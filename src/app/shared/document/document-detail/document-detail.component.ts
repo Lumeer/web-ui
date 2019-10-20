@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable} from 'rxjs';
@@ -49,6 +58,7 @@ import {AttributeTypeModalComponent} from '../../modal/attribute-type/attribute-
 import {userHasManageRoleInResource} from '../../utils/resource.utils';
 import {Organization} from '../../../core/store/organizations/organization';
 import {AttributeFunctionModalComponent} from '../../modal/attribute-function/attribute-function-modal.component';
+import {DocumentDataComponent} from './data/document-data.component';
 
 @Component({
   selector: 'document-detail',
@@ -56,7 +66,7 @@ import {AttributeFunctionModalComponent} from '../../modal/attribute-function/at
   styleUrls: ['./document-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailComponent implements OnInit, OnChanges {
+export class DocumentDetailComponent implements OnInit {
   @Input()
   public collection: Collection;
 
@@ -69,11 +79,12 @@ export class DocumentDetailComponent implements OnInit, OnChanges {
   @Input()
   public permissions: AllowedPermissions;
 
+  @ViewChild(DocumentDataComponent, {static: false})
+  public documentDataComponent: DocumentDataComponent;
+
   public users$: Observable<User[]>;
   public readonly durationUnitsMap: DurationUnitsMap;
   public workspace$: Observable<Workspace>;
-
-  public defaultAttribute: Attribute;
 
   public constraintData$: Observable<ConstraintData>;
 
@@ -90,17 +101,6 @@ export class DocumentDetailComponent implements OnInit, OnChanges {
     this.constraintData$ = this.constraintDataService.observeConstraintData();
     this.users$ = this.store$.pipe(select(selectAllUsers));
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection) {
-      this.initDefaultAttribute();
-    }
-  }
-
-  private initDefaultAttribute() {
-    const defaultAttributeId = this.collection && getDefaultAttributeId(this.collection);
-    this.defaultAttribute = defaultAttributeId && findAttribute(this.collection.attributes, defaultAttributeId);
   }
 
   public onRemoveDocument() {
@@ -194,5 +194,9 @@ export class DocumentDetailComponent implements OnInit, OnChanges {
       value: 'You can have only a single function per table/link type in the Free Plan.',
     });
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
+  }
+
+  public getCurrentDocument(): DocumentModel {
+    return this.documentDataComponent && this.documentDataComponent.getCurrentDocument();
   }
 }

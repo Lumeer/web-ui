@@ -112,11 +112,15 @@ export class DocumentDataRowComponent implements DataRowComponent {
   }
 
   public onValueFocus() {
-    this.onFocus.emit(1);
+    if (!this.editing$.value) {
+      this.onFocus.emit(1);
+    }
   }
 
   public onKeyFocus() {
-    this.onFocus.emit(0);
+    if (!this.keyEditing$.value) {
+      this.onFocus.emit(0);
+    }
   }
 
   public onDataInputCancel() {

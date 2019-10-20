@@ -48,6 +48,8 @@ import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.ut
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {CalendarHeaderComponent} from './header/calendar-header.component';
 import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
+import {BsModalService} from 'ngx-bootstrap';
+import {DocumentDetailModalComponent} from '../../../../shared/modal/document-detail/document-detail-modal.component';
 
 interface Data {
   collections: Collection[];
@@ -102,19 +104,17 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   @Output()
   public configChange = new EventEmitter<CalendarConfig>();
 
-  @Output()
-  public newEvent = new EventEmitter<number>();
-
-  @Output()
-  public updateEvent = new EventEmitter<{documentId: string; collectionId: string; stemIndex: number}>();
-
   public currentMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
   public currentDate$ = new BehaviorSubject<Date>(new Date());
 
   public events$: Observable<CalendarEvent<CalendarMetaData>[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
-  constructor(@Inject(LOCALE_ID) public locale: string, private renderer: Renderer2) {}
+  constructor(
+    @Inject(LOCALE_ID) public locale: string,
+    private renderer: Renderer2,
+    private modalService: BsModalService
+  ) {}
 
   public ngOnInit() {
     this.events$ = this.subscribeToEvents();
@@ -214,12 +214,12 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   public onNewEvent(time: number) {
-    if (this.isAtLeastOneWritable()) {
-      this.newEvent.emit(time);
+    if (this.isAtLeastOneCollectionWritable()) {
+      // TODO
     }
   }
 
-  private isAtLeastOneWritable(): boolean {
+  private isAtLeastOneCollectionWritable(): boolean {
     for (const [collectionId, permissions] of Object.entries(this.permissions)) {
       if (permissions.writeWithView && this.collectionHasConfig(collectionId)) {
         return true;
@@ -240,7 +240,12 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   public onEventClicked(event: CalendarEvent<CalendarMetaData>) {
-    this.updateEvent.emit({...event.meta});
+    const collection = (this.collections || []).find(coll => coll.id === event.meta.collectionId);
+    const document = (this.documents || []).find(doc => doc.id === event.meta.documentId);
+    if (collection && document) {
+      const config = {initialState: {document, collection}, keyboard: true, class: 'modal-lg'};
+      this.modalService.show(DocumentDetailModalComponent, config);
+    }
   }
 
   @HostListener('window:resize')

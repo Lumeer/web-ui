@@ -23,10 +23,6 @@
 .map-marker {
   cursor: pointer;
 
-  &.map-marker--editable {
-    cursor: move;
-  }
-
   & > .map-marker-shape {
     position: absolute;
     top: -45px;

@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Attribute} from '../../core/store/collections/collection';
-import {BehaviorSubject, combineLatest, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, of, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -67,6 +67,10 @@ export class DataRowService {
     return this.resourceType === AttributesResourceType.Collection;
   }
 
+  public get isNewDataResource(): boolean {
+    return !this.dataResource.id;
+  }
+
   public init(resource: AttributesResource, dataResource: DataResource) {
     this.resource = resource;
     this.resourceType = getAttributesResourceType(resource);
@@ -86,12 +90,15 @@ export class DataRowService {
   }
 
   private subscribeCollectionAndDocument() {
-    this.subscriptions.add(
-      combineLatest([
-        this.store$.pipe(
+    const documentObservable = !this.isNewDataResource
+      ? this.store$.pipe(
           select(selectDocumentById(this.dataResource.id)),
           skip(1)
-        ),
+        )
+      : of(this.dataResource);
+    this.subscriptions.add(
+      combineLatest([
+        documentObservable,
         this.store$.pipe(
           select(selectCollectionById(this.resource.id)),
           skip(1)
@@ -105,12 +112,15 @@ export class DataRowService {
   }
 
   private subscribeLinkTypeAndLink() {
-    this.subscriptions.add(
-      combineLatest([
-        this.store$.pipe(
+    const linkInstanceObservable = !this.isNewDataResource
+      ? this.store$.pipe(
           select(selectLinkInstanceById(this.dataResource.id)),
           skip(1)
-        ),
+        )
+      : of(this.dataResource);
+    this.subscriptions.add(
+      combineLatest([
+        linkInstanceObservable,
         this.store$.pipe(
           select(selectLinkTypeById(this.resource.id)),
           skip(1)
@@ -172,7 +182,7 @@ export class DataRowService {
   public deleteRow(index: number) {
     const row = this.rows$.value[index];
     if (row) {
-      if (row.attribute) {
+      if (!this.isNewDataResource && row.attribute) {
         this.deleteExistingRow(row);
       } else {
         this.deleteNewRow(index);
@@ -237,19 +247,24 @@ export class DataRowService {
     }
 
     const rows = [...this.rows$.value];
-    rows.splice(index, 1);
+    const defaultAttributeId = this.isCollectionResource ? getDefaultAttributeId(this.resource) : null;
+    const newRow = {attribute, id: attribute.id, value: null, isDefault: attribute.id === defaultAttributeId};
+    rows.splice(index, 1, newRow);
     this.rows$.next(rows);
 
-    const data = {...this.dataResource.data};
-    if (row.attribute) {
-      delete data[row.attribute.id];
-    }
-    data[attribute.id] = isNotNullOrUndefined(row.value) ? row.value : '';
-    const newDataResource = {...this.dataResource, data};
-    if (this.isCollectionResource) {
-      this.store$.dispatch(new DocumentsAction.UpdateData({document: <DocumentModel>newDataResource}));
-    } else {
-      // this.store$.dispatch(new LinkInstancesAction.UpdateData({linkInstance: <LinkInstance>newDataResource}));
+    if (!this.isNewDataResource) {
+      rows.splice(index, 1);
+      const data = {...this.dataResource.data};
+      if (row.attribute) {
+        delete data[row.attribute.id];
+      }
+      data[attribute.id] = isNotNullOrUndefined(row.value) ? row.value : '';
+      const newDataResource = {...this.dataResource, data};
+      if (this.isCollectionResource) {
+        this.store$.dispatch(new DocumentsAction.UpdateData({document: <DocumentModel>newDataResource}));
+      } else {
+        // this.store$.dispatch(new LinkInstancesAction.UpdateData({linkInstance: <LinkInstance>newDataResource}));
+      }
     }
   }
 
@@ -257,45 +272,47 @@ export class DataRowService {
     const value = isNotNullOrUndefined(row.value) ? row.value : '';
     const newAttribute = {name, constraint: row.attribute && row.attribute.constraint};
     const rows = [...this.rows$.value];
-    rows.splice(index, 1);
-    rows.push({
+    const newRow = {
       attribute: newAttribute,
       key: name,
       value,
       id: generateCorrelationId(),
       isDefault: false,
       creating: true,
-    });
+    };
+    rows.splice(index, 1, newRow);
     this.rows$.next(rows);
 
-    const newData = {[name]: {value}};
-    const data = {...this.dataResource.data};
-    if (row.attribute) {
-      delete data[row.attribute.id];
-    }
-    const newDataResource = {...this.dataResource, newData, data};
-    if (this.isCollectionResource) {
-      this.store$.dispatch(
-        new CollectionsAction.CreateAttributes({
-          collectionId: (<DocumentModel>this.dataResource).collectionId,
-          attributes: [newAttribute],
-          nextAction: new DocumentsAction.UpdateData({document: <DocumentModel>newDataResource}),
-        })
-      );
-    } else {
-      this.store$.dispatch(
-        new LinkTypesAction.CreateAttributes({
-          linkTypeId: (<LinkInstance>this.dataResource).linkTypeId,
-          attributes: [newAttribute],
-          // TODO on success or next action
-        })
-      );
+    if (!this.isNewDataResource) {
+      const newData = {[name]: {value}};
+      const data = {...this.dataResource.data};
+      if (row.attribute) {
+        delete data[row.attribute.id];
+      }
+      const newDataResource = {...this.dataResource, newData, data};
+      if (this.isCollectionResource) {
+        this.store$.dispatch(
+          new CollectionsAction.CreateAttributes({
+            collectionId: (<DocumentModel>this.dataResource).collectionId,
+            attributes: [newAttribute],
+            nextAction: new DocumentsAction.UpdateData({document: <DocumentModel>newDataResource}),
+          })
+        );
+      } else {
+        this.store$.dispatch(
+          new LinkTypesAction.CreateAttributes({
+            linkTypeId: (<LinkInstance>this.dataResource).linkTypeId,
+            attributes: [newAttribute],
+            // TODO on success or next action
+          })
+        );
+      }
     }
   }
 
   private updateValue(row: DataRow, index: number, value: any) {
     this.updateNewValue(row, index, value);
-    if (row.attribute) {
+    if (!this.isNewDataResource && row.attribute) {
       this.updateExistingValue(row, value);
     }
   }

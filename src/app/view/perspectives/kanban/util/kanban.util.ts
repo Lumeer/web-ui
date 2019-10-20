@@ -24,8 +24,8 @@ import {
   KanbanConfigVersion,
   KanbanStemConfig,
 } from '../../../../core/store/kanbans/kanban';
-import {areArraysSame, deepArrayEquals} from '../../../../shared/utils/array.utils';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {areArraysSame} from '../../../../shared/utils/array.utils';
+import {Collection} from '../../../../core/store/collections/collection';
 import {findAttribute, findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -72,7 +72,7 @@ function stemConfigsChanged(viewStemsConfigs: KanbanStemConfig[], currentStemsCo
     stem: config.stem && normalizeQueryStem(config.stem),
   }));
 
-  return !deepArrayEquals(normalizedViewStemsConfigs, normalizedCurrentStemsConfigs);
+  return !areArraysSame(normalizedViewStemsConfigs, normalizedCurrentStemsConfigs);
 }
 
 function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {

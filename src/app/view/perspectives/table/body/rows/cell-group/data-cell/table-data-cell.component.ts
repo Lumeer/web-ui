@@ -512,7 +512,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     };
     const createDocumentAction = new DocumentsAction.Create({
       document,
-      callback: this.createLinkInstanceCallback(table),
+      onSuccess: this.createLinkInstanceCallback(table),
     });
     const newAttribute = {name: attributeName};
 
@@ -534,7 +534,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       metaData: this.createDocumentMetaData(row),
     };
 
-    this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)}));
+    this.store$.dispatch(new DocumentsAction.Create({document, onSuccess: this.createLinkInstanceCallback(table)}));
   }
 
   private createDocumentMetaData(row: TableConfigRow): DocumentMetaData {
@@ -710,7 +710,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
               correlationId,
               data: generateDocumentDataByCollectionQuery(collectionId, query, currentUser),
             },
-            callback: documentId =>
+            onSuccess: documentId =>
               this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),
           })
         )

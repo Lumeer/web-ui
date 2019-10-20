@@ -343,7 +343,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onTaskCreated(task: GanttChartTask) {
-    const stemConfig = this.config.stemsConfigs && this.config.stemsConfigs[0]; // we support create tasks only in this situation
+    const stemConfig = this.config.stemsConfigs && this.config.stemsConfigs[0]; // we support creating tasks only in this situation
     if (!stemConfig || !stemConfig.stem) {
       return;
     }
@@ -363,7 +363,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     Object.keys(patchData).forEach(key => (data[key] = patchData[key]));
     document.data = data;
 
-    this.createDocument.emit(document);
+    this.openDocumentDetailModal(document);
   }
 
   public onTaskDetail(task: GanttChartTask) {
@@ -372,12 +372,17 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       return; // TODO support links in detail dialog
     }
     const document = this.getDataResource(metadata.dataResourceId, metadata.resourceType);
-    if (!document) {
-      return;
+    if (document) {
+      this.openDocumentDetailModal(document as DocumentModel);
     }
+  }
 
-    const collection = this.getResource(document, metadata.resourceType);
-    const config = {initialState: {document, collection}, keyboard: true, class: 'modal-lg'};
+  private openDocumentDetailModal(document: DocumentModel) {
+    const collection = this.getResource(document, AttributesResourceType.Collection);
+    const config = {initialState: {document, collection}, keyboard: false, class: 'modal-lg'};
+    if (!document.id) {
+      config['backdrop'] = 'static';
+    }
     this.modalService.show(DocumentDetailModalComponent, config);
   }
 }

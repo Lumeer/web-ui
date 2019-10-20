@@ -12,8 +12,9 @@
        [cdkDropListData]="column"
        [cdkDropListConnectedTo]="dragColumnsIds"
        (cdkDropListDropped)="onDropPostIt($event)">
-    <post-it *ngFor="let card of cards; trackBy: trackByCard; let idx = index; let last = last"
+    <post-it *ngFor="let card of cards; trackBy: trackByCard; let last = last"
              cdkDrag
+             id="{{postItIdPrefix}}#{{card.dataResource.id}}"
              class="post-it"
              [tag]="card.dueHours | kanbanDueHoursTag"
              [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"

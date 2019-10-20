@@ -30,6 +30,7 @@ import {Query} from '../../../../../core/store/navigation/query/query';
 import {DataResource} from '../../../../../core/model/resource';
 import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {generateId} from '../../../../../shared/utils/resource.utils';
 
 export interface KanbanCard {
   dataResource: DataResource;
@@ -96,6 +97,7 @@ export class KanbanColumnComponent {
   public toggleFavorite = new EventEmitter<DataResource>();
 
   public readonly dragDelay = DRAG_DELAY;
+  public readonly postItIdPrefix = generateId();
 
   public trackByCard(index: number, card: KanbanCard) {
     return card.dataResource.id;
@@ -157,6 +159,10 @@ export class KanbanColumnComponent {
   }
 
   public onDocumentCreated(id: string) {
+    setTimeout(() => {
+      const postIt = document.getElementById(`${this.postItIdPrefix}#${id}`);
+      postIt && postIt.scrollIntoView();
+    });
     // TODO scroll
   }
 

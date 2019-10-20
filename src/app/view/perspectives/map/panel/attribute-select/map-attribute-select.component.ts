@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'map-attribute-select',
@@ -38,6 +39,12 @@ export class MapAttributeSelectComponent implements OnChanges {
   public select = new EventEmitter<string>();
 
   public items: SelectItemModel[];
+
+  public readonly emptyValueString: string;
+
+  constructor(private i18n: I18n) {
+    this.emptyValueString = i18n({id: 'map.config.attribute.empty', value: 'Select attribute'});
+  }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.collection && this.collection) {

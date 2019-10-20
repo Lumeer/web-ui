@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Constraint} from '../../../../../core/model/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -86,7 +86,8 @@ export class KanbanStemConfigComponent {
       ...(this.config.doneColumnTitles.slice(0, index) || []),
       ...(this.config.doneColumnTitles.slice(index + 1) || []),
     ];
-    this.configChange.emit({...this.config, doneColumnTitles: newTitles});
+    const doneColumnTitles = newTitles.length ? newTitles : undefined;
+    this.configChange.emit({...this.config, doneColumnTitles});
   }
 
   public onConstraintSelected(constraint: Constraint) {
@@ -98,8 +99,9 @@ export class KanbanStemConfigComponent {
     this.configElementSelected(selectId, 'attribute');
   }
 
-  public onDueDateSelected(selectId: SelectItemWithConstraintId) {
-    this.configElementSelected(selectId, 'dueDate', true);
+  public onDueDateSelected(attribute: KanbanAttribute) {
+    const config = {...this.config, dueDate: attribute};
+    this.configChange.emit(config);
   }
 
   public onDoneColumnSelected(selectId: string, index: number) {
@@ -114,11 +116,11 @@ export class KanbanStemConfigComponent {
     }
   }
 
-  private configElementSelected(selectId: SelectItemWithConstraintId, element: string, skipConstraint?: boolean) {
+  private configElementSelected(selectId: SelectItemWithConstraintId, element: string) {
     const {attributeId, resourceIndex} = selectId;
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
     const resource = attributesResourcesOrder[resourceIndex];
-    const constraint = skipConstraint ? null : findAttributeConstraint(resource.attributes, attributeId);
+    const constraint = findAttributeConstraint(resource.attributes, attributeId);
     if (resource) {
       const resourceType = getAttributesResourceType(resource);
       const selection = {attributeId, resourceIndex, resourceType, resourceId: resource.id, constraint};

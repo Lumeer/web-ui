@@ -4,15 +4,15 @@
     <h3>
       <data-input class="flex-fill d-block ml-n1 main-data-input"
                   [readonly]="true"
-                  [value]="document?.data && defaultAttribute && document.data[defaultAttribute.id]"
-                  [constraint]="defaultAttribute?.constraint"
+                  [value]="row?.value"
+                  [constraint]="row?.attribute?.constraint"
                   [constraintData]="constraintData">
       </data-input>
     </h3>
 
   </div>
 
-  <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right">
+  <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right" *ngIf="document.id">
     <div class="small text-notice">
       <span i18n="@@document.detail.version">Version {{document?.dataVersion}}</span><br/>
       <span i18n="@@document.detail.createdBy">Created on {{document?.creationDate | date : 'mediumDate'}}

@@ -37,7 +37,7 @@ import {DropdownPosition} from '../dropdown-position';
 import {DropdownComponent} from '../dropdown.component';
 import {DropdownOption} from './dropdown-option';
 import {DropdownOptionDirective} from './dropdown-option.directive';
-import {deepObjectsEquals} from '../../utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
 
 @Component({
   selector: 'options-dropdown',
@@ -84,9 +84,13 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.options && this.options) {
+    if (this.shouldResetActiveItem(changes)) {
       this.listKeyManager && this.listKeyManager.setActiveItem(null);
     }
+  }
+
+  private shouldResetActiveItem(changes: SimpleChanges): boolean {
+    return (changes.options && !!this.options) || (changes.selectedValue && isNullOrUndefined(this.selectedValue));
   }
 
   public onOptionClick(event: MouseEvent, option: DropdownOption) {
@@ -103,7 +107,7 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   }
 
   private highlightSelectedValue() {
-    if ((this.listKeyManager && this.selectedValue) || this.selectedValue === 0) {
+    if (this.listKeyManager && isNotNullOrUndefined(this.selectedValue)) {
       const activeIndex = (this.options || []).findIndex(option => deepObjectsEquals(option.value, this.selectedValue));
       this.listKeyManager.setActiveItem(activeIndex);
     }

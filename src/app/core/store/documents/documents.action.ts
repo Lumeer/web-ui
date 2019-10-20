@@ -90,7 +90,13 @@ export namespace DocumentsAction {
   export class Create implements Action {
     public readonly type = DocumentsActionType.CREATE;
 
-    public constructor(public payload: {document: DocumentModel; callback?: (documentId: string) => void}) {}
+    public constructor(
+      public payload: {
+        document: DocumentModel;
+        onSuccess?: (documentId: string) => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class CreateSuccess implements Action {

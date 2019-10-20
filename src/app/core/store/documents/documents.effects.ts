@@ -93,22 +93,21 @@ export class DocumentsEffects {
 
           return this.documentService.createDocument(documentDto).pipe(
             map(dto => convertDocumentDtoToModel(dto, correlationId)),
-            tap(document => {
-              const callback = action.payload.callback;
-              if (callback) {
-                callback(document.id);
-              }
+            mergeMap(document => {
+              return [
+                ...createCallbackActions(action.payload.onSuccess, document.id),
+                new DocumentsAction.CreateSuccess({document}),
+                new DocumentsAction.PatchDataPending({
+                  collectionId: document.collectionId,
+                  documentId: document.id,
+                  correlationId: document.correlationId,
+                }),
+                new DocumentsAction.CheckDataHint({document: action.payload.document}),
+              ];
             }),
-            mergeMap(document => [
-              new DocumentsAction.CreateSuccess({document}),
-              new DocumentsAction.PatchDataPending({
-                collectionId: document.collectionId,
-                documentId: document.id,
-                correlationId: document.correlationId,
-              }),
-              new DocumentsAction.CheckDataHint({document: action.payload.document}),
-            ]),
-            catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
+            catchError(error =>
+              of(...createCallbackActions(action.payload.onFailure), new DocumentsAction.CreateFailure({error: error}))
+            )
           );
         })
       );

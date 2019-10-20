@@ -1,23 +1,11 @@
-<ng-container *ngIf="{constraintData: constraintData$ | async} as data">
-
-  <document-detail-header [collection]="collection"
-                          [document]="document"
-                          [defaultAttribute]="defaultAttribute"
-                          [constraintData]="data.constraintData"
-                          [permissions]="permissions"
-                          [workspace]="workspace$ | async"
-                          (switchToTable)="onSwitchToTable()"
-                          (removeDocument)="onRemoveDocument()">
-  </document-detail-header>
-
-  <document-data class="d-block mt-4"
-                 [collection]="collection"
-                 [document]="document"
-                 [permissions]="permissions"
-                 [constraintData]="data.constraintData"
-                 [query]="query"
-                 (attributeTypeClick)="onAttributeTypeClick($event)"
-                 (attributeFunctionCLick)="onAttributeFunctionClick($event)">
-  </document-data>
-
-</ng-container>
+<document-data [collection]="collection"
+               [document]="document"
+               [permissions]="permissions"
+               [constraintData]="constraintData$ | async"
+               [workspace]="workspace$ | async"
+               [query]="query"
+               (attributeTypeClick)="onAttributeTypeClick($event)"
+               (attributeFunctionCLick)="onAttributeFunctionClick($event)"
+               (removeDocument)="onRemoveDocument()"
+               (switchToTable)="onSwitchToTable()">
+</document-data>

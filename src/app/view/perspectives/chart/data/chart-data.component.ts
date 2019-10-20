@@ -41,13 +41,15 @@ import {ChartData, convertChartDateFormat} from './convertor/chart-data';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartDataConverter} from './convertor/chart-data-converter';
-import {ValueChange} from '../visualizer/plot-maker/plot-maker';
+import {ClickEvent, ValueChange} from '../visualizer/plot-maker/plot-maker';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import * as moment from 'moment';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
+import {BsModalService} from 'ngx-bootstrap';
+import {DocumentDetailModalComponent} from '../../../../shared/modal/document-detail/document-detail-modal.component';
 
 interface Data {
   collections: Collection[];
@@ -114,7 +116,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
   private dataSubject = new BehaviorSubject<Data>(null);
   public chartData$: Observable<ChartData>;
 
-  constructor(private chartDataConverter: ChartDataConverter) {}
+  constructor(private chartDataConverter: ChartDataConverter, private modalService: BsModalService) {}
 
   public ngOnInit() {
     const closingNotifier = this.dataSubject.pipe(debounceTime(100));
@@ -326,5 +328,22 @@ export class ChartDataComponent implements OnInit, OnChanges {
 
   public resize() {
     this.chartVisualizerComponent && this.chartVisualizerComponent.resize();
+  }
+
+  public onDetail(event: ClickEvent) {
+    if (event.resourceType === AttributesResourceType.Collection) {
+      const documentId = event.pointId;
+
+      const document = (this.documents || []).find(doc => doc.id === documentId);
+      if (!document) {
+        return;
+      }
+      const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
+      const config = {initialState: {document, collection}, keyboard: false, class: 'modal-lg'};
+      if (!document.id) {
+        config['backdrop'] = 'static';
+      }
+      this.modalService.show(DocumentDetailModalComponent, config);
+    }
   }
 }

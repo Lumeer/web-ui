@@ -55,6 +55,8 @@ import {
 import {MapRenderComponent} from './render/map-render.component';
 import {MarkerMoveEvent} from './render/marker-move.event';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
+import {DocumentDetailModalComponent} from '../../../../shared/modal/document-detail/document-detail-modal.component';
+import {BsModalService} from 'ngx-bootstrap';
 
 @Component({
   selector: 'map-content',
@@ -87,7 +89,8 @@ export class MapContentComponent implements OnInit, OnDestroy {
     private collectionsPermissions: CollectionsPermissionsPipe,
     private i18n: I18n,
     private notificationService: NotificationService,
-    private store$: Store<{}>
+    private store$: Store<{}>,
+    private modalService: BsModalService
   ) {}
 
   public ngOnInit() {
@@ -255,5 +258,14 @@ export class MapContentComponent implements OnInit, OnDestroy {
     if (this.mapRenderComponent) {
       this.mapRenderComponent.refreshMapSize();
     }
+  }
+
+  public onMarkerDetail(properties: MapMarkerProperties) {
+    const config = {
+      initialState: {document: properties.document, collection: properties.collection},
+      keyboard: true,
+      class: 'modal-lg',
+    };
+    this.modalService.show(DocumentDetailModalComponent, config);
   }
 }

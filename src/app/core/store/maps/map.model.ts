@@ -43,7 +43,7 @@ export interface MapConfig {
   positionSaved: boolean;
 }
 
-export type AttributeIdsMap = {[collectionId: string]: string[]};
+export type AttributeIdsMap = Record<string, string[]>;
 
 export const DEFAULT_MAP_CONFIG: MapConfig = {
   attributeIdsMap: {},

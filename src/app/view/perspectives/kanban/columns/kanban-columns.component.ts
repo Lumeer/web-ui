@@ -63,6 +63,8 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-favorite-toggle.service';
 import {SelectDataValue} from '../../../../core/model/data-value/select.data-value';
 import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {Constraint} from '../../../../core/model/constraint';
+import {DataValue} from '../../../../core/model/data-value';
 
 @Component({
   selector: 'kanban-columns',
@@ -230,7 +232,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.dispatch(
         new DocumentsAction.Create({
           document,
-          callback: documentId => this.onDocumentCreated(documentId, column),
+          onSuccess: documentId => this.onDocumentCreated(documentId, column),
         })
       );
     }
@@ -246,7 +248,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
     const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
     const constraint = findAttributeConstraint(collection.attributes, kanbanAttribute.attributeId);
-    data[kanbanAttribute.attributeId] = constraint.createDataValue(value).serialize();
+    data[kanbanAttribute.attributeId] = this.createValueByConstraint(constraint, value);
     return {collectionId: collection.id, data};
   }
 
@@ -255,14 +257,17 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
     if (collection) {
       const constraint = findAttributeConstraint(collection.attributes, attributeId);
-      let value = null;
-      if (constraint && constraint.type === ConstraintType.Select) {
-        value = new SelectDataValue(newValue, constraint.config as SelectConstraintConfig, true).serialize();
-      } else {
-        value = constraint.createDataValue(newValue).serialize();
-      }
+      const value = this.createValueByConstraint(constraint, newValue);
       const data = {...document.data, [attributeId]: value};
       this.patchDocumentData.emit({...document, data});
+    }
+  }
+
+  private createValueByConstraint(constraint: Constraint, newValue: any): any {
+    if (constraint && constraint.type === ConstraintType.Select) {
+      return new SelectDataValue(newValue, constraint.config as SelectConstraintConfig, true).serialize();
+    } else {
+      return constraint.createDataValue(newValue).serialize();
     }
   }
 

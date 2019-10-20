@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import isEqual from 'lodash/isEqual';
+import omitBy from 'lodash/omitBy';
+import isNil from 'lodash/isNil';
 import cloneDeep from 'lodash/cloneDeep';
 
 export function isNullOrUndefined(object: any): object is null | undefined {
@@ -46,7 +48,11 @@ export function toNumber(value: any): number {
 }
 
 export function deepObjectsEquals(object1: any, object2: any): boolean {
-  return isEqual(object1, object2);
+  return isEqual(cleanObject(object1), cleanObject(object2));
+}
+
+export function cleanObject(object: any): any {
+  return omitBy(object, isNil);
 }
 
 export function deepObjectCopy<T>(object: T): T {

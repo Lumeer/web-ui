@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface UiRow {
-  id?: string;
-  name: string;
-  newName?: string;
-  value: string;
-  newValue?: string;
-  correlationId?: string;
-  remove?: boolean;
-  warning?: string;
+import {Pipe, PipeTransform} from '@angular/core';
+import {DataRow} from '../../../data/data-row.service';
+
+@Pipe({
+  name: 'defaultDataRow',
+})
+export class DefaultDataRowPipe implements PipeTransform {
+  public transform(rows: DataRow[]): DataRow {
+    return (rows || []).find(row => row.isDefault);
+  }
 }

@@ -103,7 +103,7 @@ export function createMapClusterCountsLayer(id: string, source: string): Layer {
   };
 }
 
-export function createMapMarker(properties: MapMarkerProperties): Marker {
+export function createMapMarker(properties: MapMarkerProperties, onDoubleClick: () => void): Marker {
   const popup = createMapMarkerPopup(properties);
   const element = createMapMarkerIcon(properties.collection, properties.editable);
 
@@ -113,6 +113,13 @@ export function createMapMarker(properties: MapMarkerProperties): Marker {
 
   element.addEventListener('mouseenter', () => !popup.isOpen() && marker.togglePopup());
   element.addEventListener('mouseleave', () => popup.isOpen() && marker.togglePopup());
+  if (properties.editable) {
+    element.addEventListener('dblclick', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      onDoubleClick();
+    });
+  }
 
   return marker;
 }
@@ -135,7 +142,7 @@ function createMapMarkerIcon(collection: Collection, editable?: boolean): HTMLDi
   const markerElement = document.createElement('div');
   markerElement.className = 'map-marker';
   if (editable) {
-    markerElement.classList.add('map-marker--editable');
+    markerElement.classList.add('map-marker-editable');
   }
 
   const shapeElement = document.createElement('div');

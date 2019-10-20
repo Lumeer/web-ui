@@ -32,6 +32,7 @@ import {AttributeFunctionModalModule} from '../modal/attribute-function/attribut
 import {ClickOutsideModule} from 'ng-click-outside';
 import {DocumentDetailHiddenInputComponent} from './document-detail/hidden-input/document-detail-hidden-input.component';
 import {ColorPickerModule} from 'ngx-color-picker';
+import {DefaultDataRowPipe} from './document-detail/header/default-data-row.pipe';
 
 @NgModule({
   imports: [
@@ -51,6 +52,7 @@ import {ColorPickerModule} from 'ngx-color-picker';
     DocumentDataRowComponent,
     DocumentDataRowIconsComponent,
     DocumentDetailHiddenInputComponent,
+    DefaultDataRowPipe,
   ],
   exports: [DocumentDetailComponent],
 })

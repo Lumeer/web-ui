@@ -32,7 +32,7 @@ import {
 } from '@angular/core';
 import {ChartData} from '../convertor/chart-data';
 import {ChartVisualizer} from '../../visualizer/chart-visualizer';
-import {ValueChange} from '../../visualizer/plot-maker/plot-maker';
+import {ClickEvent, ValueChange} from '../../visualizer/plot-maker/plot-maker';
 
 @Component({
   selector: 'chart-visualizer',
@@ -47,6 +47,9 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
 
   @Output()
   public change = new EventEmitter<ValueChange>();
+
+  @Output()
+  public doubleClick = new EventEmitter<ClickEvent>();
 
   @ViewChild('chart', {static: true})
   private chartElement: ElementRef;
@@ -73,8 +76,9 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
   }
 
   private createChart() {
-    const onValueChange = valueChange => this.change.next(valueChange);
-    this.chartVisualizer = new ChartVisualizer(this.chartElement, onValueChange);
+    const onValueChange = valueChange => this.change.emit(valueChange);
+    const onDoubleClick = event => this.doubleClick.emit(event);
+    this.chartVisualizer = new ChartVisualizer(this.chartElement, onValueChange, onDoubleClick);
     this.chartVisualizer.setWriteEnabled(this.isWritable());
     this.chartVisualizer.createChart(this.chartData);
   }

@@ -28,7 +28,7 @@ import {
   OnChanges,
   OnDestroy,
 } from '@angular/core';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -40,6 +40,7 @@ import {Perspective, perspectiveIconsMap} from '../../../../view/perspectives/pe
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DocumentFavoriteToggleService} from '../../../toggle/document-favorite-toggle.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {DataRow} from '../../../data/data-row.service';
 
 @Component({
   selector: 'document-detail-header',
@@ -56,7 +57,7 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public document: DocumentModel;
 
   @Input()
-  public defaultAttribute: Attribute;
+  public row: DataRow;
 
   @Input()
   public constraintData: ConstraintData;

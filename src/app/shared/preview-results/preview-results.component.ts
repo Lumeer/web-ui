@@ -131,7 +131,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
             getQueryFiltersForCollection(this.query, this.selectedCollection.id)
           ),
         },
-        callback: id => {
+        onSuccess: id => {
           this.store$.dispatch(
             new NavigationAction.SetViewCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}})
           );
