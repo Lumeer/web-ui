@@ -49,7 +49,7 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {CalendarHeaderComponent} from './header/calendar-header.component';
 import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
 import {BsModalService} from 'ngx-bootstrap';
-import {DocumentDetailModalComponent} from '../../../../shared/modal/document-detail/document-detail-modal.component';
+import {CalendarEventDetailModalComponent} from '../modal/calendar-event-detail-modal.component';
 
 interface Data {
   collections: Collection[];
@@ -213,9 +213,14 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }
   }
 
-  public onNewEvent(time: number) {
+  public onNewEvent(initialTime: number) {
     if (this.isAtLeastOneCollectionWritable()) {
-      // TODO
+      const config = {
+        initialState: {initialTime, config: this.config, permissions: this.permissions},
+        class: 'modal-lg',
+      };
+      config['backdrop'] = 'static';
+      this.modalService.show(CalendarEventDetailModalComponent, config);
     }
   }
 
@@ -242,9 +247,13 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public onEventClicked(event: CalendarEvent<CalendarMetaData>) {
     const collection = (this.collections || []).find(coll => coll.id === event.meta.collectionId);
     const document = (this.documents || []).find(doc => doc.id === event.meta.documentId);
+    const stemIndex = event.meta.stemIndex;
     if (collection && document) {
-      const config = {initialState: {document, collection}, keyboard: true, class: 'modal-lg'};
-      this.modalService.show(DocumentDetailModalComponent, config);
+      const config = {
+        initialState: {document, collection, stemIndex, config: this.config, permissions: this.permissions},
+        class: 'modal-lg',
+      };
+      this.modalService.show(CalendarEventDetailModalComponent, config);
     }
   }
 

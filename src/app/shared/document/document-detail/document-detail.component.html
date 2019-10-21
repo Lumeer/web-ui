@@ -4,8 +4,10 @@
                [constraintData]="constraintData$ | async"
                [workspace]="workspace$ | async"
                [query]="query"
+               [toolbarRef]="toolbarRef"
                (attributeTypeClick)="onAttributeTypeClick($event)"
                (attributeFunctionCLick)="onAttributeFunctionClick($event)"
                (removeDocument)="onRemoveDocument()"
-               (switchToTable)="onSwitchToTable()">
+               (switchToTable)="onSwitchToTable()"
+               (documentChanged)="documentChanged.emit($event)">
 </document-data>

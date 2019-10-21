@@ -372,3 +372,28 @@ function calendarDefaultConfig(query: Query): CalendarConfig {
 export function getCalendarDefaultStemConfig(stem?: QueryStem): CalendarStemConfig {
   return {barsProperties: {}, stem};
 }
+
+export const DEFAULT_EVENT_DURATION = 60;
+
+export function createEventDatesFromDocument(start?: Date, end?: Date): {eventStart: Date; eventEnd: Date} {
+  if (isDateValid(start) && isDateValid(end)) {
+    return {eventStart: start, eventEnd: end};
+  } else if (isDateValid(start)) {
+    const eventEnd = moment(start)
+      .add(DEFAULT_EVENT_DURATION, 'minutes')
+      .toDate();
+    return {eventStart: start, eventEnd};
+  } else if (isDateValid(end)) {
+    const eventStart = moment(start)
+      .subtract(DEFAULT_EVENT_DURATION, 'minutes')
+      .toDate();
+    return {eventStart, eventEnd: end};
+  }
+
+  return {
+    eventStart: new Date(),
+    eventEnd: moment()
+      .add(DEFAULT_EVENT_DURATION, 'minutes')
+      .toDate(),
+  };
+}

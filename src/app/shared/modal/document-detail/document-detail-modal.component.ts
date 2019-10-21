@@ -17,8 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ViewChild, HostListener} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Input,
+  OnDestroy,
+  HostListener,
+  TemplateRef,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {select, Store} from '@ngrx/store';
@@ -29,11 +39,11 @@ import {BsModalRef} from 'ngx-bootstrap';
 import {DialogType} from '../../../dialog/dialog-type';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {DocumentDetailComponent} from '../../document/document-detail/document-detail.component';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
 
 @Component({
+  selector: 'document-detail-modal',
   templateUrl: './document-detail-modal.component.html',
   styleUrls: ['./document-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,15 +55,18 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
   @Input()
   public document: DocumentModel;
 
-  @ViewChild(DocumentDetailComponent, {static: false})
-  public documentDetailComponent: DocumentDetailComponent;
+  @Input()
+  public toolbarRef: TemplateRef<any>;
+
+  @Output()
+  public documentChanged = new EventEmitter<DocumentModel>();
 
   public readonly dialogType = DialogType;
 
   public query$: Observable<Query>;
-
   public performingAction$ = new BehaviorSubject(false);
 
+  private currentDocument: DocumentModel;
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
@@ -67,8 +80,8 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
   private subscribeExist() {
     this.subscriptions.add(
       combineLatest([
-        this.store$.pipe(select(selectCollectionById(this.collection.id))),
-        this.store$.pipe(select(selectDocumentById(this.document.id))),
+        (this.collection.id && this.store$.pipe(select(selectCollectionById(this.collection.id)))) || of(true),
+        (this.document.id && this.store$.pipe(select(selectDocumentById(this.document.id)))) || of(true),
       ]).subscribe(([collection, document]) => {
         if (!collection || !document) {
           this.hideDialog();
@@ -79,8 +92,7 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
 
   public onSubmit() {
     this.performingAction$.next(true);
-    const document =
-      (this.documentDetailComponent && this.documentDetailComponent.getCurrentDocument()) || this.document;
+    const document = this.currentDocument || this.document;
 
     this.store$.dispatch(
       new DocumentsAction.Create({
@@ -110,5 +122,10 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
     if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
+  }
+
+  public onDocumentChanged(documentModel: DocumentModel) {
+    this.documentChanged.emit(documentModel);
+    this.currentDocument = documentModel;
   }
 }

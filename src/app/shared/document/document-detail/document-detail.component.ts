@@ -17,16 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-  ViewChildren,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable} from 'rxjs';
@@ -37,7 +28,6 @@ import {NotificationService} from '../../../core/notifications/notification.serv
 import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
@@ -58,7 +48,6 @@ import {AttributeTypeModalComponent} from '../../modal/attribute-type/attribute-
 import {userHasManageRoleInResource} from '../../utils/resource.utils';
 import {Organization} from '../../../core/store/organizations/organization';
 import {AttributeFunctionModalComponent} from '../../modal/attribute-function/attribute-function-modal.component';
-import {DocumentDataComponent} from './data/document-data.component';
 
 @Component({
   selector: 'document-detail',
@@ -79,8 +68,11 @@ export class DocumentDetailComponent implements OnInit {
   @Input()
   public permissions: AllowedPermissions;
 
-  @ViewChild(DocumentDataComponent, {static: false})
-  public documentDataComponent: DocumentDataComponent;
+  @Input()
+  public toolbarRef: TemplateRef<any>;
+
+  @Output()
+  public documentChanged = new EventEmitter<DocumentModel>();
 
   public users$: Observable<User[]>;
   public readonly durationUnitsMap: DurationUnitsMap;
@@ -158,8 +150,8 @@ export class DocumentDetailComponent implements OnInit {
       this.store$.pipe(select(selectOrganizationByWorkspace)),
     ])
       .pipe(take(1))
-      .subscribe(([curentUser, organization]) => {
-        if (userHasManageRoleInResource(curentUser, organization)) {
+      .subscribe(([currentUser, organization]) => {
+        if (userHasManageRoleInResource(currentUser, organization)) {
           this.notifyFunctionsLimitWithRedirect(organization);
         } else {
           this.notifyFunctionsLimitWithoutRights();
@@ -194,9 +186,5 @@ export class DocumentDetailComponent implements OnInit {
       value: 'You can have only a single function per table/link type in the Free Plan.',
     });
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
-  }
-
-  public getCurrentDocument(): DocumentModel {
-    return this.documentDataComponent && this.documentDataComponent.getCurrentDocument();
   }
 }

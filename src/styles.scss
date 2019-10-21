@@ -173,6 +173,38 @@ typeahead-container {
   word-break: break-all;
 }
 
+modal-container {
+  overflow-y: unset !important;
+
+  .modal-dialog {
+    max-height: calc(100% - 1rem);
+    display: flex;
+
+    .modal-content > * {
+      display: flex;
+      height: 100%;
+      width: 100%;
+
+      & > * {
+        width: 100%;
+      }
+    }
+
+    .modal-content modal-wrapper {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (min-width: 576px) {
+  modal-container .modal-dialog {
+    max-height: calc(100% - 3.5rem);
+  }
+}
+
 @media (min-width: 1100px) {
   .modal-dialog.modal-xxl {
     max-width: 1000px;

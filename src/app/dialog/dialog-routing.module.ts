@@ -24,7 +24,6 @@ import {DialogPath} from './dialog-path';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
 import {PlayVideoComponent} from './play-video/play-video.component';
-import {CalendarEventDialogComponent} from './calendar-event/calendar-event-dialog.component';
 
 const routes: Routes = [
   {
@@ -47,16 +46,6 @@ const routes: Routes = [
     component: PlayVideoComponent,
     outlet: 'dialog',
     data: {modalDialogClass: 'modal-lg'},
-  },
-  {
-    path: `${DialogPath.CALENDAR_EVENT}/:calendarId/:time`,
-    component: CalendarEventDialogComponent,
-    outlet: 'dialog',
-  },
-  {
-    path: `${DialogPath.CALENDAR_EVENT}/:calendarId/:time/:documentId/:stemIndex`,
-    component: CalendarEventDialogComponent,
-    outlet: 'dialog',
   },
 ];
 

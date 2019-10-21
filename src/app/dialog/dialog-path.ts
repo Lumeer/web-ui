@@ -22,7 +22,6 @@ export enum DialogPath {
   FEEDBACK = 'feedback',
   SHARE_VIEW = 'share-view',
   PLAY_VIDEO = 'video',
-  CALENDAR_EVENT = 'calendar-event',
 }
 
 export const dialogPathsMap: {[id: string]: DialogPath} = {
@@ -30,5 +29,4 @@ export const dialogPathsMap: {[id: string]: DialogPath} = {
   [DialogPath.FEEDBACK]: DialogPath.FEEDBACK,
   [DialogPath.SHARE_VIEW]: DialogPath.SHARE_VIEW,
   [DialogPath.PLAY_VIDEO]: DialogPath.PLAY_VIDEO,
-  [DialogPath.CALENDAR_EVENT]: DialogPath.CALENDAR_EVENT,
 };

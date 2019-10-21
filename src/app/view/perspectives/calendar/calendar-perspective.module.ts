@@ -39,6 +39,7 @@ import {CalendarCollectionConfigComponent} from './config/collection-config/cale
 import {adapterFactory} from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
 import {CalendarEventsComponent} from './events/calendar-events.component';
+import {CalendarEventDetailModalComponent} from './modal/calendar-event-detail-modal.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -72,8 +73,9 @@ export function momentAdapterFactory() {
     CalendarHeaderComponent,
     CalendarCollectionConfigComponent,
     CalendarEventsComponent,
+    CalendarEventDetailModalComponent,
   ],
-  entryComponents: [CalendarPerspectiveComponent],
+  entryComponents: [CalendarPerspectiveComponent, CalendarEventDetailModalComponent],
   exports: [CalendarPerspectiveComponent],
   providers: [
     {

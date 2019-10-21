@@ -30,7 +30,6 @@ import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogModule} from './share-view/share-view-dialog.module';
 import {DialogWrapperModule} from './shared/wrapper/dialog-wrapper.module';
 import {PlayVideoComponent} from './play-video/play-video.component';
-import {CalendarEventDialogModule} from './calendar-event/calendar-event-dialog.module';
 import {FullscreenDialogComponent} from './fullscreen-dialog/fullscreen-dialog.component';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PresenterModule} from '../shared/presenter/presenter.module';
@@ -45,7 +44,6 @@ import {PresenterModule} from '../shared/presenter/presenter.module';
     DialogRoutingModule,
     DialogWrapperModule,
     ShareViewDialogModule,
-    CalendarEventDialogModule,
     ClickOutsideModule,
   ],
   declarations: [

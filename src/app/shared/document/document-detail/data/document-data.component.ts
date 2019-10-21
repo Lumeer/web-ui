@@ -32,6 +32,7 @@ import {
   HostListener,
   ViewChild,
   OnInit,
+  TemplateRef,
 } from '@angular/core';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -43,8 +44,12 @@ import {DocumentDataRowComponent} from './row/document-data-row.component';
 import {filterUnusedAttributes} from '../../../utils/attribute.utils';
 import {DocumentDetailHiddenInputComponent} from '../hidden-input/document-detail-hidden-input.component';
 import {DataRowFocusService} from '../../../data/data-row-focus-service';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {AppState} from '../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {selectDocumentById} from '../../../../core/store/documents/documents.state';
 
 @Component({
   selector: 'document-data',
@@ -71,6 +76,9 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public toolbarRef: TemplateRef<any>;
+
   @Output()
   public attributeTypeClick = new EventEmitter<Attribute>();
 
@@ -89,11 +97,16 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public removeDocument = new EventEmitter();
 
+  @Output()
+  public documentChanged = new EventEmitter<DocumentModel>();
+
   public unusedAttributes$ = new BehaviorSubject<Attribute[]>([]);
+  public collection$: Observable<Collection>;
+  public document$: Observable<DocumentModel>;
 
   private dataRowFocusService: DataRowFocusService;
 
-  constructor(public dataRowService: DataRowService) {
+  constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
     this.dataRowFocusService = new DataRowFocusService(
       () => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
@@ -109,15 +122,28 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
         currentDocument && currentDocument.data
       );
       this.unusedAttributes$.next(unusedAttributes);
+      this.documentChanged.emit(currentDocument);
     });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.objectChanged(changes.collection) || this.objectChanged(changes.document)) {
-      if (this.collection && this.document) {
-        this.dataRowService.init(this.collection, this.document);
+    if (this.shouldRefreshObservables(changes)) {
+      this.dataRowService.init(this.collection, this.document);
+      this.collection$ = this.store$.pipe(select(selectCollectionById(this.collection.id)));
+      this.document$ =
+        (this.document.id && this.store$.pipe(select(selectDocumentById(this.document.id)))) || of(this.document);
+    }
+  }
+
+  private shouldRefreshObservables(changes: SimpleChanges): boolean {
+    if (this.collection && this.document) {
+      if (this.document.id) {
+        return this.objectChanged(changes.collection) || this.objectChanged(changes.document);
+      } else {
+        return !!changes.collection || !!changes.document;
       }
     }
+    return false;
   }
 
   private objectChanged(change: SimpleChange): boolean {
@@ -181,7 +207,7 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
     this.dataRowFocusService.newHiddenInput(value);
   }
 
-  public getCurrentDocument(): DocumentModel {
+  private getCurrentDocument(): DocumentModel {
     if (!this.document) {
       return null;
     }

@@ -92,13 +92,6 @@ export class DialogService {
     this.navigateToDialog([DialogPath.PLAY_VIDEO, videoId]);
   }
 
-  public openCalendarEventDialog(calendarId: string, time: number, documentId?: string, stemIndex?: number) {
-    const path = [DialogPath.CALENDAR_EVENT, calendarId, time];
-    documentId && path.push(documentId);
-    isNotNullOrUndefined(stemIndex) && path.push(stemIndex);
-    this.navigateToDialog(path);
-  }
-
   private navigateToDialog(path: any[]) {
     return this.router.navigate(['', {outlets: {dialog: path, fsdialog: null}}], {queryParamsHandling: 'preserve'});
   }

@@ -2,7 +2,6 @@
                [performingAction]="performingAction$ | async"
                [submitDisabled]="formInvalid$ | async"
                [showClose]="!(preventClose$ | async)"
-               [fitToScreen]="true"
                (onSubmit)="onSubmit()"
                (onClose)="onClose()">
   <span class="title" i18n="@@resource.new.dialog.title">

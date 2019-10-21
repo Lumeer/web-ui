@@ -11,7 +11,9 @@
                      [collection]="collection"
                      [document]="document"
                      [query]="query$ | async"
-                     [permissions]="collection | collectionPermissions | async">
+                     [permissions]="collection | collectionPermissions | async"
+                     [toolbarRef]="toolbarRef"
+                     (documentChanged)="onDocumentChanged($event)">
     </document-detail>
     <links-list
       *ngIf="collection && document && document.id"

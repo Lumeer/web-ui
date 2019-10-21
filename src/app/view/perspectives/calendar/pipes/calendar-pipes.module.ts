@@ -25,6 +25,7 @@ import {CalendarValuePropertyPipe} from './calendar-value-property.pipe';
 import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-set.pipe';
 import {CalendarModesToSelectPipe} from './calendar-modes-to-select.pipe';
 import {FirstDayOfWeekPipe} from './first-day-of-week.pipe';
+import {StemCollectionItemsPipe} from './stem-collection-items.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -35,6 +36,7 @@ import {FirstDayOfWeekPipe} from './first-day-of-week.pipe';
     CalendarRequiredPropertiesSetPipe,
     CalendarModesToSelectPipe,
     FirstDayOfWeekPipe,
+    StemCollectionItemsPipe,
   ],
   exports: [
     CalendarPropertyItemsPipe,
@@ -43,6 +45,7 @@ import {FirstDayOfWeekPipe} from './first-day-of-week.pipe';
     CalendarRequiredPropertiesSetPipe,
     CalendarModesToSelectPipe,
     FirstDayOfWeekPipe,
+    StemCollectionItemsPipe,
   ],
 })
 export class CalendarPipesModule {}

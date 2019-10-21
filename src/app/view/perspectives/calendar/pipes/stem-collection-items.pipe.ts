@@ -18,23 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Query} from '../../../core/store/navigation/query/query';
-import {Collection} from '../../../core/store/collections/collection';
-import {SelectItemModel} from '../../../shared/select/select-item/select-item.model';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {Collection} from '../../../../core/store/collections/collection';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'stemCollectionsItems',
 })
-export class StemCollectionsItemsPipe implements PipeTransform {
-  public transform(query: Query, collections: Collection[], stemIndex: number): SelectItemModel[] {
+export class StemCollectionItemsPipe implements PipeTransform {
+  public transform(
+    query: Query,
+    collections: Collection[],
+    permissions: Record<string, AllowedPermissions>
+  ): SelectItemModel[] {
     return (query.stems || []).reduce((models, stem, index) => {
-      if (isNotNullOrUndefined(stemIndex) && index !== stemIndex) {
-        return models;
-      }
-
       const collection = (collections || []).find(coll => coll.id === stem.collectionId);
-      if (collection) {
+      if (collection && permissions[collection.id] && permissions[collection.id].writeWithView) {
         models.push(this.collectionSelectItem(index, collection));
       }
       return models;
