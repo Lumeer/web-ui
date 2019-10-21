@@ -138,7 +138,7 @@ export class AttributeFunctionModalComponent implements OnInit {
     );
   }
 
-  private hideDialog() {
+  public hideDialog() {
     this.bsModalRef.hide();
   }
 

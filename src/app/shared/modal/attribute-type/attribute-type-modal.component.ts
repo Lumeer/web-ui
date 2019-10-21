@@ -126,7 +126,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
     );
   }
 
-  private hideDialog() {
+  public hideDialog() {
     this.bsModalRef.hide();
   }
 
