@@ -27,6 +27,7 @@
          [attr.maxlength]="skipValidation ? null : value?.config?.maxLength"
          (typeaheadOnSelect)="onSelect($event)"
          (typeaheadOnBlur)="onBlur()"
+         (blur)="onBlur()"
          (ngModelChange)="onInput()"
          class="border-0 w-100 h-100 px-1"
          [ngClass]="valid || skipValidation ? 'bg-transparent' : 'bg-danger-light'"
