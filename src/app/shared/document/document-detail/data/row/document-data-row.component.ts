@@ -26,6 +26,7 @@ import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {DataRowComponent} from '../../../../data/data-row-component';
+import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 
 @Component({
   selector: 'document-data-row',
@@ -101,14 +102,26 @@ export class DocumentDataRowComponent implements DataRowComponent {
 
   public onNewKey(value: string) {
     this.initialKey = null;
-    this.newKey.emit(value);
+    if (value !== this.getCurrentKey()) {
+      this.newKey.emit(value);
+    }
     this.onKeyInputCancel();
+  }
+
+  private getCurrentKey(): any {
+    return (this.row.attribute && this.row.attribute.name) || this.row.key;
   }
 
   public onNewValue(value: any) {
     this.initialValue = null;
-    this.newValue.emit(value);
+    if (value !== this.getCurrentValue()) {
+      this.newValue.emit(value);
+    }
     this.onDataInputCancel();
+  }
+
+  private getCurrentValue(): any {
+    return this.row.value;
   }
 
   public onValueFocus() {

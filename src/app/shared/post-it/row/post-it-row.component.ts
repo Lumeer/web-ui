@@ -95,14 +95,26 @@ export class PostItRowComponent implements DataRowComponent {
 
   public onNewKey(value: string) {
     this.initialKey = null;
-    this.newKey.emit(value);
-    this.keyEditing$.next(false);
+    if (value !== this.getCurrentKey()) {
+      this.newKey.emit(value);
+    }
+    this.onKeyInputCancel();
+  }
+
+  private getCurrentKey(): any {
+    return (this.row.attribute && this.row.attribute.name) || this.row.key;
   }
 
   public onNewValue(value: any) {
     this.initialValue = null;
-    this.newValue.emit(value);
-    this.editing$.next(false);
+    if (value !== this.getCurrentValue()) {
+      this.newValue.emit(value);
+    }
+    this.onDataInputCancel();
+  }
+
+  private getCurrentValue(): any {
+    return this.row.value;
   }
 
   public onValueFocus() {
