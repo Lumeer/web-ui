@@ -20,26 +20,29 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
-import {IconPickerComponent} from './icon-color/icon/icon-picker.component';
-import {ColorPickerComponent} from './icon-color/color/color-picker.component';
+import {IconChooseComponent} from './icon-color/icon/icon-choose.component';
+import {ColorChooseComponent} from './icon-color/color/color-choose.component';
 import {IconColorPickerComponent} from './icon-color/icon-color-picker.component';
-import {HighlightColorPipe} from './icon-color/color/highlight-color.pipe';
-import {IconIdPipe} from './icon-color/icon/icon-id.pipe';
+import {HighlightColorPipe} from './icon-color/pipes/highlight-color.pipe';
+import {IconIdPipe} from './icon-color/pipes/icon-id.pipe';
 import {PipesModule} from '../pipes/pipes.module';
-import {IconFilterPipe} from './icon-color/icon/icon-filter.pipe';
+import {IconFilterPipe} from './icon-color/pipes/icon-filter.pipe';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {DropdownModule} from '../dropdown/dropdown.module';
+import {ColorPickerComponent} from './color/color-picker.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, PipesModule, ColorPickerModule, DropdownModule],
   declarations: [
-    IconPickerComponent,
-    ColorPickerComponent,
+    IconChooseComponent,
+    ColorChooseComponent,
     IconColorPickerComponent,
+    ColorPickerComponent,
     HighlightColorPipe,
     IconIdPipe,
     IconFilterPipe,
+    ColorChooseComponent,
   ],
-  exports: [IconPickerComponent, ColorPickerComponent, IconColorPickerComponent],
+  exports: [IconColorPickerComponent, ColorPickerComponent],
 })
 export class PickerModule {}

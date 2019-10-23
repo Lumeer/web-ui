@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import isEqual from 'lodash/isEqual';
+import {deepObjectsEquals} from './common.utils';
 
 export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: number, ...items: T[]): T[] {
   const arrayCopy = [...array];
@@ -25,7 +25,7 @@ export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: nu
 }
 
 export function deepArrayEquals(array1: any[], array2: any[]): boolean {
-  return isEqual(array1, array2);
+  return deepObjectsEquals(array1, array2);
 }
 
 export function arrayStartsWith(longer: any[], shorter: any[]): boolean {
@@ -43,7 +43,7 @@ export function isArraySubset(superset: any[], subset: any[]): boolean {
 export function areArraysSame(array1: any[], array2: any[]): boolean {
   const a1 = array1 || [];
   const a2 = array2 || [];
-  return a1.length === a2.length && a1.every((value, index) => isEqual(value, a2[index]));
+  return a1.length === a2.length && a1.every((value, index) => deepObjectsEquals(value, a2[index]));
 }
 
 export function getArrayDifference<T>(bigArray: T[], smallArray: T[]): T[] {

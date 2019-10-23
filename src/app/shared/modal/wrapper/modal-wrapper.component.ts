@@ -23,8 +23,6 @@ import {
   Input,
   Output,
   EventEmitter,
-  HostListener,
-  AfterViewInit,
   ViewChild,
   ElementRef,
   Renderer2,
@@ -37,7 +35,7 @@ import {DialogType} from '../../../dialog/dialog-type';
   styleUrls: ['./modal-wrapper.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModalWrapperComponent implements AfterViewInit {
+export class ModalWrapperComponent {
   @ViewChild('modalHeader', {static: false})
   public headerElement: ElementRef;
 
@@ -72,57 +70,23 @@ export class ModalWrapperComponent implements AfterViewInit {
   public performingAction = false;
 
   @Input()
-  public fitToScreen: boolean;
+  public customHeader: boolean;
 
   @Output()
-  public close = new EventEmitter();
+  public onClose = new EventEmitter();
 
   @Output()
-  public submit = new EventEmitter();
+  public onSubmit = new EventEmitter();
 
   constructor(private renderer: Renderer2) {}
 
   public onCloseClick() {
-    this.close.next();
+    this.onClose.next();
   }
 
   public onSubmitClick() {
     if (!this.submitDisabled) {
-      this.submit.emit();
-    }
-  }
-
-  @HostListener('window:resize')
-  public onWindowResize() {
-    this.recomputeBodyHeightIfNeeded();
-  }
-
-  public ngAfterViewInit() {
-    this.recomputeBodyHeightIfNeeded();
-  }
-
-  public recomputeBodyHeightIfNeeded() {
-    if (!this.fitToScreen) {
-      return;
-    }
-
-    setTimeout(() => this.recomputeBodyHeight());
-  }
-
-  private recomputeBodyHeight() {
-    const large = window.matchMedia('(min-width: 992px)').matches;
-
-    if (large) {
-      const headerHeight = (this.headerElement && this.headerElement.nativeElement.offsetHeight) || 0;
-      const footerHeight = (this.footerElement && this.footerElement.nativeElement.offsetHeight) || 0;
-
-      this.renderer.setStyle(
-        this.bodyElement.nativeElement,
-        'max-height',
-        `calc(100% - ${headerHeight + footerHeight}px)`
-      );
-    } else {
-      this.renderer.setStyle(this.bodyElement.nativeElement, 'max-height', null);
+      this.onSubmit.emit();
     }
   }
 }

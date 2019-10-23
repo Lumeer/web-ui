@@ -134,7 +134,7 @@
   "bundlesize": [
     {
       "path": "./dist/lumeer/common*.js",
-      "maxSize": "6160b"
+      "maxSize": "10kb"
     },
     {
       "path": "./dist/lumeer/main*.js",

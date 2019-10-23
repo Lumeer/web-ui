@@ -167,6 +167,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.save.emit(dataValue);
     } else {
       this.resetSearchInput();
+      this.cancel.emit();
     }
   }
 

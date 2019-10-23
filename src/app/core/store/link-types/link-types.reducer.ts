@@ -55,7 +55,7 @@ function addLinkTypes(state: LinkTypesState, linkTypes: LinkType[]): LinkTypesSt
     return !oldLinkType || isLinkTypeNewer(linkType, oldLinkType);
   });
 
-  return linkTypesAdapter.addMany(filteredLinkTypes, newState);
+  return linkTypesAdapter.upsertMany(filteredLinkTypes, newState);
 }
 
 function isLinkTypeNewer(linkType: LinkType, oldLinkType: LinkType): boolean {

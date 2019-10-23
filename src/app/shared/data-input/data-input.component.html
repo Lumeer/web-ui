@@ -8,8 +8,9 @@
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValue($event)"
                       (cancel)="onCancel()"
-                      (focused)="emitFocus($event)"
-                      (dataBlur)="onDataBlur()">
+                      (onFocus)="emitFocus($event)"
+                      (dataBlur)="onDataBlur()"
+                      class="d-block">
   </address-data-input>
 
   <boolean-data-input *ngSwitchCase="constraintType.Boolean"
@@ -39,6 +40,7 @@
                        [skipValidation]="skipValidation"
                        [value]="dataValue"
                        (valueChange)="onValueChange($event)"
+                       (onFocus)="emitFocus($event)"
                        (save)="onSaveValue($event)"
                        (cancel)="onCancel()"
                        class="d-block">
@@ -52,6 +54,7 @@
                        (valueChange)="onValueChange($event)"
                        (save)="onSaveValue($event)"
                        (cancel)="onCancel()"
+                       (onFocus)="emitFocus($event)"
                        (dataBlur)="onDataBlur()"
                        class="d-block">
   </duration-data-input>
@@ -62,6 +65,7 @@
                     [readonly]="readonly"
                     [value]="dataValue"
                     (save)="onSaveValue($event)"
+                    (click)="emitFocus($event)"
                     (cancel)="onCancel()"
                     class="px-1">
   </files-data-input>
@@ -125,21 +129,12 @@
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
-                   (dataBlur)="onDataBlur()" >
+                   (dataBlur)="onDataBlur()">
   </user-data-input>
 
-  <text-data-input *ngSwitchDefault
-                   [focus]="focus"
-                   [readonly]="readonly"
-                   [skipValidation]="skipValidation"
-                   [value]="dataValue"
-                   (valueChange)="onValueChange($event)"
-                   (save)="onSaveValue($event)"
-                   (cancel)="onCancel()"
-                   (onFocus)="emitFocus($event)"
-                   (dataBlur)="onDataBlur()"
-                   class="d-block">
-  </text-data-input>
+  <ng-container *ngSwitchDefault
+                [ngTemplateOutlet]="textDataInput">
+  </ng-container>
 </ng-container>
 
 <ng-template #textDataInput>
@@ -147,6 +142,8 @@
                    [readonly]="readonly"
                    [skipValidation]="skipValidation"
                    [value]="dataValue"
+                   [placeholder]="placeholder"
+                   [suggestions]="suggestions"
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"

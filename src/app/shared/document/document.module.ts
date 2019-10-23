@@ -20,15 +20,40 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DocumentDetailComponent} from './document-detail/document-detail.component';
-import {KeyValueComponent} from './document-detail/key-value/key-value.component';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DataInputModule} from '../data-input/data-input.module';
-import {PostItDocumentModule} from './post-it/post-it-document.module';
+import {DocumentDetailHeaderComponent} from './document-detail/header/document-detail-header.component';
+import {DocumentDataComponent} from './document-detail/data/document-data.component';
+import {DocumentDataRowComponent} from './document-detail/data/row/document-data-row.component';
+import {DocumentDataRowIconsComponent} from './document-detail/data/row/icons/document-data-row-icons.component';
+import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
+import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
+import {ClickOutsideModule} from 'ng-click-outside';
+import {DocumentDetailHiddenInputComponent} from './document-detail/hidden-input/document-detail-hidden-input.component';
+import {ColorPickerModule} from 'ngx-color-picker';
+import {DefaultDataRowPipe} from './document-detail/header/default-data-row.pipe';
 
 @NgModule({
-  imports: [CommonModule, DataInputModule, InputModule, PipesModule, PostItDocumentModule],
-  declarations: [DocumentDetailComponent, KeyValueComponent],
-  exports: [DocumentDetailComponent, PostItDocumentModule],
+  imports: [
+    CommonModule,
+    DataInputModule,
+    InputModule,
+    PipesModule,
+    ClickOutsideModule,
+    ColorPickerModule,
+    AttributeTypeModalModule,
+    AttributeFunctionModalModule,
+  ],
+  declarations: [
+    DocumentDetailComponent,
+    DocumentDetailHeaderComponent,
+    DocumentDataComponent,
+    DocumentDataRowComponent,
+    DocumentDataRowIconsComponent,
+    DocumentDetailHiddenInputComponent,
+    DefaultDataRowPipe,
+  ],
+  exports: [DocumentDetailComponent],
 })
 export class DocumentModule {}

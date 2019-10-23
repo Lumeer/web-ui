@@ -1,0 +1,5 @@
+.main-data-input::ng-deep > * > * {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

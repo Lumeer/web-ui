@@ -21,10 +21,26 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ModalWrapperModule} from './wrapper/modal-wrapper.module';
 import {CreateResourceModalModule} from './create-resource/create-resource-modal.module';
+import {AttributeTypeModalModule} from './attribute-type/attribute-type-modal.module';
+import {AttributeFunctionModalModule} from './attribute-function/attribute-function-modal.module';
+import {DocumentDetailModalModule} from './document-detail/document-detail-modal.module';
 
 @NgModule({
   declarations: [],
-  imports: [CommonModule, ModalWrapperModule, CreateResourceModalModule],
-  exports: [ModalWrapperModule, CreateResourceModalModule],
+  imports: [
+    CommonModule,
+    ModalWrapperModule,
+    CreateResourceModalModule,
+    AttributeTypeModalModule,
+    AttributeFunctionModalModule,
+    DocumentDetailModalModule,
+  ],
+  exports: [
+    ModalWrapperModule,
+    CreateResourceModalModule,
+    AttributeTypeModalModule,
+    AttributeFunctionModalModule,
+    DocumentDetailModalModule,
+  ],
 })
 export class ModalModule {}

@@ -2,7 +2,7 @@
        [readonly]="readonly"
        [title]="value | formatDataValue"
        [value]="value | formatDataValue"
-       (focus)="focused.emit($event)"
+       (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        data-test="text-data-input"
        type="text">
@@ -11,7 +11,7 @@
   <input #addressInput
          [title]="value | formatDataValue"
          [value]="value | formatDataValue"
-         (focus)="onFocus()"
+         (focus)="onFocused()"
          (blur)="onBlur()"
          (input)="onInput($event)"
          class="border-0 w-100 h-100 px-1 bg-transparent"

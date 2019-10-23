@@ -73,7 +73,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   public dataBlur = new EventEmitter();
 
   @Output()
-  public focused = new EventEmitter<any>();
+  public onFocus = new EventEmitter<any>();
 
   @ViewChild('addressInput', {static: false})
   public addressInput: ElementRef<HTMLInputElement>;
@@ -137,7 +137,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     this.value$.next(dataValue.format());
   }
 
-  public onFocus() {
+  public onFocused() {
     if (this.dropdown) {
       this.dropdown.open();
     }
@@ -199,7 +199,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.addressInput.nativeElement.value = this.value.format();
+        this.addressInput && (this.addressInput.nativeElement.value = this.value.format());
         this.cancel.emit();
         return;
     }

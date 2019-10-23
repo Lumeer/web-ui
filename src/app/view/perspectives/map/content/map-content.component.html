@@ -5,6 +5,7 @@
                 [markers]="data.markers"
                 (mapMove)="onMapMove($event)"
                 (markerMove)="onMarkerMove($event)"
+                (detail)="onMarkerDetail($event)"
                 class="flex-grow-1">
     </map-render>
   </ng-container>

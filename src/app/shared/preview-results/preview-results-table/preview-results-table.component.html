@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="h-10em"
-       [class.table-responsive]="resizeable">
+       [class.table-responsive]="resizeable" #table>
     <table class="table table-sm" id="preview-results-table">
       <thead>
         <tr>
@@ -28,13 +28,15 @@
       </thead>
       <tbody>
         <tr *ngIf="documents.length === 0">
-          <td [attr.colspan]="collection.attributes.length" class="text-center" i18n="@@shared.preview.results.noResults">
-            No records found.
+          <td [attr.colspan]="collection.attributes.length" class="text-center font-weight-bold">
+            <h4 i18n="@@shared.preview.results.noResults">No records found.</h4>
           </td>
         </tr>
         <ng-container
           *ngFor="let document of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument">
           <tr class="clickable-row"
+              id="preview-result-row-{{document.id}}"
+              #tableRow
               [class.active]="document.id === selectedDocumentId"
               (click)="activate(document)">
             <td *ngFor="let attr of collection.attributes">

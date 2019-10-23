@@ -12,31 +12,23 @@
        [cdkDropListData]="column"
        [cdkDropListConnectedTo]="dragColumnsIds"
        (cdkDropListDropped)="onDropPostIt($event)">
-    <ng-container *ngFor="let card of cards; trackBy: trackByCard; let idx = index; let last = last">
-      <post-it-document
-        cdkDrag
-        id="{{columnSelectionId}}#{{card.dataResource.id}}"
-        class="card post-it"
-        *ngIf="{ tag: (card.dueHours | kanbanDueHoursTag) } as data"
-        [tag]="data.tag?.text"
-        [tagColor]="data.tag?.color"
-        [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
-        [cdkDragData]="card"
-        [cdkDragStartDelay]="dragDelay"
-        [class.mb-2]="!last"
-        [documentModel]="card.dataResource"
-        [collection]="collections | collectionById:card.dataResource.collectionId"
-        [query]="query"
-        [selectionHelper]="selectionHelper"
-        [perspectiveId]="columnSelectionId"
-        [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
-        [index]="idx"
-        [permissions]="permissions[card.dataResource.collectionId] || {}"
-        [constraintData]="constraintData"
-        (remove)="onRemoveDocument(card.dataResource)"
-        (toggleFavorite)="onToggleFavorite(card.dataResource)">
-      </post-it-document>
-    </ng-container>
+    <post-it *ngFor="let card of cards; trackBy: trackByCard; let last = last"
+             cdkDrag
+             id="{{postItIdPrefix}}#{{card.dataResource.id}}"
+             class="post-it"
+             [tag]="card.dueHours | kanbanDueHoursTag"
+             [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
+             [cdkDragData]="card"
+             [cdkDragStartDelay]="dragDelay"
+             [class.mb-2]="!last"
+             [dataResource]="card.dataResource"
+             [resource]="collections | collectionById:card.dataResource.collectionId"
+             [query]="query"
+             [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
+             [allowedPermissions]="permissions[card.dataResource.collectionId] || {}"
+             [constraintData]="constraintData"
+             (toggleFavorite)="onToggleFavorite(card)">
+    </post-it>
 
   </div>
 

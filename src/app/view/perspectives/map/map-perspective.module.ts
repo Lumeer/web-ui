@@ -30,9 +30,10 @@ import {MapAttributeGroupComponent} from './panel/attribute-group/map-attribute-
 import {MapAttributeIdsPipe} from './panel/map-attribute-ids.pipe';
 import {MapPositionCheckboxComponent} from './panel/position-checkbox/map-position-checkbox.component';
 import {MapLoadingComponent} from './content/loading/map-loading.component';
+import {ModalModule} from '../../../shared/modal/modal.module';
 
 @NgModule({
-  imports: [SharedModule, MapPerspectiveRoutingModule],
+  imports: [SharedModule, ModalModule, MapPerspectiveRoutingModule],
   declarations: [
     MapPerspectiveComponent,
     MapContentComponent,

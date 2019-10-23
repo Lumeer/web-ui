@@ -97,6 +97,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   @Output()
   public mapMove = new EventEmitter<MapPosition>();
 
+  @Output()
+  public detail = new EventEmitter<MapMarkerProperties>();
+
   public mapElementId: string;
 
   private mapboxMap: Map;
@@ -270,11 +273,15 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private createAllMakers(markers: MapMarkerProperties[]) {
     return markers.reduce((markersMap, properties) => {
-      const marker = createMapMarker(properties);
+      const marker = createMapMarker(properties, () => this.onMarkerDoubleClick(properties));
       marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
       markersMap[properties.document.id] = marker;
       return markersMap;
     }, {});
+  }
+
+  private onMarkerDoubleClick(marker: MapMarkerProperties) {
+    this.detail.emit(marker);
   }
 
   private addSourceAndLayers(markers: MapMarkerProperties[]) {

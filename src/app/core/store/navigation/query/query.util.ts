@@ -349,3 +349,11 @@ export function findBestStemConfigIndex(
 
   return 0;
 }
+
+export function filterStemsForCollection(collectionId: string, query: Query): Query {
+  if (query && (query.stems || []).length > 0) {
+    return {...query, stems: query.stems.filter(stem => stem.collectionId === collectionId)};
+  } else {
+    return {stems: [{collectionId}]};
+  }
+}

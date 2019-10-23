@@ -5,7 +5,7 @@
              [placeholderIcon]="collection.icon"
              [placeholderColor]="collection.color"
              [placeholderTitle]="collection.name"
-             [emptyValue]="'Choose...'"
+             [emptyValue]="emptyValueString"
              (select)="onSelect($event)"
              (remove)="onRemove()">
 </select-item>

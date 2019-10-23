@@ -1,0 +1,33 @@
+<document-detail-modal [collection]="collection$ | async"
+                       [document]="document$ | async"
+                       [toolbarRef]="toolbar"
+                       (documentChanged)="onDocumentChanged($event)">
+</document-detail-modal>
+
+<ng-template #toolbar>
+
+  <div class="d-flex flex-row flex-nowrap align-items-center mb-3">
+
+    <select-item *ngIf="!document"
+      class="d-block mr-2"
+      [items]="query$ | async | stemCollectionsItems:(collections$ | async):permissions"
+      [removable]="false"
+      [selectedId]="stemIndex$ | async"
+      (select)="onStemIndexSelect($event)">
+    </select-item>
+
+    <div class="custom-control custom-checkbox">
+      <input id="allDayCheckbox"
+             [attr.checked]="allDay$ | async"
+             [checked]="allDay$ | async"
+             (change)="onAllDayChecked($event.target.checked)"
+             type="checkbox"
+             class="custom-control-input">
+      <label for="allDayCheckbox"
+             class="custom-control-label">
+      </label>
+      <span i18n="@@dialog.create.calendar.event.allDay">All day event</span>
+    </div>
+
+  </div>
+</ng-template>

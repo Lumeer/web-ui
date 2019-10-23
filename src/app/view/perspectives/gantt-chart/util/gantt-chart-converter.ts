@@ -383,7 +383,7 @@ export class GanttChartConverter {
         end: interval[1].value,
         progress: createProgress(progress),
         dependencies: validDataResourceIdsMap[dataResource.id] || [],
-        allowedDependencies: validIds,
+        allowedDependencies: validIds.filter(id => id !== dataResource.id),
         barColor: shadeColor(taskColor, 0.5),
         progressColor: shadeColor(taskColor, 0.3),
         startDrag: startEditable,

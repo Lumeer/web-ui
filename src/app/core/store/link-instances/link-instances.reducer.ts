@@ -39,7 +39,7 @@ export function linkInstancesReducer(
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
     case LinkInstancesActionType.DUPLICATE_SUCCESS:
-      return linkInstancesAdapter.addMany(action.payload.linkInstances, state);
+      return linkInstancesAdapter.upsertMany(action.payload.linkInstances, state);
     case LinkInstancesActionType.CLEAR_BY_LINK_TYPE:
       return linkInstancesAdapter.removeMany(
         linkInstance => linkInstance.linkTypeId === action.payload.linkTypeId,
@@ -59,7 +59,7 @@ function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction
     return !oldLinkInstance || isLinkInstanceNewer(linkInstance, oldLinkInstance);
   });
 
-  return linkInstancesAdapter.addMany(filteredLinkInstances, newState);
+  return linkInstancesAdapter.upsertMany(filteredLinkInstances, newState);
 }
 
 function isLinkInstanceNewer(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {

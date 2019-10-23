@@ -17,10 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {ConstraintData} from '../../../core/model/data/constraint';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  QueryList,
+  SimpleChange,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {ConstraintData} from '../../../core/model/data/constraint';
 
 const PAGE_SIZE = 100;
 
@@ -30,7 +44,7 @@ const PAGE_SIZE = 100;
   styleUrls: ['./preview-results-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PreviewResultsTableComponent implements OnChanges {
+export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   @Input()
   public documents: DocumentModel[];
 
@@ -49,16 +63,31 @@ export class PreviewResultsTableComponent implements OnChanges {
   @Input()
   public resizeable = true;
 
-  public page = 0;
-
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
+
+  @ViewChild('table', {static: false, read: ElementRef})
+  public tableElement: ElementRef;
+
+  @ViewChildren('tableRow')
+  public rowsElements: QueryList<ElementRef>;
+
+  public page = 0;
 
   public readonly pageSize = PAGE_SIZE;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.documents && this.selectedDocumentId) {
       this.countPageForDocument(this.selectedDocumentId);
+    }
+    if (changes.collection) {
+      this.resetScrollIfNeeded(changes.collection);
+    }
+  }
+
+  private resetScrollIfNeeded(change: SimpleChange) {
+    if (change.previousValue && change.currentValue && change.previousValue.id !== change.currentValue.id) {
+      this.tableElement.nativeElement.scrollTop = 0;
     }
   }
 
@@ -88,5 +117,22 @@ export class PreviewResultsTableComponent implements OnChanges {
 
   public trackByDocument(index: number, document: DocumentModel): string {
     return document.correlationId || document.id;
+  }
+
+  public ngAfterViewInit() {
+    this.scrollToCurrentRow();
+  }
+
+  private scrollToCurrentRow() {
+    if (this.selectedDocumentId && this.rowsElements) {
+      const id = `preview-result-row-${this.selectedDocumentId}`;
+      const index = this.rowsElements.toArray().findIndex(elem => elem.nativeElement.id === id);
+      if (index > 0) {
+        const rowElement = this.rowsElements.toArray()[index - 1]; // because of sticky header
+        setTimeout(() => {
+          rowElement && rowElement.nativeElement.scrollIntoView();
+        });
+      }
+    }
   }
 }

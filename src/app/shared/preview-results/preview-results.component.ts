@@ -23,15 +23,12 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnDestroy,
   OnInit,
   Output,
-  SimpleChange,
   SimpleChanges,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, take, withLatestFrom} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
 import {ConstraintData} from '../../core/model/data/constraint';
 import {ConstraintDataService} from '../../core/service/constraint-data.service';
 import {AppState} from '../../core/store/app.state';
@@ -40,24 +37,35 @@ import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectNavigation, selectViewCursor} from '../../core/store/navigation/navigation.state';
-import {Query, QueryStem} from '../../core/store/navigation/query/query';
-import {getQueryFiltersForCollection} from '../../core/store/navigation/query/query.util';
-import {Workspace} from '../../core/store/navigation/workspace';
+import {Query} from '../../core/store/navigation/query/query';
+import {filterStemsForCollection, getQueryFiltersForCollection} from '../../core/store/navigation/query/query.util';
 import {generateCorrelationId} from '../utils/resource.utils';
+import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
+import {Project} from '../../core/store/projects/project';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {Perspective} from '../../view/perspectives/perspective';
+import {QueryAction} from '../../core/model/query-action';
+import {Router} from '@angular/router';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 @Component({
   selector: 'preview-results',
   templateUrl: './preview-results.component.html',
-  styleUrls: ['./preview-results.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() public selectedCollection: Collection;
+export class PreviewResultsComponent implements OnInit, OnChanges {
+  @Input()
+  public selectedCollection: Collection;
 
-  @Input() public selectedDocument: DocumentModel;
+  @Input()
+  public selectedDocument: DocumentModel;
+
+  @Input()
+  public query: Query;
+
+  @Input()
+  public workspace: Workspace;
 
   @Output()
   public selectCollection = new EventEmitter<Collection>();
@@ -66,174 +74,50 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
   public selectDocument = new EventEmitter<DocumentModel>();
 
   public collections$: Observable<Collection[]>;
-
   public documents$: Observable<DocumentModel[]>;
-  public loaded$ = new BehaviorSubject<boolean>(false);
-
   public constraintData$: Observable<ConstraintData>;
+  public loaded$: Observable<boolean>;
+  public project$: Observable<Project>;
 
-  private allSubscriptions = new Subscription();
-  private dataSubscription = new Subscription();
-  private collectionSubscription = new Subscription();
-
-  private query: Query;
-
-  constructor(private store$: Store<AppState>, private constraintDataService: ConstraintDataService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private router: Router,
+    private constraintDataService: ConstraintDataService
+  ) {}
 
   public ngOnInit() {
-    this.subscribeAll();
-    this.updateDefaultCollectionSubscription();
+    this.subscribeData();
+  }
+
+  private subscribeData() {
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.constraintData$ = this.constraintDataService.observeConstraintData();
   }
 
-  private subscribeAll() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-
-    this.allSubscriptions.add(
-      this.store$
-        .pipe(
-          select(selectNavigation),
-          filter(navigation => this.validWorkspace(navigation.workspace)),
-          withLatestFrom(this.store$.pipe(select(selectCollectionsByQuery)))
-        )
-        .subscribe(([navigation, collections]) => {
-          this.query = navigation.query;
-          this.checkCollectionsAfterQueryChange(collections);
-        })
-    );
-  }
-
-  private validWorkspace(workspace: Workspace): boolean {
-    return !!(workspace && workspace.organizationCode && workspace.projectCode);
-  }
-
-  private checkCollectionsAfterQueryChange(newCollections: Collection[]) {
-    if (!this.selectedCollection) {
-      return;
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.selectedCollection || changes.query) {
+      this.subscribeToDocuments();
     }
+  }
 
-    const isCollectionIncluded = !!newCollections.find(coll => coll.id === this.selectedCollection.id);
-
-    if (isCollectionIncluded) {
-      this.getData(this.selectedCollection);
+  private subscribeToDocuments() {
+    if (this.selectedCollection && this.query) {
+      const collectionQuery = filterStemsForCollection(this.selectedCollection.id, this.query);
+      this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery)));
+      this.loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)));
     } else {
-      this.updateDefaultCollectionSubscription();
+      this.documents$ = of([]);
+      this.loaded$ = of(true);
     }
-  }
-
-  private updateDefaultCollectionSubscription() {
-    this.collectionSubscription.unsubscribe();
-    this.collectionSubscription = this.store$
-      .pipe(
-        select(selectCollectionsByQuery),
-        filter(collections => this.shouldChangeSelectedCollection(collections)),
-        take(1),
-        withLatestFrom(this.store$.pipe(select(selectViewCursor)))
-      )
-      .subscribe(([collections, cursor]) => {
-        let collection: Collection;
-        if (cursor && cursor.collectionId) {
-          collection = collections.find(c => c.id === cursor.collectionId);
-        }
-        if (!collection) {
-          collection = collections[0];
-        }
-
-        this.setActiveCollection(collection);
-      });
-  }
-
-  private shouldChangeSelectedCollection(collections: Collection[]): boolean {
-    return (
-      collections.length > 0 &&
-      (!this.selectedCollection || !collections.find(coll => coll.id === this.selectedCollection.id))
-    );
   }
 
   public setActiveCollection(collection: Collection) {
     this.selectCollection.emit(collection);
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedCollection && this.shouldGetData(changes.selectedCollection)) {
-      this.getData(this.selectedCollection);
-    }
-  }
-
-  private shouldGetData(selectedChange: SimpleChange): boolean {
-    return (
-      selectedChange.currentValue &&
-      (!selectedChange.previousValue || selectedChange.currentValue.id !== selectedChange.previousValue.id)
-    );
-  }
-
-  private filterStems(collection: Collection, stems: QueryStem[]): QueryStem[] {
-    if (stems.length > 0) {
-      return stems.filter(stem => stem.collectionId === collection.id);
-    } else {
-      return [{collectionId: collection.id}];
-    }
-  }
-
-  private getData(collection: Collection) {
-    const collectionQuery = {
-      ...this.query,
-      stems: this.filterStems(collection, (this.query && this.query.stems) || []),
-    };
-    this.updateDataSubscription(collectionQuery);
-    this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
-
-    this.loaded$.next(false);
-    this.store$
-      .pipe(
-        select(selectQueryDocumentsLoaded(collectionQuery)),
-        filter(loaded => loaded),
-        take(1)
-      )
-      .subscribe(loaded => this.loaded$.next(loaded));
-  }
-
-  private updateDataSubscription(collectionQuery: Query) {
-    this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery)));
-
-    this.dataSubscription.unsubscribe();
-    this.dataSubscription = this.documents$
-      .pipe(
-        filter(documents => this.shouldChangeSelectedDocument(documents)),
-        take(1),
-        withLatestFrom(this.store$.pipe(select(selectViewCursor)))
-      )
-      .subscribe(([documents, cursor]) => {
-        let document: DocumentModel;
-        if (cursor && cursor.documentId) {
-          document = documents.find(d => d.id === cursor.documentId);
-        }
-        if (!document) {
-          document = documents[0];
-        }
-
-        this.setActiveDocument(document);
-      });
-  }
-
-  private shouldChangeSelectedDocument(documents: DocumentModel[]): boolean {
-    return (
-      documents.length > 0 && (!this.selectedDocument || !documents.find(doc => doc.id === this.selectedDocument.id))
-    );
-  }
-
   public setActiveDocument(document: DocumentModel) {
     this.selectDocument.emit(document);
-  }
-
-  public ngOnDestroy() {
-    this.unsubscribeAll();
-  }
-
-  private unsubscribeAll() {
-    this.allSubscriptions.unsubscribe();
-    this.dataSubscription.unsubscribe();
-    this.collectionSubscription.unsubscribe();
   }
 
   public onNewDocument() {
@@ -247,12 +131,22 @@ export class PreviewResultsComponent implements OnInit, OnDestroy, OnChanges {
             getQueryFiltersForCollection(this.query, this.selectedCollection.id)
           ),
         },
-        callback: id => {
+        onSuccess: id => {
           this.store$.dispatch(
             new NavigationAction.SetViewCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}})
           );
         },
       })
     );
+  }
+
+  public switchToCollectionsTab() {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
+      queryParams: {action: QueryAction.CreateCollection},
+    });
+  }
+
+  private workspacePath(): string {
+    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 }

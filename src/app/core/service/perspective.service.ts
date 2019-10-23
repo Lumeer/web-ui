@@ -61,7 +61,7 @@ export class PerspectiveService {
         const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
         viewPath.push(perspective.toString());
 
-        if (queryToSet) {
+        if (queryToSet || cursor) {
           this.router.navigate(viewPath, {
             queryParams: {
               [QueryParam.Query]: queryToSet,

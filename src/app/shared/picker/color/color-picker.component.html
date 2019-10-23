@@ -1,0 +1,24 @@
+<dropdown [origin]="origin"
+  [positions]="dropdownPositions"
+  [minWidth]="230"
+  [minHeight]="434">
+
+  <div
+    [colorPicker]="color"
+    [cpToggle]="true"
+    (colorPickerSelect)="onSelect($event)"
+    (colorPickerCancel)="onCancel()"
+    [cpDialogDisplay]="'inline'"
+    [cpSaveClickOutside]="false"
+    [cpCloseClickOutside]="false"
+    [cpPresetColors]="localPalette"
+    cpPresetLabel=""
+    cpAlphaChannel="disabled"
+    cpDisableInput="true"
+    cpOKButton="true"
+    cpOKButtonText="Save"
+    i18n-cpOKButtonText="@@button.save"
+    cpOKButtonClass="btn btn-sm btn-primary">
+  </div>
+
+</dropdown>

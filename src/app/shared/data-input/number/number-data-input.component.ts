@@ -112,7 +112,7 @@ export class NumberDataInputComponent implements OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.numberInput.nativeElement.value = this.value.format();
+        this.numberInput && (this.numberInput.nativeElement.value = this.value.format());
         this.cancel.emit();
         return;
     }

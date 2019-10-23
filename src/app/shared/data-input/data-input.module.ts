@@ -45,6 +45,7 @@ import {DataCursorPipe} from './data-cursor.pipe';
 import {FileTypeIconPipe} from './files/file-type-icon.pipe';
 import {FilesDropdownComponent} from './files/dropdown/files-dropdown.component';
 import {FileAttachmentButtonComponent} from './files/button/file-attachment-button.component';
+import {PickerModule} from '../picker/picker.module';
 
 @NgModule({
   imports: [
@@ -55,6 +56,7 @@ import {FileAttachmentButtonComponent} from './files/button/file-attachment-butt
     DateTimeModule,
     DirectivesModule,
     ColorPickerModule,
+    PickerModule,
     GravatarModule,
     TypeaheadModule,
     DropdownModule,

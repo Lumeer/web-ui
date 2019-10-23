@@ -1,80 +1,13 @@
-<ng-container *ngIf="collection | collectionPermissions | async as allowedPermissions">
-<ng-container *ngIf="{constraintData: constraintData$ | async} as data">
-  <div class="row mt-3 mb-4">
-    <div class="col-8 d-flex align-bottom align-self-end">
-      <div class="align-text-bottom w-100">
-        <h4 class="mb-0 d-flex">
-          <span [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</span>&nbsp;
-          <data-input class="flex-fill"
-            [readonly]="true"
-            [value]="state?.summary$ | async"
-            [constraint]="(state?.attribute$ | async)?.constraint"
-            [constraintData]="data.constraintData">
-          </data-input>
-        </h4>
-      </div>
-    </div>
-    <div class="col small text-right d-flex flex-column align-bottom text-notice">
-      <div class="justify-content-end w-100">
-        <span i18n="@@document.detail.version">Version {{document.dataVersion}}</span><br/>
-        <span i18n="@@document.detail.createdBy">Created on {{document.creationDate | date : 'mediumDate'}} by {{createdBy$ | async}}</span>
-        <span *ngIf="document.updateDate" i18n="@@document.detail.modifiedBy"><br/>Last modified on {{document.updateDate | date : 'mediumDate'}} by {{updatedBy$ | async}}</span>
-      </div>
-      <div class="w-100 justify-content-end mt-2 toolbar">
-        <i class="{{tableIcon}} mr-3 clickable"
-           aria-hidden="true"
-           *ngIf="allowedPermissions.writeWithView"
-           title="Switch to Table perspective"
-           i18n-title="@@document.detail.switch.table"
-           (click)="onSwitchToTable()"
-        ></i>
-        <ng-container *ngIf="allowedPermissions.read">
-          <i *ngIf="state?.favorite$ | async" class="fas fa-fw fa-star text-warning clickable mr-2"
-             title="Remove from favorites"
-             i18n-title="@@document.detail.favorite.remove"
-             (click)="onToggleFavorite()"></i>
-          <i *ngIf="!(state?.favorite$ | async)"
-             class="far fa-fw fa-star text-warning clickable mr-2"
-             title="Add to favorites"
-             i18n-title="@@document.detail.favorite.add"
-             (click)="onToggleFavorite()"></i>
-        </ng-container>
-        <i class="fas fa-fw fa-trash text-danger clickable"
-           aria-hidden="true"
-           *ngIf="allowedPermissions.writeWithView"
-           title="Remove Record"
-           i18n-title="@@document.detail.remove"
-           (click)="onRemoveDocument()"
-        ></i>
-      </div>
-
-
-    </div>
-  </div>
-  <ng-container *ngFor="let row of state.rows$ | async; trackBy: getTrackBy; let idx = index">
-    <key-value *ngIf="!row.remove"
-               [key]="row.newName || row.name"
-               [value]="row.newValue || row.value"
-               [constraint]="(collection | collectionAttribute : row.id)?.constraint"
-               [constraintData]="data.constraintData"
-               [dataCursor]="document | dataCursor : row.id"
-               [defaultAttribute]="row.id === collection?.defaultAttributeId"
-               [readOnly]="!allowedPermissions.writeWithView || !(collection | collectionAttributeEditable : row.id: permissions: query)"
-               (keyValueChange)="submitRowChange(idx, $event)"
-               (remove)="onRemoveRow(idx)"
-               [warning]="row.warning"
-               [configurable]="true"
-               (onConfigure)="fireConstraintConfig(row.id)"
-               (onFunction)="fireFunctionConfig(row.id, $event)">
-    </key-value>
-  </ng-container>
-  <div *ngIf="allowedPermissions.writeWithView" class="row border-top mb-5">
-    <div class="col">
-      <button class="btn btn-sm btn-light btn-block my-2" (click)="addAttrRow()">
-        <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
-        <span i18n="@@document.detail.attribute.add">Add Row</span>
-      </button>
-    </div>
-  </div>
-</ng-container>
-</ng-container>
+<document-data [collection]="collection"
+               [document]="document"
+               [permissions]="permissions"
+               [constraintData]="constraintData$ | async"
+               [workspace]="workspace$ | async"
+               [query]="query"
+               [toolbarRef]="toolbarRef"
+               (attributeTypeClick)="onAttributeTypeClick($event)"
+               (attributeFunctionCLick)="onAttributeFunctionClick($event)"
+               (removeDocument)="onRemoveDocument()"
+               (switchToTable)="onSwitchToTable()"
+               (documentChanged)="documentChanged.emit($event)">
+</document-data>

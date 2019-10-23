@@ -28,9 +28,7 @@ import {
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, first, mergeMap, take, withLatestFrom} from 'rxjs/operators';
-import {User} from '../../../core/store/users/user';
-import {selectAllUsers} from '../../../core/store/users/users.state';
+import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -42,16 +40,10 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {DialogService} from '../../../dialog/dialog.service';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
-import {TranslationService} from '../../../core/service/translation.service';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {calendarConfigIsEmpty, checkOrTransformCalendarConfig} from './util/calendar-util';
-import {BsModalService} from 'ngx-bootstrap';
-import {ChooseLinkDocumentModalComponent} from '../kanban/modal/choose-link-document/choose-link-document-modal.component';
-import {DetailDialogComponent} from '../../../shared/detail-dialog/detail-dialog.component';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
 @Component({
   selector: 'calendar',
@@ -65,8 +57,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<CalendarConfig>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public users$: Observable<User[]>;
-  public readonly durationUnitsMap: DurationUnitsMap;
+  public constraintData$: Observable<ConstraintData>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
@@ -77,12 +68,8 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private dialogService: DialogService,
-    private translationService: TranslationService,
-    private modalService: BsModalService
-  ) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+    private constraintService: ConstraintDataService
+  ) {}
 
   public ngOnInit() {
     this.initCalendar();
@@ -153,7 +140,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.constraintService.observeConstraintData();
   }
 
   public onConfigChanged(config: CalendarConfig) {
@@ -167,22 +154,6 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
     this.store$.dispatch(new CalendarsAction.RemoveCalendar({calendarId: this.calendarId}));
-  }
-
-  public onNewEvent(time: number) {
-    this.dialogService.openCalendarEventDialog(this.calendarId, time);
-  }
-
-  public onUpdateEvent(data: {documentId: string; collectionId: string; stemIndex: number}) {
-    combineLatest([
-      this.store$.pipe(select(selectDocumentById(data.documentId))),
-      this.store$.pipe(select(selectCollectionById(data.collectionId))),
-    ])
-      .pipe(first())
-      .subscribe(([document, collection]) => {
-        const config = {initialState: {document, collection}, keyboard: true, class: 'modal-lg'};
-        this.modalService.show(DetailDialogComponent, config);
-      });
   }
 
   public onSidebarToggle() {

@@ -30,7 +30,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {TypeaheadDirective, TypeaheadMatch} from 'ngx-bootstrap/typeahead';
+import {TypeaheadMatch} from 'ngx-bootstrap/typeahead';
 import {SelectDataValue} from '../../../core/model/data-value/select.data-value';
 import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint-config';
 import {KeyCode} from '../../key-code';
@@ -73,9 +73,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(TypeaheadDirective, {static: false})
-  public typeahead: TypeaheadDirective;
-
   public options: SelectConstraintOption[] = [];
 
   public text = '';
@@ -105,7 +102,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     }));
   }
 
-  public ngAfterViewChecked(): void {
+  public ngAfterViewChecked() {
     if (this.setFocus) {
       this.setFocusToInput();
       this.setFocus = false;

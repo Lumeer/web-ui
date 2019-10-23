@@ -31,7 +31,7 @@ import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContextMenuService} from 'ngx-contextmenu';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, first, map, switchMap, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {AppState} from '../../../../../../core/store/app.state';
@@ -49,7 +49,6 @@ import {TableConfigColumn, TableModel} from '../../../../../../core/store/tables
 import {findTableColumn, getTablePart, splitColumnPath} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction, TablesActionType} from '../../../../../../core/store/tables/tables.action';
 import {selectTableCursorSelected} from '../../../../../../core/store/tables/tables.selector';
-import {DialogService} from '../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../../../../shared/key-code';
 import {
@@ -62,6 +61,12 @@ import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-cha
 import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
+import {AttributeTypeModalComponent} from '../../../../../../shared/modal/attribute-type/attribute-type-modal.component';
+import {BsModalService} from 'ngx-bootstrap';
+import {selectCurrentUser} from '../../../../../../core/store/users/users.state';
+import {userHasManageRoleInResource} from '../../../../../../shared/utils/resource.utils';
+import {Organization} from '../../../../../../core/store/organizations/organization';
+import {AttributeFunctionModalComponent} from '../../../../../../shared/modal/attribute-function/attribute-function-modal.component';
 
 @Component({
   selector: 'table-single-column',
@@ -120,7 +125,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     private changeDetector: ChangeDetectorRef,
     private columnBackgroundPipe: ColumnBackgroundPipe,
     private contextMenuService: ContextMenuService,
-    private dialogService: DialogService,
+    private modalService: BsModalService,
     private i18n: I18n,
     private store$: Store<AppState>
   ) {}
@@ -348,12 +353,13 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   public onConfigure() {
-    if (this.collection) {
-      this.dialogService.openCollectionAttributeConfigDialog(this.collection.id, this.attribute.id);
-    }
-    if (this.linkType) {
-      this.dialogService.openLinkTypeAttributeConfigDialog(this.linkType.id, this.attribute.id);
-    }
+    const collectionId = this.collection && this.collection.id;
+    const linkTypeId = this.linkType && this.linkType.id;
+
+    const initialState = {attributeId: this.attribute.id, collectionId, linkTypeId};
+    const config = {initialState, keyboard: false};
+    config['backdrop'] = 'static';
+    return this.modalService.show(AttributeTypeModalComponent, config);
   }
 
   public onFunctionEdit() {
@@ -365,7 +371,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
         if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
           this.notifyFunctionsLimit();
         } else {
-          this.dialogService.openCollectionAttributeFunction(this.collection.id, this.attribute.id);
+          this.showAttributeFunctionDialog({collectionId: this.collection.id, attributeId: this.attribute.id});
         }
       }
       if (this.linkType) {
@@ -375,38 +381,60 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
         if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
           this.notifyFunctionsLimit();
         } else {
-          this.dialogService.openLinkTypeAttributeFunction(this.linkType.id, this.attribute.id);
+          this.showAttributeFunctionDialog({linkTypeId: this.linkType.id, attributeId: this.attribute.id});
         }
       }
     });
   }
 
+  private showAttributeFunctionDialog(initialState: any) {
+    const config = {initialState, keyboard: false, class: 'modal-xxl'};
+    config['backdrop'] = 'static';
+    return this.modalService.show(AttributeFunctionModalComponent, config);
+  }
+
   private notifyFunctionsLimit() {
-    this.store$
-      .pipe(
-        select(selectOrganizationByWorkspace),
-        map(organization => organization.code),
-        first()
-      )
-      .subscribe(code => {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
-        const message = this.i18n({
-          id: 'function.create.serviceLimits',
-          value:
-            'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
-        });
-        this.store$.dispatch(
-          new NotificationsAction.Confirm({
-            title,
-            message,
-            action: new RouterAction.Go({
-              path: ['/organization', code, 'detail'],
-              extras: {fragment: 'orderService'},
-            }),
-            yesFirst: false,
-          })
-        );
+    combineLatest([
+      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+    ])
+      .pipe(take(1))
+      .subscribe(([curentUser, organization]) => {
+        if (userHasManageRoleInResource(curentUser, organization)) {
+          this.notifyFunctionsLimitWithRedirect(organization);
+        } else {
+          this.notifyFunctionsLimitWithoutRights();
+        }
       });
+  }
+
+  private notifyFunctionsLimitWithRedirect(organization: Organization) {
+    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+    const message = this.i18n({
+      id: 'function.create.serviceLimits',
+      value:
+        'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
+    });
+    this.store$.dispatch(
+      new NotificationsAction.Confirm({
+        title,
+        message,
+        action: new RouterAction.Go({
+          path: ['/organization', organization.code, 'detail'],
+          extras: {fragment: 'orderService'},
+        }),
+        yesFirst: false,
+      })
+    );
+  }
+
+  private notifyFunctionsLimitWithoutRights() {
+    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+    const message = this.i18n({
+      id: 'function.create.serviceLimits.noRights',
+      value: 'You can have only a single function per table/link type in the Free Plan.',
+    });
+    this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }
 
   public onEdit() {

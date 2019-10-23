@@ -18,17 +18,17 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
-  Output,
+  Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  QueryList,
   SimpleChanges,
   ViewChildren,
-  QueryList,
-  OnInit,
-  OnDestroy,
 } from '@angular/core';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -44,7 +44,7 @@ import {distinctUntilChanged} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../core/constants';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {KanbanResourceCreate} from './column/footer/kanban-column-footer.component';
@@ -61,6 +61,10 @@ import {BsModalService} from 'ngx-bootstrap/modal';
 import {KanbanColumnComponent} from './column/kanban-column.component';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-favorite-toggle.service';
+import {SelectDataValue} from '../../../../core/model/data-value/select.data-value';
+import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {Constraint} from '../../../../core/model/constraint';
+import {DataValue} from '../../../../core/model/data-value';
 
 @Component({
   selector: 'kanban-columns',
@@ -109,9 +113,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
 
-  @Output()
-  public removeDocument = new EventEmitter<DocumentModel>();
-
   public readonly dragDelay = DRAG_DELAY;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
 
@@ -153,10 +154,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public onColumnsChange(data: {columns: KanbanColumn[]; otherColumn: KanbanColumn}) {
     const config = {...this.config, columns: data.columns, otherColumn: data.otherColumn};
     this.configChange.next(config);
-  }
-
-  public onRemoveDocument(document: DocumentModel) {
-    this.removeDocument.emit(document);
   }
 
   public createObjectInResource(resourceCreate: KanbanResourceCreate, column: KanbanColumn) {
@@ -235,7 +232,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.dispatch(
         new DocumentsAction.Create({
           document,
-          callback: documentId => this.onDocumentCreated(documentId, column),
+          onSuccess: documentId => this.onDocumentCreated(documentId, column),
         })
       );
     }
@@ -251,7 +248,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
     const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
     const constraint = findAttributeConstraint(collection.attributes, kanbanAttribute.attributeId);
-    data[kanbanAttribute.attributeId] = constraint.createDataValue(value).serialize();
+    data[kanbanAttribute.attributeId] = this.createValueByConstraint(constraint, value);
     return {collectionId: collection.id, data};
   }
 
@@ -260,9 +257,17 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
     if (collection) {
       const constraint = findAttributeConstraint(collection.attributes, attributeId);
-      const value = constraint.createDataValue(newValue).serialize();
+      const value = this.createValueByConstraint(constraint, newValue);
       const data = {...document.data, [attributeId]: value};
       this.patchDocumentData.emit({...document, data});
+    }
+  }
+
+  private createValueByConstraint(constraint: Constraint, newValue: any): any {
+    if (constraint && constraint.type === ConstraintType.Select) {
+      return new SelectDataValue(newValue, constraint.config as SelectConstraintConfig, true).serialize();
+    } else {
+      return constraint.createDataValue(newValue).serialize();
     }
   }
 
@@ -272,7 +277,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     this.configChange.next(config);
   }
 
-  public onFavoriteToggle(document: DocumentModel) {
+  public onToggleFavorite(document: DocumentModel) {
     this.toggleService.set(document.id, !document.favorite, document);
   }
 

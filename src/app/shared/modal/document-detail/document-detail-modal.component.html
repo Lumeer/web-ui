@@ -1,0 +1,34 @@
+<modal-wrapper
+  [type]="dialogType.Primary"
+  (onClose)="hideDialog()"
+  [showSubmit]="!document.id"
+  [performingAction]="performingAction$ | async"
+  [showHeader]="false"
+  (onSubmit)="onSubmit()">
+
+  <div class="body p-3">
+    <document-detail *ngIf="collection && document"
+                     [collection]="collection"
+                     [document]="document"
+                     [query]="query$ | async"
+                     [permissions]="collection | collectionPermissions | async"
+                     [toolbarRef]="toolbarRef"
+                     (documentChanged)="onDocumentChanged($event)">
+    </document-detail>
+    <links-list
+      *ngIf="collection && document && document.id"
+      [document]="document"
+      [collection]="collection"
+      (documentSelect)="selectCollectionAndDocument($event)">
+    </links-list>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.close">Close</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="fal fa-check"></i>&nbsp;<span i18n="@@button.create">Create</span>
+  </span>
+
+</modal-wrapper>

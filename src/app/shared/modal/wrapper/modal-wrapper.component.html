@@ -1,12 +1,18 @@
-<div class="modal-header bg-{{type}} justify-content-center align-items-center text-center p-3"
+<div class="modal-header"
+     [ngClass]="customHeader ? 'p-0' : ('bg-' + type  + ' justify-content-center align-items-center text-center p-3')"
      *ngIf="showHeader" #modalHeader>
-  <i *ngIf="icon" class="{{icon}} icon text-white mr-2"></i>
-  <h4 class="modal-title text-white">
-    <ng-content select=".title"></ng-content>
-  </h4>
-  <ng-content select=".description"></ng-content>
+  <ng-container *ngIf="!customHeader">
+    <i *ngIf="icon" class="{{icon}} icon text-white mr-2"></i>
+    <h4 class="modal-title text-white">
+      <ng-content select=".title"></ng-content>
+    </h4>
+    <ng-content select=".description"></ng-content>
+  </ng-container>
+  <ng-container *ngIf="customHeader">
+    <ng-content select=".custom-header"></ng-content>
+  </ng-container>
 </div>
-<div class="modal-body p-0" #modalBody [class.h-100]="fitToScreen">
+<div class="modal-body p-0" #modalBody>
   <ng-content select=".body"></ng-content>
 </div>
 <div class="modal-footer footer-bg p-3"

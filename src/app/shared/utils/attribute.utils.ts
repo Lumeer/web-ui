@@ -157,3 +157,8 @@ export function filterOutInvalidAttributeNameCharacters(lastName: string): strin
   const regex = new RegExp(`[${FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS.map(character => `\\${character}`)}]`, 'g');
   return (lastName || '').replace(regex, '');
 }
+
+export function filterUnusedAttributes(attributes: Attribute[], data: Record<string, any>): Attribute[] {
+  const usedAttributesIds = Object.keys(data || {});
+  return (attributes || []).filter(attribute => !usedAttributesIds.includes(attribute.id));
+}

@@ -48,14 +48,6 @@ import {KeyCode} from '../../key-code';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateResourceModalComponent implements OnInit, OnDestroy {
-  @ViewChild(CreateResourceDialogFormComponent, {static: false})
-  set content(content: CreateResourceDialogFormComponent) {
-    if (content) {
-      this.resourceFormComponent = content;
-      this.initFormStatusChanges();
-    }
-  }
-
   @Input()
   public resourceType: ResourceType;
 
@@ -67,6 +59,14 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
 
   @Input()
   public callback: (resource: Project | Organization) => void;
+
+  @ViewChild(CreateResourceDialogFormComponent, {static: false})
+  set content(content: CreateResourceDialogFormComponent) {
+    if (content) {
+      this.resourceFormComponent = content;
+      this.initFormStatusChanges();
+    }
+  }
 
   public contentValid$: Observable<boolean>;
   public performingAction$ = new BehaviorSubject(false);

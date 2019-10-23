@@ -23,8 +23,8 @@ import {DataValue} from './index';
 export class SelectDataValue implements DataValue {
   public readonly option: SelectConstraintOption;
 
-  constructor(public readonly value: any, public readonly config: SelectConstraintConfig) {
-    this.option = config && config.options && config.options.find(opt => String(opt.value) === String(value));
+  constructor(public readonly value: any, public readonly config: SelectConstraintConfig, byDisplayValue?: boolean) {
+    this.option = byDisplayValue ? findOptionByDisplayValue(config, value) : findOptionByValue(config, value);
   }
 
   public format(): string {
@@ -83,4 +83,12 @@ export class SelectDataValue implements DataValue {
     const nextIndex = (index + indexDelta) % options.length;
     return options[nextIndex];
   }
+}
+
+function findOptionByValue(config: SelectConstraintConfig, value: any): SelectConstraintOption {
+  return config && config.options && config.options.find(opt => String(opt.value) === String(value));
+}
+
+function findOptionByDisplayValue(config: SelectConstraintConfig, value: any): SelectConstraintOption {
+  return config && config.options && config.options.find(opt => String(opt.displayValue) === String(value));
 }

@@ -20,9 +20,8 @@
                    (createResource)="createObjectInResource($event, column)"
                    (updateDocument)="onUpdateDocument($event)"
                    (columnsChange)="onColumnsChange($event)"
-                   (removeDocument)="onRemoveDocument($event)"
                    (removeColumn)="onRemoveColumn(column)"
-                   (toggleFavorite)="onFavoriteToggle($event)">
+                   (toggleFavorite)="onToggleFavorite($event)">
     </kanban-column>
 
     <kanban-column *ngIf="config.otherColumn?.resourcesOrder?.length > 0"
@@ -39,8 +38,7 @@
                    (createResource)="createObjectInResource($event, config.otherColumn)"
                    (updateDocument)="onUpdateDocument($event)"
                    (columnsChange)="onColumnsChange($event)"
-                   (removeDocument)="onRemoveDocument($event)"
-                   (toggleFavorite)="onFavoriteToggle($event)">
+                   (toggleFavorite)="onToggleFavorite($event)">
     </kanban-column>
   </div>
 </div>

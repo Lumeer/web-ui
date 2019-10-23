@@ -21,12 +21,13 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {DataCursor} from './data-cursor';
+import {DataResource} from '../../core/model/resource';
 
 @Pipe({
   name: 'dataCursor',
 })
 export class DataCursorPipe implements PipeTransform {
-  public transform(entity: DocumentModel | LinkInstance, attributeId: string): DataCursor {
+  public transform(entity: DataResource, attributeId: string): DataCursor {
     const {collectionId} = entity as DocumentModel;
     const {linkTypeId} = entity as LinkInstance;
 

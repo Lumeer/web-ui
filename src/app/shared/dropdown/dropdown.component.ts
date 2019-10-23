@@ -52,6 +52,12 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
   @Input()
   public positions: DropdownPosition[] = [DropdownPosition.BottomStart];
 
+  @Input()
+  public minWidth: number;
+
+  @Input()
+  public minHeight: number;
+
   @ViewChild('dropdown', {static: false})
   public dropdown: TemplateRef<any>;
 
@@ -107,6 +113,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
       hasBackdrop: this.closeOnClickOutside,
       panelClass: ['position-absolute', 'w-max-content'],
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
+      minWidth: this.minWidth,
+      minHeight: this.minHeight,
       positionStrategy,
     };
   }

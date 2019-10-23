@@ -25,10 +25,23 @@ import {EmptyRecordsComponent} from './empty-records/empty-records.component';
 import {EmptySearchComponent} from './empty-search/empty-search.component';
 import {EmptyStateComponent} from './empty-state/empty-state.component';
 import {InvalidQueryComponent} from './invalid-query/invalid-query.component';
+import {EmptyDataComponent} from './empty-data/empty-data.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, PipesModule],
-  declarations: [EmptySearchComponent, EmptyStateComponent, EmptyRecordsComponent, InvalidQueryComponent],
-  exports: [EmptySearchComponent, EmptyStateComponent, EmptyRecordsComponent, InvalidQueryComponent],
+  declarations: [
+    EmptySearchComponent,
+    EmptyStateComponent,
+    EmptyRecordsComponent,
+    InvalidQueryComponent,
+    EmptyDataComponent,
+  ],
+  exports: [
+    EmptySearchComponent,
+    EmptyStateComponent,
+    EmptyRecordsComponent,
+    InvalidQueryComponent,
+    EmptyDataComponent,
+  ],
 })
 export class WarningMessageModule {}

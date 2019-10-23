@@ -26,6 +26,8 @@ export abstract class DraggablePlotMaker extends PlotMaker {
     this.dragEnabled = enabled;
   }
 
+  public abstract initDoubleClick();
+
   public abstract initDrag();
 
   public abstract destroyDrag();

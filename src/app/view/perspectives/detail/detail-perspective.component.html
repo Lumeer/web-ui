@@ -1,23 +1,24 @@
 <div class="container-fluid col-12 col-lg-10 col-xl-9">
-  <ng-container *ngIf="selected$ | async as selected">
+  <ng-container *ngIf="{selected: selected$ | async, query: query$ | async} as data">
     <preview-results
-      [selectedCollection]="selected.collection"
-      [selectedDocument]="selected.document"
+      class="mb-4 d-block"
+      [selectedCollection]="data.selected.collection"
+      [selectedDocument]="data.selected.document"
+      [query]="data.query"
+      [workspace]="workspace$ | async"
       (selectCollection)="selectCollection($event)"
       (selectDocument)="selectDocument($event)">
     </preview-results>
 
-    <div class="detail-card">
-      <document-detail *ngIf="selected.collection && selected.document"
-                       [collection]="selected.collection"
-                       [document]="selected.document"
-                       [query]="query$ | async"
+    <div class="card p-4 mb-4" *ngIf="data.selected.collection && data.selected.document">
+      <document-detail [collection]="data.selected.collection"
+                       [document]="data.selected.document"
+                       [query]="data.query"
                        [permissions]="collectionPermission$ | async">
       </document-detail>
       <links-list
-        *ngIf="selected.collection && selected.document"
-        [document]="selected.document"
-        [collection]="selected.collection"
+        [document]="data.selected.document"
+        [collection]="data.selected.collection"
         (documentSelect)="selectCollectionAndDocument($event)">
       </links-list>
     </div>

@@ -118,7 +118,7 @@ export class PercentageDataInputComponent implements OnChanges {
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.percentageInput.nativeElement.value = this.value.format('');
+        this.percentageInput && (this.percentageInput.nativeElement.value = this.value.format(''));
         this.cancel.emit();
         return;
     }

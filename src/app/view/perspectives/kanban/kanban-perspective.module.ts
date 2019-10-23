@@ -54,6 +54,7 @@ import {KanbanValueTypeSelectItemsPipe} from './pipes/kanban-value-type-select-i
 import {KanbanAggregateSelectItemsPipe} from './pipes/kanban-aggregate-select-items.pipe';
 import {KanbanCleanAttributePipe} from './pipes/kanban-clean-attribute.pipe';
 import {KanbanCleanValueAttributePipe} from './pipes/kanban-clean-value-attribute.pipe';
+import {PostItModule} from '../../../shared/post-it/post-it.module';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import {KanbanCleanValueAttributePipe} from './pipes/kanban-clean-value-attribut
     DropdownModule,
     PickerModule,
     PresenterModule,
+    PostItModule,
     PreviewResultsModule,
     ModalWrapperModule,
     NgxModalModule.forRoot(),

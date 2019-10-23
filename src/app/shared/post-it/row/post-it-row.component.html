@@ -1,0 +1,49 @@
+<div class="d-flex flex-nowrap flex-row wrapper" *ngIf="{readonly: !permissions?.writeWithView} as data">
+
+  <div class="flex-grow-1 row m-0">
+
+    <div class="col-6 col-md-5 col-lg-4 p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+      <data-input [cursor]="cursor"
+                  [value]="!(initialKey | isNullOrUndefined) ? initialKey : (row.attribute && row.attribute.name || row.key)"
+                  [constraintData]="constraintData"
+                  [focus]="true"
+                  [readonly]="!(keyEditing$ | async)"
+                  [placeholder]="placeholder"
+                  [suggestions]="unusedAttributes | attributesToDataSuggestions"
+                  (save)="onNewKey($event)"
+                  (dblclick)="onKeyInputDblClick($event)"
+                  (cancel)="onKeyInputCancel()"
+                  (click)="onKeyFocus()"
+                  (clickOutside)="onKeyInputCancel()"
+                  [class.editing]="keyEditing$ | async"
+                  class="h-100 w-100 p-1 data-input key"
+                  [class.cursor-pointer]="!data.readonly"
+                  [class.read-only]="data.readonly">
+      </data-input>
+
+    </div>
+
+    <div class="col-6 col-md-7 col-lg-8 p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+
+      <data-input [constraint]="row.attribute?.constraint"
+                  [cursor]="cursor"
+                  [value]="!(initialValue | isNullOrUndefined) ? initialValue : row.value"
+                  [constraintData]="constraintData"
+                  [focus]="true"
+                  [readonly]="readonly || !((editing$ | async) || row.attribute?.constraint?.type === booleanConstraintType)"
+                  (save)="onNewValue($event)"
+                  (dblclick)="onDataInputDblClick($event)"
+                  (cancel)="onDataInputCancel()"
+                  (click)="onValueFocus()"
+                  (clickOutside)="onDataInputCancel()"
+                  [class.editing]="editing$ | async"
+                  class="h-100 w-100 p-1 data-input value"
+                  [class.cursor-pointer]="!data.readonly"
+                  [class.read-only]="data.readonly">
+      </data-input>
+
+    </div>
+
+  </div>
+
+</div>

@@ -57,7 +57,7 @@ function addProjects(state: ProjectsState, action: ProjectsAction.GetSuccess): P
     return !oldProject || isProjectNewer(project, oldProject);
   });
 
-  return projectsAdapter.addMany(filteredProjects, newState);
+  return projectsAdapter.upsertMany(filteredProjects, newState);
 }
 
 function addOrUpdateProject(state: ProjectsState, project: Project): ProjectsState {

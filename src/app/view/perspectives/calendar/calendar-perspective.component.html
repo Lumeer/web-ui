@@ -22,12 +22,10 @@
                      [canManageConfig]="data.canManageConfig"
                      [config]="data.config"
                      [permissions]="permissions$ | async"
-                     [constraintData]="{users: users$ | async, durationUnitsMap: durationUnitsMap}"
+                     [constraintData]="constraintData$ | async"
                      [query]="data.query"
                      (patchData)="patchDocumentData($event)"
-                     (configChange)="onConfigChanged($event)"
-                     (newEvent)="onNewEvent($event)"
-                     (updateEvent)="onUpdateEvent($event)">
+                     (configChange)="onConfigChanged($event)">
     </calendar-events>
   </ng-container>
 

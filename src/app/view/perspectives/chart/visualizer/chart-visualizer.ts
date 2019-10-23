@@ -27,7 +27,7 @@ import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 import {LinePlotMaker} from './plot-maker/line-plot-maker';
 import {PiePlotMaker} from './plot-maker/pie-plot-maker';
-import {DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
+import {ClickEvent, DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
 import {createRange} from './plot-maker/plot-util';
 
 export class ChartVisualizer {
@@ -45,12 +45,16 @@ export class ChartVisualizer {
 
   private writable: boolean;
 
-  constructor(private chartElement: ElementRef, private onValueChanged: (valueChange: ValueChange) => void) {}
+  constructor(
+    private chartElement: ElementRef,
+    private onValueChanged: (ValueChange) => void,
+    private onDoubleClick: (ClickEvent) => void
+  ) {}
 
   public createChart(data: ChartData) {
     this.createOrRefreshData(data);
     this.currentType = data.type;
-    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshDrag());
+    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshListeners());
     this.chartElement.nativeElement.on(
       'plotly_relayout',
       () => this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).onRelayout()
@@ -60,7 +64,7 @@ export class ChartVisualizer {
   public refreshChart(data: ChartData) {
     this.createOrRefreshData(data);
     this.currentType = data.type;
-    react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshDrag());
+    react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
   }
 
   public destroyChart() {
@@ -73,6 +77,7 @@ export class ChartVisualizer {
       this.plotMaker = this.createPlotMakerByType(data.type, this.chartElement);
       this.plotMaker.setOnDataChanged(change => this.onDataChanged(change));
       this.plotMaker.setOnValueChanged(this.onValueChanged);
+      this.plotMaker.setOnDoubleClick(this.onDoubleClick);
     }
 
     this.plotMaker.updateData(data);
@@ -90,7 +95,7 @@ export class ChartVisualizer {
     this.data[change.trace][change.axis][change.index] = change.value;
     this.checkLayoutRange();
     this.incRevisionNumber();
-    react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshDrag());
+    react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
   }
 
   private checkLayoutRange() {
@@ -139,18 +144,17 @@ export class ChartVisualizer {
     this.writable = enabled;
   }
 
-  private refreshDrag() {
-    if (!(this.plotMaker instanceof DraggablePlotMaker)) {
-      return;
-    }
+  private refreshListeners() {
+    if (this.plotMaker instanceof DraggablePlotMaker) {
+      const draggablePlotMaker = this.plotMaker as DraggablePlotMaker;
+      draggablePlotMaker.initDoubleClick();
+      draggablePlotMaker.setDragEnabled(this.writable);
 
-    const draggablePlotMaker = this.plotMaker as DraggablePlotMaker;
-    draggablePlotMaker.setDragEnabled(this.writable);
-
-    if (this.writable) {
-      draggablePlotMaker.initDrag();
-    } else {
-      draggablePlotMaker.destroyDrag();
+      if (this.writable) {
+        draggablePlotMaker.initDrag();
+      } else {
+        draggablePlotMaker.destroyDrag();
+      }
     }
   }
 

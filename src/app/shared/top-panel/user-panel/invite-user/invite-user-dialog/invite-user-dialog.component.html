@@ -1,8 +1,8 @@
 <modal-wrapper
   [icon]="'fas fa-user-plus'"
   [type]="dialogType.Primary"
-  (close)="hideDialog()"
-  (submit)="onSubmit()"
+  (onClose)="hideDialog()"
+  (onSubmit)="onSubmit()"
   [submitDisabled]="!(newUsers$ | async) || (newUsers$ | async).length === 0"
   *ngIf="{
       isOrganizationManager: (organization$ | async) | permissions:organizationType:'manage' | async,

@@ -18,32 +18,19 @@
  */
 
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SelectionHelper} from '../../../../../shared/document/post-it/util/selection-helper';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {DataResource} from '../../../../../core/model/resource';
 import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
-import {generateId} from '../../../../../shared/utils/resource.utils';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {generateId} from '../../../../../shared/utils/resource.utils';
 
 export interface KanbanCard {
   dataResource: DataResource;
@@ -57,7 +44,7 @@ export interface KanbanCard {
   styleUrls: ['./kanban-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanColumnComponent implements OnInit, OnChanges {
+export class KanbanColumnComponent {
   @ViewChild('cardWrapper', {static: true})
   public cardWrapperElement: ElementRef;
 
@@ -95,9 +82,6 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public constraintData: ConstraintData;
 
   @Output()
-  public removeDocument = new EventEmitter<DocumentModel>();
-
-  @Output()
   public updateDocument = new EventEmitter<{document: DocumentModel; newValue: string; attributeId: string}>();
 
   @Output()
@@ -110,33 +94,10 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
   public removeColumn = new EventEmitter();
 
   @Output()
-  public toggleFavorite = new EventEmitter();
+  public toggleFavorite = new EventEmitter<DataResource>();
 
-  public selectionHelper: SelectionHelper;
-  public columnSelectionId: string;
-  public documentsIds$ = new BehaviorSubject<string[]>([]);
   public readonly dragDelay = DRAG_DELAY;
-
-  public ngOnInit() {
-    this.columnSelectionId = this.column.id || generateId();
-    this.selectionHelper = new SelectionHelper(
-      this.documentsIds$,
-      key => this.documentRows(key),
-      () => 1,
-      this.columnSelectionId
-    );
-  }
-
-  private documentRows(key: string): number {
-    const document = (this.cards || []).find(card => card.dataResource.id === key);
-    return (document && Object.keys(document.dataResource.data).length - 1) || 0;
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents) {
-      this.documentsIds$.next((this.cards || []).map(card => card.dataResource.id));
-    }
-  }
+  public readonly postItIdPrefix = generateId();
 
   public trackByCard(index: number, card: KanbanCard) {
     return card.dataResource.id;
@@ -199,20 +160,17 @@ export class KanbanColumnComponent implements OnInit, OnChanges {
 
   public onDocumentCreated(id: string) {
     setTimeout(() => {
-      const postIt = document.getElementById(`${this.columnSelectionId}#${id}`);
+      const postIt = document.getElementById(`${this.postItIdPrefix}#${id}`);
       postIt && postIt.scrollIntoView();
     });
-  }
-
-  public onRemoveDocument(document: DocumentModel) {
-    this.removeDocument.emit(document);
+    // TODO scroll
   }
 
   public onRemoveColumn() {
     this.removeColumn.emit();
   }
 
-  public onToggleFavorite(document: DocumentModel) {
-    this.toggleFavorite.emit(document);
+  public onToggleFavorite(card: KanbanCard) {
+    this.toggleFavorite.emit(card.dataResource);
   }
 }

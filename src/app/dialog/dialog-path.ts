@@ -18,29 +18,15 @@
  */
 
 export enum DialogPath {
-  COLLECTION_ATTRIBUTE_FUNCTION = 'collection-attribute-function',
-  LINK_ATTRIBUTE_FUNCTION = 'link-attribute-function',
-  COLLECTION_ATTRIBUTE_TYPE = 'collection-attribute-type',
-  LINK_ATTRIBUTE_TYPE = 'link-attribute-type',
   CREATE_LINK = 'create-link',
   FEEDBACK = 'feedback',
   SHARE_VIEW = 'share-view',
-  CREATE_ORGANIZATION = 'create-organization',
-  CREATE_PROJECT = 'create-project',
   PLAY_VIDEO = 'video',
-  CALENDAR_EVENT = 'calendar-event',
 }
 
 export const dialogPathsMap: {[id: string]: DialogPath} = {
-  [DialogPath.COLLECTION_ATTRIBUTE_FUNCTION]: DialogPath.COLLECTION_ATTRIBUTE_FUNCTION,
-  [DialogPath.LINK_ATTRIBUTE_FUNCTION]: DialogPath.LINK_ATTRIBUTE_FUNCTION,
-  [DialogPath.COLLECTION_ATTRIBUTE_TYPE]: DialogPath.COLLECTION_ATTRIBUTE_TYPE,
-  [DialogPath.LINK_ATTRIBUTE_TYPE]: DialogPath.LINK_ATTRIBUTE_TYPE,
   [DialogPath.CREATE_LINK]: DialogPath.CREATE_LINK,
   [DialogPath.FEEDBACK]: DialogPath.FEEDBACK,
   [DialogPath.SHARE_VIEW]: DialogPath.SHARE_VIEW,
-  [DialogPath.CREATE_ORGANIZATION]: DialogPath.CREATE_ORGANIZATION,
-  [DialogPath.CREATE_PROJECT]: DialogPath.CREATE_PROJECT,
   [DialogPath.PLAY_VIDEO]: DialogPath.PLAY_VIDEO,
-  [DialogPath.CALENDAR_EVENT]: DialogPath.CALENDAR_EVENT,
 };

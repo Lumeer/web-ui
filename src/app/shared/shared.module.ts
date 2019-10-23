@@ -25,12 +25,10 @@ import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {BlocklyModule} from './blockly/blockly.module';
 import {BrowserWarningModule} from './browser-warning/browser-warning.module';
 import {CollapsibleSidebarModule} from './collapsible-sidebar/collapsible-sidebar.module';
-import {CommentsComponent} from './comments/comments.component';
 import {DateTimeModule} from './date-time/date-time.module';
 import {DirectivesModule} from './directives/directives.module';
 import {DocumentHintsModule} from './document-hints/document-hints.module';
 import {DocumentModule} from './document/document.module';
-import {DragAndDropModule} from './drag-and-drop/drag-and-drop.module';
 import {InputModule} from './input/input.module';
 import {LinksModule} from './links/links.module';
 import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
@@ -54,7 +52,6 @@ import {ModalModule} from './modal/modal.module';
 import {PresenterModule} from './presenter/presenter.module';
 import {DropdownModule} from './dropdown/dropdown.module';
 import {SequencesModule} from './sequences/sequences.module';
-import {DetailDialogComponent} from './detail-dialog/detail-dialog.component';
 import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
 
 @NgModule({
@@ -64,7 +61,6 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     ReactiveFormsModule,
     RouterModule,
     PickerModule,
-    DragAndDropModule,
     UsersModule,
     TagModule,
     InputModule,
@@ -90,23 +86,19 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
   ],
   declarations: [
     SizeSliderComponent,
-    CommentsComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     SliderComponent,
     ResourceHeaderComponent,
     LoadingIndicatorComponent,
     TourComponent,
-    DetailDialogComponent,
   ],
   exports: [
     CommonModule,
-    DragAndDropModule,
     FormsModule,
     ReactiveFormsModule,
     PostItCollectionsModule,
     SizeSliderComponent,
-    CommentsComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     UsersModule,
@@ -136,9 +128,7 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     DropdownModule,
     PickerModule,
     SequencesModule,
-    DetailDialogComponent,
     DataDropdownModule,
   ],
-  entryComponents: [DetailDialogComponent],
 })
 export class SharedModule {}

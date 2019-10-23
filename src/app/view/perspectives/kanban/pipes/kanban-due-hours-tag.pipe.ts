@@ -20,22 +20,25 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {COLOR_DANGER, COLOR_WARNING} from '../../../../core/constants';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {PostItTag} from '../../../../shared/post-it/post-it.component';
 
 @Pipe({
   name: 'kanbanDueHoursTag',
 })
 export class KanbanDueHoursTagPipe implements PipeTransform {
-  public transform(dueHours: number): {text: string; color: string} {
+  constructor(private i18n: I18n) {}
+
+  public transform(dueHours: number): PostItTag {
     if (dueHours) {
       if (dueHours < 1) {
         return {
-          text: this.i18n({id: 'kanban.dueHours.tag.pastDue', value: 'Past due'}),
+          title: this.i18n({id: 'kanban.dueHours.tag.pastDue', value: 'Past due'}),
           color: COLOR_DANGER,
         };
       }
       if (dueHours < 25) {
         return {
-          text: this.i18n({id: 'kanban.dueHours.tag.dueSoon', value: 'Due soon'}),
+          title: this.i18n({id: 'kanban.dueHours.tag.dueSoon', value: 'Due soon'}),
           color: COLOR_WARNING,
         };
       }
@@ -43,6 +46,4 @@ export class KanbanDueHoursTagPipe implements PipeTransform {
 
     return null;
   }
-
-  constructor(private i18n: I18n) {}
 }

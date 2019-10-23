@@ -21,9 +21,9 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output,
 import {AsyncValidatorFn, FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {ResourceType} from '../../../../core/model/resource-type';
-import {safeGetRandomIcon} from '../../../picker/icon-color/icon/icons';
+import {safeGetRandomIcon} from '../../../picker/icons';
 import {DEFAULT_COLOR, DEFAULT_ICON} from '../../../../core/constants';
-import * as Colors from '../../../picker/icon-color/color/colors';
+import * as Colors from '../../../picker/colors';
 import {Resource} from '../../../../core/model/resource';
 import {ProjectValidators} from '../../../../core/validators/project.validators';
 import {OrganizationValidators} from '../../../../core/validators/organization.validators';

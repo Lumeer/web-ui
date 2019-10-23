@@ -1,37 +1,19 @@
-<input *ngIf="readonly; else colorPicker"
-       readonly="true"
-       [title]="value | formatDataValue"
-       [value]="(value | isDataValueValid) ? '': (value | formatDataValue)"
-       class="border-0 w-100 h-100 px-1"
-       [class.bg-transparent]="!(value | serializeDataValue) || !(value | isDataValueValid)"
-       [class.invalid-value]="!(value | isDataValueValid)"
-       [ngStyle]="{'background-color': (value | isDataValueValid) ? (value | formatDataValue) : ''}"
-       data-test="color-data-input"
-       type="text">
+<input [readonly]="readonly" #colorInput
+  [title]="value | formatDataValue"
+  [value]="!valid || !readonly ? (value | formatDataValue) : ''"
+  class="border-0 w-100 h-100 px-1"
+  [class.bg-transparent]="!readonly || !(value | serializeDataValue) || !valid"
+  [class.bg-danger-light]="readonly && !valid"
+  [class.invalid-value]="readonly && !(value | isDataValueValid)"
+  (focus)="onFocus.emit($event)"
+  [ngStyle]="{'background-color': valid ? (value | formatDataValue) : ''}"
+  data-test="color-data-input"
+  type="text">
 
-<ng-template #colorPicker>
-  <input #colorInput
-         [colorPicker]="value | formatDataValue"
-         (colorPickerChange)="onInput($event)"
-         (colorPickerSelect)="onValueChange($event)"
-         (colorPickerCancel)="onCancel()"
-         (cpToggleChange)="onDialogDisplay($event)"
-         [cpUseRootViewContainer]="true"
-         cpPresetLabel=""
-         cpAlphaChannel="disabled"
-         cpDisableInput="true"
-         cpOKButton="true"
-         cpOKButtonText="Save"
-         cpPosition="bottom"
-         i18n-cpOKButtonText="@@button.save"
-         cpOKButtonClass="btn btn-sm btn-primary"
-         [cpSaveClickOutside]="false"
-         [cpCloseClickOutside]="false"
-         [cpPresetColors]="localPalette"
-         [value]="value | formatDataValue"
-         (input)="onTextInput($event)"
-         class="border-0 w-100 h-100 px-1"
-         [ngClass]="(valid || skipValidation) ? 'bg-transparent' : 'bg-danger-light'"
-         data-test="color-data-input"
-         type="text">
-</ng-template>
+<color-picker *ngIf="!readonly"
+  [color]="value | formatDataValue"
+  [origin]="element"
+  (valueChange)="onValueChange($event)"
+  (save)="onSave($event)"
+  (cancel)="onCancel()">
+</color-picker>

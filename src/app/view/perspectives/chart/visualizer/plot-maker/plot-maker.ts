@@ -28,9 +28,11 @@ import {AttributesResourceType} from '../../../../../core/model/resource';
 export abstract class PlotMaker {
   protected chartData: ChartData;
 
-  protected onValueChanged?: (valueChange: ValueChange) => void;
+  protected onValueChanged?: (ValueChange) => void;
 
-  protected onDataChanged?: (dataChange: DataChange) => void;
+  protected onDataChanged?: (DataChange) => void;
+
+  protected onDoubleClick?: (ClickEvent) => void;
 
   constructor(protected element: ElementRef) {}
 
@@ -40,6 +42,10 @@ export abstract class PlotMaker {
 
   public setOnValueChanged(onValueChanged: (valueChange: ValueChange) => void) {
     this.onValueChanged = onValueChanged;
+  }
+
+  public setOnDoubleClick(callback: (ClickEvent) => void) {
+    this.onDoubleClick = callback;
   }
 
   public setOnDataChanged(onDataChanged: (dataChange: DataChange) => void) {
@@ -81,6 +87,12 @@ export abstract class PlotMaker {
   protected getAxisDataSets(type: ChartYAxisType): ChartDataSet[] {
     return this.chartData.sets.filter(set => set.yAxisType === type);
   }
+}
+
+export interface ClickEvent {
+  setId: string;
+  pointId: string;
+  resourceType: AttributesResourceType;
 }
 
 export interface ValueChange {

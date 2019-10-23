@@ -37,6 +37,7 @@ import {
 import {
   ChartAxisCategory,
   ChartDataSetAxis,
+  ChartPoint,
   ChartYAxisType,
   checkKnownOverrideFormatEntry,
   convertChartDateFormat,
@@ -487,6 +488,28 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     return this.chartData && !!this.chartData.sets.find(set => set.draggable);
   }
 
+  public initDoubleClick() {
+    this.getPoints().on('dblclick', (event, index) => {
+      const dataSetIndex = this.getDataSetByGlobalIndex(index);
+      const dataSet = this.chartData.sets[dataSetIndex];
+      const point = dataSet.points[event.i];
+      this.onDoubleClick({setId: dataSet.id, pointId: point.id, resourceType: dataSet.resourceType});
+    });
+  }
+
+  private getDataSetByGlobalIndex(index: number): number {
+    let upperIndex = 0;
+    for (let i = 0; i < this.chartData.sets.length; i++) {
+      const pointsLength = (this.chartData.sets[i].points || []).length;
+      upperIndex += pointsLength;
+      if (index < upperIndex) {
+        return i;
+      }
+    }
+
+    return 0;
+  }
+
   public initDrag() {
     this.destroyDrag();
 
@@ -503,7 +526,8 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         const traceIx = plotMaker.getTraceIndexForPoint(this);
         const setIx = plotMaker.getSetIndexForTraceIndex(traceIx);
         const yScale = plotMaker.createYScale(setIx);
-        const initialValue = plotMaker.getInitialValue(setIx, datum.i);
+        let initialValue = plotMaker.getInitialValue(setIx, datum.i);
+        initialValue = isNumeric(initialValue) ? toNumber(initialValue) : initialValue;
         const lastValue = initialValue;
 
         const traceSetAxis = plotMaker.traceSet(setIx);

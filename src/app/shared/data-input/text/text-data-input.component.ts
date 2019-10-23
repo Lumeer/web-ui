@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -34,6 +35,8 @@ import {TextDataValue} from '../../../core/model/data-value/text.data-value';
 import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {DataSuggestion} from '../data-suggestion';
+import {TypeaheadDirective, TypeaheadMatch} from 'ngx-bootstrap/typeahead';
 
 @Component({
   selector: 'text-data-input',
@@ -41,7 +44,7 @@ import {HtmlModifier} from '../../utils/html-modifier';
   styleUrls: ['./text-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextDataInputComponent implements OnChanges {
+export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -53,6 +56,12 @@ export class TextDataInputComponent implements OnChanges {
 
   @Input()
   public value: TextDataValue | UnknownDataValue;
+
+  @Input()
+  public placeholder: string;
+
+  @Input()
+  public suggestions: DataSuggestion[];
 
   @Output()
   public valueChange = new EventEmitter<DataValue>();
@@ -72,8 +81,14 @@ export class TextDataInputComponent implements OnChanges {
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
+  @ViewChild(TypeaheadDirective, {static: false})
+  public typeahead: TypeaheadDirective;
+
+  public text = '';
   public valid = true;
+
   private preventSave: boolean;
+  private triggerInput: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
@@ -82,14 +97,36 @@ export class TextDataInputComponent implements OnChanges {
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
         input.nativeElement.focus();
       });
+      this.triggerInput = true;
+      this.text = this.value.format();
+    }
+    if (changes.value && this.value) {
+      this.text = this.value.format();
     }
 
     this.refreshValid(this.value);
   }
 
-  public onInput(event: Event) {
-    const element = event.target as HTMLInputElement;
-    const dataValue = this.value.parseInput(element.value);
+  public ngAfterViewChecked() {
+    if (this.triggerInput) {
+      this.dispatchInputEvent();
+      this.triggerInput = false;
+    }
+  }
+
+  private dispatchInputEvent() {
+    if (this.textInput) {
+      const element = this.textInput.nativeElement;
+      const event = new Event('input', {
+        bubbles: true,
+        cancelable: true,
+      });
+      setTimeout(() => element.dispatchEvent(event));
+    }
+  }
+
+  public onInput() {
+    const dataValue = this.value.parseInput(this.text);
     this.refreshValid(dataValue);
     this.valueChange.emit(dataValue);
   }
@@ -98,7 +135,7 @@ export class TextDataInputComponent implements OnChanges {
     if (this.preventSave) {
       this.preventSave = false;
     } else {
-      this.saveValue(this.textInput);
+      this.saveInputValue(this.textInput);
     }
     this.dataBlur.emit();
   }
@@ -113,21 +150,33 @@ export class TextDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        // needs to be executed after parent event handlers
-        const input = this.textInput;
-        this.preventSave = true;
-        setTimeout(() => input && this.saveValue(input));
+        if (this.readonly) {
+          event.preventDefault();
+        } else {
+          // needs to be executed after parent event handlers
+          const input = this.textInput;
+          this.preventSave = true;
+          setTimeout(() => input && this.saveInputValue(input));
+        }
         return;
       case KeyCode.Escape:
         this.preventSave = true;
-        this.textInput.nativeElement.value = this.value.format();
+        this.textInput && (this.textInput.nativeElement.value = this.value.format());
         this.cancel.emit();
         return;
     }
   }
 
-  private saveValue(input: ElementRef) {
-    const dataValue = this.value.parseInput(input.nativeElement.value);
+  private saveInputValue(input: ElementRef) {
+    this.saveValue(input.nativeElement.value);
+  }
+
+  private saveValue(value: string) {
+    const dataValue = this.value.parseInput(value);
     this.save.emit(dataValue);
+  }
+
+  public onSelect(match: TypeaheadMatch) {
+    this.saveValue(match.item.title);
   }
 }

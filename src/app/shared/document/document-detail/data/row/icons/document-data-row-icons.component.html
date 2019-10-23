@@ -1,0 +1,43 @@
+<ng-container *ngIf="{iconName: (row.attribute?.constraint | constraintTypeIcon)} as typeData">
+  <i *ngIf="typeData.iconName"
+     [ngClass]="typeData.iconName"
+     [title]="row.attribute?.constraint | constraintTypeIconTitle"
+     class="text-muted small fa-fw"></i>
+  <i *ngIf="!typeData.iconName" class="fa-fw fa fa-icon-none small"
+     aria-hidden="true">
+  </i>
+</ng-container>
+
+<ng-container *ngIf="permissions?.writeWithView">
+<i class="fas fa-fw fa-trash text-danger mx-2 clickable text-danger button-remove"
+   aria-hidden="true"
+
+   title="Remove Row"
+   i18n-title="@@remove.row"
+   (click)="onDelete()">
+</i>
+</ng-container>
+
+<ng-container *ngIf="{manage: row.attribute && row.attribute.id && permissions?.manageWithView} as attributeData">
+  <i class="fa fa-fw fa-shapes mr-2 clickable text-success button-config"
+     aria-hidden="true"
+     *ngIf="attributeData.manage"
+     i18n-title="@@document.detail.configure.constraint"
+     title="Set Attribute Type"
+     (click)="onAttributeType()">
+  </i>
+  <i *ngIf="!attributeData.manage" class="fa-fw fa fa-icon-none mr-2"
+     aria-hidden="true">
+  </i>
+
+  <i class="fa fa-fw fa-function mr-2 clickable text-success button-function"
+     aria-hidden="true"
+     *ngIf="attributeData.manage"
+     i18n-title="@@document.detail.configure.function"
+     title="Set Attribute Function"
+     (click)="onAttributeFunction()">
+  </i>
+  <i *ngIf="!attributeData.manage" class="fa-fw fa fa-icon-none mr-2"
+     aria-hidden="true">
+  </i>
+</ng-container>

@@ -24,31 +24,8 @@ import {DialogPath} from './dialog-path';
 import {FeedbackDialogComponent} from './dialog/feedback-dialog.component';
 import {ShareViewDialogComponent} from './share-view/share-view-dialog.component';
 import {PlayVideoComponent} from './play-video/play-video.component';
-import {AttributeTypeDialogComponent} from './attribute-type/attribute-type-dialog.component';
-import {CalendarEventDialogComponent} from './calendar-event/calendar-event-dialog.component';
-import {AttributeFunctionDialogComponent} from './attribute-function/attribute-function-dialog.component';
 
 const routes: Routes = [
-  {
-    path: `${DialogPath.COLLECTION_ATTRIBUTE_FUNCTION}/:collectionId/:attributeId`,
-    component: AttributeFunctionDialogComponent,
-    outlet: 'fsdialog',
-  },
-  {
-    path: `${DialogPath.LINK_ATTRIBUTE_FUNCTION}/:linkTypeId/:attributeId`,
-    component: AttributeFunctionDialogComponent,
-    outlet: 'fsdialog',
-  },
-  {
-    path: `${DialogPath.COLLECTION_ATTRIBUTE_TYPE}/:collectionId/:attributeId`,
-    component: AttributeTypeDialogComponent,
-    outlet: 'dialog',
-  },
-  {
-    path: `${DialogPath.LINK_ATTRIBUTE_TYPE}/:linkTypeId/:attributeId`,
-    component: AttributeTypeDialogComponent,
-    outlet: 'dialog',
-  },
   {
     path: `${DialogPath.CREATE_LINK}/:linkCollectionIds`,
     component: CreateLinkDialogComponent,
@@ -69,16 +46,6 @@ const routes: Routes = [
     component: PlayVideoComponent,
     outlet: 'dialog',
     data: {modalDialogClass: 'modal-lg'},
-  },
-  {
-    path: `${DialogPath.CALENDAR_EVENT}/:calendarId/:time`,
-    component: CalendarEventDialogComponent,
-    outlet: 'dialog',
-  },
-  {
-    path: `${DialogPath.CALENDAR_EVENT}/:calendarId/:time/:documentId/:stemIndex`,
-    component: CalendarEventDialogComponent,
-    outlet: 'dialog',
   },
 ];
 

@@ -73,6 +73,7 @@ import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
+import {isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'table-data-cell',
@@ -241,11 +242,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
               if (attribute && attribute.constraint) {
                 const dataValue = attribute.constraint.createDataValue(this.editedValue);
                 if (dataValue.isValid()) {
-                  this.onValueSave(dataValue);
+                  this.onValueSave(dataValue.serialize());
                 }
               } else {
                 const dataValue = new UnknownDataValue(this.editedValue);
-                this.onValueSave(dataValue);
+                this.onValueSave(dataValue.serialize());
               }
             }
             this.editing$.next(false);
@@ -511,7 +512,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     };
     const createDocumentAction = new DocumentsAction.Create({
       document,
-      callback: this.createLinkInstanceCallback(table),
+      onSuccess: this.createLinkInstanceCallback(table),
     });
     const newAttribute = {name: attributeName};
 
@@ -533,7 +534,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       metaData: this.createDocumentMetaData(row),
     };
 
-    this.store$.dispatch(new DocumentsAction.Create({document, callback: this.createLinkInstanceCallback(table)}));
+    this.store$.dispatch(new DocumentsAction.Create({document, onSuccess: this.createLinkInstanceCallback(table)}));
   }
 
   private createDocumentMetaData(row: TableConfigRow): DocumentMetaData {
@@ -709,7 +710,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
               correlationId,
               data: generateDocumentDataByCollectionQuery(collectionId, query, currentUser),
             },
-            callback: documentId =>
+            onSuccess: documentId =>
               this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),
           })
         )
@@ -743,7 +744,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onValueSave(value: any) {
-    if (value !== null && value !== undefined) {
+    if (isNotNullOrUndefined(value)) {
       this.useSelectionOrSave(value);
     }
     this.editing$.next(false);

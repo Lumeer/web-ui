@@ -36,7 +36,6 @@ import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
 import {isDateValid} from '../../utils/common.utils';
-import {resetUnusedDatePart} from '../../utils/date.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
@@ -57,6 +56,9 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   @Input()
   public value: DateTimeDataValue;
+
+  @Output()
+  public onFocus = new EventEmitter<any>();
 
   @Output()
   public valueChange = new EventEmitter<DateTimeDataValue>();
@@ -82,7 +84,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
-      this.preventSaving = !!changes.value;
       setTimeout(() => {
         if (changes.value) {
           this.dateTimeInput.nativeElement.value = this.value.format(false);
@@ -124,7 +125,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
         return;
       case KeyCode.Escape:
         this.preventSaving = true;
-        this.dateTimeInput.nativeElement.value = this.value.format(false);
+        this.dateTimeInput && (this.dateTimeInput.nativeElement.value = this.value.format(false));
         this.cancel.emit();
         return;
     }

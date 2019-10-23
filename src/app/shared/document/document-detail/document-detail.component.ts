@@ -17,33 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs';
-import {filter, first, map} from 'rxjs/operators';
+import {combineLatest, Observable} from 'rxjs';
+import {first, map, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintData, DurationUnitsMap} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
-import {AppState} from '../../../core/store/app.state';
-import {Collection} from '../../../core/store/collections/collection';
-import {DocumentModel} from '../../../core/store/documents/document.model';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {Query} from '../../../core/store/navigation/query/query';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {Query} from '../../../core/store/navigation/query/query';
 import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
 import {selectServiceLimitsByWorkspace} from '../../../core/store/organizations/service-limits/service-limits.state';
-import {RouterAction} from '../../../core/store/router/router.action';
-import {User} from '../../../core/store/users/user';
-import {selectUserById} from '../../../core/store/users/users.state';
-import {DocumentUi} from '../../../core/ui/document-ui';
-import {UiRow} from '../../../core/ui/ui-row';
-import {DialogService} from '../../../dialog/dialog.service';
-import {Perspective, perspectiveIconsMap} from '../../../view/perspectives/perspective';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import DeleteConfirm = DocumentsAction.DeleteConfirm;
+import {User} from '../../../core/store/users/user';
+import {AppState} from '../../../core/store/app.state';
+import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
+import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {RouterAction} from '../../../core/store/router/router.action';
+import {BsModalService} from 'ngx-bootstrap';
+import {AttributeTypeModalComponent} from '../../modal/attribute-type/attribute-type-modal.component';
+import {userHasManageRoleInResource} from '../../utils/resource.utils';
+import {Organization} from '../../../core/store/organizations/organization';
+import {AttributeFunctionModalComponent} from '../../modal/attribute-function/attribute-function-modal.component';
 
 @Component({
   selector: 'document-detail',
@@ -51,7 +55,7 @@ import DeleteConfirm = DocumentsAction.DeleteConfirm;
   styleUrls: ['./document-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
+export class DocumentDetailComponent implements OnInit {
   @Input()
   public collection: Collection;
 
@@ -64,13 +68,15 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public permissions: AllowedPermissions;
 
-  public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
+  @Input()
+  public toolbarRef: TemplateRef<any>;
+
+  @Output()
+  public documentChanged = new EventEmitter<DocumentModel>();
+
   public users$: Observable<User[]>;
-
-  public state: DocumentUi;
-
-  public createdBy$: Observable<string>;
-  public updatedBy$: Observable<string>;
+  public readonly durationUnitsMap: DurationUnitsMap;
+  public workspace$: Observable<Workspace>;
 
   public constraintData$: Observable<ConstraintData>;
 
@@ -79,63 +85,14 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
-    private dialogService: DialogService,
+    private modalService: BsModalService,
     private constraintDataService: ConstraintDataService
   ) {}
 
   public ngOnInit() {
     this.constraintData$ = this.constraintDataService.observeConstraintData();
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.document) {
-      this.renewSubscriptions();
-    }
-  }
-
-  private renewSubscriptions(): void {
-    if (this.state) {
-      this.state.destroy();
-    }
-
-    if (this.collection && this.document) {
-      this.state = new DocumentUi(this.collection, this.document, this.store$, this.i18n, this.notificationService);
-
-      this.createdBy$ = this.store$.pipe(
-        select(selectUserById(this.document.createdBy)),
-        filter(user => !!user),
-        map(user => user.name || user.email || 'Guest')
-      );
-      this.updatedBy$ = this.store$.pipe(
-        select(selectUserById(this.document.updatedBy)),
-        filter(user => !!user),
-        map(user => user.name || user.email || 'Guest')
-      );
-    }
-  }
-
-  public ngOnDestroy() {
-    if (this.state) {
-      this.state.destroy();
-    }
-  }
-
-  public addAttrRow() {
-    if (this.state) {
-      this.state.onAddRow();
-    }
-  }
-
-  public onRemoveRow(idx: number) {
-    if (this.state) {
-      this.state.onRemoveRow(idx);
-    }
-  }
-
-  public submitRowChange(idx: number, $event: [string, string]) {
-    if (this.state) {
-      this.state.onUpdateRow(idx, $event);
-    }
+    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.workspace$ = this.store$.pipe(select(selectWorkspace));
   }
 
   public onRemoveDocument() {
@@ -147,21 +104,21 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  public onToggleFavorite() {
-    if (this.state) {
-      this.state.onToggleFavorite();
+  public onSwitchToTable() {
+    if (this.collection && this.document) {
+      const queryString = convertQueryModelToString({stems: [{collectionId: this.collection.id}]});
+      this.perspectiveService.switchPerspective(Perspective.Table, this.collection, this.document, queryString);
     }
   }
 
-  public getTrackBy(index: number, row: UiRow): string {
-    return row.correlationId || row.id;
+  public onAttributeTypeClick(attribute: Attribute) {
+    const initialState = {attributeId: attribute.id, collectionId: this.collection.id};
+    const config = {initialState, keyboard: false};
+    config['backdrop'] = 'static';
+    return this.modalService.show(AttributeTypeModalComponent, config);
   }
 
-  public fireConstraintConfig(id: string) {
-    this.dialogService.openCollectionAttributeConfigDialog(this.collection.id, id);
-  }
-
-  public fireFunctionConfig(id: string, event: MouseEvent) {
+  public onAttributeFunctionClick(attribute: Attribute) {
     this.store$
       .pipe(
         select(selectServiceLimitsByWorkspace),
@@ -170,50 +127,64 @@ export class DocumentDetailComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe(functionsCountLimit => {
         const functions = this.collection.attributes.filter(
-          attribute => attribute.id !== id && !!attribute.function && !!attribute.function.js
+          attr => attr.id !== attribute.id && !!attr.function && !!attr.function.js
         ).length;
         if (functionsCountLimit !== 0 && functions >= functionsCountLimit) {
           this.notifyFunctionsLimit();
         } else {
-          // the original event closes the dialog immediately when not stopped
-          event.stopPropagation();
-          this.dialogService.openCollectionAttributeFunction(this.collection.id, id);
+          this.showAttributeFunctionDialog(attribute);
         }
       });
   }
 
+  private showAttributeFunctionDialog(attribute: Attribute) {
+    const initialState = {attributeId: attribute.id, collectionId: this.collection.id};
+    const config = {initialState, keyboard: false, class: 'modal-xxl'};
+    config['backdrop'] = 'static';
+    return this.modalService.show(AttributeFunctionModalComponent, config);
+  }
+
   private notifyFunctionsLimit() {
-    this.store$
-      .pipe(
-        select(selectOrganizationByWorkspace),
-        map(organization => organization.code),
-        first()
-      )
-      .subscribe(code => {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
-        const message = this.i18n({
-          id: 'function.create.serviceLimits',
-          value:
-            'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
-        });
-        this.store$.dispatch(
-          new NotificationsAction.Confirm({
-            title,
-            message,
-            action: new RouterAction.Go({
-              path: ['/organization', code, 'detail'],
-              extras: {fragment: 'orderService'},
-            }),
-            yesFirst: false,
-          })
-        );
+    combineLatest([
+      this.store$.pipe(select(selectCurrentUser)),
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+    ])
+      .pipe(take(1))
+      .subscribe(([currentUser, organization]) => {
+        if (userHasManageRoleInResource(currentUser, organization)) {
+          this.notifyFunctionsLimitWithRedirect(organization);
+        } else {
+          this.notifyFunctionsLimitWithoutRights();
+        }
       });
   }
 
-  public onSwitchToTable() {
-    if (this.collection && this.document) {
-      const queryString = convertQueryModelToString({stems: [{collectionId: this.collection.id}]});
-      this.perspectiveService.switchPerspective(Perspective.Table, this.collection, this.document, queryString);
-    }
+  private notifyFunctionsLimitWithRedirect(organization: Organization) {
+    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+    const message = this.i18n({
+      id: 'function.create.serviceLimits',
+      value:
+        'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
+    });
+    this.store$.dispatch(
+      new NotificationsAction.Confirm({
+        title,
+        message,
+        action: new RouterAction.Go({
+          path: ['/organization', organization.code, 'detail'],
+          extras: {fragment: 'orderService'},
+        }),
+        yesFirst: false,
+      })
+    );
+  }
+
+  private notifyFunctionsLimitWithoutRights() {
+    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+    const message = this.i18n({
+      id: 'function.create.serviceLimits.noRights',
+      value: 'You can have only a single function per table/link type in the Free Plan.',
+    });
+    this.store$.dispatch(new NotificationsAction.Info({title, message}));
   }
 }

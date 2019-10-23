@@ -1,0 +1,41 @@
+<modal-wrapper class="d-block" [type]="'primary'"
+               [performingAction]="performingAction$ | async"
+               [submitDisabled]="formInvalid$ | async"
+               [customHeader]="true"
+               (onSubmit)="onSubmit()"
+               (onClose)="hideDialog()"
+               data-test="attribute-type-dialog"
+               *ngIf="{collection: collection$ | async, linkType: linkType$ | async, linkCollections: linkCollections$ | async, attribute: attribute$ | async} as data">
+
+  <div class="custom-header p-3">
+    <h5 class="modal-title break-all">
+      <icons-presenter
+        [colors]="data.collection ? [data.collection.color] : [data.linkCollections[0]?.color, data.linkCollections[1]?.color]"
+        [icons]="data.collection ? [data.collection.icon] : [data.linkCollections[0]?.icon, data.linkCollections[1]?.icon]">
+      </icons-presenter>
+      <span [style.color]="data.collection?.color"
+            [title]="(data.collection?.name || data.linkType?.name) + '.' + data.attribute?.name"
+            class="ml-1">
+        {{data.collection?.name || data.linkType?.name}}.{{data.attribute?.name}}
+      </span>
+    </h5>
+  </div>
+
+
+  <div class="body">
+    <attribute-type-form class="p-3 d-block"
+                         *ngIf="data.attribute; else notFound"
+                         [attribute]="data.attribute"
+                         (attributeChange)="onAttributeChange($event)">
+    </attribute-type-form>
+
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" data-test="attribute-type-save-button" i18n="@@button.save">Save</span>
+
+</modal-wrapper>
+
+<ng-template #notFound>
+  <span i18n="@@attribute.config.dialog.not.exists">Such an attribute does not exist.</span>
+</ng-template>
