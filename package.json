@@ -57,7 +57,7 @@
     "@ngrx/store-devtools": "^8.4.0",
     "@ngx-translate/i18n-polyfill": "^1.0.0",
     "@sentry/browser": "^5.7.1",
-    "angular-calendar": "^0.27.19",
+    "angular-calendar": "^0.27.20",
     "angular-resizable-element": "^3.2.6",
     "angulartics2": "^8.1.0",
     "auth0-js": "^9.11.3",
