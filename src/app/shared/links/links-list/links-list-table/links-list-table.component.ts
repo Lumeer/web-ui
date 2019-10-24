@@ -29,7 +29,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {ConstraintData} from '../../../../core/model/data/constraint';
@@ -56,16 +56,20 @@ const PAGE_SIZE = 100;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListTableComponent implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  public linkType: LinkType;
+
+  @Input()
+  public document: DocumentModel;
+
+  @Output()
+  public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
+
+  @Output()
+  public unlink = new EventEmitter<string>();
+
   @ViewChild(LinksListTableHeaderComponent, {static: false})
   public headerComponent: LinksListTableHeaderComponent;
-
-  @Input() public linkType: LinkType;
-
-  @Input() public document: DocumentModel;
-
-  @Output() public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
-
-  @Output() public unlink = new EventEmitter<string>();
 
   public otherCollection$: Observable<Collection>;
   public linkRows$ = new BehaviorSubject<LinkRowModel[]>([]);
@@ -102,8 +106,8 @@ export class LinksListTableComponent implements OnInit, OnChanges, OnDestroy {
 
       this.linksSubscription.unsubscribe();
       this.linksSubscription = this.store$
-        .select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id]))
         .pipe(
+          select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])),
           mergeMap(linkInstances =>
             this.fetchDocumentsForLinkInstances(linkInstances).pipe(
               map(documents => this.joinLinkInstancesWithDocuments(linkInstances, documents))

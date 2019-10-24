@@ -55,7 +55,11 @@ export class AttributeTypeSelectComponent implements OnInit {
       }));
 
     result.sort((a, b) => {
-      return a.id === 'None' ? -1 : b.id === 'None' ? 1 : a.value.localeCompare(b.value);
+      return a.id === ConstraintType.Unknown
+        ? -1
+        : b.id === ConstraintType.Unknown
+        ? 1
+        : a.value.localeCompare(b.value);
     });
 
     return result;

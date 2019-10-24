@@ -19,6 +19,7 @@
 
 import {Directive, ElementRef, HostListener, Inject, Optional, Renderer2} from '@angular/core';
 import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
+import {isNotNullOrUndefined} from '../utils/common.utils';
 
 @Directive({
   selector: '[number]',
@@ -41,9 +42,14 @@ export class NumberDirective extends DefaultValueAccessor {
 
   @HostListener('input', ['$event'])
   public onInput(event: Event) {
-    const displayValue = (<HTMLInputElement>event.currentTarget).value
-      .replace(/[^0-9,.eE\s-]/g, '')
-      .replace(/-/g, (str, index) => (index > 0 ? '' : str));
+    const displayValue = removeNonNumberCharacters((<HTMLInputElement>event.currentTarget).value);
     this._sourceRenderer.setProperty(this._sourceElementRef.nativeElement, 'value', displayValue);
   }
+}
+
+export function removeNonNumberCharacters(value: any): string {
+  return (isNotNullOrUndefined(value) ? value : '')
+    .toString()
+    .replace(/[^0-9,.eE\s-]/g, '')
+    .replace(/-/g, (str, index) => (index > 0 ? '' : str));
 }
