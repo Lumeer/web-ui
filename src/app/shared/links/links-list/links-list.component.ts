@@ -17,9 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChange,
+  SimpleChanges,
+} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {Observable, combineLatest as observableCombineLatest} from 'rxjs';
+import {Observable, combineLatest, BehaviorSubject} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {AppState} from '../../../core/store/app.state';
@@ -37,25 +46,27 @@ import {Query} from '../../../core/store/navigation/query/query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinksListComponent implements OnChanges {
-  @Input() public document: DocumentModel;
+  @Input()
+  public document: DocumentModel;
 
-  @Input() public collection: Collection;
+  @Input()
+  public collection: Collection;
 
-  @Output() public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
+  @Output()
+  public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
   public linkTypes$: Observable<LinkType[]>;
-  public activeLinkType: LinkType;
 
-  private lastCollectionId: string;
+  public selectedLinkType$ = new BehaviorSubject<LinkType>(null);
 
   public constructor(private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.renewSubscriptions();
+    this.renewSubscriptions(changes.collection);
   }
 
   public onSelectLink(linkType: LinkType) {
-    this.activeLinkType = linkType;
+    this.selectedLinkType$.next(linkType);
 
     if (linkType) {
       this.readDocuments(linkType);
@@ -66,13 +77,15 @@ export class LinksListComponent implements OnChanges {
     this.store.dispatch(new LinkInstancesAction.Delete({linkInstanceId}));
   }
 
-  private renewSubscriptions() {
-    if (this.collection && this.collection.id !== this.lastCollectionId) {
-      this.lastCollectionId = this.collection.id;
-      this.linkTypes$ = observableCombineLatest(
+  private renewSubscriptions(change: SimpleChange) {
+    if (
+      change &&
+      (!change.previousValue || (change.currentValue && change.previousValue.id !== change.currentValue.id))
+    ) {
+      this.linkTypes$ = combineLatest([
         this.store.select(selectLinkTypesByCollectionId(this.collection.id)),
-        this.store.select(selectCollectionsDictionary)
-      ).pipe(
+        this.store.select(selectCollectionsDictionary),
+      ]).pipe(
         map(([linkTypes, collectionsMap]) =>
           linkTypes.map(linkType => {
             const collections: [Collection, Collection] = [
@@ -89,15 +102,11 @@ export class LinksListComponent implements OnChanges {
 
   private initActiveLinkType(linkTypes: LinkType[]) {
     let selectLinkType: LinkType;
-    if (linkTypes.length === 0) {
-      selectLinkType = null;
-    } else if (this.activeLinkType) {
-      selectLinkType = linkTypes.find(linkType => linkType.id === this.activeLinkType.id) || linkTypes[0];
-    } else {
-      selectLinkType = linkTypes[0];
+    if (this.selectedLinkType$.value) {
+      selectLinkType = linkTypes.find(linkType => linkType.id === this.selectedLinkType$.value.id);
     }
 
-    this.onSelectLink(selectLinkType);
+    this.onSelectLink(selectLinkType || linkTypes[0]);
   }
 
   private readDocuments(linkType: LinkType) {
@@ -107,7 +116,7 @@ export class LinksListComponent implements OnChanges {
     }
   }
 
-  public onSelectDocument($event: {collection: Collection; document: DocumentModel}) {
-    this.documentSelect.emit($event);
+  public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {
+    this.documentSelect.emit(data);
   }
 }

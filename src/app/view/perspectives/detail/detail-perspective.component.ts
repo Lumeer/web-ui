@@ -151,7 +151,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
     if (selectedDocument) {
       documentObservable = this.store$.pipe(
         select(selectDocumentById(selectedDocument.id)),
-        startWith(null),
+        startWith(null as DocumentModel),
         pairwise(),
         map(doc => ({document: doc[1], previousDocument: doc[0]}))
       );

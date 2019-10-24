@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../utils/common.utils';
 import {KeyCode} from '../key-code';
 import {DataRowComponent, DataRowHiddenComponent} from './data-row-component';
@@ -27,7 +26,6 @@ interface DataRowPosition {
   column?: number;
 }
 
-@Injectable()
 export class DataRowFocusService {
   private focused: DataRowPosition = {};
   private edited: DataRowPosition = {};

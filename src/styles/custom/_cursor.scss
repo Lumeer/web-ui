@@ -1,27 +1,27 @@
 @import '../variables';
 
 .cursor-inherit {
-  cursor: inherit;
+  cursor: inherit !important;
 }
 
 .cursor-default {
-  cursor: default;
+  cursor: default !important;
 }
 
 .cursor-help {
-  cursor: help;
+  cursor: help !important;
 }
 
 .cursor-move {
-  cursor: move;
+  cursor: move !important;
 }
 
 .cursor-not-allowed {
-  cursor: not-allowed;
+  cursor: not-allowed !important;
 }
 
 .cursor-pointer {
-  cursor: pointer;
+  cursor: pointer !important;
 
   &.text-primary:hover {
     color: $primary-hover !important;
@@ -45,5 +45,5 @@
 }
 
 .cursor-text {
-  cursor: text;
+  cursor: text !important;
 }

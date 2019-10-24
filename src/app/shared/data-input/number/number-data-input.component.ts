@@ -32,6 +32,7 @@ import {
 import {NumberDataValue} from '../../../core/model/data-value/number.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {removeNonNumberCharacters} from '../../directives/number.directive';
 
 @Component({
   selector: 'number-data-input',
@@ -74,17 +75,17 @@ export class NumberDataInputComponent implements OnChanges {
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
+    const cleanValue = this.value.parseInput(removeNonNumberCharacters(this.value.format()));
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
-        if (this.value && !this.numberInput.nativeElement.value) {
-          this.refreshValid(this.value);
-          this.numberInput.nativeElement.value = this.value.format();
+        if (this.value) {
+          this.numberInput.nativeElement.value = cleanValue.format();
         }
         HtmlModifier.setCursorAtTextContentEnd(this.numberInput.nativeElement);
         this.numberInput.nativeElement.focus();
       });
     }
-    this.refreshValid(this.value);
+    this.refreshValid(cleanValue);
   }
 
   private refreshValid(value: NumberDataValue) {
