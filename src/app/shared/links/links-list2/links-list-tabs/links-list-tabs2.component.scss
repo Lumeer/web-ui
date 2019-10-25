@@ -1,0 +1,13 @@
+@import '../../../../../styles/variables';
+
+a.nav-link {
+  max-width: 20rem;
+
+  &:not(.active) {
+    color: $primary;
+  }
+
+  &:hover:not(.active) {
+    color: $primary-hover;
+  }
+}

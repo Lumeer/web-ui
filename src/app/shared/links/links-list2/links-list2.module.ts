@@ -17,10 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {LinksList2Component} from './links-list2.component';
 
-@Component({
-  selector: 'links',
-  templateUrl: './links.component.html',
+@NgModule({
+  declarations: [LinksList2Component],
+  imports: [CommonModule],
+  exports: [LinksList2Component],
 })
-export class LinksComponent {}
+export class LinksList2Module {}

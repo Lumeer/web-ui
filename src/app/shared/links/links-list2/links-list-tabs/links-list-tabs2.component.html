@@ -1,0 +1,14 @@
+<ul class="nav nav-tabs">
+  <li *ngFor="let linkType of linkTypes; trackBy:trackByLinkTypes" class="nav-item">
+    <a class="nav-link text-truncate"
+       [class.active]="linkType.id === selectedLinkType?.id"
+       title="{{linkType.name}}"
+       (click)="selectLink(linkType)">
+      <icons-presenter
+        [colors]="linkType.collections | colors"
+        [icons]="linkType.collections | icons"
+        [title]="linkType.name"></icons-presenter>
+      {{linkType.name}}
+    </a>
+  </li>
+</ul>

@@ -19,7 +19,6 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {LinksComponent} from './links.component';
 import {LinksListComponent} from './links-list/links-list.component';
 import {LinksListTabsComponent} from './links-list/links-list-tabs/links-list-tabs.component';
 import {LinksListTableComponent} from './links-list/links-list-table/links-list-table.component';
@@ -32,6 +31,7 @@ import {DocumentHintsModule} from '../document-hints/document-hints.module';
 import {LinkRowsDocumentIdsPipe} from './links-list/links-list-table/link-rows-document-ids.pipe';
 import {DataInputModule} from '../data-input/data-input.module';
 import {PresenterModule} from '../presenter/presenter.module';
+import {LinksList2Module} from './links-list2/links-list2.module';
 
 @NgModule({
   imports: [
@@ -42,9 +42,9 @@ import {PresenterModule} from '../presenter/presenter.module';
     InputModule,
     PipesModule,
     DocumentHintsModule,
+    LinksList2Module,
   ],
   declarations: [
-    LinksComponent,
     LinksListComponent,
     LinksListTabsComponent,
     LinksListTableComponent,
@@ -52,6 +52,6 @@ import {PresenterModule} from '../presenter/presenter.module';
     LinksListTableBodyComponent,
     LinkRowsDocumentIdsPipe,
   ],
-  exports: [LinksComponent, LinksListComponent],
+  exports: [LinksListComponent, LinksList2Module],
 })
 export class LinksModule {}
