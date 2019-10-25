@@ -35,7 +35,11 @@ import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
-import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
+import {
+  getAllCollectionIdsFromQuery,
+  getAllLinkTypeIdsFromQuery,
+  queryWithoutLinks,
+} from '../navigation/query/query.util';
 import {selectCurrentUser} from '../users/users.state';
 import {View} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
@@ -82,6 +86,15 @@ export const selectCollectionsByQuery = createSelector(
   (collections, documents, linkTypes, query) => filterCollectionsByQuery(collections, documents, linkTypes, query)
 );
 
+export const selectCollectionsByQueryWithoutLinks = createSelector(
+  selectCollectionsByReadPermission,
+  selectAllDocuments,
+  selectAllLinkTypes,
+  selectQuery,
+  (collections, documents, linkTypes, query) =>
+    filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query))
+);
+
 export const selectCollectionsByCustomQuery = (query: Query) =>
   createSelector(
     selectCollectionsByReadPermission,
@@ -123,12 +136,6 @@ export const selectDocumentsByQuery = createSelector(
   selectDocumentsAndLinksByQuery,
   (data): DocumentModel[] => data.documents
 );
-
-export const selectDocumentsByQueryAndIds = (ids: string[]) =>
-  createSelector(
-    selectDocumentsByQuery,
-    documents => documents.filter(doc => ids.includes(doc.id))
-  );
 
 export const selectDocumentsByQueryIncludingChildren = createSelector(
   selectDocumentsByReadPermission,

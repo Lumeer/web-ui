@@ -45,17 +45,16 @@ import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/lin
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {getOtherLinkedCollectionId} from '../../../utils/link-type.utils';
 import {LinkRowModel} from './link-row.model';
-import {LinksListTableHeaderComponent} from './links-list-table-header/links-list-table-header.component';
 
 const PAGE_SIZE = 100;
 
 @Component({
-  selector: 'links-list-table',
-  templateUrl: './links-list-table.component.html',
-  styleUrls: ['./links-list-table.component.scss', './links-list-table.scss'],
+  selector: 'links-list2-table',
+  templateUrl: './links-list2-table.component.html',
+  styleUrls: ['./links-list2-table.component.scss', './links-list-table.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableComponent implements OnInit, OnChanges, OnDestroy {
+export class LinksList2TableComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public linkType: LinkType;
 
@@ -67,9 +66,6 @@ export class LinksListTableComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   public unlink = new EventEmitter<string>();
-
-  @ViewChild(LinksListTableHeaderComponent, {static: false})
-  public headerComponent: LinksListTableHeaderComponent;
 
   public otherCollection$: Observable<Collection>;
   public linkRows$ = new BehaviorSubject<LinkRowModel[]>([]);

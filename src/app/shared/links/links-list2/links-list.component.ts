@@ -31,7 +31,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
@@ -39,14 +39,14 @@ import {selectCollectionsDictionary} from '../../../core/store/collections/colle
 import {map, tap} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 
 @Component({
-  selector: 'links-list2',
-  templateUrl: './links-list2.component.html',
-  styleUrls: ['./links-list2.component.scss'],
+  selector: 'links-list',
+  templateUrl: './links-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksList2Component implements OnChanges {
+export class LinksListComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
@@ -56,49 +56,42 @@ export class LinksList2Component implements OnChanges {
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
-  public linkTypes$: Observable<LinkType[]>;
-
   public selectedLinkType$ = new BehaviorSubject<LinkType>(null);
 
-  public constructor(private store: Store<AppState>) {}
+  public linkTypes$: Observable<LinkType[]>;
+  public otherCollection$: Observable<Collection>;
+
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.renewSubscriptions(changes.collection);
-  }
-
-  public onSelectLink(linkType: LinkType) {
-    this.selectedLinkType$.next(linkType);
-
-    if (linkType) {
-      this.readDocuments(linkType);
+    if (this.objectChanged(changes.collection)) {
+      this.renewSubscriptions();
+    }
+    if (this.objectChanged(changes.document)) {
+      this.selectedLinkType$.value && this.selectOtherCollection(this.selectedLinkType$.value);
     }
   }
 
-  public unLinkDocument(linkInstanceId: string) {
-    this.store.dispatch(new LinkInstancesAction.Delete({linkInstanceId}));
+  private renewSubscriptions() {
+    this.linkTypes$ = combineLatest([
+      this.store$.pipe(select(selectLinkTypesByCollectionId(this.collection.id))),
+      this.store$.pipe(select(selectCollectionsDictionary)),
+    ]).pipe(
+      map(([linkTypes, collectionsMap]) =>
+        linkTypes.map(linkType => {
+          const collections: [Collection, Collection] = [
+            collectionsMap[linkType.collectionIds[0]],
+            collectionsMap[linkType.collectionIds[1]],
+          ];
+          return {...linkType, collections};
+        })
+      ),
+      tap(linkTypes => this.initActiveLinkType(linkTypes))
+    );
   }
 
-  private renewSubscriptions(change: SimpleChange) {
-    if (
-      change &&
-      (!change.previousValue || (change.currentValue && change.previousValue.id !== change.currentValue.id))
-    ) {
-      this.linkTypes$ = combineLatest([
-        this.store.select(selectLinkTypesByCollectionId(this.collection.id)),
-        this.store.select(selectCollectionsDictionary),
-      ]).pipe(
-        map(([linkTypes, collectionsMap]) =>
-          linkTypes.map(linkType => {
-            const collections: [Collection, Collection] = [
-              collectionsMap[linkType.collectionIds[0]],
-              collectionsMap[linkType.collectionIds[1]],
-            ];
-            return {...linkType, collections};
-          })
-        ),
-        tap(linkTypes => this.initActiveLinkType(linkTypes))
-      );
-    }
+  private objectChanged(change: SimpleChange): boolean {
+    return change && (!change.previousValue || change.previousValue.id !== change.currentValue.id);
   }
 
   private initActiveLinkType(linkTypes: LinkType[]) {
@@ -110,11 +103,35 @@ export class LinksList2Component implements OnChanges {
     this.onSelectLink(selectLinkType || linkTypes[0]);
   }
 
-  private readDocuments(linkType: LinkType) {
+  public onSelectLink(linkType: LinkType) {
+    this.selectedLinkType$.next(linkType);
+    this.selectOtherCollection(linkType);
+
+    if (linkType) {
+      this.readData(linkType);
+    }
+  }
+
+  private selectOtherCollection(linkType: LinkType) {
+    this.otherCollection$ = this.store$.pipe(
+      select(selectCollectionsDictionary),
+      map(collectionsMap => {
+        const collectionId = getOtherLinkedCollectionId(linkType, this.document && this.document.collectionId);
+        return collectionId && collectionsMap[collectionId];
+      })
+    );
+  }
+
+  private readData(linkType: LinkType) {
     if (linkType) {
       const query: Query = {stems: [{collectionId: this.collection.id, linkTypeIds: [linkType.id]}]};
-      this.store.dispatch(new DocumentsAction.Get({query}));
+      this.store$.dispatch(new DocumentsAction.Get({query}));
+      this.store$.dispatch(new LinkInstancesAction.Get({query}));
     }
+  }
+
+  public unLinkDocument(linkInstanceId: string) {
+    this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId}));
   }
 
   public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {

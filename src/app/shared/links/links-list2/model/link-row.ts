@@ -17,9 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkType} from '../../core/store/link-types/link.type';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 
-export function getOtherLinkedCollectionId(linkType: LinkType, collectionId: string): string {
-  const collectionIds = linkType && linkType.collectionIds;
-  return collectionIds[0] === collectionId ? collectionIds[1] : collectionIds[0];
+export interface LinkRow {
+  linkInstance?: LinkInstance;
+  document: DocumentModel;
 }

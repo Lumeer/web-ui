@@ -1,0 +1,24 @@
+<tr>
+  <th *ngFor="let column of columns; trackBy:trackByLinkColumn"
+      class="sticky-header table-border"
+      [style.width.px]="column.width"
+      [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
+      [style.font-weight]="column.bold ? 'bold' : 'normal'"
+      scope="col" #tableHeader title="{{column.attribute.name}}">
+    <div class="d-flex flex-nowrap flex-row align-items-center">
+      <div class="flex-grow-1 overflow-hidden">{{column.attribute.name}}</div>
+      <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
+        <i *ngIf="typeData.iconName" class="text-primary small faw ml-1"
+           [ngClass]="typeData.iconName"
+           [title]="column.attribute.constraint | constraintTypeIconTitle"></i>
+      </ng-container>
+    </div>
+  </th>
+  <th class="border-0 bg-white"></th>
+</tr>
+<div *ngFor="let column of columns; trackBy:trackByLinkColumn; let index = index"
+     [style.left]="'calc(' + (columns | columnHandleLeft:index) + 'px - 0.5rem)'" cdkDragLockAxis="x" cdkDrag
+     (cdkDragMoved)="onDragMoved($event, index)"
+     (cdkDragEnded)="onDragEnd($event, index)"
+     #resizeHandle class="resize-handle">
+</div>

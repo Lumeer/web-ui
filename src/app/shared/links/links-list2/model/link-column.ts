@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {LinksList2Component} from './links-list2.component';
+import {Attribute} from '../../../../core/store/collections/collection';
 
-@NgModule({
-  declarations: [LinksList2Component],
-  imports: [CommonModule],
-  exports: [LinksList2Component],
-})
-export class LinksList2Module {}
+export interface LinkColumn {
+  width: number;
+  attribute: Attribute;
+  linkTypeId?: string;
+  collectionId?: string;
+  color?: string;
+  bold?: boolean;
+}

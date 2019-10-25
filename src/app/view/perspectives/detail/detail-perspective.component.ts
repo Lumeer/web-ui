@@ -27,13 +27,16 @@ import {NavigationAction} from '../../../core/store/navigation/navigation.action
 import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {distinctUntilChanged, filter, map, mergeMap, pairwise, startWith, take, tap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectQuery, selectViewCursor, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByQueryWithoutLinks,
+  selectDocumentsByCustomQuery,
+} from '../../../core/store/common/permissions.selectors';
 import {filterStemsForCollection} from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {Workspace} from '../../../core/store/navigation/workspace';
@@ -67,18 +70,18 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
   private initSelection() {
     const subscription = combineLatest([
-      this.store$.pipe(select(selectCollectionsByQuery)),
+      this.store$.pipe(select(selectCollectionsByQueryWithoutLinks)),
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectViewCursor)),
     ])
       .pipe(
-        filter(([, query]) => !!query),
         mergeMap(([collections, query, cursor]) => {
           const selectedCollection =
             (cursor && (collections || []).find(coll => coll.id === cursor.collectionId)) ||
             (collections && collections[0]);
           if (selectedCollection) {
             const collectionQuery = filterStemsForCollection(selectedCollection.id, query);
+            this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
             return this.store$.pipe(
               select(selectDocumentsByCustomQuery(collectionQuery)),
               map(documents => {
@@ -90,10 +93,23 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
             );
           }
           return of({collection: null, document: null});
-        }),
-        take(1)
+        })
       )
-      .subscribe(({collection, document}) => collection && this.select(collection, document));
+      .subscribe(({collection, document}) => {
+        if (collection) {
+          const selectedCollection = this.selected$.value.collection;
+          const selectedDocument = this.selected$.value.document;
+
+          const collectionIsSame = selectedCollection && collection.id === selectedCollection.id;
+          const documentIsSame = selectedDocument && document && document.id === selectedDocument.id;
+
+          if (!collectionIsSame || !documentIsSame) {
+            this.select(collection, document);
+          }
+        } else {
+          this.selected$.next({});
+        }
+      });
     this.subscriptions.add(subscription);
   }
 
@@ -131,7 +147,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public selectDocument(document: DocumentModel) {
-    this.select(this.selected$.getValue().collection, document);
+    this.select(this.selected$.value.collection, document);
     this.loadLinkInstances(document);
   }
 
@@ -140,33 +156,17 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
     this.select(data.collection, data.document);
   }
 
-  private select(selectedCollection: Collection, selectedDocument?: DocumentModel) {
+  private select(selectedCollection: Collection, selectedDocument: DocumentModel) {
     this.collectionPermission$ = this.collectionPermissionsPipe
       .transform(selectedCollection)
       .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
 
     this.collectionSubscription.unsubscribe();
-
-    let documentObservable: Observable<{document: DocumentModel; previousDocument: DocumentModel}>;
-    if (selectedDocument) {
-      documentObservable = this.store$.pipe(
-        select(selectDocumentById(selectedDocument.id)),
-        startWith(null as DocumentModel),
-        pairwise(),
-        map(doc => ({document: doc[1], previousDocument: doc[0]}))
-      );
-    } else {
-      documentObservable = of({document: selectedDocument, previousDocument: null});
-    }
-
     this.collectionSubscription = combineLatest([
       this.store$.pipe(select(selectCollectionById(selectedCollection.id))),
-      documentObservable,
-    ]).subscribe(([collection, {document, previousDocument}]) => {
-      if (!document && previousDocument) {
-        this.collectionSubscription.unsubscribe();
-        collection && this.selectCollection(collection);
-      } else {
+      selectedDocument ? this.store$.pipe(select(selectDocumentById(selectedDocument.id))) : of(null),
+    ]).subscribe(([collection, document]) => {
+      if (collection) {
         this.selected$.next({collection, document});
       }
     });

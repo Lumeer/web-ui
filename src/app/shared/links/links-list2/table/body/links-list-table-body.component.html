@@ -1,0 +1,27 @@
+<tr *ngIf="rows.length === 0">
+  <td [attr.colspan]="columns.length" class="text-center" i18n="@@shared.preview.results.noResults">
+    No records found.
+  </td>
+</tr>
+
+<tr *ngFor="let row of rows">
+  <td *ngFor="let column of columns"
+      [style.width.px]="column.width">
+    <data-input *ngIf="column.linkTypeId && row.linkInstance"
+                [constraint]="column.attribute.constraint"
+                [constraintData]="constraintData"
+                [cursor]="row.linkInstance | dataCursor : column.attribute.id"
+                [value]="row.linkInstance.data &&  row.linkInstance.data[column.attribute.id]"
+                [readonly]="true">
+    </data-input>
+
+    <data-input *ngIf="column.collectionId && row.document"
+                [constraint]="column.attribute.constraint"
+                [constraintData]="constraintData"
+                [cursor]="row.document | dataCursor : column.attribute.id"
+                [value]="row.document.data &&  row.document.data[column.attribute.id]"
+                [readonly]="true">
+    </data-input>
+  </td>
+
+</tr>

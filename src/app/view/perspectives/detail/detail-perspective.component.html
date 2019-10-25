@@ -16,11 +16,11 @@
                        [query]="data.query"
                        [permissions]="collectionPermission$ | async">
       </document-detail>
-      <links-list2 class="d-block mt-5"
+      <links-list class="d-block mt-5"
                    [document]="data.selected.document"
                    [collection]="data.selected.collection"
                    (documentSelect)="selectCollectionAndDocument($event)">
-      </links-list2>
+      </links-list>
     </div>
 
   </ng-container>

@@ -17,9 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkType} from '../../core/store/link-types/link.type';
+import {Pipe, PipeTransform} from '@angular/core';
+import {LinkColumn} from '../model/link-column';
 
-export function getOtherLinkedCollectionId(linkType: LinkType, collectionId: string): string {
-  const collectionIds = linkType && linkType.collectionIds;
-  return collectionIds[0] === collectionId ? collectionIds[1] : collectionIds[0];
+@Pipe({
+  name: 'columnHandleLeft',
+})
+export class ColumnHandleLeftPipe implements PipeTransform {
+  public transform(columns: LinkColumn[], index: number): number {
+    return (columns || []).reduce((sum, column, ix) => (sum += ix <= index ? column.width : 0), 0);
+  }
 }

@@ -35,3 +35,11 @@ export interface LinkInstance {
 export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {
   return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
 }
+
+export function getOtherLinkedDocumentIds(linkInstances: LinkInstance[], documentId: string): string[] {
+  return linkInstances.reduce((acc, linkInstance) => {
+    const otherDocumentId = getOtherLinkedDocumentId(linkInstance, documentId);
+    acc.push(otherDocumentId);
+    return acc;
+  }, []);
+}

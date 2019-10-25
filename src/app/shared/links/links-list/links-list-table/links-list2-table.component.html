@@ -15,12 +15,8 @@
     <ng-container *ngIf="linkType | linkTypePermissions | async as allowedPermissions">
       <div class="h-10em table-responsive">
         <table class="table table-sm" id="preview-results-table">
-          <thead links-list-table-header
-                 [linkType]="linkType"
-                 [collection]="data.otherCollection">
-          </thead>
-          <tbody links-list-table-body
-                 [columns]="headerComponent?.getColumns()"
+          <tbody links-list2-table-body
+                 [columns]="[]"
                  [usedDocumentIds]="data.linkRows | linkRowsDocumentIds"
                  [document]="document"
                  [linkType]="linkType"

@@ -1,0 +1,23 @@
+$height: 2rem;
+$width: 1rem;
+
+.sticky-header {
+  position: sticky;
+  top: -1px;
+  white-space: nowrap;
+}
+
+th {
+  height: $height;
+  vertical-align: middle !important;
+  padding: 0 $width / 2 !important;
+}
+
+.resize-handle {
+  height: $height;
+  width: $width;
+  background: transparent;
+  cursor: col-resize;
+  position: absolute;
+  top: 0;
+}

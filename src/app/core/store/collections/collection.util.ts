@@ -35,8 +35,7 @@ export function isCollectionAttributeEditable(
   permissions: AllowedPermissions,
   query?: Query
 ): boolean {
-  const attribute =
-    attributeId && collection && collection.attributes && collection.attributes.find(attr => attr.id === attributeId);
+  const attribute = attributeId && ((collection && collection.attributes) || []).find(attr => attr.id === attributeId);
   return (
     isAttributeEditable(attribute) &&
     (canManageByPermissions(permissions) || !isCollectionAttributeLockedByQuery(query, collection, attributeId))
@@ -68,8 +67,7 @@ export function isLinkTypeAttributeEditable(
   permissions: AllowedPermissions,
   query?: Query
 ): boolean {
-  const attribute =
-    attributeId && linkType && linkType.attributes && linkType.attributes.find(attr => attr.id === attributeId);
+  const attribute = attributeId && ((linkType && linkType.attributes) || []).find(attr => attr.id === attributeId);
   return (
     isAttributeEditable(attribute) &&
     (canManageByPermissions(permissions) || !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId))
@@ -109,6 +107,9 @@ function isAttributeEditable(attribute: Attribute): boolean {
 }
 
 export function getDefaultAttributeId(collection: Collection): string {
+  if (!collection) {
+    return null;
+  }
   if (collection.defaultAttributeId) {
     const defaultAttribute = collection.attributes.find(attr => attr.id === collection.defaultAttributeId);
     if (defaultAttribute) {
@@ -125,13 +126,13 @@ export function getDefaultAttributeId(collection: Collection): string {
 }
 
 export function mergeCollections(collectionsA: Collection[], collectionsB: Collection[]): Collection[] {
-  const collectionsAIds = collectionsA.map(collection => collection.id);
-  const collectionsBToAdd = collectionsB.filter(collection => !collectionsAIds.includes(collection.id));
-  return collectionsA.concat(collectionsBToAdd);
+  const collectionsAIds = (collectionsA || []).map(collection => collection.id);
+  const collectionsBToAdd = (collectionsB || []).filter(collection => !collectionsAIds.includes(collection.id));
+  return (collectionsA || []).concat(collectionsBToAdd);
 }
 
 export function createAttributesMap(attributes: Attribute[]): Record<string, Attribute> {
-  return attributes.reduce((attributesMap, attribute) => {
+  return (attributes || []).reduce((attributesMap, attribute) => {
     if (attribute.id) {
       attributesMap[attribute.id] = attribute;
     }
@@ -149,5 +150,5 @@ export function findAttributeConstraint(attributes: Attribute[], attributeId: st
 }
 
 export function hasAttributeType(entity: Collection | LinkType, constraintType: ConstraintType): boolean {
-  return entity && entity.attributes.some(attr => attr.constraint && attr.constraint.type === constraintType);
+  return entity && (entity.attributes || []).some(attr => attr.constraint && attr.constraint.type === constraintType);
 }

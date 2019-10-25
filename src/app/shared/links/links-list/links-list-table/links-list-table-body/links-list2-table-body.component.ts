@@ -30,12 +30,12 @@ import {KeyCode} from '../../../../key-code';
 import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
-  selector: '[links-list-table-body]',
-  templateUrl: './links-list-table-body.component.html',
-  styleUrls: ['links-list-table-body.component.scss', './../links-list-table.scss'],
+  selector: '[links-list2-table-body]',
+  templateUrl: './links-list2-table-body.component.html',
+  styleUrls: ['links-list2-table-body.component.scss', './../links-list-table.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableBodyComponent {
+export class LinksList2TableBodyComponent {
   @ViewChild(DocumentHintsComponent, {static: false})
   public suggestions: DocumentHintsComponent;
 

@@ -87,7 +87,7 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
 
   private resetScrollIfNeeded(change: SimpleChange) {
     if (change.previousValue && change.currentValue && change.previousValue.id !== change.currentValue.id) {
-      this.tableElement.nativeElement.scrollTop = 0;
+      this.tableElement && (this.tableElement.nativeElement.scrollTop = 0);
     }
   }
 

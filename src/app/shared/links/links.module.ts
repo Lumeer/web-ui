@@ -19,19 +19,16 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {LinksListComponent} from './links-list/links-list.component';
-import {LinksListTabsComponent} from './links-list/links-list-tabs/links-list-tabs.component';
-import {LinksListTableComponent} from './links-list/links-list-table/links-list-table.component';
+import {LinksList2TableComponent} from './links-list/links-list-table/links-list2-table.component';
 import {PickerModule} from '../picker/picker.module';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
-import {LinksListTableHeaderComponent} from './links-list/links-list-table/links-list-table-header/links-list-table-header.component';
-import {LinksListTableBodyComponent} from './links-list/links-list-table/links-list-table-body/links-list-table-body.component';
+import {LinksList2TableBodyComponent} from './links-list/links-list-table/links-list-table-body/links-list2-table-body.component';
 import {DocumentHintsModule} from '../document-hints/document-hints.module';
 import {LinkRowsDocumentIdsPipe} from './links-list/links-list-table/link-rows-document-ids.pipe';
 import {DataInputModule} from '../data-input/data-input.module';
 import {PresenterModule} from '../presenter/presenter.module';
-import {LinksList2Module} from './links-list2/links-list2.module';
+import {LinksListModule} from './links-list2/links-list.module';
 
 @NgModule({
   imports: [
@@ -42,16 +39,9 @@ import {LinksList2Module} from './links-list2/links-list2.module';
     InputModule,
     PipesModule,
     DocumentHintsModule,
-    LinksList2Module,
+    LinksListModule,
   ],
-  declarations: [
-    LinksListComponent,
-    LinksListTabsComponent,
-    LinksListTableComponent,
-    LinksListTableHeaderComponent,
-    LinksListTableBodyComponent,
-    LinkRowsDocumentIdsPipe,
-  ],
-  exports: [LinksListComponent, LinksList2Module],
+  declarations: [LinksList2TableComponent, LinksList2TableBodyComponent, LinkRowsDocumentIdsPipe],
+  exports: [LinksListModule],
 })
 export class LinksModule {}

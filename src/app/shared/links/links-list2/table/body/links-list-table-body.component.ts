@@ -17,33 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-
-import {LinkType} from '../../../../core/store/link-types/link.type';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {LinkColumn} from '../../model/link-column';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {LinkRow} from '../../model/link-row';
 
 @Component({
-  selector: 'links-list-tabs',
-  templateUrl: './links-list-tabs2.component.html',
-  styleUrls: ['./links-list-tabs2.component.scss'],
+  selector: '[links-list-table-body]',
+  templateUrl: './links-list-table-body.component.html',
+  styleUrls: ['./links-list-table-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTabs2Component {
+export class LinksListTableBodyComponent {
   @Input()
-  public linkTypes: LinkType[];
+  public columns: LinkColumn[];
 
   @Input()
-  public selectedLinkType: LinkType;
+  public constraintData: ConstraintData;
 
-  @Output()
-  public select = new EventEmitter<LinkType>();
+  @Input()
+  public permissions: AllowedPermissions;
 
-  public selectLink(linkType: LinkType) {
-    if (!this.selectedLinkType || this.selectedLinkType.id !== linkType.id) {
-      this.select.emit(linkType);
-    }
-  }
-
-  public trackByLinkTypes(index: number, linkType: LinkType): string {
-    return linkType.id;
-  }
+  @Input()
+  public rows: LinkRow[];
 }
