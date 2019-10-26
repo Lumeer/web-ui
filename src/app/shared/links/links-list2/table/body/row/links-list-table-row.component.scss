@@ -1,0 +1,38 @@
+@import '../../../../../../../styles/variables';
+
+$padding: 0.5rem;
+
+td {
+  height: 2rem;
+  padding: 0 !important;
+
+  data-input {
+    display: block;
+    height: 100%;
+  }
+}
+
+td.editing data-input {
+  border: 1px solid $success;
+}
+
+td.focused data-input {
+  border: 1px solid $primary;
+}
+
+td::ng-deep data-input {
+  & > *:not(user-data-input) > input {
+    padding-left: $padding !important;
+    padding-right: $padding !important;
+  }
+
+  & > user-data-input {
+    img {
+      margin-left: $padding !important;
+    }
+
+    input {
+      padding-right: $padding !important;
+    }
+  }
+}

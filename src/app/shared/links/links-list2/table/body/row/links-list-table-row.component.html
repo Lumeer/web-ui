@@ -1,0 +1,37 @@
+<ng-container *ngIf="{columnFocused: columnFocused$ | async, columnEditing: columnEditing$ | async} as data">
+  <td *ngFor="let column of columns; trackBy: trackByColumn; let index = index"
+      class="table-border"
+      [style.width.px]="column.width"
+      [class.focused]="data.columnFocused === index"
+      [class.editing]="data.columnEditing === index">
+    <data-input *ngIf="column.linkTypeId && row.linkInstance"
+                [constraint]="column.attribute.constraint"
+                [constraintData]="constraintData"
+                [cursor]="row.linkInstance | dataCursor : column.attribute.id"
+                [value]="!(initialValue | isNullOrUndefined) && data.columnEditing === index ? initialValue : (row.linkInstance.data &&  row.linkInstance.data[column.attribute.id])"
+                [focus]="true"
+                [readonly]="readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
+                [class.cursor-pointer]="!readonly"
+                (save)="onNewValue(index, $event)"
+                (dblclick)="onDataInputDblClick(index, $event)"
+                (cancel)="onDataInputCancel(index)"
+                (click)="onDataInputFocus(index)"
+                (clickOutside)="onDataInputCancel(index)">
+    </data-input>
+
+    <data-input *ngIf="column.collectionId && row.document"
+                [constraint]="column.attribute.constraint"
+                [constraintData]="constraintData"
+                [cursor]="row.document | dataCursor : column.attribute.id"
+                [value]="!(initialValue | isNullOrUndefined) && data.columnEditing === index ? initialValue : (row.document.data &&  row.document.data[column.attribute.id])"
+                [focus]="true"
+                [readonly]="readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
+                [class.cursor-pointer]="!readonly"
+                (save)="onNewValue(index, $event)"
+                (dblclick)="onDataInputDblClick(index, $event)"
+                (cancel)="onDataInputCancel(index)"
+                (click)="onDataInputFocus(index)"
+                (clickOutside)="onDataInputCancel(index)">
+    </data-input>
+  </td>
+</ng-container>

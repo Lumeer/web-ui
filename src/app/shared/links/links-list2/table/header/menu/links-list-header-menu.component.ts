@@ -17,17 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, ViewChild} from '@angular/core';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {ContextMenuComponent} from 'ngx-contextmenu';
 
-import {FilterBoxComponent} from './filter-box/filter-box.component';
-import {InputBoxComponent} from './input-box/input-box.component';
-import {InvitationTypeSelectComponent} from './invitation-type-select/invitation-type-select.component';
-import {HiddenInputComponent} from './hidden-input/hidden-input.component';
-
-@NgModule({
-  imports: [CommonModule],
-  declarations: [FilterBoxComponent, InputBoxComponent, InvitationTypeSelectComponent, HiddenInputComponent],
-  exports: [FilterBoxComponent, InputBoxComponent, InvitationTypeSelectComponent, HiddenInputComponent],
+@Component({
+  selector: 'links-list-header-menu',
+  templateUrl: './links-list-header-menu.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InputModule {}
+export class LinksListHeaderMenuComponent {
+  @Input()
+  public permissions: AllowedPermissions;
+
+  @Output()
+  public attributeType = new EventEmitter();
+
+  @Output()
+  public attributeFunction = new EventEmitter();
+
+  @ViewChild(ContextMenuComponent, {static: true})
+  public contextMenu: ContextMenuComponent;
+}

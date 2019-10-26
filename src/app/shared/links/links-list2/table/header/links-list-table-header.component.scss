@@ -5,6 +5,7 @@ $width: 1rem;
   position: sticky;
   top: -1px;
   white-space: nowrap;
+  z-index: 2;
 }
 
 th {
@@ -20,4 +21,5 @@ th {
   cursor: col-resize;
   position: absolute;
   top: 0;
+  z-index: 2;
 }

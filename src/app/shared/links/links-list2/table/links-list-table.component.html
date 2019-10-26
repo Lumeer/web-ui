@@ -1,12 +1,19 @@
-<table class="table position-relative" *ngIf="{columns: columns$ | async} as data">
-  <thead links-list-table-header [columns]="data.columns"
-         (resizeColumn)="onResizeColumn($event)">
-  </thead>
-  <tbody links-list-table-body
-         [permissions]="collection | collectionPermissions | async"
-         [columns]="data.columns"
-         [constraintData]="constraintData$ | async"
-         [rows]="rows$ | async">
-  </tbody>
+<div class="overflow-auto">
+  <table class="table position-relative"
+         *ngIf="{columns: columns$ | async, permissions: collection | collectionPermissions | async} as data">
+    <thead links-list-table-header
+           [columns]="data.columns"
+           [permissions]="data.permissions"
+           (resizeColumn)="onResizeColumn($event)"
+           (attributeType)="onAttributeType($event)"
+           (attributeFunction)="onAttributeFunction($event)">
+    </thead>
+    <tbody links-list-table-body
+           [permissions]="data.permissions"
+           [columns]="data.columns"
+           [constraintData]="constraintData$ | async"
+           [rows]="rows$ | async">
+    </tbody>
 
-</table>
+  </table>
+</div>

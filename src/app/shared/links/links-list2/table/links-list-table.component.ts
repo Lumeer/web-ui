@@ -37,6 +37,8 @@ import {
   LinkInstance,
 } from '../../../../core/store/link-instances/link.instance';
 import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
+import {AttributeTypeModalComponent} from '../../../modal/attribute-type/attribute-type-modal.component';
+import {ModalService} from '../../../modal/modal.service';
 
 const columnWidth = 100;
 
@@ -61,7 +63,11 @@ export class LinksListTableComponent implements OnChanges {
   public rows$: Observable<LinkRow[]>;
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private constraintDataService: ConstraintDataService, private store$: Store<AppState>) {
+  constructor(
+    private constraintDataService: ConstraintDataService,
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {
     this.constraintData$ = constraintDataService.observeConstraintData();
   }
 
@@ -84,7 +90,7 @@ export class LinksListTableComponent implements OnChanges {
       const column: LinkColumn = (this.columns$.value || []).find(
         c => c.linkTypeId === this.linkType.id && c.attribute.id === attribute.id
       ) || {attribute, width: columnWidth, linkTypeId: this.linkType.id};
-      columns.push({...column});
+      columns.push({...column, attribute});
       return columns;
     }, []);
     const defaultAttributeId = getDefaultAttributeId(this.collection);
@@ -98,7 +104,7 @@ export class LinksListTableComponent implements OnChanges {
         color: this.collection.color,
         bold: attribute.id === defaultAttributeId,
       };
-      columns.push({...column});
+      columns.push({...column, attribute});
       return columns;
     }, []);
 
@@ -137,5 +143,13 @@ export class LinksListTableComponent implements OnChanges {
     const columns = [...this.columns$.value];
     columns[data.index] = {...columns[data.index], width: data.width};
     this.columns$.next(columns);
+  }
+
+  public onAttributeType(column: LinkColumn) {
+    this.modalService.showAttributeType(column.attribute.id, column.collectionId, column.linkTypeId);
+  }
+
+  public onAttributeFunction(column: LinkColumn) {
+    this.modalService.showAttributeFunction(column.attribute.id, column.collectionId, column.linkTypeId);
   }
 }

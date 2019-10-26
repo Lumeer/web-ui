@@ -45,7 +45,7 @@ import {AppState} from '../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {PostItHiddenInputComponent} from './hidden-input/post-it-hidden-input.component';
+import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 
 export interface PostItTag {
   title: string;
@@ -88,8 +88,8 @@ export class PostItComponent implements OnDestroy {
   @ViewChildren(PostItRowComponent)
   public rows: QueryList<PostItRowComponent>;
 
-  @ViewChild(PostItHiddenInputComponent, {static: false})
-  public hiddenInputComponent: PostItHiddenInputComponent;
+  @ViewChild(HiddenInputComponent, {static: false})
+  public hiddenInputComponent: HiddenInputComponent;
 
   public unusedAttributes: Attribute[] = [];
 
@@ -99,6 +99,7 @@ export class PostItComponent implements OnDestroy {
 
   constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
     this.dataRowFocusService = new DataRowFocusService(
+      () => 2,
       () => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
       () => this.hiddenInputComponent

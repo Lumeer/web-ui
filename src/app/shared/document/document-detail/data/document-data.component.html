@@ -11,9 +11,9 @@
                           (removeDocument)="removeDocument.emit()">
   </document-detail-header>
 
-  <document-detail-hidden-input (newInput)="onNewHiddenInput($event)"
-                                class="position-fixed">
-  </document-detail-hidden-input>
+  <hidden-input (newInput)="onNewHiddenInput($event)"
+                class="position-fixed">
+  </hidden-input>
 
   <ng-container *ngIf="toolbarRef" [ngTemplateOutlet]="toolbarRef"></ng-container>
 

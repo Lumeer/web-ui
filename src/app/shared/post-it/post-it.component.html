@@ -1,7 +1,6 @@
-<post-it-hidden-input (newInput)="onNewHiddenInput($event)"
-                              class="position-fixed">
-</post-it-hidden-input>
-
+<hidden-input (newInput)="onNewHiddenInput($event)"
+              class="position-fixed">
+</hidden-input>
 
 <post-it-header *ngIf="(resource | resourceIconsColors) as data"
                 class="card-header p-2"

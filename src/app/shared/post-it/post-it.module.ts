@@ -28,7 +28,7 @@ import {PostItHeaderComponent} from './header/post-it-header.component';
 import {PresenterModule} from '../presenter/presenter.module';
 import {ResourceIconsColorsPipe} from './pipes/resource-icons-colors.pipe';
 import {DataResourceFavoritePipe} from './pipes/data-resource-favorite.pipe';
-import {PostItHiddenInputComponent} from './hidden-input/post-it-hidden-input.component';
+import {InputModule} from '../input/input.module';
 
 @NgModule({
   declarations: [
@@ -37,9 +37,8 @@ import {PostItHiddenInputComponent} from './hidden-input/post-it-hidden-input.co
     PostItHeaderComponent,
     ResourceIconsColorsPipe,
     DataResourceFavoritePipe,
-    PostItHiddenInputComponent,
   ],
-  imports: [CommonModule, DataInputModule, PipesModule, PresenterModule, ClickOutsideModule],
+  imports: [CommonModule, DataInputModule, PipesModule, PresenterModule, ClickOutsideModule, InputModule],
   exports: [PostItComponent],
 })
 export class PostItModule {}

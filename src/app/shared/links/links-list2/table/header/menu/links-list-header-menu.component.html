@@ -1,0 +1,20 @@
+<context-menu #contextMenu>
+  <ng-template
+    contextMenuItem
+    [enabled]="permissions?.manageWithView"
+    (execute)="attributeType.emit()">
+    <i class="fa fa-fw fa-shapes mr-1"
+       aria-hidden="true">
+    </i>&nbsp;
+    <span i18n="@@table.header.menu.changeType">Attribute type...
+    </span>
+  </ng-template>
+  <ng-template
+    contextMenuItem
+    [enabled]="permissions?.manageWithView"
+    (execute)="attributeFunction.emit()">
+    <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>&nbsp;
+    <span i18n="@@table.header.menu.editFunction">Edit function...</span>
+  </ng-template>
+
+</context-menu>

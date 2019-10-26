@@ -30,6 +30,9 @@ import {
 } from '@angular/core';
 import {LinkColumn} from '../../model/link-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {LinksListHeaderMenuComponent} from './menu/links-list-header-menu.component';
+import {ContextMenuService} from 'ngx-contextmenu';
 
 const columnMinWidth = 30;
 
@@ -43,8 +46,17 @@ export class LinksListTableHeaderComponent {
   @Input()
   public columns: LinkColumn[];
 
+  @Input()
+  public permissions: AllowedPermissions;
+
   @Output()
   public resizeColumn = new EventEmitter<{index: number; width: number}>();
+
+  @Output()
+  public attributeFunction = new EventEmitter<LinkColumn>();
+
+  @Output()
+  public attributeType = new EventEmitter<LinkColumn>();
 
   @ViewChildren('tableHeader')
   public tableHeaderElements: QueryList<ElementRef>;
@@ -52,22 +64,30 @@ export class LinksListTableHeaderComponent {
   @ViewChildren('resizeHandle')
   public handlerElements: QueryList<ElementRef>;
 
-  constructor(private renderer: Renderer2) {}
+  @ViewChildren(LinksListHeaderMenuComponent)
+  public headerMenuElements: QueryList<LinksListHeaderMenuComponent>;
 
-  public trackByLinkColumn(index: number, linkColumn: LinkColumn): string {
-    return linkColumn.attribute.correlationId || linkColumn.attribute.id;
+  constructor(private renderer: Renderer2, private contextMenuService: ContextMenuService) {}
+
+  public trackByColumn(index: number, column: LinkColumn): string {
+    return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
   }
 
   public onDragMoved(dragMove: CdkDragMove, index: number) {
     const element = this.tableHeaderElements.toArray()[index];
-    const width = Math.max(columnMinWidth, this.columns[index].width + dragMove.distance.x);
-    if (element) {
+    const width = this.computeNewWidth(index, dragMove.distance);
+    if (element && element.nativeElement.offsetWidth !== width) {
       this.renderer.setStyle(element.nativeElement, 'width', String(width) + 'px');
     }
   }
 
+  private computeNewWidth(index: number, distance: {x: number}): number {
+    const width = Math.max(columnMinWidth, this.columns[index].width + distance.x);
+    return width - (width % 5);
+  }
+
   public onDragEnd(dragEnd: CdkDragEnd, index: number) {
-    const width = Math.max(columnMinWidth, this.columns[index].width + dragEnd.distance.x);
+    const width = this.computeNewWidth(index, dragEnd.distance);
     this.resizeColumn.emit({index, width});
 
     const resizeElement = this.handlerElements.toArray()[index];
@@ -75,5 +95,33 @@ export class LinksListTableHeaderComponent {
       this.renderer.setStyle(resizeElement.nativeElement, 'transform', 'none');
     }
     dragEnd.source.reset();
+  }
+
+  public onContextMenu(column: number, event: MouseEvent) {
+    const menuElement = this.headerMenuElements.toArray()[column];
+    if (menuElement) {
+      this.contextMenuService.show.next({
+        contextMenu: menuElement.contextMenu,
+        event,
+        item: null,
+      });
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  public onAttributeFunction(index: number) {
+    const column = this.columns[index];
+    if (column) {
+      this.attributeFunction.emit(column);
+    }
+  }
+
+  public onAttributeType(index: number) {
+    const column = this.columns[index];
+    if (column) {
+      this.attributeType.emit(column);
+    }
   }
 }

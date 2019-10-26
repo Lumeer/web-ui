@@ -18,17 +18,15 @@
  */
 
 export interface DataRowComponent {
-  startKeyEditing(value?: any);
+  startColumnEditing(column: number, value?: any): boolean;
 
-  startValueEditing(value?: any);
+  endColumnEditing(column: number);
 
-  endValueEditing();
+  endRowEditing();
 
-  endKeyEditing();
+  focusColumn(column: number);
 
-  focusKey(focus: boolean);
-
-  focusValue(focus: boolean);
+  unFocusRow();
 }
 
 export interface DataRowHiddenComponent {

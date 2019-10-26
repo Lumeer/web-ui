@@ -30,6 +30,13 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ColumnHandleLeftPipe} from './pipes/column-handle-left.pipe';
 import {LinksListTableBodyComponent} from './table/body/links-list-table-body.component';
 import {DataInputModule} from '../../data-input/data-input.module';
+import {LinksListTableRowComponent} from './table/body/row/links-list-table-row.component';
+import {InputModule} from '../../input/input.module';
+import {ClickOutsideModule} from 'ng-click-outside';
+import {LinksListHeaderMenuComponent} from './table/header/menu/links-list-header-menu.component';
+import {ContextMenuModule} from 'ngx-contextmenu';
+import {AttributeTypeModalModule} from '../../modal/attribute-type/attribute-type-modal.module';
+import {AttributeFunctionModalModule} from '../../modal/attribute-function/attribute-function-modal.module';
 
 @NgModule({
   declarations: [
@@ -39,8 +46,21 @@ import {DataInputModule} from '../../data-input/data-input.module';
     LinksListTableHeaderComponent,
     ColumnHandleLeftPipe,
     LinksListTableBodyComponent,
+    LinksListTableRowComponent,
+    LinksListHeaderMenuComponent,
   ],
-  imports: [CommonModule, PresenterModule, PipesModule, DragDropModule, DataInputModule],
+  imports: [
+    CommonModule,
+    PresenterModule,
+    PipesModule,
+    DragDropModule,
+    DataInputModule,
+    InputModule,
+    ClickOutsideModule,
+    ContextMenuModule,
+    AttributeTypeModalModule,
+    AttributeFunctionModalModule,
+  ],
   exports: [LinksListComponent],
 })
 export class LinksListModule {}
