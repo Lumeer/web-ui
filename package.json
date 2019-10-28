@@ -73,7 +73,7 @@
     "js-base64": "^2.5.1",
     "jssha": "^2.3.1",
     "lodash": "^4.17.15",
-    "mapbox-gl": "^1.4.1",
+    "mapbox-gl": "^1.5.0",
     "mixpanel-browser": "^2.29.1",
     "moment": "^2.24.0",
     "ng-click-outside": "^5.1.1",
