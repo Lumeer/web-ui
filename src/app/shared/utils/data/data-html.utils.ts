@@ -29,13 +29,14 @@ export function createDataValueHtml(
   constraintData: ConstraintData,
   className?: string
 ): string {
-  const formattedValue = (constraint || new UnknownConstraint()).createDataValue(value, constraintData).format();
+  const dataValue = (constraint || new UnknownConstraint()).createDataValue(value, constraintData);
+  const formattedValue = dataValue.format();
 
   switch (constraint && constraint.type) {
     case ConstraintType.Color:
       return createDataColorValueHtml(formattedValue, className);
     case ConstraintType.Boolean:
-      return createDataBooleanValueHtml(formattedValue, className);
+      return createDataBooleanValueHtml(dataValue.serialize(), className);
     case ConstraintType.Files:
       return createDataFilesValueHtml(formattedValue, className);
     default:
@@ -52,11 +53,11 @@ function createDataColorValueHtml(value: string, className?: string) {
           style="width: 60px; background: ${value}">&nbsp;</div>`;
 }
 
-function createDataBooleanValueHtml(value: string, className?: string) {
+function createDataBooleanValueHtml(value: any, className?: string) {
   const inputId = `search-document-input-${generateId()}`;
   return `<div class="d-inline-block custom-control custom-checkbox ${className || ''}"><input 
              id="${inputId}"
-             checked="${value}"
+             ${value ? 'checked="true"' : ''}
              style="cursor: unset;"
              readonly type="checkbox"
              class="custom-control-input">
