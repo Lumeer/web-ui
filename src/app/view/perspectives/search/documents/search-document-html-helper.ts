@@ -18,7 +18,7 @@
  */
 
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -34,11 +34,15 @@ export function createSearchDocumentValuesHtml(
     return '';
   }
 
-  const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
-  return Object.keys(document.data)
-    .filter(
-      attributeId => collectionAttributesIds.includes(attributeId) && isNotNullOrUndefined(document.data[attributeId])
-    )
+  const collectionAttributesIds = (collection.attributes || []).map(attribute => attribute.id);
+  return collectionAttributesIds
+    .filter(attributeId => {
+      const constraint = findAttributeConstraint(collection.attributes, attributeId);
+      return (
+        (constraint != null && constraint.type === ConstraintType.Boolean) ||
+        isNotNullOrUndefined(document.data[attributeId])
+      );
+    })
     .map(attributeId =>
       createDataValueHtml(
         document.data[attributeId],
@@ -60,13 +64,16 @@ export function createSearchDocumentEntriesHtml(
     return '';
   }
 
-  const collectionAttributesIds = collection.attributes.map(attribute => attribute.id);
-  return Object.keys(document.data)
-    .filter(
-      attributeId =>
-        collectionAttributesIds.includes(attributeId) &&
-        (showEmptyValues || isNotNullOrUndefined(document.data[attributeId]))
-    )
+  const collectionAttributesIds = (collection.attributes || []).map(attribute => attribute.id);
+  return collectionAttributesIds
+    .filter(attributeId => {
+      const constraint = findAttributeConstraint(collection.attributes, attributeId);
+      return (
+        (constraint != null && constraint.type === ConstraintType.Boolean) ||
+        showEmptyValues ||
+        isNotNullOrUndefined(document.data[attributeId])
+      );
+    })
     .map(attributeId => ({attributeId, constraint: findAttributeConstraint(collection.attributes, attributeId)}))
     .map(
       ({attributeId, constraint}) =>

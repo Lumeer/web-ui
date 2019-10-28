@@ -57,7 +57,10 @@ export class DocumentsEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.Get>(DocumentsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
-    filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
+    filter(
+      ([action, queries]) =>
+        action.payload.force || !queries.find(query => areQueriesEqual(query, action.payload.query))
+    ),
     mergeMap(([action]) => {
       const queryDto = convertQueryModelToDto(action.payload.query);
 
