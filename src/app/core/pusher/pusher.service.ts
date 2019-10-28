@@ -321,7 +321,7 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new DocumentsAction.Get({
-            query: {stems: [{collectionId: data.object.id}], page: 0, pageSize: 200},
+            query: {stems: [{collectionId: data.object.id}], page: 0, pageSize: null},
           })
         );
       }
@@ -330,7 +330,7 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new DocumentsAction.Get({
-            query: {stems: [{collectionId: data.id}], page: 0, pageSize: 200},
+            query: {stems: [{collectionId: data.id}], page: 0, pageSize: null},
           })
         );
       }
@@ -339,7 +339,7 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new DocumentsAction.Get({
-            query: {stems: [{collectionId: data.object.id}], page: 0, pageSize: 200},
+            query: {stems: [{collectionId: data.object.id}], page: 0, pageSize: null},
           })
         );
       }
@@ -348,7 +348,7 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentWorkspace(data)) {
         this.store$.dispatch(
           new DocumentsAction.Get({
-            query: {stems: [{collectionId: data.id}], page: 0, pageSize: 200},
+            query: {stems: [{collectionId: data.id}], page: 0, pageSize: null},
           })
         );
       }
