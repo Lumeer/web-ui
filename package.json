@@ -68,7 +68,7 @@
     "crc-32": "^1.2.0",
     "driver.js": "^0.9.8",
     "file-saver": "^2.0.2",
-    "flag-icon-css": "^3.4.2",
+    "flag-icon-css": "^3.4.5",
     "hammerjs": "^2.0.8",
     "js-base64": "^2.5.1",
     "jssha": "^2.3.1",
