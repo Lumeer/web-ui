@@ -65,6 +65,7 @@ import {SelectDataValue} from '../../../../core/model/data-value/select.data-val
 import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Constraint} from '../../../../core/model/constraint';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 
 @Component({
   selector: 'kanban-columns',
@@ -115,6 +116,8 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly dragDelay = DRAG_DELAY;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
+
+  private unknownConstraint: Constraint = new UnknownConstraint();
 
   constructor(
     private store$: Store<AppState>,
@@ -268,7 +271,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     if (constraint && constraint.type === ConstraintType.Select) {
       return new SelectDataValue(newValue, constraint.config as SelectConstraintConfig, true).serialize();
     } else {
-      return constraint ? constraint.createDataValue(newValue).serialize() : newValue;
+      return (constraint || this.unknownConstraint).createDataValue(newValue).serialize();
     }
   }
 
