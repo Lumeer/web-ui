@@ -6,6 +6,7 @@
   [class.bg-danger-light]="readonly && !valid"
   [class.invalid-value]="readonly && !(value | isDataValueValid)"
   (focus)="onFocus.emit($event)"
+  (input)="onValueChange($event.target.value)"
   [ngStyle]="{'background-color': valid ? (value | formatDataValue) : ''}"
   data-test="color-data-input"
   type="text">

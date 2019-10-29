@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Attribute} from '../../core/store/collections/collection';
 
-export interface LinkRowModel {
-  linkInstance?: LinkInstance;
-  document?: DocumentModel;
-  correlationId?: string;
+@Pipe({
+  name: 'attributeFunctionDefined',
+})
+export class AttributeFunctionDefinedPipe implements PipeTransform {
+  public transform(attribute: Attribute): boolean {
+    return attribute && attribute.function && attribute.function.js && attribute.function.js.length > 0;
+  }
 }

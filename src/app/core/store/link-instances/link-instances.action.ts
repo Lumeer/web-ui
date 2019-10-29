@@ -31,6 +31,9 @@ export enum LinkInstancesActionType {
   CREATE_SUCCESS = '[Link Instances] Create :: Success',
   CREATE_FAILURE = '[Link Instances] Create :: Failure',
 
+  UPDATE = '[Link Instances] Update',
+  UPDATE_INTERNAL = '[Link Instances] Update :: Internal',
+
   PATCH_DATA = '[Link Instances] Patch Data',
   PATCH_DATA_INTERNAL = '[Link Instances] Patch Data :: Internal',
 
@@ -104,6 +107,18 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {linkInstanceId: string; data: Record<string, any>}) {}
   }
 
+  export class Update implements Action {
+    public readonly type = LinkInstancesActionType.UPDATE;
+
+    public constructor(public payload: {linkInstance: LinkInstance; nextAction?: Action}) {}
+  }
+
+  export class UpdateInternal implements Action {
+    public readonly type = LinkInstancesActionType.UPDATE_INTERNAL;
+
+    public constructor(public payload: {linkInstance: LinkInstance}) {}
+  }
+
   export class UpdateSuccess implements Action {
     public readonly type = LinkInstancesActionType.UPDATE_SUCCESS;
 
@@ -119,13 +134,13 @@ export namespace LinkInstancesAction {
   export class Delete implements Action {
     public readonly type = LinkInstancesActionType.DELETE;
 
-    public constructor(public payload: {linkInstanceId: string; callback?: (linkInstanceId: string) => void}) {}
+    public constructor(public payload: {linkInstanceId: string}) {}
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = LinkInstancesActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: {linkInstanceId: string; callback?: (linkInstanceId: string) => void}) {}
+    public constructor(public payload: {linkInstanceId: string}) {}
   }
 
   export class DeleteSuccess implements Action {
@@ -137,7 +152,7 @@ export namespace LinkInstancesAction {
   export class DeleteFailure implements Action {
     public readonly type = LinkInstancesActionType.DELETE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; linkInstance: LinkInstance}) {}
   }
 
   export class Duplicate implements Action {
@@ -181,6 +196,8 @@ export namespace LinkInstancesAction {
     | CreateFailure
     | PatchData
     | PatchDataInternal
+    | Update
+    | UpdateInternal
     | UpdateSuccess
     | UpdateFailure
     | Delete

@@ -7,9 +7,14 @@
       (select)="onSelectLink($event)">
     </links-list-tabs>
     <links-list-table
+      class="d-block mt-2"
       [linkType]="selectedLinkType$ | async"
       [document]="document"
-      [collection]="otherCollection$ | async">
+      [collection]="otherCollection$ | async"
+      [permissions]="permissions$ | async"
+      [query]="query$ | async"
+      (unLink)="unLinkDocument($event)"
+      (detail)="onSelectDocument($event)">
     </links-list-table>
   </ng-container>
 </ng-container>

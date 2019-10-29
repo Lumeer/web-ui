@@ -69,7 +69,7 @@ export namespace NavigationAction {
   export class RemoveViewFromUrl implements Action {
     public readonly type = NavigationActionType.REMOVE_VIEW_FROM_URL;
 
-    public constructor(public payload: {setQuery?: Query}) {}
+    public constructor(public payload: {setQuery?: Query; cursor?: ViewCursor}) {}
   }
 
   export class NavigateToPreviousUrl implements Action {

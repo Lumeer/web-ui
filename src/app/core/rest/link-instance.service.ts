@@ -39,6 +39,10 @@ export class LinkInstanceService extends BaseService {
     return this.httpClient.get<LinkInstanceDto>(this.restApiPrefix(linkTypeId, linkInstanceId));
   }
 
+  public updateLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
+    return this.httpClient.put<LinkInstanceDto>(this.restApiPrefix(linkInstance.id), linkInstance);
+  }
+
   public createLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
     return this.httpClient.post<LinkInstanceDto>(this.restApiPrefix(), linkInstance);
   }

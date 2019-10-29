@@ -17,27 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {PickerModule} from '../picker/picker.module';
-import {InputModule} from '../input/input.module';
-import {PipesModule} from '../pipes/pipes.module';
-import {DocumentHintsModule} from '../document-hints/document-hints.module';
-import {DataInputModule} from '../data-input/data-input.module';
-import {PresenterModule} from '../presenter/presenter.module';
-import {LinksListModule} from './links-list/links-list.module';
+import {Attribute} from '../../../../core/store/collections/collection';
 
-@NgModule({
-  imports: [
-    CommonModule,
-    DataInputModule,
-    PickerModule,
-    PresenterModule,
-    InputModule,
-    PipesModule,
-    DocumentHintsModule,
-    LinksListModule,
-  ],
-  exports: [LinksListModule],
-})
-export class LinksModule {}
+export interface LinkColumn {
+  width: number;
+  attribute: Attribute;
+  linkTypeId?: string;
+  collectionId?: string;
+  color?: string;
+  bold?: boolean;
+  editable: boolean;
+}

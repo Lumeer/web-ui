@@ -44,7 +44,6 @@ import {TableConfigPart, TableConfigRow} from '../../../../../../../../core/stor
 import {createEmptyTableRow} from '../../../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {
-  selectTablePart,
   selectTableParts,
   selectTableRow,
   selectTableRowIndentable,
@@ -190,8 +189,8 @@ export class TableDataCellMenuComponent implements OnChanges {
         map(row => row.linkInstanceId)
       )
       .subscribe(linkInstanceId => {
-        const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
-        this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId, callback}));
+        this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId}));
+        this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
       });
   }
 

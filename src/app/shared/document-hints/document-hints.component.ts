@@ -22,17 +22,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
-  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
@@ -48,8 +46,13 @@ import {Direction} from '../direction';
 import {DropdownPosition} from '../dropdown/dropdown-position';
 import {DropdownComponent} from '../dropdown/dropdown.component';
 import {DocumentHintColumn} from './document-hint-column';
-import {DurationUnitsMap} from '../../core/model/data/constraint';
-import {TranslationService} from '../../core/service/translation.service';
+import {ConstraintData} from '../../core/model/data/constraint';
+import {getOtherLinkedDocumentId} from '../../core/store/link-instances/link.instance';
+import {selectDocumentById} from '../../core/store/documents/documents.state';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {isNotNullOrUndefined} from '../utils/common.utils';
+import {findAttributeConstraint} from '../../core/store/collections/collection.util';
+import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
 
 @Component({
   selector: 'document-hints',
@@ -94,8 +97,8 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   @Input()
   public origin: ElementRef | HTMLElement;
 
-  @Output()
-  public useHint = new EventEmitter();
+  @Input()
+  public constraintData: ConstraintData;
 
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
@@ -105,19 +108,16 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public collection$: Observable<Collection>;
   public documents$: Observable<DocumentModel[]>;
   public users$: Observable<User[]>;
-  public readonly durationUnitsMap: DurationUnitsMap;
 
+  public minWidth: number;
   public selectedIndex$ = new BehaviorSubject<number>(-1);
   private filter$ = new BehaviorSubject<string>('');
 
   private hintsCount = 0;
 
-  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
-    this.durationUnitsMap = this.translationService.createDurationUnitsMap();
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.bindDocuments();
     this.users$ = this.store$.pipe(select(selectAllUsers));
   }
 
@@ -127,7 +127,10 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     }
     if (changes.collectionId && this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
+      this.bindDocuments();
     }
+
+    this.minWidth = (this.columns || []).reduce((width, column) => width + column.width, 0);
   }
 
   private bindDocuments() {
@@ -135,25 +138,34 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
       stems: [{collectionId: this.collectionId}],
     };
 
-    this.documents$ = this.store$.select(selectDocumentsByCustomQuery(query)).pipe(
-      map(documents =>
-        documents.filter(document => document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id))
-      ),
-      mergeMap(documents =>
+    const documents$ = this.store$
+      .select(selectDocumentsByCustomQuery(query))
+      .pipe(
+        map(documents =>
+          documents.filter(
+            document => document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id)
+          )
+        )
+      );
+
+    this.documents$ = combineLatest([documents$, this.collection$]).pipe(
+      mergeMap(([documents, collection]) =>
         this.filter$.pipe(
-          map(typedValue =>
-            documents
+          map(typedValue => {
+            const constraint =
+              findAttributeConstraint(collection && collection.attributes, this.attributeId) || new UnknownConstraint();
+            return documents
               .filter(document => {
                 const value = document.data[this.attributeId];
-                return (
-                  value &&
-                  String(value)
-                    .toLowerCase()
-                    .includes(String(typedValue).toLowerCase())
-                );
+                const formattedValue = isNotNullOrUndefined(value)
+                  ? constraint.createDataValue(value, this.constraintData).format()
+                  : '';
+                return String(formattedValue)
+                  .toLowerCase()
+                  .includes(String(typedValue || '').toLowerCase());
               })
-              .slice(0, this.limit)
-          ),
+              .slice(0, this.limit);
+          }),
           tap(hints => (this.hintsCount = hints.length))
         )
       )
@@ -225,8 +237,6 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public onUseDocument(document: DocumentModel) {
-    this.useHint.emit();
-
     if (this.linkInstanceId) {
       this.createLinkWithExistingLinkData(document);
     } else {
@@ -238,10 +248,25 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     this.store$
       .pipe(
         select(selectLinkInstanceById(this.linkInstanceId)),
-        take(1),
-        filter(linkInstance => !!linkInstance)
+        filter(linkInstance => !!linkInstance),
+        mergeMap(oldLinkInstance => {
+          const otherDocumentId = getOtherLinkedDocumentId(oldLinkInstance, this.linkedDocumentId);
+          return this.store$.pipe(
+            select(selectDocumentById(otherDocumentId)),
+            map(oldDocument => ({oldDocument, oldLinkInstance}))
+          );
+        }),
+        take(1)
       )
-      .subscribe(linkInstance => this.createLink(document, linkInstance.data));
+      .subscribe(({oldDocument, oldLinkInstance}) => {
+        const documentIds: [string, string] = [this.linkedDocumentId, document.id];
+        const linkInstance = {...oldLinkInstance, documentIds, correlationId: this.correlationId};
+        let nextAction = null;
+        if (Object.keys((oldDocument && oldDocument.data) || {}).length === 0) {
+          nextAction = new DocumentsAction.Delete({documentId: oldDocument.id, collectionId: oldDocument.collectionId});
+        }
+        this.store$.dispatch(new LinkInstancesAction.Update({linkInstance, nextAction}));
+      });
   }
 
   public clearSelection() {

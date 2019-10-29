@@ -26,6 +26,7 @@ import {
   SimpleChanges,
   SimpleChange,
   OnChanges,
+  OnInit,
 } from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -36,17 +37,22 @@ import {AppState} from '../../../core/store/app.state';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {map, tap} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap, tap} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-permissions.pipe';
+import {deepObjectsEquals} from '../../utils/common.utils';
 
 @Component({
   selector: 'links-list',
   templateUrl: './links-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListComponent implements OnChanges {
+export class LinksListComponent implements OnChanges, OnInit {
   @Input()
   public collection: Collection;
 
@@ -60,8 +66,14 @@ export class LinksListComponent implements OnChanges {
 
   public linkTypes$: Observable<LinkType[]>;
   public otherCollection$: Observable<Collection>;
+  public permissions$: Observable<AllowedPermissions>;
+  public query$: Observable<Query>;
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
+
+  public ngOnInit() {
+    this.query$ = this.store$.pipe(select(selectQuery));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.objectChanged(changes.collection)) {
@@ -120,6 +132,10 @@ export class LinksListComponent implements OnChanges {
         return collectionId && collectionsMap[collectionId];
       })
     );
+    this.permissions$ = this.otherCollection$.pipe(
+      mergeMap(collection => this.collectionPermissionsPipe.transform(collection)),
+      distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
+    );
   }
 
   private readData(linkType: LinkType) {
@@ -130,8 +146,8 @@ export class LinksListComponent implements OnChanges {
     }
   }
 
-  public unLinkDocument(linkInstanceId: string) {
-    this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId}));
+  public unLinkDocument(linkInstance: LinkInstance) {
+    this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId: linkInstance.id}));
   }
 
   public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {

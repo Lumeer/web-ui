@@ -32,9 +32,12 @@ import {Perspective} from '../../../perspective';
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
 import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
+import {Project} from '../../../../../core/store/projects/project';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {User} from '../../../../../core/store/users/user';
 
 @Component({
-  selector: 'search-documents-wrapper',
+  selector: 'search-documents-content',
   templateUrl: './search-documents-content.component.html',
   styleUrls: ['./search-documents-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,6 +65,9 @@ export class SearchDocumentsContentComponent implements OnInit {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public currentUser: User;
+
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();
 
@@ -69,6 +75,7 @@ export class SearchDocumentsContentComponent implements OnInit {
   public scrollDown = new EventEmitter();
 
   public readonly sizeType = SizeType;
+  public readonly projectType = ResourceType.Project;
 
   constructor(
     private perspectiveService: PerspectiveService,
@@ -129,5 +136,9 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   public ngOnDestroy() {
     this.toggleService.onDestroy();
+  }
+
+  public onAdd() {
+    // TODO
   }
 }

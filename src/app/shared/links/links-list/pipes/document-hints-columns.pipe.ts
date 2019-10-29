@@ -17,10 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {Pipe, PipeTransform} from '@angular/core';
+import {LinkColumn} from '../model/link-column';
+import {DocumentHintColumn} from '../../../document-hints/document-hint-column';
 
-export interface LinkRow {
-  linkInstance?: LinkInstance;
-  document: DocumentModel;
+@Pipe({
+  name: 'documentHintsColumns',
+})
+export class DocumentHintsColumnsPipe implements PipeTransform {
+  public transform(columns: LinkColumn[]): DocumentHintColumn[] {
+    return (columns || []).map(column => ({
+      width: column.width,
+      attributeId: column.attribute.id,
+      hidden: !!column.linkTypeId,
+    }));
+  }
 }

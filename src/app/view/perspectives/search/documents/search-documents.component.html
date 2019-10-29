@@ -1,4 +1,4 @@
-<search-documents-wrapper *ngIf="loaded$ | async"
+<search-documents-content *ngIf="loaded$ | async"
                           [constraintData]="constraintData$ | async"
                           [query]="query$ | async"
                           [config]="documentsConfig$ | async"
@@ -6,6 +6,7 @@
                           [collections]="collections$ | async"
                           [workspace]="workspace$ | async"
                           [documents]="documents$ | async"
+                          [currentUser]="currentUser$ | async"
                           (configChange)="configChange($event)"
                           (scrollDown)="onFetchNextPage()">
-</search-documents-wrapper>
+</search-documents-content>

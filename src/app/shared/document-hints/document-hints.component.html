@@ -1,8 +1,10 @@
-<dropdown [origin]="origin"
-          [positions]="dropdownPositions">
-  <ng-container *ngIf="{documents: documents$ | async, collection: collection$ | async} as data">
+<ng-container *ngIf="{documents: documents$ | async, collection: collection$ | async} as data">
+  <dropdown [origin]="origin"
+            [positions]="dropdownPositions"
+            [minWidth]="minWidth"
+            [minHeight]="(data.documents?.length || 0) * 30">
     <div *ngIf="linkedDocumentId && data.collection && data.documents?.length"
-         class="dropdown-menu show position-static"
+         class="dropdown-menu show position-static p-0"
          data-test="document-hints">
       <div *ngFor="let doc of data.documents; index as documentIndex"
            [class.selected]="(selectedIndex$ | async) === documentIndex"
@@ -10,7 +12,7 @@
            class="dropdown-item p-0 d-flex">
         <ng-container *ngFor="let column of columns">
           <div
-            *ngIf="{value: (doc.data[column.attributeId] | dataValue : (data.collection | collectionAttribute : column.attributeId)?.constraint : {users: users$ | async, durationUnitsMap: durationUnitsMap}) | formatDataValue} as state"
+            *ngIf="{value: (doc.data[column.attributeId] | dataValue : (data.collection | collectionAttribute : column.attributeId)?.constraint : constraintData) | formatDataValue} as state"
             [class.font-weight-bold]="column.attributeId === attributeId"
             [style.width.px]="column.width"
             [innerHtml]="column.hidden ? '' : (column.attributeId === attributeId ? (state.value | highlightText: value) : state.value)"
@@ -21,5 +23,5 @@
         </ng-container>
       </div>
     </div>
-  </ng-container>
-</dropdown>
+  </dropdown>
+</ng-container>

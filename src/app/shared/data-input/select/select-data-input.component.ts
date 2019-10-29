@@ -150,6 +150,11 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     }
   }
 
+  public onInput() {
+    const dataValue = this.value.parseInput(this.text);
+    this.valueChange.emit(dataValue);
+  }
+
   private saveValue() {
     const selectedOption = this.options.find(option => option.displayValue === this.text);
 

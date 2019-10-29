@@ -267,7 +267,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     if (constraint && constraint.type === ConstraintType.Select) {
       return new SelectDataValue(newValue, constraint.config as SelectConstraintConfig, true).serialize();
     } else {
-      return constraint.createDataValue(newValue).serialize();
+      return constraint ? constraint.createDataValue(newValue).serialize() : newValue;
     }
   }
 

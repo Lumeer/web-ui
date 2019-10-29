@@ -1,9 +1,27 @@
+<ng-container *ngIf="{writable: collections | anyCollectionIsWritable:currentUser} as data">
+  <div class="d-flex flex-row flex-nowrap my-2 align-items-center"
+       *ngIf="data.writable || documents?.length">
+
+    <button *ngIf="collections | anyCollectionIsWritable:currentUser"
+            type="button"
+            class="btn btn-sm btn-primary cursor-pointer"
+            title="Add document"
+            i18n-title="@@document.add"
+            (click)="onAdd()">
+      <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
+      <span class="font-weight-bold" i18n="@@create.new.document">Create New Record</span>
+    </button>
+
+    <size-slider class="ml-auto" *ngIf="documents?.length"
+                 [defaultSize]="config?.size" (newSize)="onSizeChange($event)"></size-slider>
+  </div>
+</ng-container>
+
 <div class="mt-2 mb-5" *ngIf="documents?.length; else noDocuments" infiniteScroll
      [infiniteScrollDisabled]="maxDocuments > 0"
      [infiniteScrollDistance]="2"
      (scrolled)="onScrollDown()">
-  <size-slider class="d-flex justify-content-end mb-2"
-               [defaultSize]="config?.size" (newSize)="onSizeChange($event)"></size-slider>
+
   <div class="detail card p-0 mb-2"
        (click)="toggleDocument(document)"
        (dblclick)="onDetailClick(document)"

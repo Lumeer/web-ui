@@ -37,6 +37,8 @@ import {LinksListHeaderMenuComponent} from './table/header/menu/links-list-heade
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {AttributeTypeModalModule} from '../../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../../modal/attribute-function/attribute-function-modal.module';
+import {DocumentHintsModule} from '../../document-hints/document-hints.module';
+import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
 
 @NgModule({
   declarations: [
@@ -48,6 +50,7 @@ import {AttributeFunctionModalModule} from '../../modal/attribute-function/attri
     LinksListTableBodyComponent,
     LinksListTableRowComponent,
     LinksListHeaderMenuComponent,
+    DocumentHintsColumnsPipe,
   ],
   imports: [
     CommonModule,
@@ -60,6 +63,7 @@ import {AttributeFunctionModalModule} from '../../modal/attribute-function/attri
     ContextMenuModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
+    DocumentHintsModule,
   ],
   exports: [LinksListComponent],
 })

@@ -166,7 +166,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     if (this.resizeToContent) {
       this.recalculateWidth(dataValue, true);
     }
-    this.valueChange.emit(dataValue.serialize());
+    this.valueChange.emit(String(dataValue.value));
   }
 
   public onCancel() {

@@ -25,6 +25,10 @@ import {
   QueryList,
   ViewChild,
   HostListener,
+  Output,
+  EventEmitter,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {LinkColumn} from '../../model/link-column';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
@@ -37,13 +41,18 @@ import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {BehaviorSubject} from 'rxjs';
+import {generateCorrelationId} from '../../../../utils/resource.utils';
 
 @Component({
   selector: '[links-list-table-body]',
   templateUrl: './links-list-table-body.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableBodyComponent {
+export class LinksListTableBodyComponent implements OnChanges {
   @Input()
   public columns: LinkColumn[];
 
@@ -56,13 +65,36 @@ export class LinksListTableBodyComponent {
   @Input()
   public rows: LinkRow[];
 
+  @Input()
+  public linkType: LinkType;
+
+  @Input()
+  public collection: Collection;
+
+  @Input()
+  public document: DocumentModel;
+
   @ViewChildren('tableRow')
   public tableRows: QueryList<LinksListTableRowComponent>;
 
   @ViewChild(HiddenInputComponent, {static: false})
   public hiddenInputComponent: HiddenInputComponent;
 
+  @Output()
+  public columnFocus = new EventEmitter<number>();
+
+  @Output()
+  public unlink = new EventEmitter<LinkRow>();
+
+  @Output()
+  public detail = new EventEmitter<LinkRow>();
+
+  @Output()
+  public newLink = new EventEmitter<{data: Record<string, any>; correlationId: string}>();
+
   private dataRowFocusService: DataRowFocusService;
+
+  public newRows$ = new BehaviorSubject<LinkRow[]>([]);
 
   constructor(private store$: Store<AppState>) {
     this.dataRowFocusService = new DataRowFocusService(
@@ -71,6 +103,27 @@ export class LinksListTableBodyComponent {
       () => this.tableRows.toArray(),
       () => this.hiddenInputComponent
     );
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.rows && this.rows) {
+      const correlationIds = this.rows.map(row => row.correlationId).filter(correlationId => !!correlationId);
+      const newRows = this.newRows$.value.filter(
+        row => !row.correlationId || !correlationIds.includes(row.correlationId)
+      );
+      if (newRows.length !== this.newRows$.value.length) {
+        this.newRows$.next(newRows);
+      }
+    }
+    this.checkNewRow();
+  }
+
+  private checkNewRow() {
+    if (this.permissions.writeWithView) {
+      if (this.newRows$.value.length === 0) {
+        this.newRows$.next([{correlationId: generateCorrelationId()}]);
+      }
+    }
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -110,6 +163,10 @@ export class LinksListTableBodyComponent {
   }
 
   public trackByRow(index: number, row: LinkRow): string {
+    if (row.correlationId) {
+      return row.correlationId;
+    }
+
     return `${row.document.collectionId || row.document.id}:${(row.linkInstance &&
       (row.linkInstance.correlationId || row.linkInstance.id)) ||
       ''}`;

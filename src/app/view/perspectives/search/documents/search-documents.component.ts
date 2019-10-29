@@ -28,7 +28,7 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {User} from '../../../../core/store/users/user';
-import {selectAllUsers} from '../../../../core/store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../../../../core/store/users/users.state';
 import {Collection} from '../../../../core/store/collections/collection';
 import {
   selectCollectionsByQuery,
@@ -43,6 +43,7 @@ import {selectSearchConfig} from '../../../../core/store/searches/searches.state
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {sortDocumentsByFavoriteAndLastUsed} from '../../../../core/store/documents/document.utils';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
+import {Project} from '../../../../core/store/projects/project';
 
 const PAGE_SIZE = 40;
 
@@ -63,6 +64,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public query$: Observable<Query>;
   public users$: Observable<User[]>;
   public workspace$: Observable<Workspace>;
+  public currentUser$: Observable<User>;
 
   public readonly durationUnitsMap: DurationUnitsMap;
 
@@ -84,6 +86,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.query$ = this.store$.pipe(select(selectQuery));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.documentsConfig$ = this.selectDocumentsConfig$();
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
 
     this.subscribeData();
   }

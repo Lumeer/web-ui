@@ -1,65 +1,63 @@
-<ng-container *ngIf="loaded && collection">
-  <div class="row">
-    <div class="col text-right">
-      <strong>{{documents.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:documents.length}}</strong>
-      &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{documents.length}}
-      <a *ngIf="page - 1 | canActivatePage:pageSize:documents.length" (click)="selectPage(page - 1)"><i
-        class="clickable fas fa-angle-double-left"></i></a>
-      <i *ngIf="!(page - 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-left"></i>
-      <a *ngIf="page + 1 | canActivatePage:pageSize:documents.length" (click)="selectPage(page + 1)"><i
-        class="clickable fas fa-angle-double-right"></i></a>
-      <i *ngIf="!(page + 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-right"></i>
-    </div>
+<div class="row">
+  <div class="col text-right">
+    <strong>{{documents.length > 0 ? page * pageSize + 1 : 0}}&mdash;{{page | pageEndIndex:pageSize:documents.length}}</strong>
+    &nbsp;<span i18n="@@count.of">of</span>&nbsp;{{documents.length}}
+    <a *ngIf="page - 1 | canActivatePage:pageSize:documents.length" (click)="selectPage(page - 1)"><i
+      class="clickable fas fa-angle-double-left"></i></a>
+    <i *ngIf="!(page - 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-left"></i>
+    <a *ngIf="page + 1 | canActivatePage:pageSize:documents.length" (click)="selectPage(page + 1)"><i
+      class="clickable fas fa-angle-double-right"></i></a>
+    <i *ngIf="!(page + 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-right"></i>
   </div>
-  <div class="h-10em"
-       [class.table-responsive]="resizeable" #table>
-    <table class="table table-sm" id="preview-results-table">
-      <thead>
-        <tr>
-          <th class="sticky-header"
-              [style.background-color]="collection.color | lightenColor:0.5"
-              [style.font-weight]="attr.id === collection.defaultAttributeId || (!collection.defaultAttributeId && idx === 0) ? 'bold' : 'normal'"
-              *ngFor="let attr of collection.attributes; trackBy:trackByAttribute; let idx = index"
-              scope="col"
-              title="{{attr.name}}">
-            {{attr.name}}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngIf="documents.length === 0">
-          <td [attr.colspan]="collection.attributes.length" class="text-center font-weight-bold">
-            <h4 i18n="@@shared.preview.results.noResults">No records found.</h4>
-          </td>
-        </tr>
-        <ng-container
-          *ngFor="let document of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument">
-          <tr class="clickable-row"
-              id="preview-result-row-{{document.id}}"
-              #tableRow
-              [class.active]="document.id === selectedDocumentId"
-              (click)="activate(document)">
-            <td *ngFor="let attr of collection.attributes">
-              <data-input [constraint]="attr.constraint"
-                          [constraintData]="constraintData"
-                          [cursor]="document | dataCursor : attr.id"
-                          [value]="document.data[attr.id]"
-                          [readonly]="true">
-              </data-input>
-            </td>
-          </tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </div>
-  <ng-container *ngIf="resizeable">
+</div>
+<div class="h-10em"
+     [class.table-responsive]="resizeable" #table>
+  <table class="table table-sm" id="preview-results-table">
+    <thead>
+    <tr #tableRow>
+      <th class="sticky-header"
+          [style.background-color]="collection.color | lightenColor:0.5"
+          [style.font-weight]="attr.id === collection.defaultAttributeId || (!collection.defaultAttributeId && idx === 0) ? 'bold' : 'normal'"
+          *ngFor="let attr of collection.attributes; trackBy:trackByAttribute; let idx = index"
+          scope="col"
+          title="{{attr.name}}">
+        {{attr.name}}
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngIf="documents.length === 0">
+      <td [attr.colspan]="collection.attributes.length" class="text-center font-weight-bold">
+        <h4 i18n="@@shared.preview.results.noResults">No records found.</h4>
+      </td>
+    </tr>
+    <ng-container
+      *ngFor="let document of (documents | slice : (page * pageSize) : ((page + 1) * pageSize)); trackBy:trackByDocument">
+      <tr class="clickable-row"
+          id="preview-result-row-{{document.id}}"
+          #tableRow
+          [class.active]="document.id === selectedDocumentId"
+          (click)="activate(document)">
+        <td *ngFor="let attr of collection.attributes">
+          <data-input [constraint]="attr.constraint"
+                      [constraintData]="constraintData"
+                      [cursor]="document | dataCursor : attr.id"
+                      [value]="document.data[attr.id]"
+                      [readonly]="true">
+          </data-input>
+        </td>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+</div>
+<ng-container *ngIf="resizeable">
     <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
           title="You can scroll the table...">
       <i class="fas fa-arrows-h"></i>
     </span>
-    <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
-          title="You can scroll the table...">
+  <span class="small float-right text-primary" i18n-title="@@shared.preview-results.scrollable"
+        title="You can scroll the table...">
     <i class="fas fa-arrows-v" style="top: -1em; left: 2em; position: relative;"></i>
     </span>
-  </ng-container>
 </ng-container>

@@ -1,4 +1,4 @@
-<i *ngIf="(attribute?.function)"
+<i *ngIf="attribute | attributeFunctionDefined"
    [class.mb-1]="attribute?.constraint"
    class="fas fa-function fa-xs">
 </i>

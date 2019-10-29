@@ -1,0 +1,26 @@
+<div class="overflow-auto" #tableWrapper>
+  <table class="table position-relative"
+         *ngIf="{columns: columns$ | async} as data">
+    <thead links-list-table-header
+           [columns]="data.columns"
+           [permissions]="permissions"
+           (resizeColumn)="onResizeColumn($event)"
+           (attributeType)="onAttributeType($event)"
+           (attributeFunction)="onAttributeFunction($event)">
+    </thead>
+    <tbody links-list-table-body
+           [permissions]="permissions"
+           [columns]="data.columns"
+           [constraintData]="constraintData$ | async"
+           [rows]="rows$ | async"
+           [linkType]="linkType"
+           [collection]="collection"
+           [document]="document"
+           (columnFocus)="onColumnFocus($event)"
+           (detail)="onDetail($event)"
+           (unlink)="onUnLink($event)"
+           (newLink)="onNewLink($event)">
+    </tbody>
+
+  </table>
+</div>

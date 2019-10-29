@@ -119,6 +119,7 @@ export namespace DocumentsAction {
         document: DocumentModel;
         otherDocumentId: string;
         linkTypeId: string;
+        correlationId: string;
         callback?: (documentId: string) => void;
       }
     ) {}

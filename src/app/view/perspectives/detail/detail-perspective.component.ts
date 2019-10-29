@@ -37,9 +37,10 @@ import {
   selectCollectionsByQueryWithoutLinks,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
-import {filterStemsForCollection} from '../../../core/store/navigation/query/query.util';
+import {filterStemsForCollection, queryIsEmpty} from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 
 @Component({
   selector: 'detail-perspective',
@@ -57,13 +58,17 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
   public selected$ = new BehaviorSubject<{collection?: Collection; document?: DocumentModel}>({});
 
+  private query: Query;
   private collectionSubscription = new Subscription();
   private subscriptions = new Subscription();
 
   public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(
+      select(selectQuery),
+      tap(query => (this.query = query))
+    );
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
     this.initSelection();
   }
@@ -152,11 +157,12 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
-    this.setQueryWithCollection(data.collection);
-    this.select(data.collection, data.document);
+    const currentQueryIsEmpty = queryIsEmpty(this.query);
+    const query: Query = currentQueryIsEmpty ? null : {stems: [{collectionId: data.collection.id}]};
+    this.select(data.collection, data.document, query);
   }
 
-  private select(selectedCollection: Collection, selectedDocument: DocumentModel) {
+  private select(selectedCollection: Collection, selectedDocument: DocumentModel, query?: Query) {
     this.collectionPermission$ = this.collectionPermissionsPipe
       .transform(selectedCollection)
       .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
@@ -171,11 +177,16 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.store$.dispatch(
-      new NavigationAction.SetViewCursor({
-        cursor: {collectionId: selectedCollection.id, documentId: selectedDocument && selectedDocument.id},
-      })
-    );
+    const cursor: ViewCursor = {
+      collectionId: selectedCollection.id,
+      documentId: selectedDocument && selectedDocument.id,
+    };
+
+    if (query) {
+      this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query, cursor}));
+    } else {
+      this.store$.dispatch(new NavigationAction.SetViewCursor({cursor}));
+    }
   }
 
   private loadLinkInstances(document: DocumentModel) {
@@ -183,10 +194,5 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       const query: Query = {stems: [{collectionId: document.collectionId, documentIds: [document.id]}]};
       this.store$.dispatch(new LinkInstancesAction.Get({query}));
     }
-  }
-
-  private setQueryWithCollection(collection: Collection) {
-    const query: Query = {stems: [{collectionId: collection.id}]};
-    this.store$.dispatch(new NavigationAction.RemoveViewFromUrl({setQuery: query}));
   }
 }

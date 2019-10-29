@@ -123,9 +123,15 @@ export class NavigationEffects {
         path.push(searchTab);
       }
 
-      const extras: NavigationExtras = action.payload.setQuery
-        ? {queryParams: action.payload.setQuery}
-        : {queryParamsHandling: 'merge'};
+      const queryParams = {};
+      if (action.payload.setQuery) {
+        queryParams[QueryParam.Query] = convertQueryModelToString(action.payload.setQuery);
+      }
+      if (action.payload.cursor) {
+        queryParams[QueryParam.ViewCursor] = convertViewCursorToString(action.payload.cursor);
+      }
+
+      const extras: NavigationExtras = {queryParams, queryParamsHandling: 'merge'};
 
       const containsViewDialog = this.router.url.includes(`dialog:${DialogPath.SHARE_VIEW}`);
       let nextAction: Action = null;

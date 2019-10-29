@@ -36,3 +36,23 @@ td::ng-deep data-input {
     }
   }
 }
+
+:host:hover {
+  .fixed-column i {
+    opacity: 1 !important;
+  }
+}
+
+.fixed-column {
+  background: white;
+  position: sticky;
+  text-align: start;
+  right: -2px;
+  z-index: 1;
+  width: var(--detail-links-sticky-width, auto);
+
+  i {
+    transition: opacity $animation-color-duration;
+    opacity: 0;
+  }
+}
