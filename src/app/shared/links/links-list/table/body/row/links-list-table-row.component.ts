@@ -107,6 +107,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public initialValue: any;
   public focusSubscription = new Subscription();
 
+  private savingDisabled = false;
   private creatingNewRow = false;
 
   constructor(public element: ElementRef) {}
@@ -219,7 +220,19 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public onNewValue(column: number, value: any) {
     if (this.suggestions && this.suggestions.isSelected()) {
       this.suggestions.useSelection();
-    } else if (this.creatingNewLink()) {
+    } else {
+      this.saveData(column, value);
+    }
+    this.onDataInputCancel(column);
+  }
+
+  private saveData(column: number, value: any) {
+    if (this.savingDisabled) {
+      this.savingDisabled = false;
+      return;
+    }
+
+    if (this.creatingNewLink()) {
       this.createNewLink(column, value);
     } else {
       const currentValue = this.columnValue(column);
@@ -227,7 +240,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
         this.newValue.emit({column, value});
       }
     }
-    this.onDataInputCancel(column);
   }
 
   private createNewLink(column: number, value: any) {
@@ -290,5 +302,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     if (isKeyPrintable(event) && this.suggestions) {
       return this.suggestions.clearSelection();
     }
+  }
+
+  public onUseHint() {
+    this.savingDisabled = true;
   }
 }

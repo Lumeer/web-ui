@@ -62,6 +62,7 @@
     [linkInstanceId]="row.linkInstance?.id"
     [linkTypeId]="linkTypeId"
     [constraintData]="constraintData"
-    [origin]="element">
+    [origin]="element"
+    (useHint)="onUseHint()">
   </document-hints>
 </ng-container>

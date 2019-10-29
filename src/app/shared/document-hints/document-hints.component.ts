@@ -22,10 +22,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -99,6 +101,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Output()
+  public useHint = new EventEmitter();
 
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
@@ -237,6 +242,8 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public onUseDocument(document: DocumentModel) {
+    this.useHint.emit();
+
     if (this.linkInstanceId) {
       this.createLinkWithExistingLinkData(document);
     } else {
