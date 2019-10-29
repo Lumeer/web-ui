@@ -5,8 +5,8 @@
     <button *ngIf="collections | anyCollectionIsWritable:currentUser"
             type="button"
             class="btn btn-sm btn-primary cursor-pointer"
-            title="Add document"
-            i18n-title="@@document.add"
+            title="Create New Record"
+            i18n-title="@@create.new.document"
             (click)="onAdd()">
       <i class="fa fa-plus-circle mr-1" aria-hidden="true"></i>
       <span class="font-weight-bold" i18n="@@create.new.document">Create New Record</span>

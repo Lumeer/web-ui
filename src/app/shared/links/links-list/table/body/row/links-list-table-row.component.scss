@@ -12,12 +12,21 @@ td {
   }
 }
 
-td.editing data-input {
-  border: 1px solid $success;
+%highlighted {
+  z-index: $z-index-selected;
+  outline-offset: -1px;
 }
 
-td.focused data-input {
-  border: 1px solid $primary;
+td.editing {
+  @extend %highlighted;
+  outline: $success solid 1px;
+  box-shadow: 1px 1px 4px $secondary;
+}
+
+td.focused {
+  @extend %highlighted;
+  outline: $primary solid 1px;
+  box-shadow: 0px 0px 4px $secondary;
 }
 
 td::ng-deep data-input {
