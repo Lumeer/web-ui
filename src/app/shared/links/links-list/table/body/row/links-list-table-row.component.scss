@@ -1,0 +1,58 @@
+@import '../../../../../../../styles/variables';
+
+$padding: 0.5rem;
+
+td {
+  height: 2rem;
+  padding: 0 !important;
+
+  data-input {
+    display: block;
+    height: 100%;
+  }
+}
+
+td.editing data-input {
+  border: 1px solid $success;
+}
+
+td.focused data-input {
+  border: 1px solid $primary;
+}
+
+td::ng-deep data-input {
+  & > *:not(user-data-input) > input {
+    padding-left: $padding !important;
+    padding-right: $padding !important;
+  }
+
+  & > user-data-input {
+    img {
+      margin-left: $padding !important;
+    }
+
+    input {
+      padding-right: $padding !important;
+    }
+  }
+}
+
+:host:hover {
+  .fixed-column i {
+    opacity: 1 !important;
+  }
+}
+
+.fixed-column {
+  background: white;
+  position: sticky;
+  text-align: start;
+  right: -2px;
+  z-index: 1;
+  width: var(--detail-links-sticky-width, auto);
+
+  i {
+    transition: opacity $animation-color-duration;
+    opacity: 0;
+  }
+}

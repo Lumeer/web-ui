@@ -33,7 +33,11 @@ import {ConstraintData} from '../../core/model/data/constraint';
 import {ConstraintDataService} from '../../core/service/constraint-data.service';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
-import {selectCollectionsByQuery, selectDocumentsByCustomQuery} from '../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByQuery,
+  selectCollectionsByQueryWithoutLinks,
+  selectDocumentsByCustomQuery,
+} from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {generateDocumentData} from '../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
@@ -90,7 +94,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQueryWithoutLinks));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.constraintData$ = this.constraintDataService.observeConstraintData();
   }

@@ -19,19 +19,13 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {LinksComponent} from './links.component';
-import {LinksListComponent} from './links-list/links-list.component';
-import {LinksListTabsComponent} from './links-list/links-list-tabs/links-list-tabs.component';
-import {LinksListTableComponent} from './links-list/links-list-table/links-list-table.component';
 import {PickerModule} from '../picker/picker.module';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
-import {LinksListTableHeaderComponent} from './links-list/links-list-table/links-list-table-header/links-list-table-header.component';
-import {LinksListTableBodyComponent} from './links-list/links-list-table/links-list-table-body/links-list-table-body.component';
 import {DocumentHintsModule} from '../document-hints/document-hints.module';
-import {LinkRowsDocumentIdsPipe} from './links-list/links-list-table/link-rows-document-ids.pipe';
 import {DataInputModule} from '../data-input/data-input.module';
 import {PresenterModule} from '../presenter/presenter.module';
+import {LinksListModule} from './links-list/links-list.module';
 
 @NgModule({
   imports: [
@@ -42,16 +36,8 @@ import {PresenterModule} from '../presenter/presenter.module';
     InputModule,
     PipesModule,
     DocumentHintsModule,
+    LinksListModule,
   ],
-  declarations: [
-    LinksComponent,
-    LinksListComponent,
-    LinksListTabsComponent,
-    LinksListTableComponent,
-    LinksListTableHeaderComponent,
-    LinksListTableBodyComponent,
-    LinkRowsDocumentIdsPipe,
-  ],
-  exports: [LinksComponent, LinksListComponent],
+  exports: [LinksListModule],
 })
 export class LinksModule {}

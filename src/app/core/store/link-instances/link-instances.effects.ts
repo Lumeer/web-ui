@@ -21,8 +21,8 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, of} from 'rxjs';
-import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {EMPTY, Observable, of} from 'rxjs';
+import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
@@ -38,7 +38,11 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
-import {selectLinkInstanceById, selectLinkInstancesQueries} from './link-instances.state';
+import {
+  selectLinkInstanceById,
+  selectLinkInstancesDictionary,
+  selectLinkInstancesQueries,
+} from './link-instances.state';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -119,6 +123,31 @@ export class LinkInstancesEffects {
   );
 
   @Effect()
+  public update$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.Update>(LinkInstancesActionType.UPDATE),
+    mergeMap(action => {
+      const {linkInstance, nextAction} = action.payload;
+      const linkInstanceDto = convertLinkInstanceModelToDto(linkInstance);
+
+      return this.store$.pipe(
+        select(selectLinkInstanceById(linkInstanceDto.id)),
+        take(1),
+        tap(() => this.store$.dispatch(new LinkInstancesAction.UpdateInternal({linkInstance}))),
+        mergeMap(originalLinkInstance =>
+          this.linkInstanceService.updateLinkInstance(linkInstanceDto).pipe(
+            flatMap(() => {
+              const actions: Action[] = [new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})];
+              nextAction && actions.push(nextAction);
+              return actions;
+            }),
+            catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
+          )
+        )
+      );
+    })
+  );
+
+  @Effect()
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.CreateFailure>(LinkInstancesActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
@@ -181,15 +210,18 @@ export class LinkInstancesEffects {
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Delete>(LinkInstancesActionType.DELETE),
     mergeMap(action =>
-      this.linkInstanceService.deleteLinkInstance(action.payload.linkInstanceId).pipe(
-        tap(() => {
-          const callback = action.payload.callback;
-          if (callback) {
-            callback(action.payload.linkInstanceId);
-          }
-        }),
-        map(() => new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId})),
-        catchError(error => of(new LinkInstancesAction.DeleteFailure({error})))
+      this.store$.pipe(
+        select(selectLinkInstanceById(action.payload.linkInstanceId)),
+        take(1),
+        tap(() =>
+          this.store$.dispatch(new LinkInstancesAction.DeleteSuccess({linkInstanceId: action.payload.linkInstanceId}))
+        ),
+        mergeMap(linkInstance =>
+          this.linkInstanceService.deleteLinkInstance(action.payload.linkInstanceId).pipe(
+            mergeMap(() => EMPTY),
+            catchError(error => of(new LinkInstancesAction.DeleteFailure({error, linkInstance})))
+          )
+        )
       )
     )
   );

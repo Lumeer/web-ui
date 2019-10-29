@@ -11,6 +11,7 @@
           (selectCollection)="setActiveCollection($event)">
         </preview-results-tabs>
         <preview-results-table
+          *ngIf="data.loaded && selectCollection"
           [documents]="data.documents | documentsByCollection:selectedCollection?.id"
           [selectedDocumentId]="selectedDocument?.id"
           [loaded]="data.loaded"

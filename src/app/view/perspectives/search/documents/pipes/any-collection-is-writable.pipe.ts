@@ -17,10 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {userHasRoleInResource} from '../../../../../shared/utils/resource.utils';
+import {User} from '../../../../../core/store/users/user';
+import {Role} from '../../../../../core/model/role';
 
-@Component({
-  selector: 'links',
-  templateUrl: './links.component.html',
+@Pipe({
+  name: 'anyCollectionIsWritable',
 })
-export class LinksComponent {}
+export class AnyCollectionIsWritablePipe implements PipeTransform {
+  public transform(collections: Collection[], user: User): boolean {
+    return (collections || []).some(coll => userHasRoleInResource(user, coll, Role.Write));
+  }
+}

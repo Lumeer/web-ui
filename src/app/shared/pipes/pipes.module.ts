@@ -79,6 +79,7 @@ import {PerspectiveNamePipe} from './perspective-name.pipe';
 import {ValueFilterPipe} from './value-filter.pipe';
 import {IsNullOrUndefinedPipe} from './is-null-or-undefined.pipe';
 import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.pipe';
+import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -141,6 +142,7 @@ import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.
     ValueFilterPipe,
     IsNullOrUndefinedPipe,
     AttributesToDataSuggestionsPipe,
+    AttributeFunctionDefinedPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -203,6 +205,7 @@ import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.
     ValueFilterPipe,
     IsNullOrUndefinedPipe,
     AttributesToDataSuggestionsPipe,
+    AttributeFunctionDefinedPipe,
   ],
 })
 export class PipesModule {}

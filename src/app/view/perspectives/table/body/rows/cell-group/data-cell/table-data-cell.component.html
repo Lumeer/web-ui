@@ -23,10 +23,12 @@
               data-test="table-data-input">
   </data-input>
 
-  <ng-container *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (data.attribute | canShowAttributeHints) && (suggesting$ | async) && editedValue">
+  <ng-container
+    *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (data.attribute | canShowAttributeHints) && (suggesting$ | async) && editedValue">
     <document-hints *ngIf="{row: row$ | async} as hintsData"
                     [attributeId]="column.attributeIds[0]"
                     [collectionId]="(table | part:cursor)?.collectionId"
+                    [constraintData]="constraintData"
                     [columns]="table | documentHintColumns:cursor:canManageConfig"
                     [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
                     [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"

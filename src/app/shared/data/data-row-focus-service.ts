@@ -31,6 +31,7 @@ export class DataRowFocusService {
   private edited: DataRowPosition = {};
 
   constructor(
+    private numColumns: () => number,
     private numRows: () => number,
     private rows: () => DataRowComponent[],
     private hiddenComponent?: () => DataRowHiddenComponent
@@ -56,8 +57,8 @@ export class DataRowFocusService {
   }
 
   public focus(row: number, column: number) {
-    this.emitFocus(row, column);
     this.resetEdit();
+    this.emitFocus(row, column);
   }
 
   private emitFocus(row: number, column: number) {
@@ -68,11 +69,9 @@ export class DataRowFocusService {
     this.focused = {row, column};
     this.rows().forEach((component, index) => {
       if (index === row) {
-        component.focusKey(column === 0);
-        component.focusValue(column === 1);
+        component.focusColumn(column);
       } else {
-        component.focusKey(false);
-        component.focusValue(false);
+        component.unFocusRow();
       }
     });
     this.hiddenComponent() && this.hiddenComponent().focus();
@@ -86,35 +85,21 @@ export class DataRowFocusService {
 
     if (this.isEditing() && this.edited.row === row && this.edited.column === column) {
       this.edited = {};
-      if (column === 0) {
-        component.endKeyEditing();
-      } else if (column === 1) {
-        component.endValueEditing();
-      }
+      component.endColumnEditing(column);
     } else if (this.isFocusing() && this.focused.row === row && this.focused.column === column) {
       this.focused = {};
-      if (column === 0) {
-        component.focusKey(false);
-      } else if (column === 1) {
-        component.focusValue(false);
-      }
+      component.unFocusRow();
     }
   }
 
   private resetFocus() {
     this.focused = {};
-    this.rows().forEach(component => {
-      component.focusKey(false);
-      component.focusValue(false);
-    });
+    this.rows().forEach(component => component.unFocusRow());
   }
 
   private resetEdit() {
     this.edited = {};
-    this.rows().forEach(component => {
-      component.endKeyEditing();
-      component.endValueEditing();
-    });
+    this.rows().forEach(component => component.endRowEditing());
   }
 
   public edit(row: number, column: number) {
@@ -128,21 +113,21 @@ export class DataRowFocusService {
     }
 
     this.hiddenComponent() && this.hiddenComponent().blur();
-    this.edited = {row, column};
+
+    let editingConfirmed = false;
     this.rows().forEach((component, index) => {
       if (index === row) {
-        if (column === 0) {
-          component.startKeyEditing(value);
-          component.endValueEditing();
-        } else if (column === 1) {
-          component.endKeyEditing();
-          component.startValueEditing(value);
-        }
+        editingConfirmed = component.startColumnEditing(column, value);
       } else {
-        component.endKeyEditing();
-        component.endValueEditing();
+        component.endRowEditing();
       }
     });
+
+    if (editingConfirmed) {
+      this.edited = {row, column};
+    } else {
+      this.focus(Math.min(row + 1, this.numRows() - 1), column);
+    }
   }
 
   private onArrowKeyDown(event: KeyboardEvent) {
@@ -192,18 +177,7 @@ export class DataRowFocusService {
   }
 
   private computeTabKeyDownOffset(event: KeyboardEvent, position: DataRowPosition): {offsetX: number; offsetY: number} {
-    const {column, row} = position;
-    let offsetX = 0;
-    let offsetY = 0;
-    if (event.shiftKey) {
-      offsetX = isNotNullOrUndefined(column) ? (column === 0 ? (row > 0 ? 1 : 0) : -1) : 0;
-      offsetY = isNotNullOrUndefined(column) ? (column === 0 ? -1 : 0) : 0;
-    } else {
-      const maxRowIndex = this.numRows() - 1;
-      offsetX = isNotNullOrUndefined(column) ? (column === 0 ? 1 : row < maxRowIndex ? -1 : 0) : 0;
-      offsetY = isNotNullOrUndefined(column) ? (column === 0 ? 0 : 1) : 0;
-    }
-    return {offsetX, offsetY};
+    return {offsetX: event.shiftKey ? -1 : 1, offsetY: 0};
   }
 
   private computeMoveOffset(x: number, y: number, position: DataRowPosition): {newRow?: number; newColumn?: number} {
@@ -213,7 +187,7 @@ export class DataRowFocusService {
     }
 
     const maxRowIndex = this.numRows() - 1;
-    const maxColumnIndex = 1;
+    const maxColumnIndex = this.numColumns() - 1;
 
     const newRow = Math.max(0, Math.min(row + y, maxRowIndex));
     const newColumn = Math.max(0, Math.min(column + x, maxColumnIndex));
@@ -228,18 +202,21 @@ export class DataRowFocusService {
       const {newRow, newColumn} = this.computeMoveOffset(0, 1, this.edited);
       this.emitFocus(newRow, newColumn);
     } else if (this.isFocusing()) {
-      this.emitEdit(this.focused.row, this.focused.column);
+      const focused = {...this.focused};
       this.resetFocus();
+      this.emitEdit(focused.row, focused.column);
     }
   }
 
   private onF2KeyDown(event: KeyboardEvent) {
     if (this.isFocusing()) {
-      this.emitEdit(this.focused.row, this.focused.column);
+      const focused = {...this.focused};
       this.resetFocus();
+      this.emitEdit(focused.row, focused.column);
     } else if (this.isEditing()) {
-      this.emitFocus(this.edited.row, this.edited.column);
+      const edited = {...this.edited};
       this.resetEdit();
+      this.emitFocus(edited.row, edited.column);
     }
   }
 
@@ -251,14 +228,16 @@ export class DataRowFocusService {
     event.preventDefault();
     event.stopPropagation();
 
-    this.emitEdit(this.focused.row, this.focused.column, '');
+    const focused = {...this.focused};
     this.resetFocus();
+    this.emitEdit(focused.row, focused.column, '');
   }
 
   public newHiddenInput(value: string) {
     if (this.isFocusing()) {
-      this.emitEdit(this.focused.row, this.focused.column, value);
+      const focused = {...this.focused};
       this.resetFocus();
+      this.emitEdit(focused.row, focused.column, value);
     }
   }
 }

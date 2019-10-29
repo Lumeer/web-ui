@@ -26,7 +26,6 @@ import {ContextMenuComponent} from 'ngx-contextmenu';
 @Component({
   selector: 'table-column-context-menu',
   templateUrl: './table-column-context-menu.component.html',
-  styleUrls: ['./table-column-context-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableColumnContextMenuComponent {

@@ -32,12 +32,16 @@ export function linkInstancesReducer(
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.PATCH_DATA_INTERNAL:
       return patchData(state, action);
+    case LinkInstancesActionType.UPDATE_INTERNAL:
+      return linkInstancesAdapter.upsertOne(action.payload.linkInstance, state);
     case LinkInstancesActionType.UPDATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.UPDATE_FAILURE:
       return revertLinkInstance(state, action.payload.originalLinkInstance);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
+    case LinkInstancesActionType.DELETE_FAILURE:
+      return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.DUPLICATE_SUCCESS:
       return linkInstancesAdapter.upsertMany(action.payload.linkInstances, state);
     case LinkInstancesActionType.CLEAR_BY_LINK_TYPE:

@@ -26,7 +26,7 @@ import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {DataRowComponent} from '../../../../data/data-row-component';
-import {isNotNullOrUndefined} from '../../../../utils/common.utils';
+import {isNumeric, toNumber} from '../../../../utils/common.utils';
 
 @Component({
   selector: 'document-data-row',
@@ -149,14 +149,45 @@ export class DocumentDataRowComponent implements DataRowComponent {
     this.onEdit.emit(1);
   }
 
-  public startValueEditing(value?: any) {
+  public startColumnEditing(column: number, value?: any): boolean {
+    if (column === 0) {
+      this.endValueEditing();
+      return this.startKeyEditing(value);
+    } else if (column === 1) {
+      this.endKeyEditing();
+      return this.startValueEditing(value);
+    }
+    return false;
+  }
+
+  private startKeyEditing(value?: any): boolean {
+    if (this.isManageable() && !this.keyEditing$.value) {
+      this.initialKey = value;
+      this.keyEditing$.next(true);
+      return true;
+    }
+    return false;
+  }
+
+  private startValueEditing(value?: any): boolean {
     if (this.isEditable() && !this.editing$.value) {
       if (this.shouldDirectEditValue()) {
         this.onNewValue(this.computeDirectEditValue());
       } else {
-        this.initialValue = value;
+        this.initialValue = this.modifyInitialValue(value);
         this.editing$.next(true);
+        return true;
       }
+    }
+    return false;
+  }
+
+  private modifyInitialValue(value: any): any {
+    switch (this.constraintType) {
+      case ConstraintType.Percentage:
+        return isNumeric(value) ? toNumber(value) / 100 : value;
+      default:
+        return value;
     }
   }
 
@@ -181,21 +212,22 @@ export class DocumentDataRowComponent implements DataRowComponent {
     this.onEdit.emit(0);
   }
 
-  public startKeyEditing(value?: any) {
-    if (this.isManageable() && !this.keyEditing$.value) {
-      this.initialKey = value;
-      this.keyEditing$.next(true);
+  public endColumnEditing(column: number) {
+    if (column === 0) {
+      this.endKeyEditing();
+    } else if (column === 1) {
+      this.endValueEditing();
     }
   }
 
-  public endValueEditing() {
+  private endValueEditing() {
     this.initialValue = null;
     if (this.editing$.value) {
       this.editing$.next(false);
     }
   }
 
-  public endKeyEditing() {
+  private endKeyEditing() {
     this.initialKey = null;
     if (this.keyEditing$.value) {
       this.keyEditing$.next(false);
@@ -206,17 +238,37 @@ export class DocumentDataRowComponent implements DataRowComponent {
     return this.permissions && this.permissions.manageWithView;
   }
 
-  public focusKey(focus: boolean) {
-    if (focus && this.keyEditing$.value) {
-      return;
+  public focusColumn(column: number) {
+    if (column === 0) {
+      this.focusKey();
+      this.valueFocused = false;
+    } else if (column === 1) {
+      this.focusValue();
+      this.keyFocused = false;
     }
-    this.keyFocused = focus;
   }
 
-  public focusValue(focus: boolean) {
-    if (focus && this.editing$.value) {
+  private focusKey() {
+    if (this.keyEditing$.value) {
       return;
     }
-    this.valueFocused = focus;
+    this.keyFocused = true;
+  }
+
+  private focusValue() {
+    if (this.editing$.value) {
+      return;
+    }
+    this.valueFocused = true;
+  }
+
+  public endRowEditing() {
+    this.endKeyEditing();
+    this.endValueEditing();
+  }
+
+  public unFocusRow() {
+    this.keyFocused = false;
+    this.valueFocused = false;
   }
 }

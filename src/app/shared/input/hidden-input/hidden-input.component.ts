@@ -17,16 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
+import {Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
 import {DataRowHiddenComponent} from '../../data/data-row-component';
 
 @Component({
-  selector: 'post-it-hidden-input',
-  templateUrl: './post-it-hidden-input.component.html',
-  styleUrls: ['./post-it-hidden-input.component.scss'],
+  selector: 'hidden-input',
+  templateUrl: './hidden-input.component.html',
+  styleUrls: ['./hidden-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItHiddenInputComponent implements DataRowHiddenComponent {
+export class HiddenInputComponent implements DataRowHiddenComponent {
   @Output()
   public newInput = new EventEmitter<string>();
 

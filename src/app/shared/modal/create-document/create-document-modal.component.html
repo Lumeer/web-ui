@@ -1,0 +1,15 @@
+<document-detail-modal [collection]="collection$ | async"
+                       [document]="document$ | async"
+                       [toolbarRef]="toolbar">
+</document-detail-modal>
+
+<ng-template #toolbar>
+
+  <select-item class="d-inline-block mb-3"
+               [items]="collections | collectionsSelectItems"
+               [removable]="false"
+               [selectedId]="selectedId$ | async"
+               (select)="onSelect($event)">
+  </select-item>
+
+</ng-template>

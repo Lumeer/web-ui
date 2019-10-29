@@ -1,24 +1,20 @@
 <ng-container *ngIf="linkTypes$ | async as linkTypes">
   <ng-container *ngIf="linkTypes.length > 0">
-    <div class="row justify-content-center mt-5">
-      <div class="col">
-        <h5 i18n="@@shared.links.title">Links to other records</h5>
-        <links-list-tabs
-          [linkTypes]="linkTypes"
-          [selectedLinkType]="selectedLinkType$ | async"
-          (select)="onSelectLink($event)">
-        </links-list-tabs>
-      </div>
-    </div>
-    <div class="row justify-content-center mb-3">
-      <div class="col">
-        <links-list-table
-          [linkType]="selectedLinkType$ | async"
-          [document]="document"
-          (unlink)="unLinkDocument($event)"
-          (documentSelect)="onSelectDocument($event)">
-        </links-list-table>
-      </div>
-    </div>
+    <h5 i18n="@@shared.links.title">Links to other records</h5>
+    <links-list-tabs
+      [linkTypes]="linkTypes"
+      [selectedLinkType]="selectedLinkType$ | async"
+      (select)="onSelectLink($event)">
+    </links-list-tabs>
+    <links-list-table
+      class="d-block mt-2"
+      [linkType]="selectedLinkType$ | async"
+      [document]="document"
+      [collection]="otherCollection$ | async"
+      [permissions]="permissions$ | async"
+      [query]="query$ | async"
+      (unLink)="unLinkDocument($event)"
+      (detail)="onSelectDocument($event)">
+    </links-list-table>
   </ng-container>
 </ng-container>

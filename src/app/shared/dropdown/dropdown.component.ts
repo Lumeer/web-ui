@@ -26,7 +26,9 @@ import {
   ElementRef,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
+  SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
@@ -39,7 +41,7 @@ import {convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-
   styleUrls: ['./dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DropdownComponent implements AfterViewInit, OnDestroy {
+export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input()
   public closeOnClickOutside: boolean;
 
@@ -68,6 +70,12 @@ export class DropdownComponent implements AfterViewInit, OnDestroy {
 
   public ngAfterViewInit() {
     this.portal = new TemplatePortal(this.dropdown, this.viewContainer);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.minWidth || changes.minHeight) {
+      this.overlayRef && this.overlayRef.updateSize({minWidth: this.minWidth, minHeight: this.minHeight});
+    }
   }
 
   public ngOnDestroy() {

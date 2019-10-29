@@ -1,0 +1,37 @@
+<tr>
+  <th *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
+      class="sticky-header table-border-left table-border-top table-border-right border-bottom-0"
+      [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
+      [style.font-weight]="column.bold ? 'bold' : 'normal'"
+      [style.width.px]="column.width"
+      scope="col" title="{{column.attribute.name}}" #tableHeader
+      (contextmenu)="onContextMenu(index, $event)">
+    <div class="d-flex flex-nowrap flex-row align-items-center">
+      <div class="flex-grow-1 overflow-hidden">{{column.attribute.name}}</div>
+
+      <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
+        <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
+             *ngIf="typeData.iconName || (column.attribute | attributeFunctionDefined)">
+          <i *ngIf="(column.attribute | attributeFunctionDefined)"
+             [class.mb-1]="typeData.iconName"
+             class="fas fa-function fa-xs fa-fw">
+          </i>
+          <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
+             [ngClass]="typeData.iconName"
+             [title]="column.attribute.constraint | constraintTypeIconTitle"></i>
+        </div>
+      </ng-container>
+    </div>
+    <links-list-header-menu [permissions]="permissions"
+                            (attributeFunction)="onAttributeFunction(index)"
+                            (attributeType)="onAttributeType(index)">
+    </links-list-header-menu>
+  </th>
+  <th class="border-0 bg-white fixed-header" *ngIf="permissions?.read && permissions?.writeWithView">&nbsp;</th>
+</tr>
+<div *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
+     [style.left]="'calc(' + (columns | columnHandleLeft:index) + 'px - 0.5rem)'" cdkDragLockAxis="x" cdkDrag
+     (cdkDragMoved)="onDragMoved($event, index)"
+     (cdkDragEnded)="onDragEnd($event, index)"
+     #resizeHandle class="resize-handle">
+</div>

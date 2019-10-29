@@ -42,7 +42,7 @@ import {DataRow, DataRowService} from '../../../data/data-row.service';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {DocumentDataRowComponent} from './row/document-data-row.component';
 import {filterUnusedAttributes} from '../../../utils/attribute.utils';
-import {DocumentDetailHiddenInputComponent} from '../hidden-input/document-detail-hidden-input.component';
+import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
 import {DataRowFocusService} from '../../../data/data-row-focus-service';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Workspace} from '../../../../core/store/navigation/workspace';
@@ -88,8 +88,8 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChildren(DocumentDataRowComponent)
   public rows: QueryList<DocumentDataRowComponent>;
 
-  @ViewChild(DocumentDetailHiddenInputComponent, {static: false})
-  public hiddenInputComponent: DocumentDetailHiddenInputComponent;
+  @ViewChild(HiddenInputComponent, {static: false})
+  public hiddenInputComponent: HiddenInputComponent;
 
   @Output()
   public switchToTable = new EventEmitter();
@@ -108,6 +108,7 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
 
   constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
     this.dataRowFocusService = new DataRowFocusService(
+      () => 2,
       () => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
       () => this.hiddenInputComponent

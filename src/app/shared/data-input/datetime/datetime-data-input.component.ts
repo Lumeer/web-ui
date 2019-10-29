@@ -137,11 +137,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
     this.valueChange.emit(dataValue);
   }
 
-  public onValueChange(date: Date) {
-    const dataValue = this.value.copy(date && date.toISOString());
-    this.valueChange.emit(dataValue);
-  }
-
   public onSave(date: Date) {
     if (this.preventSaving) {
       this.preventSaving = false;

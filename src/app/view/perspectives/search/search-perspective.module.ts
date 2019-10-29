@@ -32,6 +32,7 @@ import {SearchViewsComponent} from './views/search-views.component';
 import {ViewDetailComponent} from './views/content/view-detail/view-detail.component';
 import {ContainsDeletedQueryItemPipe} from './views/content/view-detail/contains-deleted-query-item.pipe';
 import {SearchViewsContentComponent} from './views/content/search-views-content.component';
+import {CreateDocumentModalModule} from '../../../shared/modal/create-document/create-document-modal.module';
 
 @NgModule({
   imports: [
@@ -41,6 +42,7 @@ import {SearchViewsContentComponent} from './views/content/search-views-content.
     WarningMessageModule,
     SearchPerspectiveRoutingModule,
     SearchDocumentsModule,
+    CreateDocumentModalModule,
   ],
   declarations: [
     SearchAllComponent,

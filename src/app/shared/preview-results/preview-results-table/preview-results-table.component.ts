@@ -66,7 +66,7 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   @Output()
   public selectDocument = new EventEmitter<DocumentModel>();
 
-  @ViewChild('table', {static: false, read: ElementRef})
+  @ViewChild('table', {static: true, read: ElementRef})
   public tableElement: ElementRef;
 
   @ViewChildren('tableRow')
@@ -79,15 +79,7 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   public ngOnChanges(changes: SimpleChanges) {
     if (this.documents && this.selectedDocumentId) {
       this.countPageForDocument(this.selectedDocumentId);
-    }
-    if (changes.collection) {
-      this.resetScrollIfNeeded(changes.collection);
-    }
-  }
-
-  private resetScrollIfNeeded(change: SimpleChange) {
-    if (change.previousValue && change.currentValue && change.previousValue.id !== change.currentValue.id) {
-      this.tableElement.nativeElement.scrollTop = 0;
+      setTimeout(() => this.scrollToCurrentRow());
     }
   }
 
@@ -124,14 +116,19 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   }
 
   private scrollToCurrentRow() {
-    if (this.selectedDocumentId && this.rowsElements) {
+    if (this.selectedDocumentId && this.rowsElements && this.tableElement) {
       const id = `preview-result-row-${this.selectedDocumentId}`;
       const index = this.rowsElements.toArray().findIndex(elem => elem.nativeElement.id === id);
       if (index > 0) {
         const rowElement = this.rowsElements.toArray()[index - 1]; // because of sticky header
-        setTimeout(() => {
-          rowElement && rowElement.nativeElement.scrollIntoView();
-        });
+        if (
+          rowElement.nativeElement.offsetTop >
+          this.tableElement.nativeElement.scrollTop + this.tableElement.nativeElement.clientHeight
+        ) {
+          this.tableElement.nativeElement.scrollTop = rowElement.nativeElement.offsetTop;
+        } else if (rowElement.nativeElement.offsetTop < this.tableElement.nativeElement.scrollTop) {
+          this.tableElement.nativeElement.scrollTop = rowElement.nativeElement.offsetTop;
+        }
       }
     }
   }

@@ -20,5 +20,6 @@
 import {LinkType} from '../../core/store/link-types/link.type';
 
 export function getOtherLinkedCollectionId(linkType: LinkType, collectionId: string): string {
-  return linkType.collectionIds[0] === collectionId ? linkType.collectionIds[1] : linkType.collectionIds[0];
+  const collectionIds = linkType && linkType.collectionIds;
+  return collectionIds[0] === collectionId ? collectionIds[1] : collectionIds[0];
 }

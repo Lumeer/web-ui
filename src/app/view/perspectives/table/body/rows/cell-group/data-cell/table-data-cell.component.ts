@@ -149,10 +149,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly constraintType = ConstraintType;
 
+  private savingDisabled: boolean;
   private selectedSubscriptions = new Subscription();
   private subscriptions = new Subscription();
-
-  private savingDisabled: boolean;
 
   public constructor(
     private actions$: Actions,
@@ -458,13 +457,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  public disableSaving() {
-    this.savingDisabled = true;
-  }
-
   private saveData(value: any) {
     const previousValue = this.getValue() || this.getValue() === 0 ? this.getValue() : '';
     if (this.savingDisabled || previousValue === value || (!value && !this.isEntityInitialized())) {
+      this.savingDisabled = false;
       return;
     }
 
@@ -489,10 +485,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createDocument(attributeId: string, attributeName: string, value: any) {
-    combineLatest(
+    combineLatest([
       this.store$.pipe(select(selectTableById(this.cursor.tableId))),
-      this.store$.pipe(select(selectTableRow(this.cursor)))
-    )
+      this.store$.pipe(select(selectTableRow(this.cursor))),
+    ])
       .pipe(first())
       .subscribe(([table, row]) => {
         if (!attributeId) {
@@ -754,33 +750,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.editing$.next(false);
   }
 
-  public onUseDocumentHint() {
-    this.disableSaving();
-
-    if (this.isEntityInitialized()) {
-      this.deleteLinkInstance();
-      this.deleteDocumentIfEmpty();
-    }
-  }
-
-  private deleteLinkInstance() {
-    this.store$
-      .pipe(
-        select(selectTableRow(this.cursor)),
-        first()
-      )
-      .subscribe(row => {
-        const callback = () => this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
-        this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId: row.linkInstanceId, callback}));
-      });
-  }
-
-  private deleteDocumentIfEmpty() {
-    if (Object.keys((this.document && this.document.data) || {}).length === 0) {
-      this.deleteDocument();
-    }
-  }
-
   @HostListener('keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     if (this.editing$.getValue()) {
@@ -843,5 +812,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           return;
       }
     }
+  }
+
+  public onUseDocumentHint() {
+    this.savingDisabled = true;
   }
 }

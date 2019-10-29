@@ -32,9 +32,15 @@ import {Perspective} from '../../../perspective';
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
 import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
+import {ResourceType} from '../../../../../core/model/resource-type';
+import {User} from '../../../../../core/store/users/user';
+import {userHasRoleInResource} from '../../../../../shared/utils/resource.utils';
+import {Role} from '../../../../../core/model/role';
+import {BsModalService} from 'ngx-bootstrap';
+import {CreateDocumentModalComponent} from '../../../../../shared/modal/create-document/create-document-modal.component';
 
 @Component({
-  selector: 'search-documents-wrapper',
+  selector: 'search-documents-content',
   templateUrl: './search-documents-content.component.html',
   styleUrls: ['./search-documents-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,6 +68,9 @@ export class SearchDocumentsContentComponent implements OnInit {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public currentUser: User;
+
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();
 
@@ -69,11 +78,13 @@ export class SearchDocumentsContentComponent implements OnInit {
   public scrollDown = new EventEmitter();
 
   public readonly sizeType = SizeType;
+  public readonly projectType = ResourceType.Project;
 
   constructor(
     private perspectiveService: PerspectiveService,
     private router: Router,
-    private toggleService: DocumentFavoriteToggleService
+    private toggleService: DocumentFavoriteToggleService,
+    private bsModalService: BsModalService
   ) {}
 
   public ngOnInit() {
@@ -129,5 +140,17 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   public ngOnDestroy() {
     this.toggleService.onDestroy();
+  }
+
+  public onAdd() {
+    const collections = (this.collections || []).filter(coll =>
+      userHasRoleInResource(this.currentUser, coll, Role.Write)
+    );
+    if (collections.length) {
+      const initialState = {collections, query: this.query, currentUser: this.currentUser};
+      const config = {initialState, keyboard: false};
+      config['backdrop'] = 'static';
+      this.bsModalService.show(CreateDocumentModalComponent, config);
+    }
   }
 }

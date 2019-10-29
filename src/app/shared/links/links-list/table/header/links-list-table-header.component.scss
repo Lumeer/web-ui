@@ -1,0 +1,33 @@
+$height: 2rem;
+$width: 1rem;
+
+.sticky-header {
+  white-space: nowrap;
+}
+
+th {
+  z-index: 2;
+  position: sticky;
+  height: $height;
+  vertical-align: middle !important;
+  padding: 0 $width / 2 !important;
+}
+
+.fixed-header {
+  right: -2px;
+  width: var(--detail-links-sticky-width, auto);
+}
+
+.resize-handle {
+  height: $height;
+  width: $width;
+  background: transparent;
+  cursor: col-resize;
+  position: absolute;
+  top: 0;
+  z-index: 2;
+}
+
+.icons {
+  font-size: 13px;
+}
