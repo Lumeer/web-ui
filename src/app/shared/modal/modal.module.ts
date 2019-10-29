@@ -24,6 +24,7 @@ import {CreateResourceModalModule} from './create-resource/create-resource-modal
 import {AttributeTypeModalModule} from './attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from './attribute-function/attribute-function-modal.module';
 import {DocumentDetailModalModule} from './document-detail/document-detail-modal.module';
+import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
 
 @NgModule({
   declarations: [],
@@ -34,6 +35,7 @@ import {DocumentDetailModalModule} from './document-detail/document-detail-modal
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
     DocumentDetailModalModule,
+    CreateDocumentModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -41,6 +43,7 @@ import {DocumentDetailModalModule} from './document-detail/document-detail-modal
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
     DocumentDetailModalModule,
+    CreateDocumentModalModule,
   ],
 })
 export class ModalModule {}

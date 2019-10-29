@@ -119,7 +119,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   private fetchDocuments() {
-    const query = {...this.query$.getValue(), page: 0, pageSize: 5};
+    const query = {...this.query$.getValue()};
     this.store$.dispatch(new DocumentsAction.Get({query}));
   }
 

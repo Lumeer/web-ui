@@ -64,7 +64,7 @@ import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-
 import {SelectDataValue} from '../../../../core/model/data-value/select.data-value';
 import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Constraint} from '../../../../core/model/constraint';
-import {DataValue} from '../../../../core/model/data-value';
+import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'kanban-columns',
@@ -225,6 +225,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
           document,
           otherDocumentId: linkDocument.id,
           linkTypeId,
+          correlationId: generateCorrelationId(),
           callback: documentId => this.onDocumentCreated(documentId, column),
         })
       );

@@ -28,7 +28,6 @@ import {DocumentsAction} from '../../store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../store/documents/documents.state';
 import {selectQuery} from '../../store/navigation/navigation.state';
 import {selectDocumentsByQuery} from '../../store/common/permissions.selectors';
-import {queryIsEmpty} from '../../store/navigation/query/query.util';
 import {selectViewsLoaded} from '../../store/views/views.state';
 import {Project} from '../../store/projects/project';
 import {Organization} from '../../store/organizations/organization';
@@ -59,8 +58,7 @@ export class DocumentsGuard implements Resolve<DocumentModel[]> {
           tap(loaded => {
             if (!loaded) {
               const workspace = {organizationId: organization.id, projectId: project.id};
-              const querySingleDocument = {...query, page: 0, pageSize: queryIsEmpty(query) ? 10 : 1000}; // TODO change count
-              this.store$.dispatch(new DocumentsAction.Get({query: querySingleDocument, workspace}));
+              this.store$.dispatch(new DocumentsAction.Get({query, workspace})); // TODO pagination
             }
           }),
           filter(loaded => loaded)
