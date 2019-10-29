@@ -35,15 +35,14 @@ import {
   selectDocumentsByCustomQuery,
 } from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {ConstraintData, DurationUnitsMap} from '../../../../core/model/data/constraint';
-import {TranslationService} from '../../../../core/service/translation.service';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {selectSearchConfig} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {sortDocumentsByFavoriteAndLastUsed} from '../../../../core/store/documents/document.utils';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
-import {Project} from '../../../../core/store/projects/project';
+import {ConstraintDataService} from '../../../../core/service/constraint-data.service';
 
 const PAGE_SIZE = 40;
 
@@ -66,20 +65,17 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public workspace$: Observable<Workspace>;
   public currentUser$: Observable<User>;
 
-  public readonly durationUnitsMap: DurationUnitsMap;
-
   private searchId = DEFAULT_SEARCH_ID;
   private config: SearchConfig;
   private page = 0;
   private documentsOrder = [];
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  constructor(private store$: Store<AppState>, private constrainDataService: ConstraintDataService) {
+    this.constraintData$ = this.constrainDataService.observeConstraintData();
   }
 
   public ngOnInit() {
-    this.constraintData$ = this.selectConstraintData$();
     this.users$ = this.store$.pipe(select(selectAllUsers));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.loaded$ = this.store$.pipe(select(selectCurrentQueryDocumentsLoaded));
@@ -89,13 +85,6 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
 
     this.subscribeData();
-  }
-
-  private selectConstraintData$(): Observable<ConstraintData> {
-    return this.store$.pipe(
-      select(selectAllUsers),
-      map(users => ({users, durationUnitsMap: this.durationUnitsMap}))
-    );
   }
 
   private selectDocumentsConfig$(): Observable<SearchDocumentsConfig> {

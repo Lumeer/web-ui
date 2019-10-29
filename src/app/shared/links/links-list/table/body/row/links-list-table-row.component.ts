@@ -109,7 +109,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   private creatingNewRow = false;
 
-  constructor(private element: ElementRef) {}
+  constructor(public element: ElementRef) {}
 
   public ngOnInit() {
     this.focusSubscription.add(
