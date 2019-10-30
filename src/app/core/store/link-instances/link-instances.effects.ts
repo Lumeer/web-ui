@@ -38,11 +38,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
-import {
-  selectLinkInstanceById,
-  selectLinkInstancesDictionary,
-  selectLinkInstancesQueries,
-} from './link-instances.state';
+import {selectLinkInstanceById, selectLinkInstancesQueries} from './link-instances.state';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -133,6 +129,7 @@ export class LinkInstancesEffects {
         select(selectLinkInstanceById(linkInstanceDto.id)),
         take(1),
         tap(() => this.store$.dispatch(new LinkInstancesAction.UpdateInternal({linkInstance}))),
+        map(originalLinkInstance => ({...originalLinkInstance, correlationId: linkInstance.correlationId})),
         mergeMap(originalLinkInstance =>
           this.linkInstanceService.updateLinkInstance(linkInstanceDto).pipe(
             flatMap(() => {

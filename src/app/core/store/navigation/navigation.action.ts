@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Query} from './query/query';
 import {SearchTab} from './search-tab';
 import {ViewCursor} from './view-cursor/view-cursor';
+import {Workspace} from './workspace';
 
 export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',

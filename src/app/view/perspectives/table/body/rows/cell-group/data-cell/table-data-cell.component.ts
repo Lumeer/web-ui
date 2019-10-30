@@ -29,6 +29,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  SimpleChange,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -151,6 +152,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private savingDisabled: boolean;
   private selectedSubscriptions = new Subscription();
+  private affectedSubscription = new Subscription();
   private subscriptions = new Subscription();
 
   public constructor(
@@ -163,30 +165,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    if (this.cursor.partIndex > 1) {
-      this.subscriptions.add(this.subscribeToAffected());
-    }
     this.subscriptions.add(this.subscribeToEditing());
-  }
-
-  private subscribeToAffected(): Subscription {
-    return this.store$
-      .select(
-        selectAffected({
-          attributeId: this.column.attributeIds[0],
-          documentId: this.document && this.document.id,
-          linkInstanceId: this.linkInstance && this.linkInstance.id,
-        })
-      )
-      .pipe(
-        distinctUntilChanged(),
-        withLatestFrom(this.editing$)
-      )
-      .subscribe(([affected, editing]) => {
-        this.affected = affected && !editing;
-        // TODO run change detection in parent component some other way
-        this.affect.emit();
-      });
   }
 
   private subscribeToEditing(): Subscription {
@@ -264,6 +243,39 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.cursor && this.cursor) {
       this.row$ = this.store$.pipe(select(selectTableRow(this.cursor)));
     }
+    if (
+      this.cursor.partIndex > 1 &&
+      (this.objectChanged(changes.document) || this.objectChanged(changes.linkInstance))
+    ) {
+      this.affectedSubscription.unsubscribe();
+      this.affectedSubscription = this.subscribeToAffected();
+    }
+  }
+
+  private subscribeToAffected(): Subscription {
+    return this.store$
+      .select(
+        selectAffected({
+          attributeId: this.column.attributeIds[0],
+          documentId: this.document && this.document.id,
+          linkInstanceId: this.linkInstance && this.linkInstance.id,
+        })
+      )
+      .pipe(
+        distinctUntilChanged(),
+        withLatestFrom(this.editing$)
+      )
+      .subscribe(([affected, editing]) => {
+        this.affected = affected && !editing;
+        // TODO run change detection in parent component some other way
+        this.affect.emit();
+      });
+  }
+
+  private objectChanged(change: SimpleChange): boolean {
+    return (
+      change && change.currentValue && (!change.previousValue || change.previousValue.id !== change.currentValue.id)
+    );
   }
 
   private checkSuggesting() {
@@ -364,6 +376,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.selectedSubscriptions.unsubscribe();
+    this.affectedSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
   }
 
