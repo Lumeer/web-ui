@@ -21,17 +21,11 @@ import {Action} from '@ngrx/store';
 import {Query} from './query/query';
 import {SearchTab} from './search-tab';
 import {ViewCursor} from './view-cursor/view-cursor';
-import {Workspace} from './workspace';
 
 export enum NavigationActionType {
   ADD_LINK_TO_QUERY = '[Navigation] Add Link to Query',
-  REMOVE_LINK_FROM_QUERY = '[Navigation] Remove Link from Query',
 
   ADD_COLLECTION_TO_QUERY = '[Navigation] Add Collection to Query',
-  REMOVE_COLLECTION_FROM_QUERY = '[Navigation] Remove Collection from Query',
-
-  REMOVE_ATTRIBUTES_FROM_QUERY = '[Navigation] Remove Attributes from Query',
-  REMOVE_LINK_ATTRIBUTES_FROM_QUERY = '[Navigation] Remove Link Attributes from Query',
 
   NAVIGATE_TO_PREVIOUS_URL = '[Navigation] Navigate To Previous URL',
 
