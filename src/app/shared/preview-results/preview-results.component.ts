@@ -124,26 +124,6 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
     this.selectDocument.emit(document);
   }
 
-  public onNewDocument() {
-    this.store$.dispatch(
-      new DocumentsAction.Create({
-        document: {
-          collectionId: this.selectedCollection.id,
-          correlationId: generateCorrelationId(),
-          data: generateDocumentData(
-            this.selectedCollection,
-            getQueryFiltersForCollection(this.query, this.selectedCollection.id)
-          ),
-        },
-        onSuccess: id => {
-          this.store$.dispatch(
-            new NavigationAction.SetViewCursor({cursor: {collectionId: this.selectedCollection.id, documentId: id}})
-          );
-        },
-      })
-    );
-  }
-
   public switchToCollectionsTab() {
     this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
       queryParams: {action: QueryAction.CreateCollection},

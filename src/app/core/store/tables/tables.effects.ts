@@ -598,12 +598,12 @@ export class TablesEffects {
     ofType<TablesAction.SyncPrimaryRows>(TablesActionType.SYNC_PRIMARY_ROWS),
     debounceTime(100), // otherwise unwanted parallel syncing occurs
     switchMap(action =>
-      combineLatest(
+      combineLatest([
         this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
         this.store$.pipe(select(selectDocumentsByCustomQuery(queryWithoutLinks(action.payload.query), false, true))),
         this.store$.pipe(select(selectMoveTableCursorDown)),
-        this.store$.pipe(select(selectTableCursor))
-      ).pipe(
+        this.store$.pipe(select(selectTableCursor)),
+      ]).pipe(
         take(1),
         filter(([table]) => !!table),
         mergeMap(([table, documents, moveCursorDown, tableCursor]) => {
@@ -689,10 +689,10 @@ export class TablesEffects {
     ofType<TablesAction.SyncLinkedRows>(TablesActionType.SYNC_LINKED_ROWS),
     mergeMap(action => {
       const {cursor} = action.payload;
-      return combineLatest(
+      return combineLatest([
         this.store$.pipe(select(selectTablePart(cursor))),
-        this.store$.pipe(select(selectTableRows(cursor.tableId)))
-      ).pipe(
+        this.store$.pipe(select(selectTableRows(cursor.tableId))),
+      ]).pipe(
         take(1),
         filter(([part]) => !!part),
         mergeMap(([part, rows]) => {
@@ -738,6 +738,31 @@ export class TablesEffects {
                     actions.push(new TablesAction.InitLinkedRows({cursor, linkInstances}));
                   }
 
+                  // documentIds on LinkInstance was updated
+                  const changedRowIndex = linkedRows.findIndex(
+                    row => !documents.find(doc => doc.id === row.documentId)
+                  );
+                  if (changedRowIndex >= 0) {
+                    const changedRow = linkedRows[changedRowIndex];
+                    const linkInstance = linkInstances.find(li => li.id === changedRow.linkInstanceId);
+                    if (linkInstance) {
+                      const otherDocumentId = getOtherDocumentIdFromLinkInstance(linkInstance, ...rowDocumentIds);
+                      const newDocument = documents.find(doc => doc.id === otherDocumentId);
+                      if (newDocument) {
+                        actions.push(
+                          new TablesAction.ReplaceRows({
+                            cursor: {
+                              ...cursor,
+                              rowPath: [...cursor.rowPath, changedRowIndex],
+                            },
+                            deleteCount: 1,
+                            rows: [{...changedRow, documentId: newDocument.id}],
+                          })
+                        );
+                      }
+                    }
+                  }
+
                   if (unknownLinkInstances.length > 0) {
                     rowsWithPath.forEach(rowWithPath => {
                       const addedLinkedRows = unknownLinkInstances
@@ -750,17 +775,15 @@ export class TablesEffects {
                           return newRows;
                         }, []);
 
-                      if (addedLinkedRows.length === 0) {
-                        return;
+                      if (addedLinkedRows.length) {
+                        actions.push(
+                          new TablesAction.AddLinkedRows({
+                            cursor: {...cursor, rowPath: rowWithPath.path},
+                            linkedRows: addedLinkedRows,
+                            append: true,
+                          })
+                        );
                       }
-
-                      actions.push(
-                        new TablesAction.AddLinkedRows({
-                          cursor: {...cursor, rowPath: rowWithPath.path},
-                          linkedRows: addedLinkedRows,
-                          append: true,
-                        })
-                      );
                     });
                   }
 
