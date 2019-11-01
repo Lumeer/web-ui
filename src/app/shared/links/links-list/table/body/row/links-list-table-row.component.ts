@@ -71,6 +71,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   @Input()
   public documentId: string;
 
+  @Input()
+  public attributeEditing: {documentId?: string; attributeId?: string};
+
   @Output()
   public onFocus = new EventEmitter<number>();
 
@@ -87,13 +90,16 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public columnFocus = new EventEmitter<number>();
 
   @Output()
+  public columnEdit = new EventEmitter<number>();
+
+  @Output()
   public unLink = new EventEmitter();
 
   @Output()
   public detail = new EventEmitter();
 
   @Output()
-  public newLink = new EventEmitter<{data: Record<string, any>; correlationId: string}>();
+  public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
 
   @ViewChild(DocumentHintsComponent, {static: false})
   public suggestions: DocumentHintsComponent;
@@ -105,7 +111,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public suggesting$ = new BehaviorSubject<any>(null);
 
   public initialValue: any;
-  public focusSubscription = new Subscription();
+  public subscriptions = new Subscription();
 
   private savingDisabled = false;
   private creatingNewRow = false;
@@ -113,7 +119,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   constructor(public element: ElementRef) {}
 
   public ngOnInit() {
-    this.focusSubscription.add(
+    this.subscriptions.add(
       this.columnFocused$
         .asObservable()
         .pipe(
@@ -121,6 +127,13 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
           filter(index => isNotNullOrUndefined(index))
         )
         .subscribe(index => this.columnFocus.emit(index))
+    );
+
+    this.subscriptions.add(
+      this.columnEditing$
+        .asObservable()
+        .pipe(distinctUntilChanged())
+        .subscribe(index => this.columnEdit.emit(index))
     );
   }
 
@@ -242,11 +255,11 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     }
   }
 
-  private createNewLink(column: number, value: any) {
+  private createNewLink(index: number, value: any) {
     if (!this.creatingNewRow && isNotNullOrUndefined(value) && String(value).trim() !== '') {
       this.creatingNewRow = true;
-      const attribute = this.columns[column].attribute;
-      this.newLink.emit({data: {[attribute.id]: value}, correlationId: this.row.correlationId});
+      const column = this.columns[index];
+      this.newLink.emit({column, value, correlationId: this.row.correlationId});
     }
   }
 
@@ -255,8 +268,10 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onDataInputDblClick(column: number, event: MouseEvent) {
-    event.preventDefault();
-    this.onEdit.emit(column);
+    if (this.columnEditing$.value !== column) {
+      event.preventDefault();
+      this.onEdit.emit(column);
+    }
   }
 
   public onDataInputCancel(column: number) {
@@ -264,7 +279,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onDataInputFocus(column: number) {
-    this.onFocus.emit(column);
+    if (this.columnEditing$.value !== column) {
+      this.onFocus.emit(column);
+    }
   }
 
   public trackByColumn(index: number, column: LinkColumn): string {
@@ -272,7 +289,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public ngOnDestroy() {
-    this.focusSubscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   public onDetail() {

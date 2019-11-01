@@ -26,9 +26,10 @@ import {EmptySearchComponent} from './empty-search/empty-search.component';
 import {EmptyStateComponent} from './empty-state/empty-state.component';
 import {InvalidQueryComponent} from './invalid-query/invalid-query.component';
 import {EmptyDataComponent} from './empty-data/empty-data.component';
+import {SelectModule} from '../select/select.module';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, PipesModule],
+  imports: [CommonModule, FormsModule, PipesModule, SelectModule],
   declarations: [
     EmptySearchComponent,
     EmptyStateComponent,

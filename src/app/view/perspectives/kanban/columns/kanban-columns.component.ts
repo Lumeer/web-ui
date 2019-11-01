@@ -227,8 +227,11 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
         new DocumentsAction.CreateWithLink({
           document,
           otherDocumentId: linkDocument.id,
-          linkTypeId,
-          correlationId: generateCorrelationId(),
+          linkInstance: {
+            documentIds: [linkDocument.id, ''],
+            linkTypeId,
+            correlationId: generateCorrelationId(),
+          },
           callback: documentId => this.onDocumentCreated(documentId, column),
         })
       );

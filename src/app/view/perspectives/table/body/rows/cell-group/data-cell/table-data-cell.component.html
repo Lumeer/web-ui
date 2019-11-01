@@ -30,6 +30,7 @@
                     [collectionId]="(table | part:cursor)?.collectionId"
                     [constraintData]="constraintData"
                     [columns]="table | documentHintColumns:cursor:canManageConfig"
+                    [excludedDocumentIds]="document && document.id ? [document.id] : []"
                     [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
                     [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
                     [linkInstanceId]="hintsData.row?.linkInstanceId"

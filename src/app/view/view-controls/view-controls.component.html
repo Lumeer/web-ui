@@ -26,7 +26,7 @@
           </button>
           <div aria-labelledby="perspectiveDropdown"
                class="dropdown-menu">
-            <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query | sortPerspectives"
+            <a *ngFor="let aperspective of perspectives | sortPerspectives"
                [class.active]="perspective === aperspective.perspective"
                (click)="onSelectPerspective(aperspective.perspective, state.permissions.canManage)"
                class="dropdown-item" [title]="aperspective.perspective | perspectiveName">

@@ -17,20 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {LinkColumn} from '../model/link-column';
-import {DocumentHintColumn} from '../../../document-hints/document-hint-column';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Collection} from '../../../core/store/collections/collection';
 
-@Pipe({
-  name: 'documentHintsColumns',
+@Component({
+  selector: 'select-collection',
+  templateUrl: './select-collection.component.html',
+  styleUrls: ['./select-collection.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentHintsColumnsPipe implements PipeTransform {
-  public transform(columns: LinkColumn[]): DocumentHintColumn[] {
-    return (columns || [])
-      .filter(column => column.collectionId)
-      .map(column => ({
-        width: column.width,
-        attributeId: column.attribute.id,
-      }));
-  }
+export class SelectCollectionComponent {
+  @Input()
+  public collections: Collection[];
+
+  @Output()
+  public onSelect = new EventEmitter<Collection>();
 }

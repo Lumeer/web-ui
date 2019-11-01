@@ -35,6 +35,7 @@ import {SelectDataItemComponent} from './select-data-item/select-data-item.compo
 import {DataInputModule} from '../data-input/data-input.module';
 import {GetSelectDataItemPipe} from './select-data-item/get-select-data-item.pipe';
 import {DataDropdownModule} from '../data-dropdown/data-dropdown.module';
+import {SelectCollectionComponent} from './select-collection/select-collection.component';
 
 @NgModule({
   imports: [
@@ -56,8 +57,9 @@ import {DataDropdownModule} from '../data-dropdown/data-dropdown.module';
     SelectItemWithConstraintConfigPipe,
     SelectDataItemComponent,
     GetSelectDataItemPipe,
+    SelectCollectionComponent,
   ],
   providers: [AreIdsEqualPipe],
-  exports: [SelectItemComponent, SelectItemWithConstraint, SelectDataItemComponent],
+  exports: [SelectItemComponent, SelectItemWithConstraint, SelectDataItemComponent, SelectCollectionComponent],
 })
 export class SelectModule {}

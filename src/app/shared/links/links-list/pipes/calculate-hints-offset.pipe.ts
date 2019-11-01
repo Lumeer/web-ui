@@ -17,19 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SmartDocTemplatePartDto {
-  type: string;
+import {Pipe, PipeTransform} from '@angular/core';
+import {LinkColumn} from '../model/link-column';
 
-  textHtml?: string;
-  textData?: any;
-
-  linkTypeId?: string;
-  perspective?: string;
-  templateId?: string;
-}
-
-export interface SmartDocTemplateDto {
-  id?: string;
-  collectionCode: string;
-  parts: SmartDocTemplatePartDto[];
+@Pipe({
+  name: 'calculateHintsOffset',
+})
+export class CalculateHintsOffsetPipe implements PipeTransform {
+  public transform(columns: LinkColumn[]): number {
+    return (columns || []).filter(col => !!col.linkTypeId).reduce((sum, col) => sum + col.width, 0);
+  }
 }

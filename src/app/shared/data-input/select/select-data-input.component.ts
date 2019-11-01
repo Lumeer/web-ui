@@ -77,7 +77,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
 
   public text = '';
 
-  private preventSave: boolean;
   private setFocus: boolean;
   private triggerInput: boolean;
 
@@ -138,12 +137,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        this.preventSave = true;
         // needs to be executed after parent event handlers
         setTimeout(() => this.saveValue());
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
         this.resetSearchInput();
         this.cancel.emit();
         return;
@@ -170,7 +167,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onSelect(event: TypeaheadMatch) {
-    this.preventSave = true;
     const dataValue = this.value.copy(event.item.value);
     this.save.emit(dataValue);
   }

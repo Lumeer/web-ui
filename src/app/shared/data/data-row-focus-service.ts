@@ -114,15 +114,13 @@ export class DataRowFocusService {
 
     this.hiddenComponent() && this.hiddenComponent().blur();
 
-    let editingConfirmed = false;
     this.rows().forEach((component, index) => {
-      if (index === row) {
-        editingConfirmed = component.startColumnEditing(column, value);
-      } else {
+      if (index !== row) {
         component.endRowEditing();
       }
     });
 
+    const editingConfirmed = this.rows()[row].startColumnEditing(column, value);
     if (editingConfirmed) {
       this.edited = {row, column};
     } else {
