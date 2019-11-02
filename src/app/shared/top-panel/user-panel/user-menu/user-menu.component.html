@@ -1,91 +1,14 @@
-<div class="dropdown show ml-2" data-tour="user-menu">
-  <a href="#"
-     role="button"
-     id="profileDropdownLink"
-     data-toggle="dropdown"
-     data-offset="0,10"
-     aria-haspopup="true"
-     aria-expanded="false"
-     class="text-primary">
-    <i class="fa fa-user-circle fa-2x"></i>
-  </a>
-
-  <div class="dropdown-menu dropdown-menu-right profile-dropdown"
-       aria-labelledby="profileDropdownLink">
-    <a *ngIf="freePlan$ | async"
-       class="dropdown-item text-center bg-danger text-white free-plan"
-       (click)="goToOrganizationDetail()">
-      <span i18n="@@panel.plan.free">Free&nbsp;Plan: Upgrade now!</span>
-    </a>
-    <span *ngIf="currentUser$ | async as currentUser"
-          class="dropdown-item-text text-secondary">
-      {{ currentUser.email }}
-    </span>
-    <a *ngIf="locale !== 'cs'"
-       [href]="url$ | async | languageLink:'cs'"
-       class="dropdown-item"
-       title="Čeština">
-      <span class="flag-icon flag-icon-cz"></span>
-      <span>Čeština</span>
-      (<span i18n="@@language.czech">Czech</span>)
-    </a>
-    <a *ngIf="locale !== 'en'"
-       [href]="url$ | async | languageLink:'en'"
-       class="dropdown-item"
-       title="English">
-      <span class="flag-icon flag-icon-gb"></span>
-      <span>English</span>
-      (<span i18n="@@language.english">English</span>)
-    </a>
-    <a (click)="onFeedbackClick()"
-       class="dropdown-item"
-       title="Send feedback"
-       i18n-title="@@menu.sendFeedback">
-      <i class="far fa-fw fa-comment"
-         data-fa-transform="left-4"
-         aria-hidden="true"></i>&nbsp;
-      <span i18n="@@menu.sendFeedback">Send Feedback</span>
-    </a>
-    <a (click)="onStartTour()"
-       class="dropdown-item"
-       title="Application Tour"
-       i18n-title="@@menu.applicationTour">
-      <i class="far fa-fw fa-map-signs"
-         data-fa-transform="left-4"
-         aria-hidden="true"></i>&nbsp;
-      <span i18n="@@menu.applicationTour">Application Tour</span>
-    </a>
-    <a href="https://lumeer.freshdesk.com/support/solutions"
-       target="_blank"
-       class="dropdown-item"
-       title="Solutions and Support"
-       i18n-title="@@menu.solutionsSupport">
-      <i class="fas fa-fw fa-life-ring"
-         data-fa-transform="left-4"
-         aria-hidden="true"></i>&nbsp;
-      <span i18n="@@menu.solutionsSupport">Solutions and Support</span>
-    </a>
-    <a *ngIf="false"
-       class="dropdown-item"
-       title="Account"
-       i18n-title="@@menu.account">
-      <i class="fas fa-fw fa-user"
-         data-fa-transform="left-4"
-         aria-hidden="true"></i>&nbsp;
-      <span i18n="@@menu.account">Account</span>
-    </a>
-    <a (click)="onLogoutClick()"
-       class="dropdown-item"
-       title="Log out"
-       i18n-title="@@menu.logout">
-      <i class="fas fa-fw fa-sign-in"
-         data-fa-transform="left-4"
-         aria-hidden="true"></i>&nbsp;
-      <span i18n="@@menu.logout">Logout</span>
-    </a>
-    <ng-container *ngIf="buildNumber">
-      <div class="dropdown-divider"></div>
-      <small class="dropdown-header py-0">Build #{{buildNumber}}</small>
-    </ng-container>
-  </div>
+<div class="ml-2" data-tour="user-menu" (click)="onMenuClick()"
+     #origin>
+  <i class="fa fa-user-circle fa-2x"></i>
 </div>
+
+<user-menu-dropdown [origin]="origin"
+                    [currentUser]="currentUser$ | async"
+                    [freePlan]="freePlan$ | async"
+                    [url]="url$ | async"
+                    (feedback)="onFeedbackClick()"
+                    (logout)="onLogoutClick()"
+                    (organizationDetail)="goToOrganizationDetail()"
+                    (startTour)="onStartTour()">
+</user-menu-dropdown>

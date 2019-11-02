@@ -22,7 +22,7 @@ import {UserNotification} from '../../../../../core/model/user-notification';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {Project} from '../../../../../core/store/projects/project';
-import {BehaviorSubject} from 'rxjs';
+import {Dictionary} from '@ngrx/entity';
 
 @Component({
   selector: 'notifications-menu-wrapper',
@@ -41,7 +41,7 @@ export class NotificationsMenuWrapperComponent {
   public unreadOnly: boolean;
 
   @Input()
-  public organizations: Organization;
+  public organizations: Dictionary<Organization>;
 
   @Input()
   public workspace: Workspace;

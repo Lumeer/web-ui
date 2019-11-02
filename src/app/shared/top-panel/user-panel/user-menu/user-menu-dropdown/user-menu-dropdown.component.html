@@ -1,0 +1,85 @@
+<dropdown [closeOnClickOutside]="true"
+          [positions]="dropdownPositions"
+          [origin]="origin">
+  <div class="dropdown-menu show">
+    <div class="profile-dropdown" aria-labelledby="profileDropdownLink">
+      <a *ngIf="freePlan"
+         class="dropdown-item text-center bg-danger text-white free-plan"
+         (click)="organizationDetail.emit()">
+        <span i18n="@@panel.plan.free">Free&nbsp;Plan: Upgrade now!</span>
+      </a>
+      <span *ngIf="currentUser"
+            class="dropdown-item-text text-secondary">
+      {{ currentUser.email }}
+    </span>
+      <a *ngIf="locale !== 'cs'"
+         [href]="url | languageLink:'cs'"
+         class="dropdown-item"
+         title="Čeština">
+        <span class="flag-icon flag-icon-cz"></span>
+        <span>Čeština</span>
+        (<span i18n="@@language.czech">Czech</span>)
+      </a>
+      <a *ngIf="locale !== 'en'"
+         [href]="url| languageLink:'en'"
+         class="dropdown-item"
+         title="English">
+        <span class="flag-icon flag-icon-gb"></span>
+        <span>English</span>
+        (<span i18n="@@language.english">English</span>)
+      </a>
+      <a (click)="feedback.emit()"
+         class="dropdown-item"
+         title="Send feedback"
+         i18n-title="@@menu.sendFeedback">
+        <i class="far fa-fw fa-comment"
+           data-fa-transform="left-4"
+           aria-hidden="true"></i>&nbsp;
+        <span i18n="@@menu.sendFeedback">Send Feedback</span>
+      </a>
+      <a (click)="startTour.emit()"
+         class="dropdown-item"
+         title="Application Tour"
+         i18n-title="@@menu.applicationTour">
+        <i class="far fa-fw fa-map-signs"
+           data-fa-transform="left-4"
+           aria-hidden="true"></i>&nbsp;
+        <span i18n="@@menu.applicationTour">Application Tour</span>
+      </a>
+      <a href="https://lumeer.freshdesk.com/support/solutions"
+         target="_blank"
+         class="dropdown-item"
+         title="Solutions and Support"
+         i18n-title="@@menu.solutionsSupport">
+        <i class="fas fa-fw fa-life-ring"
+           data-fa-transform="left-4"
+           aria-hidden="true"></i>&nbsp;
+        <span i18n="@@menu.solutionsSupport">Solutions and Support</span>
+      </a>
+      <a *ngIf="false"
+         class="dropdown-item"
+         title="Account"
+         i18n-title="@@menu.account">
+        <i class="fas fa-fw fa-user"
+           data-fa-transform="left-4"
+           aria-hidden="true"></i>&nbsp;
+        <span i18n="@@menu.account">Account</span>
+      </a>
+      <a (click)="logout.emit()"
+         class="dropdown-item"
+         title="Log out"
+         i18n-title="@@menu.logout">
+        <i class="fas fa-fw fa-sign-in"
+           data-fa-transform="left-4"
+           aria-hidden="true"></i>&nbsp;
+        <span i18n="@@menu.logout">Logout</span>
+      </a>
+      <ng-container *ngIf="buildNumber">
+        <div class="dropdown-divider"></div>
+        <small class="dropdown-header py-0">Build #{{buildNumber}}</small>
+      </ng-container>
+    </div>
+  </div>
+
+
+</dropdown>

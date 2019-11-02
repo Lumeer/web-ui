@@ -40,6 +40,8 @@ import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
 import {NewUserComponent} from './user-panel/invite-user/invite-user-dialog/new-user/new-user.component';
 import {FormsModule} from '@angular/forms';
 import {InputModule} from '../input/input.module';
+import {DropdownModule} from '../dropdown/dropdown.module';
+import {UserMenuDropdownComponent} from './user-panel/user-menu/user-menu-dropdown/user-menu-dropdown.component';
 
 @NgModule({
   imports: [
@@ -53,6 +55,7 @@ import {InputModule} from '../input/input.module';
     NgxModalModule.forRoot(),
     FormsModule,
     InputModule,
+    DropdownModule,
   ],
   declarations: [
     TopPanelComponent,
@@ -67,6 +70,7 @@ import {InputModule} from '../input/input.module';
     InviteUserComponent,
     InviteUserDialogComponent,
     NewUserComponent,
+    UserMenuDropdownComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],
   entryComponents: [InviteUserDialogComponent],

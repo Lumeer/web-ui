@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -25,10 +25,14 @@ import {ResourceType} from '../../../core/model/resource-type';
 import {AppState} from '../../../core/store/app.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {Organization} from '../../../core/store/organizations/organization';
-import {selectOrganizationByWorkspace} from '../../../core/store/organizations/organizations.state';
+import {
+  selectAllOrganizations,
+  selectOrganizationByWorkspace
+} from '../../../core/store/organizations/organizations.state';
 import {Project} from '../../../core/store/projects/project';
-import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
+import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
 import {WorkspaceSelectService} from '../../../core/service/workspace-select.service';
+import {ResourceMenuComponent} from './resource-menu/resource-menu.component';
 
 @Component({
   selector: 'workspace-panel',
@@ -40,22 +44,33 @@ export class WorkspacePanelComponent implements OnInit {
   @Input()
   public workspace: Workspace;
 
+  @ViewChild('organizationMenu', {static: false})
+  public organizationMenuComponent: ResourceMenuComponent;
+
+  @ViewChild('projectMenu', {static: false})
+  public projectMenuComponent: ResourceMenuComponent;
+
   public readonly organizationResourceType = ResourceType.Organization;
   public readonly projectResourceType = ResourceType.Project;
 
   public organization$: Observable<Organization>;
   public project$: Observable<Project>;
+  public organizations$: Observable<Organization[]>;
+  public projects$: Observable<Project[]>;
 
   constructor(
     public element: ElementRef<HTMLElement>,
     private router: Router,
     private selectService: WorkspaceSelectService,
     private store$: Store<AppState>
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.organizations$ = this.store$.pipe(select(selectAllOrganizations));
+    this.projects$ = this.store$.pipe(select(selectProjectsForWorkspace));
   }
 
   public selectOrganization(organization: Organization) {
@@ -72,5 +87,17 @@ export class WorkspacePanelComponent implements OnInit {
 
   public createNewProject(organization: Organization) {
     this.selectService.createNewProject(organization);
+  }
+
+  public onOrganizationClick() {
+    if (this.organizationMenuComponent) {
+      this.organizationMenuComponent.open();
+    }
+  }
+
+  public onProjectClick() {
+    if (this.projectMenuComponent) {
+      this.projectMenuComponent.open();
+    }
   }
 }

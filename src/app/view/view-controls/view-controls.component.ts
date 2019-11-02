@@ -26,7 +26,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
+  SimpleChanges, ViewChild,
 } from '@angular/core';
 import {NavigationExtras} from '@angular/router';
 import {select, Store} from '@ngrx/store';
@@ -49,6 +49,7 @@ import {
 import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
 import {Query} from '../../core/store/navigation/query/query';
+import {OptionsDropdownComponent} from '../../shared/dropdown/options/options-dropdown.component';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -70,6 +71,9 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   public saveOrClone = new EventEmitter<string>();
+
+  @ViewChild(OptionsDropdownComponent, {static: false})
+  public dropdown: OptionsDropdownComponent;
 
   public name: string;
 
@@ -95,7 +99,8 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     private notificationService: NotificationService,
     private i18n: I18n,
     private store$: Store<AppState>
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());
@@ -136,12 +141,12 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private bindViewChanged() {
-    this.viewChanged$ = combineLatest(
+    this.viewChanged$ = combineLatest([
       this.nameChanged$,
       this.store$.pipe(select(selectViewConfigChanged)),
       this.store$.pipe(select(selectViewQueryChanged)),
       this.store$.pipe(select(selectViewPerspectiveChanged))
-    ).pipe(
+    ]).pipe(
       debounceTime(100),
       tap(([, configChanged, queryChanged]) => {
         this.configChanged = configChanged;
@@ -226,6 +231,9 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public onPerspectiveChooserClick(event: MouseEvent) {
     event[PERSPECTIVE_CHOOSER_CLICK] = true;
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
   }
 
   public startSaveLoading() {

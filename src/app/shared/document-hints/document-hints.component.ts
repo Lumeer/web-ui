@@ -187,11 +187,6 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     }
   }
 
-  private calculateOffset(): number {
-    const index = this.columns.findIndex(column => column.attributeId === this.attributeId);
-    return this.columns.slice(0, index).reduce((offset, column) => column.width + offset, 0);
-  }
-
   public ngOnDestroy() {
     this.close();
   }

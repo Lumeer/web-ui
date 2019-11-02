@@ -79,20 +79,20 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private openDialog() {
-    this.open = true;
-    this.dialog().modal('show');
+    // this.open = true;
+    // this.dialog().modal('show');
   }
 
   private closeDialog() {
-    this.open = false;
-    this.dialog().modal('hide');
+    // this.open = false;
+    // this.dialog().modal('hide');
   }
 
   public ngAfterViewInit() {
-    this.dialog().on('hidden.bs.modal', () => {
-      this.open = false;
-      this.clearDialogRoute();
-    });
+    // this.dialog().on('hidden.bs.modal', () => {
+    //   this.open = false;
+    //   this.clearDialogRoute();
+    // });
   }
 
   private clearDialogRoute() {
@@ -104,6 +104,6 @@ export class DialogBaseComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private dialog(): any {
-    return $(`#${this.id}`);
+    return null; // $(`#${this.id}`);
   }
 }

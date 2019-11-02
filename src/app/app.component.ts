@@ -74,7 +74,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private initPushNotifications() {
     if (environment.pusherKey) {
-      this.pusherService.init();
+      // TODO this.pusherService.init();
     }
   }
 

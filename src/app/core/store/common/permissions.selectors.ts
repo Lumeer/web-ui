@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {createSelector} from '@ngrx/store';
-import {isArraySubset} from '../../../shared/utils/array.utils';
+import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
 import {
   authorHasRoleInView,
   sortResourcesByFavoriteAndLastUsed,
@@ -26,7 +26,7 @@ import {
 } from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
-import {selectAllCollections} from '../collections/collections.state';
+import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
 import {DocumentModel} from '../documents/document.model';
 import {sortDocumentsByCreationDate} from '../documents/document.utils';
 import {filterDocumentsAndLinksByQuery} from '../documents/documents.filters';
@@ -93,6 +93,15 @@ export const selectCollectionsByQueryWithoutLinks = createSelector(
   selectQuery,
   (collections, documents, linkTypes, query) =>
     filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query))
+);
+
+export const selectCollectionsInQuery = createSelector(
+  selectCollectionsDictionary,
+  selectQuery,
+  (collectionsMap, query) => {
+    const collectionIds = uniqueValues(((query && query.stems) || []).map(stem => stem.collectionId));
+    return collectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
+  }
 );
 
 export const selectCollectionsByCustomQuery = (query: Query) =>

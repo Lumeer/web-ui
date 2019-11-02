@@ -103,7 +103,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     return this.overlay
       .position()
       .flexibleConnectedTo(this.origin)
+      .withPush(false)
       .withFlexibleDimensions(false)
+      .withGrowAfterOpen(true)
       .withViewportMargin(8)
       .withPositions(convertDropdownToConnectedPositions(this.positions));
   }
