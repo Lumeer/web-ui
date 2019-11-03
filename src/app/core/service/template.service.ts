@@ -59,6 +59,8 @@ export class TemplateService {
         return this.createEdcalTemplate();
       case TemplateType.TASK:
         return this.createTaskTemplate();
+      case TemplateType.CRM:
+        return this.createCrmTemplate();
       default:
         return null;
     }
@@ -192,6 +194,20 @@ export class TemplateService {
     };
   }
 
+  private createCrmTemplate(): Template {
+    return {
+      type: TemplateType.CRM,
+      imagePath: 'assets/templates/crm.jpg',
+      title: this.i18n({id: 'template.crm.title', value: 'Sales CRM'}),
+      description: this.i18n({
+        id: 'template.crm.description',
+        value:
+          'Win deals your way with a visual CRM to manage accounts, contacts, activities, sales teams, deals, and pipelines.',
+      }),
+      url: this.createUrlForType(TemplateType.CRM),
+    };
+  }
+
   private createUrlForType(type: TemplateType): string | null {
     switch (type) {
       case TemplateType.Empty:
@@ -214,6 +230,8 @@ export class TemplateService {
         return this.getEdcalUrl();
       case TemplateType.TASK:
         return this.getTaskUrl();
+      case TemplateType.CRM:
+        return this.getCrmUrl();
     }
   }
 
@@ -295,6 +313,15 @@ export class TemplateService {
         return this.createUrl('cs/rizeni-ukolu');
       default:
         return this.createUrl('task-tracker');
+    }
+  }
+
+  private getCrmUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/prodejni-crm');
+      default:
+        return this.createUrl('sales-crm');
     }
   }
 
