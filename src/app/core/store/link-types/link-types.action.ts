@@ -83,7 +83,13 @@ export namespace LinkTypesAction {
   export class Create implements Action {
     public readonly type = LinkTypesActionType.CREATE;
 
-    public constructor(public payload: {linkType: LinkType; callback?: (linkType: LinkType) => void}) {}
+    public constructor(
+      public payload: {
+        linkType: LinkType;
+        onSuccess?: (linkType: LinkType) => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class CreateSuccess implements Action {

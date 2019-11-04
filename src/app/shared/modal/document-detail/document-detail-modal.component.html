@@ -1,5 +1,5 @@
 <modal-wrapper
-  [type]="dialogType.Primary"
+  [dialogType]="dialogType.Primary"
   (onClose)="hideDialog()"
   [showSubmit]="!document.id"
   [performingAction]="performingAction$ | async"

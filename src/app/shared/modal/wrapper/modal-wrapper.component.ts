@@ -27,7 +27,7 @@ import {
   ElementRef,
   Renderer2,
 } from '@angular/core';
-import {DialogType} from '../../../dialog/dialog-type';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'modal-wrapper',
@@ -46,7 +46,7 @@ export class ModalWrapperComponent {
   public bodyElement: ElementRef;
 
   @Input()
-  public type: DialogType;
+  public dialogType: DialogType;
 
   @Input()
   public icon: string;

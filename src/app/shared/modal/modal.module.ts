@@ -25,6 +25,8 @@ import {AttributeTypeModalModule} from './attribute-type/attribute-type-modal.mo
 import {AttributeFunctionModalModule} from './attribute-function/attribute-function-modal.module';
 import {DocumentDetailModalModule} from './document-detail/document-detail-modal.module';
 import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
+import {CreateLinkModalModule} from './create-link/create-link-modal.module';
+import {ShareViewModalModule} from './share-view/share-view-modal.module';
 
 @NgModule({
   declarations: [],
@@ -36,6 +38,8 @@ import {CreateDocumentModalModule} from './create-document/create-document-modal
     AttributeFunctionModalModule,
     DocumentDetailModalModule,
     CreateDocumentModalModule,
+    CreateLinkModalModule,
+    ShareViewModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -44,6 +48,8 @@ import {CreateDocumentModalModule} from './create-document/create-document-modal
     AttributeFunctionModalModule,
     DocumentDetailModalModule,
     CreateDocumentModalModule,
+    CreateLinkModalModule,
+    ShareViewModalModule,
   ],
 })
 export class ModalModule {}

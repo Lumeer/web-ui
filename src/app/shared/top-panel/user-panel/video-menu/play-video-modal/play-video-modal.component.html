@@ -1,0 +1,17 @@
+<modal-wrapper class="d-block"
+               [dialogType]="dialogType.Primary"
+               [showSubmit]="false"
+               (onClose)="hideDialog()">
+
+  <span class="title">{{video.summary}}</span>
+
+  <div class="body">
+    <iframe id="ytplayer" type="text/html"
+            class="w-100" [style.min-height.px]="360"
+            [src]="videoUrl"
+            frameborder="0" allowfullscreen></iframe>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+
+</modal-wrapper>

@@ -37,6 +37,7 @@ import {Attribute, Collection} from '../../../../../../../core/store/collections
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
 import {
   selectAllCollections,
+  selectCollectionsByIds,
   selectCollectionsDictionary,
 } from '../../../../../../../core/store/collections/collections.state';
 import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
@@ -49,11 +50,11 @@ import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cu
 import {TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectTableById, selectTableColumn} from '../../../../../../../core/store/tables/tables.selector';
-import {DialogService} from '../../../../../../../dialog/dialog.service';
 import {Direction} from '../../../../../../../shared/direction';
 import {DropdownPosition} from '../../../../../../../shared/dropdown/dropdown-position';
 import {DropdownComponent} from '../../../../../../../shared/dropdown/dropdown.component';
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
+import {ModalService} from '../../../../../../../shared/modal/modal.service';
 
 interface LinkedAttribute {
   linkType?: LinkType;
@@ -112,7 +113,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
 
   public selectedIndex$ = new BehaviorSubject(-1);
 
-  public constructor(private dialogService: DialogService, private store$: Store<AppState>) {}
+  public constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
   public ngOnInit(): void {
     this.linkedAttributes$ = this.bindLinkedAttributes();
@@ -207,8 +208,12 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
 
   public createLinkType(collection: Collection) {
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
-    const linkCollectionIds = [this.collection.id, collection.id].join(',');
-    this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.useLinkType(linkType));
+    this.store$
+      .pipe(
+        select(selectCollectionsByIds([this.collection.id, collection.id])),
+        first()
+      )
+      .subscribe(collections => this.modalService.showCreateLink(collections, linkType => this.useLinkType(linkType)));
   }
 
   public bindLinkedAttributes(): Observable<LinkedAttribute[]> {

@@ -1,7 +1,8 @@
 <dropdown [origin]="origin"
           [closeOnClickOutside]="true"
+          [pushOnScreen]="true"
           [positions]="dropdownPositions">
-  <div class="dropdown-menu show" style="width: 19rem;">
+  <div class="card" [style.width.rem]="19">
     <resource-detail
       [type]="type"
       [resource]="resource"

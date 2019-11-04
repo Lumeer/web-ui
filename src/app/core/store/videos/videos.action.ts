@@ -35,7 +35,7 @@ export namespace VideosAction {
   export class LoadVideos implements Action {
     public readonly type = VideosActionType.LOAD_VIDEOS;
 
-    public constructor(public payload: {videos: {[id: string]: number}; apiKey: string}) {}
+    public constructor(public payload: {videos: Record<string, number>; apiKey: string}) {}
   }
 
   export class LoadVideosFailure implements Action {

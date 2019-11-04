@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {BsModalService} from 'ngx-bootstrap/modal';
-import {InviteUserDialogComponent} from './invite-user-dialog/invite-user-dialog.component';
+import {InviteUserModalComponent} from './modal/invite-user-modal.component';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
@@ -53,6 +53,6 @@ export class InviteUserComponent {
   }
 
   public onInviteUser() {
-    this.modalService.show(InviteUserDialogComponent, {keyboard: true, backdrop: 'static'});
+    this.modalService.show(InviteUserModalComponent, {keyboard: true, backdrop: 'static'});
   }
 }

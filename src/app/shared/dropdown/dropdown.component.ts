@@ -60,6 +60,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input()
   public minHeight: number;
 
+  @Input()
+  public pushOnScreen = false;
+
   @ViewChild('dropdown', {static: false})
   public dropdown: TemplateRef<any>;
 
@@ -103,7 +106,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     return this.overlay
       .position()
       .flexibleConnectedTo(this.origin)
-      .withPush(false)
+      .withPush(this.pushOnScreen)
       .withFlexibleDimensions(false)
       .withGrowAfterOpen(true)
       .withViewportMargin(8)

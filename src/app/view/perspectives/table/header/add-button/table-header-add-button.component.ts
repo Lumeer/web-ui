@@ -29,8 +29,11 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
-import {first, map} from 'rxjs/operators';
-import {selectCollectionsDictionary} from '../../../../../core/store/collections/collections.state';
+import {first, map, mergeMap} from 'rxjs/operators';
+import {
+  selectCollectionsByIds,
+  selectCollectionsDictionary,
+} from '../../../../../core/store/collections/collections.state';
 import {
   selectCollectionsByReadPermission,
   selectLinkTypesByReadPermission,
@@ -40,10 +43,10 @@ import {selectQuery} from '../../../../../core/store/navigation/navigation.state
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
-import {DialogService} from '../../../../../dialog/dialog.service';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
+import {ModalService} from '../../../../../shared/modal/modal.service';
 
 const ITEMS_LIMIT = 15;
 
@@ -67,7 +70,7 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
 
   constructor(
     private contextMenuService: ContextMenuService,
-    private dialogService: DialogService,
+    private modalService: ModalService,
     private element: ElementRef,
     private store$: Store<{}>
   ) {}
@@ -124,11 +127,13 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
     this.store$
       .pipe(
         select(selectTableLastCollectionId(this.cursor.tableId)),
+        mergeMap(lastCollectionId =>
+          this.store$.pipe(select(selectCollectionsByIds([lastCollectionId, collection.id])))
+        ),
         first()
       )
-      .subscribe(lastCollectionId => {
-        const linkCollectionIds = [lastCollectionId, collection.id].join(',');
-        this.dialogService.openCreateLinkDialog(linkCollectionIds, linkType => this.onUseLinkType(linkType));
+      .subscribe(collections => {
+        this.modalService.showCreateLink(collections, linkType => this.onUseLinkType(linkType));
       });
   }
 

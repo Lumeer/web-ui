@@ -34,14 +34,17 @@ import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
 import {VideoMenuComponent} from './user-panel/video-menu/video-menu.component';
 import {NotificationsMenuModule} from './user-panel/notifications-menu/notifications-menu.module';
 import {InviteUserComponent} from './user-panel/invite-user/invite-user.component';
-import {InviteUserDialogComponent} from './user-panel/invite-user/invite-user-dialog/invite-user-dialog.component';
+import {InviteUserModalComponent} from './user-panel/invite-user/modal/invite-user-modal.component';
 import {ModalModule} from '../modal/modal.module';
 import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
-import {NewUserComponent} from './user-panel/invite-user/invite-user-dialog/new-user/new-user.component';
-import {FormsModule} from '@angular/forms';
+import {NewUserComponent} from './user-panel/invite-user/modal/new-user/new-user.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputModule} from '../input/input.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
-import {UserMenuDropdownComponent} from './user-panel/user-menu/user-menu-dropdown/user-menu-dropdown.component';
+import {UserMenuDropdownComponent} from './user-panel/user-menu/dropdown/user-menu-dropdown.component';
+import {VideoMenuDropdownComponent} from './user-panel/video-menu/dropdown/video-menu-dropdown.component';
+import {UserFeedbackModalComponent} from './user-panel/user-menu/user-feedback-modal/user-feedback-modal.component';
+import {PlayVideoModalComponent} from './user-panel/video-menu/play-video-modal/play-video-modal.component';
 
 @NgModule({
   imports: [
@@ -52,8 +55,9 @@ import {UserMenuDropdownComponent} from './user-panel/user-menu/user-menu-dropdo
     SearchBoxModule,
     NotificationsMenuModule,
     ModalModule,
-    NgxModalModule.forRoot(),
+    NgxModalModule,
     FormsModule,
+    ReactiveFormsModule,
     InputModule,
     DropdownModule,
   ],
@@ -68,11 +72,14 @@ import {UserMenuDropdownComponent} from './user-panel/user-menu/user-menu-dropdo
     ControlsToggleComponent,
     VideoMenuComponent,
     InviteUserComponent,
-    InviteUserDialogComponent,
+    InviteUserModalComponent,
     NewUserComponent,
     UserMenuDropdownComponent,
+    VideoMenuDropdownComponent,
+    UserFeedbackModalComponent,
+    PlayVideoModalComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],
-  entryComponents: [InviteUserDialogComponent],
+  entryComponents: [InviteUserModalComponent, UserFeedbackModalComponent, PlayVideoModalComponent],
 })
 export class TopPanelModule {}

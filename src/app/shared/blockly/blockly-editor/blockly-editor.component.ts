@@ -48,7 +48,6 @@ import {Attribute, Collection} from '../../../core/store/collections/collection'
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {RuleVariable} from '../../../collection/settings/tab/rules/rule-variable-type';
 import {AppState} from '../../../core/store/app.state';
-import {DialogService} from '../../../dialog/dialog.service';
 import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
 import {shadeColor} from '../../utils/html-modifier';
@@ -142,7 +141,6 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private route: ActivatedRoute,
-    private dialogService: DialogService,
     private contrastColorPipe: ContrastColorPipe,
     private blocklyService: BlocklyService,
     private renderer2: Renderer2,

@@ -35,12 +35,31 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributeFunctionModalComponent} from './attribute-function/attribute-function-modal.component';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
+import {View} from '../../core/store/views/view';
+import {ShareViewModalComponent} from './share-view/share-view-modal.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModalService {
   constructor(private store$: Store<AppState>, private i18n: I18n, private bsModalService: BsModalService) {}
+
+  public showShareView(view: View) {
+    const initialState = {view};
+    const config = {initialState, keyboard: false};
+    config['backdrop'] = 'static';
+    this.bsModalService.show(ShareViewModalComponent, config);
+  }
+
+  public showCreateLink(collections: Collection[], callback?: (linkType: LinkType) => void) {
+    const initialState = {collections, callback};
+    const config = {initialState, keyboard: false};
+    config['backdrop'] = 'static';
+    this.bsModalService.show(CreateLinkModalComponent, config);
+  }
 
   public showAttributeType(attributeId: string, collectionId: string, linkTypeId?: string) {
     const initialState = {attributeId, collectionId, linkTypeId};

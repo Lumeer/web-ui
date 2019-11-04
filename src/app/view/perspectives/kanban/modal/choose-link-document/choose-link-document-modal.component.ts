@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {DialogType} from '../../../../../dialog/dialog-type';
+import {DialogType} from '../../../../../shared/modal/dialog-type';
 import {BsModalRef} from 'ngx-bootstrap';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {BehaviorSubject} from 'rxjs';

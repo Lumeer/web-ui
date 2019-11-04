@@ -83,17 +83,13 @@ export class LinkTypesEffects {
 
       return this.linkTypeService.createLinkType(linkTypeDto).pipe(
         map(dto => convertLinkTypeDtoToModel(dto, action.payload.linkType.correlationId)),
-        mergeMap(linkType => {
-          const actions: Action[] = [new LinkTypesAction.CreateSuccess({linkType: linkType})];
-
-          const {callback} = action.payload;
-          if (callback) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => callback(linkType)}));
-          }
-
-          return actions;
-        }),
-        catchError(error => of(new LinkTypesAction.CreateFailure({error: error})))
+        mergeMap(linkType => [
+          new LinkTypesAction.CreateSuccess({linkType: linkType}),
+          ...createCallbackActions(action.payload.onSuccess, linkType),
+        ]),
+        catchError(error =>
+          of(new LinkTypesAction.CreateFailure({error: error}), ...createCallbackActions(action.payload.onFailure))
+        )
       );
     })
   );

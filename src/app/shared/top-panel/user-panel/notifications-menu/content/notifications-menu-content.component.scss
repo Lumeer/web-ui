@@ -1,0 +1,17 @@
+.font-size-15 {
+  font-size: 1.5rem;
+}
+
+span.notifications-count {
+  font-size: 0.6rem;
+  padding: 0 3px;
+  color: white;
+  background-color: red;
+  border-radius: 10px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  line-height: 0.9rem;
+  min-width: 0.9rem;
+  text-align: center;
+}
