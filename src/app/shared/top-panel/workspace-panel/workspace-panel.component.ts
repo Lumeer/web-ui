@@ -27,7 +27,7 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {Organization} from '../../../core/store/organizations/organization';
 import {
   selectAllOrganizations,
-  selectOrganizationByWorkspace
+  selectOrganizationByWorkspace,
 } from '../../../core/store/organizations/organizations.state';
 import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
@@ -63,8 +63,7 @@ export class WorkspacePanelComponent implements OnInit {
     private router: Router,
     private selectService: WorkspaceSelectService,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));

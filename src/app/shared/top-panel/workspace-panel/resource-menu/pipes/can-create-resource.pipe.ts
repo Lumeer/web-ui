@@ -36,8 +36,7 @@ import {superUserEmails} from '../../../../../auth/super-user-emails';
   name: 'canCreateResource',
 })
 export class CanCreateResourcePipe implements PipeTransform {
-  public constructor(private store$: Store<AppState>, private permissionsPipe: PermissionsPipe) {
-  }
+  public constructor(private store$: Store<AppState>, private permissionsPipe: PermissionsPipe) {}
 
   public transform(resource: Resource, type: ResourceType, projects: Project[]): Observable<boolean> {
     if (!resource) {
@@ -53,7 +52,7 @@ export class CanCreateResourcePipe implements PipeTransform {
       const project = resource as Project;
       return combineLatest([
         this.store$.pipe(select(selectOrganizationById(project.organizationId))),
-        this.store$.pipe(select(selectServiceLimitsByOrganizationId(project.organizationId)))
+        this.store$.pipe(select(selectServiceLimitsByOrganizationId(project.organizationId))),
       ]).pipe(
         filter(([organization, serviceLimits]) => !!organization && !!serviceLimits),
         mergeMap(([organization, serviceLimits]) =>

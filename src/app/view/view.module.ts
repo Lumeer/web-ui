@@ -27,10 +27,16 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
-import { PerspectivesOptionsPipe } from './view-controls/perspectives-options.pipe';
+import {PerspectivesOptionsPipe} from './view-controls/perspectives-options.pipe';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, RouterModule, SharedModule, TablePerspectiveModule, ViewRoutingModule],
-  declarations: [ViewComponent, ViewControlsComponent, ViewLoadingComponent, ViewControlsInfoPipe, PerspectivesOptionsPipe],
+  declarations: [
+    ViewComponent,
+    ViewControlsComponent,
+    ViewLoadingComponent,
+    ViewControlsInfoPipe,
+    PerspectivesOptionsPipe,
+  ],
 })
 export class ViewModule {}

@@ -19,12 +19,14 @@
 
 import {
   ChangeDetectionStrategy,
-  Component, ElementRef,
+  Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   Output,
-  SimpleChanges, ViewChild,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {Store} from '@ngrx/store';
 import {ResourceType} from '../../../../core/model/resource-type';
@@ -72,8 +74,7 @@ export class ResourceMenuComponent implements OnChanges {
 
   public readonly dropdownPositions = [DropdownPosition.BottomStart];
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public isOrganizationType(): boolean {
     return this.type === ResourceType.Organization;

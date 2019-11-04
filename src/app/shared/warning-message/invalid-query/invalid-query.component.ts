@@ -23,7 +23,8 @@ import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
 import {Observable, of} from 'rxjs';
 import {
-  selectCollectionsByReadPermission, selectCollectionsInQuery,
+  selectCollectionsByReadPermission,
+  selectCollectionsInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -46,19 +47,23 @@ export class InvalidQueryComponent implements OnInit {
   public collections$: Observable<Collection[]>;
   public currentCollectionsLength$: Observable<number>;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.currentCollectionsLength$ = this.store$.pipe(
       select(selectQuery),
-      mergeMap(query => queryIsEmptyExceptPagination(query) ? of([]) : this.store$.pipe(select(selectCollectionsInQuery))),
+      mergeMap(query =>
+        queryIsEmptyExceptPagination(query) ? of([]) : this.store$.pipe(select(selectCollectionsInQuery))
+      ),
       map(collections => (collections || []).length)
     );
     this.collections$ = this.currentCollectionsLength$.pipe(
-      mergeMap(length => length === 0 ? this.store$.pipe(select(selectCollectionsByReadPermission)) :
-        this.store$.pipe(select(selectCollectionsInQuery))
-      ));
+      mergeMap(length =>
+        length === 0
+          ? this.store$.pipe(select(selectCollectionsByReadPermission))
+          : this.store$.pipe(select(selectCollectionsInQuery))
+      )
+    );
   }
 
   public onCollectionSelect(collection: Collection) {
@@ -68,7 +73,7 @@ export class InvalidQueryComponent implements OnInit {
         take(1)
       )
       .subscribe(query => {
-        let stem = (query && query.stems || []).find(s => s.collectionId === collection.id);
+        let stem = ((query && query.stems) || []).find(s => s.collectionId === collection.id);
         if (!stem) {
           stem = {collectionId: collection.id};
         }

@@ -22,16 +22,14 @@ import {Perspective, perspectiveIconsMap} from '../perspectives/perspective';
 import {DropdownOption} from '../../shared/dropdown/options/dropdown-option';
 
 @Pipe({
-  name: 'perspectivesOptions'
+  name: 'perspectivesOptions',
 })
 export class PerspectivesOptionsPipe implements PipeTransform {
-
-  public transform(perspectives: {perspective: Perspective, name: string}[]): DropdownOption[] {
+  public transform(perspectives: {perspective: Perspective; name: string}[]): DropdownOption[] {
     return perspectives.map(obj => ({
       value: obj.perspective,
       displayValue: obj.name,
-      icons: [perspectiveIconsMap[obj.perspective]]
+      icons: [perspectiveIconsMap[obj.perspective]],
     }));
   }
-
 }

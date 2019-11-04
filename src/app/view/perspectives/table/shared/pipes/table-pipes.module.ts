@@ -148,5 +148,4 @@ import {DocumentHintsOffsetPipe} from './document-hints-offset.pipe';
   ],
   providers: [AttributeNameChangedPipe, ColumnBackgroundPipe],
 })
-export class TablePipesModule {
-}
+export class TablePipesModule {}
