@@ -1,0 +1,84 @@
+<modal-wrapper
+  [icon]="'fas fa-user-plus'"
+  [dialogType]="dialogType.Primary"
+  (onClose)="hideDialog()"
+  (onSubmit)="onSubmit()"
+  [submitDisabled]="!(newUsers$ | async) || (newUsers$ | async).length === 0"
+  *ngIf="{
+      isOrganizationManager: (organization$ | async) | permissions:organizationType:'manage' | async,
+      isProjectManager: (project$ | async) | permissions:projectType:'manage' | async
+    } as managers">
+
+  <span class="title" i18n="@@inviteUser.dialog.title">Invite colleagues</span>
+
+  <div class="body p-3">
+
+    <div class="d-block">
+      <h5 i18n="@@inviteUser.dialog.headline">First enter colleague's email:</h5>
+    </div>
+
+    <ng-container *ngIf="managers.isOrganizationManager; else projectManager">
+      <new-user [users]="newUsers$ | async"
+                [existingUsers]="existingUsers$ | async"
+                (userCreated)="onAddUser($event)">
+      </new-user>
+    </ng-container>
+
+    <ng-template #projectManager>
+      <ng-container *ngIf="managers.isProjectManager">
+        <new-user [users]="newUsers$ | async"
+                  [existingUsers]="[]"
+                  [allowedUsers]="existingUsers$ | async"
+                  (userCreated)="onAddUser($event)">
+        </new-user>
+      </ng-container>
+    </ng-template>
+
+    <ng-container *ngIf="managers.isOrganizationManager || managers.isProjectManager; else managerWarning">
+
+      <div class="d-block mt-2 lh-2" *ngIf="newUsers$ | async as users">
+        <span i18n="@@inviteUser.dialog.users.list">Colleagues to invite: </span>
+        <span *ngIf="!users || users.length === 0">&mdash;</span>
+
+        <ng-container *ngFor="let user of users;">
+          <span class="badge badge-pill badge-light mx-1">
+            {{user}}&nbsp;
+            <i class="fas fa-times cursor-pointer" (click)="onRemoveUser(user)"></i>
+          </span>
+        </ng-container>
+      </div>
+
+      <div class="d-block mt-3">
+        <h5 i18n="@@inviteUser.dialog.userRights.headline">Invited colleagues can:</h5>
+      </div>
+      <invitation-type-select [selectedInvitationType]="accessType" (onInvitationTypeSelect)="accessType = $event"></invitation-type-select>
+
+      <div class="d-block mt-3 px-3">
+        <span i18n="@@inviteUser.dialog.settings.description1">
+          Use the cog icon
+        </span>
+        <i class="fas fa-cog text-success"></i>
+        <span i18n="@@inviteUser.dialog.settings.description2">
+          next to the table, or the Share button to change access rights later (especially
+          for the newly created tables and views).
+        </span>
+      </div>
+    </ng-container>
+
+    <ng-template #managerWarning>
+      <div class="d-block">
+        <h4 i18n="inviteUser.dialog.managerWarning">Only organization and project managers can invite colleagues, please ask them.</h4>
+      </div>
+    </ng-template>
+
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="far fa-check"></i>&nbsp;<span i18n="@@inviteUser.button.text">Invite</span>
+  </span>
+
+</modal-wrapper>

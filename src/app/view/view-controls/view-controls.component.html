@@ -1,4 +1,5 @@
-<ng-container *ngIf="{permissions: view | viewControlsInfo:name:(config$ | async):(perspective$ | async) | async, viewChanged: viewChanged$ | async} as state">
+<ng-container
+  *ngIf="{permissions: view | viewControlsInfo:name:(config$ | async):(perspective$ | async) | async, viewChanged: viewChanged$ | async} as state">
   <form class="view-controls-grid mt-2">
     <div class="perspective d-flex align-items-center justify-content-start">
       <div class="input-group flex-nowrap mr-2 mb-2" data-tour="perspective">
@@ -11,30 +12,26 @@
           </i>
         </span>
         </div>
-        <div *ngVar="perspective$ | async as perspective"
-             (click)="onPerspectiveChooserClick($event)"
-             title="{{perspective | perspectiveName}}" i18n-title="@@view.perspective">
-          <button aria-expanded="false"
-                  aria-haspopup="true"
-                  class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
-                  data-toggle="dropdown"
-                  id="perspectiveDropdown"
-                  type="button">
+        <ng-container *ngIf="perspective$ | async as perspective">
+
+          <button aria-expanded="false" aria-haspopup="true" type="button" #perspectiveElement
+                  class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left"
+                  (click)="onPerspectiveChooserClick($event)">
             <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
             <span class="ml-sm-1 text-nowrap"
-                  i18n="@@view.perspective.name">{perspective, select, detail {Detail} pivot {Pivot} kanban {Board} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document}}</span>
+                  i18n="@@view.perspective.name">{perspective, select, detail {Detail} pivot {Pivot} kanban {Board} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table}}</span>
           </button>
-          <div aria-labelledby="perspectiveDropdown"
-               class="dropdown-menu">
-            <a *ngFor="let aperspective of perspectives | filterPerspectives:view.query | sortPerspectives"
-               [class.active]="perspective === aperspective.perspective"
-               (click)="onSelectPerspective(aperspective.perspective, state.permissions.canManage)"
-               class="dropdown-item" [title]="aperspective.perspective | perspectiveName">
-              <i class="{{aperspective.perspective | perspectiveIcon}}"></i>
-              <span class="ml-1 text-nowrap">{{aperspective.name}}</span>
-            </a>
-          </div>
-        </div>
+
+          <options-dropdown
+            [closeOnClickOutside]="true"
+            [origin]="perspectiveElement"
+            [options]="perspectives | sortPerspectives | perspectivesOptions"
+            [selectedValue]="perspective"
+            (selectOption)="onSelectPerspective($event.value, state.permissions.canManage)">
+          </options-dropdown>
+
+        </ng-container>
+
       </div>
 
       <i *ngIf="novice"
@@ -64,7 +61,8 @@
              class="form-control"
              autocomplete="off"
              placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
-      <div class="input-group-append" *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
+      <div class="input-group-append"
+           *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
         <button [disabled]="buttonsData.disabled"
                 class="btn"
                 [class.btn-primary]="!buttonsData.disabled"

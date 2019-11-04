@@ -22,23 +22,26 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {PipesModule} from '../../../pipes/pipes.module';
 import {NotificationsMenuComponent} from './notifications-menu.component';
-import {NotificationsMenuWrapperComponent} from './notifications-menu-wrapper/notifications-menu-wrapper.component';
+import {NotificationsMenuContentComponent} from './content/notifications-menu-content.component';
 import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
-import {NotificationOrganizationComponent} from './notifications-menu-wrapper/notification-organization/notification-organization.component';
-import {NotificationProjectComponent} from './notifications-menu-wrapper/notification-project/notification-project.component';
-import {NotificationCollectionComponent} from './notifications-menu-wrapper/notification-collection/notification-collection.component';
-import {NotificationViewComponent} from './notifications-menu-wrapper/notification-view/notification-view.component';
+import {NotificationOrganizationComponent} from './content/dropdown/organization/notification-organization.component';
+import {NotificationProjectComponent} from './content/dropdown/project/notification-project.component';
+import {NotificationCollectionComponent} from './content/dropdown/collection/notification-collection.component';
+import {NotificationViewComponent} from './content/dropdown/view/notification-view.component';
+import {NotificationsMenuDropdownComponent} from './content/dropdown/notifications-menu-dropdown.component';
+import {DropdownModule} from '../../../dropdown/dropdown.module';
 
 @NgModule({
-  imports: [CommonModule, PipesModule, RouterModule],
+  imports: [CommonModule, PipesModule, RouterModule, DropdownModule],
   declarations: [
     NotificationsMenuComponent,
-    NotificationsMenuWrapperComponent,
+    NotificationsMenuContentComponent,
     ValidNotificationFilterPipe,
     NotificationOrganizationComponent,
     NotificationProjectComponent,
     NotificationCollectionComponent,
     NotificationViewComponent,
+    NotificationsMenuDropdownComponent,
   ],
   exports: [NotificationsMenuComponent],
 })

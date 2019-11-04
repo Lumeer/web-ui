@@ -26,7 +26,13 @@ td.editing {
 td.focused {
   @extend %highlighted;
   outline: $primary solid 1px;
-  box-shadow: 0px 0px 4px $secondary;
+  box-shadow: 0 0 4px $secondary;
+}
+
+td.affected:not(.editing) {
+  @extend %highlighted;
+  outline: $warning solid 1px;
+  box-shadow: 1px 1px 4px $secondary;
 }
 
 td::ng-deep data-input {

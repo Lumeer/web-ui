@@ -26,10 +26,11 @@ import {DocumentHintColumn} from '../../../document-hints/document-hint-column';
 })
 export class DocumentHintsColumnsPipe implements PipeTransform {
   public transform(columns: LinkColumn[]): DocumentHintColumn[] {
-    return (columns || []).map(column => ({
-      width: column.width,
-      attributeId: column.attribute.id,
-      hidden: !!column.linkTypeId,
-    }));
+    return (columns || [])
+      .filter(column => column.collectionId)
+      .map(column => ({
+        width: column.width,
+        attributeId: column.attribute.id,
+      }));
   }
 }

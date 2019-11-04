@@ -19,17 +19,17 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
+
 import {PipesModule} from '../pipes/pipes.module';
 import {ModalModule} from '../modal/modal.module';
-import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
-import {FormsModule} from '@angular/forms';
 import {InputModule} from '../input/input.module';
 import {SequenceListComponent} from './sequence-list/sequence-list.component';
 import {SequenceItemComponent} from './sequence-item/sequence-item.component';
 
 @NgModule({
-  imports: [CommonModule, PipesModule, RouterModule, ModalModule, NgxModalModule.forRoot(), FormsModule, InputModule],
+  imports: [CommonModule, PipesModule, RouterModule, ModalModule, FormsModule, InputModule],
   declarations: [SequenceListComponent, SequenceItemComponent],
   exports: [SequenceListComponent, SequenceItemComponent],
 })

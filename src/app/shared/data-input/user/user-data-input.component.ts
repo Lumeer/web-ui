@@ -34,6 +34,7 @@ import {TypeaheadMatch} from 'ngx-bootstrap/typeahead';
 import {UserDataValue} from '../../../core/model/data-value/user.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {User} from '../../../core/store/users/user';
 
 export const USER_AVATAR_SIZE = 22;
 
@@ -76,30 +77,33 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
 
   public readonly avatarSize = USER_AVATAR_SIZE;
 
-  public name: string;
+  public name: string = '';
+  public users: User[];
 
-  private preventSave: boolean = false;
-  private setFocus: boolean;
+  private preventSave: boolean;
   private triggerInput: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.preventSave = false;
-      this.setFocus = true;
+      setTimeout(() => this.setFocusToInput());
+      this.triggerInput = true;
     }
     if (changes.value && this.value) {
-      if (String(this.value.format()).length === 1) {
-        this.triggerInput = true; // show suggestions when typing the first letter in readonly mode
-      }
       this.resetSearchInput();
+    }
+    if (changes.value) {
+      this.users = this.bindUsers();
     }
   }
 
-  public ngAfterViewChecked(): void {
-    if (this.setFocus) {
-      this.setFocusToInput();
-      this.setFocus = false;
-    }
+  private bindUsers(): User[] {
+    return ((this.value && this.value.constraintData && this.value.constraintData.users) || []).map(user => ({
+      ...user,
+      name: user.name || user.email,
+    }));
+  }
+
+  public ngAfterViewChecked() {
     if (this.triggerInput) {
       this.dispatchInputEvent();
       this.triggerInput = false;
@@ -128,14 +132,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
-      this.dataBlur.emit();
     } else {
-      // needs to be executed after parent event handlers
-      setTimeout(() => {
-        this.saveValue();
-        this.dataBlur.emit();
-      }, 250);
+      this.saveValue();
     }
+    this.dataBlur.emit();
   }
 
   @HostListener('keydown', ['$event'])
@@ -162,7 +162,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     if (user || !this.name) {
       const dataValue = this.value.copy(user ? user.email : '');
       this.save.emit(dataValue);
-    } else if (this.skipValidation) {
+    } else if (this.skipValidation || (this.value.config && this.value.config.externalUsers)) {
       const dataValue = this.value.parseInput(this.name);
       this.save.emit(dataValue);
     } else {
@@ -176,10 +176,6 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onSelect(event: TypeaheadMatch) {
-    if (this.preventSave) {
-      return; // value has already been saved in onKeyDown method
-    }
-
     this.preventSave = true;
     const dataValue = this.value.copy(event.item.email);
     this.save.emit(dataValue);

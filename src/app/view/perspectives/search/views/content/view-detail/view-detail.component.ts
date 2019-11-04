@@ -35,8 +35,8 @@ import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-ite
 import {QueryItemsConverter} from '../../../../../../shared/top-panel/search-box/query-item/query-items.converter';
 import {ResourceType} from '../../../../../../core/model/resource-type';
 import {SizeType} from '../../../../../../shared/slider/size-type';
-import {DialogService} from '../../../../../../dialog/dialog.service';
 import {Role} from '../../../../../../core/model/role';
+import {ModalService} from '../../../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'view-detail',
@@ -70,7 +70,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   public readonly roleManage = Role.Manage;
   public readonly sizeType = SizeType;
 
-  public constructor(private dialogService: DialogService) {}
+  public constructor(private modalService: ModalService) {}
 
   public ngOnInit() {
     this.createQueryItems();
@@ -103,7 +103,7 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   }
 
   public onShareClick() {
-    this.dialogService.openShareViewDialog(this.view.code);
+    this.modalService.showShareView(this.view);
   }
 
   public onFavoriteToggle() {

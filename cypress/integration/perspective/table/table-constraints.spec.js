@@ -385,7 +385,7 @@ describe('Table perspective :: Constraints', () => {
       .click();
     cy.get('[data-test="text-constraint-case-style-select"]').select('TitleCase');
     cy.get('[data-test="attribute-type-save-button"]').click();
-    cy.get('[data-test="modal-dialog"]').should('be.hidden');
+    cy.waitForModalHidden();
 
     cy.wait('@updateAttribute')
       .its('status')
@@ -422,7 +422,7 @@ describe('Table perspective :: Constraints', () => {
       .contains('Checkbox')
       .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
-    cy.get('[data-test="modal-dialog"]').should('be.hidden');
+    cy.waitForModalHidden();
 
     cy.wait('@updateAttribute')
       .its('status')
@@ -470,7 +470,7 @@ describe('Table perspective :: Constraints', () => {
       .click();
     cy.get('[data-test="datetime-constraint-format-select"]').select('YYYY-MM-DD');
     cy.get('[data-test="attribute-type-save-button"]').click();
-    cy.get('[data-test="modal-dialog"]').should('be.hidden');
+    cy.waitForModalHidden();
 
     cy.wait('@updateAttribute')
       .its('status')
@@ -582,7 +582,7 @@ describe('Table perspective :: Constraints', () => {
       .contains('Number')
       .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
-    cy.get('[data-test="modal-dialog"]').should('be.hidden');
+    cy.waitForModalHidden();
 
     cy.wait('@updateAttribute')
       .its('status')

@@ -1,0 +1,13 @@
+@import '../../../../styles/variables';
+
+.post-it {
+  width: $post-it-width;
+  height: $post-it-width;
+  border-color: transparent;
+
+  transition: box-shadow $animation-duration, transform $animation-duration;
+
+  &:hover {
+    box-shadow: $shadow-default;
+  }
+}

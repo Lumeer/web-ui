@@ -4,12 +4,15 @@
       class="table-border"
       [style.width.px]="column.width"
       [class.focused]="data.columnFocused === index"
-      [class.editing]="data.columnEditing === index">
-    <data-input *ngIf="column.linkTypeId && row.linkInstance"
+      [class.editing]="data.columnEditing === index"
+      [class.affected]="!(attributeEditing?.documentId | isNullOrUndefined) &&
+      (row.document?.id === attributeEditing?.documentId) &&
+      (column.collectionId && column.attribute.id === attributeEditing?.attributeId)">
+    <data-input *ngIf="column.linkTypeId"
                 [constraint]="column.attribute.constraint"
                 [constraintData]="constraintData"
-                [cursor]="row.linkInstance | dataCursor : column.attribute.id"
-                [value]="!(initialValue | isNullOrUndefined) && data.columnEditing === index ? initialValue : (row.linkInstance.data && row.linkInstance.data[column.attribute.id])"
+                [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id)"
+                [value]="!(initialValue | isNullOrUndefined) && data.columnEditing === index ? initialValue : (row.linkInstance && row.linkInstance.data && row.linkInstance.data[column.attribute.id])"
                 [focus]="true"
                 [readonly]="!column.editable || data.readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
                 [class.cursor-pointer]="!data.readonly && column.editable"
@@ -51,13 +54,14 @@
   </td>
 
   <document-hints
-    *ngIf="!(data.columnEditing | isNullOrUndefined)"
+    *ngIf="!(data.columnEditing | isNullOrUndefined) && columns[data.columnEditing].collectionId"
     [attributeId]="columns[data.columnEditing]?.attribute?.id"
     [correlationId]="row.correlationId"
     [value]="suggesting$ | async"
     [collectionId]="collectionId"
+    [excludedDocumentIds]="row.document?.id ? [row.document.id] : []"
     [columns]="columns | documentHintsColumns"
-    [calculatePosition]="false"
+    [offsetLeft]="columns | calculateHintsOffset"
     [linkedDocumentId]="documentId"
     [linkInstanceId]="row.linkInstance?.id"
     [linkTypeId]="linkTypeId"

@@ -1,10 +1,10 @@
 <div class="d-flex justify-content-end align-items-center">
   <invite-user [mobile]="mobile"></invite-user>
-  <video-menu></video-menu>
+  <video-menu *ngIf="showVideos$ | async"></video-menu>
   <notifications-menu></notifications-menu>
   <user-menu
     [workspace]="workspace"
     [controlsVisible]="controlsVisible"
-    (toggleControls)="toggleControls.emit()"
-  ></user-menu>
+    (toggleControls)="toggleControls.emit()">
+  </user-menu>
 </div>

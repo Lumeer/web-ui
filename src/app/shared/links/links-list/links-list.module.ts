@@ -39,6 +39,7 @@ import {AttributeTypeModalModule} from '../../modal/attribute-type/attribute-typ
 import {AttributeFunctionModalModule} from '../../modal/attribute-function/attribute-function-modal.module';
 import {DocumentHintsModule} from '../../document-hints/document-hints.module';
 import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
+import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
     LinksListTableRowComponent,
     LinksListHeaderMenuComponent,
     DocumentHintsColumnsPipe,
+    CalculateHintsOffsetPipe,
   ],
   imports: [
     CommonModule,

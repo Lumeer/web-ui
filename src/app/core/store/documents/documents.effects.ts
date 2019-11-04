@@ -121,16 +121,15 @@ export class DocumentsEffects {
   public createWithLink$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.CreateWithLink>(DocumentsActionType.CREATE_WITH_LINK),
     mergeMap(action => {
-      const {document, otherDocumentId, linkTypeId, correlationId, callback} = action.payload;
+      const {document, otherDocumentId, linkInstance: preparedLinkInstance, callback} = action.payload;
       const documentDto = convertDocumentModelToDto(document);
 
       return this.documentService.createDocument(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
         mergeMap(newDocument => {
           const linkInstance: LinkInstance = {
+            ...preparedLinkInstance,
             documentIds: [newDocument.id, otherDocumentId],
-            linkTypeId,
-            correlationId,
           };
           const linkInstanceDto = convertLinkInstanceModelToDto(linkInstance);
           return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(

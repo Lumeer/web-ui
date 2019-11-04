@@ -35,7 +35,6 @@ import {DataPipesModule} from './data/data-pipes.module';
 import {DefaultAttributePipe} from './default-attribute.pipe';
 import {EmptyQueryPipe} from './empty-query.pipe';
 import {EmptyPipe} from './empty.pipe';
-import {FilterPerspectivesPipe} from './filter-perspectives.pipe';
 import {FormatDatePipe} from './format-date.pipe';
 import {HighlightTextPipe} from './highlight-text.pipe';
 import {IconsPipe} from './icons.pipe';
@@ -90,7 +89,6 @@ import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
     PrefixPipe,
     NativeDatePipe,
     PerspectiveIconPipe,
-    FilterPerspectivesPipe,
     SortPerspectivesPipe,
     EmptyPipe,
     EmptyQueryPipe,
@@ -151,7 +149,6 @@ import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
     PrefixPipe,
     NativeDatePipe,
     PerspectiveIconPipe,
-    FilterPerspectivesPipe,
     SortPerspectivesPipe,
     EmptyPipe,
     EmptyQueryPipe,

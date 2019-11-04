@@ -1,0 +1,19 @@
+<div class="d-flex flex-row flex-wrap justify-content-center">
+
+  <div *ngFor="let collection of collections"
+       class="card post-it cursor-pointer mr-4 mb-4" (click)="onSelect.emit(collection)">
+
+    <div class="card-body text-center">
+      <div [style.color]="collection.color"
+           [title]="collection.name"
+           data-test="collection-card-icon">
+        <i class="fa-3x {{ collection.icon }}"
+           aria-hidden="true">
+        </i>
+      </div>
+
+      <div class="mt-3 text-truncate">{{collection.name}}</div>
+    </div>
+
+  </div>
+</div>

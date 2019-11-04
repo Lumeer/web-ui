@@ -50,10 +50,10 @@ export class CanCreateResourcePipe implements PipeTransform {
       );
     } else if (type === ResourceType.Project) {
       const project = resource as Project;
-      return combineLatest(
+      return combineLatest([
         this.store$.pipe(select(selectOrganizationById(project.organizationId))),
-        this.store$.pipe(select(selectServiceLimitsByOrganizationId(project.organizationId)))
-      ).pipe(
+        this.store$.pipe(select(selectServiceLimitsByOrganizationId(project.organizationId))),
+      ]).pipe(
         filter(([organization, serviceLimits]) => !!organization && !!serviceLimits),
         mergeMap(([organization, serviceLimits]) =>
           this.permissionsPipe

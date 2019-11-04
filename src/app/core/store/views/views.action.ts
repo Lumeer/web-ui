@@ -136,6 +136,8 @@ export namespace ViewsAction {
         permissions: Permission[];
         newUsers: User[];
         newUsersRoles: Record<string, string[]>;
+        onSuccess?: () => void;
+        onFailure?: () => void;
       }
     ) {}
   }

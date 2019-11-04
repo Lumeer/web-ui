@@ -29,7 +29,6 @@ import {AppComponent} from './app.component';
 import {CollectionModule} from './collection/collection.module';
 import {AuthModule} from './auth/auth.module';
 import {CoreModule} from './core/core.module';
-import {DialogModule} from './dialog/dialog.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 import {SharedModule} from './shared/shared.module';
@@ -55,7 +54,6 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
     AuthModule,
     CoreModule,
     CollectionModule,
-    DialogModule,
     SharedModule,
     ViewModule,
     WorkspaceModule,

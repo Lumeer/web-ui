@@ -27,7 +27,6 @@ export enum Perspective {
   Map = 'map',
   Pivot = 'pivot',
   GanttChart = 'ganttChart',
-  SmartDoc = 'smartdoc',
 }
 
 export const perspectivesMap: Record<string, Perspective> = {
@@ -40,7 +39,6 @@ export const perspectivesMap: Record<string, Perspective> = {
   [Perspective.GanttChart]: Perspective.GanttChart,
   [Perspective.Map]: Perspective.Map,
   [Perspective.Search]: Perspective.Search,
-  [Perspective.SmartDoc]: Perspective.SmartDoc,
   [Perspective.Table]: Perspective.Table,
 };
 
@@ -54,6 +52,5 @@ export const perspectiveIconsMap: Record<string, string> = {
   [Perspective.GanttChart]: 'fas fa-fw fa-stream',
   [Perspective.Map]: 'far fa-fw fa-map',
   [Perspective.Search]: 'far fa-fw fa-search',
-  [Perspective.SmartDoc]: 'far fa-fw fa-file-alt',
   [Perspective.Table]: 'far fa-fw fa-table',
 };

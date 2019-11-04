@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
@@ -25,7 +25,9 @@ import {VideoModel} from '../../../../core/store/videos/video.model';
 import {selectVideosByUrl} from '../../../../core/store/videos/videos.state';
 import {selectUrl} from '../../../../core/store/navigation/navigation.state';
 import {mergeMap} from 'rxjs/operators';
-import {DialogService} from '../../../../dialog/dialog.service';
+import {BsModalService} from 'ngx-bootstrap';
+import {PlayVideoModalComponent} from './play-video-modal/play-video-modal.component';
+import {VideoMenuDropdownComponent} from './dropdown/video-menu-dropdown.component';
 
 @Component({
   selector: 'video-menu',
@@ -36,7 +38,10 @@ import {DialogService} from '../../../../dialog/dialog.service';
 export class VideoMenuComponent implements OnInit {
   public videos$: Observable<VideoModel[]>;
 
-  constructor(private store: Store<AppState>, private dialogService: DialogService) {}
+  @ViewChild(VideoMenuDropdownComponent, {static: true})
+  public videoMenuDropdown: VideoMenuDropdownComponent;
+
+  constructor(private store: Store<AppState>, private bsModalService: BsModalService) {}
 
   public ngOnInit(): void {
     this.videos$ = this.store.pipe(
@@ -45,7 +50,11 @@ export class VideoMenuComponent implements OnInit {
     );
   }
 
-  public openPlayer(id: string): void {
-    this.dialogService.openVideoPlayer(id);
+  public openPlayer(video: VideoModel): void {
+    this.videoMenuDropdown.close();
+
+    const initialState = {video};
+    const config = {initialState, keyboard: true, class: 'modal-lg'};
+    this.bsModalService.show(PlayVideoModalComponent, config);
   }
 }

@@ -16,22 +16,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
+
+import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, timer} from 'rxjs';
 import {User} from '../../../../core/store/users/user';
-import {environment} from '../../../../../environments/environment';
 import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';
 import {selectUrl} from '../../../../core/store/navigation/navigation.state';
-import {DialogService} from '../../../../dialog/dialog.service';
 import {selectCurrentUser} from '../../../../core/store/users/users.state';
 import {ServiceLimitsAction} from '../../../../core/store/organizations/service-limits/service-limits.action';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {filter, first, map} from 'rxjs/operators';
 import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {Router} from '@angular/router';
 import * as Driver from 'driver.js';
 import {UsersAction} from '../../../../core/store/users/users.action';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
@@ -39,6 +39,9 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import PatchCurrentUser = UsersAction.PatchCurrentUser;
 import {selectAllViews} from '../../../../core/store/views/views.state';
+import {UserMenuDropdownComponent} from './dropdown/user-menu-dropdown.component';
+import {BsModalService} from 'ngx-bootstrap';
+import {UserFeedbackModalComponent} from './user-feedback-modal/user-feedback-modal.component';
 
 @Component({
   selector: 'user-menu',
@@ -47,9 +50,6 @@ import {selectAllViews} from '../../../../core/store/views/views.state';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserMenuComponent {
-  public readonly buildNumber = environment.buildNumber;
-  public readonly locale = environment.locale;
-
   @Input()
   public workspace: Workspace;
 
@@ -58,6 +58,9 @@ export class UserMenuComponent {
 
   @Output()
   public toggleControls = new EventEmitter();
+
+  @ViewChild(UserMenuDropdownComponent, {static: false})
+  public userMenuComponent: UserMenuDropdownComponent;
 
   public currentUser$: Observable<User>;
   public url$: Observable<string>;
@@ -69,7 +72,7 @@ export class UserMenuComponent {
 
   public constructor(
     private authService: AuthService,
-    private dialogService: DialogService,
+    private bsModalService: BsModalService,
     private store$: Store<AppState>,
     private router: Router,
     private i18n: I18n
@@ -139,7 +142,11 @@ export class UserMenuComponent {
   }
 
   public onFeedbackClick() {
-    this.dialogService.openFeedbackDialog();
+    this.userMenuComponent.close();
+
+    const config = {initialState: {}, keyboard: false};
+    config['backdrop'] = 'static';
+    this.bsModalService.show(UserFeedbackModalComponent, config);
   }
 
   public onLogoutClick() {
@@ -149,7 +156,7 @@ export class UserMenuComponent {
   public onStartTour(): void {
     this.recallWizard();
 
-    combineLatest(this.store$.pipe(select(selectAllCollections)), this.store$.pipe(select(selectAllViews)))
+    combineLatest([this.store$.pipe(select(selectAllCollections)), this.store$.pipe(select(selectAllViews))])
       .pipe(
         filter(([collections, views]) => !!collections && !!views),
         first()
@@ -449,6 +456,12 @@ export class UserMenuComponent {
     ) {
       this.dismissWizard();
       this.driver.reset(true);
+    }
+  }
+
+  public onMenuClick() {
+    if (this.userMenuComponent) {
+      this.userMenuComponent.open();
     }
   }
 }

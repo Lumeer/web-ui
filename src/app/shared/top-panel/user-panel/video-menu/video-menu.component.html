@@ -1,30 +1,8 @@
-<div class="panel-item video ml-2" *ngIf="(videos$ | async)?.length">
-  <div class="dropdown show" data-tour="video-menu">
-    <a href="#"
-       role="button"
-       id="videoDropdownLink"
-       data-toggle="dropdown"
-       data-offset="0,10"
-       aria-haspopup="true"
-       aria-expanded="false">
-        <i class="fab fa-lg fa-youtube"></i>
-    </a>
-
-    <div class="dropdown-menu dropdown-menu-right video-dropdown"
-         aria-labelledby="videoDropdownLink">
-
-      <a
-        *ngFor="let video of videos$ | async"
-        (click)="openPlayer(video.id)"
-        class="dropdown-item"
-        [title]="video.summary">
-        <img [src]="video.thumbnail" width="64px" class="mr-2"/>
-        <div>
-          <span class="summary">{{video.summary}}</span>
-          <span class="description text-muted">{{video.description}}</span>
-        </div>
-      </a>
-
-    </div>
-  </div>
+<div class="ml-2 cursor-pointer" data-tour="video-menu" (click)="dropdown.open()" #origin>
+  <i class="fab fa-lg fa-youtube"></i>
 </div>
+
+<video-menu-dropdown #dropdown [origin]="origin"
+                     [videos]="videos$ | async"
+                     (openPlayer)="openPlayer($event)">
+</video-menu-dropdown>

@@ -1,0 +1,9 @@
+@import '../../../../../../styles/variables';
+
+.selected {
+  background-color: $light;
+}
+
+.suggestions {
+  min-width: 250px;
+}

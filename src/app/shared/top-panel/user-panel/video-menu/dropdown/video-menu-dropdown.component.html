@@ -1,0 +1,17 @@
+<dropdown [origin]="origin"
+          [closeOnClickOutside]="true"
+          [positions]="dropdownPositions"
+          [pushOnScreen]="true">
+  <div class="card py-2" [style.width.rem]="25">
+    <a *ngFor="let video of videos; trackBy: trackByVideo"
+       class="dropdown-item d-flex"
+       (click)="onVideoClick(video)"
+       [title]="video.summary">
+      <img [src]="video.thumbnail" [style.width.px]="64" class="mr-4"/>
+      <div>
+        <span class="summary">{{video.summary}}</span>
+        <span class="description text-muted">{{video.description}}</span>
+      </div>
+    </a>
+  </div>
+</dropdown>

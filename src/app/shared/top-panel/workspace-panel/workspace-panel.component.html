@@ -1,49 +1,39 @@
 <ul *ngIf="{organization: organization$ | async, project: project$ | async} as data"
     class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
   <li class="nav-item dropdown">
-    <a class="nav-link text-truncate"
-       href="#"
-       id="navbarDropdown1"
-       role="button"
-       [style.maxWidth.rem]="10"
-       data-toggle="dropdown"
-       aria-haspopup="true"
-       aria-expanded="false">
-      <i [class]="data.organization?.icon"
-         [style.color]="data.organization?.color">
+    <div class="nav-link text-truncate cursor-pointer" role="button"
+         (click)="onOrganizationClick()"
+         [style.maxWidth.rem]="10" #organizationElement>
+      <i [class]="data.organization?.icon" [style.color]="data.organization?.color">
       </i>
       &nbsp;{{data.organization?.code}}
-    </a>
-    <resource-menu
-      labelledBy="navbarDropdown1"
-      [type]="organizationResourceType"
-      [resource]="data.organization"
-      [workspace]="workspace"
-      (onResourceSelect)="selectOrganization($event)"
-      (onNewResource)="createNewOrganization()">
+    </div>
+    <resource-menu #organizationMenu
+                   [type]="organizationResourceType"
+                   [resource]="data.organization"
+                   [origin]="organizationElement"
+                   [organizations]="organizations$ | async"
+                   [workspace]="workspace"
+                   (onResourceSelect)="selectOrganization($event)"
+                   (onNewResource)="createNewOrganization()">
     </resource-menu>
   </li>
   <li class="nav-separator"><i class="fas fa-chevron-right"></i></li>
   <li class="nav-item dropdown">
-    <a class="nav-link text-truncate"
-       href="#"
-       id="navbarDropdown2"
-       role="button"
-       [style.maxWidth.rem]="10"
-       data-toggle="dropdown"
-       aria-haspopup="true"
-       aria-expanded="false">
-      <i [class]="data.project?.icon"
-         [style.color]="data.project?.color"></i>
+    <div class="nav-link text-truncate cursor-pointer" role="button"
+         (click)="onProjectClick()"
+         #projectElement>
+      <i [class]="data.project?.icon" [style.color]="data.project?.color"></i>
       &nbsp;{{data.project?.code}}
-    </a>
-    <resource-menu
-      labelledBy="navbarDropdown2"
-      [type]="projectResourceType"
-      [resource]="data.project"
-      [workspace]="workspace"
-      (onResourceSelect)="selectProject(data.organization, $event)"
-      (onNewResource)="createNewProject(data.organization)">
+    </div>
+    <resource-menu #projectMenu
+                   [type]="projectResourceType"
+                   [resource]="data.project"
+                   [workspace]="workspace"
+                   [projects]="projects$ | async"
+                   [origin]="projectElement"
+                   (onResourceSelect)="selectProject(data.organization, $event)"
+                   (onNewResource)="createNewProject(data.organization)">
     </resource-menu>
   </li>
 </ul>

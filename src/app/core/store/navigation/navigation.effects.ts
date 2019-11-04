@@ -23,7 +23,6 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {filter, map, withLatestFrom} from 'rxjs/operators';
-import {DialogPath} from '../../../dialog/dialog-path';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {ModuleLazyLoadingService} from '../../service/module-lazy-loading.service';
 import {AppState} from '../app.state';
@@ -132,15 +131,7 @@ export class NavigationEffects {
       }
 
       const extras: NavigationExtras = {queryParams, queryParamsHandling: 'merge'};
-
-      const containsViewDialog = this.router.url.includes(`dialog:${DialogPath.SHARE_VIEW}`);
-      let nextAction: Action = null;
-      if (containsViewDialog) {
-        const removeDialogPath: any[] = ['', {outlets: {dialog: null}}];
-        nextAction = new RouterAction.Go({path: removeDialogPath, extras});
-      }
-
-      return new RouterAction.Go({path, extras, nextAction});
+      return new RouterAction.Go({path, extras});
     })
   );
 

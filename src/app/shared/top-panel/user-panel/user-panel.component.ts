@@ -17,8 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Workspace} from '../../../core/store/navigation/workspace';
+import {AppState} from '../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
+import {selectUrl} from '../../../core/store/navigation/navigation.state';
+import {map, mergeMap} from 'rxjs/operators';
+import {selectVideosByUrl} from '../../../core/store/videos/videos.state';
 
 @Component({
   selector: 'user-panel',
@@ -26,7 +32,7 @@ import {Workspace} from '../../../core/store/navigation/workspace';
   styleUrls: ['./user-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserPanelComponent {
+export class UserPanelComponent implements OnInit {
   @Input()
   public workspace: Workspace;
 
@@ -39,5 +45,15 @@ export class UserPanelComponent {
   @Output()
   public toggleControls = new EventEmitter();
 
-  constructor(public element: ElementRef<HTMLElement>) {}
+  public showVideos$: Observable<boolean>;
+
+  constructor(public element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.showVideos$ = this.store$.pipe(
+      select(selectUrl),
+      mergeMap(url => this.store$.pipe(select(selectVideosByUrl(url)))),
+      map(videos => (videos || []).length > 0)
+    );
+  }
 }

@@ -29,6 +29,7 @@
          (typeaheadOnBlur)="onBlur()"
          (blur)="onBlur()"
          (ngModelChange)="onInput()"
+         [spellcheck]="false"
          class="border-0 w-100 h-100 px-1"
          [ngClass]="valid || skipValidation ? 'bg-transparent' : 'bg-danger-light'"
          data-test="text-data-input"

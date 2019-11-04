@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Query} from '../navigation/query/query';
 import {Workspace} from '../navigation/workspace';
 import {DocumentMetaData, DocumentModel} from './document.model';
+import {LinkInstance} from '../link-instances/link.instance';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',
@@ -118,8 +119,7 @@ export namespace DocumentsAction {
       public payload: {
         document: DocumentModel;
         otherDocumentId: string;
-        linkTypeId: string;
-        correlationId: string;
+        linkInstance: LinkInstance;
         callback?: (documentId: string) => void;
       }
     ) {}

@@ -94,7 +94,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public value: string;
 
   @Input()
-  public calculatePosition: boolean = true;
+  public offsetLeft: number;
 
   @Input()
   public origin: ElementRef | HTMLElement;
@@ -183,13 +183,8 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   public open() {
     if (this.dropdown) {
-      this.dropdown.open(this.calculatePosition ? -this.calculateOffset() : null);
+      this.dropdown.open(this.offsetLeft);
     }
-  }
-
-  private calculateOffset(): number {
-    const index = this.columns.findIndex(column => column.attributeId === this.attributeId);
-    return this.columns.slice(0, index).reduce((offset, column) => column.width + offset, 0);
   }
 
   public ngOnDestroy() {

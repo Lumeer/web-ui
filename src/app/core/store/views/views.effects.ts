@@ -47,6 +47,7 @@ import RemoveViewFromUrl = NavigationAction.RemoveViewFromUrl;
 import {User} from '../users/user';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {convertUserModelToDto} from '../users/user.converter';
+import {createCallbackActions} from '../store.utils';
 
 @Injectable()
 export class ViewsEffects {
@@ -256,8 +257,15 @@ export class ViewsEffects {
           );
           return this.viewService.updateUserPermission(viewId, permissionsDto);
         }),
-        concatMap(() => of(new ViewsAction.SetPermissionsSuccess({...action.payload, type: PermissionType.Users}))),
-        catchError(error => of(new ViewsAction.SetPermissionsFailure({error})))
+        concatMap(() =>
+          of(
+            new ViewsAction.SetPermissionsSuccess({...action.payload, type: PermissionType.Users}),
+            ...createCallbackActions(action.payload.onSuccess)
+          )
+        ),
+        catchError(error =>
+          of(new ViewsAction.SetPermissionsFailure({error}), ...createCallbackActions(action.payload.onFailure))
+        )
       );
     })
   );

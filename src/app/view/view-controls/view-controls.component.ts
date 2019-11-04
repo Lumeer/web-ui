@@ -27,6 +27,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {NavigationExtras} from '@angular/router';
 import {select, Store} from '@ngrx/store';
@@ -46,9 +47,10 @@ import {
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
 } from '../../core/store/views/views.state';
-import {DialogService} from '../../dialog/dialog.service';
 import {Perspective} from '../perspectives/perspective';
 import {Query} from '../../core/store/navigation/query/query';
+import {OptionsDropdownComponent} from '../../shared/dropdown/options/options-dropdown.component';
+import {ModalService} from '../../shared/modal/modal.service';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -71,6 +73,9 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public saveOrClone = new EventEmitter<string>();
 
+  @ViewChild(OptionsDropdownComponent, {static: false})
+  public dropdown: OptionsDropdownComponent;
+
   public name: string;
 
   public config$: Observable<ViewConfig>;
@@ -91,7 +96,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(
-    private dialogService: DialogService,
+    private modalService: ModalService,
     private notificationService: NotificationService,
     private i18n: I18n,
     private store$: Store<AppState>
@@ -136,12 +141,12 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private bindViewChanged() {
-    this.viewChanged$ = combineLatest(
+    this.viewChanged$ = combineLatest([
       this.nameChanged$,
       this.store$.pipe(select(selectViewConfigChanged)),
       this.store$.pipe(select(selectViewQueryChanged)),
-      this.store$.pipe(select(selectViewPerspectiveChanged))
-    ).pipe(
+      this.store$.pipe(select(selectViewPerspectiveChanged)),
+    ]).pipe(
       debounceTime(100),
       tap(([, configChanged, queryChanged]) => {
         this.configChanged = configChanged;
@@ -221,11 +226,14 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onShareClick() {
-    this.dialogService.openShareViewDialog(this.view.code);
+    this.modalService.showShareView(this.view);
   }
 
   public onPerspectiveChooserClick(event: MouseEvent) {
     event[PERSPECTIVE_CHOOSER_CLICK] = true;
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
   }
 
   public startSaveLoading() {

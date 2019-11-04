@@ -251,15 +251,27 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
     row.linkInstance && this.unLink.emit(row.linkInstance);
   }
 
-  public onNewLink(object: {data: Record<string, any>; correlationId: string}) {
-    const {data, correlationId} = object;
-    const document: DocumentModel = {collectionId: this.collection.id, correlationId: generateCorrelationId(), data};
+  public onNewLink(object: {column: LinkColumn; value: any; correlationId: string}) {
+    const {column, value, correlationId} = object;
+    const data = {[column.attribute.id]: value};
+    const documentData = column.collectionId ? data : {};
+    const linkData = column.linkTypeId ? data : {};
+
+    const document: DocumentModel = {
+      collectionId: this.collection.id,
+      correlationId: generateCorrelationId(),
+      data: documentData,
+    };
     this.store$.dispatch(
       new DocumentsAction.CreateWithLink({
         document,
         otherDocumentId: this.document.id,
-        correlationId,
-        linkTypeId: this.linkType.id,
+        linkInstance: {
+          correlationId,
+          data: linkData,
+          documentIds: [this.document.id, ''], // other will be set after document is created
+          linkTypeId: this.linkType.id,
+        },
       })
     );
   }

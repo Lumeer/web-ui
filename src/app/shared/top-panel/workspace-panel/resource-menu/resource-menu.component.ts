@@ -20,57 +20,64 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {Store} from '@ngrx/store';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {AppState} from '../../../../core/store/app.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {Organization} from '../../../../core/store/organizations/organization';
-import {selectAllOrganizations} from '../../../../core/store/organizations/organizations.state';
 import {Project} from '../../../../core/store/projects/project';
 import {ProjectsAction} from '../../../../core/store/projects/projects.action';
-import {selectProjectsForWorkspace} from '../../../../core/store/projects/projects.state';
 import {Resource} from '../../../../core/model/resource';
+import {DropdownPosition} from '../../../dropdown/dropdown-position';
+import {DropdownComponent} from '../../../dropdown/dropdown.component';
 
 @Component({
   selector: 'resource-menu',
   templateUrl: './resource-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceMenuComponent implements OnInit, OnChanges {
-  @Input() public labelledBy: string = '';
-  @Input() public type: ResourceType;
-  @Input() public resource: Resource;
-  @Input() public workspace: Workspace;
+export class ResourceMenuComponent implements OnChanges {
+  @Input()
+  public type: ResourceType;
 
-  @Output() public onNewResource = new EventEmitter<ResourceType>();
-  @Output() public onResourceSelect = new EventEmitter<Resource>();
+  @Input()
+  public resource: Resource;
 
-  public organizations$: Observable<Organization[]>;
-  public projects$: Observable<Project[]>;
+  @Input()
+  public workspace: Workspace;
 
-  private dispatched = false;
+  @Input()
+  public origin: ElementRef | HTMLElement;
+
+  @Input()
+  public organizations: Organization[];
+
+  @Input()
+  public projects: Project[];
+
+  @Output()
+  public onNewResource = new EventEmitter<ResourceType>();
+
+  @Output()
+  public onResourceSelect = new EventEmitter<Resource>();
+
+  @ViewChild(DropdownComponent, {static: false})
+  public dropdown: DropdownComponent;
+
+  public readonly dropdownPositions = [DropdownPosition.BottomStart];
 
   constructor(private store$: Store<AppState>) {}
 
-  public ngOnInit() {
-    this.bindData();
-  }
-
   public isOrganizationType(): boolean {
     return this.type === ResourceType.Organization;
-  }
-
-  private bindData(): void {
-    this.organizations$ = this.store$.pipe(select(selectAllOrganizations));
-    this.projects$ = this.store$.pipe(select(selectProjectsForWorkspace));
   }
 
   public newResource(): void {
@@ -82,9 +89,14 @@ export class ResourceMenuComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (!this.dispatched && this.resource && !this.isOrganizationType()) {
+    if (!this.isOrganizationType()) {
       this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
-      this.dispatched = true;
+    }
+  }
+
+  public open() {
+    if (this.dropdown) {
+      this.dropdown.open();
     }
   }
 }
