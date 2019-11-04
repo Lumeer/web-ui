@@ -3,7 +3,8 @@
                [performingAction]="performingAction$ | async"
                [submitDisabled]="formInvalid$ | async"
                (onSubmit)="onSubmit()"
-               (onClose)="hideDialog()">
+               (onClose)="hideDialog()"
+               data-test="create-link-dialog">
 
   <span class="title" i18n="@@link.new.dialog.title">Create new link</span>
 

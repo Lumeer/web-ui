@@ -135,13 +135,15 @@ describe('Table perspective :: Columns', () => {
       .click();
 
     // rename link and save changes
-    cy.get('[data-test="dialog-title"]').should('be.visible');
+    cy.waitForModalShown();
+    cy.get('[data-test="create-link-dialog"]').should('be.visible');
     cy.get('[data-test="link-name-input"]').should('have.value', 'first second');
     cy.get('[data-test="link-name-input"]')
       .clear()
       .type('link'); // workaround waiting for dialog close hook binding
     cy.get('[data-test="create-link-dialog-create-button"]').click();
-    cy.get('[data-test="dialog-title"]').should('not.exist');
+    cy.waitForModalHidden();
+    cy.get('[data-test="create-link-dialog"]').should('not.be.visible');
 
     // verify table caption and columns
     cy.get('[data-test="table-caption-name"]')
