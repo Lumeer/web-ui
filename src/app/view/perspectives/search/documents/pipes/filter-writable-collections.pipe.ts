@@ -33,14 +33,12 @@ export class FilterWritableCollectionsPipe implements PipeTransform {
     const collectionsMap = (collections || []).reduce((obj, coll) => ({...obj, [coll.id]: coll}), {});
     return this.collectionsPermissions.transform(collections).pipe(
       map(permissions =>
-        Object.entries(permissions)
-          .map(([key, permission]) => {
-            if (permission.writeWithView) {
-              return collectionsMap[key];
-            }
-            return null;
-          })
-          .filter(collection => !!collection)
+        Object.entries(permissions).reduce<Collection[]>((arr, [key, permission]) => {
+          if (permission.writeWithView) {
+            arr.push(collectionsMap[key]);
+          }
+          return arr;
+        }, [])
       )
     );
   }
