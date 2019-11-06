@@ -1,5 +1,7 @@
 <dropdown [origin]="origin"
-          [positions]="dropdownPositions">
+          [positions]="dropdownPositions"
+          [closeOnClickOutside]="false"
+          [showBackdrop]="false">
   <div class="card"
        (click)="onClick($event)">
     <div class="d-flex"

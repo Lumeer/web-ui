@@ -64,9 +64,6 @@ import {formatData} from '../../../../shared/utils/data/format-data';
 import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 
-const MIN_PROGRESS = 0.001;
-const MAX_PROGRESS = 1000;
-
 type DataResourceSwimlanes = DataResource & {swimlanes?: string[]};
 
 export interface GanttChartTaskMetadata {
@@ -481,14 +478,14 @@ function areDatesValid(start: string, end: string): boolean {
 
 function createProgress(progress: any): number {
   if (isNullOrUndefined(progress)) {
-    return MIN_PROGRESS;
+    return 0;
   }
 
   const progressWithoutPercent = progress.toString().replace(/%*$/g, '');
   if (isNumeric(progressWithoutPercent)) {
-    return Math.min(Math.max(toNumber(progressWithoutPercent), MIN_PROGRESS), MAX_PROGRESS);
+    return Math.max(toNumber(progressWithoutPercent), 0);
   }
-  return MIN_PROGRESS;
+  return 0;
 }
 
 function createInterval(

@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, ElementRef, ViewChild} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  ElementRef,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import {User} from '../../../../../core/store/users/user';
 import {environment} from '../../../../../../environments/environment';
 import {DropdownComponent} from '../../../../dropdown/dropdown.component';
@@ -29,7 +38,7 @@ import {DropdownPosition} from '../../../../dropdown/dropdown-position';
   styleUrls: ['./user-menu-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserMenuDropdownComponent {
+export class UserMenuDropdownComponent implements OnDestroy {
   @Input()
   public currentUser: User;
 
@@ -62,6 +71,26 @@ export class UserMenuDropdownComponent {
   public readonly buildNumber = environment.buildNumber;
   public readonly locale = environment.locale;
 
+  public onLogout() {
+    this.logout.emit();
+    this.close();
+  }
+
+  public onOrganizationDetail() {
+    this.organizationDetail.emit();
+    this.close();
+  }
+
+  public onFeedback() {
+    this.feedback.emit();
+    this.close();
+  }
+
+  public onStartTour() {
+    this.startTour.emit();
+    this.close();
+  }
+
   public open() {
     if (this.dropdown) {
       this.dropdown.open();
@@ -72,5 +101,9 @@ export class UserMenuDropdownComponent {
     if (this.dropdown) {
       this.dropdown.close();
     }
+  }
+
+  public ngOnDestroy() {
+    this.close();
   }
 }

@@ -28,8 +28,9 @@ import {
 } from '../../../shared/utils/constraint/duration-constraint.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {ConstraintData} from '../data/constraint';
-import {DurationConstraintConfig} from '../data/constraint-config';
+import {DurationConstraintConfig, DurationUnit} from '../data/constraint-config';
 import {DataValue} from './index';
+import {isNumeric, toNumber} from '../../../shared/utils/common.utils';
 
 export class DurationDataValue implements DataValue {
   public bigNumber: Big;
@@ -91,6 +92,14 @@ export class DurationDataValue implements DataValue {
   }
 
   public parseInput(inputValue: string): DurationDataValue {
-    return this.copy(inputValue);
+    const value = parseInputValue(inputValue);
+    return new DurationDataValue(value, this.config, this.constraintData);
   }
+}
+
+function parseInputValue(value: any): any {
+  if (isNumeric(value)) {
+    return toNumber(value) * 1000;
+  }
+  return value;
 }

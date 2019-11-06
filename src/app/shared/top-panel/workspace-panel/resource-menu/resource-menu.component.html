@@ -1,8 +1,9 @@
 <dropdown [origin]="origin"
-          [closeOnClickOutside]="true"
+          [showBackdrop]="false"
           [pushOnScreen]="true"
           [positions]="dropdownPositions">
-  <div class="card" [style.width.rem]="19">
+  <div class="card overflow-auto" [style.width.rem]="19"
+       [style.max-height.vh]="90">
     <resource-detail
       [type]="type"
       [resource]="resource"
@@ -19,7 +20,7 @@
 
       <div class="dropdown-divider"></div>
 
-      <a class="dropdown-item" (click)="newResource()">
+      <a class="dropdown-item pb-2" (click)="newResource()">
         <i class="fas fa-plus text-success mr-1"></i>
         <span
           i18n="@@resource.menu.createNew">Create New {type, select, organization {Organization} project {Project} other {}}</span>

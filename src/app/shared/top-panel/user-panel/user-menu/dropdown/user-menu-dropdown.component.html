@@ -1,4 +1,4 @@
-<dropdown [closeOnClickOutside]="true"
+<dropdown [showBackdrop]="false"
           [positions]="dropdownPositions"
           [origin]="origin"
           [pushOnScreen]="true">
@@ -6,7 +6,7 @@
     <div class="profile-dropdown" aria-labelledby="profileDropdownLink">
       <a *ngIf="freePlan"
          class="dropdown-item text-start bg-danger text-white free-plan"
-         (click)="organizationDetail.emit()">
+         (click)="onOrganizationDetail()">
         <span i18n="@@panel.plan.free">Free&nbsp;Plan: Upgrade now!</span>
       </a>
       <span *ngIf="currentUser"
@@ -28,7 +28,7 @@
         <span>English</span>&nbsp;
         (<span i18n="@@language.english">English</span>)
       </a>
-      <a (click)="feedback.emit()"
+      <a (click)="onFeedback()"
          class="dropdown-item"
          title="Send feedback"
          i18n-title="@@menu.sendFeedback">
@@ -37,7 +37,7 @@
            aria-hidden="true"></i>&nbsp;
         <span i18n="@@menu.sendFeedback">Send Feedback</span>
       </a>
-      <a (click)="startTour.emit()"
+      <a (click)="onStartTour()"
          class="dropdown-item"
          title="Application Tour"
          i18n-title="@@menu.applicationTour">
@@ -65,7 +65,7 @@
            aria-hidden="true"></i>&nbsp;
         <span i18n="@@menu.account">Account</span>
       </a>
-      <a (click)="logout.emit()"
+      <a (click)="onLogout()"
          class="dropdown-item"
          title="Log out"
          i18n-title="@@menu.logout">
@@ -74,9 +74,9 @@
            aria-hidden="true"></i>&nbsp;
         <span i18n="@@menu.logout">Logout</span>
       </a>
-      <ng-container *ngIf="buildNumber">
+      <ng-container *ngIf="buildNumber || 3">
         <div class="dropdown-divider"></div>
-        <small class="dropdown-header py-0">Build #{{buildNumber}}</small>
+        <small class="dropdown-header pt-0 pb-2">Build #{{buildNumber}}</small>
       </ng-container>
     </div>
   </div>

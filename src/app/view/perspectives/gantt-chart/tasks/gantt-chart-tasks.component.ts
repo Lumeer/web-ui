@@ -244,7 +244,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (metadata.progressAttributeId) {
       const constraint = findAttributeConstraint(resource && resource.attributes, metadata.progressAttributeId);
       const saveValue = constraint
-        ? constraint.createDataValue(task.progress, this.constraintData).serialize()
+        ? constraint
+            .createDataValue(task.progress, this.constraintData)
+            .parseInput(String(task.progress || 0))
+            .serialize()
         : this.formatPercentage(dataResource, metadata.progressAttributeId, task.progress);
       if (saveValue !== dataResource[metadata.progressAttributeId]) {
         patchData[metadata.progressAttributeId] = saveValue;

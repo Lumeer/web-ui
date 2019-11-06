@@ -1,6 +1,8 @@
 <ng-container *ngIf="{documents: documents$ | async, collection: collection$ | async} as data">
   <dropdown [origin]="origin"
             [positions]="dropdownPositions"
+            [closeOnClickOutside]="false"
+            [showBackdrop]="false"
             [minWidth]="minWidth"
             [minHeight]="(data.documents?.length || 0) * 30">
     <div *ngIf="linkedDocumentId && data.collection && data.documents?.length"

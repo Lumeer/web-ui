@@ -1,6 +1,7 @@
 <div class="mt-3 mb-5" *ngIf="dataLoaded$ | async">
 
-  <ng-container *ngIf="{hasCollection: hasCollection$ | async, hasView: hasView$ | async, hasAnyView: hasAnyView$ | async, hasDocument: hasDocument$ | async} as data">
+  <ng-container
+    *ngIf="{hasCollection: hasCollection$ | async, hasView: hasView$ | async, hasAnyView: hasAnyView$ | async, hasDocument: hasDocument$ | async} as data">
 
     <ng-container *ngIf="data.hasCollection || data.hasView || data.hasDocument; else noData">
 
@@ -20,7 +21,7 @@
             <button class="mx-2 btn btn-sm btn-primary cursor-default" type="button"><i class="fas fa-save"></i></button>
           </div>
         </div>
-        <hr />
+        <hr/>
       </ng-container>
 
 
