@@ -47,9 +47,6 @@ import {DropdownPosition} from '../../dropdown/dropdown-position';
 })
 export class DataOptionsDropdownComponent implements AfterViewInit, OnChanges {
   @Input()
-  public closeOnClickOutside: boolean;
-
-  @Input()
   public fitParent: boolean;
 
   @Input()

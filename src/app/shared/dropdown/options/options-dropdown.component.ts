@@ -47,7 +47,10 @@ import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../
 })
 export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   @Input()
-  public closeOnClickOutside: boolean;
+  public closeOnClickOutside = true;
+
+  @Input()
+  public showBackdrop = true;
 
   @Input()
   public fitParent: boolean;

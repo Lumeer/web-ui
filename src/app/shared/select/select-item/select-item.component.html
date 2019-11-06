@@ -42,9 +42,9 @@
     </ng-container>
   </button>
 
-  <options-dropdown [closeOnClickOutside]="true"
-                    [fitParent]="fitParent"
+  <options-dropdown [fitParent]="fitParent"
                     [options]="dropdownOptions"
+                    [showBackdrop]="false"
                     [origin]="selectItemParent"
                     [selectedValue]="selectedId"
                     (selectOption)="onSelect($event)">

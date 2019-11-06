@@ -34,10 +34,10 @@ import {convertQueryModelToString} from '../../../../../core/store/navigation/qu
 import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {User} from '../../../../../core/store/users/user';
-import {userHasRoleInResource} from '../../../../../shared/utils/resource.utils';
-import {Role} from '../../../../../core/model/role';
 import {BsModalService} from 'ngx-bootstrap';
 import {CreateDocumentModalComponent} from '../../../../../shared/modal/create-document/create-document-modal.component';
+import {Organization} from '../../../../../core/store/organizations/organization';
+import {Project} from '../../../../../core/store/projects/project';
 
 @Component({
   selector: 'search-documents-content',
@@ -70,6 +70,12 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   @Input()
   public currentUser: User;
+
+  @Input()
+  public organization: Organization;
+
+  @Input()
+  public project: Project;
 
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();
@@ -142,10 +148,7 @@ export class SearchDocumentsContentComponent implements OnInit {
     this.toggleService.onDestroy();
   }
 
-  public onAdd() {
-    const collections = (this.collections || []).filter(coll =>
-      userHasRoleInResource(this.currentUser, coll, Role.Write)
-    );
+  public onAdd(collections: Collection[]) {
     if (collections.length) {
       const initialState = {collections, query: this.query, currentUser: this.currentUser};
       const config = {initialState, keyboard: false};

@@ -132,12 +132,19 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onBlur() {
+    setTimeout(() => this.onTypeAheadBlur());
+  }
+
+  public onTypeAheadBlur() {
     if (this.preventSave) {
       this.preventSave = false;
+      this.dataBlur.emit();
     } else {
-      this.saveInputValue(this.textInput);
+      const value = this.textInput.nativeElement.value;
+      // needs to be executed after parent event handlers
+      this.saveValue(value);
+      this.dataBlur.emit();
     }
-    this.dataBlur.emit();
   }
 
   private refreshValid(value: DataValue) {
@@ -156,7 +163,7 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
           // needs to be executed after parent event handlers
           const input = this.textInput;
           this.preventSave = true;
-          setTimeout(() => input && this.saveInputValue(input));
+          setTimeout(() => input && this.saveValue(input.nativeElement.value));
         }
         return;
       case KeyCode.Escape:
@@ -165,10 +172,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
         this.cancel.emit();
         return;
     }
-  }
-
-  private saveInputValue(input: ElementRef) {
-    this.saveValue(input.nativeElement.value);
   }
 
   private saveValue(value: string) {

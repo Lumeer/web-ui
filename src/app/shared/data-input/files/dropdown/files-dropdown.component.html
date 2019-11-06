@@ -1,24 +1,25 @@
-<dropdown [origin]="origin">
+<dropdown [origin]="origin"
+          [showBackdrop]="false">
   <div class="card p-3"
        (click)="onClick($event)">
     <table *ngIf="files?.length > 0"
            class="table table-sm">
       <tbody>
-        <tr *ngFor="let file of files; index as fileIndex">
-          <td [class.border-top-0]="fileIndex === 0"
-              [class.text-secondary]="file.uploading">
-            {{ file.fileName }}
-          </td>
-          <td [class.border-top-0]="fileIndex === 0"
-              class="text-right">
-            <i *ngIf="!file.uploading"
-               (click)="onRemove(file.id)"
-               title="Delete file"
-               i18n-title="@@files.dropdown.button.delete"
-               class="fas fa-trash text-danger cursor-pointer">
-            </i>
-          </td>
-        </tr>
+      <tr *ngFor="let file of files; index as fileIndex">
+        <td [class.border-top-0]="fileIndex === 0"
+            [class.text-secondary]="file.uploading">
+          {{ file.fileName }}
+        </td>
+        <td [class.border-top-0]="fileIndex === 0"
+            class="text-right">
+          <i *ngIf="!file.uploading"
+             (click)="onRemove(file.id)"
+             title="Delete file"
+             i18n-title="@@files.dropdown.button.delete"
+             class="fas fa-trash text-danger cursor-pointer">
+          </i>
+        </td>
+      </tr>
       </tbody>
     </table>
 

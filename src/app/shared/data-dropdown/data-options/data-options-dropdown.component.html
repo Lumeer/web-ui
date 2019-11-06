@@ -1,4 +1,4 @@
-<dropdown [closeOnClickOutside]="closeOnClickOutside"
+<dropdown [showBackdrop]="false"
           [fitParent]="fitParent"
           [origin]="origin"
           [positions]="dropdownPositions">
@@ -11,11 +11,11 @@
        class="dropdown-item text-truncate"
        tabindex>
       <data-input
-          [constraint]="option.constraint"
-          [focus]="true"
-          [readonly]="true"
-          [value]="option.value"
-          class="text-nowrap">
+        [constraint]="option.constraint"
+        [focus]="true"
+        [readonly]="true"
+        [value]="option.value"
+        class="text-nowrap">
       </data-input>
     </a>
   </div>

@@ -1,8 +1,9 @@
 <dropdown [pushOnScreen]="true"
           [origin]="origin"
           [positions]="dropdownPositions"
-          [closeOnClickOutside]="true">
-  <div class="panel-item notifications card py-2"
+          [showBackdrop]="false">
+  <div class="panel-item notifications card py-2 overflow-auto"
+       [style.max-height.vh]="90"
        [style.width.rem]="18">
     <form class="px-2 text-right">
       <span class="small text-muted mr-1 align-text-top">Show only unread</span>
@@ -68,7 +69,7 @@
                                      [notification]="notification">
             </notification-collection>
 
-            <notification-view *ngSwitchCase="notificationType.ProjectShared"
+            <notification-view *ngSwitchCase="notificationType.ViewShared"
                                [organizations]="organizations"
                                [workspace]="workspace"
                                [currentProject]="currentProject"

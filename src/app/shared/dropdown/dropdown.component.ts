@@ -43,7 +43,10 @@ import {convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-
 })
 export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input()
-  public closeOnClickOutside: boolean;
+  public closeOnClickOutside = true;
+
+  @Input()
+  public showBackdrop = true;
 
   @Input()
   public fitParent: boolean;
@@ -65,6 +68,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   @ViewChild('dropdown', {static: false})
   public dropdown: TemplateRef<any>;
+
+  public clickListener: any;
 
   private overlayRef: OverlayRef;
   private portal: Portal<any>;
@@ -96,10 +101,25 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.overlayRef.attach(this.portal);
 
     if (this.closeOnClickOutside) {
-      this.overlayRef.backdropClick().subscribe(() => this.close());
+      if (this.showBackdrop) {
+        this.overlayRef.backdropClick().subscribe(() => this.close());
+      } else {
+        this.clickListener = event => this.checkClickOutside(event);
+        setTimeout(() => document.addEventListener('click', this.clickListener));
+      }
     }
 
     this.syncWidth();
+  }
+
+  public checkClickOutside(event) {
+    if (
+      this.overlayRef &&
+      this.overlayRef.overlayElement &&
+      !this.overlayRef.overlayElement.contains(event.target as any)
+    ) {
+      this.close();
+    }
   }
 
   private createPositionStrategy(): FlexibleConnectedPositionStrategy {
@@ -121,9 +141,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     }
 
     return {
-      backdropClass: this.closeOnClickOutside ? 'cdk-overlay-transparent-backdrop' : undefined,
+      backdropClass: this.showBackdrop ? 'cdk-overlay-transparent-backdrop' : undefined,
       disposeOnNavigation: true,
-      hasBackdrop: this.closeOnClickOutside,
+      hasBackdrop: this.showBackdrop,
       panelClass: ['position-absolute', 'w-max-content'],
       scrollStrategy: this.overlay.scrollStrategies.reposition(),
       minWidth: this.minWidth,
@@ -138,6 +158,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
       this.overlayRef.dispose();
       this.overlayRef = null;
     }
+    document.removeEventListener('click', this.clickListener);
   }
 
   public isOpen(): boolean {

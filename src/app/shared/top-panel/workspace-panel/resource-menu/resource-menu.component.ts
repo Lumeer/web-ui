@@ -24,6 +24,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
   ViewChild,
@@ -44,7 +45,7 @@ import {DropdownComponent} from '../../../dropdown/dropdown.component';
   templateUrl: './resource-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceMenuComponent implements OnChanges {
+export class ResourceMenuComponent implements OnChanges, OnDestroy {
   @Input()
   public type: ResourceType;
 
@@ -82,10 +83,12 @@ export class ResourceMenuComponent implements OnChanges {
 
   public newResource(): void {
     this.onNewResource.emit(this.type);
+    this.close();
   }
 
   public selectResource(resource: Resource): void {
     this.onResourceSelect.emit(resource);
+    this.close();
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -98,5 +101,15 @@ export class ResourceMenuComponent implements OnChanges {
     if (this.dropdown) {
       this.dropdown.open();
     }
+  }
+
+  public close() {
+    if (this.dropdown) {
+      this.dropdown.close();
+    }
+  }
+
+  public ngOnDestroy() {
+    this.close();
   }
 }

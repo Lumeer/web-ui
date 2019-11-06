@@ -29,7 +29,7 @@ import {CreateDocumentValuesHtmlPipe} from './pipes/create-document-values-html.
 import {CreateDocumentEntriesHtmlPipe} from './pipes/create-document-entries-html.pipe';
 import {DocumentDefaultAttributeHtmlPipe} from './pipes/document-default-attribute-html.pipe';
 import {SearchDocumentsContentComponent} from './content/search-documents-content.component';
-import {AnyCollectionIsWritablePipe} from './pipes/any-collection-is-writable.pipe';
+import {FilterWritableCollectionsPipe} from './pipes/filter-writable-collections.pipe';
 
 @NgModule({
   imports: [CommonModule, SharedModule],
@@ -42,7 +42,7 @@ import {AnyCollectionIsWritablePipe} from './pipes/any-collection-is-writable.pi
     CreateDocumentEntriesHtmlPipe,
     DocumentDefaultAttributeHtmlPipe,
     SearchDocumentsContentComponent,
-    AnyCollectionIsWritablePipe,
+    FilterWritableCollectionsPipe,
   ],
   exports: [SearchDocumentsComponent],
 })

@@ -19,6 +19,8 @@
          type="text">
 
   <options-dropdown [options]="addressOptions$ | async"
+                    [showBackdrop]="false"
+                    [closeOnClickOutside]="false"
                     [origin]="addressInput"
                     (selectOption)="onSelectOption($event)">
   </options-dropdown>

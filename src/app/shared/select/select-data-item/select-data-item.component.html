@@ -39,12 +39,11 @@
     </ng-container>
   </button>
 
-  <data-options-dropdown [closeOnClickOutside]="true"
-                    [fitParent]="fitParent"
-                    [options]="dropdownOptions"
-                    [origin]="selectItemParent"
-                    [selectedValue]="selectedId"
-                    (selectOption)="onSelect($event)">
+  <data-options-dropdown [fitParent]="fitParent"
+                         [options]="dropdownOptions"
+                         [origin]="selectItemParent"
+                         [selectedValue]="selectedId"
+                         (selectOption)="onSelect($event)">
   </data-options-dropdown>
 
 </div>

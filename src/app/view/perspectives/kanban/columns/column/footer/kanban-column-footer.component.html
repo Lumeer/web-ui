@@ -4,15 +4,16 @@
       <i class="fa fa-plus mr-2"></i><span i18n="@@create.new.document">Create New Record</span>
     </button>
 
-    <options-dropdown [closeOnClickOutside]="true"
-                      [fitParent]="false"
+    <options-dropdown [fitParent]="false"
                       [origin]="parentElement"
+                      [showBackdrop]="false"
                       [options]="dropdownOptions"
                       (selectOption)="onOptionSelect($event)">
     </options-dropdown>
 
     <div class="align-self-center flex-fill text-right small text-muted">
-      <span i18n="@@kanban.perspective.footer.cards">{count, plural, =0 {no cards} one {1 card} few {{{count}} cards} other {{{count}} cards}}</span>
+      <span
+        i18n="@@kanban.perspective.footer.cards">{count, plural, =0 {no cards} one {1 card} few {{{count}} cards} other {{{count}} cards}}</span>
     </div>
   </div>
 </div>

@@ -1,4 +1,6 @@
 <dropdown [origin]="origin"
+          [showBackdrop]="false"
+          [closeOnClickOutside]="false"
           [positions]="dropdownPositions">
   <ng-container *ngIf="{
     lastName: lastName$ | async,
@@ -7,8 +9,9 @@
     selectedIndex: (selectedIndex$ | async),
     table: table$ | async
   } as state">
-    <div *ngIf="state.lastName && (!(collection | attributeExist:attributeName) || !(state.linkedAttributes | empty) || !(state.allAttributes | empty))"
-         class="dropdown">
+    <div
+      *ngIf="state.lastName && (!(collection | attributeExist:attributeName) || !(state.linkedAttributes | empty) || !(state.allAttributes | empty))"
+      class="dropdown">
       <div class="dropdown-menu show"
            data-test="table-attribute-suggestions">
         <ng-container *ngIf="(collection || linkType) && !((collection || linkType) | attributeExist:attributeName)">
@@ -26,8 +29,9 @@
           </a>
         </ng-container>
 
-        <div *ngIf="!(collection | attributeExist:attributeName) && (!(state.linkedAttributes | empty) || !(state.allAttributes | empty))"
-             class="dropdown-divider">
+        <div
+          *ngIf="!(collection | attributeExist:attributeName) && (!(state.linkedAttributes | empty) || !(state.allAttributes | empty))"
+          class="dropdown-divider">
         </div>
 
         <ng-container *ngIf="(cursor | isLastPart: state.table) && !(state.table | embedded)">
@@ -43,7 +47,8 @@
                                [icons]="[linkedAttribute.collection.icon]"
                                class="mr-1">
               </icons-presenter>
-              <span [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
+              <span
+                [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
               <small class="text-secondary ml-1">({{linkedAttribute.linkType.name}})</small>
             </a>
           </ng-container>
@@ -64,7 +69,8 @@
                                [icons]="[linkedAttribute.collection.icon]"
                                class="mr-1">
               </icons-presenter>
-              <span [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
+              <span
+                [innerHtml]="(linkedAttribute.collection.name | highlightText:state.lastName:true) + '.' + (linkedAttribute.attribute.name | highlightText:state.lastName:true)"></span>
             </a>
           </ng-container>
         </ng-container>
