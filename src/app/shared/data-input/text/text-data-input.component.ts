@@ -134,10 +134,14 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
+      this.dataBlur.emit();
     } else {
-      this.saveInputValue(this.textInput);
+      // needs to be executed after parent event handlers
+      setTimeout(() => {
+        this.saveInputValue(this.textInput);
+        this.dataBlur.emit();
+      }, 200);
     }
-    this.dataBlur.emit();
   }
 
   private refreshValid(value: DataValue) {

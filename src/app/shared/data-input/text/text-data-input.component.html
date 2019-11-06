@@ -22,7 +22,7 @@
          [typeaheadOptionsInScrollableView]="10"
          [adaptivePosition]="true"
          [typeaheadSelectFirstItem]="false"
-         [typeaheadIsFirstItemActive]="false"
+         [typeaheadIsFirstItemActive]="text?.length > 0"
          [container]="'body'"
          [attr.maxlength]="skipValidation ? null : value?.config?.maxLength"
          (typeaheadOnSelect)="onSelect($event)"

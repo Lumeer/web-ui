@@ -132,10 +132,14 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
+      this.dataBlur.emit();
     } else {
-      this.saveValue();
+      // needs to be executed after parent event handlers
+      setTimeout(() => {
+        this.saveValue();
+        this.dataBlur.emit();
+      }, 200);
     }
-    this.dataBlur.emit();
   }
 
   @HostListener('keydown', ['$event'])
