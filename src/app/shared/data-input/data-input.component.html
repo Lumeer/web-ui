@@ -132,6 +132,18 @@
                    (dataBlur)="onDataBlur()">
   </user-data-input>
 
+  <rich-text-data-input *ngSwitchCase="constraintType.Text"
+                   [focus]="focus"
+                   [readonly]="readonly"
+                   [skipValidation]="skipValidation"
+                   [value]="dataValue"
+                   (valueChange)="onValueChange($event)"
+                   (save)="onSaveValue($event)"
+                   (cancel)="onCancel()"
+                   (onFocus)="emitFocus($event)"
+                   (dataBlur)="onDataBlur()">
+  </rich-text-data-input>
+
   <ng-container *ngSwitchDefault
                 [ngTemplateOutlet]="textDataInput">
   </ng-container>

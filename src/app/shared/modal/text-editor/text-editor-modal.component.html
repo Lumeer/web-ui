@@ -1,0 +1,29 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  [showHeader]="false"
+  (onClose)="cancelDialog()"
+  (onSubmit)="submitDialog(content)"
+  [submitDisabled]="!valid || readonly">
+
+  <div class="body" #dialogBody>
+
+    <quill-editor
+      [(ngModel)]="content"
+      [readOnly]="readonly"
+      (onEditorCreated)="$event.focus()"
+      (onContentChanged)="contentChanged($event)"
+      [maxLength]="maxLength"
+      [minLength]="minLength">
+    </quill-editor>
+
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+      <i class="far fa-check"></i>&nbsp;<span i18n="@@button.save">Save</span>
+  </span>
+
+</modal-wrapper>

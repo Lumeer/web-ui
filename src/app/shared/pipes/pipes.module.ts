@@ -79,6 +79,7 @@ import {ValueFilterPipe} from './value-filter.pipe';
 import {IsNullOrUndefinedPipe} from './is-null-or-undefined.pipe';
 import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.pipe';
 import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
+import {StripHtmlPipe} from './strip-html.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -141,6 +142,7 @@ import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
     IsNullOrUndefinedPipe,
     AttributesToDataSuggestionsPipe,
     AttributeFunctionDefinedPipe,
+    StripHtmlPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -203,6 +205,7 @@ import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
     IsNullOrUndefinedPipe,
     AttributesToDataSuggestionsPipe,
     AttributeFunctionDefinedPipe,
+    StripHtmlPipe,
   ],
 })
 export class PipesModule {}
