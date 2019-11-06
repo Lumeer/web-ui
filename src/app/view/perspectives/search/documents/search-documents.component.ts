@@ -43,6 +43,10 @@ import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {sortDocumentsByFavoriteAndLastUsed} from '../../../../core/store/documents/document.utils';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {ConstraintDataService} from '../../../../core/service/constraint-data.service';
+import {Organization} from '../../../../core/store/organizations/organization';
+import {Project} from '../../../../core/store/projects/project';
+import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 
 const PAGE_SIZE = 40;
 
@@ -64,6 +68,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public users$: Observable<User[]>;
   public workspace$: Observable<Workspace>;
   public currentUser$: Observable<User>;
+  public organization$: Observable<Organization>;
+  public project$: Observable<Project>;
 
   private searchId = DEFAULT_SEARCH_ID;
   private config: SearchConfig;
@@ -83,6 +89,8 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.documentsConfig$ = this.selectDocumentsConfig$();
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+    this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
+    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
 
     this.subscribeData();
   }

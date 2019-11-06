@@ -19,15 +19,29 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {userHasRoleInResource} from '../../../../../shared/utils/resource.utils';
-import {User} from '../../../../../core/store/users/user';
-import {Role} from '../../../../../core/model/role';
+import {CollectionsPermissionsPipe} from '../../../../../shared/pipes/permissions/collections-permissions.pipe';
+import {map} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 
 @Pipe({
-  name: 'anyCollectionIsWritable',
+  name: 'filterWritableCollections',
 })
-export class AnyCollectionIsWritablePipe implements PipeTransform {
-  public transform(collections: Collection[], user: User): boolean {
-    return (collections || []).some(coll => userHasRoleInResource(user, coll, Role.Write));
+export class FilterWritableCollectionsPipe implements PipeTransform {
+  constructor(private collectionsPermissions: CollectionsPermissionsPipe) {}
+
+  public transform(collections: Collection[]): Observable<Collection[]> {
+    const collectionsMap = (collections || []).reduce((obj, coll) => ({...obj, [coll.id]: coll}), {});
+    return this.collectionsPermissions.transform(collections).pipe(
+      map(permissions =>
+        Object.entries(permissions)
+          .map(([key, permission]) => {
+            if (permission.writeWithView) {
+              return collectionsMap[key];
+            }
+            return null;
+          })
+          .filter(collection => !!collection)
+      )
+    );
   }
 }

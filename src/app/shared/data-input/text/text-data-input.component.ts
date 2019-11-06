@@ -136,9 +136,10 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
       this.preventSave = false;
       this.dataBlur.emit();
     } else {
+      const value = this.textInput.nativeElement.value;
       // needs to be executed after parent event handlers
       setTimeout(() => {
-        this.saveInputValue(this.textInput);
+        this.saveValue(value);
         this.dataBlur.emit();
       }, 200);
     }
@@ -160,7 +161,7 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
           // needs to be executed after parent event handlers
           const input = this.textInput;
           this.preventSave = true;
-          setTimeout(() => input && this.saveInputValue(input));
+          setTimeout(() => input && this.saveValue(input.nativeElement.value));
         }
         return;
       case KeyCode.Escape:
@@ -169,10 +170,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
         this.cancel.emit();
         return;
     }
-  }
-
-  private saveInputValue(input: ElementRef) {
-    this.saveValue(input.nativeElement.value);
   }
 
   private saveValue(value: string) {
