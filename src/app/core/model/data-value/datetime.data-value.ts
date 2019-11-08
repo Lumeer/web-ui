@@ -28,10 +28,7 @@ export class DateTimeDataValue implements DataValue {
 
   constructor(public readonly value: any, public readonly config: DateTimeConstraintConfig) {
     if (this.value || this.value === 0) {
-      this.momentDate = resetUnusedMomentPart(
-        parseMomentDate(this.value, this.config && this.config.format),
-        this.config.format
-      );
+      this.momentDate = parseMomentDate(this.value, this.config && this.config.format);
     }
   }
 

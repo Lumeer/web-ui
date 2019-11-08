@@ -20,14 +20,14 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Constraint} from '../../../core/model/constraint';
 import {DataValue} from '../../../core/model/data-value';
-import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
 import {ConstraintData} from '../../../core/model/data/constraint';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 
 @Pipe({
   name: 'dataValue',
 })
 export class DataValuePipe implements PipeTransform {
   public transform(value: any, constraint: Constraint, constraintData?: ConstraintData): DataValue {
-    return constraint ? constraint.createDataValue(value, constraintData) : new UnknownDataValue(value);
+    return (constraint || new UnknownConstraint()).createDataValue(value, constraintData);
   }
 }

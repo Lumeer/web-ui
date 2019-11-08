@@ -301,9 +301,16 @@ export class ChartDataComponent implements OnInit, OnChanges {
       return value;
     }
 
-    if (value && constraint.type === ConstraintType.DateTime) {
-      const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
-      return moment(value, convertChartDateFormat(config && config.format)).toISOString();
+    if (value) {
+      if (constraint.type === ConstraintType.DateTime) {
+        const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
+        return moment(value, convertChartDateFormat(config && config.format)).toISOString();
+      } else if (constraint.type === ConstraintType.Percentage) {
+        return constraint
+          .createDataValue(value, this.constraintData)
+          .parseInput(String(value || 0))
+          .serialize();
+      }
     }
 
     return constraint.createDataValue(value, this.constraintData).serialize();

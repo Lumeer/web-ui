@@ -420,7 +420,7 @@ export class ChartDataConverter {
       default:
         return (constraint || new UnknownConstraint())
           .createDataValue(value, constraintData || this.constraintData)
-          .serialize();
+          .format();
     }
   }
 
