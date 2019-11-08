@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -31,9 +30,10 @@ import {
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap';
 import {Subject} from 'rxjs';
-import {TABLE_ROW_MIN_HEIGHT} from '../../../view/perspectives/table/body/table-body.component';
 import {KeyCode} from '../../key-code';
 import {StripHtmlPipe} from '../../pipes/strip-html.pipe';
+import {isMacOS} from '../../utils/system.utils';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 export interface TextEditorChanged {
   html: string;
@@ -46,7 +46,7 @@ export interface TextEditorChanged {
   styleUrls: ['./text-editor-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextEditorModalComponent implements AfterViewInit {
+export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public readonly dialogType = DialogType;
 
   @Input()
@@ -70,10 +70,14 @@ export class TextEditorModalComponent implements AfterViewInit {
 
   public valid = true;
 
+  public readonly macOS = isMacOS();
+  public insertTextPlaceholder: string;
+
   constructor(
     private bsModalRef: BsModalRef,
     private element: ElementRef<HTMLElement>,
-    private stripHtml: StripHtmlPipe
+    private stripHtml: StripHtmlPipe,
+    private i18n: I18n
   ) {}
 
   private hideDialog() {
@@ -104,15 +108,20 @@ export class TextEditorModalComponent implements AfterViewInit {
   }
 
   private checkValid(text: string) {
-    //console.log({txt: 'validuju', text});
-    this.valid = true;
+    const filterText = text.replace('\n', '').trim();
+    let newValid = true;
 
     if (this.minLength) {
-      this.valid = text.length >= this.minLength;
+      newValid = filterText.length >= this.minLength;
     }
 
     if (this.maxLength) {
-      this.valid = this.valid && text.length <= this.maxLength;
+      newValid = newValid && filterText.length <= this.maxLength;
+    }
+
+    if (newValid !== this.valid) {
+      this.valid = newValid;
+      setTimeout(() => this.editoreHeight());
     }
   }
 
@@ -123,15 +132,24 @@ export class TextEditorModalComponent implements AfterViewInit {
 
   private editoreHeight() {
     const toolbar = +this.dialogBody.nativeElement.querySelector('.ql-toolbar').clientHeight;
-    const height = +this.dialogBody.nativeElement.parentElement.clientHeight - toolbar - 2;
+    const warning = this.valid ? 0 : +this.dialogBody.nativeElement.querySelector('#invalid-warning').clientHeight;
+    const height = +this.dialogBody.nativeElement.parentElement.clientHeight - toolbar - warning - 2;
 
     this.element.nativeElement.style.setProperty('--editor-height', `${height}px`);
+  }
+
+  public ngOnInit(): void {
+    this.checkValid(this.stripHtml.transform(this.content));
+
+    this.insertTextPlaceholder = this.i18n({
+      id: 'textEditor.insertTextPlaceholder',
+      value: 'Insert text here...',
+    });
   }
 
   public ngAfterViewInit(): void {
     setTimeout(() => {
       this.editoreHeight();
-      this.checkValid(this.stripHtml.transform(this.content));
     });
   }
 
@@ -143,6 +161,10 @@ export class TextEditorModalComponent implements AfterViewInit {
 
     if (event.code !== KeyCode.Escape) {
       event.stopPropagation();
+    }
+
+    if (event.code === KeyCode.Escape) {
+      this.cancelDialog();
     }
   }
 }

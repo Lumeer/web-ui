@@ -112,13 +112,19 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
       initialState: {
         content: this.text,
         minLength: this.value && this.value.config && this.value.config.minLength,
-        maxLength: this.value && this.value.config && this.value.config.minLength,
+        maxLength: this.value && this.value.config && this.value.config.maxLength,
       },
     });
 
     this.modalSubscription.add(
       this.modalRef.content.onSave.subscribe(content => {
         this.saveValue(content);
+      })
+    );
+    this.modalSubscription.add(
+      this.modalRef.content.onCancel.subscribe(() => {
+        this.dataBlur.emit();
+        this.cancel.emit();
       })
     );
   }
