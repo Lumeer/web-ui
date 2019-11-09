@@ -3,7 +3,7 @@
   <address-data-input *ngSwitchCase="constraintType.Address"
                       [focus]="focus"
                       [readonly]="readonly"
-                      [skipValidation]="skipValidation"
+                      [skipValidation]="configuration.skipValidation"
                       [value]="dataValue"
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValue($event)"
@@ -24,7 +24,7 @@
   <coordinates-data-input *ngSwitchCase="constraintType.Coordinates"
                           [focus]="focus"
                           [readonly]="readonly"
-                          [skipValidation]="skipValidation"
+                          [skipValidation]="configuration.skipValidation"
                           [value]="dataValue"
                           (valueChange)="onValueChange($event)"
                           (save)="onSaveValue($event)"
@@ -37,7 +37,7 @@
   <datetime-data-input *ngSwitchCase="constraintType.DateTime"
                        [focus]="focus"
                        [readonly]="readonly"
-                       [skipValidation]="skipValidation"
+                       [skipValidation]="configuration.skipValidation"
                        [value]="dataValue"
                        (valueChange)="onValueChange($event)"
                        (onFocus)="emitFocus($event)"
@@ -49,7 +49,7 @@
   <duration-data-input *ngSwitchCase="constraintType.Duration"
                        [focus]="focus"
                        [readonly]="readonly"
-                       [skipValidation]="skipValidation"
+                       [skipValidation]="configuration.skipValidation"
                        [value]="dataValue"
                        (valueChange)="onValueChange($event)"
                        (save)="onSaveValue($event)"
@@ -74,7 +74,7 @@
                      [focus]="focus"
                      [readonly]="readonly"
                      [value]="dataValue"
-                     [skipValidation]="skipValidation"
+                     [skipValidation]="configuration.skipValidation"
                      (valueChange)="onValueChange($event)"
                      (save)="onSaveValue($event)"
                      (cancel)="onCancel()"
@@ -87,7 +87,7 @@
                          [focus]="focus"
                          [readonly]="readonly"
                          [value]="dataValue"
-                         [skipValidation]="skipValidation"
+                         [skipValidation]="configuration.skipValidation"
                          (valueChange)="onValueChange($event)"
                          (save)="onSaveValue($event)"
                          (cancel)="onCancel()"
@@ -100,7 +100,7 @@
                     [focus]="focus"
                     [readonly]="readonly"
                     [value]="dataValue"
-                    [skipValidation]="skipValidation"
+                    [skipValidation]="configuration.skipValidation"
                     (valueChange)="onValueChange($event)"
                     (save)="onSaveValue($event)"
                     (cancel)="onCancel()"
@@ -123,7 +123,7 @@
   <user-data-input *ngSwitchCase="constraintType.User"
                    [focus]="focus"
                    [readonly]="readonly"
-                   [skipValidation]="skipValidation"
+                   [skipValidation]="configuration.skipValidation"
                    [value]="dataValue"
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"
@@ -132,17 +132,19 @@
                    (dataBlur)="onDataBlur()">
   </user-data-input>
 
-  <rich-text-data-input *ngSwitchCase="constraintType.Text"
-                   [focus]="focus"
-                   [readonly]="readonly"
-                   [skipValidation]="skipValidation"
-                   [value]="dataValue"
-                   (valueChange)="onValueChange($event)"
-                   (save)="onSaveValue($event)"
-                   (cancel)="onCancel()"
-                   (onFocus)="emitFocus($event)"
-                   (dataBlur)="onDataBlur()">
-  </rich-text-data-input>
+  <ng-container *ngSwitchCase="constraintType.Text">
+    <rich-text-data-input *ngIf="!configuration.fromQuery; else textDataInput"
+                          [focus]="focus"
+                          [readonly]="readonly"
+                          [skipValidation]="configuration.skipValidation"
+                          [value]="dataValue"
+                          (valueChange)="onValueChange($event)"
+                          (save)="onSaveValue($event)"
+                          (cancel)="onCancel()"
+                          (onFocus)="emitFocus($event)"
+                          (dataBlur)="onDataBlur()">
+    </rich-text-data-input>
+  </ng-container>
 
   <ng-container *ngSwitchDefault
                 [ngTemplateOutlet]="textDataInput">
@@ -152,7 +154,7 @@
 <ng-template #textDataInput>
   <text-data-input [focus]="focus"
                    [readonly]="readonly"
-                   [skipValidation]="skipValidation"
+                   [skipValidation]="configuration.skipValidation"
                    [value]="dataValue"
                    [placeholder]="placeholder"
                    [suggestions]="suggestions"

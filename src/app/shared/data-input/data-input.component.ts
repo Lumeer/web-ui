@@ -37,6 +37,7 @@ import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
 import {USER_AVATAR_SIZE} from './user/user-data-input.component';
 import {DataSuggestion} from './data-suggestion';
+import {DataInputConfiguration} from './data-input-configuration';
 
 @Component({
   selector: 'data-input',
@@ -64,7 +65,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public value: any;
 
   @Input()
-  public skipValidation = false;
+  public configuration: DataInputConfiguration = {skipValidation: false, fromQuery: false};
 
   @Input()
   public resizeToContent = false;
