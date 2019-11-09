@@ -19,14 +19,14 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Constraint} from '../../core/model/constraint';
-import {constraintIconsMap} from '../../core/model/data/constraint';
+import {constraintIconsMap, ConstraintType} from '../../core/model/data/constraint';
 
 @Pipe({
   name: 'constraintTypeIcon',
 })
 export class ConstraintTypeIconPipe implements PipeTransform {
   public transform(constraint: Constraint): string {
-    if (!constraint) {
+    if (!constraint || constraint.type === ConstraintType.Unknown) {
       return '';
     }
 
