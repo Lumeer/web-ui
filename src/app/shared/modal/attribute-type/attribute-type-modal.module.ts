@@ -45,6 +45,7 @@ import {DurationConstraintUnitMaxValuePipe} from './form/constraint-config/durat
 import {AttributeTypeSelectComponent} from './form/select/attribute-type-select.component';
 import {SelectConstraintOptionsFormComponent} from './form/constraint-config/select/options/select-constraint-options-form.component';
 import {SelectModule} from '../../select/select.module';
+import {DirectivesModule} from '../../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import {SelectModule} from '../../select/select.module';
     DateTimeModule,
     PresenterModule,
     PipesModule,
+    DirectivesModule,
   ],
   exports: [AttributeTypeModalComponent],
   entryComponents: [AttributeTypeModalComponent],

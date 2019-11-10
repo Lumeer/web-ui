@@ -22,6 +22,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {NumberConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
+import {NumberConstraintFormControl} from './number-constraint-form-control';
 
 @Component({
   selector: 'number-constraint-config-form',
@@ -48,15 +49,17 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl('decimal', new FormControl(this.config && this.config.decimal));
+    this.form.addControl(NumberConstraintFormControl.Decimal, new FormControl(this.config && this.config.decimal));
     this.form.addControl(
-      'minValue',
+      NumberConstraintFormControl.MinValue,
       new FormControl(this.config && this.config.minValue && this.config.minValue.toFixed())
     );
     this.form.addControl(
-      'maxValue',
+      NumberConstraintFormControl.MaxValue,
       new FormControl(this.config && this.config.maxValue && this.config.maxValue.toFixed())
     );
-    this.form.setValidators(minMaxValidator('minValue', 'maxValue'));
+    this.form.setValidators(
+      minMaxValidator(NumberConstraintFormControl.MinValue, NumberConstraintFormControl.MaxValue)
+    );
   }
 }

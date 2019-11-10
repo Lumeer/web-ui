@@ -19,7 +19,7 @@
 
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {AddressConstraintFormControl} from './address-constraint-form-control';
@@ -74,7 +74,7 @@ export class AddressConstraintConfigFormComponent {
   private createForm() {
     this.form.addControl(
       AddressConstraintFormControl.Fields,
-      new FormControl(this.config ? this.config.fields : ADDRESS_DEFAULT_FIELDS)
+      new FormControl(this.config ? this.config.fields : ADDRESS_DEFAULT_FIELDS, fieldsValidator())
     );
   }
 
@@ -114,4 +114,10 @@ export class AddressConstraintConfigFormComponent {
   public get fieldsControl(): AbstractControl {
     return this.form.get(AddressConstraintFormControl.Fields);
   }
+}
+
+function fieldsValidator(): ValidatorFn {
+  return (formControl: FormControl): ValidationErrors | null => {
+    return (formControl.value || []).length ? null : {emptyFields: true};
+  };
 }

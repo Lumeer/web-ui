@@ -17,11 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
 import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 
 @Component({
   selector: 'add-rule-form',
@@ -29,7 +41,10 @@ import {Collection} from '../../../../../core/store/collections/collection';
   styleUrls: ['./add-rule-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddRuleFormComponent implements OnInit, OnDestroy {
+export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
+  @Input()
+  public ruleNames: string[];
+
   @Input()
   public originalRuleName: string;
 
@@ -42,8 +57,6 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
   @Input()
   public ruleIndex: number;
 
-  public ruleNames: string[] = [];
-
   @Output()
   public onCancelNewRule = new EventEmitter<number>();
 
@@ -51,6 +64,7 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
   public onSaveRule = new EventEmitter<Rule>();
 
   public readonly types = Object.values(RuleTypeMap);
+  public readonly typeItems: SelectItemModel[];
 
   public form: FormGroup;
 
@@ -58,15 +72,16 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public readonly ruleType = RuleType;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private i18n: I18n) {
+    this.typeItems = this.createTypeItems();
+  }
 
-  @Input('ruleNames')
-  public set setRuleNames(ruleNames: string[]) {
-    this.ruleNames = ruleNames;
-
-    // there can be a new rule added that clashes with currently entered name
-    if (this.form) {
-      this.form.get('name').updateValueAndValidity();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.ruleNames) {
+      // there can be a new rule added that clashes with currently entered name
+      if (this.form) {
+        this.form.get('name').updateValueAndValidity();
+      }
     }
   }
 
@@ -239,5 +254,18 @@ export class AddRuleFormComponent implements OnInit, OnDestroy {
 
   public submitRule(): void {
     this.onSaveRule.emit(this.getRuleFromForm());
+  }
+
+  private createTypeItems(): SelectItemModel[] {
+    return this.types.map(type => ({
+      id: type,
+      value: this.i18n(
+        {
+          id: 'collection.config.tab.rules.type',
+          value: '{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly}}',
+        },
+        {type}
+      ),
+    }));
   }
 }

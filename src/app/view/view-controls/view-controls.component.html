@@ -15,7 +15,7 @@
         <ng-container *ngIf="perspective$ | async as perspective">
 
           <button aria-expanded="false" aria-haspopup="true" type="button" #perspectiveElement
-                  class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left"
+                  class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
                   (click)="onPerspectiveChooserClick($event)">
             <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
             <span class="ml-sm-1 text-nowrap"

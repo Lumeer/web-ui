@@ -13,28 +13,31 @@
   </div>
 
   <button class="btn btn-outline-gray-600 dropdown-toggle flex-grow-1 d-flex align-items-center {{buttonClasses}}"
+          type="button"
           [class.sharp-top-left]="placeholderIcon || placeholderText"
           [class.sharp-bottom-left]="placeholderIcon || placeholderText"
           [disabled]="disabled"
           [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
           (click)="onDropdownClick()"
-          (keydown)="onKeyDown($event)">
+          (keydown)="onKeyDown($event)"
+          *ngIf="{selectedItem: selectedId | getSelectItem:items } as data">
 
     <span class="flex-grow-1 text-left empty-text text-truncate"
-          *ngIf="!(selectedId | getSelectItem:items)"
+          *ngIf="!data.selectedItem"
           [title]="emptyValue">{{emptyValue}}</span>
 
-    <ng-container *ngIf="selectedId | getSelectItem:items as selectedItem">
+    <ng-container *ngIf="data.selectedItem">
 
-      <icons-presenter *ngIf="selectedItem.icons && selectedItem.iconColors"
-                       [colors]="selectedItem.iconColors"
-                       [icons]="selectedItem.icons">
+      <icons-presenter *ngIf="data.selectedItem.icons && data.selectedItem.iconColors"
+                       class="d-block mr-2"
+                       [colors]="data.selectedItem.iconColors"
+                       [icons]="data.selectedItem.icons">
       </icons-presenter>
-      <i *ngIf="selectedItem.icons && !selectedItem.iconColors && selectedItem.icons.length === 1"
-         class="fa-fw {{selectedItem.icons[0]}}"></i>
-      <span class="ml-2 text-nowrap flex-grow-1 text-left text-truncate"
-            [title]="selectedItem.value">
-        {{selectedItem.value}}
+      <i *ngIf="data.selectedItem.icons && !data.selectedItem.iconColors && data.selectedItem.icons.length === 1"
+         class="fa-fw mr-2 {{data.selectedItem.icons[0]}}"></i>
+      <span class="text-nowrap flex-grow-1 text-left text-truncate"
+            [title]="data.selectedItem.value">
+        {{data.selectedItem.value}}
       </span>
       <i *ngIf="removable && !disabled"
          class="fa-fw fal fa-times mx-1 clear"

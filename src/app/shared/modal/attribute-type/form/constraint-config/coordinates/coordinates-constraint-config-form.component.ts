@@ -25,6 +25,8 @@ import {CoordinatesConstraintFormControl} from './coordinates-constraint-form-co
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {CoordinatesDataValue} from '../../../../../../core/model/data-value/coordinates.data-value';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'coordinates-constraint-config-form',
@@ -32,6 +34,12 @@ import {CoordinatesDataValue} from '../../../../../../core/model/data-value/coor
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoordinatesConstraintConfigFormComponent implements OnChanges {
+  @Input()
+  public config: CoordinatesConstraintConfig;
+
+  @Input()
+  public form: FormGroup;
+
   public readonly controls = CoordinatesConstraintFormControl;
   public readonly formats = Object.values(CoordinatesFormat);
   public readonly coordinatesFormat = CoordinatesFormat;
@@ -41,13 +49,17 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
     [CoordinatesFormat.DegreesMinutesSeconds]: [0, 1, 2],
   };
 
-  @Input()
-  public config: CoordinatesConstraintConfig;
-
-  @Input()
-  public form: FormGroup;
+  public readonly formatItems: SelectItemModel[];
+  public readonly ddPrecisionItems: SelectItemModel[];
+  public readonly dmsPrecisionItems: SelectItemModel[];
 
   public exampleValue$: Observable<CoordinatesDataValue>;
+
+  constructor(private i18n: I18n) {
+    this.formatItems = this.createFormatItems();
+    this.ddPrecisionItems = this.createDdPrecisionItems();
+    this.dmsPrecisionItems = this.createDmsPrecisionItems();
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -81,8 +93,13 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
     );
   }
 
-  public onFormatChange() {
-    this.precisionControl.setValue(getDefaultPrecision(this.formatControl.value));
+  public onFormatSelect(format: CoordinatesFormat) {
+    this.formatControl.setValue(format);
+    this.precisionControl.setValue(getDefaultPrecision(format));
+  }
+
+  public onPrecisionSelect(precision: number) {
+    this.precisionControl.setValue(precision);
   }
 
   public get formatControl(): AbstractControl {
@@ -91,6 +108,46 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
 
   public get precisionControl(): AbstractControl {
     return this.form.get(CoordinatesConstraintFormControl.Precision);
+  }
+
+  private createFormatItems(): SelectItemModel[] {
+    return this.formats.map(format => ({
+      id: format,
+      value: this.i18n(
+        {
+          id: 'constraint.coordinates.format.types',
+          value: '{format, select, DD {Decimal degrees} DMS {Degrees, minutes, seconds}}',
+        },
+        {format}
+      ),
+    }));
+  }
+
+  private createDdPrecisionItems(): SelectItemModel[] {
+    return this.precisions[CoordinatesFormat.DecimalDegrees].map(precision => ({
+      id: precision,
+      value: this.i18n(
+        {
+          id: 'constraint.coordinates.precisions.dd',
+          value:
+            '{precision, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)}}',
+        },
+        {precision: precision.toString()}
+      ),
+    }));
+  }
+
+  private createDmsPrecisionItems(): SelectItemModel[] {
+    return this.precisions[CoordinatesFormat.DegreesMinutesSeconds].map(precision => ({
+      id: precision,
+      value: this.i18n(
+        {
+          id: 'constraint.coordinates.precisions.dms',
+          value: '{precision, select, 0 {0 digits (~ 30 m)} 1 {1 digit (~ 3 m)} 2 {2 digits (~ 0.3 m)}}',
+        },
+        {precision: precision.toString()}
+      ),
+    }));
   }
 }
 

@@ -22,6 +22,9 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {CaseStyle, TextConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {TextConstraintFormControl} from './text-constraint-form-control';
 
 @Component({
   selector: 'text-constraint-config-form',
@@ -35,7 +38,23 @@ export class TextConstraintConfigFormComponent implements OnChanges {
   @Input()
   public form: FormGroup;
 
-  public readonly caseStyles = Object.keys(CaseStyle);
+  public readonly items: SelectItemModel[];
+
+  public textConstraintFormControl = TextConstraintFormControl;
+
+  public constructor(private i18n: I18n) {
+    this.items = Object.keys(CaseStyle).map(caseStyle => {
+      const value = i18n(
+        {
+          id: 'constraint.text.caseStyle.value',
+          value:
+            '{caseStyle, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case}}',
+        },
+        {caseStyle}
+      );
+      return {id: caseStyle, value};
+    });
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -51,11 +70,15 @@ export class TextConstraintConfigFormComponent implements OnChanges {
 
   private createForm() {
     const caseStyle = (this.config && this.config.caseStyle) || CaseStyle.None;
-    this.form.addControl('caseStyle', new FormControl(caseStyle));
+    this.form.addControl(TextConstraintFormControl.CaseStyle, new FormControl(caseStyle));
 
-    this.form.addControl('minLength', new FormControl(this.config && this.config.minLength));
-    this.form.addControl('maxLength', new FormControl(this.config && this.config.maxLength));
+    this.form.addControl(TextConstraintFormControl.MinLength, new FormControl(this.config && this.config.minLength));
+    this.form.addControl(TextConstraintFormControl.MaxLength, new FormControl(this.config && this.config.maxLength));
 
-    this.form.setValidators(minMaxValidator('minLength', 'maxLength'));
+    this.form.setValidators(minMaxValidator(TextConstraintFormControl.MinLength, TextConstraintFormControl.MaxLength));
+  }
+
+  public onCaseSelect(caseStyle: string) {
+    this.form.patchValue({caseStyle});
   }
 }
