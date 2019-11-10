@@ -20,6 +20,25 @@
 import {Directive, ElementRef, HostListener, Inject, Input, Optional, Renderer2} from '@angular/core';
 import {COMPOSITION_BUFFER_MODE, DefaultValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {isNotNullOrUndefined} from '../utils/common.utils';
+import {KeyCode} from '../key-code';
+
+const allowedCodes = [
+  KeyCode.Digit0,
+  KeyCode.Digit1,
+  KeyCode.Digit2,
+  KeyCode.Digit3,
+  KeyCode.Digit4,
+  KeyCode.Digit5,
+  KeyCode.Digit6,
+  KeyCode.Digit7,
+  KeyCode.Digit8,
+  KeyCode.Digit9,
+  KeyCode.Enter,
+  KeyCode.NumpadEnter,
+  KeyCode.Tab,
+  KeyCode.ArrowUp,
+  KeyCode.ArrowDown,
+];
 
 @Directive({
   selector: '[integer]',
@@ -33,7 +52,7 @@ export class IntegerDirective extends DefaultValueAccessor {
   public maxValue;
 
   private _sourceRenderer: Renderer2;
-  private _sourceElementRef: ElementRef;
+  private _sourceElementRef: ElementRef<HTMLInputElement>;
 
   constructor(
     @Inject(Renderer2) renderer: Renderer2,
@@ -46,17 +65,37 @@ export class IntegerDirective extends DefaultValueAccessor {
     this._sourceElementRef = elementRef;
   }
 
-  @HostListener('blur', ['$event.target.value'])
-  public onBlur(value) {
-    // console.log('blir', value);
+  @HostListener('keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (!allowedCodes.includes(event.code as KeyCode)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
+  @HostListener('blur', ['$event'])
+  public onBlur(event: Event) {
+    this.handleEvent(event, true);
   }
 
   @HostListener('input', ['$event'])
   public onInput(event: Event) {
+    this.handleEvent(event);
+  }
+
+  private handleEvent(event: Event, minMax?: boolean) {
     const value = (<HTMLInputElement>event.currentTarget).value;
-    // console.log(value);
     if (isNotNullOrUndefined(value) && value !== '') {
-      const absolute = Math.abs(+value);
+      let absolute = Math.abs(+value);
+      if (minMax) {
+        if (isNotNullOrUndefined(this.minValue)) {
+          absolute = Math.max(this.minValue, absolute);
+        }
+        if (isNotNullOrUndefined(this.maxValue)) {
+          absolute = Math.min(this.maxValue, absolute);
+        }
+      }
+
       this._sourceRenderer.setProperty(this._sourceElementRef.nativeElement, 'value', String(absolute));
       this.onChange(absolute);
     }

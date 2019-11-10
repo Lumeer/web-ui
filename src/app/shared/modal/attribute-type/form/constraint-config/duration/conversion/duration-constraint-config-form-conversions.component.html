@@ -5,35 +5,37 @@
     <table class="table table-borderless">
       <tbody>
 
-        <tr *ngFor="let control of conversionsControl.controls; let index = index"
-            [formGroupName]="index">
+      <tr *ngFor="let control of conversionsControl.controls; let index = index"
+          [formGroupName]="index">
 
-          <td class="align-middle text-nowrap p-1">
-            <label [for]="conversionsControls.Value"
-                   i18n="@@constraint.duration.unit.description"
-                   class="unit-column m-0">
-              {control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }
-            </label>
-          </td>
+        <td class="align-middle text-nowrap p-1">
+          <label [for]="conversionsControls.Value"
+                 i18n="@@constraint.duration.unit.description"
+                 class="unit-column m-0">
+            {control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }
+          </label>
+        </td>
 
-          <td class="p-1">
-            <input type="number" class="form-control"
-                   [id]="conversionsControls.Value"
-                   [formControlName]="conversionsControls.Value"
-                   [readOnly]="!editable || !(control.value.unit | durationConstraintUnitEditable)"
-                   min="1"
-                   integer
-                   [max]="control.value.unit | durationConstraintUnitMaxValue">
+        <td class="p-1">
+          <input type="number" class="form-control"
+                 [id]="conversionsControls.Value"
+                 [formControlName]="conversionsControls.Value"
+                 [readOnly]="!editable || !(control.value.unit | durationConstraintUnitEditable)"
+                 min="1"
+                 [minValue]="1"
+                 integer
+                 [max]="control.value.unit | durationConstraintUnitMaxValue"
+                 [maxValue]="control.value.unit | durationConstraintUnitMaxValue">
 
-          </td>
-          <td class="align-middle text-nowrap p-1">
-            <div class="info-column text-muted"
-                 i18n="@@constraint.duration.unit.conversion">
-              {control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }
-            </div>
-          </td>
+        </td>
+        <td class="align-middle text-nowrap p-1">
+          <div class="info-column text-muted"
+               i18n="@@constraint.duration.unit.conversion">
+            {control.value.unit, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }
+          </div>
+        </td>
 
-        </tr>
+      </tr>
 
       </tbody>
 

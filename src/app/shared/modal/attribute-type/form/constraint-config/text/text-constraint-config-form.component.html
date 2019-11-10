@@ -23,6 +23,8 @@
              min="0"
              formControlName="minLength"
              id="textMinLength"
+             integer
+             [minValue]="0"
              type="number">
     </div>
 
@@ -34,6 +36,7 @@
       <input class="form-control"
              formControlName="maxLength"
              id="textMaxLength"
+             integer
              type="number">
     </div>
   </div>
