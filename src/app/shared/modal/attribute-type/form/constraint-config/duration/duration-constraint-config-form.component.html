@@ -13,17 +13,14 @@
            i18n="@@constraint.duration.type.label">
       Time scope
     </label>
-    <select [id]="controls.Type"
-            [formControlName]="controls.Type"
-            (change)="onTypeChange()"
-            class="custom-select"
-            data-test="duration-constraint-format-select">
-      <option *ngFor="let type of types"
-              [value]="type"
-              i18n="@@constraint.duration.type">
-        {type, select, Work {Work} Classic {Normal} Custom {Custom}}
-      </option>
-    </select>
+    <select-item class="w-100 d-block"
+                 [items]="typeItems"
+                 [removable]="false"
+                 [selectedId]="typeControl.value"
+                 (select)="onTypeSelect($event)"
+                 data-test="duration-constraint-format-select"
+                 buttonClasses="flex-grow-1 text-truncate">
+    </select-item>
   </div>
 
   <duration-constraint-config-form-conversion [formGroup]="form"

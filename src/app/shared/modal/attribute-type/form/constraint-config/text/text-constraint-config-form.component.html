@@ -1,19 +1,16 @@
 <div [formGroup]="form">
   <div class="form-group">
-    <label for="textCaseStyle"
-           i18n="@@constraint.text.caseStyle.label">
+    <label i18n="@@constraint.text.caseStyle.label">
       Case style
     </label>
-    <select class="custom-select"
-            data-test="text-constraint-case-style-select"
-            formControlName="caseStyle"
-            id="textCaseStyle">
-      <option *ngFor="let caseStyle of caseStyles"
-              [value]="caseStyle"
-              i18n="@@constraint.text.caseStyle.value">
-        {caseStyle, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case}}
-      </option>
-    </select>
+    <select-item class="w-100 d-block"
+                 [items]="items"
+                 [removable]="false"
+                 [selectedId]="form.get(textConstraintFormControl.CaseStyle).value"
+                 buttonClasses="text-truncate flex-grow-1"
+                 data-test="text-constraint-case-style-select"
+                 (select)="onCaseSelect($event)">
+    </select-item>
   </div>
 
   <div class="d-flex">
@@ -23,6 +20,7 @@
         Minimum length
       </label>
       <input class="form-control"
+             min="0"
              formControlName="minLength"
              id="textMinLength"
              type="number">

@@ -25,10 +25,25 @@ import {TrimValueAccessor} from './trim-value-accessor';
 import {RenderedDirective} from './rendered.directive';
 import {NumberDirective} from './number.directive';
 import {PercentageDirective} from './percentage.directive';
+import {IntegerDirective} from './integer.directive';
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [NgVarDirective, TrimValueAccessor, RenderedDirective, NumberDirective, PercentageDirective],
-  exports: [NgVarDirective, TrimValueAccessor, RenderedDirective, NumberDirective, PercentageDirective],
+  declarations: [
+    NgVarDirective,
+    TrimValueAccessor,
+    RenderedDirective,
+    NumberDirective,
+    PercentageDirective,
+    IntegerDirective,
+  ],
+  exports: [
+    NgVarDirective,
+    TrimValueAccessor,
+    RenderedDirective,
+    NumberDirective,
+    PercentageDirective,
+    IntegerDirective,
+  ],
 })
 export class DirectivesModule {}

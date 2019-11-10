@@ -22,6 +22,7 @@
                    [formControlName]="conversionsControls.Value"
                    [readOnly]="!editable || !(control.value.unit | durationConstraintUnitEditable)"
                    min="1"
+                   integer
                    [max]="control.value.unit | durationConstraintUnitMaxValue">
 
           </td>

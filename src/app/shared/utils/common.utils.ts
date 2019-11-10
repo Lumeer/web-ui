@@ -52,7 +52,11 @@ export function deepObjectsEquals(object1: any, object2: any): boolean {
 }
 
 export function cleanObject(object: any): any {
-  return omitBy(object, isNil);
+  return isObject(object) ? omitBy(object, isNil) : object;
+}
+
+export function isObject(value: any): boolean {
+  return value !== null && typeof value === 'object';
 }
 
 export function deepObjectCopy<T>(object: T): T {

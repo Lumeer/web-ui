@@ -32,6 +32,7 @@ import {parseDateTimeDataValue} from '../../utils/data.utils';
 import {resetUnusedDatePart} from '../../utils/date.utils';
 import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
 import {DateTimePickerComponent} from '../picker/date-time-picker.component';
+import {KeyCode} from '../../key-code';
 
 @Component({
   selector: 'date-time-input',
@@ -82,7 +83,11 @@ export class DateTimeInputComponent implements OnChanges {
   }
 
   public onClickOutside(event: Event) {
-    this.dateTimePicker.close();
+    this.close();
+  }
+
+  public close() {
+    this.dateTimePicker && this.dateTimePicker.close();
   }
 
   public onBlur() {
@@ -100,5 +105,16 @@ export class DateTimeInputComponent implements OnChanges {
 
   public onInput() {
     this.shouldSaveOnBlur = true;
+  }
+
+  public onKeyDown(event: KeyboardEvent) {
+    if (event.code === KeyCode.Enter) {
+      event.stopPropagation();
+      event.preventDefault();
+      this.dateTimeInput.nativeElement.blur();
+      this.close();
+    } else if (event.code === KeyCode.Tab) {
+      this.close();
+    }
   }
 }

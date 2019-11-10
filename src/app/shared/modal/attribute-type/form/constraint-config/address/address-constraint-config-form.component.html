@@ -43,6 +43,12 @@
   <span>{{ exampleValue$ | async | formatDataValue }}</span>
 </p>
 
+<div *ngIf="fieldsControl.errors && fieldsControl.errors['emptyFields']"
+     class="text-danger"
+     i18n="@@form.errors.emptyFields">
+  Fields can not be empty
+</div>
+
 <ng-template #addressField
              let-default
              let-badgeClass="badgeClass">

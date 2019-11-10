@@ -37,6 +37,9 @@ import {createConstraint} from '../../../utils/constraint/create-constraint';
 import {ConstraintType, constraintTypesMap} from '../../../../core/model/data/constraint';
 import {ConstraintConfig, SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {convertToBig} from '../../../utils/data.utils';
+import {DatetimeConstraintFormControl} from './constraint-config/datetime/datetime-constraint-form-control';
+import {TextConstraintFormControl} from './constraint-config/text/text-constraint-form-control';
+import {NumberConstraintFormControl} from './constraint-config/number/number-constraint-form-control';
 
 @Component({
   selector: 'attribute-type-form',
@@ -97,9 +100,9 @@ export class AttributeTypeFormComponent implements OnChanges {
         };
       case ConstraintType.DateTime:
         return {
-          format: this.configForm.get('format').value,
-          minValue: this.configForm.get('minValue').value,
-          maxValue: this.configForm.get('maxValue').value,
+          format: this.configForm.get(DatetimeConstraintFormControl.Format).value,
+          minValue: this.configForm.get(DatetimeConstraintFormControl.MinValue).value,
+          maxValue: this.configForm.get(DatetimeConstraintFormControl.MaxValue).value,
           range: undefined, // TODO
         };
       case ConstraintType.Duration:
@@ -111,10 +114,10 @@ export class AttributeTypeFormComponent implements OnChanges {
         };
       case ConstraintType.Number:
         return {
-          decimal: this.configForm.get('decimal').value,
+          decimal: this.configForm.get(NumberConstraintFormControl.Decimal).value,
           format: undefined, // TODO
-          minValue: convertToBig(this.configForm.get('minValue').value),
-          maxValue: convertToBig(this.configForm.get('maxValue').value),
+          minValue: convertToBig(this.configForm.get(NumberConstraintFormControl.MinValue).value),
+          maxValue: convertToBig(this.configForm.get(NumberConstraintFormControl.MaxValue).value),
           precision: undefined, // TODO
         };
       case ConstraintType.Percentage:
@@ -133,9 +136,9 @@ export class AttributeTypeFormComponent implements OnChanges {
         };
       case ConstraintType.Text:
         return {
-          caseStyle: this.configForm.get('caseStyle').value,
-          minLength: this.configForm.get('minLength').value,
-          maxLength: this.configForm.get('maxLength').value,
+          caseStyle: this.configForm.get(TextConstraintFormControl.CaseStyle).value,
+          minLength: this.configForm.get(TextConstraintFormControl.MinLength).value,
+          maxLength: this.configForm.get(TextConstraintFormControl.MaxLength).value,
           regexp: undefined, // TODO
         };
       case ConstraintType.User:

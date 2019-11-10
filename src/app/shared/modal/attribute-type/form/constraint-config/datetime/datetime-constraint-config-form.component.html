@@ -1,23 +1,16 @@
 <div [formGroup]="form">
   <div class="form-group">
-    <label for="dateTimeFormat"
-           i18n="@@constraint.dateTime.format.label">
+    <label i18n="@@constraint.dateTime.format.label">
       Format
     </label>
-    <select class="custom-select"
-            data-test="datetime-constraint-format-select"
-            formControlName="selectFormat"
-            id="dateTimeFormat"
-            (change)="onFormatChange($event)">
-      <option *ngFor="let format of formats"
-              [value]="format">
-        {{format}}
-      </option>
-      <option value=""
-              i18n="@@constraint.dateTime.format.custom">
-        Custom
-      </option>
-    </select>
+    <select-item class="w-100 d-block"
+                 [selectedId]="formatControl.value"
+                 [removable]="false"
+                 [items]="formatItems"
+                 (select)="formatControl.setValue($event)"
+                 buttonClasses="flex-grow-1 text-truncate"
+                 data-test="datetime-constraint-format-select">
+    </select-item>
   </div>
   <div *ngIf="!selectFormatControl?.value"
        class="d-flex">

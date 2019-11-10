@@ -35,6 +35,8 @@ import {
   getPreviousDurationUnit,
 } from '../../../../../utils/constraint/duration-constraint.utils';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 
 @Component({
   selector: 'duration-constraint-config-form',
@@ -53,9 +55,11 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   public readonly types = Object.values(DurationType);
   public readonly units = Object.values(DurationUnit);
   public readonly exampleString: string;
+  public readonly typeItems: SelectItemModel[];
 
-  constructor(private translationService: TranslationService) {
+  constructor(private translationService: TranslationService, private i18n: I18n) {
     this.exampleString = this.generateExampleString();
+    this.typeItems = this.createTypeItems();
   }
 
   private generateExampleString(): string {
@@ -118,8 +122,8 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
     return getDefaultDurationUnitConversion(type, unit);
   }
 
-  public onTypeChange() {
-    const type = this.typeControl.value;
+  public onTypeSelect(type: DurationType) {
+    this.typeControl.setValue(type);
     this.units.forEach((unit, index) => {
       const conversionValue = this.getUnitConversion(type, unit);
       this.conversionsControl
@@ -135,5 +139,18 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
 
   public get conversionsControl(): FormArray {
     return this.form.get(DurationConstraintFormControl.Conversions) as FormArray;
+  }
+
+  private createTypeItems(): SelectItemModel[] {
+    return this.types.map(type => ({
+      id: type,
+      value: this.i18n(
+        {
+          id: 'constraint.duration.type',
+          value: '{type, select, Work {Work} Classic {Normal} Custom {Custom}}',
+        },
+        {type}
+      ),
+    }));
   }
 }

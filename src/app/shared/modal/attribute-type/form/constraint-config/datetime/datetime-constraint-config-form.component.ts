@@ -25,6 +25,10 @@ import {DateTimeConstraintConfig} from '../../../../../../core/model/data/constr
 import {TemplateService} from '../../../../../../core/service/template.service';
 import {DateTimeDataValue} from '../../../../../../core/model/data-value/datetime.data-value';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
+import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
 
 @Component({
   selector: 'datetime-constraint-config-form',
@@ -56,9 +60,13 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
     'h:mm a',
   ];
 
+  public readonly formatItems: SelectItemModel[];
+
   public exampleValue$: Observable<DateTimeDataValue>;
 
-  constructor(private templateService: TemplateService) {}
+  constructor(private templateService: TemplateService, private i18n: I18n) {
+    this.formatItems = this.createFormatItems();
+  }
 
   public ngOnInit() {
     this.exampleValue$ = this.bindExampleValue();
@@ -94,34 +102,37 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
 
   private createForm() {
     const format = (this.config && this.config.format) || this.formats[0];
-    this.form.addControl('format', new FormControl(format));
+    this.form.addControl(DatetimeConstraintFormControl.Format, new FormControl(format));
 
     const selectFormat = this.formats.includes(format) ? format : '';
-    this.form.addControl('selectFormat', new FormControl(selectFormat));
+    this.form.addControl(DatetimeConstraintFormControl.CustomFormat, new FormControl(selectFormat));
 
-    this.form.addControl('minValue', new FormControl(this.config && this.config.minValue));
-    this.form.addControl('maxValue', new FormControl(this.config && this.config.maxValue));
-    // this.form.setValidators(minMaxValidator('minDateTime', 'maxDateTime'));
-  }
-
-  public onFormatChange(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    this.formatControl.setValue(select.value);
+    this.form.addControl(DatetimeConstraintFormControl.MinValue, new FormControl(this.config && this.config.minValue));
+    this.form.addControl(DatetimeConstraintFormControl.MaxValue, new FormControl(this.config && this.config.maxValue));
+    this.form.setValidators(
+      minMaxValidator(DatetimeConstraintFormControl.MinValue, DatetimeConstraintFormControl.MaxValue)
+    );
   }
 
   public get formatControl(): AbstractControl {
-    return this.form.get('format');
+    return this.form.get(DatetimeConstraintFormControl.Format);
   }
 
   public get selectFormatControl(): AbstractControl {
-    return this.form.get('selectFormat');
+    return this.form.get(DatetimeConstraintFormControl.CustomFormat);
   }
 
   public get minValueControl(): AbstractControl {
-    return this.form.get('minValue');
+    return this.form.get(DatetimeConstraintFormControl.MinValue);
   }
 
   public get maxValueControl(): AbstractControl {
-    return this.form.get('maxValue');
+    return this.form.get(DatetimeConstraintFormControl.MaxValue);
+  }
+
+  private createFormatItems(): SelectItemModel[] {
+    const formatItems = this.formats.map(format => ({id: format, value: format}));
+    const customItem = {id: '', value: this.i18n({id: 'constraint.dateTime.format.custom', value: 'Custom'})};
+    return [...formatItems, customItem];
   }
 }

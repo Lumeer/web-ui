@@ -383,7 +383,10 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="select-item-option"]')
       .contains('Text')
       .click();
-    cy.get('[data-test="text-constraint-case-style-select"]').select('TitleCase');
+    cy.get('[data-test="text-constraint-case-style-select"]').click();
+    cy.get('[data-test="select-item-option"]')
+      .contains('Every first letter upper case')
+      .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
     cy.waitForModalHidden();
 
@@ -468,7 +471,10 @@ describe('Table perspective :: Constraints', () => {
     cy.get('[data-test="select-item-option"]')
       .contains('Date')
       .click();
-    cy.get('[data-test="datetime-constraint-format-select"]').select('YYYY-MM-DD');
+    cy.get('[data-test="datetime-constraint-format-select"]').click();
+    cy.get('[data-test="select-item-option"]')
+      .contains('YYYY-MM-DD')
+      .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
     cy.waitForModalHidden();
 

@@ -24,6 +24,7 @@ import {
   HostListener,
   Input,
   OnChanges,
+  OnDestroy,
   Output,
   SimpleChanges,
   ViewChild,
@@ -38,7 +39,7 @@ import {SelectItemModel} from './select-item.model';
   styleUrls: ['./select-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectItemComponent implements OnChanges {
+export class SelectItemComponent implements OnChanges, OnDestroy {
   @Input()
   public items: SelectItemModel[];
 
@@ -108,6 +109,12 @@ export class SelectItemComponent implements OnChanges {
 
   public onDropdownClick() {
     this.dropdown.open();
+  }
+
+  public ngOnDestroy() {
+    if (this.dropdown) {
+      this.dropdown.close();
+    }
   }
 }
 
