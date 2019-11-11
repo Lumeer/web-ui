@@ -27,6 +27,7 @@ import {DocumentDetailModalModule} from './document-detail/document-detail-modal
 import {CreateDocumentModalModule} from './create-document/create-document-modal.module';
 import {CreateLinkModalModule} from './create-link/create-link-modal.module';
 import {ShareViewModalModule} from './share-view/share-view-modal.module';
+import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
 
 @NgModule({
   declarations: [],
@@ -40,6 +41,7 @@ import {ShareViewModalModule} from './share-view/share-view-modal.module';
     CreateDocumentModalModule,
     CreateLinkModalModule,
     ShareViewModalModule,
+    TextEditorModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -50,6 +52,7 @@ import {ShareViewModalModule} from './share-view/share-view-modal.module';
     CreateDocumentModalModule,
     CreateLinkModalModule,
     ShareViewModalModule,
+    TextEditorModalModule,
   ],
 })
 export class ModalModule {}

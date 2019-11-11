@@ -37,6 +37,7 @@ import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
 import {USER_AVATAR_SIZE} from './user/user-data-input.component';
 import {DataSuggestion} from './data-suggestion';
+import {DataInputConfiguration} from './data-input-configuration';
 
 @Component({
   selector: 'data-input',
@@ -64,10 +65,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public value: any;
 
   @Input()
-  public skipValidation = false;
-
-  @Input()
-  public resizeToContent = false;
+  public configuration: DataInputConfiguration = {skipValidation: false, fromQuery: false, resizeToContent: false};
 
   @Input()
   public placeholder: string;
@@ -100,7 +98,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value || changes.constraint || changes.constraintData) {
       this.dataValue = this.createDataValue();
-      if (this.resizeToContent) {
+      if (this.configuration.resizeToContent) {
         this.recalculateWidth(this.dataValue);
       }
     }
@@ -156,21 +154,21 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onSaveValue(dataValue: DataValue) {
-    if (this.resizeToContent) {
+    if (this.configuration.resizeToContent) {
       this.recalculateWidth(dataValue);
     }
     this.save.emit(dataValue.serialize());
   }
 
   public onValueChange(dataValue: DataValue) {
-    if (this.resizeToContent) {
+    if (this.configuration.resizeToContent) {
       this.recalculateWidth(dataValue, true);
     }
     this.valueChange.emit(String(dataValue.value));
   }
 
   public onCancel() {
-    if (this.resizeToContent) {
+    if (this.configuration.resizeToContent) {
       this.recalculateWidth(this.dataValue);
     }
     this.cancel.emit();

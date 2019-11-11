@@ -17,19 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../core/model/constraint';
-import {constraintIconsMap, ConstraintType} from '../../core/model/data/constraint';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
-  name: 'constraintTypeIcon',
+  name: 'stripHtml',
 })
-export class ConstraintTypeIconPipe implements PipeTransform {
-  public transform(constraint: Constraint): string {
-    if (!constraint || constraint.type === ConstraintType.Unknown) {
-      return '';
-    }
-
-    return constraintIconsMap[constraint.type];
+@Injectable({providedIn: 'root'})
+export class StripHtmlPipe implements PipeTransform {
+  public transform(text: string, usefulTags?: string[]): string {
+    return (usefulTags || []).length > 0
+      ? text.replace(new RegExp(`<(?!\/?(${usefulTags.join('|')})\s*\/?)[^>]+>`, 'g'), '')
+      : text.replace(/<(?:.|\s)*?>/g, '');
   }
 }

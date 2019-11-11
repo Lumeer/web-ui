@@ -1,0 +1,36 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  [showHeader]="false"
+  (onClose)="cancelDialog()"
+  (onSubmit)="submitDialog(content)"
+  [submitDisabled]="!valid || readonly">
+
+  <div class="body" #dialogBody>
+
+    <quill-editor
+      [(ngModel)]="content"
+      [readOnly]="readonly"
+      (onEditorCreated)="$event.focus()"
+      (onContentChanged)="contentChanged($event)"
+      [maxLength]="maxLength"
+      [minLength]="minLength"
+      [placeholder]="insertTextPlaceholder">
+    </quill-editor>
+
+    <div *ngIf="!valid" class="text-danger px-2 py-1 small" id="invalid-warning">
+      <span *ngIf="minLength" i18n="textEditor.minLength">Minimal text length must be {{minLength}} characters.&nbsp;</span>
+      <span *ngIf="maxLength" i18n="textEditor.maxLength">Maximal text length can be {{maxLength}} characters.</span>
+    </div>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+  <span class="button-submit">
+    <i class="far fa-check"></i>&nbsp;<span i18n="@@button.save">Save</span>
+    &nbsp;
+    <small class="text-muted small">{{macOS ? '⌘ ⏎' : 'Ctrl + ⏎'}}</small>
+  </span>
+
+</modal-wrapper>

@@ -26,6 +26,7 @@ import {LinkAttributeQueryItem} from '../model/link-attribute.query-item';
 import {BehaviorSubject} from 'rxjs';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {KeyCode} from '../../../../key-code';
+import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 
 @Component({
   selector: 'attribute-value',
@@ -58,6 +59,12 @@ export class AttributeValueComponent {
   public readonly constraintType = ConstraintType;
 
   public editing$ = new BehaviorSubject(false);
+
+  public readonly dataInputConfiguration: DataInputConfiguration = {
+    skipValidation: true,
+    fromQuery: true,
+    resizeToContent: true,
+  };
 
   public get conditionValueControl(): AbstractControl {
     return this.queryItemForm && this.queryItemForm.get('conditionValue');

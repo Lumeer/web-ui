@@ -46,6 +46,8 @@ import {FileTypeIconPipe} from './files/file-type-icon.pipe';
 import {FilesDropdownComponent} from './files/dropdown/files-dropdown.component';
 import {FileAttachmentButtonComponent} from './files/button/file-attachment-button.component';
 import {PickerModule} from '../picker/picker.module';
+import {RichTextDataInputComponent} from './rich-text/rich-text-data-input.component';
+import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.module';
 
 @NgModule({
   imports: [
@@ -60,6 +62,7 @@ import {PickerModule} from '../picker/picker.module';
     GravatarModule,
     TypeaheadModule,
     DropdownModule,
+    TextEditorModalModule,
   ],
   declarations: [
     DataInputComponent,
@@ -79,6 +82,7 @@ import {PickerModule} from '../picker/picker.module';
     FileTypeIconPipe,
     FilesDropdownComponent,
     FileAttachmentButtonComponent,
+    RichTextDataInputComponent,
   ],
   exports: [
     DataInputComponent,
