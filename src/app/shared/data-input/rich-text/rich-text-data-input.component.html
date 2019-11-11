@@ -2,5 +2,6 @@
   class="border-0 w-100 px-1 bg-transparent overflow-hidden"
   (focus)="onFocus.emit($event)"
   [title]="value | formatDataValue | stripHtml"
-  [innerHTML]="value | formatDataValue | stripHtml:['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code']">
+  [innerHTML]="value | formatDataValue | stripHtml:['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code']"
+  data-test="text-data-input">
 </div>

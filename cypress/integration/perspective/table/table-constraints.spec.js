@@ -399,16 +399,16 @@ describe('Table perspective :: Constraints', () => {
 
     cy.get('[data-test="text-data-input"]')
       .first()
-      .should('have.value', 'Falcon 1');
+      .should('have.text', 'Falcon 1');
     cy.get('[data-test="text-data-input"]')
       .eq(5)
-      .should('have.value', 'FALCON 9');
+      .should('have.text', 'FALCON 9');
     cy.get('[data-test="text-data-input"]')
       .eq(10)
-      .should('have.value', 'Falcon Heavy');
+      .should('have.text', 'Falcon Heavy');
     cy.get('[data-test="text-data-input"]')
       .eq(15)
-      .should('have.value', 'Super Heavy');
+      .should('have.text', 'Super Heavy');
 
     // change second column type to boolean
 
