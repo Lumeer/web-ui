@@ -5,7 +5,6 @@
   [constraintData]="constraintData"
   [readonly]="readonly || !((editing$ | async) || queryItem?.attribute?.constraint?.type === constraintType.Boolean)"
   [configuration]="dataInputConfiguration"
-  [resizeToContent]="true"
   (save)="onSave($event)"
   (click)="setEditing()"
   (onFocus)="setEditing()"

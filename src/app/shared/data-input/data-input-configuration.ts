@@ -20,4 +20,5 @@
 export interface DataInputConfiguration {
   skipValidation?: boolean;
   fromQuery?: boolean;
+  resizeToContent?: boolean;
 }

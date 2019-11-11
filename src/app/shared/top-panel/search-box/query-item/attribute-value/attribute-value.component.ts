@@ -60,7 +60,11 @@ export class AttributeValueComponent {
 
   public editing$ = new BehaviorSubject(false);
 
-  public readonly dataInputConfiguration: DataInputConfiguration = {skipValidation: true, fromQuery: true};
+  public readonly dataInputConfiguration: DataInputConfiguration = {
+    skipValidation: true,
+    fromQuery: true,
+    resizeToContent: true,
+  };
 
   public get conditionValueControl(): AbstractControl {
     return this.queryItemForm && this.queryItemForm.get('conditionValue');
