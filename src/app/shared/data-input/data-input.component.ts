@@ -68,6 +68,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public configuration: DataInputConfiguration = {skipValidation: false, fromQuery: false, resizeToContent: false};
 
   @Input()
+  public placeholder: string;
+
+  @Input()
   public suggestions: DataSuggestion[];
 
   @Output()
