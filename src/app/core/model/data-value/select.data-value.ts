@@ -18,12 +18,17 @@
  */
 
 import {SelectConstraintConfig, SelectConstraintOption} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 
 export class SelectDataValue implements DataValue {
   public readonly option: SelectConstraintOption;
 
-  constructor(public readonly value: any, public readonly config: SelectConstraintConfig, byDisplayValue?: boolean) {
+  constructor(
+    public readonly value: any,
+    public readonly inputType: DataValueInputType,
+    public readonly config: SelectConstraintConfig,
+    byDisplayValue?: boolean
+  ) {
     this.option = byDisplayValue ? findOptionByDisplayValue(config, value) : findOptionByValue(config, value);
   }
 
@@ -32,6 +37,10 @@ export class SelectDataValue implements DataValue {
       return (this.config.displayValues && this.option.displayValue) || this.option.value;
     }
     return this.value || '';
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -48,7 +57,7 @@ export class SelectDataValue implements DataValue {
     }
 
     const nextOption = this.shiftOption(1);
-    return new SelectDataValue(nextOption.value, this.config);
+    return new SelectDataValue(nextOption.value, DataValueInputType.Stored, this.config);
   }
 
   public decrement(): SelectDataValue {
@@ -57,7 +66,7 @@ export class SelectDataValue implements DataValue {
     }
 
     const previousOption = this.shiftOption(-1);
-    return new SelectDataValue(previousOption.value, this.config);
+    return new SelectDataValue(previousOption.value, DataValueInputType.Stored, this.config);
   }
 
   public compareTo(otherValue: SelectDataValue): number {
@@ -70,11 +79,11 @@ export class SelectDataValue implements DataValue {
 
   public copy(newValue?: any): SelectDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new SelectDataValue(value, this.config);
+    return new SelectDataValue(value, DataValueInputType.Copied, this.config);
   }
 
   public parseInput(inputValue: string): SelectDataValue {
-    return this.copy(inputValue);
+    return new SelectDataValue(inputValue, DataValueInputType.Typed, this.config);
   }
 
   private shiftOption(indexDelta: number): SelectConstraintOption {

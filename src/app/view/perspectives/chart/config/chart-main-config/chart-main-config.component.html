@@ -25,7 +25,7 @@
              [placeholderText]="sortPlaceholder"
              [emptyValue]="axisEmptyValue"
              [items]="config | sortSelectItems:attributesResources"
-             [selectedId]="config.sort && config.sort.axis"
+             [selectedId]="config.sort?.axis | chartCleanAxis"
              [buttonClasses]="buttonClasses"
              [removable]="true"
              (select)="onSortSelect($event)"
@@ -37,6 +37,6 @@
              [placeholderText]="sortTypePlaceholder"
              [buttonClasses]="buttonClasses"
              [removable]="false"
-             [selectedId]="config.sort && config.sort.type"
+             [selectedId]="config.sort?.type"
              (select)="onSortTypeSelect($event)">
 </select-item>

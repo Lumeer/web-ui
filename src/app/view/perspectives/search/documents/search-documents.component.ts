@@ -20,8 +20,8 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, filter, map, take, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
@@ -30,10 +30,7 @@ import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {User} from '../../../../core/store/users/user';
 import {selectAllUsers, selectCurrentUser} from '../../../../core/store/users/users.state';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  selectCollectionsByQuery,
-  selectDocumentsByCustomQuery,
-} from '../../../../core/store/common/permissions.selectors';
+import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
@@ -73,9 +70,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   private searchId = DEFAULT_SEARCH_ID;
   private config: SearchConfig;
-  private page = 0;
   private documentsOrder = [];
   private subscriptions = new Subscription();
+  private page$ = new BehaviorSubject<number>(0);
 
   constructor(private store$: Store<AppState>, private constrainDataService: ConstraintDataService) {
     this.constraintData$ = this.constrainDataService.observeConstraintData();
@@ -91,8 +88,9 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.documents$ = this.subscribeDocuments$();
 
-    this.subscribeData();
+    this.subscribeQueryChange();
   }
 
   private selectDocumentsConfig$(): Observable<SearchDocumentsConfig> {
@@ -103,62 +101,17 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     );
   }
 
-  public configChange(documentsConfig: SearchDocumentsConfig) {
-    const config = {...this.config, documents: documentsConfig};
-    this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config}));
-  }
-
-  public onFetchNextPage() {
-    this.page++;
-    this.store$
-      .pipe(
-        select(selectQuery),
-        take(1)
-      )
-      .subscribe(query => {
-        this.fetchDocuments(query);
-      });
-  }
-
-  public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-  }
-
-  private subscribeData() {
-    const navigationSubscription = this.store$
-      .pipe(
-        select(selectQuery),
-        filter(query => !!query),
-        distinctUntilChanged()
-      )
-      .subscribe(query => {
-        this.clearDocumentsInfo();
-        this.fetchDocuments(query);
-      });
-    this.subscriptions.add(navigationSubscription);
-  }
-
-  private clearDocumentsInfo() {
-    this.page = 0;
-    this.documentsOrder = [];
-  }
-
-  private fetchDocuments(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery(query)}));
-    this.subscribeDocuments(query);
-  }
-
-  private getPaginationQuery(query: Query): Query {
-    return {...query, page: this.page, pageSize: PAGE_SIZE};
-  }
-
-  private subscribeDocuments(query: Query) {
-    const pageSize = PAGE_SIZE * (this.page + 1);
-    const customQuery = {...query, page: 0, pageSize};
-    this.documents$ = this.store$.pipe(
-      select(selectDocumentsByCustomQuery(customQuery, true)),
+  private subscribeDocuments$(): Observable<DocumentModel[]> {
+    const pageObservable = this.page$.asObservable();
+    return this.store$.pipe(
+      select(selectDocumentsByQuery),
       map(documents => sortDocumentsByFavoriteAndLastUsed(documents)),
-      map(documents => this.mapNewDocuments(documents))
+      mergeMap(documents =>
+        pageObservable.pipe(
+          map(page => (documents || []).slice(0, PAGE_SIZE * (page + 1))),
+          map(sortedDocuments => this.mapNewDocuments(sortedDocuments))
+        )
+      )
     );
   }
 
@@ -183,5 +136,53 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     }
 
     return orderedDocuments;
+  }
+
+  public configChange(documentsConfig: SearchDocumentsConfig) {
+    const config = {...this.config, documents: documentsConfig};
+    this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config}));
+  }
+
+  public onFetchNextPage() {
+    this.page$.next(this.page$.value + 1);
+    this.store$
+      .pipe(
+        select(selectQuery),
+        take(1)
+      )
+      .subscribe(query => {
+        this.fetchDocuments(query);
+      });
+  }
+
+  private fetchDocuments(query: Query) {
+    this.store$.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery(query)}));
+  }
+
+  private getPaginationQuery(query: Query): Query {
+    return {...query, page: this.page$.value, pageSize: PAGE_SIZE};
+  }
+
+  private subscribeQueryChange() {
+    const navigationSubscription = this.store$
+      .pipe(
+        select(selectQuery),
+        filter(query => !!query),
+        distinctUntilChanged()
+      )
+      .subscribe(query => {
+        this.clearDocumentsInfo();
+        this.fetchDocuments(query);
+      });
+    this.subscriptions.add(navigationSubscription);
+  }
+
+  private clearDocumentsInfo() {
+    this.documentsOrder = [];
+    this.page$.next(0);
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

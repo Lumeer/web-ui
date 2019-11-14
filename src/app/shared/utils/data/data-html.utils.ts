@@ -22,6 +22,7 @@ import {UnknownConstraint} from '../../../core/model/constraint/unknown.constrai
 import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {FileTypeIconPipe} from '../../data-input/files/file-type-icon.pipe';
 import {generateId} from '../resource.utils';
+import {DataValueInputType} from '../../../core/model/data-value';
 
 export function createDataValueHtml(
   value: any,
@@ -29,31 +30,34 @@ export function createDataValueHtml(
   constraintData: ConstraintData,
   className?: string
 ): string {
-  const dataValue = (constraint || new UnknownConstraint()).createDataValue(value, constraintData);
-  const formattedValue = dataValue.format();
+  const dataValue = (constraint || new UnknownConstraint()).createDataValue(
+    value,
+    DataValueInputType.Stored,
+    constraintData
+  );
 
   switch (constraint && constraint.type) {
     case ConstraintType.Color:
-      return createDataColorValueHtml(formattedValue, className);
+      return createDataColorValueHtml(dataValue.preview(), className);
     case ConstraintType.Boolean:
-      return createDataBooleanValueHtml(dataValue.serialize(), className);
+      return createDataBooleanValueHtml(dataValue, className);
     case ConstraintType.Files:
-      return createDataFilesValueHtml(formattedValue, className);
+      return createDataFilesValueHtml(dataValue.preview(), className);
     default:
-      return createDataAnyValueHtml(formattedValue, className);
+      return createDataAnyValueHtml(dataValue.preview(), className);
   }
 }
 
-function createDataAnyValueHtml(value: string, className?: string) {
+function createDataAnyValueHtml(value: string, className?: string): string {
   return `<span class="${className || ''}">${value}</span>`;
 }
 
-function createDataColorValueHtml(value: string, className?: string) {
+function createDataColorValueHtml(value: string, className?: string): string {
   return `<div class="d-inline-block ${className || ''}"
           style="width: 60px; background: ${value}">&nbsp;</div>`;
 }
 
-function createDataBooleanValueHtml(value: any, className?: string) {
+function createDataBooleanValueHtml(value: any, className?: string): string {
   const inputId = `search-document-input-${generateId()}`;
   return `<div class="d-inline-block custom-control custom-checkbox ${className || ''}"><input 
              id="${inputId}"
@@ -68,7 +72,7 @@ function createDataBooleanValueHtml(value: any, className?: string) {
           </label></div>`;
 }
 
-function createDataFilesValueHtml(value: string, className?: string) {
+function createDataFilesValueHtml(value: string, className?: string): string {
   let result = `<span class="${className || ''}">`;
 
   if (value) {

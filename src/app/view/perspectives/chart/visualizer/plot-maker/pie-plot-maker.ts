@@ -113,7 +113,7 @@ export class PiePlotMaker extends PlotMaker {
       const dateConfig = config as DateTimeConstraintConfig;
       const format = convertChartDateFormat(dateConfig && dateConfig.format);
       const constraint = new DateTimeConstraint({format} as DateTimeConstraintConfig);
-      return constraint.createDataValue(value).format();
+      return constraint.createDataValue(value).preview();
     } else if (category === ChartAxisCategory.Percentage) {
       return value + '%';
     }

@@ -1,3 +1,4 @@
-div {
-  max-height: 2rem;
+:host {
+  display: flex;
+  align-items: center;
 }

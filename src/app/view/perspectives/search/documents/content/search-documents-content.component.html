@@ -17,10 +17,7 @@
   </div>
 </ng-container>
 
-<div class="mt-2 mb-5" *ngIf="documents?.length; else noDocuments" infiniteScroll
-     [infiniteScrollDisabled]="maxDocuments > 0"
-     [infiniteScrollDistance]="2"
-     (scrolled)="onScrollDown()">
+<div class="mt-2 mb-5" *ngIf="documents?.length; else noDocuments">
 
   <div class="detail card p-0 mb-2"
        (click)="toggleDocument(document)"

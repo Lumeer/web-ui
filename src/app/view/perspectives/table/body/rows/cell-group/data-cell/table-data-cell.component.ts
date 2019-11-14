@@ -75,6 +75,7 @@ import {isAttributeConstraintType} from '../../../../../../../shared/utils/attri
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 import {isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
+import {DataValueInputType} from '../../../../../../../core/model/data-value';
 
 @Component({
   selector: 'table-data-cell',
@@ -223,7 +224,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
                   this.onValueSave(dataValue.serialize());
                 }
               } else {
-                const dataValue = new UnknownDataValue(this.editedValue);
+                const dataValue = new UnknownDataValue(this.editedValue, DataValueInputType.Stored);
                 this.onValueSave(dataValue.serialize());
               }
             }

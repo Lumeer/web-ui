@@ -21,13 +21,14 @@ import {ColorDataValue} from '../data-value/color.data-value';
 import {ConstraintType} from '../data/constraint';
 import {ColorConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
+import {DataValueInputType} from '../data-value';
 
 export class ColorConstraint implements Constraint {
   public readonly type = ConstraintType.Color;
 
   constructor(public readonly config: ColorConstraintConfig) {}
 
-  public createDataValue(value: any): ColorDataValue {
-    return new ColorDataValue(value, this.config);
+  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): ColorDataValue {
+    return new ColorDataValue(value, inputType, this.config);
   }
 }

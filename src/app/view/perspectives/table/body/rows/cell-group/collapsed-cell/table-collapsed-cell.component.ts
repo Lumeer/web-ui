@@ -34,6 +34,7 @@ import {TableConfigColumn} from '../../../../../../../core/store/tables/table.mo
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.selector';
 import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
+import {DataValueInputType} from '../../../../../../../core/model/data-value';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -134,7 +135,11 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     return constraintObservable$.pipe(
       map(constraint =>
         values
-          .map(value => (constraint || new UnknownConstraint()).createDataValue(value, this.constraintData).format())
+          .map(value =>
+            (constraint || new UnknownConstraint())
+              .createDataValue(value, DataValueInputType.Stored, this.constraintData)
+              .format()
+          )
           .filter(value => !!value)
       )
     );

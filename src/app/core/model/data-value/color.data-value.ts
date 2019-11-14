@@ -23,19 +23,27 @@ import {prolongShortHexColor} from '../../../shared/utils/color/prolong-short-he
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {validDataColors} from '../../../shared/utils/data/valid-data-colors';
 import {ColorConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 
 export class ColorDataValue implements DataValue {
   public readonly hexCode: string;
   public readonly numberCode: number;
 
-  constructor(public readonly value: any, public readonly config: ColorConstraintConfig) {
+  constructor(
+    public readonly value: any,
+    public readonly inputType: DataValueInputType,
+    public readonly config: ColorConstraintConfig
+  ) {
     this.hexCode = value || value === 0 ? parseColorHexCode(value) : null;
     this.numberCode = convertColorHexCodeToNumber(this.hexCode);
   }
 
   public format(): string {
     return this.hexCode || formatUnknownDataValue(this.value);
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -52,11 +60,11 @@ export class ColorDataValue implements DataValue {
     }
 
     if (this.hexCode === '#ffffff') {
-      return new ColorDataValue('#000000', this.config);
+      return new ColorDataValue('#000000', DataValueInputType.Stored, this.config);
     }
 
     const value = (this.numberCode + 1).toString(16);
-    return new ColorDataValue(value, this.config);
+    return new ColorDataValue(value, DataValueInputType.Stored, this.config);
   }
 
   public decrement(): ColorDataValue {
@@ -65,11 +73,11 @@ export class ColorDataValue implements DataValue {
     }
 
     if (this.hexCode === '#000000') {
-      return new ColorDataValue('#ffffff', this.config);
+      return new ColorDataValue('#ffffff', DataValueInputType.Stored, this.config);
     }
 
     const value = (this.numberCode - 1).toString(16);
-    return new ColorDataValue(value, this.config);
+    return new ColorDataValue(value, DataValueInputType.Stored, this.config);
   }
 
   public compareTo(otherValue: ColorDataValue): number {
@@ -78,11 +86,11 @@ export class ColorDataValue implements DataValue {
 
   public copy(newValue?: any): ColorDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new ColorDataValue(value, this.config);
+    return new ColorDataValue(value, DataValueInputType.Copied, this.config);
   }
 
   public parseInput(inputValue: string): ColorDataValue {
-    return this.copy(inputValue);
+    return new ColorDataValue(inputValue, DataValueInputType.Typed, this.config);
   }
 }
 

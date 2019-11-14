@@ -95,7 +95,7 @@ import {PostItModule} from '../../../shared/post-it/post-it.module';
     PostItModule,
     PreviewResultsModule,
     ModalWrapperModule,
-    NgxModalModule,
+    NgxModalModule.forRoot(),
   ],
   entryComponents: [KanbanPerspectiveComponent, ChooseLinkDocumentModalComponent],
   exports: [KanbanPerspectiveComponent],

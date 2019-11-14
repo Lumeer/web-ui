@@ -30,7 +30,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {Constraint} from '../../core/model/constraint';
-import {DataValue} from '../../core/model/data-value';
+import {DataValue, DataValueInputType} from '../../core/model/data-value';
 import {UnknownDataValue} from '../../core/model/data-value/unknown.data-value';
 import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {generateCorrelationId} from '../utils/resource.utils';
@@ -106,8 +106,8 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   private createDataValue(): DataValue {
     return this.constraint
-      ? this.constraint.createDataValue(this.value, this.constraintData)
-      : new UnknownDataValue(this.value);
+      ? this.constraint.createDataValue(this.value, DataValueInputType.Stored, this.constraintData)
+      : new UnknownDataValue(this.value, DataValueInputType.Stored); // TODO somehow determine whether value was typed or stored
   }
 
   private recalculateWidth(value: DataValue, raw?: boolean) {

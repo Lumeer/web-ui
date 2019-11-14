@@ -45,6 +45,7 @@ import {
 import {convertChartDateTickFormat} from '../chart-util';
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {createRange} from './plot-util';
+import {DataValueInputType} from '../../../../../core/model/data-value';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -144,7 +145,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       .sort();
 
     const constraint = new DateTimeConstraint(config);
-    const titles = values.map(value => constraint.createDataValue(value).format());
+    const titles = values.map(value => constraint.createDataValue(value).preview());
     return {values, titles};
   }
 

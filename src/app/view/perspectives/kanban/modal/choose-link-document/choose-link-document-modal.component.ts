@@ -22,7 +22,9 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {DialogType} from '../../../../../shared/modal/dialog-type';
 import {BsModalRef} from 'ngx-bootstrap';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {ConstraintDataService} from '../../../../../core/service/constraint-data.service';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
@@ -42,7 +44,11 @@ export class ChooseLinkDocumentModalComponent {
 
   public readonly dialogType = DialogType;
 
-  constructor(private bsModalRef: BsModalRef) {}
+  public constraintData$: Observable<ConstraintData>;
+
+  constructor(private bsModalRef: BsModalRef, private constraintDataService: ConstraintDataService) {
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
+  }
 
   public hideDialog() {
     this.bsModalRef.hide();

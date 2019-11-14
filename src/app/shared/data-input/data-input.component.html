@@ -10,7 +10,7 @@
                       (cancel)="onCancel()"
                       (onFocus)="emitFocus($event)"
                       (dataBlur)="onDataBlur()"
-                      class="d-block">
+                      class="d-block w-100">
   </address-data-input>
 
   <boolean-data-input *ngSwitchCase="constraintType.Boolean"
@@ -18,7 +18,8 @@
                       [value]="dataValue"
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValue($event)"
-                      (onFocus)="emitFocus($event)">
+                      (onFocus)="emitFocus($event)"
+                      class="w-100">
   </boolean-data-input>
 
   <coordinates-data-input *ngSwitchCase="constraintType.Coordinates"
@@ -31,7 +32,7 @@
                           (cancel)="onCancel()"
                           (onFocus)="emitFocus($event)"
                           (dataBlur)="onDataBlur()"
-                          class="d-block">
+                          class="d-block w-100">
   </coordinates-data-input>
 
   <datetime-data-input *ngSwitchCase="constraintType.DateTime"
@@ -43,7 +44,7 @@
                        (onFocus)="emitFocus($event)"
                        (save)="onSaveValue($event)"
                        (cancel)="onCancel()"
-                       class="d-block">
+                       class="d-block w-100">
   </datetime-data-input>
 
   <duration-data-input *ngSwitchCase="constraintType.Duration"
@@ -56,7 +57,7 @@
                        (cancel)="onCancel()"
                        (onFocus)="emitFocus($event)"
                        (dataBlur)="onDataBlur()"
-                       class="d-block">
+                       class="d-block w-100">
   </duration-data-input>
 
   <files-data-input *ngSwitchCase="constraintType.Files"
@@ -67,7 +68,7 @@
                     (save)="onSaveValue($event)"
                     (click)="emitFocus($event)"
                     (cancel)="onCancel()"
-                    class="px-1">
+                    class="px-1 w-100">
   </files-data-input>
 
   <number-data-input *ngSwitchCase="constraintType.Number"
@@ -80,7 +81,7 @@
                      (cancel)="onCancel()"
                      (onFocus)="emitFocus($event)"
                      (dataBlur)="onDataBlur()"
-                     class="d-block">
+                     class="d-block w-100">
   </number-data-input>
 
   <percentage-data-input *ngSwitchCase="constraintType.Percentage"
@@ -93,7 +94,7 @@
                          (cancel)="onCancel()"
                          (onFocus)="emitFocus($event)"
                          (dataBlur)="onDataBlur()"
-                         class="d-block">
+                         class="d-block w-100">
   </percentage-data-input>
 
   <color-data-input *ngSwitchCase="constraintType.Color"
@@ -105,7 +106,7 @@
                     (save)="onSaveValue($event)"
                     (cancel)="onCancel()"
                     (onFocus)="emitFocus($event)"
-                    class="d-block">
+                    class="d-block w-100">
   </color-data-input>
 
   <select-data-input *ngSwitchCase="constraintType.Select"
@@ -117,7 +118,7 @@
                      (cancel)="onCancel()"
                      (onFocus)="emitFocus($event)"
                      (dataBlur)="onDataBlur()"
-                     class="d-block">
+                     class="d-block w-100">
   </select-data-input>
 
   <user-data-input *ngSwitchCase="constraintType.User"
@@ -129,7 +130,8 @@
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
-                   (dataBlur)="onDataBlur()">
+                   (dataBlur)="onDataBlur()"
+                   class="w-100">
   </user-data-input>
 
   <ng-container *ngSwitchCase="constraintType.Text">
@@ -142,7 +144,8 @@
                           (save)="onSaveValue($event)"
                           (cancel)="onCancel()"
                           (onFocus)="emitFocus($event)"
-                          (dataBlur)="onDataBlur()">
+                          (dataBlur)="onDataBlur()"
+                          class="w-100">
     </rich-text-data-input>
   </ng-container>
 
@@ -163,6 +166,6 @@
                    (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
                    (dataBlur)="onDataBlur()"
-                   class="d-block">
+                   class="d-block w-100">
   </text-data-input>
 </ng-template>

@@ -21,13 +21,14 @@ import {PercentageDataValue} from '../data-value/percentage.data-value';
 import {ConstraintType} from '../data/constraint';
 import {PercentageConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
+import {DataValueInputType} from '../data-value';
 
 export class PercentageConstraint implements Constraint {
   public readonly type = ConstraintType.Percentage;
 
   constructor(public readonly config: PercentageConstraintConfig) {}
 
-  public createDataValue(value: any): PercentageDataValue {
-    return new PercentageDataValue(value, this.config);
+  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): PercentageDataValue {
+    return new PercentageDataValue(value, inputType, this.config);
   }
 }

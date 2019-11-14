@@ -3,6 +3,7 @@
 :host {
   display: flex;
   height: 100%;
+  overflow: auto;
 }
 
 @include media-breakpoint-down(xs) {

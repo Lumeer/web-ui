@@ -29,7 +29,7 @@ import {
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {ConstraintData} from '../data/constraint';
 import {DurationConstraintConfig, DurationUnit} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 import {isNumeric, toNumber} from '../../../shared/utils/common.utils';
 
 export class DurationDataValue implements DataValue {
@@ -37,6 +37,7 @@ export class DurationDataValue implements DataValue {
 
   constructor(
     public readonly value: any,
+    public readonly inputType: DataValueInputType,
     public readonly config: DurationConstraintConfig,
     public readonly constraintData: ConstraintData
   ) {
@@ -58,6 +59,10 @@ export class DurationDataValue implements DataValue {
       this.constraintData && this.constraintData.durationUnitsMap,
       maxUnits
     );
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -88,12 +93,12 @@ export class DurationDataValue implements DataValue {
 
   public copy(newValue?: any): DurationDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new DurationDataValue(value, this.config, this.constraintData);
+    return new DurationDataValue(value, DataValueInputType.Copied, this.config, this.constraintData);
   }
 
   public parseInput(inputValue: string): DurationDataValue {
     const value = parseInputValue(inputValue);
-    return new DurationDataValue(value, this.config, this.constraintData);
+    return new DurationDataValue(value, DataValueInputType.Typed, this.config, this.constraintData);
   }
 }
 

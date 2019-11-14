@@ -22,13 +22,14 @@ import {isEmailValid} from '../../../shared/utils/email.utils';
 import {User} from '../../store/users/user';
 import {ConstraintData} from '../data/constraint';
 import {UserConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 
 export class UserDataValue implements DataValue {
   public readonly user: User;
 
   constructor(
     public readonly value: any,
+    public readonly inputType: DataValueInputType,
     public readonly config: UserConstraintConfig,
     public readonly constraintData: ConstraintData
   ) {
@@ -46,6 +47,10 @@ export class UserDataValue implements DataValue {
     }
 
     return formatUnknownDataValue(this.value);
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -86,10 +91,10 @@ export class UserDataValue implements DataValue {
 
   public copy(newValue?: any): UserDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new UserDataValue(value, this.config, this.constraintData);
+    return new UserDataValue(value, DataValueInputType.Copied, this.config, this.constraintData);
   }
 
   public parseInput(inputValue: string): UserDataValue {
-    return this.copy(inputValue);
+    return new UserDataValue(inputValue, DataValueInputType.Typed, this.config, this.constraintData);
   }
 }

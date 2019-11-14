@@ -34,6 +34,7 @@ import {KeyCode} from '../../key-code';
 import {StripHtmlPipe} from '../../pipes/strip-html.pipe';
 import {isMacOS} from '../../utils/system.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {defaultTextEditorOptions} from './text-editor.utils';
 
 export interface TextEditorChanged {
   html: string;
@@ -71,6 +72,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public valid = true;
 
   public readonly macOS = isMacOS();
+  public readonly defaultOptions = defaultTextEditorOptions;
   public insertTextPlaceholder: string;
 
   constructor(

@@ -64,30 +64,34 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
   public readonly dialogType = DialogType;
 
   public query$: Observable<Query>;
+  public collection$: Observable<Collection>;
+  public document$: Observable<DocumentModel>;
+
   public performingAction$ = new BehaviorSubject(false);
 
   private currentDocument: DocumentModel;
-  private subscriptions = new Subscription();
+  private dataExistSubscription = new Subscription();
 
   constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
+    this.collection$ = of(this.collection);
+    this.document$ = of(this.document);
 
-    this.subscribeExist();
+    this.subscribeExist(this.collection, this.document);
   }
 
-  private subscribeExist() {
-    this.subscriptions.add(
-      combineLatest([
-        (this.collection.id && this.store$.pipe(select(selectCollectionById(this.collection.id)))) || of(true),
-        (this.document.id && this.store$.pipe(select(selectDocumentById(this.document.id)))) || of(true),
-      ]).subscribe(([collection, document]) => {
-        if (!collection || !document) {
-          this.hideDialog();
-        }
-      })
-    );
+  private subscribeExist(collection: Collection, document: DocumentModel) {
+    this.dataExistSubscription.unsubscribe();
+    this.dataExistSubscription = combineLatest([
+      (collection.id && this.store$.pipe(select(selectCollectionById(collection.id)))) || of(true),
+      (document.id && this.store$.pipe(select(selectDocumentById(document.id)))) || of(true),
+    ]).subscribe(([currentCollection, currentDocument]) => {
+      if (!currentCollection || !currentDocument) {
+        this.hideDialog();
+      }
+    });
   }
 
   public onSubmit() {
@@ -108,13 +112,14 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this.dataExistSubscription.unsubscribe();
   }
 
   public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
-    const {collection, document} = data;
-    // this.setQueryWithCollection(collection);
-    // this.select(collection, document);
+    this.collection$ = of(data.collection);
+    this.document$ = of(data.document);
+    this.subscribeExist(data.collection, data.document);
+    this.currentDocument = data.document;
   }
 
   @HostListener('document:keydown', ['$event'])

@@ -55,6 +55,7 @@ import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {isNotNullOrUndefined} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
+import {DataValueInputType} from '../../core/model/data-value';
 
 @Component({
   selector: 'document-hints',
@@ -163,7 +164,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
               .filter(document => {
                 const value = document.data[this.attributeId];
                 const formattedValue = isNotNullOrUndefined(value)
-                  ? constraint.createDataValue(value, this.constraintData).format()
+                  ? constraint.createDataValue(value, DataValueInputType.Stored, this.constraintData).format()
                   : '';
                 return String(formattedValue)
                   .toLowerCase()

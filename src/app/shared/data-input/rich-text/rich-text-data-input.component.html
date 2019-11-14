@@ -1,7 +1,7 @@
 <div
-  class="border-0 w-100 px-1 bg-transparent overflow-hidden"
+  class="border-0 w-100 px-1 bg-transparent overflow-hidden text-nowrap"
   (focus)="onFocus.emit($event)"
-  [title]="value | formatDataValue | stripHtml"
-  [innerHTML]="value | formatDataValue | stripHtml:['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code']"
+  [title]="value | formatDataValue | stripHtml: false"
+  [innerHTML]="value | formatDataValue | stripHtml"
   data-test="text-data-input">
 </div>

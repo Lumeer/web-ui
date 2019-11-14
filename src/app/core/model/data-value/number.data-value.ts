@@ -26,18 +26,26 @@ import {
   formatUnknownDataValue,
 } from '../../../shared/utils/data.utils';
 import {NumberConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 
 export class NumberDataValue implements DataValue {
   public readonly bigNumber: Big;
 
-  constructor(public readonly value: any, public readonly config: NumberConstraintConfig) {
+  constructor(
+    public readonly value: any,
+    public readonly inputType: DataValueInputType,
+    public readonly config: NumberConstraintConfig
+  ) {
     this.bigNumber = convertToBig(value);
   }
 
   public format(): string {
     // TODO format based on config
     return this.bigNumber ? decimalStoreToUser(this.bigNumber.toFixed()) : formatUnknownDataValue(this.value);
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -55,11 +63,11 @@ export class NumberDataValue implements DataValue {
   }
 
   public increment(): NumberDataValue {
-    return this.bigNumber && new NumberDataValue(this.bigNumber.add(1), this.config);
+    return this.bigNumber && new NumberDataValue(this.bigNumber.add(1), DataValueInputType.Stored, this.config);
   }
 
   public decrement(): NumberDataValue {
-    return this.bigNumber && new NumberDataValue(this.bigNumber.sub(1), this.config);
+    return this.bigNumber && new NumberDataValue(this.bigNumber.sub(1), DataValueInputType.Stored, this.config);
   }
 
   public compareTo(otherValue: NumberDataValue): number {
@@ -68,11 +76,11 @@ export class NumberDataValue implements DataValue {
 
   public copy(newValue?: any): NumberDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new NumberDataValue(value, this.config);
+    return new NumberDataValue(value, DataValueInputType.Copied, this.config);
   }
 
   public parseInput(inputValue: string): NumberDataValue {
-    return this.copy(inputValue);
+    return new NumberDataValue(inputValue, DataValueInputType.Typed, this.config);
   }
 }
 

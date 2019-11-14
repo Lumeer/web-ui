@@ -66,6 +66,7 @@ import {SelectConstraintConfig} from '../../../../core/model/data/constraint-con
 import {Constraint} from '../../../../core/model/constraint';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
+import {DataValueInputType} from '../../../../core/model/data-value';
 
 @Component({
   selector: 'kanban-columns',
@@ -122,7 +123,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private modalService: BsModalService,
+    private bsModalService: BsModalService,
     private toggleService: DocumentFavoriteToggleService
   ) {}
 
@@ -189,7 +190,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   ) {
     const callback = document => this.createDocument(kanbanAttribute, column, document, linkTypeId);
     const config = {initialState: {documents, collection, callback}, keyboard: true, class: 'modal-lg'};
-    this.modalService.show(ChooseLinkDocumentModalComponent, config);
+    this.bsModalService.show(ChooseLinkDocumentModalComponent, config);
   }
 
   private getPreviousDocumentByKanbanResource(resourceCreate: KanbanResourceCreate): DocumentModel[] {
@@ -272,7 +273,12 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   private createValueByConstraint(constraint: Constraint, newValue: any): any {
     if (constraint && constraint.type === ConstraintType.Select) {
-      return new SelectDataValue(newValue, constraint.config as SelectConstraintConfig, true).serialize();
+      return new SelectDataValue(
+        newValue,
+        DataValueInputType.Stored,
+        constraint.config as SelectConstraintConfig,
+        true
+      ).serialize();
     } else {
       return (constraint || this.unknownConstraint).createDataValue(newValue).serialize();
     }

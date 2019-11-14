@@ -21,13 +21,14 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Address, AddressField} from '../../store/geocoding/address';
 import {ConstraintData} from '../data/constraint';
 import {AddressConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 
 export class AddressDataValue implements DataValue {
   public readonly address: Address;
 
   constructor(
     public readonly value: any,
+    public readonly inputType: DataValueInputType,
     public readonly config: AddressConstraintConfig,
     public readonly constraintData: ConstraintData
   ) {
@@ -62,6 +63,10 @@ export class AddressDataValue implements DataValue {
     }, '');
   }
 
+  public preview(): string {
+    return this.format();
+  }
+
   public serialize(): any {
     return this.address ? this.format() : this.value;
   }
@@ -88,10 +93,10 @@ export class AddressDataValue implements DataValue {
 
   public copy(newValue?: any): AddressDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new AddressDataValue(value, this.config, this.constraintData);
+    return new AddressDataValue(value, DataValueInputType.Copied, this.config, this.constraintData);
   }
 
   public parseInput(inputValue: string): AddressDataValue {
-    return this.copy(inputValue);
+    return new AddressDataValue(inputValue, DataValueInputType.Typed, this.config, this.constraintData);
   }
 }

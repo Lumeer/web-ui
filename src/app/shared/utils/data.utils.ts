@@ -23,6 +23,13 @@ import {isNullOrUndefined} from './common.utils';
 import {resetUnusedMomentPart} from './date.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
+const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code'];
+
+export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true) {
+  return keepFormattingTags
+    ? (text || '').replace(new RegExp(`<(?!\/?(${formattingTags.join('|')})\s*\/?)[^>]+>`, 'g'), ' ')
+    : (text || '').replace(/<(?:.|\s)*?>/g, ' ');
+}
 
 export function parseDateTimeDataValue(value: any, expectedFormat?: string): Date {
   if (!value) {

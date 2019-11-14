@@ -10,11 +10,12 @@
     <quill-editor
       [(ngModel)]="content"
       [readOnly]="readonly"
-      (onEditorCreated)="$event.focus()"
-      (onContentChanged)="contentChanged($event)"
       [maxLength]="maxLength"
       [minLength]="minLength"
-      [placeholder]="insertTextPlaceholder">
+      [placeholder]="insertTextPlaceholder"
+      [modules]="defaultOptions"
+      (onEditorCreated)="$event.focus()"
+      (onContentChanged)="contentChanged($event)">
     </quill-editor>
 
     <div *ngIf="!valid" class="text-danger px-2 py-1 small" id="invalid-warning">

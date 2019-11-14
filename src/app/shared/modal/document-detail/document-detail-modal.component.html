@@ -6,19 +6,19 @@
   [showHeader]="false"
   (onSubmit)="onSubmit()">
 
-  <div class="body p-3">
-    <document-detail *ngIf="collection && document"
-                     [collection]="collection"
-                     [document]="document"
+  <div class="body p-3" *ngIf="{collection: collection$ | async, document: document$ | async} as data">
+    <document-detail *ngIf="data.collection && data.document"
+                     [collection]="data.collection"
+                     [document]="data.document"
                      [query]="query$ | async"
-                     [permissions]="collection | collectionPermissions | async"
+                     [permissions]="data.collection | collectionPermissions | async"
                      [toolbarRef]="toolbarRef"
                      (documentChanged)="onDocumentChanged($event)">
     </document-detail>
     <links-list
-      *ngIf="collection && document && document.id"
-      [document]="document"
-      [collection]="collection"
+      *ngIf="data.collection && data.document?.id"
+      [document]="data.document"
+      [collection]="data.collection"
       (documentSelect)="selectCollectionAndDocument($event)">
     </links-list>
   </div>

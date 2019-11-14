@@ -76,11 +76,11 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   private subscribeDataInfo() {
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
 
-    this.dataLoaded$ = combineLatest(
+    this.dataLoaded$ = combineLatest([
       this.store$.pipe(select(selectCollectionsLoaded)),
       this.store$.pipe(select(selectViewsLoaded)),
-      this.store$.pipe(select(selectCurrentQueryDocumentsLoaded))
-    ).pipe(
+      this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
+    ]).pipe(
       tap(([, , documentsLoaded]) => (this.documentsLoaded = documentsLoaded)),
       map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
     );

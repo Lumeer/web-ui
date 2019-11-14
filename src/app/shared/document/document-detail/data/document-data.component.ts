@@ -50,6 +50,7 @@ import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../../core/store/documents/documents.state';
+import {DataValueInputType} from '../../../../core/model/data-value';
 
 @Component({
   selector: 'document-data',
@@ -219,7 +220,9 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
       .filter(row => row.attribute && row.attribute.id)
       .reduce((d, row) => {
         if (row.attribute.constraint) {
-          d[row.attribute.id] = row.attribute.constraint.createDataValue(row.value, this.constraintData).serialize();
+          d[row.attribute.id] = row.attribute.constraint
+            .createDataValue(row.value, DataValueInputType.Stored, this.constraintData)
+            .serialize();
         } else {
           d[row.attribute.id] = row.value;
         }
