@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 
 import {filter, map, take} from 'rxjs/operators';
 import {ResourceType} from '../../core/model/resource-type';
@@ -38,6 +38,10 @@ import {Workspace} from '../../core/store/navigation/workspace';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {Query} from '../../core/store/navigation/query/query';
+import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
+import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
+import {Organization} from '../../core/store/organizations/organization';
+import {Project} from '../../core/store/projects/project';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -50,9 +54,13 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public readonly collectionType = ResourceType.Collection;
 
   private workspace: Workspace;
+  public organizationAndProject: Observable<{organization: Organization; project: Project}>;
   private previousUrl: string;
 
   private subscriptions = new Subscription();
+
+  @ViewChild('tableId', {static: false})
+  private tableIdElement: ElementRef<HTMLInputElement>;
 
   constructor(
     private i18n: I18n,
@@ -151,6 +159,11 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
         filter(workspace => !!workspace)
       )
       .subscribe(workspace => (this.workspace = workspace));
+    this.organizationAndProject = combineLatest([
+      this.store$.pipe(select(selectOrganizationByWorkspace)),
+      this.store$.pipe(select(selectProjectByWorkspace)),
+    ]).pipe(map(([organization, project]) => ({organization, project})));
+    this.store$.pipe(select(selectOrganizationByWorkspace));
     this.subscriptions.add(sub1);
 
     const sub2 = this.store$
@@ -167,5 +180,11 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
         take(1)
       )
       .subscribe(url => (this.previousUrl = url));
+  }
+
+  public copyTableId() {
+    this.tableIdElement.nativeElement.select();
+    this.tableIdElement.nativeElement.setSelectionRange(0, 99999);
+    document.execCommand('copy');
   }
 }

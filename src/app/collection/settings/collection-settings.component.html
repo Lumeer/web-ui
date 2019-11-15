@@ -25,6 +25,20 @@
 
     </resource-header>
 
+    <div class="d-flex flex-row-reverse text-right" *ngIf="(organizationAndProject | async) as realWorkspace">
+      <div class="input-group input-group-sm w-auto">
+        <div class="input-group-prepend">
+          <span class="input-group-text align-items-end" i18n="@@collection.settings.tableId">Table ID:</span>
+        </div>
+        <input #tableId class="form-control" type="text" [readOnly]="true" [value]="realWorkspace.organization.id + '/' + realWorkspace.project.id + '/' + collection.id">
+        <div class="input-group-append">
+          <span class="input-group-text cursor-pointer text-secondary" title="Copy to clipboard" i18n-title="@@collection.settings.clipboard.copy" (click)="copyTableId()">
+            <i class="fas fa-copy"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+
     <ul class="nav nav-tabs px-5">
       <li role="presentation" class="nav-item">
         <a [routerLink]="['attributes']"
