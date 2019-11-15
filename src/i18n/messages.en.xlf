@@ -776,31 +776,40 @@
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="collection.settings.records.count" datatype="html">
         <source>Number of records</source><target state="final">Number of records</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="collection.config.tab.attributes" datatype="html">
-        <source>
-          Attributes
-        </source><target state="final">
-          Attributes
-        </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
-        <source>
-          Rules
-        </source><target state="final">
-          Rules
-        </target>
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="collection.settings.tableId" datatype="html">
+        <source>Table ID:</source><target state="final">Table ID:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.settings.clipboard.copy" datatype="html">
+        <source>Copy to clipboard</source><target state="final">Copy to clipboard</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
+      </trans-unit><trans-unit id="collection.config.tab.attributes" datatype="html">
+        <source>
+          Attributes
+        </source><target state="final">
+          Attributes
+        </target>
+
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
+        <source>
+          Rules
+        </source><target state="final">
+          Rules
+        </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
         <source>
           Users
         </source><target state="final">
           Users
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
         <source>Add a new attribute</source><target state="final">Add a new attribute</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/attributes/collection-attributes.component.html</context>
@@ -2202,7 +2211,7 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.type" datatype="html">
-        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</source><target state="final">{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</target>
+        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} }</source><target state="final">{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} }</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/single-rule/single-rule.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.on" datatype="html">
@@ -2475,6 +2484,12 @@
         <source>You do not have permission to access this table</source><target state="final">You do not have permission to access this table</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.settings.clipboard.copied" datatype="html">
+        <source>Copied!</source><target state="final">Copied!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -4100,7 +4115,7 @@
           Link Types
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
         <source>Name</source><target state="final">Name</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
@@ -4168,6 +4183,18 @@
         <source>Do you really want to delete this rule?</source><target state="final">Do you really want to delete this rule?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
+        <source>Zapier Rule</source><target state="final">Zapier Rule</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/single-rule/single-rule.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
+        <source>This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).</source><target state="final">This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/single-rule/single-rule.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit></body>

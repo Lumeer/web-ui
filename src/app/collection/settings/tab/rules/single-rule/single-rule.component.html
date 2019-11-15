@@ -5,7 +5,7 @@
   <div>
     <strong>{{rule.name}}</strong>
     <span class="mx-2" i18n="@@collection.config.tab.rules.ofType">of type</span>
-    <em i18n="@@collection.config.tab.rules.type">{rule.type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly}}</em>
+    <em i18n="@@collection.config.tab.rules.type">{rule.type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}</em>
     <span class="ml-2" i18n="@@collection.config.tab.rules.on">on</span>
 
     <span
@@ -30,10 +30,10 @@
     </span>
   </div>
   <div class="flex-grow-1 text-right">
-    <a (click)="fireEdit(rule.name)">
+    <a (click)="fireEdit(rule)">
       <i class="fas fa-pencil text-success cursor-pointer"></i>
     </a>
-    <a class="ml-3" (click)="fireDelete(rule.name)">
+    <a class="ml-3" (click)="fireDelete(rule)">
       <i class="fas fa-trash text-danger cursor-pointer"></i>
     </a>
   </div>
