@@ -45,6 +45,7 @@ import {Project} from '../../core/store/projects/project';
 
 @Component({
   templateUrl: './collection-settings.component.html',
+  styleUrls: ['./collection-settings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionSettingsComponent implements OnInit, OnDestroy {
@@ -56,6 +57,9 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   private workspace: Workspace;
   public organizationAndProject: Observable<{organization: Organization; project: Project}>;
   private previousUrl: string;
+
+  public copied = new BehaviorSubject<boolean>(false);
+  public copiedText: string;
 
   private subscriptions = new Subscription();
 
@@ -71,6 +75,10 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.subscribeToStore();
+    this.copiedText = this.i18n({
+      id: 'collection.settings.clipboard.copied',
+      value: 'Copied!',
+    });
   }
 
   public ngOnDestroy(): void {
@@ -186,5 +194,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     this.tableIdElement.nativeElement.select();
     this.tableIdElement.nativeElement.setSelectionRange(0, 99999);
     document.execCommand('copy');
+    this.copied.next(true);
+    setTimeout(() => this.copied.next(false), 3000);
   }
 }

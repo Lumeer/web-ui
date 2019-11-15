@@ -1,0 +1,12 @@
+@import '~src/styles/variables';
+
+input#tableId {
+  background-color: white;
+
+  &.copied {
+    border-color: $success;
+    font-weight: bold;
+  }
+
+  transition: border-color 0.25s ease;
+}

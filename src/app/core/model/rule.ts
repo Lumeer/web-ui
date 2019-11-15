@@ -20,6 +20,7 @@
 export enum RuleType {
   AutoLink = 'AUTO_LINK',
   Blockly = 'BLOCKLY',
+  Zapier = 'ZAPIER',
 }
 
 export enum RuleTiming {
@@ -35,6 +36,7 @@ export enum RuleTiming {
 export const RuleTypeMap = {
   [RuleType.AutoLink]: RuleType.AutoLink,
   [RuleType.Blockly]: RuleType.Blockly,
+  [RuleType.Zapier]: RuleType.Zapier,
 };
 
 export const RuleTimingMap = {
@@ -63,6 +65,11 @@ export interface BlocklyRule extends BasicRule {
   configuration: BlocklyRuleConfiguration;
 }
 
+export interface ZapierRule extends BasicRule {
+  type: RuleType.Zapier;
+  configuration: ZapierRuleConfiguration;
+}
+
 export type AutoLinkRuleConfiguration = {
   collection1: string;
   attribute1: string;
@@ -80,5 +87,10 @@ export type BlocklyRuleConfiguration = {
   blocklyDryRunResult: string;
 };
 
-export type Rule = AutoLinkRule | BlocklyRule;
-export type RuleConfiguration = AutoLinkRuleConfiguration | BlocklyRuleConfiguration;
+export type ZapierRuleConfiguration = {
+  hookUrl: string;
+  id: string;
+};
+
+export type Rule = AutoLinkRule | BlocklyRule | ZapierRule;
+export type RuleConfiguration = AutoLinkRuleConfiguration | BlocklyRuleConfiguration | ZapierRuleConfiguration;

@@ -1864,13 +1864,25 @@
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
+      </trans-unit><trans-unit id="collection.settings.tableId" datatype="html">
+        <source>Table ID:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.settings.clipboard.copy" datatype="html">
+        <source>Copy to clipboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
       </trans-unit><trans-unit id="collection.config.tab.attributes" datatype="html">
         <source>
           Attributes
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
         <source>
@@ -1878,7 +1890,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.link.types" datatype="html">
         <source>
@@ -1886,7 +1898,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
         <source>
@@ -1894,7 +1906,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">57</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
         <source>Add a new attribute</source>
@@ -2031,7 +2043,7 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.type" datatype="html">
-        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} }</source>
+        <source>{VAR_SELECT, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/rules/single-rule/single-rule.component.html</context>
           <context context-type="linenumber">8</context>
@@ -3430,6 +3442,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="collection.settings.clipboard.copied" datatype="html">
+        <source>Copied!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="collection.delete.dialog.message" datatype="html">
         <source>Do you really want to delete this table?</source>
         <context-group purpose="location">
@@ -3634,6 +3653,20 @@
         <source>Do you really want to delete this rule?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.zapier.warning.title" datatype="html">
+        <source>Zapier Rule</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/single-rule/single-rule.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="collection.config.tab.rules.zapier.warning.text" datatype="html">
+        <source>This rule is created by a Zap in Zapier. Please configure this rule directly in Zapier (www.zapier.com).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/rules/single-rule/single-rule.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
