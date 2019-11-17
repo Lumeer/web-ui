@@ -18,7 +18,11 @@
  */
 
 import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'top-panel-wrapper',
@@ -32,10 +36,13 @@ export class TopPanelWrapperComponent implements OnInit {
 
   public mobile$ = new BehaviorSubject(true);
 
-  constructor(private element: ElementRef) {}
+  public workspace$: Observable<Workspace>;
+
+  constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.detectMobileResolution();
+    this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
   }
 
   @HostListener('window:resize')

@@ -1,0 +1,30 @@
+.wrap {
+  display: block;
+  height: 2.5rem;
+}
+
+.bookmark {
+  position: fixed !important;
+  left: 100%;
+  transition: all 0.3s ease !important;
+  z-index: 1000;
+  border-radius: 0.2rem 0 0 0.2rem;
+  max-width: 50%;
+  display: table;
+  margin: 0 0 0.5rem -1rem;
+  box-sizing: border-box;
+  background-color: white;
+}
+
+.bookmark:hover {
+  transform: translateX(calc(-100% + 1rem));
+}
+
+.content {
+  padding: 0.5rem 0.5rem;
+}
+
+i {
+  padding: 0.51rem 0.5rem;
+  border-radius: 0.2rem 0 0 0.2rem;
+}

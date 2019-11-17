@@ -53,6 +53,7 @@ import {PresenterModule} from './presenter/presenter.module';
 import {DropdownModule} from './dropdown/dropdown.module';
 import {SequencesModule} from './sequences/sequences.module';
 import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
+import {BookmarksModule} from './bookmarks/bookmarks.module';
 
 @NgModule({
   imports: [
@@ -83,6 +84,7 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     PresenterModule,
     DropdownModule,
     DataDropdownModule,
+    BookmarksModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -129,6 +131,7 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
     PickerModule,
     SequencesModule,
     DataDropdownModule,
+    BookmarksModule,
   ],
 })
 export class SharedModule {}
