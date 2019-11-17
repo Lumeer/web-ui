@@ -22,7 +22,6 @@ import {combineLatest, Observable} from 'rxjs';
 import {View} from '../../../core/store/views/view';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectViewsByQuery} from '../../../core/store/common/permissions.selectors';
 import {perspectiveIconsMap} from '../../../view/perspectives/perspective';
 import {QueryData} from '../../top-panel/search-box/util/query-data';
 import {selectAllCollections} from '../../../core/store/collections/collections.state';
@@ -47,7 +46,10 @@ export class ViewsBookmarksComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.views$ = this.store$.pipe(select(selectAllViews));
+    this.views$ = this.store$.pipe(
+      select(selectAllViews),
+      map(views => views.filter(view => view.favorite))
+    );
     this.queryData$ = combineLatest([
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
@@ -56,10 +58,6 @@ export class ViewsBookmarksComponent implements OnInit {
 
   public getIconForPerspective(perspective: string): string {
     return (perspectiveIconsMap[perspective] || '').replace('fa-fw', '');
-  }
-
-  public getQueryColor(query): string {
-    return '';
   }
 
   public getViewLink(view: View) {
