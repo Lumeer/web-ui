@@ -109,7 +109,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     this.save.emit(dataValue);
   }
 
-  private openTextEditor(event: MouseEvent) {
+  public openTextEditor(event: MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
     event.stopImmediatePropagation();
