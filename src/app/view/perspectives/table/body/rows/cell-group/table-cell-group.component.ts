@@ -43,8 +43,9 @@ import {
 } from '../../../../../../core/store/tables/tables.selector';
 import {selectAllUsers} from '../../../../../../core/store/users/users.state';
 import {User} from '../../../../../../core/store/users/user';
-import {DurationUnitsMap} from '../../../../../../core/model/data/constraint';
+import {ConstraintData, DurationUnitsMap} from '../../../../../../core/model/data/constraint';
 import {TranslationService} from '../../../../../../core/service/translation.service';
+import {ConstraintDataService} from '../../../../../../core/service/constraint-data.service';
 
 @Component({
   selector: 'table-cell-group',
@@ -65,7 +66,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public documents$: Observable<DocumentModel[]>;
   public linkInstances$: Observable<LinkInstance[]>;
   public query$: Observable<Query>;
-  public users$: Observable<User[]>;
+  public constraintData$: Observable<ConstraintData>;
 
   public columns$: Observable<TableConfigColumn[]>;
   public part$: Observable<TableConfigPart>;
@@ -78,13 +79,11 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
   private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
 
-  public constructor(private store$: Store<{}>, private translationService: TranslationService) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+  public constructor(private store$: Store<{}>, private constraintDataService: ConstraintDataService) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
-    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
 
     // const cursor$ = this.cursor$.pipe(filter(cursor => !!cursor));
     this.columns$ = this.bindColumns();

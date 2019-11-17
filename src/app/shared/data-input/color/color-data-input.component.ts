@@ -78,14 +78,7 @@ export class ColorDataInputComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
-      this.preventSaving = !!changes.value;
       setTimeout(() => {
-        this.refreshValid(this.value);
-
-        if (changes.value) {
-          this.colorInput.nativeElement.value = this.value.format();
-        }
-
         HtmlModifier.setCursorAtTextContentEnd(this.colorInput.nativeElement);
         this.colorInput.nativeElement.focus();
         this.openColorPicker();
@@ -94,12 +87,6 @@ export class ColorDataInputComponent implements OnChanges {
     if (changes.focus && !this.focus) {
       this.closeColorPicker();
     }
-    if (changes.value && this.value.format().length === 1) {
-      // show value entered into hidden input without any changes
-      const input = this.colorInput;
-      setTimeout(() => input && (input.nativeElement.value = this.value.format()));
-    }
-
     this.refreshValid(this.value);
   }
 
@@ -147,6 +134,7 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   public onValueChange(value: string) {
+    this.colorInput.nativeElement.value = value;
     const dataValue = this.value.parseInput(value);
     this.valueChange.emit(dataValue);
   }

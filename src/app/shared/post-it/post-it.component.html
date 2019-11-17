@@ -4,6 +4,7 @@
 
 <post-it-header *ngIf="(resource | resourceIconsColors) as data"
                 class="card-header p-2"
+                cdkDragHandle
                 [class.cursor-move]="canDrag"
                 [resource]="resource"
                 [allowedPermissions]="allowedPermissions"

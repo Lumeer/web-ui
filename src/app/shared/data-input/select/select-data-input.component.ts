@@ -35,6 +35,7 @@ import {SelectDataValue} from '../../../core/model/data-value/select.data-value'
 import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint-config';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {DataValueInputType} from '../../../core/model/data-value';
 
 @Component({
   selector: 'select-data-input',
@@ -86,9 +87,9 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocus = true;
     }
     if (changes.value && this.value) {
-      if (String(this.value.format()).length === 1) {
+      if (this.value.inputType === DataValueInputType.Typed) {
         this.text = this.value.format();
-        this.triggerInput = true; // show suggestions when typing the first letter in readonly mode
+        this.triggerInput = true;
       }
       this.options = this.createDisplayOptions(this.value.config);
     }

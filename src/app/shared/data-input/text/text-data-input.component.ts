@@ -145,7 +145,7 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private refreshValid(value: DataValue) {
-    this.valid = value.isValid();
+    this.valid = !value || value.isValid();
   }
 
   @HostListener('keydown', ['$event'])

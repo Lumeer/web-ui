@@ -2,7 +2,7 @@
   [dialogType]="dialogType.Primary"
   [showHeader]="false"
   (onClose)="cancelDialog()"
-  (onSubmit)="submitDialog(content)"
+  (onSubmit)="submitDialog()"
   [submitDisabled]="!valid || readonly">
 
   <div class="body" #dialogBody>
@@ -14,7 +14,7 @@
       [minLength]="minLength"
       [placeholder]="insertTextPlaceholder"
       [modules]="defaultOptions"
-      (onEditorCreated)="$event.focus()"
+      (onEditorCreated)="onEditorCreated($event)"
       (onContentChanged)="contentChanged($event)">
     </quill-editor>
 

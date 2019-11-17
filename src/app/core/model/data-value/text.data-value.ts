@@ -41,7 +41,11 @@ export class TextDataValue implements DataValue {
   }
 
   public serialize(): any {
-    return this.format();
+    const formattedValue = this.format();
+    if (numberOfTags(formattedValue) === 1) {
+      return stripTextHtmlTags(formattedValue, false);
+    }
+    return formattedValue;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
@@ -81,4 +85,9 @@ export class TextDataValue implements DataValue {
   public parseInput(inputValue: string): TextDataValue {
     return new TextDataValue(inputValue, DataValueInputType.Typed, this.config);
   }
+}
+
+function numberOfTags(value: string): number {
+  const match = value.match(/<([a-z]+)(?=[\s>])(?:[^>=]|='[^']*'|="[^"]*"|=[^'"\s]*)*\s?\/?>/g);
+  return match ? match.length : 0;
 }

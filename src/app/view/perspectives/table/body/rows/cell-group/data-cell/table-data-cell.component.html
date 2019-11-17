@@ -8,13 +8,11 @@
                         (edit)="onEdit()">
   </table-data-cell-menu>
 
-  <data-input *ngIf="{ value: hiddenInputValue$ | async} as hiddenInput"
-              [constraint]="data.attribute?.constraint"
-              [constraintData]="constraintData"
+  <data-input [constraint]="data.attribute?.constraint"
               [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
+              [dataValue]="dataValue$ | async"
               [focus]="true"
               [readonly]="!allowedPermissions?.writeWithView || !((editing$ | async) || (data.attribute?.constraint?.type === constraintType.Boolean))"
-              [value]="(clearValue$ | async) ? '' : (hiddenInput.value || hiddenInput.value === 0 ? hiddenInput.value : (document ? (document | extractValue:column) : (linkInstance | extractValue:column)))"
               (valueChange)="onValueChange($event)"
               (save)="onValueSave($event)"
               (cancel)="onCancelEditing()"
@@ -36,7 +34,7 @@
                     [linkInstanceId]="hintsData.row?.linkInstanceId"
                     [correlationId]="hintsData.row?.correlationId"
                     [offsetLeft]="hintsData.columns | documentHintsOffset:column.attributeIds[0]"
-                    [value]="editedValue"
+                    [dataValue]="editedValue"
                     [origin]="element"
                     (useHint)="onUseDocumentHint()">
     </document-hints>

@@ -17,23 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {DataValuePipe} from './data-value.pipe';
-import {FormatDataValuePipe} from './format-data-value.pipe';
-import {IsDataValueValidPipe} from './is-data-value-valid.pipe';
-import {SerializeDataValuePipe} from './serialize-data-value.pipe';
-import {PreviewDataValuePipe} from './preview-data-value.pipe';
+import {Pipe, PipeTransform} from '@angular/core';
+import {DataValue} from '../../../core/model/data-value';
 
-@NgModule({
-  imports: [CommonModule],
-  declarations: [
-    DataValuePipe,
-    FormatDataValuePipe,
-    IsDataValueValidPipe,
-    SerializeDataValuePipe,
-    PreviewDataValuePipe,
-  ],
-  exports: [DataValuePipe, FormatDataValuePipe, IsDataValueValidPipe, SerializeDataValuePipe, PreviewDataValuePipe],
+@Pipe({
+  name: 'previewDataValue',
 })
-export class DataPipesModule {}
+export class PreviewDataValuePipe implements PipeTransform {
+  public transform(dataValue: DataValue): string {
+    return dataValue ? dataValue.preview() : '';
+  }
+}

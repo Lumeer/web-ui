@@ -9,10 +9,9 @@
       (row.document?.id === attributeEditing?.documentId) &&
       (column.collectionId && column.attribute.id === attributeEditing?.attributeId)">
     <data-input *ngIf="column.linkTypeId"
-                [constraint]="column.attribute.constraint"
-                [constraintData]="constraintData"
+                [constraint]="column.attribute?.constraint"
                 [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id)"
-                [value]="!(initialValue | isNullOrUndefined) && data.columnEditing === index ? initialValue : (row.linkInstance && row.linkInstance.data && row.linkInstance.data[column.attribute.id])"
+                [dataValue]="!(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : ((row.linkInstance?.data && row.linkInstance.data[column.attribute.id]) | dataValue:column.attribute?.constraint:constraintData)"
                 [focus]="true"
                 [readonly]="!column.editable || data.readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
                 [class.cursor-pointer]="!data.readonly && column.editable"
@@ -25,9 +24,8 @@
 
     <data-input *ngIf="column.collectionId"
                 [constraint]="column.attribute.constraint"
-                [constraintData]="constraintData"
                 [cursor]="row.document && (row.document | dataCursor : column.attribute.id)"
-                [value]="!(initialValue | isNullOrUndefined) && data.columnEditing === index ? initialValue : (row.document && row.document.data && row.document.data[column.attribute.id])"
+                [dataValue]="!(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : ((row.document?.data && row.document.data[column.attribute.id]) | dataValue:column.attribute?.constraint:constraintData)"
                 [focus]="true"
                 [readonly]="!column.editable || data.readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
                 [class.cursor-pointer]="!data.readonly && column.editable"
@@ -57,7 +55,7 @@
     *ngIf="!(data.columnEditing | isNullOrUndefined) && columns[data.columnEditing].collectionId"
     [attributeId]="columns[data.columnEditing]?.attribute?.id"
     [correlationId]="row.correlationId"
-    [value]="suggesting$ | async"
+    [dataValue]="suggesting$ | async"
     [collectionId]="collectionId"
     [excludedDocumentIds]="row.document?.id ? [row.document.id] : []"
     [columns]="columns | documentHintsColumns"

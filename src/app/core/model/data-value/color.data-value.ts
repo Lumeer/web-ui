@@ -39,6 +39,9 @@ export class ColorDataValue implements DataValue {
   }
 
   public format(): string {
+    if (this.inputType === DataValueInputType.Typed) {
+      return this.value;
+    }
     return this.hexCode || formatUnknownDataValue(this.value);
   }
 

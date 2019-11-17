@@ -28,7 +28,7 @@ import {
 } from '../../../shared/utils/constraint/duration-constraint.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {ConstraintData} from '../data/constraint';
-import {DurationConstraintConfig, DurationUnit} from '../data/constraint-config';
+import {DurationConstraintConfig} from '../data/constraint-config';
 import {DataValue, DataValueInputType} from './index';
 import {isNumeric, toNumber} from '../../../shared/utils/common.utils';
 
@@ -42,12 +42,16 @@ export class DurationDataValue implements DataValue {
     public readonly constraintData: ConstraintData
   ) {
     const durationUnitsMap = this.constraintData && this.constraintData.durationUnitsMap;
-    if (isDurationDataValueValid(this.value, durationUnitsMap)) {
-      this.bigNumber = convertToBig(getDurationSaveValue(this.value, this.config, durationUnitsMap));
+    const modifiedValue = this.inputType === DataValueInputType.Typed ? parseInputValue(value) : value;
+    if (isDurationDataValueValid(modifiedValue, durationUnitsMap)) {
+      this.bigNumber = convertToBig(getDurationSaveValue(modifiedValue, this.config, durationUnitsMap));
     }
   }
 
   public format(maxUnits?: number): string {
+    if (this.inputType === DataValueInputType.Typed) {
+      return this.value;
+    }
     if (!this.bigNumber) {
       return formatUnknownDataValue(this.value);
     }
@@ -97,8 +101,7 @@ export class DurationDataValue implements DataValue {
   }
 
   public parseInput(inputValue: string): DurationDataValue {
-    const value = parseInputValue(inputValue);
-    return new DurationDataValue(value, DataValueInputType.Typed, this.config, this.constraintData);
+    return new DurationDataValue(inputValue, DataValueInputType.Typed, this.config, this.constraintData);
   }
 }
 

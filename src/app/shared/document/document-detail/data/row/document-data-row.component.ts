@@ -17,7 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  Renderer2,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataCursor} from '../../../../data-input/data-cursor';
@@ -26,7 +40,12 @@ import {BehaviorSubject} from 'rxjs';
 import {DataRow} from '../../../../data/data-row.service';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {DataRowComponent} from '../../../../data/data-row-component';
-import {isNumeric, toNumber} from '../../../../utils/common.utils';
+import {isNotNullOrUndefined} from '../../../../utils/common.utils';
+import {DataValue, DataValueInputType} from '../../../../../core/model/data-value';
+import {UnknownDataValue} from '../../../../../core/model/data-value/unknown.data-value';
+import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
+import {DocumentDataRowIconsComponent} from './icons/document-data-row-icons.component';
+import {BooleanConstraint} from '../../../../../core/model/constraint/boolean.constraint';
 
 @Component({
   selector: 'document-data-row',
@@ -34,7 +53,7 @@ import {isNumeric, toNumber} from '../../../../utils/common.utils';
   styleUrls: ['./document-data-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDataRowComponent implements DataRowComponent {
+export class DocumentDataRowComponent implements DataRowComponent, OnChanges, AfterViewInit {
   @Input()
   public row: DataRow;
 
@@ -77,6 +96,12 @@ export class DocumentDataRowComponent implements DataRowComponent {
   @Output()
   public resetFocusAndEdit = new EventEmitter<number>();
 
+  @ViewChild('wrapperElement', {static: false, read: ElementRef})
+  public wrapperElement: ElementRef;
+
+  @ViewChild(DocumentDataRowIconsComponent, {static: false, read: ElementRef})
+  public iconsElement: ElementRef;
+
   @HostBinding('class.key-focused')
   public keyFocused: boolean;
 
@@ -88,20 +113,44 @@ export class DocumentDataRowComponent implements DataRowComponent {
   public placeholder: string;
 
   public keyEditing$ = new BehaviorSubject(false);
-  public initialKey: any;
+  public keyDataValue: DataValue;
+
+  public editedValue: DataValue;
   public editing$ = new BehaviorSubject(false);
-  public initialValue: any;
+  public dataValue: DataValue;
 
   public get constraintType(): ConstraintType {
     return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
   }
 
-  constructor(private i18n: I18n) {
+  constructor(private i18n: I18n, private renderer: Renderer2) {
     this.placeholder = i18n({id: 'dataResource.attribute.placeholder', value: 'Enter attribute name'});
   }
 
-  public onNewKey(value: string) {
-    this.initialKey = null;
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.row && this.row) {
+      this.keyDataValue = this.createKeyDataValue();
+      this.dataValue = this.createDataValue();
+    }
+  }
+
+  private createKeyDataValue(value?: any, inputType?: DataValueInputType): DataValue {
+    const initialValue = isNotNullOrUndefined(value)
+      ? value
+      : (this.row.attribute && this.row.attribute.name) || this.row.key;
+    const initialInputType = isNotNullOrUndefined(value) ? inputType : DataValueInputType.Stored;
+    return new UnknownDataValue(initialValue, initialInputType);
+  }
+
+  private createDataValue(value?: any, inputType?: DataValueInputType): DataValue {
+    const constraint = (this.row.attribute && this.row.attribute.constraint) || new UnknownConstraint();
+    const initialValue = isNotNullOrUndefined(value) ? value : this.row.value;
+    const initialInputType = isNotNullOrUndefined(value) ? inputType : DataValueInputType.Stored;
+    return constraint.createDataValue(initialValue, initialInputType, this.constraintData);
+  }
+
+  public onNewKey(dataValue: DataValue) {
+    const value = dataValue.serialize();
     if (value !== this.getCurrentKey()) {
       this.newKey.emit(value);
     }
@@ -112,8 +161,9 @@ export class DocumentDataRowComponent implements DataRowComponent {
     return (this.row.attribute && this.row.attribute.name) || this.row.key;
   }
 
-  public onNewValue(value: any) {
-    this.initialValue = null;
+  public onNewValue(dataValue: DataValue) {
+    this.editedValue = null;
+    const value = dataValue.serialize();
     if (value !== this.getCurrentValue()) {
       this.newValue.emit(value);
     }
@@ -145,8 +195,10 @@ export class DocumentDataRowComponent implements DataRowComponent {
   }
 
   public onDataInputDblClick(event: MouseEvent) {
-    event.preventDefault();
-    this.onEdit.emit(1);
+    if (!this.editing$.value) {
+      event.preventDefault();
+      this.onEdit.emit(1);
+    }
   }
 
   public startColumnEditing(column: number, value?: any): boolean {
@@ -162,7 +214,7 @@ export class DocumentDataRowComponent implements DataRowComponent {
 
   private startKeyEditing(value?: any): boolean {
     if (this.isManageable() && !this.keyEditing$.value) {
-      this.initialKey = value;
+      this.keyDataValue = this.createKeyDataValue(value, DataValueInputType.Typed);
       this.keyEditing$.next(true);
       return true;
     }
@@ -170,11 +222,12 @@ export class DocumentDataRowComponent implements DataRowComponent {
   }
 
   private startValueEditing(value?: any): boolean {
+    this.editedValue = null;
     if (this.isEditable() && !this.editing$.value) {
       if (this.shouldDirectEditValue()) {
         this.onNewValue(this.computeDirectEditValue());
       } else {
-        this.initialValue = this.modifyInitialValue(value);
+        this.dataValue = this.createDataValue(value, DataValueInputType.Typed);
         this.editing$.next(true);
         return true;
       }
@@ -182,22 +235,14 @@ export class DocumentDataRowComponent implements DataRowComponent {
     return false;
   }
 
-  private modifyInitialValue(value: any): any {
-    switch (this.constraintType) {
-      case ConstraintType.Percentage:
-        return isNumeric(value) ? toNumber(value) / 100 : value;
-      default:
-        return value;
-    }
-  }
-
   private shouldDirectEditValue(): boolean {
     return this.constraintType === ConstraintType.Boolean;
   }
 
-  private computeDirectEditValue(): any {
+  private computeDirectEditValue(): DataValue {
     if (this.constraintType === ConstraintType.Boolean) {
-      return !this.row.value;
+      const constraint = this.row.attribute.constraint as BooleanConstraint;
+      return constraint.createDataValue(!this.row.value);
     }
 
     return null;
@@ -208,8 +253,10 @@ export class DocumentDataRowComponent implements DataRowComponent {
   }
 
   public onKeyInputDblClick(event: MouseEvent) {
-    event.preventDefault();
-    this.onEdit.emit(0);
+    if (!this.keyEditing$.value) {
+      event.preventDefault();
+      this.onEdit.emit(0);
+    }
   }
 
   public endColumnEditing(column: number) {
@@ -221,14 +268,17 @@ export class DocumentDataRowComponent implements DataRowComponent {
   }
 
   private endValueEditing() {
-    this.initialValue = null;
+    this.keyDataValue = this.createKeyDataValue();
     if (this.editing$.value) {
+      if (this.editedValue) {
+        this.onNewValue(this.editedValue);
+      }
       this.editing$.next(false);
     }
   }
 
   private endKeyEditing() {
-    this.initialKey = null;
+    this.dataValue = this.createDataValue();
     if (this.keyEditing$.value) {
       this.keyEditing$.next(false);
     }
@@ -270,5 +320,25 @@ export class DocumentDataRowComponent implements DataRowComponent {
   public unFocusRow() {
     this.keyFocused = false;
     this.valueFocused = false;
+  }
+
+  public onValueEdit(value: DataValue) {
+    this.editedValue = value;
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.computeWidth();
+  }
+
+  public ngAfterViewInit() {
+    this.computeWidth();
+  }
+
+  private computeWidth() {
+    const iconsWidth = (this.iconsElement && this.iconsElement.nativeElement.clientWidth) || 0;
+    if (this.wrapperElement) {
+      this.renderer.setStyle(this.wrapperElement.nativeElement, 'width', `calc(100% - ${iconsWidth}px - 0.25rem)`);
+    }
   }
 }

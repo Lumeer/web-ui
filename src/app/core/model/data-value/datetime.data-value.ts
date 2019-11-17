@@ -45,6 +45,10 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public format(showInvalid = true): string {
+    if (this.inputType === DataValueInputType.Typed) {
+      return this.value;
+    }
+
     if ([undefined, null, ''].includes(this.value)) {
       return '';
     }

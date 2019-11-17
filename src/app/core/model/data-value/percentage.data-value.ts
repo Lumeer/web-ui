@@ -39,15 +39,14 @@ export class PercentageDataValue implements DataValue {
     public readonly inputType: DataValueInputType,
     public readonly config: PercentageConstraintConfig
   ) {
-    const pureValue = String(value)
-      .trim()
-      .endsWith('%')
-      ? parseInputValue(value)
-      : value;
+    const pureValue = this.inputType === DataValueInputType.Typed ? parseInputValue(value) : value;
     this.percentage = convertPercentageToBig(pureValue, config && config.decimals);
   }
 
   public format(suffix = '%'): string {
+    if (this.inputType === DataValueInputType.Typed) {
+      return this.value;
+    }
     if (!this.percentage) {
       return formatUnknownDataValue(this.value);
     }
@@ -106,8 +105,7 @@ export class PercentageDataValue implements DataValue {
   }
 
   public parseInput(inputValue: string): PercentageDataValue {
-    const value = parseInputValue(inputValue);
-    return new PercentageDataValue(value, DataValueInputType.Typed, this.config);
+    return new PercentageDataValue(inputValue, DataValueInputType.Typed, this.config);
   }
 }
 

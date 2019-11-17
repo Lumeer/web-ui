@@ -12,9 +12,9 @@
        tabindex>
       <data-input
         [constraint]="option.constraint"
+        [dataValue]="option.value | dataValue:option.constraint:constraintData"
         [focus]="true"
         [readonly]="true"
-        [value]="option.value"
         class="text-nowrap">
       </data-input>
     </a>

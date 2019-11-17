@@ -77,24 +77,11 @@ export class PercentageDataInputComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
-        this.percentageInput.nativeElement.value = this.value.format('');
         HtmlModifier.setCursorAtTextContentEnd(this.percentageInput.nativeElement);
         this.percentageInput.nativeElement.focus();
       });
     }
-    if (changes.value) {
-      this.initValue();
-    }
     this.valid = this.value.isValid();
-  }
-
-  private initValue() {
-    const input = this.percentageInput;
-    setTimeout(() => {
-      if (input && input.nativeElement) {
-        input.nativeElement.value = this.value.format('');
-      }
-    });
   }
 
   @HostListener('keydown', ['$event'])

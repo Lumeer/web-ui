@@ -36,12 +36,15 @@ import {ConstraintData, ConstraintType} from '../../../../../../core/model/data/
 import {LinkRow} from '../../../model/link-row';
 import {DataRowComponent} from '../../../../../data/data-row-component';
 import {BehaviorSubject, Subscription} from 'rxjs';
-import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../utils/common.utils';
+import {isNotNullOrUndefined} from '../../../../../utils/common.utils';
 import {distinctUntilChanged, filter} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
+import {DataValue, DataValueInputType} from '../../../../../../core/model/data-value';
+import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
+import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -108,9 +111,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   public columnEditing$ = new BehaviorSubject<number>(null);
   public columnFocused$ = new BehaviorSubject<number>(null);
-  public suggesting$ = new BehaviorSubject<any>(null);
+  public suggesting$ = new BehaviorSubject<DataValue>(null);
 
-  public initialValue: any;
+  public editedValue: DataValue;
   public subscriptions = new Subscription();
 
   private savingDisabled = false;
@@ -159,7 +162,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public endRowEditing() {
-    this.initialValue = null;
+    if (this.editedValue && isNotNullOrUndefined(this.columnEditing$.value)) {
+      this.onNewValue(this.columnEditing$.value, this.editedValue);
+    }
     this.suggesting$.next(null);
     this.columnEditing$.next(null);
   }
@@ -169,17 +174,26 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public startColumnEditing(column: number, value?: any): boolean {
+    this.editedValue = null;
     if (this.isColumnEditable(column)) {
       if (this.shouldDirectEditValue(column)) {
         this.onNewValue(column, this.computeDirectEditValue(column));
       } else {
-        this.initialValue = this.modifyInitialValue(column, value);
-        this.suggesting$.next(this.initialValue);
+        this.editedValue = this.createDataValue(column, value);
+        this.suggesting$.next(this.editedValue);
         this.columnEditing$.next(column);
         return true;
       }
     }
     return false;
+  }
+
+  private createDataValue(column: number, value?: any, inputType?: DataValueInputType): DataValue {
+    const attribute = this.columns[column].attribute;
+    const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+    const initialValue = isNotNullOrUndefined(value) ? value : this.columnValue(column);
+    const initialInputType = isNotNullOrUndefined(value) ? inputType : DataValueInputType.Stored;
+    return constraint.createDataValue(initialValue, initialInputType, this.constraintData);
   }
 
   private shouldDirectEditValue(column: number): boolean {
@@ -195,25 +209,13 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     return this.permissions && this.permissions.writeWithView && this.columns[column].editable;
   }
 
-  private computeDirectEditValue(column: number): any {
+  private computeDirectEditValue(column: number): DataValue {
     if (this.columnConstraintType(column) === ConstraintType.Boolean) {
-      return !this.columnValue(column);
+      const constraint = this.columns[column].attribute.constraint as BooleanConstraint;
+      return constraint.createDataValue(!this.columnValue(column));
     }
 
     return null;
-  }
-
-  private modifyInitialValue(index: number, value: any): any {
-    if (!value) {
-      return value;
-    }
-
-    switch (this.columnConstraintType(index)) {
-      case ConstraintType.Percentage:
-        return isNumeric(value) ? toNumber(value) / 100 : value;
-      default:
-        return value;
-    }
   }
 
   private columnValue(index: number): any {
@@ -230,24 +232,26 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     this.columnFocused$.next(null);
   }
 
-  public onNewValue(column: number, value: any) {
+  public onNewValue(column: number, dataValue: DataValue) {
+    this.editedValue = null;
     if (this.suggestions && this.suggestions.isSelected()) {
       this.suggestions.useSelection();
     } else {
-      this.saveData(column, value);
+      this.saveData(column, dataValue);
     }
     this.onDataInputCancel(column);
   }
 
-  private saveData(column: number, value: any) {
+  private saveData(column: number, dataValue: DataValue) {
     if (this.savingDisabled) {
       this.savingDisabled = false;
       return;
     }
 
     if (this.creatingNewLink()) {
-      this.createNewLink(column, value);
+      this.createNewLink(column, dataValue);
     } else {
+      const value = dataValue.serialize();
       const currentValue = this.columnValue(column);
       if (currentValue !== value) {
         this.newValue.emit({column, value});
@@ -255,7 +259,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     }
   }
 
-  private createNewLink(index: number, value: any) {
+  private createNewLink(index: number, dataValue: DataValue) {
+    const value = dataValue.serialize();
     if (!this.creatingNewRow && isNotNullOrUndefined(value) && String(value).trim() !== '') {
       this.creatingNewRow = true;
       const column = this.columns[index];
@@ -300,8 +305,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     this.unLink.emit();
   }
 
-  public onValueChange(index: number, value: any) {
-    this.suggesting$.next(value);
+  public onValueChange(index: number, dataVa: DataValue) {
+    this.suggesting$.next(dataVa);
   }
 
   public onDataInputKeyDown(event: KeyboardEvent) {

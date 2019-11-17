@@ -55,7 +55,7 @@ import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {isNotNullOrUndefined} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
-import {DataValueInputType} from '../../core/model/data-value';
+import {DataValue, DataValueInputType} from '../../core/model/data-value';
 
 @Component({
   selector: 'document-hints',
@@ -92,7 +92,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public correlationId: string;
 
   @Input()
-  public value: string;
+  public dataValue: DataValue;
 
   @Input()
   public offsetLeft: number;
@@ -128,8 +128,8 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.value) {
-      this.filter$.next(this.value);
+    if (changes.dataValue && this.dataValue) {
+      this.filter$.next(this.dataValue.format());
     }
     if (changes.collectionId && this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));

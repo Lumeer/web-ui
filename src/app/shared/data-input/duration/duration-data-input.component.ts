@@ -32,7 +32,6 @@ import {
 import {DurationDataValue} from '../../../core/model/data-value/duration.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
-import {isNumeric} from '../../utils/common.utils';
 
 @Component({
   selector: 'duration-data-input',
@@ -76,32 +75,14 @@ export class DurationDataInputComponent implements OnChanges {
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
-    let valueSet = false;
     if (changes.readonly && !this.readonly && this.focus) {
-      valueSet = true;
       setTimeout(() => {
-        this.setValue(this.durationInput);
         HtmlModifier.setCursorAtTextContentEnd(this.durationInput.nativeElement);
         this.durationInput.nativeElement.focus();
       });
     }
     if (changes.value && this.value) {
       this.valid = this.value.isValid();
-      if (!valueSet) {
-        this.initValue();
-      }
-    }
-  }
-
-  private initValue() {
-    setTimeout(() => this.durationInput && this.setValue(this.durationInput));
-  }
-
-  private setValue(input: ElementRef) {
-    if (String(this.value.value).length === 1) {
-      input.nativeElement.value = String(this.value.value);
-    } else {
-      input.nativeElement.value = this.value.format();
     }
   }
 

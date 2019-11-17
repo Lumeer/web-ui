@@ -48,6 +48,7 @@ import {FileAttachmentButtonComponent} from './files/button/file-attachment-butt
 import {PickerModule} from '../picker/picker.module';
 import {RichTextDataInputComponent} from './rich-text/rich-text-data-input.component';
 import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.module';
+import {QuillModule} from 'ngx-quill';
 
 @NgModule({
   imports: [
@@ -62,6 +63,7 @@ import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.modu
     GravatarModule,
     TypeaheadModule,
     DropdownModule,
+    QuillModule,
     TextEditorModalModule,
   ],
   declarations: [

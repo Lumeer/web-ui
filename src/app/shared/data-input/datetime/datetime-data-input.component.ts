@@ -37,6 +37,7 @@ import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.c
 import {KeyCode} from '../../key-code';
 import {isDateValid} from '../../utils/common.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {DataValueInputType} from '../../../core/model/data-value';
 
 @Component({
   selector: 'datetime-data-input',
@@ -85,10 +86,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       setTimeout(() => {
-        if (changes.value) {
-          this.dateTimeInput.nativeElement.value = this.value.format(false);
-        }
-
         HtmlModifier.setCursorAtTextContentEnd(this.dateTimeInput.nativeElement);
         this.dateTimeInput.nativeElement.focus();
         this.dateTimePicker && this.dateTimePicker.open();
@@ -102,11 +99,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
     if (changes.value && this.value) {
       this.date = this.value.toDate();
       this.options = createDateTimeOptions(this.value.config && this.value.config.format);
-    }
-    if (changes.value && String(this.value.value).length === 1) {
-      // show value entered into hidden input without any changes
-      const input = this.dateTimeInput;
-      setTimeout(() => input && (input.nativeElement.value = String(this.value.value)));
     }
   }
 
@@ -150,7 +142,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
     const dataValue = this.value.copy(date);
 
-    if (dataValue.serialize() !== this.value.serialize()) {
+    if (dataValue.serialize() !== this.value.serialize() || this.value.inputType === DataValueInputType.Typed) {
       this.save.emit(dataValue);
     } else {
       this.cancel.emit();
@@ -158,10 +150,17 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   }
 
   public onCancel() {
+    this.dateTimeInput && (this.dateTimeInput.nativeElement.value = this.value.format());
     this.cancel.emit();
   }
 
   public ngAfterViewInit(): void {
     document.body.style.setProperty('--first-day-of-week', environment.locale === 'cs' ? '8' : '2');
+  }
+
+  public onValueChange(date: Date) {
+    const dataValue = this.value.copy(date);
+    this.dateTimeInput.nativeElement.value = dataValue.format();
+    this.valueChange.emit(dataValue);
   }
 }
