@@ -42,7 +42,10 @@ export class UserDataValue implements DataValue {
       return this.user.name || this.user.email;
     }
 
-    if (this.config && this.config.externalUsers && isEmailValid(String(this.value))) {
+    if (
+      this.inputType === DataValueInputType.Typed ||
+      (this.config && this.config.externalUsers && isEmailValid(String(this.value)))
+    ) {
       return String(this.value);
     }
 
@@ -58,7 +61,10 @@ export class UserDataValue implements DataValue {
       return this.user.email;
     }
 
-    if (this.config && this.config.externalUsers && isEmailValid(String(this.value))) {
+    if (
+      this.inputType === DataValueInputType.Typed ||
+      (this.config && this.config.externalUsers && isEmailValid(String(this.value)))
+    ) {
       return String(this.value);
     }
 

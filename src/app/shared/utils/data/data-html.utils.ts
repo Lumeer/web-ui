@@ -40,7 +40,7 @@ export function createDataValueHtml(
     case ConstraintType.Color:
       return createDataColorValueHtml(dataValue.preview(), className);
     case ConstraintType.Boolean:
-      return createDataBooleanValueHtml(dataValue, className);
+      return createDataBooleanValueHtml(dataValue.serialize(), className);
     case ConstraintType.Files:
       return createDataFilesValueHtml(dataValue.preview(), className);
     default:
