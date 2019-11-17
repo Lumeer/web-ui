@@ -117,7 +117,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   public minWidth: number;
   public selectedIndex$ = new BehaviorSubject<number>(-1);
-  private filter$ = new BehaviorSubject<string>('');
+  public filter$ = new BehaviorSubject<string>('');
 
   private hintsCount = 0;
 
