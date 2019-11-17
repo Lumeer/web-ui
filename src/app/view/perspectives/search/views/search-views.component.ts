@@ -65,10 +65,10 @@ export class SearchViewsComponent {
     this.query$ = this.store$.pipe(select(selectQuery));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.loaded$ = this.store$.pipe(select(selectViewsLoaded));
-    this.queryData$ = combineLatest(
+    this.queryData$ = combineLatest([
       this.store$.pipe(select(selectAllCollections)),
-      this.store$.pipe(select(selectAllLinkTypes))
-    ).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
+      this.store$.pipe(select(selectAllLinkTypes)),
+    ]).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
     this.viewsConfig$ = this.selectViewsConfig$();
   }
 

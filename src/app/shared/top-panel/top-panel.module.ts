@@ -45,6 +45,7 @@ import {UserMenuDropdownComponent} from './user-panel/user-menu/dropdown/user-me
 import {VideoMenuDropdownComponent} from './user-panel/video-menu/dropdown/video-menu-dropdown.component';
 import {UserFeedbackModalComponent} from './user-panel/user-menu/user-feedback-modal/user-feedback-modal.component';
 import {PlayVideoModalComponent} from './user-panel/video-menu/play-video-modal/play-video-modal.component';
+import {BookmarksModule} from '../bookmarks/bookmarks.module';
 
 @NgModule({
   imports: [
@@ -60,6 +61,7 @@ import {PlayVideoModalComponent} from './user-panel/video-menu/play-video-modal/
     ReactiveFormsModule,
     InputModule,
     DropdownModule,
+    BookmarksModule,
   ],
   declarations: [
     TopPanelComponent,

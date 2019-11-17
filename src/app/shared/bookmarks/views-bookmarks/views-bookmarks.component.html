@@ -1,0 +1,10 @@
+<bookmark-toolbar [additionalClasses]="['mt-5']">
+  <ng-container *ngFor="let view of (views$ | async | arrayReverse)">
+    <bookmark *ngIf="view.favorite"
+              [color]="view.query | queryColor:(queryData$ | async)"
+              [icon]="getIconForPerspective(view.perspective)"
+              [link]="getViewLink(view)">
+      {{view.name}}
+    </bookmark>
+  </ng-container>
+</bookmark-toolbar>
