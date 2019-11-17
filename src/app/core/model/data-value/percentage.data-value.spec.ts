@@ -117,21 +117,21 @@ describe('PercentageDataValue', () => {
 
   it('should parse integer value', () => {
     const dataValue = new PercentageDataValue('', DataValueInputType.Stored, basicPercentage).parseInput('66');
-    expect(dataValue.format()).toEqual('66%');
+    expect(dataValue.format()).toEqual('66');
     expect(dataValue.serialize()).toEqual('0.66');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should parse decimal value', () => {
     const dataValue = new PercentageDataValue('', DataValueInputType.Stored, basicPercentage).parseInput('66.66');
-    expect(dataValue.format()).toEqual('67%');
+    expect(dataValue.format()).toEqual('66.66');
     expect(dataValue.serialize()).toEqual('0.67');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should parse decimal value with symbol', () => {
     const dataValue = new PercentageDataValue('', DataValueInputType.Stored, basicPercentage).parseInput('66.66%');
-    expect(dataValue.format()).toEqual('67%');
+    expect(dataValue.format()).toEqual('66.66%');
     expect(dataValue.serialize()).toEqual('0.67');
     expect(dataValue.isValid()).toEqual(true);
   });

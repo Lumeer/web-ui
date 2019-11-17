@@ -39,7 +39,11 @@ export class PercentageDataValue implements DataValue {
     public readonly inputType: DataValueInputType,
     public readonly config: PercentageConstraintConfig
   ) {
-    const pureValue = this.inputType === DataValueInputType.Typed ? parseInputValue(value) : value;
+    const containerPercentageSign = String(value)
+      .trim()
+      .endsWith('%');
+    const pureValue =
+      this.inputType === DataValueInputType.Typed || containerPercentageSign ? parseInputValue(value) : value;
     this.percentage = convertPercentageToBig(pureValue, config && config.decimals);
   }
 
