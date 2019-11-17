@@ -79,8 +79,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public date: Date;
   public options: DateTimeOptions;
 
-  private preventSaving: boolean;
-
   constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -109,14 +107,12 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         if (this.dateTimeInput) {
-          this.preventSaving = true;
           const dataValue = this.value.parseInput(this.dateTimeInput.nativeElement.value);
           // needs to be executed after parent event handlers
           setTimeout(() => this.save.emit(dataValue));
         }
         return;
       case KeyCode.Escape:
-        this.preventSaving = true;
         this.dateTimeInput && (this.dateTimeInput.nativeElement.value = this.value.format(false));
         this.cancel.emit();
         return;
@@ -130,11 +126,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   }
 
   public onSave(date: Date) {
-    if (this.preventSaving) {
-      this.preventSaving = false;
-      return;
-    }
-
     if (date && !isDateValid(date)) {
       this.cancel.emit();
       return;

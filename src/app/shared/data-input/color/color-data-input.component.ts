@@ -72,7 +72,6 @@ export class ColorDataInputComponent implements OnChanges {
   public colorPicker: ColorPickerComponent;
 
   public valid = true;
-  private preventSaving: boolean;
 
   constructor(public element: ElementRef) {}
 
@@ -91,8 +90,7 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   private refreshValid(value: ColorDataValue) {
-    const formattedValue = value.format();
-    this.valid = !formattedValue || this.value.copy(formattedValue).isValid();
+    this.valid = value.isValid() || !value.format();
   }
 
   private openColorPicker() {
@@ -122,7 +120,6 @@ export class ColorDataInputComponent implements OnChanges {
             return;
           }
 
-          this.preventSaving = true;
           // needs to be executed after parent event handlers
           setTimeout(() => this.save.emit(dataValue));
         }
@@ -140,11 +137,6 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   public onSave(color: string) {
-    if (this.preventSaving) {
-      this.preventSaving = false;
-      return;
-    }
-
     if (!color) {
       this.cancel.emit();
       return;
@@ -153,24 +145,14 @@ export class ColorDataInputComponent implements OnChanges {
     const dataValue = this.value.copy(color);
 
     if (dataValue.serialize() !== this.value.serialize()) {
+      this.colorInput && (this.colorInput.nativeElement.value = '');
       this.save.emit(dataValue);
     } else {
-      this.cancel.emit();
-    }
-  }
-
-  public onBlur() {
-    if (this.preventSaving) {
-      this.preventSaving = false;
-    } else {
-      const {value} = this.colorInput.nativeElement;
-      const dataValue = this.value.parseInput(value);
-      this.save.emit(dataValue);
+      this.onCancel();
     }
   }
 
   public onCancel() {
-    this.preventSaving = true;
     this.colorInput && (this.colorInput.nativeElement.value = this.value.format());
     this.cancel.emit();
   }
