@@ -26,7 +26,7 @@ import {AllowedPermissions, mergeAllowedPermissions} from '../../../../core/mode
 import {Constraint} from '../../../../core/model/constraint';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {DateTimeConstraintConfig, PercentageConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {
@@ -63,6 +63,7 @@ import {
 import {formatData} from '../../../../shared/utils/data/format-data';
 import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
+import {DataValueInputType} from '../../../../core/model/data-value';
 
 type DataResourceSwimlanes = DataResource & {swimlanes?: string[]};
 
@@ -338,6 +339,8 @@ export class GanttChartConverter {
       );
       const progress = stemConfig.progress && (formattedData[stemConfig.progress.attributeId] || 0);
       const progressEditable = stemConfig.progress && this.isPropertyEditable(stemConfig.progress);
+      const progressConstraint =
+        stemConfig.progress && findAttributeConstraint(resource.attributes, stemConfig.progress.attributeId);
 
       const resourceColor = this.getPropertyColor(stemConfig.start);
       const dataResourceColor = stemConfig.color && dataResource.data[stemConfig.color.attributeId];
@@ -356,12 +359,20 @@ export class GanttChartConverter {
       const datesSwimlanes = [];
       if (showDatesAsSwimlanes) {
         const startString = (this.getConstraint(stemConfig.start) || new UnknownConstraint())
-          .createDataValue(start, this.constraintData)
+          .createDataValue(start, DataValueInputType.Stored, this.constraintData)
           .format();
         const endString = (this.getConstraint(stemConfig.end) || new UnknownConstraint())
-          .createDataValue(end, this.constraintData)
+          .createDataValue(end, DataValueInputType.Stored, this.constraintData)
           .format();
         datesSwimlanes.push(...[startString, endString]);
+      }
+
+      let minProgress,
+        maxProgress = null;
+      if (progressConstraint && progressConstraint.type === ConstraintType.Percentage) {
+        const config = progressConstraint.config as PercentageConstraintConfig;
+        minProgress = isNotNullOrUndefined(config.minValue) ? Math.max(0, config.minValue) : null;
+        maxProgress = isNotNullOrUndefined(config.maxValue) ? config.maxValue : null;
       }
 
       const metadata: GanttChartTaskMetadata = {
@@ -375,7 +386,7 @@ export class GanttChartConverter {
 
       arr.push({
         id: dataResource.id,
-        name: constraint.createDataValue(name, this.constraintData).format(),
+        name: constraint.createDataValue(name, DataValueInputType.Stored, this.constraintData).format(),
         start: interval[0].value,
         end: interval[1].value,
         progress: createProgress(progress),
@@ -389,6 +400,8 @@ export class GanttChartConverter {
         editable: permission && permission.writeWithView,
         textColor: contrastColor(shadeColor(taskColor, 0.5)),
         swimlanes: [...(dataResource.swimlanes || []), ...datesSwimlanes],
+        minProgress,
+        maxProgress,
 
         metadata,
       });
@@ -462,7 +475,7 @@ export class GanttChartConverter {
       barModel.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
 
     const formattedValue = (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, this.constraintData)
+      .createDataValue(value, DataValueInputType.Stored, this.constraintData)
       .format();
     return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
   }

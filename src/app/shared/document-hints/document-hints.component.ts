@@ -55,6 +55,7 @@ import {DocumentsAction} from '../../core/store/documents/documents.action';
 import {isNotNullOrUndefined} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
+import {DataValue, DataValueInputType} from '../../core/model/data-value';
 
 @Component({
   selector: 'document-hints',
@@ -91,7 +92,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public correlationId: string;
 
   @Input()
-  public value: string;
+  public dataValue: DataValue;
 
   @Input()
   public offsetLeft: number;
@@ -116,7 +117,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   public minWidth: number;
   public selectedIndex$ = new BehaviorSubject<number>(-1);
-  private filter$ = new BehaviorSubject<string>('');
+  public filter$ = new BehaviorSubject<string>('');
 
   private hintsCount = 0;
 
@@ -127,8 +128,8 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.value) {
-      this.filter$.next(this.value);
+    if (changes.dataValue && this.dataValue) {
+      this.filter$.next(this.dataValue.format());
     }
     if (changes.collectionId && this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
@@ -163,7 +164,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
               .filter(document => {
                 const value = document.data[this.attributeId];
                 const formattedValue = isNotNullOrUndefined(value)
-                  ? constraint.createDataValue(value, this.constraintData).format()
+                  ? constraint.createDataValue(value, DataValueInputType.Stored, this.constraintData).format()
                   : '';
                 return String(formattedValue)
                   .toLowerCase()

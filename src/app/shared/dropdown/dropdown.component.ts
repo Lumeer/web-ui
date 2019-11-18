@@ -24,10 +24,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -65,6 +67,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   @Input()
   public pushOnScreen = false;
+
+  @Output()
+  public onClose = new EventEmitter();
 
   @ViewChild('dropdown', {static: false})
   public dropdown: TemplateRef<any>;
@@ -153,6 +158,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   }
 
   public close() {
+    this.onClose.emit();
     if (this.overlayRef) {
       this.overlayRef.detach();
       this.overlayRef.dispose();

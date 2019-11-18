@@ -37,6 +37,7 @@ import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.c
 import {KeyCode} from '../../key-code';
 import {isDateValid} from '../../utils/common.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {DataValueInputType} from '../../../core/model/data-value';
 
 @Component({
   selector: 'datetime-data-input',
@@ -78,17 +79,11 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public date: Date;
   public options: DateTimeOptions;
 
-  private preventSaving: boolean;
-
   constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       setTimeout(() => {
-        if (changes.value) {
-          this.dateTimeInput.nativeElement.value = this.value.format(false);
-        }
-
         HtmlModifier.setCursorAtTextContentEnd(this.dateTimeInput.nativeElement);
         this.dateTimeInput.nativeElement.focus();
         this.dateTimePicker && this.dateTimePicker.open();
@@ -103,11 +98,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       this.date = this.value.toDate();
       this.options = createDateTimeOptions(this.value.config && this.value.config.format);
     }
-    if (changes.value && String(this.value.value).length === 1) {
-      // show value entered into hidden input without any changes
-      const input = this.dateTimeInput;
-      setTimeout(() => input && (input.nativeElement.value = String(this.value.value)));
-    }
   }
 
   @HostListener('keydown', ['$event'])
@@ -117,14 +107,12 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         if (this.dateTimeInput) {
-          this.preventSaving = true;
           const dataValue = this.value.parseInput(this.dateTimeInput.nativeElement.value);
           // needs to be executed after parent event handlers
           setTimeout(() => this.save.emit(dataValue));
         }
         return;
       case KeyCode.Escape:
-        this.preventSaving = true;
         this.dateTimeInput && (this.dateTimeInput.nativeElement.value = this.value.format(false));
         this.cancel.emit();
         return;
@@ -138,11 +126,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   }
 
   public onSave(date: Date) {
-    if (this.preventSaving) {
-      this.preventSaving = false;
-      return;
-    }
-
     if (date && !isDateValid(date)) {
       this.cancel.emit();
       return;
@@ -150,7 +133,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
     const dataValue = this.value.copy(date);
 
-    if (dataValue.serialize() !== this.value.serialize()) {
+    if (dataValue.serialize() !== this.value.serialize() || this.value.inputType === DataValueInputType.Typed) {
       this.save.emit(dataValue);
     } else {
       this.cancel.emit();
@@ -158,10 +141,17 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   }
 
   public onCancel() {
+    this.dateTimeInput && (this.dateTimeInput.nativeElement.value = this.value.format());
     this.cancel.emit();
   }
 
   public ngAfterViewInit(): void {
     document.body.style.setProperty('--first-day-of-week', environment.locale === 'cs' ? '8' : '2');
+  }
+
+  public onValueChange(date: Date) {
+    const dataValue = this.value.copy(date);
+    this.dateTimeInput.nativeElement.value = dataValue.format();
+    this.valueChange.emit(dataValue);
   }
 }

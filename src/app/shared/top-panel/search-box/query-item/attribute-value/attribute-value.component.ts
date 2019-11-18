@@ -27,6 +27,7 @@ import {BehaviorSubject} from 'rxjs';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {KeyCode} from '../../../../key-code';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
+import {DataValue} from '../../../../../core/model/data-value';
 
 @Component({
   selector: 'attribute-value',
@@ -70,7 +71,8 @@ export class AttributeValueComponent {
     return this.queryItemForm && this.queryItemForm.get('conditionValue');
   }
 
-  public onSave(value: any) {
+  public onSave(dataValue: DataValue) {
+    const value = dataValue.serialize();
     this.setValue(value);
 
     if (this.conditionValueControl && this.conditionValueControl.valid) {
@@ -85,11 +87,15 @@ export class AttributeValueComponent {
   }
 
   public setEditing() {
-    this.editing$.next(true);
+    if (!this.editing$.value) {
+      this.editing$.next(true);
+    }
   }
 
   public cancelEditing() {
-    this.editing$.next(false);
+    if (this.editing$.value) {
+      this.editing$.next(false);
+    }
   }
 
   private get constraint(): Constraint {
@@ -101,7 +107,7 @@ export class AttributeValueComponent {
       case KeyCode.NumpadEnter:
       case KeyCode.Enter:
         if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
-          this.onSave(!this.queryItem.conditionValue);
+          this.onSave(this.constraint.createDataValue(!this.queryItem.conditionValue));
         } else if (!this.editing$.getValue()) {
           this.setEditing();
         }

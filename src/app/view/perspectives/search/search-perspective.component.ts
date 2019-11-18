@@ -36,6 +36,7 @@ import {SearchesAction} from '../../../core/store/searches/searches.action';
 @Component({
   templateUrl: './search-perspective.component.html',
   styleUrls: ['./search-perspective.component.scss'],
+  host: {class: 'search-perspective'},
 })
 export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   private query: Query = {};

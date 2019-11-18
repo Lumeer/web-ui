@@ -38,6 +38,7 @@ import {deepObjectsEquals} from '../../utils/common.utils';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {DropdownOptionDirective} from '../../dropdown/options/dropdown-option.directive';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
+import {ConstraintData} from '../../../core/model/data/constraint';
 
 @Component({
   selector: 'data-options-dropdown',
@@ -57,6 +58,9 @@ export class DataOptionsDropdownComponent implements AfterViewInit, OnChanges {
 
   @Input()
   public selectedValue: any;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public selectOption = new EventEmitter<DataDropdownOption>();

@@ -22,12 +22,16 @@ import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {formatCoordinates, parseCoordinates} from '../../../shared/utils/map/coordinates.utils';
 import {MapCoordinates} from '../../store/maps/map.model';
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 
 export class CoordinatesDataValue implements DataValue {
   public readonly coordinates: MapCoordinates;
 
-  constructor(public readonly value: any, public readonly config: CoordinatesConstraintConfig) {
+  constructor(
+    public readonly value: any,
+    public readonly inputType: DataValueInputType,
+    public readonly config: CoordinatesConstraintConfig
+  ) {
     this.coordinates = parseCoordinates(value);
   }
 
@@ -37,6 +41,10 @@ export class CoordinatesDataValue implements DataValue {
     }
 
     return formatCoordinates(this.coordinates, this.config.format, this.config.precision);
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -65,10 +73,10 @@ export class CoordinatesDataValue implements DataValue {
 
   public copy(newValue?: any): CoordinatesDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new CoordinatesDataValue(value, this.config);
+    return new CoordinatesDataValue(value, DataValueInputType.Copied, this.config);
   }
 
   public parseInput(inputValue: string): CoordinatesDataValue {
-    return this.copy(inputValue);
+    return new CoordinatesDataValue(inputValue, DataValueInputType.Typed, this.config);
   }
 }

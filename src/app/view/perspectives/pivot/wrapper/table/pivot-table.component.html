@@ -7,12 +7,14 @@
 
         <ng-container *ngFor="let cell of row">
           <td *ngIf="cell"
+              [style.max-width.px]="150"
               [rowSpan]="cell.rowSpan"
               [colSpan]="cell.colSpan"
               [ngClass]="cell.cssClass"
               [style.background]="cell.background"
               [style.color]="cell.background && (cell.background | contrastColor)">
-            <ng-container *ngIf="cell | pivotTableCellHasValue">{{cell.value}}</ng-container>
+            <div class="text-truncate" *ngIf="cell | pivotTableCellHasValue" [innerHTML]="cell.value"
+                 [title]="cell.value"></div>
             <ng-container *ngIf="!(cell | pivotTableCellHasValue)">&nbsp;</ng-container>
           </td>
         </ng-container>
@@ -25,6 +27,8 @@
   <empty-state class="w-100"
                icon="far fa-empty-set">
     <h3 i18n="@@perspective.pivot.table.empty.title">Cannot display anything</h3>
-    <div i18n="@@perspective.pivot.table.empty.description">Please configure your view in the sidebar on the left first.</div>
+    <div i18n="@@perspective.pivot.table.empty.description">Please configure your view in the sidebar on the left
+      first.
+    </div>
   </empty-state>
 </ng-template>

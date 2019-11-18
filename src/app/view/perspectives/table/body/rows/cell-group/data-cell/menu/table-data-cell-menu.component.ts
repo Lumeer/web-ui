@@ -118,11 +118,11 @@ export class TableDataCellMenuComponent implements OnChanges {
   }
 
   private addPrimaryRow(indexDelta: number) {
-    combineLatest(
+    combineLatest([
       this.store$.pipe(select(selectTableRow(this.cursor))),
       this.store$.pipe(select(selectTableRow(getTableRowCursor(this.cursor, 1)))),
-      this.store$.pipe(select(selectDocumentsDictionary))
-    )
+      this.store$.pipe(select(selectDocumentsDictionary)),
+    ])
       .pipe(first())
       .subscribe(([row, nextRow, documentsMap]) => {
         const parentDocumentId = this.getParentDocumentId(row, nextRow, Boolean(indexDelta), documentsMap);

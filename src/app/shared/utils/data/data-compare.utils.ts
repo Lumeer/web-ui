@@ -25,6 +25,7 @@ import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-conf
 import {ConditionType} from '../../../core/store/navigation/query/query';
 import {isNullOrUndefined, isNumeric, toNumber} from '../common.utils';
 import {convertToBig, parseMomentDate} from '../data.utils';
+import {DataValueInputType} from '../../../core/model/data-value';
 
 export function compareDataValues(a: any, b: any, constraint: Constraint, asc: boolean = true): number {
   const multiplier = asc ? 1 : -1;

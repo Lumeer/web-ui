@@ -28,8 +28,8 @@ import {
 } from '../../../shared/utils/constraint/duration-constraint.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {ConstraintData} from '../data/constraint';
-import {DurationConstraintConfig, DurationUnit} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DurationConstraintConfig} from '../data/constraint-config';
+import {DataValue, DataValueInputType} from './index';
 import {isNumeric, toNumber} from '../../../shared/utils/common.utils';
 
 export class DurationDataValue implements DataValue {
@@ -37,16 +37,21 @@ export class DurationDataValue implements DataValue {
 
   constructor(
     public readonly value: any,
+    public readonly inputType: DataValueInputType,
     public readonly config: DurationConstraintConfig,
     public readonly constraintData: ConstraintData
   ) {
     const durationUnitsMap = this.constraintData && this.constraintData.durationUnitsMap;
-    if (isDurationDataValueValid(this.value, durationUnitsMap)) {
-      this.bigNumber = convertToBig(getDurationSaveValue(this.value, this.config, durationUnitsMap));
+    const modifiedValue = this.inputType === DataValueInputType.Typed ? parseInputValue(value) : value;
+    if (isDurationDataValueValid(modifiedValue, durationUnitsMap)) {
+      this.bigNumber = convertToBig(getDurationSaveValue(modifiedValue, this.config, durationUnitsMap));
     }
   }
 
   public format(maxUnits?: number): string {
+    if (this.inputType === DataValueInputType.Typed) {
+      return this.value;
+    }
     if (!this.bigNumber) {
       return formatUnknownDataValue(this.value);
     }
@@ -58,6 +63,10 @@ export class DurationDataValue implements DataValue {
       this.constraintData && this.constraintData.durationUnitsMap,
       maxUnits
     );
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -88,12 +97,11 @@ export class DurationDataValue implements DataValue {
 
   public copy(newValue?: any): DurationDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new DurationDataValue(value, this.config, this.constraintData);
+    return new DurationDataValue(value, DataValueInputType.Copied, this.config, this.constraintData);
   }
 
   public parseInput(inputValue: string): DurationDataValue {
-    const value = parseInputValue(inputValue);
-    return new DurationDataValue(value, this.config, this.constraintData);
+    return new DurationDataValue(inputValue, DataValueInputType.Typed, this.config, this.constraintData);
   }
 }
 

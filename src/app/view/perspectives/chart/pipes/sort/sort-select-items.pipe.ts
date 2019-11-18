@@ -46,7 +46,11 @@ export class SortSelectItemsPipe implements PipeTransform {
     if (xAxis.resourceType === AttributesResourceType.Collection) {
       const collection = collections.find(coll => xAxis.resourceId === coll.id);
       return (
-        (collection && collection.attributes.map(attribute => collectionAttributeToItem(collection, attribute))) || []
+        (collection &&
+          collection.attributes.map(attribute =>
+            collectionAttributeToItem(collection, attribute, xAxis.resourceIndex)
+          )) ||
+        []
       );
     } else if (xAxis.resourceType === AttributesResourceType.LinkType) {
       const linkType = linkTypes.find(lt => xAxis.resourceId === lt.id);
@@ -57,7 +61,7 @@ export class SortSelectItemsPipe implements PipeTransform {
           collection1 &&
           collection2 &&
           linkType.attributes.map(attribute =>
-            linkTypeAttributeToItem(linkType, [collection1, collection2], attribute)
+            linkTypeAttributeToItem(linkType, [collection1, collection2], attribute, xAxis.resourceIndex)
           )) ||
         []
       );

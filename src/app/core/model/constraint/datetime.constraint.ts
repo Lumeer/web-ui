@@ -21,13 +21,14 @@ import {DateTimeDataValue} from '../data-value/datetime.data-value';
 import {ConstraintType} from '../data/constraint';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
+import {DataValueInputType} from '../data-value';
 
 export class DateTimeConstraint implements Constraint {
   public readonly type = ConstraintType.DateTime;
 
   constructor(public readonly config: DateTimeConstraintConfig) {}
 
-  public createDataValue(value: any): DateTimeDataValue {
-    return new DateTimeDataValue(value, this.config);
+  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): DateTimeDataValue {
+    return new DateTimeDataValue(value, inputType, this.config);
   }
 }

@@ -50,6 +50,7 @@ import {CalendarHeaderComponent} from './header/calendar-header.component';
 import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
 import {BsModalService} from 'ngx-bootstrap';
 import {CalendarEventDetailModalComponent} from '../modal/calendar-event-detail-modal.component';
+import {DataValueInputType} from '../../../../core/model/data-value';
 
 interface Data {
   collections: Collection[];
@@ -205,7 +206,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private getSaveValue(value: any, constraint: Constraint): any {
     if (constraint) {
-      return constraint.createDataValue(value, this.constraintData).serialize();
+      return constraint.createDataValue(value, DataValueInputType.Stored, this.constraintData).serialize();
     } else if (isDateValid(value)) {
       return moment(value).toISOString();
     } else {

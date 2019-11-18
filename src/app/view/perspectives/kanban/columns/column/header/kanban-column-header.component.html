@@ -25,6 +25,10 @@
                    [focus]="false">
   </user-data-input>
 
+  <div *ngSwitchCase="constraintTypes.Text" class="px-3 py-2 text-truncate flex-grow-1"
+       [innerHTML]="column.title | stripHtml">
+  </div>
+
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="column.title; else otherTitle">
       <div class="px-3 py-2 text-truncate flex-grow-1" [title]="column.title">

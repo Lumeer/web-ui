@@ -20,12 +20,17 @@
 import {UnknownDataValue} from '../data-value/unknown.data-value';
 import {ConstraintData, ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
+import {DataValueInputType} from '../data-value';
 
 export class UnknownConstraint implements Constraint {
   public readonly type = ConstraintType.Unknown;
   public readonly config = {};
 
-  public createDataValue(value: any, constraintData?: ConstraintData): UnknownDataValue {
-    return new UnknownDataValue(value);
+  public createDataValue(
+    value: any,
+    inputType: DataValueInputType = DataValueInputType.Stored,
+    constraintData?: ConstraintData
+  ): UnknownDataValue {
+    return new UnknownDataValue(value, inputType);
   }
 }

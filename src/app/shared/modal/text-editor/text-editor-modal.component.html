@@ -2,7 +2,7 @@
   [dialogType]="dialogType.Primary"
   [showHeader]="false"
   (onClose)="cancelDialog()"
-  (onSubmit)="submitDialog(content)"
+  (onSubmit)="submitDialog()"
   [submitDisabled]="!valid || readonly">
 
   <div class="body" #dialogBody>
@@ -10,11 +10,12 @@
     <quill-editor
       [(ngModel)]="content"
       [readOnly]="readonly"
-      (onEditorCreated)="$event.focus()"
-      (onContentChanged)="contentChanged($event)"
       [maxLength]="maxLength"
       [minLength]="minLength"
-      [placeholder]="insertTextPlaceholder">
+      [placeholder]="insertTextPlaceholder"
+      [modules]="defaultOptions"
+      (onEditorCreated)="onEditorCreated($event)"
+      (onContentChanged)="contentChanged($event)">
     </quill-editor>
 
     <div *ngIf="!valid" class="text-danger px-2 py-1 small" id="invalid-warning">

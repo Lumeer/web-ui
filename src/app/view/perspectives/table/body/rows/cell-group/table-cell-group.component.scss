@@ -27,7 +27,7 @@
   box-shadow: 2px 2px 4px $secondary;
 }
 
-.affected {
+.affected:not(.selected):not(.edited) {
   @extend %highlighted;
   outline: $warning solid 2px;
 }

@@ -99,7 +99,7 @@ export function searchDocumentDefaultAttributeHtml(
   const defaultAttributeId = getDefaultAttributeId(collection);
   const value = document.data[defaultAttributeId];
   const constraint = findAttributeConstraint(collection.attributes, defaultAttributeId) || new UnknownConstraint();
-  return constraint.createDataValue(value, constraintData).format();
+  return createDataValueHtml(value, constraint, constraintData);
 }
 
 function searchDocumentAttributeHtml(attributeId: string, collection: Collection) {

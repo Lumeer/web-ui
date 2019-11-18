@@ -1,13 +1,12 @@
 <div class="d-flex flex-nowrap flex-row border-top wrapper" *ngIf="{readonly: !permissions?.writeWithView} as data">
 
-  <div class="flex-grow-1 row m-0">
+  <div class="flex-grow-1 row m-0" #wrapperElement>
 
     <div class="col-6 col-md-5 col-lg-4 p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
       <data-input [cursor]="cursor"
-                  [value]="!(initialKey | isNullOrUndefined) ? initialKey : (row.attribute && row.attribute.name || row.key)"
-                  [constraintData]="constraintData"
                   [focus]="true"
                   [readonly]="!(keyEditing$ | async)"
+                  [dataValue]="keyDataValue"
                   [placeholder]="placeholder"
                   [suggestions]="unusedAttributes | attributesToDataSuggestions"
                   (save)="onNewKey($event)"
@@ -27,14 +26,14 @@
 
       <data-input [constraint]="row.attribute?.constraint"
                   [cursor]="cursor"
-                  [value]="!(initialValue | isNullOrUndefined) ? initialValue : row.value"
-                  [constraintData]="constraintData"
+                  [dataValue]="dataValue"
                   [focus]="true"
                   [readonly]="readonly || !((editing$ | async) || row.attribute?.constraint?.type === booleanConstraintType)"
                   (save)="onNewValue($event)"
                   (dblclick)="onDataInputDblClick($event)"
                   (cancel)="onDataInputCancel()"
                   (click)="onValueFocus()"
+                  (valueChange)="onValueEdit($event)"
                   (clickOutside)="onDataInputCancel()"
                   [class.editing]="editing$ | async"
                   class="h-100 w-100 p-1 data-input value"

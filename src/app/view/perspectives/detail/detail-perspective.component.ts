@@ -27,7 +27,7 @@ import {NavigationAction} from '../../../core/store/navigation/navigation.action
 import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {distinctUntilChanged, filter, map, mergeMap, startWith, take, tap, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectQuery, selectViewCursor, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
@@ -41,7 +41,6 @@ import {filterStemsForCollection, queryIsEmpty} from '../../../core/store/naviga
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
-import {Router, Event, NavigationEnd} from '@angular/router';
 
 @Component({
   selector: 'detail-perspective',
@@ -63,11 +62,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   private collectionSubscription = new Subscription();
   private subscriptions = new Subscription();
 
-  public constructor(
-    private store$: Store<AppState>,
-    private collectionPermissionsPipe: CollectionPermissionsPipe,
-    private router: Router
-  ) {}
+  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(
@@ -104,11 +99,10 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
           }
           return of({collection: null, document: null});
         }),
-        distinctUntilChanged((a, b) => this.selectionIsSame(a, b)),
-        withLatestFrom(this.router.events.pipe(startWith(null as Event))),
-        filter(([, event]) => !event || event instanceof NavigationEnd)
+        debounceTime(100),
+        distinctUntilChanged((a, b) => this.selectionIsSame(a, b))
       )
-      .subscribe(([{collection, document}]) => {
+      .subscribe(({collection, document}) => {
         if (collection) {
           const selectedCollection = this.selected$.value.collection;
           const selectedDocument = this.selected$.value.document;

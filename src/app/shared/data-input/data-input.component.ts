@@ -31,8 +31,7 @@ import {
 } from '@angular/core';
 import {Constraint} from '../../core/model/constraint';
 import {DataValue} from '../../core/model/data-value';
-import {UnknownDataValue} from '../../core/model/data-value/unknown.data-value';
-import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
+import {ConstraintType} from '../../core/model/data/constraint';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
 import {USER_AVATAR_SIZE} from './user/user-data-input.component';
@@ -50,19 +49,16 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public constraint: Constraint;
 
   @Input()
-  public constraintData: ConstraintData;
+  public cursor: DataCursor;
 
   @Input()
-  public cursor: DataCursor;
+  public dataValue: DataValue;
 
   @Input()
   public focus: boolean;
 
   @Input()
   public readonly: boolean;
-
-  @Input()
-  public value: any;
 
   @Input()
   public configuration: DataInputConfiguration = {skipValidation: false, fromQuery: false, resizeToContent: false};
@@ -74,10 +70,10 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public suggestions: DataSuggestion[];
 
   @Output()
-  public valueChange = new EventEmitter<any>();
+  public valueChange = new EventEmitter<DataValue>();
 
   @Output()
-  public save = new EventEmitter<any>();
+  public save = new EventEmitter<DataValue>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -88,34 +84,23 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   @Output()
   public onFocus = new EventEmitter<any>();
 
-  public dataValue: DataValue;
-
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
 
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.value || changes.constraint || changes.constraintData) {
-      this.dataValue = this.createDataValue();
-      if (this.configuration.resizeToContent) {
-        this.recalculateWidth(this.dataValue);
-      }
+    if (changes.dataValue && this.configuration.resizeToContent) {
+      this.recalculateWidth(this.dataValue);
     }
   }
 
-  private createDataValue(): DataValue {
-    return this.constraint
-      ? this.constraint.createDataValue(this.value, this.constraintData)
-      : new UnknownDataValue(this.value);
-  }
-
-  private recalculateWidth(value: DataValue, raw?: boolean) {
-    const width = this.getWidthOfInput(value, raw);
+  private recalculateWidth(value: DataValue) {
+    const width = this.getWidthOfInput(value);
     this.renderer.setStyle(this.elementRef.nativeElement, 'width', `${width}px`);
   }
 
-  private getWidthOfInput(value: DataValue, raw?: boolean): number {
+  private getWidthOfInput(value: DataValue): number {
     if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
       return 34;
     }
@@ -127,7 +112,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
       this.tempElement.classList.remove('d-none');
     }
 
-    this.tempElement.innerHTML = raw ? String(value.value) : value.format();
+    this.tempElement.innerHTML = value.format();
     const textWidth = this.tempElement.getBoundingClientRect().width;
 
     this.tempElement.classList.add('d-none');
@@ -157,14 +142,14 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     if (this.configuration.resizeToContent) {
       this.recalculateWidth(dataValue);
     }
-    this.save.emit(dataValue.serialize());
+    this.save.emit(dataValue);
   }
 
   public onValueChange(dataValue: DataValue) {
     if (this.configuration.resizeToContent) {
-      this.recalculateWidth(dataValue, true);
+      this.recalculateWidth(dataValue);
     }
-    this.valueChange.emit(String(dataValue.value));
+    this.valueChange.emit(dataValue);
   }
 
   public onCancel() {

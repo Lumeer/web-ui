@@ -27,6 +27,7 @@ import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {CoordinatesDataValue} from '../../../../../../core/model/data-value/coordinates.data-value';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DataValueInputType} from '../../../../../../core/model/data-value';
 
 @Component({
   selector: 'coordinates-constraint-config-form',
@@ -89,7 +90,7 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   private bindExampleValue(): Observable<CoordinatesDataValue> {
     return this.form.valueChanges.pipe(
       startWith(this.form.value),
-      map(config => new CoordinatesDataValue('49.2331315, 16.5701833', config))
+      map(config => new CoordinatesDataValue('49.2331315, 16.5701833', DataValueInputType.Stored, config))
     );
   }
 

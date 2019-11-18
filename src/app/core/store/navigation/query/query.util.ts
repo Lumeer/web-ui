@@ -352,8 +352,12 @@ export function findBestStemConfigIndex(
 
 export function filterStemsForCollection(collectionId: string, query: Query): Query {
   if (query && (query.stems || []).length > 0) {
-    return {...query, stems: query.stems.filter(stem => stem.collectionId === collectionId)};
+    return {
+      ...query,
+      stems: query.stems.filter(stem => stem.collectionId === collectionId),
+      fulltexts: query.fulltexts,
+    };
   } else {
-    return {stems: [{collectionId}]};
+    return {stems: [{collectionId}], fulltexts: query && query.fulltexts};
   }
 }

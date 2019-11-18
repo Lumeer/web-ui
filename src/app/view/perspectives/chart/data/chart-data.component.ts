@@ -50,6 +50,8 @@ import {AttributesResourceType} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
 import {BsModalService} from 'ngx-bootstrap';
 import {DocumentDetailModalComponent} from '../../../../shared/modal/document-detail/document-detail-modal.component';
+import {DataValueInputType} from '../../../../core/model/data-value';
+import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
 
 interface Data {
   collections: Collection[];
@@ -306,14 +308,14 @@ export class ChartDataComponent implements OnInit, OnChanges {
         const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
         return moment(value, convertChartDateFormat(config && config.format)).toISOString();
       } else if (constraint.type === ConstraintType.Percentage) {
-        return constraint
-          .createDataValue(value, this.constraintData)
+        return (<PercentageConstraint>constraint)
+          .createDataValue(value)
           .parseInput(String(value || 0))
           .serialize();
       }
     }
 
-    return constraint.createDataValue(value, this.constraintData).serialize();
+    return constraint.createDataValue(value, DataValueInputType.Stored, this.constraintData).serialize();
   }
 
   private onLinkValueChange(valueChange: ValueChange) {

@@ -29,6 +29,7 @@ import {PresenterModule} from '../presenter/presenter.module';
 import {ResourceIconsColorsPipe} from './pipes/resource-icons-colors.pipe';
 import {DataResourceFavoritePipe} from './pipes/data-resource-favorite.pipe';
 import {InputModule} from '../input/input.module';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,15 @@ import {InputModule} from '../input/input.module';
     ResourceIconsColorsPipe,
     DataResourceFavoritePipe,
   ],
-  imports: [CommonModule, DataInputModule, PipesModule, PresenterModule, ClickOutsideModule, InputModule],
+  imports: [
+    CommonModule,
+    DataInputModule,
+    PipesModule,
+    PresenterModule,
+    ClickOutsideModule,
+    InputModule,
+    DragDropModule,
+  ],
   exports: [PostItComponent],
 })
 export class PostItModule {}

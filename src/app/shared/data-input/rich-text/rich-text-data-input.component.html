@@ -1,7 +1,25 @@
-<div
-  class="border-0 w-100 px-1 bg-transparent overflow-hidden"
-  (focus)="onFocus.emit($event)"
-  [title]="value | formatDataValue | stripHtml"
-  [innerHTML]="value | formatDataValue | stripHtml:['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code']"
-  data-test="text-data-input">
-</div>
+<quill-view-html class="quill-editor overflow-hidden"
+                 *ngIf="readonly"
+                 data-test="text-data-input"
+                 [content]="value | formatDataValue | stripHtml">
+</quill-view-html>
+
+<span *ngIf="!readonly" class="icon-fullscreen" (click)="openTextEditor($event)">
+  <i class="fa fa-expand-alt"></i>
+</span>
+
+<quill-editor *ngIf="!readonly"
+              class="w-100 quill-editor edit"
+              [class.h-100]="isMultiline"
+              [(ngModel)]="text"
+              [readOnly]="readonly"
+              [modules]="modules"
+              [maxLength]="value.config.maxLength"
+              [minLength]="value.config.minLength"
+              [placeholder]="''"
+              theme="bubble"
+              data-test="text-data-input"
+              (onEditorCreated)="onEditorCreated($event)"
+              (onContentChanged)="contentChanged()"
+              (onBlur)="onBlur($event)">
+</quill-editor>

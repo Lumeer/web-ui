@@ -19,118 +19,119 @@
 
 import {PercentageConstraintConfig} from '../data/constraint-config';
 import {PercentageDataValue} from './percentage.data-value';
+import {DataValueInputType} from './index';
 
 describe('PercentageDataValue', () => {
   const basicPercentage = {} as PercentageConstraintConfig;
 
   it('undefined value', () => {
-    const dataValue = new PercentageDataValue(undefined, basicPercentage);
+    const dataValue = new PercentageDataValue(undefined, DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('');
     expect(dataValue.serialize()).toEqual('');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('null value', () => {
-    const dataValue = new PercentageDataValue(null, basicPercentage);
+    const dataValue = new PercentageDataValue(null, DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('');
     expect(dataValue.serialize()).toEqual('');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('empty string value', () => {
-    const dataValue = new PercentageDataValue('', basicPercentage);
+    const dataValue = new PercentageDataValue('', DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('');
     expect(dataValue.serialize()).toEqual('');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('zero number value', () => {
-    const dataValue = new PercentageDataValue(0, basicPercentage);
+    const dataValue = new PercentageDataValue(0, DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('0%');
     expect(dataValue.serialize()).toEqual(0);
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('zero string value', () => {
-    const dataValue = new PercentageDataValue('0', basicPercentage);
+    const dataValue = new PercentageDataValue('0', DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('0%');
     expect(dataValue.serialize()).toEqual(0);
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('integer number value', () => {
-    const dataValue = new PercentageDataValue(1, basicPercentage);
+    const dataValue = new PercentageDataValue(1, DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('100%');
     expect(dataValue.serialize()).toEqual(1);
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('integer string value', () => {
-    const dataValue = new PercentageDataValue('1', basicPercentage);
+    const dataValue = new PercentageDataValue('1', DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('100%');
     expect(dataValue.serialize()).toEqual(1);
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('decimal number value', () => {
-    const dataValue = new PercentageDataValue(0.5, basicPercentage);
+    const dataValue = new PercentageDataValue(0.5, DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('50%');
     expect(dataValue.serialize()).toEqual('0.5');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('decimal string value', () => {
-    const dataValue = new PercentageDataValue('0.75', basicPercentage);
+    const dataValue = new PercentageDataValue('0.75', DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('75%');
     expect(dataValue.serialize()).toEqual('0.75');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('integer string value with symbol', () => {
-    const dataValue = new PercentageDataValue('42%', basicPercentage);
+    const dataValue = new PercentageDataValue('42%', DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('42%');
     expect(dataValue.serialize()).toEqual('0.42');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('decimal string value with symbol', () => {
-    const dataValue = new PercentageDataValue('66.66%', basicPercentage);
+    const dataValue = new PercentageDataValue('66.66%', DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('67%');
     expect(dataValue.serialize()).toEqual('0.67');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should return invalid string', () => {
-    const dataValue = new PercentageDataValue('abc', basicPercentage);
+    const dataValue = new PercentageDataValue('abc', DataValueInputType.Stored, basicPercentage);
     expect(dataValue.format()).toEqual('abc');
     expect(dataValue.serialize()).toEqual('abc');
     expect(dataValue.isValid()).toEqual(false);
   });
 
   it('should parse empty value', () => {
-    const dataValue = new PercentageDataValue('', basicPercentage).parseInput('');
+    const dataValue = new PercentageDataValue('', DataValueInputType.Stored, basicPercentage).parseInput('');
     expect(dataValue.format()).toEqual('');
     expect(dataValue.serialize()).toEqual('');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should parse integer value', () => {
-    const dataValue = new PercentageDataValue('', basicPercentage).parseInput('66');
-    expect(dataValue.format()).toEqual('66%');
+    const dataValue = new PercentageDataValue('', DataValueInputType.Stored, basicPercentage).parseInput('66');
+    expect(dataValue.format()).toEqual('66');
     expect(dataValue.serialize()).toEqual('0.66');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should parse decimal value', () => {
-    const dataValue = new PercentageDataValue('', basicPercentage).parseInput('66.66');
-    expect(dataValue.format()).toEqual('67%');
+    const dataValue = new PercentageDataValue('', DataValueInputType.Stored, basicPercentage).parseInput('66.66');
+    expect(dataValue.format()).toEqual('66.66');
     expect(dataValue.serialize()).toEqual('0.67');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should parse decimal value with symbol', () => {
-    const dataValue = new PercentageDataValue('', basicPercentage).parseInput('66.66%');
-    expect(dataValue.format()).toEqual('67%');
+    const dataValue = new PercentageDataValue('', DataValueInputType.Stored, basicPercentage).parseInput('66.66%');
+    expect(dataValue.format()).toEqual('66.66%');
     expect(dataValue.serialize()).toEqual('0.67');
     expect(dataValue.isValid()).toEqual(true);
   });
@@ -138,14 +139,14 @@ describe('PercentageDataValue', () => {
   const integerPercentage = {decimals: 0} as PercentageConstraintConfig;
 
   it('should keep integer value', () => {
-    const dataValue = new PercentageDataValue('0.5', integerPercentage);
+    const dataValue = new PercentageDataValue('0.5', DataValueInputType.Stored, integerPercentage);
     expect(dataValue.format()).toEqual('50%');
     expect(dataValue.serialize()).toEqual('0.5');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should round decimal value to integer', () => {
-    const dataValue = new PercentageDataValue(0.666, integerPercentage);
+    const dataValue = new PercentageDataValue(0.666, DataValueInputType.Stored, integerPercentage);
     expect(dataValue.format()).toEqual('67%');
     expect(dataValue.serialize()).toEqual('0.67');
     expect(dataValue.isValid()).toEqual(true);
@@ -154,21 +155,21 @@ describe('PercentageDataValue', () => {
   const decimalPercentage = {decimals: 4} as PercentageConstraintConfig;
 
   it('should add missing zeroes', () => {
-    const dataValue = new PercentageDataValue('0.75', decimalPercentage);
+    const dataValue = new PercentageDataValue('0.75', DataValueInputType.Stored, decimalPercentage);
     expect(dataValue.format()).toEqual('75%');
     expect(dataValue.serialize()).toEqual('0.75');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should round down decimal value', () => {
-    const dataValue = new PercentageDataValue(0.33333333, decimalPercentage);
+    const dataValue = new PercentageDataValue(0.33333333, DataValueInputType.Stored, decimalPercentage);
     expect(dataValue.format()).toEqual('33.3333%');
     expect(dataValue.serialize()).toEqual('0.333333');
     expect(dataValue.isValid()).toEqual(true);
   });
 
   it('should round up decimal value', () => {
-    const dataValue = new PercentageDataValue(0.66666666, decimalPercentage);
+    const dataValue = new PercentageDataValue(0.66666666, DataValueInputType.Stored, decimalPercentage);
     expect(dataValue.format()).toEqual('66.6667%');
     expect(dataValue.serialize()).toEqual('0.666667');
     expect(dataValue.isValid()).toEqual(true);

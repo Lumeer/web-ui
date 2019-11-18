@@ -46,6 +46,7 @@ import {
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
+import {DataValueInputType} from '../../../../core/model/data-value';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -104,8 +105,8 @@ export class PivotDataConverter {
     const overrideConstraint =
       pivotConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotConstraint);
     return (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, constraintData)
-      .format();
+      .createDataValue(value, DataValueInputType.Stored, constraintData)
+      .preview();
   }
 
   private updateData(

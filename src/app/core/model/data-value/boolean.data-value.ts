@@ -18,19 +18,27 @@
  */
 
 import {BooleanConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
 
 export class BooleanDataValue implements DataValue {
   public readonly booleanValue: boolean;
 
-  constructor(public readonly value: any, public readonly config: BooleanConstraintConfig) {
+  constructor(
+    public readonly value: any,
+    public readonly inputType: DataValueInputType,
+    public readonly config: BooleanConstraintConfig
+  ) {
     this.booleanValue = truthyValues.includes(typeof value === 'string' ? value.toLocaleLowerCase() : value);
   }
 
   public format(): string {
     return String(this.booleanValue); // TODO format based on language
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -59,10 +67,10 @@ export class BooleanDataValue implements DataValue {
 
   public copy(newValue?: any): BooleanDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new BooleanDataValue(value, this.config);
+    return new BooleanDataValue(value, DataValueInputType.Copied, this.config);
   }
 
   public parseInput(inputValue: string): BooleanDataValue {
-    return this.copy(inputValue);
+    return new BooleanDataValue(inputValue, DataValueInputType.Typed, this.config);
   }
 }

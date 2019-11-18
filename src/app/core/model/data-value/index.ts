@@ -37,11 +37,23 @@ export interface DataValue {
   value: any;
 
   /**
+   * Input type by which value was created
+   */
+  inputType: DataValueInputType;
+
+  /**
    * Generates a string that will be shown to a user.
    *
    * @return stringified value or empty string if the value is `null` or `undefined`
    */
   format(): string;
+
+  /**
+   * Generates a shortened preview string that will be shown to a user.
+   *
+   * @return stringified value or empty string if the value is `null` or `undefined`
+   */
+  preview(): string;
 
   /**
    * Serializes the value to a format in which it is sent to backend and most probably also stored in the DB.
@@ -84,6 +96,12 @@ export interface DataValue {
    * Parses a text from a user input and creates a new value from it.
    */
   parseInput(inputValue: string): DataValue;
+}
+
+export enum DataValueInputType {
+  Stored,
+  Typed,
+  Copied,
 }
 
 export class DataValueAccumulator {

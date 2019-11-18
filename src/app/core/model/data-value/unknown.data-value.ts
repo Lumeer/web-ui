@@ -17,16 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {decimalStoreToUser, formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {DataValue} from './index';
+import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
+import {DataValue, DataValueInputType} from './index';
 
 export class UnknownDataValue implements DataValue {
   public readonly config: any = {};
 
-  constructor(public readonly value: any) {}
+  constructor(public readonly value: any, public readonly inputType: DataValueInputType) {}
 
   public format(): string {
     return formatUnknownDataValue(this.value);
+  }
+
+  public preview(): string {
+    return this.format();
   }
 
   public serialize(): any {
@@ -55,10 +59,10 @@ export class UnknownDataValue implements DataValue {
 
   public copy(newValue?: any): DataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new UnknownDataValue(value);
+    return new UnknownDataValue(value, DataValueInputType.Copied);
   }
 
   public parseInput(inputValue: string): DataValue {
-    return this.copy(inputValue);
+    return new UnknownDataValue(inputValue, DataValueInputType.Typed);
   }
 }

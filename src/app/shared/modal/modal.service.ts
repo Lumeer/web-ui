@@ -40,12 +40,23 @@ import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
 import {View} from '../../core/store/views/view';
 import {ShareViewModalComponent} from './share-view/share-view-modal.component';
+import {DocumentDetailModalComponent} from './document-detail/document-detail-modal.component';
+import {DocumentModel} from '../../core/store/documents/document.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModalService {
   constructor(private store$: Store<AppState>, private i18n: I18n, private bsModalService: BsModalService) {}
+
+  public showDocumentDetail(document: DocumentModel, collection: Collection) {
+    const config = {
+      initialState: {document: document, collection: collection},
+      keyboard: true,
+      class: 'modal-lg',
+    };
+    this.bsModalService.show(DocumentDetailModalComponent, config);
+  }
 
   public showShareView(view: View) {
     const initialState = {view};

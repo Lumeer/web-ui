@@ -80,9 +80,6 @@ export class SearchDocumentsContentComponent implements OnInit {
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();
 
-  @Output()
-  public scrollDown = new EventEmitter();
-
   public readonly sizeType = SizeType;
   public readonly projectType = ResourceType.Project;
 
@@ -112,10 +109,6 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   public onSizeChange(size: SizeType) {
     this.configChange.next({...this.config, size});
-  }
-
-  public onScrollDown() {
-    this.scrollDown.emit();
   }
 
   private isDocumentExplicitlyExpanded(document: DocumentModel): boolean {

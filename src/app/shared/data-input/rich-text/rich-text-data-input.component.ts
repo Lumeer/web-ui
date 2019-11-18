@@ -21,10 +21,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
   Output,
+  Renderer2,
   SimpleChanges,
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
@@ -33,6 +35,7 @@ import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-valu
 import {BsModalRef, BsModalService} from 'ngx-bootstrap';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
 import {Subscription} from 'rxjs';
+import {KeyCode} from '../../key-code';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -73,24 +76,32 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   public text = '';
   public valid = true;
+  public isMultiline = true;
 
   private modalRef: BsModalRef;
   private modalSubscription = new Subscription();
+  private preventSave: boolean;
 
-  constructor(private modalService: BsModalService) {}
+  public readonly modules = {
+    toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
+  };
+
+  constructor(private modalService: BsModalService, private renderer: Renderer2) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.text = this.value.format();
-
-      this.openTextEditor();
+      this.initValue();
     }
     if (changes.value && this.value) {
-      this.text = this.value.format();
+      this.initValue();
     }
-    if (changes.focus && !this.focus) {
-      this.closeTextEditor();
-    }
+  }
+
+  private initValue() {
+    this.text = this.value.format();
+
+    const numberOfPTagsMatch = this.text.match(/<p.*?>.+?<\/p>/g);
+    this.isMultiline = numberOfPTagsMatch && numberOfPTagsMatch.length > 1;
   }
 
   private saveValue(value: string) {
@@ -98,13 +109,11 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     this.save.emit(dataValue);
   }
 
-  private closeTextEditor() {
-    if (this.modalRef) {
-      this.modalRef.hide();
-    }
-  }
+  public openTextEditor(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
 
-  private openTextEditor() {
     this.modalRef = this.modalService.show(TextEditorModalComponent, {
       keyboard: true,
       backdrop: 'static',
@@ -131,5 +140,66 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   public ngOnDestroy(): void {
     this.modalSubscription.unsubscribe();
+  }
+
+  public contentChanged() {
+    this.valueChange.emit(this.value.parseInput(this.text));
+  }
+
+  public onEditorCreated(editor: any) {
+    editor.setSelection(Number.MAX_SAFE_INTEGER);
+
+    const isMultiLine = editor.root.childElementCount > 1;
+    if (isMultiLine) {
+      this.renderer.setStyle(editor.root, 'overflow-x', 'auto');
+      editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
+    } else {
+      this.renderer.setStyle(editor.root, 'overflow-x', 'hidden');
+      editor.scrollingContainer.scrollLeft = Number.MAX_SAFE_INTEGER;
+    }
+
+    this.preventEnterInEditor(editor);
+  }
+
+  private preventEnterInEditor(editor: any) {
+    delete editor.keyboard.bindings[13];
+    editor.keyboard.addBinding({key: 'enter'}, () => {
+      return false;
+    });
+  }
+
+  @HostListener('keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    switch (event.code) {
+      case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
+      case KeyCode.Tab:
+        if (this.readonly) {
+          event.preventDefault();
+        } else {
+          // needs to be executed after parent event handlers
+          // const input = this.textInput;
+          this.preventSave = true;
+          setTimeout(() => this.saveValue(this.text));
+        }
+        return;
+      case KeyCode.Escape:
+        this.preventSave = true;
+        // this.textInput && (this.textInput.nativeElement.value = this.value.format());
+        this.cancel.emit();
+        return;
+    }
+  }
+
+  public onBlur(data: {editor: any; source: string}) {
+    if (this.preventSave) {
+      this.preventSave = false;
+      this.dataBlur.emit();
+    } else {
+      setTimeout(() => {
+        this.saveValue(this.text);
+        this.dataBlur.emit();
+      }, 100);
+    }
   }
 }

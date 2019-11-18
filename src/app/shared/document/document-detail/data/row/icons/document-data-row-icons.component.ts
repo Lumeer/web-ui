@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ElementRef} from '@angular/core';
 import {DataRow} from '../../../../../data/data-row.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 

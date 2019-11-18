@@ -22,6 +22,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnDestroy,
@@ -153,17 +154,24 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     this.dateControl.setValue(date);
   }
 
-  public onCancelClick() {
+  public onCancel() {
     this.close();
     this.cancel.emit();
   }
 
-  public onSaveClick() {
+  public onSave() {
     this.close();
     this.save.emit(this.dateControl.value);
   }
 
   public get dateControl(): AbstractControl {
     return this.form.get('date');
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (event.code === KeyCode.Escape) {
+      this.onCancel();
+    }
   }
 }

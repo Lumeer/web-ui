@@ -21,13 +21,18 @@ import {DurationDataValue} from '../data-value/duration.data-value';
 import {ConstraintData, ConstraintType} from '../data/constraint';
 import {DurationConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
+import {DataValueInputType} from '../data-value';
 
 export class DurationConstraint implements Constraint {
   public readonly type = ConstraintType.Duration;
 
   constructor(public readonly config: DurationConstraintConfig) {}
 
-  public createDataValue(value: any, constraintData?: ConstraintData): DurationDataValue {
-    return new DurationDataValue(value, this.config, constraintData);
+  public createDataValue(
+    value: any,
+    inputType: DataValueInputType = DataValueInputType.Stored,
+    constraintData?: ConstraintData
+  ): DurationDataValue {
+    return new DurationDataValue(value, inputType, this.config, constraintData);
   }
 }

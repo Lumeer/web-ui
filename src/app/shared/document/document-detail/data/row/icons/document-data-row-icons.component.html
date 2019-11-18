@@ -9,13 +9,12 @@
 </ng-container>
 
 <ng-container *ngIf="permissions?.writeWithView">
-<i class="fas fa-fw fa-trash text-danger mx-2 clickable text-danger button-remove"
-   aria-hidden="true"
-
-   title="Remove Row"
-   i18n-title="@@remove.row"
-   (click)="onDelete()">
-</i>
+  <i class="fas fa-fw fa-trash text-danger mx-2 clickable text-danger button-remove"
+     aria-hidden="true"
+     title="Remove Row"
+     i18n-title="@@remove.row"
+     (click)="onDelete()">
+  </i>
 </ng-container>
 
 <ng-container *ngIf="{manage: row.attribute && row.attribute.id && permissions?.manageWithView} as attributeData">

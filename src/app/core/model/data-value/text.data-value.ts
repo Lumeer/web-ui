@@ -17,13 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
+import {formatUnknownDataValue, stripTextHtmlTags} from '../../../shared/utils/data.utils';
 import {transformTextBasedOnCaseStyle} from '../../../shared/utils/string.utils';
 import {TextConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {DataValue, DataValueInputType} from './index';
 
 export class TextDataValue implements DataValue {
-  constructor(public readonly value: any, public readonly config: TextConstraintConfig) {}
+  constructor(
+    public readonly value: any,
+    public readonly inputType: DataValueInputType,
+    public readonly config: TextConstraintConfig
+  ) {}
 
   public format(): string {
     if (typeof this.value !== 'string') {
@@ -32,8 +36,16 @@ export class TextDataValue implements DataValue {
     return transformTextBasedOnCaseStyle(this.value, this.config && this.config.caseStyle);
   }
 
+  public preview(): string {
+    return stripTextHtmlTags(this.format());
+  }
+
   public serialize(): any {
-    return this.format();
+    const formattedValue = this.format();
+    if (numberOfTags(formattedValue) === 1) {
+      return stripTextHtmlTags(formattedValue, false);
+    }
+    return formattedValue;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
@@ -67,10 +79,15 @@ export class TextDataValue implements DataValue {
 
   public copy(newValue?: any): TextDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new TextDataValue(value, this.config);
+    return new TextDataValue(value, DataValueInputType.Copied, this.config);
   }
 
   public parseInput(inputValue: string): TextDataValue {
-    return this.copy(inputValue);
+    return new TextDataValue(inputValue, DataValueInputType.Typed, this.config);
   }
+}
+
+function numberOfTags(value: string): number {
+  const match = value.match(/<([a-z]+)(?=[\s>])(?:[^>=]|='[^']*'|="[^"]*"|=[^'"\s]*)*\s?\/?>/g);
+  return match ? match.length : 0;
 }

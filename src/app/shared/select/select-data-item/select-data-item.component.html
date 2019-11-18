@@ -1,5 +1,6 @@
 <div class="input-group flex-nowrap"
-     #selectItemParent>
+     #selectItemParent
+     *ngIf="{constraintData: constraintData$ | async} as data">
   <div *ngIf="placeholderIcon || placeholderText"
        class="input-group-prepend">
     <span [style.color]="placeholderColor"
@@ -29,8 +30,8 @@
       <data-input
         [constraint]="selectedItem.constraint"
         [focus]="true"
+        [dataValue]="selectedItem.value  | dataValue:selectedItem.constraint:data.constraintData"
         [readonly]="true"
-        [value]="selectedItem.value"
         class="ml-2 text-nowrap flex-grow-1 text-left text-truncate">
       </data-input>
       <i *ngIf="removable && !disabled"
@@ -42,6 +43,7 @@
   <data-options-dropdown [fitParent]="fitParent"
                          [options]="dropdownOptions"
                          [origin]="selectItemParent"
+                         [constraintData]="data.constraintData"
                          [selectedValue]="selectedId"
                          (selectOption)="onSelect($event)">
   </data-options-dropdown>

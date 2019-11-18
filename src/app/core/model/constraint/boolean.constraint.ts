@@ -20,12 +20,13 @@
 import {BooleanDataValue} from '../data-value/boolean.data-value';
 import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
+import {DataValueInputType} from '../data-value';
 
 export class BooleanConstraint implements Constraint {
   public readonly type = ConstraintType.Boolean;
   public readonly config = {};
 
-  public createDataValue(value: any): BooleanDataValue {
-    return new BooleanDataValue(value, this.config);
+  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): BooleanDataValue {
+    return new BooleanDataValue(value, inputType, this.config);
   }
 }

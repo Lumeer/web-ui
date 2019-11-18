@@ -21,7 +21,7 @@
          [typeaheadMinLength]="0"
          [typeaheadOptionsInScrollableView]="10"
          [adaptivePosition]="true"
-         [typeaheadSelectFirstItem]="false"
+         [typeaheadSelectFirstItem]="text?.length > 0"
          [typeaheadIsFirstItemActive]="text?.length > 0"
          [container]="'body'"
          [attr.maxlength]="skipValidation ? null : value?.config?.maxLength"

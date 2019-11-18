@@ -17,10 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ElementRef, Output, EventEmitter, ViewChild} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  ElementRef,
+  Output,
+  EventEmitter,
+  ViewChild,
+  HostListener,
+} from '@angular/core';
 import {greyscale, palette, saturated} from '../colors';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
+import {KeyCode} from '../../key-code';
 
 @Component({
   selector: 'color-picker',
@@ -76,5 +86,16 @@ export class ColorPickerComponent {
     if (this.dropdown) {
       this.dropdown.close();
     }
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (event.code === KeyCode.Escape) {
+      this.onCancel();
+    }
+  }
+
+  public onChange(value: string) {
+    this.valueChange.emit(value);
   }
 }

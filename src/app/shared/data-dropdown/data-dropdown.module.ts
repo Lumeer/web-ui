@@ -23,9 +23,10 @@ import {PresenterModule} from '../presenter/presenter.module';
 import {DataOptionsDropdownComponent} from './data-options/data-options-dropdown.component';
 import {DataInputModule} from '../data-input/data-input.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
-  imports: [CommonModule, PresenterModule, DataInputModule, DropdownModule],
+  imports: [CommonModule, PresenterModule, DataInputModule, DropdownModule, PipesModule],
   declarations: [DataOptionsDropdownComponent],
   exports: [DataOptionsDropdownComponent],
 })

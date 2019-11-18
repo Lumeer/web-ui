@@ -14,10 +14,10 @@
            class="dropdown-item p-0 d-flex">
         <ng-container *ngFor="let column of columns">
           <div
-            *ngIf="{value: (doc.data[column.attributeId] | dataValue : (data.collection | collectionAttribute : column.attributeId)?.constraint : constraintData) | formatDataValue} as state"
+            *ngIf="{value: (doc.data[column.attributeId] | dataValue : (data.collection | collectionAttribute : column.attributeId)?.constraint : constraintData) | previewDataValue} as state"
             [class.font-weight-bold]="column.attributeId === attributeId"
             [style.width.px]="column.width"
-            [innerHtml]="column.hidden ? '' : (column.attributeId === attributeId ? (state.value | highlightText: value) : state.value)"
+            [innerHtml]="column.hidden ? '' : (column.attributeId === attributeId ? (state.value | highlightText: (filter$ | async)) : state.value)"
             [title]="column.hidden ? '' : state.value"
             class="text-truncate cursor-default p-1"
             data-test="document-hint">

@@ -16,6 +16,7 @@
                            [selectedDocumentId]="selectedDocumentId$ | async"
                            [loaded]="true"
                            [resizeable]="false"
+                           [constraintData]="constraintData$ | async"
                            (selectDocument)="onSelectDocument($event)">
     </preview-results-table>
   </div>

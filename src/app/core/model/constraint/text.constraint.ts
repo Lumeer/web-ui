@@ -21,13 +21,18 @@ import {TextDataValue} from '../data-value/text.data-value';
 import {ConstraintData, ConstraintType} from '../data/constraint';
 import {TextConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
+import {DataValueInputType} from '../data-value';
 
 export class TextConstraint implements Constraint {
   public readonly type = ConstraintType.Text;
 
   constructor(public readonly config: TextConstraintConfig) {}
 
-  public createDataValue(value: any, constraintDate?: ConstraintData): TextDataValue {
-    return new TextDataValue(value, this.config);
+  public createDataValue(
+    value: any,
+    inputType: DataValueInputType = DataValueInputType.Stored,
+    constraintDate?: ConstraintData
+  ): TextDataValue {
+    return new TextDataValue(value, inputType, this.config);
   }
 }

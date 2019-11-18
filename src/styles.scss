@@ -177,6 +177,11 @@ typeahead-container {
   word-break: break-all;
 }
 
+.ql-container {
+  font-family: $font-family-sans-serif;
+  font-size: 0.9375rem;
+}
+
 modal-container {
   overflow-y: unset !important;
 

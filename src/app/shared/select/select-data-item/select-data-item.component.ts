@@ -30,6 +30,9 @@ import {
 import {SelectDataItemModel} from './select-data-item.model';
 import {DataOptionsDropdownComponent} from '../../data-dropdown/data-options/data-options-dropdown.component';
 import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
+import {Observable} from 'rxjs';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
 @Component({
   selector: 'select-data-item',
@@ -81,6 +84,11 @@ export class SelectDataItemComponent implements OnChanges {
   public dropdown: DataOptionsDropdownComponent;
 
   public dropdownOptions: DataDropdownOption[] = [];
+  public constraintData$: Observable<ConstraintData>;
+
+  constructor(private constraintDataService: ConstraintDataService) {
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
+  }
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.items && this.items) {

@@ -44,6 +44,7 @@
               "node_modules/driver.js/dist/driver.min.css",
               "node_modules/@angular/cdk/overlay-prebuilt.css",
               "node_modules/quill/dist/quill.core.css",
+              "node_modules/quill/dist/quill.bubble.css",
               "node_modules/quill/dist/quill.snow.css",
               "src/styles.scss"
             ],

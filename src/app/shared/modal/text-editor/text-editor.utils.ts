@@ -17,18 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CoordinatesDataValue} from '../data-value/coordinates.data-value';
-import {ConstraintType} from '../data/constraint';
-import {CoordinatesConstraintConfig} from '../data/constraint-config';
-import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
+export const defaultTextEditorOptions = {
+  toolbar: [
+    ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+    ['blockquote', 'code-block'],
 
-export class CoordinatesConstraint implements Constraint {
-  public readonly type = ConstraintType.Coordinates;
+    [{header: 1}, {header: 2}], // custom button values
+    [{list: 'ordered'}, {list: 'bullet'}],
+    [{script: 'sub'}, {script: 'super'}], // superscript/subscript
+    [{indent: '-1'}, {indent: '+1'}], // outdent/indent
+    [{direction: 'rtl'}], // text direction
 
-  constructor(public readonly config: CoordinatesConstraintConfig) {}
+    [{size: ['small', false, 'large', 'huge']}], // custom dropdown
+    [{header: [1, 2, 3, 4, 5, 6, false]}],
 
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): CoordinatesDataValue {
-    return new CoordinatesDataValue(value, inputType, this.config);
-  }
-}
+    [{color: []}, {background: []}], // dropdown with defaults from theme
+    [{font: []}],
+    [{align: []}],
+
+    ['clean'], // remove formatting button
+
+    ['link'], // link and image, video
+  ],
+};

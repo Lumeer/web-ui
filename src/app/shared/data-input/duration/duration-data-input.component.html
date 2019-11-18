@@ -11,7 +11,7 @@
 <ng-template #durationEditing>
   <input #durationInput
          [title]="value | formatDataValue"
-         [value]=""
+         [value]="value | formatDataValue"
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"

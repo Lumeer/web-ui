@@ -34,6 +34,7 @@ import {KeyCode} from '../../key-code';
 import {StripHtmlPipe} from '../../pipes/strip-html.pipe';
 import {isMacOS} from '../../utils/system.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {defaultTextEditorOptions} from './text-editor.utils';
 
 export interface TextEditorChanged {
   html: string;
@@ -71,6 +72,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public valid = true;
 
   public readonly macOS = isMacOS();
+  public readonly defaultOptions = defaultTextEditorOptions;
   public insertTextPlaceholder: string;
 
   constructor(
@@ -84,8 +86,8 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
     this.bsModalRef.hide();
   }
 
-  public submitDialog(content: string) {
-    this.onSave.next(content);
+  public submitDialog() {
+    this.onSave.next(this.content);
     this.hideDialog();
   }
 
@@ -121,16 +123,16 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
 
     if (newValid !== this.valid) {
       this.valid = newValid;
-      setTimeout(() => this.editoreHeight());
+      setTimeout(() => this.editorHeight());
     }
   }
 
   @HostListener('window:resize')
   public onWindowResize() {
-    this.editoreHeight();
+    this.editorHeight();
   }
 
-  private editoreHeight() {
+  private editorHeight() {
     const toolbar = +this.dialogBody.nativeElement.querySelector('.ql-toolbar').clientHeight;
     const warning = this.valid ? 0 : +this.dialogBody.nativeElement.querySelector('#invalid-warning').clientHeight;
     const height = +this.dialogBody.nativeElement.parentElement.clientHeight - toolbar - warning - 2;
@@ -149,14 +151,14 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
 
   public ngAfterViewInit(): void {
     setTimeout(() => {
-      this.editoreHeight();
+      this.editorHeight();
     });
   }
 
   @HostListener('keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     if (this.valid && event.code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
-      this.submitDialog(this.content);
+      this.submitDialog();
     }
 
     if (event.code !== KeyCode.Escape) {
@@ -166,5 +168,10 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
     if (event.code === KeyCode.Escape) {
       this.cancelDialog();
     }
+  }
+
+  public onEditorCreated(editor: any) {
+    editor.setSelection(Number.MAX_SAFE_INTEGER);
+    editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
   }
 }

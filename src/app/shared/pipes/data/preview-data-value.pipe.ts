@@ -17,18 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CoordinatesDataValue} from '../data-value/coordinates.data-value';
-import {ConstraintType} from '../data/constraint';
-import {CoordinatesConstraintConfig} from '../data/constraint-config';
-import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
+import {Pipe, PipeTransform} from '@angular/core';
+import {DataValue} from '../../../core/model/data-value';
 
-export class CoordinatesConstraint implements Constraint {
-  public readonly type = ConstraintType.Coordinates;
-
-  constructor(public readonly config: CoordinatesConstraintConfig) {}
-
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): CoordinatesDataValue {
-    return new CoordinatesDataValue(value, inputType, this.config);
+@Pipe({
+  name: 'previewDataValue',
+})
+export class PreviewDataValuePipe implements PipeTransform {
+  public transform(dataValue: DataValue): string {
+    return dataValue ? dataValue.preview() : '';
   }
 }

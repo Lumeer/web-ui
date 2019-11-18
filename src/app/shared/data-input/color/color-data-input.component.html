@@ -9,6 +9,7 @@
   (input)="onValueChange($event.target.value)"
   [ngStyle]="{'background-color': valid ? (value | formatDataValue) : ''}"
   data-test="color-data-input"
+  [spellcheck]="false"
   type="text">
 
 <color-picker *ngIf="!readonly"

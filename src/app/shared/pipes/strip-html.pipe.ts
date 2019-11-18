@@ -18,15 +18,14 @@
  */
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
+import {stripTextHtmlTags} from '../utils/data.utils';
 
 @Pipe({
   name: 'stripHtml',
 })
 @Injectable({providedIn: 'root'})
 export class StripHtmlPipe implements PipeTransform {
-  public transform(text: string, usefulTags?: string[]): string {
-    return (usefulTags || []).length > 0
-      ? text.replace(new RegExp(`<(?!\/?(${usefulTags.join('|')})\s*\/?)[^>]+>`, 'g'), '')
-      : text.replace(/<(?:.|\s)*?>/g, '');
+  public transform(text: string, keepFormattingTags: boolean = true): string {
+    return stripTextHtmlTags(text, keepFormattingTags);
   }
 }
