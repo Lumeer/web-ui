@@ -100,7 +100,7 @@
     "@angular/language-service": "^8.2.13",
     "@compodoc/compodoc": "^1.1.11",
     "@ngrx/schematics": "^8.4.0",
-    "@sentry/cli": "^1.48.0",
+    "@sentry/cli": "^1.49.0",
     "@types/auth0-js": "^9.10.6",
     "@types/big.js": "^4.0.5",
     "@types/geojson": "^7946.0.7",
