@@ -60,9 +60,9 @@ export class HomeComponent implements OnInit {
             this.navigateToAnyProject(organizations, projects);
           }
         } else if (organizations.length === 0) {
-          this.selectService.createNewOrganization();
+          this.selectService.createNewOrganization({replaceUrl: true});
         } else {
-          this.selectService.createNewProject(organizations[0]);
+          this.selectService.createNewProject(organizations[0], null, {replaceUrl: true});
         }
       });
   }
@@ -93,15 +93,15 @@ export class HomeComponent implements OnInit {
       if (project) {
         this.navigateToProject(organization, project);
       } else {
-        this.selectService.createNewProject(organization);
+        this.selectService.createNewProject(organization, null, {replaceUrl: true});
       }
     } else {
-      this.selectService.createNewOrganization();
+      this.selectService.createNewOrganization({replaceUrl: true});
     }
   }
 
   private navigateToProject(organization: Organization, project: Project) {
-    this.router.navigate(['/', 'w', organization.code, project.code, 'view', 'search']);
+    this.router.navigate(['/', 'w', organization.code, project.code, 'view', 'search'], {replaceUrl: true});
   }
 
   private getDefaultWorkspace(): Observable<DefaultWorkspace> {
@@ -124,14 +124,14 @@ export class HomeComponent implements OnInit {
   }
 
   private getOrganizationsAndProjects(): Observable<{organizations: Organization[]; projects: Project[]}> {
-    return combineLatest(
+    return combineLatest([
       this.getOrganizations().pipe(
         tap(organizations =>
           organizations.forEach(org => this.store$.dispatch(new ProjectsAction.Get({organizationId: org.id})))
         )
       ),
-      this.store$.select(selectProjectsLoaded)
-    ).pipe(
+      this.store$.select(selectProjectsLoaded),
+    ]).pipe(
       filter(([organizations, projectsLoaded]) => organizations.every(org => projectsLoaded[org.id])),
       switchMap(([organizations]) =>
         this.store$.select(selectAllProjects).pipe(map((projects: Project[]) => ({organizations, projects})))

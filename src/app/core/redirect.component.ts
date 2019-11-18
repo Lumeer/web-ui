@@ -73,7 +73,7 @@ export class RedirectComponent implements OnInit {
     this.selectUser()
       .pipe(
         mergeMap(user =>
-          combineLatest(this.selectOrganizations(), this.selectServiceLimits()).pipe(
+          combineLatest([this.selectOrganizations(), this.selectServiceLimits()]).pipe(
             map(([organizations, limits]) => ({user, organizations, limits}))
           )
         ),
@@ -120,12 +120,12 @@ export class RedirectComponent implements OnInit {
   }
 
   private createProject(organization: Organization, template: TemplateType) {
-    const modalRef = this.workspaceSelectService.createNewProject(organization, template);
+    const modalRef = this.workspaceSelectService.createNewProject(organization, template, {replaceUrl: true});
     modalRef.content.onClose$.subscribe(() => this.redirectToHome());
   }
 
   private redirectToHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/'], {replaceUrl: true});
   }
 
   private canCreateProjectsInOrganization(

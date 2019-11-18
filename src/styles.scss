@@ -150,6 +150,10 @@ typeahead-container {
   width: max-content;
 }
 
+.min-h-100 {
+  min-height: 100%;
+}
+
 .cdk-overlay-container {
   z-index: 1100 !important; // otherwise date picker shown behind Bootstrap modal
 }

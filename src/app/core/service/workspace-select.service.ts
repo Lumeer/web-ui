@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Router} from '@angular/router';
+import {NavigationExtras, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, map, mergeMap, take} from 'rxjs/operators';
@@ -76,9 +76,9 @@ export class WorkspaceSelectService {
       });
   }
 
-  private goToProject(organization: Organization, project: Project) {
+  private goToProject(organization: Organization, project: Project, extras?: NavigationExtras) {
     if (organization && project) {
-      this.router.navigate(['w', organization.code, project.code, 'view', 'search', 'all']);
+      this.router.navigate(['w', organization.code, project.code, 'view', 'search', 'all'], extras);
     }
   }
 
@@ -98,16 +98,22 @@ export class WorkspaceSelectService {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  public createNewProject(organization: Organization, templateType?: TemplateType): BsModalRef {
-    return this.openCreateProjectModal(organization, templateType, project => this.goToProject(organization, project));
+  public createNewProject(
+    organization: Organization,
+    templateType?: TemplateType,
+    extras?: NavigationExtras
+  ): BsModalRef {
+    return this.openCreateProjectModal(organization, templateType, project =>
+      this.goToProject(organization, project, extras)
+    );
   }
 
   public selectProject(organization: Organization, project: Project) {
     this.goToProject(organization, project);
   }
 
-  public createNewOrganization(): BsModalRef {
-    return this.openCreateOrganizationModal(organization => this.createNewProject(organization));
+  public createNewOrganization(extras?: NavigationExtras): BsModalRef {
+    return this.openCreateOrganizationModal(organization => this.createNewProject(organization, null, extras));
   }
 
   private openCreateProjectModal(
