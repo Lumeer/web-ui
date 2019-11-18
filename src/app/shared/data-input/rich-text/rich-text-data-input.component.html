@@ -1,5 +1,6 @@
 <quill-view-html class="quill-editor overflow-hidden"
                  *ngIf="readonly"
+                 data-test="text-data-input"
                  [content]="value | formatDataValue | stripHtml">
 </quill-view-html>
 
@@ -17,6 +18,7 @@
               [minLength]="value.config.minLength"
               [placeholder]="''"
               theme="bubble"
+              data-test="text-data-input"
               (onEditorCreated)="onEditorCreated($event)"
               (onContentChanged)="contentChanged()"
               (onBlur)="onBlur($event)">
