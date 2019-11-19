@@ -54,7 +54,7 @@ import {
   isNumeric,
   toNumber,
 } from '../../../../shared/utils/common.utils';
-import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
+import {parseDateTimeDataValue, stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 import {
   AggregatedDataValues,
   DataAggregator,
@@ -384,9 +384,11 @@ export class GanttChartConverter {
         resourceType: stemConfig.start.resourceType,
       };
 
+      const nameFormatted = constraint.createDataValue(name, DataValueInputType.Stored, this.constraintData).format();
+
       arr.push({
         id: dataResource.id,
-        name: constraint.createDataValue(name, DataValueInputType.Stored, this.constraintData).format(),
+        name: stripTextHtmlTags(nameFormatted, false),
         start: interval[0].value,
         end: interval[1].value,
         progress: createProgress(progress),
