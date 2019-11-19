@@ -58,11 +58,11 @@ Object.keys(loadJsonFile).forEach(function(key) {
     icons += "'fa-" + key + "'";
   }
 
-  registerVocab(key, key);
+  registerVocab(String(key), String(key));
 
   if (icon.search && icon.search.terms) {
     Object.keys(icon.search.terms).forEach(function(value) {
-      registerVocab(key, icon.search.terms[value]);
+      registerVocab(String(key), icon.search.terms[value]);
     });
   }
 });
@@ -82,7 +82,7 @@ vocab.forEach(function(value, key) {
 
     var line = '';
     first_brands = true;
-    line += "['" + key.replace("'", "\\'") + "', [\n  ";
+    line += "['" + String(key).replace("'", "\\'") + "', [\n  ";
     value.forEach(function(elem) {
       if (!first_brands) {
         line += ',\n  ';
