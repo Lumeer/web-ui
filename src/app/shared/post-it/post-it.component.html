@@ -14,7 +14,8 @@
                 [favorite]="dataResource | dataResourceFavorite"
                 [resourceType]="resourceType"
                 (remove)="onRemove()"
-                (toggleFavorite)="toggleFavorite.emit()">
+                (toggleFavorite)="toggleFavorite.emit()"
+                (detail)="onDetail()">
 </post-it-header>
 
 <div class="card-body px-2 py-0">

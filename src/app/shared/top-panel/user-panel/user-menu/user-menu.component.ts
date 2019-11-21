@@ -40,8 +40,8 @@ import {NotificationsAction} from '../../../../core/store/notifications/notifica
 import PatchCurrentUser = UsersAction.PatchCurrentUser;
 import {selectAllViews} from '../../../../core/store/views/views.state';
 import {UserMenuDropdownComponent} from './dropdown/user-menu-dropdown.component';
-import {BsModalService} from 'ngx-bootstrap';
 import {UserFeedbackModalComponent} from './user-feedback-modal/user-feedback-modal.component';
+import {ModalService} from '../../../modal/modal.service';
 
 @Component({
   selector: 'user-menu',
@@ -72,7 +72,7 @@ export class UserMenuComponent {
 
   public constructor(
     private authService: AuthService,
-    private bsModalService: BsModalService,
+    private modalService: ModalService,
     private store$: Store<AppState>,
     private router: Router,
     private i18n: I18n
@@ -146,7 +146,7 @@ export class UserMenuComponent {
 
     const config = {initialState: {}, keyboard: false};
     config['backdrop'] = 'static';
-    this.bsModalService.show(UserFeedbackModalComponent, config);
+    this.modalService.show(UserFeedbackModalComponent, config);
   }
 
   public onLogoutClick() {

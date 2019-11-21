@@ -62,9 +62,9 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   @Input()
   public minLength: number;
 
-  public onSave = new Subject<string>();
-  public onCancel = new Subject();
-  public onContentChanged = new Subject<TextEditorChanged>();
+  public onSave$ = new Subject<string>();
+  public onCancel$ = new Subject();
+  public onContentChanged$ = new Subject<TextEditorChanged>();
 
   @ViewChild('dialogBody', {static: false})
   public dialogBody: ElementRef;
@@ -87,12 +87,12 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   }
 
   public submitDialog() {
-    this.onSave.next(this.content);
+    this.onSave$.next(this.content);
     this.hideDialog();
   }
 
   public cancelDialog() {
-    this.onCancel.next();
+    this.onCancel$.next();
     this.hideDialog();
   }
 
@@ -106,7 +106,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
     text: string;
   }) {
     this.checkValid($event.text);
-    this.onContentChanged.next({html: $event.html, text: $event.text});
+    this.onContentChanged$.next({html: $event.html, text: $event.text});
   }
 
   private checkValid(text: string) {

@@ -106,7 +106,7 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   constructor(private store$: Store<AppState>) {
     this.dataRowFocusService = new DataRowFocusService(
       () => this.columns.length,
-      () => this.rows.length,
+      () => this.rows.length + this.newRows$.value.length,
       () => this.tableRows.toArray(),
       () => this.hiddenInputComponent
     );

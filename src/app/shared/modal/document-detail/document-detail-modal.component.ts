@@ -28,7 +28,7 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {select, Store} from '@ngrx/store';
@@ -62,6 +62,8 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
   public documentChanged = new EventEmitter<DocumentModel>();
 
   public readonly dialogType = DialogType;
+
+  public onCancel$ = new Subject();
 
   public query$: Observable<Query>;
   public collection$: Observable<Collection>;
@@ -107,7 +109,12 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
     );
   }
 
-  public hideDialog() {
+  public onClose() {
+    this.onCancel$.next();
+    this.hideDialog();
+  }
+
+  private hideDialog() {
     this.bsModalRef.hide();
   }
 
@@ -125,7 +132,7 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
-      this.hideDialog();
+      this.onClose();
     }
   }
 

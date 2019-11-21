@@ -32,10 +32,11 @@ import {
 import {DataValue} from '../../../core/model/data-value';
 import {TextDataValue} from '../../../core/model/data-value/text.data-value';
 import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
 import {Subscription} from 'rxjs';
 import {KeyCode} from '../../key-code';
+import {ModalService} from '../../modal/modal.service';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -86,7 +87,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
   };
 
-  constructor(private modalService: BsModalService, private renderer: Renderer2) {}
+  constructor(private modalService: ModalService, private renderer: Renderer2) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {

@@ -48,10 +48,9 @@ import {ConstraintData, ConstraintType} from '../../../../core/model/data/constr
 import * as moment from 'moment';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
-import {BsModalService} from 'ngx-bootstrap';
-import {DocumentDetailModalComponent} from '../../../../shared/modal/document-detail/document-detail-modal.component';
 import {DataValueInputType} from '../../../../core/model/data-value';
 import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
+import {ModalService} from '../../../../shared/modal/modal.service';
 
 interface Data {
   collections: Collection[];
@@ -118,7 +117,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
   private dataSubject = new BehaviorSubject<Data>(null);
   public chartData$: Observable<ChartData>;
 
-  constructor(private chartDataConverter: ChartDataConverter, private modalService: BsModalService) {}
+  constructor(private chartDataConverter: ChartDataConverter, private modalService: ModalService) {}
 
   public ngOnInit() {
     const closingNotifier = this.dataSubject.pipe(debounceTime(100));
@@ -342,17 +341,11 @@ export class ChartDataComponent implements OnInit, OnChanges {
   public onDetail(event: ClickEvent) {
     if (event.resourceType === AttributesResourceType.Collection) {
       const documentId = event.pointId;
-
       const document = (this.documents || []).find(doc => doc.id === documentId);
-      if (!document) {
-        return;
+      const collection = document && (this.collections || []).find(coll => coll.id === document.collectionId);
+      if (collection && document) {
+        this.modalService.showDocumentDetail(document, collection);
       }
-      const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
-      const config = {initialState: {document, collection}, keyboard: false, class: 'modal-lg'};
-      if (!document.id) {
-        config['backdrop'] = 'static';
-      }
-      this.modalService.show(DocumentDetailModalComponent, config);
     }
   }
 }

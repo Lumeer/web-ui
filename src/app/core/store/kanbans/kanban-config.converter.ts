@@ -79,6 +79,7 @@ function convertKanbanColumnConfigDtoToModelV0(column: KanbanColumnV0): KanbanCo
       id,
       attributeId,
       resourceType: AttributesResourceType.Collection,
+      stemIndex: 0,
     })),
     createdFromAttributes: (column.createdFromAttributes || []).map(attribute => ({
       ...attribute,

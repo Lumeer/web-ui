@@ -52,7 +52,7 @@ import {
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
-import {selectDocumentsDictionary} from '../documents/documents.state';
+import {selectDocumentsByIds, selectDocumentsDictionary} from '../documents/documents.state';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';

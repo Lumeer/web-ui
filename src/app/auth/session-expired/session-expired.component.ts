@@ -26,6 +26,7 @@ import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {ModalService} from '../../shared/modal/modal.service';
 
 @Component({
   selector: 'session-expired',
@@ -37,9 +38,15 @@ export class SessionExpiredComponent implements OnInit {
 
   public redirectUrl$: Observable<string>;
 
-  public constructor(private location: Location, private route: ActivatedRoute, private store$: Store<AppState>) {}
+  public constructor(
+    private location: Location,
+    private route: ActivatedRoute,
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {}
 
   public ngOnInit() {
+    this.modalService.destroy();
     this.disableBackButton();
     this.clearStore();
     this.bindRedirectUrl();

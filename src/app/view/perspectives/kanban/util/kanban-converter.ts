@@ -456,7 +456,7 @@ function sortDocumentsIdsByPreviousOrder(
 
   for (const order of orderedResourcesOrder || []) {
     if (resourcesOrderMap[order.id]) {
-      newOrderedResources.push(order);
+      newOrderedResources.push(resourcesOrderMap[order.id]);
       delete resourcesOrderMap[order.id];
     }
   }

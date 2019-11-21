@@ -151,4 +151,8 @@ export class GanttChartVisualizationComponent implements OnChanges {
       fromTask.metadata.dataResourceId !== toTask.metadata.dataResourceId
     );
   }
+
+  public removeTask(task: GanttChartTask) {
+    this.ganttChart.removeTask(task);
+  }
 }

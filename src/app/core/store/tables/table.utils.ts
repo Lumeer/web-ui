@@ -43,6 +43,10 @@ import {
 } from './table.model';
 
 export function findTableColumn(columns: TableConfigColumn[], path: number[]): TableConfigColumn {
+  if (!path || path.length === 0) {
+    return null;
+  }
+
   const index = getColumnIndex(path);
   const column = columns[index];
 

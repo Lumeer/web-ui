@@ -20,15 +20,17 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthService} from '../auth.service';
+import {ModalService} from '../../shared/modal/modal.service';
 
 @Component({
   selector: 'logout',
   template: '',
 })
 export class LogoutComponent implements OnInit {
-  public constructor(private authService: AuthService, private router: Router) {}
+  public constructor(private authService: AuthService, private router: Router, private modalService: ModalService) {}
 
   public ngOnInit() {
+    this.modalService.destroy();
     this.navigateToApplication();
   }
 

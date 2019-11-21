@@ -56,6 +56,9 @@ export class PostItHeaderComponent {
   @Output()
   public toggleFavorite = new EventEmitter();
 
+  @Output()
+  public detail = new EventEmitter();
+
   public readonly resourceTypeCollection = AttributesResourceType.Collection;
 
   public onRemove() {
@@ -64,5 +67,9 @@ export class PostItHeaderComponent {
 
   public onToggleFavorite() {
     this.toggleFavorite.emit();
+  }
+
+  public onDetail() {
+    this.detail.emit();
   }
 }

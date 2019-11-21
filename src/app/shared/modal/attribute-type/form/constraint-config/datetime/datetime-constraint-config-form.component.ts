@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {DateTimeConstraintConfig} from '../../../../../../core/model/data/constraint-config';
@@ -30,6 +30,7 @@ import {SelectItemModel} from '../../../../../select/select-item/select-item.mod
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
 import {DataValueInputType} from '../../../../../../core/model/data-value';
+import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../../date-time/date-time-options';
 
 @Component({
   selector: 'datetime-constraint-config-form',
@@ -79,7 +80,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
       startWith(this.form.value),
       map(value => {
         const config: DateTimeConstraintConfig = {
-          format: value.format || value.selectFormat,
+          format: value.format || value.customFormat,
           minValue: undefined,
           maxValue: undefined,
           range: undefined,
@@ -103,24 +104,20 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
 
   private createForm() {
     const format = (this.config && this.config.format) || this.formats[0];
-    this.form.addControl(DatetimeConstraintFormControl.Format, new FormControl(format));
-
     const selectFormat = this.formats.includes(format) ? format : '';
-    this.form.addControl(DatetimeConstraintFormControl.CustomFormat, new FormControl(selectFormat));
+    this.form.addControl(DatetimeConstraintFormControl.Format, new FormControl(selectFormat));
+    this.form.addControl(DatetimeConstraintFormControl.CustomFormat, new FormControl(format));
 
     this.form.addControl(DatetimeConstraintFormControl.MinValue, new FormControl(this.config && this.config.minValue));
     this.form.addControl(DatetimeConstraintFormControl.MaxValue, new FormControl(this.config && this.config.maxValue));
-    this.form.setValidators(
-      minMaxValidator(DatetimeConstraintFormControl.MinValue, DatetimeConstraintFormControl.MaxValue)
-    );
+    this.form.setValidators([
+      minMaxValidator(DatetimeConstraintFormControl.MinValue, DatetimeConstraintFormControl.MaxValue),
+      customFormatValidator(),
+    ]);
   }
 
   public get formatControl(): AbstractControl {
     return this.form.get(DatetimeConstraintFormControl.Format);
-  }
-
-  public get selectFormatControl(): AbstractControl {
-    return this.form.get(DatetimeConstraintFormControl.CustomFormat);
   }
 
   public get minValueControl(): AbstractControl {
@@ -136,4 +133,26 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
     const customItem = {id: '', value: this.i18n({id: 'constraint.dateTime.format.custom', value: 'Custom'})};
     return [...formatItems, customItem];
   }
+}
+
+export function customFormatValidator(): ValidatorFn {
+  return (form: FormGroup): ValidationErrors | null => {
+    const format = form.get(DatetimeConstraintFormControl.Format).value;
+    const customFormat = form.get(DatetimeConstraintFormControl.CustomFormat).value;
+
+    if (format) {
+      return null;
+    }
+
+    if (!(customFormat || '').toString().trim()) {
+      return {customEmpty: true};
+    }
+
+    const options = createDateTimeOptions(customFormat);
+    if (!hasDateOption(options) && !hasTimeOption(options)) {
+      return {customInvalid: true};
+    }
+
+    return null;
+  };
 }

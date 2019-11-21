@@ -57,7 +57,6 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
-import {BsModalService} from 'ngx-bootstrap/modal';
 import {KanbanColumnComponent} from './column/kanban-column.component';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-favorite-toggle.service';
@@ -67,6 +66,7 @@ import {Constraint} from '../../../../core/model/constraint';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {DataValueInputType} from '../../../../core/model/data-value';
+import {ModalService} from '../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'kanban-columns',
@@ -123,7 +123,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private bsModalService: BsModalService,
+    private modalService: ModalService,
     private toggleService: DocumentFavoriteToggleService
   ) {}
 
@@ -190,7 +190,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   ) {
     const callback = document => this.createDocument(kanbanAttribute, column, document, linkTypeId);
     const config = {initialState: {documents, collection, callback}, keyboard: true, class: 'modal-lg'};
-    this.bsModalService.show(ChooseLinkDocumentModalComponent, config);
+    this.modalService.show(ChooseLinkDocumentModalComponent, config);
   }
 
   private getPreviousDocumentByKanbanResource(resourceCreate: KanbanResourceCreate): DocumentModel[] {
