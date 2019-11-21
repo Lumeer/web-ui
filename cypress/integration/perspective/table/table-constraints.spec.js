@@ -388,11 +388,10 @@ describe('Table perspective :: Constraints', () => {
       .contains('Every first letter upper case')
       .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
-    cy.waitForModalHidden();
-
     cy.wait('@updateAttribute')
       .its('status')
       .should('eq', 200);
+    cy.waitForModalHidden();
     cy.get('[data-test="attribute-type-dialog"]').should('not.exist');
 
     // check format of first column values
@@ -425,11 +424,10 @@ describe('Table perspective :: Constraints', () => {
       .contains('Checkbox')
       .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
-    cy.waitForModalHidden();
-
     cy.wait('@updateAttribute')
       .its('status')
       .should('eq', 200);
+    cy.waitForModalHidden();
     cy.get('[data-test="attribute-type-dialog"]').should('not.exist');
 
     // check format of second column values and make some changes
@@ -476,11 +474,10 @@ describe('Table perspective :: Constraints', () => {
       .contains('YYYY-MM-DD')
       .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
-    cy.waitForModalHidden();
-
     cy.wait('@updateAttribute')
       .its('status')
       .should('eq', 200);
+    cy.waitForModalHidden();
     cy.get('[data-test="attribute-type-dialog"]').should('not.exist');
 
     // check format of third column values
@@ -588,11 +585,10 @@ describe('Table perspective :: Constraints', () => {
       .contains('Number')
       .click();
     cy.get('[data-test="attribute-type-save-button"]').click();
-    cy.waitForModalHidden();
-
     cy.wait('@updateAttribute')
       .its('status')
       .should('eq', 200);
+    cy.waitForModalHidden();
     cy.get('[data-test="attribute-type-dialog"]').should('not.exist');
 
     // check values in the fourth column
