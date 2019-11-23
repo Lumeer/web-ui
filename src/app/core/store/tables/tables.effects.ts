@@ -52,7 +52,7 @@ import {
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
-import {selectDocumentsByIds, selectDocumentsDictionary} from '../documents/documents.state';
+import {selectDocumentsDictionary} from '../documents/documents.state';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
@@ -952,10 +952,10 @@ export class TablesEffects {
         return [];
       }
 
-      return combineLatest(
+      return combineLatest([
         this.store$.pipe(select(selectTableRows(cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsDictionary))
-      ).pipe(
+        this.store$.pipe(select(selectDocumentsDictionary)),
+      ]).pipe(
         first(),
         mergeMap(([rows, documentsMap]) => {
           const row = findTableRow(rows, cursor.rowPath);
@@ -1011,11 +1011,11 @@ export class TablesEffects {
       const {cursor} = action.payload;
       const {parentPath, rowIndex} = splitRowPath(cursor.rowPath);
 
-      return combineLatest(
+      return combineLatest([
         this.store$.pipe(select(selectTableRows(cursor.tableId))),
         this.store$.pipe(select(selectTableRowsWithHierarchyLevels(cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsDictionary))
-      ).pipe(
+        this.store$.pipe(select(selectDocumentsDictionary)),
+      ]).pipe(
         first(),
         mergeMap(([rows, hierarchyRows, documentsMap]) => {
           if (cursor.partIndex > 0) {

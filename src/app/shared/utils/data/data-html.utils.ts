@@ -59,16 +59,14 @@ function createDataColorValueHtml(value: string, className?: string): string {
 
 function createDataBooleanValueHtml(value: any, className?: string): string {
   const inputId = `search-document-input-${generateId()}`;
-  return `<div class="d-inline-block custom-control custom-checkbox ${className || ''}"><input 
+  return `<div class="d-inline-flex lmr-checkbox ${className || ''}"><input 
              id="${inputId}"
              ${value ? 'checked="true"' : ''}
              style="cursor: unset;"
-             readonly type="checkbox"
-             class="custom-control-input">
+             readonly type="checkbox">
           <label
              for="${inputId}"
-             style="cursor: unset;"
-             class="custom-control-label">
+             style="cursor: unset;">
           </label></div>`;
 }
 

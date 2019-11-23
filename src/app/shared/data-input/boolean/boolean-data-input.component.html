@@ -1,4 +1,4 @@
-<div class="custom-control custom-checkbox"
+<div class="lmr-checkbox d-flex"
      (click)="onDivClick($event)">
   <input #booleanInput
          [id]="inputId"
@@ -8,9 +8,8 @@
          (click)="onInputClick($event)"
          (focus)="onFocus.emit($event)"
          type="checkbox"
-         class="custom-control-input"
          data-test="boolean-data-input">
   <label [for]="inputId"
-         class="custom-control-label">
+         (click)="onLabelClick($event)">
   </label>
 </div>

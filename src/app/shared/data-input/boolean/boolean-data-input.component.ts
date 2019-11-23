@@ -33,6 +33,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
+import {generateCorrelationId} from '../../utils/resource.utils';
 
 @Component({
   selector: 'boolean-data-input',
@@ -110,5 +111,9 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
     // label click is propagated instead
     event.preventDefault();
     event.stopPropagation();
+  }
+
+  public onLabelClick(event: MouseEvent) {
+    event.preventDefault();
   }
 }
