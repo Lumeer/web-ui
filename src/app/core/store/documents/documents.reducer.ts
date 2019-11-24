@@ -37,7 +37,7 @@ export function documentsReducer(
     case DocumentsActionType.PATCH_DATA:
       return onPatchData(state, action);
     case DocumentsActionType.PATCH_DATA_INTERNAL:
-      return patchDocument(state, action);
+      return patchData(state, action);
     case DocumentsActionType.PATCH_DATA_PENDING:
       return removeEmptyPendingData(state, action);
     case DocumentsActionType.UPDATE_SUCCESS:
@@ -97,7 +97,7 @@ function removeEmptyPendingData(state: DocumentsState, action: DocumentsAction.P
   return state;
 }
 
-function patchDocument(state: DocumentsState, action: DocumentsAction.PatchDataInternal): DocumentsState {
+function patchData(state: DocumentsState, action: DocumentsAction.PatchDataInternal): DocumentsState {
   const originalDocument = action.payload.originalDocument;
 
   return documentsAdapter.upsertOne(
@@ -107,13 +107,20 @@ function patchDocument(state: DocumentsState, action: DocumentsAction.PatchDataI
         ...originalDocument.data,
         ...action.payload.document.data,
       },
+      dataVersion: originalDocument.dataVersion + 1,
     },
     state
   );
 }
 
 function updateDocument(state: DocumentsState, action: DocumentsAction.UpdateDataInternal): DocumentsState {
-  return documentsAdapter.upsertOne(action.payload.document, state);
+  return documentsAdapter.upsertOne(
+    {
+      ...action.payload.document,
+      dataVersion: action.payload.document.dataVersion + 1,
+    },
+    state
+  );
 }
 
 function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess): DocumentsState {
@@ -135,6 +142,14 @@ function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): Do
 
   if (isDocumentNewer(document, oldDocument)) {
     return documentsAdapter.upsertOne(document, state);
+  } else if (isModifiedLater(document, oldDocument)) {
+    return documentsAdapter.updateOne(
+      {
+        id: document.id,
+        changes: {updateDate: document.updateDate, updatedBy: document.updatedBy},
+      },
+      state
+    );
   }
   return state;
 }
@@ -147,13 +162,7 @@ function revertDocument(state: DocumentsState, originalDocument: DocumentModel):
       return documentsAdapter.addOne(originalDocument, state);
     }
 
-    if (
-      originalDocument.dataVersion &&
-      storedDocument.dataVersion &&
-      originalDocument.dataVersion >= storedDocument.dataVersion
-    ) {
-      return documentsAdapter.upsertOne(originalDocument, state);
-    }
+    return documentsAdapter.upsertOne(originalDocument, state);
   }
 
   return state;
@@ -161,4 +170,10 @@ function revertDocument(state: DocumentsState, originalDocument: DocumentModel):
 
 function isDocumentNewer(document: DocumentModel, oldDocument: DocumentModel): boolean {
   return document.dataVersion && (!oldDocument.dataVersion || document.dataVersion > oldDocument.dataVersion);
+}
+
+function isModifiedLater(document: DocumentModel, oldDocument: DocumentModel): boolean {
+  return (
+    document.updateDate && (!oldDocument.updateDate || document.updateDate.getTime() > oldDocument.updateDate.getTime())
+  );
 }

@@ -33,7 +33,7 @@ export function linkInstancesReducer(
     case LinkInstancesActionType.PATCH_DATA_INTERNAL:
       return patchData(state, action);
     case LinkInstancesActionType.UPDATE_INTERNAL:
-      return linkInstancesAdapter.upsertOne(action.payload.linkInstance, state);
+      return updateLinkInstance(state, action);
     case LinkInstancesActionType.UPDATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.UPDATE_FAILURE:
@@ -54,6 +54,16 @@ export function linkInstancesReducer(
     default:
       return state;
   }
+}
+
+function updateLinkInstance(state: LinkInstancesState, action: LinkInstancesAction.UpdateInternal): LinkInstancesState {
+  return linkInstancesAdapter.upsertOne(
+    {
+      ...action.payload.linkInstance,
+      dataVersion: action.payload.linkInstance.dataVersion + 1,
+    },
+    state
+  );
 }
 
 function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction.GetSuccess): LinkInstancesState {
@@ -80,6 +90,14 @@ function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkIn
 
   if (isLinkInstanceNewer(linkInstance, oldLinkInstance)) {
     return linkInstancesAdapter.upsertOne(linkInstance, state);
+  } else if (isModifiedLater(linkInstance, oldLinkInstance)) {
+    return linkInstancesAdapter.updateOne(
+      {
+        id: linkInstance.id,
+        changes: {updateDate: linkInstance.updateDate, updatedBy: linkInstance.updatedBy},
+      },
+      state
+    );
   }
   return state;
 }
@@ -92,21 +110,32 @@ function patchData(state: LinkInstancesState, action: LinkInstancesAction.PatchD
     return state;
   }
 
-  return linkInstancesAdapter.updateOne({id: linkInstanceId, changes: {data: {...linkInstance.data, ...data}}}, state);
+  return linkInstancesAdapter.updateOne(
+    {
+      id: linkInstanceId,
+      changes: {data: {...linkInstance.data, ...data}, dataVersion: linkInstance.dataVersion + 1},
+    },
+    state
+  );
 }
 
 function revertLinkInstance(state: LinkInstancesState, originalLinkInstance: LinkInstance): LinkInstancesState {
-  const storedLinkInstance = state.entities[originalLinkInstance && originalLinkInstance.id];
+  if (originalLinkInstance) {
+    const storedLinkInstance = state.entities[originalLinkInstance && originalLinkInstance.id];
 
-  if (
-    storedLinkInstance &&
-    originalLinkInstance &&
-    storedLinkInstance.dataVersion &&
-    originalLinkInstance.dataVersion &&
-    storedLinkInstance.dataVersion <= originalLinkInstance.dataVersion
-  ) {
+    if (!storedLinkInstance) {
+      return linkInstancesAdapter.addOne(originalLinkInstance, state);
+    }
+
     return linkInstancesAdapter.upsertOne(originalLinkInstance, state);
   }
 
   return state;
+}
+
+function isModifiedLater(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {
+  return (
+    linkInstance.updateDate &&
+    (!oldLinkInstance.updateDate || linkInstance.updateDate.getTime() > oldLinkInstance.updateDate.getTime())
+  );
 }
