@@ -202,9 +202,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
       );
     }
-    if (changes.column || changes.document || changes.linkInstance || changes.constraintData) {
-      this.dataValue$ = this.createDataValue$();
-    }
     if (
       changes.selected &&
       (changes.selected.firstChange || !changes.selected.previousValue !== !changes.selected.currentValue)
@@ -241,10 +238,15 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.affectedSubscription.unsubscribe();
       this.affectedSubscription = this.subscribeToAffected();
     }
+    if (changes.column || changes.document || changes.linkInstance || changes.constraintData) {
+      if (!this.editing$.value) {
+        this.dataValue$ = this.createDataValue$();
+      }
+    }
   }
 
   private createDataValue$(): Observable<DataValue> {
-    return this.createDataValueByValue$(this.getCurrentValue());
+    return this.createDataValueByValue$(this.getValue());
   }
 
   private createDataValueByValue$(
@@ -260,7 +262,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
               attribute.constraint.createDataValue(value, inputType, this.constraintData)) ||
             new UnknownDataValue(value, inputType)
         ),
-        tap(dataValue => inputType === DataValueInputType.Typed && (this.editedValue = dataValue))
+        tap(dataValue => inputType === DataValueInputType.Typed && (this.editedValue = dataValue)),
+        take(inputType === DataValueInputType.Typed ? 1 : Number.MAX_SAFE_INTEGER)
       );
     }
     return of(new UnknownDataValue(value, inputType));
@@ -339,13 +342,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   private switchCheckboxValue(value: string) {
     // switch checkbox only if Enter or Space is pressed
     if (!value || value === ' ') {
-      this.saveData(!this.getCurrentValue());
+      this.saveData(!this.getValue());
     }
-  }
-
-  private getCurrentValue(): any {
-    const data = (this.document && this.document.data) || (this.linkInstance && this.linkInstance.data) || {};
-    return data[this.column.attributeIds[0]];
   }
 
   private startEditingAndChangeValue(value: string) {

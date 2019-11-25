@@ -35,6 +35,7 @@ import {StripHtmlPipe} from '../../pipes/strip-html.pipe';
 import {isMacOS} from '../../utils/system.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {defaultTextEditorOptions} from './text-editor.utils';
+import {QuillEditorComponent} from 'ngx-quill';
 
 export interface TextEditorChanged {
   html: string;
@@ -48,8 +49,6 @@ export interface TextEditorChanged {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextEditorModalComponent implements OnInit, AfterViewInit {
-  public readonly dialogType = DialogType;
-
   @Input()
   public readonly = false;
 
@@ -62,17 +61,21 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   @Input()
   public minLength: number;
 
+  @ViewChild('dialogBody', {static: false})
+  public dialogBody: ElementRef;
+
+  @ViewChild(QuillEditorComponent, {static: false})
+  public quillEditorComponent: QuillEditorComponent;
+
   public onSave$ = new Subject<string>();
   public onCancel$ = new Subject();
   public onContentChanged$ = new Subject<TextEditorChanged>();
-
-  @ViewChild('dialogBody', {static: false})
-  public dialogBody: ElementRef;
 
   public valid = true;
 
   public readonly macOS = isMacOS();
   public readonly defaultOptions = defaultTextEditorOptions;
+  public readonly dialogType = DialogType;
   public insertTextPlaceholder: string;
 
   constructor(
@@ -140,7 +143,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
     this.element.nativeElement.style.setProperty('--editor-height', `${height}px`);
   }
 
-  public ngOnInit(): void {
+  public ngOnInit() {
     this.checkValid(this.stripHtml.transform(this.content));
 
     this.insertTextPlaceholder = this.i18n({
@@ -149,9 +152,12 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
     });
   }
 
-  public ngAfterViewInit(): void {
+  public ngAfterViewInit() {
     setTimeout(() => {
       this.editorHeight();
+      if (this.quillEditorComponent && this.quillEditorComponent.quillEditor) {
+        this.quillEditorComponent.quillEditor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
+      }
     });
   }
 
@@ -170,8 +176,10 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public onEditorCreated(editor: any) {
-    editor.setSelection(Number.MAX_SAFE_INTEGER);
-    editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
+  public focusEditor(editor: any) {
+    setTimeout(() => {
+      editor.setSelection(Number.MAX_SAFE_INTEGER);
+      editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
+    }, 200);
   }
 }

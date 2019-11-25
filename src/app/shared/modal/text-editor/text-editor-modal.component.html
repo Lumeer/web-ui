@@ -14,7 +14,7 @@
       [minLength]="minLength"
       [placeholder]="insertTextPlaceholder"
       [modules]="defaultOptions"
-      (onEditorCreated)="onEditorCreated($event)"
+      (onEditorCreated)="focusEditor($event)"
       (onContentChanged)="contentChanged($event)">
     </quill-editor>
 

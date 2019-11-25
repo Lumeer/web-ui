@@ -15,7 +15,7 @@
   <div class="d-flex flex-row">
     <span *ngIf="collection" [style.color]="collection?.color">{{collection?.name}}</span>
     <div class="ml-3" [innerHTML]="document | documentDefaultAttributeHtml : collection : constraintData"></div>
-    <div class="ml-auto" *ngIf="collection | permissions:collectionType:readRole | async">
+    <div class="ml-auto text-nowrap" *ngIf="collection | permissions:collectionType:readRole | async">
       <span class="clickable ml-2 hiding-icon"
             (click)="$event.stopPropagation(); onToggleFavorite()"
             title="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
