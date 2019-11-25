@@ -22,6 +22,8 @@ import {BsDatepickerViewMode} from 'ngx-bootstrap/datepicker';
 export interface DateTimeOptions {
   year?: boolean;
   month?: boolean;
+  quarter?: boolean;
+  week?: boolean;
   day?: boolean;
   hours?: boolean;
   minutes?: boolean;
@@ -33,20 +35,22 @@ export interface DateTimeOptions {
 export function createDateTimeOptions(format: string): DateTimeOptions {
   return (
     format && {
-      year: format.includes('Y'),
+      year: format.toLowerCase().includes('y'),
+      quarter: format.toLowerCase().includes('q'),
       month: format.includes('M'),
-      day: format.includes('D'),
-      hours: format.includes('H') || format.includes('h') || format.includes('k'),
+      week: format.toLowerCase().includes('w'),
+      day: format.toLowerCase().includes('d'),
+      hours: format.toLowerCase().includes('h') || format.includes('k'),
       minutes: format.includes('m'),
       seconds: format.includes('s'),
-      meridian: format.includes('a') || format.includes('A'),
+      meridian: format.toLowerCase().includes('a'),
       milliseconds: format.includes('S'),
     }
   );
 }
 
 export function hasDateOption(options: DateTimeOptions): boolean {
-  return options && (options.year || options.month || options.day);
+  return options && (options.year || options.month || options.day || options.week || options.quarter);
 }
 
 export function hasTimeOption(options: DateTimeOptions): boolean {

@@ -50,6 +50,8 @@ import {
   selectTableRowOutdentable,
 } from '../../../../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../../../../shared/direction';
+import {selectCollectionById} from '../../../../../../../../core/store/collections/collections.state';
+import {ModalService} from '../../../../../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -88,7 +90,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   public tableRow$: Observable<TableConfigRow>;
   public tableParts$: Observable<TableConfigPart[]>;
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.document && this.document) {
@@ -214,5 +216,16 @@ export class TableDataCellMenuComponent implements OnChanges {
 
   public onCloneRow() {
     this.store$.dispatch(new TablesAction.CloneRow({cursor: this.cursor}));
+  }
+
+  public onDocumentDetail() {
+    if (this.document) {
+      this.store$
+        .pipe(
+          select(selectCollectionById(this.document.collectionId)),
+          take(1)
+        )
+        .subscribe(collection => this.modalService.showDocumentDetail(this.document, collection));
+    }
   }
 }

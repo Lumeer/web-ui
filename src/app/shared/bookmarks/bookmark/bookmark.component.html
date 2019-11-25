@@ -1,5 +1,5 @@
 <div class="wrap">
-  <div class="bookmark" [style.borderColor]="color" [style.cursor]="link ? 'pointer' : 'inherit'" (click)="openLink()">
+  <div class="bookmark text-nowrap" [style.borderColor]="color" [style.cursor]="link ? 'pointer' : 'inherit'" (click)="openLink()">
     <i [ngClass]="classes" [style.backgroundColor]="color" [style.color]="color | contrastColor"></i>
     <span class="content"><ng-content></ng-content></span>
   </div>

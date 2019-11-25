@@ -58,7 +58,6 @@ import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-cha
 import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
-import {BsModalService} from 'ngx-bootstrap';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 
 @Component({
@@ -117,7 +116,6 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     private changeDetector: ChangeDetectorRef,
     private columnBackgroundPipe: ColumnBackgroundPipe,
     private contextMenuService: ContextMenuService,
-    private bsModalService: BsModalService,
     private modalService: ModalService,
     private i18n: I18n,
     private store$: Store<AppState>

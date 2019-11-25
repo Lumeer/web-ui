@@ -1,12 +1,21 @@
 :host {
   display: block;
   min-height: calc(var(--caption-height) + var(--column-group-height));
-  overflow: hidden;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* removes scrollbar for Firefox */
+  -ms-overflow-style: none; /* removes scrollbar for Internet Explorer 10+ */
   transform: scale(1, 1); // keep header in embedded mode
   z-index: 10;
 
   & > div {
     z-index: 10;
+  }
+
+  &::-webkit-scrollbar {
+    /* removes scrollbar for WebKit */
+    width: 0;
+    height: 0;
   }
 }
 

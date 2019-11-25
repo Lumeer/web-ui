@@ -2,17 +2,17 @@
           [showBackdrop]="false"
           [positions]="dropdownPositions"
           [pushOnScreen]="true">
-  <div class="card py-2 overflow-auto" [style.width.rem]="25"
+  <div class="card py-2 overflow-auto d-block" [style.width.rem]="25"
        [style.max-height.vh]="90">
-    <a *ngFor="let video of videos; trackBy: trackByVideo"
-       class="dropdown-item d-flex"
+    <div *ngFor="let video of videos; trackBy: trackByVideo"
+       class="dropdown-item d-flex align-items-start cursor-pointer"
        (click)="onVideoClick(video)"
        [title]="video.summary">
       <img [src]="video.thumbnail" [style.width.px]="64" class="mr-4"/>
-      <div>
+      <div class="flex-grow-1 d-flex flex-column">
         <span class="summary">{{video.summary}}</span>
         <span class="description text-muted">{{video.description}}</span>
       </div>
-    </a>
+    </div>
   </div>
 </dropdown>

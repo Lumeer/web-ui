@@ -34,10 +34,10 @@ import {convertQueryModelToString} from '../../../../../core/store/navigation/qu
 import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {User} from '../../../../../core/store/users/user';
-import {BsModalService} from 'ngx-bootstrap';
 import {CreateDocumentModalComponent} from '../../../../../shared/modal/create-document/create-document-modal.component';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
+import {ModalService} from '../../../../../shared/modal/modal.service';
 
 @Component({
   selector: 'search-documents-content',
@@ -87,7 +87,7 @@ export class SearchDocumentsContentComponent implements OnInit {
     private perspectiveService: PerspectiveService,
     private router: Router,
     private toggleService: DocumentFavoriteToggleService,
-    private bsModalService: BsModalService
+    private modalService: ModalService
   ) {}
 
   public ngOnInit() {
@@ -146,7 +146,7 @@ export class SearchDocumentsContentComponent implements OnInit {
       const initialState = {collections, query: this.query, currentUser: this.currentUser};
       const config = {initialState, keyboard: false};
       config['backdrop'] = 'static';
-      this.bsModalService.show(CreateDocumentModalComponent, config);
+      this.modalService.show(CreateDocumentModalComponent, config);
     }
   }
 }

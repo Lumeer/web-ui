@@ -55,15 +55,17 @@ export class KanbanColumnCardsPipe implements PipeTransform {
         const document = documentMap[order.id];
         const stemsConfigs = (config && config.stemsConfigs) || [];
 
+        const dueHours =
+          isNotNullOrUndefined(order.stemIndex) &&
+          ((stemsConfigs[order.stemIndex] && stemsConfigs[order.stemIndex].doneColumnTitles) || []).indexOf(
+            column.title
+          ) < 0 &&
+          this.getDueHours(document, collections, stemsConfigs[order.stemIndex]);
+
         arr.push({
           attributeId: order.attributeId,
           dataResource: document,
-          dueHours:
-            isNotNullOrUndefined(order.stemIndex) &&
-            stemsConfigs[order.stemIndex] &&
-            stemsConfigs[order.stemIndex].doneColumnTitles &&
-            stemsConfigs[order.stemIndex].doneColumnTitles.indexOf(column.title) < 0 &&
-            this.getDueHours(document, collections, stemsConfigs[order.stemIndex]),
+          dueHours,
         });
       }
       return arr;

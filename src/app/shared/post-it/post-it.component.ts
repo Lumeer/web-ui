@@ -46,6 +46,7 @@ import {Store} from '@ngrx/store';
 import {getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
+import {ModalService} from '../modal/modal.service';
 
 export interface PostItTag {
   title: string;
@@ -97,7 +98,11 @@ export class PostItComponent implements OnDestroy {
 
   public resourceType: AttributesResourceType;
 
-  constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
+  constructor(
+    public dataRowService: DataRowService,
+    private store$: Store<AppState>,
+    private modalService: ModalService
+  ) {
     this.dataRowFocusService = new DataRowFocusService(
       () => 2,
       () => this.dataRowService.rows$.value.length,
@@ -178,6 +183,12 @@ export class PostItComponent implements OnDestroy {
           documentId: this.dataResource.id,
         })
       );
+    }
+  }
+
+  public onDetail() {
+    if (getAttributesResourceType(this.resource) === AttributesResourceType.Collection) {
+      this.modalService.showDocumentDetail(this.dataResource as DocumentModel, this.resource);
     }
   }
 }

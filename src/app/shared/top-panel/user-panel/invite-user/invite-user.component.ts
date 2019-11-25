@@ -18,7 +18,6 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {BsModalService} from 'ngx-bootstrap/modal';
 import {InviteUserModalComponent} from './modal/invite-user-modal.component';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -28,6 +27,7 @@ import {Project} from '../../../../core/store/projects/project';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {ModalService} from '../../../modal/modal.service';
 
 @Component({
   selector: 'invite-user',
@@ -45,7 +45,7 @@ export class InviteUserComponent {
   public readonly organizationType = ResourceType.Organization;
   public readonly projectType = ResourceType.Project;
 
-  constructor(private modalService: BsModalService, private store$: Store<AppState>) {}
+  constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));

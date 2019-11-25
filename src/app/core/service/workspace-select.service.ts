@@ -32,10 +32,11 @@ import {ProjectsAction} from '../store/projects/projects.action';
 import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from '../store/projects/projects.state';
 import {User} from '../store/users/user';
 import {selectCurrentUser} from '../store/users/users.state';
-import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {ResourceType} from '../model/resource-type';
 import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
 import {TemplateType} from '../model/template';
+import {ModalService} from '../../shared/modal/modal.service';
 
 @Injectable({
   providedIn: 'root',
@@ -47,7 +48,7 @@ export class WorkspaceSelectService {
     private store$: Store<AppState>,
     private i18n: I18n,
     private router: Router,
-    private modalService: BsModalService
+    private modalService: ModalService
   ) {
     this.store$.pipe(select(selectCurrentUser)).subscribe(user => (this.currentUser = user));
   }

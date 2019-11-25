@@ -26,11 +26,11 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
 import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 import * as moment from 'moment';
-import {BsModalService} from 'ngx-bootstrap';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
@@ -45,12 +45,20 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {User} from '../../../../core/store/users/user';
-import {DocumentDetailModalComponent} from '../../../../shared/modal/document-detail/document-detail-modal.component';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals, isNotNullOrUndefined, isNumeric} from '../../../../shared/utils/common.utils';
+import {
+  deepObjectsEquals,
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+  isNumeric,
+} from '../../../../shared/utils/common.utils';
 import {GanttChartConverter, GanttChartTaskMetadata} from '../util/gantt-chart-converter';
 import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
 import {DataValueInputType} from '../../../../core/model/data-value';
+import {ModalService} from '../../../../shared/modal/modal.service';
+import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
+import {BsModalRef} from 'ngx-bootstrap';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 interface Data {
   collections: Collection[];
@@ -117,7 +125,11 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Output()
   public createDocument = new EventEmitter<DocumentModel>();
 
+  @ViewChild(GanttChartVisualizationComponent, {static: false})
+  public ganttChartVisualizationComponent: GanttChartVisualizationComponent;
+
   private readonly converter: GanttChartConverter;
+  private readonly newTaskName: string;
 
   private options: GanttOptions;
 
@@ -127,9 +139,11 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   constructor(
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
-    private modalService: BsModalService
+    private modalService: ModalService,
+    private i18n: I18n
   ) {
     this.converter = new GanttChartConverter(this.selectItemWithConstraintFormatter);
+    this.newTaskName = i18n({id: 'gantt.perspective.task.create.title', value: 'New task'});
   }
 
   public ngOnInit() {
@@ -365,9 +379,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const data = generateDocumentDataByQuery(this.query, this.currentUser);
     const patchData = this.createTaskPatchData(taskWithMetadata, document);
     Object.keys(patchData).forEach(key => (data[key] = patchData[key]));
+    if (stemConfig.name && isNullOrUndefined(data[stemConfig.name.attributeId])) {
+      data[stemConfig.name.attributeId] = this.newTaskName;
+    }
     document.data = data;
 
-    this.openDocumentDetailModal(document);
+    const modalRef = this.openDocumentDetailModal(document);
+    modalRef.content.onCancel$.subscribe(() => this.ganttChartVisualizationComponent.removeTask(task));
   }
 
   public onTaskDetail(task: GanttChartTask) {
@@ -381,12 +399,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  private openDocumentDetailModal(document: DocumentModel) {
+  private openDocumentDetailModal(document: DocumentModel): BsModalRef {
     const collection = this.getResource(document, AttributesResourceType.Collection);
-    const config = {initialState: {document, collection}, keyboard: false, class: 'modal-lg'};
-    if (!document.id) {
-      config['backdrop'] = 'static';
-    }
-    this.modalService.show(DocumentDetailModalComponent, config);
+    return this.modalService.showDocumentDetail(document, collection);
   }
 }

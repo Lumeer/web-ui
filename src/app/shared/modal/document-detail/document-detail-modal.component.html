@@ -1,6 +1,6 @@
 <modal-wrapper
   [dialogType]="dialogType.Primary"
-  (onClose)="hideDialog()"
+  (onClose)="onClose()"
   [showSubmit]="!document.id"
   [performingAction]="performingAction$ | async"
   [showHeader]="false"
@@ -15,11 +15,11 @@
                      [toolbarRef]="toolbarRef"
                      (documentChanged)="onDocumentChanged($event)">
     </document-detail>
-    <links-list
-      *ngIf="data.collection && data.document?.id"
-      [document]="data.document"
-      [collection]="data.collection"
-      (documentSelect)="selectCollectionAndDocument($event)">
+    <links-list class="d-block mt-5"
+                *ngIf="data.collection && data.document?.id"
+                [document]="data.document"
+                [collection]="data.collection"
+                (documentSelect)="selectCollectionAndDocument($event)">
     </links-list>
   </div>
 

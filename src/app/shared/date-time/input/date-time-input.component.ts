@@ -97,6 +97,7 @@ export class DateTimeInputComponent implements OnChanges {
     }
 
     this.shouldSaveOnBlur = false;
+    this.close();
   }
 
   public onSave(date: Date) {
@@ -114,6 +115,7 @@ export class DateTimeInputComponent implements OnChanges {
       this.dateTimeInput.nativeElement.blur();
       this.close();
     } else if (event.code === KeyCode.Tab) {
+      this.dateTimeInput.nativeElement.blur();
       this.close();
     }
   }

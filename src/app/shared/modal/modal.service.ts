@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, TemplateRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BsModalService} from 'ngx-bootstrap';
+import {BsModalRef, BsModalService, ModalOptions} from 'ngx-bootstrap';
 import {AttributeTypeModalComponent} from './attribute-type/attribute-type-modal.component';
 import {AppState} from '../../core/store/app.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
@@ -47,36 +47,52 @@ import {DocumentModel} from '../../core/store/documents/document.model';
   providedIn: 'root',
 })
 export class ModalService {
+  private modalRefs: BsModalRef[] = [];
+
   constructor(private store$: Store<AppState>, private i18n: I18n, private bsModalService: BsModalService) {}
 
-  public showDocumentDetail(document: DocumentModel, collection: Collection) {
+  public show(content: string | TemplateRef<any> | any, config?: ModalOptions): BsModalRef {
+    const modalRef = this.bsModalService.show(content, config);
+    this.modalRefs.push(modalRef);
+    return modalRef;
+  }
+
+  public showDocumentDetail(document: DocumentModel, collection: Collection): BsModalRef {
     const config = {
       initialState: {document: document, collection: collection},
       keyboard: true,
       class: 'modal-lg',
     };
-    this.bsModalService.show(DocumentDetailModalComponent, config);
+    const modalRef = this.bsModalService.show(DocumentDetailModalComponent, config);
+    this.modalRefs.push(modalRef);
+    return modalRef;
   }
 
-  public showShareView(view: View) {
+  public showShareView(view: View): BsModalRef {
     const initialState = {view};
     const config = {initialState, keyboard: false};
     config['backdrop'] = 'static';
-    this.bsModalService.show(ShareViewModalComponent, config);
+    const modalRef = this.bsModalService.show(ShareViewModalComponent, config);
+    this.modalRefs.push(modalRef);
+    return modalRef;
   }
 
-  public showCreateLink(collections: Collection[], callback?: (linkType: LinkType) => void) {
+  public showCreateLink(collections: Collection[], callback?: (linkType: LinkType) => void): BsModalRef {
     const initialState = {collections, callback};
     const config = {initialState, keyboard: false};
     config['backdrop'] = 'static';
-    this.bsModalService.show(CreateLinkModalComponent, config);
+    const modalRef = this.bsModalService.show(CreateLinkModalComponent, config);
+    this.modalRefs.push(modalRef);
+    return modalRef;
   }
 
-  public showAttributeType(attributeId: string, collectionId: string, linkTypeId?: string) {
+  public showAttributeType(attributeId: string, collectionId: string, linkTypeId?: string): BsModalRef {
     const initialState = {attributeId, collectionId, linkTypeId};
     const config = {initialState, keyboard: false};
     config['backdrop'] = 'static';
-    this.bsModalService.show(AttributeTypeModalComponent, config);
+    const modalRef = this.bsModalService.show(AttributeTypeModalComponent, config);
+    this.modalRefs.push(modalRef);
+    return modalRef;
   }
 
   public showAttributeFunction(attributeId: string, collectionId: string, linkTypeId?: string) {
@@ -98,11 +114,13 @@ export class ModalService {
       });
   }
 
-  private showAttributeFunctionDialog(attributeId: string, collectionId: string, linkTypeId: string) {
+  private showAttributeFunctionDialog(attributeId: string, collectionId: string, linkTypeId: string): BsModalRef {
     const initialState = {attributeId, collectionId, linkTypeId};
     const config = {initialState, keyboard: false, class: 'modal-xxl'};
     config['backdrop'] = 'static';
-    return this.bsModalService.show(AttributeFunctionModalComponent, config);
+    const modalRef = this.bsModalService.show(AttributeFunctionModalComponent, config);
+    this.modalRefs.push(modalRef);
+    return modalRef;
   }
 
   private notifyFunctionsLimit() {
@@ -147,5 +165,9 @@ export class ModalService {
       value: 'You can have only a single function per table/link type in the Free Plan.',
     });
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
+  }
+
+  public destroy() {
+    this.modalRefs.forEach(ref => ref && ref.hide());
   }
 }

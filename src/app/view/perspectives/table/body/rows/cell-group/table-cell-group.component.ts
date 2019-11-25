@@ -41,10 +41,7 @@ import {
   selectTablePart,
   selectTablePartLeafColumns,
 } from '../../../../../../core/store/tables/tables.selector';
-import {selectAllUsers} from '../../../../../../core/store/users/users.state';
-import {User} from '../../../../../../core/store/users/user';
 import {ConstraintData, DurationUnitsMap} from '../../../../../../core/model/data/constraint';
-import {TranslationService} from '../../../../../../core/service/translation.service';
 import {ConstraintDataService} from '../../../../../../core/service/constraint-data.service';
 
 @Component({

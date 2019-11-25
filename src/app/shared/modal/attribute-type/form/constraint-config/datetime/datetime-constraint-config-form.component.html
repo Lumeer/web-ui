@@ -12,11 +12,11 @@
                  data-test="datetime-constraint-format-select">
     </select-item>
   </div>
-  <div *ngIf="!selectFormatControl?.value"
+  <div *ngIf="!formatControl?.value"
        class="d-flex">
     <div class="form-group flex-fill">
       <input class="form-control"
-             formControlName="format"
+             formControlName="customFormat"
              spellcheck="false"
              type="text">
     </div>
@@ -62,5 +62,17 @@
        class="text-danger"
        i18n="@@form.errors.minMaxInvalid">
     Minimum must be less or equal than maximum.
+  </div>
+
+  <div *ngIf="form.errors && form.errors['customEmpty']"
+       class="text-danger"
+       i18n="@@form.date.errors.customEmpty">
+    Format can not be empty.
+  </div>
+
+  <div *ngIf="form.errors && form.errors['customInvalid']"
+       class="text-danger"
+       i18n="@@form.date.errors.customInvalid">
+    We are sorry, but this format is not supported. Please enter valid format.
   </div>
 </div>

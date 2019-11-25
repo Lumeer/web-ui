@@ -25,9 +25,9 @@ import {VideoModel} from '../../../../core/store/videos/video.model';
 import {selectVideosByUrl} from '../../../../core/store/videos/videos.state';
 import {selectUrl} from '../../../../core/store/navigation/navigation.state';
 import {mergeMap} from 'rxjs/operators';
-import {BsModalService} from 'ngx-bootstrap';
 import {PlayVideoModalComponent} from './play-video-modal/play-video-modal.component';
 import {VideoMenuDropdownComponent} from './dropdown/video-menu-dropdown.component';
+import {ModalService} from '../../../modal/modal.service';
 
 @Component({
   selector: 'video-menu',
@@ -41,7 +41,7 @@ export class VideoMenuComponent implements OnInit {
   @ViewChild(VideoMenuDropdownComponent, {static: true})
   public videoMenuDropdown: VideoMenuDropdownComponent;
 
-  constructor(private store: Store<AppState>, private bsModalService: BsModalService) {}
+  constructor(private store: Store<AppState>, private modalService: ModalService) {}
 
   public ngOnInit(): void {
     this.videos$ = this.store.pipe(
@@ -55,6 +55,6 @@ export class VideoMenuComponent implements OnInit {
 
     const initialState = {video};
     const config = {initialState, keyboard: true, class: 'modal-lg'};
-    this.bsModalService.show(PlayVideoModalComponent, config);
+    this.modalService.show(PlayVideoModalComponent, config);
   }
 }

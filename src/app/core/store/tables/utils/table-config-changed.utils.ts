@@ -57,12 +57,17 @@ export function areTableConfigPartsChanged(
 }
 
 function isTablePartChanged(savedPart: TableConfigPart, shownPart: TableConfigPart, attributes: Attribute[]): boolean {
-  const filteredSavedColumns = filterTableColumnsByAttributes(savedPart.columns, attributes);
+  const filteredSavedColumns = filterTableColumnsByAttributes(savedPart.columns, attributes).filter(
+    column => (column.attributeIds || []).length > 0
+  );
+  const filteredShownColumns = filterTableColumnsByAttributes(shownPart.columns, attributes).filter(
+    column => (column.attributeIds || []).length > 0
+  );
 
   return (
     savedPart.collectionId !== shownPart.collectionId ||
     savedPart.linkTypeId !== shownPart.linkTypeId ||
-    areTableColumnsChanged(filteredSavedColumns, shownPart.columns)
+    areTableColumnsChanged(filteredSavedColumns, filteredShownColumns)
   );
 }
 

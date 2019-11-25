@@ -25,6 +25,7 @@ import {filter, take} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
+import {ModalService} from '../../shared/modal/modal.service';
 
 @Component({
   selector: 'auth-callback',
@@ -42,10 +43,13 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
     private authService: AuthService,
     private element: ElementRef,
     private router: Router,
-    private store: Store<AppState>
+    private store: Store<AppState>,
+    private modalService: ModalService
   ) {}
 
   public ngOnInit() {
+    this.modalService.destroy();
+
     if (this.authService.isAuthenticated()) {
       this.navigateToApplication();
       return;

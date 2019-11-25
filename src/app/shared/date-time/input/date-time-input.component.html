@@ -3,6 +3,7 @@
        [readonly]="readonly"
        [value]="value | formatDate : format"
        (focus)="onFocus()"
+       (click)="$event.stopPropagation()"
        (blur)="onBlur()"
        (input)="onInput()"
        (keydown)="onKeyDown($event)"

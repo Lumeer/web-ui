@@ -20,15 +20,32 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
-import {Subscription} from 'rxjs';
-import {filter, map, switchMap, take} from 'rxjs/operators';
+import {combineLatest, of, Subscription} from 'rxjs';
+import {filter, map, mergeMap, switchMap, take} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
-import {selectTableCursor, selectTablePart} from '../../../../../core/store/tables/tables.selector';
+import {
+  selectTableColumn,
+  selectTableCursor,
+  selectTablePart,
+  selectTableRow,
+} from '../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {CollectionPermissionsPipe} from '../../../../../shared/pipes/permissions/collection-permissions.pipe';
 import {EDITABLE_EVENT} from '../../table-perspective.component';
+import {AppState} from '../../../../../core/store/app.state';
+import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
+import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
+import {findAttribute, findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
+import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
+import {DataValueInputType} from '../../../../../core/model/data-value';
+import {ConstraintDataService} from '../../../../../core/service/constraint-data.service';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {ClipboardService} from '../../../../../core/service/clipboard.service';
+import {selectLinkInstanceById} from '../../../../../core/store/link-instances/link-instances.state';
+import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
+import {AttributesResource, DataResource} from '../../../../../core/model/resource';
 
 @Component({
   selector: 'table-hidden-input',
@@ -50,14 +67,21 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   private skipCompose = false;
 
+  private constraintData: ConstraintData;
+
   constructor(
     private actions$: Actions,
     private collectionPermissions: CollectionPermissionsPipe,
-    private store$: Store<{}>
+    private store$: Store<AppState>,
+    private constraintDataService: ConstraintDataService,
+    private clipboardService: ClipboardService
   ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToTableCursorActions());
+    this.subscriptions.add(
+      this.constraintDataService.observeConstraintData().subscribe(data => (this.constraintData = data))
+    );
   }
 
   private subscribeToTableCursorActions(): Subscription {
@@ -109,10 +133,19 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
       case KeyCode.ArrowLeft:
       case KeyCode.ArrowRight:
       case KeyCode.ArrowUp:
+        if (event.altKey && event.shiftKey) {
+          break;
+        }
         event.preventDefault();
         return;
       case KeyCode.Tab:
         return;
+      case KeyCode.KeyC:
+        if (event.ctrlKey || event.metaKey) {
+          this.copyCell();
+          return;
+        }
+        break;
     }
 
     event.stopPropagation();
@@ -176,5 +209,93 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   public onClick(event: MouseEvent) {
     event.preventDefault();
+  }
+
+  private copyCell() {
+    this.store$
+      .pipe(
+        select(selectTableCursor),
+        take(1),
+        mergeMap(cursor =>
+          combineLatest([
+            this.store$.pipe(select(selectTablePart(cursor))),
+            this.store$.pipe(select(selectTableRow(cursor))),
+            this.store$.pipe(select(selectTableColumn(cursor))),
+            of(cursor),
+          ])
+        ),
+        take(1)
+      )
+      .subscribe(([tablePart, tableRow, tableColumn, tableCursor]) => {
+        if (tableRow) {
+          const column = tablePart.columns && tablePart.columns[tableCursor.columnIndex];
+          const attributeId = column && column.attributeIds && column.attributeIds[0];
+          if (attributeId) {
+            if (tablePart.collectionId) {
+              this.copyDocumentValue(tableRow.documentId, tablePart.collectionId, attributeId);
+            } else if (tablePart.linkTypeId) {
+              this.copyLinkValue(tablePart.linkTypeId, tableRow.linkInstanceId, attributeId);
+            }
+          }
+        } else if (tableColumn) {
+          const attributeId = tableColumn.attributeIds && tableColumn.attributeIds[0];
+          if (tablePart.collectionId) {
+            this.copyCollectionAttribute(tablePart.collectionId, attributeId);
+          } else if (tablePart.linkTypeId) {
+            this.copyLinkTypeAttribute(tablePart.linkTypeId, attributeId);
+          }
+        }
+      });
+  }
+
+  private copyDocumentValue(documentId: string, collectionId: string, attributeId: string) {
+    combineLatest([
+      this.store$.pipe(select(selectDocumentById(documentId))),
+      this.store$.pipe(select(selectCollectionById(collectionId))),
+    ])
+      .pipe(take(1))
+      .subscribe(([document, collection]) => this.copyValue(document, collection, attributeId));
+  }
+
+  private copyLinkValue(linkInstanceId: string, linkTypeId: string, attributeId: string) {
+    combineLatest([
+      this.store$.pipe(select(selectLinkInstanceById(linkInstanceId))),
+      this.store$.pipe(select(selectLinkTypeById(linkTypeId))),
+    ])
+      .pipe(take(1))
+      .subscribe(([linkInstance, linkType]) => this.copyValue(linkInstance, linkType, attributeId));
+  }
+
+  private copyValue(dataResource: DataResource, attributesResource: AttributesResource, attributeId: string) {
+    const constraint = findAttributeConstraint(attributesResource && attributesResource.attributes, attributeId);
+    const value = (constraint || new UnknownConstraint())
+      .createDataValue(dataResource.data[attributeId], DataValueInputType.Stored, this.constraintData)
+      .format();
+    this.clipboardService.copy(value);
+  }
+
+  private copyCollectionAttribute(collectionId: string, attributeId: string) {
+    this.store$
+      .pipe(
+        select(selectCollectionById(collectionId)),
+        take(1)
+      )
+      .subscribe(collection => this.copyAttribute(collection, attributeId));
+  }
+
+  private copyLinkTypeAttribute(linkTypeId: string, attributeId: string) {
+    this.store$
+      .pipe(
+        select(selectLinkTypeById(linkTypeId)),
+        take(1)
+      )
+      .subscribe(linkType => this.copyAttribute(linkType, attributeId));
+  }
+
+  private copyAttribute(attributesResource: AttributesResource, attributeId: string) {
+    const attribute = findAttribute(attributesResource && attributesResource.attributes, attributeId);
+    if (attribute) {
+      this.clipboardService.copy(attribute.name);
+    }
   }
 }

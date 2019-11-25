@@ -1,5 +1,11 @@
 @import '../../../../../../../../styles/variables';
 
+:host {
+  display: block;
+  line-height: var(--table-row-min-height);
+  min-height: var(--table-row-min-height);
+}
+
 %highlighted {
   position: relative;
   z-index: $z-index-selected;

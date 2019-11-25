@@ -12,6 +12,12 @@
   </ng-template>
 
   <ng-container *ngIf="created">
+    <ng-template *ngIf="allowedPermissions?.read" contextMenuItem
+      (execute)="onDocumentDetail()">
+      <i class="far fa-fw fa-file-search mr-1"
+         aria-hidden="true"></i>
+      <span i18n="@@table.body.row.show.detail">Show detail</span>
+    </ng-template>
     <ng-template contextMenuItem
                  divider="true">
     </ng-template>
