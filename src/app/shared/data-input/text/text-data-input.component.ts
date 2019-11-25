@@ -101,7 +101,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
       this.text = this.value.format();
     }
     if (changes.value && this.value) {
-      // console.log(changes.value, this.value);
       this.text = this.value.format();
     }
 
