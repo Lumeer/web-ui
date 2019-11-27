@@ -20,18 +20,20 @@
 import {Location} from '@angular/common';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {select, Store} from '@ngrx/store';
 import {Auth0DecodedHash, Auth0UserProfile, WebAuth} from 'auth0-js';
-import {of, Subscription, timer} from 'rxjs';
-import {catchError, filter, first, mergeMap, timeout} from 'rxjs/operators';
+import {Observable, of, Subject, Subscription, timer} from 'rxjs';
+import {catchError, filter, map, mergeMap, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
-import {AppState} from '../core/store/app.state';
-import {UsersAction} from '../core/store/users/users.action';
 import {Angulartics2} from 'angulartics2';
-import {selectCurrentUser} from '../core/store/users/users.state';
 import {User} from '../core/store/users/user';
 import mixpanel from 'mixpanel-browser';
 import {hashUserId} from '../shared/utils/system.utils';
+import {UserService} from '../core/rest';
+import {HttpErrorResponse} from '@angular/common/http';
+import {AppState} from '../core/store/app.state';
+import {UsersAction} from '../core/store/users/users.action';
+import {selectCurrentUser} from '../core/store/users/users.state';
+import {select, Store} from '@ngrx/store';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
@@ -48,13 +50,16 @@ export class AuthService {
   private accessToken: string;
   private idToken: string;
   private expiresAt: number;
+  private userInteracted: boolean;
 
   private refreshSubscription: Subscription;
+  private logoutSubscription: Subscription;
 
   public constructor(
     private location: Location,
     private router: Router,
-    private store: Store<AppState>,
+    private userService: UserService,
+    private store$: Store<AppState>,
     private angulartics2: Angulartics2
   ) {
     if (environment.auth) {
@@ -63,6 +68,7 @@ export class AuthService {
 
       // in case the application was refreshed and user has already been authenticated
       this.scheduleRenewal();
+      this.scheduleLogout();
     }
   }
 
@@ -83,49 +89,68 @@ export class AuthService {
     }
 
     this.loggingIn = true;
+    this.clearLoginData();
     this.saveLoginRedirectPath(redirectPath);
     this.auth0.authorize();
+    this.trackUserLogin();
+  }
+
+  private trackUserLogin() {
+    if (!environment.analytics) {
+      return;
+    }
+
+    this.angulartics2.eventTrack.next({
+      action: 'User login',
+      properties: {category: 'User Actions'},
+    });
+
+    if (environment.mixpanelKey) {
+      mixpanel.track('User Login');
+    }
   }
 
   public handleAuthentication() {
     this.auth0.parseHash((error, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
-        this.store.dispatch(new UsersAction.GetCurrentUserWithLastLogin());
-        if (environment.analytics) {
-          this.store
-            .pipe(
-              select(selectCurrentUser),
-              filter(user => !!user && !!user.lastLoggedIn),
-              timeout(10000),
-              first(),
-              catchError(() => null)
-            )
-            .subscribe((user: User) => {
-              if (user && environment.analytics) {
-                const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
-                this.angulartics2.eventTrack.next({
-                  action: 'User returned',
-                  properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
-                });
-
-                if (environment.mixpanelKey) {
-                  mixpanel.identify(hashUserId(user.id));
-                  mixpanel.track('User Returned', {
-                    dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
-                    wau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 7,
-                    mau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 30,
-                    hoursSinceLastLogin: hoursSinceLastLogin,
-                  });
-                }
-              }
-            });
-        }
+        this.store$.dispatch(new UsersAction.GetCurrentUserWithLastLogin());
+        this.trackUserLastLogin();
       } else if (error) {
         this.router.navigate(['/']);
         console.error(error);
       }
     });
+  }
+
+  private trackUserLastLogin() {
+    if (!environment.analytics) {
+      return;
+    }
+    this.store$
+      .pipe(
+        select(selectCurrentUser),
+        filter(user => !!user)
+      )
+      .subscribe((user: User) => {
+        if (user) {
+          const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
+          this.angulartics2.eventTrack.next({
+            action: 'User returned',
+            properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
+          });
+
+          if (environment.mixpanelKey) {
+            mixpanel.identify(hashUserId(user.id));
+            mixpanel.track('User Returned', {
+              dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
+              wau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 7,
+              mau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 30,
+              hoursSinceLastLogin: hoursSinceLastLogin,
+            });
+          }
+        }
+      });
   }
 
   private setSession(authResult: Auth0DecodedHash): void {
@@ -141,6 +166,7 @@ export class AuthService {
     }
 
     this.scheduleRenewal();
+    this.scheduleLogout();
   }
 
   public logout(): void {
@@ -149,6 +175,12 @@ export class AuthService {
       return;
     }
 
+    this.clearLoginData();
+    this.saveLoginRedirectPath(this.router.url);
+    window.location.assign(this.getLogoutUrl());
+  }
+
+  private clearLoginData() {
     this.accessToken = null;
     this.idToken = null;
     this.expiresAt = null;
@@ -161,9 +193,6 @@ export class AuthService {
     }
 
     this.unscheduleRenewal();
-
-    this.saveLoginRedirectPath(this.router.url);
-    window.location.assign(this.getLogoutUrl());
   }
 
   public getLogoutUrl(): string {
@@ -174,6 +203,11 @@ export class AuthService {
   public isAuthenticated(): boolean {
     // Check whether the current time is past the access token's expiry time
     return new Date().getTime() < this.getExpiresAt();
+  }
+
+  public tokenExpired(): boolean {
+    const expiredAt = this.getExpiresAt();
+    return expiredAt > 0 && expiredAt < new Date().getTime();
   }
 
   public getAccessToken(): string {
@@ -215,23 +249,40 @@ export class AuthService {
     });
   }
 
+  public onUserInteraction() {
+    this.userInteracted = true;
+  }
+
+  private tryRenewToken(): Observable<Auth0DecodedHash> {
+    const subject = new Subject<Auth0DecodedHash>();
+    this.auth0.checkSession({}, (error, result) => subject.next(error ? null : result));
+    return subject.asObservable();
+  }
+
   public scheduleRenewal() {
     if (!this.isAuthenticated()) {
       return;
     }
 
     this.unscheduleRenewal();
+    this.userInteracted = false;
 
     const source = of(this.getExpiresAt()).pipe(
       mergeMap(expiresAt => {
-        const oneMinute = 60000;
         // Use the delay in a timer to run the refresh at the proper time
-        return timer(Math.max(1, expiresAt - Date.now() - oneMinute));
+        const timerTime = (expiresAt - Date.now()) / 5;
+        return timer(timerTime > 10000 ? timerTime : 20000);
       })
     );
 
     // Once the delay time from above is reached, get a new JWT and schedule additional refreshes
-    this.refreshSubscription = source.subscribe(() => this.renewToken());
+    this.refreshSubscription = source.subscribe(() => {
+      if (this.userInteracted) {
+        this.renewToken();
+      } else {
+        this.scheduleRenewal();
+      }
+    });
   }
 
   public unscheduleRenewal() {
@@ -240,12 +291,49 @@ export class AuthService {
     }
   }
 
-  public getLoginRedirectPath(): string {
-    const redirectPath = localStorage.getItem(REDIRECT_KEY) || '/';
-    return redirectPath !== '/agreement' ? redirectPath : '/';
+  public scheduleLogout() {
+    if (this.logoutSubscription) {
+      this.logoutSubscription.unsubscribe();
+    }
+    this.logoutSubscription = timer(this.getExpiresAt() - Date.now()).subscribe(() => {
+      this.login(this.router.url);
+    });
   }
 
-  public saveLoginRedirectPath(path: string) {
-    localStorage.setItem(REDIRECT_KEY, path);
+  public getLoginRedirectPath(): string {
+    return localStorage.getItem(REDIRECT_KEY) || '/';
+  }
+
+  public saveLoginRedirectPath(redirectPath: string) {
+    const restrictedPaths = ['/agreement', '/logout', '/auth'];
+    if (!restrictedPaths.some(path => path.startsWith(path))) {
+      localStorage.setItem(REDIRECT_KEY, redirectPath);
+    }
+  }
+
+  public checkToken(): Observable<boolean> {
+    return this.checkServerResponse().pipe(
+      mergeMap(success => {
+        if (success) {
+          return this.tryRenewToken().pipe(
+            tap(response => response && this.setSession(response)),
+            map(response => !!response)
+          );
+        }
+        return of(false);
+      })
+    );
+  }
+
+  private checkServerResponse(): Observable<boolean> {
+    return this.userService.getCurrentUser().pipe(
+      map(() => true),
+      catchError(error => {
+        if (error instanceof HttpErrorResponse && error.status === 401) {
+          return of(false);
+        }
+        return of(true);
+      })
+    );
   }
 }

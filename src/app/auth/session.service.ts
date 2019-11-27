@@ -17,33 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
-import {environment} from '../../../../environments/environment';
-import {isBackendUrl} from '../../api/api.utils';
+import {BehaviorSubject, Subscription} from 'rxjs';
+import {throttleTime} from 'rxjs/operators';
+import {environment} from '../../environments/environment';
 
-@Injectable()
-export class SessionHttpInterceptor implements HttpInterceptor {
+const CHECK_INTERVAL = 5 * 1000; // millis
+
+@Injectable({
+  providedIn: 'root',
+})
+export class SessionService {
+  private subject$ = new BehaviorSubject({});
+  private subscriptions = new Subscription();
   private timeoutId: number;
 
-  public constructor(private router: Router) {}
+  public constructor(private router: Router) {
+    this.subscribeToSubject();
+  }
 
-  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!isBackendUrl(request.url)) {
-      return next.handle(request);
-    }
+  public onUserInteraction() {
+    this.subject$.next({});
+  }
 
-    return next.handle(request).pipe(
-      tap(() => {
-        window.clearTimeout(this.timeoutId);
-        this.timeoutId = window.setTimeout(
-          () => this.navigateToSessionExpiredPage(),
-          environment.sessionTimeout * 60 * 1000
-        );
-      })
+  private subscribeToSubject() {
+    const subscription = this.subject$.pipe(throttleTime(CHECK_INTERVAL)).subscribe(() => this.resetSession());
+    this.subscriptions.add(subscription);
+  }
+
+  private resetSession() {
+    window.clearTimeout(this.timeoutId);
+    this.timeoutId = window.setTimeout(
+      () => this.navigateToSessionExpiredPage(),
+      environment.sessionTimeout * 60 * 1000
     );
   }
 
@@ -53,5 +60,9 @@ export class SessionHttpInterceptor implements HttpInterceptor {
         redirectUrl: this.router.url,
       },
     });
+  }
+
+  public destroy() {
+    this.subscriptions.unsubscribe();
   }
 }

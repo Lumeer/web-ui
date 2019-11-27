@@ -26,6 +26,7 @@ import {AppState} from '../../core/store/app.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 import {ModalService} from '../../shared/modal/modal.service';
+import {UsersAction} from '../../core/store/users/users.action';
 
 @Component({
   selector: 'auth-callback',
@@ -43,7 +44,7 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
     private authService: AuthService,
     private element: ElementRef,
     private router: Router,
-    private store: Store<AppState>,
+    private store$: Store<AppState>,
     private modalService: ModalService
   ) {}
 
@@ -55,7 +56,7 @@ export class AuthCallbackComponent implements OnInit, AfterViewChecked {
       return;
     }
 
-    this.store
+    this.store$
       .select(selectCurrentUser)
       .pipe(
         filter(user => !!user),

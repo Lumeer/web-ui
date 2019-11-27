@@ -42,6 +42,7 @@ import {selectCurrentUser} from './core/store/users/users.state';
 import {hashUserId} from './shared/utils/system.utils';
 import {VideosAction} from './core/store/videos/videos.action';
 import {getAllVideos} from './core/store/videos/videos.data';
+import {SessionService} from './auth/session.service';
 
 @Component({
   selector: 'lmr-app',
@@ -63,6 +64,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private store$: Store<AppState>,
     private title: Title,
     private pusherService: PusherService,
+    private sessionService: SessionService,
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer - Visual Project&Team Management'}));
@@ -73,6 +75,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.handleAuthentication();
     this.startAnalyticsTracking();
     this.setUpExternalServicesUserContext();
+    this.initCheckUserInteraction();
   }
 
   private initPushNotifications() {
@@ -222,6 +225,17 @@ export class AppComponent implements OnInit, AfterViewInit {
           smartlookClient.init(environment.smartlookKey);
         });
     }
+  }
+
+  private initCheckUserInteraction() {
+    ['mousedown', 'keypress', 'onscroll', 'wheel'].forEach(type =>
+      document.body.addEventListener(type, () => this.userInteracted())
+    );
+  }
+
+  private userInteracted() {
+    this.sessionService.onUserInteraction();
+    this.authService.onUserInteraction();
   }
 }
 
