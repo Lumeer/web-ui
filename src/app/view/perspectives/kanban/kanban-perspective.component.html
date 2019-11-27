@@ -5,7 +5,6 @@
                 users: users$ | async} as data">
 
     <collapsible-sidebar *ngIf="data.canManageConfig"
-                         class="h-100"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <kanban-config
