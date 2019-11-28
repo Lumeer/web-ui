@@ -25,6 +25,8 @@ import {Observable} from 'rxjs';
 import {selectUrl} from '../../../core/store/navigation/navigation.state';
 import {map, mergeMap} from 'rxjs/operators';
 import {selectVideosByUrl} from '../../../core/store/videos/videos.state';
+import {User} from '../../../core/store/users/user';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
 
 @Component({
   selector: 'user-panel',
@@ -47,6 +49,8 @@ export class UserPanelComponent implements OnInit {
 
   public showVideos$: Observable<boolean>;
 
+  public user$: Observable<User>;
+
   constructor(public element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
 
   public ngOnInit() {
@@ -55,5 +59,7 @@ export class UserPanelComponent implements OnInit {
       mergeMap(url => this.store$.pipe(select(selectVideosByUrl(url)))),
       map(videos => (videos || []).length > 0)
     );
+
+    this.user$ = this.store$.pipe(select(selectCurrentUser));
   }
 }

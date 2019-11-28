@@ -56,6 +56,9 @@ export class UserMenuComponent {
   @Input()
   public controlsVisible: boolean;
 
+  @Input()
+  public userEmail: string;
+
   @Output()
   public toggleControls = new EventEmitter();
 

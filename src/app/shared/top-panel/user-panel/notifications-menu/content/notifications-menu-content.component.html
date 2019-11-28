@@ -1,4 +1,4 @@
-<span class="fa-stack ml-1 cursor-pointer" #origin (click)="dropdown.open()">
+<span title="Notifications" i18n-title="@@topPanel.notifications.title" class="fa-stack ml-1 cursor-pointer" #origin (click)="dropdown.open()">
   <i class="fa fa-bell fa-stack-1x font-size-15"
      [class.text-primary]="unreadNotifications?.length > 0"
      [class.text-secondary]="!unreadNotifications || unreadNotifications.length === 0"></i>

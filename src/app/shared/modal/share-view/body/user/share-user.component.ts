@@ -37,6 +37,9 @@ export class ShareUserComponent {
   public email: string;
 
   @Input()
+  public userName: string;
+
+  @Input()
   public roles: string[];
 
   @Output()

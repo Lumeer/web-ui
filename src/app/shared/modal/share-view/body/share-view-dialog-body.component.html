@@ -5,40 +5,42 @@
     (copy)="copyToClipboard()">
   </share-view-copy>
 
-  <hr>
+  <div class="p-3">
+    <share-view-input
+      class="d-block my-2"
+      [text]="text$ | async"
+      [suggestions]="suggestions$ | async"
+      [selectedIndex]="selectedIndex$ | async"
+      [currentUsers]="[staticUsers, data.changeableUsers, data.newUsers] | concat"
+      [canAddNewUsers]="canAddNewUsers"
+      (inputChanged)="onInputChanged($event)"
+      (suggestionChoose)="onSuggestionClick($event)"
+      (inputKeyDown)="onKeyDown($event)"
+      (suggest)="suggest()"
+      (addNewUser)="onAddNewUser()">
+    </share-view-input>
 
-  <share-view-input
-    class="d-block mt-2"
-    [text]="text$ | async"
-    [suggestions]="suggestions$ | async"
-    [selectedIndex]="selectedIndex$ | async"
-    [currentUsers]="[staticUsers, data.changeableUsers, data.newUsers] | concat"
-    [canAddNewUsers]="canAddNewUsers"
-    (inputChanged)="onInputChanged($event)"
-    (suggestionChoose)="onSuggestionClick($event)"
-    (inputKeyDown)="onKeyDown($event)"
-    (suggest)="suggest()"
-    (addNewUser)="onAddNewUser()">
-  </share-view-input>
+    <table class="table table mt-4">
+      <thead>
+        <tr>
+          <th class="border-top-0"></th>
+          <th class="border-top-0"><span i18n="@@users.header.email">Email</span></th>
+          <th class="border-top-0 tools"><span>Roles</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr share-user *ngFor="let user of [staticUsers, data.changeableUsers, data.newUsers] | concat; trackBy:trackByUser"
+            [canRemove]="user | canRemoveUser:currentUser:organization:project"
+            [changeRoles]="user.id !== currentUser?.id && (user | canChangeRoles:viewResourceType:organization:project)"
+            [roles]="user | userRoles:data.userRoles"
+            [email]="user.email"
+            [userName]="user.name"
+            (rolesChange)="onNewRoles(user, $event)"
+            (delete)="deleteUser(user)">
+        </tr>
+      </tbody>
 
-  <table class="table table-striped table-sm mt-2">
-    <thead>
-      <tr>
-        <th class="border-top-0"><span i18n="@@users.header.email">Email</span></th>
-        <th class="border-top-0"><span>Roles</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr share-user *ngFor="let user of [staticUsers, data.changeableUsers, data.newUsers] | concat; trackBy:trackByUser"
-          [canRemove]="user | canRemoveUser:currentUser:organization:project"
-          [changeRoles]="user.id !== currentUser?.id && (user | canChangeRoles:viewResourceType:organization:project)"
-          [roles]="user | userRoles:data.userRoles"
-          [email]="user.email"
-          (rolesChange)="onNewRoles(user, $event)"
-          (delete)="deleteUser(user)">
-      </tr>
-    </tbody>
-
-  </table>
+    </table>
+  </div>
 
 </ng-container>
