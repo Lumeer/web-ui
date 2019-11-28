@@ -81,6 +81,7 @@ import {AttributesToDataSuggestionsPipe} from './attributes-to-data-suggestions.
 import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
 import {StripHtmlPipe} from './strip-html.pipe';
 import {ArrayReversePipe} from './array/array-reverse.pipe';
+import {RoleHumanReadablePipe} from './role-human-readable.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -145,6 +146,7 @@ import {ArrayReversePipe} from './array/array-reverse.pipe';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
+    RoleHumanReadablePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -209,6 +211,7 @@ import {ArrayReversePipe} from './array/array-reverse.pipe';
     AttributeFunctionDefinedPipe,
     StripHtmlPipe,
     ArrayReversePipe,
+    RoleHumanReadablePipe,
   ],
 })
 export class PipesModule {}

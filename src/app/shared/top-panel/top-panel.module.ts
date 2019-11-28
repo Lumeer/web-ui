@@ -47,6 +47,7 @@ import {UserFeedbackModalComponent} from './user-panel/user-menu/user-feedback-m
 import {PlayVideoModalComponent} from './user-panel/video-menu/play-video-modal/play-video-modal.component';
 import {BookmarksModule} from '../bookmarks/bookmarks.module';
 import {GravatarModule} from 'ngx-gravatar';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [
@@ -64,6 +65,7 @@ import {GravatarModule} from 'ngx-gravatar';
     DropdownModule,
     BookmarksModule,
     GravatarModule,
+    TooltipModule.forRoot(),
   ],
   declarations: [
     TopPanelComponent,

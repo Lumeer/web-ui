@@ -4,9 +4,9 @@
          [email]="email"
          [size]="48"
          class="mr-3">
-    <div class="flex-column">
-      <div class="flex-nowrap">{{userName}}</div>
-      <div class="text-muted">{{roles}}</div>
+    <div class="flex-column align-self-center">
+      <div *ngIf="userName; else noName" class="flex-nowrap">{{userName}}</div>
+      <div class="text-muted">{{roles | roleHumanReadable}}</div>
     </div>
   </div>
 </td>
@@ -33,3 +33,9 @@
        (click)="onDelete()"></i>
   </div>
 </td>
+
+<ng-template #noName>
+  <div class="flex-nowrap text-muted">
+    Unknown name
+  </div>
+</ng-template>

@@ -30,9 +30,10 @@ import {NotificationCollectionComponent} from './content/dropdown/collection/not
 import {NotificationViewComponent} from './content/dropdown/view/notification-view.component';
 import {NotificationsMenuDropdownComponent} from './content/dropdown/notifications-menu-dropdown.component';
 import {DropdownModule} from '../../../dropdown/dropdown.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
-  imports: [CommonModule, PipesModule, RouterModule, DropdownModule],
+  imports: [CommonModule, PipesModule, RouterModule, DropdownModule, TooltipModule.forRoot()],
   declarations: [
     NotificationsMenuComponent,
     NotificationsMenuContentComponent,

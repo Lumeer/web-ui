@@ -2,8 +2,9 @@
     class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
   <li class="nav-item dropdown">
     <div class="nav-link text-truncate cursor-pointer" role="button"
-         title="Organization menu"
-         i18n-title="@@topPanel.organizationMenu.title"
+         tooltip="Organization menu"
+         i18n-tooltip="@@topPanel.organizationMenu.title"
+         placement="bottom"
          (click)="onOrganizationClick()"
          [style.maxWidth.rem]="10" #organizationElement>
       <i [class]="data.organization?.icon" [style.color]="data.organization?.color">
@@ -23,8 +24,9 @@
   <li class="nav-separator"><i class="fas fa-chevron-right"></i></li>
   <li class="nav-item dropdown">
     <div class="nav-link text-truncate cursor-pointer" role="button"
-         title="Project menu"
-         i18n-title="@@topPanel.proejctMenu.title"
+         tooltip="Project menu"
+         i18n-tooltip="@@topPanel.projectMenu.title"
+         placement="bottom"
          (click)="onProjectClick()"
          #projectElement>
       <i [class]="data.project?.icon" [style.color]="data.project?.color"></i>
