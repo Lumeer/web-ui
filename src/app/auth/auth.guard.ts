@@ -22,7 +22,8 @@ import {ActivatedRouteSnapshot, CanActivate, CanActivateChild, RouterStateSnapsh
 import {environment} from '../../environments/environment';
 import {AuthService} from './auth.service';
 import {Angulartics2} from 'angulartics2';
-import mixpanel from 'mixpanel-browser';
+import {Observable, of} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -30,29 +31,21 @@ import mixpanel from 'mixpanel-browser';
 export class AuthGuard implements CanActivate, CanActivateChild {
   public constructor(private angulartics2: Angulartics2, private authService: AuthService) {}
 
-  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.isAuthenticated(state);
   }
 
-  public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+  public canActivateChild(childRoute: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     return this.isAuthenticated(state);
   }
 
-  private isAuthenticated(state: RouterStateSnapshot): boolean {
+  private isAuthenticated(state: RouterStateSnapshot): Observable<boolean> {
     if (environment.auth && !this.authService.isAuthenticated()) {
-      if (environment.analytics) {
-        this.angulartics2.eventTrack.next({
-          action: 'User login',
-          properties: {category: 'User Actions'},
-        });
-
-        if (environment.mixpanelKey) {
-          mixpanel.track('User Login');
-        }
+      if (this.authService.tokenExpired()) {
+        return this.authService.checkToken().pipe(tap(valid => !valid && this.authService.login(state.url)));
       }
-      this.authService.login(state.url);
-      return false;
+      return of(false);
     }
-    return true;
+    return of(true);
   }
 }

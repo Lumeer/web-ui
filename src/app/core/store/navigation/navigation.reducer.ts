@@ -24,7 +24,7 @@ import {AppState} from '../app.state';
 import {parseMapCoordinates} from '../maps/map-coordinates';
 import {MapPosition} from '../maps/map.model';
 import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
-import {NavigationState} from './navigation.state';
+import {initialNavigationState, NavigationState} from './navigation.state';
 import {QueryParam} from './query-param';
 import {convertQueryStringToModel} from './query/query.converter';
 import {SearchTab, searchTabsMap} from './search-tab';
@@ -100,7 +100,7 @@ function tryToParseSearchTabPath(url: string): SearchTab | null {
 }
 
 function onRouterCancel(state: NavigationState, action: RouterCancelAction<AppState>): NavigationState {
-  return action.payload.storeState.navigation;
+  return (action.payload.storeState && action.payload.storeState.navigation) || initialNavigationState;
 }
 
 export function navigationReducer(
