@@ -1,20 +1,25 @@
 <div class="d-flex">
-  <input class="form-control form-control-sm flex-fill"
-         [ngModel]="text"
-         (keydown)="onKeyDown($event)"
-         (input)="onInputChanged($event.target.value); onSuggest()"
-         (focus)="onSuggest()"
-         placeholder="Enter user email and press Enter"
-         i18n-placeholder="@@view.share.dialog.input.placeholder"/>
 
-  <button type="button"
-          *ngIf="canAddNewUsers"
-          class="btn btn-sm btn-primary text-nowrap ml-2"
-          [disabled]="!(text | canAddNewUser:currentUsers)"
-          (click)="onAddUser()">
-    <i class="fas fa-plus mr-2"></i>
-    <span class="font-weight-bold" i18n="@@view.share.dialog.input.button">Add</span>
-  </button>
+  <div class="input-group flex-row">
+    <input class="form-control form-control-sm flex-fill"
+           [ngModel]="text"
+           (keydown)="onKeyDown($event)"
+           (input)="onInputChanged($event.target.value); onSuggest()"
+           (focus)="onSuggest()"
+           placeholder="Enter user email and press Enter"
+           i18n-placeholder="@@view.share.dialog.input.placeholder"/>
+
+    <div class="input-group-append">
+      <button type="button"
+              *ngIf="canAddNewUsers"
+              class="btn btn-sm btn-primary text-nowrap"
+              [disabled]="!(text | canAddNewUser:currentUsers)"
+              (click)="onAddUser()">
+        <i class="fas fa-plus mr-2"></i>
+        <span class="font-weight-bold" i18n="@@view.share.dialog.input.button">Add</span>
+      </button>
+    </div>
+  </div>
 
 </div>
 

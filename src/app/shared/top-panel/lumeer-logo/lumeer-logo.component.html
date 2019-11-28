@@ -1,9 +1,13 @@
 <ng-template #logo>
-  <img [style.height.px]="height"
+  <div [style.height.px]="height + 2"
+       [style.width.px]="height + 2"
+       [style.backgroundSize.px]="height"
+       title="Back to home"
+       i18n-title="@@topPanel.home.title"
        class="lumeer-logo"
-       src="assets/img/lumeer.svg"
        data-test="lumeer-logo"
        data-tour="logo">
+  </div>
   <div *ngIf="text"
        [style.line-height.px]="height"
        class="lumeer-header text-uppercase pl-2">

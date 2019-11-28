@@ -1,11 +1,13 @@
-<small i18n="@@view.share.dialog.link.title">Only team members in the list below can open this link</small>
-<div class="input-group mt-2">
-  <input type="text" class="link form-control"
-         #urlInput (focus)="urlInput.select()"
-         [ngModel]="viewShareUrl" readonly/>
-  <div class="input-group-append">
-    <button class="btn btn-primary" type="button" (click)="onCopyClick()">
-      <i class="fas fa-copy"></i>
-    </button>
+<div class="container d-flex flex-column justify-content-center px-5">
+  <div class="input-group mt-2 flex-row pt-4">
+    <input type="text" class="link form-control"
+           #urlInput (focus)="urlInput.select()"
+           [ngModel]="viewShareUrl" readonly/>
+    <div class="input-group-append">
+      <button class="btn btn-success" type="button" (click)="onCopyClick()">
+        <i class="fas fa-copy"></i>
+      </button>
+    </div>
   </div>
+  <small class="text-center pt-1 pb-4" i18n="@@view.share.dialog.link.title">Only team members in the list below can open this link</small>
 </div>

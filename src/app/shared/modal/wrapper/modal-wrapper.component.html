@@ -21,7 +21,7 @@
     <button *ngIf="showClose"
             [disabled]="performingAction"
             type="button"
-            class="btn btn-outline-secondary text-nowrap float-left" (click)="onCloseClick()">
+            class="btn btn-outline-primary text-nowrap float-left" (click)="onCloseClick()">
       <ng-content select=".button-cancel"></ng-content>
     </button>
     <button *ngIf="showSubmit"

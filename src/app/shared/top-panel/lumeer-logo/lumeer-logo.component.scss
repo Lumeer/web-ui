@@ -4,12 +4,15 @@
 .lumeer-logo {
   position: relative;
   z-index: $zindex-sticky;
+  background: url('../../../../assets/img/lumeer.svg') no-repeat center center;
+  color: $primary;
 
   &:hover {
-    transform: scale(1.2, 1.2);
+    transform: rotate(360deg);
+    background: url('../../../../assets/img/arrow-alt-left-solid.svg') no-repeat center center;
   }
 
-  transition: transform 0.15s ease-in-out;
+  transition: all 0.25s ease-in-out;
 }
 
 .lumeer-header {

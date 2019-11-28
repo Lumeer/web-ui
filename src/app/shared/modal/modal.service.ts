@@ -70,7 +70,7 @@ export class ModalService {
 
   public showShareView(view: View): BsModalRef {
     const initialState = {view};
-    const config = {initialState, keyboard: false};
+    const config = {initialState, keyboard: false, class: 'modal-lg'};
     config['backdrop'] = 'static';
     const modalRef = this.bsModalService.show(ShareViewModalComponent, config);
     this.modalRefs.push(modalRef);
