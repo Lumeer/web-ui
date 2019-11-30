@@ -28,14 +28,14 @@ export class RoleHumanReadablePipe implements PipeTransform {
   constructor(private i18n: I18n) {}
 
   public transform(roles: string[]): string {
-    let roleText = 'UNKNOWN';
+    let roleText = Role.Empty;
 
-    if (roles.findIndex(role => role === 'MANAGE') >= 0) {
-      roleText = 'MANAGE';
-    } else if (roles.findIndex(role => role === 'WRITE') >= 0) {
-      roleText = 'WRITE';
-    } else if (roles.findIndex(role => role === 'READ') >= 0) {
-      roleText = 'READ';
+    if (roles.findIndex(role => role === Role.Manage) >= 0) {
+      roleText = Role.Manage;
+    } else if (roles.findIndex(role => role === Role.Write) >= 0) {
+      roleText = Role.Write;
+    } else if (roles.findIndex(role => role === Role.Read) >= 0) {
+      roleText = Role.Read;
     }
 
     return this.i18n(

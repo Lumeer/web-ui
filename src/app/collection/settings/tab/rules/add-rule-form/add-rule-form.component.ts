@@ -257,15 +257,17 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createTypeItems(): SelectItemModel[] {
-    return this.types.map(type => ({
-      id: type,
-      value: this.i18n(
-        {
-          id: 'collection.config.tab.rules.type',
-          value: '{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly}}',
-        },
-        {type}
-      ),
-    }));
+    return this.types
+      .filter(type => type !== RuleType.Zapier)
+      .map(type => ({
+        id: type,
+        value: this.i18n(
+          {
+            id: 'collection.config.tab.rules.type',
+            value: '{type, select, AUTO_LINK {Automated link} BLOCKLY {Blockly} ZAPIER {Zapier}}',
+          },
+          {type}
+        ),
+      }));
   }
 }

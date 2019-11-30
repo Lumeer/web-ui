@@ -29,3 +29,13 @@ i {
 i:not(.role-selected):not(.role-clickable) {
   color: $secondary;
 }
+
+@media (max-width: 430px) {
+  .user-box {
+    flex-wrap: wrap !important;
+  }
+
+  .user-name {
+    padding-top: 0.5rem;
+  }
+}

@@ -4,4 +4,8 @@ table {
 
 .tools {
   width: 8.75rem;
+
+  @media (max-width: 430px) {
+    width: auto;
+  }
 }
