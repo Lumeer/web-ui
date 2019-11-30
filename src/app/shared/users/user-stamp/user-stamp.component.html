@@ -1,0 +1,16 @@
+<div class="d-flex flex-row user-box">
+  <img ngxGravatar
+       [email]="email"
+       [size]="48"
+       class="mr-3">
+  <div class="flex-column align-self-center user-name">
+    <div *ngIf="userName; else noName" class="flex-nowrap">{{userName}}</div>
+    <div class="text-muted">{{roles | roleHumanReadable}}</div>
+  </div>
+</div>
+
+<ng-template #noName>
+  <div class="flex-nowrap text-muted" i18n="@@view.share.dialog.userName.unknown">
+    Unknown name
+  </div>
+</ng-template>

@@ -14,9 +14,10 @@
 <div class="row mt-4">
   <div class="col">
     <h4 *ngIf="resourceType | isOrganizationType" i18n="@@users.header.existingUsers">Existing users</h4>
-    <table class="table table-striped table-sm">
+    <table class="table table-sm">
       <thead [style.background-color]="resource.color | lightenColor:.5">
         <tr>
+          <th class="border-top-0"></th>
           <th class="border-top-0">
             <span i18n="@@users.header.email">Email</span>
           </th>
