@@ -41,7 +41,7 @@ export class RoleHumanReadablePipe implements PipeTransform {
     return this.i18n(
       {
         id: 'user.permission.humanName',
-        value: '{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} UNKNOWN {No role assigned}}',
+        value: '{role, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned}}',
       },
       {
         role: roleText,
