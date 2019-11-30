@@ -3789,7 +3789,7 @@
         <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/permissions/aggregation-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="user.permission.humanName" datatype="html">
-        <source>{VAR_SELECT, select, READ {Reader} MANAGE {Creator} WRITE {Author} UNKNOWN {No role assigned} }</source><target>{VAR_SELECT, select, READ {Čtenář} MANAGE {Tvůrce} WRITE {Autor} UNKNOWN {Bez role} }</target>
+        <source>{VAR_SELECT, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</source><target>{VAR_SELECT, select, READ {Čtenář} MANAGE {Tvůrce} WRITE {Autor} EMPTY {Bez role} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/role-human-readable.pipe.ts</context>
           <context context-type="linenumber">1</context>
