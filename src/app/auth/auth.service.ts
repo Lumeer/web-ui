@@ -306,7 +306,7 @@ export class AuthService {
 
   public saveLoginRedirectPath(redirectPath: string) {
     const restrictedPaths = ['/agreement', '/logout', '/auth'];
-    if (!restrictedPaths.some(path => path.startsWith(path))) {
+    if (!restrictedPaths.some(path => path.startsWith(redirectPath))) {
       localStorage.setItem(REDIRECT_KEY, redirectPath);
     }
   }

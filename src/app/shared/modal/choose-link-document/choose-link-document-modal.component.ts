@@ -18,13 +18,13 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {DialogType} from '../../../../../shared/modal/dialog-type';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap';
-import {Collection} from '../../../../../core/store/collections/collection';
+import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../../../core/service/constraint-data.service';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',

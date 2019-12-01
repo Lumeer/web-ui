@@ -39,10 +39,6 @@ import {PickerModule} from '../../../shared/picker/picker.module';
 import {KanbanSelectedItemPipe} from './pipes/kanban-selected-item.pipe';
 import {KanbanRestrictedSelectItemIdsPipe} from './pipes/kanban-restricted-select-item-ids.pipe';
 import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
-import {ChooseLinkDocumentModalComponent} from './modal/choose-link-document/choose-link-document-modal.component';
-import {ModalModule as NgxModalModule} from 'ngx-bootstrap/modal';
-import {PreviewResultsModule} from '../../../shared/preview-results/preview-results.module';
-import {ModalWrapperModule} from '../../../shared/modal/wrapper/modal-wrapper.module';
 import {PresenterModule} from '../../../shared/presenter/presenter.module';
 import {KanbanDueDateSelectItemsPipe} from './pipes/kanban-due-date-select-items.pipe';
 import {KanbanDueHoursTagPipe} from './pipes/kanban-due-hours-tag.pipe';
@@ -71,7 +67,6 @@ import {PostItModule} from '../../../shared/post-it/post-it.module';
     FilterWritableResourcesPipe,
     KanbanSelectedItemPipe,
     KanbanRestrictedSelectItemIdsPipe,
-    ChooseLinkDocumentModalComponent,
     KanbanDueDateSelectItemsPipe,
     KanbanDueHoursTagPipe,
     KanbanColumnTitlesPipe,
@@ -93,11 +88,8 @@ import {PostItModule} from '../../../shared/post-it/post-it.module';
     PickerModule,
     PresenterModule,
     PostItModule,
-    PreviewResultsModule,
-    ModalWrapperModule,
-    NgxModalModule.forRoot(),
   ],
-  entryComponents: [KanbanPerspectiveComponent, ChooseLinkDocumentModalComponent],
+  entryComponents: [KanbanPerspectiveComponent],
   exports: [KanbanPerspectiveComponent],
 })
 export class KanbanPerspectiveModule {}

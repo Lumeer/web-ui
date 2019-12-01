@@ -48,7 +48,7 @@ import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.ut
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {CalendarHeaderComponent} from './header/calendar-header.component';
 import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
-import {CalendarEventDetailModalComponent} from '../modal/calendar-event-detail-modal.component';
+import {CalendarEventDetailModalComponent} from '../../../../shared/modal/calendar-event-detail/calendar-event-detail-modal.component';
 import {DataValueInputType} from '../../../../core/model/data-value';
 import {ModalService} from '../../../../shared/modal/modal.service';
 

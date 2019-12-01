@@ -48,7 +48,7 @@ import {ConstraintData, ConstraintType} from '../../../../core/model/data/constr
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {KanbanResourceCreate} from './column/footer/kanban-column-footer.component';
-import {ChooseLinkDocumentModalComponent} from '../modal/choose-link-document/choose-link-document-modal.component';
+import {ChooseLinkDocumentModalComponent} from '../../../../shared/modal/choose-link-document/choose-link-document-modal.component';
 import {filterDocumentsAndLinksByStem} from '../../../../core/store/documents/documents.filters';
 import {generateDocumentData, groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
 import {

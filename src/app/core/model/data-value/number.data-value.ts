@@ -40,6 +40,9 @@ export class NumberDataValue implements DataValue {
   }
 
   public format(): string {
+    if (this.inputType === DataValueInputType.Typed) {
+      return this.value;
+    }
     // TODO format based on config
     return this.bigNumber ? decimalStoreToUser(this.bigNumber.toFixed()) : formatUnknownDataValue(this.value);
   }
