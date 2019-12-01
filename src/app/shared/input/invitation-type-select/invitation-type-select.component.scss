@@ -1,7 +1,16 @@
+@import '../../../../styles/variables';
+
 a.list-group-item {
   transition: color 0ms ease-out;
 
   &.active {
-    color: white;
+    font-weight: bold;
+    border-color: $success;
+    color: $primary;
+    background-color: $success;
+
+    small.text-muted span {
+      color: white;
+    }
   }
 }

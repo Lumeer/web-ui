@@ -31,6 +31,8 @@ import {PipesModule} from '../../pipes/pipes.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputModule} from '../../input/input.module';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {GravatarModule} from 'ngx-gravatar';
+import {UsersModule} from '../../users/users.module';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,16 @@ import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
     CanRemoveUserPipe,
     CanAddNewUserPipe,
   ],
-  imports: [CommonModule, PipesModule, FormsModule, ReactiveFormsModule, ModalWrapperModule, InputModule],
+  imports: [
+    CommonModule,
+    PipesModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ModalWrapperModule,
+    InputModule,
+    GravatarModule,
+    UsersModule,
+  ],
   exports: [ShareViewModalComponent],
   entryComponents: [ShareViewModalComponent],
 })

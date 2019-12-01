@@ -17,49 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {ResourceType} from '../../../../../core/model/resource-type';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 @Component({
-  selector: '[share-user]',
-  templateUrl: './share-user.component.html',
-  styleUrls: ['./share-user.component.scss'],
+  selector: 'user-stamp',
+  templateUrl: './user-stamp.component.html',
+  styleUrls: ['./user-stamp.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ShareUserComponent {
+export class UserStampComponent {
   @Input()
-  public canRemove: boolean;
-
-  @Input()
-  public changeRoles: boolean;
+  public userName: string;
 
   @Input()
   public email: string;
 
   @Input()
-  public userName: string;
-
-  @Input()
   public roles: string[];
-
-  @Output()
-  public delete = new EventEmitter();
-
-  @Output()
-  public rolesChange = new EventEmitter<string[]>();
-
-  public viewResourceType = ResourceType.View;
-
-  public toggleRole(role: string) {
-    if (!this.changeRoles) {
-      return;
-    }
-
-    const newRoles = this.roles.includes(role) ? this.roles.filter(r => r !== role) : [...this.roles, role];
-    this.rolesChange.emit(newRoles);
-  }
-
-  public onDelete() {
-    this.delete.emit();
-  }
 }

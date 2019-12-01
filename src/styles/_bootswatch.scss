@@ -220,6 +220,25 @@ body {
   }
 }
 
+@mixin table-auto-width {
+  width: auto !important;
+}
+
+table {
+  &.table-fit {
+    @include table-auto-width;
+    table-layout: auto !important;
+    thead th,
+    tfoot th {
+      @include table-auto-width;
+    }
+    tbody td,
+    tfoot td {
+      @include table-auto-width;
+    }
+  }
+}
+
 // Forms =======================================================================
 
 input:-webkit-autofill {

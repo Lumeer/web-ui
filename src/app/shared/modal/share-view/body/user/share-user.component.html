@@ -1,20 +1,26 @@
 <td>
+  <user-stamp [userName]="userName" [email]="email" [roles]="roles"></user-stamp>
+</td>
+
+<td>
   <div class="text-truncate">{{email}}</div>
 </td>
 
-<td class="d-flex">
-  <i *ngFor="let role of viewResourceType | resourceRoles"
-     class="fas fa-fw {{role | roleIcon}} mx-1"
-     [class.role-clickable]="changeRoles"
-     [class.role-selected]="roles | includes:role"
-     aria-hidden="true"
-     [title]="role | roleTitle"
-     (click)="toggleRole(role)">
-  </i>
-  <i class="fal fa-fw fa-times text-danger mx-2 cursor-pointer"
-     *ngIf="canRemove"
-     aria-hidden="true"
-     title="Remove User"
-     i18n-title="@@users.actions.remove"
-     (click)="onDelete()"></i>
+<td>
+  <div>
+    <i *ngFor="let role of viewResourceType | resourceRoles"
+       class="fas fa-fw {{role | roleIcon}} mx-1"
+       [class.role-clickable]="changeRoles"
+       [class.role-selected]="roles | includes:role"
+       aria-hidden="true"
+       [title]="role | roleTitle"
+       (click)="toggleRole(role)">
+    </i>
+    <i class="fal fa-fw fa-times text-danger mx-2 cursor-pointer"
+       *ngIf="canRemove"
+       aria-hidden="true"
+       title="Remove User"
+       i18n-title="@@users.actions.remove"
+       (click)="onDelete()"></i>
+  </div>
 </td>

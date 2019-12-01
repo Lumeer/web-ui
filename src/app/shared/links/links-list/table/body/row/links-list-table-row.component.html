@@ -43,7 +43,7 @@
       <i class="fas fa-file-search clickable mr-2"
          *ngIf="permissions?.read && row.document"
          (click)="onDetail()"
-         i18n-title="@@show.document" title="Show detail" aria-hidden="true"></i>
+         i18n-title="@@show.detail" title="Show detail" aria-hidden="true"></i>
       <i class="fas fa-unlink clickable"
          *ngIf="permissions?.writeWithView && row.document"
          (click)="onUnlink()"

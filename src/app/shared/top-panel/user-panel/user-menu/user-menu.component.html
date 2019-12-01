@@ -1,5 +1,13 @@
-<div class="ml-2 cursor-pointer" data-tour="user-menu" (click)="onMenuClick()" #origin>
-  <i class="fa fa-user-circle fa-2x"></i>
+<div tooltip="User menu"
+     i18n-tooltip="@@topPanel.userMenu.title"
+     placement="bottom"
+     class="ml-2 cursor-pointer"
+     data-tour="user-menu"
+     (click)="onMenuClick()" #origin>
+  <img *ngIf="userEmail; else userIcon"
+       ngxGravatar
+       [email]="userEmail"
+       [size]="30">
 </div>
 
 <user-menu-dropdown [origin]="origin"
@@ -11,3 +19,7 @@
                     (organizationDetail)="goToOrganizationDetail()"
                     (startTour)="onStartTour()">
 </user-menu-dropdown>
+
+<ng-template #userIcon>
+  <i class="fa fa-user-circle fa-2x"></i>
+</ng-template>

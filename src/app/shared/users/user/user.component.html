@@ -1,4 +1,8 @@
-<td>
+<td class="p-2">
+  <user-stamp [email]="user.email" [userName]="user.name" [roles]="userRoles"></user-stamp>
+</td>
+
+<td class="px-0 py-1">
 
   <input-box
     class="flex-grow-1"
@@ -10,7 +14,7 @@
 
 </td>
 
-<td class="align-middle">
+<td class="p-2">
   <i *ngFor="let role of resourceType | resourceRoles"
      class="fas fa-fw {{role | roleIcon}} mx-1"
      [class.role-clickable]="changeRoles"

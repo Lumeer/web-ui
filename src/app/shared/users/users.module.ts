@@ -31,9 +31,11 @@ import {TagModule} from '../tag/tag.module';
 import {InputModule} from '../input/input.module';
 import {UserFilterPipe} from './user-list/pipes/user-filter.pipe';
 import {PipesModule} from '../pipes/pipes.module';
+import {UserStampComponent} from './user-stamp/user-stamp.component';
+import {GravatarModule} from 'ngx-gravatar';
 
 @NgModule({
-  imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule],
+  imports: [CommonModule, FormsModule, TagModule, InputModule, PipesModule, GravatarModule],
   declarations: [
     UserFilterPipe,
     UserGroupsComponent,
@@ -42,7 +44,8 @@ import {PipesModule} from '../pipes/pipes.module';
     UserComponent,
     NewUserComponent,
     UsersComponent,
+    UserStampComponent,
   ],
-  exports: [UsersComponent, NewUserComponent],
+  exports: [UsersComponent, NewUserComponent, UserStampComponent],
 })
 export class UsersModule {}

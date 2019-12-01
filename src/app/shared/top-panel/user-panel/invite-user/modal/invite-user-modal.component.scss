@@ -1,5 +1,8 @@
+@import '../../../../../../styles/variables';
+
 .badge {
-  font-size: 1rem;
+  font-size: 0.85rem;
+  font-weight: normal;
 }
 
 .lh-2 {
@@ -12,4 +15,14 @@ a.list-group-item {
   &.active {
     color: white;
   }
+}
+
+.header-container {
+  background-color: $primary;
+  color: $light;
+}
+
+.user {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

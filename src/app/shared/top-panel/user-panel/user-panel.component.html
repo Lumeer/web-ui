@@ -4,6 +4,7 @@
   <notifications-menu></notifications-menu>
   <user-menu
     [workspace]="workspace"
+    [userEmail]="(user$ | async)?.email"
     [controlsVisible]="controlsVisible"
     (toggleControls)="toggleControls.emit()">
   </user-menu>
