@@ -28,6 +28,8 @@ import {CreateDocumentModalModule} from './create-document/create-document-modal
 import {CreateLinkModalModule} from './create-link/create-link-modal.module';
 import {ShareViewModalModule} from './share-view/share-view-modal.module';
 import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
+import {CalendarEventDetailModalModule} from './calendar-event-detail/calendar-event-detail-modal.module';
+import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
 
 @NgModule({
   declarations: [],
@@ -42,6 +44,8 @@ import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
     CreateLinkModalModule,
     ShareViewModalModule,
     TextEditorModalModule,
+    CalendarEventDetailModalModule,
+    ChooseLinkDocumentModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -53,6 +57,8 @@ import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
     CreateLinkModalModule,
     ShareViewModalModule,
     TextEditorModalModule,
+    CalendarEventDetailModalModule,
+    ChooseLinkDocumentModalModule,
   ],
 })
 export class ModalModule {}

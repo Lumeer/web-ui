@@ -150,7 +150,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly constraintType = ConstraintType;
 
-  private savingDisabled: boolean;
   private selectedSubscriptions = new Subscription();
   private affectedSubscription = new Subscription();
   private subscriptions = new Subscription();
@@ -481,8 +480,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private saveData(value: any) {
     const previousValue = this.getValue() || this.getValue() === 0 ? this.getValue() : '';
-    if (this.savingDisabled || previousValue === value || (!value && !this.isEntityInitialized())) {
-      this.savingDisabled = false;
+    if (previousValue === value || (!value && !this.isEntityInitialized())) {
       return;
     }
 
@@ -838,6 +836,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onUseDocumentHint() {
-    this.savingDisabled = true;
+    this.editing$.next(false);
   }
 }

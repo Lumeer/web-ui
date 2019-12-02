@@ -18,26 +18,30 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentData, DocumentModel} from '../../../../core/store/documents/document.model';
+import {Collection} from '../../../core/store/collections/collection';
+import {DocumentData, DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {AppState} from '../../../../core/store/app.state';
+import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {selectQuery} from '../../../../core/store/navigation/navigation.state';
-import {selectAllCollections, selectCollectionById} from '../../../../core/store/collections/collections.state';
+import {Query} from '../../../core/store/navigation/query/query';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {map, mergeMap, take, tap} from 'rxjs/operators';
 import {
   CalendarBarPropertyOptional,
   CalendarBarPropertyRequired,
   CalendarConfig,
   CalendarStemConfig,
-} from '../../../../core/store/calendars/calendar';
-import {DEFAULT_EVENT_DURATION, isAllDayEvent, parseCalendarEventDate} from '../util/calendar-util';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+} from '../../../core/store/calendars/calendar';
+import {
+  DEFAULT_EVENT_DURATION,
+  isAllDayEvent,
+  parseCalendarEventDate,
+} from '../../../view/perspectives/calendar/util/calendar-util';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import * as moment from 'moment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
 
 @Component({
   templateUrl: './calendar-event-detail-modal.component.html',

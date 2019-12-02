@@ -18,10 +18,10 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Collection} from '../../../core/store/collections/collection';
+import {SelectItemModel} from '../../select/select-item/select-item.model';
+import {Query} from '../../../core/store/navigation/query/query';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'stemCollectionsItems',
