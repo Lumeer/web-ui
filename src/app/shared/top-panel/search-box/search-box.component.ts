@@ -160,14 +160,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public onAddQueryItem(queryItem: QueryItem) {
-    this.addQueryItemWithRelatedItems(queryItem);
-    this.onQueryItemsChanged();
-  }
-
-  private addQueryItemWithRelatedItems(queryItem: QueryItem) {
     const newQueryItems = addQueryItemWithRelatedItems(this.queryData, this.queryItems$.getValue(), queryItem);
-    this.queryItems$.next(newQueryItems);
-    this.initForm(newQueryItems);
+    if (!this.showView(newQueryItems)) {
+      this.queryItems$.next(newQueryItems);
+      this.initForm(newQueryItems);
+      this.onQueryItemsChanged();
+    }
   }
 
   public onRemoveLastQueryItem() {
@@ -212,15 +210,15 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.showView()) {
+    if (this.showView(this.queryItems$.value)) {
       return;
     }
 
     this.showByQueryItems(redirect);
   }
 
-  private showView(): boolean {
-    const viewQueryItem = this.queryItems$.getValue().find(item => item.type === QueryItemType.View) as ViewQueryItem;
+  private showView(queryItems: QueryItem[]): boolean {
+    const viewQueryItem = (queryItems || []).find(item => item.type === QueryItemType.View) as ViewQueryItem;
 
     if (viewQueryItem) {
       this.navigateToView(viewQueryItem.view);

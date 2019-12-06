@@ -21,8 +21,9 @@ import {View} from '../../../../../core/store/views/view';
 import {perspectiveIconsMap} from '../../../../../view/perspectives/perspective';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionQueryItem} from './collection.query-item';
-import {COLOR_PRIMARY} from '../../../../../core/constants';
+import {COLOR_PRIMARY, COLOR_QUERY_FULLTEXT} from '../../../../../core/constants';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {getBaseCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
 
 export class ViewQueryItem implements QueryItem {
   public type = QueryItemType.View;
@@ -30,9 +31,23 @@ export class ViewQueryItem implements QueryItem {
   public icons: string[];
   public colors: string[];
 
-  public constructor(public view: View) {
+  public constructor(public view: View, public primaryCollection?: Collection) {
     this.icons = [perspectiveIconsMap[view.perspective]];
-    this.colors = [COLOR_PRIMARY];
+    this.colors = this.parseColors();
+  }
+
+  private parseColors(): string[] {
+    const queryCollectionIds = getBaseCollectionIdsFromQuery(this.view.query);
+    if (
+      queryCollectionIds.length > 0 &&
+      this.primaryCollection &&
+      queryCollectionIds[0] === this.primaryCollection.id
+    ) {
+      return [this.primaryCollection.color];
+    } else if (((this.view.query && this.view.query.fulltexts) || []).length > 0) {
+      return [COLOR_QUERY_FULLTEXT];
+    }
+    return [COLOR_PRIMARY];
   }
 
   public get text(): string {

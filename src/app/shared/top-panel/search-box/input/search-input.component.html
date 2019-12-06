@@ -17,6 +17,6 @@
        class="w-100 py-1 px-2"/>
 
 <search-suggestions [queryItems]="queryItems"
-                    [text]="suggesting ? text : ''"
+                    [text]="suggesting ? (text || '') : null"
                     (useSuggestion)="onUseSuggestion($event)">
 </search-suggestions>

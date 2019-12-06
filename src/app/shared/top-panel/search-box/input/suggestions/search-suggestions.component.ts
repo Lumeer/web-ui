@@ -28,18 +28,13 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {catchError, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';
-import {SuggestionsDto, SuggestionType} from '../../../../../core/dto';
-import {SearchService} from '../../../../../core/rest';
-import {AppState} from '../../../../../core/store/app.state';
-import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
+import {catchError, debounceTime, switchMap} from 'rxjs/operators';
 import {FulltextQueryItem} from '../../query-item/model/fulltext.query-item';
 import {QueryItem} from '../../query-item/model/query-item';
 import {QueryItemType} from '../../query-item/model/query-item-type';
-import {convertSuggestionsDtoToModel} from './model/suggestions.converter';
-import {convertSuggestionsToQueryItemsSorted, getCollectionIdsChainForItems} from './model/suggestions.util';
+import {SuggestionsService} from '../../../../../core/service/suggestions-service';
+import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 
 @Component({
   selector: 'search-suggestions',
@@ -66,7 +61,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
 
   private subscriptions = new Subscription();
 
-  constructor(private searchService: SearchService, private store: Store<AppState>) {}
+  constructor(private suggestionsService: SuggestionsService) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToSearchTerms());
@@ -88,13 +83,8 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   private subscribeToSearchTerms(): Subscription {
     return this.searchTerms$
       .pipe(
-        debounceTime(300),
+        debounceTime(100),
         switchMap(text => this.retrieveSuggestions(text)),
-        withLatestFrom(this.store.pipe(select(selectAllCollections))),
-        map(([suggestionsDto, collections]) => convertSuggestionsDtoToModel(suggestionsDto, collections)),
-        map(suggestions => convertSuggestionsToQueryItemsSorted(suggestions, this.queryItems)),
-        map(queryItems => this.addFulltextSuggestion(queryItems)),
-        map(queryItems => this.filterUsedQueryItems(queryItems)),
         catchError(error => {
           console.error(error);
           return of<QueryItem[]>();
@@ -106,38 +96,11 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
       });
   }
 
-  private retrieveSuggestions(text: string): Observable<SuggestionsDto> {
-    if (this.suggesting && text) {
-      const priorityCollectionIds = getCollectionIdsChainForItems(this.queryItems);
-      const dto = {text: text.toLowerCase(), type: SuggestionType.All, priorityCollectionIds};
-      return this.searchService.suggest(dto);
+  private retrieveSuggestions(text: string): Observable<QueryItem[]> {
+    if (this.suggesting && isNotNullOrUndefined(text)) {
+      return this.suggestionsService.suggest(text, this.queryItems);
     }
-    return of<SuggestionsDto>(null);
-  }
-
-  private addFulltextSuggestion(queryItems: QueryItem[]): QueryItem[] {
-    if (this.text) {
-      return queryItems.concat(new FulltextQueryItem(this.text));
-    } else {
-      return queryItems;
-    }
-  }
-
-  private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
-    const allowedTypes = [
-      QueryItemType.Collection,
-      QueryItemType.Attribute,
-      QueryItemType.LinkAttribute,
-      QueryItemType.Link,
-      QueryItemType.Document,
-    ];
-    return queryItems.filter(
-      queryItem =>
-        allowedTypes.includes(queryItem.type) ||
-        !this.queryItems.find(usedItem => {
-          return usedItem.type === queryItem.type && usedItem.value === queryItem.value;
-        })
-    );
+    return of([]);
   }
 
   public moveSelection(direction: number) {
