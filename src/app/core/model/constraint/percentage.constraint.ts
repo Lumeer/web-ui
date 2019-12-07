@@ -22,6 +22,7 @@ import {ConstraintType} from '../data/constraint';
 import {PercentageConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class PercentageConstraint implements Constraint {
   public readonly type = ConstraintType.Percentage;
@@ -30,5 +31,20 @@ export class PercentageConstraint implements Constraint {
 
   public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): PercentageDataValue {
     return new PercentageDataValue(value, inputType, this.config);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.GreaterThan,
+      QueryCondition.LowerThan,
+      QueryCondition.GreaterThanEquals,
+      QueryCondition.LowerThanEquals,
+      QueryCondition.NotBetween,
+      QueryCondition.NotBetween,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

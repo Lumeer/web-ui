@@ -1,0 +1,13 @@
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions"
+          [closeOnClickOutside]="true"
+          [showBackdrop]="false">
+
+  <filter-builder-content class="card d-flex flex-row flex-nowrap p-2"
+                          [attribute]="attribute"
+                          [selectedCondition]="null"
+                          [selectedValue]="value"
+                          (valueChange)="valueChange.emit($event)">
+  </filter-builder-content>
+
+</dropdown>

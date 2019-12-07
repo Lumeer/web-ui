@@ -2,7 +2,7 @@
   <div class="dropdown" *ngIf="suggestions.length > 0">
     <div class="dropdown-menu show suggestions">
       <search-suggestion-item *ngFor="let suggestion of suggestions; let suggestionIndex = index"
-                              class="dropdown-item d-flex justify-content-between"
+                              class="dropdown-item d-flex justify-content-between cursor-pointer"
                               [class.selected]="suggestionIndex === (selectedIndex$ | async)"
                               [suggestion]="suggestion"
                               [text]="text"

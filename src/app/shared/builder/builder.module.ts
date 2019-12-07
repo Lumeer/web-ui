@@ -19,34 +19,10 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-
-import {NgVarDirective} from './ng-var.directive';
-import {TrimValueAccessor} from './trim-value-accessor';
-import {RenderedDirective} from './rendered.directive';
-import {NumberDirective} from './number.directive';
-import {PercentageDirective} from './percentage.directive';
-import {IntegerDirective} from './integer.directive';
-import {AutoSizeInputDirective} from './autosize-input.directive';
+import {FilterBuilderModule} from './filter-builder/filter-builder.module';
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [
-    NgVarDirective,
-    TrimValueAccessor,
-    RenderedDirective,
-    NumberDirective,
-    PercentageDirective,
-    IntegerDirective,
-    AutoSizeInputDirective,
-  ],
-  exports: [
-    NgVarDirective,
-    TrimValueAccessor,
-    RenderedDirective,
-    NumberDirective,
-    PercentageDirective,
-    IntegerDirective,
-    AutoSizeInputDirective,
-  ],
+  imports: [CommonModule, FilterBuilderModule],
+  exports: [FilterBuilderModule],
 })
-export class DirectivesModule {}
+export class BuilderModule {}

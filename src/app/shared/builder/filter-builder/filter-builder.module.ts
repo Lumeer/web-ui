@@ -19,34 +19,15 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-
-import {NgVarDirective} from './ng-var.directive';
-import {TrimValueAccessor} from './trim-value-accessor';
-import {RenderedDirective} from './rendered.directive';
-import {NumberDirective} from './number.directive';
-import {PercentageDirective} from './percentage.directive';
-import {IntegerDirective} from './integer.directive';
-import {AutoSizeInputDirective} from './autosize-input.directive';
+import {FilterBuilderComponent} from './filter-builder.component';
+import {DropdownModule} from '../../dropdown/dropdown.module';
+import {QueryConditionItemsPipe} from './pipes/query-condition-items.pipe';
+import {DataInputModule} from '../../data-input/data-input.module';
+import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [
-    NgVarDirective,
-    TrimValueAccessor,
-    RenderedDirective,
-    NumberDirective,
-    PercentageDirective,
-    IntegerDirective,
-    AutoSizeInputDirective,
-  ],
-  exports: [
-    NgVarDirective,
-    TrimValueAccessor,
-    RenderedDirective,
-    NumberDirective,
-    PercentageDirective,
-    IntegerDirective,
-    AutoSizeInputDirective,
-  ],
+  declarations: [FilterBuilderComponent, QueryConditionItemsPipe, FilterBuilderContentComponent],
+  exports: [FilterBuilderComponent],
+  imports: [CommonModule, DropdownModule, DataInputModule],
 })
-export class DirectivesModule {}
+export class FilterBuilderModule {}

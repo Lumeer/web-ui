@@ -29,8 +29,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {catchError, debounceTime, switchMap} from 'rxjs/operators';
-import {FulltextQueryItem} from '../../query-item/model/fulltext.query-item';
+import {catchError, switchMap} from 'rxjs/operators';
 import {QueryItem} from '../../query-item/model/query-item';
 import {QueryItemType} from '../../query-item/model/query-item-type';
 import {SuggestionsService} from '../../../../../core/service/suggestions-service';
@@ -83,7 +82,6 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   private subscribeToSearchTerms(): Subscription {
     return this.searchTerms$
       .pipe(
-        debounceTime(100),
         switchMap(text => this.retrieveSuggestions(text)),
         catchError(error => {
           console.error(error);
@@ -112,8 +110,17 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
 
   public useSelection(text: string) {
     const selectedIndex = this.selectedIndex$.getValue();
-    const queryItem = this.suggestions$.getValue()[selectedIndex] || new FulltextQueryItem(text);
-    this.onUseSuggestion(queryItem);
+    const queryItem = this.suggestions$.getValue()[selectedIndex];
+    if (queryItem) {
+      this.onUseSuggestion(queryItem);
+    } else {
+      const fulltextQueryItem = this.suggestions$.value.find(
+        suggestion => suggestion.type === QueryItemType.Fulltext && suggestion.text === text
+      );
+      if (fulltextQueryItem) {
+        this.onUseSuggestion(fulltextQueryItem);
+      }
+    }
   }
 
   public onUseSuggestion(queryItem: QueryItem) {

@@ -28,7 +28,7 @@
                        [linkTypes]="data.linkTypes"
                        [linkInstances]="data.documentsAndLinks.linkInstances"
                        [config]="data.config"
-                       [constraintData]="{users: users$ | async, durationUnitsMap: durationUnitsMap}"
+                       [constraintData]="constraintData$ | async"
                        [query]="data.query"
                        [currentUser]="currentUser$ | async"
                        (patchDocumentData)="patchDocumentData($event)"

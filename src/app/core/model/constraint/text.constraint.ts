@@ -22,6 +22,7 @@ import {ConstraintData, ConstraintType} from '../data/constraint';
 import {TextConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class TextConstraint implements Constraint {
   public readonly type = ConstraintType.Text;
@@ -34,5 +35,18 @@ export class TextConstraint implements Constraint {
     constraintDate?: ConstraintData
   ): TextDataValue {
     return new TextDataValue(value, inputType, this.config);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.Contains,
+      QueryCondition.NotContains,
+      QueryCondition.StartsWith,
+      QueryCondition.EndsWith,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

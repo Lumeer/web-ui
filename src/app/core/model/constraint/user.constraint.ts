@@ -22,6 +22,7 @@ import {ConstraintData, ConstraintType} from '../data/constraint';
 import {UserConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class UserConstraint implements Constraint {
   public readonly type = ConstraintType.User;
@@ -34,5 +35,16 @@ export class UserConstraint implements Constraint {
     constraintData?: ConstraintData
   ): UserDataValue {
     return new UserDataValue(value, inputType, this.config, constraintData);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.StartsWith,
+      QueryCondition.EndsWith,
+      QueryCondition.In,
+      QueryCondition.NotIn,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

@@ -20,6 +20,9 @@
 import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DurationUnit} from '../model/data/constraint-config';
+import {QueryCondition} from '../store/navigation/query/query';
+import {Constraint} from '../model/constraint';
+import {ConstraintType} from '../model/data/constraint';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +41,74 @@ export class TranslationService {
         value: '{unit, select, w {w} d {d} h {h} m {m} s {s}}',
       },
       {unit}
+    );
+  }
+
+  public translateQueryCondition(condition: QueryCondition, constraint: Constraint): string {
+    if (!condition) {
+      return this.translateConditionByText(condition);
+    }
+
+    switch (constraint.type) {
+      case ConstraintType.Text:
+      case ConstraintType.Address:
+        return this.translateConditionByText(condition);
+      case ConstraintType.Number:
+      case ConstraintType.Percentage:
+      case ConstraintType.Duration:
+        return this.translateConditionByNumber(condition);
+      case ConstraintType.DateTime:
+        return this.translateConditionByDate(condition);
+      default:
+        return this.translateConditionByText(condition);
+    }
+  }
+
+  private translateConditionByText(condition: QueryCondition): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.constraint.text',
+        value:
+          '{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends Width} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty}}',
+      },
+      {condition}
+    );
+  }
+
+  private translateConditionByNumber(condition: QueryCondition): string {
+    switch (condition) {
+      case QueryCondition.Equals:
+        return '=';
+      case QueryCondition.NotEquals:
+        return '≠';
+      case QueryCondition.GreaterThan:
+        return '>';
+      case QueryCondition.GreaterThanEquals:
+        return '>=';
+      case QueryCondition.LowerThan:
+        return '<';
+      case QueryCondition.LowerThanEquals:
+        return '<=';
+    }
+
+    return this.i18n(
+      {
+        id: 'query.filter.condition.constraint.text',
+        value:
+          '{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}',
+      },
+      {condition}
+    );
+  }
+
+  private translateConditionByDate(condition: QueryCondition): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.constraint.date',
+        value:
+          '{condition, select, eq {Is} neq {Is Not} within {Is Within} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Between} empty {Is Empty} notEmpty {Is Not Empty}}',
+      },
+      {condition}
     );
   }
 }

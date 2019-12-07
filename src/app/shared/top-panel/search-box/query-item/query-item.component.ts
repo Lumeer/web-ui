@@ -17,17 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {Constraint} from '../../../../core/model/constraint';
 
 import {QueryItem} from './model/query-item';
 import {FormGroup} from '@angular/forms';
-import {AttributeValueComponent} from './attribute-value/attribute-value.component';
-import {AttributeConditionComponent} from './attribute-condition/attribute-condition.component';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
+import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
 
 @Component({
   selector: 'query-item',
@@ -35,7 +43,7 @@ import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
   styleUrls: ['./query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QueryItemComponent {
+export class QueryItemComponent implements OnInit {
   @Input()
   public queryItem: QueryItem;
 
@@ -57,26 +65,19 @@ export class QueryItemComponent {
   @Output()
   public change = new EventEmitter();
 
-  @ViewChild(AttributeValueComponent, {static: false})
-  public attributeValueComponent: AttributeValueComponent;
+  @ViewChild(FilterBuilderComponent, {static: false})
+  public filterBuilderComponent: FilterBuilderComponent;
 
-  @ViewChild(AttributeConditionComponent, {static: false})
-  public attributeConditionComponent: AttributeConditionComponent;
+  constructor(public hostElement: ElementRef) {}
+
+  public ngOnInit() {
+    if (this.queryItem.type === QueryItemType.Attribute) {
+      setTimeout(() => this.filterBuilderComponent.open());
+    }
+  }
 
   public onRemove() {
     this.remove.emit();
-  }
-
-  public focusCondition() {
-    this.attributeConditionComponent.setEditing();
-  }
-
-  public moveFocusToValue() {
-    if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
-      this.attributeConditionComponent.blur();
-    } else {
-      this.attributeValueComponent.setEditing();
-    }
   }
 
   private get constraint(): Constraint {
@@ -101,6 +102,12 @@ export class QueryItemComponent {
   public onQueryItemChanged() {
     if (this.isFormValid()) {
       this.change.emit();
+    }
+  }
+
+  public onConditionChange(data: {condition: string; value: any}) {
+    if (this.queryItemForm) {
+      this.queryItemForm.patchValue({condition: data.condition, conditionValue: data.value});
     }
   }
 }

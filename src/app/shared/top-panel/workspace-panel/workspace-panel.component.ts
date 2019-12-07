@@ -44,6 +44,9 @@ export class WorkspacePanelComponent implements OnInit {
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public contentHeight: number;
+
   @ViewChild('organizationMenu', {static: false})
   public organizationMenuComponent: ResourceMenuComponent;
 

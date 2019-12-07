@@ -44,6 +44,9 @@ export class UserPanelComponent implements OnInit {
   @Input()
   public mobile: boolean;
 
+  @Input()
+  public contentHeight: number;
+
   @Output()
   public toggleControls = new EventEmitter();
 

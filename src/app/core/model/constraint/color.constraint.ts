@@ -22,6 +22,7 @@ import {ConstraintType} from '../data/constraint';
 import {ColorConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class ColorConstraint implements Constraint {
   public readonly type = ConstraintType.Color;
@@ -30,5 +31,9 @@ export class ColorConstraint implements Constraint {
 
   public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): ColorDataValue {
     return new ColorDataValue(value, inputType, this.config);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [QueryCondition.Equals, QueryCondition.NotEquals, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
   }
 }

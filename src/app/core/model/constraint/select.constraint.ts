@@ -22,6 +22,7 @@ import {ConstraintType} from '../data/constraint';
 import {SelectConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class SelectConstraint implements Constraint {
   public readonly type = ConstraintType.Select;
@@ -30,5 +31,9 @@ export class SelectConstraint implements Constraint {
 
   public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): SelectDataValue {
     return new SelectDataValue(value, inputType, this.config);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [QueryCondition.In, QueryCondition.NotIn, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
   }
 }

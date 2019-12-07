@@ -54,3 +54,23 @@ export enum ConditionType {
   GreaterThan,
   GreaterThanEquals,
 }
+
+export enum QueryCondition {
+  Equals = 'eq',
+  NotEquals = 'neq',
+  Within = 'within',
+  LowerThan = 'lt',
+  LowerThanEquals = 'lte',
+  GreaterThan = 'gt',
+  GreaterThanEquals = 'gte',
+  In = 'in',
+  NotIn = 'nin',
+  Between = 'between',
+  NotBetween = 'notBetween',
+  Contains = 'contains',
+  NotContains = 'notContains',
+  StartsWith = 'startsWith',
+  EndsWith = 'endsWith',
+  IsEmpty = 'empty',
+  NotEmpty = 'notEmpty',
+}

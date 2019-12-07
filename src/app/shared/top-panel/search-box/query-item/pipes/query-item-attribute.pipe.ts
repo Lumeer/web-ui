@@ -17,21 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FilesDataValue} from '../data-value/files.data-value';
-import {ConstraintType} from '../data/constraint';
-import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
-import {QueryCondition} from '../../store/navigation/query/query';
+import {Pipe, PipeTransform} from '@angular/core';
 
-export class FilesConstraint implements Constraint {
-  public readonly type = ConstraintType.Files;
-  public readonly config = {};
+import {QueryItem} from '../model/query-item';
+import {QueryItemType} from '../model/query-item-type';
+import {Attribute} from '../../../../../core/store/collections/collection';
+import {AttributeQueryItem} from '../model/attribute.query-item';
+import {LinkAttributeQueryItem} from '../model/link-attribute.query-item';
 
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): FilesDataValue {
-    return new FilesDataValue(value, inputType, this.config);
-  }
+@Pipe({
+  name: 'queryItemAttribute',
+})
+export class QueryItemAttributePipe implements PipeTransform {
+  public transform(queryItem: QueryItem): Attribute {
+    if (queryItem.type === QueryItemType.Attribute) {
+      return (<AttributeQueryItem>queryItem).attribute;
+    } else if (queryItem.type === QueryItemType.LinkAttribute) {
+      return (<LinkAttributeQueryItem>queryItem).attribute;
+    }
 
-  public conditions(): QueryCondition[] {
-    return [QueryCondition.IsEmpty, QueryCondition.NotEmpty];
+    return null;
   }
 }

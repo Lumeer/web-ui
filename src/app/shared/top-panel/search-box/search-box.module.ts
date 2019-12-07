@@ -27,14 +27,13 @@ import {SearchButtonComponent} from './button/search-button.component';
 import {SearchInputComponent} from './input/search-input.component';
 import {SuggestionItemComponent} from './input/suggestions/item/search-suggestion-item.component';
 import {SearchSuggestionsComponent} from './input/suggestions/search-suggestions.component';
-import {AttributeConditionComponent} from './query-item/attribute-condition/attribute-condition.component';
-import {AttributeValueComponent} from './query-item/attribute-value/attribute-value.component';
-import {ConditionSuggestionsComponent} from './query-item/condition-suggestions/condition-suggestions.component';
 import {SearchBoxPipesModule} from './query-item/pipes/search-box-pipes.module';
 import {QueryItemComponent} from './query-item/query-item.component';
 import {SearchBoxComponent} from './search-box.component';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {PresenterModule} from '../../presenter/presenter.module';
+import {DirectivesModule} from '../../directives/directives.module';
+import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
 
 @NgModule({
   imports: [
@@ -46,6 +45,8 @@ import {PresenterModule} from '../../presenter/presenter.module';
     PipesModule,
     SearchBoxPipesModule,
     DataInputModule,
+    DirectivesModule,
+    FilterBuilderModule,
   ],
   declarations: [
     SearchBoxComponent,
@@ -53,10 +54,7 @@ import {PresenterModule} from '../../presenter/presenter.module';
     SearchSuggestionsComponent,
     SearchInputComponent,
     SearchButtonComponent,
-    ConditionSuggestionsComponent,
     SuggestionItemComponent,
-    AttributeConditionComponent,
-    AttributeValueComponent,
   ],
   exports: [SearchBoxComponent, QueryItemComponent, SearchBoxPipesModule],
 })

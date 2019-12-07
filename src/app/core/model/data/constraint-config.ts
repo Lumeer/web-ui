@@ -68,11 +68,11 @@ export enum DurationType {
 export interface FilesConstraintConfig {}
 
 export interface NumberConstraintConfig {
-  decimal: boolean;
-  format: string;
-  minValue: Big;
-  maxValue: Big;
-  precision: number;
+  decimal?: boolean;
+  format?: string;
+  minValue?: Big;
+  maxValue?: Big;
+  precision?: number;
 }
 
 export interface PercentageConstraintConfig {

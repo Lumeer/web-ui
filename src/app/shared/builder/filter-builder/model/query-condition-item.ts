@@ -17,14 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {AlertModule} from 'ngx-bootstrap/alert';
-import {BrowserWarningComponent} from './browser-warning.component';
-
-@NgModule({
-  imports: [CommonModule, AlertModule],
-  declarations: [BrowserWarningComponent],
-  exports: [BrowserWarningComponent],
-})
-export class BrowserWarningModule {}
+export interface QueryConditionItem {
+  value: string;
+  title: string;
+}

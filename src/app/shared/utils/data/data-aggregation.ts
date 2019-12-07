@@ -36,7 +36,7 @@ export enum DataAggregationType {
 }
 
 export function isValueAggregation(aggregation: DataAggregationType): boolean {
-  return !aggregation || ![DataAggregationType.Count].includes(aggregation);
+  return !aggregation || ![DataAggregationType.Count, DataAggregationType.Unique].includes(aggregation);
 }
 
 export function aggregateDataResources(

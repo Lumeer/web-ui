@@ -22,6 +22,7 @@ import {ConstraintType} from '../data/constraint';
 import {CoordinatesConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class CoordinatesConstraint implements Constraint {
   public readonly type = ConstraintType.Coordinates;
@@ -30,5 +31,16 @@ export class CoordinatesConstraint implements Constraint {
 
   public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): CoordinatesDataValue {
     return new CoordinatesDataValue(value, inputType, this.config);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.Contains,
+      QueryCondition.NotContains,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

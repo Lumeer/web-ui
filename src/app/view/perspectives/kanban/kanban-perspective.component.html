@@ -2,7 +2,7 @@
 
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async, linkTypes: linkTypes$ | async,
                 canManageConfig: currentView$ | async | canManageConfig | async, documentsAndLinks: documentsAndLinks$ | async, query: query$ | async,
-                users: users$ | async} as data">
+                constraintData: constraintData$ | async} as data">
 
     <collapsible-sidebar *ngIf="data.canManageConfig"
                          [collapsed]="!(sidebarOpened$ | async)"
@@ -16,7 +16,7 @@
         [config]="data.config"
         [query]="data.query"
         (configChange)="onConfigChanged($event)"
-        [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}">
+        [constraintData]="data.constraintData">
       </kanban-config>
     </collapsible-sidebar>
 
@@ -29,12 +29,11 @@
       [config]="data.config"
       [query]="data.query"
       [canManageConfig]="data.canManageConfig"
-      [constraintData]="{users: data.users, durationUnitsMap: durationUnitsMap}"
+      [constraintData]="data.constraintData"
       [currentUser]="currentUser$ | async"
       [workspace]="workspace$ | async"
       (configChange)="onConfigChanged($event)"
-      (patchDocumentData)="onPatchDocumentData($event)"
-      (removeDocument)="onRemoveDocument($event)">
+      (patchDocumentData)="onPatchDocumentData($event)">
 
     </kanban-columns>
 

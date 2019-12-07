@@ -22,6 +22,7 @@ import {ConstraintData, ConstraintType} from '../data/constraint';
 import {AddressConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class AddressConstraint implements Constraint {
   public readonly type = ConstraintType.Address;
@@ -34,5 +35,18 @@ export class AddressConstraint implements Constraint {
     constraintData?: ConstraintData
   ): AddressDataValue {
     return new AddressDataValue(value, inputType, this.config, constraintData);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.Contains,
+      QueryCondition.NotContains,
+      QueryCondition.StartsWith,
+      QueryCondition.EndsWith,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

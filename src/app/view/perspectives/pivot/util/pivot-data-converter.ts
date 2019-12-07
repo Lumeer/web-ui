@@ -36,7 +36,11 @@ import {
 } from '../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {
+  aggregateDataResources,
+  DataAggregationType,
+  isValueAggregation,
+} from '../../../../shared/utils/data/data-aggregation';
 import {
   AggregatedData,
   AggregatedDataMap,
@@ -47,6 +51,7 @@ import {
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
 import {DataValueInputType} from '../../../../core/model/data-value';
+import {NumberConstraint} from '../../../../core/model/constraint/number.constraint';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -539,7 +544,12 @@ export class PivotDataConverter {
     return (valueAttributes || []).reduce(
       ({titles, constraints}, pivotAttribute) => {
         const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
-        constraints.push(this.pivotAttributeConstraint(pivotAttribute));
+
+        if (isValueAggregation(pivotAttribute.aggregation)) {
+          constraints.push(this.pivotAttributeConstraint(pivotAttribute));
+        } else {
+          constraints.push(new NumberConstraint({}));
+        }
         const title = this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
         titles.push(title);
 

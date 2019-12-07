@@ -6,7 +6,6 @@
   grid-gap: 10px;
   grid-template-areas: 'logo controls-toggle user-panel'; //  "workspace-panel workspace-panel workspace-panel" "search-box search-box search-box" "controls controls controls"
   grid-template-columns: auto auto 1fr;
-  align-items: center;
 }
 
 .logo {

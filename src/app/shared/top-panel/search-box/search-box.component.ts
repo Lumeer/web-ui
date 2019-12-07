@@ -52,8 +52,8 @@ import {selectWorkspaceModels} from '../../../core/store/common/common.selectors
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
-import {TranslationService} from '../../../core/service/translation.service';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
 const allowAutomaticSubmission = true;
 
@@ -66,10 +66,11 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public currentView$ = new BehaviorSubject<View>(null);
   public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
   public form$ = new BehaviorSubject<FormGroup>(null);
-  public queryItemsControl: FormArray;
-  public readonly durationUnitsMap: DurationUnitsMap;
 
   public users$: Observable<User[]>;
+  public constraintData$: Observable<ConstraintData>;
+
+  public queryItemsControl: FormArray;
 
   private subscriptions = new Subscription();
 
@@ -84,10 +85,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     private router: Router,
     private store$: Store<AppState>,
     private formBuilder: FormBuilder,
-    private translationService: TranslationService
-  ) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+    private constraintDataService: ConstraintDataService
+  ) {}
 
   public ngOnInit() {
     this.initForm();
@@ -95,6 +94,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscribeToQuery();
     this.subscribeToNavigation();
     this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
   }
 
   private subscribeViewData() {

@@ -23,7 +23,6 @@ import {View, ViewConfig} from '../../../core/store/views/view';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {Query} from '../../../core/store/navigation/query/query';
-import {User} from '../../../core/store/users/user';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -37,15 +36,14 @@ import {
   selectDocumentsAndLinksByQuery,
   selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
-import {selectAllUsers} from '../../../core/store/users/users.state';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformPivotConfig, pivotConfigIsEmpty} from './util/pivot-util';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
-import {TranslationService} from '../../../core/service/translation.service';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
 @Component({
   selector: 'pivot-perspective',
@@ -60,17 +58,14 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
   public query$ = new BehaviorSubject<Query>(null);
-  public users$: Observable<User[]>;
-  public readonly durationUnitsMap: DurationUnitsMap;
+  public constraintData$: Observable<ConstraintData>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
   private pivotId = DEFAULT_PIVOT_ID;
 
-  constructor(private store$: Store<AppState>, private translationService: TranslationService) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+  constructor(private store$: Store<AppState>, private constraintDataService: ConstraintDataService) {}
 
   public ngOnInit() {
     this.initPivot();
@@ -145,7 +140,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectPivotConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));

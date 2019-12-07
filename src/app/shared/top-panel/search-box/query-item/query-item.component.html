@@ -1,5 +1,5 @@
 <div [style.background-color]="queryItem | queryItemBackground"
-     [style.border-color]="queryItem | queryItemBorder:isFormValid()"
+     [style.border-color]="queryItem | queryItemBorder:(readonly || !queryItemForm || queryItemForm.valid)"
      [class.pr-2]="readonly"
      class="query-item py-1 px-1 d-flex align-items-center">
   <icons-presenter [colors]="queryItem.colors"
@@ -22,26 +22,7 @@
 
   <div class="mr-1 d-inline-flex flex-grow-1 overflow-hidden"
        *ngIf="queryItem | isAttributeItem">
-
-    <attribute-condition class="mr-1"
-                         [queryItemForm]="queryItemForm"
-                         [queryItem]="queryItem"
-                         [readonly]="readonly"
-                         (change)="onQueryItemChanged()"
-                         (enter)="moveFocusToValue()"
-                         (moveRight)="moveFocusToValue()">
-    </attribute-condition>
-
-    <attribute-value [queryItem]="queryItem"
-                     [queryItemForm]="queryItemForm"
-                     [readonly]="readonly"
-                     [constraintData]="constraintData"
-                     (change)="onQueryItemChanged()"
-                     (enter)="onEnter()"
-                     (moveLeft)="focusCondition()"
-                     class="d-inline-flex">
-    </attribute-value>
-
+    {{queryItem.condition}}{{queryItem.conditionValue}}
   </div>
 
   <i *ngIf="!readonly"
@@ -50,3 +31,11 @@
      title="Remove query item" i18n-title="@@query.item.button.remove">
   </i>
 </div>
+
+<filter-builder *ngIf="queryItem | isAttributeItem"
+                [attribute]="queryItem | queryItemAttribute"
+                [origin]="hostElement"
+                [condition]="queryItem.condition"
+                [value]="queryItem.conditionValue"
+                (valueChange)="onConditionChange($event)">
+</filter-builder>

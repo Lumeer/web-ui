@@ -41,7 +41,6 @@ import {getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.uti
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
-import {isNotNullOrUndefined} from '../../shared/utils/common.utils';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -59,28 +58,29 @@ enum SuggestionScore {
 }
 
 enum ViewSuggestionScore {
-  EmptyQueryAndText = 30,
+  EmptyQueryAndText = 100, // defines order when query and also text is empty (same below in other score enums)
 }
 
 enum CollectionSuggestionScore {
-  EmptyQuery = 25,
+  EmptyQueryAndText = 70,
+  AdditionalPoints = SuggestionScore.MostUsed + 1, // in order to prefer collection against attribute
 }
 
 enum LinkTypeSuggestionScore {
-  EmptyQuery = 20,
+  EmptyQueryAndText = 45,
   IsDirectlyLinkable = 20, // can link to Collection or other LinkType
   IsLinkable = 10,
   IsLinkableDuplicated = 5, // can link but already is in current Stem
 }
 
 enum AttributeSuggestionScore {
-  EmptyQuery = 10,
+  EmptyQueryAndText = 10,
   IsInCurrentStem = 20, // its Collection is in current Stem
   IsUsedInCurrentStem = 17, // is already used in current Stem
 }
 
 enum LinkAttributeSuggestionScore {
-  EmptyQuery = 10,
+  EmptyQueryAndText = 0,
   IsInCurrentStem = 15, // its LinkType is in current Stem
   IsUsedInCurrentStem = 12, // is already used in current Stem
 }
@@ -140,7 +140,7 @@ export class SuggestionsService {
 
   public suggest(text: string, queryItems: QueryItem[]): Observable<QueryItem[]> {
     const textWithoutAccent = removeAccent(text);
-    return this.selectObjectsSorted(textWithoutAccent).pipe(
+    return this.selectObjectsSorted(text).pipe(
       map(suggestions => this.addScoreByCurrentItems(suggestions, textWithoutAccent, queryItems || [])),
       map(suggestions => this.filterAndSortSuggestions(suggestions)),
       map(suggestions => this.sliceTopSuggestions(suggestions, textWithoutAccent, queryItems)),
@@ -149,12 +149,13 @@ export class SuggestionsService {
   }
 
   private selectObjectsSorted(text: string): Observable<ObjectSuggestion[]> {
+    const textWithoutAccent = removeAccent(text);
     return combineLatest([
-      this.selectViewsSuggestions$(text),
-      this.selectCollectionsSuggestions$(text),
-      this.selectAttributesSuggestions$(text),
-      this.selectLinkTypesSuggestions$(text),
-      this.selectLinkAttributesSuggestions$(text),
+      this.selectViewsSuggestions$(textWithoutAccent),
+      this.selectCollectionsSuggestions$(textWithoutAccent),
+      this.selectAttributesSuggestions$(textWithoutAccent),
+      this.selectLinkTypesSuggestions$(textWithoutAccent),
+      this.selectLinkAttributesSuggestions$(textWithoutAccent),
       this.selectFullTextsSuggestions(text),
     ]).pipe(map(suggestions => flattenMatrix<ObjectSuggestion>(suggestions)));
   }
@@ -176,11 +177,12 @@ export class SuggestionsService {
           addViewScoreByCurrentItems(<ViewSuggestion>suggestion, text, stemsQueryItems);
           break;
         case SuggestionType.Collection:
-          addCollectionScoreByCurrentItems(<CollectionSuggestion>suggestion, stemsQueryItems);
+          addCollectionScoreByCurrentItems(<CollectionSuggestion>suggestion, text, stemsQueryItems);
           break;
         case SuggestionType.LinkType:
           addLinkTypeScoreByCurrentItems(
             <LinkTypeSuggestion>suggestion,
+            text,
             stemsQueryItems,
             lastItem,
             collectionIdsChain,
@@ -188,10 +190,15 @@ export class SuggestionsService {
           );
           break;
         case SuggestionType.Attribute:
-          addAttributeScoreByCurrentItems(<AttributeSuggestion>suggestion, lastStemItems, collectionIdsChain);
+          addAttributeScoreByCurrentItems(<AttributeSuggestion>suggestion, text, lastStemItems, collectionIdsChain);
           break;
         case SuggestionType.LinkAttribute:
-          addLinkAttributeScoreByCurrentItems(<LinkAttributeSuggestion>suggestion, lastStemItems, linkTypeIdsChain);
+          addLinkAttributeScoreByCurrentItems(
+            <LinkAttributeSuggestion>suggestion,
+            text,
+            lastStemItems,
+            linkTypeIdsChain
+          );
           break;
         case SuggestionType.FullText:
           addFullTextScoreByCurrentItems(<FullTextSuggestion>suggestion, queryItems);
@@ -220,27 +227,33 @@ export class SuggestionsService {
     currentItems: QueryItem[]
   ): ObjectSuggestion[] {
     const maxCountMap = createMaxSuggestionTypesMap(text, currentItems);
+    const maxCountMapKeys = Object.keys(maxCountMap);
     const slicedSuggestions: ObjectSuggestion[] = [];
-    const skippedIndexes = [];
-    for (let i = 0; i < suggestions.length; i++) {
-      if (slicedSuggestions.length >= maxSuggestions) {
-        break;
-      }
 
-      if (maxCountMap[suggestions[i].suggestionType] <= 0) {
-        skippedIndexes.push(i);
-        continue;
-      }
+    let indexes = [...Array(suggestions.length).keys()];
+    while (slicedSuggestions.length < maxSuggestions && indexes.length > 0) {
+      const skippedIndexes = [];
 
-      maxCountMap[suggestions[i].suggestionType]--;
-      slicedSuggestions.push(suggestions[i]);
-    }
+      for (const index of indexes) {
+        if (slicedSuggestions.length >= maxSuggestions) {
+          break;
+        }
 
-    for (let i = slicedSuggestions.length; i < maxSuggestions; i++) {
-      const index = skippedIndexes.shift();
-      if (isNotNullOrUndefined(index)) {
+        if (maxCountMap[suggestions[index].suggestionType] <= 0) {
+          skippedIndexes.push(index);
+          continue;
+        }
+        maxCountMap[suggestions[index].suggestionType]--;
         slicedSuggestions.push(suggestions[index]);
       }
+
+      // settle for next round
+      for (let i = 0; i < maxSuggestions - slicedSuggestions.length; i++) {
+        const key = maxCountMapKeys[i % maxCountMapKeys.length];
+        maxCountMap[key]++;
+      }
+
+      indexes = skippedIndexes;
     }
 
     if (!slicedSuggestions.some(suggestion => suggestion.suggestionType === SuggestionType.FullText)) {
@@ -284,7 +297,7 @@ export class SuggestionsService {
       map(collections => {
         const sortedByLastUsed = sortResourcesLastUsed<Collection>(collections).slice(0, lastUsedThreshold);
         return collections.map(collection => {
-          let score = 0;
+          let score = CollectionSuggestionScore.AdditionalPoints;
           const name = removeAccent(collection.name);
           if (text) {
             score += getScoreByMatch(name, text);
@@ -396,27 +409,32 @@ export class SuggestionsService {
 function createMaxSuggestionTypesMap(text: string, currentItems: QueryItem[]): Record<SuggestionType, number> {
   const stemItems = filterStemsQueryItems(currentItems);
   const isEmptySearch = stemItems.length === 0 && !text;
+  const halfMaxSuggestions = Math.ceil(maxSuggestions / 2);
   return {
-    [SuggestionType.View]: isEmptySearch ? 3 : maxSuggestions,
-    [SuggestionType.Collection]: isEmptySearch ? 3 : maxSuggestions,
-    [SuggestionType.LinkType]: isEmptySearch ? 3 : maxSuggestions,
-    [SuggestionType.LinkAttribute]: isEmptySearch ? 3 : maxSuggestions,
-    [SuggestionType.Attribute]: isEmptySearch ? 3 : maxSuggestions,
+    [SuggestionType.View]: isEmptySearch ? 3 : halfMaxSuggestions,
+    [SuggestionType.Collection]: isEmptySearch ? 3 : halfMaxSuggestions,
+    [SuggestionType.LinkType]: isEmptySearch ? 3 : halfMaxSuggestions,
+    [SuggestionType.LinkAttribute]: isEmptySearch ? 3 : halfMaxSuggestions,
+    [SuggestionType.Attribute]: isEmptySearch ? 3 : halfMaxSuggestions,
     [SuggestionType.FullText]: 1,
   };
 }
 
 function addViewScoreByCurrentItems(suggestion: ViewSuggestion, text: string, stemsQueryItems: QueryItem[]) {
-  if (!text && stemsQueryItems.length === 0) {
-    suggestion.score += ViewSuggestionScore.EmptyQueryAndText;
-  } else if (text && stemsQueryItems.length > 0) {
+  if (stemsQueryItems.length > 0) {
     suggestion.score += SuggestionScore.Restricted;
+  } else if (!text) {
+    suggestion.score += ViewSuggestionScore.EmptyQueryAndText;
   }
 }
 
-function addCollectionScoreByCurrentItems(suggestion: CollectionSuggestion, stemsQueryItems: QueryItem[]) {
-  if (stemsQueryItems.length === 0) {
-    suggestion.score += CollectionSuggestionScore.EmptyQuery;
+function addCollectionScoreByCurrentItems(
+  suggestion: CollectionSuggestion,
+  text: string,
+  stemsQueryItems: QueryItem[]
+) {
+  if (stemsQueryItems.length === 0 && !text) {
+    suggestion.score += CollectionSuggestionScore.EmptyQueryAndText;
   }
 }
 
@@ -429,13 +447,14 @@ function addFullTextScoreByCurrentItems(suggestion: FullTextSuggestion, queryIte
 
 function addLinkTypeScoreByCurrentItems(
   suggestion: LinkTypeSuggestion,
+  text: string,
   stemsQueryItems: QueryItem[],
   lastItem: QueryItem,
   collectionIdsChain: string[],
   linkTypeIdsChain: string[]
 ) {
-  if (stemsQueryItems.length === 0) {
-    suggestion.score += LinkTypeSuggestionScore.EmptyQuery;
+  if (stemsQueryItems.length === 0 && !text) {
+    suggestion.score += LinkTypeSuggestionScore.EmptyQueryAndText;
   }
 
   if (!lastItem) {
@@ -470,11 +489,12 @@ function addLinkTypeScoreByCurrentItems(
 
 function addAttributeScoreByCurrentItems(
   suggestion: AttributeSuggestion,
+  text: string,
   lastStemItems: QueryItem[],
   collectionIdsChain: string[]
 ) {
-  if (lastStemItems.length === 0) {
-    suggestion.score += AttributeSuggestionScore.EmptyQuery;
+  if (lastStemItems.length === 0 && !text) {
+    suggestion.score += AttributeSuggestionScore.EmptyQueryAndText;
   }
 
   const isAlreadyInStem = lastStemItems.some(
@@ -492,11 +512,12 @@ function addAttributeScoreByCurrentItems(
 
 function addLinkAttributeScoreByCurrentItems(
   suggestion: LinkAttributeSuggestion,
+  text: string,
   lastStemItems: QueryItem[],
   linkTypeIdsChain: string[]
 ) {
-  if (lastStemItems.length === 0) {
-    suggestion.score += LinkAttributeSuggestionScore.EmptyQuery;
+  if (lastStemItems.length === 0 && !text) {
+    suggestion.score += LinkAttributeSuggestionScore.EmptyQueryAndText;
   }
 
   const isAlreadyInStem = lastStemItems.some(

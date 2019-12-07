@@ -36,32 +36,6 @@ const LteVariants = ['<=', 'lte'];
 const GtVariants = ['>', 'gt'];
 const GteVariants = ['>=', 'gte'];
 
-const allConditionArrays = [EqVariants, NeqVariants, LtVariants, LteVariants, GtVariants, GteVariants];
-
-export function getAllConditions(): string[] {
-  const maxElements = getMaxConditionsInArrays();
-
-  const allConditions = [];
-  for (let i = 0; i < maxElements; i++) {
-    for (const array of allConditionArrays) {
-      if (i < array.length) {
-        allConditions.push(array[i]);
-      }
-    }
-  }
-
-  return allConditions;
-}
-
-function getMaxConditionsInArrays(): number {
-  return allConditionArrays.reduce((acc, array) => {
-    if (acc < array.length) {
-      acc = array.length;
-    }
-    return acc;
-  }, 0);
-}
-
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
     case QueryItemType.View:

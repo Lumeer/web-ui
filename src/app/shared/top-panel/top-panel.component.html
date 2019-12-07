@@ -1,29 +1,37 @@
 <ng-container *ngIf="{workspace: workspace$ | async, controlsShown: controlsShown$ | async} as state">
-  <lumeer-logo [height]="lineHeight"
-               [link]="state.workspace | workspaceDefaultUrl"
-               [text]="!(state.workspace | workspaceSet) ? 'Lumeer' : null"
-               class="logo">
-  </lumeer-logo>
+  <div class="logo">
+    <lumeer-logo [height]="36"
+                 [style.height.px]="firstLineHeight"
+                 [link]="state.workspace | workspaceDefaultUrl"
+                 [text]="!(state.workspace | workspaceSet) ? 'Lumeer' : null"
+                 class="d-flex align-items-center">
+    </lumeer-logo>
+  </div>
 
-  <controls-toggle *ngIf="mobile"
-                   (toggle)="onToggleControls()"
-                   class="controls-toggle">
-  </controls-toggle>
+  <div class="controls-toggle" *ngIf="mobile">
+    <controls-toggle [style.height.px]="firstLineHeight"
+                     class="d-flex align-items-center"
+                     (toggle)="onToggleControls()">
+    </controls-toggle>
+  </div>
 
   <workspace-panel *ngIf="state.controlsShown && (state.workspace | workspaceSet)"
                    [workspace]="state.workspace"
+                   [contentHeight]="firstLineHeight"
                    class="workspace-panel">
   </workspace-panel>
 
   <user-panel [workspace]="state.workspace"
               (toggleControls)="onToggleControls()"
               [controlsVisible]="!mobile || (controlsShown$ | async)"
+              [contentHeight]="firstLineHeight"
               [mobile]="mobile"
               class="user-panel">
   </user-panel>
 
   <search-box *ngIf="state.controlsShown && (state.workspace | workspaceSet) && searchBoxShown"
-              class="search-box">
+              [style.min-width.px]="firstLineHeight"
+              class="search-box d-flex align-items-center">
   </search-box>
 
   <div *ngIf="state.controlsShown"

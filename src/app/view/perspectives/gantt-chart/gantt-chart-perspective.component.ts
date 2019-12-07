@@ -48,8 +48,8 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig, ganttConfigIsEmpty} from './util/gantt-chart-util';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
-import {TranslationService} from '../../../core/service/translation.service';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -65,8 +65,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public currentView$: Observable<View>;
   public currentUser$: Observable<User>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public users$: Observable<User[]>;
-  public readonly durationUnitsMap: DurationUnitsMap;
+  public constraintData$: Observable<ConstraintData>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
@@ -77,10 +76,8 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   constructor(
     private store$: Store<AppState>,
     private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private translationService: TranslationService
-  ) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+    private constraintDataService: ConstraintDataService
+  ) {}
 
   public ngOnInit() {
     this.initGanttChart();
@@ -165,7 +162,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
-    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.constraintDataService.observeConstraintData();
   }
 
   public ngOnDestroy() {

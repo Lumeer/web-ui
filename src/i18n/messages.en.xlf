@@ -51,7 +51,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/video-menu/play-video-modal/play-video-modal.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">77</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/video-menu/play-video-modal/play-video-modal.component.html</context><context context-type="linenumber">15</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">76</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
         <source>
         Select
       </source><target state="final">
@@ -406,17 +406,17 @@
         <source>Email</source><target state="final">Email</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="users.header.search.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/body/share-view-dialog-body.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="users.header.search.placeholder" datatype="html">
         <source>Search user...</source><target state="final">Search user...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="users.header.search.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="users.header.search.title" datatype="html">
         <source>Search for users</source><target state="final">Search for users</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="users.actions.remove" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-list/user-list.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="users.actions.remove" datatype="html">
         <source>Remove User</source><target state="final">Remove User</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user/user.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/body/user/share-user.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="users.add.button" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user/user.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/body/user/share-user.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="users.add.button" datatype="html">
         <source>Invite user</source><target state="final">Invite user</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/users/new-user/new-user.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="users.user.email.invalid" datatype="html">
@@ -521,13 +521,7 @@
       </trans-unit><trans-unit id="inviteUser.dialog.title" datatype="html">
         <source>Invite colleagues</source><target state="final">Invite colleagues</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.headline" datatype="html">
-        <source>First enter colleague's email:</source><target state="final">First enter colleague's email:</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.users.list" datatype="html">
-        <source>Colleagues to invite: </source><target state="final">Colleagues to invite: </target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.userRights.headline" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.userRights.headline" datatype="html">
         <source>Invited colleagues can:</source><target state="final">Invited colleagues can:</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.title" datatype="html">
@@ -572,57 +566,57 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
         <source>
-          Use the cog icon
-        </source><target state="final">
-          Use the cog icon
-        </target>
+            Use the cog icon
+          </source><target state="final">
+            Use the cog icon
+          </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.settings.description2" datatype="html">
         <source>
-          next to the table, or the Share button to change access rights later (especially
-          for the newly created tables and views).
-        </source><target state="final">
-          next to the table, or the Share button to change access rights later (especially
-          for the newly created tables and views).
-        </target>
+            next to the table, or the Share button to change access rights later (especially
+            for the newly created tables and views).
+          </source><target state="final">
+            next to the table, or the Share button to change access rights later (especially
+            for the newly created tables and views).
+          </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source><target state="final">Only organization and project managers can invite colleagues, please ask them.</target>
         
         <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="inviteUser.button.text" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="inviteUser.button.text" datatype="html">
         <source>Invite</source><target state="final">Invite</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">81</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="inviteUser.button.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="inviteUser.button.title" datatype="html">
         <source>Invite a colleague</source><target state="final">Invite a colleague</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.button" datatype="html">
         <source>Add</source><target state="final">Add</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.user.emailDropdown.invalid" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.user.emailDropdown.invalid" datatype="html">
         <source>
-      Please select one of the colleagues who are already in your organization.
-    </source><target state="final">
-      Please select one of the colleagues who are already in your organization.
-    </target>
+        Please select one of the colleagues who are already in your organization.
+      </source><target state="final">
+        Please select one of the colleagues who are already in your organization.
+      </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.user.email.invalid" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.user.email.invalid" datatype="html">
         <source>
-      Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
-    </source><target state="final">
-      Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
-    </target>
+        Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
+      </source><target state="final">
+        Please enter a valid e-mail address (e.g. alan.turing@lumeerio.com).
+      </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.email.duplicate" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.email.duplicate" datatype="html">
         <source>
-      A colleague with this email is already invited. Try another one!
-    </source><target state="final">
-      A colleague with this email is already invited. Try another one!
-    </target>
+        A colleague with this email is already invited. Try another one!
+      </source><target state="final">
+        A colleague with this email is already invited. Try another one!
+      </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="userNotifications.new" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="userNotifications.new" datatype="html">
         <source>new</source><target state="final">new</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="userNotifications.readOn" datatype="html">
@@ -723,22 +717,9 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="search.input.placeholder" datatype="html">
-        <source>
-    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"/>
-  </source><target state="final">
-    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"/>
-  </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/search-box/input/search-input.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="704a36bb7d1e358bff6fcd007b3a1008a7e98087" datatype="html">
-        <source>{VAR_SELECT, select, 0 {Type anything you search for...} other {} }</source><target state="final">{VAR_SELECT, select, 0 {Type anything you search for...} other {} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/search-box/input/search-input.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.button" datatype="html">
+        <source>Type anything you search for...</source><target state="final">Type anything you search for...</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="search.button" datatype="html">
         <source>Search</source><target state="final">Search</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/search-box/button/search-button.component.html</context>
@@ -893,7 +874,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>All day event</source><target state="final">All day event</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/calendar/modal/calendar-event-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
         <source>Create</source><target state="final">Create</target>
 
 
@@ -924,11 +905,8 @@
   </source><target state="final">
     Unknown name
   </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/share-view/body/user/share-user.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="link.new.dialog.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-stamp/user-stamp.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="link.new.dialog.title" datatype="html">
         <source>Create new link</source><target state="final">Create new link</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="view.share.dialog.title" datatype="html">
@@ -2432,24 +2410,18 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/link/info/table-link-info.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="modal.kanban.chooseDocument.title" datatype="html">
         <source>Choose a record</source><target state="final">Choose a record</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/modal/choose-link-document/choose-link-document-modal.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit><trans-unit id="modal.kanban.chooseDocument.description" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="modal.kanban.chooseDocument.description" datatype="html">
         <source>
       Select to which record you want to link the new one.
     </source><target state="final">
       Select to which record you want to link the new one.
     </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/modal/choose-link-document/choose-link-document-modal.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="modal.kanban.chooseDocument.submit" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="modal.kanban.chooseDocument.submit" datatype="html">
         <source>Choose</source><target state="final">Choose</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.column.summary" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.column.summary" datatype="html">
         <source>Column Summary</source><target state="final">Column Summary</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/kanban/config/kanban-config.component.html</context>
@@ -3408,7 +3380,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/select/attribute-type-select.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.default.title" datatype="html">
         <source>New event</source><target state="final">New event</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/modal/calendar-event-detail-modal.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
       <trans-unit id="dialog.feedback.success" datatype="html">
         <source>Your feedback has been sent.</source><target state="final">Your feedback has been sent.</target>
         
