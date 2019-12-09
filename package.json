@@ -108,7 +108,7 @@
     "@types/jasminewd2": "~2.0.8",
     "@types/js-base64": "^2.3.1",
     "@types/jssha": "^2.0.0",
-    "@types/mapbox-gl": "^1.5.1",
+    "@types/mapbox-gl": "^1.6.0",
     "@types/node": "^12.11.1",
     "@types/plotly.js": "^1.44.12",
     "angular-http-server": "^1.9.0",
