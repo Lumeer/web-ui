@@ -17,24 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {CollectionAttributeFilter, ConditionType, LinkAttributeFilter, Query, QueryStem} from './query';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryCondition, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
 import {isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Collection} from '../../collections/collection';
 import {AttributesResource} from '../../../model/resource';
-
-const EqVariants = ['=', '==', 'eq', 'equals'];
-const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
-const LtVariants = ['<', 'lt'];
-const LteVariants = ['<=', 'lte'];
-const GtVariants = ['>', 'gt'];
-const GteVariants = ['>=', 'gte'];
+import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
+import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
+import {UnknownConstraint} from '../../../model/constraint/unknown.constraint';
+import {ConstraintType} from '../../../model/data/constraint';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -55,34 +52,54 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
     case QueryItemType.LinkAttribute:
       return new FormGroup({
         text: new FormControl(queryItem.text, Validators.required),
-        condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator]),
-        conditionValue: new FormControl(queryItem.conditionValue),
+        condition: new FormControl(queryCondition(queryItem)),
+        conditionType: new FormControl(queryItem.conditionValue && queryItem.conditionValue.type),
+        conditionValues: new FormControl(queryConditionValues(queryItem)),
       });
   }
 }
 
-export function conditionValidator(input: FormControl): {[key: string]: any} {
-  const value = input.value.toString().trim();
-  const isCondition = conditionFromString(value) != null;
-  return !isCondition ? {invalidCondition: value} : null;
+function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
+  const condition = group.controls.condition.value;
+  const conditionValue = group.controls.conditionValue.value;
+  // TODO
+  return null;
 }
 
-export function conditionFromString(condition: string): ConditionType {
-  const conditionLowerCase = condition.toLowerCase();
-  if (EqVariants.includes(conditionLowerCase)) {
-    return ConditionType.Equals;
-  } else if (NeqVariants.includes(conditionLowerCase)) {
-    return ConditionType.NotEquals;
-  } else if (LtVariants.includes(conditionLowerCase)) {
-    return ConditionType.LowerThan;
-  } else if (LteVariants.includes(conditionLowerCase)) {
-    return ConditionType.LowerThanEquals;
-  } else if (GtVariants.includes(conditionLowerCase)) {
-    return ConditionType.GreaterThan;
-  } else if (GteVariants.includes(conditionLowerCase)) {
-    return ConditionType.GreaterThanEquals;
+export function queryConditionNumInputs(condition: QueryCondition): number {
+  switch (condition) {
+    case QueryCondition.IsEmpty:
+    case QueryCondition.NotEmpty:
+      return 0;
+    case QueryCondition.Between:
+    case QueryCondition.NotBetween:
+      return 2;
+    default:
+      return 1;
   }
-  return null;
+}
+
+function queryCondition(queryItem: QueryItem): QueryCondition {
+  if (queryItem.condition) {
+    return queryItem.condition;
+  }
+  const attribute = (<AttributeQueryItem>queryItem).attribute || (<LinkAttributeQueryItem>queryItem).attribute;
+  const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+  return constraint.conditions()[0];
+}
+
+function queryConditionValues(queryItem: QueryItem): any[] {
+  if (queryItem.conditionValue) {
+    return queryItem.conditionValue.values || [];
+  }
+  const attribute = (<AttributeQueryItem>queryItem).attribute || (<LinkAttributeQueryItem>queryItem).attribute;
+  const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+  switch (constraint.type) {
+    case ConstraintType.Boolean:
+      return [true];
+    default:
+      return [];
+  }
 }
 
 export function queryIsNotEmpty(query: Query): boolean {

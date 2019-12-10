@@ -214,7 +214,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.showByQueryItems(redirect);
+    // this.showByQueryItems(redirect);
   }
 
   private showView(queryItems: QueryItem[]): boolean {

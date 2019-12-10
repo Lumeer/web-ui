@@ -23,6 +23,10 @@ import {QueryConditionItem} from '../model/query-condition-item';
 import {DataValue, DataValueInputType} from '../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
+import {BehaviorSubject} from 'rxjs';
+import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {ConstraintConditionType} from '../../../../core/model/data/constraint-condition';
 
 @Component({
   selector: 'filter-builder-content',
@@ -35,36 +39,65 @@ export class FilterBuilderContentComponent implements OnChanges {
   public attribute: Attribute;
 
   @Input()
-  public selectedValue: any;
+  public selectedValue: QueryConditionValue;
 
   @Input()
-  public selectedCondition: string;
+  public selectedCondition: QueryCondition;
 
   @Input()
   public constraintData: ConstraintData;
 
   @Output()
-  public valueChange = new EventEmitter<{condition: string; value: any}>();
+  public valueChange = new EventEmitter<{condition: QueryCondition; value: QueryConditionValue}>();
 
   public readonly constraintType = ConstraintType;
+
+  public editing$ = new BehaviorSubject(false);
+  public numInputs: number;
 
   public dataValue: DataValue;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.attribute || changes.value) {
+    if (changes.attribute || changes.selectedValue) {
       this.dataValue = this.createDataValue();
+    }
+    if (changes.selectedCondition) {
+      this.numInputs = queryConditionNumInputs(this.selectedCondition);
     }
   }
 
   private createDataValue(): DataValue {
+    const value = ((this.selectedValue && this.selectedValue.values) || [])[0];
     return ((this.attribute && this.attribute.constraint) || new UnknownConstraint()).createDataValue(
-      this.selectedValue,
+      value,
       DataValueInputType.Typed,
       this.constraintData
     );
   }
 
+  public onInputDoubleClick() {
+    if (!this.editing$.value) {
+      this.editing$.next(true);
+    }
+  }
+
   public onConditionSelect(item: QueryConditionItem) {
     this.valueChange.emit({condition: item.value, value: this.selectedValue});
+  }
+
+  public onInputCancel() {
+    this.editing$.next(false);
+  }
+
+  public onInputSave(dataValue: DataValue) {
+    const value: QueryConditionValue = {type: null, values: [dataValue.serialize()]};
+    this.valueChange.emit({condition: this.selectedCondition, value});
+    this.editing$.next(false);
+  }
+
+  public onConditionValueSelect(item: ConstraintConditionType) {
+    const value: QueryConditionValue = {type: item, values: []};
+    this.valueChange.emit({condition: this.selectedCondition, value});
+    this.editing$.next(false);
   }
 }

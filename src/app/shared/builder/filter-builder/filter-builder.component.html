@@ -5,9 +5,9 @@
 
   <filter-builder-content class="card d-flex flex-row flex-nowrap p-2"
                           [attribute]="attribute"
-                          [selectedCondition]="null"
-                          [selectedValue]="value"
-                          (valueChange)="valueChange.emit($event)">
+                          [selectedCondition]="condition"
+                          [selectedValue]="conditionValue"
+                          (valueChange)="onValueChange($event)">
   </filter-builder-content>
 
 </dropdown>

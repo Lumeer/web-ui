@@ -17,9 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../../../core/store/navigation/query/query';
+export type ConstraintConditionType = DateConstraintCondition | UserConstraintCondition;
 
-export interface QueryConditionItem {
-  value: QueryCondition;
-  title: string;
+export enum DateConstraintCondition {
+  Today = 'today',
+  Yesterday = 'yesterday',
+  Tomorrow = 'tomorrow',
+  ThisMonth = 'thisMonth',
+  ThisWeek = 'thisWeek',
+  LastMonth = 'lastMonth',
+  LastWeek = 'lastWeek',
+}
+
+export enum UserConstraintCondition {
+  CurrentUser = 'currentUser',
 }

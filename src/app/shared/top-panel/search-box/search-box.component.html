@@ -12,7 +12,6 @@
                   [queryItemForm]="queryItemsControl.at(itemIndex)"
                   [queryItem]="queryItem"
                   [constraintData]="constraintData"
-                  (enter)="searchInput.focusInput()"
                   [readonly]="!data.canManageConfig"
                   (change)="onQueryItemsChanged()"
                   (remove)="onRemoveQueryItem(itemIndex)"

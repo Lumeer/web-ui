@@ -24,9 +24,15 @@ import {DropdownModule} from '../../dropdown/dropdown.module';
 import {QueryConditionItemsPipe} from './pipes/query-condition-items.pipe';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
+import {QueryConstraintConditionsPipe} from './pipes/query-constraint-conditions.pipe';
 
 @NgModule({
-  declarations: [FilterBuilderComponent, QueryConditionItemsPipe, FilterBuilderContentComponent],
+  declarations: [
+    FilterBuilderComponent,
+    QueryConditionItemsPipe,
+    QueryConstraintConditionsPipe,
+    FilterBuilderContentComponent,
+  ],
   exports: [FilterBuilderComponent],
   imports: [CommonModule, DropdownModule, DataInputModule],
 })

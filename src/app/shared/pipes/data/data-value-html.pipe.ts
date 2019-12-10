@@ -17,19 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
-
-import {Attribute} from '../../../../../core/store/collections/collection';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Constraint} from '../../../core/model/constraint';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {createDataValueHtml} from '../../utils/data/data-html.utils';
 
 @Pipe({
-  name: 'conditionFilter',
+  name: 'dataValueHtml',
 })
-@Injectable()
-export class ConditionFilterPipe implements PipeTransform {
-  public transform(conditions: string[], value: string): any[] {
-    if (!conditions || !value) {
-      return conditions;
-    }
-    return conditions.filter(c => c.toLowerCase().includes(value.toLowerCase()));
+export class DataValueHtmlPipe implements PipeTransform {
+  public transform(value: any, constraint: Constraint, constraintData?: ConstraintData): string {
+    return createDataValueHtml(value, constraint, constraintData);
   }
 }

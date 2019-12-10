@@ -18,31 +18,30 @@
  */
 
 import {DateTimeConstraint} from '../../../core/model/constraint/datetime.constraint';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
 import {dataValuesMeetCondition} from './data-compare.utils';
-import {ConditionType} from '../../../core/store/navigation/query/query';
+import {QueryCondition} from '../../../core/store/navigation/query/query';
 
 describe('Data values meet condition', () => {
   it('should compare by date only year constraint', () => {
     const constraint = new DateTimeConstraint({format: 'YYYY'} as DateTimeConstraintConfig);
 
-    expect(dataValuesMeetCondition("2019-04-10'T'09:40:10.031Z", null, ConditionType.Equals, constraint)).toEqual(
+    expect(dataValuesMeetCondition("2019-04-10'T'09:40:10.031Z", null, QueryCondition.Equals, constraint)).toEqual(
       false
     );
-    expect(dataValuesMeetCondition("2019-04-10'T'09:40:10.031Z", null, ConditionType.NotEquals, constraint)).toEqual(
+    expect(dataValuesMeetCondition("2019-04-10'T'09:40:10.031Z", null, QueryCondition.NotEquals, constraint)).toEqual(
       true
     );
     expect(
-      dataValuesMeetCondition(undefined, "2019-04-13'T'10:32:01.000Z", ConditionType.NotEquals, constraint)
+      dataValuesMeetCondition(undefined, "2019-04-13'T'10:32:01.000Z", QueryCondition.NotEquals, constraint)
     ).toEqual(true);
-    expect(dataValuesMeetCondition(null, undefined, ConditionType.Equals, constraint)).toEqual(true);
+    expect(dataValuesMeetCondition(null, undefined, QueryCondition.Equals, constraint)).toEqual(true);
 
     expect(
       dataValuesMeetCondition(
         "2019-04-10'T'09:40:10.031Z",
         "2019-04-13'T'10:32:01.000Z",
-        ConditionType.Equals,
+        QueryCondition.Equals,
         constraint
       )
     ).toEqual(true);
@@ -50,7 +49,7 @@ describe('Data values meet condition', () => {
       dataValuesMeetCondition(
         "2019-04-10'T'09:40:10.031Z",
         "2020-04-13'T'10:32:01.000Z",
-        ConditionType.Equals,
+        QueryCondition.Equals,
         constraint
       )
     ).toEqual(false);
@@ -58,7 +57,7 @@ describe('Data values meet condition', () => {
       dataValuesMeetCondition(
         "2019-04-10'T'09:40:10.031Z",
         "2020-04-13'T'10:32:01.000Z",
-        ConditionType.LowerThan,
+        QueryCondition.LowerThan,
         constraint
       )
     ).toEqual(true);
@@ -66,7 +65,7 @@ describe('Data values meet condition', () => {
       dataValuesMeetCondition(
         "2019-01-10'T'00:00:00.031Z",
         "2019-09-23'T'18:32:01.000Z",
-        ConditionType.LowerThanEquals,
+        QueryCondition.LowerThanEquals,
         constraint
       )
     ).toEqual(true);
@@ -74,7 +73,7 @@ describe('Data values meet condition', () => {
       dataValuesMeetCondition(
         "2019-01-10'T'00:00:00.031Z",
         "2019-09-23'T'18:32:01.000Z",
-        ConditionType.GreaterThanEquals,
+        QueryCondition.GreaterThanEquals,
         constraint
       )
     ).toEqual(true);
@@ -82,7 +81,7 @@ describe('Data values meet condition', () => {
       dataValuesMeetCondition(
         "2019-01-10'T'00:00:00.031Z",
         "2019-09-23'T'18:32:01.000Z",
-        ConditionType.Equals,
+        QueryCondition.Equals,
         constraint
       )
     ).toEqual(true);
@@ -90,7 +89,7 @@ describe('Data values meet condition', () => {
       dataValuesMeetCondition(
         "2020-01-10'T'00:00:00.031Z",
         "2019-09-23'T'18:32:01.000Z",
-        ConditionType.GreaterThan,
+        QueryCondition.GreaterThan,
         constraint
       )
     ).toEqual(true);
@@ -105,7 +104,7 @@ describe('Data values meet condition', () => {
         dataValuesMeetCondition(
           "2019-04-10'T'09:40:10.031Z",
           "2019-05-13'T'10:32:01.000Z",
-          ConditionType.Equals,
+          QueryCondition.Equals,
           constraint
         )
       ).toEqual(false);
@@ -113,7 +112,7 @@ describe('Data values meet condition', () => {
         dataValuesMeetCondition(
           "2019-04-10'T'09:40:10.031Z",
           "2019-04-10'T'10:32:01.000Z",
-          ConditionType.Equals,
+          QueryCondition.Equals,
           constraint
         )
       ).toEqual(true);
@@ -121,7 +120,7 @@ describe('Data values meet condition', () => {
         dataValuesMeetCondition(
           "2019-04-10'T'09:40:10.031Z",
           "2029-04-10'T'10:32:01.000Z",
-          ConditionType.Equals,
+          QueryCondition.Equals,
           constraint
         )
       ).toEqual(false);
@@ -129,7 +128,7 @@ describe('Data values meet condition', () => {
         dataValuesMeetCondition(
           "2019-04-10'T'09:40:10.031Z",
           "2019-04-13'T'10:32:01.000Z",
-          ConditionType.LowerThanEquals,
+          QueryCondition.LowerThanEquals,
           constraint
         )
       ).toEqual(true);
@@ -137,7 +136,7 @@ describe('Data values meet condition', () => {
         dataValuesMeetCondition(
           "2019-04-10'T'09:40:10.031Z",
           "2019-04-13'T'10:32:01.000Z",
-          ConditionType.GreaterThanEquals,
+          QueryCondition.GreaterThanEquals,
           constraint
         )
       ).toEqual(true);
@@ -145,7 +144,7 @@ describe('Data values meet condition', () => {
         dataValuesMeetCondition(
           "2020-01-10'T'00:00:00.031Z",
           "2019-09-23'T'18:32:01.000Z",
-          ConditionType.GreaterThan,
+          QueryCondition.GreaterThan,
           constraint
         )
       ).toEqual(true);
@@ -153,7 +152,7 @@ describe('Data values meet condition', () => {
         dataValuesMeetCondition(
           "2019-04-10'T'09:40:10.031Z",
           "2020-04-13'T'10:32:01.000Z",
-          ConditionType.LowerThan,
+          QueryCondition.LowerThan,
           constraint
         )
       ).toEqual(true);

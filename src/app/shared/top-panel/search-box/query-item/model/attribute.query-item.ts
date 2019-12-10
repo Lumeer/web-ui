@@ -20,7 +20,11 @@
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query/query';
+import {
+  CollectionAttributeFilter,
+  QueryCondition,
+  QueryConditionValue,
+} from '../../../../../core/store/navigation/query/query';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
@@ -28,8 +32,8 @@ export class AttributeQueryItem implements QueryItem {
   public constructor(
     public collection: Collection,
     public attribute: Attribute,
-    public condition: string,
-    public conditionValue: any
+    public condition?: QueryCondition,
+    public conditionValue?: QueryConditionValue
   ) {}
 
   public get text() {
@@ -53,7 +57,7 @@ export class AttributeQueryItem implements QueryItem {
       collectionId: this.collection.id,
       attributeId: this.attribute.id,
       condition: this.condition,
-      value: this.conditionValue,
+      conditionValue: this.conditionValue,
     };
   }
 }

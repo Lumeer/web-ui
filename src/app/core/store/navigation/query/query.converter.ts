@@ -19,8 +19,8 @@
 
 import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {QueryDto} from '../../../dto';
-import {AttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../../dto/query.dto';
-import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
+import {CollectionAttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../../dto/query.dto';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryCondition, QueryStem} from './query';
 import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
 import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
 
@@ -62,12 +62,14 @@ function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
   };
 }
 
-function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): CollectionAttributeFilter {
+function convertAttributeFilterDtoToModel(dto: CollectionAttributeFilterDto): CollectionAttributeFilter {
   return {
     collectionId: dto.collectionId,
     attributeId: dto.attributeId,
-    condition: dto.operator,
-    value: dto.value,
+    condition: conditionFromString(dto.operator),
+    conditionValue: {
+      ...dto.conditionValue,
+    },
   };
 }
 
@@ -75,17 +77,21 @@ function convertLinkAttributeFilterDtoToModel(dto: LinkAttributeFilterDto): Link
   return {
     linkTypeId: dto.linkTypeId,
     attributeId: dto.attributeId,
-    condition: dto.operator,
-    value: dto.value,
+    condition: conditionFromString(dto.operator),
+    conditionValue: {
+      ...dto.conditionValue,
+    },
   };
 }
 
-function convertAttributeFilterModelToDto(model: CollectionAttributeFilter): AttributeFilterDto {
+function convertAttributeFilterModelToDto(model: CollectionAttributeFilter): CollectionAttributeFilterDto {
   return {
     collectionId: model.collectionId,
     attributeId: model.attributeId,
     operator: model.condition,
-    value: model.value,
+    conditionValue: {
+      ...model.conditionValue,
+    },
   };
 }
 
@@ -94,7 +100,9 @@ function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter): LinkA
     linkTypeId: model.linkTypeId,
     attributeId: model.attributeId,
     operator: model.condition,
-    value: model.value,
+    conditionValue: {
+      ...model.conditionValue,
+    },
   };
 }
 
@@ -144,4 +152,29 @@ export function normalizeQueryStem(stem: QueryStem): QueryStem {
     linkFilters: stem.linkFilters || [],
     linkTypeIds: stem.linkTypeIds || [],
   };
+}
+
+const EqVariants = [QueryCondition.Equals, '=', '==', 'equals'];
+const NeqVariants = [QueryCondition.NotEquals, '!=', '!==', '<>', 'ne', 'nequals'];
+const LtVariants = [QueryCondition.LowerThan, '<'];
+const LteVariants = [QueryCondition.LowerThanEquals, '<='];
+const GtVariants = [QueryCondition.GreaterThan, '>'];
+const GteVariants = [QueryCondition.GreaterThanEquals, '>='];
+
+function conditionFromString(condition: string): QueryCondition {
+  const conditionLowerCase = condition.toLowerCase();
+  if (EqVariants.includes(conditionLowerCase)) {
+    return QueryCondition.Equals;
+  } else if (NeqVariants.includes(conditionLowerCase)) {
+    return QueryCondition.NotEquals;
+  } else if (LtVariants.includes(conditionLowerCase)) {
+    return QueryCondition.LowerThan;
+  } else if (LteVariants.includes(conditionLowerCase)) {
+    return QueryCondition.LowerThanEquals;
+  } else if (GtVariants.includes(conditionLowerCase)) {
+    return QueryCondition.GreaterThan;
+  } else if (GteVariants.includes(conditionLowerCase)) {
+    return QueryCondition.GreaterThanEquals;
+  }
+  return null;
 }

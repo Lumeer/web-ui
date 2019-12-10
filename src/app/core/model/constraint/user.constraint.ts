@@ -39,10 +39,10 @@ export class UserConstraint implements Constraint {
 
   public conditions(): QueryCondition[] {
     return [
-      QueryCondition.StartsWith,
-      QueryCondition.EndsWith,
       QueryCondition.In,
       QueryCondition.NotIn,
+      QueryCondition.StartsWith,
+      QueryCondition.EndsWith,
       QueryCondition.IsEmpty,
       QueryCondition.NotEmpty,
     ];

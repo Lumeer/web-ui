@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeFilter, CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
+import {
+  AttributeFilter,
+  CollectionAttributeFilter,
+  LinkAttributeFilter,
+  Query,
+  QueryCondition,
+  QueryConditionValue,
+  QueryStem,
+} from './query';
+import {ConstraintConditionType} from '../../../model/data/constraint-condition';
 
 export interface ShortenedQuery {
   s: ShortenedQueryStem[]; // stems
@@ -37,7 +46,12 @@ export interface ShortenedQueryStem {
 export interface ShortenedAttributeFilter {
   e: string; // condition (expression)
   a: string; // attributeId
-  v: any; // value
+  v: ShortenedConditionValue; // value
+}
+
+export interface ShortenedConditionValue {
+  t: string; // type
+  v: any[]; // values
 }
 
 export interface ShortenedCollectionAttributeFilter extends ShortenedAttributeFilter {
@@ -81,8 +95,12 @@ function shortenAttributeFilter(filter: AttributeFilter): ShortenedAttributeFilt
   return {
     e: filter.condition,
     a: filter.attributeId,
-    v: filter.value,
+    v: shortenConditionValue(filter.conditionValue),
   };
+}
+
+function shortenConditionValue(value: QueryConditionValue): ShortenedConditionValue {
+  return {t: value.type, v: value.values};
 }
 
 export function prolongQuery(query: ShortenedQuery): Query {
@@ -116,8 +134,15 @@ function prolongLinkAttributeFilter(filter: ShortenedLinkAttributeFilter): LinkA
 
 function prolongAttributeFilter(filter: ShortenedAttributeFilter): AttributeFilter {
   return {
-    condition: filter.e,
+    condition: <QueryCondition>filter.e,
     attributeId: filter.a,
-    value: filter.v,
+    conditionValue: prolongConditionValue(filter.v),
+  };
+}
+
+function prolongConditionValue(filter: ShortenedConditionValue): QueryConditionValue {
+  return {
+    type: <ConstraintConditionType>filter.t,
+    values: filter.v,
   };
 }

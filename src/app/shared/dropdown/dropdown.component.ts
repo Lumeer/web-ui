@@ -171,6 +171,12 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     return !!this.overlayRef;
   }
 
+  public updatePosition() {
+    if (this.overlayRef) {
+      this.overlayRef.updatePosition();
+    }
+  }
+
   @HostListener('window:resize')
   public onWindowResize() {
     this.syncWidth();

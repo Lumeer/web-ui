@@ -20,9 +20,16 @@
     {{queryItem | queryItemText | truncate:30}}
   </span>
 
-  <div class="mr-1 d-inline-flex flex-grow-1 overflow-hidden"
+  <div class="mr-1 d-inline-flex flex-grow-1 text-truncate text-nowrap"
        *ngIf="queryItem | isAttributeItem">
-    {{queryItem.condition}}{{queryItem.conditionValue}}
+    <span>{{conditionControl?.value | translateCondition:(queryItem | queryItemAttribute)}}</span>
+    <ng-container *ngIf="!conditionTypeControl?.value">
+      <div class="d-inline-block ml-2"
+           *ngFor="let value of conditionValuesControl?.value"
+           [innerHTML]="(value | dataValueHtml:(queryItem | queryItemAttribute)?.constraint:constraintData) | safeHtml">
+      </div>
+    </ng-container>
+    <span class="ml-2" *ngIf="conditionTypeControl?.value">{{conditionTypeControl?.value}}</span>
   </div>
 
   <i *ngIf="!readonly"
@@ -35,7 +42,8 @@
 <filter-builder *ngIf="queryItem | isAttributeItem"
                 [attribute]="queryItem | queryItemAttribute"
                 [origin]="hostElement"
-                [condition]="queryItem.condition"
-                [value]="queryItem.conditionValue"
+                [condition]="conditionControl?.value"
+                [conditionType]="conditionTypeControl?.value"
+                [conditionValues]="conditionValuesControl?.value"
                 (valueChange)="onConditionChange($event)">
 </filter-builder>

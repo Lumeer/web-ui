@@ -70,7 +70,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     if (changes.queryItems && this.queryItems) {
       this.suggesting = !this.queryItems.find(queryItem => queryItem.type === QueryItemType.View);
     }
-    if (changes.text) {
+    if (changes.text || changes.queryItems) {
       this.searchTerms$.next(this.text);
     }
   }
@@ -106,6 +106,10 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     if (0 <= selectedIndex && selectedIndex < this.suggestions$.getValue().length) {
       this.selectedIndex$.next(selectedIndex);
     }
+  }
+
+  public hasSelection(): boolean {
+    return this.selectedIndex$.getValue() > 0;
   }
 
   public useSelection(text: string) {

@@ -77,6 +77,8 @@ export class SearchInputComponent {
 
     if (this.shouldFocusInput(suggestion)) {
       setTimeout(() => this.focusInput());
+    } else {
+      this.searchInput.nativeElement.blur();
     }
   }
 
@@ -151,7 +153,7 @@ export class SearchInputComponent {
   }
 
   public onEnterKeyUp() {
-    if (this.text) {
+    if (this.text || this.searchSuggestions.hasSelection()) {
       this.searchSuggestions.useSelection(this.text);
     } else {
       this.search.emit();

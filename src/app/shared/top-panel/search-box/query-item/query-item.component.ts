@@ -27,15 +27,13 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {Constraint} from '../../../../core/model/constraint';
 
 import {QueryItem} from './model/query-item';
-import {FormGroup} from '@angular/forms';
+import {AbstractControl, FormGroup} from '@angular/forms';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
-import {AttributeQueryItem} from './model/attribute.query-item';
-import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
 import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
+import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
 
 @Component({
   selector: 'query-item',
@@ -60,9 +58,6 @@ export class QueryItemComponent implements OnInit {
   public remove = new EventEmitter();
 
   @Output()
-  public enter = new EventEmitter();
-
-  @Output()
   public change = new EventEmitter();
 
   @ViewChild(FilterBuilderComponent, {static: false})
@@ -70,26 +65,26 @@ export class QueryItemComponent implements OnInit {
 
   constructor(public hostElement: ElementRef) {}
 
+  public get conditionControl(): AbstractControl {
+    return this.queryItemForm && this.queryItemForm.controls.condition;
+  }
+
+  public get conditionValuesControl(): AbstractControl {
+    return this.queryItemForm && this.queryItemForm.controls.conditionValues;
+  }
+
+  public get conditionTypeControl(): AbstractControl {
+    return this.queryItemForm && this.queryItemForm.controls.conditionType;
+  }
+
   public ngOnInit() {
-    if (this.queryItem.type === QueryItemType.Attribute) {
-      setTimeout(() => this.filterBuilderComponent.open());
+    if (this.queryItem.type === QueryItemType.Attribute || this.queryItem.type === QueryItemType.LinkAttribute) {
+      setTimeout(() => this.filterBuilderComponent && this.filterBuilderComponent.open());
     }
   }
 
   public onRemove() {
     this.remove.emit();
-  }
-
-  private get constraint(): Constraint {
-    if (this.queryItem.type === QueryItemType.Attribute || this.queryItem.type === QueryItemType.LinkAttribute) {
-      const attributeItem = this.queryItem as AttributeQueryItem | LinkAttributeQueryItem;
-      return attributeItem.attribute && attributeItem.attribute.constraint;
-    }
-    return null;
-  }
-
-  public onEnter() {
-    this.enter.emit();
   }
 
   public isFormValid(): boolean {
@@ -105,9 +100,13 @@ export class QueryItemComponent implements OnInit {
     }
   }
 
-  public onConditionChange(data: {condition: string; value: any}) {
+  public onConditionChange(data: {condition: QueryCondition; value: QueryConditionValue}) {
     if (this.queryItemForm) {
-      this.queryItemForm.patchValue({condition: data.condition, conditionValue: data.value});
+      this.queryItemForm.patchValue({
+        condition: data.condition,
+        conditionType: data.value.type,
+        conditionValues: data.value.values,
+      });
     }
   }
 }

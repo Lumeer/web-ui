@@ -22,10 +22,9 @@ import {Constraint} from '../../../core/model/constraint';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {DateTimeConstraintConfig} from '../../../core/model/data/constraint-config';
-import {ConditionType} from '../../../core/store/navigation/query/query';
+import {QueryCondition} from '../../../core/store/navigation/query/query';
 import {isNullOrUndefined, isNumeric, toNumber} from '../common.utils';
 import {convertToBig, parseMomentDate} from '../data.utils';
-import {DataValueInputType} from '../../../core/model/data-value';
 
 export function compareDataValues(a: any, b: any, constraint: Constraint, asc: boolean = true): number {
   const multiplier = asc ? 1 : -1;
@@ -101,17 +100,17 @@ function compareDurationValues(a: any, b: any, asc: boolean) {
   return compareAnyValues(a, b, asc);
 }
 
-export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType, constraint: Constraint): boolean {
+export function dataValuesMeetCondition(a: any, b: any, condition: QueryCondition, constraint: Constraint): boolean {
   if (constraint && constraint.type === ConstraintType.Boolean) {
     return dataValuesMeetConditionByBoolean(a, b, condition);
   }
 
   if ((isNullOrUndefined(a) || a === '') && (isNullOrUndefined(b) || b === '')) {
-    return condition === ConditionType.Equals;
+    return condition === QueryCondition.Equals;
   }
 
   if (isNullOrUndefined(a) || a === '' || (isNullOrUndefined(b) || b === '')) {
-    return condition === ConditionType.NotEquals;
+    return condition === QueryCondition.NotEquals;
   }
 
   if (!constraint) {
@@ -133,11 +132,11 @@ export function dataValuesMeetCondition(a: any, b: any, condition: ConditionType
   }
 }
 
-function dataValuesMeetConditionByBoolean(a: any, b: any, condition: ConditionType): boolean {
+function dataValuesMeetConditionByBoolean(a: any, b: any, condition: QueryCondition): boolean {
   switch (condition) {
-    case ConditionType.Equals:
+    case QueryCondition.Equals:
       return !!a === !!b;
-    case ConditionType.NotEquals:
+    case QueryCondition.NotEquals:
       return !a !== !b;
     default:
       return dataValuesMeetConditionByAny(a, b, condition);
@@ -148,23 +147,23 @@ function dataValuesMeetConditionByDateTime(
   a: any,
   b: any,
   config: DateTimeConstraintConfig,
-  condition: ConditionType
+  condition: QueryCondition
 ): boolean {
   const aMoment = parseMomentDateConstraintPriority(a, config);
   const bMoment = parseMomentDateConstraintPriority(b, config);
 
   switch (condition) {
-    case ConditionType.Equals:
+    case QueryCondition.Equals:
       return aMoment.isSame(bMoment);
-    case ConditionType.NotEquals:
+    case QueryCondition.NotEquals:
       return !aMoment.isSame(bMoment);
-    case ConditionType.GreaterThan:
+    case QueryCondition.GreaterThan:
       return aMoment.isAfter(bMoment);
-    case ConditionType.GreaterThanEquals:
+    case QueryCondition.GreaterThanEquals:
       return aMoment.isSameOrAfter(bMoment);
-    case ConditionType.LowerThan:
+    case QueryCondition.LowerThan:
       return aMoment.isBefore(bMoment);
-    case ConditionType.LowerThanEquals:
+    case QueryCondition.LowerThanEquals:
       return aMoment.isSameOrBefore(bMoment);
     default:
       return true;
@@ -179,37 +178,37 @@ function parseMomentDateConstraintPriority(value: any, config: DateTimeConstrain
   return momentDate;
 }
 
-function dataValuesMeetConditionByNumber(a: any, b: any, condition: ConditionType): boolean {
+function dataValuesMeetConditionByNumber(a: any, b: any, condition: QueryCondition): boolean {
   const aBig = convertToBig(a);
   const bBig = convertToBig(b);
 
   if (!aBig && !bBig) {
-    return condition === ConditionType.Equals;
+    return condition === QueryCondition.Equals;
   }
 
   if (!aBig || !bBig) {
-    return condition === ConditionType.NotEquals;
+    return condition === QueryCondition.NotEquals;
   }
 
   switch (condition) {
-    case ConditionType.Equals:
+    case QueryCondition.Equals:
       return aBig.eq(bBig);
-    case ConditionType.NotEquals:
+    case QueryCondition.NotEquals:
       return !aBig.eq(bBig);
-    case ConditionType.GreaterThan:
+    case QueryCondition.GreaterThan:
       return aBig.gt(bBig);
-    case ConditionType.GreaterThanEquals:
+    case QueryCondition.GreaterThanEquals:
       return aBig.gte(bBig);
-    case ConditionType.LowerThan:
+    case QueryCondition.LowerThan:
       return aBig.lt(bBig);
-    case ConditionType.LowerThanEquals:
+    case QueryCondition.LowerThanEquals:
       return aBig.lte(bBig);
     default:
       return true;
   }
 }
 
-function dataValuesMeetConditionDuration(a: any, b: any, condition: ConditionType) {
+function dataValuesMeetConditionDuration(a: any, b: any, condition: QueryCondition) {
   if (isNumeric(a) && isNumeric(b)) {
     return dataValuesMeetConditionByNumber(a, b, condition);
   }
@@ -217,32 +216,32 @@ function dataValuesMeetConditionDuration(a: any, b: any, condition: ConditionTyp
   return dataValuesMeetConditionByAny(a, b, condition);
 }
 
-function dataValuesMeetConditionByUser(a: any, b: any, condition: ConditionType): boolean {
+function dataValuesMeetConditionByUser(a: any, b: any, condition: QueryCondition): boolean {
   switch (condition) {
-    case ConditionType.Equals:
+    case QueryCondition.Equals:
       return a === b;
-    case ConditionType.NotEquals:
+    case QueryCondition.NotEquals:
       return a !== b;
     default:
       return true;
   }
 }
 
-function dataValuesMeetConditionByAny(a: any, b: any, condition: ConditionType, constraint?: Constraint): boolean {
+function dataValuesMeetConditionByAny(a: any, b: any, condition: QueryCondition, constraint?: Constraint): boolean {
   const aValue = (constraint || new UnknownConstraint()).createDataValue(a).format();
   const bValue = (constraint || new UnknownConstraint()).createDataValue(b).format();
   switch (condition) {
-    case ConditionType.Equals:
+    case QueryCondition.Equals:
       return aValue === bValue;
-    case ConditionType.NotEquals:
+    case QueryCondition.NotEquals:
       return aValue !== bValue;
-    case ConditionType.GreaterThan:
+    case QueryCondition.GreaterThan:
       return aValue > bValue;
-    case ConditionType.GreaterThanEquals:
+    case QueryCondition.GreaterThanEquals:
       return aValue >= bValue;
-    case ConditionType.LowerThan:
+    case QueryCondition.LowerThan:
       return aValue < bValue;
-    case ConditionType.LowerThanEquals:
+    case QueryCondition.LowerThanEquals:
       return aValue <= bValue;
     default:
       return true;

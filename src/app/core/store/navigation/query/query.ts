@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {ConstraintConditionType} from '../../../model/data/constraint-condition';
+
 export interface Query {
   stems?: QueryStem[];
   fulltexts?: string[];
@@ -33,9 +35,9 @@ export interface QueryStem {
 }
 
 export interface AttributeFilter {
-  condition: string;
+  condition: QueryCondition;
+  conditionValue: QueryConditionValue;
   attributeId: string;
-  value: any;
 }
 
 export interface CollectionAttributeFilter extends AttributeFilter {
@@ -44,15 +46,6 @@ export interface CollectionAttributeFilter extends AttributeFilter {
 
 export interface LinkAttributeFilter extends AttributeFilter {
   linkTypeId: string;
-}
-
-export enum ConditionType {
-  Equals,
-  NotEquals,
-  LowerThan,
-  LowerThanEquals,
-  GreaterThan,
-  GreaterThanEquals,
 }
 
 export enum QueryCondition {
@@ -73,4 +66,9 @@ export enum QueryCondition {
   EndsWith = 'endsWith',
   IsEmpty = 'empty',
   NotEmpty = 'notEmpty',
+}
+
+export interface QueryConditionValue {
+  type?: ConstraintConditionType;
+  values?: any[];
 }

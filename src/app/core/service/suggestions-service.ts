@@ -249,8 +249,21 @@ export class SuggestionsService {
 
       // settle for next round
       for (let i = 0; i < maxSuggestions - slicedSuggestions.length; i++) {
-        const key = maxCountMapKeys[i % maxCountMapKeys.length];
-        maxCountMap[key]++;
+        const startIndex = i % maxCountMapKeys.length;
+        const distributeIndexes = [...Array(suggestions.length).keys()].map(
+          index => (index + startIndex) % maxCountMapKeys.length
+        );
+        for (const distributeIndex of distributeIndexes) {
+          const suggestionType = maxCountMapKeys[distributeIndex];
+          const containsSuggestionWithType = skippedIndexes.some(
+            skippedIndex => suggestions[skippedIndex].suggestionType.toString() === suggestionType
+          );
+
+          if (containsSuggestionWithType) {
+            maxCountMap[suggestionType]++;
+            break;
+          }
+        }
       }
 
       indexes = skippedIndexes;
@@ -577,10 +590,10 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       return new LinkQueryItem((<LinkTypeSuggestion>suggestion).linkType);
     case SuggestionType.Attribute:
       const attributeSuggestion = <AttributeSuggestion>suggestion;
-      return new AttributeQueryItem(attributeSuggestion.collection, attributeSuggestion.attribute, '', '');
+      return new AttributeQueryItem(attributeSuggestion.collection, attributeSuggestion.attribute);
     case SuggestionType.LinkAttribute:
       const linkSuggestion = <LinkAttributeSuggestion>suggestion;
-      return new LinkAttributeQueryItem(linkSuggestion.linkType, linkSuggestion.attribute, '', '');
+      return new LinkAttributeQueryItem(linkSuggestion.linkType, linkSuggestion.attribute);
     case SuggestionType.FullText:
       return new FulltextQueryItem((<FullTextSuggestion>suggestion).text);
   }

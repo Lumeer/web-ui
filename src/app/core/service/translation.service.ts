@@ -23,6 +23,7 @@ import {DurationUnit} from '../model/data/constraint-config';
 import {QueryCondition} from '../store/navigation/query/query';
 import {Constraint} from '../model/constraint';
 import {ConstraintType} from '../model/data/constraint';
+import {ConstraintConditionType} from '../model/data/constraint-condition';
 
 @Injectable({
   providedIn: 'root',
@@ -45,7 +46,7 @@ export class TranslationService {
   }
 
   public translateQueryCondition(condition: QueryCondition, constraint: Constraint): string {
-    if (!condition) {
+    if (!constraint) {
       return this.translateConditionByText(condition);
     }
 
@@ -84,11 +85,11 @@ export class TranslationService {
       case QueryCondition.GreaterThan:
         return '>';
       case QueryCondition.GreaterThanEquals:
-        return '>=';
+        return '≥';
       case QueryCondition.LowerThan:
         return '<';
       case QueryCondition.LowerThanEquals:
-        return '<=';
+        return '≤';
     }
 
     return this.i18n(
@@ -110,5 +111,9 @@ export class TranslationService {
       },
       {condition}
     );
+  }
+
+  public translateConstraintConditionTypes(type: ConstraintConditionType): string {
+    return type;
   }
 }

@@ -17,9 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../../../core/store/navigation/query/query';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-export interface QueryConditionItem {
-  value: QueryCondition;
-  title: string;
+import {Attribute} from '../../../../../core/store/collections/collection';
+import {TranslationService} from '../../../../../core/service/translation.service';
+import {QueryCondition} from '../../../../../core/store/navigation/query/query';
+
+@Pipe({
+  name: 'translateCondition',
+})
+@Injectable()
+export class TranslateConditionPipe implements PipeTransform {
+  constructor(private translationService: TranslationService) {}
+
+  public transform(condition: QueryCondition, attribute: Attribute): string {
+    return this.translationService.translateQueryCondition(condition, attribute && attribute.constraint);
+  }
 }

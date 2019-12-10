@@ -21,7 +21,7 @@ import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from '../navigation/query/query';
-import {conditionFromString, isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
+import {isOnlyFulltextsQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
 import {Attribute, Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {LinkInstance} from '../link-instances/link.instance';
@@ -31,6 +31,7 @@ import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {findAttributeConstraint} from '../collections/collection.util';
 import {dataValuesMeetCondition} from '../../../shared/utils/data/data-compare.utils';
 import {mergeLinkInstances} from '../link-instances/link-instance.utils';
+import {UserConstraintCondition} from '../../model/data/constraint-condition';
 
 export function filterDocumentsAndLinksByQuery(
   documents: DocumentModel[],
@@ -107,11 +108,11 @@ function applyFunctionsToFilters(query: Query, currentUser: User): Query {
 }
 
 function applyFilterFunctions(filter: CollectionAttributeFilter, currentUser: User): any {
-  switch (filter.value) {
-    case 'userEmail()':
+  switch (filter.conditionValue.type) {
+    case UserConstraintCondition.CurrentUser:
       return currentUser && currentUser.email;
     default:
-      return filter.value;
+      return ((filter.conditionValue && filter.conditionValue.values) || [])[0];
   }
 }
 
@@ -431,10 +432,9 @@ function dataMeetFilter(
 ) {
   const constraint = findAttributeConstraint(attributes, filter.attributeId);
   const dataValue = data[filter.attributeId];
-  const filterValue = filter.value;
-  const conditionType = conditionFromString(filter.condition || '');
+  const filterValue = ((filter.conditionValue && filter.conditionValue.values) || [])[0];
 
-  return dataValuesMeetCondition(dataValue, filterValue, conditionType, constraint);
+  return dataValuesMeetCondition(dataValue, filterValue, filter.condition, constraint);
 }
 
 function paginate(documents: DocumentModel[], query: Query) {
