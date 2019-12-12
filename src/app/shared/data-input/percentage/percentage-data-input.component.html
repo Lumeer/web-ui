@@ -12,7 +12,7 @@
   <input #percentageInput
          percentage
          [title]="value | formatDataValue"
-         [value]="value | formatDataValue"
+         [value]="value | formatDataValue | removeLastCharacters:1"
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"

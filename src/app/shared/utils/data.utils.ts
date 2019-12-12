@@ -27,8 +27,8 @@ const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', '
 
 export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true) {
   return keepFormattingTags
-    ? (text || '').replace(new RegExp(`<(?!\/?(${formattingTags.join('|')})\s*\/?)[^>]+>`, 'g'), ' ')
-    : (text || '').replace(/<(?:.|\s)*?>/g, ' ');
+    ? (text || '').replace(new RegExp(`<(?!\/?(${formattingTags.join('|')})\s*\/?)[^>]+>`, 'g'), ' ').trim()
+    : (text || '').replace(/<(?:.|\s)*?>/g, ' ').trim();
 }
 
 export function parseDateTimeDataValue(value: any, expectedFormat?: string): Date {

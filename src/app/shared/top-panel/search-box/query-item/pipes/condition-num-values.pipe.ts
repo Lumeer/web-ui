@@ -17,37 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface QueryDto {
-  stems?: QueryStemDto[];
-  fulltexts?: string[];
-  page?: number;
-  pageSize?: number;
-}
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-export interface QueryStemDto {
-  collectionId: string;
-  linkTypeIds?: string[];
-  documentIds?: string[];
-  filters?: CollectionAttributeFilterDto[];
-  linkFilters?: LinkAttributeFilterDto[];
-}
+import {QueryCondition} from '../../../../../core/store/navigation/query/query';
+import {queryConditionNumInputs} from '../../../../../core/store/navigation/query/query.util';
 
-export interface ConditionValueDto {
-  type?: any;
-  value?: any;
-}
-
-export interface AttributeFilterDto {
-  operator: string;
-  attributeId: string;
-  value?: any;
-  conditionValues: ConditionValueDto[];
-}
-
-export interface CollectionAttributeFilterDto extends AttributeFilterDto {
-  collectionId: string;
-}
-
-export interface LinkAttributeFilterDto extends AttributeFilterDto {
-  linkTypeId: string;
+@Pipe({
+  name: 'conditionNumValues',
+})
+@Injectable()
+export class ConditionNumValuesPipe implements PipeTransform {
+  public transform(condition: QueryCondition): number {
+    return queryConditionNumInputs(condition);
+  }
 }

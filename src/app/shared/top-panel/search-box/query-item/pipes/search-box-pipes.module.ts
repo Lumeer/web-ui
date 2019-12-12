@@ -29,6 +29,8 @@ import {TranslateConditionPipe} from './translate-condition.pipe';
 import {TruncatePipe} from './truncate.pipe';
 import {QueryItemTextPipe} from './query-item-text.pipe';
 import {QueryItemAttributePipe} from './query-item-attribute.pipe';
+import {TranslateConditionValuePipe} from './translate-condition-value.pipe';
+import {ConditionNumValuesPipe} from './condition-num-values.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -42,6 +44,8 @@ import {QueryItemAttributePipe} from './query-item-attribute.pipe';
     QueryItemTextPipe,
     TruncatePipe,
     QueryItemAttributePipe,
+    TranslateConditionValuePipe,
+    ConditionNumValuesPipe,
   ],
   exports: [
     IsAttributeItemPipe,
@@ -53,6 +57,8 @@ import {QueryItemAttributePipe} from './query-item-attribute.pipe';
     QueryItemTextPipe,
     TruncatePipe,
     QueryItemAttributePipe,
+    TranslateConditionValuePipe,
+    ConditionNumValuesPipe,
   ],
 })
 export class SearchBoxPipesModule {}

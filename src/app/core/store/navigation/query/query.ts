@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintConditionType} from '../../../model/data/constraint-condition';
+import {ConstraintConditionValue} from '../../../model/data/constraint-condition';
 
 export interface Query {
   stems?: QueryStem[];
@@ -36,7 +36,7 @@ export interface QueryStem {
 
 export interface AttributeFilter {
   condition: QueryCondition;
-  conditionValue: QueryConditionValue;
+  conditionValues: QueryConditionValue[];
   attributeId: string;
 }
 
@@ -69,6 +69,6 @@ export enum QueryCondition {
 }
 
 export interface QueryConditionValue {
-  type?: ConstraintConditionType;
-  values?: any[];
+  type?: ConstraintConditionValue;
+  value?: any;
 }

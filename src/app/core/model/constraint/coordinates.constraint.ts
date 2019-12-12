@@ -34,13 +34,6 @@ export class CoordinatesConstraint implements Constraint {
   }
 
   public conditions(): QueryCondition[] {
-    return [
-      QueryCondition.Equals,
-      QueryCondition.NotEquals,
-      QueryCondition.Contains,
-      QueryCondition.NotContains,
-      QueryCondition.IsEmpty,
-      QueryCondition.NotEmpty,
-    ];
+    return [QueryCondition.Equals, QueryCondition.NotEquals, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
   }
 }

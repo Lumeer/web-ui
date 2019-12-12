@@ -25,7 +25,7 @@ export interface QueryItem {
   icons?: string[];
   colors?: string[];
   condition?: QueryCondition;
-  conditionValue?: QueryConditionValue;
+  conditionValues?: QueryConditionValue[];
 
   value: string;
   type: QueryItemType;

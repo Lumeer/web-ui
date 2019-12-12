@@ -109,7 +109,7 @@ export class NumberDataInputComponent implements OnChanges {
 
         this.preventSave = true;
         // needs to be executed after parent event handlers
-        setTimeout(() => input && this.save.emit(dataValue));
+        setTimeout(() => this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
         this.preventSave = true;
@@ -132,7 +132,9 @@ export class NumberDataInputComponent implements OnChanges {
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.numberInput.nativeElement.value);
-      this.save.emit(dataValue);
+      if (this.skipValidation || dataValue.isValid()) {
+        this.save.emit(dataValue);
+      }
     }
     this.dataBlur.emit();
   }

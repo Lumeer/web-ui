@@ -22,14 +22,18 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostBinding,
+  HostListener,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 
 import {QueryItem} from './model/query-item';
-import {AbstractControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
 import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
@@ -41,7 +45,7 @@ import {QueryCondition, QueryConditionValue} from '../../../../core/store/naviga
   styleUrls: ['./query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QueryItemComponent implements OnInit {
+export class QueryItemComponent implements OnInit, OnChanges {
   @Input()
   public queryItem: QueryItem;
 
@@ -60,6 +64,12 @@ export class QueryItemComponent implements OnInit {
   @Output()
   public change = new EventEmitter();
 
+  @Output()
+  public focusInput = new EventEmitter();
+
+  @HostBinding('class.cursor-pointer')
+  public cursorPointer: boolean;
+
   @ViewChild(FilterBuilderComponent, {static: false})
   public filterBuilderComponent: FilterBuilderComponent;
 
@@ -69,17 +79,29 @@ export class QueryItemComponent implements OnInit {
     return this.queryItemForm && this.queryItemForm.controls.condition;
   }
 
-  public get conditionValuesControl(): AbstractControl {
-    return this.queryItemForm && this.queryItemForm.controls.conditionValues;
+  public get conditionValuesControl(): FormArray {
+    return this.queryItemForm && (this.queryItemForm.controls.conditionValues as FormArray);
   }
 
-  public get conditionTypeControl(): AbstractControl {
-    return this.queryItemForm && this.queryItemForm.controls.conditionType;
+  public ngOnChanges(changes: SimpleChanges) {
+    this.cursorPointer = this.isAttributeType();
   }
 
   public ngOnInit() {
-    if (this.queryItem.type === QueryItemType.Attribute || this.queryItem.type === QueryItemType.LinkAttribute) {
+    if (this.isAttributeType()) {
       setTimeout(() => this.filterBuilderComponent && this.filterBuilderComponent.open());
+    }
+  }
+
+  private isAttributeType(): boolean {
+    const type = this.queryItem && this.queryItem.type;
+    return [QueryItemType.Attribute, QueryItemType.LinkAttribute].includes(type);
+  }
+
+  @HostListener('click')
+  public onClick() {
+    if (this.isAttributeType() && !this.filterBuilderComponent.isOpen()) {
+      this.filterBuilderComponent.open();
     }
   }
 
@@ -100,13 +122,16 @@ export class QueryItemComponent implements OnInit {
     }
   }
 
-  public onConditionChange(data: {condition: QueryCondition; value: QueryConditionValue}) {
+  public onConditionChange(data: {condition: QueryCondition; values: QueryConditionValue[]}) {
     if (this.queryItemForm) {
       this.queryItemForm.patchValue({
         condition: data.condition,
-        conditionType: data.value.type,
-        conditionValues: data.value.values,
+        conditionValues: data.values,
       });
     }
+  }
+
+  public onFinishBuilderEditing() {
+    this.focusInput.emit();
   }
 }

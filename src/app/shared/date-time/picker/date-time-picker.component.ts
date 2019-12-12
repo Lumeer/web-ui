@@ -154,12 +154,16 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     this.dateControl.setValue(date);
   }
 
-  public onCancel() {
+  public onCancel(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation();
+    }
     this.close();
     this.cancel.emit();
   }
 
-  public onSave() {
+  public onSave(event: MouseEvent) {
+    event.stopPropagation();
     this.close();
     this.save.emit(this.dateControl.value);
   }

@@ -15,6 +15,7 @@
                   [readonly]="!data.canManageConfig"
                   (change)="onQueryItemsChanged()"
                   (remove)="onRemoveQueryItem(itemIndex)"
+                  (focusInput)="searchInput.focusInput()"
                   class="d-inline-flex mt-1 ml-1 align-items-center">
       </query-item>
 

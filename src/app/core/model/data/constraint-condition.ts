@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type ConstraintConditionType = DateConstraintCondition | UserConstraintCondition;
+export type ConstraintConditionValue = DateConstraintConditionValue | UserConstraintConditionValue;
 
-export enum DateConstraintCondition {
+export enum DateConstraintConditionValue {
   Today = 'today',
   Yesterday = 'yesterday',
   Tomorrow = 'tomorrow',
@@ -27,8 +27,10 @@ export enum DateConstraintCondition {
   ThisWeek = 'thisWeek',
   LastMonth = 'lastMonth',
   LastWeek = 'lastWeek',
+  NextMonth = 'nextMonth',
+  NextWeek = 'nextWeek',
 }
 
-export enum UserConstraintCondition {
+export enum UserConstraintConditionValue {
   CurrentUser = 'currentUser',
 }

@@ -164,7 +164,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private resetSearchInput() {
-    this.text = ''; // formatSelectDataValue(this.value, this.constraintConfig);
+    this.text = '';
   }
 
   public onSelect(event: TypeaheadMatch) {

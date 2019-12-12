@@ -22,7 +22,11 @@ import {Attribute} from '../../../../core/store/collections/collection';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {TranslationService} from '../../../../core/service/translation.service';
 import {ConstraintType} from '../../../../core/model/data/constraint';
-import {DateConstraintCondition, UserConstraintCondition} from '../../../../core/model/data/constraint-condition';
+import {
+  DateConstraintConditionValue,
+  UserConstraintConditionValue,
+} from '../../../../core/model/data/constraint-condition';
+import {ConstraintConditionValueItem} from '../model/query-condition-item';
 
 @Pipe({
   name: 'queryConstraintConditions',
@@ -30,15 +34,21 @@ import {DateConstraintCondition, UserConstraintCondition} from '../../../../core
 export class QueryConstraintConditionsPipe implements PipeTransform {
   constructor(private translationService: TranslationService) {}
 
-  public transform(attribute: Attribute): string[] {
+  public transform(attribute: Attribute): ConstraintConditionValueItem[] {
     const constraint = attribute.constraint || new UnknownConstraint();
+    let values = [];
     switch (constraint.type) {
       case ConstraintType.User:
-        return Object.values(UserConstraintCondition);
+        values = Object.values(UserConstraintConditionValue);
+        break;
       case ConstraintType.DateTime:
-        return Object.values(DateConstraintCondition);
-      default:
-        return [];
+        values = Object.values(DateConstraintConditionValue);
+        break;
     }
+
+    return values.map(value => ({
+      value,
+      title: this.translationService.translateConstraintConditionValue(value, constraint),
+    }));
   }
 }

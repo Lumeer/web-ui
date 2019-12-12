@@ -54,10 +54,11 @@ export class TextDataValue implements DataValue {
     }
 
     if (this.config) {
-      if (this.config.minLength && ('' + this.value).length < this.config.minLength) {
+      const strippedValue = stripTextHtmlTags(this.value);
+      if (this.config.minLength && strippedValue.length < this.config.minLength) {
         return false;
       }
-      if (this.config.maxLength && ('' + this.value).length > this.config.maxLength) {
+      if (this.config.maxLength && strippedValue.length > this.config.maxLength) {
         return false;
       }
     }

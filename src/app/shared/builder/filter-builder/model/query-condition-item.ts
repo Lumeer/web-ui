@@ -18,8 +18,14 @@
  */
 
 import {QueryCondition} from '../../../../core/store/navigation/query/query';
+import {ConstraintConditionValue} from '../../../../core/model/data/constraint-condition';
 
 export interface QueryConditionItem {
   value: QueryCondition;
+  title: string;
+}
+
+export interface ConstraintConditionValueItem {
+  value: ConstraintConditionValue;
   title: string;
 }

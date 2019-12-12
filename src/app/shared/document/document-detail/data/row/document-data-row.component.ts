@@ -270,9 +270,6 @@ export class DocumentDataRowComponent implements DataRowComponent, OnChanges, Af
   private endValueEditing() {
     this.keyDataValue = this.createKeyDataValue();
     if (this.editing$.value) {
-      if (this.editedValue) {
-        this.onNewValue(this.editedValue);
-      }
       this.editing$.next(false);
     }
   }

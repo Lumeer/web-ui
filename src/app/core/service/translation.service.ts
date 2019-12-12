@@ -23,7 +23,11 @@ import {DurationUnit} from '../model/data/constraint-config';
 import {QueryCondition} from '../store/navigation/query/query';
 import {Constraint} from '../model/constraint';
 import {ConstraintType} from '../model/data/constraint';
-import {ConstraintConditionType} from '../model/data/constraint-condition';
+import {
+  ConstraintConditionValue,
+  DateConstraintConditionValue,
+  UserConstraintConditionValue,
+} from '../model/data/constraint-condition';
 
 @Injectable({
   providedIn: 'root',
@@ -70,7 +74,7 @@ export class TranslationService {
       {
         id: 'query.filter.condition.constraint.text',
         value:
-          '{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends Width} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty}}',
+          '{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty}}',
       },
       {condition}
     );
@@ -113,7 +117,39 @@ export class TranslationService {
     );
   }
 
-  public translateConstraintConditionTypes(type: ConstraintConditionType): string {
-    return type;
+  public translateConstraintConditionValue(type: ConstraintConditionValue, constraint: Constraint): string {
+    if (!constraint) {
+      return null;
+    }
+
+    switch (constraint.type) {
+      case ConstraintType.User:
+        return this.translateUserConstraintConditionValue(type as UserConstraintConditionValue);
+      case ConstraintType.DateTime:
+        return this.translateDateConstraintConditionValue(type as DateConstraintConditionValue);
+      default:
+        return null;
+    }
+  }
+
+  private translateDateConstraintConditionValue(condition: DateConstraintConditionValue): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.value.constraint.date',
+        value:
+          '{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}',
+      },
+      {condition}
+    );
+  }
+
+  private translateUserConstraintConditionValue(type: UserConstraintConditionValue): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.value.constraint.user',
+        value: '{type, select, currentUser {Current User}}',
+      },
+      {type}
+    );
   }
 }

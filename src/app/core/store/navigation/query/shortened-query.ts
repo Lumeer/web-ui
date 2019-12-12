@@ -26,7 +26,7 @@ import {
   QueryConditionValue,
   QueryStem,
 } from './query';
-import {ConstraintConditionType} from '../../../model/data/constraint-condition';
+import {ConstraintConditionValue} from '../../../model/data/constraint-condition';
 
 export interface ShortenedQuery {
   s: ShortenedQueryStem[]; // stems
@@ -46,12 +46,12 @@ export interface ShortenedQueryStem {
 export interface ShortenedAttributeFilter {
   e: string; // condition (expression)
   a: string; // attributeId
-  v: ShortenedConditionValue; // value
+  v: ShortenedConditionValue[]; // value
 }
 
 export interface ShortenedConditionValue {
   t: string; // type
-  v: any[]; // values
+  v: any; // value
 }
 
 export interface ShortenedCollectionAttributeFilter extends ShortenedAttributeFilter {
@@ -95,12 +95,12 @@ function shortenAttributeFilter(filter: AttributeFilter): ShortenedAttributeFilt
   return {
     e: filter.condition,
     a: filter.attributeId,
-    v: shortenConditionValue(filter.conditionValue),
+    v: (filter.conditionValues || []).map(v => shortenConditionValue(v)),
   };
 }
 
 function shortenConditionValue(value: QueryConditionValue): ShortenedConditionValue {
-  return {t: value.type, v: value.values};
+  return {t: value.type, v: value.value};
 }
 
 export function prolongQuery(query: ShortenedQuery): Query {
@@ -136,13 +136,13 @@ function prolongAttributeFilter(filter: ShortenedAttributeFilter): AttributeFilt
   return {
     condition: <QueryCondition>filter.e,
     attributeId: filter.a,
-    conditionValue: prolongConditionValue(filter.v),
+    conditionValues: (filter.v || []).map(value => prolongConditionValue(value)),
   };
 }
 
 function prolongConditionValue(filter: ShortenedConditionValue): QueryConditionValue {
   return {
-    type: <ConstraintConditionType>filter.t,
-    values: filter.v,
+    type: <ConstraintConditionValue>filter.t,
+    value: filter.v,
   };
 }

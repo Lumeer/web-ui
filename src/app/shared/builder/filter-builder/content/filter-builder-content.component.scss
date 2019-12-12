@@ -1,9 +1,17 @@
 @import '../../../../../styles/variables';
 
 .data-input-border {
-  max-width: 150px;
+  max-width: 120px;
   border: 1px solid $gray-400;
   border-radius: 0.25rem;
+}
+
+.data-input-padding {
+  padding: 0.25rem 0.5rem;
+}
+
+.data-input {
+  min-height: 30px;
 }
 
 .data-input::ng-deep > boolean-data-input {

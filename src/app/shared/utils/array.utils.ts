@@ -86,3 +86,8 @@ export function flattenMatrix<T>(array: T[][]): T[] {
     return arr;
   }, []);
 }
+
+export function createRange(from: number, to: number): number[] {
+  const range = [...Array(to - from).keys()];
+  return range.map(r => r + from);
+}

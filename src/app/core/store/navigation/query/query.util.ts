@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AbstractControl, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryCondition, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
-import {isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
+import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Collection} from '../../collections/collection';
@@ -53,10 +53,19 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
       return new FormGroup({
         text: new FormControl(queryItem.text, Validators.required),
         condition: new FormControl(queryCondition(queryItem)),
-        conditionType: new FormControl(queryItem.conditionValue && queryItem.conditionValue.type),
-        conditionValues: new FormControl(queryConditionValues(queryItem)),
+        conditionValues: new FormArray(attributeConditionValuesForms(queryItem)),
       });
   }
+}
+
+function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
+  return createRange(0, 2).map(index => {
+    const conditionValue = queryItem.conditionValues && queryItem.conditionValues[index];
+    return new FormGroup({
+      type: new FormControl(conditionValue && conditionValue.type),
+      value: new FormControl(conditionValue ? conditionValue.value : queryConditionInitialValue(queryItem)),
+    });
+  });
 }
 
 function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
@@ -88,17 +97,14 @@ function queryCondition(queryItem: QueryItem): QueryCondition {
   return constraint.conditions()[0];
 }
 
-function queryConditionValues(queryItem: QueryItem): any[] {
-  if (queryItem.conditionValue) {
-    return queryItem.conditionValue.values || [];
-  }
+function queryConditionInitialValue(queryItem: QueryItem): any {
   const attribute = (<AttributeQueryItem>queryItem).attribute || (<LinkAttributeQueryItem>queryItem).attribute;
   const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
   switch (constraint.type) {
     case ConstraintType.Boolean:
-      return [true];
+      return true;
     default:
-      return [];
+      return null;
   }
 }
 

@@ -117,7 +117,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.syncWidth();
   }
 
-  public checkClickOutside(event) {
+  public checkClickOutside(event: MouseEvent) {
     if (
       this.overlayRef &&
       this.overlayRef.overlayElement &&

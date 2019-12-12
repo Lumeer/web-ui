@@ -162,9 +162,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public endRowEditing() {
-    if (this.editedValue && isNotNullOrUndefined(this.columnEditing$.value)) {
-      this.onNewValue(this.columnEditing$.value, this.editedValue);
-    }
     this.suggesting$.next(null);
     this.columnEditing$.next(null);
   }

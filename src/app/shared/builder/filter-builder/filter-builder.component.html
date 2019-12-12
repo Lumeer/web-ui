@@ -6,8 +6,10 @@
   <filter-builder-content class="card d-flex flex-row flex-nowrap p-2"
                           [attribute]="attribute"
                           [selectedCondition]="condition"
-                          [selectedValue]="conditionValue"
-                          (valueChange)="onValueChange($event)">
+                          [selectedValues]="conditionValues"
+                          [constraintData]="constraintData$ | async"
+                          (valueChange)="onValueChange($event)"
+                          (finishEditing)="onFinishEditing()">
   </filter-builder-content>
 
 </dropdown>

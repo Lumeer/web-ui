@@ -26,8 +26,6 @@ import {
   ViewChild,
   Output,
   EventEmitter,
-  OnChanges,
-  SimpleChanges,
 } from '@angular/core';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
@@ -36,14 +34,13 @@ import {ConstraintData} from '../../../core/model/data/constraint';
 import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {Observable} from 'rxjs';
 import {QueryCondition, QueryConditionValue} from '../../../core/store/navigation/query/query';
-import {ConstraintConditionType} from '../../../core/model/data/constraint-condition';
 
 @Component({
   selector: 'filter-builder',
   templateUrl: './filter-builder.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FilterBuilderComponent implements OnInit, OnChanges {
+export class FilterBuilderComponent implements OnInit {
   @Input()
   public origin: ElementRef | HTMLElement;
 
@@ -51,16 +48,16 @@ export class FilterBuilderComponent implements OnInit, OnChanges {
   public attribute: Attribute;
 
   @Input()
-  public conditionType: ConstraintConditionType;
-
-  @Input()
-  public conditionValues: any[];
+  public conditionValues: QueryConditionValue[];
 
   @Input()
   public condition: QueryCondition;
 
   @Output()
-  public valueChange = new EventEmitter<{condition: QueryCondition; value: QueryConditionValue}>();
+  public valueChange = new EventEmitter<{condition: QueryCondition; values: QueryConditionValue[]}>();
+
+  @Output()
+  public finishEditing = new EventEmitter();
 
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
@@ -69,18 +66,14 @@ export class FilterBuilderComponent implements OnInit, OnChanges {
 
   public constraintData$: Observable<ConstraintData>;
 
-  public conditionValue: QueryConditionValue;
-
   constructor(private constraintDataService: ConstraintDataService) {}
 
   public ngOnInit() {
     this.constraintData$ = this.constraintDataService.observeConstraintData();
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.conditionType || changes.conditionValues) {
-      this.conditionValue = {type: this.conditionType, values: this.conditionValues};
-    }
+  public isOpen(): boolean {
+    return this.dropdown && this.dropdown.isOpen();
   }
 
   public open() {
@@ -95,8 +88,13 @@ export class FilterBuilderComponent implements OnInit, OnChanges {
     }
   }
 
-  public onValueChange(data: {condition: QueryCondition; value: QueryConditionValue}) {
+  public onValueChange(data: {condition: QueryCondition; values: QueryConditionValue[]}) {
     this.valueChange.emit(data);
     setTimeout(() => this.dropdown.updatePosition());
+  }
+
+  public onFinishEditing() {
+    this.close();
+    this.finishEditing.emit();
   }
 }

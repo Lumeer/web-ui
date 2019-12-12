@@ -21,7 +21,7 @@ import {CollectionAttributeFilter, Query, QueryCondition} from '../navigation/qu
 import {getQueryFiltersForCollection} from '../navigation/query/query.util';
 import {User} from '../users/user';
 import {DocumentData, DocumentModel} from './document.model';
-import {UserConstraintCondition} from '../../model/data/constraint-condition';
+import {UserConstraintConditionValue} from '../../model/data/constraint-condition';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -80,7 +80,7 @@ export function generateDocumentData(
   (collectionFilters || [])
     .filter(filter => filter.collectionId === collection.id)
     .forEach(filter => {
-      const conditionValue = ((filter.conditionValue && filter.conditionValue.values) || [])[0];
+      const conditionValue = filter.conditionValues && filter.conditionValues[0].value;
       const isNumber = !isNaN(Number(conditionValue));
       const value = isNumber ? +conditionValue : conditionValue.toString();
 
@@ -98,7 +98,11 @@ export function generateDocumentData(
         case QueryCondition.LowerThanEquals:
         case QueryCondition.Equals:
         default:
-          if (currentUser && filter.conditionValue.type === UserConstraintCondition.CurrentUser) {
+          if (
+            currentUser &&
+            filter.conditionValues &&
+            filter.conditionValues[0].type === UserConstraintConditionValue.CurrentUser
+          ) {
             data[filter.attributeId] = currentUser.email;
           } else {
             data[filter.attributeId] = conditionValue;

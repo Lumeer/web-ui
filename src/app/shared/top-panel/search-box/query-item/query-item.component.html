@@ -21,15 +21,20 @@
   </span>
 
   <div class="mr-1 d-inline-flex flex-grow-1 text-truncate text-nowrap"
-       *ngIf="queryItem | isAttributeItem">
-    <span>{{conditionControl?.value | translateCondition:(queryItem | queryItemAttribute)}}</span>
-    <ng-container *ngIf="!conditionTypeControl?.value">
-      <div class="d-inline-block ml-2"
-           *ngFor="let value of conditionValuesControl?.value"
-           [innerHTML]="(value | dataValueHtml:(queryItem | queryItemAttribute)?.constraint:constraintData) | safeHtml">
-      </div>
+       *ngIf="queryItem | queryItemAttribute as attribute">
+    <span class="font-italic">{{conditionControl?.value | translateCondition:(queryItem | queryItemAttribute)}}</span>
+    <ng-container *ngFor="let control of conditionValuesControl.controls; let index = index">
+      <ng-container
+        *ngIf="index < (conditionControl?.value | conditionNumValues) && control.get('type') as typeControl">
+        <span *ngIf="index > 0">,&nbsp;</span>
+        <div class="d-inline-flex align-items-center"
+             *ngIf="!typeControl.value" [class.ml-1]="index === 0"
+             [innerHTML]="(control.get('value').value | dataValueHtml:attribute.constraint:constraintData) | safeHtml">
+        </div>
+        <span class="ml-1" [class.ml-1]="index === 0"
+              *ngIf="typeControl.value">{{typeControl.value | translateConditionValue:attribute}}</span>
+      </ng-container>
     </ng-container>
-    <span class="ml-2" *ngIf="conditionTypeControl?.value">{{conditionTypeControl?.value}}</span>
   </div>
 
   <i *ngIf="!readonly"
@@ -43,7 +48,7 @@
                 [attribute]="queryItem | queryItemAttribute"
                 [origin]="hostElement"
                 [condition]="conditionControl?.value"
-                [conditionType]="conditionTypeControl?.value"
                 [conditionValues]="conditionValuesControl?.value"
-                (valueChange)="onConditionChange($event)">
+                (valueChange)="onConditionChange($event)"
+                (finishEditing)="onFinishBuilderEditing()">
 </filter-builder>

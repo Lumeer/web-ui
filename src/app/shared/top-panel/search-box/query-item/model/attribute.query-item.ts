@@ -25,6 +25,7 @@ import {
   QueryCondition,
   QueryConditionValue,
 } from '../../../../../core/store/navigation/query/query';
+import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
@@ -33,7 +34,7 @@ export class AttributeQueryItem implements QueryItem {
     public collection: Collection,
     public attribute: Attribute,
     public condition?: QueryCondition,
-    public conditionValue?: QueryConditionValue
+    public conditionValues?: QueryConditionValue[]
   ) {}
 
   public get text() {
@@ -41,7 +42,14 @@ export class AttributeQueryItem implements QueryItem {
   }
 
   public get value() {
-    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
+    return `${this.collection.id}:${this.attribute.id}:${this.condition || ''}:${this.conditionValuesString()}`;
+  }
+
+  private conditionValuesString(): string {
+    return (this.conditionValues || [])
+      .map(item => item.type || item.value)
+      .filter(item => isNotNullOrUndefined(item))
+      .join(':');
   }
 
   public get icons(): string[] {
@@ -57,7 +65,7 @@ export class AttributeQueryItem implements QueryItem {
       collectionId: this.collection.id,
       attributeId: this.attribute.id,
       condition: this.condition,
-      conditionValue: this.conditionValue,
+      conditionValues: this.conditionValues,
     };
   }
 }

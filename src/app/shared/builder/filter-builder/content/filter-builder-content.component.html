@@ -2,29 +2,34 @@
 
   <div class="text-muted px-2">Choose Condition</div>
   <div *ngFor="let item of attribute | queryConditionItems; let first = first"
-       class="px-2 py-1 dropdown-item cursor-pointer"
+       class="px-2 py-1 dropdown-item cursor-pointer font-italic"
        [class.mt-2]="first"
        [class.active]="item.value === selectedCondition"
        (click)="onConditionSelect(item)">{{item.title}}</div>
 </div>
 
-<div class="d-flex flex-column ml-4" *ngIf="numInputs > 0">
+<div class="d-flex flex-column ml-3" *ngFor="let index of ngForIndexes">
   <div class="text-muted px-2">Choose Value</div>
-  <data-input class="data-input px-2 py-1 mt-2"
+  <data-input class="data-input mt-2"
               [class.data-input-border]="attribute.constraint?.type !== constraintType.Boolean"
+              [class.data-input-padding]="attribute.constraint?.type !== constraintType.Color"
               [constraint]="attribute.constraint"
-              [dataValue]="dataValue"
+              [dataValue]="dataValues[index]"
+              [configuration]="configuration"
               [focus]="true"
-              [readonly]="!((editing$ | async) || attribute?.constraint?.type === constraintType.Boolean)"
-              (cancel)="onInputCancel()"
-              (save)="onInputSave($event)"
-              (dblclick)="onInputDoubleClick()">
+              [readonly]="!(((editing$ | async) === index) || attribute?.constraint?.type === constraintType.Boolean)"
+              (cancel)="onInputCancel(index)"
+              (save)="onInputSave($event, index)"
+              (keydown.enter)="onEnterOrTabKeyDown($event, index)"
+              (keydown.tab)="onEnterOrTabKeyDown($event, index)"
+              (valueChange)="onValueChange($event, index)"
+              (dblclick)="onInputDoubleClick(index)">
   </data-input>
   <div *ngFor="let item of attribute | queryConstraintConditions; let first = first"
        class="px-2 py-1 dropdown-item cursor-pointer"
        [class.mt-2]="first"
-       [class.active]="selectedValue?.type === item"
-       (click)="onConditionValueSelect(item)">
-    {{item}}
+       [class.active]="selectedValues?.length && item.value === selectedValues[index].type"
+       (click)="onConditionValueSelect(item, index)">
+    {{item.title}}
   </div>
 </div>

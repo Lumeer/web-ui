@@ -17,37 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface QueryDto {
-  stems?: QueryStemDto[];
-  fulltexts?: string[];
-  page?: number;
-  pageSize?: number;
-}
+import {Pipe, PipeTransform} from '@angular/core';
 
-export interface QueryStemDto {
-  collectionId: string;
-  linkTypeIds?: string[];
-  documentIds?: string[];
-  filters?: CollectionAttributeFilterDto[];
-  linkFilters?: LinkAttributeFilterDto[];
-}
-
-export interface ConditionValueDto {
-  type?: any;
-  value?: any;
-}
-
-export interface AttributeFilterDto {
-  operator: string;
-  attributeId: string;
-  value?: any;
-  conditionValues: ConditionValueDto[];
-}
-
-export interface CollectionAttributeFilterDto extends AttributeFilterDto {
-  collectionId: string;
-}
-
-export interface LinkAttributeFilterDto extends AttributeFilterDto {
-  linkTypeId: string;
+@Pipe({
+  name: 'removeLastCharacters',
+})
+export class RemoveLastCharactersPipe implements PipeTransform {
+  public transform(value: string, numCharacters: number): string {
+    if (!value || !numCharacters) {
+      return value;
+    }
+    return value.substring(0, value.length - numCharacters);
+  }
 }

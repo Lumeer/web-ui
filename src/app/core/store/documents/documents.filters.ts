@@ -31,7 +31,7 @@ import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {findAttributeConstraint} from '../collections/collection.util';
 import {dataValuesMeetCondition} from '../../../shared/utils/data/data-compare.utils';
 import {mergeLinkInstances} from '../link-instances/link-instance.utils';
-import {UserConstraintCondition} from '../../model/data/constraint-condition';
+import {UserConstraintConditionValue} from '../../model/data/constraint-condition';
 
 export function filterDocumentsAndLinksByQuery(
   documents: DocumentModel[],
@@ -108,11 +108,12 @@ function applyFunctionsToFilters(query: Query, currentUser: User): Query {
 }
 
 function applyFilterFunctions(filter: CollectionAttributeFilter, currentUser: User): any {
-  switch (filter.conditionValue.type) {
-    case UserConstraintCondition.CurrentUser:
+  const type = filter.conditionValues && filter.conditionValues[0] && filter.conditionValues[0].type;
+  switch (type) {
+    case UserConstraintConditionValue.CurrentUser:
       return currentUser && currentUser.email;
     default:
-      return ((filter.conditionValue && filter.conditionValue.values) || [])[0];
+      return filter.conditionValues && filter.conditionValues[0].value;
   }
 }
 
@@ -432,7 +433,7 @@ function dataMeetFilter(
 ) {
   const constraint = findAttributeConstraint(attributes, filter.attributeId);
   const dataValue = data[filter.attributeId];
-  const filterValue = ((filter.conditionValue && filter.conditionValue.values) || [])[0];
+  const filterValue = filter.conditionValues && filter.conditionValues[0].value;
 
   return dataValuesMeetCondition(dataValue, filterValue, filter.condition, constraint);
 }

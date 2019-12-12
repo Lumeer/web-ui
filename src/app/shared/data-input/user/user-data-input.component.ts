@@ -35,6 +35,7 @@ import {UserDataValue} from '../../../core/model/data-value/user.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {User} from '../../../core/store/users/user';
+import {DataValueInputType} from '../../../core/model/data-value';
 
 export const USER_AVATAR_SIZE = 22;
 
@@ -80,16 +81,19 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public name: string = '';
   public users: User[];
 
-  private preventSave: boolean;
+  private setFocus: boolean;
   private triggerInput: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => this.setFocusToInput());
-      this.triggerInput = true;
+      this.resetSearchInput();
+      this.setFocus = true;
     }
     if (changes.value && this.value) {
-      this.resetSearchInput();
+      if (this.value.inputType === DataValueInputType.Typed) {
+        this.name = this.value.format();
+        this.triggerInput = true;
+      }
     }
     if (changes.value) {
       this.users = this.bindUsers();
@@ -104,6 +108,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
     if (this.triggerInput) {
       this.dispatchInputEvent();
       this.triggerInput = false;
@@ -129,31 +137,16 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     }
   }
 
-  public onBlur() {
-    if (this.preventSave) {
-      this.preventSave = false;
-      this.dataBlur.emit();
-    } else {
-      // needs to be executed after parent event handlers
-      setTimeout(() => {
-        this.saveValue();
-        this.dataBlur.emit();
-      }, 200);
-    }
-  }
-
   @HostListener('keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        this.preventSave = true;
         // needs to be executed after parent event handlers
         setTimeout(() => this.saveValue());
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
         this.resetSearchInput();
         this.cancel.emit();
         return;
@@ -166,21 +159,20 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     if (user || !this.name) {
       const dataValue = this.value.copy(user ? user.email : '');
       this.save.emit(dataValue);
-    } else if (this.skipValidation || (this.value.config && this.value.config.externalUsers)) {
+    } else if (this.name && (this.skipValidation || (this.value.config && this.value.config.externalUsers))) {
       const dataValue = this.value.parseInput(this.name);
       this.save.emit(dataValue);
     } else {
-      this.resetSearchInput();
       this.cancel.emit();
     }
+    this.resetSearchInput();
   }
 
   private resetSearchInput() {
-    this.name = this.value.format();
+    this.name = '';
   }
 
   public onSelect(event: TypeaheadMatch) {
-    this.preventSave = true;
     const dataValue = this.value.copy(event.item.email);
     this.save.emit(dataValue);
   }
@@ -188,5 +180,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public onInputChange() {
     const dataValue = this.value.parseInput(this.name);
     this.valueChange.emit(dataValue);
+  }
+
+  public onBlur() {
+    this.cancel.emit();
+    this.dataBlur.emit();
   }
 }

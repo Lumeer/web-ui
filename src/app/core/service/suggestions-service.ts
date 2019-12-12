@@ -36,7 +36,7 @@ import {CollectionQueryItem} from '../../shared/top-panel/search-box/query-item/
 import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/link.query-item';
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
-import {arrayIntersection, flattenMatrix} from '../../shared/utils/array.utils';
+import {arrayIntersection, createRange, flattenMatrix} from '../../shared/utils/array.utils';
 import {getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
@@ -230,7 +230,7 @@ export class SuggestionsService {
     const maxCountMapKeys = Object.keys(maxCountMap);
     const slicedSuggestions: ObjectSuggestion[] = [];
 
-    let indexes = [...Array(suggestions.length).keys()];
+    let indexes = createRange(0, suggestions.length);
     while (slicedSuggestions.length < maxSuggestions && indexes.length > 0) {
       const skippedIndexes = [];
 
@@ -250,7 +250,7 @@ export class SuggestionsService {
       // settle for next round
       for (let i = 0; i < maxSuggestions - slicedSuggestions.length; i++) {
         const startIndex = i % maxCountMapKeys.length;
-        const distributeIndexes = [...Array(suggestions.length).keys()].map(
+        const distributeIndexes = createRange(0, maxCountMapKeys.length).map(
           index => (index + startIndex) % maxCountMapKeys.length
         );
         for (const distributeIndex of distributeIndexes) {
