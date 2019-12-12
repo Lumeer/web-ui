@@ -79,10 +79,10 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
+  public onFocus = new EventEmitter<any>();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
+  public enterInvalid = new EventEmitter();
 
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
@@ -163,7 +163,4 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     this.onFocus.emit($event);
   }
 
-  public onDataBlur() {
-    this.dataBlur.emit();
-  }
 }

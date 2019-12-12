@@ -19,6 +19,7 @@
                 (dblclick)="onDataInputDblClick(index, $event)"
                 (cancel)="onDataInputCancel(index)"
                 (click)="onDataInputFocus(index)"
+                (enterInvalid)="onEnterInvalid()"
                 (clickOutside)="onDataInputCancel(index)">
     </data-input>
 
@@ -35,7 +36,8 @@
                 (dblclick)="onDataInputDblClick(index, $event)"
                 (cancel)="onDataInputCancel(index)"
                 (click)="onDataInputFocus(index)"
-                (clickOutside)="onDataInputCancel(index)">
+                (clickOutside)="onDataInputCancel(index)"
+                (enterInvalid)="onEnterInvalid()">
     </data-input>
   </td>
   <td class="fixed-column border-0" *ngIf="permissions?.read && permissions?.writeWithView">
@@ -52,7 +54,7 @@
   </td>
 
   <document-hints
-    *ngIf="!(data.columnEditing | isNullOrUndefined) && columns[data.columnEditing].collectionId"
+    *ngIf="!(data.columnEditing | isNullOrUndefined) && columns[data.columnEditing].collectionId && (columns[data.columnEditing].attribute | canShowAttributeHints)"
     [attributeId]="columns[data.columnEditing]?.attribute?.id"
     [correlationId]="row.correlationId"
     [dataValue]="suggesting$ | async"

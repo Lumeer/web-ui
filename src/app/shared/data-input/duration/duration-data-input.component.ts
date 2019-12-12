@@ -62,10 +62,10 @@ export class DurationDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
+  public onFocus = new EventEmitter<any>();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
+  public enterInvalid = new EventEmitter();
 
   @ViewChild('durationInput', {static: false})
   public durationInput: ElementRef<HTMLInputElement>;
@@ -98,18 +98,25 @@ export class DurationDataInputComponent implements OnChanges {
         if (!this.skipValidation && input && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           event.preventDefault();
+          this.enterInvalid.emit();
           return;
         }
 
-        this.preventSave = true;
+        this.preventSaveAndBlur();
         // needs to be executed after parent event handlers
         setTimeout(() => input && this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
-        this.durationInput && (this.durationInput.nativeElement.value = this.value.format());
+        this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private preventSaveAndBlur() {
+    if (this.durationInput) {
+      this.preventSave = true;
+      this.durationInput.nativeElement.blur();
     }
   }
 
@@ -123,12 +130,14 @@ export class DurationDataInputComponent implements OnChanges {
 
   public onBlur() {
     if (this.preventSave) {
-      this.cancel.emit();
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.durationInput.nativeElement.value);
-      this.save.emit(dataValue);
+      if (this.skipValidation || dataValue.isValid()) {
+        this.save.emit(dataValue);
+      } else {
+        this.cancel.emit();
+      }
     }
-    this.dataBlur.emit();
   }
 }

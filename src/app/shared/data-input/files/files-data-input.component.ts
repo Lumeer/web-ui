@@ -22,12 +22,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
+  EventEmitter, HostListener,
   Input,
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
+  SimpleChanges, ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -40,6 +40,7 @@ import {FileAttachment, FileAttachmentType} from '../../../core/store/file-attac
 import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-attachments.action';
 import {selectFileAttachmentsByDataCursor} from '../../../core/store/file-attachments/file-attachments.state';
 import {DataCursor, isDataCursorEntityInitialized} from '../data-cursor';
+import {KeyCode} from '../../key-code';
 
 @Component({
   selector: 'files-data-input',
@@ -69,6 +70,9 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   @Output()
   public onFocus = new EventEmitter<any>();
 
+  @ViewChild('hiddenInput', {static: false})
+  public hiddenInput: ElementRef<HTMLInputElement>;
+
   public fileAttachments$: Observable<FileAttachment[]>;
 
   public uploadProgress$ = new BehaviorSubject<number>(null);
@@ -83,7 +87,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<{}>
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.fileAttachments$ = this.cursor$.pipe(
@@ -107,6 +112,13 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
         !isDataCursorEntityInitialized(changes.cursor.previousValue)
       ) {
         this.createFile(this.preparedFile);
+      }
+    }
+    if (changes.readonly) {
+      if (this.readonly) {
+        setTimeout(() => this.hiddenInput.nativeElement.blur());
+      } else {
+        setTimeout(() => this.hiddenInput.nativeElement.focus());
       }
     }
   }
@@ -224,5 +236,25 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
 
   public onCancel() {
     this.cancel.emit();
+  }
+
+  @HostListener('click', ['$event'])
+  public onClick(event: KeyboardEvent) {
+    if (!this.readonly) {
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      event.preventDefault();
+      this.hiddenInput.nativeElement.focus();
+    }
+  }
+
+  @HostListener('keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    switch (event.code) {
+      case KeyCode.Escape:
+        console.log('cancel');
+        this.cancel.emit();
+        return;
+    }
   }
 }

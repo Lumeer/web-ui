@@ -187,10 +187,12 @@ export class DocumentDataRowComponent implements DataRowComponent, OnChanges, Af
   }
 
   public onDataInputCancel() {
+    this.dataValue = this.createDataValue();
     this.resetFocusAndEdit.emit(1);
   }
 
   public onKeyInputCancel() {
+    this.keyDataValue = this.createKeyDataValue();
     this.resetFocusAndEdit.emit(0);
   }
 
@@ -268,14 +270,12 @@ export class DocumentDataRowComponent implements DataRowComponent, OnChanges, Af
   }
 
   private endValueEditing() {
-    this.keyDataValue = this.createKeyDataValue();
     if (this.editing$.value) {
       this.editing$.next(false);
     }
   }
 
   private endKeyEditing() {
-    this.dataValue = this.createDataValue();
     if (this.keyEditing$.value) {
       this.keyEditing$.next(false);
     }

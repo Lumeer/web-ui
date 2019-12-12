@@ -75,7 +75,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public documentId: string;
 
   @Input()
-  public attributeEditing: {documentId?: string; attributeId?: string};
+  public attributeEditing: { documentId?: string; attributeId?: string };
 
   @Output()
   public onFocus = new EventEmitter<number>();
@@ -87,7 +87,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public resetFocusAndEdit = new EventEmitter<number>();
 
   @Output()
-  public newValue = new EventEmitter<{column: number; value: any}>();
+  public newValue = new EventEmitter<{ column: number; value: any }>();
 
   @Output()
   public columnFocus = new EventEmitter<number>();
@@ -102,7 +102,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public detail = new EventEmitter();
 
   @Output()
-  public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
+  public newLink = new EventEmitter<{ column: LinkColumn; value: any; correlationId: string }>();
 
   @ViewChild(DocumentHintsComponent, {static: false})
   public suggestions: DocumentHintsComponent;
@@ -116,10 +116,12 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public editedValue: DataValue;
   public subscriptions = new Subscription();
 
-  private savingDisabled = false;
+  private preventSave = false;
+  private preventSaveTimer: number;
   private creatingNewRow = false;
 
-  constructor(public element: ElementRef) {}
+  constructor(public element: ElementRef) {
+  }
 
   public ngOnInit() {
     this.subscriptions.add(
@@ -240,8 +242,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   private saveData(column: number, dataValue: DataValue) {
-    if (this.savingDisabled) {
-      this.savingDisabled = false;
+    if (this.preventSave) {
+      this.preventSave = false;
       return;
     }
 
@@ -324,6 +326,21 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onUseHint() {
-    this.savingDisabled = true;
+    this.preventSaving();
+  }
+
+  private preventSaving() {
+    if (this.preventSaveTimer) {
+      window.clearTimeout(this.preventSaveTimer);
+    }
+    this.preventSave = true;
+    this.preventSaveTimer = window.setTimeout(() => this.preventSave = false, 250);
+  }
+
+  public onEnterInvalid() {
+    if (this.suggestions && this.suggestions.isSelected()) {
+      this.suggestions.useSelection();
+      this.endRowEditing();
+    }
   }
 }

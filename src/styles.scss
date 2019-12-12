@@ -187,6 +187,16 @@ typeahead-container {
   font-size: 0.9375rem;
 }
 
+.hidden-input {
+  background: transparent;
+  border: none;
+  caret-color: transparent;
+  color: transparent !important;
+  cursor: default;
+  height: 1px;
+  width: 1px;
+}
+
 modal-container {
   overflow-y: unset !important;
 

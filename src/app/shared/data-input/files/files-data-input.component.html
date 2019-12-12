@@ -11,4 +11,9 @@
                   (remove)="onRemove($event, data.files)"
                   (cancel)="onCancel()">
   </files-dropdown>
+  <input #hiddenInput
+         class="hidden-input position-absolute"
+         tabindex="-1"
+         [style.z-index]="-1"
+         type="text"/>
 </ng-container>

@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {ConstraintType} from '../../core/model/data/constraint';
 import {Attribute} from '../../core/store/collections/collection';
 
-const NO_HINTS_CONSTRAINT_TYPES = [ConstraintType.Select, ConstraintType.User];
+const NO_HINTS_CONSTRAINT_TYPES = [ConstraintType.Select, ConstraintType.User, ConstraintType.Files];
 
 @Pipe({
   name: 'canShowAttributeHints',

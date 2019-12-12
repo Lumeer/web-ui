@@ -161,7 +161,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToEditing());
@@ -761,6 +762,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onCancelEditing() {
+    this.dataValue$ = this.createDataValue$();
     this.editing$.next(false);
   }
 
@@ -830,5 +832,12 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public onUseDocumentHint() {
     this.editing$.next(false);
+  }
+
+  public onEnterInvalid() {
+    if (this.suggestions && this.suggestions.isSelected()) {
+      this.suggestions.useSelection();
+      this.editing$.next(false);
+    }
   }
 }

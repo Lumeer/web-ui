@@ -79,7 +79,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   private overlayRef: OverlayRef;
   private portal: Portal<any>;
 
-  constructor(private overlay: Overlay, private viewContainer: ViewContainerRef) {}
+  constructor(private overlay: Overlay, private viewContainer: ViewContainerRef) {
+  }
 
   public ngAfterViewInit() {
     this.portal = new TemplatePortal(this.dropdown, this.viewContainer);
@@ -87,7 +88,10 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.minWidth || changes.minHeight) {
-      this.overlayRef && this.overlayRef.updateSize({minWidth: this.minWidth, minHeight: this.minHeight});
+      if (this.overlayRef) {
+        this.overlayRef.updateSize({minWidth: this.minWidth, minHeight: this.minHeight});
+        this.overlayRef.updatePosition();
+      }
     }
   }
 

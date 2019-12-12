@@ -32,7 +32,6 @@ import {
 import {NumberDataValue} from '../../../core/model/data-value/number.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
-import {removeNonNumberCharacters} from '../../directives/number.directive';
 
 @Component({
   selector: 'number-data-input',
@@ -60,10 +59,10 @@ export class NumberDataInputComponent implements OnChanges {
   public save = new EventEmitter<NumberDataValue>();
 
   @Output()
-  public cancel = new EventEmitter();
+  public enterInvalid = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
+  public cancel = new EventEmitter();
 
   @Output()
   public onFocus = new EventEmitter<any>();
@@ -75,21 +74,17 @@ export class NumberDataInputComponent implements OnChanges {
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
-    const cleanValue = this.value.parseInput(removeNonNumberCharacters(this.value.format()));
     if (changes.readonly && !this.readonly && this.focus) {
       setTimeout(() => {
-        if (this.value) {
-          this.numberInput.nativeElement.value = cleanValue.format();
-        }
         HtmlModifier.setCursorAtTextContentEnd(this.numberInput.nativeElement);
         this.numberInput.nativeElement.focus();
       });
     }
-    this.refreshValid(cleanValue);
+    this.refreshValid(this.value);
   }
 
   private refreshValid(value: NumberDataValue) {
-    this.valid = value.isValid();
+    this.valid = !value || value.isValid();
   }
 
   @HostListener('keydown', ['$event'])
@@ -104,18 +99,25 @@ export class NumberDataInputComponent implements OnChanges {
         if (!this.skipValidation && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           event.preventDefault();
+          this.enterInvalid.emit();
           return;
         }
 
-        this.preventSave = true;
+        this.preventSaveAndBlur();
         // needs to be executed after parent event handlers
         setTimeout(() => this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
-        this.numberInput && (this.numberInput.nativeElement.value = this.value.format());
+        this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private preventSaveAndBlur() {
+    if (this.numberInput) {
+      this.preventSave = true;
+      this.numberInput.nativeElement.blur();
     }
   }
 
@@ -134,8 +136,9 @@ export class NumberDataInputComponent implements OnChanges {
       const dataValue = this.value.parseInput(this.numberInput.nativeElement.value);
       if (this.skipValidation || dataValue.isValid()) {
         this.save.emit(dataValue);
+      } else {
+        this.cancel.emit();
       }
     }
-    this.dataBlur.emit();
   }
 }

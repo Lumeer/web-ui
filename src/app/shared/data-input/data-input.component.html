@@ -9,7 +9,6 @@
                       (save)="onSaveValue($event)"
                       (cancel)="onCancel()"
                       (onFocus)="emitFocus($event)"
-                      (dataBlur)="onDataBlur()"
                       class="d-block w-100">
   </address-data-input>
 
@@ -31,7 +30,6 @@
                           (save)="onSaveValue($event)"
                           (cancel)="onCancel()"
                           (onFocus)="emitFocus($event)"
-                          (dataBlur)="onDataBlur()"
                           class="d-block w-100">
   </coordinates-data-input>
 
@@ -55,8 +53,8 @@
                        (valueChange)="onValueChange($event)"
                        (save)="onSaveValue($event)"
                        (cancel)="onCancel()"
+                       (enterInvalid)="enterInvalid.emit()"
                        (onFocus)="emitFocus($event)"
-                       (dataBlur)="onDataBlur()"
                        class="d-block w-100">
   </duration-data-input>
 
@@ -79,8 +77,8 @@
                      (valueChange)="onValueChange($event)"
                      (save)="onSaveValue($event)"
                      (cancel)="onCancel()"
+                     (enterInvalid)="enterInvalid.emit()"
                      (onFocus)="emitFocus($event)"
-                     (dataBlur)="onDataBlur()"
                      class="d-block w-100">
   </number-data-input>
 
@@ -92,8 +90,8 @@
                          (valueChange)="onValueChange($event)"
                          (save)="onSaveValue($event)"
                          (cancel)="onCancel()"
+                         (enterInvalid)="enterInvalid.emit()"
                          (onFocus)="emitFocus($event)"
-                         (dataBlur)="onDataBlur()"
                          class="d-block w-100">
   </percentage-data-input>
 
@@ -117,7 +115,6 @@
                      (save)="onSaveValue($event)"
                      (cancel)="onCancel()"
                      (onFocus)="emitFocus($event)"
-                     (dataBlur)="onDataBlur()"
                      class="d-block w-100">
   </select-data-input>
 
@@ -130,7 +127,6 @@
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
-                   (dataBlur)="onDataBlur()"
                    class="w-100">
   </user-data-input>
 
@@ -144,7 +140,6 @@
                           (save)="onSaveValue($event)"
                           (cancel)="onCancel()"
                           (onFocus)="emitFocus($event)"
-                          (dataBlur)="onDataBlur()"
                           class="w-100">
     </rich-text-data-input>
   </ng-container>
@@ -165,7 +160,6 @@
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
                    (onFocus)="emitFocus($event)"
-                   (dataBlur)="onDataBlur()"
                    class="d-block w-100">
   </text-data-input>
 </ng-template>

@@ -27,6 +27,7 @@ import {
 } from '../../../shared/utils/data.utils';
 import {NumberConstraintConfig} from '../data/constraint-config';
 import {DataValue, DataValueInputType} from './index';
+import {removeNonNumberCharacters} from '../../../shared/directives/number.directive';
 
 export class NumberDataValue implements DataValue {
   public readonly bigNumber: Big;
@@ -36,6 +37,9 @@ export class NumberDataValue implements DataValue {
     public readonly inputType: DataValueInputType,
     public readonly config: NumberConstraintConfig
   ) {
+    if (this.inputType === DataValueInputType.Typed) {
+      this.value = removeNonNumberCharacters(this.value);
+    }
     this.bigNumber = convertToBig(value);
   }
 

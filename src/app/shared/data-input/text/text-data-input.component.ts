@@ -78,6 +78,9 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   @Output()
   public onFocus = new EventEmitter<any>();
 
+  @Output()
+  public enterInvalid = new EventEmitter();
+
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
@@ -136,11 +139,12 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
       this.preventSave = false;
       this.dataBlur.emit();
     } else {
-      setTimeout(() => {
-        // needs to be executed after parent event handlers
-        this.saveValue(this.text);
-        this.dataBlur.emit();
-      }, 200);
+      const dataValue = this.value.parseInput(this.text);
+      if (this.skipValidation || dataValue.isValid()) {
+        this.save.emit(dataValue);
+      } else {
+        this.cancel.emit();
+      }
     }
   }
 
@@ -154,20 +158,31 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.readonly) {
+        const input = this.textInput;
+        const dataValue = this.value.parseInput(input.nativeElement.value);
+
+        if (!this.skipValidation && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
           event.preventDefault();
-        } else {
-          // needs to be executed after parent event handlers
-          const input = this.textInput;
-          this.preventSave = true;
-          setTimeout(() => input && this.saveValue(input.nativeElement.value));
+          this.enterInvalid.emit();
+          return;
         }
+
+        this.preventSaveAndBlur();
+        // needs to be executed after parent event handlers
+        setTimeout(() => this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
-        this.textInput && (this.textInput.nativeElement.value = this.value.format());
+        this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private preventSaveAndBlur() {
+    if (this.textInput) {
+      this.preventSave = true;
+      this.textInput.nativeElement.blur();
     }
   }
 
