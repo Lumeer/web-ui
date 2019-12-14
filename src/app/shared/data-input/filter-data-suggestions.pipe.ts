@@ -17,10 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DropdownOption {
-  gravatar?: string;
-  value: any;
-  displayValue?: string;
-  icons?: string[];
-  iconColors?: string[];
+import {Pipe, PipeTransform} from '@angular/core';
+import {DataSuggestion} from './data-suggestion';
+import {DataDropdownOption} from '../data-dropdown/data-options/data-dropdown-option';
+import {removeAccent} from '../utils/string.utils';
+
+@Pipe({
+  name: 'filterDataSuggestions',
+})
+export class FilterDataSuggestionsPipe implements PipeTransform {
+  public transform(suggestions: DataSuggestion[], text: string): DataDropdownOption[] {
+    return (suggestions || [])
+      .filter(suggestion =>
+        removeAccent(suggestion.title)
+          .trim()
+          .includes(removeAccent(text).trim())
+      )
+      .map(suggestion => ({value: suggestion.title, displayValue: suggestion.title}));
+  }
 }

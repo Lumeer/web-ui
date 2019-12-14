@@ -36,6 +36,9 @@ export class CoordinatesDataValue implements DataValue {
   }
 
   public format(): string {
+    if (this.inputType === DataValueInputType.Typed) {
+      return this.value;
+    }
     if (!this.coordinates) {
       return formatUnknownDataValue(this.value);
     }

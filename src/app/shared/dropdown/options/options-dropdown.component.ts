@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ActiveDescendantKeyManager, ListKeyManager} from '@angular/cdk/a11y';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -38,6 +36,8 @@ import {DropdownComponent} from '../dropdown.component';
 import {DropdownOption} from './dropdown-option';
 import {DropdownOptionDirective} from './dropdown-option.directive';
 import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
+import {BehaviorSubject} from 'rxjs';
+import {USER_AVATAR_SIZE} from '../../../core/constants';
 
 @Component({
   selector: 'options-dropdown',
@@ -45,7 +45,7 @@ import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../
   styleUrls: ['./options-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
+export class OptionsDropdownComponent implements OnChanges {
   @Input()
   public closeOnClickOutside = true;
 
@@ -62,6 +62,9 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   public origin: ElementRef | HTMLElement;
 
   @Input()
+  public firstItemActive: boolean;
+
+  @Input()
   public selectedValue: any;
 
   @Output()
@@ -73,7 +76,9 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   @ViewChildren(DropdownOptionDirective)
   public dropdownOptions: QueryList<DropdownOptionDirective>;
 
-  private listKeyManager: ListKeyManager<DropdownOptionDirective>;
+  public readonly avatarSize = USER_AVATAR_SIZE;
+
+  public activeIndex$ = new BehaviorSubject<number>(-1);
 
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
@@ -82,13 +87,15 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
     DropdownPosition.TopEnd,
   ];
 
-  public ngAfterViewInit() {
-    this.listKeyManager = new ActiveDescendantKeyManager(this.dropdownOptions);
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldResetActiveItem(changes)) {
-      this.listKeyManager && this.listKeyManager.setActiveItem(null);
+      if (this.firstItemActive) {
+        this.activeIndex$.next(0);
+      } else {
+        this.activeIndex$.next(-1);
+      }
+    } else if (changes.firstItemActive && this.firstItemActive) {
+      this.activeIndex$.next(0);
     }
   }
 
@@ -96,7 +103,7 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
     return (changes.options && !!this.options) || (changes.selectedValue && isNullOrUndefined(this.selectedValue));
   }
 
-  public onOptionClick(event: MouseEvent, option: DropdownOption) {
+  public onOptionSelect(event: MouseEvent, option: DropdownOption) {
     event.preventDefault();
     this.selectOption.emit(option);
     this.close();
@@ -110,9 +117,9 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   }
 
   private highlightSelectedValue() {
-    if (this.listKeyManager && isNotNullOrUndefined(this.selectedValue)) {
+    if (isNotNullOrUndefined(this.selectedValue)) {
       const activeIndex = (this.options || []).findIndex(option => deepObjectsEquals(option.value, this.selectedValue));
-      this.listKeyManager.setActiveItem(activeIndex);
+      this.activeIndex$.next(activeIndex);
     }
   }
 
@@ -127,19 +134,25 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    if (!this.listKeyManager) {
-      return;
-    }
-
-    this.listKeyManager.onKeydown(event);
-
-    if (event.code === KeyCode.Enter || event.code === KeyCode.NumpadEnter) {
-      this.selectOption.emit(this.listKeyManager.activeItem);
-      this.close();
+    switch (event.code) {
+      case KeyCode.ArrowUp:
+        this.activeIndex$.next(Math.max(0, this.activeIndex$.value - 1));
+        break;
+      case KeyCode.ArrowDown:
+        this.activeIndex$.next(Math.min(this.options.length - 1, this.activeIndex$.value + 1));
+        break;
+      case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
+        const activeItem = this.getActiveOption();
+        if (activeItem) {
+          this.selectOption.emit(activeItem);
+          this.close();
+        }
+        break;
     }
   }
 
   public getActiveOption(): DropdownOption {
-    return this.listKeyManager && this.listKeyManager.activeItem;
+    return this.options && this.options[this.activeIndex$.value];
   }
 }

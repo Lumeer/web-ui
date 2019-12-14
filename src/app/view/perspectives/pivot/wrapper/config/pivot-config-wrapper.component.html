@@ -5,11 +5,12 @@
          [checked]="config.mergeTables"
          (change)="onMergeTablesChange($event.target.checked)"
          type="checkbox"
+         #checkbox
          class="custom-control-input">
   <label for="mergeTablesCheckbox"
          class="custom-control-label">
   </label>
-  <span i18n="@@perspective.pivot.config.merge">Merge tables</span>
+  <span i18n="@@perspective.pivot.config.merge" class="user-select-none cursor-pointer" (click)="checkbox.click()">Merge tables</span>
 </div>
 
 <div class="text-danger small mb-4 mt-2" i18n="@@perspective.pivot.config.merge.fail"

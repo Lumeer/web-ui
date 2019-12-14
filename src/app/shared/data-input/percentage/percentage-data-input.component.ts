@@ -90,6 +90,10 @@ export class PercentageDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        if (this.readonly) {
+          return;
+        }
+
         const input = this.percentageInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 

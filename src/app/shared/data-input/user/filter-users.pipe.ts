@@ -17,10 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DropdownOption {
-  gravatar?: string;
-  value: any;
-  displayValue?: string;
-  icons?: string[];
-  iconColors?: string[];
+import {Pipe, PipeTransform} from '@angular/core';
+import {User} from '../../../core/store/users/user';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {removeAccent} from '../../utils/string.utils';
+
+@Pipe({
+  name: 'filterUsers',
+})
+export class FilterUsersPipe implements PipeTransform {
+  public transform(users: User[], text: string): DropdownOption[] {
+    return (users || [])
+      .filter(user => removeAccent(user.name || user.email).includes(removeAccent(text)))
+      .map(user => ({gravatar: user.email, value: user.email || user.name, displayValue: user.name || user.email}));
+  }
 }

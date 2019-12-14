@@ -36,12 +36,12 @@ import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-valu
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {DataSuggestion} from '../data-suggestion';
-import {TypeaheadDirective, TypeaheadMatch} from 'ngx-bootstrap/typeahead';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 
 @Component({
   selector: 'text-data-input',
   templateUrl: './text-data-input.component.html',
-  styleUrls: ['./text-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextDataInputComponent implements OnChanges, AfterViewChecked {
@@ -73,9 +73,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
-
-  @Output()
   public onFocus = new EventEmitter<any>();
 
   @Output()
@@ -84,8 +81,8 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(TypeaheadDirective, {static: false})
-  public typeahead: TypeaheadDirective;
+  @ViewChild(OptionsDropdownComponent, {static: false})
+  public dropdown: OptionsDropdownComponent;
 
   public text = '';
   public valid = true;
@@ -137,14 +134,25 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
-      this.dataBlur.emit();
+      this.blurCleanup();
     } else {
+      const selectedOption = this.dropdown.getActiveOption();
       const dataValue = this.value.parseInput(this.text);
-      if (this.skipValidation || dataValue.isValid()) {
-        this.save.emit(dataValue);
+      if (selectedOption || this.skipValidation || dataValue.isValid()) {
+        if (selectedOption) {
+          this.saveValue(selectedOption.value);
+        } else {
+          this.save.emit(dataValue);
+        }
       } else {
         this.cancel.emit();
       }
+    }
+  }
+
+  private blurCleanup() {
+    if (this.dropdown) {
+      this.dropdown.close();
     }
   }
 
@@ -158,10 +166,14 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        if (this.readonly) {
+          return;
+        }
         const input = this.textInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
+        const selectedOption = this.dropdown.getActiveOption();
 
-        if (!this.skipValidation && !dataValue.isValid()) {
+        if (!this.skipValidation && !dataValue.isValid() && !selectedOption) {
           event.stopImmediatePropagation();
           event.preventDefault();
           this.enterInvalid.emit();
@@ -170,13 +182,21 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
 
         this.preventSaveAndBlur();
         // needs to be executed after parent event handlers
-        setTimeout(() => this.save.emit(dataValue));
+        setTimeout(() => {
+          if (selectedOption) {
+            this.saveValue(selectedOption.value);
+          } else {
+            this.save.emit(dataValue);
+          }
+        });
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
         this.cancel.emit();
         return;
     }
+
+    this.dropdown.onKeyDown(event);
   }
 
   private preventSaveAndBlur() {
@@ -191,7 +211,14 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
     this.save.emit(dataValue);
   }
 
-  public onSelect(match: TypeaheadMatch) {
-    this.saveValue(match.item.title);
+  public onSelectOption(option: DropdownOption) {
+    this.preventSaveAndBlur();
+    this.saveValue(option.value);
+  }
+
+  public onFocused() {
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
   }
 }

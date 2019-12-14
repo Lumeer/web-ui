@@ -92,6 +92,10 @@ export class DurationDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        if (this.readonly) {
+          return;
+        }
+
         const input = this.durationInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 

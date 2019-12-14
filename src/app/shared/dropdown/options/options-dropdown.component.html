@@ -3,16 +3,23 @@
           [fitParent]="fitParent"
           [origin]="origin"
           [pushOnScreen]="true"
+          [minHeight]="(options?.length || 0) * 30"
+          [minWidth]="100"
           [positions]="dropdownPositions">
   <div *ngIf="options?.length > 0"
        class="dropdown-menu show position-static w-100">
-    <a *ngFor="let option of options"
-       dropdownOption
-       [value]="option.value"
-       (click)="onOptionClick($event, option)"
+    <a *ngFor="let option of options; let index = index"
+       [class.active]="(activeIndex$ | async) === index"
+       (mousedown)="onOptionSelect($event, option)"
        class="dropdown-item text-truncate"
        data-test="select-item-option"
        tabindex>
+      <img ngxGravatar
+           *ngIf="option.gravatar"
+           [email]="option.gravatar"
+           [size]="avatarSize"
+           class="mr-1">
+
       <icons-presenter *ngIf="option.icons && option.iconColors"
                        [colors]="option.iconColors"
                        [icons]="option.icons">
@@ -21,7 +28,6 @@
       <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
          class="fa-fw {{option.icons[0]}}">
       </i>
-
       <span class="ml-sm-1 text-nowrap">
         {{ option.displayValue || option.value }}
       </span>

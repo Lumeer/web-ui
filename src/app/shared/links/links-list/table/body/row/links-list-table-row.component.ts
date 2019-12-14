@@ -18,18 +18,18 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
+  Component,
   ElementRef,
-  ViewChild,
+  EventEmitter,
+  Input,
   OnChanges,
-  SimpleChanges,
+  OnDestroy,
+  OnInit,
+  Output,
   SimpleChange,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {LinkColumn} from '../../../model/link-column';
 import {ConstraintData, ConstraintType} from '../../../../../../core/model/data/constraint';
@@ -75,7 +75,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public documentId: string;
 
   @Input()
-  public attributeEditing: { documentId?: string; attributeId?: string };
+  public attributeEditing: {documentId?: string; attributeId?: string};
 
   @Output()
   public onFocus = new EventEmitter<number>();
@@ -87,7 +87,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public resetFocusAndEdit = new EventEmitter<number>();
 
   @Output()
-  public newValue = new EventEmitter<{ column: number; value: any }>();
+  public newValue = new EventEmitter<{column: number; value: any}>();
 
   @Output()
   public columnFocus = new EventEmitter<number>();
@@ -102,7 +102,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public detail = new EventEmitter();
 
   @Output()
-  public newLink = new EventEmitter<{ column: LinkColumn; value: any; correlationId: string }>();
+  public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
 
   @ViewChild(DocumentHintsComponent, {static: false})
   public suggestions: DocumentHintsComponent;
@@ -120,8 +120,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   private preventSaveTimer: number;
   private creatingNewRow = false;
 
-  constructor(public element: ElementRef) {
-  }
+  constructor(public element: ElementRef) {}
 
   public ngOnInit() {
     this.subscriptions.add(
@@ -309,8 +308,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onDataInputKeyDown(event: KeyboardEvent) {
-    event.stopPropagation();
-
     switch (event.code) {
       case KeyCode.ArrowDown:
         event.preventDefault();
@@ -334,7 +331,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
       window.clearTimeout(this.preventSaveTimer);
     }
     this.preventSave = true;
-    this.preventSaveTimer = window.setTimeout(() => this.preventSave = false, 250);
+    this.preventSaveTimer = window.setTimeout(() => (this.preventSave = false), 250);
   }
 
   public onEnterInvalid() {

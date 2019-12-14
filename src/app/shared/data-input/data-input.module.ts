@@ -49,6 +49,8 @@ import {PickerModule} from '../picker/picker.module';
 import {RichTextDataInputComponent} from './rich-text/rich-text-data-input.component';
 import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.module';
 import {QuillModule} from 'ngx-quill';
+import {FilterDataSuggestionsPipe} from './filter-data-suggestions.pipe';
+import {FilterUsersPipe} from './user/filter-users.pipe';
 
 @NgModule({
   imports: [
@@ -85,6 +87,8 @@ import {QuillModule} from 'ngx-quill';
     FilesDropdownComponent,
     FileAttachmentButtonComponent,
     RichTextDataInputComponent,
+    FilterDataSuggestionsPipe,
+    FilterUsersPipe,
   ],
   exports: [
     DataInputComponent,

@@ -34,9 +34,9 @@ import {DataValue} from '../../core/model/data-value';
 import {ConstraintType} from '../../core/model/data/constraint';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
-import {USER_AVATAR_SIZE} from './user/user-data-input.component';
 import {DataSuggestion} from './data-suggestion';
 import {DataInputConfiguration} from './data-input-configuration';
+import {USER_AVATAR_SIZE} from '../../core/constants';
 
 @Component({
   selector: 'data-input',
@@ -162,5 +162,4 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public emitFocus($event: any) {
     this.onFocus.emit($event);
   }
-
 }

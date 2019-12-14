@@ -20,6 +20,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
   HostListener,
@@ -29,6 +30,7 @@ import {
   Output,
   Renderer2,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
 import {TextDataValue} from '../../../core/model/data-value/text.data-value';
@@ -38,6 +40,7 @@ import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-moda
 import {Subscription} from 'rxjs';
 import {KeyCode} from '../../key-code';
 import {ModalService} from '../../modal/modal.service';
+import {QuillEditorComponent} from 'ngx-quill';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -76,8 +79,14 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   @Output()
   public onFocus = new EventEmitter<any>();
 
+  @Output()
+  public enterInvalid = new EventEmitter();
+
   @HostBinding('class.bg-danger-light')
   public invalidBackground = false;
+
+  @ViewChild(QuillEditorComponent, {static: false})
+  public textEditor: QuillEditorComponent;
 
   public text = '';
   public valid = true;
@@ -196,31 +205,34 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
           if (!this.skipValidation && !dataValue.isValid()) {
             event.stopImmediatePropagation();
             event.preventDefault();
+            this.enterInvalid.emit();
             return;
           }
-          this.preventSave = true;
+
+          this.preventSaveAndBlur();
           // needs to be executed after parent event handlers
           setTimeout(() => this.save.emit(dataValue));
         }
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
-        // this.textInput && (this.textInput.nativeElement.value = this.value.format());
+        this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private preventSaveAndBlur() {
+    if (this.textEditor && this.textEditor.quillEditor) {
+      this.preventSave = true;
+      this.textEditor.quillEditor.root.blur();
     }
   }
 
   public onBlur(data: {editor: any; source: string}) {
     if (this.preventSave) {
       this.preventSave = false;
-      this.dataBlur.emit();
     } else {
-      const text = this.text;
-      setTimeout(() => {
-        this.saveValue(text);
-        this.dataBlur.emit();
-      }, 100);
+      this.saveValue(this.text);
     }
   }
 }

@@ -19,31 +19,20 @@
 <ng-template #textEditing>
   <input #textInput
          [(ngModel)]="name"
-         [typeahead]="users"
-         [typeaheadItemTemplate]="suggestionItem"
-         [typeaheadLatinize]="true"
-         [typeaheadMinLength]="0"
-         [typeaheadScrollable]="true"
-         [typeaheadSelectFirstItem]="name?.length > 0"
-         [typeaheadIsFirstItemActive]="name?.length > 0"
-         [typeaheadOptionsInScrollableView]="10"
-         [adaptivePosition]="true"
-         typeaheadOptionField="name"
-         container="body"
-         (typeaheadOnSelect)="onSelect($event)"
-         (typeaheadOnBlur)="onBlur()"
+         (blur)="onBlur()"
+         (focus)="onFocused()"
          (ngModelChange)="onInputChange()"
+         [spellcheck]="false"
          class="border-0 w-100 h-100 px-1 bg-transparent"
          data-test="user-data-input"
          type="text">
-</ng-template>
 
-<ng-template #suggestionItem
-             let-model="item"
-             let-index="index">
-  <img ngxGravatar
-       [email]="model.email"
-       [size]="avatarSize"
-       class="mr-2">
-  <span>{{ model.name || model.email }}</span>
+  <options-dropdown [options]="users | filterUsers:name"
+                    [showBackdrop]="false"
+                    [closeOnClickOutside]="false"
+                    [origin]="textInput"
+                    [firstItemActive]="name?.length > 0"
+                    (selectOption)="onSelectOption($event)">
+  </options-dropdown>
+
 </ng-template>

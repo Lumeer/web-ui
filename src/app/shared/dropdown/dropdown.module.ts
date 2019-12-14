@@ -23,9 +23,10 @@ import {DropdownOptionDirective} from './options/dropdown-option.directive';
 import {DropdownComponent} from './dropdown.component';
 import {OptionsDropdownComponent} from './options/options-dropdown.component';
 import {PresenterModule} from '../presenter/presenter.module';
+import {GravatarModule} from 'ngx-gravatar';
 
 @NgModule({
-  imports: [CommonModule, PresenterModule],
+  imports: [CommonModule, PresenterModule, GravatarModule],
   declarations: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
   exports: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
 })

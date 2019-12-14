@@ -51,10 +51,15 @@ export class ColorPickerComponent {
   public save = new EventEmitter<string>();
 
   @Output()
+  public saveOnClose = new EventEmitter<string>();
+
+  @Output()
   public cancel = new EventEmitter();
 
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
+
+  private selectedValue: string;
 
   public readonly localPalette = [...greyscale, '#ffffff', ...saturated, ...palette];
   public readonly dropdownPositions = [
@@ -69,17 +74,20 @@ export class ColorPickerComponent {
   public onCancel() {
     this.close();
     this.cancel.emit();
+    this.selectedValue = null;
   }
 
   public onSelect(value: string) {
     this.close();
     this.save.emit(value);
+    this.selectedValue = null;
   }
 
   public open() {
     if (this.dropdown) {
       this.dropdown.open();
     }
+    this.selectedValue = null;
   }
 
   public close() {
@@ -97,5 +105,15 @@ export class ColorPickerComponent {
 
   public onChange(value: string) {
     this.valueChange.emit(value);
+    this.selectedValue = value;
+  }
+
+  public onCloseByClickOutside() {
+    this.saveOnClose.emit(this.selectedValue);
+    this.selectedValue = null;
+  }
+
+  public getSelectedValue(): string {
+    return this.selectedValue;
   }
 }

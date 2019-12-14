@@ -1,9 +1,10 @@
 <dropdown [origin]="origin"
   [showBackdrop]="false"
-  [closeOnClickOutside]="false"
+  [closeOnClickOutside]="true"
   [positions]="dropdownPositions"
   [minWidth]="230"
-  [minHeight]="434">
+  [minHeight]="434"
+  (onCloseByClickOutside)="onCloseByClickOutside()">
 
   <div
     [colorPicker]="color"
@@ -11,10 +12,10 @@
     (colorPickerSelect)="onSelect($event)"
     (colorPickerCancel)="onCancel()"
     (colorPickerChange)="onChange($event)"
-    [cpDialogDisplay]="'inline'"
     [cpSaveClickOutside]="false"
     [cpCloseClickOutside]="false"
     [cpPresetColors]="localPalette"
+    cpDialogDisplay="inline"
     cpPresetLabel=""
     cpAlphaChannel="disabled"
     cpDisableInput="true"

@@ -36,8 +36,9 @@ import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {User} from '../../../core/store/users/user';
 import {DataValueInputType} from '../../../core/model/data-value';
-
-export const USER_AVATAR_SIZE = 22;
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
+import {USER_AVATAR_SIZE} from '../../../core/constants';
 
 @Component({
   selector: 'user-data-input',
@@ -68,13 +69,16 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
+  public onFocus = new EventEmitter<any>();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
+  public enterInvalid = new EventEmitter();
 
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
+
+  @ViewChild(OptionsDropdownComponent, {static: false})
+  public dropdown: OptionsDropdownComponent;
 
   public readonly avatarSize = USER_AVATAR_SIZE;
 
@@ -83,6 +87,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
 
   private setFocus: boolean;
   private triggerInput: boolean;
+  private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
@@ -101,10 +106,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private bindUsers(): User[] {
-    return ((this.value && this.value.constraintData && this.value.constraintData.users) || []).map(user => ({
-      ...user,
-      name: user.name || user.email,
-    }));
+    return (this.value && this.value.constraintData && this.value.constraintData.users) || [];
   }
 
   public ngAfterViewChecked() {
@@ -143,29 +145,42 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        if (this.readonly) {
+          return;
+        }
+        const selectedOption = this.dropdown.getActiveOption();
         // needs to be executed after parent event handlers
-        setTimeout(() => this.saveValue());
+        setTimeout(() => this.saveValue(selectedOption));
         return;
       case KeyCode.Escape:
         this.resetSearchInput();
         this.cancel.emit();
         return;
     }
+
+    this.dropdown.onKeyDown(event);
   }
 
-  private saveValue() {
-    const {users} = this.value.constraintData;
-    const user = users.find(u => u.name === this.name);
-    if (user || !this.name) {
-      const dataValue = this.value.copy(user ? user.email : '');
-      this.save.emit(dataValue);
+  private saveValue(selectedOption?: DropdownOption, enter?: boolean) {
+    if (selectedOption) {
+      this.saveValueByOption(selectedOption);
     } else if (this.name && (this.skipValidation || (this.value.config && this.value.config.externalUsers))) {
       const dataValue = this.value.parseInput(this.name);
       this.save.emit(dataValue);
     } else {
-      this.cancel.emit();
+      if (enter) {
+        this.enterInvalid.emit();
+      } else {
+        this.cancel.emit();
+      }
     }
     this.resetSearchInput();
+  }
+
+  private saveValueByOption(option: DropdownOption) {
+    const user = (this.users || []).find(u => (u.email || u.name) === option.value);
+    const dataValue = this.value.copy(user ? user.email || user.name : '');
+    this.save.emit(dataValue);
   }
 
   private resetSearchInput() {
@@ -183,7 +198,35 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onBlur() {
-    this.cancel.emit();
-    this.dataBlur.emit();
+    if (this.preventSave) {
+      this.preventSave = false;
+      this.blurCleanup();
+    } else {
+      this.saveValue(this.dropdown && this.dropdown.getActiveOption());
+    }
+  }
+
+  private preventSaveAndBlur() {
+    if (this.textInput) {
+      this.preventSave = true;
+      this.textInput.nativeElement.blur();
+    }
+  }
+
+  public onSelectOption(option: DropdownOption) {
+    this.preventSaveAndBlur();
+    this.saveValue(option);
+  }
+
+  private blurCleanup() {
+    if (this.dropdown) {
+      this.dropdown.close();
+    }
+  }
+
+  public onFocused() {
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
   }
 }

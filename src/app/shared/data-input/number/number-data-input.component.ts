@@ -93,6 +93,9 @@ export class NumberDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        if (this.readonly) {
+          return;
+        }
         const input = this.numberInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 

@@ -33,6 +33,7 @@ import {ColorDataValue} from '../../../core/model/data-value/color.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {ColorPickerComponent} from '../../picker/color/color-picker.component';
+import {isNotNullOrUndefined} from '../../utils/common.utils';
 
 @Component({
   selector: 'color-data-input',
@@ -63,6 +64,9 @@ export class ColorDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
+  public enterInvalid = new EventEmitter();
+
+  @Output()
   public onFocus = new EventEmitter<any>();
 
   @ViewChild('colorInput', {static: false})
@@ -72,6 +76,8 @@ export class ColorDataInputComponent implements OnChanges {
   public colorPicker: ColorPickerComponent;
 
   public valid = true;
+
+  private pendingUpdate: string;
 
   constructor(public element: ElementRef) {}
 
@@ -83,6 +89,17 @@ export class ColorDataInputComponent implements OnChanges {
         this.openColorPicker();
       });
     }
+    if (
+      changes.readonly &&
+      isNotNullOrUndefined(changes.readonly.previousValue) &&
+      !changes.readonly.previousValue &&
+      this.readonly
+    ) {
+      if (isNotNullOrUndefined(this.pendingUpdate)) {
+        this.onSave(this.pendingUpdate);
+      }
+    }
+
     if (changes.focus && !this.focus) {
       this.closeColorPicker();
     }
@@ -94,6 +111,7 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   private openColorPicker() {
+    this.pendingUpdate = null;
     this.colorPicker.open();
   }
 
@@ -110,13 +128,14 @@ export class ColorDataInputComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         const input = this.colorInput;
-
+        this.pendingUpdate = null;
         if (input) {
           const dataValue = this.value.parseInput(input.nativeElement.value);
 
           if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
             event.stopImmediatePropagation();
             event.preventDefault();
+            this.enterInvalid.emit();
             return;
           }
 
@@ -131,29 +150,30 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   public onValueChange(value: string) {
+    this.pendingUpdate = value;
     this.colorInput.nativeElement.value = value;
     const dataValue = this.value.parseInput(value);
     this.valueChange.emit(dataValue);
   }
 
   public onSave(color: string) {
-    if (!color) {
-      this.cancel.emit();
-      return;
-    }
+    this.pendingUpdate = null;
+    this.value = this.value.copy(color);
+    this.colorInput && (this.colorInput.nativeElement.value = '');
+    this.save.emit(this.value);
+  }
 
-    const dataValue = this.value.copy(color);
-
-    if (dataValue.serialize() !== this.value.serialize()) {
-      this.colorInput && (this.colorInput.nativeElement.value = '');
-      this.save.emit(dataValue);
-    } else {
-      this.onCancel();
-    }
+  public onSaveOnClose(color: string) {
+    this.onSave(color);
   }
 
   public onCancel() {
+    this.pendingUpdate = null;
     this.colorInput && (this.colorInput.nativeElement.value = this.value.format());
     this.cancel.emit();
+  }
+
+  public onInput(value: string) {
+    this.onValueChange(value);
   }
 }

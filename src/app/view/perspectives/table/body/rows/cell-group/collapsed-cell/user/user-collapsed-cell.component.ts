@@ -20,9 +20,9 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UserConstraint} from '../../../../../../../../core/model/constraint/user.constraint';
 import {ConstraintData} from '../../../../../../../../core/model/data/constraint';
-import {USER_AVATAR_SIZE} from '../../../../../../../../shared/data-input/user/user-data-input.component';
 import {uniqueValues} from '../../../../../../../../shared/utils/array.utils';
 import {isEmailValid} from '../../../../../../../../shared/utils/email.utils';
+import {USER_AVATAR_SIZE} from '../../../../../../../../core/constants';
 
 @Component({
   selector: 'user-collapsed-cell',

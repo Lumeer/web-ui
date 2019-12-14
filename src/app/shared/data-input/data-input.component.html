@@ -126,6 +126,7 @@
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
+                   (enterInvalid)="enterInvalid.emit()"
                    (onFocus)="emitFocus($event)"
                    class="w-100">
   </user-data-input>
@@ -159,6 +160,7 @@
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
+                   (enterInvalid)="enterInvalid.emit()"
                    (onFocus)="emitFocus($event)"
                    class="d-block w-100">
   </text-data-input>

@@ -44,7 +44,6 @@ import {HtmlModifier} from '../../utils/html-modifier';
 @Component({
   selector: 'address-data-input',
   templateUrl: './address-data-input.component.html',
-  styleUrls: ['./address-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AddressDataInputComponent implements OnInit, OnChanges {
@@ -68,9 +67,6 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   @Output()
   public cancel = new EventEmitter();
-
-  @Output()
-  public dataBlur = new EventEmitter();
 
   @Output()
   public onFocus = new EventEmitter<any>();
@@ -116,7 +112,6 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.preventSave = false;
       setTimeout(() => {
         if (this.addressInput) {
           HtmlModifier.setCursorAtTextContentEnd(this.addressInput.nativeElement);
@@ -148,14 +143,12 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
       this.preventSave = false;
       this.blurCleanup();
     } else {
-      const value = this.addressInput.nativeElement.value;
-      setTimeout(() => {
-        if (!this.preventSave) {
-          this.preventSave = true;
-          this.saveValue(value);
-        }
-        this.blurCleanup();
-      }, 250);
+      const selectedOption = this.dropdown.getActiveOption();
+      if (selectedOption) {
+        this.saveValue(selectedOption.value);
+      } else {
+        this.saveValue(this.addressInput.nativeElement.value);
+      }
     }
   }
 
@@ -165,15 +158,10 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     }
 
     this.value$.next('');
-    this.dataBlur.emit();
   }
 
   public onSelectOption(option: DropdownOption) {
-    if (this.preventSave) {
-      return;
-    }
-
-    this.preventSave = true;
+    this.preventSaveAndBlur();
     const dataValue = this.value.copy(option.value);
     this.save.emit(dataValue);
   }
@@ -184,9 +172,14 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        if (this.readonly) {
+          return;
+        }
+
         const input = this.addressInput;
         const selectedOption = this.dropdown.getActiveOption();
-        this.preventSave = true;
+
+        this.preventSaveAndBlur();
         // needs to be executed after parent event handlers
         const value = input.nativeElement.value;
         setTimeout(() => {
@@ -198,13 +191,19 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
         });
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
-        this.addressInput && (this.addressInput.nativeElement.value = this.value.format());
+        this.preventSaveAndBlur();
         this.cancel.emit();
         return;
     }
 
     this.dropdown.onKeyDown(event);
+  }
+
+  private preventSaveAndBlur() {
+    if (this.addressInput) {
+      this.preventSave = true;
+      this.addressInput.nativeElement.blur();
+    }
   }
 
   private saveValue(value: string) {
