@@ -31,7 +31,7 @@
                     [showBackdrop]="false"
                     [closeOnClickOutside]="false"
                     [origin]="textInput"
-                    [firstItemActive]="name?.length > 0"
+                    [firstItemActive]="!value?.config?.externalUsers && name?.length > 0"
                     (selectOption)="onSelectOption($event)">
   </options-dropdown>
 

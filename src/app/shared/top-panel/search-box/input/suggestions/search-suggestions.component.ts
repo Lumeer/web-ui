@@ -20,6 +20,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -27,6 +28,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {catchError, switchMap} from 'rxjs/operators';
@@ -34,6 +36,7 @@ import {QueryItem} from '../../query-item/model/query-item';
 import {QueryItemType} from '../../query-item/model/query-item-type';
 import {SuggestionsService} from '../../../../../core/service/suggestions-service';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
+import {DropdownComponent} from '../../../../dropdown/dropdown.component';
 
 @Component({
   selector: 'search-suggestions',
@@ -48,8 +51,14 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   @Input()
   public text: string;
 
+  @Input()
+  public origin: ElementRef | HTMLElement;
+
   @Output()
   public useSuggestion = new EventEmitter<QueryItem>();
+
+  @ViewChild(DropdownComponent, {static: false})
+  public dropdown: DropdownComponent;
 
   public suggestions$ = new BehaviorSubject<QueryItem[]>([]);
   public selectedIndex$ = new BehaviorSubject(-1);
@@ -88,10 +97,30 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
           return of<QueryItem[]>();
         })
       )
-      .subscribe(suggestions => {
-        this.suggestions$.next(suggestions);
-        this.selectedIndex$.next(-1);
-      });
+      .subscribe(suggestions => this.onNewSuggestions(suggestions));
+  }
+
+  private onNewSuggestions(suggestions: QueryItem[]) {
+    this.suggestions$.next(suggestions);
+    this.selectedIndex$.next(-1);
+
+    if (suggestions.length > 0) {
+      this.open();
+    } else {
+      this.close();
+    }
+  }
+
+  public open() {
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
+  }
+
+  public close() {
+    if (this.dropdown) {
+      this.dropdown.close();
+    }
   }
 
   private retrieveSuggestions(text: string): Observable<QueryItem[]> {

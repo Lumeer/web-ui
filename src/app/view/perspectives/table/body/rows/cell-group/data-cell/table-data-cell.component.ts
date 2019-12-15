@@ -161,8 +161,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToEditing());

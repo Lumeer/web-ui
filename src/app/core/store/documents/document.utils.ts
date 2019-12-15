@@ -80,7 +80,8 @@ export function generateDocumentData(
   (collectionFilters || [])
     .filter(filter => filter.collectionId === collection.id)
     .forEach(filter => {
-      const conditionValue = filter.conditionValues && filter.conditionValues[0].value;
+      const conditionValue =
+        (filter.conditionValues && filter.conditionValues[0] && filter.conditionValues[0].value) || '';
       const isNumber = !isNaN(Number(conditionValue));
       const value = isNumber ? +conditionValue : conditionValue.toString();
 
@@ -101,6 +102,7 @@ export function generateDocumentData(
           if (
             currentUser &&
             filter.conditionValues &&
+            filter.conditionValues[0] &&
             filter.conditionValues[0].type === UserConstraintConditionValue.CurrentUser
           ) {
             data[filter.attributeId] = currentUser.email;

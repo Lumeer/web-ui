@@ -16,5 +16,9 @@
 
 .data-input::ng-deep > boolean-data-input {
   justify-content: flex-start;
-  padding: 0 0.5rem;
+}
+
+.data-input.editing {
+  border: 1px solid $success;
+  border-radius: 0.25rem;
 }

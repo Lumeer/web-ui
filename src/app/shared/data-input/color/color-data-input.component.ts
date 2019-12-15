@@ -89,12 +89,7 @@ export class ColorDataInputComponent implements OnChanges {
         this.openColorPicker();
       });
     }
-    if (
-      changes.readonly &&
-      isNotNullOrUndefined(changes.readonly.previousValue) &&
-      !changes.readonly.previousValue &&
-      this.readonly
-    ) {
+    if (this.changedFromEditableToReadonly(changes)) {
       if (isNotNullOrUndefined(this.pendingUpdate)) {
         this.onSave(this.pendingUpdate);
       }
@@ -104,6 +99,15 @@ export class ColorDataInputComponent implements OnChanges {
       this.closeColorPicker();
     }
     this.refreshValid(this.value);
+  }
+
+  private changedFromEditableToReadonly(changes: SimpleChanges): boolean {
+    return (
+      changes.readonly &&
+      isNotNullOrUndefined(changes.readonly.previousValue) &&
+      !changes.readonly.previousValue &&
+      this.readonly
+    );
   }
 
   private refreshValid(value: ColorDataValue) {
@@ -127,21 +131,23 @@ export class ColorDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        const input = this.colorInput;
-        this.pendingUpdate = null;
-        if (input) {
-          const dataValue = this.value.parseInput(input.nativeElement.value);
-
-          if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            this.enterInvalid.emit();
-            return;
-          }
-
-          // needs to be executed after parent event handlers
-          setTimeout(() => this.save.emit(dataValue));
+        if (this.readonly) {
+          return;
         }
+
+        const input = this.colorInput;
+        const dataValue = this.value.parseInput(input.nativeElement.value);
+        this.pendingUpdate = null;
+
+        if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
+          event.preventDefault();
+          this.enterInvalid.emit();
+          return;
+        }
+
+        // needs to be executed after parent event handlers
+        setTimeout(() => this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
         this.onCancel();
@@ -157,10 +163,16 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   public onSave(color: string) {
+    const value = this.value.copy(color);
+    if (color && !value.isValid()) {
+      this.cancel.emit();
+      return;
+    }
+
     this.pendingUpdate = null;
-    this.value = this.value.copy(color);
+    this.value = value;
     this.colorInput && (this.colorInput.nativeElement.value = '');
-    this.save.emit(this.value);
+    this.save.emit(value);
   }
 
   public onSaveOnClose(color: string) {
@@ -169,7 +181,6 @@ export class ColorDataInputComponent implements OnChanges {
 
   public onCancel() {
     this.pendingUpdate = null;
-    this.colorInput && (this.colorInput.nativeElement.value = this.value.format());
     this.cancel.emit();
   }
 

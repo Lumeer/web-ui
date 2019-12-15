@@ -35,7 +35,8 @@ export class LinkAttributeQueryItem implements QueryItem {
     public linkType: LinkType,
     public attribute: Attribute,
     public condition?: QueryCondition,
-    public conditionValues?: QueryConditionValue[]
+    public conditionValues?: QueryConditionValue[],
+    public fromSuggestion?: boolean
   ) {}
 
   public get icons(): string[] {

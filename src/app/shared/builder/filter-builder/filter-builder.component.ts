@@ -34,6 +34,7 @@ import {ConstraintData} from '../../../core/model/data/constraint';
 import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {Observable} from 'rxjs';
 import {QueryCondition, QueryConditionValue} from '../../../core/store/navigation/query/query';
+import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
 
 @Component({
   selector: 'filter-builder',
@@ -62,6 +63,9 @@ export class FilterBuilderComponent implements OnInit {
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
 
+  @ViewChild(FilterBuilderContentComponent, {static: false})
+  public contentComponent: FilterBuilderContentComponent;
+
   public readonly dropdownPositions = [DropdownPosition.BottomStart];
 
   public constraintData$: Observable<ConstraintData>;
@@ -79,6 +83,7 @@ export class FilterBuilderComponent implements OnInit {
   public open() {
     if (this.dropdown) {
       this.dropdown.open();
+      this.contentComponent.focusFirstInput();
     }
   }
 

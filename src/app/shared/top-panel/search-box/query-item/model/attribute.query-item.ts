@@ -34,7 +34,8 @@ export class AttributeQueryItem implements QueryItem {
     public collection: Collection,
     public attribute: Attribute,
     public condition?: QueryCondition,
-    public conditionValues?: QueryConditionValue[]
+    public conditionValues?: QueryConditionValue[],
+    public fromSuggestion?: boolean
   ) {}
 
   public get text() {

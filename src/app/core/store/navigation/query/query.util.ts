@@ -28,10 +28,6 @@ import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/com
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Collection} from '../../collections/collection';
 import {AttributesResource} from '../../../model/resource';
-import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
-import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
-import {UnknownConstraint} from '../../../model/constraint/unknown.constraint';
-import {ConstraintType} from '../../../model/data/constraint';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -50,11 +46,14 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
       });
     case QueryItemType.Attribute:
     case QueryItemType.LinkAttribute:
-      return new FormGroup({
-        text: new FormControl(queryItem.text, Validators.required),
-        condition: new FormControl(queryCondition(queryItem)),
-        conditionValues: new FormArray(attributeConditionValuesForms(queryItem)),
-      });
+      return new FormGroup(
+        {
+          text: new FormControl(queryItem.text, Validators.required),
+          condition: new FormControl(queryItem.condition),
+          conditionValues: new FormArray(attributeConditionValuesForms(queryItem)),
+        },
+        attributeQueryValidator
+      );
   }
 }
 
@@ -63,14 +62,19 @@ function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
     const conditionValue = queryItem.conditionValues && queryItem.conditionValues[index];
     return new FormGroup({
       type: new FormControl(conditionValue && conditionValue.type),
-      value: new FormControl(conditionValue ? conditionValue.value : queryConditionInitialValue(queryItem)),
+      value: new FormControl(conditionValue && conditionValue.value),
     });
   });
 }
 
 function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
   const condition = group.controls.condition.value;
-  const conditionValue = group.controls.conditionValue.value;
+  const conditionValue = group.controls.conditionValues.value;
+
+  if (!condition) {
+    return {emptyCondition: true};
+  }
+
   // TODO
   return null;
 }
@@ -85,26 +89,6 @@ export function queryConditionNumInputs(condition: QueryCondition): number {
       return 2;
     default:
       return 1;
-  }
-}
-
-function queryCondition(queryItem: QueryItem): QueryCondition {
-  if (queryItem.condition) {
-    return queryItem.condition;
-  }
-  const attribute = (<AttributeQueryItem>queryItem).attribute || (<LinkAttributeQueryItem>queryItem).attribute;
-  const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
-  return constraint.conditions()[0];
-}
-
-function queryConditionInitialValue(queryItem: QueryItem): any {
-  const attribute = (<AttributeQueryItem>queryItem).attribute || (<LinkAttributeQueryItem>queryItem).attribute;
-  const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
-  switch (constraint.type) {
-    case ConstraintType.Boolean:
-      return true;
-    default:
-      return null;
   }
 }
 

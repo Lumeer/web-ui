@@ -37,10 +37,13 @@ import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
 import {arrayIntersection, createRange, flattenMatrix} from '../../shared/utils/array.utils';
-import {getBaseCollectionIdsFromQuery} from '../store/navigation/query/query.util';
+import {getBaseCollectionIdsFromQuery, queryConditionNumInputs} from '../store/navigation/query/query.util';
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
+import {QueryCondition, QueryConditionValue} from '../store/navigation/query/query';
+import {UnknownConstraint} from '../model/constraint/unknown.constraint';
+import {ConstraintType} from '../model/data/constraint';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -590,12 +593,44 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       return new LinkQueryItem((<LinkTypeSuggestion>suggestion).linkType);
     case SuggestionType.Attribute:
       const attributeSuggestion = <AttributeSuggestion>suggestion;
-      return new AttributeQueryItem(attributeSuggestion.collection, attributeSuggestion.attribute);
+      const attributeCondition = initialCondition(attributeSuggestion.attribute);
+      const attributeValues = initialValues(attributeCondition, attributeSuggestion.attribute);
+      return new AttributeQueryItem(
+        attributeSuggestion.collection,
+        attributeSuggestion.attribute,
+        attributeCondition,
+        attributeValues,
+        true
+      );
     case SuggestionType.LinkAttribute:
       const linkSuggestion = <LinkAttributeSuggestion>suggestion;
-      return new LinkAttributeQueryItem(linkSuggestion.linkType, linkSuggestion.attribute);
+      const linkCondition = initialCondition(linkSuggestion.attribute);
+      const linkValues = initialValues(linkCondition, linkSuggestion.attribute);
+      return new LinkAttributeQueryItem(
+        linkSuggestion.linkType,
+        linkSuggestion.attribute,
+        linkCondition,
+        linkValues,
+        true
+      );
     case SuggestionType.FullText:
       return new FulltextQueryItem((<FullTextSuggestion>suggestion).text);
+  }
+}
+
+function initialCondition(attribute: Attribute): QueryCondition {
+  const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+  return constraint.conditions()[0];
+}
+
+function initialValues(condition: QueryCondition, attribute: Attribute): QueryConditionValue[] {
+  const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+  const numInputs = queryConditionNumInputs(condition);
+  switch (constraint.type) {
+    case ConstraintType.Boolean:
+      return createRange(0, numInputs).map(() => ({value: true}));
+    default:
+      return createRange(0, numInputs).map(() => ({}));
   }
 }
 

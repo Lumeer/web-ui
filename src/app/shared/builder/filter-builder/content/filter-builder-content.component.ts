@@ -28,6 +28,7 @@ import {BehaviorSubject} from 'rxjs';
 import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 import {createRange} from '../../../utils/array.utils';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {KeyCode} from '../../../key-code';
 
 @Component({
   selector: 'filter-builder-content',
@@ -57,7 +58,7 @@ export class FilterBuilderContentComponent implements OnChanges {
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {skipValidation: true, fromQuery: true};
 
-  public editing$ = new BehaviorSubject(0);
+  public editing$ = new BehaviorSubject(-1);
   public numInputs: number;
   public ngForIndexes: number[];
 
@@ -84,6 +85,12 @@ export class FilterBuilderContentComponent implements OnChanges {
     });
   }
 
+  public focusFirstInput() {
+    if (this.numInputs > 0) {
+      this.editing$.next(0);
+    }
+  }
+
   public onConditionSelect(item: QueryConditionItem) {
     this.valueChange.emit({condition: item.value, values: this.selectedValues});
   }
@@ -105,7 +112,6 @@ export class FilterBuilderContentComponent implements OnChanges {
   }
 
   public onInputSave(dataValue: DataValue, index: number) {
-    console.log('save', index, dataValue.format());
     const value: QueryConditionValue = {type: null, value: dataValue.serialize()};
 
     const values = [...(this.selectedValues || [])];
@@ -116,20 +122,34 @@ export class FilterBuilderContentComponent implements OnChanges {
   }
 
   public onInputCancel(index: number) {
-    console.log('cancel', index);
+    const dataValues = [...this.dataValues];
+    dataValues[index] = dataValues[index].copy();
+    this.dataValues = dataValues;
+
     this.editing$.next(-1);
   }
 
-  public onValueChange(dataValue: DataValue, index: number) {
-    console.log('change', index, dataValue.format());
+  public onKeyDown(event: KeyboardEvent, index: number) {
+    switch (event.code) {
+      case KeyCode.Tab:
+      case KeyCode.Enter:
+        this.onEnterOrTabKeyDown(event, index);
+    }
   }
 
   public onEnterOrTabKeyDown(event: KeyboardEvent, index: number) {
     event.stopPropagation();
     event.preventDefault();
 
+    if (event.shiftKey && event.code === KeyCode.Tab) {
+      if (index > 0) {
+        setTimeout(() => this.editing$.next(index - 1));
+      }
+      return;
+    }
+
     if (index + 1 < this.numInputs) {
-      this.editing$.next(index + 1);
+      setTimeout(() => this.editing$.next(index + 1));
     } else {
       this.finishEditing.emit();
     }

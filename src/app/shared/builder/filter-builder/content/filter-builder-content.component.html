@@ -13,6 +13,7 @@
   <data-input class="data-input mt-2"
               [class.data-input-border]="attribute.constraint?.type !== constraintType.Boolean"
               [class.data-input-padding]="attribute.constraint?.type !== constraintType.Color"
+              [class.editing]="attribute.constraint?.type !== constraintType.Boolean && (editing$ | async) === index"
               [constraint]="attribute.constraint"
               [dataValue]="dataValues[index]"
               [configuration]="configuration"
@@ -20,9 +21,7 @@
               [readonly]="!(((editing$ | async) === index) || attribute?.constraint?.type === constraintType.Boolean)"
               (cancel)="onInputCancel(index)"
               (save)="onInputSave($event, index)"
-              (keydown.enter)="onEnterOrTabKeyDown($event, index)"
-              (keydown.tab)="onEnterOrTabKeyDown($event, index)"
-              (valueChange)="onValueChange($event, index)"
+              (keydown)="onKeyDown($event, index)"
               (dblclick)="onInputDoubleClick(index)">
   </data-input>
   <div *ngFor="let item of attribute | queryConstraintConditions; let first = first"

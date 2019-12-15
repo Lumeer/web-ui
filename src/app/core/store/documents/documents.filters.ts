@@ -113,7 +113,7 @@ function applyFilterFunctions(filter: CollectionAttributeFilter, currentUser: Us
     case UserConstraintConditionValue.CurrentUser:
       return currentUser && currentUser.email;
     default:
-      return filter.conditionValues && filter.conditionValues[0].value;
+      return filter.conditionValues && filter.conditionValues[0] && filter.conditionValues[0].value;
   }
 }
 
@@ -433,7 +433,7 @@ function dataMeetFilter(
 ) {
   const constraint = findAttributeConstraint(attributes, filter.attributeId);
   const dataValue = data[filter.attributeId];
-  const filterValue = filter.conditionValues && filter.conditionValues[0].value;
+  const filterValue = filter.conditionValues && filter.conditionValues[0] && filter.conditionValues[0].value;
 
   return dataValuesMeetCondition(dataValue, filterValue, filter.condition, constraint);
 }

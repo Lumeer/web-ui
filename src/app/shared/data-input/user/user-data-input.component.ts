@@ -95,7 +95,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocus = true;
     }
     if (changes.value && this.value) {
-      if (this.value.inputType === DataValueInputType.Typed) {
+      if (this.value.inputType === DataValueInputType.Typed || this.skipValidation) {
         this.name = this.value.format();
         this.triggerInput = true;
       }

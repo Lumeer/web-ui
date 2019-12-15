@@ -29,4 +29,6 @@ export interface QueryItem {
 
   value: string;
   type: QueryItemType;
+
+  fromSuggestion?: boolean;
 }

@@ -41,6 +41,7 @@
                        (valueChange)="onValueChange($event)"
                        (onFocus)="emitFocus($event)"
                        (save)="onSaveValue($event)"
+                       (enterInvalid)="enterInvalid.emit()"
                        (cancel)="onCancel()"
                        class="d-block w-100">
   </datetime-data-input>
@@ -103,6 +104,7 @@
                     (valueChange)="onValueChange($event)"
                     (save)="onSaveValue($event)"
                     (cancel)="onCancel()"
+                    (enterInvalid)="enterInvalid.emit()"
                     (onFocus)="emitFocus($event)"
                     class="d-block w-100">
   </color-data-input>

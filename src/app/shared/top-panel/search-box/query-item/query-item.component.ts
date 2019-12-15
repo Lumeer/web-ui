@@ -38,6 +38,7 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
 import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
 import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
+import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'query-item',
@@ -88,7 +89,7 @@ export class QueryItemComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit() {
-    if (this.isAttributeType()) {
+    if (this.isAttributeType() && this.queryItem.fromSuggestion) {
       setTimeout(() => this.filterBuilderComponent && this.filterBuilderComponent.open());
     }
   }
@@ -123,12 +124,18 @@ export class QueryItemComponent implements OnInit, OnChanges {
   }
 
   public onConditionChange(data: {condition: QueryCondition; values: QueryConditionValue[]}) {
-    if (this.queryItemForm) {
-      this.queryItemForm.patchValue({
-        condition: data.condition,
-        conditionValues: data.values,
-      });
+    if (!this.queryItemForm) {
+      return;
     }
+    const numInputs = queryConditionNumInputs(data.condition);
+    this.queryItem.condition = data.condition;
+    this.queryItem.conditionValues = (data.values || []).slice(0, numInputs);
+    this.queryItemForm.patchValue({
+      condition: data.condition,
+      conditionValues: data.values,
+    });
+
+    this.onQueryItemChanged();
   }
 
   public onFinishBuilderEditing() {

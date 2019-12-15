@@ -34,6 +34,7 @@ import {DataInputModule} from '../../data-input/data-input.module';
 import {PresenterModule} from '../../presenter/presenter.module';
 import {DirectivesModule} from '../../directives/directives.module';
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
+import {DropdownModule} from '../../dropdown/dropdown.module';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.m
     SearchBoxPipesModule,
     DataInputModule,
     DirectivesModule,
+    DropdownModule,
     FilterBuilderModule,
   ],
   declarations: [

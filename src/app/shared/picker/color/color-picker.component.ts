@@ -112,8 +112,4 @@ export class ColorPickerComponent {
     this.saveOnClose.emit(this.selectedValue);
     this.selectedValue = null;
   }
-
-  public getSelectedValue(): string {
-    return this.selectedValue;
-  }
 }

@@ -18,5 +18,6 @@
                   [value]="date"
                   (save)="onSave($event)"
                   (valueChange)="onValueChange($event)"
+                  (saveOnClose)="onSaveOnClose(dateTimeInput.value, $event)"
                   (cancel)="onCancel()">
 </date-time-picker>
