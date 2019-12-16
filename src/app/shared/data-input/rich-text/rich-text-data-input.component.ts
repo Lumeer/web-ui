@@ -74,12 +74,6 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
-
-  @Output()
-  public onFocus = new EventEmitter<any>();
-
-  @Output()
   public enterInvalid = new EventEmitter();
 
   @HostBinding('class.bg-danger-light')
@@ -153,10 +147,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
       })
     );
     this.modalSubscription.add(
-      this.modalRef.content.onCancel$.subscribe(() => {
-        this.dataBlur.emit();
-        this.cancel.emit();
-      })
+      this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit())
     );
   }
 

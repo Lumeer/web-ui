@@ -18,25 +18,30 @@
  */
 
 import {SelectConstraintConfig, SelectConstraintOption} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 
 export class SelectDataValue implements DataValue {
-  public readonly option: SelectConstraintOption;
+  public readonly options: SelectConstraintOption[];
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
     public readonly config: SelectConstraintConfig,
-    byDisplayValue?: boolean
+    public readonly inputValue?: string,
   ) {
-    this.option = byDisplayValue ? findOptionByDisplayValue(config, value) : findOptionByValue(config, value);
+    this.options = findOptionsByValue(config, value);
   }
 
   public format(): string {
-    if (this.option && this.config) {
-      return (this.config.displayValues && this.option.displayValue) || this.option.value;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
     }
-    return this.value || '';
+
+    if (this.options.length && this.config) {
+      return this.options.map(option => this.config.displayValues ? option.displayValue : option.value).join(', ');
+    }
+    return formatUnknownDataValue(this.value);
   }
 
   public preview(): string {
@@ -44,60 +49,68 @@ export class SelectDataValue implements DataValue {
   }
 
   public serialize(): any {
-    return this.option ? this.option.value : this.value || '';
+    return this.options.map(option => option.value);
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
-    return !!this.option;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return true;
+    }
+    return !this.value || this.options.length > 0;
   }
 
   public increment(): SelectDataValue {
-    if (!this.option) {
+    if (this.options.length === 0) {
       return null;
     }
 
-    const nextOption = this.shiftOption(1);
-    return new SelectDataValue(nextOption.value, DataValueInputType.Stored, this.config);
+    const nextOption = this.shiftOption(1, this.options[0]);
+    return new SelectDataValue(nextOption.value, this.config);
   }
 
   public decrement(): SelectDataValue {
-    if (!this.option) {
+    if (this.options.length === 0) {
       return null;
     }
 
-    const previousOption = this.shiftOption(-1);
-    return new SelectDataValue(previousOption.value, DataValueInputType.Stored, this.config);
+    const previousOption = this.shiftOption(-1, this.options[0]);
+    return new SelectDataValue(previousOption.value, this.config);
   }
 
   public compareTo(otherValue: SelectDataValue): number {
+    if (this.config.multi || otherValue.config.multi) {
+      return 0;
+    }
     const {options} = this.config;
-    const thisIndex = options.findIndex(option => this.option && this.option.value === option.value);
-    const otherIndex = options.findIndex(option => otherValue.option && otherValue.option.value === option.value);
+    const thisIndex = options.findIndex(option => this.options[0] && this.options[0].value === option.value);
+    const otherIndex = options.findIndex(option => otherValue.options[0] && otherValue.options[0].value === option.value);
 
     return thisIndex - otherIndex;
   }
 
   public copy(newValue?: any): SelectDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new SelectDataValue(value, DataValueInputType.Copied, this.config);
+    return new SelectDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): SelectDataValue {
-    return new SelectDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new SelectDataValue(inputValue, this.config, inputValue);
   }
 
-  private shiftOption(indexDelta: number): SelectConstraintOption {
+  private shiftOption(indexDelta: number, option: SelectConstraintOption): SelectConstraintOption {
     const {options} = this.config;
-    const index = options.indexOf(this.option);
+    const index = options.indexOf(option);
     const nextIndex = (index + indexDelta) % options.length;
     return options[nextIndex];
   }
 }
 
-function findOptionByValue(config: SelectConstraintConfig, value: any): SelectConstraintOption {
-  return config && config.options && config.options.find(opt => String(opt.value) === String(value));
+function findOptionsByValue(config: SelectConstraintConfig, value: any): SelectConstraintOption[] {
+  const options = config && config.options || [];
+  const values: any[] = (isArray(value) ? value : [value]).filter(val => isNotNullOrUndefined(val) && val !== '');
+  return values.map(val => options.find(opt => String(opt.value) === String(val))).filter(option => !!option);
 }
 
-function findOptionByDisplayValue(config: SelectConstraintConfig, value: any): SelectConstraintOption {
+export function findOptionByDisplayValue(config: SelectConstraintConfig, value: any): SelectConstraintOption {
   return config && config.options && config.options.find(opt => String(opt.displayValue) === String(value));
 }

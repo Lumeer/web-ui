@@ -73,9 +73,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public cancel = new EventEmitter();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
-
-  @Output()
   public enterInvalid = new EventEmitter();
 
   @ViewChild('textInput', {static: false})

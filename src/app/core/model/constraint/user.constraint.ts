@@ -21,7 +21,6 @@ import {UserDataValue} from '../data-value/user.data-value';
 import {ConstraintData, ConstraintType} from '../data/constraint';
 import {UserConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
 import {QueryCondition} from '../../store/navigation/query/query';
 
 export class UserConstraint implements Constraint {
@@ -29,12 +28,12 @@ export class UserConstraint implements Constraint {
 
   constructor(public readonly config: UserConstraintConfig) {}
 
-  public createDataValue(
-    value: any,
-    inputType: DataValueInputType = DataValueInputType.Stored,
-    constraintData?: ConstraintData
-  ): UserDataValue {
-    return new UserDataValue(value, inputType, this.config, constraintData);
+  public createDataValue(value: any, constraintData: ConstraintData): UserDataValue {
+    return new UserDataValue(value, this.config, constraintData);
+  }
+
+  public createInputDataValue(inputValue: string, value: any, constraintData: ConstraintData): UserDataValue {
+    return new UserDataValue(value, this.config, constraintData, inputValue);
   }
 
   public conditions(): QueryCondition[] {

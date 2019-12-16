@@ -17,23 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {COLOR_LIGHT, COLOR_PRIMARY} from '../../core/constants';
+import {Pipe, PipeTransform} from '@angular/core';
+import {SelectConstraintOption} from '../../../core/model/data/constraint-config';
+import {SelectDataValue} from '../../../core/model/data-value/select.data-value';
 
-export function contrastColor(color: string, returnCodes?: { dark: string; light: string }): string {
-  if (!color) {
-    return returnCodes ? returnCodes.dark : COLOR_PRIMARY;
+@Pipe({
+  name: 'findSelectOption'
+})
+export class FindSelectOptionPipe implements PipeTransform {
+
+  public transform(options: SelectConstraintOption[], value: SelectDataValue): SelectConstraintOption {
+    const serialized = value.serialize();
+    return (options || []).find(option => (option.value || option.displayValue) === serialized);
   }
 
-  const f = parseInt(color.indexOf('#') === 0 ? color.slice(1) : color, 16),
-    R = f >> 16,
-    G = (f >> 8) & 0x00ff,
-    B = f & 0x0000ff;
-
-  const luminance = (0.299 * R + 0.587 * G + 0.114 * B) / 255;
-
-  if (luminance > 0.5) {
-    return returnCodes ? returnCodes.dark : COLOR_PRIMARY;
-  } else {
-    return returnCodes ? returnCodes.light : COLOR_LIGHT;
-  }
 }

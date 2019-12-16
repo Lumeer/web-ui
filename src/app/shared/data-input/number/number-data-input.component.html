@@ -1,7 +1,6 @@
 <input *ngIf="readonly; else numberEditing"
        [title]="value | formatDataValue"
        [value]="value | formatDataValue"
-       (focus)="onFocus.emit($event)"
        type="text"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [class.invalid-value]="!skipValidation && !valid"

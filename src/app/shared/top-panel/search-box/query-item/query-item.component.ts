@@ -39,6 +39,7 @@ import {QueryItemType} from './model/query-item-type';
 import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
 import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
 import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 
 @Component({
   selector: 'query-item',
@@ -73,6 +74,8 @@ export class QueryItemComponent implements OnInit, OnChanges {
 
   @ViewChild(FilterBuilderComponent, {static: false})
   public filterBuilderComponent: FilterBuilderComponent;
+
+  public readonly dataInputConfiguration: DataInputConfiguration = {skipValidation: true, resizeToContent: true};
 
   constructor(public hostElement: ElementRef) {}
 

@@ -21,7 +21,6 @@ import {ColorDataValue} from '../data-value/color.data-value';
 import {ConstraintType} from '../data/constraint';
 import {ColorConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
 import {QueryCondition} from '../../store/navigation/query/query';
 
 export class ColorConstraint implements Constraint {
@@ -29,8 +28,12 @@ export class ColorConstraint implements Constraint {
 
   constructor(public readonly config: ColorConstraintConfig) {}
 
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): ColorDataValue {
-    return new ColorDataValue(value, inputType, this.config);
+  public createDataValue(value: any): ColorDataValue {
+    return new ColorDataValue(value, this.config);
+  }
+
+  public createInputDataValue(inputValue: string, value: any,): ColorDataValue {
+    return new ColorDataValue(value, this.config, inputValue || '');
   }
 
   public conditions(): QueryCondition[] {

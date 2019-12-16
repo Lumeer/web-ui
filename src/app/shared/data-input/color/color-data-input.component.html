@@ -5,7 +5,6 @@
   [class.bg-transparent]="!readonly || !(value | serializeDataValue) || !valid"
   [class.bg-danger-light]="!skipValidation && readonly && !valid"
   [class.invalid-value]="!skipValidation && readonly && !(value | isDataValueValid)"
-  (focus)="onFocus.emit($event)"
   (input)="onInput($event.target.value)"
   [ngStyle]="{'background-color': valid ? (value | formatDataValue) : ''}"
   data-test="color-data-input"

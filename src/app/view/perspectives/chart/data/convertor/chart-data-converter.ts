@@ -62,7 +62,6 @@ import {
   ChartYAxisType,
   convertChartDateFormat,
 } from './chart-data';
-import {DataValueInputType} from '../../../../../core/model/data-value';
 
 @Injectable()
 export class ChartDataConverter {
@@ -407,7 +406,7 @@ export class ChartDataConverter {
 
     switch (constraint && constraint.type) {
       case ConstraintType.Text:
-        return constraint.createDataValue(value, DataValueInputType.Stored, this.constraintData).preview();
+        return constraint.createDataValue(value, this.constraintData).preview();
       case ConstraintType.DateTime:
         return this.formatDateTimeValue(value, constraint.config as DateTimeConstraintConfig);
       case ConstraintType.Percentage:
@@ -422,7 +421,7 @@ export class ChartDataConverter {
         return isNumeric(durationValue) && toNumber(durationValue) >= 0 ? toNumber(durationValue) : null;
       default:
         return (constraint || new UnknownConstraint())
-          .createDataValue(value, DataValueInputType.Stored, constraintData || this.constraintData)
+          .createDataValue(value, constraintData || this.constraintData)
           .serialize();
     }
   }
@@ -434,7 +433,7 @@ export class ChartDataConverter {
   }
 
   private formatPercentageValue(value: any, constraint: PercentageConstraint): string {
-    const percentageValue = constraint.createDataValue(value, DataValueInputType.Stored).format('');
+    const percentageValue = constraint.createDataValue(value).format('');
     return decimalUserToStore(percentageValue);
   }
 

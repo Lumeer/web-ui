@@ -37,9 +37,9 @@ export interface DataValue {
   value: any;
 
   /**
-   * Input type by which value was created
+   * Raw value enter by user.
    */
-  inputType: DataValueInputType;
+  inputValue?: string;
 
   /**
    * Generates a string that will be shown to a user.
@@ -96,12 +96,6 @@ export interface DataValue {
    * Parses a text from a user input and creates a new value from it.
    */
   parseInput(inputValue: string): DataValue;
-}
-
-export enum DataValueInputType {
-  Stored,
-  Typed,
-  Copied,
 }
 
 export class DataValueAccumulator {

@@ -62,9 +62,6 @@ export class DurationDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
-
-  @Output()
   public enterInvalid = new EventEmitter();
 
   @ViewChild('durationInput', {static: false})

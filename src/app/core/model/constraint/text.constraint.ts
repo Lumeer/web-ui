@@ -18,10 +18,9 @@
  */
 
 import {TextDataValue} from '../data-value/text.data-value';
-import {ConstraintData, ConstraintType} from '../data/constraint';
+import {ConstraintType} from '../data/constraint';
 import {TextConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
 import {QueryCondition} from '../../store/navigation/query/query';
 
 export class TextConstraint implements Constraint {
@@ -29,12 +28,12 @@ export class TextConstraint implements Constraint {
 
   constructor(public readonly config: TextConstraintConfig) {}
 
-  public createDataValue(
-    value: any,
-    inputType: DataValueInputType = DataValueInputType.Stored,
-    constraintDate?: ConstraintData
-  ): TextDataValue {
-    return new TextDataValue(value, inputType, this.config);
+  public createDataValue(value: any): TextDataValue {
+    return new TextDataValue(value, this.config);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): TextDataValue {
+    return new TextDataValue(value, this.config, inputValue);
   }
 
   public conditions(): QueryCondition[] {
@@ -49,4 +48,5 @@ export class TextConstraint implements Constraint {
       QueryCondition.NotEmpty,
     ];
   }
+
 }

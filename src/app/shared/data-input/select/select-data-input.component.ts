@@ -30,12 +30,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {TypeaheadMatch} from 'ngx-bootstrap/typeahead';
 import {SelectDataValue} from '../../../core/model/data-value/select.data-value';
-import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint-config';
+import {SelectConstraintConfig} from '../../../core/model/data/constraint-config';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
-import {DataValueInputType} from '../../../core/model/data-value';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
+import {isArray} from '../../utils/common.utils';
 
 @Component({
   selector: 'select-data-input',
@@ -66,20 +67,22 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
-
-  @Output()
-  public onFocus = new EventEmitter<any>();
+  public enterInvalid = new EventEmitter();
 
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
-  public options: SelectConstraintOption[] = [];
+  @ViewChild(OptionsDropdownComponent, {static: false})
+  public dropdown: OptionsDropdownComponent;
+
+  public options: DropdownOption[] = [];
+  public selectedOptions: DropdownOption[] = [];
 
   public text = '';
 
   private setFocus: boolean;
   private triggerInput: boolean;
+  private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
@@ -87,19 +90,26 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocus = true;
     }
     if (changes.value && this.value) {
-      if (this.value.inputType === DataValueInputType.Typed) {
-        this.text = this.value.format();
-        this.triggerInput = true;
-      }
-      this.options = this.createDisplayOptions(this.value.config);
+      this.text = this.value.format();
+      this.triggerInput = true;
+      this.options = this.createDropdownOptions(this.value.config);
+      this.selectedOptions = this.createSelectedOptions(this.value.config);
     }
   }
 
-  private createDisplayOptions(config: SelectConstraintConfig): SelectConstraintOption[] {
+  private createDropdownOptions(config: SelectConstraintConfig): DropdownOption[] {
     return config.options.map(option => ({
       ...option,
-      displayValue: (config.displayValues && option.displayValue) || option.value,
+      value: String(option.value || ''),
+      displayValue: String((config.displayValues && option.displayValue) || option.value || ''),
     }));
+  }
+
+  private createSelectedOptions(config: SelectConstraintConfig): DropdownOption[] {
+    if (isArray(this.value.value)) {
+      return [];
+    }
+    return this.value.value;
   }
 
   public ngAfterViewChecked() {
@@ -138,14 +148,21 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        if (this.readonly) {
+          return;
+        }
+        const selectedOption = this.dropdown.getActiveOption();
+        this.preventSaveAndBlur();
         // needs to be executed after parent event handlers
-        setTimeout(() => this.saveValue());
+        setTimeout(() => this.saveValue(selectedOption, true));
         return;
       case KeyCode.Escape:
         this.resetSearchInput();
         this.cancel.emit();
         return;
     }
+
+    this.dropdown.onKeyDown(event);
   }
 
   public onInput() {
@@ -153,13 +170,19 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     this.valueChange.emit(dataValue);
   }
 
-  private saveValue() {
-    const selectedOption = this.options.find(option => option.displayValue === this.text);
-
-    if (selectedOption || !this.text) {
+  private saveValue(activeOption: DropdownOption, enter?: boolean) {
+    if (activeOption) {
+      const selectedOption = this.options.find(option => option.value === activeOption.value);
       const dataValue = this.value.copy(selectedOption ? selectedOption.value : '');
       this.save.emit(dataValue);
+    } else {
+      if (enter) {
+        this.enterInvalid.emit();
+      } else {
+        this.cancel.emit();
+      }
     }
+
     this.resetSearchInput();
   }
 
@@ -167,13 +190,36 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     this.text = '';
   }
 
-  public onSelect(event: TypeaheadMatch) {
-    const dataValue = this.value.copy(event.item.value);
-    this.save.emit(dataValue);
+  public onSelect(option: DropdownOption) {
+    this.preventSaveAndBlur();
+    this.saveValue(option);
   }
 
   public onBlur() {
-    this.cancel.emit();
-    this.dataBlur.emit();
+    if (this.preventSave) {
+      this.preventSave = false;
+      this.blurCleanup();
+    } else {
+      this.saveValue(this.dropdown && this.dropdown.getActiveOption());
+    }
+  }
+
+  private preventSaveAndBlur() {
+    if (this.textInput) {
+      this.preventSave = true;
+      this.textInput.nativeElement.blur();
+    }
+  }
+
+  private blurCleanup() {
+    if (this.dropdown) {
+      this.dropdown.close();
+    }
+  }
+
+  public onFocused() {
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
   }
 }

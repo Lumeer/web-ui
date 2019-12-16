@@ -24,14 +24,15 @@ import {
   ElementRef,
   Input,
   OnChanges,
-  QueryList,
+  QueryList, Renderer2,
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
 import {FormArray, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
-import {SelectConstraintOption} from '../../../../../../../core/model/data/constraint-config';
+import {selectDefaultPalette, SelectConstraintOption} from '../../../../../../../core/model/data/constraint-config';
 import {SelectConstraintOptionsFormControl} from '../select-constraint-form-control';
 import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../utils/form.utils';
+import {ColorPickerComponent} from '../../../../../../picker/color/color-picker.component';
 
 @Component({
   selector: 'select-constraint-options-form',
@@ -56,6 +57,10 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   public displayValueInputs: QueryList<ElementRef<HTMLInputElement>>;
 
   public readonly formControlNames = SelectConstraintOptionsFormControl;
+  public backgroundInitialValues: string[] = [];
+
+  constructor(private renderer: Renderer2) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.options) {
@@ -73,17 +78,18 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
 
   private createForm() {
     (this.options || [])
-      .map(option => this.createOptionForm(option.value, option.displayValue))
+      .map((option, index) => this.createOptionForm(index, option))
       .forEach(form => this.form.push(form));
-    this.form.push(this.createOptionForm());
+    const optionsLength = (this.options || []).length;
+    this.form.push(this.createOptionForm(optionsLength));
 
     if (this.form.length < 2) {
-      this.form.push(this.createOptionForm());
+      this.form.push(this.createOptionForm(optionsLength + 1));
     }
   }
 
   public onAddOption() {
-    this.form.push(this.createOptionForm());
+    this.form.push(this.createOptionForm(this.form.controls.length));
   }
 
   public onRemoveOption(index: number) {
@@ -98,7 +104,7 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
     const value = event.target['value'];
 
     if (index === this.form.controls.length - 1 && value) {
-      this.form.push(this.createOptionForm());
+      this.form.push(this.createOptionForm(this.form.controls.length));
     }
   }
 
@@ -120,11 +126,13 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
     }
   }
 
-  private createOptionForm(value = '', displayValue = ''): FormGroup {
+  private createOptionForm(index: number, option?: SelectConstraintOption): FormGroup {
+    const initialBackground = selectDefaultPalette[index % selectDefaultPalette.length];
     return new FormGroup(
       {
-        [SelectConstraintOptionsFormControl.Value]: new FormControl(value),
-        [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl(displayValue),
+        [SelectConstraintOptionsFormControl.Value]: new FormControl(option && option.value || ''),
+        [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl(option && option.displayValue || ''),
+        [SelectConstraintOptionsFormControl.Background]: new FormControl(option && option.background || initialBackground),
       },
       this.createRequiredValueValidator()
     );
@@ -138,5 +146,26 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
         ? {required: true}
         : null;
     };
+  }
+
+  public onColorSave(optionIndex: number, color: string) {
+    this.patchBackground(optionIndex, color);
+  }
+
+  private patchBackground(optionIndex: number, color: string) {
+    this.form.at(optionIndex).patchValue({[SelectConstraintOptionsFormControl.Background]: color});
+  }
+
+  public onPaletteClick(optionIndex: number, colorPicker: ColorPickerComponent) {
+    this.backgroundInitialValues[optionIndex] = this.form.at(optionIndex).get(SelectConstraintOptionsFormControl.Background).value;
+    colorPicker.open();
+  }
+
+  public onColorChange(optionIndex: number, color: string) {
+    this.patchBackground(optionIndex, color);
+  }
+
+  public onColorCancel(optionIndex: number) {
+    this.patchBackground(optionIndex, this.backgroundInitialValues[optionIndex]);
   }
 }

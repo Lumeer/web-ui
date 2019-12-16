@@ -66,9 +66,6 @@ export class ColorDataInputComponent implements OnChanges {
   @Output()
   public enterInvalid = new EventEmitter();
 
-  @Output()
-  public onFocus = new EventEmitter<any>();
-
   @ViewChild('colorInput', {static: false})
   public colorInput: ElementRef<HTMLInputElement>;
 

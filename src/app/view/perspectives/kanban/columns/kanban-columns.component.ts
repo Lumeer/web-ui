@@ -60,12 +60,11 @@ import {findAttributeConstraint} from '../../../../core/store/collections/collec
 import {KanbanColumnComponent} from './column/kanban-column.component';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-favorite-toggle.service';
-import {SelectDataValue} from '../../../../core/model/data-value/select.data-value';
+import {findOptionByDisplayValue, SelectDataValue} from '../../../../core/model/data-value/select.data-value';
 import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Constraint} from '../../../../core/model/constraint';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {DataValueInputType} from '../../../../core/model/data-value';
 import {ModalService} from '../../../../shared/modal/modal.service';
 
 @Component({
@@ -273,12 +272,9 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   private createValueByConstraint(constraint: Constraint, newValue: any): any {
     if (constraint && constraint.type === ConstraintType.Select) {
-      return new SelectDataValue(
-        newValue,
-        DataValueInputType.Stored,
-        constraint.config as SelectConstraintConfig,
-        true
-      ).serialize();
+      const selectConfig = constraint.config as SelectConstraintConfig;
+      const value = findOptionByDisplayValue(selectConfig, newValue);
+      return new SelectDataValue(value, selectConfig).serialize();
     } else {
       return (constraint || this.unknownConstraint).createDataValue(newValue).serialize();
     }

@@ -60,9 +60,6 @@ export class CoordinatesDataInputComponent {
   @Output()
   public cancel = new EventEmitter();
 
-  @Output()
-  public onFocus = new EventEmitter<any>();
-
   @ViewChild('coordinatesInput', {static: false})
   public coordinatesInput: ElementRef<HTMLInputElement>;
 

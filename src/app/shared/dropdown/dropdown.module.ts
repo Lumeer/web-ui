@@ -24,10 +24,12 @@ import {DropdownComponent} from './dropdown.component';
 import {OptionsDropdownComponent} from './options/options-dropdown.component';
 import {PresenterModule} from '../presenter/presenter.module';
 import {GravatarModule} from 'ngx-gravatar';
+import { FilterDropdownOptionsPipe } from './options/filter-dropdown-options.pipe';
+import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({
-  imports: [CommonModule, PresenterModule, GravatarModule],
-  declarations: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
-  exports: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent],
+  imports: [CommonModule, PresenterModule, GravatarModule, PipesModule],
+  declarations: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent, FilterDropdownOptionsPipe],
+  exports: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent, FilterDropdownOptionsPipe],
 })
 export class DropdownModule {}

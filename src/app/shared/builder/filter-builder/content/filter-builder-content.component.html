@@ -10,7 +10,7 @@
 
 <div class="d-flex flex-column ml-3" *ngFor="let index of ngForIndexes">
   <div class="text-muted px-2">Choose Value</div>
-  <data-input class="data-input mt-2"
+  <data-input class="data-input mt-2 cursor-pointer"
               [class.data-input-border]="attribute.constraint?.type !== constraintType.Boolean"
               [class.data-input-padding]="attribute.constraint?.type !== constraintType.Color"
               [class.editing]="attribute.constraint?.type !== constraintType.Boolean && (editing$ | async) === index"

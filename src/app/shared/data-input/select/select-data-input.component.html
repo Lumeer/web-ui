@@ -1,37 +1,39 @@
-<input *ngIf="readonly; else textEditing"
-       [readonly]="readonly"
-       [title]="value | formatDataValue"
-       [value]="value | formatDataValue"
-       (focus)="onFocus.emit($event)"
-       [class.invalid-value]="!(value | isDataValueValid)"
-       class="border-0 w-100 h-100 px-1 bg-transparent"
-       data-test="select-data-input"
-       type="text">
+<div class="d-flex align-items-center w-100 h-100 p-1 overflow-hidden"
+     [class.invalid-value]="!(value | isDataValueValid)"
+     data-test="select-data-input">
 
-<ng-template #textEditing>
-  <input #textInput
-         [(ngModel)]="text"
-         [typeahead]="options"
-         [typeaheadItemTemplate]="suggestionItem"
-         [typeaheadLatinize]="true"
-         [typeaheadMinLength]="0"
-         [typeaheadIsFirstItemActive]="text?.length > 0"
-         [typeaheadSelectFirstItem]="text?.length > 0"
-         [typeaheadScrollable]="true"
-         [typeaheadOptionsInScrollableView]="10"
-         [adaptivePosition]="true"
-         typeaheadOptionField="displayValue"
-         container="body"
-         (typeaheadOnSelect)="onSelect($event)"
-         (typeaheadOnBlur)="onBlur()"
-         (ngModelChange)="onInput()"
-         class="border-0 w-100 h-100 px-1 bg-transparent"
-         data-test="select-data-input"
-         type="text">
-</ng-template>
+  <ng-container *ngIf="value.config?.multi || readonly">
 
-<ng-template #suggestionItem
-             let-model="item"
-             let-index="index">
-  {{ model.displayValue }}
-</ng-template>
+  <span class="d-inline-block px-2 py-1 tag text-nowrap" [title]="value | formatDataValue"
+        *ngIf="value.value && {option: options | findSelectOption:value} as tagData"
+        [style.background]="tagData.option?.background"
+        [style.color]="tagData.option?.background | contrastColor"
+        [class.invalid-value]="!tagData.option">
+    {{value | formatDataValue}}
+  </span>
+
+  </ng-container>
+
+  <ng-container *ngIf="!readonly">
+
+    <input #textInput
+           [(ngModel)]="text"
+           (focus)="onFocused()"
+           (blur)="onBlur()"
+           (ngModelChange)="onInput()"
+           class="border-0 w-100 h-100 px-1 bg-transparent"
+           data-test="select-data-input"
+           type="text">
+
+    <options-dropdown [options]="options | filterDropdownOptions:text"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInput"
+                      [selectedValue]="value | serializeDataValue"
+                      [firstItemActive]="text?.length > 0"
+                      (selectOption)="onSelect($event)">
+    </options-dropdown>
+
+  </ng-container>
+
+</div>

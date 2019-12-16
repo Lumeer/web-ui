@@ -21,19 +21,24 @@ import {SelectDataValue} from '../data-value/select.data-value';
 import {ConstraintType} from '../data/constraint';
 import {SelectConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
 import {QueryCondition} from '../../store/navigation/query/query';
 
 export class SelectConstraint implements Constraint {
   public readonly type = ConstraintType.Select;
 
-  constructor(public readonly config: SelectConstraintConfig) {}
+  constructor(public readonly config: SelectConstraintConfig) {
+  }
 
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): SelectDataValue {
-    return new SelectDataValue(value, inputType, this.config);
+  public createDataValue(value: any,): SelectDataValue {
+    return new SelectDataValue(value, this.config);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): SelectDataValue {
+    return new SelectDataValue(value, this.config, inputValue);
   }
 
   public conditions(): QueryCondition[] {
     return [QueryCondition.In, QueryCondition.NotIn, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
   }
+
 }

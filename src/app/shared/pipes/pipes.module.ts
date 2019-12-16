@@ -83,6 +83,7 @@ import {StripHtmlPipe} from './strip-html.pipe';
 import {ArrayReversePipe} from './array/array-reverse.pipe';
 import {RoleHumanReadablePipe} from './role-human-readable.pipe';
 import {RemoveLastCharactersPipe} from './remove-last-characters.pipe';
+import {SafeStylePipe} from './safe-style.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -149,6 +150,7 @@ import {RemoveLastCharactersPipe} from './remove-last-characters.pipe';
     ArrayReversePipe,
     RoleHumanReadablePipe,
     RemoveLastCharactersPipe,
+    SafeStylePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -215,6 +217,7 @@ import {RemoveLastCharactersPipe} from './remove-last-characters.pipe';
     ArrayReversePipe,
     RoleHumanReadablePipe,
     RemoveLastCharactersPipe,
+    SafeStylePipe,
   ],
 })
 export class PipesModule {}

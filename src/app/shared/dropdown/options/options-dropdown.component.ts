@@ -67,6 +67,9 @@ export class OptionsDropdownComponent implements OnChanges {
   @Input()
   public selectedValue: any;
 
+  @Input()
+  public multiSelect: boolean;
+
   @Output()
   public selectOption = new EventEmitter<DropdownOption>();
 
@@ -106,7 +109,9 @@ export class OptionsDropdownComponent implements OnChanges {
   public onOptionSelect(event: MouseEvent, option: DropdownOption) {
     event.preventDefault();
     this.selectOption.emit(option);
-    this.close();
+    if (!this.multiSelect) {
+      this.close();
+    }
   }
 
   public open() {
@@ -119,7 +124,7 @@ export class OptionsDropdownComponent implements OnChanges {
   private highlightSelectedValue() {
     if (isNotNullOrUndefined(this.selectedValue)) {
       const activeIndex = (this.options || []).findIndex(option => deepObjectsEquals(option.value, this.selectedValue));
-      this.activeIndex$.next(activeIndex);
+      setTimeout(() => this.activeIndex$.next(activeIndex));
     }
   }
 

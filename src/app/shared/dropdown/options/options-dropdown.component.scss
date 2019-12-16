@@ -1,6 +1,14 @@
 @import '~src/styles/variables';
 
-.dropdown-item.active-item {
-  background: $primary !important;
-  color: #fff;
+.card {
+  min-width: 100px;
+}
+
+.dropdown-item {
+  padding: 0.25rem 1rem !important;
+
+  .option {
+    border-radius: 0.5rem;
+    padding: 0 0.5rem;
+  }
 }

@@ -51,6 +51,7 @@ import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.modu
 import {QuillModule} from 'ngx-quill';
 import {FilterDataSuggestionsPipe} from './filter-data-suggestions.pipe';
 import {FilterUsersPipe} from './user/filter-users.pipe';
+import { FindSelectOptionPipe } from './select/find-select-option.pipe';
 
 @NgModule({
   imports: [
@@ -89,6 +90,7 @@ import {FilterUsersPipe} from './user/filter-users.pipe';
     RichTextDataInputComponent,
     FilterDataSuggestionsPipe,
     FilterUsersPipe,
+    FindSelectOptionPipe,
   ],
   exports: [
     DataInputComponent,

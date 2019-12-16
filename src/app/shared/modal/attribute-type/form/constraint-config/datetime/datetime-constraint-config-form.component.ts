@@ -29,7 +29,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
-import {DataValueInputType} from '../../../../../../core/model/data-value';
 import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../../date-time/date-time-options';
 
 @Component({
@@ -85,7 +84,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
           maxValue: undefined,
           range: undefined,
         };
-        return new DateTimeDataValue(new Date().toISOString(), DataValueInputType.Stored, config);
+        return new DateTimeDataValue(new Date().toISOString(), config);
       })
     );
   }

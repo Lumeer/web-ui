@@ -50,7 +50,6 @@ import {
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
-import {DataValueInputType} from '../../../../core/model/data-value';
 import {NumberConstraint} from '../../../../core/model/constraint/number.constraint';
 
 interface PivotMergeData {
@@ -110,7 +109,7 @@ export class PivotDataConverter {
     const overrideConstraint =
       pivotConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotConstraint);
     return (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, DataValueInputType.Stored, constraintData)
+      .createDataValue(value, constraintData)
       .preview();
   }
 

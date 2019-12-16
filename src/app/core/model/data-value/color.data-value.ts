@@ -23,7 +23,8 @@ import {prolongShortHexColor} from '../../../shared/utils/color/prolong-short-he
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {validDataColors} from '../../../shared/utils/data/valid-data-colors';
 import {ColorConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export class ColorDataValue implements DataValue {
   public readonly hexCode: string;
@@ -31,17 +32,18 @@ export class ColorDataValue implements DataValue {
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: ColorConstraintConfig
+    public readonly config: ColorConstraintConfig,
+    public readonly inputValue?: string,
   ) {
     this.hexCode = value || value === 0 ? parseColorHexCode(value) : null;
     this.numberCode = convertColorHexCodeToNumber(this.hexCode);
   }
 
   public format(): string {
-    if (this.inputType === DataValueInputType.Typed) {
-      return this.value;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
     }
+
     return this.hexCode || formatUnknownDataValue(this.value);
   }
 
@@ -54,7 +56,7 @@ export class ColorDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
-    return Boolean(!this.value || this.hexCode);
+    return isNotNullOrUndefined(this.inputValue) || !this.value || !!this.hexCode;
   }
 
   public increment(): ColorDataValue {
@@ -63,11 +65,11 @@ export class ColorDataValue implements DataValue {
     }
 
     if (this.hexCode === '#ffffff') {
-      return new ColorDataValue('#000000', DataValueInputType.Stored, this.config);
+      return new ColorDataValue('#000000', this.config);
     }
 
     const value = (this.numberCode + 1).toString(16);
-    return new ColorDataValue(value, DataValueInputType.Stored, this.config);
+    return new ColorDataValue(value, this.config);
   }
 
   public decrement(): ColorDataValue {
@@ -76,11 +78,11 @@ export class ColorDataValue implements DataValue {
     }
 
     if (this.hexCode === '#000000') {
-      return new ColorDataValue('#ffffff', DataValueInputType.Stored, this.config);
+      return new ColorDataValue('#ffffff', this.config);
     }
 
     const value = (this.numberCode - 1).toString(16);
-    return new ColorDataValue(value, DataValueInputType.Stored, this.config);
+    return new ColorDataValue(value, this.config);
   }
 
   public compareTo(otherValue: ColorDataValue): number {
@@ -89,11 +91,11 @@ export class ColorDataValue implements DataValue {
 
   public copy(newValue?: any): ColorDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new ColorDataValue(value, DataValueInputType.Copied, this.config);
+    return new ColorDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): ColorDataValue {
-    return new ColorDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new ColorDataValue(inputValue, this.config, inputValue);
   }
 }
 

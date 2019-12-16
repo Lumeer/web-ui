@@ -63,7 +63,6 @@ import {
 import {formatData} from '../../../../shared/utils/data/format-data';
 import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {DataValueInputType} from '../../../../core/model/data-value';
 
 type DataResourceSwimlanes = DataResource & {swimlanes?: string[]};
 
@@ -359,10 +358,10 @@ export class GanttChartConverter {
       const datesSwimlanes = [];
       if (showDatesAsSwimlanes) {
         const startString = (this.getConstraint(stemConfig.start) || new UnknownConstraint())
-          .createDataValue(start, DataValueInputType.Stored, this.constraintData)
+          .createDataValue(start, this.constraintData)
           .format();
         const endString = (this.getConstraint(stemConfig.end) || new UnknownConstraint())
-          .createDataValue(end, DataValueInputType.Stored, this.constraintData)
+          .createDataValue(end, this.constraintData)
           .format();
         datesSwimlanes.push(...[startString, endString]);
       }
@@ -384,7 +383,7 @@ export class GanttChartConverter {
         resourceType: stemConfig.start.resourceType,
       };
 
-      const nameFormatted = constraint.createDataValue(name, DataValueInputType.Stored, this.constraintData).format();
+      const nameFormatted = constraint.createDataValue(name, this.constraintData).format();
 
       arr.push({
         id: dataResource.id,
@@ -477,7 +476,7 @@ export class GanttChartConverter {
       barModel.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
 
     const formattedValue = (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, DataValueInputType.Stored, this.constraintData)
+      .createDataValue(value, this.constraintData)
       .format();
     return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
   }

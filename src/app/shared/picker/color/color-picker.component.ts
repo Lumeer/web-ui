@@ -31,6 +31,7 @@ import {greyscale, palette, saturated} from '../colors';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'color-picker',
@@ -59,6 +60,8 @@ export class ColorPickerComponent {
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
 
+  public showPicker$ = new BehaviorSubject(false);
+
   private selectedValue: string;
 
   public readonly localPalette = [...greyscale, '#ffffff', ...saturated, ...palette];
@@ -84,6 +87,7 @@ export class ColorPickerComponent {
   }
 
   public open() {
+    this.showPicker$.next(true);
     if (this.dropdown) {
       this.dropdown.open();
     }
@@ -91,6 +95,7 @@ export class ColorPickerComponent {
   }
 
   public close() {
+    this.showPicker$.next(false);
     if (this.dropdown) {
       this.dropdown.close();
     }

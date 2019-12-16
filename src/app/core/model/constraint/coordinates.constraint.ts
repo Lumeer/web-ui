@@ -21,16 +21,20 @@ import {CoordinatesDataValue} from '../data-value/coordinates.data-value';
 import {ConstraintType} from '../data/constraint';
 import {CoordinatesConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
 import {QueryCondition} from '../../store/navigation/query/query';
 
 export class CoordinatesConstraint implements Constraint {
   public readonly type = ConstraintType.Coordinates;
 
-  constructor(public readonly config: CoordinatesConstraintConfig) {}
+  constructor(public readonly config: CoordinatesConstraintConfig) {
+  }
 
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): CoordinatesDataValue {
-    return new CoordinatesDataValue(value, inputType, this.config);
+  public createDataValue(value: any): CoordinatesDataValue {
+    return new CoordinatesDataValue(value, this.config);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): CoordinatesDataValue {
+    return new CoordinatesDataValue(value, this.config, inputValue || '');
   }
 
   public conditions(): QueryCondition[] {

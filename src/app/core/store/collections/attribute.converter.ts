@@ -22,7 +22,12 @@ import {convertToBig} from '../../../shared/utils/data.utils';
 import {AttributeDto, AttributeFunctionDto, ConstraintDto} from '../../dto/attribute.dto';
 import {Constraint} from '../../model/constraint';
 import {ConstraintType} from '../../model/data/constraint';
-import {ConstraintConfig, DateTimeConstraintConfig, NumberConstraintConfig} from '../../model/data/constraint-config';
+import {
+  ConstraintConfig,
+  DateTimeConstraintConfig,
+  NumberConstraintConfig,
+  SelectConstraintConfig, selectDefaultPalette
+} from '../../model/data/constraint-config';
 import {Attribute, AttributeFunction} from './collection';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
@@ -60,12 +65,14 @@ function convertConstraintConfigDtoToModel(type: string, config: any): Constrain
       return convertDateTimeConstraintConfigDtoToModel(config);
     case ConstraintType.Number:
       return convertNumberConstraintConfigDtoToModel(config);
+    case ConstraintType.Select:
+      return convertSelectConstraintConfigDtoToModel(config);
     default:
       return config;
   }
 }
 
-function convertDateTimeConstraintConfigDtoToModel(config: any): ConstraintConfig {
+function convertDateTimeConstraintConfigDtoToModel(config: any): DateTimeConstraintConfig {
   return {
     format: config.format,
     minValue: config.minValue && new Date(config.minValue),
@@ -73,7 +80,7 @@ function convertDateTimeConstraintConfigDtoToModel(config: any): ConstraintConfi
   };
 }
 
-function convertNumberConstraintConfigDtoToModel(config: any): ConstraintConfig {
+function convertNumberConstraintConfigDtoToModel(config: any): NumberConstraintConfig {
   return {
     decimal: config.decimal,
     format: config.format,
@@ -81,6 +88,16 @@ function convertNumberConstraintConfigDtoToModel(config: any): ConstraintConfig 
     minValue: convertToBig(config.minValue),
     maxValue: convertToBig(config.maxValue),
   };
+}
+
+function convertSelectConstraintConfigDtoToModel(config: any): SelectConstraintConfig {
+  return {
+    ...config,
+    options: (config.options || []).map((option, index) => ({
+      ...option,
+      background: option.background || selectDefaultPalette[index % selectDefaultPalette.length]
+    }))
+  }
 }
 
 function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto {

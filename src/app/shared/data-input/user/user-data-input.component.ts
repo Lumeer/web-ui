@@ -35,7 +35,6 @@ import {UserDataValue} from '../../../core/model/data-value/user.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {User} from '../../../core/store/users/user';
-import {DataValueInputType} from '../../../core/model/data-value';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
@@ -95,10 +94,8 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocus = true;
     }
     if (changes.value && this.value) {
-      if (this.value.inputType === DataValueInputType.Typed || this.skipValidation) {
-        this.name = this.value.format();
-        this.triggerInput = true;
-      }
+      this.name = this.value.format();
+      this.triggerInput = true;
     }
     if (changes.value) {
       this.users = this.bindUsers();
@@ -149,8 +146,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
           return;
         }
         const selectedOption = this.dropdown.getActiveOption();
+        this.preventSaveAndBlur();
         // needs to be executed after parent event handlers
-        setTimeout(() => this.saveValue(selectedOption));
+        setTimeout(() => this.saveValue(selectedOption, true));
         return;
       case KeyCode.Escape:
         this.resetSearchInput();

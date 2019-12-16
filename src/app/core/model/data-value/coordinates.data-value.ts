@@ -17,28 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {formatCoordinates, parseCoordinates} from '../../../shared/utils/map/coordinates.utils';
 import {MapCoordinates} from '../../store/maps/map.model';
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
 
 export class CoordinatesDataValue implements DataValue {
   public readonly coordinates: MapCoordinates;
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: CoordinatesConstraintConfig
+    public readonly config: CoordinatesConstraintConfig,
+    public readonly inputValue?: string,
   ) {
     this.coordinates = parseCoordinates(value);
   }
 
   public format(): string {
-    if (this.inputType === DataValueInputType.Typed) {
-      return this.value;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
     }
+
     if (!this.coordinates) {
       return formatUnknownDataValue(this.value);
     }
@@ -55,7 +56,7 @@ export class CoordinatesDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
-    return !!this.coordinates;
+    return isNotNullOrUndefined(this.inputValue) || !!this.coordinates;
   }
 
   public increment(): CoordinatesDataValue {
@@ -76,10 +77,10 @@ export class CoordinatesDataValue implements DataValue {
 
   public copy(newValue?: any): CoordinatesDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new CoordinatesDataValue(value, DataValueInputType.Copied, this.config);
+    return new CoordinatesDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): CoordinatesDataValue {
-    return new CoordinatesDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new CoordinatesDataValue(inputValue, this.config, inputValue);
   }
 }

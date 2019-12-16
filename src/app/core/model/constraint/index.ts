@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue, DataValueAccumulator, DataValueInputType} from '../data-value';
+import {DataValue, DataValueAccumulator} from '../data-value';
 import {ConstraintData, ConstraintType} from '../data/constraint';
 import {ConstraintConfig} from '../data/constraint-config';
 import {QueryCondition} from '../../store/navigation/query/query';
@@ -36,7 +36,12 @@ export interface Constraint {
   /**
    * Creates data value based on this constraint.
    */
-  createDataValue(value: any, inputType?: DataValueInputType, constraintData?: ConstraintData): DataValue;
+  createDataValue(value: any, constraintData?: ConstraintData): DataValue;
+
+  /**
+   * Creates data value based on this constraint.
+   */
+  createInputDataValue(inputValue: string, value: any, constraintData?: ConstraintData): DataValue;
 
   /**
    * Calculates a sum of the given values.

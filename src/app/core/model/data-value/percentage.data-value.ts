@@ -21,7 +21,7 @@ import Big from 'big.js';
 import {compareBigNumbers} from '../../../shared/utils/big/compare-big-numbers';
 import {convertBigToNumberSafely} from '../../../shared/utils/big/convert-big-to-number-safely';
 import {createBigWithoutTrailingZeros} from '../../../shared/utils/big/create-big-without-trailing-zeros';
-import {isNumeric, toNumber} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
 import {
   convertToBig,
   decimalStoreToUser,
@@ -29,27 +29,30 @@ import {
   formatUnknownDataValue,
 } from '../../../shared/utils/data.utils';
 import {PercentageConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
 
 export class PercentageDataValue implements DataValue {
   public readonly percentage: Big;
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: PercentageConstraintConfig
+    public readonly config: PercentageConstraintConfig,
+    public readonly inputValue?: string,
   ) {
+    this.percentage = this.createPercentage(value)
+  }
+
+  private createPercentage(value: any): Big {
     const containerPercentageSign = String(value)
       .trim()
       .endsWith('%');
-    const pureValue =
-      this.inputType === DataValueInputType.Typed || containerPercentageSign ? parseInputValue(value) : value;
-    this.percentage = convertPercentageToBig(pureValue, config && config.decimals);
+    const pureValue = containerPercentageSign ? parseInputValue(value) : value;
+    return convertPercentageToBig(pureValue, this.config && this.config.decimals);
   }
 
   public format(suffix = '%'): string {
-    if (this.inputType === DataValueInputType.Typed) {
-      return this.value;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
     }
     if (!this.percentage) {
       return formatUnknownDataValue(this.value);
@@ -72,6 +75,10 @@ export class PercentageDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.copy(this.inputValue).isValid(ignoreConfig);
+    }
+
     if (!this.value) {
       return true;
     }
@@ -92,11 +99,11 @@ export class PercentageDataValue implements DataValue {
   }
 
   public increment(): PercentageDataValue {
-    return this.percentage && new PercentageDataValue(this.percentage.add(1), DataValueInputType.Stored, this.config);
+    return this.percentage && new PercentageDataValue(this.percentage.add(1), this.config);
   }
 
   public decrement(): PercentageDataValue {
-    return this.percentage && new PercentageDataValue(this.percentage.sub(1), DataValueInputType.Stored, this.config);
+    return this.percentage && new PercentageDataValue(this.percentage.sub(1), this.config);
   }
 
   public compareTo(otherValue: PercentageDataValue): number {
@@ -105,11 +112,11 @@ export class PercentageDataValue implements DataValue {
 
   public copy(newValue?: any): PercentageDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new PercentageDataValue(value, DataValueInputType.Copied, this.config);
+    return new PercentageDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): PercentageDataValue {
-    return new PercentageDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new PercentageDataValue(inputValue, this.config, inputValue);
   }
 }
 

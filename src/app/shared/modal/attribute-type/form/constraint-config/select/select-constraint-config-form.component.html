@@ -1,20 +1,39 @@
 <div [formGroup]="form">
   <p class="text-muted"
      i18n="@@constraint.select.options.description">
-    Keeps a predefined set of valid values from which one can be selected. At least two values must be configured.
+    Keeps a predefined set of valid values from which one can be selected. At least one value must be configured.
   </p>
 
   <div class="form-group">
-    <div class="form-check">
+
+    <div class="custom-control custom-checkbox">
+      <input [formControlName]="formControlName.Multi"
+             [id]="formControlName.Multi"
+             #multiCheckbox
+             class="custom-control-input"
+             type="checkbox">
+      <label [for]="formControlName.Multi"
+             class="custom-control-label">
+      </label>
+      <span i18n="@@constraint.select.multi.label" class="cursor-pointer user-select-none"
+            (click)="multiCheckbox.click()">
+        Allow select multiple values
+      </span>
+    </div>
+
+    <div class="custom-control custom-checkbox mt-2">
       <input [formControlName]="formControlName.DisplayValues"
              [id]="formControlName.DisplayValues"
-             class="form-check-input"
+             #checkbox
+             class="custom-control-input"
              type="checkbox">
       <label [for]="formControlName.DisplayValues"
-             class="form-check-label"
-             i18n="@@constraint.select.displayValues.label">
-        Distinguish display values
+             class="custom-control-label">
       </label>
+      <span i18n="@@constraint.select.displayValues.label" class="cursor-pointer user-select-none"
+            (click)="checkbox.click()">
+        Distinguish display values
+      </span>
       <i class="fas fa-question-circle ml-1 cursor-help"
          title="Use different values for users and for computations in functions (e.g. High Priority = 3)."
          i18n-title="@@constraint.select.displayValues.help">

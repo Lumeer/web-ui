@@ -37,6 +37,7 @@ import {DataCursor} from './data-cursor';
 import {DataSuggestion} from './data-suggestion';
 import {DataInputConfiguration} from './data-input-configuration';
 import {USER_AVATAR_SIZE} from '../../core/constants';
+import {isNotNullOrUndefined} from '../utils/common.utils';
 
 @Component({
   selector: 'data-input',
@@ -79,15 +80,13 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public cancel = new EventEmitter();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
-
-  @Output()
   public enterInvalid = new EventEmitter();
 
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.dataValue && this.configuration.resizeToContent) {
@@ -97,12 +96,15 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   private recalculateWidth(value: DataValue) {
     const width = this.getWidthOfInput(value);
-    this.renderer.setStyle(this.elementRef.nativeElement, 'width', `${width}px`);
+    this.renderer.setStyle(this.elementRef.nativeElement, 'width', isNotNullOrUndefined(width) ? `${width}px` : null);
   }
 
-  private getWidthOfInput(value: DataValue): number {
+  private getWidthOfInput(value: DataValue): number | null {
+    if (this.computationNotNecessary()) {
+      return null;
+    }
     if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
-      return 34;
+      return 16;
     }
 
     if (!this.tempElement) {
@@ -122,6 +124,11 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     }
 
     return textWidth;
+  }
+
+  private computationNotNecessary(): boolean {
+    const constraintType = this.constraint && this.constraint.type;
+    return [ConstraintType.Select].includes(constraintType);
   }
 
   private createTempElement(): HTMLElement {
@@ -157,9 +164,5 @@ export class DataInputComponent implements OnChanges, OnDestroy {
       this.recalculateWidth(this.dataValue);
     }
     this.cancel.emit();
-  }
-
-  public emitFocus($event: any) {
-    this.onFocus.emit($event);
   }
 }

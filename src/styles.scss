@@ -187,6 +187,10 @@ typeahead-container {
   font-size: 0.9375rem;
 }
 
+.user-select-none {
+  user-select: none;
+}
+
 .hidden-input {
   background: transparent;
   border: none;

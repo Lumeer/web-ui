@@ -75,7 +75,8 @@ import {isAttributeConstraintType} from '../../../../../../../shared/utils/attri
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
 import {isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
-import {DataValue, DataValueInputType} from '../../../../../../../core/model/data-value';
+import {DataValue} from '../../../../../../../core/model/data-value';
+import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 
 @Component({
   selector: 'table-data-cell',
@@ -161,7 +162,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToEditing());
@@ -243,22 +245,24 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private createDataValueByValue$(
     value: any,
-    inputType: DataValueInputType = DataValueInputType.Stored
+    typed?: boolean
   ): Observable<DataValue> {
     if (this.attribute$) {
       return this.attribute$.pipe(
         map(
-          attribute =>
-            (attribute &&
-              attribute.constraint &&
-              attribute.constraint.createDataValue(value, inputType, this.constraintData)) ||
-            new UnknownDataValue(value, inputType)
+          attribute => {
+            const constraint = attribute && attribute.constraint || new UnknownConstraint();
+            if (typed) {
+              return constraint.createInputDataValue(value, this.getValue(), this.constraintData);
+            }
+            return constraint.createDataValue(value, this.constraintData);
+          }
         ),
-        tap(dataValue => inputType === DataValueInputType.Typed && (this.editedValue = dataValue)),
-        take(inputType === DataValueInputType.Typed ? 1 : Number.MAX_SAFE_INTEGER)
+        tap(dataValue => typed && (this.editedValue = dataValue)),
+        take(typed ? 1 : Number.MAX_SAFE_INTEGER)
       );
     }
-    return of(new UnknownDataValue(value, inputType));
+    return of(new UnknownDataValue(value));
   }
 
   private subscribeToAffected(): Subscription {
@@ -319,7 +323,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private startEditingAndClear() {
-    this.dataValue$ = this.createDataValueByValue$('', DataValueInputType.Typed);
+    this.dataValue$ = this.createDataValueByValue$('', true);
     this.editing$.next(true);
   }
 
@@ -340,7 +344,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private startEditingAndChangeValue(value: string) {
     if (value) {
-      this.dataValue$ = this.createDataValueByValue$(value, DataValueInputType.Typed);
+      this.dataValue$ = this.createDataValueByValue$(value, true);
     }
     this.editing$.next(true);
   }

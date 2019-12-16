@@ -18,12 +18,12 @@
  */
 
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
 
 export class UnknownDataValue implements DataValue {
   public readonly config: any = {};
 
-  constructor(public readonly value: any, public readonly inputType: DataValueInputType) {}
+  constructor(public readonly value: any) {}
 
   public format(): string {
     return formatUnknownDataValue(this.value);
@@ -59,10 +59,10 @@ export class UnknownDataValue implements DataValue {
 
   public copy(newValue?: any): DataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new UnknownDataValue(value, DataValueInputType.Copied);
+    return new UnknownDataValue(value);
   }
 
   public parseInput(inputValue: string): DataValue {
-    return new UnknownDataValue(inputValue, DataValueInputType.Typed);
+    return new UnknownDataValue(inputValue);
   }
 }

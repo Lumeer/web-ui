@@ -62,9 +62,6 @@ export class PercentageDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
-
-  @Output()
   public enterInvalid = new EventEmitter();
 
   @ViewChild('percentageInput', {static: false})

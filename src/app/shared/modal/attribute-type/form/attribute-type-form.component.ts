@@ -131,6 +131,7 @@ export class AttributeTypeFormComponent implements OnChanges {
         };
       case ConstraintType.Select:
         return {
+          multi: this.configForm.get(SelectConstraintFormControl.Multi).value,
           displayValues: this.configForm.get(SelectConstraintFormControl.DisplayValues).value,
           options: this.configForm
             .get(SelectConstraintFormControl.Options)

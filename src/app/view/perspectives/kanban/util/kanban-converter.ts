@@ -41,7 +41,6 @@ import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {findOriginalAttributeConstraint} from './kanban.util';
 import {generateId} from '../../../../shared/utils/resource.utils';
-import {DataValueInputType} from '../../../../core/model/data-value';
 
 interface KanbanColumnData {
   resourcesOrder: KanbanResource[];
@@ -313,7 +312,7 @@ export class KanbanConverter {
       this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanAttributeConstraint);
 
     return (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, DataValueInputType.Stored, constraintData)
+      .createDataValue(value, constraintData)
       .format();
   }
 }

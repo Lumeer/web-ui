@@ -21,15 +21,16 @@ import * as moment from 'moment';
 import {formatUnknownDataValue, parseMomentDate} from '../../../shared/utils/data.utils';
 import {getSmallestDateUnit, resetUnusedMomentPart} from '../../../shared/utils/date.utils';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export class DateTimeDataValue implements DataValue {
   private readonly momentDate: moment.Moment;
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: DateTimeConstraintConfig
+    public readonly config: DateTimeConstraintConfig,
+    public readonly inputValue?: string,
   ) {
     if (this.value || this.value === 0) {
       this.momentDate = parseMomentDate(this.value, this.config && this.config.format);
@@ -45,8 +46,8 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public format(showInvalid = true): string {
-    if (this.inputType === DataValueInputType.Typed) {
-      return this.value;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
     }
 
     if ([undefined, null, ''].includes(this.value)) {
@@ -63,6 +64,10 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return true;
+    }
+
     if (!this.value && this.value !== 0) {
       return true;
     }
@@ -105,13 +110,13 @@ export class DateTimeDataValue implements DataValue {
   public increment(): DateTimeDataValue {
     const smallestUnit = getSmallestDateUnit(this.config.format);
     const nextValue = this.momentDate.add(1, smallestUnit).toISOString();
-    return new DateTimeDataValue(nextValue, DataValueInputType.Stored, this.config);
+    return new DateTimeDataValue(nextValue, this.config);
   }
 
   public decrement(): DateTimeDataValue {
     const smallestUnit = getSmallestDateUnit(this.config.format);
     const nextValue = this.momentDate.subtract(1, smallestUnit).toISOString();
-    return new DateTimeDataValue(nextValue, DataValueInputType.Stored, this.config);
+    return new DateTimeDataValue(nextValue, this.config);
   }
 
   public compareTo(otherValue: DateTimeDataValue): number {
@@ -126,7 +131,7 @@ export class DateTimeDataValue implements DataValue {
 
   public copy(newValue?: any): DateTimeDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new DateTimeDataValue(value, DataValueInputType.Copied, this.config);
+    return new DateTimeDataValue(value, this.config);
   }
 
   public toDate(): Date {
@@ -135,6 +140,6 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public parseInput(inputValue: string): DateTimeDataValue {
-    return new DateTimeDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new DateTimeDataValue(inputValue, this.config, inputValue);
   }
 }

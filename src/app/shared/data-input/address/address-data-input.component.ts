@@ -68,9 +68,6 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
-  @Output()
-  public onFocus = new EventEmitter<any>();
-
   @ViewChild('addressInput', {static: false})
   public addressInput: ElementRef<HTMLInputElement>;
 

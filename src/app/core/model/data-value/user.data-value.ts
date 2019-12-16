@@ -22,31 +22,44 @@ import {isEmailValid} from '../../../shared/utils/email.utils';
 import {User} from '../../store/users/user';
 import {ConstraintData} from '../data/constraint';
 import {UserConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export class UserDataValue implements DataValue {
-  public readonly user: User;
+  public readonly users: User[];
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
     public readonly config: UserConstraintConfig,
-    public readonly constraintData: ConstraintData
+    public readonly constraintData: ConstraintData,
+    public readonly inputValue?: string,
   ) {
-    const email = String(value).trim();
-    this.user = ((constraintData && constraintData.users) || []).find(user => user.email === email);
+    this.users = this.createUsers();
+  }
+
+  private createUsers(): User[] {
+    const users = this.constraintData && this.constraintData.users || [];
+    const userValues: any[] = (isArray(this.value) ? this.value : [this.value]).filter(val => isNotNullOrUndefined(val) && val !== '');
+    console.log(userValues);
+    return userValues.map(userValue => {
+      const user = users.find(u => u.email === userValue);
+      if (user) {
+        return user;
+      }
+      if (this.config.externalUsers && isEmailValid(String(userValue))) {
+        return {email: String(userValue), name: String(userValue), groupsMap: {}};
+      }
+      return null;
+    }).filter(user => !!user);
   }
 
   public format(): string {
-    if (this.user) {
-      return this.user.name || this.user.email;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
     }
 
-    if (
-      this.inputType === DataValueInputType.Typed ||
-      (this.config && this.config.externalUsers && isEmailValid(String(this.value)))
-    ) {
-      return String(this.value);
+    if (this.users.length) {
+      return this.users.map(user => user.name || user.email).join(', ');
     }
 
     return formatUnknownDataValue(this.value);
@@ -57,26 +70,15 @@ export class UserDataValue implements DataValue {
   }
 
   public serialize(): any {
-    if (this.user) {
-      return this.user.email;
-    }
-
-    if (
-      this.inputType === DataValueInputType.Typed ||
-      (this.config && this.config.externalUsers && isEmailValid(String(this.value)))
-    ) {
-      return String(this.value);
+    if (this.users.length) {
+      return this.users.map(user => user.email);
     }
 
     return '';
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
-    if (this.user) {
-      return true;
-    }
-
-    return Boolean(this.config) && this.config.externalUsers && isEmailValid(String(this.value));
+    return this.users.length > 0;
   }
 
   public increment(): UserDataValue {
@@ -88,8 +90,12 @@ export class UserDataValue implements DataValue {
   }
 
   public compareTo(otherValue: UserDataValue): number {
-    if (this.user && otherValue.user) {
-      this.user.email.localeCompare(otherValue.user.email);
+    if (this.config.multi || otherValue.config.multi) {
+      return 0;
+    }
+
+    if (this.users[0] && otherValue.users[0]) {
+      this.users[0].email.localeCompare(otherValue.users[0].email);
     }
 
     return String(this.value).localeCompare(String(otherValue.value));
@@ -97,10 +103,10 @@ export class UserDataValue implements DataValue {
 
   public copy(newValue?: any): UserDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new UserDataValue(value, DataValueInputType.Copied, this.config, this.constraintData);
+    return new UserDataValue(value, this.config, this.constraintData);
   }
 
   public parseInput(inputValue: string): UserDataValue {
-    return new UserDataValue(inputValue, DataValueInputType.Typed, this.config, this.constraintData);
+    return new UserDataValue(inputValue, this.config, this.constraintData, inputValue);
   }
 }

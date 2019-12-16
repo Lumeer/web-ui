@@ -1,7 +1,7 @@
 <div [style.background-color]="queryItem | queryItemBackground"
      [style.border-color]="queryItem | queryItemBorder:(readonly || !queryItemForm || queryItemForm.valid)"
      [class.pr-2]="readonly"
-     class="query-item py-1 px-1 d-flex align-items-center">
+     class="query-item px-1 d-flex align-items-center h-100">
   <icons-presenter [colors]="queryItem.colors"
                    [icons]="queryItem.icons">
   </icons-presenter>
@@ -20,17 +20,20 @@
     {{queryItem | queryItemText | truncate:30}}
   </span>
 
-  <div class="mr-1 d-inline-flex flex-grow-1 text-truncate text-nowrap"
+  <div class="mr-1 d-inline-flex flex-grow-1 text-truncate text-nowrap align-items-center"
        *ngIf="queryItem | queryItemAttribute as attribute">
     <span class="font-italic">{{conditionControl?.value | translateCondition:(queryItem | queryItemAttribute)}}</span>
     <ng-container *ngFor="let control of conditionValuesControl.controls; let index = index">
       <ng-container
         *ngIf="index < (conditionControl?.value | conditionNumValues) && control.get('type') as typeControl">
         <span *ngIf="index > 0">,&nbsp;</span>
-        <div class="d-inline-flex align-items-center"
-             *ngIf="!typeControl.value" [class.ml-1]="index === 0"
-             [innerHTML]="(control.get('value').value | dataValueHtml:attribute.constraint:constraintData) | safeHtml">
-        </div>
+        <data-input *ngIf="!typeControl.value" [class.ml-1]="index === 0"
+                    [dataValue]="control.get('value').value | dataValue:attribute.constraint:constraintData"
+                    [readonly]="true"
+                    [focus]="false"
+                    [constraint]="attribute.constraint"
+                    [configuration]="dataInputConfiguration">
+        </data-input>
         <span class="ml-1" [class.ml-1]="index === 0"
               *ngIf="typeControl.value">{{typeControl.value | translateConditionValue:attribute}}</span>
       </ng-container>

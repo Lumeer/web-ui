@@ -52,8 +52,16 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
+    this.addMultiFormControl();
     this.addDisplayValuesFormControl();
     this.addOptionsFormArray();
+  }
+
+  private addMultiFormControl() {
+    this.form.addControl(
+      SelectConstraintFormControl.Multi,
+      new FormControl(this.config && this.config.multi)
+    );
   }
 
   private addDisplayValuesFormControl() {
@@ -70,7 +78,7 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
         [],
         [
           uniqueValuesValidator(SelectConstraintOptionsFormControl.Value, true),
-          minimumValuesCountValidator(SelectConstraintOptionsFormControl.Value, 2),
+          minimumValuesCountValidator(SelectConstraintOptionsFormControl.Value, 1),
         ]
       )
     );

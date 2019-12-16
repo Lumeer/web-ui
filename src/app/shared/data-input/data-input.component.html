@@ -8,7 +8,6 @@
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValue($event)"
                       (cancel)="onCancel()"
-                      (onFocus)="emitFocus($event)"
                       class="d-block w-100">
   </address-data-input>
 
@@ -17,7 +16,6 @@
                       [value]="dataValue"
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValue($event)"
-                      (onFocus)="emitFocus($event)"
                       class="w-100">
   </boolean-data-input>
 
@@ -29,7 +27,6 @@
                           (valueChange)="onValueChange($event)"
                           (save)="onSaveValue($event)"
                           (cancel)="onCancel()"
-                          (onFocus)="emitFocus($event)"
                           class="d-block w-100">
   </coordinates-data-input>
 
@@ -39,7 +36,6 @@
                        [skipValidation]="configuration.skipValidation"
                        [value]="dataValue"
                        (valueChange)="onValueChange($event)"
-                       (onFocus)="emitFocus($event)"
                        (save)="onSaveValue($event)"
                        (enterInvalid)="enterInvalid.emit()"
                        (cancel)="onCancel()"
@@ -55,7 +51,6 @@
                        (save)="onSaveValue($event)"
                        (cancel)="onCancel()"
                        (enterInvalid)="enterInvalid.emit()"
-                       (onFocus)="emitFocus($event)"
                        class="d-block w-100">
   </duration-data-input>
 
@@ -65,7 +60,6 @@
                     [readonly]="readonly"
                     [value]="dataValue"
                     (save)="onSaveValue($event)"
-                    (click)="emitFocus($event)"
                     (cancel)="onCancel()"
                     class="px-1 w-100">
   </files-data-input>
@@ -79,7 +73,6 @@
                      (save)="onSaveValue($event)"
                      (cancel)="onCancel()"
                      (enterInvalid)="enterInvalid.emit()"
-                     (onFocus)="emitFocus($event)"
                      class="d-block w-100">
   </number-data-input>
 
@@ -92,7 +85,6 @@
                          (save)="onSaveValue($event)"
                          (cancel)="onCancel()"
                          (enterInvalid)="enterInvalid.emit()"
-                         (onFocus)="emitFocus($event)"
                          class="d-block w-100">
   </percentage-data-input>
 
@@ -105,7 +97,6 @@
                     (save)="onSaveValue($event)"
                     (cancel)="onCancel()"
                     (enterInvalid)="enterInvalid.emit()"
-                    (onFocus)="emitFocus($event)"
                     class="d-block w-100">
   </color-data-input>
 
@@ -116,7 +107,6 @@
                      (valueChange)="onValueChange($event)"
                      (save)="onSaveValue($event)"
                      (cancel)="onCancel()"
-                     (onFocus)="emitFocus($event)"
                      class="d-block w-100">
   </select-data-input>
 
@@ -129,7 +119,6 @@
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
                    (enterInvalid)="enterInvalid.emit()"
-                   (onFocus)="emitFocus($event)"
                    class="w-100">
   </user-data-input>
 
@@ -142,7 +131,6 @@
                           (valueChange)="onValueChange($event)"
                           (save)="onSaveValue($event)"
                           (cancel)="onCancel()"
-                          (onFocus)="emitFocus($event)"
                           class="w-100">
     </rich-text-data-input>
   </ng-container>
@@ -163,7 +151,6 @@
                    (save)="onSaveValue($event)"
                    (cancel)="onCancel()"
                    (enterInvalid)="enterInvalid.emit()"
-                   (onFocus)="emitFocus($event)"
                    class="d-block w-100">
   </text-data-input>
 </ng-template>

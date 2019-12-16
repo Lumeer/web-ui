@@ -7,30 +7,35 @@
           [minWidth]="100"
           [positions]="dropdownPositions">
   <div *ngIf="options?.length > 0"
-       class="dropdown-menu show position-static w-100">
+       class="card">
     <a *ngFor="let option of options; let index = index"
        [class.active]="(activeIndex$ | async) === index"
        (mousedown)="onOptionSelect($event, option)"
        class="dropdown-item text-truncate"
        data-test="select-item-option"
        tabindex>
-      <img ngxGravatar
-           *ngIf="option.gravatar"
-           [email]="option.gravatar"
-           [size]="avatarSize"
-           class="mr-1">
+      <div class="option d-inline-block"
+           [style.background]="option.background"
+           [style.color]="option.background | contrastColor">
+        <img ngxGravatar
+             *ngIf="option.gravatar"
+             [email]="option.gravatar"
+             [size]="avatarSize"
+             class="mr-2">
 
-      <icons-presenter *ngIf="option.icons && option.iconColors"
-                       [colors]="option.iconColors"
-                       [icons]="option.icons">
-      </icons-presenter>
+        <icons-presenter *ngIf="option.icons && option.iconColors"
+                         class="mr-1"
+                         [colors]="option.iconColors"
+                         [icons]="option.icons">
+        </icons-presenter>
 
-      <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
-         class="fa-fw {{option.icons[0]}}">
-      </i>
-      <span class="ml-sm-1 text-nowrap">
+        <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
+           class="fa-fw {{option.icons[0]}} mr-1">
+        </i>
+        <span class="text-nowrap">
         {{ option.displayValue || option.value }}
       </span>
+      </div>
     </a>
   </div>
 </dropdown>

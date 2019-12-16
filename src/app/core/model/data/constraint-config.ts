@@ -19,6 +19,7 @@
 
 import Big from 'big.js';
 import {AddressField} from '../../store/geocoding/address';
+import {palette} from '../../../shared/picker/colors';
 
 export interface AddressConstraintConfig {
   fields: AddressField[];
@@ -42,7 +43,7 @@ export interface DateTimeConstraintConfig {
   format: string;
   minValue: Date;
   maxValue: Date;
-  range: boolean;
+  range?: boolean;
 }
 
 export interface DurationConstraintConfig {
@@ -93,12 +94,16 @@ export interface SelectConstraintOption {
   displayValue?: string;
   icon?: string;
   value: string;
+  background?: string;
 }
 
 export interface SelectConstraintConfig {
+  multi?: boolean;
   displayValues: boolean;
   options: SelectConstraintOption[];
 }
+
+export const selectDefaultPalette = palette.slice(0, 8);
 
 export interface TagConstraintConfig {
   options: string[];
@@ -120,6 +125,7 @@ export interface TextConstraintConfig {
 }
 
 export interface UserConstraintConfig {
+  multi?: string;
   externalUsers: boolean;
 }
 

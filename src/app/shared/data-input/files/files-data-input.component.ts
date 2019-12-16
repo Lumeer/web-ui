@@ -67,9 +67,6 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
-  @Output()
-  public onFocus = new EventEmitter<any>();
-
   @ViewChild('hiddenInput', {static: false})
   public hiddenInput: ElementRef<HTMLInputElement>;
 
@@ -252,7 +249,6 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   public onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Escape:
-        console.log('cancel');
         this.cancel.emit();
         return;
     }

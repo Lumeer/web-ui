@@ -42,7 +42,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
-import {DataValue, DataValueInputType} from '../../../../../../core/model/data-value';
+import {DataValue} from '../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
 
@@ -75,7 +75,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public documentId: string;
 
   @Input()
-  public attributeEditing: {documentId?: string; attributeId?: string};
+  public attributeEditing: { documentId?: string; attributeId?: string };
 
   @Output()
   public onFocus = new EventEmitter<number>();
@@ -87,7 +87,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public resetFocusAndEdit = new EventEmitter<number>();
 
   @Output()
-  public newValue = new EventEmitter<{column: number; value: any}>();
+  public newValue = new EventEmitter<{ column: number; value: any }>();
 
   @Output()
   public columnFocus = new EventEmitter<number>();
@@ -102,7 +102,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public detail = new EventEmitter();
 
   @Output()
-  public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
+  public newLink = new EventEmitter<{ column: LinkColumn; value: any; correlationId: string }>();
 
   @ViewChild(DocumentHintsComponent, {static: false})
   public suggestions: DocumentHintsComponent;
@@ -120,7 +120,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   private preventSaveTimer: number;
   private creatingNewRow = false;
 
-  constructor(public element: ElementRef) {}
+  constructor(public element: ElementRef) {
+  }
 
   public ngOnInit() {
     this.subscriptions.add(
@@ -186,12 +187,14 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     return false;
   }
 
-  private createDataValue(column: number, value?: any, inputType?: DataValueInputType): DataValue {
+  private createDataValue(column: number, value?: any, typed?: boolean): DataValue {
     const attribute = this.columns[column].attribute;
     const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+    if (typed) {
+      return constraint.createInputDataValue(value, this.columnValue(column), this.constraintData);
+    }
     const initialValue = isNotNullOrUndefined(value) ? value : this.columnValue(column);
-    const initialInputType = isNotNullOrUndefined(value) ? inputType : DataValueInputType.Stored;
-    return constraint.createDataValue(initialValue, initialInputType, this.constraintData);
+    return constraint.createDataValue(initialValue, this.constraintData);
   }
 
   private shouldDirectEditValue(column: number): boolean {

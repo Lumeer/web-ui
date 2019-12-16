@@ -22,4 +22,11 @@
     color: black;
     transition: opacity $animation-duration;
   }
+
+  .data-input::ng-deep {
+
+    & > color-data-input {
+      width: 40px !important;
+    }
+  }
 }

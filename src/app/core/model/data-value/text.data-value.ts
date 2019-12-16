@@ -20,16 +20,21 @@
 import {formatUnknownDataValue, stripTextHtmlTags} from '../../../shared/utils/data.utils';
 import {transformTextBasedOnCaseStyle} from '../../../shared/utils/string.utils';
 import {TextConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export class TextDataValue implements DataValue {
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: TextConstraintConfig
+    public readonly config: TextConstraintConfig,
+    public readonly inputValue?: string,
   ) {}
 
   public format(): string {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
+    }
+
     if (typeof this.value !== 'string') {
       return formatUnknownDataValue(this.value, true);
     }
@@ -49,6 +54,10 @@ export class TextDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.copy(this.inputValue).isValid(ignoreConfig);
+    }
+
     if (!this.value || ignoreConfig) {
       return true;
     }
@@ -80,11 +89,11 @@ export class TextDataValue implements DataValue {
 
   public copy(newValue?: any): TextDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new TextDataValue(value, DataValueInputType.Copied, this.config);
+    return new TextDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): TextDataValue {
-    return new TextDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new TextDataValue(inputValue, this.config, inputValue);
   }
 }
 

@@ -29,8 +29,6 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
 import {isNullOrUndefined} from '../common.utils';
-import {stripTextHtmlTags} from '../data.utils';
-import {DataValueInputType} from '../../../core/model/data-value';
 
 type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 
@@ -484,7 +482,7 @@ export class DataAggregator {
       return this.formatValue(value, constraint, this.constraintData, attribute);
     }
     return (constraint || new UnknownConstraint())
-      .createDataValue(value, DataValueInputType.Stored, this.constraintData)
+      .createDataValue(value, this.constraintData)
       .preview();
   }
 }

@@ -58,9 +58,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public value: DateTimeDataValue;
 
   @Output()
-  public onFocus = new EventEmitter<any>();
-
-  @Output()
   public valueChange = new EventEmitter<DateTimeDataValue>();
 
   @Output()

@@ -4,7 +4,6 @@
        [value]="value | formatDataValue"
        [class.invalid-value]="!(value | isDataValueValid)"
        (input)="onInput($event)"
-       (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        autocomplete="off"
        data-test="datetime-data-input"

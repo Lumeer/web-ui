@@ -20,15 +20,18 @@
 import {FilesDataValue} from '../data-value/files.data-value';
 import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
 import {QueryCondition} from '../../store/navigation/query/query';
 
 export class FilesConstraint implements Constraint {
   public readonly type = ConstraintType.Files;
   public readonly config = {};
 
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): FilesDataValue {
-    return new FilesDataValue(value, inputType, this.config);
+  public createDataValue(value: any): FilesDataValue {
+    return new FilesDataValue(value, this.config);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): FilesDataValue {
+    return new FilesDataValue(value, this.config);
   }
 
   public conditions(): QueryCondition[] {

@@ -4,7 +4,6 @@
        [title]="value | formatDataValue"
        [value]="value | formatDataValue"
        [placeholder]="placeholder || ''"
-       (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [class.invalid-value]="!skipValidation && !valid"
        data-test="text-data-input"

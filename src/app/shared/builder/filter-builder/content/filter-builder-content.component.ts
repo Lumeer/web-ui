@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
 import {ConstraintConditionValueItem, QueryConditionItem} from '../model/query-condition-item';
-import {DataValue, DataValueInputType} from '../../../../core/model/data-value';
+import {DataValue} from '../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
@@ -77,11 +77,7 @@ export class FilterBuilderContentComponent implements OnChanges {
   private createDataValues(): DataValue[] {
     return (this.selectedValues || []).map(selectedValue => {
       const value = selectedValue && selectedValue.value;
-      return ((this.attribute && this.attribute.constraint) || new UnknownConstraint()).createDataValue(
-        value || '',
-        DataValueInputType.Stored,
-        this.constraintData
-      );
+      return ((this.attribute && this.attribute.constraint) || new UnknownConstraint()).createDataValue(value || '', this.constraintData);
     });
   }
 

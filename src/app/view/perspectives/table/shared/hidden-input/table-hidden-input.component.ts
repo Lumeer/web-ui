@@ -39,7 +39,6 @@ import {selectDocumentById} from '../../../../../core/store/documents/documents.
 import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
 import {findAttribute, findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
-import {DataValueInputType} from '../../../../../core/model/data-value';
 import {ConstraintDataService} from '../../../../../core/service/constraint-data.service';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
@@ -269,7 +268,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   private copyValue(dataResource: DataResource, attributesResource: AttributesResource, attributeId: string) {
     const constraint = findAttributeConstraint(attributesResource && attributesResource.attributes, attributeId);
     const value = (constraint || new UnknownConstraint())
-      .createDataValue(dataResource.data[attributeId], DataValueInputType.Stored, this.constraintData)
+      .createDataValue(dataResource.data[attributeId], this.constraintData)
       .format();
     this.clipboardService.copy(value);
   }

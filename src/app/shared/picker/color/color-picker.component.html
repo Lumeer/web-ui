@@ -6,7 +6,7 @@
   [minHeight]="434"
   (onCloseByClickOutside)="onCloseByClickOutside()">
 
-  <div
+  <div *ngIf="showPicker$ | async"
     [colorPicker]="color"
     [cpToggle]="true"
     (colorPickerSelect)="onSelect($event)"
