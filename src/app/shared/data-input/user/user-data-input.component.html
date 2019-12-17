@@ -1,38 +1,47 @@
-<ng-container *ngIf="readonly; else textEditing">
-  <ng-container *ngIf="{user: value | serializeDataValue | userByEmail : value?.constraintData?.users} as state">
-    <img *ngIf="value | isDataValueValid"
-         ngxGravatar
-         [email]="value | serializeDataValue"
-         [size]="avatarSize"
-         class="ml-1">
-    <input [readonly]="readonly"
-           [title]="skipValidation ? name : (value | formatDataValue)"
-           [value]="skipValidation ? name : (value | formatDataValue)"
-           (focus)="onFocus.emit($event)"
-           [class.invalid-value]="!skipValidation && (value?.config?.externalUsers ? !(value | isDataValueValid) : !state.user)"
-           class="border-0 h-100 px-1 bg-transparent flex-grow-1 cursor-inherit"
+<div class="d-flex align-items-center h-100 p-1" #wrapperElement
+     [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'"
+     data-test="user-data-input">
+
+  <ng-container *ngIf="multi || readonly">
+
+    <ng-container *ngFor="let user of selectedUses">
+      <img ngxGravatar
+           [email]="user.email"
+           [size]="avatarSize"
+           [style.min-width.px]="avatarSize"
+           [style.min-height.px]="avatarSize"
+           class="ml-1">
+      <span [title]="user.name || user.email"
+            [class.invalid-value]="!skipValidation && (value?.config?.externalUsers ? !user : !user)"
+            class="d-inline-block ml-2 text-nowrap user"
+            data-test="user-data-input"
+            type="text">
+        {{user.name || user.email}}
+      </span>
+    </ng-container>
+
+  </ng-container>
+
+  <ng-container *ngIf="!readonly">
+    <input #textInput
+           [(ngModel)]="name"
+           (blur)="onBlur()"
+           (focus)="onFocused()"
+           (ngModelChange)="onInputChange()"
+           [spellcheck]="false"
+           class="border-0 w-100 h-100 px-1 bg-transparent"
            data-test="user-data-input"
            type="text">
+
+    <options-dropdown [options]="users | filterUsers:name"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInput"
+                      [multiSelect]="multi"
+                      [firstItemActive]="!multi && !value?.config?.externalUsers && name?.length > 0"
+                      (selectOption)="onSelectOption($event)">
+    </options-dropdown>
+
   </ng-container>
-</ng-container>
 
-<ng-template #textEditing>
-  <input #textInput
-         [(ngModel)]="name"
-         (blur)="onBlur()"
-         (focus)="onFocused()"
-         (ngModelChange)="onInputChange()"
-         [spellcheck]="false"
-         class="border-0 w-100 h-100 px-1 bg-transparent"
-         data-test="user-data-input"
-         type="text">
-
-  <options-dropdown [options]="users | filterUsers:name"
-                    [showBackdrop]="false"
-                    [closeOnClickOutside]="false"
-                    [origin]="textInput"
-                    [firstItemActive]="!value?.config?.externalUsers && name?.length > 0"
-                    (selectOption)="onSelectOption($event)">
-  </options-dropdown>
-
-</ng-template>
+</div>

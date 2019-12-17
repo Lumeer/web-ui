@@ -42,6 +42,7 @@ import {TablesAction} from '../../../../core/store/tables/tables.action';
   templateUrl: './table-header.component.html',
   styleUrls: ['./table-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'invisible-scroll-y'}
 })
 export class TableHeaderComponent implements OnInit, OnChanges {
   @Input()

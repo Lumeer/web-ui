@@ -52,6 +52,7 @@ import {QuillModule} from 'ngx-quill';
 import {FilterDataSuggestionsPipe} from './filter-data-suggestions.pipe';
 import {FilterUsersPipe} from './user/filter-users.pipe';
 import { FindSelectOptionPipe } from './select/find-select-option.pipe';
+import { SelectOptionsValuesPipe } from './select/select-options-values.pipe';
 
 @NgModule({
   imports: [
@@ -91,13 +92,15 @@ import { FindSelectOptionPipe } from './select/find-select-option.pipe';
     FilterDataSuggestionsPipe,
     FilterUsersPipe,
     FindSelectOptionPipe,
+    SelectOptionsValuesPipe,
   ],
-  exports: [
-    DataInputComponent,
-    BooleanDataInputComponent,
-    UserDataInputComponent,
-    DataCursorPipe,
-    FileAttachmentButtonComponent,
-  ],
+    exports: [
+        DataInputComponent,
+        BooleanDataInputComponent,
+        UserDataInputComponent,
+        DataCursorPipe,
+        FileAttachmentButtonComponent,
+        SelectDataInputComponent,
+    ],
 })
 export class DataInputModule {}

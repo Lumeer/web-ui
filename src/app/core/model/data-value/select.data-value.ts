@@ -49,7 +49,10 @@ export class SelectDataValue implements DataValue {
   }
 
   public serialize(): any {
-    return this.options.map(option => option.value);
+    if (this.config.multi) {
+      return this.options.map(option => option.value);
+    }
+    return this.options.length > 0 ? this.options[0].value : null;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

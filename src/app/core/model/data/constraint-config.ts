@@ -125,7 +125,7 @@ export interface TextConstraintConfig {
 }
 
 export interface UserConstraintConfig {
-  multi?: string;
+  multi?: boolean;
   externalUsers: boolean;
 }
 

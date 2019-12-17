@@ -27,7 +27,7 @@
             [showBackdrop]="false"
             [origin]="perspectiveElement"
             [options]="perspectives | sortPerspectives | perspectivesOptions"
-            [selectedValue]="perspective"
+            [highlightedValue]="perspective"
             (selectOption)="onSelectPerspective($event.value, state.permissions.canManage)">
           </options-dropdown>
 

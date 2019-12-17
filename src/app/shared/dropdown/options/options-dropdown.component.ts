@@ -65,7 +65,10 @@ export class OptionsDropdownComponent implements OnChanges {
   public firstItemActive: boolean;
 
   @Input()
-  public selectedValue: any;
+  public highlightedValue: any;
+
+  @Input()
+  public selectedValues: any[];
 
   @Input()
   public multiSelect: boolean;
@@ -103,7 +106,7 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   private shouldResetActiveItem(changes: SimpleChanges): boolean {
-    return (changes.options && !!this.options) || (changes.selectedValue && isNullOrUndefined(this.selectedValue));
+    return (changes.options && !!this.options) || (changes.selectedValue && isNullOrUndefined(this.highlightedValue));
   }
 
   public onOptionSelect(event: MouseEvent, option: DropdownOption) {
@@ -122,8 +125,8 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   private highlightSelectedValue() {
-    if (isNotNullOrUndefined(this.selectedValue)) {
-      const activeIndex = (this.options || []).findIndex(option => deepObjectsEquals(option.value, this.selectedValue));
+    if (isNotNullOrUndefined(this.highlightedValue)) {
+      const activeIndex = (this.options || []).findIndex(option => deepObjectsEquals(option.value, this.highlightedValue));
       setTimeout(() => this.activeIndex$.next(activeIndex));
     }
   }
@@ -159,5 +162,9 @@ export class OptionsDropdownComponent implements OnChanges {
 
   public getActiveOption(): DropdownOption {
     return this.options && this.options[this.activeIndex$.value];
+  }
+
+  public resetActiveOption() {
+    this.activeIndex$.next(-1);
   }
 }

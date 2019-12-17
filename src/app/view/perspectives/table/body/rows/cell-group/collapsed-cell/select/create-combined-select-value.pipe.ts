@@ -17,7 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export enum UserConstraintFormControl {
-  Multi = 'multi',
-  ExternalUsers = 'externalUsers',
+import {Pipe, PipeTransform} from '@angular/core';
+import {SelectConstraint} from '../../../../../../../../core/model/constraint/select.constraint';
+import {isArray, isNotNullOrUndefined} from '../../../../../../../../shared/utils/common.utils';
+
+@Pipe({
+  name: 'createCombinedSelectValue'
+})
+export class CreateCombinedSelectValuePipe implements PipeTransform {
+
+  transform(values: any[], constraint: SelectConstraint): any {
+    console.log(values);
+    const combined = values.reduce((arr, value) => {
+      console.log(value);
+      if (isArray(value)) {
+        arr.push(...value);
+      } else if (isNotNullOrUndefined(value)) {
+        arr.push(value);
+      }
+      return arr;
+    }, []);
+    return constraint.createDataValue(combined);
+  }
+
 }

@@ -50,6 +50,7 @@ import {TablePrimaryRowComponent} from './rows/primary-row/table-primary-row.com
 import {TableRowsComponent} from './rows/table-rows.component';
 import {TableBodyComponent} from './table-body.component';
 import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/files/files-collapsed-cell.component';
+import { CreateCombinedSelectValuePipe } from './rows/cell-group/collapsed-cell/select/create-combined-select-value.pipe';
 
 @NgModule({
   imports: [
@@ -87,6 +88,7 @@ import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/file
     UserCollapsedCellComponent,
     BooleanCollapsedCellComponent,
     FilesCollapsedCellComponent,
+    CreateCombinedSelectValuePipe,
   ],
   exports: [TableBodyComponent],
 })

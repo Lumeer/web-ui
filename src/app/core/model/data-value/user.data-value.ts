@@ -40,7 +40,6 @@ export class UserDataValue implements DataValue {
   private createUsers(): User[] {
     const users = this.constraintData && this.constraintData.users || [];
     const userValues: any[] = (isArray(this.value) ? this.value : [this.value]).filter(val => isNotNullOrUndefined(val) && val !== '');
-    console.log(userValues);
     return userValues.map(userValue => {
       const user = users.find(u => u.email === userValue);
       if (user) {
@@ -70,11 +69,11 @@ export class UserDataValue implements DataValue {
   }
 
   public serialize(): any {
-    if (this.users.length) {
+    if (this.config.multi) {
       return this.users.map(user => user.email);
     }
 
-    return '';
+    return this.users.length ? this.users[0] : null;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

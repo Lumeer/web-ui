@@ -11,12 +11,21 @@
     <a *ngFor="let option of options; let index = index"
        [class.active]="(activeIndex$ | async) === index"
        (mousedown)="onOptionSelect($event, option)"
+       (click)="$event.stopImmediatePropagation(); $event.preventDefault();"
        class="dropdown-item text-truncate"
+       [class.dropdown-item-multi]="multiSelect"
        data-test="select-item-option"
        tabindex>
+
+      <i *ngIf="multiSelect" class="fa-fw far mr-2"
+         [ngClass]="(selectedValues | includes:option.value) ? 'fa-check' : 'fa-none'">
+      </i>
+
       <div class="option d-inline-block"
            [style.background]="option.background"
-           [style.color]="option.background | contrastColor">
+           [class.option-background]="!!option.background"
+           [style.color]="option.background && (option.background | contrastColor)">
+
         <img ngxGravatar
              *ngIf="option.gravatar"
              [email]="option.gravatar"

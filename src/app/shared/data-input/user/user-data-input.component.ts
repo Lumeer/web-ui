@@ -30,7 +30,6 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {TypeaheadMatch} from 'ngx-bootstrap/typeahead';
 import {UserDataValue} from '../../../core/model/data-value/user.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
@@ -38,6 +37,7 @@ import {User} from '../../../core/store/users/user';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
+import {uniqueValues} from '../../utils/array.utils';
 
 @Component({
   selector: 'user-data-input',
@@ -68,10 +68,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public cancel = new EventEmitter();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
-
-  @Output()
   public enterInvalid = new EventEmitter();
+
+  @ViewChild('wrapperElement', {static: false})
+  public wrapperElement: ElementRef<HTMLElement>;
 
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
@@ -83,6 +83,8 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
 
   public name: string = '';
   public users: User[];
+  public selectedUses: User[];
+  public multi: boolean;
 
   private setFocus: boolean;
   private triggerInput: boolean;
@@ -92,13 +94,13 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     if (changes.readonly && !this.readonly && this.focus) {
       this.resetSearchInput();
       this.setFocus = true;
-    }
-    if (changes.value && this.value) {
-      this.name = this.value.format();
       this.triggerInput = true;
     }
-    if (changes.value) {
+    if (changes.value && this.value) {
       this.users = this.bindUsers();
+      this.selectedUses = this.value.users;
+      this.multi = this.value.config && this.value.config.multi;
+      this.name = this.value.format();
     }
   }
 
@@ -146,22 +148,57 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
           return;
         }
         const selectedOption = this.dropdown.getActiveOption();
-        this.preventSaveAndBlur();
-        // needs to be executed after parent event handlers
-        setTimeout(() => this.saveValue(selectedOption, true));
+
+        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+
+          this.toggleOption(selectedOption);
+          this.dropdown.resetActiveOption();
+        } else {
+          this.preventSaveAndBlur();
+          // needs to be executed after parent event handlers
+          setTimeout(() => this.saveValue(selectedOption, event.code !== KeyCode.Tab));
+        }
         return;
       case KeyCode.Escape:
         this.resetSearchInput();
         this.cancel.emit();
+        return;
+      case KeyCode.Backspace:
+        if (!this.name && this.multi && this.users.length > 0) {
+          this.users = this.users.slice(0, this.users.length - 1);
+        }
         return;
     }
 
     this.dropdown.onKeyDown(event);
   }
 
-  private saveValue(selectedOption?: DropdownOption, enter?: boolean) {
-    if (selectedOption) {
-      this.saveValueByOption(selectedOption);
+  private toggleOption(option: DropdownOption) {
+    if (this.users.some(o => o.email === option.value)) {
+      this.selectedUses = this.selectedUses.filter(o => o.email !== option.value);
+    } else {
+      const selectUser = (this.users || []).find(o => o.email === option.value);
+      if (selectUser) {
+        this.selectedUses = [...this.selectedUses, selectUser];
+        setTimeout(() => this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER);
+      }
+    }
+  }
+
+  private saveValue(activeOption?: DropdownOption, enter?: boolean) {
+    if (this.multi) {
+      const selectedUser = activeOption && this.users.find(option => option.email === activeOption.value);
+      const options = [...this.selectedUses, selectedUser].filter(option => !!option);
+      const emails = uniqueValues(options.map(option => option.email));
+      const dataValue = this.value.copy(emails);
+      this.save.emit(dataValue);
+      return;
+    }
+
+    if (activeOption) {
+      this.saveValueByOption(activeOption);
     } else if (this.name && (this.skipValidation || (this.value.config && this.value.config.externalUsers))) {
       const dataValue = this.value.parseInput(this.name);
       this.save.emit(dataValue);
@@ -185,22 +222,19 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     this.name = '';
   }
 
-  public onSelect(event: TypeaheadMatch) {
-    const dataValue = this.value.copy(event.item.email);
-    this.save.emit(dataValue);
-  }
-
   public onInputChange() {
     const dataValue = this.value.parseInput(this.name);
     this.valueChange.emit(dataValue);
   }
 
   public onBlur() {
+    this.wrapperElement.nativeElement.scrollLeft = 0;
     if (this.preventSave) {
       this.preventSave = false;
       this.blurCleanup();
     } else {
-      this.saveValue(this.dropdown && this.dropdown.getActiveOption());
+      const activeOption = this.multi ? null : this.dropdown && this.dropdown.getActiveOption();
+      this.saveValue(activeOption);
     }
   }
 
@@ -212,8 +246,12 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onSelectOption(option: DropdownOption) {
-    this.preventSaveAndBlur();
-    this.saveValue(option);
+    if (this.multi) {
+      this.toggleOption(option);
+    } else {
+      this.preventSaveAndBlur();
+      this.saveValue(option);
+    }
   }
 
   private blurCleanup() {
@@ -227,4 +265,14 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.dropdown.open();
     }
   }
+
+  @HostListener('mousedown', ['$event'])
+  public onMouseDown(event: MouseEvent) {
+    // prevent hide dropdown on mouse down (instead input)
+    if (!this.readonly && this.textInput && !this.textInput.nativeElement.contains(event.target as any)) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    }
+  }
+
 }

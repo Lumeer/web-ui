@@ -81,6 +81,19 @@ ul {
   }
 }
 
+.invisible-scroll-y {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* removes scrollbar for Firefox */
+  -ms-overflow-style: none; /* removes scrollbar for Internet Explorer 10+ */
+
+  &::-webkit-scrollbar {
+    /* removes scrollbar for WebKit */
+    width: 0;
+    height: 0;
+  }
+}
+
 .pointer-events-none {
   pointer-events: none;
 }

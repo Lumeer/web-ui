@@ -74,7 +74,7 @@ import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
 import {DataValue} from '../../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 
@@ -384,11 +384,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  @HostListener('mousedown', ['$event'])
-  public onMouseDown(event: MouseEvent) {
-    if (!this.edited) {
-      event.preventDefault();
-    }
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent) {
     if (!this.selected) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
@@ -477,7 +474,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private saveData(value: any) {
     const previousValue = this.getValue() || this.getValue() === 0 ? this.getValue() : '';
-    if (previousValue === value || (!value && !this.isEntityInitialized())) {
+    if (deepObjectsEquals(previousValue, value) || (!value && !this.isEntityInitialized())) {
       return;
     }
 

@@ -6,6 +6,21 @@
 
   <div class="form-group">
     <div class="custom-control custom-checkbox">
+      <input [formControlName]="formControlName.Multi"
+             [id]="formControlName.Multi"
+             #multiCheckbox
+             class="custom-control-input"
+             type="checkbox">
+      <label [for]="formControlName.Multi"
+             class="custom-control-label">
+      </label>
+      <span i18n="@@constraint.user.multi.label" class="cursor-pointer user-select-none"
+            (click)="multiCheckbox.click()">
+        Allow select multiple users
+      </span>
+    </div>
+
+    <div class="custom-control custom-checkbox">
       <input [formControlName]="formControlName.ExternalUsers"
              [id]="formControlName.ExternalUsers"
              #checkbox
@@ -14,7 +29,8 @@
       <label [for]="formControlName.ExternalUsers"
              class="custom-control-label">
       </label>
-      <span i18n="@@constraint.user.externalUsers.label" class="cursor-pointer user-select-none" (click)="checkbox.click()">
+      <span i18n="@@constraint.user.externalUsers.label" class="cursor-pointer user-select-none"
+            (click)="checkbox.click()">
         Allow unregistered users (any valid email)
       </span>
     </div>

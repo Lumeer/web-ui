@@ -1,16 +1,19 @@
-<div class="d-flex align-items-center w-100 h-100 p-1 overflow-hidden"
-     [class.invalid-value]="!(value | isDataValueValid)"
+<div class="d-flex align-items-center h-100 p-1" #wrapperElement
+     [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'"
      data-test="select-data-input">
 
-  <ng-container *ngIf="value.config?.multi || readonly">
+  <ng-container *ngIf="multi || readonly">
 
-  <span class="d-inline-block px-2 py-1 tag text-nowrap" [title]="value | formatDataValue"
-        *ngIf="value.value && {option: options | findSelectOption:value} as tagData"
-        [style.background]="tagData.option?.background"
-        [style.color]="tagData.option?.background | contrastColor"
-        [class.invalid-value]="!tagData.option">
-    {{value | formatDataValue}}
-  </span>
+    <ng-container *ngFor="let option of selectedOptions; let first = first">
+        <span class="d-inline-block px-2 py-1 tag text-nowrap" [title]="option.displayValue || option.value"
+              [style.background]="option.background"
+              [style.color]="option.background | contrastColor"
+              [class.invalid-value]="!option.value"
+              [spellcheck]="false"
+              [class.ml-2]="!first">
+          {{option.displayValue || option.value}}
+        </span>
+    </ng-container>
 
   </ng-container>
 
@@ -21,16 +24,19 @@
            (focus)="onFocused()"
            (blur)="onBlur()"
            (ngModelChange)="onInput()"
-           class="border-0 w-100 h-100 px-1 bg-transparent"
+           [spellcheck]="false"
+           class="border-0 w-100 h-100 px-1 bg-transparent select-input"
            data-test="select-data-input"
            type="text">
 
-    <options-dropdown [options]="options | filterDropdownOptions:text"
+    <options-dropdown [options]="dropdownOptions | filterDropdownOptions:text"
                       [showBackdrop]="false"
                       [closeOnClickOutside]="false"
                       [origin]="textInput"
-                      [selectedValue]="value | serializeDataValue"
-                      [firstItemActive]="text?.length > 0"
+                      [multiSelect]="multi"
+                      [highlightedValue]="!multi && selectedOptions?.length === 1 && selectedOptions[0].value"
+                      [selectedValues]="multi ? (selectedOptions | selectOptionsValues) : []"
+                      [firstItemActive]="!multi && text?.length > 0"
                       (selectOption)="onSelect($event)">
     </options-dropdown>
 

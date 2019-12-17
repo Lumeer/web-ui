@@ -38,6 +38,13 @@
                          class="h-100">
     </user-collapsed-cell>
 
+    <select-data-input *ngSwitchCase="constraintType.Select"
+                       [focus]="false"
+                       [readonly]="true"
+                       [title]="data.stringValues | join"
+                       [value]="values | createCombinedSelectValue:data.constraint">
+    </select-data-input>
+
     <ng-container *ngSwitchDefault>
       <ng-container *ngTemplateOutlet="defaultCollapsedCell"></ng-container>
     </ng-container>

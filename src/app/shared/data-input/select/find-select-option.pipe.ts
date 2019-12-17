@@ -26,9 +26,8 @@ import {SelectDataValue} from '../../../core/model/data-value/select.data-value'
 })
 export class FindSelectOptionPipe implements PipeTransform {
 
-  public transform(options: SelectConstraintOption[], value: SelectDataValue): SelectConstraintOption {
-    const serialized = value.serialize();
-    return (options || []).find(option => (option.value || option.displayValue) === serialized);
+  public transform(options: SelectConstraintOption[], value: any): SelectConstraintOption {
+    return (options || []).find(option => (option.value || option.displayValue) === value);
   }
 
 }

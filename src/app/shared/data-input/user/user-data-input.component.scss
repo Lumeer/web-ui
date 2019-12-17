@@ -5,10 +5,10 @@
   & > img {
     flex-shrink: 0;
   }
-}
 
-input[readonly] {
-  min-width: 1px; // to keep it within flex container
+  .user {
+    line-height: 0.9rem;
+  }
 }
 
 input:focus {
