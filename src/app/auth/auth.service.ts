@@ -292,6 +292,10 @@ export class AuthService {
   }
 
   public scheduleLogout() {
+    if (!this.isAuthenticated()) {
+      return;
+    }
+
     if (this.logoutSubscription) {
       this.logoutSubscription.unsubscribe();
     }
@@ -306,7 +310,7 @@ export class AuthService {
 
   public saveLoginRedirectPath(redirectPath: string) {
     const restrictedPaths = ['/agreement', '/logout', '/auth'];
-    if (!restrictedPaths.some(path => path.startsWith(redirectPath))) {
+    if (!restrictedPaths.some(path => redirectPath.startsWith(path))) {
       localStorage.setItem(REDIRECT_KEY, redirectPath);
     }
   }
