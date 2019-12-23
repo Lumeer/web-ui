@@ -11,7 +11,7 @@
 
       <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
         <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
-             *ngIf="typeData.iconName || (column.attribute | attributeFunctionDefined)">
+          (click)="onContextMenu(index, $event)">
           <i *ngIf="(column.attribute | attributeFunctionDefined)"
              [class.mb-1]="typeData.iconName"
              class="fas fa-function fa-xs fa-fw">
@@ -19,8 +19,15 @@
           <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
              [ngClass]="typeData.iconName"
              [title]="column.attribute.constraint | constraintTypeIconTitle"></i>
+          <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
+             title="Column settings..."
+             title-i18n="@@table.header.column.settings"
+             class="fa-xs fas fa-caret-down">
+          </i>
         </div>
       </ng-container>
+      <ng-template #dropdownIcon>
+      </ng-template>
     </div>
     <links-list-header-menu [permissions]="permissions"
                             (attributeFunction)="onAttributeFunction(index)"
