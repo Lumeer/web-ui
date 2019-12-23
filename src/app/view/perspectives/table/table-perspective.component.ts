@@ -33,7 +33,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {filter, first, withLatestFrom} from 'rxjs/operators';
+import {filter, first, tap, withLatestFrom} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {selectNavigation} from '../../../core/store/navigation/navigation.state';
@@ -46,7 +46,7 @@ import {
 import {isFirstTableCell, isLastTableCell, TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
 import {TablesAction} from '../../../core/store/tables/tables.action';
-import {selectTableById, selectTableConfig, selectTableCursor} from '../../../core/store/tables/tables.selector';
+import {selectTableById, selectTableConfigById, selectTableCursor} from '../../../core/store/tables/tables.selector';
 import {View} from '../../../core/store/views/view';
 import {selectCurrentView, selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
@@ -94,6 +94,8 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   public table$ = new BehaviorSubject<TableModel>(null);
 
   private selectedCursor: TableCursor;
+
+  private lastViewId: string;
 
   private subscriptions = new Subscription();
 
@@ -249,21 +251,35 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToQuery(initConfig: TableConfig): Subscription {
+    // the filter in the pipe passes only when the table is not embedded
+    // as a consequence, there cannot be multiple embedded tables in the table perspective, this would require further refinement here
     return this.store$
       .pipe(
         select(selectNavigation),
         filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query),
-        withLatestFrom(this.store$.pipe(select(selectTableConfig)))
+        withLatestFrom(
+          this.store$.pipe(select(selectTableConfigById(this.tableId))),
+          this.store$.pipe(select(selectPerspectiveViewConfig)),
+          this.store$.pipe(select(selectCurrentView))
+        )
       )
-      .subscribe(([{query}, config]) => {
-        if (areQueriesEqual(this.query, query)) {
+      .subscribe(([{query}, config, viewConfig, view]) => {
+        // views can have the same query and still be configured differently
+        if (areQueriesEqual(this.query, query) && (!view || this.lastViewId === view.id)) {
           return;
+        }
+
+        if (view) {
+          this.lastViewId = view.id;
         }
 
         if (this.table$.getValue() && hasQueryNewLink(this.query, query)) {
           this.addTablePart(query);
         } else {
-          this.refreshTable(query, config || initConfig);
+          // when tableId does not change, config holds the old table configuration - this helps only when view is not used
+          // initConfig is initialized only once and carries the initial perspective config
+          // viewConfig is the up-to-date configuration of the current view
+          this.refreshTable(query, viewConfig || config || initConfig);
         }
 
         this.query = query;
