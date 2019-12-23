@@ -24,7 +24,7 @@ import {DropdownComponent} from './dropdown.component';
 import {OptionsDropdownComponent} from './options/options-dropdown.component';
 import {PresenterModule} from '../presenter/presenter.module';
 import {GravatarModule} from 'ngx-gravatar';
-import { FilterDropdownOptionsPipe } from './options/filter-dropdown-options.pipe';
+import {FilterDropdownOptionsPipe} from './options/filter-dropdown-options.pipe';
 import {PipesModule} from '../pipes/pipes.module';
 
 @NgModule({

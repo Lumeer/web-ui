@@ -30,7 +30,7 @@ export class AddressDataValue implements DataValue {
     public readonly value: any,
     public readonly config: AddressConstraintConfig,
     public readonly constraintData: ConstraintData,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {
     if (isObject(value)) {
       this.address = value;

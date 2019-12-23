@@ -3,6 +3,8 @@
   <div class="card-header p-0"
        [class.cursor-move]="canManageConfig">
     <kanban-column-header [column]="column"
+                          [collections]="collections"
+                          [linkTypes]="linkTypes"
                           (remove)="onRemoveColumn()">
     </kanban-column-header>
   </div>

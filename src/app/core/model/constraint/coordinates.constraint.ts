@@ -26,8 +26,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 export class CoordinatesConstraint implements Constraint {
   public readonly type = ConstraintType.Coordinates;
 
-  constructor(public readonly config: CoordinatesConstraintConfig) {
-  }
+  constructor(public readonly config: CoordinatesConstraintConfig) {}
 
   public createDataValue(value: any): CoordinatesDataValue {
     return new CoordinatesDataValue(value, this.config);

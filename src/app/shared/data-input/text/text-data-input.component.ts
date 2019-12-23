@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -44,7 +43,7 @@ import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.
   templateUrl: './text-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextDataInputComponent implements OnChanges, AfterViewChecked {
+export class TextDataInputComponent implements OnChanges {
   @Input()
   public focus: boolean;
 
@@ -85,7 +84,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public valid = true;
 
   private preventSave: boolean;
-  private triggerInput: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
@@ -94,7 +92,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
         input.nativeElement.focus();
       });
-      this.triggerInput = true;
       this.text = this.value.format();
     }
     if (changes.value && this.value) {
@@ -102,24 +99,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
     }
 
     this.refreshValid(this.value);
-  }
-
-  public ngAfterViewChecked() {
-    if (this.triggerInput) {
-      this.dispatchInputEvent();
-      this.triggerInput = false;
-    }
-  }
-
-  private dispatchInputEvent() {
-    if (this.textInput) {
-      const element = this.textInput.nativeElement;
-      const event = new Event('input', {
-        bubbles: true,
-        cancelable: true,
-      });
-      setTimeout(() => element.dispatchEvent(event));
-    }
   }
 
   public onInput() {
@@ -170,9 +149,10 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
         const dataValue = this.value.parseInput(input.nativeElement.value);
         const selectedOption = this.dropdown.getActiveOption();
 
+        event.stopImmediatePropagation();
+        event.preventDefault();
+
         if (!this.skipValidation && !dataValue.isValid() && !selectedOption) {
-          event.stopImmediatePropagation();
-          event.preventDefault();
           this.enterInvalid.emit();
           return;
         }

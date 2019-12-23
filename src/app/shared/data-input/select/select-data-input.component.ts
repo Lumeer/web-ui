@@ -85,14 +85,12 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   public text = '';
 
   private setFocus: boolean;
-  private triggerInput: boolean;
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       this.resetSearchInput();
       this.setFocus = true;
-      this.triggerInput = true;
     }
     if (changes.value && this.value) {
       this.dropdownOptions = this.createDropdownOptions(this.value.config);
@@ -115,10 +113,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocusToInput();
       this.setFocus = false;
     }
-    if (this.triggerInput) {
-      this.dispatchInputEvent();
-      this.triggerInput = false;
-    }
   }
 
   private setFocusToInput() {
@@ -126,17 +120,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       const element = this.textInput.nativeElement;
       HtmlModifier.setCursorAtTextContentEnd(element);
       element.focus();
-    }
-  }
-
-  private dispatchInputEvent() {
-    if (this.textInput) {
-      const element = this.textInput.nativeElement;
-      const event = new Event('input', {
-        bubbles: true,
-        cancelable: true,
-      });
-      setTimeout(() => element.dispatchEvent(event));
     }
   }
 
@@ -151,10 +134,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
         }
         const selectedOption = this.dropdown.getActiveOption();
 
-        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
+        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
           this.toggleOption(selectedOption);
           this.dropdown.resetActiveOption();
         } else {
@@ -164,6 +147,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
         }
         return;
       case KeyCode.Escape:
+        this.preventSaveAndBlur();
+        this.resetScroll();
         this.resetSearchInput();
         this.cancel.emit();
         return;
@@ -184,9 +169,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       const selectOption = (this.value.config.options || []).find(o => o.value === option.value);
       if (selectOption) {
         this.selectedOptions = [...this.selectedOptions, selectOption];
-        setTimeout(() => this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER);
+        setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
       }
     }
+    this.resetSearchInput();
   }
 
   public onInput() {
@@ -196,7 +182,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
 
   private saveValue(activeOption: DropdownOption, enter?: boolean) {
     if (this.multi) {
-      const selectedOption = activeOption && this.value.config.options.find(option => option.value === activeOption.value);
+      const selectedOption =
+        activeOption && this.value.config.options.find(option => option.value === activeOption.value);
       const options = [...this.selectedOptions, selectedOption].filter(option => !!option);
       const optionValues = uniqueValues(options.map(option => option.value));
       const dataValue = this.value.copy(optionValues);
@@ -232,7 +219,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onBlur() {
-    this.wrapperElement.nativeElement.scrollLeft = 0;
+    this.resetScroll();
     if (this.preventSave) {
       this.preventSave = false;
       this.blurCleanup();
@@ -240,6 +227,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       const activeOption = this.multi ? null : this.dropdown && this.dropdown.getActiveOption();
       this.saveValue(activeOption);
     }
+  }
+
+  private resetScroll() {
+    this.wrapperElement.nativeElement.scrollLeft = 0;
   }
 
   private preventSaveAndBlur() {
@@ -268,5 +259,9 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       event.stopImmediatePropagation();
       event.preventDefault();
     }
+  }
+
+  public trackByOption(index: number, option: SelectConstraintOption): string {
+    return option.value;
   }
 }

@@ -18,15 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraint} from '../../../../../../../../core/model/constraint/select.constraint';
 import {isArray, isNotNullOrUndefined} from '../../../../../../../../shared/utils/common.utils';
-import {SelectDataValue} from '../../../../../../../../core/model/data-value/select.data-value';
+import {UserConstraint} from '../../../../../../../../core/model/constraint/user.constraint';
+import {UserDataValue} from '../../../../../../../../core/model/data-value/user.data-value';
+import {ConstraintData} from '../../../../../../../../core/model/data/constraint';
 
 @Pipe({
-  name: 'createCombinedSelectValue',
+  name: 'createCombinedUserValue',
 })
-export class CreateCombinedSelectValuePipe implements PipeTransform {
-  public transform(values: any[], constraint: SelectConstraint): SelectDataValue {
+export class CreateCombinedUserValuePipe implements PipeTransform {
+  public transform(values: any[], constraint: UserConstraint, constraintData: ConstraintData): UserDataValue {
     const combined = values.reduce((arr, value) => {
       if (isArray(value)) {
         arr.push(...value);
@@ -35,6 +36,6 @@ export class CreateCombinedSelectValuePipe implements PipeTransform {
       }
       return arr;
     }, []);
-    return constraint.createDataValue(combined);
+    return constraint.createDataValue(combined, constraintData);
   }
 }

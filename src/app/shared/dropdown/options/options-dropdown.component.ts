@@ -35,7 +35,7 @@ import {DropdownPosition} from '../dropdown-position';
 import {DropdownComponent} from '../dropdown.component';
 import {DropdownOption} from './dropdown-option';
 import {DropdownOptionDirective} from './dropdown-option.directive';
-import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../utils/common.utils';
 import {BehaviorSubject} from 'rxjs';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
 
@@ -84,7 +84,7 @@ export class OptionsDropdownComponent implements OnChanges {
 
   public readonly avatarSize = USER_AVATAR_SIZE;
 
-  public activeIndex$ = new BehaviorSubject<number>(-1);
+  public activeValue$ = new BehaviorSubject<any>(null);
 
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
@@ -95,22 +95,27 @@ export class OptionsDropdownComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldResetActiveItem(changes)) {
-      if (this.firstItemActive) {
-        this.activeIndex$.next(0);
-      } else {
-        this.activeIndex$.next(-1);
-      }
-    } else if (changes.firstItemActive && this.firstItemActive) {
-      this.activeIndex$.next(0);
+      this.activeValue$.next(this.firstItemActive ? this.optionValue(0) : null);
     }
   }
 
+  private optionValue(index: number): any {
+    const option = (this.options || [])[index];
+    return option && option.value;
+  }
+
+  private indexByValue(value: any): number {
+    return (this.options || []).findIndex(option => option.value === value);
+  }
+
   private shouldResetActiveItem(changes: SimpleChanges): boolean {
-    return (changes.options && !!this.options) || (changes.selectedValue && isNullOrUndefined(this.highlightedValue));
+    const value = this.activeValue$.value;
+    return changes.options && isNotNullOrUndefined(value) && this.indexByValue(value) === -1;
   }
 
   public onOptionSelect(event: MouseEvent, option: DropdownOption) {
     event.preventDefault();
+    event.stopImmediatePropagation();
     this.selectOption.emit(option);
     if (!this.multiSelect) {
       this.close();
@@ -126,8 +131,8 @@ export class OptionsDropdownComponent implements OnChanges {
 
   private highlightSelectedValue() {
     if (isNotNullOrUndefined(this.highlightedValue)) {
-      const activeIndex = (this.options || []).findIndex(option => deepObjectsEquals(option.value, this.highlightedValue));
-      setTimeout(() => this.activeIndex$.next(activeIndex));
+      const activeOption = (this.options || []).find(option => deepObjectsEquals(option.value, this.highlightedValue));
+      setTimeout(() => this.activeValue$.next(activeOption && activeOption.value));
     }
   }
 
@@ -142,12 +147,13 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
+    const index = this.indexByValue(this.activeValue$.value);
     switch (event.code) {
       case KeyCode.ArrowUp:
-        this.activeIndex$.next(Math.max(0, this.activeIndex$.value - 1));
+        this.activeValue$.next(this.optionValue(Math.max(0, index - 1)));
         break;
       case KeyCode.ArrowDown:
-        this.activeIndex$.next(Math.min(this.options.length - 1, this.activeIndex$.value + 1));
+        this.activeValue$.next(this.optionValue(Math.min(this.options.length - 1, index + 1)));
         break;
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
@@ -161,10 +167,11 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   public getActiveOption(): DropdownOption {
-    return this.options && this.options[this.activeIndex$.value];
+    const value = this.activeValue$.value;
+    return value && (this.options || []).find(option => option.value === value);
   }
 
   public resetActiveOption() {
-    this.activeIndex$.next(-1);
+    this.activeValue$.next(null);
   }
 }

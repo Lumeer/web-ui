@@ -26,8 +26,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 export class DurationConstraint implements Constraint {
   public readonly type = ConstraintType.Duration;
 
-  constructor(public readonly config: DurationConstraintConfig) {
-  }
+  constructor(public readonly config: DurationConstraintConfig) {}
 
   public createDataValue(value: any, constraintData: ConstraintData): DurationDataValue {
     return new DurationDataValue(value, this.config, constraintData);

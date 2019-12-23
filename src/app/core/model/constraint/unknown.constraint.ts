@@ -31,7 +31,7 @@ export class UnknownConstraint implements Constraint {
   }
 
   public createInputDataValue(inputValue: string, value: any): UnknownDataValue {
-    return new UnknownDataValue(value);
+    return new UnknownDataValue(value, inputValue);
   }
 
   public conditions(): QueryCondition[] {

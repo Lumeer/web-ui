@@ -26,7 +26,7 @@ export class BooleanConstraint implements Constraint {
   public readonly type = ConstraintType.Boolean;
   public readonly config = {};
 
-  public createDataValue(value: any,): BooleanDataValue {
+  public createDataValue(value: any): BooleanDataValue {
     return new BooleanDataValue(value, this.config);
   }
 

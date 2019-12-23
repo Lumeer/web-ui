@@ -19,13 +19,17 @@
 
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {DataValue} from './index';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export class UnknownDataValue implements DataValue {
   public readonly config: any = {};
 
-  constructor(public readonly value: any) {}
+  constructor(public readonly value: any, public readonly inputValue?: string) {}
 
   public format(): string {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
+    }
     return formatUnknownDataValue(this.value);
   }
 

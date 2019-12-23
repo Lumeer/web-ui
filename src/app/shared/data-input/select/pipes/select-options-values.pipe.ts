@@ -18,23 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ConstraintType} from '../../core/model/data/constraint';
-import {Attribute} from '../../core/store/collections/collection';
-
-const NO_HINTS_CONSTRAINT_TYPES = [
-  ConstraintType.Color,
-  ConstraintType.DateTime,
-  ConstraintType.Select,
-  ConstraintType.User,
-  ConstraintType.Files,
-];
+import {SelectConstraintOption} from '../../../../core/model/data/constraint-config';
 
 @Pipe({
-  name: 'canShowAttributeHints',
+  name: 'selectOptionsValues',
 })
-export class CanShowAttributeHintsPipe implements PipeTransform {
-  public transform(attribute: Attribute): boolean {
-    const constraintType = attribute && attribute.constraint && attribute.constraint.type;
-    return !NO_HINTS_CONSTRAINT_TYPES.includes(constraintType);
+export class SelectOptionsValuesPipe implements PipeTransform {
+  public transform(options: SelectConstraintOption[]): any[] {
+    return (options || []).map(option => option.value);
   }
 }

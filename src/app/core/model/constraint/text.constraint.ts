@@ -48,5 +48,4 @@ export class TextConstraint implements Constraint {
       QueryCondition.NotEmpty,
     ];
   }
-
 }

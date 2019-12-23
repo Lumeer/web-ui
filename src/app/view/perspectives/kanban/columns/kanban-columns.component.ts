@@ -41,7 +41,7 @@ import {User} from '../../../../core/store/users/user';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../core/constants';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
@@ -60,8 +60,6 @@ import {findAttributeConstraint} from '../../../../core/store/collections/collec
 import {KanbanColumnComponent} from './column/kanban-column.component';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-favorite-toggle.service';
-import {findOptionByDisplayValue, SelectDataValue} from '../../../../core/model/data-value/select.data-value';
-import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Constraint} from '../../../../core/model/constraint';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
@@ -259,22 +257,40 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     return {collectionId: collection.id, data};
   }
 
-  public onUpdateDocument(object: {document: DocumentModel; newValue: string; attributeId: string}) {
-    const {document, newValue, attributeId} = object;
+  public onUpdateDocument(object: {
+    document: DocumentModel;
+    newValue: string;
+    previousValue: string;
+    attributeId: string;
+  }) {
+    const {document, newValue, attributeId, previousValue} = object;
     const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
     if (collection) {
       const constraint = findAttributeConstraint(collection.attributes, attributeId);
-      const value = this.createValueByConstraint(constraint, newValue);
+      const value = this.createValueByConstraint(constraint, newValue, previousValue, document.data[attributeId]);
       const data = {...document.data, [attributeId]: value};
       this.patchDocumentData.emit({...document, data});
     }
   }
 
-  private createValueByConstraint(constraint: Constraint, newValue: any): any {
-    if (constraint && constraint.type === ConstraintType.Select) {
-      const selectConfig = constraint.config as SelectConstraintConfig;
-      const value = findOptionByDisplayValue(selectConfig, newValue);
-      return new SelectDataValue(value, selectConfig).serialize();
+  private createValueByConstraint(
+    constraint: Constraint,
+    newValue: any,
+    previousValue?: any,
+    documentValue?: any
+  ): any {
+    if (
+      constraint &&
+      (constraint.type === ConstraintType.Select || constraint.type === ConstraintType.User) &&
+      isNotNullOrUndefined(previousValue) &&
+      isArray(documentValue)
+    ) {
+      const changedIndex = documentValue.findIndex(value => value === previousValue);
+      const newArray = [...documentValue];
+      if (!newArray.includes(newValue)) {
+        newArray[changedIndex] = newValue;
+      }
+      return constraint.createDataValue(newArray, this.constraintData).serialize();
     } else {
       return (constraint || this.unknownConstraint).createDataValue(newValue).serialize();
     }

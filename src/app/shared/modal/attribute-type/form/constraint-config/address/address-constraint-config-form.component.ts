@@ -67,10 +67,7 @@ export class AddressConstraintConfigFormComponent {
   private bindExampleValue(): Observable<AddressDataValue> {
     return this.form.valueChanges.pipe(
       startWith(this.form.value),
-      map(
-        config =>
-          new AddressDataValue('example', config, {addressesMap: this.exampleAddressesMap})
-      )
+      map(config => new AddressDataValue('example', config, {addressesMap: this.exampleAddressesMap}))
     );
   }
 

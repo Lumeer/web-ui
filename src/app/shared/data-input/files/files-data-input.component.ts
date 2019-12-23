@@ -22,12 +22,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter, HostListener,
+  EventEmitter,
+  HostListener,
   Input,
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges, ViewChild,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -84,8 +86,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<{}>
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.fileAttachments$ = this.cursor$.pipe(

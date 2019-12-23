@@ -37,16 +37,16 @@ export class PercentageDataValue implements DataValue {
   constructor(
     public readonly value: any,
     public readonly config: PercentageConstraintConfig,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {
-    this.percentage = this.createPercentage(value)
+    this.percentage = this.createPercentage(value);
   }
 
   private createPercentage(value: any): Big {
     const containerPercentageSign = String(value)
       .trim()
       .endsWith('%');
-    const pureValue = containerPercentageSign ? parseInputValue(value) : value;
+    const pureValue = containerPercentageSign || isNotNullOrUndefined(this.inputValue) ? parseInputValue(value) : value;
     return convertPercentageToBig(pureValue, this.config && this.config.decimals);
   }
 

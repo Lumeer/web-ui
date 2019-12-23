@@ -93,7 +93,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
         const element = this.hiddenInput.nativeElement;
 
         if (action.payload.cursor) {
-          setTimeout(() => element.focus());
+          element.focus();
         } else {
           element.blur();
         }

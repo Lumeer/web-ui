@@ -219,9 +219,7 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
       .filter(row => row.attribute && row.attribute.id)
       .reduce((d, row) => {
         if (row.attribute.constraint) {
-          d[row.attribute.id] = row.attribute.constraint
-            .createDataValue(row.value, this.constraintData)
-            .serialize();
+          d[row.attribute.id] = row.attribute.constraint.createDataValue(row.value, this.constraintData).serialize();
         } else {
           d[row.attribute.id] = row.value;
         }

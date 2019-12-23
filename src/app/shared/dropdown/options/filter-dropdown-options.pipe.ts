@@ -22,13 +22,11 @@ import {DropdownOption} from './dropdown-option';
 import {removeAccent} from '../../utils/string.utils';
 
 @Pipe({
-  name: 'filterDropdownOptions'
+  name: 'filterDropdownOptions',
 })
 export class FilterDropdownOptionsPipe implements PipeTransform {
-
   public transform(options: DropdownOption[], text: string): DropdownOption[] {
     const filterText = removeAccent(text).trim();
     return (options || []).filter(option => removeAccent(option.displayValue || option.value).includes(filterText));
   }
-
 }

@@ -46,6 +46,7 @@ import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView} from '../views/views.state';
 import {selectWorkspaceModels} from './common.selectors';
 import {LinkInstance} from '../link-instances/link.instance';
+import {sortLinkInstances} from '../link-instances/link-instance.utils';
 
 export const selectCurrentUserIsManager = createSelector(
   selectCurrentUser,
@@ -137,7 +138,10 @@ export const selectDocumentsAndLinksByQuery = createSelector(
     currentUser
   ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} => {
     const data = filterDocumentsAndLinksByQuery(documents, collections, linkTypes, linkInstances, query, currentUser);
-    return {documents: sortDocumentsByCreationDate(data.documents), linkInstances: data.linkInstances};
+    return {
+      documents: sortDocumentsByCreationDate(data.documents),
+      linkInstances: sortLinkInstances(data.linkInstances),
+    };
   }
 );
 
@@ -183,7 +187,10 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
         currentUser,
         includeChildren
       );
-      return {documents: sortDocumentsByCreationDate(data.documents), linkInstances: data.linkInstances};
+      return {
+        documents: sortDocumentsByCreationDate(data.documents),
+        linkInstances: sortLinkInstances(data.linkInstances),
+      };
     }
   );
 

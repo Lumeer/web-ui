@@ -36,7 +36,6 @@ import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
 import {DataSuggestion} from './data-suggestion';
 import {DataInputConfiguration} from './data-input-configuration';
-import {USER_AVATAR_SIZE} from '../../core/constants';
 import {isNotNullOrUndefined} from '../utils/common.utils';
 
 @Component({
@@ -85,8 +84,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
 
-  constructor(private renderer: Renderer2, private elementRef: ElementRef) {
-  }
+  constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.dataValue && this.configuration.resizeToContent) {
@@ -119,16 +117,18 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
     this.tempElement.classList.add('d-none');
 
-    if (this.constraint && this.constraint.type === ConstraintType.User) {
-      return textWidth + (value.isValid() ? USER_AVATAR_SIZE : 0);
-    }
-
     return textWidth;
   }
 
   private computationNotNecessary(): boolean {
-    const constraintType = this.constraint && this.constraint.type;
-    return [ConstraintType.Select].includes(constraintType);
+    if (!this.constraintType) {
+      return false;
+    }
+    if ([ConstraintType.Select, ConstraintType.User].includes(this.constraint.type)) {
+      return true;
+    }
+
+    return false;
   }
 
   private createTempElement(): HTMLElement {

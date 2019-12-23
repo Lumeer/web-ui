@@ -25,10 +25,7 @@ const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'si
 export class BooleanDataValue implements DataValue {
   public readonly booleanValue: boolean;
 
-  constructor(
-    public readonly value: any,
-    public readonly config: BooleanConstraintConfig
-  ) {
+  constructor(public readonly value: any, public readonly config: BooleanConstraintConfig) {
     this.booleanValue = truthyValues.includes(typeof value === 'string' ? value.toLocaleLowerCase() : value);
   }
 

@@ -27,7 +27,7 @@ export class TextDataValue implements DataValue {
   constructor(
     public readonly value: any,
     public readonly config: TextConstraintConfig,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {}
 
   public format(): string {

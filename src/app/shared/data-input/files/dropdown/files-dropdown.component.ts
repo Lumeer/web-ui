@@ -64,10 +64,14 @@ export class FilesDropdownComponent implements AfterViewInit {
 
   public fileSizeError$ = new BehaviorSubject(null);
 
-  public readonly dropdownPositions = [DropdownPosition.BottomStart, DropdownPosition.BottomEnd, DropdownPosition.TopStart, DropdownPosition.TopEnd];
+  public readonly dropdownPositions = [
+    DropdownPosition.BottomStart,
+    DropdownPosition.BottomEnd,
+    DropdownPosition.TopStart,
+    DropdownPosition.TopEnd,
+  ];
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   public ngAfterViewInit() {
     this.dropdown.open();

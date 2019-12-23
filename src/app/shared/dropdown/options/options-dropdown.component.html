@@ -7,11 +7,11 @@
           [minWidth]="100"
           [positions]="dropdownPositions">
   <div *ngIf="options?.length > 0"
-       class="card">
+       class="card" [class.w-100]="fitParent">
     <a *ngFor="let option of options; let index = index"
-       [class.active]="(activeIndex$ | async) === index"
-       (mousedown)="onOptionSelect($event, option)"
-       (click)="$event.stopImmediatePropagation(); $event.preventDefault();"
+       [class.active]="(activeValue$ | async) === option.value"
+       (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
+       (click)="onOptionSelect($event, option)"
        class="dropdown-item text-truncate"
        [class.dropdown-item-multi]="multiSelect"
        data-test="select-item-option"

@@ -32,7 +32,7 @@ export class ColorConstraint implements Constraint {
     return new ColorDataValue(value, this.config);
   }
 
-  public createInputDataValue(inputValue: string, value: any,): ColorDataValue {
+  public createInputDataValue(inputValue: string, value: any): ColorDataValue {
     return new ColorDataValue(value, this.config, inputValue || '');
   }
 

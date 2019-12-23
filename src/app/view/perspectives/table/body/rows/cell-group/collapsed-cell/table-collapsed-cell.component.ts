@@ -71,8 +71,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
 
   public readonly constraintType = ConstraintType;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.bindAffected();
@@ -135,11 +134,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     return constraintObservable$.pipe(
       map(constraint =>
         values
-          .map(value =>
-            (constraint || new UnknownConstraint())
-              .createDataValue(value, this.constraintData)
-              .format()
-          )
+          .map(value => (constraint || new UnknownConstraint()).createDataValue(value, this.constraintData).format())
           .filter(value => !!value)
       )
     );

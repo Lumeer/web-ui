@@ -146,9 +146,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
         this.saveValue(content);
       })
     );
-    this.modalSubscription.add(
-      this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit())
-    );
+    this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit()));
   }
 
   public ngOnDestroy(): void {
@@ -193,9 +191,11 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
           event.preventDefault();
         } else {
           const dataValue = this.value.parseInput(this.text);
+
+          event.stopImmediatePropagation();
+          event.preventDefault();
+
           if (!this.skipValidation && !dataValue.isValid()) {
-            event.stopImmediatePropagation();
-            event.preventDefault();
             this.enterInvalid.emit();
             return;
           }

@@ -22,10 +22,12 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -85,6 +87,9 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
 
   @Input()
   public origin: ElementRef | HTMLElement;
+
+  @Output()
+  public selected = new EventEmitter();
 
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
@@ -155,6 +160,11 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
     }
   }
 
+  public onUseAttribute() {
+    this.selected.emit();
+    this.createAttribute();
+  }
+
   public createAttribute() {
     const attribute: Attribute = {
       name: this.attributeName,
@@ -165,6 +175,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
     } else if (this.linkType) {
       this.createLinkTypeAttribute(attribute);
     }
+    this.close();
   }
 
   private createCollectionAttribute(attribute: Attribute) {
@@ -203,10 +214,13 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   }
 
   public useLinkType(linkType: LinkType) {
+    this.selected.emit();
     this.store$.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
+    this.close();
   }
 
   public createLinkType(collection: Collection) {
+    this.selected.emit();
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     this.store$
       .pipe(
@@ -214,6 +228,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
         first()
       )
       .subscribe(collections => this.modalService.showCreateLink(collections, linkType => this.useLinkType(linkType)));
+    this.close();
   }
 
   public bindLinkedAttributes(): Observable<LinkedAttribute[]> {

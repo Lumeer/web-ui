@@ -26,10 +26,9 @@ import {QueryCondition} from '../../store/navigation/query/query';
 export class SelectConstraint implements Constraint {
   public readonly type = ConstraintType.Select;
 
-  constructor(public readonly config: SelectConstraintConfig) {
-  }
+  constructor(public readonly config: SelectConstraintConfig) {}
 
-  public createDataValue(value: any,): SelectDataValue {
+  public createDataValue(value: any): SelectDataValue {
     return new SelectDataValue(value, this.config);
   }
 
@@ -40,5 +39,4 @@ export class SelectConstraint implements Constraint {
   public conditions(): QueryCondition[] {
     return [QueryCondition.In, QueryCondition.NotIn, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
   }
-
 }

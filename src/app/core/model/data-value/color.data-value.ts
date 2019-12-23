@@ -33,7 +33,7 @@ export class ColorDataValue implements DataValue {
   constructor(
     public readonly value: any,
     public readonly config: ColorConstraintConfig,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {
     this.hexCode = value || value === 0 ? parseColorHexCode(value) : null;
     this.numberCode = convertColorHexCodeToNumber(this.hexCode);

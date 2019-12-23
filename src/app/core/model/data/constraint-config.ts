@@ -99,7 +99,7 @@ export interface SelectConstraintOption {
 
 export interface SelectConstraintConfig {
   multi?: boolean;
-  displayValues: boolean;
+  displayValues?: boolean;
   options: SelectConstraintOption[];
 }
 

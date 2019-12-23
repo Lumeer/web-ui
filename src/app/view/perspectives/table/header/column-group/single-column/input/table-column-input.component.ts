@@ -66,6 +66,8 @@ export class TableColumnInputComponent implements OnChanges {
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
+  private preventSave: boolean;
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.edited && this.edited) {
       setTimeout(() => this.focusInput());
@@ -81,8 +83,8 @@ export class TableColumnInputComponent implements OnChanges {
   }
 
   public onBlur() {
-    if (this.initialized) {
-      this.cancel.emit();
+    if (this.preventSave) {
+      this.preventSave = false;
     } else {
       this.saveValue();
     }
@@ -112,6 +114,7 @@ export class TableColumnInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        this.preventSaveAndBlur();
         this.saveValue();
         event.preventDefault();
         return;
@@ -128,6 +131,13 @@ export class TableColumnInputComponent implements OnChanges {
 
     if (FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS.includes(event.key)) {
       event.preventDefault();
+    }
+  }
+
+  public preventSaveAndBlur() {
+    if (this.textInput) {
+      this.preventSave = true;
+      this.textInput.nativeElement.blur();
     }
   }
 

@@ -30,10 +30,14 @@ import {
   CalendarStemConfig,
 } from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
-import {findAttribute, isCollectionAttributeEditable} from '../../../../core/store/collections/collection.util';
+import {
+  findAttribute,
+  findAttributeConstraint,
+  isCollectionAttributeEditable,
+} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isArray, isDateValid} from '../../../../shared/utils/common.utils';
 import {formatData} from '../../../../shared/utils/data/format-data';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -43,7 +47,7 @@ import {
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {isArraySubset} from '../../../../shared/utils/array.utils';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 
 export interface CalendarMetaData {
   documentId: string;
@@ -118,7 +122,10 @@ export function createCalendarEventsForCollection(
   for (const document of documents) {
     const formattedData = formatData(document.data, collection.attributes, constraintData);
 
-    const title = nameProperty && formattedData[nameProperty.attributeId];
+    const title = nameProperty && document.data[nameProperty.attributeId];
+    const titleConstraint =
+      (nameProperty && findAttributeConstraint(collection.attributes, nameProperty.attributeId)) ||
+      new UnknownConstraint();
     const startString = startProperty && formattedData[startProperty.attributeId];
 
     const start = parseCalendarEventDate(startString);
@@ -132,28 +139,34 @@ export function createCalendarEventsForCollection(
 
     const allDay = isAllDayEvent(start, end);
     const interval = createInterval(start, startProperty.attributeId, end, end && endProperty.attributeId);
-    const event = {
-      title,
-      start: interval[0].value,
-      end: interval[1].value,
-      color: allDay ? allDayColor : color,
-      allDay,
-      draggable: draggableStart || draggableEnd,
-      resizable: {
-        beforeStart: draggableStart && interval[1].value, // an end date is always required for resizable events to work
-        afterEnd: draggableEnd && interval[1].value,
-      },
-      meta: {
-        documentId: document.id,
-        collectionId: document.collectionId,
-        stemIndex,
-        color: collection.color,
-        startAttributeId: interval[0].attrId,
-        endAttributeId: interval[1].attrId,
-      },
-    };
 
-    events.push(event);
+    const titles = isArray(title) ? title : [title];
+    for (let i = 0; i < titles.length; i++) {
+      const titleFormatted = titleConstraint.createDataValue(titles[i], constraintData).format();
+
+      const event = {
+        title: titleFormatted,
+        start: interval[0].value,
+        end: interval[1].value,
+        color: allDay ? allDayColor : color,
+        allDay,
+        draggable: draggableStart || draggableEnd,
+        resizable: {
+          beforeStart: draggableStart && interval[1].value, // an end date is always required for resizable events to work
+          afterEnd: draggableEnd && interval[1].value,
+        },
+        meta: {
+          documentId: document.id,
+          collectionId: document.collectionId,
+          stemIndex,
+          color: collection.color,
+          startAttributeId: interval[0].attrId,
+          endAttributeId: interval[1].attrId,
+        },
+      };
+
+      events.push(event);
+    }
   }
 
   return events;

@@ -46,7 +46,7 @@ export class LinkTypeComponent implements OnInit, OnDestroy, OnChanges {
   @Output()
   public delete = new EventEmitter<number>();
 
-  public linksCount = new BehaviorSubject<number>(0);
+  public linksCount$ = new BehaviorSubject<number>(0);
 
   private linksCountSubscription = new Subscription();
 
@@ -61,7 +61,7 @@ export class LinkTypeComponent implements OnInit, OnDestroy, OnChanges {
     if (this.linkType) {
       this.linksCountSubscription = this.store
         .select(selectLinkInstancesByType(this.linkType.id))
-        .subscribe(linkInstances => this.linksCount.next(linkInstances.length));
+        .subscribe(linkInstances => this.linksCount$.next(linkInstances.length));
     }
   }
 
@@ -74,6 +74,6 @@ export class LinkTypeComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public onDelete() {
-    this.delete.emit(this.linksCount.getValue());
+    this.delete.emit(this.linksCount$.getValue());
   }
 }

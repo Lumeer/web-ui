@@ -39,7 +39,7 @@ export class DurationDataValue implements DataValue {
     public readonly value: any,
     public readonly config: DurationConstraintConfig,
     public readonly constraintData: ConstraintData,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {
     const durationUnitsMap = this.constraintData && this.constraintData.durationUnitsMap;
     if (isDurationDataValueValid(value, durationUnitsMap)) {

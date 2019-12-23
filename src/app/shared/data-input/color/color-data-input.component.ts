@@ -136,9 +136,10 @@ export class ColorDataInputComponent implements OnChanges {
         const dataValue = this.value.parseInput(input.nativeElement.value);
         this.pendingUpdate = null;
 
+        event.stopImmediatePropagation();
+        event.preventDefault();
+
         if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
-          event.stopImmediatePropagation();
-          event.preventDefault();
           this.enterInvalid.emit();
           return;
         }

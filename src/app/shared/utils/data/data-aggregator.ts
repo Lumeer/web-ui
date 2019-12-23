@@ -19,7 +19,7 @@
 
 import {Constraint} from '../../../core/model/constraint';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {Collection} from '../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
@@ -481,9 +481,7 @@ export class DataAggregator {
     if (this.formatValue) {
       return this.formatValue(value, constraint, this.constraintData, attribute);
     }
-    return (constraint || new UnknownConstraint())
-      .createDataValue(value, this.constraintData)
-      .preview();
+    return (constraint || new UnknownConstraint()).createDataValue(value, this.constraintData).preview();
   }
 }
 

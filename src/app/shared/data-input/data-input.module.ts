@@ -50,9 +50,11 @@ import {RichTextDataInputComponent} from './rich-text/rich-text-data-input.compo
 import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.module';
 import {QuillModule} from 'ngx-quill';
 import {FilterDataSuggestionsPipe} from './filter-data-suggestions.pipe';
-import {FilterUsersPipe} from './user/filter-users.pipe';
-import { FindSelectOptionPipe } from './select/find-select-option.pipe';
-import { SelectOptionsValuesPipe } from './select/select-options-values.pipe';
+import {FilterUsersPipe} from './user/pipes/filter-users.pipe';
+import {SelectOptionIsValidPipe} from './select/pipes/select-option-is-valid.pipe';
+import {SelectOptionsValuesPipe} from './select/pipes/select-options-values.pipe';
+import {UsersEmailsPipe} from './user/pipes/users-emails.pipe';
+import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
 
 @NgModule({
   imports: [
@@ -91,16 +93,18 @@ import { SelectOptionsValuesPipe } from './select/select-options-values.pipe';
     RichTextDataInputComponent,
     FilterDataSuggestionsPipe,
     FilterUsersPipe,
-    FindSelectOptionPipe,
+    SelectOptionIsValidPipe,
     SelectOptionsValuesPipe,
+    UsersEmailsPipe,
+    UsersAreValidPipe,
   ],
-    exports: [
-        DataInputComponent,
-        BooleanDataInputComponent,
-        UserDataInputComponent,
-        DataCursorPipe,
-        FileAttachmentButtonComponent,
-        SelectDataInputComponent,
-    ],
+  exports: [
+    DataInputComponent,
+    BooleanDataInputComponent,
+    UserDataInputComponent,
+    DataCursorPipe,
+    FileAttachmentButtonComponent,
+    SelectDataInputComponent,
+  ],
 })
 export class DataInputModule {}

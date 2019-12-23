@@ -18,23 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ConstraintType} from '../../core/model/data/constraint';
-import {Attribute} from '../../core/store/collections/collection';
-
-const NO_HINTS_CONSTRAINT_TYPES = [
-  ConstraintType.Color,
-  ConstraintType.DateTime,
-  ConstraintType.Select,
-  ConstraintType.User,
-  ConstraintType.Files,
-];
+import {User} from '../../../../core/store/users/user';
 
 @Pipe({
-  name: 'canShowAttributeHints',
+  name: 'usersAreValid',
 })
-export class CanShowAttributeHintsPipe implements PipeTransform {
-  public transform(attribute: Attribute): boolean {
-    const constraintType = attribute && attribute.constraint && attribute.constraint.type;
-    return !NO_HINTS_CONSTRAINT_TYPES.includes(constraintType);
+export class UsersAreValidPipe implements PipeTransform {
+  public transform(selectedUsers: User[], definedUsers: User[]): boolean {
+    return selectedUsers.every(selectedUser => definedUsers.some(user => selectedUser.email === user.email));
   }
 }

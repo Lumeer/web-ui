@@ -23,12 +23,9 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  SimpleChange,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {LinkColumn} from '../../../model/link-column';
@@ -52,7 +49,7 @@ import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean
   styleUrls: ['./links-list-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy, OnChanges {
+export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy {
   @Input()
   public columns: LinkColumn[];
 
@@ -75,7 +72,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public documentId: string;
 
   @Input()
-  public attributeEditing: { documentId?: string; attributeId?: string };
+  public attributeEditing: {documentId?: string; attributeId?: string};
 
   @Output()
   public onFocus = new EventEmitter<number>();
@@ -87,7 +84,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public resetFocusAndEdit = new EventEmitter<number>();
 
   @Output()
-  public newValue = new EventEmitter<{ column: number; value: any }>();
+  public newValue = new EventEmitter<{column: number; value: any}>();
 
   @Output()
   public columnFocus = new EventEmitter<number>();
@@ -102,7 +99,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public detail = new EventEmitter();
 
   @Output()
-  public newLink = new EventEmitter<{ column: LinkColumn; value: any; correlationId: string }>();
+  public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
 
   @ViewChild(DocumentHintsComponent, {static: false})
   public suggestions: DocumentHintsComponent;
@@ -118,10 +115,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   private preventSave = false;
   private preventSaveTimer: number;
-  private creatingNewRow = false;
 
-  constructor(public element: ElementRef) {
-  }
+  constructor(public element: ElementRef) {}
 
   public ngOnInit() {
     this.subscriptions.add(
@@ -140,21 +135,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
         .pipe(distinctUntilChanged())
         .subscribe(index => this.columnEdit.emit(index))
     );
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    this.checkNewRowChanged(changes.row);
-  }
-
-  private checkNewRowChanged(change: SimpleChange) {
-    if (
-      change &&
-      change.previousValue &&
-      change.currentValue &&
-      change.previousValue.correlationId !== change.currentValue.correlationId
-    ) {
-      this.creatingNewRow = false;
-    }
   }
 
   public endColumnEditing(column: number) {
@@ -262,8 +242,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   private createNewLink(index: number, dataValue: DataValue) {
     const value = dataValue.serialize();
-    if (!this.creatingNewRow && isNotNullOrUndefined(value) && String(value).trim() !== '') {
-      this.creatingNewRow = true;
+    if (isNotNullOrUndefined(value) && String(value).trim() !== '') {
       const column = this.columns[index];
       this.newLink.emit({column, value, correlationId: this.row.correlationId});
     }
@@ -284,7 +263,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     this.resetFocusAndEdit.emit(column);
   }
 
-  public onDataInputFocus(column: number) {
+  public onDataInputFocus(column: number, event: MouseEvent) {
     if (this.columnEditing$.value !== column) {
       this.onFocus.emit(column);
     }

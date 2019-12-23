@@ -101,6 +101,10 @@ export class CoordinatesDataInputComponent {
         // needs to be executed after parent event handlers
         const input = this.coordinatesInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
+
+        event.stopImmediatePropagation();
+        event.preventDefault();
+
         this.preventSaveAndBlur();
         setTimeout(() => this.save.emit(dataValue));
         return;

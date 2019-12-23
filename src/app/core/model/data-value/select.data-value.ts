@@ -28,7 +28,7 @@ export class SelectDataValue implements DataValue {
   constructor(
     public readonly value: any,
     public readonly config: SelectConstraintConfig,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {
     this.options = findOptionsByValue(config, value);
   }
@@ -39,7 +39,7 @@ export class SelectDataValue implements DataValue {
     }
 
     if (this.options.length && this.config) {
-      return this.options.map(option => this.config.displayValues ? option.displayValue : option.value).join(', ');
+      return this.options.map(option => (this.config.displayValues ? option.displayValue : option.value)).join(', ');
     }
     return formatUnknownDataValue(this.value);
   }
@@ -59,7 +59,7 @@ export class SelectDataValue implements DataValue {
     if (isNotNullOrUndefined(this.inputValue)) {
       return true;
     }
-    return !this.value || this.options.length > 0;
+    return !this.value || this.options.every(option => this.config.options.some(o => o.value === option.value));
   }
 
   public increment(): SelectDataValue {
@@ -86,7 +86,9 @@ export class SelectDataValue implements DataValue {
     }
     const {options} = this.config;
     const thisIndex = options.findIndex(option => this.options[0] && this.options[0].value === option.value);
-    const otherIndex = options.findIndex(option => otherValue.options[0] && otherValue.options[0].value === option.value);
+    const otherIndex = options.findIndex(
+      option => otherValue.options[0] && otherValue.options[0].value === option.value
+    );
 
     return thisIndex - otherIndex;
   }
@@ -109,9 +111,18 @@ export class SelectDataValue implements DataValue {
 }
 
 function findOptionsByValue(config: SelectConstraintConfig, value: any): SelectConstraintOption[] {
-  const options = config && config.options || [];
+  const options = (config && config.options) || [];
   const values: any[] = (isArray(value) ? value : [value]).filter(val => isNotNullOrUndefined(val) && val !== '');
-  return values.map(val => options.find(opt => String(opt.value) === String(val))).filter(option => !!option);
+  return values
+    .map(val => {
+      const option = options.find(opt => String(opt.value) === String(val));
+      if (option) {
+        return option;
+      }
+
+      return {value: val, displayValue: val};
+    })
+    .filter(option => !!option);
 }
 
 export function findOptionByDisplayValue(config: SelectConstraintConfig, value: any): SelectConstraintOption {

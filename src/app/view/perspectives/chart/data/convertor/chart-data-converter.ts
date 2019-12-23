@@ -41,7 +41,13 @@ import {LinkInstance} from '../../../../../core/store/link-instances/link.instan
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
+import {
+  isArray,
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+  isNumeric,
+  toNumber,
+} from '../../../../../shared/utils/common.utils';
 import {getDurationSaveValue} from '../../../../../shared/utils/constraint/duration-constraint.utils';
 import {decimalUserToStore, parseMomentDate} from '../../../../../shared/utils/data.utils';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
@@ -215,18 +221,21 @@ export class ChartDataConverter {
     const dataResources = this.dataAggregator.getDataResources(definedAxis.resourceIndex);
 
     for (const dataObject of dataResources) {
-      let value = xAxis ? dataObject.data[xAxis.attributeId] : yAxis ? dataObject.data[yAxis.attributeId] : null;
-      value = this.formatChartAxisValue(value, definedAxis);
-      if (isNullOrUndefined(value) || actualValues.has(value)) {
-        continue;
+      const value = xAxis ? dataObject.data[xAxis.attributeId] : yAxis ? dataObject.data[yAxis.attributeId] : null;
+      const values = isArray(value) ? value : [value];
+      for (let i = 0; i < values.length; i++) {
+        const formattedValue = this.formatChartAxisValue(values[i], definedAxis);
+        if (isNullOrUndefined(formattedValue) || actualValues.has(formattedValue)) {
+          continue;
+        }
+
+        const id = draggable ? dataObject.id : null;
+
+        isNum = isNum && isNumeric(formattedValue);
+
+        points.push({id, x: xAxis ? formattedValue : null, y: yAxis ? formattedValue : null});
+        actualValues.add(formattedValue);
       }
-
-      const id = draggable ? dataObject.id : null;
-
-      isNum = isNum && isNumeric(value);
-
-      points.push({id, x: xAxis ? value : null, y: yAxis ? value : null});
-      actualValues.add(value);
     }
 
     const name = yAxis && this.attributeNameForAxis(yAxis);
@@ -405,6 +414,8 @@ export class ChartDataConverter {
     }
 
     switch (constraint && constraint.type) {
+      case ConstraintType.Select:
+      case ConstraintType.User:
       case ConstraintType.Text:
         return constraint.createDataValue(value, this.constraintData).preview();
       case ConstraintType.DateTime:

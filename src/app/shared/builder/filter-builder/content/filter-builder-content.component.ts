@@ -31,7 +31,8 @@ import {DataInputConfiguration} from '../../../data-input/data-input-configurati
 import {KeyCode} from '../../../key-code';
 import {Constraint} from '../../../../core/model/constraint';
 import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
-import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {SelectConstraintConfig, UserConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
 
 @Component({
   selector: 'filter-builder-content',
@@ -53,7 +54,7 @@ export class FilterBuilderContentComponent implements OnChanges {
   public constraintData: ConstraintData;
 
   @Output()
-  public valueChange = new EventEmitter<{ condition: QueryCondition; values: QueryConditionValue[] }>();
+  public valueChange = new EventEmitter<{condition: QueryCondition; values: QueryConditionValue[]}>();
 
   @Output()
   public finishEditing = new EventEmitter();
@@ -88,8 +89,11 @@ export class FilterBuilderContentComponent implements OnChanges {
     const constraint = this.attribute.constraint;
     switch (constraint.type) {
       case ConstraintType.Select:
-        const config = <SelectConstraintConfig>{...constraint.config, multi: true};
-        return new SelectConstraint(config);
+        const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
+        return new SelectConstraint(selectConfig);
+      case ConstraintType.User:
+        const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
+        return new UserConstraint(userConfig);
       default:
         return constraint;
     }

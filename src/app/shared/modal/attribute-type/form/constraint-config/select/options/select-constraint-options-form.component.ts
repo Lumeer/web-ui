@@ -24,7 +24,8 @@ import {
   ElementRef,
   Input,
   OnChanges,
-  QueryList, Renderer2,
+  QueryList,
+  Renderer2,
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
@@ -59,8 +60,7 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   public readonly formControlNames = SelectConstraintOptionsFormControl;
   public backgroundInitialValues: string[] = [];
 
-  constructor(private renderer: Renderer2) {
-  }
+  constructor(private renderer: Renderer2) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.options) {
@@ -130,9 +130,11 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
     const initialBackground = selectDefaultPalette[index % selectDefaultPalette.length];
     return new FormGroup(
       {
-        [SelectConstraintOptionsFormControl.Value]: new FormControl(option && option.value || ''),
-        [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl(option && option.displayValue || ''),
-        [SelectConstraintOptionsFormControl.Background]: new FormControl(option && option.background || initialBackground),
+        [SelectConstraintOptionsFormControl.Value]: new FormControl((option && option.value) || ''),
+        [SelectConstraintOptionsFormControl.DisplayValue]: new FormControl((option && option.displayValue) || ''),
+        [SelectConstraintOptionsFormControl.Background]: new FormControl(
+          (option && option.background) || initialBackground
+        ),
       },
       this.createRequiredValueValidator()
     );
@@ -157,7 +159,9 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   }
 
   public onPaletteClick(optionIndex: number, colorPicker: ColorPickerComponent) {
-    this.backgroundInitialValues[optionIndex] = this.form.at(optionIndex).get(SelectConstraintOptionsFormControl.Background).value;
+    this.backgroundInitialValues[optionIndex] = this.form
+      .at(optionIndex)
+      .get(SelectConstraintOptionsFormControl.Background).value;
     colorPicker.open();
   }
 

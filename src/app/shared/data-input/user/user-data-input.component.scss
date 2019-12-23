@@ -9,6 +9,10 @@
   .user {
     line-height: 0.9rem;
   }
+
+  .user-input {
+    min-width: 50px;
+  }
 }
 
 input:focus {

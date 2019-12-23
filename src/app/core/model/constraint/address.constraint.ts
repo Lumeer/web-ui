@@ -26,13 +26,9 @@ import {QueryCondition} from '../../store/navigation/query/query';
 export class AddressConstraint implements Constraint {
   public readonly type = ConstraintType.Address;
 
-  constructor(public readonly config: AddressConstraintConfig) {
-  }
+  constructor(public readonly config: AddressConstraintConfig) {}
 
-  public createDataValue(
-    value: any,
-    constraintData?: ConstraintData
-  ): AddressDataValue {
+  public createDataValue(value: any, constraintData?: ConstraintData): AddressDataValue {
     return new AddressDataValue(value, this.config, constraintData);
   }
 

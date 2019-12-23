@@ -19,7 +19,7 @@
 
 import {COLOR_LIGHT, COLOR_PRIMARY} from '../../core/constants';
 
-export function contrastColor(color: string, returnCodes?: { dark: string; light: string }): string {
+export function contrastColor(color: string, returnCodes?: {dark: string; light: string}): string {
   if (!color) {
     return returnCodes ? returnCodes.dark : COLOR_PRIMARY;
   }

@@ -23,6 +23,7 @@
                         (save)="onSave($event)"
                         (cancel)="onCancel()"
                         (keydown)="onKeyDown($event)"
+                        #columnInput
                         class="flex-grow-1">
     </table-column-input>
 
@@ -37,7 +38,8 @@
                                [collection]="collection"
                                [linkType]="linkType"
                                [cursor]="cursor"
-                               [origin]="columnCell">
+                               [origin]="columnCell"
+                               (selected)="columnInput.preventSaveAndBlur()">
   </table-attribute-suggestions>
 
   <table-column-context-menu *ngIf="attribute && cursor"

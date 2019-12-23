@@ -18,7 +18,7 @@
                 (save)="onNewValue(index, $event)"
                 (dblclick)="onDataInputDblClick(index, $event)"
                 (cancel)="onDataInputCancel(index)"
-                (click)="onDataInputFocus(index)"
+                (click)="onDataInputFocus(index, $event)"
                 (enterInvalid)="onEnterInvalid()"
                 (clickOutside)="onDataInputCancel(index)">
     </data-input>
@@ -35,7 +35,7 @@
                 (valueChange)="onValueChange(index, $event)"
                 (dblclick)="onDataInputDblClick(index, $event)"
                 (cancel)="onDataInputCancel(index)"
-                (click)="onDataInputFocus(index)"
+                (click)="onDataInputFocus(index, $event)"
                 (clickOutside)="onDataInputCancel(index)"
                 (enterInvalid)="onEnterInvalid()">
     </data-input>

@@ -38,6 +38,7 @@ import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
 import {uniqueValues} from '../../utils/array.utils';
+import {isEmailValid} from '../../utils/email.utils';
 
 @Component({
   selector: 'user-data-input',
@@ -83,22 +84,20 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
 
   public name: string = '';
   public users: User[];
-  public selectedUses: User[];
+  public selectedUsers: User[];
   public multi: boolean;
 
   private setFocus: boolean;
-  private triggerInput: boolean;
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
       this.resetSearchInput();
       this.setFocus = true;
-      this.triggerInput = true;
     }
     if (changes.value && this.value) {
       this.users = this.bindUsers();
-      this.selectedUses = this.value.users;
+      this.selectedUsers = this.value.users;
       this.multi = this.value.config && this.value.config.multi;
       this.name = this.value.format();
     }
@@ -113,10 +112,6 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocusToInput();
       this.setFocus = false;
     }
-    if (this.triggerInput) {
-      this.dispatchInputEvent();
-      this.triggerInput = false;
-    }
   }
 
   private setFocusToInput() {
@@ -124,17 +119,6 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       const element = this.textInput.nativeElement;
       HtmlModifier.setCursorAtTextContentEnd(element);
       element.focus();
-    }
-  }
-
-  private dispatchInputEvent() {
-    if (this.textInput) {
-      const element = this.textInput.nativeElement;
-      const event = new Event('input', {
-        bubbles: true,
-        cancelable: true,
-      });
-      setTimeout(() => element.dispatchEvent(event));
     }
   }
 
@@ -149,10 +133,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         }
         const selectedOption = this.dropdown.getActiveOption();
 
-        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
-          event.preventDefault();
-          event.stopImmediatePropagation();
+        event.stopImmediatePropagation();
+        event.preventDefault();
 
+        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
           this.toggleOption(selectedOption);
           this.dropdown.resetActiveOption();
         } else {
@@ -162,12 +146,14 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         }
         return;
       case KeyCode.Escape:
+        this.preventSaveAndBlur();
+        this.resetScroll();
         this.resetSearchInput();
         this.cancel.emit();
         return;
       case KeyCode.Backspace:
-        if (!this.name && this.multi && this.users.length > 0) {
-          this.users = this.users.slice(0, this.users.length - 1);
+        if (!this.name && this.multi && this.selectedUsers.length > 0) {
+          this.selectedUsers = this.selectedUsers.slice(0, this.selectedUsers.length - 1);
         }
         return;
     }
@@ -176,32 +162,44 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private toggleOption(option: DropdownOption) {
-    if (this.users.some(o => o.email === option.value)) {
-      this.selectedUses = this.selectedUses.filter(o => o.email !== option.value);
+    if (this.selectedUsers.some(o => o.email === option.value)) {
+      this.selectedUsers = this.selectedUsers.filter(o => o.email !== option.value);
     } else {
       const selectUser = (this.users || []).find(o => o.email === option.value);
       if (selectUser) {
-        this.selectedUses = [...this.selectedUses, selectUser];
-        setTimeout(() => this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER);
+        this.selectedUsers = [...this.selectedUsers, selectUser];
+        setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
       }
     }
+    this.resetSearchInput();
   }
 
   private saveValue(activeOption?: DropdownOption, enter?: boolean) {
+    const inputIsEmail = isEmailValid(this.name.trim());
     if (this.multi) {
       const selectedUser = activeOption && this.users.find(option => option.email === activeOption.value);
-      const options = [...this.selectedUses, selectedUser].filter(option => !!option);
-      const emails = uniqueValues(options.map(option => option.email));
-      const dataValue = this.value.copy(emails);
-      this.save.emit(dataValue);
-      return;
+      if (selectedUser || !this.value.config.externalUsers || !inputIsEmail) {
+        const options = [...this.selectedUsers, selectedUser].filter(option => !!option);
+        const emails = uniqueValues(options.map(option => option.email));
+        const dataValue = this.value.copy(emails);
+        this.save.emit(dataValue);
+        return;
+      }
     }
 
     if (activeOption) {
       this.saveValueByOption(activeOption);
-    } else if (this.name && (this.skipValidation || (this.value.config && this.value.config.externalUsers))) {
-      const dataValue = this.value.parseInput(this.name);
-      this.save.emit(dataValue);
+    } else if (
+      this.name &&
+      (this.skipValidation || (this.value.config && this.value.config.externalUsers)) &&
+      inputIsEmail
+    ) {
+      if (this.multi) {
+        const emails = uniqueValues([...this.selectedUsers.map(option => option.email), this.name.trim()]);
+        this.save.emit(this.value.copy(emails));
+      } else {
+        this.save.emit(this.value.parseInput(this.name));
+      }
     } else {
       if (enter) {
         this.enterInvalid.emit();
@@ -228,7 +226,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onBlur() {
-    this.wrapperElement.nativeElement.scrollLeft = 0;
+    this.resetScroll();
     if (this.preventSave) {
       this.preventSave = false;
       this.blurCleanup();
@@ -236,6 +234,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       const activeOption = this.multi ? null : this.dropdown && this.dropdown.getActiveOption();
       this.saveValue(activeOption);
     }
+  }
+
+  private resetScroll() {
+    this.wrapperElement.nativeElement.scrollLeft = 0;
   }
 
   private preventSaveAndBlur() {
@@ -275,4 +277,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     }
   }
 
+  public trackByUser(index: number, user: User): string {
+    return user.email || user.name;
+  }
 }

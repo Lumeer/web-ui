@@ -1,14 +1,13 @@
 <div class="d-flex align-items-center h-100 p-1" #wrapperElement
-     [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'"
-     data-test="select-data-input">
+     [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
   <ng-container *ngIf="multi || readonly">
 
-    <ng-container *ngFor="let option of selectedOptions; let first = first">
+    <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">
         <span class="d-inline-block px-2 py-1 tag text-nowrap" [title]="option.displayValue || option.value"
               [style.background]="option.background"
               [style.color]="option.background | contrastColor"
-              [class.invalid-value]="!option.value"
+              [class.invalid-value]="!(option | selectOptionIsValid:value.config?.options)"
               [spellcheck]="false"
               [class.ml-2]="!first">
           {{option.displayValue || option.value}}
@@ -24,8 +23,9 @@
            (focus)="onFocused()"
            (blur)="onBlur()"
            (ngModelChange)="onInput()"
+           [class.ml-1]="selectedOptions.length > 0"
            [spellcheck]="false"
-           class="border-0 w-100 h-100 px-1 bg-transparent select-input"
+           class="border-0 w-100 h-100 bg-transparent select-input"
            data-test="select-data-input"
            type="text">
 

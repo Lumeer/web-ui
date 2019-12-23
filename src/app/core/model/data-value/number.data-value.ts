@@ -36,7 +36,7 @@ export class NumberDataValue implements DataValue {
   constructor(
     public readonly value: any,
     public readonly config: NumberConstraintConfig,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {
     this.bigNumber = convertToBig(value);
   }

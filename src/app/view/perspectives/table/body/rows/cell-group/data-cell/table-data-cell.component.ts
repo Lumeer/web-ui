@@ -162,8 +162,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToEditing());
@@ -243,21 +242,16 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.createDataValueByValue$(this.getValue());
   }
 
-  private createDataValueByValue$(
-    value: any,
-    typed?: boolean
-  ): Observable<DataValue> {
+  private createDataValueByValue$(value: any, typed?: boolean): Observable<DataValue> {
     if (this.attribute$) {
       return this.attribute$.pipe(
-        map(
-          attribute => {
-            const constraint = attribute && attribute.constraint || new UnknownConstraint();
-            if (typed) {
-              return constraint.createInputDataValue(value, this.getValue(), this.constraintData);
-            }
-            return constraint.createDataValue(value, this.constraintData);
+        map(attribute => {
+          const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+          if (typed) {
+            return constraint.createInputDataValue(value, this.getValue(), this.constraintData);
           }
-        ),
+          return constraint.createDataValue(value, this.constraintData);
+        }),
         tap(dataValue => typed && (this.editedValue = dataValue)),
         take(typed ? 1 : Number.MAX_SAFE_INTEGER)
       );
@@ -386,7 +380,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
-    if (!this.selected) {
+    if (!this.edited) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
   }
@@ -406,17 +400,22 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @HostListener('contextmenu', ['$event'])
   public onContextMenu(event: MouseEvent) {
     if (!this.edited) {
+      if (!this.selected) {
+        this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+      }
       setTimeout(() => this.showContextMenu(event));
     }
   }
 
   private showContextMenu(event: MouseEvent) {
-    this.contextMenuService.show.next({
-      anchorElement: null,
-      contextMenu: this.menuComponent.contextMenu,
-      event,
-      item: null,
-    });
+    if (this.menuComponent) {
+      this.contextMenuService.show.next({
+        anchorElement: null,
+        contextMenu: this.menuComponent.contextMenu,
+        event,
+        item: null,
+      });
+    }
   }
 
   private useSelectionOrSave(dataValue: DataValue) {
@@ -831,6 +830,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onUseDocumentHint() {
+    this.selected = false;
     this.editing$.next(false);
   }
 

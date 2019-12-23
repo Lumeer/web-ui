@@ -21,11 +21,7 @@ import {FilesConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 
 export class FilesDataValue implements DataValue {
-  constructor(
-    public readonly value: any,
-    public readonly config: FilesConstraintConfig
-  ) {
-  }
+  constructor(public readonly value: any, public readonly config: FilesConstraintConfig) {}
 
   public format(): string {
     return this.value || this.value === 0 ? String(this.value) : '';

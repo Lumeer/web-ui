@@ -26,7 +26,8 @@ import {
   ConstraintConfig,
   DateTimeConstraintConfig,
   NumberConstraintConfig,
-  SelectConstraintConfig, selectDefaultPalette
+  SelectConstraintConfig,
+  selectDefaultPalette,
 } from '../../model/data/constraint-config';
 import {Attribute, AttributeFunction} from './collection';
 
@@ -95,9 +96,9 @@ function convertSelectConstraintConfigDtoToModel(config: any): SelectConstraintC
     ...config,
     options: (config.options || []).map((option, index) => ({
       ...option,
-      background: option.background || selectDefaultPalette[index % selectDefaultPalette.length]
-    }))
-  }
+      background: option.background || selectDefaultPalette[index % selectDefaultPalette.length],
+    })),
+  };
 }
 
 function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto {

@@ -36,19 +36,9 @@ td.affected:not(.editing) {
 }
 
 td::ng-deep data-input {
-  & > *:not(user-data-input) > input {
+  & > *:not(user-data-input) > * {
     padding-left: $padding !important;
     padding-right: $padding !important;
-  }
-
-  & > user-data-input {
-    img {
-      margin-left: $padding !important;
-    }
-
-    input {
-      padding-right: $padding !important;
-    }
   }
 }
 

@@ -145,7 +145,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     };
 
     const documents$ = this.store$
-      .select(selectDocumentsByCustomQuery(query))
+      .select(selectDocumentsByCustomQuery(query, true))
       .pipe(
         map(documents =>
           documents.filter(

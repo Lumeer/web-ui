@@ -96,9 +96,10 @@ export class DurationDataInputComponent implements OnChanges {
         const input = this.durationInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 
+        event.stopImmediatePropagation();
+        event.preventDefault();
+
         if (!this.skipValidation && input && !dataValue.isValid()) {
-          event.stopImmediatePropagation();
-          event.preventDefault();
           this.enterInvalid.emit();
           return;
         }

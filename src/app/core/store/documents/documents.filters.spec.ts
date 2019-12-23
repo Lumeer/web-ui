@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {} from 'jasmine';
 import {DateTimeConstraint} from '../../model/constraint/datetime.constraint';
 import {NumberConstraint} from '../../model/constraint/number.constraint';
 import {DateTimeConstraintConfig, NumberConstraintConfig} from '../../model/data/constraint-config';
@@ -27,8 +26,8 @@ import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {filterDocumentsAndLinksByQuery} from './documents.filters';
 import {Collection} from '../collections/collection';
-import {Query} from '../navigation/query/query';
-import {ConstraintType} from '../../model/data/constraint';
+import {Query, QueryCondition} from '../navigation/query/query';
+import {UserConstraintConditionValue} from '../../model/data/constraint-condition';
 
 const documents: DocumentModel[] = [
   {
@@ -219,7 +218,14 @@ describe('Document filters', () => {
           stems: [
             {
               collectionId: 'c1',
-              filters: [{collectionId: 'c1', attributeId: 'a1', condition: '=', value: 'IBM'}],
+              filters: [
+                {
+                  collectionId: 'c1',
+                  attributeId: 'a1',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{value: 'IBM'}],
+                },
+              ],
             },
           ],
         },
@@ -239,7 +245,14 @@ describe('Document filters', () => {
           stems: [
             {
               collectionId: 'c1',
-              filters: [{collectionId: 'c1', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+              filters: [
+                {
+                  collectionId: 'c1',
+                  attributeId: 'a2',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
+                },
+              ],
             },
           ],
         },
@@ -259,7 +272,14 @@ describe('Document filters', () => {
           stems: [
             {
               collectionId: 'c1',
-              filters: [{collectionId: 'c1', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+              filters: [
+                {
+                  collectionId: 'c1',
+                  attributeId: 'a2',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
+                },
+              ],
             },
           ],
         },
@@ -279,7 +299,14 @@ describe('Document filters', () => {
           stems: [
             {
               collectionId: 'c2',
-              filters: [{collectionId: 'c2', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+              filters: [
+                {
+                  collectionId: 'c2',
+                  attributeId: 'a2',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
+                },
+              ],
             },
           ],
         },
@@ -299,7 +326,14 @@ describe('Document filters', () => {
           stems: [
             {
               collectionId: 'c2',
-              filters: [{collectionId: 'c2', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+              filters: [
+                {
+                  collectionId: 'c2',
+                  attributeId: 'a2',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
+                },
+              ],
             },
           ],
         },
@@ -319,7 +353,14 @@ describe('Document filters', () => {
           stems: [
             {
               collectionId: 'c1',
-              filters: [{collectionId: 'c1', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+              filters: [
+                {
+                  collectionId: 'c1',
+                  attributeId: 'a2',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
+                },
+              ],
             },
           ],
         },
@@ -341,7 +382,14 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               linkTypeIds: ['lt1'],
-              filters: [{collectionId: 'c1', attributeId: 'a2', condition: '=', value: 'userEmail()'}],
+              filters: [
+                {
+                  collectionId: 'c1',
+                  attributeId: 'a2',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
+                },
+              ],
             },
           ],
         },
@@ -362,7 +410,14 @@ describe('Document filters', () => {
           stems: [
             {
               collectionId: 'c1',
-              filters: [{collectionId: 'c1', attributeId: 'a1', condition: '=', value: 'IBM'}],
+              filters: [
+                {
+                  collectionId: 'c1',
+                  attributeId: 'a1',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{value: 'IBM'}],
+                },
+              ],
             },
           ],
         },
@@ -383,7 +438,14 @@ describe('Document filters', () => {
           stems: [
             {
               collectionId: 'c1',
-              filters: [{collectionId: 'c1', attributeId: 'a1', condition: '=', value: 'Red Hat'}],
+              filters: [
+                {
+                  collectionId: 'c1',
+                  attributeId: 'a1',
+                  condition: QueryCondition.Equals,
+                  conditionValues: [{value: 'Red Hat'}],
+                },
+              ],
             },
           ],
         },
@@ -452,7 +514,19 @@ describe('Document filters', () => {
 
   it('should filter by number constraint', () => {
     let query: Query = {
-      stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '=', value: '-10'}]}],
+      stems: [
+        {
+          collectionId: 'c1',
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a100',
+              condition: QueryCondition.Equals,
+              conditionValues: [{value: '-10'}],
+            },
+          ],
+        },
+      ],
     };
     expect(
       filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
@@ -462,7 +536,17 @@ describe('Document filters', () => {
 
     query = {
       stems: [
-        {collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '!=', value: '-10'}]},
+        {
+          collectionId: 'c1',
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a100',
+              condition: QueryCondition.NotEquals,
+              conditionValues: [{value: '-10'}],
+            },
+          ],
+        },
       ],
     };
     expect(
@@ -472,7 +556,19 @@ describe('Document filters', () => {
     ).toEqual(['d1', 'd2', 'd4', 'd5', 'd6']);
 
     query = {
-      stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '>', value: '40'}]}],
+      stems: [
+        {
+          collectionId: 'c1',
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a100',
+              condition: QueryCondition.GreaterThan,
+              conditionValues: [{value: '40'}],
+            },
+          ],
+        },
+      ],
     };
     expect(
       filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
@@ -481,7 +577,19 @@ describe('Document filters', () => {
     ).toEqual(['d2', 'd4', 'd6']);
 
     query = {
-      stems: [{collectionId: 'c1', filters: [{collectionId: 'c1', attributeId: 'a100', condition: '<=', value: '40'}]}],
+      stems: [
+        {
+          collectionId: 'c1',
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a100',
+              condition: QueryCondition.LowerThanEquals,
+              conditionValues: [{value: '40'}],
+            },
+          ],
+        },
+      ],
     };
     expect(
       filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
@@ -495,7 +603,14 @@ describe('Document filters', () => {
       stems: [
         {
           collectionId: 'c1',
-          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '=', value: "2019-04-06'T'00:00:00.000Z"}],
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a101',
+              condition: QueryCondition.Equals,
+              conditionValues: [{value: "2019-04-06'T'00:00:00.000Z"}],
+            },
+          ],
         },
       ],
     };
@@ -509,7 +624,14 @@ describe('Document filters', () => {
       stems: [
         {
           collectionId: 'c1',
-          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '!=', value: "2019-04-06'T'00:00:00.000Z"}],
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a101',
+              condition: QueryCondition.NotEquals,
+              conditionValues: [{value: "2019-04-06'T'00:00:00.000Z"}],
+            },
+          ],
         },
       ],
     };
@@ -523,7 +645,14 @@ describe('Document filters', () => {
       stems: [
         {
           collectionId: 'c1',
-          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '<', value: "2019-04-06'T'00:00:00.000Z"}],
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a101',
+              condition: QueryCondition.LowerThan,
+              conditionValues: [{value: "2019-04-06'T'00:00:00.000Z"}],
+            },
+          ],
         },
       ],
     };
@@ -537,7 +666,14 @@ describe('Document filters', () => {
       stems: [
         {
           collectionId: 'c1',
-          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '>=', value: "2019-04-06'T'00:00:00.000Z"}],
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a101',
+              condition: QueryCondition.GreaterThanEquals,
+              conditionValues: [{value: "2019-04-06'T'00:00:00.000Z"}],
+            },
+          ],
         },
       ],
     };
@@ -551,7 +687,14 @@ describe('Document filters', () => {
       stems: [
         {
           collectionId: 'c1',
-          filters: [{collectionId: 'c1', attributeId: 'a101', condition: '>=', value: 'bla bla bla'}],
+          filters: [
+            {
+              collectionId: 'c1',
+              attributeId: 'a101',
+              condition: QueryCondition.GreaterThanEquals,
+              conditionValues: [{value: 'bla bla bla'}],
+            },
+          ],
         },
       ],
     };

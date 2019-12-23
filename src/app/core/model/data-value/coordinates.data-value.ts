@@ -30,7 +30,7 @@ export class CoordinatesDataValue implements DataValue {
   constructor(
     public readonly value: any,
     public readonly config: CoordinatesConstraintConfig,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {
     this.coordinates = parseCoordinates(value);
   }

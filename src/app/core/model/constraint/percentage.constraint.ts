@@ -26,8 +26,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 export class PercentageConstraint implements Constraint {
   public readonly type = ConstraintType.Percentage;
 
-  constructor(public readonly config: PercentageConstraintConfig) {
-  }
+  constructor(public readonly config: PercentageConstraintConfig) {}
 
   public createDataValue(value: any): PercentageDataValue {
     return new PercentageDataValue(value, this.config);

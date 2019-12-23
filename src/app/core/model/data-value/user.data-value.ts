@@ -18,12 +18,12 @@
  */
 
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {isEmailValid} from '../../../shared/utils/email.utils';
 import {User} from '../../store/users/user';
 import {ConstraintData} from '../data/constraint';
 import {UserConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isEmailValid} from '../../../shared/utils/email.utils';
 
 export class UserDataValue implements DataValue {
   public readonly users: User[];
@@ -32,24 +32,25 @@ export class UserDataValue implements DataValue {
     public readonly value: any,
     public readonly config: UserConstraintConfig,
     public readonly constraintData: ConstraintData,
-    public readonly inputValue?: string,
+    public readonly inputValue?: string
   ) {
     this.users = this.createUsers();
   }
 
   private createUsers(): User[] {
-    const users = this.constraintData && this.constraintData.users || [];
-    const userValues: any[] = (isArray(this.value) ? this.value : [this.value]).filter(val => isNotNullOrUndefined(val) && val !== '');
-    return userValues.map(userValue => {
-      const user = users.find(u => u.email === userValue);
-      if (user) {
-        return user;
-      }
-      if (this.config.externalUsers && isEmailValid(String(userValue))) {
+    const users = (this.constraintData && this.constraintData.users) || [];
+    const userValues: any[] = (isArray(this.value) ? this.value : [this.value]).filter(
+      val => isNotNullOrUndefined(val) && val !== ''
+    );
+    return userValues
+      .map(userValue => {
+        const user = users.find(u => u.email === userValue);
+        if (user) {
+          return user;
+        }
         return {email: String(userValue), name: String(userValue), groupsMap: {}};
-      }
-      return null;
-    }).filter(user => !!user);
+      })
+      .filter(user => !!user);
   }
 
   public format(): string {
@@ -73,11 +74,21 @@ export class UserDataValue implements DataValue {
       return this.users.map(user => user.email);
     }
 
-    return this.users.length ? this.users[0] : null;
+    return this.users.length ? this.users[0].email : null;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
-    return this.users.length > 0;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return true;
+    }
+    return !this.value || this.users.every(user => this.isUserValid(user));
+  }
+
+  private isUserValid(user: User): boolean {
+    if (((this.constraintData && this.constraintData.users) || []).some(u => u.email === user.email)) {
+      return true;
+    }
+    return this.config.externalUsers && isEmailValid(user.email);
   }
 
   public increment(): UserDataValue {

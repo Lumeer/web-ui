@@ -18,16 +18,17 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraintOption} from '../../../core/model/data/constraint-config';
-import {SelectDataValue} from '../../../core/model/data-value/select.data-value';
+import {User} from '../../../../core/store/users/user';
+import {DropdownOption} from '../../../dropdown/options/dropdown-option';
+import {removeAccent} from '../../../utils/string.utils';
 
 @Pipe({
-  name: 'findSelectOption'
+  name: 'filterUsers',
 })
-export class FindSelectOptionPipe implements PipeTransform {
-
-  public transform(options: SelectConstraintOption[], value: any): SelectConstraintOption {
-    return (options || []).find(option => (option.value || option.displayValue) === value);
+export class FilterUsersPipe implements PipeTransform {
+  public transform(users: User[], text: string): DropdownOption[] {
+    return (users || [])
+      .filter(user => removeAccent(user.name || user.email).includes(removeAccent(text)))
+      .map(user => ({gravatar: user.email, value: user.email || user.name, displayValue: user.name || user.email}));
   }
-
 }
