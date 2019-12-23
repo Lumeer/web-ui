@@ -26,8 +26,9 @@
                         class="flex-grow-1">
     </table-column-input>
 
-    <table-column-icons *ngIf="!state.edited && (attribute?.constraint || attribute?.function)"
+    <table-column-icons *ngIf="!state.edited"
                         [attribute]="attribute"
+                        (click)="onContextMenu($event)"
                         class="flex-grow-0">
     </table-column-icons>
   </div>

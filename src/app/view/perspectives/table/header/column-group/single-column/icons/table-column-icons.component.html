@@ -8,3 +8,9 @@
    [title]="attribute?.constraint | constraintTypeIconTitle"
    class="fa-xs">
 </i>
+
+<i *ngIf="!(attribute | attributeFunctionDefined) && !(attribute?.constraint | constraintTypeIcon)"
+   title="Column settings..."
+   title-i18n="@@table.header.column.settings"
+   class="fa-xs fas fa-caret-down">
+</i>
