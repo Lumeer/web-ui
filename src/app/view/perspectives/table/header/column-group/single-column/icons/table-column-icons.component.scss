@@ -1,3 +1,5 @@
+@import '~src/styles/variables';
+
 :host {
   display: flex;
   flex-direction: column;
@@ -5,4 +7,8 @@
   justify-content: center;
   font-size: 13px;
   padding-left: 0.25rem;
+}
+
+.fa-caret-down {
+  color: $secondary;
 }
