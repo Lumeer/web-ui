@@ -7,7 +7,7 @@
 
   <div class="p-3">
     <share-view-input
-      class="d-block my-2"
+      class="d-block my-2 mt-4"
       [text]="text$ | async"
       [suggestions]="suggestions$ | async"
       [selectedIndex]="selectedIndex$ | async"
@@ -20,7 +20,7 @@
       (addNewUser)="onAddNewUser()">
     </share-view-input>
 
-    <table class="table table mt-4">
+    <table class="table">
       <thead>
         <tr>
           <th class="border-top-0"></th>
