@@ -50,6 +50,12 @@ export const selectTableConfig = createSelector(
   table => table && table.config
 );
 
+export const selectTableConfigById = (tableId: string) =>
+  createSelector(
+    selectTableById(tableId),
+    table => table && table.config
+  );
+
 export const selectHasNextTableParts = (cursor: TableCursor) =>
   cursor &&
   createSelector(
