@@ -26,7 +26,6 @@ import {AppState} from '../../core/store/app.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
 import {ModalService} from '../../shared/modal/modal.service';
-import {UsersAction} from '../../core/store/users/users.action';
 
 @Component({
   selector: 'auth-callback',
