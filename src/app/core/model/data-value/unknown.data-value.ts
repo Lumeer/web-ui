@@ -20,6 +20,8 @@
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {DataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class UnknownDataValue implements DataValue {
   public readonly config: any = {};
@@ -68,5 +70,23 @@ export class UnknownDataValue implements DataValue {
 
   public parseInput(inputValue: string): DataValue {
     return new UnknownDataValue(inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = values && values.map(value => this.copy(value.value));
+    const formattedValue = this.format()
+      .toLowerCase()
+      .trim();
+    const otherFormattedValues = (dataValues || []).map(dataValue =>
+      dataValue
+        .format()
+        .toLowerCase()
+        .trim()
+    );
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

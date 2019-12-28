@@ -101,10 +101,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private createDropdownOptions(config: SelectConstraintConfig): DropdownOption[] {
-    return config.options.map(option => ({
+    return ((config && config.options) || []).map(option => ({
       ...option,
-      value: String(option.value || ''),
-      displayValue: String((config.displayValues && option.displayValue) || option.value || ''),
+      value: option.value,
+      displayValue: config.displayValues ? option.displayValue : option.value,
     }));
   }
 
@@ -135,9 +135,9 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
         const selectedOption = this.dropdown.getActiveOption();
 
         event.preventDefault();
-        event.stopImmediatePropagation();
 
         if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
+          event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
           this.dropdown.resetActiveOption();
         } else {
@@ -191,8 +191,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       return;
     }
 
-    if (activeOption) {
-      const dataValue = this.value.copy(activeOption.value || '');
+    if (activeOption || !this.text) {
+      const dataValue = this.value.copy(activeOption ? activeOption.value : '');
       this.save.emit(dataValue);
     } else {
       if (enter) {

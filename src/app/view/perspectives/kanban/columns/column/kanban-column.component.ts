@@ -169,7 +169,6 @@ export class KanbanColumnComponent {
       const postIt = document.getElementById(`${this.postItIdPrefix}#${id}`);
       postIt && postIt.scrollIntoView();
     });
-    // TODO scroll
   }
 
   public onRemoveColumn() {

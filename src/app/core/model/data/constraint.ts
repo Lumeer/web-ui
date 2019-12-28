@@ -108,6 +108,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
 export interface ConstraintData {
   addressesMap?: AddressesMap;
   users?: User[];
+  currentUser?: User;
   durationUnitsMap?: DurationUnitsMap;
 }
 

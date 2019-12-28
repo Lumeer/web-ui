@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export type ConstraintConditionValue = DateConstraintConditionValue | UserConstraintConditionValue;
+export type ConstraintConditionValue = DateTimeConstraintConditionValue | UserConstraintConditionValue;
 
-export enum DateConstraintConditionValue {
+export enum DateTimeConstraintConditionValue {
   Today = 'today',
   Yesterday = 'yesterday',
   Tomorrow = 'tomorrow',

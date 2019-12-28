@@ -29,9 +29,9 @@ import {getOtherLinkedCollectionId} from '../../../shared/utils/link-type.utils'
 import {arrayIntersection} from '../../../shared/utils/array.utils';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {findAttributeConstraint} from '../collections/collection.util';
-import {dataValuesMeetCondition} from '../../../shared/utils/data/data-compare.utils';
 import {mergeLinkInstances} from '../link-instances/link-instance.utils';
 import {UserConstraintConditionValue} from '../../model/data/constraint-condition';
+import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 
 export function filterDocumentsAndLinksByQuery(
   documents: DocumentModel[],
@@ -431,11 +431,9 @@ function dataMeetFilter(
   attributes: Attribute[],
   filter: CollectionAttributeFilter | LinkAttributeFilter
 ) {
-  const constraint = findAttributeConstraint(attributes, filter.attributeId);
+  const constraint = findAttributeConstraint(attributes, filter.attributeId) || new UnknownConstraint();
   const dataValue = data[filter.attributeId];
-  const filterValue = filter.conditionValues && filter.conditionValues[0] && filter.conditionValues[0].value;
-
-  return dataValuesMeetCondition(dataValue, filterValue, filter.condition, constraint);
+  return constraint.createDataValue(dataValue).meetCondition(filter.condition, filter.conditionValues);
 }
 
 function paginate(documents: DocumentModel[], query: Query) {

@@ -149,10 +149,10 @@ export class TextDataInputComponent implements OnChanges {
         const dataValue = this.value.parseInput(input.nativeElement.value);
         const selectedOption = this.dropdown.getActiveOption();
 
-        event.stopImmediatePropagation();
         event.preventDefault();
 
         if (!this.skipValidation && !dataValue.isValid() && !selectedOption) {
+          event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }

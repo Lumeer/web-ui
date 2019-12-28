@@ -23,6 +23,8 @@ import {formatCoordinates, parseCoordinates} from '../../../shared/utils/map/coo
 import {MapCoordinates} from '../../store/maps/map.model';
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../data/constraint-config';
 import {DataValue} from './index';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class CoordinatesDataValue implements DataValue {
   public readonly coordinates: MapCoordinates;
@@ -82,5 +84,24 @@ export class CoordinatesDataValue implements DataValue {
 
   public parseInput(inputValue: string): CoordinatesDataValue {
     return new CoordinatesDataValue(inputValue, this.config, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = values && values.map(value => this.copy(value.value));
+    const formattedValue = this.format()
+      .trim()
+      .toLowerCase();
+    const otherFormattedValues = (dataValues || []).map(dataValue =>
+      dataValue
+        .format()
+        .trim()
+        .toLowerCase()
+    );
+
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

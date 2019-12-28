@@ -19,13 +19,16 @@
 
 import {BooleanConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetFulltexts} from './data-value.utils';
 
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
 
 export class BooleanDataValue implements DataValue {
+  public readonly config: BooleanConstraintConfig = {};
   public readonly booleanValue: boolean;
 
-  constructor(public readonly value: any, public readonly config: BooleanConstraintConfig) {
+  constructor(public readonly value: any) {
     this.booleanValue = truthyValues.includes(typeof value === 'string' ? value.toLocaleLowerCase() : value);
   }
 
@@ -63,10 +66,27 @@ export class BooleanDataValue implements DataValue {
 
   public copy(newValue?: any): BooleanDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new BooleanDataValue(value, this.config);
+    return new BooleanDataValue(value);
   }
 
   public parseInput(inputValue: string): BooleanDataValue {
-    return new BooleanDataValue(inputValue, this.config);
+    return new BooleanDataValue(inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = values && values.map(value => this.copy(value.value));
+    const otherBooleanValue = dataValues && dataValues.length > 0 && dataValues[0].booleanValue;
+    switch (condition) {
+      case QueryCondition.Equals:
+        return this.booleanValue === otherBooleanValue;
+      case QueryCondition.NotEquals:
+        return this.booleanValue !== otherBooleanValue;
+      default:
+        return false;
+    }
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

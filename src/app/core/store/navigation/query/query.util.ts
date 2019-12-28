@@ -75,7 +75,14 @@ function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
     return {emptyCondition: true};
   }
 
-  // TODO
+  const everyValueDefined = createRange(0, queryConditionNumInputs(condition)).every(
+    index => conditionValue[index] && (conditionValue[index].type || conditionValue[index].value)
+  );
+
+  if (!everyValueDefined) {
+    return {emptyValue: true};
+  }
+
   return null;
 }
 
@@ -214,6 +221,15 @@ export function queryWithoutLinks(query: Query): Query {
 
   const stems = query.stems && query.stems.map(stem => ({...stem, linkTypeIds: []}));
   return {...query, stems};
+}
+
+export function queryWithoutFilters(query: Query): Query {
+  if (!query) {
+    return query;
+  }
+
+  const stems: QueryStem[] = query.stems && query.stems.map(stem => ({...stem, filters: [], linkFilters: []}));
+  return {...query, stems, fulltexts: []};
 }
 
 export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTypes: LinkType[]): QueryStem {

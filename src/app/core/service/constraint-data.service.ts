@@ -19,23 +19,27 @@
 
 import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {ConstraintData} from '../model/data/constraint';
-import {selectAllUsers} from '../store/users/users.state';
+import {selectAllUsers, selectCurrentUser} from '../store/users/users.state';
 import {TranslationService} from './translation.service';
+import {DurationUnit} from '../model/data/constraint-config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConstraintDataService {
-  constructor(private store$: Store<{}>, private translationService: TranslationService) {}
+  public readonly durationUnitsMap: Record<DurationUnit, string>;
+
+  constructor(private store$: Store<{}>, private translationService: TranslationService) {
+    this.durationUnitsMap = translationService.createDurationUnitsMap();
+  }
 
   public observeConstraintData(): Observable<ConstraintData> {
     // TODO get AddressesMap as well
-    return this.store$.pipe(
-      select(selectAllUsers),
-      map(users => ({users, durationUnitsMap: this.translationService.createDurationUnitsMap()}))
+    return combineLatest([this.store$.pipe(select(selectAllUsers)), this.store$.pipe(select(selectCurrentUser))]).pipe(
+      map(([users, currentUser]) => ({users, currentUser, durationUnitsMap: this.durationUnitsMap}))
     );
   }
 }

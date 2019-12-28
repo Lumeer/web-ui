@@ -29,6 +29,8 @@ import {NumberConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {removeNonNumberCharacters} from '../../../shared/directives/number.directive';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByNumber, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class NumberDataValue implements DataValue {
   public readonly bigNumber: Big;
@@ -89,6 +91,18 @@ export class NumberDataValue implements DataValue {
 
   public parseInput(inputValue: string): NumberDataValue {
     return new NumberDataValue(inputValue, this.config, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = values && values.map(value => this.copy(value.value));
+    const otherBigNumbers = (dataValues || []).map(value => value.bigNumber);
+    const otherValues = (dataValues || []).map(value => value.value);
+
+    return dataValuesMeetConditionByNumber(condition, this.bigNumber, otherBigNumbers, this.value, otherValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }
 

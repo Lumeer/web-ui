@@ -105,7 +105,7 @@ export class AttributeTypeFormComponent implements OnChanges {
             this.configForm.get(DatetimeConstraintFormControl.CustomFormat).value,
           minValue: this.configForm.get(DatetimeConstraintFormControl.MinValue).value,
           maxValue: this.configForm.get(DatetimeConstraintFormControl.MaxValue).value,
-          range: undefined, // TODO
+          range: undefined,
         };
       case ConstraintType.Duration:
         return {
@@ -117,14 +117,14 @@ export class AttributeTypeFormComponent implements OnChanges {
       case ConstraintType.Number:
         return {
           decimal: this.configForm.get(NumberConstraintFormControl.Decimal).value,
-          format: undefined, // TODO
+          format: undefined,
           minValue: convertToBig(this.configForm.get(NumberConstraintFormControl.MinValue).value),
           maxValue: convertToBig(this.configForm.get(NumberConstraintFormControl.MaxValue).value),
-          precision: undefined, // TODO
+          precision: undefined,
         };
       case ConstraintType.Percentage:
         return {
-          format: undefined, // TODO
+          format: undefined,
           decimals: this.configForm.get(PercentageConstraintFormControl.Decimals).value,
           minValue: this.configForm.get(PercentageConstraintFormControl.MinValue).value,
           maxValue: this.configForm.get(PercentageConstraintFormControl.MaxValue).value,
@@ -142,7 +142,7 @@ export class AttributeTypeFormComponent implements OnChanges {
           caseStyle: this.configForm.get(TextConstraintFormControl.CaseStyle).value,
           minLength: this.configForm.get(TextConstraintFormControl.MinLength).value,
           maxLength: this.configForm.get(TextConstraintFormControl.MaxLength).value,
-          regexp: undefined, // TODO
+          regexp: undefined,
         };
       case ConstraintType.User:
         return {

@@ -192,10 +192,10 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
         } else {
           const dataValue = this.value.parseInput(this.text);
 
-          event.stopImmediatePropagation();
           event.preventDefault();
 
           if (!this.skipValidation && !dataValue.isValid()) {
+            event.stopImmediatePropagation();
             this.enterInvalid.emit();
             return;
           }

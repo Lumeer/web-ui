@@ -25,7 +25,7 @@ import {Constraint} from '../model/constraint';
 import {ConstraintType} from '../model/data/constraint';
 import {
   ConstraintConditionValue,
-  DateConstraintConditionValue,
+  DateTimeConstraintConditionValue,
   UserConstraintConditionValue,
 } from '../model/data/constraint-condition';
 
@@ -98,7 +98,7 @@ export class TranslationService {
 
     return this.i18n(
       {
-        id: 'query.filter.condition.constraint.text',
+        id: 'query.filter.condition.constraint.number',
         value:
           '{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}',
       },
@@ -111,7 +111,7 @@ export class TranslationService {
       {
         id: 'query.filter.condition.constraint.date',
         value:
-          '{condition, select, eq {Is} neq {Is Not} within {Is Within} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Between} empty {Is Empty} notEmpty {Is Not Empty}}',
+          '{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}',
       },
       {condition}
     );
@@ -126,13 +126,13 @@ export class TranslationService {
       case ConstraintType.User:
         return this.translateUserConstraintConditionValue(type as UserConstraintConditionValue);
       case ConstraintType.DateTime:
-        return this.translateDateConstraintConditionValue(type as DateConstraintConditionValue);
+        return this.translateDateConstraintConditionValue(type as DateTimeConstraintConditionValue);
       default:
         return null;
     }
   }
 
-  private translateDateConstraintConditionValue(condition: DateConstraintConditionValue): string {
+  private translateDateConstraintConditionValue(condition: DateTimeConstraintConditionValue): string {
     return this.i18n(
       {
         id: 'query.filter.condition.value.constraint.date',

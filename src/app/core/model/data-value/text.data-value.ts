@@ -22,6 +22,8 @@ import {transformTextBasedOnCaseStyle} from '../../../shared/utils/string.utils'
 import {TextConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText} from './data-value.utils';
 
 export class TextDataValue implements DataValue {
   constructor(
@@ -94,6 +96,32 @@ export class TextDataValue implements DataValue {
 
   public parseInput(inputValue: string): TextDataValue {
     return new TextDataValue(inputValue, this.config, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = values && values.map(value => this.copy(value.value));
+    const formattedValue = stripTextHtmlTags(this.format(), false)
+      .toLowerCase()
+      .trim();
+    const otherFormattedValues = (dataValues || []).map(dataValue =>
+      stripTextHtmlTags(dataValue.format(), false)
+        .toLowerCase()
+        .trim()
+    );
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    const formattedValue = stripTextHtmlTags(this.format(), false)
+      .toLowerCase()
+      .trim();
+    return (fulltexts || [])
+      .map(fulltext =>
+        stripTextHtmlTags(fulltext, false)
+          .toLowerCase()
+          .trim()
+      )
+      .every(fulltext => formattedValue.includes(fulltext));
   }
 }
 

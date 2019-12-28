@@ -94,10 +94,10 @@ export class PercentageDataInputComponent implements OnChanges {
         const input = this.percentageInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 
-        event.stopImmediatePropagation();
         event.preventDefault();
 
         if (!this.skipValidation && input && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }

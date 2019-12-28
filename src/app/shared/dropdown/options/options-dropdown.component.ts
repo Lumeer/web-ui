@@ -35,7 +35,7 @@ import {DropdownPosition} from '../dropdown-position';
 import {DropdownComponent} from '../dropdown.component';
 import {DropdownOption} from './dropdown-option';
 import {DropdownOptionDirective} from './dropdown-option.directive';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
 import {BehaviorSubject} from 'rxjs';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
 
@@ -110,7 +110,7 @@ export class OptionsDropdownComponent implements OnChanges {
 
   private shouldResetActiveItem(changes: SimpleChanges): boolean {
     const value = this.activeValue$.value;
-    return changes.options && isNotNullOrUndefined(value) && this.indexByValue(value) === -1;
+    return changes.options && (isNullOrUndefined(value) || this.indexByValue(value) === -1);
   }
 
   public onOptionSelect(event: MouseEvent, option: DropdownOption) {

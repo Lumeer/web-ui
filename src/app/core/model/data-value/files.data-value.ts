@@ -19,6 +19,8 @@
 
 import {FilesConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetFulltexts} from './data-value.utils';
 
 export class FilesDataValue implements DataValue {
   constructor(public readonly value: any, public readonly config: FilesConstraintConfig) {}
@@ -58,5 +60,20 @@ export class FilesDataValue implements DataValue {
 
   public parseInput(inputValue: string): FilesDataValue {
     return new FilesDataValue(inputValue, this.config);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    switch (condition) {
+      case QueryCondition.IsEmpty:
+        return !this.value;
+      case QueryCondition.NotEmpty:
+        return this.value;
+      default:
+        return false;
+    }
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

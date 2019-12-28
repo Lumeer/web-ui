@@ -96,10 +96,10 @@ export class NumberDataInputComponent implements OnChanges {
         const input = this.numberInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 
-        event.stopImmediatePropagation();
         event.preventDefault();
 
         if (!this.skipValidation && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }

@@ -38,7 +38,7 @@ export interface ConditionValueDto {
 }
 
 export interface AttributeFilterDto {
-  operator: string;
+  condition: string;
   attributeId: string;
   value?: any;
   conditionValues: ConditionValueDto[];

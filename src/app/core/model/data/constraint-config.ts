@@ -35,7 +35,7 @@ export enum CoordinatesFormat {
 }
 
 export interface CoordinatesConstraintConfig {
-  format: CoordinatesFormat;
+  format?: CoordinatesFormat;
   precision: number;
 }
 
@@ -121,7 +121,7 @@ export interface TextConstraintConfig {
   caseStyle: CaseStyle;
   minLength: number;
   maxLength: number;
-  regexp: string;
+  regexp?: string;
 }
 
 export interface UserConstraintConfig {

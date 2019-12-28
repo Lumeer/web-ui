@@ -133,10 +133,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         }
         const selectedOption = this.dropdown.getActiveOption();
 
-        event.stopImmediatePropagation();
         event.preventDefault();
 
         if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
+          event.stopImmediatePropagation();
           this.toggleOption(selectedOption);
           this.dropdown.resetActiveOption();
         } else {
@@ -187,7 +187,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       }
     }
 
-    if (activeOption) {
+    if (activeOption || !this.name) {
       this.saveValueByOption(activeOption);
     } else if (
       this.name &&
@@ -211,7 +211,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private saveValueByOption(option: DropdownOption) {
-    const user = (this.users || []).find(u => (u.email || u.name) === option.value);
+    const user = option && (this.users || []).find(u => (u.email || u.name) === option.value);
     const dataValue = this.value.copy(user ? user.email || user.name : '');
     this.save.emit(dataValue);
   }

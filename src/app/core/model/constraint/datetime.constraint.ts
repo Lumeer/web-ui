@@ -40,12 +40,12 @@ export class DateTimeConstraint implements Constraint {
     return [
       QueryCondition.Equals,
       QueryCondition.NotEquals,
-      QueryCondition.Within,
       QueryCondition.GreaterThan,
       QueryCondition.LowerThan,
       QueryCondition.GreaterThanEquals,
       QueryCondition.LowerThanEquals,
       QueryCondition.Between,
+      QueryCondition.NotBetween,
       QueryCondition.IsEmpty,
       QueryCondition.NotEmpty,
     ];

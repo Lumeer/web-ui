@@ -130,10 +130,10 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
         const dataValue = this.value.parseInput(input.nativeElement.value);
         this.pendingUpdate = null;
 
-        event.stopImmediatePropagation();
         event.preventDefault();
 
         if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }

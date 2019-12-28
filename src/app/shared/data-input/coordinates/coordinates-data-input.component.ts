@@ -102,7 +102,6 @@ export class CoordinatesDataInputComponent {
         const input = this.coordinatesInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 
-        event.stopImmediatePropagation();
         event.preventDefault();
 
         this.preventSaveAndBlur();

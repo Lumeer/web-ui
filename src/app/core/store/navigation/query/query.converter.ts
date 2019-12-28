@@ -84,7 +84,7 @@ function convertCollectionAttributeFilterDtoToModel(dto: CollectionAttributeFilt
 function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): AttributeFilter {
   return {
     attributeId: dto.attributeId,
-    condition: conditionFromString(dto.operator),
+    condition: conditionFromString(dto.condition),
     conditionValues: (dto.conditionValues || []).map(item => ({value: item.value, type: item.type})),
   };
 }
@@ -106,7 +106,7 @@ function convertCollectionAttributeFilterModelToDto(model: CollectionAttributeFi
 function convertAttributeFilterModelToDto(model: AttributeFilter): AttributeFilterDto {
   return {
     attributeId: model.attributeId,
-    operator: model.condition,
+    condition: model.condition,
     conditionValues: (model.conditionValues || []).map(item => ({value: item.value, type: item.type})),
   };
 }
@@ -188,5 +188,5 @@ function conditionFromString(condition: string): QueryCondition {
   } else if (GteVariants.includes(conditionLowerCase)) {
     return QueryCondition.GreaterThanEquals;
   }
-  return null;
+  return condition as QueryCondition;
 }

@@ -22,6 +22,8 @@ import {Address, AddressField} from '../../store/geocoding/address';
 import {ConstraintData} from '../data/constraint';
 import {AddressConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class AddressDataValue implements DataValue {
   public readonly address: Address;
@@ -102,5 +104,22 @@ export class AddressDataValue implements DataValue {
 
   public parseInput(inputValue: string): AddressDataValue {
     return new AddressDataValue(inputValue, this.config, this.constraintData, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const formattedValue = this.format()
+      .toLowerCase()
+      .trim();
+    const otherFormattedValues = (values || []).map(value =>
+      this.copy(value.value)
+        .format()
+        .toLowerCase()
+        .trim()
+    );
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

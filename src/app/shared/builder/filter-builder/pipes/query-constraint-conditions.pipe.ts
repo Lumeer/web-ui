@@ -23,7 +23,7 @@ import {UnknownConstraint} from '../../../../core/model/constraint/unknown.const
 import {TranslationService} from '../../../../core/service/translation.service';
 import {ConstraintType} from '../../../../core/model/data/constraint';
 import {
-  DateConstraintConditionValue,
+  DateTimeConstraintConditionValue,
   UserConstraintConditionValue,
 } from '../../../../core/model/data/constraint-condition';
 import {ConstraintConditionValueItem} from '../model/query-condition-item';
@@ -42,7 +42,7 @@ export class QueryConstraintConditionsPipe implements PipeTransform {
         values = Object.values(UserConstraintConditionValue);
         break;
       case ConstraintType.DateTime:
-        values = Object.values(DateConstraintConditionValue);
+        values = Object.values(DateTimeConstraintConditionValue);
         break;
     }
 

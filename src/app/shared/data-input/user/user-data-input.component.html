@@ -11,13 +11,13 @@
          [style.min-height.px]="avatarSize"
          [style.margin-left.rem]="!first ? -0.5 : 0.25">
 
-    <span *ngIf="value.config.externalUsers || (selectedUsers | usersAreValid:users)"
+    <span *ngIf="value.config?.externalUsers || (selectedUsers | usersAreValid:users)"
           class="d-inline-block ml-2 text-nowrap user"
           data-test="user-data-input">
         {{selectedUsers | usersEmails | join}}
       </span>
 
-    <ng-container *ngIf="!value.config.externalUsers && !(selectedUsers | usersAreValid:users)">
+    <ng-container *ngIf="!value.config?.externalUsers && !(selectedUsers | usersAreValid:users)">
 
       <ng-container *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last">
 
@@ -54,7 +54,6 @@
                       [origin]="textInput"
                       [multiSelect]="multi"
                       [selectedValues]="multi ? (selectedUsers | usersEmails) : []"
-                      [highlightedValue]="!multi && selectedUsers?.length === 1 && selectedUsers[0].email"
                       [firstItemActive]="!multi && !value?.config?.externalUsers && name?.length > 0"
                       (selectOption)="onSelectOption($event)">
     </options-dropdown>

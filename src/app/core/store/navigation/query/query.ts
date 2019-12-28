@@ -51,7 +51,6 @@ export interface LinkAttributeFilter extends AttributeFilter {
 export enum QueryCondition {
   Equals = 'eq',
   NotEquals = 'neq',
-  Within = 'within',
   LowerThan = 'lt',
   LowerThanEquals = 'lte',
   GreaterThan = 'gt',

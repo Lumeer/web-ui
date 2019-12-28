@@ -121,10 +121,11 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   }
 
   private computationNotNecessary(): boolean {
-    if (!this.constraintType) {
+    const constraintType = this.constraint && this.constraint.type;
+    if (!constraintType) {
       return false;
     }
-    if ([ConstraintType.Select, ConstraintType.User].includes(this.constraint.type)) {
+    if ([ConstraintType.Select, ConstraintType.User].includes(constraintType)) {
       return true;
     }
 

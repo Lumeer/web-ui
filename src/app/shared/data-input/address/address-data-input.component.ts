@@ -176,6 +176,8 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
         const input = this.addressInput;
         const selectedOption = this.dropdown.getActiveOption();
 
+        event.preventDefault();
+
         this.preventSaveAndBlur();
         // needs to be executed after parent event handlers
         const value = input.nativeElement.value;

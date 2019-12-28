@@ -218,7 +218,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   }
 
   private addFileNameToData(fileName: string) {
-    const value = !this.value || String(this.value).endsWith(fileName) ? fileName : `${this.value},${fileName}`;
+    const formattedValue = this.value && this.value.format();
+    const value = !formattedValue || formattedValue.endsWith(fileName) ? fileName : `${formattedValue},${fileName}`;
     const dataValue = this.value.copy(value);
     this.save.emit(dataValue);
   }

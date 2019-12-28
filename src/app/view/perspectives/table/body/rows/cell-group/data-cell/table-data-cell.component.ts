@@ -535,7 +535,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createDocumentWithExistingAttribute(table: TableModel, row: TableConfigRow, attributeId: string, value: any) {
-    // TODO row is probably not needed here
     const document: DocumentModel = {
       ...this.document,
       correlationId: (row && row.correlationId) || (this.document && this.document.correlationId),

@@ -27,11 +27,11 @@ export class BooleanConstraint implements Constraint {
   public readonly config = {};
 
   public createDataValue(value: any): BooleanDataValue {
-    return new BooleanDataValue(value, this.config);
+    return new BooleanDataValue(value);
   }
 
   public createInputDataValue(inputValue: string, value: any): BooleanDataValue {
-    return new BooleanDataValue(value, this.config);
+    return new BooleanDataValue(value);
   }
 
   public conditions(): QueryCondition[] {

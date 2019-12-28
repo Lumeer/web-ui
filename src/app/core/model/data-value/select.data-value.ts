@@ -21,6 +21,8 @@ import {SelectConstraintConfig, SelectConstraintOption} from '../data/constraint
 import {DataValue} from './index';
 import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetFulltexts} from './data-value.utils';
 
 export class SelectDataValue implements DataValue {
   public readonly options: SelectConstraintOption[];
@@ -39,7 +41,9 @@ export class SelectDataValue implements DataValue {
     }
 
     if (this.options.length && this.config) {
-      return this.options.map(option => (this.config.displayValues ? option.displayValue : option.value)).join(', ');
+      return this.options
+        .map(option => (this.config && this.config.displayValues ? option.displayValue : option.value))
+        .join(', ');
     }
     return formatUnknownDataValue(this.value);
   }
@@ -49,7 +53,7 @@ export class SelectDataValue implements DataValue {
   }
 
   public serialize(): any {
-    if (this.config.multi) {
+    if (this.config && this.config.multi) {
       return this.options.map(option => option.value);
     }
     return this.options.length > 0 ? this.options[0].value : null;
@@ -81,7 +85,7 @@ export class SelectDataValue implements DataValue {
   }
 
   public compareTo(otherValue: SelectDataValue): number {
-    if (this.config.multi || otherValue.config.multi) {
+    if ((this.config && this.config.multi) || (otherValue.config && otherValue.config.multi)) {
       return 0;
     }
     const {options} = this.config;
@@ -108,23 +112,47 @@ export class SelectDataValue implements DataValue {
     const nextIndex = (index + indexDelta) % options.length;
     return options[nextIndex];
   }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = values && values.map(value => this.copy(value.value));
+    const otherOptions = dataValues && dataValues.length > 0 && dataValues[0].options;
+
+    switch (condition) {
+      case QueryCondition.In:
+        return this.options.some(option =>
+          (otherOptions || []).some(otherOption => otherOption.value === option.value)
+        );
+      case QueryCondition.NotIn:
+        return this.options.every(option =>
+          (otherOptions || []).every(otherOption => otherOption.value !== option.value)
+        );
+      case QueryCondition.IsEmpty:
+        return this.options.length === 0 && this.format().trim().length === 0;
+      case QueryCondition.NotEmpty:
+        return this.options.length > 0 || this.format().trim().length > 0;
+      default:
+        return false;
+    }
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
+  }
 }
 
 function findOptionsByValue(config: SelectConstraintConfig, value: any): SelectConstraintOption[] {
   const options = (config && config.options) || [];
-  const values: any[] = (isArray(value) ? value : [value]).filter(val => isNotNullOrUndefined(val) && val !== '');
+  const values: any[] = (isArray(value) ? value : [value]).filter(
+    val => isNotNullOrUndefined(val) && String(val).trim()
+  );
   return values
     .map(val => {
       const option = options.find(opt => String(opt.value) === String(val));
       if (option) {
-        return option;
+        return {...option, displayValue: config.displayValues ? option.displayValue : option.value};
       }
 
       return {value: val, displayValue: val};
     })
     .filter(option => !!option);
-}
-
-export function findOptionByDisplayValue(config: SelectConstraintConfig, value: any): SelectConstraintOption {
-  return config && config.options && config.options.find(opt => String(opt.displayValue) === String(value));
 }

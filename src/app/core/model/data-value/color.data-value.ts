@@ -25,6 +25,8 @@ import {validDataColors} from '../../../shared/utils/data/valid-data-colors';
 import {ColorConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class ColorDataValue implements DataValue {
   public readonly hexCode: string;
@@ -96,6 +98,35 @@ export class ColorDataValue implements DataValue {
 
   public parseInput(inputValue: string): ColorDataValue {
     return new ColorDataValue(inputValue, this.config, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = values && values.map(value => this.copy(value.value));
+    const formattedValue = this.format()
+      .trim()
+      .toLowerCase();
+    const otherFormattedValues = (dataValues || []).map(dataValue =>
+      dataValue
+        .format()
+        .trim()
+        .toLowerCase()
+    );
+
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    const formattedFulltexts = (fulltexts || []).map(fulltext => this.copy(fulltext).format());
+    return (
+      dataValuesMeetFulltexts(this.format(), formattedFulltexts) ||
+      dataValuesMeetFulltexts(this.readableColor(), fulltexts)
+    );
+  }
+
+  public readableColor(): string {
+    const formattedValue = this.format();
+    const colorEntry = Object.entries(validDataColors).find(entry => entry[1] === this.hexCode);
+    return (colorEntry && colorEntry[0]) || formattedValue;
   }
 }
 
