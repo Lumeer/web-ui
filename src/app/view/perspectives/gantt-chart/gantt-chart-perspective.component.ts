@@ -30,7 +30,7 @@ import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/doc
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {User} from '../../../core/store/users/user';
-import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 
@@ -49,7 +49,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig, ganttConfigIsEmpty} from './util/gantt-chart-util';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -73,11 +73,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(
-    private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private constraintDataService: ConstraintDataService
-  ) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initGanttChart();
@@ -162,7 +158,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public ngOnDestroy() {

@@ -72,6 +72,7 @@ import {viewsReducer} from './views/views.reducer';
 import {searchesReducer} from './searches/searches.reducer';
 import {SequencesEffects} from './sequences/sequences.effects';
 import {sequencesReducer} from './sequences/sequences.reducer';
+import {constraintDataReducer} from './constraint-data/constraint-data.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -101,6 +102,7 @@ const reducers: ActionReducerMap<AppState> = {
   kanbans: kanbansReducer,
   searches: searchesReducer,
   sequences: sequencesReducer,
+  constraintData: constraintDataReducer,
 };
 
 const effects = [
@@ -139,7 +141,7 @@ const effects = [
     }),
     EffectsModule.forRoot(effects),
     environment.storeDevtools
-      ? StoreDevtoolsModule.instrument({maxAge: 250, name: `Lumeer NgRx Store (${location.hostname})`})
+      ? StoreDevtoolsModule.instrument({maxAge: 50, name: `Lumeer NgRx Store (${location.hostname})`})
       : [],
   ],
   declarations: [],

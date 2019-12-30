@@ -43,7 +43,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformPivotConfig, pivotConfigIsEmpty} from './util/pivot-util';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'pivot-perspective',
@@ -65,7 +65,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private pivotId = DEFAULT_PIVOT_ID;
 
-  constructor(private store$: Store<AppState>, private constraintDataService: ConstraintDataService) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initPivot();
@@ -140,7 +140,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectPivotConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));

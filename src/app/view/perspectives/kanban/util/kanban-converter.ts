@@ -41,6 +41,7 @@ import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shar
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {findOriginalAttributeConstraint} from './kanban.util';
 import {generateId} from '../../../../shared/utils/resource.utils';
+import {groupLinkInstancesByLinkTypes} from '../../../../core/store/link-instances/link-instance.utils';
 
 interface KanbanColumnData {
   resourcesOrder: KanbanResource[];
@@ -116,12 +117,12 @@ export class KanbanConverter {
       }
 
       const {pipelineDocuments} = filterDocumentsAndLinksByStem(
-        documentsByCollection,
         collections,
+        documentsByCollection,
         linkTypes,
-        linkInstances,
-        stemConfig.stem,
-        []
+        groupLinkInstancesByLinkTypes(linkInstances),
+        constraintData,
+        stemConfig.stem
       );
       const pipelineIndex = stemConfig.attribute.resourceIndex / 2; // resourceIndex counts both collection and linkType and pipeline only collection
       const documents = pipelineDocuments[pipelineIndex] || [];

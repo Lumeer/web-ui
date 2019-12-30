@@ -74,8 +74,8 @@ export class BooleanDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = values && values.map(value => this.copy(value.value));
-    const otherBooleanValue = dataValues && dataValues.length > 0 && dataValues[0].booleanValue;
+    const dataValues = (values || []).map(value => new BooleanDataValue(value.value));
+    const otherBooleanValue = dataValues.length > 0 && dataValues[0].booleanValue;
     switch (condition) {
       case QueryCondition.Equals:
         return this.booleanValue === otherBooleanValue;

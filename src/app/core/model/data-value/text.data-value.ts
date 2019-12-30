@@ -99,11 +99,11 @@ export class TextDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = values && values.map(value => this.copy(value.value));
+    const dataValues = (values || []).map(value => new TextDataValue(value.value, this.config));
     const formattedValue = stripTextHtmlTags(this.format(), false)
       .toLowerCase()
       .trim();
-    const otherFormattedValues = (dataValues || []).map(dataValue =>
+    const otherFormattedValues = dataValues.map(dataValue =>
       stripTextHtmlTags(dataValue.format(), false)
         .toLowerCase()
         .trim()

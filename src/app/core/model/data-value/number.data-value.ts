@@ -94,9 +94,9 @@ export class NumberDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = values && values.map(value => this.copy(value.value));
-    const otherBigNumbers = (dataValues || []).map(value => value.bigNumber);
-    const otherValues = (dataValues || []).map(value => value.value);
+    const dataValues = (values || []).map(value => new NumberDataValue(value.value, this.config));
+    const otherBigNumbers = dataValues.map(value => value.bigNumber);
+    const otherValues = dataValues.map(value => value.value);
 
     return dataValuesMeetConditionByNumber(condition, this.bigNumber, otherBigNumbers, this.value, otherValues);
   }

@@ -64,6 +64,7 @@ import {Constraint} from '../../../../core/model/constraint';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {groupLinkInstancesByLinkTypes} from '../../../../core/store/link-instances/link-instance.utils';
 
 @Component({
   selector: 'kanban-columns',
@@ -192,12 +193,13 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   private getPreviousDocumentByKanbanResource(resourceCreate: KanbanResourceCreate): DocumentModel[] {
     const {pipelineDocuments} = filterDocumentsAndLinksByStem(
-      groupDocumentsByCollection(this.documents),
       this.collections,
+      groupDocumentsByCollection(this.documents),
       this.linkTypes,
-      this.linkInstances,
+      groupLinkInstancesByLinkTypes(this.linkInstances),
+      this.constraintData,
       resourceCreate.stem,
-      []
+      (this.query && this.query.fulltexts) || []
     );
     const pipelineIndex = resourceCreate.kanbanAttribute.resourceIndex / 2;
     return pipelineDocuments[pipelineIndex - 1] || [];

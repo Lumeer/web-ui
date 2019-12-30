@@ -41,8 +41,8 @@ export interface CoordinatesConstraintConfig {
 
 export interface DateTimeConstraintConfig {
   format: string;
-  minValue: Date;
-  maxValue: Date;
+  minValue?: Date;
+  maxValue?: Date;
   range?: boolean;
 }
 

@@ -101,12 +101,12 @@ export interface DataValue {
   /**
    * Check if the value meet specific condition and values
    */
-  meetCondition?(condition: QueryCondition, values: QueryConditionValue[]): boolean;
+  meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean;
 
   /**
    * Check if the value meet all provided fulltexts
    */
-  meetFullTexts?(fulltexts: string[]): boolean;
+  meetFullTexts(fulltexts: string[]): boolean;
 }
 
 export class DataValueAccumulator {

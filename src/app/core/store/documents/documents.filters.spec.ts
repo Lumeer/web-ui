@@ -19,7 +19,11 @@
 
 import {DateTimeConstraint} from '../../model/constraint/datetime.constraint';
 import {NumberConstraint} from '../../model/constraint/number.constraint';
-import {DateTimeConstraintConfig, NumberConstraintConfig} from '../../model/data/constraint-config';
+import {
+  DateTimeConstraintConfig,
+  NumberConstraintConfig,
+  UserConstraintConfig,
+} from '../../model/data/constraint-config';
 import {LinkInstance} from '../link-instances/link.instance';
 import {LinkType} from '../link-types/link.type';
 import {User} from '../users/user';
@@ -28,6 +32,8 @@ import {filterDocumentsAndLinksByQuery} from './documents.filters';
 import {Collection} from '../collections/collection';
 import {Query, QueryCondition} from '../navigation/query/query';
 import {UserConstraintConditionValue} from '../../model/data/constraint-condition';
+import {ConstraintData} from '../../model/data/constraint';
+import {UserConstraint} from '../../model/constraint/user.constraint';
 
 const documents: DocumentModel[] = [
   {
@@ -124,7 +130,7 @@ const collections: Collection[] = [
     name: 'collection',
     attributes: [
       {id: 'a1', name: 'a1'},
-      {id: 'a2', name: 'a2'},
+      {id: 'a2', name: 'a2', constraint: new UserConstraint({} as UserConstraintConfig)},
       {id: 'a100', name: 'a100', constraint: new NumberConstraint({} as NumberConstraintConfig)},
       {id: 'a101', name: 'a101', constraint: new DateTimeConstraint({} as DateTimeConstraintConfig)},
     ],
@@ -132,7 +138,14 @@ const collections: Collection[] = [
   {
     id: 'c2',
     name: 'collection',
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {
+        id: 'a2',
+        name: 'a2',
+        constraint: new UserConstraint({} as UserConstraintConfig),
+      },
+    ],
   },
 ];
 
@@ -167,6 +180,11 @@ const linkInstances: LinkInstance[] = [
     documentIds: ['d3', 'd8'],
   },
 ];
+
+const constraintData: ConstraintData = {
+  users: [turingUser, musicUser],
+  currentUser: turingUser,
+};
 
 describe('Document filters', () => {
   it('should filter empty documents by undefined query', () => {
@@ -229,7 +247,7 @@ describe('Document filters', () => {
             },
           ],
         },
-        undefined
+        constraintData
       ).documents.map(document => document.id)
     ).toEqual(['d1']);
   });
@@ -256,7 +274,7 @@ describe('Document filters', () => {
             },
           ],
         },
-        null
+        {...constraintData, currentUser: null}
       ).documents.map(document => document.id)
     ).toEqual([]);
   });
@@ -283,7 +301,7 @@ describe('Document filters', () => {
             },
           ],
         },
-        turingUser
+        constraintData
       ).documents.map(document => document.id)
     ).toEqual(['d2']);
   });
@@ -310,7 +328,7 @@ describe('Document filters', () => {
             },
           ],
         },
-        turingUser
+        constraintData
       ).documents.map(document => document.id)
     ).toEqual([]);
   });
@@ -337,7 +355,7 @@ describe('Document filters', () => {
             },
           ],
         },
-        musicUser
+        {...constraintData, currentUser: musicUser}
       ).documents.map(document => document.id)
     ).toEqual(['d7', 'd8']);
   });
@@ -364,7 +382,7 @@ describe('Document filters', () => {
             },
           ],
         },
-        turingUser,
+        constraintData,
         true
       ).documents.map(document => document.id)
     ).toEqual(['d2', 'd3']);
@@ -393,10 +411,10 @@ describe('Document filters', () => {
             },
           ],
         },
-        turingUser,
+        constraintData,
         true
       ).documents.map(document => document.id)
-    ).toEqual(['d2', 'd3', 'd7', 'd8']);
+    ).toEqual(['d7', 'd2', 'd8', 'd3']);
   });
 
   it('should filter children together with parent document by attribute values', () => {

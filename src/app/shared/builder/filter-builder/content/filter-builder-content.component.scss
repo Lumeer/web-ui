@@ -12,6 +12,7 @@
 
 .data-input {
   min-height: 30px;
+  max-height: 30px;
 }
 
 .data-input::ng-deep > boolean-data-input {

@@ -30,7 +30,7 @@ import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {ConstraintData} from '../data/constraint';
 import {DurationConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, dataValuesMeetFulltexts} from './data-value.utils';
 
@@ -110,9 +110,11 @@ export class DurationDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = values && values.map(value => this.copy(value.value));
-    const otherBigNumbers = (dataValues || []).map(value => value.bigNumber);
-    const otherValues = (dataValues || []).map(value => value.value);
+    const dataValues = (values || []).map(
+      value => new DurationDataValue(value.value, this.config, this.constraintData)
+    );
+    const otherBigNumbers = dataValues.map(value => value.bigNumber);
+    const otherValues = dataValues.map(value => value.value);
 
     return dataValuesMeetConditionByNumber(condition, this.bigNumber, otherBigNumbers, this.value, otherValues);
   }
@@ -120,11 +122,4 @@ export class DurationDataValue implements DataValue {
   public meetFullTexts(fulltexts: string[]): boolean {
     return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
-}
-
-function parseInputValue(value: any): any {
-  if (isNumeric(value)) {
-    return toNumber(value) * 1000;
-  }
-  return value;
 }

@@ -22,7 +22,7 @@ import {formatUnknownDataValue, parseMomentDate} from '../../../shared/utils/dat
 import {getSmallestDateUnit, resetUnusedMomentPart} from '../../../shared/utils/date.utils';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isDateValid, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {ConstraintConditionValue, DateTimeConstraintConditionValue} from '../data/constraint-condition';
 import {dataValuesMeetFulltexts} from './data-value.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
@@ -37,7 +37,10 @@ export class DateTimeDataValue implements DataValue {
     public readonly config: DateTimeConstraintConfig,
     public readonly inputValue?: string
   ) {
-    if (this.value || this.value === 0) {
+    if (isDateValid(this.value)) {
+      this.momentDate = moment(this.value);
+      this.value = this.value.getTime();
+    } else if (this.value || this.value === 0) {
       this.momentDate = parseMomentDate(this.value, this.config && this.config.format);
     }
   }
@@ -137,7 +140,7 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public copy(newValue?: any): DateTimeDataValue {
-    const value = newValue !== undefined ? newValue : this.value;
+    const value = newValue !== undefined ? newValue : this.momentDate && this.momentDate.toDate();
     return new DateTimeDataValue(value, this.config);
   }
 
@@ -152,7 +155,9 @@ export class DateTimeDataValue implements DataValue {
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
     const otherMomentValues = this.mapConditionValues(values);
-    const momentDates = otherMomentValues.map(value => resetUnusedMomentPart(this.momentDate, value.format));
+    const momentDates = otherMomentValues
+      .map(value => resetUnusedMomentPart(this.momentDate, value.format))
+      .sort((a, b) => this.compareMoments(a, b));
 
     const otherMoment = otherMomentValues[0] && otherMomentValues[0].moment;
     if (!this.momentDate && !otherMoment) {
@@ -200,13 +205,28 @@ export class DateTimeDataValue implements DataValue {
   }
 
   private mapConditionValues(values: QueryConditionValue[]): {moment: moment.Moment; format: string}[] {
-    return (values || []).map(value => {
-      if (value.type) {
-        return {moment: constraintConditionValueMoment(value.type), format: constraintConditionValueFormat(value.type)};
-      }
-      const format = this.config.format;
-      return {moment: resetUnusedMomentPart(this.copy(value.value).momentDate, format), format};
-    });
+    return (values || [])
+      .map(value => {
+        if (value.type) {
+          return {
+            moment: constraintConditionValueMoment(value.type),
+            format: constraintConditionValueFormat(value.type),
+          };
+        }
+        const format = this.config.format;
+        return {
+          moment: resetUnusedMomentPart(new DateTimeDataValue(value.value, this.config).momentDate, format),
+          format,
+        };
+      })
+      .sort((a, b) => this.compareMoments(a.moment, b.moment));
+  }
+
+  private compareMoments(a: moment.Moment, b: moment.Moment): number {
+    if (!a || !b) {
+      return a ? 1 : b ? -1 : 0;
+    }
+    return a.diff(b);
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
@@ -219,7 +239,7 @@ function constraintConditionValueFormat(value: ConstraintConditionValue): string
     case DateTimeConstraintConditionValue.Yesterday:
     case DateTimeConstraintConditionValue.Tomorrow:
     case DateTimeConstraintConditionValue.Today:
-      return 'DDD Y';
+      return 'DD M Y';
     case DateTimeConstraintConditionValue.LastWeek:
     case DateTimeConstraintConditionValue.NextWeek:
     case DateTimeConstraintConditionValue.ThisWeek:

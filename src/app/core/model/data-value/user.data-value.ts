@@ -125,12 +125,14 @@ export class UserDataValue implements DataValue {
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
     const dataValues = values && values.map(value => this.mapQueryConditionValue(value));
-    const otherUsers = dataValues && dataValues.length > 0 && dataValues[0].users;
+    const otherUsers = dataValues.length > 0 && dataValues[0].users;
 
     switch (condition) {
       case QueryCondition.In:
+      case QueryCondition.Equals:
         return this.users.some(option => (otherUsers || []).some(otherOption => otherOption.email === option.email));
       case QueryCondition.NotIn:
+      case QueryCondition.NotEquals:
         return this.users.every(option => (otherUsers || []).every(otherOption => otherOption.email !== option.email));
       case QueryCondition.IsEmpty:
         return this.users.length === 0 && this.format().trim().length === 0;
@@ -143,9 +145,10 @@ export class UserDataValue implements DataValue {
 
   private mapQueryConditionValue(value: QueryConditionValue): UserDataValue {
     if (value.type && value.type === UserConstraintConditionValue.CurrentUser) {
-      return this.copy(this.constraintData && this.constraintData.currentUser && this.constraintData.currentUser.email);
+      const currentUser = this.constraintData && this.constraintData.currentUser && this.constraintData.currentUser;
+      return new UserDataValue(currentUser && currentUser.email, this.config, this.constraintData);
     }
-    return this.copy(value.value);
+    return new UserDataValue(value.value, this.config, this.constraintData);
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {

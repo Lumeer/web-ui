@@ -87,11 +87,11 @@ export class CoordinatesDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = values && values.map(value => this.copy(value.value));
+    const dataValues = (values || []).map(value => new CoordinatesDataValue(value.value, this.config));
     const formattedValue = this.format()
       .trim()
       .toLowerCase();
-    const otherFormattedValues = (dataValues || []).map(dataValue =>
+    const otherFormattedValues = dataValues.map(dataValue =>
       dataValue
         .format()
         .trim()

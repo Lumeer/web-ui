@@ -43,7 +43,7 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {calendarConfigIsEmpty, checkOrTransformCalendarConfig} from './util/calendar-util';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'calendar',
@@ -65,11 +65,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private calendarId = DEFAULT_CALENDAR_ID;
 
-  constructor(
-    private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private constraintService: ConstraintDataService
-  ) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initCalendar();
@@ -140,7 +136,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.constraintData$ = this.constraintService.observeConstraintData();
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public onConfigChanged(config: CalendarConfig) {

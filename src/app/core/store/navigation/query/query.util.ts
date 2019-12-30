@@ -28,6 +28,9 @@ import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/com
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Collection} from '../../collections/collection';
 import {AttributesResource} from '../../../model/resource';
+import {ConstraintType} from '../../../model/data/constraint';
+import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
+import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -51,10 +54,16 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
           text: new FormControl(queryItem.text, Validators.required),
           condition: new FormControl(queryItem.condition),
           conditionValues: new FormArray(attributeConditionValuesForms(queryItem)),
+          constraintType: new FormControl(queryItemConstraintType(queryItem)),
         },
         attributeQueryValidator
       );
   }
+}
+
+function queryItemConstraintType(queryItem: QueryItem): ConstraintType {
+  const attribute = (<AttributeQueryItem>queryItem).attribute || (<LinkAttributeQueryItem>queryItem).attribute;
+  return (attribute && attribute.constraint && attribute.constraint.type) || ConstraintType.Unknown;
 }
 
 function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
@@ -70,13 +79,16 @@ function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
 function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
   const condition = group.controls.condition.value;
   const conditionValue = group.controls.conditionValues.value;
+  const constraintType = group.controls.constraintType.value;
 
   if (!condition) {
     return {emptyCondition: true};
   }
 
   const everyValueDefined = createRange(0, queryConditionNumInputs(condition)).every(
-    index => conditionValue[index] && (conditionValue[index].type || conditionValue[index].value)
+    index =>
+      conditionValue[index] &&
+      (conditionValue[index].type || conditionValue[index].value || constraintType === ConstraintType.Boolean)
   );
 
   if (!everyValueDefined) {
@@ -126,10 +138,6 @@ export function isSingleCollectionQuery(query: Query): boolean {
 
 export function isAnyCollectionQuery(query: Query): boolean {
   return query && query.stems && query.stems.length > 0;
-}
-
-export function isOnlyFulltextsQuery(query: Query): boolean {
-  return (!query.stems || query.stems.length === 0) && query.fulltexts && query.fulltexts.length > 0;
 }
 
 export function getQueryFiltersForCollection(query: Query, collectionId: string): CollectionAttributeFilter[] {

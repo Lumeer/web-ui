@@ -114,8 +114,8 @@ export class SelectDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = values && values.map(value => this.copy(value.value));
-    const otherOptions = dataValues && dataValues.length > 0 && dataValues[0].options;
+    const dataValues = (values || []).map(value => new SelectDataValue(value.value, this.config));
+    const otherOptions = dataValues.length > 0 && dataValues[0].options;
 
     switch (condition) {
       case QueryCondition.In:

@@ -17,21 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {TranslationService} from './translation.service';
-import {ConstraintDataAction} from '../store/constraint-data/constraint-data.action';
+import {createSelector} from '@ngrx/store';
+import {AppState} from '../app.state';
+import {DurationUnit} from '../../model/data/constraint-config';
+import {selectAllUsers, selectCurrentUser} from '../users/users.state';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class ConstraintDataService {
-  constructor(private store$: Store<{}>, private translationService: TranslationService) {
-    this.initDurationUnitMap();
-  }
-
-  private initDurationUnitMap() {
-    const durationUnitsMap = this.translationService.createDurationUnitsMap();
-    this.store$.dispatch(new ConstraintDataAction.InitDurationUnitsMap({durationUnitsMap}));
-  }
+export interface ConstraintDataState {
+  durationUnitsMap: Record<DurationUnit, string>;
 }
+
+export const initialConstraintDataState: ConstraintDataState = {
+  durationUnitsMap: null,
+};
+
+export const selectConstraintDataState = (state: AppState) => state.constraintData;
+
+export const selectConstraintData = createSelector(
+  selectConstraintDataState,
+  selectAllUsers,
+  selectCurrentUser,
+  (state, users, currentUser) => ({
+    users,
+    currentUser,
+    durationUnitsMap: state.durationUnitsMap,
+  })
+);

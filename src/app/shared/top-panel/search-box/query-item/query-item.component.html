@@ -28,6 +28,7 @@
         *ngIf="index < (conditionControl?.value | conditionNumValues) && control.get('type') as typeControl">
         <span *ngIf="index > 0">,&nbsp;</span>
         <data-input *ngIf="!typeControl.value" [class.ml-1]="index === 0"
+                    class="data-input"
                     [dataValue]="control.get('value').value | dataValue:attribute.constraint:constraintData"
                     [readonly]="true"
                     [focus]="false"

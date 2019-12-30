@@ -31,10 +31,12 @@ import {Attribute} from '../../../core/store/collections/collection';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {Observable} from 'rxjs';
 import {QueryCondition, QueryConditionValue} from '../../../core/store/navigation/query/query';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
+import {select, Store} from '@ngrx/store';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'filter-builder',
@@ -70,10 +72,10 @@ export class FilterBuilderComponent implements OnInit {
 
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private constraintDataService: ConstraintDataService) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public isOpen(): boolean {

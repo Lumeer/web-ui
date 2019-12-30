@@ -53,7 +53,7 @@ import {isNullOrUndefined} from '../../utils/common.utils';
 import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 const allowAutomaticSubmission = true;
 
@@ -81,12 +81,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private currentUser: User;
   private queryData: QueryData;
 
-  constructor(
-    private router: Router,
-    private store$: Store<AppState>,
-    private formBuilder: FormBuilder,
-    private constraintDataService: ConstraintDataService
-  ) {}
+  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {}
 
   public ngOnInit() {
     this.initForm();
@@ -94,7 +89,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscribeToQuery();
     this.subscribeToNavigation();
     this.users$ = this.store$.pipe(select(selectAllUsers));
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   private subscribeViewData() {

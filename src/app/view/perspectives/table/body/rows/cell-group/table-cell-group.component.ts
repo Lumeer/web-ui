@@ -42,7 +42,7 @@ import {
   selectTablePartLeafColumns,
 } from '../../../../../../core/store/tables/tables.selector';
 import {ConstraintData, DurationUnitsMap} from '../../../../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../../../../core/service/constraint-data.service';
+import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'table-cell-group',
@@ -76,13 +76,11 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
   private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
 
-  public constructor(private store$: Store<{}>, private constraintDataService: ConstraintDataService) {}
+  public constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
-
-    // const cursor$ = this.cursor$.pipe(filter(cursor => !!cursor));
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.columns$ = this.bindColumns();
     this.documents$ = this.bindDocuments();
     this.linkInstances$ = this.bindLinkInstances();

@@ -58,7 +58,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -92,11 +92,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   private subscriptions = new Subscription();
   private kanbanId = DEFAULT_KANBAN_ID;
 
-  constructor(
-    private store$: Store<AppState>,
-    private renderer: Renderer2,
-    private constraintDataService: ConstraintDataService
-  ) {}
+  constructor(private store$: Store<AppState>, private renderer: Renderer2) {}
 
   public ngOnInit() {
     this.initKanban();
@@ -122,7 +118,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
   }

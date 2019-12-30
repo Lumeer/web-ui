@@ -30,7 +30,7 @@ import {
 } from '../../../shared/utils/data.utils';
 import {PercentageConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class PercentageDataValue implements DataValue {
@@ -121,9 +121,10 @@ export class PercentageDataValue implements DataValue {
     return new PercentageDataValue(inputValue, this.config, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, dataValues: PercentageDataValue[]): boolean {
-    const otherBigNumbers = (dataValues || []).map(value => value.percentage);
-    const otherValues = (dataValues || []).map(value => value.value);
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = (values || []).map(value => new PercentageDataValue(value.value, this.config));
+    const otherBigNumbers = dataValues.map(value => value.percentage);
+    const otherValues = dataValues.map(value => value.value);
 
     return dataValuesMeetConditionByNumber(condition, this.percentage, otherBigNumbers, this.value, otherValues);
   }

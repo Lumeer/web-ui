@@ -17,21 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {TranslationService} from './translation.service';
-import {ConstraintDataAction} from '../store/constraint-data/constraint-data.action';
+import {ConstraintDataState, initialConstraintDataState} from './constraint-data.state';
+import {ConstraintDataAction, ConstraintDataActionType} from './constraint-data.action';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class ConstraintDataService {
-  constructor(private store$: Store<{}>, private translationService: TranslationService) {
-    this.initDurationUnitMap();
-  }
-
-  private initDurationUnitMap() {
-    const durationUnitsMap = this.translationService.createDurationUnitsMap();
-    this.store$.dispatch(new ConstraintDataAction.InitDurationUnitsMap({durationUnitsMap}));
+export function constraintDataReducer(
+  state: ConstraintDataState = initialConstraintDataState,
+  action: ConstraintDataAction.All
+): ConstraintDataState {
+  switch (action.type) {
+    case ConstraintDataActionType.INIT_DURATION_UNITS_MAP:
+      return {...state, durationUnitsMap: action.payload.durationUnitsMap};
+    default:
+      return state;
   }
 }

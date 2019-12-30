@@ -39,12 +39,12 @@ import {selectDocumentById} from '../../../../../core/store/documents/documents.
 import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
 import {findAttribute, findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
-import {ConstraintDataService} from '../../../../../core/service/constraint-data.service';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
 import {selectLinkInstanceById} from '../../../../../core/store/link-instances/link-instances.state';
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
 import {AttributesResource, DataResource} from '../../../../../core/model/resource';
+import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'table-hidden-input',
@@ -72,14 +72,13 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
     private actions$: Actions,
     private collectionPermissions: CollectionPermissionsPipe,
     private store$: Store<AppState>,
-    private constraintDataService: ConstraintDataService,
     private clipboardService: ClipboardService
   ) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToTableCursorActions());
     this.subscriptions.add(
-      this.constraintDataService.observeConstraintData().subscribe(data => (this.constraintData = data))
+      this.store$.pipe(select(selectConstraintData)).subscribe(data => (this.constraintData = data))
     );
   }
 

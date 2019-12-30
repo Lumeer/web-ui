@@ -73,11 +73,11 @@ export class UnknownDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = values && values.map(value => this.copy(value.value));
+    const dataValues = (values || []).map(value => new UnknownDataValue(value.value));
     const formattedValue = this.format()
       .toLowerCase()
       .trim();
-    const otherFormattedValues = (dataValues || []).map(dataValue =>
+    const otherFormattedValues = dataValues.map(dataValue =>
       dataValue
         .format()
         .toLowerCase()

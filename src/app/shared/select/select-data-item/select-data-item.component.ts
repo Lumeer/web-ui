@@ -23,6 +23,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -32,7 +33,9 @@ import {DataOptionsDropdownComponent} from '../../data-dropdown/data-options/dat
 import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
 import {Observable} from 'rxjs';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {select, Store} from '@ngrx/store';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: 'select-data-item',
@@ -40,7 +43,7 @@ import {ConstraintDataService} from '../../../core/service/constraint-data.servi
   styleUrls: ['./select-data-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectDataItemComponent implements OnChanges {
+export class SelectDataItemComponent implements OnInit, OnChanges {
   @Input()
   public items: SelectDataItemModel[];
 
@@ -86,8 +89,10 @@ export class SelectDataItemComponent implements OnChanges {
   public dropdownOptions: DataDropdownOption[] = [];
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private constraintDataService: ConstraintDataService) {
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public ngOnChanges(changes: SimpleChanges): void {

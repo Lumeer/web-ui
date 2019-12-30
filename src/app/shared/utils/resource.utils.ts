@@ -135,11 +135,8 @@ export function mergePermissions(p1: AllowedPermissions, p2: AllowedPermissions)
 export function getAttributesResourceType(attributesResource: AttributesResource): AttributesResourceType {
   if (<LinkType>attributesResource && (<LinkType>attributesResource).collectionIds) {
     return AttributesResourceType.LinkType;
-  } else if (<Collection>attributesResource && (<Collection>attributesResource).permissions) {
-    return AttributesResourceType.Collection;
   }
-
-  return null;
+  return AttributesResourceType.Collection;
 }
 
 export function sortResourcesByFavoriteAndLastUsed<T extends Resource>(resources: T[]): T[] {

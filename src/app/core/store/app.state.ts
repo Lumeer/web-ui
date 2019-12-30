@@ -45,6 +45,7 @@ import {initialKanbansState, KanbansState} from './kanbans/kanban.state';
 import {initialPivotsState, PivotsState} from './pivots/pivots.state';
 import {initialSearchesState, SearchesState} from './searches/searches.state';
 import {initialSequencesState, SequencesState} from './sequences/sequences.state';
+import {ConstraintDataState, initialConstraintDataState} from './constraint-data/constraint-data.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -74,6 +75,7 @@ export interface AppState {
   kanbans: KanbansState;
   searches: SearchesState;
   sequences: SequencesState;
+  constraintData: ConstraintDataState;
 }
 
 export function initialAppState(): AppState {
@@ -105,5 +107,6 @@ export function initialAppState(): AppState {
     kanbans: initialKanbansState,
     searches: initialSearchesState,
     sequences: initialSequencesState,
+    constraintData: initialConstraintDataState,
   };
 }
