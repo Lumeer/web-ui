@@ -17,22 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, isObject} from '../../../shared/utils/common.utils';
 import {Address, AddressField} from '../../store/geocoding/address';
 import {ConstraintData} from '../data/constraint';
 import {AddressConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class AddressDataValue implements DataValue {
   public readonly address: Address;
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
     public readonly config: AddressConstraintConfig,
-    public readonly constraintData: ConstraintData
+    public readonly constraintData: ConstraintData,
+    public readonly inputValue?: string
   ) {
-    if (typeof value === 'object') {
+    if (isObject(value)) {
       this.address = value;
     } else {
       const addressesMap = (constraintData && constraintData.addressesMap) || {};
@@ -41,6 +43,10 @@ export class AddressDataValue implements DataValue {
   }
 
   public format(): string {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
+    }
+
     if (!this.address) {
       return this.value || '';
     }
@@ -93,10 +99,28 @@ export class AddressDataValue implements DataValue {
 
   public copy(newValue?: any): AddressDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new AddressDataValue(value, DataValueInputType.Copied, this.config, this.constraintData);
+    return new AddressDataValue(value, this.config, this.constraintData);
   }
 
   public parseInput(inputValue: string): AddressDataValue {
-    return new AddressDataValue(inputValue, DataValueInputType.Typed, this.config, this.constraintData);
+    return new AddressDataValue(inputValue, this.config, this.constraintData, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = (values || []).map(value => new AddressDataValue(value.value, this.config, this.constraintData));
+    const formattedValue = this.format()
+      .toLowerCase()
+      .trim();
+    const otherFormattedValues = dataValues.map(dataValue =>
+      dataValue
+        .format()
+        .toLowerCase()
+        .trim()
+    );
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

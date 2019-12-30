@@ -1,7 +1,8 @@
 <quill-view-html class="quill-editor overflow-hidden"
                  *ngIf="readonly"
                  data-test="text-data-input"
-                 [content]="value | formatDataValue | stripHtml">
+                 [content]="value | formatDataValue | stripHtml"
+                 [class.invalid-value]="!skipValidation && !valid">
 </quill-view-html>
 
 <span *ngIf="!readonly" class="icon-fullscreen" (click)="openTextEditor($event)">

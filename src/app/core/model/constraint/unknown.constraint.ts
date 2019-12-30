@@ -18,19 +18,32 @@
  */
 
 import {UnknownDataValue} from '../data-value/unknown.data-value';
-import {ConstraintData, ConstraintType} from '../data/constraint';
+import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class UnknownConstraint implements Constraint {
   public readonly type = ConstraintType.Unknown;
   public readonly config = {};
 
-  public createDataValue(
-    value: any,
-    inputType: DataValueInputType = DataValueInputType.Stored,
-    constraintData?: ConstraintData
-  ): UnknownDataValue {
-    return new UnknownDataValue(value, inputType);
+  public createDataValue(value: any): UnknownDataValue {
+    return new UnknownDataValue(value);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): UnknownDataValue {
+    return new UnknownDataValue(value, inputValue);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.Contains,
+      QueryCondition.NotContains,
+      QueryCondition.StartsWith,
+      QueryCondition.EndsWith,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

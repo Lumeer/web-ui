@@ -19,6 +19,7 @@
 
 import {ConstraintData} from '../data/constraint';
 import {ConstraintConfig} from '../data/constraint-config';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 
 export interface DataValue {
   /**
@@ -37,9 +38,9 @@ export interface DataValue {
   value: any;
 
   /**
-   * Input type by which value was created
+   * Raw value enter by user.
    */
-  inputType: DataValueInputType;
+  inputValue?: string;
 
   /**
    * Generates a string that will be shown to a user.
@@ -96,12 +97,16 @@ export interface DataValue {
    * Parses a text from a user input and creates a new value from it.
    */
   parseInput(inputValue: string): DataValue;
-}
 
-export enum DataValueInputType {
-  Stored,
-  Typed,
-  Copied,
+  /**
+   * Check if the value meet specific condition and values
+   */
+  meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean;
+
+  /**
+   * Check if the value meet all provided fulltexts
+   */
+  meetFullTexts(fulltexts: string[]): boolean;
 }
 
 export class DataValueAccumulator {

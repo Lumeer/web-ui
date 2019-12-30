@@ -17,17 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {Constraint} from '../../../../core/model/constraint';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 
 import {QueryItem} from './model/query-item';
-import {FormGroup} from '@angular/forms';
-import {AttributeValueComponent} from './attribute-value/attribute-value.component';
-import {AttributeConditionComponent} from './attribute-condition/attribute-condition.component';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
+import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
-import {AttributeQueryItem} from './model/attribute.query-item';
-import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
+import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
+import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
+import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 
 @Component({
   selector: 'query-item',
@@ -35,7 +47,7 @@ import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
   styleUrls: ['./query-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QueryItemComponent {
+export class QueryItemComponent implements OnInit, OnChanges {
   @Input()
   public queryItem: QueryItem;
 
@@ -52,43 +64,53 @@ export class QueryItemComponent {
   public remove = new EventEmitter();
 
   @Output()
-  public enter = new EventEmitter();
-
-  @Output()
   public change = new EventEmitter();
 
-  @ViewChild(AttributeValueComponent, {static: false})
-  public attributeValueComponent: AttributeValueComponent;
+  @Output()
+  public focusInput = new EventEmitter();
 
-  @ViewChild(AttributeConditionComponent, {static: false})
-  public attributeConditionComponent: AttributeConditionComponent;
+  @HostBinding('class.cursor-pointer')
+  public cursorPointer: boolean;
+
+  @ViewChild(FilterBuilderComponent, {static: false})
+  public filterBuilderComponent: FilterBuilderComponent;
+
+  public readonly dataInputConfiguration: DataInputConfiguration = {skipValidation: true, resizeToContent: true};
+
+  constructor(public hostElement: ElementRef) {}
+
+  public get conditionControl(): AbstractControl {
+    return this.queryItemForm && this.queryItemForm.controls.condition;
+  }
+
+  public get conditionValuesControl(): FormArray {
+    return this.queryItemForm && (this.queryItemForm.controls.conditionValues as FormArray);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.cursorPointer = this.isAttributeType();
+  }
+
+  public ngOnInit() {
+    if (this.isAttributeType() && this.queryItem.fromSuggestion) {
+      setTimeout(() => this.filterBuilderComponent && this.filterBuilderComponent.open());
+    }
+  }
+
+  private isAttributeType(): boolean {
+    const type = this.queryItem && this.queryItem.type;
+    return [QueryItemType.Attribute, QueryItemType.LinkAttribute].includes(type);
+  }
+
+  @HostListener('click')
+  public onClick() {
+    if (this.isAttributeType() && !this.filterBuilderComponent.isOpen()) {
+      this.filterBuilderComponent.open();
+    }
+  }
 
   public onRemove() {
     this.remove.emit();
-  }
-
-  public focusCondition() {
-    this.attributeConditionComponent.setEditing();
-  }
-
-  public moveFocusToValue() {
-    if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
-      this.attributeConditionComponent.blur();
-    } else {
-      this.attributeValueComponent.setEditing();
-    }
-  }
-
-  private get constraint(): Constraint {
-    if (this.queryItem.type === QueryItemType.Attribute || this.queryItem.type === QueryItemType.LinkAttribute) {
-      const attributeItem = this.queryItem as AttributeQueryItem | LinkAttributeQueryItem;
-      return attributeItem.attribute && attributeItem.attribute.constraint;
-    }
-    return null;
-  }
-
-  public onEnter() {
-    this.enter.emit();
   }
 
   public isFormValid(): boolean {
@@ -102,5 +124,24 @@ export class QueryItemComponent {
     if (this.isFormValid()) {
       this.change.emit();
     }
+  }
+
+  public onConditionChange(data: {condition: QueryCondition; values: QueryConditionValue[]}) {
+    if (!this.queryItemForm) {
+      return;
+    }
+    const numInputs = queryConditionNumInputs(data.condition);
+    this.queryItem.condition = data.condition;
+    this.queryItem.conditionValues = (data.values || []).slice(0, numInputs);
+    this.queryItemForm.patchValue({
+      condition: data.condition,
+      conditionValues: data.values,
+    });
+
+    this.onQueryItemChanged();
+  }
+
+  public onFinishBuilderEditing() {
+    this.focusInput.emit();
   }
 }

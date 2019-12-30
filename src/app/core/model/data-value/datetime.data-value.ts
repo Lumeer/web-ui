@@ -21,17 +21,26 @@ import * as moment from 'moment';
 import {formatUnknownDataValue, parseMomentDate} from '../../../shared/utils/data.utils';
 import {getSmallestDateUnit, resetUnusedMomentPart} from '../../../shared/utils/date.utils';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isDateValid, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {ConstraintConditionValue, DateTimeConstraintConditionValue} from '../data/constraint-condition';
+import {dataValuesMeetFulltexts} from './data-value.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {createRange} from '../../../shared/utils/array.utils';
+import {queryConditionNumInputs} from '../../store/navigation/query/query.util';
 
 export class DateTimeDataValue implements DataValue {
   private readonly momentDate: moment.Moment;
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: DateTimeConstraintConfig
+    public readonly config: DateTimeConstraintConfig,
+    public readonly inputValue?: string
   ) {
-    if (this.value || this.value === 0) {
+    if (isDateValid(this.value)) {
+      this.momentDate = moment(this.value);
+      this.value = this.value.getTime();
+    } else if (this.value || this.value === 0) {
       this.momentDate = parseMomentDate(this.value, this.config && this.config.format);
     }
   }
@@ -45,8 +54,8 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public format(showInvalid = true): string {
-    if (this.inputType === DataValueInputType.Typed) {
-      return this.value;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
     }
 
     if ([undefined, null, ''].includes(this.value)) {
@@ -63,6 +72,10 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return true;
+    }
+
     if (!this.value && this.value !== 0) {
       return true;
     }
@@ -85,16 +98,18 @@ export class DateTimeDataValue implements DataValue {
 
     const {format, minValue, maxValue} = this.config;
 
+    const momentDate = resetUnusedMomentPart(this.momentDate, format);
+
     if (minValue) {
       const minDate = resetUnusedMomentPart(parseMomentDate(minValue, format), format);
-      if (this.momentDate.diff(minDate) < 0) {
+      if (momentDate.diff(minDate) < 0) {
         return false;
       }
     }
 
     if (maxValue) {
       const maxDate = resetUnusedMomentPart(parseMomentDate(maxValue, format), format);
-      if (this.momentDate.diff(maxDate) > 0) {
+      if (momentDate.diff(maxDate) > 0) {
         return false;
       }
     }
@@ -105,13 +120,13 @@ export class DateTimeDataValue implements DataValue {
   public increment(): DateTimeDataValue {
     const smallestUnit = getSmallestDateUnit(this.config.format);
     const nextValue = this.momentDate.add(1, smallestUnit).toISOString();
-    return new DateTimeDataValue(nextValue, DataValueInputType.Stored, this.config);
+    return new DateTimeDataValue(nextValue, this.config);
   }
 
   public decrement(): DateTimeDataValue {
     const smallestUnit = getSmallestDateUnit(this.config.format);
     const nextValue = this.momentDate.subtract(1, smallestUnit).toISOString();
-    return new DateTimeDataValue(nextValue, DataValueInputType.Stored, this.config);
+    return new DateTimeDataValue(nextValue, this.config);
   }
 
   public compareTo(otherValue: DateTimeDataValue): number {
@@ -125,8 +140,8 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public copy(newValue?: any): DateTimeDataValue {
-    const value = newValue !== undefined ? newValue : this.value;
-    return new DateTimeDataValue(value, DataValueInputType.Copied, this.config);
+    const value = newValue !== undefined ? newValue : this.momentDate && this.momentDate.toDate();
+    return new DateTimeDataValue(value, this.config);
   }
 
   public toDate(): Date {
@@ -135,6 +150,142 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public parseInput(inputValue: string): DateTimeDataValue {
-    return new DateTimeDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new DateTimeDataValue(inputValue, this.config, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const otherMomentValues = this.mapConditionValues(values);
+    const momentDates = otherMomentValues
+      .map(value => resetUnusedMomentPart(this.momentDate, value.format))
+      .sort((a, b) => this.compareMoments(a, b));
+
+    const otherMoment = otherMomentValues[0] && otherMomentValues[0].moment;
+    if (!this.momentDate && !otherMoment) {
+      if (condition === QueryCondition.Equals) {
+        const otherValue = values[0] && values[0].value;
+        return (!this.value && !otherValue) || this.value === otherValue;
+      }
+    } else if (!this.momentDate || !otherMoment) {
+      if (condition === QueryCondition.NotEquals) {
+        return true;
+      }
+    }
+
+    const allMomentDatesDefined = createRange(0, queryConditionNumInputs(condition)).every(
+      index => momentDates[index] && otherMomentValues[index].moment
+    );
+    if (!allMomentDatesDefined) {
+      return false;
+    }
+
+    switch (condition) {
+      case QueryCondition.Equals:
+        return momentDates[0].isSame(otherMoment);
+      case QueryCondition.NotEquals:
+        return !momentDates[0].isSame(otherMoment);
+      case QueryCondition.GreaterThan:
+        return momentDates[0].isAfter(otherMoment);
+      case QueryCondition.GreaterThanEquals:
+        return momentDates[0].isSameOrAfter(otherMoment);
+      case QueryCondition.LowerThan:
+        return momentDates[0].isBefore(otherMoment);
+      case QueryCondition.LowerThanEquals:
+        return momentDates[0].isSameOrBefore(otherMoment);
+      case QueryCondition.Between:
+        return momentDates[0].isSameOrAfter(otherMoment) && momentDates[1].isSameOrBefore(otherMomentValues[1].moment);
+      case QueryCondition.NotBetween:
+        return momentDates[0].isBefore(otherMoment) || momentDates[1].isAfter(otherMomentValues[1].moment);
+      case QueryCondition.IsEmpty:
+        return isNullOrUndefined(this.value) || String(this.value).trim().length === 0;
+      case QueryCondition.NotEmpty:
+        return isNotNullOrUndefined(this.value) && String(this.value).trim().length > 0;
+      default:
+        return false;
+    }
+  }
+
+  private mapConditionValues(values: QueryConditionValue[]): {moment: moment.Moment; format: string}[] {
+    return (values || [])
+      .map(value => {
+        if (value.type) {
+          return {
+            moment: constraintConditionValueMoment(value.type),
+            format: constraintConditionValueFormat(value.type),
+          };
+        }
+        const format = this.config.format;
+        return {
+          moment: resetUnusedMomentPart(new DateTimeDataValue(value.value, this.config).momentDate, format),
+          format,
+        };
+      })
+      .sort((a, b) => this.compareMoments(a.moment, b.moment));
+  }
+
+  private compareMoments(a: moment.Moment, b: moment.Moment): number {
+    if (!a || !b) {
+      return a ? 1 : b ? -1 : 0;
+    }
+    return a.diff(b);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(true), fulltexts);
+  }
+}
+
+function constraintConditionValueFormat(value: ConstraintConditionValue): string {
+  switch (value) {
+    case DateTimeConstraintConditionValue.Yesterday:
+    case DateTimeConstraintConditionValue.Tomorrow:
+    case DateTimeConstraintConditionValue.Today:
+      return 'DD M Y';
+    case DateTimeConstraintConditionValue.LastWeek:
+    case DateTimeConstraintConditionValue.NextWeek:
+    case DateTimeConstraintConditionValue.ThisWeek:
+      return 'W Y';
+    case DateTimeConstraintConditionValue.LastMonth:
+    case DateTimeConstraintConditionValue.NextMonth:
+    case DateTimeConstraintConditionValue.ThisMonth:
+      return 'M Y';
+    default:
+      return '';
+  }
+}
+
+function constraintConditionValueMoment(value: ConstraintConditionValue): moment.Moment {
+  switch (value) {
+    case DateTimeConstraintConditionValue.Yesterday:
+      return moment()
+        .startOf('day')
+        .subtract(1, 'day');
+    case DateTimeConstraintConditionValue.Tomorrow:
+      return moment()
+        .startOf('day')
+        .add(1, 'day');
+    case DateTimeConstraintConditionValue.Today:
+      return moment().startOf('day');
+    case DateTimeConstraintConditionValue.LastWeek:
+      return moment()
+        .startOf('week')
+        .subtract(1, 'week');
+    case DateTimeConstraintConditionValue.NextWeek:
+      return moment()
+        .startOf('week')
+        .add(1, 'week');
+    case DateTimeConstraintConditionValue.ThisWeek:
+      return moment().startOf('week');
+    case DateTimeConstraintConditionValue.LastMonth:
+      return moment()
+        .startOf('month')
+        .subtract(1, 'month');
+    case DateTimeConstraintConditionValue.NextMonth:
+      return moment()
+        .startOf('month')
+        .add(1, 'month');
+    case DateTimeConstraintConditionValue.ThisMonth:
+      return moment().startOf('month');
+    default:
+      return null;
   }
 }

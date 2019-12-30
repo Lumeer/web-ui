@@ -17,50 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Validators} from '@angular/forms';
 
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {CollectionAttributeFilter, ConditionType, LinkAttributeFilter, Query, QueryStem} from './query';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryCondition, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
-import {isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
+import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Collection} from '../../collections/collection';
 import {AttributesResource} from '../../../model/resource';
-
-const EqVariants = ['=', '==', 'eq', 'equals'];
-const NeqVariants = ['!=', '!==', '<>', 'ne', 'neq', 'nequals'];
-const LtVariants = ['<', 'lt'];
-const LteVariants = ['<=', 'lte'];
-const GtVariants = ['>', 'gt'];
-const GteVariants = ['>=', 'gte'];
-
-const allConditionArrays = [EqVariants, NeqVariants, LtVariants, LteVariants, GtVariants, GteVariants];
-
-export function getAllConditions(): string[] {
-  const maxElements = getMaxConditionsInArrays();
-
-  const allConditions = [];
-  for (let i = 0; i < maxElements; i++) {
-    for (const array of allConditionArrays) {
-      if (i < array.length) {
-        allConditions.push(array[i]);
-      }
-    }
-  }
-
-  return allConditions;
-}
-
-function getMaxConditionsInArrays(): number {
-  return allConditionArrays.reduce((acc, array) => {
-    if (acc < array.length) {
-      acc = array.length;
-    }
-    return acc;
-  }, 0);
-}
+import {ConstraintType} from '../../../model/data/constraint';
+import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
+import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -79,36 +49,66 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
       });
     case QueryItemType.Attribute:
     case QueryItemType.LinkAttribute:
-      return new FormGroup({
-        text: new FormControl(queryItem.text, Validators.required),
-        condition: new FormControl(queryItem.condition, [Validators.required, conditionValidator]),
-        conditionValue: new FormControl(queryItem.conditionValue),
-      });
+      return new FormGroup(
+        {
+          text: new FormControl(queryItem.text, Validators.required),
+          condition: new FormControl(queryItem.condition),
+          conditionValues: new FormArray(attributeConditionValuesForms(queryItem)),
+          constraintType: new FormControl(queryItemConstraintType(queryItem)),
+        },
+        attributeQueryValidator
+      );
   }
 }
 
-export function conditionValidator(input: FormControl): {[key: string]: any} {
-  const value = input.value.toString().trim();
-  const isCondition = conditionFromString(value) != null;
-  return !isCondition ? {invalidCondition: value} : null;
+function queryItemConstraintType(queryItem: QueryItem): ConstraintType {
+  const attribute = (<AttributeQueryItem>queryItem).attribute || (<LinkAttributeQueryItem>queryItem).attribute;
+  return (attribute && attribute.constraint && attribute.constraint.type) || ConstraintType.Unknown;
 }
 
-export function conditionFromString(condition: string): ConditionType {
-  const conditionLowerCase = condition.toLowerCase();
-  if (EqVariants.includes(conditionLowerCase)) {
-    return ConditionType.Equals;
-  } else if (NeqVariants.includes(conditionLowerCase)) {
-    return ConditionType.NotEquals;
-  } else if (LtVariants.includes(conditionLowerCase)) {
-    return ConditionType.LowerThan;
-  } else if (LteVariants.includes(conditionLowerCase)) {
-    return ConditionType.LowerThanEquals;
-  } else if (GtVariants.includes(conditionLowerCase)) {
-    return ConditionType.GreaterThan;
-  } else if (GteVariants.includes(conditionLowerCase)) {
-    return ConditionType.GreaterThanEquals;
+function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
+  return createRange(0, 2).map(index => {
+    const conditionValue = queryItem.conditionValues && queryItem.conditionValues[index];
+    return new FormGroup({
+      type: new FormControl(conditionValue && conditionValue.type),
+      value: new FormControl(conditionValue && conditionValue.value),
+    });
+  });
+}
+
+function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
+  const condition = group.controls.condition.value;
+  const conditionValue = group.controls.conditionValues.value;
+  const constraintType = group.controls.constraintType.value;
+
+  if (!condition) {
+    return {emptyCondition: true};
   }
+
+  const everyValueDefined = createRange(0, queryConditionNumInputs(condition)).every(
+    index =>
+      conditionValue[index] &&
+      (conditionValue[index].type || conditionValue[index].value || constraintType === ConstraintType.Boolean)
+  );
+
+  if (!everyValueDefined) {
+    return {emptyValue: true};
+  }
+
   return null;
+}
+
+export function queryConditionNumInputs(condition: QueryCondition): number {
+  switch (condition) {
+    case QueryCondition.IsEmpty:
+    case QueryCondition.NotEmpty:
+      return 0;
+    case QueryCondition.Between:
+    case QueryCondition.NotBetween:
+      return 2;
+    default:
+      return 1;
+  }
 }
 
 export function queryIsNotEmpty(query: Query): boolean {
@@ -138,10 +138,6 @@ export function isSingleCollectionQuery(query: Query): boolean {
 
 export function isAnyCollectionQuery(query: Query): boolean {
   return query && query.stems && query.stems.length > 0;
-}
-
-export function isOnlyFulltextsQuery(query: Query): boolean {
-  return (!query.stems || query.stems.length === 0) && query.fulltexts && query.fulltexts.length > 0;
 }
 
 export function getQueryFiltersForCollection(query: Query, collectionId: string): CollectionAttributeFilter[] {
@@ -233,6 +229,15 @@ export function queryWithoutLinks(query: Query): Query {
 
   const stems = query.stems && query.stems.map(stem => ({...stem, linkTypeIds: []}));
   return {...query, stems};
+}
+
+export function queryWithoutFilters(query: Query): Query {
+  if (!query) {
+    return query;
+  }
+
+  const stems: QueryStem[] = query.stems && query.stems.map(stem => ({...stem, filters: [], linkFilters: []}));
+  return {...query, stems, fulltexts: []};
 }
 
 export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTypes: LinkType[]): QueryStem {

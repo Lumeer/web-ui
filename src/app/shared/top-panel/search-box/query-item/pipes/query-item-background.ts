@@ -21,9 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {shadeColor} from '../../../../utils/html-modifier';
 import {QueryItem} from '../model/query-item';
 import {QueryItemType} from '../model/query-item-type';
-
-const DEFAULT_BACKGROUND_COLOR = '#faeabb';
-const LINK_BACKGROUND_COLOR = '#ffffff';
+import {COLOR_QUERY_FULLTEXT, COLOR_QUERY_DEFAULT} from '../../../../../core/constants';
 
 @Pipe({
   name: 'queryItemBackground',
@@ -35,13 +33,13 @@ export class QueryItemBackgroundPipe implements PipeTransform {
         queryItem.type
       )
     ) {
-      return LINK_BACKGROUND_COLOR;
+      return COLOR_QUERY_DEFAULT;
     }
 
     if (queryItem.colors && queryItem.colors.length === 1) {
       return shadeColor(queryItem.colors[0], 0.5);
     }
 
-    return DEFAULT_BACKGROUND_COLOR;
+    return COLOR_QUERY_FULLTEXT;
   }
 }

@@ -20,6 +20,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -27,19 +28,15 @@ import {
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
-import {catchError, debounceTime, map, switchMap, withLatestFrom} from 'rxjs/operators';
-import {SuggestionsDto, SuggestionType} from '../../../../../core/dto';
-import {SearchService} from '../../../../../core/rest';
-import {AppState} from '../../../../../core/store/app.state';
-import {selectAllCollections} from '../../../../../core/store/collections/collections.state';
-import {FulltextQueryItem} from '../../query-item/model/fulltext.query-item';
+import {catchError, switchMap} from 'rxjs/operators';
 import {QueryItem} from '../../query-item/model/query-item';
 import {QueryItemType} from '../../query-item/model/query-item-type';
-import {convertSuggestionsDtoToModel} from './model/suggestions.converter';
-import {convertSuggestionsToQueryItemsSorted, getCollectionIdsChainForItems} from './model/suggestions.util';
+import {SuggestionsService} from '../../../../../core/service/suggestions-service';
+import {isNotNullOrUndefined} from '../../../../utils/common.utils';
+import {DropdownComponent} from '../../../../dropdown/dropdown.component';
 
 @Component({
   selector: 'search-suggestions',
@@ -54,8 +51,14 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   @Input()
   public text: string;
 
+  @Input()
+  public origin: ElementRef | HTMLElement;
+
   @Output()
   public useSuggestion = new EventEmitter<QueryItem>();
+
+  @ViewChild(DropdownComponent, {static: false})
+  public dropdown: DropdownComponent;
 
   public suggestions$ = new BehaviorSubject<QueryItem[]>([]);
   public selectedIndex$ = new BehaviorSubject(-1);
@@ -66,7 +69,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
 
   private subscriptions = new Subscription();
 
-  constructor(private searchService: SearchService, private store: Store<AppState>) {}
+  constructor(private suggestionsService: SuggestionsService) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToSearchTerms());
@@ -76,7 +79,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     if (changes.queryItems && this.queryItems) {
       this.suggesting = !this.queryItems.find(queryItem => queryItem.type === QueryItemType.View);
     }
-    if (changes.text) {
+    if (changes.text || changes.queryItems) {
       this.searchTerms$.next(this.text);
     }
   }
@@ -88,56 +91,43 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   private subscribeToSearchTerms(): Subscription {
     return this.searchTerms$
       .pipe(
-        debounceTime(300),
         switchMap(text => this.retrieveSuggestions(text)),
-        withLatestFrom(this.store.pipe(select(selectAllCollections))),
-        map(([suggestionsDto, collections]) => convertSuggestionsDtoToModel(suggestionsDto, collections)),
-        map(suggestions => convertSuggestionsToQueryItemsSorted(suggestions, this.queryItems)),
-        map(queryItems => this.addFulltextSuggestion(queryItems)),
-        map(queryItems => this.filterUsedQueryItems(queryItems)),
         catchError(error => {
           console.error(error);
           return of<QueryItem[]>();
         })
       )
-      .subscribe(suggestions => {
-        this.suggestions$.next(suggestions);
-        this.selectedIndex$.next(-1);
-      });
+      .subscribe(suggestions => this.onNewSuggestions(suggestions));
   }
 
-  private retrieveSuggestions(text: string): Observable<SuggestionsDto> {
-    if (this.suggesting && text) {
-      const priorityCollectionIds = getCollectionIdsChainForItems(this.queryItems);
-      const dto = {text: text.toLowerCase(), type: SuggestionType.All, priorityCollectionIds};
-      return this.searchService.suggest(dto);
-    }
-    return of<SuggestionsDto>(null);
-  }
+  private onNewSuggestions(suggestions: QueryItem[]) {
+    this.suggestions$.next(suggestions);
+    this.selectedIndex$.next(-1);
 
-  private addFulltextSuggestion(queryItems: QueryItem[]): QueryItem[] {
-    if (this.text) {
-      return queryItems.concat(new FulltextQueryItem(this.text));
+    if (suggestions.length > 0) {
+      this.open();
     } else {
-      return queryItems;
+      this.close();
     }
   }
 
-  private filterUsedQueryItems(queryItems: QueryItem[]): QueryItem[] {
-    const allowedTypes = [
-      QueryItemType.Collection,
-      QueryItemType.Attribute,
-      QueryItemType.LinkAttribute,
-      QueryItemType.Link,
-      QueryItemType.Document,
-    ];
-    return queryItems.filter(
-      queryItem =>
-        allowedTypes.includes(queryItem.type) ||
-        !this.queryItems.find(usedItem => {
-          return usedItem.type === queryItem.type && usedItem.value === queryItem.value;
-        })
-    );
+  public open() {
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
+  }
+
+  public close() {
+    if (this.dropdown) {
+      this.dropdown.close();
+    }
+  }
+
+  private retrieveSuggestions(text: string): Observable<QueryItem[]> {
+    if (this.suggesting && isNotNullOrUndefined(text)) {
+      return this.suggestionsService.suggest(text, this.queryItems);
+    }
+    return of([]);
   }
 
   public moveSelection(direction: number) {
@@ -147,10 +137,23 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     }
   }
 
+  public hasSelection(): boolean {
+    return this.selectedIndex$.getValue() > 0;
+  }
+
   public useSelection(text: string) {
     const selectedIndex = this.selectedIndex$.getValue();
-    const queryItem = this.suggestions$.getValue()[selectedIndex] || new FulltextQueryItem(text);
-    this.onUseSuggestion(queryItem);
+    const queryItem = this.suggestions$.getValue()[selectedIndex];
+    if (queryItem) {
+      this.onUseSuggestion(queryItem);
+    } else {
+      const fulltextQueryItem = this.suggestions$.value.find(
+        suggestion => suggestion.type === QueryItemType.Fulltext && suggestion.text === text
+      );
+      if (fulltextQueryItem) {
+        this.onUseSuggestion(fulltextQueryItem);
+      }
+    }
   }
 
   public onUseSuggestion(queryItem: QueryItem) {

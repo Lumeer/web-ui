@@ -18,21 +18,34 @@
  */
 
 import {TextDataValue} from '../data-value/text.data-value';
-import {ConstraintData, ConstraintType} from '../data/constraint';
+import {ConstraintType} from '../data/constraint';
 import {TextConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class TextConstraint implements Constraint {
   public readonly type = ConstraintType.Text;
 
   constructor(public readonly config: TextConstraintConfig) {}
 
-  public createDataValue(
-    value: any,
-    inputType: DataValueInputType = DataValueInputType.Stored,
-    constraintDate?: ConstraintData
-  ): TextDataValue {
-    return new TextDataValue(value, inputType, this.config);
+  public createDataValue(value: any): TextDataValue {
+    return new TextDataValue(value, this.config);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): TextDataValue {
+    return new TextDataValue(value, this.config, inputValue);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.Contains,
+      QueryCondition.NotContains,
+      QueryCondition.StartsWith,
+      QueryCondition.EndsWith,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

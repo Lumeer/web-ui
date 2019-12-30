@@ -18,18 +18,15 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  OnInit,
-  OnDestroy,
+  Component,
   ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
   ViewChild,
-  OnChanges,
-  SimpleChanges,
-  SimpleChange,
 } from '@angular/core';
 import {LinkColumn} from '../../../model/link-column';
 import {ConstraintData, ConstraintType} from '../../../../../../core/model/data/constraint';
@@ -42,7 +39,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {DocumentHintsComponent} from '../../../../../document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
-import {DataValue, DataValueInputType} from '../../../../../../core/model/data-value';
+import {DataValue} from '../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
 
@@ -52,7 +49,7 @@ import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean
   styleUrls: ['./links-list-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy, OnChanges {
+export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy {
   @Input()
   public columns: LinkColumn[];
 
@@ -116,8 +113,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public editedValue: DataValue;
   public subscriptions = new Subscription();
 
-  private savingDisabled = false;
-  private creatingNewRow = false;
+  private preventSave = false;
+  private preventSaveTimer: number;
 
   constructor(public element: ElementRef) {}
 
@@ -140,21 +137,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     );
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    this.checkNewRowChanged(changes.row);
-  }
-
-  private checkNewRowChanged(change: SimpleChange) {
-    if (
-      change &&
-      change.previousValue &&
-      change.currentValue &&
-      change.previousValue.correlationId !== change.currentValue.correlationId
-    ) {
-      this.creatingNewRow = false;
-    }
-  }
-
   public endColumnEditing(column: number) {
     if (this.columnEditing$.value === column) {
       this.endRowEditing();
@@ -162,9 +144,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public endRowEditing() {
-    if (this.editedValue && isNotNullOrUndefined(this.columnEditing$.value)) {
-      this.onNewValue(this.columnEditing$.value, this.editedValue);
-    }
     this.suggesting$.next(null);
     this.columnEditing$.next(null);
   }
@@ -188,12 +167,14 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     return false;
   }
 
-  private createDataValue(column: number, value?: any, inputType?: DataValueInputType): DataValue {
+  private createDataValue(column: number, value?: any, typed?: boolean): DataValue {
     const attribute = this.columns[column].attribute;
     const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+    if (typed) {
+      return constraint.createInputDataValue(value, this.columnValue(column), this.constraintData);
+    }
     const initialValue = isNotNullOrUndefined(value) ? value : this.columnValue(column);
-    const initialInputType = isNotNullOrUndefined(value) ? inputType : DataValueInputType.Stored;
-    return constraint.createDataValue(initialValue, initialInputType, this.constraintData);
+    return constraint.createDataValue(initialValue, this.constraintData);
   }
 
   private shouldDirectEditValue(column: number): boolean {
@@ -243,8 +224,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   private saveData(column: number, dataValue: DataValue) {
-    if (this.savingDisabled) {
-      this.savingDisabled = false;
+    if (this.preventSave) {
+      this.preventSave = false;
       return;
     }
 
@@ -261,8 +242,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   private createNewLink(index: number, dataValue: DataValue) {
     const value = dataValue.serialize();
-    if (!this.creatingNewRow && isNotNullOrUndefined(value) && String(value).trim() !== '') {
-      this.creatingNewRow = true;
+    if (isNotNullOrUndefined(value) && String(value).trim() !== '') {
       const column = this.columns[index];
       this.newLink.emit({column, value, correlationId: this.row.correlationId});
     }
@@ -283,7 +263,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     this.resetFocusAndEdit.emit(column);
   }
 
-  public onDataInputFocus(column: number) {
+  public onDataInputFocus(column: number, event: MouseEvent) {
     if (this.columnEditing$.value !== column) {
       this.onFocus.emit(column);
     }
@@ -310,8 +290,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onDataInputKeyDown(event: KeyboardEvent) {
-    event.stopPropagation();
-
     switch (event.code) {
       case KeyCode.ArrowDown:
         event.preventDefault();
@@ -327,6 +305,21 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onUseHint() {
-    this.savingDisabled = true;
+    this.preventSaving();
+  }
+
+  private preventSaving() {
+    if (this.preventSaveTimer) {
+      window.clearTimeout(this.preventSaveTimer);
+    }
+    this.preventSave = true;
+    this.preventSaveTimer = window.setTimeout(() => (this.preventSave = false), 250);
+  }
+
+  public onEnterInvalid() {
+    if (this.suggestions && this.suggestions.isSelected()) {
+      this.suggestions.useSelection();
+      this.endRowEditing();
+    }
   }
 }

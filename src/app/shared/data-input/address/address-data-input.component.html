@@ -2,9 +2,9 @@
        [readonly]="readonly"
        [title]="value | formatDataValue"
        [value]="value | formatDataValue"
-       (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        data-test="text-data-input"
+       spellcheck="false"
        type="text">
 
 <ng-template #textEditing>
@@ -16,6 +16,7 @@
          (input)="onInput($event)"
          class="border-0 w-100 h-100 px-1 bg-transparent"
          data-test="text-data-input"
+         spellcheck="false"
          type="text">
 
   <options-dropdown [options]="addressOptions$ | async"

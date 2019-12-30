@@ -31,6 +31,7 @@ import {greyscale, palette, saturated} from '../colors';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'color-picker',
@@ -51,10 +52,17 @@ export class ColorPickerComponent {
   public save = new EventEmitter<string>();
 
   @Output()
+  public saveOnClose = new EventEmitter<string>();
+
+  @Output()
   public cancel = new EventEmitter();
 
   @ViewChild(DropdownComponent, {static: false})
   public dropdown: DropdownComponent;
+
+  public showPicker$ = new BehaviorSubject(false);
+
+  private selectedValue: string;
 
   public readonly localPalette = [...greyscale, '#ffffff', ...saturated, ...palette];
   public readonly dropdownPositions = [
@@ -69,20 +77,25 @@ export class ColorPickerComponent {
   public onCancel() {
     this.close();
     this.cancel.emit();
+    this.selectedValue = null;
   }
 
   public onSelect(value: string) {
     this.close();
     this.save.emit(value);
+    this.selectedValue = null;
   }
 
   public open() {
+    this.showPicker$.next(true);
     if (this.dropdown) {
       this.dropdown.open();
     }
+    this.selectedValue = null;
   }
 
   public close() {
+    this.showPicker$.next(false);
     if (this.dropdown) {
       this.dropdown.close();
     }
@@ -97,5 +110,11 @@ export class ColorPickerComponent {
 
   public onChange(value: string) {
     this.valueChange.emit(value);
+    this.selectedValue = value;
+  }
+
+  public onCloseByClickOutside() {
+    this.saveOnClose.emit(this.selectedValue);
+    this.selectedValue = null;
   }
 }

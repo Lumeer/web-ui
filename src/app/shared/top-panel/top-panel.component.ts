@@ -66,7 +66,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   @ViewChild(UserPanelComponent, {static: false})
   public userPanel: UserPanelComponent;
 
-  public readonly lineHeight = 36;
+  public readonly firstLineHeight = 50;
 
   public controlsShown$ = new BehaviorSubject(true);
   public workspace$: Observable<Workspace>;
@@ -136,8 +136,8 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   }
 
   private setTopPanelLineHeight() {
-    const element = this.element.nativeElement;
-    element.style.setProperty('--top-panel-line-height', `${this.lineHeight}px`);
+    // const element = this.element.nativeElement;
+    // element.style.setProperty('--top-panel-line-height', `${this.lineHeight}px`);
   }
 
   private setTopPanelSideWidth() {

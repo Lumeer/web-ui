@@ -1,0 +1,16 @@
+<dropdown [origin]="origin"
+          [positions]="dropdownPositions"
+          [closeOnClickOutside]="true"
+          [pushOnScreen]="true"
+          [showBackdrop]="false">
+
+  <filter-builder-content class="card d-flex flex-row flex-nowrap p-2"
+                          [attribute]="attribute"
+                          [selectedCondition]="condition"
+                          [selectedValues]="conditionValues"
+                          [constraintData]="constraintData$ | async"
+                          (valueChange)="onValueChange($event)"
+                          (finishEditing)="onFinishEditing()">
+  </filter-builder-content>
+
+</dropdown>

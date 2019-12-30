@@ -17,25 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {formatCoordinates, parseCoordinates} from '../../../shared/utils/map/coordinates.utils';
 import {MapCoordinates} from '../../store/maps/map.model';
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class CoordinatesDataValue implements DataValue {
   public readonly coordinates: MapCoordinates;
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: CoordinatesConstraintConfig
+    public readonly config: CoordinatesConstraintConfig,
+    public readonly inputValue?: string
   ) {
     this.coordinates = parseCoordinates(value);
   }
 
   public format(): string {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
+    }
+
     if (!this.coordinates) {
       return formatUnknownDataValue(this.value);
     }
@@ -52,7 +58,7 @@ export class CoordinatesDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
-    return !!this.coordinates;
+    return isNotNullOrUndefined(this.inputValue) || !!this.coordinates;
   }
 
   public increment(): CoordinatesDataValue {
@@ -73,10 +79,29 @@ export class CoordinatesDataValue implements DataValue {
 
   public copy(newValue?: any): CoordinatesDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new CoordinatesDataValue(value, DataValueInputType.Copied, this.config);
+    return new CoordinatesDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): CoordinatesDataValue {
-    return new CoordinatesDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new CoordinatesDataValue(inputValue, this.config, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = (values || []).map(value => new CoordinatesDataValue(value.value, this.config));
+    const formattedValue = this.format()
+      .trim()
+      .toLowerCase();
+    const otherFormattedValues = dataValues.map(dataValue =>
+      dataValue
+        .format()
+        .trim()
+        .toLowerCase()
+    );
+
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

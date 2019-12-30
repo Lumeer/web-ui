@@ -3,10 +3,9 @@
   [value]="!valid || !readonly ? (value | formatDataValue) : ''"
   class="border-0 w-100 h-100 px-1"
   [class.bg-transparent]="!readonly || !(value | serializeDataValue) || !valid"
-  [class.bg-danger-light]="readonly && !valid"
-  [class.invalid-value]="readonly && !(value | isDataValueValid)"
-  (focus)="onFocus.emit($event)"
-  (input)="onValueChange($event.target.value)"
+  [class.bg-danger-light]="!skipValidation && readonly && !valid"
+  [class.invalid-value]="!skipValidation && readonly && !(value | isDataValueValid)"
+  (input)="onInput($event.target.value)"
   [ngStyle]="{'background-color': valid ? (value | formatDataValue) : ''}"
   data-test="color-data-input"
   [spellcheck]="false"
@@ -17,5 +16,6 @@
   [origin]="element"
   (valueChange)="onValueChange($event)"
   (save)="onSave($event)"
+  (saveOnClose)="onSaveOnClose(colorInput.value || $event)"
   (cancel)="onCancel()">
 </color-picker>

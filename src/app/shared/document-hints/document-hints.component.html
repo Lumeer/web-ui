@@ -7,10 +7,12 @@
             [minHeight]="(data.documents?.length || 0) * 30">
     <div *ngIf="linkedDocumentId && data.collection && data.documents?.length"
          class="dropdown-menu show position-static p-0"
+         (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
+         (click)="$event.stopImmediatePropagation(); $event.preventDefault();"
          data-test="document-hints">
       <div *ngFor="let doc of data.documents; index as documentIndex"
            [class.selected]="(selectedIndex$ | async) === documentIndex"
-           (mousedown)="onUseDocument(doc)"
+           (click)="onUseDocument(doc)"
            class="dropdown-item p-0 d-flex">
         <ng-container *ngFor="let column of columns">
           <div

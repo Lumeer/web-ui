@@ -42,7 +42,6 @@ import {
 } from '../../../../core/store/collections/collection.util';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {ConstraintData} from '../../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../../core/service/constraint-data.service';
 import {LinkRow} from '../model/link-row';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -59,6 +58,7 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 
 const columnWidth = 100;
 
@@ -100,12 +100,8 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   private stickyColumnWidth: number;
 
-  constructor(
-    private constraintDataService: ConstraintDataService,
-    private store$: Store<AppState>,
-    private modalService: ModalService
-  ) {
-    this.constraintData$ = constraintDataService.observeConstraintData();
+  constructor(private store$: Store<AppState>, private modalService: ModalService) {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

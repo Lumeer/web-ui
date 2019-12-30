@@ -52,8 +52,8 @@ import {selectWorkspaceModels} from '../../../core/store/common/common.selectors
 import {isNullOrUndefined} from '../../utils/common.utils';
 import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './util/search-box.util';
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
-import {TranslationService} from '../../../core/service/translation.service';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 const allowAutomaticSubmission = true;
 
@@ -66,10 +66,11 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public currentView$ = new BehaviorSubject<View>(null);
   public queryItems$ = new BehaviorSubject<QueryItem[]>([]);
   public form$ = new BehaviorSubject<FormGroup>(null);
-  public queryItemsControl: FormArray;
-  public readonly durationUnitsMap: DurationUnitsMap;
 
   public users$: Observable<User[]>;
+  public constraintData$: Observable<ConstraintData>;
+
+  public queryItemsControl: FormArray;
 
   private subscriptions = new Subscription();
 
@@ -80,14 +81,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   private currentUser: User;
   private queryData: QueryData;
 
-  constructor(
-    private router: Router,
-    private store$: Store<AppState>,
-    private formBuilder: FormBuilder,
-    private translationService: TranslationService
-  ) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+  constructor(private router: Router, private store$: Store<AppState>, private formBuilder: FormBuilder) {}
 
   public ngOnInit() {
     this.initForm();
@@ -95,6 +89,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscribeToQuery();
     this.subscribeToNavigation();
     this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   private subscribeViewData() {
@@ -160,14 +155,12 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   public onAddQueryItem(queryItem: QueryItem) {
-    this.addQueryItemWithRelatedItems(queryItem);
-    this.onQueryItemsChanged();
-  }
-
-  private addQueryItemWithRelatedItems(queryItem: QueryItem) {
     const newQueryItems = addQueryItemWithRelatedItems(this.queryData, this.queryItems$.getValue(), queryItem);
-    this.queryItems$.next(newQueryItems);
-    this.initForm(newQueryItems);
+    if (!this.showView(newQueryItems)) {
+      this.queryItems$.next(newQueryItems);
+      this.initForm(newQueryItems);
+      this.onQueryItemsChanged();
+    }
   }
 
   public onRemoveLastQueryItem() {
@@ -212,15 +205,15 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.showView()) {
+    if (this.showView(this.queryItems$.value)) {
       return;
     }
 
     this.showByQueryItems(redirect);
   }
 
-  private showView(): boolean {
-    const viewQueryItem = this.queryItems$.getValue().find(item => item.type === QueryItemType.View) as ViewQueryItem;
+  private showView(queryItems: QueryItem[]): boolean {
+    const viewQueryItem = (queryItems || []).find(item => item.type === QueryItemType.View) as ViewQueryItem;
 
     if (viewQueryItem) {
       this.navigateToView(viewQueryItem.view);

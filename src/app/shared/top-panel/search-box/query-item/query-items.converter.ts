@@ -176,7 +176,7 @@ export class QueryItemsConverter {
         for (const filter of collectionFilters) {
           const attribute = collection && collection.attributes.find(attr => attr.id === filter.attributeId);
           if (attribute) {
-            items.push(new AttributeQueryItem(collection, attribute, filter.condition, filter.value));
+            items.push(new AttributeQueryItem(collection, attribute, filter.condition, filter.conditionValues));
           } else if (!skipDeleted) {
             items.push(new DeletedQueryItem(QueryItemType.Attribute));
           }
@@ -200,7 +200,7 @@ export class QueryItemsConverter {
                 {...linkType, collections: [collection1, collection2]},
                 attribute,
                 filter.condition,
-                filter.value
+                filter.conditionValues
               )
             );
           } else if (!skipDeleted) {

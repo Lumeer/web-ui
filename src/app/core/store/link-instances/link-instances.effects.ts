@@ -39,6 +39,7 @@ import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {selectLinkInstanceById, selectLinkInstancesQueries} from './link-instances.state';
+import {queryWithoutFilters} from '../navigation/query/query.util';
 
 @Injectable()
 export class LinkInstancesEffects {
@@ -46,17 +47,17 @@ export class LinkInstancesEffects {
   public get$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Get>(LinkInstancesActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectLinkInstancesQueries))),
-    filter(([action, queries]) => !queries.find(query => areQueriesEqual(query, action.payload.query))),
-    mergeMap(([action]) =>
-      this.searchService.searchLinkInstances(convertQueryModelToDto(action.payload.query)).pipe(
+    filter(
+      ([action, queries]) => !queries.find(query => areQueriesEqual(query, queryWithoutFilters(action.payload.query)))
+    ),
+    mergeMap(([action]) => {
+      const query = queryWithoutFilters(action.payload.query);
+      return this.searchService.searchLinkInstances(convertQueryModelToDto(query)).pipe(
         map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
-        map(
-          linkInstances =>
-            new LinkInstancesAction.GetSuccess({linkInstances: linkInstances, query: action.payload.query})
-        ),
+        map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances, query})),
         catchError(error => of(new LinkInstancesAction.GetFailure({error})))
-      )
-    )
+      );
+    })
   );
 
   @Effect()

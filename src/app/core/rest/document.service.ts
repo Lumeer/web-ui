@@ -29,7 +29,6 @@ import {AppState} from '../store/app.state';
 import {Workspace} from '../store/navigation/workspace';
 import {BaseService} from './base.service';
 
-// TODO send data attribute without '_id'
 @Injectable()
 export class DocumentService extends BaseService {
   constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {

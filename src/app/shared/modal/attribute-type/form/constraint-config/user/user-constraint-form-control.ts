@@ -18,5 +18,6 @@
  */
 
 export enum UserConstraintFormControl {
+  Multi = 'multi',
   ExternalUsers = 'externalUsers',
 }

@@ -35,9 +35,8 @@ import {DateTimeDataValue} from '../../../core/model/data-value/datetime.data-va
 import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-options';
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
-import {isDateValid} from '../../utils/common.utils';
+import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
 import {HtmlModifier} from '../../utils/html-modifier';
-import {DataValueInputType} from '../../../core/model/data-value';
 
 @Component({
   selector: 'datetime-data-input',
@@ -59,9 +58,6 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public value: DateTimeDataValue;
 
   @Output()
-  public onFocus = new EventEmitter<any>();
-
-  @Output()
   public valueChange = new EventEmitter<DateTimeDataValue>();
 
   @Output()
@@ -69,6 +65,9 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   @Output()
   public cancel = new EventEmitter();
+
+  @Output()
+  public enterInvalid = new EventEmitter();
 
   @ViewChild('dateTimeInput', {static: true})
   public dateTimeInput: ElementRef<HTMLInputElement>;
@@ -78,6 +77,8 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   public date: Date;
   public options: DateTimeOptions;
+
+  private pendingUpdate: Date;
 
   constructor(public element: ElementRef) {}
 
@@ -89,6 +90,11 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
         this.dateTimePicker && this.dateTimePicker.open();
       });
     }
+    if (this.changedFromEditableToReadonly(changes)) {
+      if (isNotNullOrUndefined(this.pendingUpdate)) {
+        this.onSave(this.pendingUpdate);
+      }
+    }
     if (changes.focus && !this.focus) {
       if (this.dateTimePicker) {
         this.dateTimePicker.close();
@@ -97,7 +103,17 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
     if (changes.value && this.value) {
       this.date = this.value.toDate();
       this.options = createDateTimeOptions(this.value.config && this.value.config.format);
+      this.dateTimeInput.nativeElement.value = this.value.format();
     }
+  }
+
+  private changedFromEditableToReadonly(changes: SimpleChanges): boolean {
+    return (
+      changes.readonly &&
+      isNotNullOrUndefined(changes.readonly.previousValue) &&
+      !changes.readonly.previousValue &&
+      this.readonly
+    );
   }
 
   @HostListener('keydown', ['$event'])
@@ -106,15 +122,27 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.dateTimeInput) {
-          const dataValue = this.value.parseInput(this.dateTimeInput.nativeElement.value);
-          // needs to be executed after parent event handlers
-          setTimeout(() => this.save.emit(dataValue));
+        if (this.readonly) {
+          return;
         }
+
+        const input = this.dateTimeInput;
+        const dataValue = this.value.parseInput(input.nativeElement.value);
+        this.pendingUpdate = null;
+
+        event.preventDefault();
+
+        if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
+          this.enterInvalid.emit();
+          return;
+        }
+
+        // needs to be executed after parent event handlers
+        setTimeout(() => this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
-        this.dateTimeInput && (this.dateTimeInput.nativeElement.value = this.value.format(false));
-        this.cancel.emit();
+        this.onCancel();
         return;
     }
   }
@@ -122,26 +150,32 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public onInput(event: Event) {
     const element = event.target as HTMLInputElement;
     const dataValue = this.value.parseInput(element.value);
+    this.pendingUpdate = dataValue.toDate();
     this.valueChange.emit(dataValue);
   }
 
   public onSave(date: Date) {
     if (date && !isDateValid(date)) {
-      this.cancel.emit();
+      this.onCancel();
       return;
     }
 
-    const dataValue = this.value.copy(date);
+    this.pendingUpdate = null;
+    this.value = this.value.copy(date);
+    this.save.emit(this.value);
+  }
 
-    if (dataValue.serialize() !== this.value.serialize() || this.value.inputType === DataValueInputType.Typed) {
-      this.save.emit(dataValue);
+  public onSaveOnClose(inputValue: string, selectedDate: Date) {
+    const inputDate = inputValue && this.value.parseInput(inputValue).toDate();
+    if (!inputValue || isDateValid(inputDate)) {
+      this.onSave(inputDate);
     } else {
-      this.cancel.emit();
+      this.onSave(selectedDate);
     }
   }
 
   public onCancel() {
-    this.dateTimeInput && (this.dateTimeInput.nativeElement.value = this.value.format());
+    this.pendingUpdate = null;
     this.cancel.emit();
   }
 
@@ -150,6 +184,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   }
 
   public onValueChange(date: Date) {
+    this.pendingUpdate = date;
     const dataValue = this.value.copy(date);
     this.dateTimeInput.nativeElement.value = dataValue.format();
     this.valueChange.emit(dataValue);

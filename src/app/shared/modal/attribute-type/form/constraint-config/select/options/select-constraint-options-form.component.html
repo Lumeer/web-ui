@@ -7,6 +7,7 @@
        cdkDragBoundary=".cdk-drop-list"
        class="my-1">
     <div [formGroup]="group"
+         *ngIf="{background: group.get(formControlNames.Background)?.value} as groupData"
          class="d-flex">
       <div class="flex-grow-0 mr-1 mt-2">
         <i cdkDragHandle
@@ -21,6 +22,7 @@
                [class.is-invalid]="group.touched && group.errors"
                (input)="onValueInput($event, optionIndex)"
                (keydown.enter)="onValueEnterKeyDown($event, optionIndex)"
+               [attr.style]="!displayValues ? (('color: ' + (groupData.background | contrastColor) + ' !important; background: ' + groupData.background) | safeStyle) : null"
                type="text"
                class="form-control"
                placeholder="Value"
@@ -36,13 +38,25 @@
         <input #displayValueInput
                [formControlName]="formControlNames.DisplayValue"
                (keydown.enter)="onDisplayValueEnterKeyDown($event, optionIndex)"
+               [attr.style]="('color: ' + (groupData.background | contrastColor) + ' !important; background: ' + groupData.background) | safeStyle"
                type="text"
                class="form-control"
                placeholder="Display as..."
                i18n-placeholder="@@constraint.select.option.displayValue">
       </div>
-      <div class="flex-grow-0 ml-2 mt-2">
-        <a *ngIf="form.controls?.length > 2; else disabledRemoveButton"
+      <div class="flex-grow-0 ml-2 d-flex align-items-center">
+        <i class="fas fa-fw fa-palette text-success mr-2 cursor-pointer"
+           title="Choose background color" (click)="onPaletteClick(optionIndex, colorPicker)"
+           i18n-title="@@constraint.select.option.background" #colorElement></i>
+        <color-picker [color]="groupData.background"
+                      #colorPicker
+                      [origin]="colorElement"
+                      (saveOnClose)="$event && onColorSave(optionIndex, $event)"
+                      (valueChange)="onColorChange(optionIndex, $event)"
+                      (cancel)="onColorCancel(optionIndex)"
+                      (save)="onColorSave(optionIndex, $event)">
+        </color-picker>
+        <a *ngIf="form.controls?.length > 1; else disabledRemoveButton"
            title="Remove option"
            i18n-title="@@constraint.select.option.remove"
            (click)="onRemoveOption(optionIndex)">
@@ -75,5 +89,5 @@
 <div *ngIf="form?.touched && form?.errors?.minimumValuesCount"
      class="text-danger"
      i18n="@@constraint.select.options.twoValues">
-  Please enter at least two values.
+  Please enter at least one value.
 </div>

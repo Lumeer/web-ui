@@ -101,9 +101,9 @@ const queryData = {collections, linkTypes};
 const queryItems = [
   new CollectionQueryItem(collections[3]),
   new LinkQueryItem(linkTypes[2]),
-  new AttributeQueryItem(collections[3], collections[3].attributes[0], '', ''),
-  new LinkAttributeQueryItem(linkTypes[2], linkTypes[2].attributes[0], '', ''),
-  new AttributeQueryItem(collections[4], collections[4].attributes[0], '', ''),
+  new AttributeQueryItem(collections[3], collections[3].attributes[0]),
+  new LinkAttributeQueryItem(linkTypes[2], linkTypes[2].attributes[0]),
+  new AttributeQueryItem(collections[4], collections[4].attributes[0]),
   new CollectionQueryItem(collections[0]),
   new LinkQueryItem(linkTypes[0]),
   new FulltextQueryItem('text'),
@@ -133,14 +133,14 @@ describe('Search box util', () => {
   });
 
   it('should add attribute', () => {
-    const attributeItem = new AttributeQueryItem(collections[3], collections[3].attributes[1], '', '');
+    const attributeItem = new AttributeQueryItem(collections[3], collections[3].attributes[1]);
     const newQueryItems = addQueryItemWithRelatedItems(queryData, queryItems, attributeItem);
     expect(newQueryItems[3]).toEqual(attributeItem);
     expect(newQueryItems.length).toEqual(queryItems.length + 1);
   });
 
   it('should add attribute with collection', () => {
-    const attributeItem = new AttributeQueryItem(collections[5], collections[5].attributes[0], '', '');
+    const attributeItem = new AttributeQueryItem(collections[5], collections[5].attributes[0]);
     const newQueryItems = addQueryItemWithRelatedItems(queryData, queryItems, attributeItem);
     expect(newQueryItems[newQueryItems.length - 4]).toEqual(new CollectionQueryItem(collections[5]));
     expect(newQueryItems[newQueryItems.length - 3]).toEqual(attributeItem);
@@ -148,14 +148,14 @@ describe('Search box util', () => {
   });
 
   it('should add link attribute', () => {
-    const linkAttributeItem = new LinkAttributeQueryItem(linkTypes[2], linkTypes[2].attributes[1], '', '');
+    const linkAttributeItem = new LinkAttributeQueryItem(linkTypes[2], linkTypes[2].attributes[1]);
     const newQueryItems = addQueryItemWithRelatedItems(queryData, queryItems, linkAttributeItem);
     expect(newQueryItems[4]).toEqual(linkAttributeItem);
     expect(newQueryItems.length).toEqual(queryItems.length + 1);
   });
 
   it('should add link attribute with collection and link', () => {
-    const linkAttributeItem = new LinkAttributeQueryItem(linkTypes[3], linkTypes[3].attributes[0], '', '');
+    const linkAttributeItem = new LinkAttributeQueryItem(linkTypes[3], linkTypes[3].attributes[0]);
     const newQueryItems = addQueryItemWithRelatedItems(queryData, queryItems, linkAttributeItem);
     expect(newQueryItems[newQueryItems.length - 5]).toEqual(new CollectionQueryItem(collections[5]));
     expect(newQueryItems[newQueryItems.length - 4]).toEqual(new LinkQueryItem(linkTypes[3]));

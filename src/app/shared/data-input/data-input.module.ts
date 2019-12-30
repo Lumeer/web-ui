@@ -49,6 +49,12 @@ import {PickerModule} from '../picker/picker.module';
 import {RichTextDataInputComponent} from './rich-text/rich-text-data-input.component';
 import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.module';
 import {QuillModule} from 'ngx-quill';
+import {FilterDataSuggestionsPipe} from './filter-data-suggestions.pipe';
+import {FilterUsersPipe} from './user/pipes/filter-users.pipe';
+import {SelectOptionIsValidPipe} from './select/pipes/select-option-is-valid.pipe';
+import {SelectOptionsValuesPipe} from './select/pipes/select-options-values.pipe';
+import {UsersEmailsPipe} from './user/pipes/users-emails.pipe';
+import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
 
 @NgModule({
   imports: [
@@ -85,6 +91,12 @@ import {QuillModule} from 'ngx-quill';
     FilesDropdownComponent,
     FileAttachmentButtonComponent,
     RichTextDataInputComponent,
+    FilterDataSuggestionsPipe,
+    FilterUsersPipe,
+    SelectOptionIsValidPipe,
+    SelectOptionsValuesPipe,
+    UsersEmailsPipe,
+    UsersAreValidPipe,
   ],
   exports: [
     DataInputComponent,
@@ -92,6 +104,7 @@ import {QuillModule} from 'ngx-quill';
     UserDataInputComponent,
     DataCursorPipe,
     FileAttachmentButtonComponent,
+    SelectDataInputComponent,
   ],
 })
 export class DataInputModule {}

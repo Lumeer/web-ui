@@ -1,7 +1,9 @@
 <input #hiddenInput
+       class="hidden-input"
        (click)="onClick($event)"
        (input)="onInput($event)"
        (keydown)="onKeyDown($event)"
        tabindex="-1"
        type="text"
+       autocomplete="off"
        data-test="table-hidden-input">

@@ -717,22 +717,9 @@
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="search.input.placeholder" datatype="html">
-        <source>
-    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"/>
-  </source><target state="final">
-    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"/>
-  </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/search-box/input/search-input.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="704a36bb7d1e358bff6fcd007b3a1008a7e98087" datatype="html">
-        <source>{VAR_SELECT, select, 0 {Type anything you search for...} other {} }</source><target state="final">{VAR_SELECT, select, 0 {Type anything you search for...} other {} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/search-box/input/search-input.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="search.button" datatype="html">
+        <source>Type anything you search for...</source><target state="final">Type anything you search for...</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="search.button" datatype="html">
         <source>Search</source><target state="final">Search</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/search-box/button/search-button.component.html</context>

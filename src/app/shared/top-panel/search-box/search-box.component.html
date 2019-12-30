@@ -1,5 +1,5 @@
-<div *ngIf="{users: users$ | async, durationUnitsMap: durationUnitsMap} as constraintData"
-     class="form-control w-100 h-100 p-0"
+<div *ngIf="constraintData$ | async as constraintData"
+     class="form-control w-100 h-auto p-0"
      data-tour="search-box">
   <form *ngIf="form$ | async as form"
         [formGroup]="form"
@@ -12,20 +12,20 @@
                   [queryItemForm]="queryItemsControl.at(itemIndex)"
                   [queryItem]="queryItem"
                   [constraintData]="constraintData"
-                  (enter)="searchInput.focusInput()"
                   [readonly]="!data.canManageConfig"
                   (change)="onQueryItemsChanged()"
                   (remove)="onRemoveQueryItem(itemIndex)"
+                  (focusInput)="searchInput.focusInput()"
                   class="d-inline-flex mt-1 ml-1 align-items-center">
       </query-item>
 
       <search-input #searchInput
                     [queryItems]="queryItems$ | async"
-                    [currentView]="currentView$ | async"
+                    [readonly]="!data.canManageConfig"
                     (addQueryItem)="onAddQueryItem($event)"
                     (removeQueryItem)="onRemoveLastQueryItem()"
                     (search)="onSearch()"
-                    class="flex-grow-1 mt-1 ml-1">
+                    class="flex-grow-1 mt-1 ml-1 mw-100">
       </search-input>
     </div>
 

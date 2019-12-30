@@ -17,11 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
 import {UserConstraint} from '../../../../../../core/model/constraint/user.constraint';
-import {KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
 import {ConstraintType} from '../../../../../../core/model/data/constraint';
+import {SelectConstraint} from '../../../../../../core/model/constraint/select.constraint';
+import {Constraint} from '../../../../../../core/model/constraint';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {PivotAttribute} from '../../../../../../core/store/pivots/pivot';
+import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
+import {findAttributeConstraint} from '../../../../../../core/store/collections/collection.util';
 
 @Component({
   selector: 'kanban-column-header',
@@ -29,9 +36,15 @@ import {ConstraintType} from '../../../../../../core/model/data/constraint';
   styleUrls: ['./kanban-column-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanColumnHeaderComponent {
+export class KanbanColumnHeaderComponent implements OnChanges {
   @Input()
   public column: KanbanColumn;
+
+  @Input()
+  public collections: Collection[];
+
+  @Input()
+  public linkTypes: LinkType[];
 
   @Output()
   public remove = new EventEmitter();
@@ -40,6 +53,34 @@ export class KanbanColumnHeaderComponent {
 
   public readonly booleanConstraint = new BooleanConstraint();
   public readonly userConstraint = new UserConstraint({externalUsers: true});
+  public readonly selectConstraint = new SelectConstraint({options: []});
+
+  public columnConstraint: Constraint;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.columnConstraint = this.createColumnConstraint();
+  }
+
+  private createColumnConstraint(): Constraint {
+    const createdFromAttributes = (this.column && this.column.createdFromAttributes) || [];
+    const constraints = createdFromAttributes
+      .map(attr => {
+        const resource = this.findResource(attr);
+        return resource && findAttributeConstraint(resource.attributes, attr.attributeId);
+      })
+      .filter(attr => !!attr);
+    return constraints[0];
+  }
+
+  private findResource(kanbanAttribute: KanbanAttribute): AttributesResource {
+    if (kanbanAttribute.resourceType === AttributesResourceType.Collection) {
+      return (this.collections || []).find(collection => collection.id === kanbanAttribute.resourceId);
+    } else if (kanbanAttribute.resourceType === AttributesResourceType.LinkType) {
+      return (this.linkTypes || []).find(linkType => linkType.id === kanbanAttribute.resourceId);
+    }
+
+    return null;
+  }
 
   public onRemove() {
     this.remove.emit();

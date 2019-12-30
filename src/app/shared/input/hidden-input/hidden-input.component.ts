@@ -23,7 +23,6 @@ import {DataRowHiddenComponent} from '../../data/data-row-component';
 @Component({
   selector: 'hidden-input',
   templateUrl: './hidden-input.component.html',
-  styleUrls: ['./hidden-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HiddenInputComponent implements DataRowHiddenComponent {

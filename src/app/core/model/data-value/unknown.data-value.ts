@@ -18,14 +18,20 @@
  */
 
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class UnknownDataValue implements DataValue {
   public readonly config: any = {};
 
-  constructor(public readonly value: any, public readonly inputType: DataValueInputType) {}
+  constructor(public readonly value: any, public readonly inputValue?: string) {}
 
   public format(): string {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
+    }
     return formatUnknownDataValue(this.value);
   }
 
@@ -59,10 +65,28 @@ export class UnknownDataValue implements DataValue {
 
   public copy(newValue?: any): DataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new UnknownDataValue(value, DataValueInputType.Copied);
+    return new UnknownDataValue(value);
   }
 
   public parseInput(inputValue: string): DataValue {
-    return new UnknownDataValue(inputValue, DataValueInputType.Typed);
+    return new UnknownDataValue(inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = (values || []).map(value => new UnknownDataValue(value.value));
+    const formattedValue = this.format()
+      .toLowerCase()
+      .trim();
+    const otherFormattedValues = dataValues.map(dataValue =>
+      dataValue
+        .format()
+        .toLowerCase()
+        .trim()
+    );
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

@@ -1,4 +1,5 @@
 <ul *ngIf="{organization: organization$ | async, project: project$ | async} as data"
+    [style.height.px]="contentHeight"
     class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
   <li class="nav-item dropdown">
     <div class="nav-link text-truncate cursor-pointer" role="button"
@@ -6,7 +7,7 @@
          i18n-tooltip="@@topPanel.organizationMenu.title"
          placement="bottom"
          (click)="onOrganizationClick()"
-         [style.maxWidth.rem]="10" #organizationElement>
+         [style.maxWidth.rem]="8" #organizationElement>
       <i [class]="data.organization?.icon" [style.color]="data.organization?.color">
       </i>
       &nbsp;{{data.organization?.code}}
@@ -27,6 +28,7 @@
          tooltip="Project menu"
          i18n-tooltip="@@topPanel.projectMenu.title"
          placement="bottom"
+         [style.maxWidth.rem]="8"
          (click)="onProjectClick()"
          #projectElement>
       <i [class]="data.project?.icon" [style.color]="data.project?.color"></i>

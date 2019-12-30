@@ -20,16 +20,23 @@
 import {formatUnknownDataValue, stripTextHtmlTags} from '../../../shared/utils/data.utils';
 import {transformTextBasedOnCaseStyle} from '../../../shared/utils/string.utils';
 import {TextConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText} from './data-value.utils';
 
 export class TextDataValue implements DataValue {
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: TextConstraintConfig
+    public readonly config: TextConstraintConfig,
+    public readonly inputValue?: string
   ) {}
 
   public format(): string {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
+    }
+
     if (typeof this.value !== 'string') {
       return formatUnknownDataValue(this.value, true);
     }
@@ -49,15 +56,20 @@ export class TextDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.copy(this.inputValue).isValid(ignoreConfig);
+    }
+
     if (!this.value || ignoreConfig) {
       return true;
     }
 
     if (this.config) {
-      if (this.config.minLength && ('' + this.value).length < this.config.minLength) {
+      const strippedValue = stripTextHtmlTags(this.value, false);
+      if (this.config.minLength && strippedValue.length < this.config.minLength) {
         return false;
       }
-      if (this.config.maxLength && ('' + this.value).length > this.config.maxLength) {
+      if (this.config.maxLength && strippedValue.length > this.config.maxLength) {
         return false;
       }
     }
@@ -79,11 +91,37 @@ export class TextDataValue implements DataValue {
 
   public copy(newValue?: any): TextDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new TextDataValue(value, DataValueInputType.Copied, this.config);
+    return new TextDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): TextDataValue {
-    return new TextDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new TextDataValue(inputValue, this.config, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = (values || []).map(value => new TextDataValue(value.value, this.config));
+    const formattedValue = stripTextHtmlTags(this.format(), false)
+      .toLowerCase()
+      .trim();
+    const otherFormattedValues = dataValues.map(dataValue =>
+      stripTextHtmlTags(dataValue.format(), false)
+        .toLowerCase()
+        .trim()
+    );
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    const formattedValue = stripTextHtmlTags(this.format(), false)
+      .toLowerCase()
+      .trim();
+    return (fulltexts || [])
+      .map(fulltext =>
+        stripTextHtmlTags(fulltext, false)
+          .toLowerCase()
+          .trim()
+      )
+      .every(fulltext => formattedValue.includes(fulltext));
   }
 }
 

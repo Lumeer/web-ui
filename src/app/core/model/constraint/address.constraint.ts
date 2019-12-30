@@ -21,18 +21,31 @@ import {AddressDataValue} from '../data-value/address.data-value';
 import {ConstraintData, ConstraintType} from '../data/constraint';
 import {AddressConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class AddressConstraint implements Constraint {
   public readonly type = ConstraintType.Address;
 
   constructor(public readonly config: AddressConstraintConfig) {}
 
-  public createDataValue(
-    value: any,
-    inputType: DataValueInputType = DataValueInputType.Stored,
-    constraintData?: ConstraintData
-  ): AddressDataValue {
-    return new AddressDataValue(value, inputType, this.config, constraintData);
+  public createDataValue(value: any, constraintData?: ConstraintData): AddressDataValue {
+    return new AddressDataValue(value, this.config, constraintData);
+  }
+
+  public createInputDataValue(inputValue: string, value: any, constraintData?: ConstraintData): AddressDataValue {
+    return new AddressDataValue(value, this.config, constraintData, inputValue || '');
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.Contains,
+      QueryCondition.NotContains,
+      QueryCondition.StartsWith,
+      QueryCondition.EndsWith,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

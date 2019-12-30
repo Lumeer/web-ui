@@ -22,7 +22,6 @@ import {UnknownConstraint} from '../../../core/model/constraint/unknown.constrai
 import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {FileTypeIconPipe} from '../../data-input/files/file-type-icon.pipe';
 import {generateId} from '../resource.utils';
-import {DataValueInputType} from '../../../core/model/data-value';
 
 export function createDataValueHtml(
   value: any,
@@ -30,11 +29,7 @@ export function createDataValueHtml(
   constraintData: ConstraintData,
   className?: string
 ): string {
-  const dataValue = (constraint || new UnknownConstraint()).createDataValue(
-    value,
-    DataValueInputType.Stored,
-    constraintData
-  );
+  const dataValue = (constraint || new UnknownConstraint()).createDataValue(value, constraintData);
 
   switch (constraint && constraint.type) {
     case ConstraintType.Color:
@@ -59,11 +54,11 @@ function createDataColorValueHtml(value: string, className?: string): string {
 
 function createDataBooleanValueHtml(value: any, className?: string): string {
   const inputId = `search-document-input-${generateId()}`;
-  return `<div class="d-inline-flex lmr-checkbox ${className || ''}"><input 
+  return `<div class="d-inline-flex lmr-checkbox ${className || ''}"><input
              id="${inputId}"
              ${value ? 'checked="true"' : ''}
              style="cursor: unset;"
-             readonly type="checkbox">
+             readonly disabled type="checkbox">
           <label
              for="${inputId}"
              style="cursor: unset;">

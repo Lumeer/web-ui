@@ -17,20 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap';
 import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {select, Store} from '@ngrx/store';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChooseLinkDocumentModalComponent {
+export class ChooseLinkDocumentModalComponent implements OnInit {
   @Input()
   public documents: DocumentModel[];
 
@@ -46,8 +48,10 @@ export class ChooseLinkDocumentModalComponent {
 
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private bsModalRef: BsModalRef, private constraintDataService: ConstraintDataService) {
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public hideDialog() {

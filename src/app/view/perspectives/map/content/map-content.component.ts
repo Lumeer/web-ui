@@ -55,7 +55,6 @@ import {
 import {MapRenderComponent} from './render/map-render.component';
 import {MarkerMoveEvent} from './render/marker-move.event';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
-import {DocumentDetailModalComponent} from '../../../../shared/modal/document-detail/document-detail-modal.component';
 import {ModalService} from '../../../../shared/modal/modal.service';
 
 @Component({

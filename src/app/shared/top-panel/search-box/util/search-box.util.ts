@@ -110,7 +110,12 @@ function addAttributeItem(
     query.stems.push({collectionId, filters: [attributeFilter]});
   }
 
-  return new QueryItemsConverter(queryData).fromQuery(query);
+  return new QueryItemsConverter(queryData).fromQuery(query).map(item => {
+    if (item.type === attributeItem.type && item.value === attributeItem.value) {
+      item.fromSuggestion = attributeItem.fromSuggestion;
+    }
+    return item;
+  });
 }
 
 function addLinkAttributeItem(
@@ -152,7 +157,12 @@ function addLinkAttributeItem(
     }
   }
 
-  return new QueryItemsConverter(queryData).fromQuery(query);
+  return new QueryItemsConverter(queryData).fromQuery(query).map(item => {
+    if (item.type === attributeItem.type && item.value === attributeItem.value) {
+      item.fromSuggestion = attributeItem.fromSuggestion;
+    }
+    return item;
+  });
 }
 
 function addDocumentItem(queryData: QueryData, queryItems: QueryItem[], documentItem: DocumentQueryItem): QueryItem[] {

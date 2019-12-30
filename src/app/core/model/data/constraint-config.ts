@@ -19,6 +19,7 @@
 
 import Big from 'big.js';
 import {AddressField} from '../../store/geocoding/address';
+import {palette} from '../../../shared/picker/colors';
 
 export interface AddressConstraintConfig {
   fields: AddressField[];
@@ -34,15 +35,15 @@ export enum CoordinatesFormat {
 }
 
 export interface CoordinatesConstraintConfig {
-  format: CoordinatesFormat;
+  format?: CoordinatesFormat;
   precision: number;
 }
 
 export interface DateTimeConstraintConfig {
   format: string;
-  minValue: Date;
-  maxValue: Date;
-  range: boolean;
+  minValue?: Date;
+  maxValue?: Date;
+  range?: boolean;
 }
 
 export interface DurationConstraintConfig {
@@ -68,11 +69,11 @@ export enum DurationType {
 export interface FilesConstraintConfig {}
 
 export interface NumberConstraintConfig {
-  decimal: boolean;
-  format: string;
-  minValue: Big;
-  maxValue: Big;
-  precision: number;
+  decimal?: boolean;
+  format?: string;
+  minValue?: Big;
+  maxValue?: Big;
+  precision?: number;
 }
 
 export interface PercentageConstraintConfig {
@@ -93,12 +94,16 @@ export interface SelectConstraintOption {
   displayValue?: string;
   icon?: string;
   value: string;
+  background?: string;
 }
 
 export interface SelectConstraintConfig {
-  displayValues: boolean;
+  multi?: boolean;
+  displayValues?: boolean;
   options: SelectConstraintOption[];
 }
+
+export const selectDefaultPalette = palette.slice(0, 8);
 
 export interface TagConstraintConfig {
   options: string[];
@@ -116,10 +121,11 @@ export interface TextConstraintConfig {
   caseStyle: CaseStyle;
   minLength: number;
   maxLength: number;
-  regexp: string;
+  regexp?: string;
 }
 
 export interface UserConstraintConfig {
+  multi?: boolean;
   externalUsers: boolean;
 }
 

@@ -4,11 +4,13 @@
          [checked]="config.showDates"
          (change)="onShowDatesChange($event.target.checked)"
          type="checkbox"
+         #datesCheckbox
          class="custom-control-input">
   <label [for]="showDatesId"
          class="custom-control-label">
   </label>
-  <span i18n="@@perspective.gantt.config.dates.show">Show task dates</span>
+  <span i18n="@@perspective.gantt.config.dates.show" class="user-select-none cursor-pointer"
+        (click)="datesCheckbox.click()">Show task dates</span>
 </div>
 
 <div class="custom-control custom-checkbox mt-2">
@@ -17,11 +19,13 @@
          [checked]="config.lockResize"
          (change)="onLockResizeChange($event.target.checked)"
          type="checkbox"
+         #resizeCheckbox
          class="custom-control-input">
   <label [for]="lockResizeId"
          class="custom-control-label">
   </label>
-  <span i18n="@@perspective.gantt.config.resize.lock">Lock dependent task position</span>
+  <span i18n="@@perspective.gantt.config.resize.lock" class="user-select-none cursor-pointer"
+        (click)="resizeCheckbox.click()">Lock dependent task position</span>
 </div>
 
 <gantt-chart-collection-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"

@@ -48,6 +48,7 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import {
+  isArray,
   isDateValid,
   isNotNullOrUndefined,
   isNullOrUndefined,
@@ -63,7 +64,6 @@ import {
 import {formatData} from '../../../../shared/utils/data/format-data';
 import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
-import {DataValueInputType} from '../../../../core/model/data-value';
 
 type DataResourceSwimlanes = DataResource & {swimlanes?: string[]};
 
@@ -352,17 +352,17 @@ export class GanttChartConverter {
           ? validDataColors[dataResourceColor] || dataResourceColor
           : resourceColor;
 
-      const constraint = (nameAttribute && nameAttribute.constraint) || new UnknownConstraint();
+      const nameConstraint = (nameAttribute && nameAttribute.constraint) || new UnknownConstraint();
 
       const permission = this.getPermission(stemConfig.start);
 
       const datesSwimlanes = [];
       if (showDatesAsSwimlanes) {
         const startString = (this.getConstraint(stemConfig.start) || new UnknownConstraint())
-          .createDataValue(start, DataValueInputType.Stored, this.constraintData)
+          .createDataValue(start, this.constraintData)
           .format();
         const endString = (this.getConstraint(stemConfig.end) || new UnknownConstraint())
-          .createDataValue(end, DataValueInputType.Stored, this.constraintData)
+          .createDataValue(end, this.constraintData)
           .format();
         datesSwimlanes.push(...[startString, endString]);
       }
@@ -384,29 +384,32 @@ export class GanttChartConverter {
         resourceType: stemConfig.start.resourceType,
       };
 
-      const nameFormatted = constraint.createDataValue(name, DataValueInputType.Stored, this.constraintData).format();
+      const names = isArray(name) ? name : [name];
+      for (let i = 0; i < names.length; i++) {
+        const nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).format();
 
-      arr.push({
-        id: dataResource.id,
-        name: stripTextHtmlTags(nameFormatted, false),
-        start: interval[0].value,
-        end: interval[1].value,
-        progress: createProgress(progress),
-        dependencies: validDataResourceIdsMap[dataResource.id] || [],
-        allowedDependencies: validIds.filter(id => id !== dataResource.id),
-        barColor: shadeColor(taskColor, 0.5),
-        progressColor: shadeColor(taskColor, 0.3),
-        startDrag: startEditable,
-        endDrag: endEditable,
-        progressDrag: progressEditable,
-        editable: permission && permission.writeWithView,
-        textColor: contrastColor(shadeColor(taskColor, 0.5)),
-        swimlanes: [...(dataResource.swimlanes || []), ...datesSwimlanes],
-        minProgress,
-        maxProgress,
+        arr.push({
+          id: dataResource.id,
+          name: stripTextHtmlTags(nameFormatted, false),
+          start: interval[0].value,
+          end: interval[1].value,
+          progress: createProgress(progress),
+          dependencies: validDataResourceIdsMap[dataResource.id] || [],
+          allowedDependencies: validIds.filter(id => id !== dataResource.id),
+          barColor: shadeColor(taskColor, 0.5),
+          progressColor: shadeColor(taskColor, 0.3),
+          startDrag: startEditable,
+          endDrag: endEditable,
+          progressDrag: progressEditable,
+          editable: permission && permission.writeWithView,
+          textColor: contrastColor(shadeColor(taskColor, 0.5)),
+          swimlanes: [...(dataResource.swimlanes || []), ...datesSwimlanes],
+          minProgress,
+          maxProgress,
 
-        metadata,
-      });
+          metadata,
+        });
+      }
 
       return arr;
     }, []);
@@ -477,7 +480,7 @@ export class GanttChartConverter {
       barModel.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
 
     const formattedValue = (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, DataValueInputType.Stored, this.constraintData)
+      .createDataValue(value, this.constraintData)
       .format();
     return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
   }

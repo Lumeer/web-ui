@@ -18,24 +18,20 @@
  */
 
 import {Injectable} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {ConstraintData} from '../model/data/constraint';
-import {selectAllUsers} from '../store/users/users.state';
+import {Store} from '@ngrx/store';
 import {TranslationService} from './translation.service';
+import {ConstraintDataAction} from '../store/constraint-data/constraint-data.action';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConstraintDataService {
-  constructor(private store$: Store<{}>, private translationService: TranslationService) {}
+  constructor(private store$: Store<{}>, private translationService: TranslationService) {
+    this.initDurationUnitMap();
+  }
 
-  public observeConstraintData(): Observable<ConstraintData> {
-    // TODO get AddressesMap as well
-    return this.store$.pipe(
-      select(selectAllUsers),
-      map(users => ({users, durationUnitsMap: this.translationService.createDurationUnitsMap()}))
-    );
+  private initDurationUnitMap() {
+    const durationUnitsMap = this.translationService.createDurationUnitsMap();
+    this.store$.dispatch(new ConstraintDataAction.InitDurationUnitsMap({durationUnitsMap}));
   }
 }

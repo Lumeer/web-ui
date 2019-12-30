@@ -21,7 +21,12 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {LinkAttributeFilter} from '../../../../../core/store/navigation/query/query';
+import {
+  LinkAttributeFilter,
+  QueryCondition,
+  QueryConditionValue,
+} from '../../../../../core/store/navigation/query/query';
+import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 
 export class LinkAttributeQueryItem implements QueryItem {
   public type = QueryItemType.LinkAttribute;
@@ -29,8 +34,9 @@ export class LinkAttributeQueryItem implements QueryItem {
   public constructor(
     public linkType: LinkType,
     public attribute: Attribute,
-    public condition: string,
-    public conditionValue: any
+    public condition?: QueryCondition,
+    public conditionValues?: QueryConditionValue[],
+    public fromSuggestion?: boolean
   ) {}
 
   public get icons(): string[] {
@@ -50,7 +56,14 @@ export class LinkAttributeQueryItem implements QueryItem {
   }
 
   public get value() {
-    return `${this.linkType.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
+    return `${this.linkType.id}:${this.attribute.id}:${this.condition || ''}:${this.conditionValuesString()}`;
+  }
+
+  private conditionValuesString(): string {
+    return (this.conditionValues || [])
+      .map(item => item.type || item.value)
+      .filter(item => isNotNullOrUndefined(item))
+      .join(':');
   }
 
   public getLinkAttributeFilter(): LinkAttributeFilter {
@@ -58,7 +71,7 @@ export class LinkAttributeQueryItem implements QueryItem {
       linkTypeId: this.linkType.id,
       attributeId: this.attribute.id,
       condition: this.condition,
-      value: this.conditionValue,
+      conditionValues: this.conditionValues,
     };
   }
 }

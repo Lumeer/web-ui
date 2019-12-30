@@ -62,10 +62,7 @@ export class PercentageDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
-
-  @Output()
-  public onFocus = new EventEmitter<any>();
+  public enterInvalid = new EventEmitter();
 
   @ViewChild('percentageInput', {static: false})
   public percentageInput: ElementRef<HTMLInputElement>;
@@ -90,24 +87,36 @@ export class PercentageDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        const input = this.percentageInput;
-        const dataValue = this.value.parseInput(input.nativeElement.value);
-
-        if (!this.skipValidation && input && !dataValue.isValid()) {
-          event.stopImmediatePropagation();
-          event.preventDefault();
+        if (this.readonly) {
           return;
         }
 
-        this.preventSave = true;
+        const input = this.percentageInput;
+        const dataValue = this.value.parseInput(input.nativeElement.value);
+
+        event.preventDefault();
+
+        if (!this.skipValidation && input && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
+          this.enterInvalid.emit();
+          return;
+        }
+
+        this.preventSaveAndBlur();
         // needs to be executed after parent event handlers
         setTimeout(() => input && this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
-        this.percentageInput && (this.percentageInput.nativeElement.value = this.value.format(''));
+        this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private preventSaveAndBlur() {
+    if (this.percentageInput) {
+      this.preventSave = true;
+      this.percentageInput.nativeElement.blur();
     }
   }
 
@@ -121,12 +130,14 @@ export class PercentageDataInputComponent implements OnChanges {
 
   public onBlur() {
     if (this.preventSave) {
-      this.cancel.emit();
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.percentageInput.nativeElement.value);
-      this.save.emit(dataValue);
+      if (this.skipValidation || dataValue.isValid()) {
+        this.save.emit(dataValue);
+      } else {
+        this.cancel.emit();
+      }
     }
-    this.dataBlur.emit();
   }
 }

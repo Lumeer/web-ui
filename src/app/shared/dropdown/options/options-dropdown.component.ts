@@ -17,9 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ActiveDescendantKeyManager, ListKeyManager} from '@angular/cdk/a11y';
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -38,6 +36,8 @@ import {DropdownComponent} from '../dropdown.component';
 import {DropdownOption} from './dropdown-option';
 import {DropdownOptionDirective} from './dropdown-option.directive';
 import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
+import {BehaviorSubject} from 'rxjs';
+import {USER_AVATAR_SIZE} from '../../../core/constants';
 
 @Component({
   selector: 'options-dropdown',
@@ -45,7 +45,7 @@ import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../
   styleUrls: ['./options-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
+export class OptionsDropdownComponent implements OnChanges {
   @Input()
   public closeOnClickOutside = true;
 
@@ -62,7 +62,16 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   public origin: ElementRef | HTMLElement;
 
   @Input()
-  public selectedValue: any;
+  public firstItemActive: boolean;
+
+  @Input()
+  public highlightedValue: any;
+
+  @Input()
+  public selectedValues: any[];
+
+  @Input()
+  public multiSelect: boolean;
 
   @Output()
   public selectOption = new EventEmitter<DropdownOption>();
@@ -73,7 +82,9 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   @ViewChildren(DropdownOptionDirective)
   public dropdownOptions: QueryList<DropdownOptionDirective>;
 
-  private listKeyManager: ListKeyManager<DropdownOptionDirective>;
+  public readonly avatarSize = USER_AVATAR_SIZE;
+
+  public activeValue$ = new BehaviorSubject<any>(null);
 
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
@@ -82,24 +93,33 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
     DropdownPosition.TopEnd,
   ];
 
-  public ngAfterViewInit() {
-    this.listKeyManager = new ActiveDescendantKeyManager(this.dropdownOptions);
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldResetActiveItem(changes)) {
-      this.listKeyManager && this.listKeyManager.setActiveItem(null);
+      this.activeValue$.next(this.firstItemActive ? this.optionValue(0) : null);
     }
   }
 
-  private shouldResetActiveItem(changes: SimpleChanges): boolean {
-    return (changes.options && !!this.options) || (changes.selectedValue && isNullOrUndefined(this.selectedValue));
+  private optionValue(index: number): any {
+    const option = (this.options || [])[index];
+    return option && option.value;
   }
 
-  public onOptionClick(event: MouseEvent, option: DropdownOption) {
+  private indexByValue(value: any): number {
+    return (this.options || []).findIndex(option => option.value === value);
+  }
+
+  private shouldResetActiveItem(changes: SimpleChanges): boolean {
+    const value = this.activeValue$.value;
+    return changes.options && (isNullOrUndefined(value) || this.indexByValue(value) === -1);
+  }
+
+  public onOptionSelect(event: MouseEvent, option: DropdownOption) {
     event.preventDefault();
+    event.stopImmediatePropagation();
     this.selectOption.emit(option);
-    this.close();
+    if (!this.multiSelect) {
+      this.close();
+    }
   }
 
   public open() {
@@ -110,9 +130,9 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   }
 
   private highlightSelectedValue() {
-    if (this.listKeyManager && isNotNullOrUndefined(this.selectedValue)) {
-      const activeIndex = (this.options || []).findIndex(option => deepObjectsEquals(option.value, this.selectedValue));
-      this.listKeyManager.setActiveItem(activeIndex);
+    if (isNotNullOrUndefined(this.highlightedValue)) {
+      const activeOption = (this.options || []).find(option => deepObjectsEquals(option.value, this.highlightedValue));
+      setTimeout(() => this.activeValue$.next(activeOption && activeOption.value));
     }
   }
 
@@ -127,19 +147,31 @@ export class OptionsDropdownComponent implements AfterViewInit, OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    if (!this.listKeyManager) {
-      return;
-    }
-
-    this.listKeyManager.onKeydown(event);
-
-    if (event.code === KeyCode.Enter || event.code === KeyCode.NumpadEnter) {
-      this.selectOption.emit(this.listKeyManager.activeItem);
-      this.close();
+    const index = this.indexByValue(this.activeValue$.value);
+    switch (event.code) {
+      case KeyCode.ArrowUp:
+        this.activeValue$.next(this.optionValue(Math.max(0, index - 1)));
+        break;
+      case KeyCode.ArrowDown:
+        this.activeValue$.next(this.optionValue(Math.min(this.options.length - 1, index + 1)));
+        break;
+      case KeyCode.Enter:
+      case KeyCode.NumpadEnter:
+        const activeItem = this.getActiveOption();
+        if (activeItem) {
+          this.selectOption.emit(activeItem);
+          this.close();
+        }
+        break;
     }
   }
 
   public getActiveOption(): DropdownOption {
-    return this.listKeyManager && this.listKeyManager.activeItem;
+    const value = this.activeValue$.value;
+    return value && (this.options || []).find(option => option.value === value);
+  }
+
+  public resetActiveOption() {
+    this.activeValue$.next(null);
   }
 }

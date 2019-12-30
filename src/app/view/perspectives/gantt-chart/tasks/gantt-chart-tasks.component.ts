@@ -54,7 +54,6 @@ import {
 } from '../../../../shared/utils/common.utils';
 import {GanttChartConverter, GanttChartTaskMetadata} from '../util/gantt-chart-converter';
 import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
-import {DataValueInputType} from '../../../../core/model/data-value';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap';
@@ -238,7 +237,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       const start = moment(task.start, this.options && this.options.dateFormat);
       const constraint = findAttributeConstraint(resource && resource.attributes, metadata.startAttributeId);
       const saveValue = constraint
-        ? constraint.createDataValue(start, DataValueInputType.Stored, this.constraintData).serialize()
+        ? constraint.createDataValue(start, this.constraintData).serialize()
         : start.toISOString();
       if (saveValue !== dataResource[metadata.startAttributeId]) {
         patchData[metadata.startAttributeId] = saveValue;
@@ -249,7 +248,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       const end = moment(task.end, this.options && this.options.dateFormat);
       const constraint = findAttributeConstraint(resource && resource.attributes, metadata.endAttributeId);
       const saveValue = constraint
-        ? constraint.createDataValue(end, DataValueInputType.Stored, this.constraintData).serialize()
+        ? constraint.createDataValue(end, this.constraintData).serialize()
         : end.toISOString();
       if (saveValue !== dataResource[metadata.endAttributeId]) {
         patchData[metadata.endAttributeId] = saveValue;
@@ -260,7 +259,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       const constraint = findAttributeConstraint(resource && resource.attributes, metadata.progressAttributeId);
       const saveValue = constraint
         ? constraint
-            .createDataValue(task.progress, DataValueInputType.Stored, this.constraintData)
+            .createDataValue(task.progress, this.constraintData)
             .parseInput(String(task.progress || 0))
             .serialize()
         : this.formatPercentage(dataResource, metadata.progressAttributeId, task.progress);
@@ -276,7 +275,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
         const constraint = findAttributeConstraint(resource && resource.attributes, category.attributeId);
         const saveValue = constraint
-          ? constraint.createDataValue(task.swimlanes[i], DataValueInputType.Stored, this.constraintData).serialize()
+          ? constraint.createDataValue(task.swimlanes[i], this.constraintData).serialize()
           : task.swimlanes[i];
 
         const changed = (dataResource.data && dataResource.data[category.attributeId] !== saveValue) || false;
