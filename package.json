@@ -60,7 +60,7 @@
     "angular-calendar": "^0.27.20",
     "angular-resizable-element": "^3.2.6",
     "angulartics2": "^8.1.0",
-    "auth0-js": "^9.11.3",
+    "auth0-js": "^9.12.1",
     "big.js": "^5.2.2",
     "bootstrap": "^4.3.1",
     "coordinate-parser": "^1.0.2",
