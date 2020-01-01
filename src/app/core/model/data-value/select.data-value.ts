@@ -119,10 +119,12 @@ export class SelectDataValue implements DataValue {
 
     switch (condition) {
       case QueryCondition.In:
+      case QueryCondition.Equals:
         return this.options.some(option =>
           (otherOptions || []).some(otherOption => otherOption.value === option.value)
         );
       case QueryCondition.NotIn:
+      case QueryCondition.NotEquals:
         return this.options.every(option =>
           (otherOptions || []).every(otherOption => otherOption.value !== option.value)
         );

@@ -42,7 +42,7 @@ const viewRoutes: Routes = [
     resolve: {
       collections: CollectionsGuard,
       views: ViewsGuard,
-      documents: DocumentsGuard,
+      //documents: DocumentsGuard,
       linkTypes: LinkTypesGuard,
       users: UsersGuard,
     },

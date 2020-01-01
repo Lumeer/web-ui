@@ -88,7 +88,7 @@ export class WorkspaceService {
   }
 
   public switchWorkspace(organization: Organization, project: Project): Observable<boolean> {
-    return Observable.create(observer => {
+    return new Observable(observer => {
       const callback = () => {
         observer.next(true);
         observer.complete();

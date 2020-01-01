@@ -1,15 +1,5 @@
-<ng-container *ngIf="{iconName: (row.attribute?.constraint | constraintTypeIcon)} as typeData">
-  <i *ngIf="typeData.iconName"
-     [ngClass]="typeData.iconName"
-     [title]="row.attribute?.constraint | constraintTypeIconTitle"
-     class="text-muted small fa-fw"></i>
-  <i *ngIf="!typeData.iconName" class="fa-fw fa fa-icon-none small"
-     aria-hidden="true">
-  </i>
-</ng-container>
-
 <ng-container *ngIf="permissions?.writeWithView">
-  <i class="fas fa-fw fa-trash text-danger mx-2 clickable text-danger button-remove"
+  <i class="fas fa-fw fa-trash text-danger mr-2 clickable text-danger button-remove"
      aria-hidden="true"
      title="Remove Row"
      i18n-title="@@remove.row"
@@ -37,6 +27,16 @@
      (click)="onAttributeFunction()">
   </i>
   <i *ngIf="!attributeData.manage" class="fa-fw fa fa-icon-none mr-2"
+     aria-hidden="true">
+  </i>
+</ng-container>
+
+<ng-container *ngIf="{iconName: (row.attribute?.constraint | constraintTypeIcon)} as typeData">
+  <i *ngIf="typeData.iconName"
+     [ngClass]="typeData.iconName"
+     [title]="row.attribute?.constraint | constraintTypeIconTitle"
+     class="mr-2 text-muted small fa-fw"></i>
+  <i *ngIf="!typeData.iconName" class="mr-2 fa-fw fa fa-icon-none small"
      aria-hidden="true">
   </i>
 </ng-container>

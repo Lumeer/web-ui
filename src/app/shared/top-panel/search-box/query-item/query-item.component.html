@@ -22,7 +22,7 @@
 
   <div class="mr-1 d-inline-flex flex-grow-1 text-truncate text-nowrap align-items-center"
        *ngIf="queryItem | queryItemAttribute as attribute">
-    <span class="font-italic">{{conditionControl?.value | translateCondition:(queryItem | queryItemAttribute)}}</span>
+    <span class="mx-1 font-italic">{{conditionControl?.value | translateCondition:(queryItem | queryItemAttribute)}}</span>
     <ng-container *ngFor="let control of conditionValuesControl.controls; let index = index">
       <ng-container
         *ngIf="index < (conditionControl?.value | conditionNumValues) && control.get('type') as typeControl">

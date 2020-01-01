@@ -174,6 +174,9 @@ const GtVariants = [QueryCondition.GreaterThan, '>'];
 const GteVariants = [QueryCondition.GreaterThanEquals, '>='];
 
 function conditionFromString(condition: string): QueryCondition {
+  if (!condition) {
+    return null;
+  }
   const conditionLowerCase = condition.toLowerCase();
   if (EqVariants.includes(conditionLowerCase)) {
     return QueryCondition.Equals;
