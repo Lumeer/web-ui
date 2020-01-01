@@ -40,7 +40,8 @@
       </i>
     </div>
 
-    <div class="view-name input-group flex-nowrap flex-fill mb-2" data-tour="view">
+    <div class="view-name input-group flex-nowrap flex-fill mb-2" data-tour="view"
+         *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
       <div class="input-group-prepend">
       <span class="input-group-text">
         <strong *ngIf="novice"
@@ -58,12 +59,12 @@
              id="viewName"
              name="viewName"
              (blur)="onInputBlur(state.permissions.canManage)"
+             (keypress)="onViewNameKeyPress(!buttonsData.disabled, $event, state.permissions.canClone)"
              type="text"
              class="form-control"
              autocomplete="off"
              placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
-      <div class="input-group-append"
-           *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
+      <div class="input-group-append">
         <button [disabled]="buttonsData.disabled"
                 class="btn"
                 [class.btn-primary]="!buttonsData.disabled"

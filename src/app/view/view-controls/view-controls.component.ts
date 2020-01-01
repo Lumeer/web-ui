@@ -51,6 +51,7 @@ import {Perspective} from '../perspectives/perspective';
 import {Query} from '../../core/store/navigation/query/query';
 import {OptionsDropdownComponent} from '../../shared/dropdown/options/options-dropdown.component';
 import {ModalService} from '../../shared/modal/modal.service';
+import {KeyCode} from '../../shared/key-code';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -246,5 +247,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   private setSaveLoading(loading: boolean) {
     this.saveLoading$.next(loading);
+  }
+
+  public onViewNameKeyPress(canSave: boolean, $event: KeyboardEvent, canClone: boolean) {
+    if (canSave && ($event.code === KeyCode.Enter || $event.code === KeyCode.NumpadEnter)) {
+      this.onSave(canClone);
+    }
   }
 }
