@@ -134,7 +134,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   private createTempElement(): HTMLElement {
     const tmp = document.createElement('span');
-    tmp.classList.add('px-2', 'invisible', 'white-space-pre');
+    tmp.classList.add('invisible', 'white-space-pre');
     tmp.id = generateCorrelationId();
     return tmp;
   }

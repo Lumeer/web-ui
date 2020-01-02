@@ -44,7 +44,7 @@ export class PercentageConstraint implements Constraint {
       QueryCondition.LowerThan,
       QueryCondition.GreaterThanEquals,
       QueryCondition.LowerThanEquals,
-      QueryCondition.NotBetween,
+      QueryCondition.Between,
       QueryCondition.NotBetween,
       QueryCondition.IsEmpty,
       QueryCondition.NotEmpty,

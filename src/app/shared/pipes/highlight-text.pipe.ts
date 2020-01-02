@@ -28,6 +28,9 @@ export class HighlightTextPipe implements PipeTransform {
     if (!text) {
       return '';
     }
+    if (!highlightedText) {
+      return text;
+    }
     const textString = String(text);
     const pattern = escapeStringForRegex(removeAccent(String(highlightedText)));
     const match = removeAccent(textString).match(new RegExp(pattern, 'i'));

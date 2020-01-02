@@ -20,6 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {DropdownOption} from './dropdown-option';
 import {removeAccent} from '../../utils/string.utils';
+import {sortObjectsByScore} from '../../utils/common.utils';
 
 @Pipe({
   name: 'filterDropdownOptions',
@@ -27,6 +28,9 @@ import {removeAccent} from '../../utils/string.utils';
 export class FilterDropdownOptionsPipe implements PipeTransform {
   public transform(options: DropdownOption[], text: string): DropdownOption[] {
     const filterText = removeAccent(text).trim();
-    return (options || []).filter(option => removeAccent(option.displayValue || option.value).includes(filterText));
+    const filteredOptionsMap = (options || []).filter(option =>
+      removeAccent(option.displayValue || option.value).includes(filterText)
+    );
+    return sortObjectsByScore<DropdownOption>(filteredOptionsMap, text, ['displayValue', 'value']);
   }
 }

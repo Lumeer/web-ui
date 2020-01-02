@@ -14,7 +14,7 @@
     <span *ngIf="value.config?.externalUsers || (selectedUsers | usersAreValid:users)"
           class="d-inline-block ml-2 text-nowrap user"
           data-test="user-data-input">
-        {{selectedUsers | usersEmails | join}}
+        {{selectedUsers | usersNames | join}}
       </span>
 
     <ng-container *ngIf="!value.config?.externalUsers && !(selectedUsers | usersAreValid:users)">
@@ -25,7 +25,7 @@
               [class.invalid-value]="!([user] | usersAreValid:users)"
               [class.ml-2]="first"
               class="d-inline-block user">
-          {{user.email}}
+          {{user.name || user.email}}
         </span>
         <span class="user" *ngIf="!last">,&nbsp;</span>
 
@@ -52,6 +52,7 @@
                       [showBackdrop]="false"
                       [closeOnClickOutside]="false"
                       [origin]="textInput"
+                      [highlightedText]="name"
                       [multiSelect]="multi"
                       [selectedValues]="multi ? (selectedUsers | usersEmails) : []"
                       [firstItemActive]="!multi && !value?.config?.externalUsers && name?.length > 0"

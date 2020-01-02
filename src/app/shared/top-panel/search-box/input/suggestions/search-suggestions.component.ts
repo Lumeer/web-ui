@@ -78,6 +78,7 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.queryItems && this.queryItems) {
       this.suggesting = !this.queryItems.find(queryItem => queryItem.type === QueryItemType.View);
+      setTimeout(() => this.updatePosition());
     }
     if (changes.text || changes.queryItems) {
       this.searchTerms$.next(this.text);
@@ -112,15 +113,15 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
   }
 
   public open() {
-    if (this.dropdown) {
-      this.dropdown.open();
-    }
+    this.dropdown && this.dropdown.open();
   }
 
   public close() {
-    if (this.dropdown) {
-      this.dropdown.close();
-    }
+    this.dropdown && this.dropdown.close();
+  }
+
+  private updatePosition() {
+    this.dropdown && this.dropdown.updatePosition();
   }
 
   private retrieveSuggestions(text: string): Observable<QueryItem[]> {
@@ -156,8 +157,11 @@ export class SearchSuggestionsComponent implements OnChanges, OnDestroy, OnInit 
     }
   }
 
-  public onUseSuggestion(queryItem: QueryItem) {
+  public onUseSuggestion(queryItem: QueryItem, event?: MouseEvent) {
+    if (event) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    }
     this.useSuggestion.emit(queryItem);
-    this.suggestions$.next([]);
   }
 }

@@ -20,7 +20,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
   HostBinding,
   HostListener,
@@ -130,22 +129,21 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     event.stopPropagation();
     event.stopImmediatePropagation();
 
+    const content = this.text;
+    this.preventSaveAndBlur();
+
     this.modalRef = this.modalService.show(TextEditorModalComponent, {
       keyboard: true,
       backdrop: 'static',
       class: 'modal-xxl modal-xxl-height',
       initialState: {
-        content: this.text,
+        content,
         minLength: this.value && this.value.config && this.value.config.minLength,
         maxLength: this.value && this.value.config && this.value.config.maxLength,
       },
     });
 
-    this.modalSubscription.add(
-      this.modalRef.content.onSave$.subscribe(content => {
-        this.saveValue(content);
-      })
-    );
+    this.modalSubscription.add(this.modalRef.content.onSave$.subscribe(value => this.saveValue(value)));
     this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit()));
   }
 

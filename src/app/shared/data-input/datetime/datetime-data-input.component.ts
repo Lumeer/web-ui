@@ -36,7 +36,6 @@ import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
 import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
-import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'datetime-data-input',
@@ -83,9 +82,10 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
+    const value = (this.value && this.value.format()) || '';
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       setTimeout(() => {
-        HtmlModifier.setCursorAtTextContentEnd(this.dateTimeInput.nativeElement);
+        this.dateTimeInput.nativeElement.setSelectionRange(value.length, value.length);
         this.dateTimeInput.nativeElement.focus();
         this.dateTimePicker && this.dateTimePicker.open();
       });

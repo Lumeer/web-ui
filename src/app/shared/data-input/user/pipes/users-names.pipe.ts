@@ -18,21 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {User} from '../../../../core/store/users/user';
 
 @Pipe({
-  name: 'removeSuffix',
+  name: 'usersNames',
 })
-export class RemoveSuffixPipe implements PipeTransform {
-  public transform(value: string, character: string): string {
-    if (!value || !character) {
-      return value;
-    }
-
-    let trimmedValue = value;
-    while (trimmedValue.endsWith(character)) {
-      trimmedValue = trimmedValue.substring(0, value.length - 1);
-    }
-
-    return trimmedValue;
+export class UsersNamesPipe implements PipeTransform {
+  public transform(users: User[]): any[] {
+    return (users || []).map(user => user.name || user.email);
   }
 }

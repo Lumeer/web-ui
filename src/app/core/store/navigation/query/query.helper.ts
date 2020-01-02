@@ -20,7 +20,7 @@
 import {deepArrayEquals, getArrayDifference, isArraySubset} from '../../../../shared/utils/array.utils';
 import {convertQueryModelToString, normalizeQueryModel} from './query.converter';
 import {Query} from './query';
-import {getBaseCollectionIdsFromQuery} from './query.util';
+import {getBaseCollectionIdsFromQuery, queryWithoutFilters} from './query.util';
 import isEqual from 'lodash/isEqual';
 
 export function areQueriesEqual(first: Query, second: Query): boolean {
@@ -30,6 +30,12 @@ export function areQueriesEqual(first: Query, second: Query): boolean {
 export function areQueriesEqualExceptPagination(first: Query, second: Query): boolean {
   const firstWithoutPagination = {...first, page: null, pageSize: null};
   const secondWithoutPagination = {...second, page: null, pageSize: null};
+  return convertQueryModelToString(firstWithoutPagination) === convertQueryModelToString(secondWithoutPagination);
+}
+
+export function areQueriesEqualExceptPaginationAndFilters(first: Query, second: Query): boolean {
+  const firstWithoutPagination = queryWithoutFilters({...first, page: null, pageSize: null});
+  const secondWithoutPagination = queryWithoutFilters({...second, page: null, pageSize: null});
   return convertQueryModelToString(firstWithoutPagination) === convertQueryModelToString(secondWithoutPagination);
 }
 

@@ -266,7 +266,11 @@ export class TablesEffects {
       const linkTypeIds = [table.config.parts[1].linkTypeId];
       const collectionId = table.config.parts[2].collectionId;
 
-      const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds}]};
+      // in collection only one stem is considered as valid query
+      const firstStem = query.stems && query.stems[0];
+      const filters = firstStem && firstStem.filters;
+      const linkFilters = firstStem && firstStem.linkFilters;
+      const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds, filters, linkFilters}]};
 
       return [
         new RouterAction.Go({

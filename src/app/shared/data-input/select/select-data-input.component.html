@@ -34,6 +34,7 @@
                       [closeOnClickOutside]="false"
                       [origin]="textInput"
                       [multiSelect]="multi"
+                      [highlightedText]="text"
                       [selectedValues]="multi ? (selectedOptions | selectOptionsValues) : []"
                       [firstItemActive]="!multi && text?.length > 0"
                       (selectOption)="onSelect($event)">

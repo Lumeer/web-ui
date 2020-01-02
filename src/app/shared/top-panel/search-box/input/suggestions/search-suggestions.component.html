@@ -11,7 +11,8 @@
                             [class.selected]="suggestionIndex === (selectedIndex$ | async)"
                             [suggestion]="suggestion"
                             [text]="text"
-                            (mousedown)="onUseSuggestion(suggestion)">
+                            (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault()"
+                            (click)="onUseSuggestion(suggestion, $event)">
     </search-suggestion-item>
   </div>
 

@@ -21,14 +21,21 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
 import {DropdownOption} from '../../../dropdown/options/dropdown-option';
 import {removeAccent} from '../../../utils/string.utils';
+import {sortObjectsByScore} from '../../../utils/common.utils';
 
 @Pipe({
   name: 'filterUsers',
 })
 export class FilterUsersPipe implements PipeTransform {
   public transform(users: User[], text: string): DropdownOption[] {
-    return (users || [])
+    const filteredUsersOptions = (users || [])
       .filter(user => removeAccent(user.name || user.email).includes(removeAccent(text)))
-      .map(user => ({gravatar: user.email, value: user.email || user.name, displayValue: user.name || user.email}));
+      .map(user => ({
+        gravatar: user.email,
+        value: user.email || user.name,
+        displayValue: user.name || user.email,
+      }));
+
+    return sortObjectsByScore<DropdownOption>(filteredUsersOptions, text, ['displayValue', 'value']);
   }
 }

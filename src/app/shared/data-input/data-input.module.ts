@@ -55,6 +55,7 @@ import {SelectOptionIsValidPipe} from './select/pipes/select-option-is-valid.pip
 import {SelectOptionsValuesPipe} from './select/pipes/select-options-values.pipe';
 import {UsersEmailsPipe} from './user/pipes/users-emails.pipe';
 import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
+import {UsersNamesPipe} from './user/pipes/users-names.pipe';
 
 @NgModule({
   imports: [
@@ -97,6 +98,7 @@ import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
     SelectOptionsValuesPipe,
     UsersEmailsPipe,
     UsersAreValidPipe,
+    UsersNamesPipe,
   ],
   exports: [
     DataInputComponent,

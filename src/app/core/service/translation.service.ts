@@ -58,6 +58,9 @@ export class TranslationService {
       case ConstraintType.Text:
       case ConstraintType.Address:
         return this.translateConditionByText(condition);
+      case ConstraintType.Select:
+      case ConstraintType.User:
+        return this.translateConditionByUserAndSelect(condition);
       case ConstraintType.Number:
       case ConstraintType.Percentage:
       case ConstraintType.Duration:
@@ -67,6 +70,17 @@ export class TranslationService {
       default:
         return this.translateConditionByText(condition);
     }
+  }
+
+  private translateConditionByUserAndSelect(condition: QueryCondition): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.constraint.select',
+        value:
+          '{condition, select, eq {In} neq {Not In} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty}}',
+      },
+      {condition}
+    );
   }
 
   private translateConditionByText(condition: QueryCondition): string {

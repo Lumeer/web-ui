@@ -62,6 +62,9 @@ describe('TextDataValue', () => {
 
       const dataValue3 = new TextDataValue('<h3>one <b>two</b> three <i>LUMEER</i> is the best</h3>', config);
       expect(dataValue3.meetCondition(QueryCondition.Contains, [compareDataValue])).toBeTruthy();
+
+      const dataValue4 = new TextDataValue('<p>hey <b>lume</b>er <b>super</b> <u>easy</u>', config);
+      expect(dataValue4.meetCondition(QueryCondition.Contains, [compareDataValue])).toBeTruthy();
     });
 
     it('starts with', () => {
@@ -110,9 +113,9 @@ describe('TextDataValue', () => {
 
     it('multiple', () => {
       expect(
-        new TextDataValue('<p>hey <li>somethi</li>ng <b>to</b> <u>type</u>', config).meetFullTexts([
+        new TextDataValue('<p>hey <i>somethi</i>ng <b>to</b> <u>type</u></p>', config).meetFullTexts([
           'hey',
-          'thin',
+          'thing',
           'pe',
           'to',
         ])

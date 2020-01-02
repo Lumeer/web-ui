@@ -31,7 +31,6 @@ import {
 } from '@angular/core';
 import {ColorDataValue} from '../../../core/model/data-value/color.data-value';
 import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
 import {ColorPickerComponent} from '../../picker/color/color-picker.component';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 
@@ -79,9 +78,10 @@ export class ColorDataInputComponent implements OnChanges {
   constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
+    const value = (this.value && this.value.format()) || '';
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       setTimeout(() => {
-        HtmlModifier.setCursorAtTextContentEnd(this.colorInput.nativeElement);
+        this.colorInput.nativeElement.setSelectionRange(value.length, value.length);
         this.colorInput.nativeElement.focus();
         this.openColorPicker();
       });

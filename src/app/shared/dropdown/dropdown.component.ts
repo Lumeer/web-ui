@@ -126,6 +126,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   public checkClickOutside(event: MouseEvent) {
     const originElement = (<ElementRef>this.origin).nativeElement || <HTMLElement>this.origin;
     if (
+      event.isTrusted &&
       this.overlayRef &&
       this.overlayRef.overlayElement &&
       !this.overlayRef.overlayElement.contains(event.target as any) &&

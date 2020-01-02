@@ -41,9 +41,8 @@
         <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
            class="fa-fw {{option.icons[0]}} mr-1">
         </i>
-        <span class="text-nowrap">
-        {{ option.displayValue || option.value }}
-      </span>
+        <span class="text-nowrap" [innerHTML]="(option.displayValue || option.value) | highlightText:highlightedText">
+        </span>
       </div>
     </a>
   </div>

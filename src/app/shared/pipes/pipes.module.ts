@@ -82,7 +82,7 @@ import {AttributeFunctionDefinedPipe} from './attribute-function-defined.pipe';
 import {StripHtmlPipe} from './strip-html.pipe';
 import {ArrayReversePipe} from './array/array-reverse.pipe';
 import {RoleHumanReadablePipe} from './role-human-readable.pipe';
-import {RemoveLastCharactersPipe} from './remove-last-characters.pipe';
+import {RemoveSuffixPipe} from './remove-last-characters.pipe';
 import {SafeStylePipe} from './safe-style.pipe';
 
 @NgModule({
@@ -149,7 +149,7 @@ import {SafeStylePipe} from './safe-style.pipe';
     StripHtmlPipe,
     ArrayReversePipe,
     RoleHumanReadablePipe,
-    RemoveLastCharactersPipe,
+    RemoveSuffixPipe,
     SafeStylePipe,
   ],
   exports: [
@@ -216,7 +216,7 @@ import {SafeStylePipe} from './safe-style.pipe';
     StripHtmlPipe,
     ArrayReversePipe,
     RoleHumanReadablePipe,
-    RemoveLastCharactersPipe,
+    RemoveSuffixPipe,
     SafeStylePipe,
   ],
 })

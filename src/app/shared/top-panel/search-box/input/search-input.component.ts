@@ -32,6 +32,7 @@ import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 import {QueryItemType} from '../query-item/model/query-item-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {HtmlModifier} from '../../../utils/html-modifier';
 
 @Component({
   selector: 'search-input',
@@ -86,8 +87,9 @@ export class SearchInputComponent {
     return [QueryItemType.Collection, QueryItemType.Link, QueryItemType.Fulltext].includes(suggestion.type);
   }
 
-  @HostListener('click')
-  public onClick() {
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent) {
+    event.stopPropagation();
     this.focusInput();
   }
 

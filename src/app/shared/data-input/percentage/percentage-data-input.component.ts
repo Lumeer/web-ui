@@ -68,6 +68,7 @@ export class PercentageDataInputComponent implements OnChanges {
   public percentageInput: ElementRef<HTMLInputElement>;
 
   public valid = true;
+  public percentageValue: any;
 
   private preventSave: boolean;
 
@@ -78,7 +79,8 @@ export class PercentageDataInputComponent implements OnChanges {
         this.percentageInput.nativeElement.focus();
       });
     }
-    this.valid = this.value.isValid();
+    this.valid = !this.value || this.value.isValid();
+    this.percentageValue = this.value && this.value.format('');
   }
 
   @HostListener('keydown', ['$event'])

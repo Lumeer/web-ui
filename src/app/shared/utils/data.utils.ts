@@ -23,7 +23,7 @@ import {isNullOrUndefined} from './common.utils';
 import {resetUnusedMomentPart} from './date.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
-const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code'];
+const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code', 'b'];
 
 export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true): string {
   return keepFormattingTags
@@ -34,7 +34,7 @@ export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = tr
 }
 
 function stripFormattingHtmlTags(text: string): string {
-  return (text || '').replace(new RegExp(`<(?!\/?(${formattingTags.join('|')})\s*\/?)[^>]+>`, 'g'), '').trim();
+  return (text || '').replace(new RegExp(`<(\/?(${formattingTags.join('|')})\s*\/?)[^>]*>`, 'g'), '').trim();
 }
 
 export function parseDateTimeDataValue(value: any, expectedFormat?: string): Date {

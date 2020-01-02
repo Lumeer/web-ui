@@ -5,7 +5,8 @@
        class="px-2 py-1 dropdown-item cursor-pointer font-italic"
        [class.mt-2]="first"
        [class.active]="item.value === selectedCondition"
-       (click)="onConditionSelect(item)">{{item.title}}</div>
+       (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault()"
+       (click)="$event.stopImmediatePropagation(); $event.preventDefault(); onConditionSelect(item)">{{item.title}}</div>
 </div>
 
 <div class="d-flex flex-column ml-3" *ngFor="let index of ngForIndexes">
@@ -22,7 +23,7 @@
               (cancel)="onInputCancel(index)"
               (save)="onInputSave($event, index)"
               (keydown)="onKeyDown($event, index)"
-              (dblclick)="onInputDoubleClick(index)">
+              (click)="$event.preventDefault(); startEditing(index)">
   </data-input>
   <div *ngFor="let item of attribute | queryConstraintConditions; let first = first"
        class="px-2 py-1 dropdown-item cursor-pointer"

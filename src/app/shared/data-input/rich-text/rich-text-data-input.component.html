@@ -5,7 +5,9 @@
                  [class.invalid-value]="!skipValidation && !valid">
 </quill-view-html>
 
-<span *ngIf="!readonly" class="icon-fullscreen" (click)="openTextEditor($event)">
+<span *ngIf="!readonly" class="icon-fullscreen"
+      (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
+      (click)="openTextEditor($event)">
   <i class="fa fa-expand-alt"></i>
 </span>
 

@@ -22,7 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
-import {areQueriesEqualExceptPagination} from '../navigation/query/query.helper';
+import {areQueriesEqualExceptPaginationAndFilters} from '../navigation/query/query.helper';
 import {DocumentData, DocumentModel} from './document.model';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
@@ -55,13 +55,13 @@ export const selectDocumentsQueries = createSelector(
 export const selectCurrentQueryDocumentsLoaded = createSelector(
   selectDocumentsQueries,
   selectQuery,
-  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptPagination(query, currentQuery))
+  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptPaginationAndFilters(query, currentQuery))
 );
 
 export const selectQueryDocumentsLoaded = (query: Query) =>
   createSelector(
     selectDocumentsQueries,
-    queries => !!queries.find(q => areQueriesEqualExceptPagination(q, query))
+    queries => !!queries.find(q => areQueriesEqualExceptPaginationAndFilters(q, query))
   );
 
 export const selectDocumentById = (id: string) =>

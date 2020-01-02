@@ -65,6 +65,9 @@ export class OptionsDropdownComponent implements OnChanges {
   public firstItemActive: boolean;
 
   @Input()
+  public highlightedText: string;
+
+  @Input()
   public highlightedValue: any;
 
   @Input()

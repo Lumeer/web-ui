@@ -107,13 +107,21 @@ export class FilterBuilderContentComponent implements OnChanges {
   }
 
   public focusFirstInput() {
-    if (this.numInputs > 0) {
+    if (this.numInputs > 0 && !this.isEditing()) {
       this.editing$.next(0);
     }
   }
 
   public onConditionSelect(item: QueryConditionItem) {
     this.valueChange.emit({condition: item.value, values: this.selectedValues});
+    const numInputs = queryConditionNumInputs(item.value);
+    if (queryConditionNumInputs(item.value) > 0 && (!this.isEditing() || this.editing$.value >= numInputs)) {
+      this.editing$.next(0);
+    }
+  }
+
+  private isEditing(): boolean {
+    return this.editing$.value >= 0;
   }
 
   public onConditionValueSelect(item: ConstraintConditionValueItem, index: number) {
@@ -126,9 +134,9 @@ export class FilterBuilderContentComponent implements OnChanges {
     this.editing$.next(-1);
   }
 
-  public onInputDoubleClick(index: number) {
+  public startEditing(index: number) {
     if (this.editing$.value !== index) {
-      this.editing$.next(index);
+      setTimeout(() => this.editing$.next(index));
     }
   }
 
