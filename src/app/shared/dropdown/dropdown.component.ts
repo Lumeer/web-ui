@@ -48,6 +48,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   public closeOnClickOutside = true;
 
   @Input()
+  public closeOnClickOrigin: boolean;
+
+  @Input()
   public showBackdrop = true;
 
   @Input()
@@ -125,12 +128,13 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   public checkClickOutside(event: MouseEvent) {
     const originElement = (<ElementRef>this.origin).nativeElement || <HTMLElement>this.origin;
+    const clickedOnOrigin = originElement.contains(event.target as any);
     if (
       event.isTrusted &&
       this.overlayRef &&
       this.overlayRef.overlayElement &&
       !this.overlayRef.overlayElement.contains(event.target as any) &&
-      !originElement.contains(event.target as any)
+      ((clickedOnOrigin && this.closeOnClickOrigin) || !clickedOnOrigin)
     ) {
       this.onCloseByClickOutside.emit();
       this.close();

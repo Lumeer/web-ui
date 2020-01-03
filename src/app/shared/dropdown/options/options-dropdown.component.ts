@@ -50,6 +50,9 @@ export class OptionsDropdownComponent implements OnChanges {
   public closeOnClickOutside = true;
 
   @Input()
+  public closeOnClickOrigin: boolean;
+
+  @Input()
   public showBackdrop = true;
 
   @Input()

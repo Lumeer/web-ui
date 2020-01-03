@@ -126,6 +126,6 @@ export class TextDataValue implements DataValue {
 }
 
 function numberOfTags(value: string): number {
-  const match = value.match(/<([a-z]+)(?=[\s>])(?:[^>=]|='[^']*'|="[^"]*"|=[^'"\s]*)*\s?\/?>/g);
+  const match = value.match(/<([a-z]+)([0-9]*)(?=[\s>])(?:[^>=]|='[^']*'|="[^"]*"|=[^'"\s]*)*\s?\/?>/g);
   return match ? match.length : 0;
 }

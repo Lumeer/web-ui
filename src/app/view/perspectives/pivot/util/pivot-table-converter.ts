@@ -830,6 +830,10 @@ function sortPivotDataHeadersRecursive(
   valueTitles: string[],
   isRows: boolean
 ): PivotDataHeader[] {
+  // we don't want to sort values headers
+  if (!isRows && isValuesHeaders(headers, valueTitles)) {
+    return headers;
+  }
   const sort = sorts && sorts[index];
   const constraint = (headers || [])[0] && (headers || [])[0].constraint;
   const valuesMap = createHeadersValuesMap(headers, sort, otherSideHeaders, values, valueTitles, isRows);
@@ -841,6 +845,15 @@ function sortPivotDataHeadersRecursive(
         sortPivotDataHeadersRecursive(header.children, index + 1, sorts, otherSideHeaders, values, valueTitles, isRows),
     }))
     .sort((r1, r2) => compareDataValues(valuesMap[r1.title], valuesMap[r2.title], constraint, !sort || sort.asc));
+}
+
+function isValuesHeaders(headers: PivotDataHeader[], valueTitles: string[]): boolean {
+  return (
+    valueTitles.length > 1 &&
+    (headers || []).every(
+      (header, index) => isNotNullOrUndefined(header.targetIndex) && header.title === valueTitles[index]
+    )
+  );
 }
 
 function createHeadersValuesMap(

@@ -27,14 +27,17 @@ const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', '
 
 export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true): string {
   return keepFormattingTags
-    ? stripFormattingHtmlTags(text)
+    ? stripFormattingHtmlTags(text, true)
     : stripFormattingHtmlTags(text)
         .replace(/<(?:.|\s)*?>/g, ' ')
         .trim();
 }
 
-function stripFormattingHtmlTags(text: string): string {
-  return (text || '').replace(new RegExp(`<(\/?(${formattingTags.join('|')})\s*\/?)[^>]*>`, 'g'), '').trim();
+function stripFormattingHtmlTags(text: string, negative?: boolean): string {
+  const negativePart = negative ? '?!' : '';
+  return (text || '')
+    .replace(new RegExp(`<(${negativePart}\/?(${formattingTags.join('|')})\s*\/?)[^>]*>`, 'g'), negative ? ' ' : '')
+    .trim();
 }
 
 export function parseDateTimeDataValue(value: any, expectedFormat?: string): Date {

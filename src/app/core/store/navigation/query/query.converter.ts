@@ -160,9 +160,17 @@ export function normalizeQueryStem(stem: QueryStem): QueryStem {
   return {
     collectionId: stem.collectionId,
     documentIds: stem.documentIds || [],
-    filters: stem.filters || [],
-    linkFilters: stem.linkFilters || [],
+    filters: (stem.filters || []).map(filter => normalizeFilter(filter)),
+    linkFilters: (stem.linkFilters || []).map(filter => normalizeFilter(filter)),
     linkTypeIds: stem.linkTypeIds || [],
+  };
+}
+
+function normalizeFilter<T extends AttributeFilter>(filter: T): T {
+  return {
+    ...filter,
+    condition: filter.condition || null,
+    conditionValues: (filter.conditionValues || []).map(v => ({value: v.value || null, type: v.type || null})),
   };
 }
 
