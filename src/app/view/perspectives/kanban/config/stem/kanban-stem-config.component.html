@@ -20,7 +20,7 @@
 
 <select-item class="d-block w-100 mt-2"
              *ngIf="config?.attribute"
-                             [items]="stem | kanbanDueDateSelectItems:collections:linkTypes:config?.attribute"
+                             [items]="attributesResourcesOrder | kanbanDueDateSelectItems:config?.attribute"
                              [emptyValue]="dueDateEmptyValueString"
                              [placeholderText]="dueDateString"
                              [selectedId]="config?.dueDate | kanbanCleanAttribute"
@@ -33,7 +33,7 @@
 <ng-container *ngFor="let columnTitle of config?.doneColumnTitles; let idx = index">
   <select-data-item class="d-block w-100 mt-2"
                     *ngIf="config?.dueDate"
-                    [items]="columnTitles | kanbanSelectDataItems:config?.attribute"
+                    [items]="columnTitles | kanbanSelectDataItems:config?.attribute:attributesResourcesOrder"
                     [emptyValue]="doneAttributeEmptyValueString"
                     [placeholderText]="doneAttributeString"
                     [selectedId]="columnTitle"
@@ -47,7 +47,7 @@
 
 <select-data-item class="d-block w-100 mt-2"
                   *ngIf="config?.dueDate && (columnTitles.length - (config?.doneColumnTitles?.length || 0) > 0)"
-                  [items]="columnTitles | valueFilter:config?.doneColumnTitles | kanbanSelectDataItems:config?.attribute"
+                  [items]="columnTitles | valueFilter:config?.doneColumnTitles | kanbanSelectDataItems:config?.attribute:attributesResourcesOrder"
                   [emptyValue]="doneAttributeEmptyValueString"
                   [placeholderText]="doneAttributeString"
                   [removable]="false"

@@ -21,6 +21,6 @@ import {Constraint} from '../../../core/model/constraint';
 
 export interface SelectDataItemModel {
   id: any;
-  value: string;
+  value: any;
   constraint?: Constraint;
 }

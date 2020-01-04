@@ -44,7 +44,7 @@ export enum KanbanConfigVersion {
 
 export interface KanbanColumn {
   id: string;
-  title?: string;
+  title?: any;
   width: number;
   resourcesOrder: KanbanResource[];
   createdFromAttributes?: KanbanAttribute[];
@@ -63,7 +63,7 @@ export interface KanbanStemConfig {
   stem?: QueryStem;
   attribute: KanbanAttribute;
   dueDate?: KanbanAttribute;
-  doneColumnTitles?: string[];
+  doneColumnTitles?: any[];
 }
 
 export interface KanbanAttribute {

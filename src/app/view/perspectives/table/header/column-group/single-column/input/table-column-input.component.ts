@@ -119,6 +119,7 @@ export class TableColumnInputComponent implements OnChanges {
         event.preventDefault();
         return;
       case KeyCode.Escape:
+        this.preventSaveAndBlur();
         this.cancel.emit();
         event.preventDefault();
         event.stopPropagation();

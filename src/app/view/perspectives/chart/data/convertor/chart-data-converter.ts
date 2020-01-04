@@ -282,7 +282,7 @@ export class ChartDataConverter {
     const chartConstraint =
       overrideConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, overrideConstraint);
 
-    return chartConstraint || constraint;
+    return chartConstraint || constraint || new UnknownConstraint();
   }
 
   private convertAxisWithAggregation(config: ChartConfig, yAxisType: ChartYAxisType): ChartDataSet[] {

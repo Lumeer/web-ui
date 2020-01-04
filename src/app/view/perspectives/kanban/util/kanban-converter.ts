@@ -109,9 +109,7 @@ export class KanbanConverter {
     for (const stemConfig of stemsConfigs) {
       stemIndex++;
 
-      const collection =
-        stemConfig.attribute && (collections || []).find(coll => coll.id === stemConfig.attribute.resourceId);
-      const attribute = collection && findAttribute(collection.attributes, stemConfig.attribute.attributeId);
+      const attribute = findAttributeByKanbanAttribute(stemConfig.attribute, collections);
       if (!attribute) {
         continue;
       }
@@ -410,8 +408,8 @@ function selectedAttributeIsInvalid(
 }
 
 function findAttributeByKanbanAttribute(kanbanAttribute: KanbanAttribute, collections: Collection[]): Attribute {
-  const collection = (collections || []).find(coll => coll.id === kanbanAttribute.resourceId);
-  return findAttribute(collection && collection.attributes, kanbanAttribute.attributeId);
+  const collection = kanbanAttribute && (collections || []).find(coll => coll.id === kanbanAttribute.resourceId);
+  return kanbanAttribute && findAttribute(collection && collection.attributes, kanbanAttribute.attributeId);
 }
 
 function getColumnIdOrGenerate(column: KanbanColumn): string {

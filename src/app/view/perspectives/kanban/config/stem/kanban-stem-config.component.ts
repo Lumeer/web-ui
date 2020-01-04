@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Constraint} from '../../../../../core/model/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {KanbanAttribute, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
@@ -27,14 +27,14 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
+import {AttributesResource} from '../../../../../core/model/resource';
 
 @Component({
   selector: 'kanban-collection-config',
   templateUrl: './kanban-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanStemConfigComponent {
+export class KanbanStemConfigComponent implements OnChanges {
   @Input()
   public collections: Collection[];
 
@@ -48,7 +48,7 @@ export class KanbanStemConfigComponent {
   public stem: QueryStem;
 
   @Input()
-  public columnTitles: string[];
+  public columnTitles: any[];
 
   @Output()
   public configChange = new EventEmitter<KanbanStemConfig>();
@@ -61,6 +61,8 @@ export class KanbanStemConfigComponent {
   public readonly doneAttributeString: string;
   public readonly doneValueString: string;
 
+  public attributesResourcesOrder: AttributesResource[];
+
   constructor(private i18n: I18n) {
     this.emptyValueString = i18n({id: 'kanban.config.collection.attribute.empty', value: 'Select attribute'});
     this.dueDateEmptyValueString = i18n({id: 'kanban.config.collection.dueDate.empty', value: 'Select due date'});
@@ -71,6 +73,12 @@ export class KanbanStemConfigComponent {
     });
     this.doneAttributeString = i18n({id: 'kanban.config.collection.doneAttribute', value: 'Done state'});
     this.doneValueString = i18n({id: 'kanban.config.collection.doneAttribute', value: 'Done value'});
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.stem || changes.collections || changes.linkTypes) {
+      this.attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
+    }
   }
 
   public onAttributeRemoved() {
@@ -109,21 +117,18 @@ export class KanbanStemConfigComponent {
       const newTitles = [...(this.config.doneColumnTitles || []), selectId];
       this.configChange.emit({...this.config, doneColumnTitles: newTitles});
     } else {
-      this.configChange.emit({
-        ...this.config,
-        doneColumnTitles: this.config.doneColumnTitles.splice(index, 1, selectId),
-      });
+      const doneColumnTitles = [...this.config.doneColumnTitles];
+      doneColumnTitles.splice(index, 1, selectId);
+      this.configChange.emit({...this.config, doneColumnTitles});
     }
   }
 
   private configElementSelected(selectId: SelectItemWithConstraintId, element: string) {
     const {attributeId, resourceIndex} = selectId;
-    const attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
-    const resource = attributesResourcesOrder[resourceIndex];
-    const constraint = findAttributeConstraint(resource.attributes, attributeId);
+    const resource = (this.attributesResourcesOrder || [])[resourceIndex];
     if (resource) {
       const resourceType = getAttributesResourceType(resource);
-      const selection = {attributeId, resourceIndex, resourceType, resourceId: resource.id, constraint};
+      const selection = {attributeId, resourceIndex, resourceType, resourceId: resource.id};
 
       const config = {...this.config, doneColumnTitles: []};
       config[element] = selection;

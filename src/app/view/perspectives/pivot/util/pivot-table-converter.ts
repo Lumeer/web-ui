@@ -27,6 +27,7 @@ import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 
 interface HeaderGroupInfo {
   background: string;
@@ -839,7 +840,7 @@ function sortPivotDataHeadersRecursive(
     return headers;
   }
   const sort = sorts && sorts[index];
-  const constraint = (headers || [])[0] && (headers || [])[0].constraint;
+  const constraint = ((headers || [])[0] && (headers || [])[0].constraint) || new UnknownConstraint();
   const valuesMap = createHeadersValuesMap(headers, sort, otherSideHeaders, values, valueTitles, isRows);
   return headers
     .map(header => ({

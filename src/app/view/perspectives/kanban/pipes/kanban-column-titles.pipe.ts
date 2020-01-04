@@ -24,12 +24,10 @@ import {KanbanAttribute, KanbanConfig} from '../../../../core/store/kanbans/kanb
   name: 'kanbanColumnTitles',
 })
 export class KanbanColumnTitlesPipe implements PipeTransform {
-  public transform(config: KanbanConfig, attribute: KanbanAttribute): string[] {
-    const res = ((config && config.columns) || [])
+  public transform(config: KanbanConfig, attribute: KanbanAttribute): any[] {
+    return ((config && config.columns) || [])
       .filter(column => !attribute || this.containsAttribute(column.createdFromAttributes, attribute))
       .map(c => c.title);
-
-    return res;
   }
 
   private containsAttribute(attributes: KanbanAttribute[], attribute: KanbanAttribute): boolean {

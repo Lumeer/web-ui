@@ -22,7 +22,6 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
 import {CollectionsGuard} from '../core/guards/data/collections.guard';
-import {DocumentsGuard} from '../core/guards/data/documents.guard';
 import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 import {UsersGuard} from '../core/guards/data/users.guard';
 import {ViewsGuard} from '../core/guards/data/views.guard';
@@ -42,7 +41,6 @@ const viewRoutes: Routes = [
     resolve: {
       collections: CollectionsGuard,
       views: ViewsGuard,
-      documents: DocumentsGuard,
       linkTypes: LinkTypesGuard,
       users: UsersGuard,
     },

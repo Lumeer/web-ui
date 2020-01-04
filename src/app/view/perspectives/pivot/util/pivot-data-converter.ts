@@ -51,6 +51,7 @@ import {
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
 import {NumberConstraint} from '../../../../core/model/constraint/number.constraint';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -654,7 +655,7 @@ export class PivotDataConverter {
 
   private findAttributeByPivotAttribute(valueAttribute: PivotAttribute): Attribute {
     const resource = this.findResourceByPivotAttribute(valueAttribute);
-    return resource && (resource.attributes || []).find(attribute => attribute.id === valueAttribute.attributeId);
+    return findAttribute(resource && resource.attributes, valueAttribute.attributeId);
   }
 
   private findResourceByPivotAttribute(valueAttribute: PivotAttribute): AttributesResource {
