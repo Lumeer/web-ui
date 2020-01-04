@@ -74,7 +74,7 @@ export class CoordinatesDataValue implements DataValue {
       return 0;
     }
 
-    return -1; // TODO calculate distance?
+    return this.format().localeCompare(otherValue.format());
   }
 
   public copy(newValue?: any): CoordinatesDataValue {

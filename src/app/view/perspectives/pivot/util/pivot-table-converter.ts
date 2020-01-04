@@ -24,7 +24,6 @@ import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../shared/utils/common.utils';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {compareDataValues} from '../../../../shared/utils/data/data-compare.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
@@ -82,7 +81,7 @@ export class PivotTableConverter {
   }
 
   private updateData(data: PivotStemData) {
-    this.data = preparePivotData(data);
+    this.data = preparePivotData(data, this.constraintData);
     const numberOfSums = Math.max(1, (this.data.valueTitles || []).length);
     this.valueTypeInfo = getValuesTypeInfo(data.values, data.valueTypes, numberOfSums);
     this.rowLevels = (data.rowShowSums || []).length;
@@ -621,8 +620,8 @@ export class PivotTableConverter {
   }
 }
 
-function preparePivotData(data: PivotStemData): PivotStemData {
-  return sortPivotData(data);
+function preparePivotData(data: PivotStemData, constraintData: ConstraintData): PivotStemData {
+  return sortPivotData(data, constraintData);
 }
 
 function getValuesTypeInfo(values: any[][], valueTypes: PivotValueType[], numValues: number): ValueTypeInfo[] {
@@ -781,18 +780,19 @@ function getDirectHeaderChildCount(
   return 1;
 }
 
-export function sortPivotData(data: PivotStemData): PivotStemData {
+export function sortPivotData(data: PivotStemData, constraintData: ConstraintData): PivotStemData {
   return {
     ...data,
-    rowHeaders: sortPivotRowDataHeaders(data.rowHeaders, data.rowSorts, data),
-    columnHeaders: sortPivotColumnDataHeaders(data.columnHeaders, data.columnSorts, data),
+    rowHeaders: sortPivotRowDataHeaders(data.rowHeaders, data.rowSorts, data, constraintData),
+    columnHeaders: sortPivotColumnDataHeaders(data.columnHeaders, data.columnSorts, data, constraintData),
   };
 }
 
 function sortPivotRowDataHeaders(
   rowHeaders: PivotDataHeader[],
   rowSorts: PivotSort[],
-  pivotData: PivotStemData
+  pivotData: PivotStemData,
+  constraintData: ConstraintData
 ): PivotDataHeader[] {
   return sortPivotDataHeadersRecursive(
     rowHeaders,
@@ -801,14 +801,16 @@ function sortPivotRowDataHeaders(
     pivotData.columnHeaders,
     pivotData.values,
     pivotData.valueTitles || [],
-    true
+    true,
+    constraintData
   );
 }
 
 function sortPivotColumnDataHeaders(
   columnHeaders: PivotDataHeader[],
   columnSorts: PivotSort[],
-  pivotData: PivotStemData
+  pivotData: PivotStemData,
+  constraintData: ConstraintData
 ): PivotDataHeader[] {
   return sortPivotDataHeadersRecursive(
     columnHeaders,
@@ -817,7 +819,8 @@ function sortPivotColumnDataHeaders(
     pivotData.rowHeaders,
     pivotData.values,
     pivotData.valueTitles || [],
-    false
+    false,
+    constraintData
   );
 }
 
@@ -828,7 +831,8 @@ function sortPivotDataHeadersRecursive(
   otherSideHeaders: PivotDataHeader[],
   values: any[][],
   valueTitles: string[],
-  isRows: boolean
+  isRows: boolean,
+  constraintData: ConstraintData
 ): PivotDataHeader[] {
   // we don't want to sort values headers
   if (!isRows && isValuesHeaders(headers, valueTitles)) {
@@ -842,9 +846,23 @@ function sortPivotDataHeadersRecursive(
       ...header,
       children:
         header.children &&
-        sortPivotDataHeadersRecursive(header.children, index + 1, sorts, otherSideHeaders, values, valueTitles, isRows),
+        sortPivotDataHeadersRecursive(
+          header.children,
+          index + 1,
+          sorts,
+          otherSideHeaders,
+          values,
+          valueTitles,
+          isRows,
+          constraintData
+        ),
     }))
-    .sort((r1, r2) => compareDataValues(valuesMap[r1.title], valuesMap[r2.title], constraint, !sort || sort.asc));
+    .sort((r1, r2) => {
+      const r1Value = constraint.createDataValue(valuesMap[r1.title], constraintData);
+      const r2Value = constraint.createDataValue(valuesMap[r2.title], constraintData);
+      const multiplier = !sort || sort.asc ? 1 : -1;
+      return r1Value.compareTo(r2Value) * multiplier;
+    });
 }
 
 function isValuesHeaders(headers: PivotDataHeader[], valueTitles: string[]): boolean {

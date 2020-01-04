@@ -19,7 +19,7 @@
 
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {DataValue} from './index';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
@@ -56,11 +56,15 @@ export class UnknownDataValue implements DataValue {
   }
 
   public compareTo(otherValue: DataValue): number {
-    if (typeof this.value === 'number' && typeof otherValue.value === 'number') {
-      return this.value - otherValue.value;
-    }
+    const aValue = isNumeric(this.value) ? toNumber(this.value) : this.value;
+    const bValue = isNumeric(otherValue.value) ? toNumber(otherValue.value) : otherValue.value;
 
-    return String(this.value).localeCompare(String(otherValue.value));
+    if (aValue > bValue) {
+      return 1;
+    } else if (bValue > aValue) {
+      return -1;
+    }
+    return 0;
   }
 
   public copy(newValue?: any): DataValue {

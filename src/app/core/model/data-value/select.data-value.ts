@@ -85,7 +85,7 @@ export class SelectDataValue implements DataValue {
   }
 
   public compareTo(otherValue: SelectDataValue): number {
-    if ((this.config && this.config.multi) || (otherValue.config && otherValue.config.multi)) {
+    if (this.options.length > 1 || otherValue.options.length > 1) {
       return 0;
     }
     const {options} = this.config;

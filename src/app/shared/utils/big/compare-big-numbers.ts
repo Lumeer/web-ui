@@ -20,6 +20,9 @@
 import Big from 'big.js';
 
 export function compareBigNumbers(first: Big, second: Big): number {
+  if (!first && !second) {
+    return 0;
+  }
   if (!first || !second) {
     return first ? 1 : -1;
   }

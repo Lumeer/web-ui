@@ -57,7 +57,6 @@ import {
   DataAggregator,
   DataAggregatorAttribute,
 } from '../../../../../shared/utils/data/data-aggregator';
-import {compareDataValues} from '../../../../../shared/utils/data/data-compare.utils';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 import {mergePermissions} from '../../../../../shared/utils/resource.utils';
 import {
@@ -143,7 +142,10 @@ export class ChartDataConverter {
         return 0;
       }
 
-      return compareDataValues(a.data[sortAxis.attributeId], b.data[sortAxis.attributeId], constraint, asc);
+      const multiplier = asc ? 1 : -1;
+      const aValue = constraint.createDataValue(a.data[sortAxis.attributeId], this.constraintData);
+      const bValue = constraint.createDataValue(b.data[sortAxis.attributeId], this.constraintData);
+      return aValue.compareTo(bValue) * multiplier;
     });
   }
 

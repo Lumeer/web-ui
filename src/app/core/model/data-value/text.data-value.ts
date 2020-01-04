@@ -86,7 +86,7 @@ export class TextDataValue implements DataValue {
   }
 
   public compareTo(otherValue: TextDataValue): number {
-    return String(this.value).localeCompare(String(otherValue.value));
+    return stripTextHtmlTags(this.format(), false).localeCompare(stripTextHtmlTags(otherValue.format(), false));
   }
 
   public copy(newValue?: any): TextDataValue {

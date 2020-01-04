@@ -103,12 +103,14 @@ export class UserDataValue implements DataValue {
   }
 
   public compareTo(otherValue: UserDataValue): number {
-    if ((this.config && this.config.multi) || (otherValue.config && otherValue.config.multi)) {
+    if (this.users.length > 1 || otherValue.users.length > 1) {
       return 0;
     }
 
     if (this.users[0] && otherValue.users[0]) {
-      this.users[0].email.localeCompare(otherValue.users[0].email);
+      return (this.users[0].name || this.users[0].email).localeCompare(
+        otherValue.users[0].name || otherValue.users[0].email
+      );
     }
 
     return String(this.value).localeCompare(String(otherValue.value));
