@@ -35,5 +35,11 @@ export class DataInputPreviewComponent {
   @Input()
   public dataValue: DataValue;
 
+  @Input()
+  public inline = true;
+
+  @Input()
+  public minWidth: number;
+
   public readonly constraintType = ConstraintType;
 }

@@ -1,5 +1,7 @@
 <ng-container *ngIf="constraint | constraintAsText; else otherConstraint">
-  <span [innerHTML]="dataValue | previewDataValue" class="white-space-normal"></span>
+  <span [innerHTML]="dataValue | previewDataValue" class="white-space-normal"
+        [class.text-nowrap]="!inline">
+  </span>
 </ng-container>
 
 <ng-template #otherConstraint>
@@ -9,7 +11,9 @@
     </boolean-data-input>
 
     <color-data-input *ngSwitchCase="constraintType.Color"
-                      [style.max-width.px]="50"
+                      [style.max-width.px]=" inline ? 50 : null"
+                      [class.h-100]="!inline"
+                      [style.min-width.px]="minWidth"
                       [readonly]="true"
                       [value]="dataValue"
                       [skipValidation]="true"

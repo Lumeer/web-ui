@@ -22,16 +22,6 @@
   height: 30px;
 }
 
-.cell.select,
-.cell.user {
-  padding-top: 0.25rem !important;
-  padding-bottom: 0.25rem !important;
-}
-
 .data-input {
   min-height: 30px;
-}
-
-.data-input::ng-deep > boolean-data-input {
-  justify-content: flex-start;
 }
