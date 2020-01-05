@@ -18,17 +18,25 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {createSearchDocumentValuesHtml} from '../search-document-html-helper';
-import {Collection} from '../../../../../core/store/collections/collection';
+import {Constraint} from '../../../core/model/constraint';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
 @Pipe({
-  name: 'createDocumentValuesHtml',
+  name: 'constraintAsText',
 })
-export class CreateDocumentValuesHtmlPipe implements PipeTransform {
-  public transform(document: DocumentModel, collections: Collection[], constraintData: ConstraintData): any {
-    const collection = (collections || []).find(coll => coll.id === document.collectionId);
-    return createSearchDocumentValuesHtml(document, collection, constraintData);
+export class ConstraintAsTextPipe implements PipeTransform {
+  public transform(constraint: Constraint): boolean {
+    const textConstraints = [
+      ConstraintType.Unknown,
+      ConstraintType.Coordinates,
+      ConstraintType.Text,
+      ConstraintType.Number,
+      ConstraintType.Percentage,
+      ConstraintType.Duration,
+      ConstraintType.Address,
+      ConstraintType.Files,
+      ConstraintType.DateTime,
+    ];
+    return !constraint || textConstraints.includes(constraint.type);
   }
 }

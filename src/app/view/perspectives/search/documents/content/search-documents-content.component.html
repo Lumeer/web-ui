@@ -34,12 +34,17 @@
       [constraintData]="constraintData"
       (toggleFavorite)="onFavoriteToggle(document)">
 
-      <div *ngIf="!(document | isDocumentOpened:config) && config?.size === sizeType.M"
-           [innerHTML]="document | createDocumentValuesHtml:collections:constraintData | safeHtml">
-      </div>
-
-      <div *ngIf="(document | isDocumentOpened:config) || config?.size === sizeType.L"
-           [innerHTML]="document | createDocumentEntriesHtml:collections:constraintData:config | safeHtml">§
+      <div class="d-flex flex-row flex-wrap align-items-center">
+        <ng-container
+          *ngFor="let entry of document | dataValueEntries:collections:constraintData:config; let first = first">
+          <span *ngIf="!first">,&nbsp;</span>
+          <span *ngIf="entry.label"
+                class="text-attribute text-nowrap" [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
+          <data-input-preview class="data-input d-inline-block"
+                              [dataValue]="entry.dataValue"
+                              [constraint]="entry.constraint">
+          </data-input-preview>
+        </ng-container>
       </div>
 
     </search-document-header>

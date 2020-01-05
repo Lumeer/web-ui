@@ -56,6 +56,8 @@ import {SelectOptionsValuesPipe} from './select/pipes/select-options-values.pipe
 import {UsersEmailsPipe} from './user/pipes/users-emails.pipe';
 import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
 import {UsersNamesPipe} from './user/pipes/users-names.pipe';
+import {DataInputPreviewComponent} from './data-input-preview/data-input-preview.component';
+import {ConstraintAsTextPipe} from './data-input-preview/constraint-as-text.pipe';
 
 @NgModule({
   imports: [
@@ -99,9 +101,12 @@ import {UsersNamesPipe} from './user/pipes/users-names.pipe';
     UsersEmailsPipe,
     UsersAreValidPipe,
     UsersNamesPipe,
+    DataInputPreviewComponent,
+    ConstraintAsTextPipe,
   ],
   exports: [
     DataInputComponent,
+    DataInputPreviewComponent,
     BooleanDataInputComponent,
     UserDataInputComponent,
     DataCursorPipe,

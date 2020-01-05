@@ -27,9 +27,9 @@ export function areQueriesEqual(first: Query, second: Query): boolean {
   return deepObjectsEquals(normalizeQueryModel(first), normalizeQueryModel(second));
 }
 
-export function areQueriesEqualExceptFilters(first: Query, second: Query): boolean {
-  const firstWithoutPagination = queryWithoutFilters({...first});
-  const secondWithoutPagination = queryWithoutFilters({...second});
+export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: Query): boolean {
+  const firstWithoutPagination = queryWithoutFilters({...first, page: null, pageSize: null});
+  const secondWithoutPagination = queryWithoutFilters({...second, page: null, pageSize: null});
   return convertQueryModelToString(firstWithoutPagination) === convertQueryModelToString(secondWithoutPagination);
 }
 

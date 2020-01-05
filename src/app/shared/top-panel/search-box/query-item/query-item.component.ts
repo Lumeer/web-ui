@@ -75,8 +75,6 @@ export class QueryItemComponent implements OnInit, OnChanges {
   @ViewChild(FilterBuilderComponent, {static: false})
   public filterBuilderComponent: FilterBuilderComponent;
 
-  public readonly dataInputConfiguration: DataInputConfiguration = {skipValidation: true, resizeToContent: true};
-
   constructor(public hostElement: ElementRef) {}
 
   public get conditionControl(): AbstractControl {

@@ -6,15 +6,17 @@
 
 <div>
   <i class="{{collection?.icon}} fa-fw"
-     [class.bigger-icon]="size !== sSize || isOpened"
+     [class.bigger-icon]="size !== sizeType.S || isOpened"
      [style.color]="collection?.color"
      *ngIf="collection" aria-hidden="true"></i>
 </div>
 
-<div class="ml-1 flex-grow-1">
+<div class="ml-1 flex-grow-1 text-truncate">
   <div class="d-flex flex-row">
     <span *ngIf="collection" [style.color]="collection?.color">{{collection?.name}}</span>
-    <div class="ml-3" [innerHTML]="document | documentDefaultAttributeHtml : collection : constraintData"></div>
+    <data-input-preview class="ml-3" [constraint]="defaultConstraint"
+                        [dataValue]="(defaultAttributeId && document?.data && document?.data[defaultAttributeId]) | dataValue:defaultConstraint: constraintData">
+    </data-input-preview>
     <div class="ml-auto text-nowrap" *ngIf="collection | permissions:collectionType:readRole | async">
       <span class="clickable ml-2 hiding-icon"
             (click)="$event.stopPropagation(); onToggleFavorite()"

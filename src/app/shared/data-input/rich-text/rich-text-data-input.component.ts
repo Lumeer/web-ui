@@ -58,6 +58,10 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public skipValidation: boolean;
 
   @Input()
+  @HostBinding('class.multiline')
+  public multilineMode: boolean;
+
+  @Input()
   public value: TextDataValue | UnknownDataValue;
 
   @Input()

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {ResourceType} from '../../../../../../core/model/resource-type';
 
@@ -25,6 +25,8 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {SizeType} from '../../../../../../shared/slider/size-type';
 import {Role} from '../../../../../../core/model/role';
+import {findAttributeConstraint, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
+import {Constraint} from '../../../../../../core/model/constraint';
 
 @Component({
   selector: 'search-document-header',
@@ -32,7 +34,7 @@ import {Role} from '../../../../../../core/model/role';
   styleUrls: ['./search-document-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchDocumentHeaderComponent {
+export class SearchDocumentHeaderComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
@@ -55,8 +57,21 @@ export class SearchDocumentHeaderComponent {
   public toggleFavorite = new EventEmitter();
 
   public readonly collectionType = ResourceType.Collection;
-  public readonly sSize = SizeType.S;
+  public readonly sizeType = SizeType;
   public readonly readRole = Role.Read;
+
+  public defaultAttributeId: string;
+  public defaultConstraint: Constraint;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection) {
+      this.defaultAttributeId = getDefaultAttributeId(this.collection);
+      this.defaultConstraint = findAttributeConstraint(
+        this.collection && this.collection.attributes,
+        this.defaultAttributeId
+      );
+    }
+  }
 
   public onDetail() {
     this.detail.emit();

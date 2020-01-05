@@ -17,16 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {Constraint} from '../../../core/model/constraint';
-import {ConstraintData} from '../../../core/model/data/constraint';
-import {createDataValueHtml} from '../../utils/data/data-html.utils';
+import {DataValue} from '../../../core/model/data-value';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
-@Pipe({
-  name: 'dataValueHtml',
+@Component({
+  selector: 'data-input-preview',
+  templateUrl: './data-input-preview.component.html',
+  styleUrls: ['./data-input-preview.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataValueHtmlPipe implements PipeTransform {
-  public transform(value: any, constraint: Constraint, constraintData?: ConstraintData): string {
-    return createDataValueHtml(value, constraint, constraintData);
-  }
+export class DataInputPreviewComponent {
+  @Input()
+  public constraint: Constraint;
+
+  @Input()
+  public dataValue: DataValue;
+
+  public readonly constraintType = ConstraintType;
 }
