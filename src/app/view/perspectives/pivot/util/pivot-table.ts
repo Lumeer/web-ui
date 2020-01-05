@@ -17,12 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Constraint} from '../../../../core/model/constraint';
+
 export interface PivotTable {
   cells: PivotTableCell[][];
 }
 
 export interface PivotTableCell {
-  value: string;
+  value: any;
+  constraint?: Constraint;
   rowSpan: number;
   colSpan: number;
   cssClass: string;

@@ -7,13 +7,22 @@
 
         <ng-container *ngFor="let cell of row">
           <td *ngIf="cell"
+              class="cell {{cell.constraint ? (cell.constraint.type | lowercase) : ''}}"
               [style.max-width.px]="150"
               [rowSpan]="cell.rowSpan"
               [colSpan]="cell.colSpan"
               [ngClass]="cell.cssClass"
               [style.background]="cell.background"
               [style.color]="cell.background && (cell.background | contrastColor)">
-            <div class="text-truncate" *ngIf="cell | pivotTableCellHasValue" [innerHTML]="cell.value"
+            <data-input *ngIf="(cell | pivotTableCellHasValue) && cell.constraint"
+                        class="data-input"
+                        [readonly]="true"
+                        [focus]="false"
+                        [constraint]="cell.constraint"
+                        [dataValue]="cell.value | dataValue:cell.constraint:constraintData">
+            </data-input>
+            <div class="text-truncate" *ngIf="(cell | pivotTableCellHasValue) && !cell.constraint"
+                 [innerHTML]="cell.value"
                  [title]="cell.value"></div>
             <ng-container *ngIf="!(cell | pivotTableCellHasValue)">&nbsp;</ng-container>
           </td>

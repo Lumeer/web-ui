@@ -28,7 +28,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
-import {isNullOrUndefined} from '../common.utils';
+import {isArray, isNotNullOrUndefined, isNullOrUndefined} from '../common.utils';
 
 type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 
@@ -307,11 +307,12 @@ export class DataAggregator {
         }
 
         for (const value of values) {
-          const formattedValue = this.formatAggregationValue(value, constraint, {
+          let formattedValue = this.formatAggregationValue(value, constraint, {
             resourceIndex: stage.index,
             attributeId: stage.attributeId,
             data: stage.data,
           });
+          formattedValue = isNotNullOrUndefined(formattedValue) ? formattedValue : '';
 
           if (index === chain.length - 1) {
             if (valuesChains.length > 0) {
@@ -474,7 +475,7 @@ export class DataAggregator {
       return [''];
     }
 
-    return Array.isArray(value) ? value : [value];
+    return isArray(value) ? value : [value];
   }
 
   private formatAggregationValue(value: any, constraint: Constraint, attribute: DataAggregatorAttribute) {

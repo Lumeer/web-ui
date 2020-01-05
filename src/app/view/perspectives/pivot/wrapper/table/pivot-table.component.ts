@@ -23,6 +23,7 @@ import {BehaviorSubject} from 'rxjs';
 import {PivotTable} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'pivot-table',
@@ -33,6 +34,9 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 export class PivotTableComponent implements OnChanges {
   @Input()
   public pivotData: PivotData;
+
+  @Input()
+  public constraintData: ConstraintData;
 
   private pivotTableConverter: PivotTableConverter;
 

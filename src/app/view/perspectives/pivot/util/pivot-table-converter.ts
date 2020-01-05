@@ -154,6 +154,7 @@ export class PivotTableConverter {
         rowSpan,
         colSpan: 1,
         background: this.getHeaderBackground(header, level),
+        constraint: header.constraint,
       };
 
       if (header.children) {
@@ -358,6 +359,7 @@ export class PivotTableConverter {
         rowSpan: 1,
         colSpan,
         background: this.getHeaderBackground(header, level),
+        constraint: header.constraint,
       };
 
       if (header.children) {

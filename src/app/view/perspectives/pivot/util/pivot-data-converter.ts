@@ -19,7 +19,7 @@
 
 import {Constraint} from '../../../../core/model/constraint';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -111,7 +111,14 @@ export class PivotDataConverter {
       pivotConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotConstraint);
     return (overrideConstraint || constraint || new UnknownConstraint())
       .createDataValue(value, constraintData)
-      .preview();
+      .serialize();
+  }
+
+  private checkSupportedConstraint(constraint: Constraint): Constraint {
+    if (!constraint || constraint.type === ConstraintType.Files) {
+      return new UnknownConstraint();
+    }
+    return constraint;
   }
 
   private updateData(
@@ -433,10 +440,15 @@ export class PivotDataConverter {
       let currentIndex = additionalNum;
       Object.keys(map).forEach((title, index) => {
         if (levels === 1 && (valueTitles || []).length <= 1) {
-          headers.push({title, targetIndex: currentIndex, color: colors[0], constraint: constraints[0]});
+          headers.push({
+            title,
+            targetIndex: currentIndex,
+            color: colors[0],
+            constraint: this.checkSupportedConstraint(constraints[0]),
+          });
           data.maxIndex = Math.max(data.maxIndex, currentIndex);
         } else {
-          headers.push({title, color: colors[0], constraint: constraints[0]});
+          headers.push({title, color: colors[0], constraint: this.checkSupportedConstraint(constraints[0])});
         }
 
         this.iterateThroughPivotDataHeader(
@@ -486,10 +498,19 @@ export class PivotDataConverter {
     let currentIndex = headerIndex;
     Object.keys(currentMap).forEach((title, index) => {
       if (level + 1 === maxLevels && (valueTitles || []).length <= 1) {
-        header.children.push({title, targetIndex: currentIndex, color: colors[level], constraint: constraints[level]});
+        header.children.push({
+          title,
+          targetIndex: currentIndex,
+          color: colors[level],
+          constraint: this.checkSupportedConstraint(constraints[level]),
+        });
         additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
-        header.children.push({title, color: colors[level], constraint: constraints[level]});
+        header.children.push({
+          title,
+          color: colors[level],
+          constraint: this.checkSupportedConstraint(constraints[level]),
+        });
       }
 
       this.iterateThroughPivotDataHeader(
