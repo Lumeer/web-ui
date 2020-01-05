@@ -310,9 +310,9 @@ describe('Pivot data converter', () => {
     };
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
     expect(pivotData.data[0].rowHeaders).toEqual([
-      {title: 'a', targetIndex: 0, color: undefined, constraint: new UnknownConstraint()},
-      {title: 'c', targetIndex: 1, color: undefined, constraint: new UnknownConstraint()},
-      {title: 'b', targetIndex: 2, color: undefined, constraint: new UnknownConstraint()},
+      {title: 'a', targetIndex: 0, color: undefined, constraint: undefined},
+      {title: 'c', targetIndex: 1, color: undefined, constraint: undefined},
+      {title: 'b', targetIndex: 2, color: undefined, constraint: undefined},
     ]);
     expect(pivotData.data[0].columnHeaders).toEqual([]);
     expect(pivotData.data[0].values).toEqual([[undefined], [undefined], [undefined]]);
@@ -333,8 +333,8 @@ describe('Pivot data converter', () => {
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
     expect(pivotData.data[0].rowHeaders).toEqual([]);
     expect(pivotData.data[0].columnHeaders).toEqual([
-      {title: 'xyz', targetIndex: 0, color: undefined, constraint: new UnknownConstraint()},
-      {title: 'vuw', targetIndex: 1, color: undefined, constraint: new UnknownConstraint()},
+      {title: 'xyz', targetIndex: 0, color: undefined, constraint: undefined},
+      {title: 'vuw', targetIndex: 1, color: undefined, constraint: undefined},
     ]);
     expect(pivotData.data[0].values).toEqual([[undefined, undefined]]);
   });
@@ -395,8 +395,8 @@ describe('Pivot data converter', () => {
     };
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
     expect(pivotData.data[0].rowHeaders).toEqual([
-      {title: 'abc', targetIndex: 0, color: undefined, constraint: new UnknownConstraint()},
-      {title: 'def', targetIndex: 1, color: undefined, constraint: new UnknownConstraint()},
+      {title: 'abc', targetIndex: 0, color: undefined, constraint: undefined},
+      {title: 'def', targetIndex: 1, color: undefined, constraint: undefined},
     ]);
     expect(pivotData.data[0].columnHeaders).toEqual([
       {title: dataConverter.createValueTitle(DataAggregationType.Sum, 'Ddd'), targetIndex: 0, color: undefined},
@@ -427,9 +427,9 @@ describe('Pivot data converter', () => {
     const pivotData = dataConverter.transform(config, collections, documents, linkTypes, linkInstances, query);
     expect(pivotData.data[0].rowHeaders).toEqual([]);
     expect(pivotData.data[0].columnHeaders).toEqual([
-      {title: 'a', targetIndex: 0, color: undefined, constraint: new UnknownConstraint()},
-      {title: 'c', targetIndex: 1, color: undefined, constraint: new UnknownConstraint()},
-      {title: 'b', targetIndex: 2, color: undefined, constraint: new UnknownConstraint()},
+      {title: 'a', targetIndex: 0, color: undefined, constraint: undefined},
+      {title: 'c', targetIndex: 1, color: undefined, constraint: undefined},
+      {title: 'b', targetIndex: 2, color: undefined, constraint: undefined},
     ]);
     expect(pivotData.data[0].values).toEqual([[-4, 9, -13]]);
   });
@@ -476,18 +476,18 @@ describe('Pivot data converter', () => {
       {
         title: 'abc',
         children: [
-          {title: 'a', targetIndex: 0, color: undefined, constraint: new UnknownConstraint()},
-          {title: 'c', targetIndex: 1, color: undefined, constraint: new UnknownConstraint()},
-          {title: 'b', targetIndex: 2, color: undefined, constraint: new UnknownConstraint()},
+          {title: 'a', targetIndex: 0, color: undefined, constraint: undefined},
+          {title: 'c', targetIndex: 1, color: undefined, constraint: undefined},
+          {title: 'b', targetIndex: 2, color: undefined, constraint: undefined},
         ],
         color: undefined,
-        constraint: new UnknownConstraint(),
+        constraint: undefined,
       },
       {
         title: 'def',
-        children: [{title: 'c', targetIndex: 3, color: undefined, constraint: new UnknownConstraint()}],
+        children: [{title: 'c', targetIndex: 3, color: undefined, constraint: undefined}],
         color: undefined,
-        constraint: new UnknownConstraint(),
+        constraint: undefined,
       },
     ]);
     const valueTitles = [
@@ -504,7 +504,7 @@ describe('Pivot data converter', () => {
           {title: valueTitles[2], targetIndex: 2, color: undefined},
         ],
         color: undefined,
-        constraint: new UnknownConstraint(),
+        constraint: undefined,
       },
       {
         title: 'vuw',
@@ -514,7 +514,7 @@ describe('Pivot data converter', () => {
           {title: valueTitles[2], targetIndex: 5, color: undefined},
         ],
         color: undefined,
-        constraint: new UnknownConstraint(),
+        constraint: undefined,
       },
     ]);
     expect(pivotData.data[0].values).toEqual([
