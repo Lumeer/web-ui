@@ -123,11 +123,8 @@ export function filterDocumentsAndLinksByStem(
     return filtered;
   }
 
-  const checkedIds = [];
+  const pushedIds = [];
   for (const dataResource of pipeline[0].dataResources) {
-    if (checkedIds.includes(dataResource.id)) {
-      continue;
-    }
     if (
       dataMeetsFiltersAndFulltexts(
         dataResource.data,
@@ -141,8 +138,11 @@ export function filterDocumentsAndLinksByStem(
         ? getDocumentsWithChildren(dataResource as DocumentModel, pipeline[0].dataResources as DocumentModel[])
         : [dataResource as DocumentModel];
       for (const document of searchDocuments) {
-        checkedIds.push(document.id);
-        if (checkAndFillDataResources(document, pipeline, filtered, constraintData, 1)) {
+        if (
+          !pushedIds.includes(document.id) &&
+          checkAndFillDataResources(document, pipeline, filtered, constraintData, 1)
+        ) {
+          pushedIds.push(document.id);
           filtered.allDocuments.push(<DocumentModel>document);
           pushToMatrix(filtered.pipelineDocuments, document, 0);
         }
