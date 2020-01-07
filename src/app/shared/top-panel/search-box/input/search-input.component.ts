@@ -89,7 +89,9 @@ export class SearchInputComponent {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
-    event.stopPropagation();
+    if (this.suggesting) {
+      event.stopPropagation();
+    }
     this.focusInput();
   }
 

@@ -107,15 +107,26 @@ export class FilterBuilderContentComponent implements OnChanges {
   }
 
   public focusFirstInput() {
-    if (this.numInputs > 0 && !this.isEditing()) {
+    if (this.shouldFocusInput() && this.numInputs > 0 && !this.isEditing()) {
       this.editing$.next(0);
     }
+  }
+
+  private shouldFocusInput(): boolean {
+    const constraintType =
+      (this.attribute && this.attribute.constraint && this.attribute.constraint.type) || ConstraintType.Unknown;
+    const restrictedTypes = [ConstraintType.DateTime, ConstraintType.Color];
+    return !restrictedTypes.includes(constraintType);
   }
 
   public onConditionSelect(item: QueryConditionItem) {
     this.valueChange.emit({condition: item.value, values: this.selectedValues});
     const numInputs = queryConditionNumInputs(item.value);
-    if (queryConditionNumInputs(item.value) > 0 && (!this.isEditing() || this.editing$.value >= numInputs)) {
+    if (
+      this.shouldFocusInput() &&
+      queryConditionNumInputs(item.value) > 0 &&
+      (!this.isEditing() || this.editing$.value >= numInputs)
+    ) {
       this.editing$.next(0);
     }
   }

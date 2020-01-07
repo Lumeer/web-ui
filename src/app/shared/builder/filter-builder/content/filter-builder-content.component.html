@@ -2,7 +2,7 @@
 
   <div class="text-muted px-2">Choose Condition</div>
   <div *ngFor="let item of attribute | queryConditionItems; let first = first"
-       class="px-2 py-1 dropdown-item cursor-pointer font-italic"
+       class="px-2 py-1 dropdown-item cursor-pointer"
        [class.mt-2]="first"
        [class.active]="item.value === selectedCondition"
        (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault()"
