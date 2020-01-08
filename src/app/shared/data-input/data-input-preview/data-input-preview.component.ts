@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Constraint} from '../../../core/model/constraint';
 import {DataValue} from '../../../core/model/data-value';
 import {ConstraintType} from '../../../core/model/data/constraint';
@@ -28,7 +28,7 @@ import {ConstraintType} from '../../../core/model/data/constraint';
   styleUrls: ['./data-input-preview.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataInputPreviewComponent {
+export class DataInputPreviewComponent implements OnChanges {
   @Input()
   public constraint: Constraint;
 
@@ -42,4 +42,12 @@ export class DataInputPreviewComponent {
   public minWidth: number;
 
   public readonly constraintType = ConstraintType;
+
+  public hasValue: boolean;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.dataValue) {
+      this.hasValue = this.dataValue && !!this.dataValue.format();
+    }
+  }
 }
