@@ -23,7 +23,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {InfiniteScrollModule} from 'ngx-infinite-scroll';
 import {BlocklyModule} from './blockly/blockly.module';
-import {BrowserWarningModule} from './browser-warning/browser-warning.module';
 import {CollapsibleSidebarModule} from './collapsible-sidebar/collapsible-sidebar.module';
 import {DateTimeModule} from './date-time/date-time.module';
 import {DirectivesModule} from './directives/directives.module';
@@ -54,6 +53,7 @@ import {DropdownModule} from './dropdown/dropdown.module';
 import {SequencesModule} from './sequences/sequences.module';
 import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
 import {BookmarksModule} from './bookmarks/bookmarks.module';
+import {BuilderModule} from './builder/builder.module';
 
 @NgModule({
   imports: [
@@ -80,11 +80,11 @@ import {BookmarksModule} from './bookmarks/bookmarks.module';
     BlocklyModule,
     DateTimeModule,
     ModalModule,
-    BrowserWarningModule,
     PresenterModule,
     DropdownModule,
     DataDropdownModule,
     BookmarksModule,
+    BuilderModule,
   ],
   declarations: [
     SizeSliderComponent,
@@ -125,13 +125,13 @@ import {BookmarksModule} from './bookmarks/bookmarks.module';
     BlocklyModule,
     DateTimeModule,
     ModalModule,
-    BrowserWarningModule,
     PresenterModule,
     DropdownModule,
     PickerModule,
     SequencesModule,
     DataDropdownModule,
     BookmarksModule,
+    BuilderModule,
   ],
 })
 export class SharedModule {}

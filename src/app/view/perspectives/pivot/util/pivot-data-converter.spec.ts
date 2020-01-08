@@ -31,6 +31,7 @@ import {SelectItemWithConstraintFormatter} from '../../../../shared/select/selec
 import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {environment} from '../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 
 const documents: DocumentModel[] = [
   {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},

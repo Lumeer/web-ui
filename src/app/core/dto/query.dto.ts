@@ -28,20 +28,26 @@ export interface QueryStemDto {
   collectionId: string;
   linkTypeIds?: string[];
   documentIds?: string[];
-  filters?: AttributeFilterDto[];
+  filters?: CollectionAttributeFilterDto[];
   linkFilters?: LinkAttributeFilterDto[];
 }
 
-export interface AttributeFilterDto {
-  collectionId: string;
-  operator: string;
-  attributeId: string;
-  value: any;
+export interface ConditionValueDto {
+  type?: any;
+  value?: any;
 }
 
-export interface LinkAttributeFilterDto {
-  linkTypeId: string;
-  operator: string;
+export interface AttributeFilterDto {
+  condition: string;
   attributeId: string;
-  value: any;
+  value?: any;
+  conditionValues: ConditionValueDto[];
+}
+
+export interface CollectionAttributeFilterDto extends AttributeFilterDto {
+  collectionId: string;
+}
+
+export interface LinkAttributeFilterDto extends AttributeFilterDto {
+  linkTypeId: string;
 }

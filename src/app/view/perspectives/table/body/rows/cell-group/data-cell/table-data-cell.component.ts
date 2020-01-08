@@ -74,8 +74,9 @@ import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
-import {DataValue, DataValueInputType} from '../../../../../../../core/model/data-value';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
+import {DataValue} from '../../../../../../../core/model/data-value';
+import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 
 @Component({
   selector: 'table-data-cell',
@@ -211,14 +212,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.selectedSubscriptions.add(this.subscribeToEditSelectedCell());
         this.selectedSubscriptions.add(this.subscribeToRemoveSelectedCell());
       } else {
-        if (this.edited) {
-          if (this.editedValue) {
-            this.onValueSave(this.editedValue);
-          }
-          this.editing$.next(false);
-        } else {
-          this.editing$.next(false);
-        }
+        this.editing$.next(false);
       }
     }
     if (changes.document || changes.linkInstance) {
@@ -248,24 +242,21 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.createDataValueByValue$(this.getValue());
   }
 
-  private createDataValueByValue$(
-    value: any,
-    inputType: DataValueInputType = DataValueInputType.Stored
-  ): Observable<DataValue> {
+  private createDataValueByValue$(value: any, typed?: boolean): Observable<DataValue> {
     if (this.attribute$) {
       return this.attribute$.pipe(
-        map(
-          attribute =>
-            (attribute &&
-              attribute.constraint &&
-              attribute.constraint.createDataValue(value, inputType, this.constraintData)) ||
-            new UnknownDataValue(value, inputType)
-        ),
-        tap(dataValue => inputType === DataValueInputType.Typed && (this.editedValue = dataValue)),
-        take(inputType === DataValueInputType.Typed ? 1 : Number.MAX_SAFE_INTEGER)
+        map(attribute => {
+          const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+          if (typed) {
+            return constraint.createInputDataValue(value, this.getValue(), this.constraintData);
+          }
+          return constraint.createDataValue(value, this.constraintData);
+        }),
+        tap(dataValue => typed && (this.editedValue = dataValue)),
+        take(typed ? 1 : Number.MAX_SAFE_INTEGER)
       );
     }
-    return of(new UnknownDataValue(value, inputType));
+    return of(new UnknownDataValue(value));
   }
 
   private subscribeToAffected(): Subscription {
@@ -326,7 +317,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private startEditingAndClear() {
-    this.dataValue$ = this.createDataValueByValue$('', DataValueInputType.Typed);
+    this.dataValue$ = this.createDataValueByValue$('', true);
     this.editing$.next(true);
   }
 
@@ -347,7 +338,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private startEditingAndChangeValue(value: string) {
     if (value) {
-      this.dataValue$ = this.createDataValueByValue$(value, DataValueInputType.Typed);
+      this.dataValue$ = this.createDataValueByValue$(value, true);
     }
     this.editing$.next(true);
   }
@@ -387,12 +378,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
-  @HostListener('mousedown', ['$event'])
-  public onMouseDown(event: MouseEvent) {
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent) {
     if (!this.edited) {
-      event.preventDefault();
-    }
-    if (!this.selected) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
   }
@@ -412,17 +400,22 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   @HostListener('contextmenu', ['$event'])
   public onContextMenu(event: MouseEvent) {
     if (!this.edited) {
+      if (!this.selected) {
+        this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+      }
       setTimeout(() => this.showContextMenu(event));
     }
   }
 
   private showContextMenu(event: MouseEvent) {
-    this.contextMenuService.show.next({
-      anchorElement: null,
-      contextMenu: this.menuComponent.contextMenu,
-      event,
-      item: null,
-    });
+    if (this.menuComponent) {
+      this.contextMenuService.show.next({
+        anchorElement: null,
+        contextMenu: this.menuComponent.contextMenu,
+        event,
+        item: null,
+      });
+    }
   }
 
   private useSelectionOrSave(dataValue: DataValue) {
@@ -480,7 +473,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private saveData(value: any) {
     const previousValue = this.getValue() || this.getValue() === 0 ? this.getValue() : '';
-    if (previousValue === value || (!value && !this.isEntityInitialized())) {
+    if (deepObjectsEquals(previousValue, value) || (!value && !this.isEntityInitialized())) {
       return;
     }
 
@@ -542,7 +535,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createDocumentWithExistingAttribute(table: TableModel, row: TableConfigRow, attributeId: string, value: any) {
-    // TODO row is probably not needed here
     const document: DocumentModel = {
       ...this.document,
       correlationId: (row && row.correlationId) || (this.document && this.document.correlationId),
@@ -768,6 +760,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onCancelEditing() {
+    this.dataValue$ = this.createDataValue$();
     this.editing$.next(false);
   }
 
@@ -836,6 +829,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onUseDocumentHint() {
+    this.selected = false;
     this.editing$.next(false);
+  }
+
+  public onEnterInvalid() {
+    if (this.suggestions && this.suggestions.isSelected()) {
+      this.suggestions.useSelection();
+      this.editing$.next(false);
+    }
   }
 }

@@ -36,12 +36,16 @@ export function resetUnusedMomentPart(date: moment.Moment, format: string): mome
     dateCopy = resetYear(dateCopy);
   }
 
-  if (!dateTimeOptions.month) {
+  if (!dateTimeOptions.month && !dateTimeOptions.week) {
     dateCopy = resetMonth(dateCopy);
   }
 
-  if (!dateTimeOptions.day) {
+  if (!dateTimeOptions.day && !dateTimeOptions.week) {
     dateCopy = resetDay(dateCopy);
+  }
+
+  if (dateTimeOptions.week) {
+    dateCopy = resetWeek(date);
   }
 
   if (!dateTimeOptions.hours) {
@@ -69,6 +73,10 @@ function resetYear(date: moment.Moment): moment.Moment {
 
 function resetMonth(date: moment.Moment): moment.Moment {
   return date.clone().month(0);
+}
+
+function resetWeek(date: moment.Moment): moment.Moment {
+  return date.clone().weekday(0);
 }
 
 function resetDay(date: moment.Moment): moment.Moment {

@@ -51,6 +51,7 @@
       <div class="d-flex flex-wrap" *ngIf="viewSize === sizeType.XL">
         <query-item *ngFor="let queryItem of queryItems; trackBy:trackByQueryItem; let isLast = last"
                     [queryItem]="queryItem"
+                    [queryItemForm]="queryItem | queryItemForm"
                     [readonly]="true"
                     class="d-inline-flex mt-1 align-items-center"
                     [class.mr-1]="!isLast">

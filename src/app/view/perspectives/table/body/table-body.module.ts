@@ -35,7 +35,6 @@ import {ColorCollapsedCellComponent} from './rows/cell-group/collapsed-cell/colo
 import {GroupColorsByCountPipe} from './rows/cell-group/collapsed-cell/color/group-colors-by-count.pipe';
 import {TableCollapsedCellMenuComponent} from './rows/cell-group/collapsed-cell/menu/table-collapsed-cell-menu.component';
 import {TableCollapsedCellComponent} from './rows/cell-group/collapsed-cell/table-collapsed-cell.component';
-import {UserCollapsedCellComponent} from './rows/cell-group/collapsed-cell/user/user-collapsed-cell.component';
 import {TableDataCellMenuComponent} from './rows/cell-group/data-cell/menu/table-data-cell-menu.component';
 import {TableDataCellComponent} from './rows/cell-group/data-cell/table-data-cell.component';
 import {TableCellGroupComponent} from './rows/cell-group/table-cell-group.component';
@@ -50,6 +49,8 @@ import {TablePrimaryRowComponent} from './rows/primary-row/table-primary-row.com
 import {TableRowsComponent} from './rows/table-rows.component';
 import {TableBodyComponent} from './table-body.component';
 import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/files/files-collapsed-cell.component';
+import {CreateCombinedSelectValuePipe} from './rows/cell-group/collapsed-cell/select/create-combined-select-value.pipe';
+import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user/create-combined-user-value.pipe';
 
 @NgModule({
   imports: [
@@ -84,9 +85,10 @@ import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/file
     ColorCollapsedCellComponent,
     GroupColorsByCountPipe,
     TableEmptyRowComponent,
-    UserCollapsedCellComponent,
     BooleanCollapsedCellComponent,
     FilesCollapsedCellComponent,
+    CreateCombinedSelectValuePipe,
+    CreateCombinedUserValuePipe,
   ],
   exports: [TableBodyComponent],
 })

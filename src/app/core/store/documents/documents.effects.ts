@@ -50,6 +50,7 @@ import {
   selectDocumentsQueries,
   selectPendingDocumentDataUpdatesByCorrelationId,
 } from './documents.state';
+import {queryWithoutFilters} from '../navigation/query/query.util';
 
 @Injectable()
 export class DocumentsEffects {
@@ -59,15 +60,17 @@ export class DocumentsEffects {
     withLatestFrom(this.store$.pipe(select(selectDocumentsQueries))),
     filter(
       ([action, queries]) =>
-        action.payload.force || !queries.find(query => areQueriesEqual(query, action.payload.query))
+        action.payload.force ||
+        !queries.find(query => areQueriesEqual(query, queryWithoutFilters(action.payload.query)))
     ),
     mergeMap(([action]) => {
-      const queryDto = convertQueryModelToDto(action.payload.query);
+      const query = queryWithoutFilters(action.payload.query);
+      const queryDto = convertQueryModelToDto(query);
 
       return this.searchService.searchDocuments(queryDto, action.payload.workspace).pipe(
         map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
-        map(documents => new DocumentsAction.GetSuccess({documents: documents, query: action.payload.query})),
-        catchError(error => of(new DocumentsAction.GetFailure({error: error})))
+        map(documents => new DocumentsAction.GetSuccess({documents, query})),
+        catchError(error => of(new DocumentsAction.GetFailure({error})))
       );
     })
   );

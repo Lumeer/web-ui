@@ -24,7 +24,6 @@ import {Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ConstraintData, DurationUnitsMap} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../../core/store/navigation/workspace';
@@ -39,6 +38,7 @@ import {User} from '../../../core/store/users/user';
 import {AppState} from '../../../core/store/app.state';
 import {selectAllUsers} from '../../../core/store/users/users.state';
 import {ModalService} from '../../modal/modal.service';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'document-detail',
@@ -76,12 +76,11 @@ export class DocumentDetailComponent implements OnInit {
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
-    private modalService: ModalService,
-    private constraintDataService: ConstraintDataService
+    private modalService: ModalService
   ) {}
 
   public ngOnInit() {
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.users$ = this.store$.pipe(select(selectAllUsers));
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
   }

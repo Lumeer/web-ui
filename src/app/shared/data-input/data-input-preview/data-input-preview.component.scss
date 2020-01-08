@@ -1,0 +1,17 @@
+:host::ng-deep {
+  & > * > * {
+    padding: 0 !important;
+  }
+
+  .ql-editor {
+    margin: 0 !important;
+  }
+}
+
+boolean-data-input {
+  justify-content: flex-start;
+}
+
+.white-space-normal {
+  white-space: normal;
+}

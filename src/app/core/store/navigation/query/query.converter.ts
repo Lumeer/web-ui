@@ -19,8 +19,20 @@
 
 import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {QueryDto} from '../../../dto';
-import {AttributeFilterDto, LinkAttributeFilterDto, QueryStemDto} from '../../../dto/query.dto';
-import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
+import {
+  AttributeFilterDto,
+  CollectionAttributeFilterDto,
+  LinkAttributeFilterDto,
+  QueryStemDto,
+} from '../../../dto/query.dto';
+import {
+  AttributeFilter,
+  CollectionAttributeFilter,
+  LinkAttributeFilter,
+  Query,
+  QueryCondition,
+  QueryStem,
+} from './query';
 import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
 import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
 
@@ -47,7 +59,7 @@ function convertQueryStemDtoToModel(dto: QueryStemDto): QueryStem {
     collectionId: dto.collectionId,
     documentIds: dto.documentIds,
     linkTypeIds: dto.linkTypeIds,
-    filters: dto.filters && dto.filters.map(filter => convertAttributeFilterDtoToModel(filter)),
+    filters: dto.filters && dto.filters.map(filter => convertCollectionAttributeFilterDtoToModel(filter)),
     linkFilters: dto.linkFilters && dto.linkFilters.map(filter => convertLinkAttributeFilterDtoToModel(filter)),
   };
 }
@@ -57,44 +69,52 @@ function convertQueryStemModelToDto(model: QueryStem): QueryStemDto {
     collectionId: model.collectionId,
     documentIds: model.documentIds,
     linkTypeIds: model.linkTypeIds,
-    filters: model.filters && model.filters.map(filter => convertAttributeFilterModelToDto(filter)),
+    filters: model.filters && model.filters.map(filter => convertCollectionAttributeFilterModelToDto(filter)),
     linkFilters: model.linkFilters && model.linkFilters.map(filter => convertLinkAttributeFilterModelToDto(filter)),
   };
 }
 
-function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): CollectionAttributeFilter {
+function convertCollectionAttributeFilterDtoToModel(dto: CollectionAttributeFilterDto): CollectionAttributeFilter {
   return {
     collectionId: dto.collectionId,
+    ...convertAttributeFilterDtoToModel(dto),
+  };
+}
+
+function convertAttributeFilterDtoToModel(dto: AttributeFilterDto): AttributeFilter {
+  return {
     attributeId: dto.attributeId,
-    condition: dto.operator,
-    value: dto.value,
+    condition: conditionFromString(dto.condition),
+    conditionValues: (dto.conditionValues || []).map(item => ({value: item.value, type: item.type})),
   };
 }
 
 function convertLinkAttributeFilterDtoToModel(dto: LinkAttributeFilterDto): LinkAttributeFilter {
   return {
     linkTypeId: dto.linkTypeId,
-    attributeId: dto.attributeId,
-    condition: dto.operator,
-    value: dto.value,
+    ...convertAttributeFilterDtoToModel(dto),
   };
 }
 
-function convertAttributeFilterModelToDto(model: CollectionAttributeFilter): AttributeFilterDto {
+function convertCollectionAttributeFilterModelToDto(model: CollectionAttributeFilter): CollectionAttributeFilterDto {
   return {
     collectionId: model.collectionId,
+    ...convertAttributeFilterModelToDto(model),
+  };
+}
+
+function convertAttributeFilterModelToDto(model: AttributeFilter): AttributeFilterDto {
+  return {
     attributeId: model.attributeId,
-    operator: model.condition,
-    value: model.value,
+    condition: model.condition,
+    conditionValues: (model.conditionValues || []).map(item => ({value: item.value, type: item.type})),
   };
 }
 
 function convertLinkAttributeFilterModelToDto(model: LinkAttributeFilter): LinkAttributeFilterDto {
   return {
     linkTypeId: model.linkTypeId,
-    attributeId: model.attributeId,
-    operator: model.condition,
-    value: model.value,
+    ...convertAttributeFilterModelToDto(model),
   };
 }
 
@@ -140,8 +160,44 @@ export function normalizeQueryStem(stem: QueryStem): QueryStem {
   return {
     collectionId: stem.collectionId,
     documentIds: stem.documentIds || [],
-    filters: stem.filters || [],
-    linkFilters: stem.linkFilters || [],
+    filters: (stem.filters || []).map(filter => normalizeFilter(filter)),
+    linkFilters: (stem.linkFilters || []).map(filter => normalizeFilter(filter)),
     linkTypeIds: stem.linkTypeIds || [],
   };
+}
+
+function normalizeFilter<T extends AttributeFilter>(filter: T): T {
+  return {
+    ...filter,
+    condition: filter.condition || null,
+    conditionValues: (filter.conditionValues || []).map(v => ({value: v.value || null, type: v.type || null})),
+  };
+}
+
+const EqVariants = [QueryCondition.Equals, '=', '==', 'equals'];
+const NeqVariants = [QueryCondition.NotEquals, '!=', '!==', '<>', 'ne', 'nequals'];
+const LtVariants = [QueryCondition.LowerThan, '<'];
+const LteVariants = [QueryCondition.LowerThanEquals, '<='];
+const GtVariants = [QueryCondition.GreaterThan, '>'];
+const GteVariants = [QueryCondition.GreaterThanEquals, '>='];
+
+function conditionFromString(condition: string): QueryCondition {
+  if (!condition) {
+    return null;
+  }
+  const conditionLowerCase = condition.toLowerCase();
+  if (EqVariants.includes(conditionLowerCase)) {
+    return QueryCondition.Equals;
+  } else if (NeqVariants.includes(conditionLowerCase)) {
+    return QueryCondition.NotEquals;
+  } else if (LtVariants.includes(conditionLowerCase)) {
+    return QueryCondition.LowerThan;
+  } else if (LteVariants.includes(conditionLowerCase)) {
+    return QueryCondition.LowerThanEquals;
+  } else if (GtVariants.includes(conditionLowerCase)) {
+    return QueryCondition.GreaterThan;
+  } else if (GteVariants.includes(conditionLowerCase)) {
+    return QueryCondition.GreaterThanEquals;
+  }
+  return condition as QueryCondition;
 }

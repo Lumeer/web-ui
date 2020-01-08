@@ -146,7 +146,7 @@ describe('Chart data converter single collection', () => {
       color: '#ffffff',
       xAxis: {
         category: ChartAxisCategory.Text,
-        config: undefined,
+        config: {},
       },
       yAxis: undefined,
       draggable: false,
@@ -181,7 +181,7 @@ describe('Chart data converter single collection', () => {
       color: '#ffffff',
       yAxis: {
         category: ChartAxisCategory.Number,
-        config: undefined,
+        config: {},
       },
       xAxis: undefined,
       name: 'Kala',
@@ -220,11 +220,11 @@ describe('Chart data converter single collection', () => {
       color: 'rgba(255,255,255,1)',
       yAxis: {
         category: ChartAxisCategory.Number,
-        config: undefined,
+        config: {},
       },
       xAxis: {
         category: ChartAxisCategory.Text,
-        config: undefined,
+        config: {},
       },
       name: 'Kala',
       draggable: true,

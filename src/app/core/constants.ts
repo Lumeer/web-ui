@@ -51,4 +51,9 @@ export const COLOR_DANGER = COLOR_RED;
 export const COLOR_LIGHT = COLOR_GRAY200;
 export const COLOR_DARK = COLOR_GRAY700;
 
+export const COLOR_QUERY_FULLTEXT = '#faeabb';
+export const COLOR_QUERY_DEFAULT = '#ffffff';
+
 export const DRAG_DELAY = 150;
+
+export const USER_AVATAR_SIZE = 22;

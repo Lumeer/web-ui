@@ -322,6 +322,7 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(
           new DocumentsAction.Get({
             query: {stems: [{collectionId: data.object.id}]},
+            force: true,
           })
         );
       }
@@ -331,6 +332,7 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(
           new DocumentsAction.Get({
             query: {stems: [{collectionId: data.id}]},
+            force: true,
           })
         );
       }
@@ -340,6 +342,7 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(
           new DocumentsAction.Get({
             query: {stems: [{collectionId: data.object.id}]},
+            force: true,
           })
         );
       }
@@ -349,6 +352,7 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(
           new DocumentsAction.Get({
             query: {stems: [{collectionId: data.id}]},
+            force: true,
           })
         );
       }

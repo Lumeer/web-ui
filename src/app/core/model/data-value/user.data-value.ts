@@ -18,35 +18,51 @@
  */
 
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {isEmailValid} from '../../../shared/utils/email.utils';
 import {User} from '../../store/users/user';
 import {ConstraintData} from '../data/constraint';
 import {UserConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isEmailValid} from '../../../shared/utils/email.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetFulltexts} from './data-value.utils';
+import {UserConstraintConditionValue} from '../data/constraint-condition';
 
 export class UserDataValue implements DataValue {
-  public readonly user: User;
+  public readonly users: User[];
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
     public readonly config: UserConstraintConfig,
-    public readonly constraintData: ConstraintData
+    public readonly constraintData: ConstraintData,
+    public readonly inputValue?: string
   ) {
-    const email = String(value).trim();
-    this.user = ((constraintData && constraintData.users) || []).find(user => user.email === email);
+    this.users = this.createUsers();
+  }
+
+  private createUsers(): User[] {
+    const users = (this.constraintData && this.constraintData.users) || [];
+    const userValues: any[] = (isArray(this.value) ? this.value : [this.value]).filter(
+      val => isNotNullOrUndefined(val) && String(val).trim()
+    );
+    return userValues
+      .map(userValue => {
+        const user = users.find(u => u.email === userValue);
+        if (user) {
+          return user;
+        }
+        return {email: String(userValue), name: String(userValue), groupsMap: {}};
+      })
+      .filter(user => !!user);
   }
 
   public format(): string {
-    if (this.user) {
-      return this.user.name || this.user.email;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
     }
 
-    if (
-      this.inputType === DataValueInputType.Typed ||
-      (this.config && this.config.externalUsers && isEmailValid(String(this.value)))
-    ) {
-      return String(this.value);
+    if (this.users.length) {
+      return this.users.map(user => user.name || user.email).join(', ');
     }
 
     return formatUnknownDataValue(this.value);
@@ -57,26 +73,25 @@ export class UserDataValue implements DataValue {
   }
 
   public serialize(): any {
-    if (this.user) {
-      return this.user.email;
+    if (this.config && this.config.multi) {
+      return this.users.map(user => user.email);
     }
 
-    if (
-      this.inputType === DataValueInputType.Typed ||
-      (this.config && this.config.externalUsers && isEmailValid(String(this.value)))
-    ) {
-      return String(this.value);
-    }
-
-    return '';
+    return this.users.length ? this.users[0].email : null;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
-    if (this.user) {
+    if (isNotNullOrUndefined(this.inputValue)) {
       return true;
     }
+    return !this.value || this.users.every(user => this.isUserValid(user));
+  }
 
-    return Boolean(this.config) && this.config.externalUsers && isEmailValid(String(this.value));
+  private isUserValid(user: User): boolean {
+    if (((this.constraintData && this.constraintData.users) || []).some(u => u.email === user.email)) {
+      return true;
+    }
+    return this.config && this.config.externalUsers && isEmailValid(user.email);
   }
 
   public increment(): UserDataValue {
@@ -88,8 +103,14 @@ export class UserDataValue implements DataValue {
   }
 
   public compareTo(otherValue: UserDataValue): number {
-    if (this.user && otherValue.user) {
-      this.user.email.localeCompare(otherValue.user.email);
+    if (this.users.length > 1 || otherValue.users.length > 1) {
+      return 0;
+    }
+
+    if (this.users[0] && otherValue.users[0]) {
+      return (this.users[0].name || this.users[0].email).localeCompare(
+        otherValue.users[0].name || otherValue.users[0].email
+      );
     }
 
     return String(this.value).localeCompare(String(otherValue.value));
@@ -97,10 +118,42 @@ export class UserDataValue implements DataValue {
 
   public copy(newValue?: any): UserDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new UserDataValue(value, DataValueInputType.Copied, this.config, this.constraintData);
+    return new UserDataValue(value, this.config, this.constraintData);
   }
 
   public parseInput(inputValue: string): UserDataValue {
-    return new UserDataValue(inputValue, DataValueInputType.Typed, this.config, this.constraintData);
+    return new UserDataValue(inputValue, this.config, this.constraintData, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = values && values.map(value => this.mapQueryConditionValue(value));
+    const otherUsers = dataValues.length > 0 && dataValues[0].users;
+
+    switch (condition) {
+      case QueryCondition.In:
+      case QueryCondition.Equals:
+        return this.users.some(option => (otherUsers || []).some(otherOption => otherOption.email === option.email));
+      case QueryCondition.NotIn:
+      case QueryCondition.NotEquals:
+        return this.users.every(option => (otherUsers || []).every(otherOption => otherOption.email !== option.email));
+      case QueryCondition.IsEmpty:
+        return this.users.length === 0 && this.format().trim().length === 0;
+      case QueryCondition.NotEmpty:
+        return this.users.length > 0 || this.format().trim().length > 0;
+      default:
+        return false;
+    }
+  }
+
+  private mapQueryConditionValue(value: QueryConditionValue): UserDataValue {
+    if (value.type && value.type === UserConstraintConditionValue.CurrentUser) {
+      const currentUser = this.constraintData && this.constraintData.currentUser && this.constraintData.currentUser;
+      return new UserDataValue(currentUser && currentUser.email, this.config, this.constraintData);
+    }
+    return new UserDataValue(value.value, this.config, this.constraintData);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

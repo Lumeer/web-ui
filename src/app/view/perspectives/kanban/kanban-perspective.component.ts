@@ -49,16 +49,16 @@ import {
 import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/collapsible-sidebar.component';
 import {KanbanColumnsComponent} from './columns/kanban-columns.component';
 import {User} from '../../../core/store/users/user';
-import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformKanbanConfig, kanbanConfigIsEmpty} from './util/kanban.util';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
-import {TranslationService} from '../../../core/service/translation.service';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -83,24 +83,16 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public linkTypes$: Observable<LinkType[]>;
   public collections$: Observable<Collection[]>;
   public query$: Observable<Query>;
-  public users$: Observable<User[]>;
+  public constraintData$: Observable<ConstraintData>;
   public currentUser$: Observable<User>;
   public workspace$: Observable<Workspace>;
-
-  public readonly durationUnitsMap: DurationUnitsMap;
 
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
   private kanbanId = DEFAULT_KANBAN_ID;
 
-  constructor(
-    private store$: Store<AppState>,
-    private renderer: Renderer2,
-    private translationService: TranslationService
-  ) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+  constructor(private store$: Store<AppState>, private renderer: Renderer2) {}
 
   public ngOnInit() {
     this.initKanban();
@@ -126,7 +118,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
   }
@@ -212,14 +204,5 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
 
   public onPatchDocumentData(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
-  }
-
-  public onRemoveDocument(document: DocumentModel) {
-    this.store$.dispatch(
-      new DocumentsAction.DeleteConfirm({
-        collectionId: document.collectionId,
-        documentId: document.id,
-      })
-    );
   }
 }

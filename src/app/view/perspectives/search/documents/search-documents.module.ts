@@ -25,22 +25,19 @@ import {SearchDocumentsComponent} from './search-documents.component';
 import {EmptyDocumentsComponent} from './content/empty-documents/empty-documents.component';
 import {SearchDocumentHeaderComponent} from './content/header/search-document-header.component';
 import {IsDocumentOpenedPipe} from './pipes/is-document-opened.pipe';
-import {CreateDocumentValuesHtmlPipe} from './pipes/create-document-values-html.pipe';
-import {CreateDocumentEntriesHtmlPipe} from './pipes/create-document-entries-html.pipe';
-import {DocumentDefaultAttributeHtmlPipe} from './pipes/document-default-attribute-html.pipe';
+import {DataValueEntriesPipe} from './pipes/data-value-entries.pipe';
 import {SearchDocumentsContentComponent} from './content/search-documents-content.component';
 import {FilterWritableCollectionsPipe} from './pipes/filter-writable-collections.pipe';
+import {DataInputModule} from '../../../../shared/data-input/data-input.module';
 
 @NgModule({
-  imports: [CommonModule, SharedModule],
+  imports: [CommonModule, SharedModule, DataInputModule],
   declarations: [
     SearchDocumentsComponent,
     EmptyDocumentsComponent,
     SearchDocumentHeaderComponent,
     IsDocumentOpenedPipe,
-    CreateDocumentValuesHtmlPipe,
-    CreateDocumentEntriesHtmlPipe,
-    DocumentDefaultAttributeHtmlPipe,
+    DataValueEntriesPipe,
     SearchDocumentsContentComponent,
     FilterWritableCollectionsPipe,
   ],

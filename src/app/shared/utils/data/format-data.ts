@@ -21,7 +21,6 @@ import {UnknownConstraint} from '../../../core/model/constraint/unknown.constrai
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DocumentData} from '../../../core/store/documents/document.model';
-import {DataValueInputType} from '../../../core/model/data-value';
 
 export function formatData(
   data: DocumentData,
@@ -36,7 +35,7 @@ export function formatData(
   const newData = {};
   for (const [attributeId, attribute] of Object.entries(idsMap)) {
     const constraint = attribute.constraint || new UnknownConstraint();
-    const dataValue = constraint.createDataValue(data[attributeId], DataValueInputType.Stored, constraintData);
+    const dataValue = constraint.createDataValue(data[attributeId], constraintData);
     if (!filterInvalid || dataValue.isValid(true)) {
       newData[attributeId] = dataValue.format();
     }

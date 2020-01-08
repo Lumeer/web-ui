@@ -41,7 +41,13 @@ import {LinkInstance} from '../../../../../core/store/link-instances/link.instan
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {isNotNullOrUndefined, isNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
+import {
+  isArray,
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+  isNumeric,
+  toNumber,
+} from '../../../../../shared/utils/common.utils';
 import {getDurationSaveValue} from '../../../../../shared/utils/constraint/duration-constraint.utils';
 import {decimalUserToStore, parseMomentDate} from '../../../../../shared/utils/data.utils';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
@@ -51,7 +57,6 @@ import {
   DataAggregator,
   DataAggregatorAttribute,
 } from '../../../../../shared/utils/data/data-aggregator';
-import {compareDataValues} from '../../../../../shared/utils/data/data-compare.utils';
 import {hex2rgba} from '../../../../../shared/utils/html-modifier';
 import {mergePermissions} from '../../../../../shared/utils/resource.utils';
 import {
@@ -62,7 +67,6 @@ import {
   ChartYAxisType,
   convertChartDateFormat,
 } from './chart-data';
-import {DataValueInputType} from '../../../../../core/model/data-value';
 
 @Injectable()
 export class ChartDataConverter {
@@ -138,7 +142,10 @@ export class ChartDataConverter {
         return 0;
       }
 
-      return compareDataValues(a.data[sortAxis.attributeId], b.data[sortAxis.attributeId], constraint, asc);
+      const multiplier = asc ? 1 : -1;
+      const aValue = constraint.createDataValue(a.data[sortAxis.attributeId], this.constraintData);
+      const bValue = constraint.createDataValue(b.data[sortAxis.attributeId], this.constraintData);
+      return aValue.compareTo(bValue) * multiplier;
     });
   }
 
@@ -216,18 +223,21 @@ export class ChartDataConverter {
     const dataResources = this.dataAggregator.getDataResources(definedAxis.resourceIndex);
 
     for (const dataObject of dataResources) {
-      let value = xAxis ? dataObject.data[xAxis.attributeId] : yAxis ? dataObject.data[yAxis.attributeId] : null;
-      value = this.formatChartAxisValue(value, definedAxis);
-      if (isNullOrUndefined(value) || actualValues.has(value)) {
-        continue;
+      const value = xAxis ? dataObject.data[xAxis.attributeId] : yAxis ? dataObject.data[yAxis.attributeId] : null;
+      const values = isArray(value) ? value : [value];
+      for (let i = 0; i < values.length; i++) {
+        const formattedValue = this.formatChartAxisValue(values[i], definedAxis);
+        if (isNullOrUndefined(formattedValue) || actualValues.has(formattedValue)) {
+          continue;
+        }
+
+        const id = draggable ? dataObject.id : null;
+
+        isNum = isNum && isNumeric(formattedValue);
+
+        points.push({id, x: xAxis ? formattedValue : null, y: yAxis ? formattedValue : null});
+        actualValues.add(formattedValue);
       }
-
-      const id = draggable ? dataObject.id : null;
-
-      isNum = isNum && isNumeric(value);
-
-      points.push({id, x: xAxis ? value : null, y: yAxis ? value : null});
-      actualValues.add(value);
     }
 
     const name = yAxis && this.attributeNameForAxis(yAxis);
@@ -272,7 +282,7 @@ export class ChartDataConverter {
     const chartConstraint =
       overrideConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, overrideConstraint);
 
-    return chartConstraint || constraint;
+    return chartConstraint || constraint || new UnknownConstraint();
   }
 
   private convertAxisWithAggregation(config: ChartConfig, yAxisType: ChartYAxisType): ChartDataSet[] {
@@ -406,8 +416,10 @@ export class ChartDataConverter {
     }
 
     switch (constraint && constraint.type) {
+      case ConstraintType.Select:
+      case ConstraintType.User:
       case ConstraintType.Text:
-        return constraint.createDataValue(value, DataValueInputType.Stored, this.constraintData).preview();
+        return constraint.createDataValue(value, this.constraintData).preview();
       case ConstraintType.DateTime:
         return this.formatDateTimeValue(value, constraint.config as DateTimeConstraintConfig);
       case ConstraintType.Percentage:
@@ -422,7 +434,7 @@ export class ChartDataConverter {
         return isNumeric(durationValue) && toNumber(durationValue) >= 0 ? toNumber(durationValue) : null;
       default:
         return (constraint || new UnknownConstraint())
-          .createDataValue(value, DataValueInputType.Stored, constraintData || this.constraintData)
+          .createDataValue(value, constraintData || this.constraintData)
           .serialize();
     }
   }
@@ -434,7 +446,7 @@ export class ChartDataConverter {
   }
 
   private formatPercentageValue(value: any, constraint: PercentageConstraint): string {
-    const percentageValue = constraint.createDataValue(value, DataValueInputType.Stored).format('');
+    const percentageValue = constraint.createDataValue(value).format('');
     return decimalUserToStore(percentageValue);
   }
 

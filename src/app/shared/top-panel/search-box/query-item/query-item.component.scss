@@ -2,6 +2,7 @@
 
 :host {
   max-width: 100%;
+  user-select: none;
 }
 
 .query-item {
@@ -10,6 +11,7 @@
   border-style: solid;
   border-radius: $border-radius-base;
   white-space: nowrap;
+  min-height: 32px;
 
   &:hover .remove {
     opacity: 1;

@@ -18,14 +18,20 @@
  */
 
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class UnknownDataValue implements DataValue {
   public readonly config: any = {};
 
-  constructor(public readonly value: any, public readonly inputType: DataValueInputType) {}
+  constructor(public readonly value: any, public readonly inputValue?: string) {}
 
   public format(): string {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.inputValue;
+    }
     return formatUnknownDataValue(this.value);
   }
 
@@ -50,19 +56,41 @@ export class UnknownDataValue implements DataValue {
   }
 
   public compareTo(otherValue: DataValue): number {
-    if (typeof this.value === 'number' && typeof otherValue.value === 'number') {
-      return this.value - otherValue.value;
-    }
+    const aValue = isNumeric(this.value) ? toNumber(this.value) : this.value;
+    const bValue = isNumeric(otherValue.value) ? toNumber(otherValue.value) : otherValue.value;
 
-    return String(this.value).localeCompare(String(otherValue.value));
+    if (aValue > bValue) {
+      return 1;
+    } else if (bValue > aValue) {
+      return -1;
+    }
+    return 0;
   }
 
   public copy(newValue?: any): DataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new UnknownDataValue(value, DataValueInputType.Copied);
+    return new UnknownDataValue(value);
   }
 
   public parseInput(inputValue: string): DataValue {
-    return new UnknownDataValue(inputValue, DataValueInputType.Typed);
+    return new UnknownDataValue(inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = (values || []).map(value => new UnknownDataValue(value.value));
+    const formattedValue = this.format()
+      .toLowerCase()
+      .trim();
+    const otherFormattedValues = dataValues.map(dataValue =>
+      dataValue
+        .format()
+        .toLowerCase()
+        .trim()
+    );
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

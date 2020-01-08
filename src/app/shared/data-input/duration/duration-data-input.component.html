@@ -1,7 +1,6 @@
 <input *ngIf="readonly; else durationEditing"
        [title]="value | formatDataValue"
        [value]="value | formatDataValue"
-       (focus)="onFocus.emit($event)"
        type="text"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [class.invalid-value]="!valid"
@@ -15,6 +14,7 @@
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"
-         class="border-0 w-100 h-100 px-1 {{ skipValidation || valid ? 'bg-transparent' : 'bg-danger-light' }}"
+         class="border-0 w-100 h-100 px-1"
+         [ngClass]="valid || skipValidation ? 'bg-transparent' : 'bg-danger-light'"
          data-test="duration-data-input">
 </ng-template>

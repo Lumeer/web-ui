@@ -49,7 +49,6 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {CalendarHeaderComponent} from './header/calendar-header.component';
 import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
 import {CalendarEventDetailModalComponent} from '../../../../shared/modal/calendar-event-detail/calendar-event-detail-modal.component';
-import {DataValueInputType} from '../../../../core/model/data-value';
 import {ModalService} from '../../../../shared/modal/modal.service';
 
 interface Data {
@@ -206,7 +205,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private getSaveValue(value: any, constraint: Constraint): any {
     if (constraint) {
-      return constraint.createDataValue(value, DataValueInputType.Stored, this.constraintData).serialize();
+      return constraint.createDataValue(value, this.constraintData).serialize();
     } else if (isDateValid(value)) {
       return moment(value).toISOString();
     } else {

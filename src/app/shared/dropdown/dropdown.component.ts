@@ -48,6 +48,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   public closeOnClickOutside = true;
 
   @Input()
+  public closeOnClickOrigin: boolean;
+
+  @Input()
   public showBackdrop = true;
 
   @Input()
@@ -71,6 +74,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Output()
   public onClose = new EventEmitter();
 
+  @Output()
+  public onCloseByClickOutside = new EventEmitter();
+
   @ViewChild('dropdown', {static: false})
   public dropdown: TemplateRef<any>;
 
@@ -87,7 +93,10 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.minWidth || changes.minHeight) {
-      this.overlayRef && this.overlayRef.updateSize({minWidth: this.minWidth, minHeight: this.minHeight});
+      if (this.overlayRef) {
+        this.overlayRef.updateSize({minWidth: this.minWidth, minHeight: this.minHeight});
+        this.overlayRef.updatePosition();
+      }
     }
   }
 
@@ -117,12 +126,17 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     this.syncWidth();
   }
 
-  public checkClickOutside(event) {
+  public checkClickOutside(event: MouseEvent) {
+    const originElement = (<ElementRef>this.origin).nativeElement || <HTMLElement>this.origin;
+    const clickedOnOrigin = originElement.contains(event.target as any);
     if (
+      event.isTrusted &&
       this.overlayRef &&
       this.overlayRef.overlayElement &&
-      !this.overlayRef.overlayElement.contains(event.target as any)
+      !this.overlayRef.overlayElement.contains(event.target as any) &&
+      ((clickedOnOrigin && this.closeOnClickOrigin) || !clickedOnOrigin)
     ) {
+      this.onCloseByClickOutside.emit();
       this.close();
     }
   }
@@ -169,6 +183,12 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   public isOpen(): boolean {
     return !!this.overlayRef;
+  }
+
+  public updatePosition() {
+    if (this.overlayRef) {
+      this.overlayRef.updatePosition();
+    }
   }
 
   @HostListener('window:resize')

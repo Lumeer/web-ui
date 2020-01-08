@@ -414,7 +414,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     });
   }
 
-  public onMouseDown() {
+  public onClick() {
     if (!this.edited$.getValue()) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }

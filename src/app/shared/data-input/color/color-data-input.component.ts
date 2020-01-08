@@ -31,8 +31,8 @@ import {
 } from '@angular/core';
 import {ColorDataValue} from '../../../core/model/data-value/color.data-value';
 import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
 import {ColorPickerComponent} from '../../picker/color/color-picker.component';
+import {isNotNullOrUndefined} from '../../utils/common.utils';
 
 @Component({
   selector: 'color-data-input',
@@ -63,7 +63,7 @@ export class ColorDataInputComponent implements OnChanges {
   public cancel = new EventEmitter();
 
   @Output()
-  public onFocus = new EventEmitter<any>();
+  public enterInvalid = new EventEmitter();
 
   @ViewChild('colorInput', {static: false})
   public colorInput: ElementRef<HTMLInputElement>;
@@ -73,20 +73,38 @@ export class ColorDataInputComponent implements OnChanges {
 
   public valid = true;
 
+  private pendingUpdate: string;
+
   constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
+    const value = (this.value && this.value.format()) || '';
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
       setTimeout(() => {
-        HtmlModifier.setCursorAtTextContentEnd(this.colorInput.nativeElement);
+        this.colorInput.nativeElement.setSelectionRange(value.length, value.length);
         this.colorInput.nativeElement.focus();
         this.openColorPicker();
       });
     }
+    if (this.changedFromEditableToReadonly(changes)) {
+      if (isNotNullOrUndefined(this.pendingUpdate)) {
+        this.onSave(this.pendingUpdate);
+      }
+    }
+
     if (changes.focus && !this.focus) {
       this.closeColorPicker();
     }
     this.refreshValid(this.value);
+  }
+
+  private changedFromEditableToReadonly(changes: SimpleChanges): boolean {
+    return (
+      changes.readonly &&
+      isNotNullOrUndefined(changes.readonly.previousValue) &&
+      !changes.readonly.previousValue &&
+      this.readonly
+    );
   }
 
   private refreshValid(value: ColorDataValue) {
@@ -94,6 +112,7 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   private openColorPicker() {
+    this.pendingUpdate = null;
     this.colorPicker.open();
   }
 
@@ -109,20 +128,24 @@ export class ColorDataInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        const input = this.colorInput;
-
-        if (input) {
-          const dataValue = this.value.parseInput(input.nativeElement.value);
-
-          if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
-            event.stopImmediatePropagation();
-            event.preventDefault();
-            return;
-          }
-
-          // needs to be executed after parent event handlers
-          setTimeout(() => this.save.emit(dataValue));
+        if (this.readonly) {
+          return;
         }
+
+        const input = this.colorInput;
+        const dataValue = this.value.parseInput(input.nativeElement.value);
+        this.pendingUpdate = null;
+
+        event.preventDefault();
+
+        if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
+          this.enterInvalid.emit();
+          return;
+        }
+
+        // needs to be executed after parent event handlers
+        setTimeout(() => this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
         this.onCancel();
@@ -131,29 +154,35 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   public onValueChange(value: string) {
+    this.pendingUpdate = value;
     this.colorInput.nativeElement.value = value;
     const dataValue = this.value.parseInput(value);
     this.valueChange.emit(dataValue);
   }
 
   public onSave(color: string) {
-    if (!color) {
+    const value = this.value.copy(color);
+    if (color && !value.isValid()) {
       this.cancel.emit();
       return;
     }
 
-    const dataValue = this.value.copy(color);
+    this.pendingUpdate = null;
+    this.value = value;
+    this.colorInput && (this.colorInput.nativeElement.value = '');
+    this.save.emit(value);
+  }
 
-    if (dataValue.serialize() !== this.value.serialize()) {
-      this.colorInput && (this.colorInput.nativeElement.value = '');
-      this.save.emit(dataValue);
-    } else {
-      this.onCancel();
-    }
+  public onSaveOnClose(color: string) {
+    this.onSave(color);
   }
 
   public onCancel() {
-    this.colorInput && (this.colorInput.nativeElement.value = this.value.format());
+    this.pendingUpdate = null;
     this.cancel.emit();
+  }
+
+  public onInput(value: string) {
+    this.onValueChange(value);
   }
 }

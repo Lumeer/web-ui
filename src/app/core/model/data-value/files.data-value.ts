@@ -18,14 +18,12 @@
  */
 
 import {FilesConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetFulltexts} from './data-value.utils';
 
 export class FilesDataValue implements DataValue {
-  constructor(
-    public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: FilesConstraintConfig
-  ) {}
+  constructor(public readonly value: any, public readonly config: FilesConstraintConfig) {}
 
   public format(): string {
     return this.value || this.value === 0 ? String(this.value) : '';
@@ -57,10 +55,25 @@ export class FilesDataValue implements DataValue {
 
   public copy(newValue?: any): FilesDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new FilesDataValue(value, DataValueInputType.Copied, this.config);
+    return new FilesDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): FilesDataValue {
-    return new FilesDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new FilesDataValue(inputValue, this.config);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    switch (condition) {
+      case QueryCondition.IsEmpty:
+        return !this.value;
+      case QueryCondition.NotEmpty:
+        return this.value;
+      default:
+        return false;
+    }
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }

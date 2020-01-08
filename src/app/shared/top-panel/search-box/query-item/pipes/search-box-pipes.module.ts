@@ -25,9 +25,13 @@ import {IsAttributeItemPipe} from './is-attribute-item.pipe';
 import {IsCollectionItemPipe} from './is-collection-item.pipe';
 import {QueryItemBackgroundPipe} from './query-item-background';
 import {QueryItemBorderPipe} from './query-item-border';
-import {ConditionFilterPipe} from './condition-filter.pipe';
+import {TranslateConditionPipe} from './translate-condition.pipe';
 import {TruncatePipe} from './truncate.pipe';
 import {QueryItemTextPipe} from './query-item-text.pipe';
+import {QueryItemAttributePipe} from './query-item-attribute.pipe';
+import {TranslateConditionValuePipe} from './translate-condition-value.pipe';
+import {ConditionNumValuesPipe} from './condition-num-values.pipe';
+import {QueryItemFormPipe} from './query-item-form.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -37,9 +41,13 @@ import {QueryItemTextPipe} from './query-item-text.pipe';
     IsDeletedItemPipe,
     QueryItemBackgroundPipe,
     QueryItemBorderPipe,
-    ConditionFilterPipe,
+    TranslateConditionPipe,
     QueryItemTextPipe,
     TruncatePipe,
+    QueryItemAttributePipe,
+    TranslateConditionValuePipe,
+    ConditionNumValuesPipe,
+    QueryItemFormPipe,
   ],
   exports: [
     IsAttributeItemPipe,
@@ -47,9 +55,13 @@ import {QueryItemTextPipe} from './query-item-text.pipe';
     IsDeletedItemPipe,
     QueryItemBackgroundPipe,
     QueryItemBorderPipe,
-    ConditionFilterPipe,
+    TranslateConditionPipe,
     QueryItemTextPipe,
     TruncatePipe,
+    QueryItemAttributePipe,
+    TranslateConditionValuePipe,
+    ConditionNumValuesPipe,
+    QueryItemFormPipe,
   ],
 })
 export class SearchBoxPipesModule {}

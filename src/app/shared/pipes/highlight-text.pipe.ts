@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {escapeStringForRegex} from '../utils/string.utils';
+import {escapeStringForRegex, removeAccent} from '../utils/string.utils';
 
 @Pipe({
   name: 'highlightText',
@@ -28,12 +28,20 @@ export class HighlightTextPipe implements PipeTransform {
     if (!text) {
       return '';
     }
+    if (!highlightedText) {
+      return text;
+    }
     const textString = String(text);
-    const pattern = escapeStringForRegex(String(highlightedText));
-    const match = textString.toString().match(new RegExp(pattern, 'i'));
+    const pattern = escapeStringForRegex(removeAccent(String(highlightedText)));
+    const match = removeAccent(textString).match(new RegExp(pattern, 'i'));
     if (!match || (prefixOnly && match.index > 0)) {
       return textString;
     }
-    return textString.replace(match.toString(), `<span class="text-success">${match}</span>`);
+    const highlightedLength = String(highlightedText).length;
+    return (
+      textString.substring(0, match.index) +
+      `<span class="text-success">${textString.substring(match.index, match.index + highlightedLength)}</span>` +
+      textString.substring(match.index + highlightedLength, textString.length)
+    );
   }
 }

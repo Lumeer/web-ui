@@ -9,7 +9,7 @@
           [formGroupName]="index">
 
         <td class="align-middle text-nowrap p-1">
-          <label [for]="conversionsControls.Value"
+          <label [for]="'value-' + control.value.unit"
                  i18n="@@constraint.duration.unit.description"
                  class="unit-column m-0">
             {control.value.unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }
@@ -18,7 +18,7 @@
 
         <td class="p-1">
           <input type="number" class="form-control"
-                 [id]="conversionsControls.Value"
+                 [id]="'value-' + control.value.unit"
                  [formControlName]="conversionsControls.Value"
                  [readOnly]="!editable || !(control.value.unit | durationConstraintUnitEditable)"
                  min="1"

@@ -30,7 +30,7 @@ import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/doc
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {User} from '../../../core/store/users/user';
-import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
+import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 
@@ -48,8 +48,8 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {checkOrTransformGanttConfig, ganttConfigIsEmpty} from './util/gantt-chart-util';
-import {DurationUnitsMap} from '../../../core/model/data/constraint';
-import {TranslationService} from '../../../core/service/translation.service';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -65,8 +65,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public currentView$: Observable<View>;
   public currentUser$: Observable<User>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public users$: Observable<User[]>;
-  public readonly durationUnitsMap: DurationUnitsMap;
+  public constraintData$: Observable<ConstraintData>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
@@ -74,13 +73,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(
-    private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private translationService: TranslationService
-  ) {
-    this.durationUnitsMap = translationService.createDurationUnitsMap();
-  }
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initGanttChart();
@@ -165,7 +158,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
-    this.users$ = this.store$.pipe(select(selectAllUsers));
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public ngOnDestroy() {

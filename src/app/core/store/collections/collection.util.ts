@@ -21,12 +21,8 @@ import {AllowedPermissions} from '../../model/allowed-permissions';
 import {Constraint} from '../../model/constraint';
 import {ConstraintType} from '../../model/data/constraint';
 import {LinkType} from '../link-types/link.type';
-import {AttributeFilter, ConditionType, Query} from '../navigation/query/query';
-import {
-  conditionFromString,
-  getQueryFiltersForCollection,
-  getQueryFiltersForLinkType,
-} from '../navigation/query/query.util';
+import {AttributeFilter, Query, QueryCondition} from '../navigation/query/query';
+import {getQueryFiltersForCollection, getQueryFiltersForLinkType} from '../navigation/query/query.util';
 import {Attribute, Collection} from './collection';
 
 export function isCollectionAttributeEditable(
@@ -58,7 +54,7 @@ export function isCollectionAttributeLockedByQuery(query: Query, collection: Col
 function isAttributeLockedByFilters(filters: AttributeFilter[], attributeId: string): boolean {
   return filters
     .filter(filter => filter.attributeId === attributeId)
-    .some(filter => conditionFromString(filter.condition) === ConditionType.Equals);
+    .some(filter => filter.condition === QueryCondition.Equals);
 }
 
 export function isLinkTypeAttributeEditable(

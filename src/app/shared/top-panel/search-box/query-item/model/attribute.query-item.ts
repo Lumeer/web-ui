@@ -20,7 +20,12 @@
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query/query';
+import {
+  CollectionAttributeFilter,
+  QueryCondition,
+  QueryConditionValue,
+} from '../../../../../core/store/navigation/query/query';
+import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
@@ -28,8 +33,9 @@ export class AttributeQueryItem implements QueryItem {
   public constructor(
     public collection: Collection,
     public attribute: Attribute,
-    public condition: string,
-    public conditionValue: any
+    public condition?: QueryCondition,
+    public conditionValues?: QueryConditionValue[],
+    public fromSuggestion?: boolean
   ) {}
 
   public get text() {
@@ -37,7 +43,14 @@ export class AttributeQueryItem implements QueryItem {
   }
 
   public get value() {
-    return `${this.collection.id}:${this.attribute.id}:${this.condition} ${this.conditionValue}`;
+    return `${this.collection.id}:${this.attribute.id}:${this.condition || ''}:${this.conditionValuesString()}`;
+  }
+
+  private conditionValuesString(): string {
+    return (this.conditionValues || [])
+      .map(item => item.type || item.value)
+      .filter(item => isNotNullOrUndefined(item))
+      .join(':');
   }
 
   public get icons(): string[] {
@@ -53,7 +66,7 @@ export class AttributeQueryItem implements QueryItem {
       collectionId: this.collection.id,
       attributeId: this.attribute.id,
       condition: this.condition,
-      value: this.conditionValue,
+      conditionValues: this.conditionValues,
     };
   }
 }

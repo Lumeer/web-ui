@@ -32,6 +32,7 @@ import {BehaviorSubject} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
+import {DropdownPosition} from '../../../dropdown/dropdown-position';
 
 @Component({
   selector: 'files-dropdown',
@@ -62,6 +63,13 @@ export class FilesDropdownComponent implements AfterViewInit {
   public dropdown: DropdownComponent;
 
   public fileSizeError$ = new BehaviorSubject(null);
+
+  public readonly dropdownPositions = [
+    DropdownPosition.BottomStart,
+    DropdownPosition.BottomEnd,
+    DropdownPosition.TopStart,
+    DropdownPosition.TopEnd,
+  ];
 
   constructor(private i18n: I18n) {}
 

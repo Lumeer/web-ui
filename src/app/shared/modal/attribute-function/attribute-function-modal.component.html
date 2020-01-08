@@ -1,6 +1,6 @@
 <modal-wrapper
   *ngIf="{collection: collection$ | async, linkType: linkType$ | async, linkCollections: linkTypeCollections$ | async, attribute: attribute$ | async} as data"
-  [dialogType]="'primary'"
+  [dialogType]="dialogType.Primary"
   [performingAction]="performingAction$ | async"
   [customHeader]="true"
   (onSubmit)="onSubmit(data.attribute)"

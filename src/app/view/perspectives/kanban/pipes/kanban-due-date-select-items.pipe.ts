@@ -18,42 +18,33 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryStem} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query/query.util';
-import {AttributesResourceType} from '../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {KanbanAttribute} from '../../../../core/store/kanbans/kanban';
-import {isNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 @Pipe({
   name: 'kanbanDueDateSelectItems',
 })
 export class KanbanDueDateSelectItemsPipe implements PipeTransform {
-  public transform(
-    stem: QueryStem,
-    collections: Collection[],
-    linkTypes: LinkType[],
-    attribute?: KanbanAttribute
-  ): SelectItemModel[] {
-    if (!stem || !attribute) {
+  public transform(attributesResourcesOrder: AttributesResource[], attribute?: KanbanAttribute): SelectItemModel[] {
+    if ((attributesResourcesOrder || []).length === 0) {
       return [];
     }
 
-    const resourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
-    const index = resourcesOrder.findIndex(ar => ar.id === attribute.resourceId);
+    const index = attributesResourcesOrder.findIndex(ar => ar.id === attribute.resourceId);
 
-    if (!isNullOrUndefined(index)) {
+    if (index >= 0) {
       if (attribute.resourceType === AttributesResourceType.Collection) {
-        return this.collectionSelectItem(resourcesOrder[index] as Collection, index);
+        return this.collectionSelectItem(attributesResourcesOrder[index] as Collection, index);
       }
 
       if (attribute.resourceType === AttributesResourceType.LinkType) {
         return this.linkTypeSelectItem(
-          resourcesOrder[index] as LinkType,
-          resourcesOrder[index - 1],
-          resourcesOrder[index + 1],
+          attributesResourcesOrder[index] as LinkType,
+          attributesResourcesOrder[index - 1],
+          attributesResourcesOrder[index + 1],
           index
         );
       }

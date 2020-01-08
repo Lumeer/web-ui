@@ -20,15 +20,16 @@
 import * as Coordinates from 'coordinate-parser';
 import {CoordinatesFormat} from '../../../core/model/data/constraint-config';
 import {MapCoordinates} from '../../../core/store/maps/map.model';
-import {isNotNullOrUndefined} from '../common.utils';
+import {isNotNullOrUndefined, isNumeric} from '../common.utils';
 
 export function parseCoordinates(value: any): MapCoordinates {
   if (value && isNotNullOrUndefined(value.lat) && isNotNullOrUndefined(value.lng)) {
     return value as MapCoordinates;
   }
 
+  const mappedValue = isNumeric(value) && !String(value).includes(',') ? `${value},0` : value;
   try {
-    const coordinates = new Coordinates(value);
+    const coordinates = new Coordinates(mappedValue);
     return {
       lat: coordinates.getLatitude(),
       lng: coordinates.getLongitude(),

@@ -18,6 +18,7 @@
  */
 
 export enum SelectConstraintFormControl {
+  Multi = 'multi',
   DisplayValues = 'displayValues',
   Options = 'options',
 }
@@ -25,4 +26,5 @@ export enum SelectConstraintFormControl {
 export enum SelectConstraintOptionsFormControl {
   Value = 'value',
   DisplayValue = 'displayValue',
+  Background = 'background',
 }

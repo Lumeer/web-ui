@@ -43,6 +43,7 @@ import {hashUserId} from './shared/utils/system.utils';
 import {VideosAction} from './core/store/videos/videos.action';
 import {getAllVideos} from './core/store/videos/videos.data';
 import {SessionService} from './auth/session.service';
+import {ConstraintDataService} from './core/service/constraint-data.service';
 
 @Component({
   selector: 'lmr-app',
@@ -65,6 +66,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private title: Title,
     private pusherService: PusherService,
     private sessionService: SessionService,
+    private constraintDataService: ConstraintDataService, // for init constraint data
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer - Visual Project&Team Management'}));

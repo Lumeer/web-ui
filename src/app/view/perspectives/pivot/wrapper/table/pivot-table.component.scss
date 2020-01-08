@@ -16,3 +16,12 @@
 .pivot-empty-cell {
   border: 1px transparent solid;
 }
+
+.cell.color {
+  padding: 0 !important;
+  height: 30px;
+}
+
+.data-input {
+  min-height: 30px;
+}

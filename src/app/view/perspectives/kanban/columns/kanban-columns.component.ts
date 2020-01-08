@@ -41,7 +41,7 @@ import {User} from '../../../../core/store/users/user';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../core/constants';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
@@ -60,13 +60,11 @@ import {findAttributeConstraint} from '../../../../core/store/collections/collec
 import {KanbanColumnComponent} from './column/kanban-column.component';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-favorite-toggle.service';
-import {SelectDataValue} from '../../../../core/model/data-value/select.data-value';
-import {SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Constraint} from '../../../../core/model/constraint';
 import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {DataValueInputType} from '../../../../core/model/data-value';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {groupLinkInstancesByLinkTypes} from '../../../../core/store/link-instances/link-instance.utils';
 
 @Component({
   selector: 'kanban-columns',
@@ -195,12 +193,13 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   private getPreviousDocumentByKanbanResource(resourceCreate: KanbanResourceCreate): DocumentModel[] {
     const {pipelineDocuments} = filterDocumentsAndLinksByStem(
-      groupDocumentsByCollection(this.documents),
       this.collections,
+      groupDocumentsByCollection(this.documents),
       this.linkTypes,
-      this.linkInstances,
+      groupLinkInstancesByLinkTypes(this.linkInstances),
+      this.constraintData,
       resourceCreate.stem,
-      []
+      (this.query && this.query.fulltexts) || []
     );
     const pipelineIndex = resourceCreate.kanbanAttribute.resourceIndex / 2;
     return pipelineDocuments[pipelineIndex - 1] || [];
@@ -260,25 +259,40 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     return {collectionId: collection.id, data};
   }
 
-  public onUpdateDocument(object: {document: DocumentModel; newValue: string; attributeId: string}) {
-    const {document, newValue, attributeId} = object;
+  public onUpdateDocument(object: {
+    document: DocumentModel;
+    newValue: string;
+    previousValue: string;
+    attributeId: string;
+  }) {
+    const {document, newValue, attributeId, previousValue} = object;
     const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
     if (collection) {
       const constraint = findAttributeConstraint(collection.attributes, attributeId);
-      const value = this.createValueByConstraint(constraint, newValue);
+      const value = this.createValueByConstraint(constraint, newValue, previousValue, document.data[attributeId]);
       const data = {...document.data, [attributeId]: value};
       this.patchDocumentData.emit({...document, data});
     }
   }
 
-  private createValueByConstraint(constraint: Constraint, newValue: any): any {
-    if (constraint && constraint.type === ConstraintType.Select) {
-      return new SelectDataValue(
-        newValue,
-        DataValueInputType.Stored,
-        constraint.config as SelectConstraintConfig,
-        true
-      ).serialize();
+  private createValueByConstraint(
+    constraint: Constraint,
+    newValue: any,
+    previousValue?: any,
+    documentValue?: any
+  ): any {
+    if (
+      constraint &&
+      (constraint.type === ConstraintType.Select || constraint.type === ConstraintType.User) &&
+      isNotNullOrUndefined(previousValue) &&
+      isArray(documentValue)
+    ) {
+      const changedIndex = documentValue.findIndex(value => value === previousValue);
+      const newArray = [...documentValue];
+      if (!newArray.includes(newValue)) {
+        newArray[changedIndex] = newValue;
+      }
+      return constraint.createDataValue(newArray, this.constraintData).serialize();
     } else {
       return (constraint || this.unknownConstraint).createDataValue(newValue).serialize();
     }

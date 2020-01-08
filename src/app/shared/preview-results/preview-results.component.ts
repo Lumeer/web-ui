@@ -30,21 +30,15 @@ import {
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {ConstraintData} from '../../core/model/data/constraint';
-import {ConstraintDataService} from '../../core/service/constraint-data.service';
 import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {
-  selectCollectionsByQuery,
   selectCollectionsByQueryWithoutLinks,
   selectDocumentsByCustomQuery,
 } from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {generateDocumentData} from '../../core/store/documents/document.utils';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {Query} from '../../core/store/navigation/query/query';
-import {filterStemsForCollection, getQueryFiltersForCollection} from '../../core/store/navigation/query/query.util';
-import {generateCorrelationId} from '../utils/resource.utils';
+import {filterStemsForCollection} from '../../core/store/navigation/query/query.util';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {Project} from '../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
@@ -52,6 +46,7 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {QueryAction} from '../../core/model/query-action';
 import {Router} from '@angular/router';
 import {Workspace} from '../../core/store/navigation/workspace';
+import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'preview-results',
@@ -83,11 +78,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   public loaded$: Observable<boolean>;
   public project$: Observable<Project>;
 
-  constructor(
-    private store$: Store<AppState>,
-    private router: Router,
-    private constraintDataService: ConstraintDataService
-  ) {}
+  constructor(private store$: Store<AppState>, private router: Router) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -96,7 +87,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   private subscribeData() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQueryWithoutLinks));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
-    this.constraintData$ = this.constraintDataService.observeConstraintData();
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

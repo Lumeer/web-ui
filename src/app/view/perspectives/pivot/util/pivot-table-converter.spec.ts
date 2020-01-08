@@ -22,7 +22,6 @@ import {PercentageConstraintConfig} from '../../../../core/model/data/constraint
 import {PivotTableConverter} from './pivot-table-converter';
 import {PivotData} from './pivot-data';
 import {COLOR_GRAY100, COLOR_GRAY200} from '../../../../core/constants';
-import {ConstraintType} from '../../../../core/model/data/constraint';
 
 describe('Pivot table converter', () => {
   const converter: PivotTableConverter = new PivotTableConverter('H', 'S');
@@ -76,6 +75,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: 'B',
@@ -84,6 +84,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][2]).toEqual({
       value: 'C',
@@ -92,6 +93,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual({
       value: '10',
@@ -159,6 +161,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: 'a1',
@@ -167,6 +170,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual(undefined);
     expect(pivotTable.cells[1][1]).toEqual({
@@ -176,6 +180,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[2][0]).toEqual({
       value: converter.createHeaderTitle('A'),
@@ -194,6 +199,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[3][1]).toEqual({
       value: 'a1',
@@ -202,6 +208,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[4][0]).toEqual({
       value: converter.createHeaderTitle('B'),
@@ -220,6 +227,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[5][1]).toEqual({
       value: 'a2',
@@ -228,6 +236,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[6][0]).toEqual(undefined);
     expect(pivotTable.cells[6][1]).toEqual({
@@ -237,6 +246,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[7][0]).toEqual(undefined);
     expect(pivotTable.cells[7][1]).toEqual({
@@ -246,6 +256,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[8][0]).toEqual({
       value: converter.createHeaderTitle('C'),
@@ -313,6 +324,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[1][0]).toEqual({
       value: 'a1',
@@ -321,6 +333,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][1]).toEqual({
       value: converter.createHeaderTitle('X'),
@@ -339,6 +352,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual(undefined);
     expect(pivotTable.cells[1][2]).toEqual({
@@ -348,6 +362,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[1][3]).toEqual({
       value: 'a2',
@@ -356,6 +371,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][4]).toEqual({
       value: converter.createHeaderTitle('Y'),
@@ -374,6 +390,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][6]).toEqual(undefined);
     expect(pivotTable.cells[1][5]).toEqual({
@@ -383,6 +400,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[1][6]).toEqual({
       value: 'a3',
@@ -391,6 +409,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][7]).toEqual({
       value: converter.createHeaderTitle('Z'),
@@ -471,6 +490,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual({
       value: 'Y',
@@ -479,6 +499,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
 
     expect(pivotTable.cells[1][2].value).toEqual('1');
@@ -613,6 +634,7 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][3]).toEqual({
       value: 'B',
@@ -621,6 +643,7 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][6]).toEqual({
       value: 'C',
@@ -629,6 +652,7 @@ describe('Pivot table converter', () => {
       rowSpan: 1,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][9]).toEqual({
       value: 'S',
@@ -752,6 +776,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.rowHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[8][0]).toEqual({
       value: converter.createHeaderTitle('B'),
@@ -769,6 +794,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][5]).toEqual({
       value: 'Y',
@@ -777,6 +803,7 @@ describe('Pivot table converter', () => {
       isHeader: true,
       cssClass: PivotTableConverter.columnHeaderClass,
       background: undefined,
+      constraint: undefined,
     });
     expect(pivotTable.cells[0][4]).toEqual({
       value: converter.createHeaderTitle('X'),

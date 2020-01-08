@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -36,15 +35,15 @@ import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-valu
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {DataSuggestion} from '../data-suggestion';
-import {TypeaheadDirective, TypeaheadMatch} from 'ngx-bootstrap/typeahead';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 
 @Component({
   selector: 'text-data-input',
   templateUrl: './text-data-input.component.html',
-  styleUrls: ['./text-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextDataInputComponent implements OnChanges, AfterViewChecked {
+export class TextDataInputComponent implements OnChanges {
   @Input()
   public focus: boolean;
 
@@ -73,22 +72,18 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
-
-  @Output()
-  public onFocus = new EventEmitter<any>();
+  public enterInvalid = new EventEmitter();
 
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(TypeaheadDirective, {static: false})
-  public typeahead: TypeaheadDirective;
+  @ViewChild(OptionsDropdownComponent, {static: false})
+  public dropdown: OptionsDropdownComponent;
 
   public text = '';
   public valid = true;
 
   private preventSave: boolean;
-  private triggerInput: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
@@ -97,7 +92,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
         input.nativeElement.focus();
       });
-      this.triggerInput = true;
       this.text = this.value.format();
     }
     if (changes.value && this.value) {
@@ -105,24 +99,6 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
     }
 
     this.refreshValid(this.value);
-  }
-
-  public ngAfterViewChecked() {
-    if (this.triggerInput) {
-      this.dispatchInputEvent();
-      this.triggerInput = false;
-    }
-  }
-
-  private dispatchInputEvent() {
-    if (this.textInput) {
-      const element = this.textInput.nativeElement;
-      const event = new Event('input', {
-        bubbles: true,
-        cancelable: true,
-      });
-      setTimeout(() => element.dispatchEvent(event));
-    }
   }
 
   public onInput() {
@@ -134,13 +110,25 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   public onBlur() {
     if (this.preventSave) {
       this.preventSave = false;
-      this.dataBlur.emit();
+      this.blurCleanup();
     } else {
-      setTimeout(() => {
-        // needs to be executed after parent event handlers
-        this.saveValue(this.text);
-        this.dataBlur.emit();
-      }, 200);
+      const selectedOption = this.dropdown.getActiveOption();
+      const dataValue = this.value.parseInput(this.text);
+      if (selectedOption || this.skipValidation || dataValue.isValid()) {
+        if (selectedOption) {
+          this.saveValue(selectedOption.value);
+        } else {
+          this.save.emit(dataValue);
+        }
+      } else {
+        this.cancel.emit();
+      }
+    }
+  }
+
+  private blurCleanup() {
+    if (this.dropdown) {
+      this.dropdown.close();
     }
   }
 
@@ -155,19 +143,43 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         if (this.readonly) {
-          event.preventDefault();
-        } else {
-          // needs to be executed after parent event handlers
-          const input = this.textInput;
-          this.preventSave = true;
-          setTimeout(() => input && this.saveValue(input.nativeElement.value));
+          return;
         }
+        const input = this.textInput;
+        const dataValue = this.value.parseInput(input.nativeElement.value);
+        const selectedOption = this.dropdown.getActiveOption();
+
+        event.preventDefault();
+
+        if (!this.skipValidation && !dataValue.isValid() && !selectedOption) {
+          event.stopImmediatePropagation();
+          this.enterInvalid.emit();
+          return;
+        }
+
+        this.preventSaveAndBlur();
+        // needs to be executed after parent event handlers
+        setTimeout(() => {
+          if (selectedOption) {
+            this.saveValue(selectedOption.value);
+          } else {
+            this.save.emit(dataValue);
+          }
+        });
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
-        this.textInput && (this.textInput.nativeElement.value = this.value.format());
+        this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+
+    this.dropdown.onKeyDown(event);
+  }
+
+  private preventSaveAndBlur() {
+    if (this.textInput) {
+      this.preventSave = true;
+      this.textInput.nativeElement.blur();
     }
   }
 
@@ -176,7 +188,14 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
     this.save.emit(dataValue);
   }
 
-  public onSelect(match: TypeaheadMatch) {
-    this.saveValue(match.item.title);
+  public onSelectOption(option: DropdownOption) {
+    this.preventSaveAndBlur();
+    this.saveValue(option.value);
+  }
+
+  public onFocused() {
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
   }
 }

@@ -18,6 +18,11 @@
  */
 
 import {CaseStyle} from '../../core/model/data/constraint-config';
+import * as unorm from 'unorm';
+
+export function removeAccent(value: string, lowerCase = true): string {
+  return unorm.nfd(lowerCase ? (value || '').toLowerCase() : value || '').replace(/[\u0300-\u036f]/g, '');
+}
 
 export function escapeStringForRegex(text: string): string {
   return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');

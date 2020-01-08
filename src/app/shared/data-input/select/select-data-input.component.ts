@@ -30,12 +30,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {TypeaheadMatch} from 'ngx-bootstrap/typeahead';
 import {SelectDataValue} from '../../../core/model/data-value/select.data-value';
 import {SelectConstraintConfig, SelectConstraintOption} from '../../../core/model/data/constraint-config';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
-import {DataValueInputType} from '../../../core/model/data-value';
+import {DropdownOption} from '../../dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
+import {uniqueValues} from '../../utils/array.utils';
 
 @Component({
   selector: 'select-data-input',
@@ -66,20 +67,25 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
+  public enterInvalid = new EventEmitter();
 
-  @Output()
-  public onFocus = new EventEmitter<any>();
+  @ViewChild('wrapperElement', {static: false})
+  public wrapperElement: ElementRef<HTMLElement>;
 
   @ViewChild('textInput', {static: false})
   public textInput: ElementRef<HTMLInputElement>;
 
-  public options: SelectConstraintOption[] = [];
+  @ViewChild(OptionsDropdownComponent, {static: false})
+  public dropdown: OptionsDropdownComponent;
 
+  public dropdownOptions: DropdownOption[] = [];
+  public selectedOptions: SelectConstraintOption[] = [];
+
+  public multi: boolean;
   public text = '';
 
   private setFocus: boolean;
-  private triggerInput: boolean;
+  private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
@@ -87,18 +93,18 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocus = true;
     }
     if (changes.value && this.value) {
-      if (this.value.inputType === DataValueInputType.Typed) {
-        this.text = this.value.format();
-        this.triggerInput = true;
-      }
-      this.options = this.createDisplayOptions(this.value.config);
+      this.dropdownOptions = this.createDropdownOptions(this.value.config);
+      this.selectedOptions = this.value.options;
+      this.text = this.value.inputValue || '';
+      this.multi = this.value.config && this.value.config.multi;
     }
   }
 
-  private createDisplayOptions(config: SelectConstraintConfig): SelectConstraintOption[] {
-    return config.options.map(option => ({
+  private createDropdownOptions(config: SelectConstraintConfig): DropdownOption[] {
+    return ((config && config.options) || []).map(option => ({
       ...option,
-      displayValue: (config.displayValues && option.displayValue) || option.value,
+      value: option.value,
+      displayValue: config.displayValues ? option.displayValue : option.value,
     }));
   }
 
@@ -106,10 +112,6 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     if (this.setFocus) {
       this.setFocusToInput();
       this.setFocus = false;
-    }
-    if (this.triggerInput) {
-      this.dispatchInputEvent();
-      this.triggerInput = false;
     }
   }
 
@@ -121,31 +123,56 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     }
   }
 
-  private dispatchInputEvent() {
-    if (this.textInput) {
-      const element = this.textInput.nativeElement;
-      const event = new Event('input', {
-        bubbles: true,
-        cancelable: true,
-      });
-      setTimeout(() => element.dispatchEvent(event));
-    }
-  }
-
   @HostListener('keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        // needs to be executed after parent event handlers
-        setTimeout(() => this.saveValue());
+        if (this.readonly) {
+          return;
+        }
+        const selectedOption = this.dropdown.getActiveOption();
+
+        event.preventDefault();
+
+        if (this.multi && event.code !== KeyCode.Tab && selectedOption) {
+          event.stopImmediatePropagation();
+          this.toggleOption(selectedOption);
+          this.dropdown.resetActiveOption();
+        } else {
+          this.preventSaveAndBlur();
+          // needs to be executed after parent event handlers
+          setTimeout(() => this.saveValue(selectedOption, event.code !== KeyCode.Tab));
+        }
         return;
       case KeyCode.Escape:
+        this.preventSaveAndBlur();
+        this.resetScroll();
         this.resetSearchInput();
         this.cancel.emit();
         return;
+      case KeyCode.Backspace:
+        if (!this.text && this.multi && this.selectedOptions.length > 0) {
+          this.selectedOptions = this.selectedOptions.slice(0, this.selectedOptions.length - 1);
+        }
+        return;
     }
+
+    this.dropdown.onKeyDown(event);
+  }
+
+  private toggleOption(option: DropdownOption) {
+    if (this.selectedOptions.some(o => o.value === option.value)) {
+      this.selectedOptions = this.selectedOptions.filter(o => o.value !== option.value);
+    } else {
+      const selectOption = (this.value.config.options || []).find(o => o.value === option.value);
+      if (selectOption) {
+        this.selectedOptions = [...this.selectedOptions, selectOption];
+        setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
+      }
+    }
+    this.resetSearchInput();
   }
 
   public onInput() {
@@ -153,27 +180,88 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     this.valueChange.emit(dataValue);
   }
 
-  private saveValue() {
-    const selectedOption = this.options.find(option => option.displayValue === this.text);
-
-    if (selectedOption || !this.text) {
-      const dataValue = this.value.copy(selectedOption ? selectedOption.value : '');
+  private saveValue(activeOption: DropdownOption, enter?: boolean) {
+    if (this.multi) {
+      const selectedOption =
+        activeOption && this.value.config.options.find(option => option.value === activeOption.value);
+      const options = [...this.selectedOptions, selectedOption].filter(option => !!option);
+      const optionValues = uniqueValues(options.map(option => option.value));
+      const dataValue = this.value.copy(optionValues);
       this.save.emit(dataValue);
+      return;
     }
+
+    if (activeOption || !this.text) {
+      const dataValue = this.value.copy(activeOption ? activeOption.value : '');
+      this.save.emit(dataValue);
+    } else {
+      if (enter) {
+        this.enterInvalid.emit();
+      } else {
+        this.cancel.emit();
+      }
+    }
+
     this.resetSearchInput();
   }
 
   private resetSearchInput() {
-    this.text = ''; // formatSelectDataValue(this.value, this.constraintConfig);
+    this.text = '';
   }
 
-  public onSelect(event: TypeaheadMatch) {
-    const dataValue = this.value.copy(event.item.value);
-    this.save.emit(dataValue);
+  public onSelect(option: DropdownOption) {
+    if (this.multi) {
+      this.toggleOption(option);
+    } else {
+      this.preventSaveAndBlur();
+      this.saveValue(option);
+    }
   }
 
   public onBlur() {
-    this.cancel.emit();
-    this.dataBlur.emit();
+    this.resetScroll();
+    if (this.preventSave) {
+      this.preventSave = false;
+      this.blurCleanup();
+    } else {
+      const activeOption = this.multi ? null : this.dropdown && this.dropdown.getActiveOption();
+      this.saveValue(activeOption);
+    }
+  }
+
+  private resetScroll() {
+    this.wrapperElement.nativeElement.scrollLeft = 0;
+  }
+
+  private preventSaveAndBlur() {
+    if (this.textInput) {
+      this.preventSave = true;
+      this.textInput.nativeElement.blur();
+    }
+  }
+
+  private blurCleanup() {
+    if (this.dropdown) {
+      this.dropdown.close();
+    }
+  }
+
+  public onFocused() {
+    if (this.dropdown) {
+      this.dropdown.open();
+    }
+  }
+
+  @HostListener('mousedown', ['$event'])
+  public onMouseDown(event: MouseEvent) {
+    // prevent hide dropdown on mouse down (instead input)
+    if (!this.readonly && this.textInput && !this.textInput.nativeElement.contains(event.target as any)) {
+      event.stopImmediatePropagation();
+      event.preventDefault();
+    }
+  }
+
+  public trackByOption(index: number, option: SelectConstraintOption): string {
+    return option.value;
   }
 }

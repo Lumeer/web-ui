@@ -60,12 +60,6 @@ export class CoordinatesDataInputComponent {
   @Output()
   public cancel = new EventEmitter();
 
-  @Output()
-  public dataBlur = new EventEmitter();
-
-  @Output()
-  public onFocus = new EventEmitter<any>();
-
   @ViewChild('coordinatesInput', {static: false})
   public coordinatesInput: ElementRef<HTMLInputElement>;
 
@@ -93,7 +87,6 @@ export class CoordinatesDataInputComponent {
     } else {
       this.saveValue(this.coordinatesInput);
     }
-    this.dataBlur.emit();
   }
 
   @HostListener('keydown', ['$event'])
@@ -102,16 +95,29 @@ export class CoordinatesDataInputComponent {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
+        if (this.readonly) {
+          return;
+        }
         // needs to be executed after parent event handlers
         const input = this.coordinatesInput;
-        this.preventSave = true;
-        setTimeout(() => input && this.saveValue(input));
+        const dataValue = this.value.parseInput(input.nativeElement.value);
+
+        event.preventDefault();
+
+        this.preventSaveAndBlur();
+        setTimeout(() => this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
-        this.preventSave = true;
-        this.coordinatesInput && (this.coordinatesInput.nativeElement.value = this.value.format());
+        this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private preventSaveAndBlur() {
+    if (this.coordinatesInput) {
+      this.preventSave = true;
+      this.coordinatesInput.nativeElement.blur();
     }
   }
 

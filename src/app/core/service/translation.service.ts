@@ -20,6 +20,14 @@
 import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DurationUnit} from '../model/data/constraint-config';
+import {QueryCondition} from '../store/navigation/query/query';
+import {Constraint} from '../model/constraint';
+import {ConstraintType} from '../model/data/constraint';
+import {
+  ConstraintConditionValue,
+  DateTimeConstraintConditionValue,
+  UserConstraintConditionValue,
+} from '../model/data/constraint-condition';
 
 @Injectable({
   providedIn: 'root',
@@ -38,6 +46,124 @@ export class TranslationService {
         value: '{unit, select, w {w} d {d} h {h} m {m} s {s}}',
       },
       {unit}
+    );
+  }
+
+  public translateQueryCondition(condition: QueryCondition, constraint: Constraint): string {
+    if (!constraint) {
+      return this.translateConditionByText(condition);
+    }
+
+    switch (constraint.type) {
+      case ConstraintType.Text:
+      case ConstraintType.Address:
+        return this.translateConditionByText(condition);
+      case ConstraintType.Select:
+      case ConstraintType.User:
+        return this.translateConditionByUserAndSelect(condition);
+      case ConstraintType.Number:
+      case ConstraintType.Percentage:
+      case ConstraintType.Duration:
+        return this.translateConditionByNumber(condition);
+      case ConstraintType.DateTime:
+        return this.translateConditionByDate(condition);
+      default:
+        return this.translateConditionByText(condition);
+    }
+  }
+
+  private translateConditionByUserAndSelect(condition: QueryCondition): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.constraint.select',
+        value:
+          '{condition, select, eq {In} neq {Not In} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty}}',
+      },
+      {condition}
+    );
+  }
+
+  private translateConditionByText(condition: QueryCondition): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.constraint.text',
+        value:
+          '{condition, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty}}',
+      },
+      {condition}
+    );
+  }
+
+  private translateConditionByNumber(condition: QueryCondition): string {
+    switch (condition) {
+      case QueryCondition.Equals:
+        return '=';
+      case QueryCondition.NotEquals:
+        return '≠';
+      case QueryCondition.GreaterThan:
+        return '>';
+      case QueryCondition.GreaterThanEquals:
+        return '≥';
+      case QueryCondition.LowerThan:
+        return '<';
+      case QueryCondition.LowerThanEquals:
+        return '≤';
+    }
+
+    return this.i18n(
+      {
+        id: 'query.filter.condition.constraint.number',
+        value:
+          '{condition, select, between {Range} notBetween {Not From Range} empty {Is Empty} notEmpty {Is Not Empty}}',
+      },
+      {condition}
+    );
+  }
+
+  private translateConditionByDate(condition: QueryCondition): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.constraint.date',
+        value:
+          '{condition, select, eq {Is} neq {Is Not} gt {Is After} lt {Is Before} gte {Is On Or After} lte {Is On Or Before} between {Is Between} notBetween {Is Not Between} empty {Is Empty} notEmpty {Is Not Empty}}',
+      },
+      {condition}
+    );
+  }
+
+  public translateConstraintConditionValue(type: ConstraintConditionValue, constraint: Constraint): string {
+    if (!constraint) {
+      return null;
+    }
+
+    switch (constraint.type) {
+      case ConstraintType.User:
+        return this.translateUserConstraintConditionValue(type as UserConstraintConditionValue);
+      case ConstraintType.DateTime:
+        return this.translateDateConstraintConditionValue(type as DateTimeConstraintConditionValue);
+      default:
+        return null;
+    }
+  }
+
+  private translateDateConstraintConditionValue(condition: DateTimeConstraintConditionValue): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.value.constraint.date',
+        value:
+          '{condition, select, today {Today} yesterday {Yesterday} tomorrow {Tomorrow} thisWeek {This Week} thisMonth {This Month} lastWeek {Last Week} lastMonth {Last Month} nextMonth {Next Month} nextWeek {Next Week}}',
+      },
+      {condition}
+    );
+  }
+
+  private translateUserConstraintConditionValue(type: UserConstraintConditionValue): string {
+    return this.i18n(
+      {
+        id: 'query.filter.condition.value.constraint.user',
+        value: '{type, select, currentUser {Current User}}',
+      },
+      {type}
     );
   }
 }

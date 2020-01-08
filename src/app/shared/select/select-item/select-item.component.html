@@ -48,8 +48,9 @@
   <options-dropdown [fitParent]="fitParent"
                     [options]="dropdownOptions"
                     [showBackdrop]="false"
+                    [closeOnClickOrigin]="true"
                     [origin]="selectItemParent"
-                    [selectedValue]="selectedId"
+                    [highlightedValue]="selectedId"
                     (selectOption)="onSelect($event)">
   </options-dropdown>
 

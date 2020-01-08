@@ -34,9 +34,9 @@ import {DataValue} from '../../core/model/data-value';
 import {ConstraintType} from '../../core/model/data/constraint';
 import {generateCorrelationId} from '../utils/resource.utils';
 import {DataCursor} from './data-cursor';
-import {USER_AVATAR_SIZE} from './user/user-data-input.component';
 import {DataSuggestion} from './data-suggestion';
 import {DataInputConfiguration} from './data-input-configuration';
+import {isNotNullOrUndefined} from '../utils/common.utils';
 
 @Component({
   selector: 'data-input',
@@ -79,10 +79,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public cancel = new EventEmitter();
 
   @Output()
-  public dataBlur = new EventEmitter();
-
-  @Output()
-  public onFocus = new EventEmitter<any>();
+  public enterInvalid = new EventEmitter();
 
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
@@ -97,12 +94,15 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   private recalculateWidth(value: DataValue) {
     const width = this.getWidthOfInput(value);
-    this.renderer.setStyle(this.elementRef.nativeElement, 'width', `${width}px`);
+    this.renderer.setStyle(this.elementRef.nativeElement, 'width', isNotNullOrUndefined(width) ? `${width}px` : null);
   }
 
-  private getWidthOfInput(value: DataValue): number {
+  private getWidthOfInput(value: DataValue): number | null {
+    if (this.computationNotNecessary()) {
+      return null;
+    }
     if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
-      return 34;
+      return 16;
     }
 
     if (!this.tempElement) {
@@ -117,16 +117,24 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
     this.tempElement.classList.add('d-none');
 
-    if (this.constraint && this.constraint.type === ConstraintType.User) {
-      return textWidth + (value.isValid() ? USER_AVATAR_SIZE : 0);
+    return textWidth;
+  }
+
+  private computationNotNecessary(): boolean {
+    const constraintType = this.constraint && this.constraint.type;
+    if (!constraintType) {
+      return false;
+    }
+    if ([ConstraintType.Select, ConstraintType.User].includes(constraintType)) {
+      return true;
     }
 
-    return textWidth;
+    return false;
   }
 
   private createTempElement(): HTMLElement {
     const tmp = document.createElement('span');
-    tmp.classList.add('px-2', 'invisible', 'white-space-pre');
+    tmp.classList.add('invisible', 'white-space-pre');
     tmp.id = generateCorrelationId();
     return tmp;
   }
@@ -157,13 +165,5 @@ export class DataInputComponent implements OnChanges, OnDestroy {
       this.recalculateWidth(this.dataValue);
     }
     this.cancel.emit();
-  }
-
-  public emitFocus($event: any) {
-    this.onFocus.emit($event);
-  }
-
-  public onDataBlur() {
-    this.dataBlur.emit();
   }
 }

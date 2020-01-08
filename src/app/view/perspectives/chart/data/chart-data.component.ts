@@ -48,7 +48,6 @@ import {ConstraintData, ConstraintType} from '../../../../core/model/data/constr
 import * as moment from 'moment';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
-import {DataValueInputType} from '../../../../core/model/data-value';
 import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
 import {ModalService} from '../../../../shared/modal/modal.service';
 
@@ -314,7 +313,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       }
     }
 
-    return constraint.createDataValue(value, DataValueInputType.Stored, this.constraintData).serialize();
+    return constraint.createDataValue(value, this.constraintData).serialize();
   }
 
   private onLinkValueChange(valueChange: ValueChange) {

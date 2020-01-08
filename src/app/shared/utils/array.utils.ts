@@ -79,3 +79,15 @@ export function shiftArrayFromIndex<T>(array: T[], fromIndex: number): T[] {
 export function uniqueValues<T>(array: T[]): T[] {
   return Array.from(new Set(array));
 }
+
+export function flattenMatrix<T>(array: T[][]): T[] {
+  return (array || []).reduce((arr, item) => {
+    arr.push(...item);
+    return arr;
+  }, []);
+}
+
+export function createRange(from: number, to: number): number[] {
+  const range = [...Array(to - from).keys()];
+  return range.map(r => r + from);
+}

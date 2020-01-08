@@ -4,7 +4,6 @@
        [title]="value | formatDataValue"
        [value]="value | formatDataValue"
        [placeholder]="placeholder || ''"
-       (focus)="onFocus.emit($event)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [class.invalid-value]="!skipValidation && !valid"
        data-test="text-data-input"
@@ -13,30 +12,22 @@
 <ng-template #textEditing>
   <input #textInput
          [(ngModel)]="text"
-         [typeahead]="suggestions || []"
-         [typeaheadScrollable]="true"
-         [typeaheadItemTemplate]="suggestionItem"
-         [typeaheadLatinize]="true"
-         [typeaheadOptionField]="'title'"
-         [typeaheadMinLength]="0"
-         [typeaheadOptionsInScrollableView]="10"
-         [adaptivePosition]="true"
-         [typeaheadSelectFirstItem]="text?.length > 0"
-         [typeaheadIsFirstItemActive]="text?.length > 0"
-         [container]="'body'"
          [attr.maxlength]="skipValidation ? null : value?.config?.maxLength"
-         (typeaheadOnSelect)="onSelect($event)"
          (blur)="onBlur()"
          (ngModelChange)="onInput()"
+         (focus)="onFocused()"
          [spellcheck]="false"
          class="border-0 w-100 h-100 px-1"
          [ngClass]="valid || skipValidation ? 'bg-transparent' : 'bg-danger-light'"
          data-test="text-data-input"
          type="text">
+  <options-dropdown [options]="suggestions | filterDataSuggestions:text"
+                    [showBackdrop]="false"
+                    [closeOnClickOutside]="false"
+                    [origin]="textInput"
+                    [firstItemActive]="text?.length > 0"
+                    (selectOption)="onSelectOption($event)">
+  </options-dropdown>
+
 </ng-template>
 
-<ng-template #suggestionItem
-             let-model="item"
-             let-index="index">
-  {{ model.title }}
-</ng-template>

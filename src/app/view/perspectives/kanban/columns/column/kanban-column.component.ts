@@ -82,7 +82,12 @@ export class KanbanColumnComponent {
   public constraintData: ConstraintData;
 
   @Output()
-  public updateDocument = new EventEmitter<{document: DocumentModel; newValue: string; attributeId: string}>();
+  public updateDocument = new EventEmitter<{
+    document: DocumentModel;
+    newValue: string;
+    previousValue: string;
+    attributeId: string;
+  }>();
 
   @Output()
   public columnsChange = new EventEmitter<{columns: KanbanColumn[]; otherColumn: KanbanColumn}>();
@@ -150,8 +155,9 @@ export class KanbanColumnComponent {
     const card = event.item.data as KanbanCard;
     const document = card.dataResource as DocumentModel;
     const newValue = event.container.data.title;
+    const previousValue = event.previousContainer.data.title;
 
-    this.updateDocument.emit({document, newValue, attributeId: card.attributeId});
+    this.updateDocument.emit({document, newValue, previousValue, attributeId: card.attributeId});
   }
 
   public createObjectInResource(resourceCreate: KanbanResourceCreate) {
@@ -163,7 +169,6 @@ export class KanbanColumnComponent {
       const postIt = document.getElementById(`${this.postItIdPrefix}#${id}`);
       postIt && postIt.scrollIntoView();
     });
-    // TODO scroll
   }
 
   public onRemoveColumn() {

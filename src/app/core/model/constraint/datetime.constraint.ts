@@ -21,14 +21,33 @@ import {DateTimeDataValue} from '../data-value/datetime.data-value';
 import {ConstraintType} from '../data/constraint';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class DateTimeConstraint implements Constraint {
   public readonly type = ConstraintType.DateTime;
 
   constructor(public readonly config: DateTimeConstraintConfig) {}
 
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): DateTimeDataValue {
-    return new DateTimeDataValue(value, inputType, this.config);
+  public createDataValue(value: any): DateTimeDataValue {
+    return new DateTimeDataValue(value, this.config);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): DateTimeDataValue {
+    return new DateTimeDataValue(value, this.config, inputValue || '');
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.GreaterThan,
+      QueryCondition.LowerThan,
+      QueryCondition.GreaterThanEquals,
+      QueryCondition.LowerThanEquals,
+      QueryCondition.Between,
+      QueryCondition.NotBetween,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

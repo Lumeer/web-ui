@@ -28,7 +28,6 @@ import {AddressesMap, AddressField} from '../../../../../../core/store/geocoding
 import {AddressConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {AddressDataValue} from '../../../../../../core/model/data-value/address.data-value';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
-import {DataValueInputType} from '../../../../../../core/model/data-value';
 
 @Component({
   selector: 'address-constraint-config-form',
@@ -68,10 +67,7 @@ export class AddressConstraintConfigFormComponent {
   private bindExampleValue(): Observable<AddressDataValue> {
     return this.form.valueChanges.pipe(
       startWith(this.form.value),
-      map(
-        config =>
-          new AddressDataValue('example', DataValueInputType.Stored, config, {addressesMap: this.exampleAddressesMap})
-      )
+      map(config => new AddressDataValue('example', config, {addressesMap: this.exampleAddressesMap}))
     );
   }
 

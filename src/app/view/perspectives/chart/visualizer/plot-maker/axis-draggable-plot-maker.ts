@@ -37,7 +37,6 @@ import {
 import {
   ChartAxisCategory,
   ChartDataSetAxis,
-  ChartPoint,
   ChartYAxisType,
   checkKnownOverrideFormatEntry,
   convertChartDateFormat,
@@ -45,7 +44,6 @@ import {
 import {convertChartDateTickFormat} from '../chart-util';
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {createRange} from './plot-util';
-import {DataValueInputType} from '../../../../../core/model/data-value';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;

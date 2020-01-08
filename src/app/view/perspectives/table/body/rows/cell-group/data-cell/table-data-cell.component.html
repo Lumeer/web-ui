@@ -16,6 +16,7 @@
               (valueChange)="onValueChange($event)"
               (save)="onValueSave($event)"
               (cancel)="onCancelEditing()"
+              (enterInvalid)="onEnterInvalid()"
               class="d-block h-100"
               [class.cursor-default]="!(data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)"
               data-test="table-data-input">

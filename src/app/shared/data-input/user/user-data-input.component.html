@@ -1,49 +1,63 @@
-<ng-container *ngIf="readonly; else textEditing">
-  <ng-container *ngIf="{user: value | serializeDataValue | userByEmail : value?.constraintData?.users} as state">
-    <img *ngIf="value | isDataValueValid"
-         ngxGravatar
-         [email]="value | serializeDataValue"
+<div class="d-flex align-items-center h-100 p-1 text-nowrap" #wrapperElement
+     [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
+
+  <ng-container *ngIf="multi || readonly">
+
+    <img ngxGravatar
+         *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first"
+         [email]="user.email"
          [size]="avatarSize"
-         class="ml-1">
-    <input [readonly]="readonly"
-           [title]="skipValidation ? name : (value | formatDataValue)"
-           [value]="skipValidation ? name : (value | formatDataValue)"
-           (focus)="onFocus.emit($event)"
-           [class.invalid-value]="!skipValidation && (value?.config?.externalUsers ? !(value | isDataValueValid) : !state.user)"
-           class="border-0 h-100 px-1 bg-transparent flex-grow-1 cursor-inherit"
+         [style.min-width.px]="avatarSize"
+         [style.min-height.px]="avatarSize"
+         [style.margin-left.rem]="!first ? -0.5 : 0.25">
+
+    <span *ngIf="value.config?.externalUsers || (selectedUsers | usersAreValid:users)"
+          class="d-inline-block ml-2 text-nowrap user"
+          data-test="user-data-input">
+        {{selectedUsers | usersNames | join}}
+      </span>
+
+    <ng-container *ngIf="!value.config?.externalUsers && !(selectedUsers | usersAreValid:users)">
+
+      <ng-container *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last">
+
+        <span data-test="user-data-input"
+              [class.invalid-value]="!([user] | usersAreValid:users)"
+              [class.ml-2]="first"
+              class="d-inline-block user">
+          {{user.name || user.email}}
+        </span>
+        <span class="user" *ngIf="!last">,&nbsp;</span>
+
+      </ng-container>
+
+    </ng-container>
+
+
+  </ng-container>
+
+  <ng-container *ngIf="!readonly">
+    <input #textInput
+           [(ngModel)]="name"
+           (blur)="onBlur()"
+           (focus)="onFocused()"
+           (ngModelChange)="onInputChange()"
+           [class.ml-1]="selectedUsers.length > 0"
+           [spellcheck]="false"
+           class="border-0 w-100 h-100 bg-transparent user-input"
            data-test="user-data-input"
            type="text">
+
+    <options-dropdown [options]="users | filterUsers:name"
+                      [showBackdrop]="false"
+                      [closeOnClickOutside]="false"
+                      [origin]="textInput"
+                      [highlightedText]="name"
+                      [multiSelect]="multi"
+                      [selectedValues]="multi ? (selectedUsers | usersEmails) : []"
+                      [firstItemActive]="!multi && !value?.config?.externalUsers && name?.length > 0"
+                      (selectOption)="onSelectOption($event)">
+    </options-dropdown>
   </ng-container>
-</ng-container>
 
-<ng-template #textEditing>
-  <input #textInput
-         [(ngModel)]="name"
-         [typeahead]="users"
-         [typeaheadItemTemplate]="suggestionItem"
-         [typeaheadLatinize]="true"
-         [typeaheadMinLength]="0"
-         [typeaheadScrollable]="true"
-         [typeaheadSelectFirstItem]="name?.length > 0"
-         [typeaheadIsFirstItemActive]="name?.length > 0"
-         [typeaheadOptionsInScrollableView]="10"
-         [adaptivePosition]="true"
-         typeaheadOptionField="name"
-         container="body"
-         (typeaheadOnSelect)="onSelect($event)"
-         (blur)="onBlur()"
-         (ngModelChange)="onInputChange()"
-         class="border-0 w-100 h-100 px-1 bg-transparent"
-         data-test="user-data-input"
-         type="text">
-</ng-template>
-
-<ng-template #suggestionItem
-             let-model="item"
-             let-index="index">
-  <img ngxGravatar
-       [email]="model.email"
-       [size]="avatarSize"
-       class="mr-2">
-  <span>{{ model.name || model.email }}</span>
-</ng-template>
+</div>

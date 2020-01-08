@@ -20,13 +20,21 @@
 import {BooleanDataValue} from '../data-value/boolean.data-value';
 import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class BooleanConstraint implements Constraint {
   public readonly type = ConstraintType.Boolean;
   public readonly config = {};
 
-  public createDataValue(value: any, inputType: DataValueInputType = DataValueInputType.Stored): BooleanDataValue {
-    return new BooleanDataValue(value, inputType, this.config);
+  public createDataValue(value: any): BooleanDataValue {
+    return new BooleanDataValue(value);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): BooleanDataValue {
+    return new BooleanDataValue(value);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [QueryCondition.Equals, QueryCondition.NotEquals];
   }
 }

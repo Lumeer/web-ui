@@ -40,6 +40,7 @@ import {PivotHeaderRestrictedAttributesPipe} from './pipe/pivot-header-restricte
 import {PivotHeaderMapAttributePipe} from './pipe/pivot-header-map-attribute.pipe';
 import {PivotConfigWrapperComponent} from './wrapper/config/pivot-config-wrapper.component';
 import {PivotTableCellHasValuePipe} from './pipe/pivot-table-value.pipe';
+import {DataInputModule} from '../../../shared/data-input/data-input.module';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,6 @@ import {PivotTableCellHasValuePipe} from './pipe/pivot-table-value.pipe';
     PivotConfigWrapperComponent,
     PivotTableCellHasValuePipe,
   ],
-  imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule],
+  imports: [SharedModule, RouterModule, PivotPerspectiveRoutingModule, DragDropModule, DataInputModule],
 })
 export class PivotPerspectiveModule {}

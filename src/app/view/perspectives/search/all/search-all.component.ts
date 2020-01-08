@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, map, tap} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {QueryAction} from '../../../../core/model/query-action';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
@@ -54,7 +54,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public query$ = new BehaviorSubject<Query>(null);
 
   private workspace: Workspace;
-  private documentsLoaded: boolean;
   private subscriptions = new Subscription();
 
   constructor(private store$: Store<AppState>, private router: Router) {}
@@ -81,7 +80,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       this.store$.pipe(select(selectViewsLoaded)),
       this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
     ]).pipe(
-      tap(([, , documentsLoaded]) => (this.documentsLoaded = documentsLoaded)),
       map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
     );
 

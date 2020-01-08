@@ -20,10 +20,17 @@
 
   <user-data-input *ngSwitchCase="constraintTypes.User"
                    class="px-3 py-2 flex-grow-1"
-                   [value]="column.title | dataValue : userConstraint"
+                   [value]="column.title | dataValue : (columnConstraint || userConstraint)"
                    [readonly]="true"
                    [focus]="false">
   </user-data-input>
+
+  <select-data-input *ngSwitchCase="constraintTypes.Select"
+                   class="px-3 py-2 flex-grow-1"
+                   [value]="column.title | dataValue : (columnConstraint || selectConstraint)"
+                   [readonly]="true"
+                   [focus]="false">
+  </select-data-input>
 
   <div *ngSwitchCase="constraintTypes.Text" class="px-3 py-2 text-truncate flex-grow-1"
        [innerHTML]="column.title | stripHtml">

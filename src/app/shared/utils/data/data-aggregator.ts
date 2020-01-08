@@ -19,7 +19,7 @@
 
 import {Constraint} from '../../../core/model/constraint';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
-import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
 import {Collection} from '../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
@@ -28,9 +28,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
-import {isNullOrUndefined} from '../common.utils';
-import {stripTextHtmlTags} from '../data.utils';
-import {DataValueInputType} from '../../../core/model/data-value';
+import {isArray, isNotNullOrUndefined, isNullOrUndefined} from '../common.utils';
 
 type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 
@@ -309,11 +307,12 @@ export class DataAggregator {
         }
 
         for (const value of values) {
-          const formattedValue = this.formatAggregationValue(value, constraint, {
+          let formattedValue = this.formatAggregationValue(value, constraint, {
             resourceIndex: stage.index,
             attributeId: stage.attributeId,
             data: stage.data,
           });
+          formattedValue = isNotNullOrUndefined(formattedValue) ? formattedValue : '';
 
           if (index === chain.length - 1) {
             if (valuesChains.length > 0) {
@@ -476,16 +475,14 @@ export class DataAggregator {
       return [''];
     }
 
-    return Array.isArray(value) ? value : [value];
+    return isArray(value) ? value : [value];
   }
 
   private formatAggregationValue(value: any, constraint: Constraint, attribute: DataAggregatorAttribute) {
     if (this.formatValue) {
       return this.formatValue(value, constraint, this.constraintData, attribute);
     }
-    return (constraint || new UnknownConstraint())
-      .createDataValue(value, DataValueInputType.Stored, this.constraintData)
-      .preview();
+    return (constraint || new UnknownConstraint()).createDataValue(value, this.constraintData).preview();
   }
 }
 

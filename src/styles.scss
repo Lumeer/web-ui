@@ -81,6 +81,19 @@ ul {
   }
 }
 
+.invisible-scroll-y {
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* removes scrollbar for Firefox */
+  -ms-overflow-style: none; /* removes scrollbar for Internet Explorer 10+ */
+
+  &::-webkit-scrollbar {
+    /* removes scrollbar for WebKit */
+    width: 0;
+    height: 0;
+  }
+}
+
 .pointer-events-none {
   pointer-events: none;
 }
@@ -187,6 +200,24 @@ typeahead-container {
   font-size: 0.9375rem;
 }
 
+.user-select-none {
+  user-select: none;
+}
+
+.hidden-input {
+  background: transparent;
+  border: none;
+  caret-color: transparent;
+  color: transparent !important;
+  cursor: default;
+  height: 1px;
+  width: 1px;
+}
+
+.outline-none {
+  outline: none !important;
+}
+
 modal-container {
   overflow-y: unset !important;
 
@@ -205,7 +236,7 @@ modal-container {
     }
 
     .modal-content modal-wrapper {
-      display: flex;
+      display: flex !important;
       height: 100%;
       flex-direction: column;
       width: 100%;

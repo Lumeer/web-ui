@@ -20,6 +20,7 @@ import isEqual from 'lodash/isEqual';
 import omitBy from 'lodash/omitBy';
 import isNil from 'lodash/isNil';
 import cloneDeep from 'lodash/cloneDeep';
+import {removeAccent} from './string.utils';
 
 export function isNullOrUndefined(object: any): object is null | undefined {
   return object === null || object === undefined;
@@ -69,4 +70,47 @@ export function isArray<T>(input?: any): input is T[] {
 
 export function isDateValid(date: Date): boolean {
   return date && date.getTime && !isNaN(date.getTime());
+}
+
+enum SuggestionScore {
+  StartWith = 5,
+  ContainsWord = 10,
+  FullMatch = 20,
+}
+
+export function sortObjectsByScore<T>(objects: T[], text: string, params: string[]): T[] {
+  const textLowerCase = removeAccent(text || '').trim();
+  const valuesArray = (objects || []).reduce<{object: T; score: number}[]>((array, object) => {
+    const value = String(getValueFromObjectParams<T>(object, params));
+    const valueLowerCase = removeAccent(value).trim();
+    if (valueLowerCase === textLowerCase) {
+      array.push({object, score: SuggestionScore.FullMatch});
+    } else if (valueLowerCase.split(' ').includes(textLowerCase)) {
+      array.push({object, score: SuggestionScore.ContainsWord});
+    } else if (valueLowerCase.startsWith(textLowerCase)) {
+      array.push({object, score: SuggestionScore.StartWith});
+    } else {
+      array.push({object, score: 0});
+    }
+    return array;
+  }, []);
+
+  return valuesArray.sort((a, b) => b.score - a.score).map(v => v.object);
+}
+
+function getValueFromObjectParams<T>(object: T, params: string[]): any {
+  if (!object) {
+    return '';
+  }
+
+  for (let i = 0; i < (params || []).length; i++) {
+    if (!object.hasOwnProperty(params[i])) {
+      continue;
+    }
+    const value = object[params[i]];
+    if (value || value === 0) {
+      return value;
+    }
+  }
+  return '';
 }

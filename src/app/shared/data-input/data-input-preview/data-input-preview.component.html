@@ -1,0 +1,39 @@
+<ng-container *ngIf="constraint | constraintAsText; else otherConstraint">
+  <span [innerHTML]="dataValue | previewDataValue" class="white-space-normal"
+        [class.text-nowrap]="!inline">
+  </span>
+</ng-container>
+
+<ng-template #otherConstraint>
+  <ng-container [ngSwitch]="constraint.type">
+    <boolean-data-input *ngSwitchCase="constraintType.Boolean"
+                        [readonly]="true" [value]="dataValue" class="w-100">
+    </boolean-data-input>
+
+    <color-data-input *ngSwitchCase="constraintType.Color"
+                      [style.max-width.px]=" inline ? (hasValue ?  50 : 0) : null"
+                      [class.h-100]="!inline"
+                      [style.min-width.px]="minWidth"
+                      [readonly]="true"
+                      [value]="dataValue"
+                      [skipValidation]="true"
+                      class="d-block w-100">
+    </color-data-input>
+
+    <select-data-input *ngSwitchCase="constraintType.Select"
+                       [skipValidation]="true"
+                       [readonly]="true"
+                       [value]="dataValue"
+                       class="d-block w-100">
+    </select-data-input>
+
+    <user-data-input *ngSwitchCase="constraintType.User"
+                     [focus]="false"
+                     [readonly]="true"
+                     [skipValidation]="true"
+                     [value]="dataValue"
+                     class="w-100">
+    </user-data-input>
+
+  </ng-container>
+</ng-template>

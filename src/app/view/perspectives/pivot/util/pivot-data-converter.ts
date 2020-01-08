@@ -36,7 +36,11 @@ import {
 } from '../../../../core/store/pivots/pivot';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {aggregateDataResources, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {
+  aggregateDataResources,
+  DataAggregationType,
+  isValueAggregation,
+} from '../../../../shared/utils/data/data-aggregation';
 import {
   AggregatedData,
   AggregatedDataMap,
@@ -46,7 +50,8 @@ import {
 } from '../../../../shared/utils/data/data-aggregator';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
-import {DataValueInputType} from '../../../../core/model/data-value';
+import {NumberConstraint} from '../../../../core/model/constraint/number.constraint';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -105,8 +110,8 @@ export class PivotDataConverter {
     const overrideConstraint =
       pivotConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotConstraint);
     return (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, DataValueInputType.Stored, constraintData)
-      .preview();
+      .createDataValue(value, constraintData)
+      .serialize();
   }
 
   private updateData(
@@ -428,7 +433,12 @@ export class PivotDataConverter {
       let currentIndex = additionalNum;
       Object.keys(map).forEach((title, index) => {
         if (levels === 1 && (valueTitles || []).length <= 1) {
-          headers.push({title, targetIndex: currentIndex, color: colors[0], constraint: constraints[0]});
+          headers.push({
+            title,
+            targetIndex: currentIndex,
+            color: colors[0],
+            constraint: constraints[0],
+          });
           data.maxIndex = Math.max(data.maxIndex, currentIndex);
         } else {
           headers.push({title, color: colors[0], constraint: constraints[0]});
@@ -481,10 +491,19 @@ export class PivotDataConverter {
     let currentIndex = headerIndex;
     Object.keys(currentMap).forEach((title, index) => {
       if (level + 1 === maxLevels && (valueTitles || []).length <= 1) {
-        header.children.push({title, targetIndex: currentIndex, color: colors[level], constraint: constraints[level]});
+        header.children.push({
+          title,
+          targetIndex: currentIndex,
+          color: colors[level],
+          constraint: constraints[level],
+        });
         additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
-        header.children.push({title, color: colors[level], constraint: constraints[level]});
+        header.children.push({
+          title,
+          color: colors[level],
+          constraint: constraints[level],
+        });
       }
 
       this.iterateThroughPivotDataHeader(
@@ -539,7 +558,12 @@ export class PivotDataConverter {
     return (valueAttributes || []).reduce(
       ({titles, constraints}, pivotAttribute) => {
         const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
-        constraints.push(this.pivotAttributeConstraint(pivotAttribute));
+
+        if (isValueAggregation(pivotAttribute.aggregation)) {
+          constraints.push(this.pivotAttributeConstraint(pivotAttribute));
+        } else {
+          constraints.push(new NumberConstraint({}));
+        }
         const title = this.createValueTitle(pivotAttribute.aggregation, attribute && attribute.name);
         titles.push(title);
 
@@ -645,7 +669,7 @@ export class PivotDataConverter {
 
   private findAttributeByPivotAttribute(valueAttribute: PivotAttribute): Attribute {
     const resource = this.findResourceByPivotAttribute(valueAttribute);
-    return resource && (resource.attributes || []).find(attribute => attribute.id === valueAttribute.attributeId);
+    return findAttribute(resource && resource.attributes, valueAttribute.attributeId);
   }
 
   private findResourceByPivotAttribute(valueAttribute: PivotAttribute): AttributesResource {

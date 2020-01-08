@@ -46,6 +46,8 @@ import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView} from '../views/views.state';
 import {selectWorkspaceModels} from './common.selectors';
 import {LinkInstance} from '../link-instances/link.instance';
+import {sortLinkInstances} from '../link-instances/link-instance.utils';
+import {selectConstraintData} from '../constraint-data/constraint-data.state';
 
 export const selectCurrentUserIsManager = createSelector(
   selectCurrentUser,
@@ -83,7 +85,9 @@ export const selectCollectionsByQuery = createSelector(
   selectAllDocuments,
   selectAllLinkTypes,
   selectQuery,
-  (collections, documents, linkTypes, query) => filterCollectionsByQuery(collections, documents, linkTypes, query)
+  selectConstraintData,
+  (collections, documents, linkTypes, query, constraintData) =>
+    filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
 );
 
 export const selectCollectionsByQueryWithoutLinks = createSelector(
@@ -91,8 +95,9 @@ export const selectCollectionsByQueryWithoutLinks = createSelector(
   selectAllDocuments,
   selectAllLinkTypes,
   selectQuery,
-  (collections, documents, linkTypes, query) =>
-    filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query))
+  selectConstraintData,
+  (collections, documents, linkTypes, query, constraintData) =>
+    filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query), constraintData)
 );
 
 export const selectCollectionsInQuery = createSelector(
@@ -109,7 +114,9 @@ export const selectCollectionsByCustomQuery = (query: Query) =>
     selectCollectionsByReadPermission,
     selectAllDocuments,
     selectAllLinkTypes,
-    (collections, documents, linkTypes) => filterCollectionsByQuery(collections, documents, linkTypes, query)
+    selectConstraintData,
+    (collections, documents, linkTypes, constraintData) =>
+      filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
   );
 
 export const selectDocumentsByReadPermission = createSelector(
@@ -127,17 +134,27 @@ export const selectDocumentsAndLinksByQuery = createSelector(
   selectAllLinkTypes,
   selectAllLinkInstances,
   selectQuery,
-  selectCurrentUser,
+  selectConstraintData,
   (
     documents,
     collections,
     linkTypes,
     linkInstances,
     query,
-    currentUser
+    constraintData
   ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} => {
-    const data = filterDocumentsAndLinksByQuery(documents, collections, linkTypes, linkInstances, query, currentUser);
-    return {documents: sortDocumentsByCreationDate(data.documents), linkInstances: data.linkInstances};
+    const data = filterDocumentsAndLinksByQuery(
+      documents,
+      collections,
+      linkTypes,
+      linkInstances,
+      query,
+      constraintData
+    );
+    return {
+      documents: sortDocumentsByCreationDate(data.documents),
+      linkInstances: sortLinkInstances(data.linkInstances),
+    };
   }
 );
 
@@ -152,10 +169,10 @@ export const selectDocumentsByQueryIncludingChildren = createSelector(
   selectAllLinkTypes,
   selectAllLinkInstances,
   selectQuery,
-  selectCurrentUser,
-  (documents, collections, linkTypes, linkInstances, query, currentUser): DocumentModel[] =>
+  selectConstraintData,
+  (documents, collections, linkTypes, linkInstances, query, constraintData): DocumentModel[] =>
     sortDocumentsByCreationDate(
-      filterDocumentsAndLinksByQuery(documents, collections, linkTypes, linkInstances, query, currentUser, true)
+      filterDocumentsAndLinksByQuery(documents, collections, linkTypes, linkInstances, query, constraintData, true)
         .documents
     )
 );
@@ -172,18 +189,21 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
     selectCollectionsByReadPermission,
     selectAllLinkTypes,
     selectAllLinkInstances,
-    selectCurrentUser,
-    (documents, collections, linkTypes, linkInstances, currentUser) => {
+    selectConstraintData,
+    (documents, collections, linkTypes, linkInstances, constraintData) => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
         collections,
         linkTypes,
         linkInstances,
         query,
-        currentUser,
+        constraintData,
         includeChildren
       );
-      return {documents: sortDocumentsByCreationDate(data.documents), linkInstances: data.linkInstances};
+      return {
+        documents: sortDocumentsByCreationDate(data.documents),
+        linkInstances: sortLinkInstances(data.linkInstances),
+      };
     }
   );
 

@@ -20,6 +20,10 @@
 import {COLOR_LIGHT, COLOR_PRIMARY} from '../../core/constants';
 
 export function contrastColor(color: string, returnCodes?: {dark: string; light: string}): string {
+  if (!color) {
+    return returnCodes ? returnCodes.dark : COLOR_PRIMARY;
+  }
+
   const f = parseInt(color.indexOf('#') === 0 ? color.slice(1) : color, 16),
     R = f >> 16,
     G = (f >> 8) & 0x00ff,

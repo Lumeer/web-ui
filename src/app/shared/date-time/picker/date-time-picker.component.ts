@@ -68,6 +68,9 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   public valueChange = new EventEmitter<Date>();
 
   @Output()
+  public saveOnClose = new EventEmitter<Date>();
+
+  @Output()
   public save = new EventEmitter<Date>();
 
   @Output()
@@ -95,6 +98,8 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
+  private selectedValue: Date;
+
   constructor(localeService: BsLocaleService) {
     localeService.use(environment.locale);
   }
@@ -117,9 +122,10 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private subscribeToDateChange(): Subscription {
-    return this.dateControl.valueChanges
-      .pipe(filter(value => value !== this.value))
-      .subscribe(value => this.valueChange.emit(value));
+    return this.dateControl.valueChanges.pipe(filter(value => value !== this.value)).subscribe(value => {
+      this.selectedValue = value;
+      this.valueChange.emit(value);
+    });
   }
 
   public ngOnDestroy() {
@@ -154,12 +160,16 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     this.dateControl.setValue(date);
   }
 
-  public onCancel() {
+  public onCancel(event?: MouseEvent) {
+    if (event) {
+      event.stopPropagation();
+    }
     this.close();
     this.cancel.emit();
   }
 
-  public onSave() {
+  public onSave(event: MouseEvent) {
+    event.stopPropagation();
     this.close();
     this.save.emit(this.dateControl.value);
   }
@@ -173,5 +183,10 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     if (event.code === KeyCode.Escape) {
       this.onCancel();
     }
+  }
+
+  public onCloseByClickOutside() {
+    this.saveOnClose.emit(this.selectedValue);
+    this.selectedValue = null;
   }
 }

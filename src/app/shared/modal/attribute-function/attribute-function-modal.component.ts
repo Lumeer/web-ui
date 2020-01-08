@@ -40,6 +40,7 @@ import {selectLinkTypeById} from '../../../core/store/link-types/link-types.stat
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {KeyCode} from '../../key-code';
+import {DialogType} from '../dialog-type';
 
 @Component({
   selector: 'attribute-function-dialog',
@@ -57,10 +58,10 @@ export class AttributeFunctionModalComponent implements OnInit {
   @Input()
   public attributeId: string;
 
-  public valueToolbox = BLOCKLY_VALUE_TOOLBOX;
-  public masterValueType = MasterBlockType.Value;
-  public masterLinkType = MasterBlockType.Link;
-  public variables: RuleVariable[];
+  public readonly valueToolbox = BLOCKLY_VALUE_TOOLBOX;
+  public readonly masterValueType = MasterBlockType.Value;
+  public readonly masterLinkType = MasterBlockType.Link;
+  public readonly dialogType = DialogType;
 
   public collections$: Observable<Collection[]>;
   public collection$: Observable<Collection>;
@@ -71,6 +72,7 @@ export class AttributeFunctionModalComponent implements OnInit {
 
   public performingAction$ = new BehaviorSubject(false);
 
+  public variables: RuleVariable[];
   public displayDebug: BlocklyDebugDisplay;
   public debugButtons: BlocklyDebugDisplay[] = [BlocklyDebugDisplay.DisplayJs, BlocklyDebugDisplay.DisplayError];
 
@@ -115,6 +117,7 @@ export class AttributeFunctionModalComponent implements OnInit {
   }
 
   public updateCollectionAttribute(collectionId: string, attribute: Attribute) {
+    this.performingAction$.next(true);
     this.store$.dispatch(
       new CollectionsAction.ChangeAttribute({
         collectionId,
@@ -127,6 +130,8 @@ export class AttributeFunctionModalComponent implements OnInit {
   }
 
   private updateLinkTypeAttribute(linkTypeId: string, attribute: Attribute) {
+    this.performingAction$.next(true);
+
     this.store$.dispatch(
       new LinkTypesAction.UpdateAttribute({
         linkTypeId,

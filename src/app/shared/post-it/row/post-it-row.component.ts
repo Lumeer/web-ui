@@ -41,8 +41,7 @@ import {ConstraintData, ConstraintType} from '../../../core/model/data/constrain
 import {BehaviorSubject} from 'rxjs';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
-import {DataValue, DataValueInputType} from '../../../core/model/data-value';
-import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
+import {DataValue} from '../../../core/model/data-value';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../core/model/constraint/boolean.constraint';
 
@@ -127,19 +126,20 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
     }
   }
 
-  private createKeyDataValue(value?: any, inputType?: DataValueInputType): DataValue {
+  private createKeyDataValue(value?: any): DataValue {
     const initialValue = isNotNullOrUndefined(value)
       ? value
       : (this.row.attribute && this.row.attribute.name) || this.row.key;
-    const initialInputType = isNotNullOrUndefined(value) ? inputType : DataValueInputType.Stored;
-    return new UnknownDataValue(initialValue, initialInputType);
+    return new UnknownConstraint().createDataValue(initialValue);
   }
 
-  private createDataValue(value?: any, inputType?: DataValueInputType): DataValue {
+  private createDataValue(value?: any, typed?: boolean): DataValue {
     const constraint = (this.row.attribute && this.row.attribute.constraint) || new UnknownConstraint();
+    if (typed) {
+      return constraint.createInputDataValue(value, this.row.value, this.constraintData);
+    }
     const initialValue = isNotNullOrUndefined(value) ? value : this.row.value;
-    const initialInputType = isNotNullOrUndefined(value) ? inputType : DataValueInputType.Stored;
-    return constraint.createDataValue(initialValue, initialInputType, this.constraintData);
+    return constraint.createDataValue(initialValue, this.constraintData);
   }
 
   public onNewKey(dataValue: DataValue) {
@@ -180,10 +180,12 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
   }
 
   public onDataInputCancel() {
+    this.dataValue = this.createDataValue();
     this.resetFocusAndEdit.emit(1);
   }
 
   public onKeyInputCancel() {
+    this.keyDataValue = this.createKeyDataValue();
     this.resetFocusAndEdit.emit(0);
   }
 
@@ -207,7 +209,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
 
   private startKeyEditing(value?: any): boolean {
     if (this.isManageable() && !this.keyEditing$.value) {
-      this.keyDataValue = this.createKeyDataValue(value, DataValueInputType.Typed);
+      this.keyDataValue = this.createKeyDataValue(value);
       this.keyEditing$.next(true);
       return true;
     }
@@ -220,7 +222,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
       if (this.shouldDirectEditValue()) {
         this.onNewValue(this.computeDirectEditValue());
       } else {
-        this.dataValue = this.createDataValue(value, DataValueInputType.Typed);
+        this.dataValue = this.createDataValue(value, true);
         this.editing$.next(true);
         return true;
       }
@@ -261,17 +263,12 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
   }
 
   private endValueEditing() {
-    this.keyDataValue = this.createKeyDataValue();
     if (this.editing$.value) {
-      if (this.editedValue) {
-        this.onNewValue(this.editedValue);
-      }
       this.editing$.next(false);
     }
   }
 
   private endKeyEditing() {
-    this.dataValue = this.createDataValue();
     if (this.keyEditing$.value) {
       this.keyEditing$.next(false);
     }

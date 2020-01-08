@@ -1,14 +1,15 @@
 <dropdown [showBackdrop]="false"
+          [closeOnClickOrigin]="true"
           [fitParent]="fitParent"
           [origin]="origin"
           [positions]="dropdownPositions">
-  <div *ngIf="options?.length > 0"
-       class="dropdown-menu show position-static w-100">
+  <div *ngIf="options?.length > 0" class="card"
+       [class.w-100]="fitParent">
     <a *ngFor="let option of options"
        dropdownOption
        [value]="option.value"
        (click)="onOptionClick($event, option)"
-       class="dropdown-item text-truncate"
+       class="dropdown-item text-truncate py-1"
        tabindex>
       <data-input
         [constraint]="option.constraint"

@@ -17,25 +17,36 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {KeyCode} from '../../../key-code';
-import {HtmlModifier} from '../../../utils/html-modifier';
 import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
-import {View} from '../../../../core/store/views/view';
+import {QueryItemType} from '../query-item/model/query-item-type';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {HtmlModifier} from '../../../utils/html-modifier';
 
 @Component({
   selector: 'search-input',
   templateUrl: './search-input.component.html',
   styleUrls: ['./search-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'cursor-text'},
 })
 export class SearchInputComponent {
   @Input()
   public queryItems: QueryItem[] = [];
 
   @Input()
-  public currentView: View;
+  public readonly: boolean;
 
   @Output()
   public addQueryItem = new EventEmitter<QueryItem>();
@@ -47,23 +58,50 @@ export class SearchInputComponent {
   public search = new EventEmitter();
 
   @ViewChild('searchInput', {static: true})
-  private searchInput: ElementRef;
+  private searchInput: ElementRef<HTMLInputElement>;
 
   @ViewChild(SearchSuggestionsComponent, {static: true})
   public searchSuggestions: SearchSuggestionsComponent;
 
+  public readonly placeholder: string;
+
   public suggesting: boolean;
   public text = '';
+
+  constructor(private i18n: I18n, private hostElement: ElementRef) {
+    this.placeholder = i18n({id: 'search.input.placeholder', value: 'Type anything you search for...'});
+  }
 
   public onUseSuggestion(suggestion: QueryItem) {
     this.addQueryItem.emit(suggestion);
     this.text = '';
 
-    setTimeout(() => this.focusInput());
+    if (this.shouldFocusInput(suggestion)) {
+      setTimeout(() => this.focusInput());
+    } else {
+      this.searchInput.nativeElement.blur();
+    }
   }
 
-  public removeHtmlComments(html: HTMLElement): string {
-    return HtmlModifier.removeHtmlComments(html);
+  private shouldFocusInput(suggestion: QueryItem): boolean {
+    return [QueryItemType.Collection, QueryItemType.Link, QueryItemType.Fulltext].includes(suggestion.type);
+  }
+
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent) {
+    if (this.suggesting) {
+      event.stopPropagation();
+    }
+    this.focusInput();
+  }
+
+  @HostListener('mousedown', ['$event'])
+  public onMouseDown(event: MouseEvent) {
+    const targetingHost = (event.target as Element) === this.hostElement.nativeElement;
+    if (targetingHost && this.suggesting) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
   }
 
   public focusInput() {
@@ -119,7 +157,7 @@ export class SearchInputComponent {
   }
 
   public onEnterKeyUp() {
-    if (this.text) {
+    if (this.text || this.searchSuggestions.hasSelection()) {
       this.searchSuggestions.useSelection(this.text);
     } else {
       this.search.emit();

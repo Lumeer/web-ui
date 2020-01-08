@@ -20,12 +20,20 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {KanbanAttribute} from '../../../../core/store/kanbans/kanban';
 import {SelectDataItemModel} from '../../../../shared/select/select-data-item/select-data-item.model';
+import {AttributesResource} from '../../../../core/model/resource';
+import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 
 @Pipe({
   name: 'kanbanSelectDataItems',
 })
 export class KanbanSelectDataItemsPipe implements PipeTransform {
-  public transform(items: string[], attribute: KanbanAttribute): SelectDataItemModel[] {
-    return items.map(item => ({id: item, value: item}));
+  public transform(
+    items: any[],
+    attribute: KanbanAttribute,
+    attributesResources: AttributesResource[]
+  ): SelectDataItemModel[] {
+    const resource = attribute && (attributesResources || [])[attribute.resourceIndex];
+    const constraint = attribute && findAttributeConstraint(resource && resource.attributes, attribute.attributeId);
+    return items.map(item => ({id: item, value: item, constraint}));
   }
 }

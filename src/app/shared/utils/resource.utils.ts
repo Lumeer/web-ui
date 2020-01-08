@@ -135,11 +135,8 @@ export function mergePermissions(p1: AllowedPermissions, p2: AllowedPermissions)
 export function getAttributesResourceType(attributesResource: AttributesResource): AttributesResourceType {
   if (<LinkType>attributesResource && (<LinkType>attributesResource).collectionIds) {
     return AttributesResourceType.LinkType;
-  } else if (<Collection>attributesResource && (<Collection>attributesResource).permissions) {
-    return AttributesResourceType.Collection;
   }
-
-  return null;
+  return AttributesResourceType.Collection;
 }
 
 export function sortResourcesByFavoriteAndLastUsed<T extends Resource>(resources: T[]): T[] {
@@ -155,5 +152,18 @@ export function sortResourcesByFavoriteAndLastUsed<T extends Resource>(resources
       return b.id.localeCompare(a.id);
     }
     return a.favorite ? -1 : 1;
+  });
+}
+
+export function sortResourcesLastUsed<T extends Resource>(resources: T[]): T[] {
+  return [...(resources || [])].sort((a, b) => {
+    if (a.lastTimeUsed && b.lastTimeUsed) {
+      return b.lastTimeUsed.getTime() - a.lastTimeUsed.getTime();
+    } else if (a.lastTimeUsed && !b.lastTimeUsed) {
+      return -1;
+    } else if (b.lastTimeUsed && !a.lastTimeUsed) {
+      return 1;
+    }
+    return b.id.localeCompare(a.id);
   });
 }

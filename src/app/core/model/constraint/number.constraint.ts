@@ -21,14 +21,33 @@ import {NumberDataValue} from '../data-value/number.data-value';
 import {ConstraintType} from '../data/constraint';
 import {NumberConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {DataValueInputType} from '../data-value';
+import {QueryCondition} from '../../store/navigation/query/query';
 
 export class NumberConstraint implements Constraint {
   public readonly type = ConstraintType.Number;
 
   constructor(public readonly config: NumberConstraintConfig) {}
 
-  public createDataValue(value: any, inputType: DataValueInputType): NumberDataValue {
-    return new NumberDataValue(value, inputType, this.config);
+  public createDataValue(value: any): NumberDataValue {
+    return new NumberDataValue(value, this.config);
+  }
+
+  public createInputDataValue(inputValue: string, value: any): NumberDataValue {
+    return new NumberDataValue(value, this.config, inputValue || '');
+  }
+
+  public conditions(): QueryCondition[] {
+    return [
+      QueryCondition.Equals,
+      QueryCondition.NotEquals,
+      QueryCondition.GreaterThan,
+      QueryCondition.LowerThan,
+      QueryCondition.GreaterThanEquals,
+      QueryCondition.LowerThanEquals,
+      QueryCondition.Between,
+      QueryCondition.NotBetween,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

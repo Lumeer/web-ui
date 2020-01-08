@@ -26,22 +26,26 @@ import {
   formatUnknownDataValue,
 } from '../../../shared/utils/data.utils';
 import {NumberConstraintConfig} from '../data/constraint-config';
-import {DataValue, DataValueInputType} from './index';
+import {DataValue} from './index';
+import {removeNonNumberCharacters} from '../../../shared/directives/number.directive';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByNumber, dataValuesMeetFulltexts} from './data-value.utils';
 
 export class NumberDataValue implements DataValue {
   public readonly bigNumber: Big;
 
   constructor(
     public readonly value: any,
-    public readonly inputType: DataValueInputType,
-    public readonly config: NumberConstraintConfig
+    public readonly config: NumberConstraintConfig,
+    public readonly inputValue?: string
   ) {
     this.bigNumber = convertToBig(value);
   }
 
   public format(): string {
-    if (this.inputType === DataValueInputType.Typed) {
-      return this.value;
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return removeNonNumberCharacters(this.inputValue);
     }
     // TODO format based on config
     return this.bigNumber ? decimalStoreToUser(this.bigNumber.toFixed()) : formatUnknownDataValue(this.value);
@@ -56,6 +60,9 @@ export class NumberDataValue implements DataValue {
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return this.copy(this.inputValue).isValid(ignoreConfig);
+    }
     if (!this.value) {
       return true;
     }
@@ -66,11 +73,11 @@ export class NumberDataValue implements DataValue {
   }
 
   public increment(): NumberDataValue {
-    return this.bigNumber && new NumberDataValue(this.bigNumber.add(1), DataValueInputType.Stored, this.config);
+    return this.bigNumber && new NumberDataValue(this.bigNumber.add(1), this.config);
   }
 
   public decrement(): NumberDataValue {
-    return this.bigNumber && new NumberDataValue(this.bigNumber.sub(1), DataValueInputType.Stored, this.config);
+    return this.bigNumber && new NumberDataValue(this.bigNumber.sub(1), this.config);
   }
 
   public compareTo(otherValue: NumberDataValue): number {
@@ -79,11 +86,23 @@ export class NumberDataValue implements DataValue {
 
   public copy(newValue?: any): NumberDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new NumberDataValue(value, DataValueInputType.Copied, this.config);
+    return new NumberDataValue(value, this.config);
   }
 
   public parseInput(inputValue: string): NumberDataValue {
-    return new NumberDataValue(inputValue, DataValueInputType.Typed, this.config);
+    return new NumberDataValue(inputValue, this.config, inputValue);
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = (values || []).map(value => new NumberDataValue(value.value, this.config));
+    const otherBigNumbers = dataValues.map(value => value.bigNumber);
+    const otherValues = dataValues.map(value => value.value);
+
+    return dataValuesMeetConditionByNumber(condition, this.bigNumber, otherBigNumbers, this.value, otherValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return dataValuesMeetFulltexts(this.format(), fulltexts);
   }
 }
 
