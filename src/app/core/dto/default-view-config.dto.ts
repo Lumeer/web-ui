@@ -17,14 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryDto} from './query.dto';
-import {ResourceDto} from './resource.dto';
-
-export interface ViewDto extends ResourceDto {
+export interface DefaultViewConfigDto {
+  collectionId: string;
   perspective: string;
-  query: QueryDto;
   config: any;
-  authorRights?: Record<string, string[]>;
-  favorite?: boolean;
-  lastTimeUsed?: number;
 }

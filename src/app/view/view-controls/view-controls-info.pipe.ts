@@ -27,7 +27,7 @@ import {AppState} from '../../core/store/app.state';
 import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
 import {selectCurrentUser} from '../../core/store/users/users.state';
-import {ViewConfig, View} from '../../core/store/views/view';
+import {View} from '../../core/store/views/view';
 import {userHasRoleInResource, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
 import {Perspective} from '../perspectives/perspective';
 import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/query.util';
@@ -46,7 +46,6 @@ export class ViewControlsInfoPipe implements PipeTransform {
   public transform(
     view: View,
     name: string,
-    config: ViewConfig,
     perspective: Perspective
   ): Observable<{canClone: boolean; canManage: boolean; canShare: boolean}> {
     if (!view || !view.code) {

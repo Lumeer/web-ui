@@ -18,11 +18,9 @@
  */
 
 import {PermissionType} from '../permissions/permissions';
-import {View} from './view';
+import {DefaultViewConfig, View, ViewConfig} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
-import {DocumentsActionType} from '../documents/documents.action';
-import {documentsAdapter} from '../documents/documents.state';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -48,11 +46,42 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: false}}, state);
     case ViewsActionType.REMOVE_FAVORITE_FAILURE:
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
+    case ViewsActionType.SET_DEFAULT_CONFIG:
+      return setDefaultConfig(state, action);
+    case ViewsActionType.GET_DEFAULT_CONFIGS_SUCCESS:
+      return updateDefaultConfigs(state, action.payload.configs);
     case ViewsActionType.CLEAR:
       return initialViewsState;
     default:
       return state;
   }
+}
+
+function setDefaultConfig(state: ViewsState, action: ViewsAction.SetDefaultConfig): ViewsState {
+  const defaultConfigs = {...state.defaultConfigs};
+  setDefaultConfigInMap(defaultConfigs, action.payload.config);
+
+  return {...state, defaultConfigs};
+}
+
+function setDefaultConfigInMap(configs: Record<string, Record<string, ViewConfig>>, config: DefaultViewConfig) {
+  if (!configs[config.perspective]) {
+    configs[config.perspective] = {};
+  }
+
+  const perspectiveConfig = configs[config.perspective];
+  if (!perspectiveConfig[config.collectionId]) {
+    perspectiveConfig[config.collectionId] = config.config;
+  }
+}
+
+function updateDefaultConfigs(state: ViewsState, configs: DefaultViewConfig[]): ViewsState {
+  const defaultConfigs = (configs || []).reduce((map, config) => {
+    setDefaultConfigInMap(map, config);
+    return map;
+  }, {});
+
+  return {...state, defaultConfigs, defaultConfigsLoaded: true};
 }
 
 function addViews(state: ViewsState, views: View[]): ViewsState {

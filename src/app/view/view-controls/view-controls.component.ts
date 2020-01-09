@@ -40,9 +40,8 @@ import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPerspective, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {RouterAction} from '../../core/store/router/router.action';
-import {View, ViewConfig} from '../../core/store/views/view';
+import {View} from '../../core/store/views/view';
 import {
-  selectPerspectiveViewConfig,
   selectViewConfigChanged,
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
@@ -79,7 +78,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public name: string;
 
-  public config$: Observable<ViewConfig>;
   public perspective$: Observable<Perspective>;
 
   public saveLoading$ = new BehaviorSubject(false);
@@ -106,8 +104,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());
     this.subscriptions.add(this.subscribeToSearchTab());
-
-    this.config$ = this.store$.pipe(select(selectPerspectiveViewConfig));
 
     this.perspective$ = this.store$.pipe(
       select(selectPerspective),

@@ -27,6 +27,7 @@ import {PermissionDto, PermissionsDto, ViewDto} from '../dto';
 import {AppState} from '../store/app.state';
 import {Workspace} from '../store/navigation/workspace';
 import {BaseService} from './base.service';
+import {DefaultViewConfigDto} from '../dto/default-view-config.dto';
 
 @Injectable()
 export class ViewService extends BaseService {
@@ -86,6 +87,14 @@ export class ViewService extends BaseService {
       observe: 'response',
       responseType: 'text',
     });
+  }
+
+  public updateDefaultConfig(dto: DefaultViewConfigDto): Observable<DefaultViewConfigDto> {
+    return this.http.put<DefaultViewConfigDto>(`${this.apiPrefix()}/defaultConfigs/config`, dto);
+  }
+
+  public getDefaultConfigs(workspace?: Workspace): Observable<DefaultViewConfigDto[]> {
+    return this.http.get<DefaultViewConfigDto[]>(`${this.apiPrefix(null, workspace)}/defaultConfigs/all`);
   }
 
   private apiPrefix(id?: string, workspace?: Workspace): string {

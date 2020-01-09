@@ -48,7 +48,7 @@ import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableConfigById, selectTableCursor} from '../../../core/store/tables/tables.selector';
 import {View} from '../../../core/store/views/view';
-import {selectCurrentView, selectPerspectiveViewConfig} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectViewConfig} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
@@ -188,10 +188,10 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private initTable() {
     this.store$
       .pipe(
-        select(selectPerspectiveViewConfig),
+        select(selectViewConfig),
         first()
       )
-      .subscribe(config => this.createTableFromQuery(config));
+      .subscribe(config => this.createTableFromQuery(config && config.table));
   }
 
   private createTableFromQuery(config: TableConfig) {
@@ -259,7 +259,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         filter(navigation => navigation.perspective === Perspective.Table && !!navigation.query),
         withLatestFrom(
           this.store$.pipe(select(selectTableConfigById(this.tableId))),
-          this.store$.pipe(select(selectPerspectiveViewConfig)),
+          this.store$.pipe(select(selectViewConfig)),
           this.store$.pipe(select(selectCurrentView))
         )
       )
@@ -279,7 +279,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
           // when tableId does not change, config holds the old table configuration - this helps only when view is not used
           // initConfig is initialized only once and carries the initial perspective config
           // viewConfig is the up-to-date configuration of the current view
-          this.refreshTable(query, viewConfig || config || initConfig);
+          this.refreshTable(query, (viewConfig && viewConfig.table) || config || initConfig);
         }
 
         this.query = query;

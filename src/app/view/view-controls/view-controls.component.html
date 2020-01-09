@@ -1,5 +1,5 @@
 <ng-container
-  *ngIf="{permissions: view | viewControlsInfo:name:(config$ | async):(perspective$ | async) | async, viewChanged: viewChanged$ | async} as state">
+  *ngIf="{permissions: view | viewControlsInfo:name:(perspective$ | async) | async, viewChanged: viewChanged$ | async} as state">
   <form class="view-controls-grid">
     <div class="perspective d-flex align-items-center justify-content-start">
       <div class="input-group flex-nowrap mr-2 mb-2" data-tour="perspective">

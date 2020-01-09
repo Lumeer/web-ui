@@ -33,13 +33,15 @@ import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navi
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {View, ViewGlobalConfig} from './view';
+import {View, ViewConfig, ViewGlobalConfig} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
   globalConfig: ViewGlobalConfig;
+  defaultConfigs: Record<string, Record<string, ViewConfig>>;
+  defaultConfigsLoaded: boolean;
 }
 
 export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id});
@@ -47,6 +49,8 @@ export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id
 export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   loaded: false,
   globalConfig: {},
+  defaultConfigs: {},
+  defaultConfigsLoaded: false,
 });
 
 export const selectViewsState = (state: AppState) => state.views;
@@ -120,6 +124,12 @@ export const selectPerspectiveViewConfig = createSelector(
   selectPerspective,
   (view, perspective) => view && view.config && view.config[perspective]
 );
+
+export const selectViewConfig = createSelector(
+  selectCurrentView,
+  view => view && view.config
+);
+
 export const selectViewConfigChanged = createSelector(
   selectPerspective,
   selectPerspectiveConfig,
@@ -153,4 +163,24 @@ const selectViewGlobalConfig = createSelector(
 export const selectSidebarOpened = createSelector(
   selectViewGlobalConfig,
   config => config.sidebarOpened
+);
+
+export const selectPerspectiveDefaultViewConfigs = createSelector(
+  selectViewsState,
+  selectPerspective,
+  selectQuery,
+  (state, perspective, query) => {
+    const firstStem = ((query && query.stems) || [])[0];
+    const collectionId = firstStem && firstStem.collectionId;
+    const configsByPerspective = state.defaultConfigs[perspective];
+    if (configsByPerspective && collectionId) {
+      return configsByPerspective[collectionId];
+    }
+    return null;
+  }
+);
+
+export const selectDefaultViewConfigsLoaded = createSelector(
+  selectViewsState,
+  state => state.defaultConfigsLoaded
 );

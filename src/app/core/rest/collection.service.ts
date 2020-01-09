@@ -70,13 +70,6 @@ export class CollectionService extends PermissionService {
     return this.httpClient.put(`${this.apiPrefix()}/${collectionId}/attributes/${attributeId}/default`, {});
   }
 
-  /**
-   * @deprecated Get attributes from collection instead.
-   */
-  public getAttributes(collectionId: string): Observable<AttributeDto[]> {
-    return this.httpClient.get<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`);
-  }
-
   public createAttribute(collectionId: string, attribute: AttributeDto): Observable<AttributeDto> {
     return this.httpClient
       .post<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute])

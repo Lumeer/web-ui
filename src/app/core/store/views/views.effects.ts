@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, of, pipe} from 'rxjs';
+import {EMPTY, Observable, of, pipe} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionDto, ViewDto} from '../../dto';
@@ -36,7 +36,12 @@ import {Permission, PermissionType} from '../permissions/permissions';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {RouterAction} from '../router/router.action';
 import {View} from './view';
-import {convertViewDtoToModel, convertViewModelToDto} from './view.converter';
+import {
+  convertDefaultViewConfigDtoToModel,
+  convertDefaultViewConfigModelToDto,
+  convertViewDtoToModel,
+  convertViewModelToDto,
+} from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {selectViewsDictionary, selectViewsLoaded} from './views.state';
 import {areQueriesEqual} from '../navigation/query/query.helper';
@@ -52,7 +57,7 @@ import {createCallbackActions} from '../store.utils';
 @Injectable()
 export class ViewsEffects {
   @Effect()
-  public get: Observable<Action> = this.actions$.pipe(
+  public get$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.Get>(ViewsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectViewsLoaded))),
     filter(([action, loaded]) => action.payload.force || !loaded),
@@ -357,6 +362,29 @@ export class ViewsEffects {
         value: 'Could not remove the view from favorites',
       });
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect({dispatch: false})
+  public setDefaultConfig$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.SetDefaultConfig>(ViewsActionType.SET_DEFAULT_CONFIG),
+    mergeMap(action => {
+      return this.viewService.updateDefaultConfig(convertDefaultViewConfigModelToDto(action.payload.config)).pipe(
+        mergeMap(() => EMPTY),
+        catchError(() => EMPTY)
+      );
+    })
+  );
+
+  @Effect()
+  public getDefaultConfigs$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.GetDefaultConfigs>(ViewsActionType.GET_DEFAULT_CONFIGS),
+    mergeMap(action => {
+      return this.viewService.getDefaultConfigs(action.payload.workspace).pipe(
+        map(dtos => dtos.map(dto => convertDefaultViewConfigDtoToModel(dto))),
+        map(configs => new ViewsAction.GetDefaultConfigsSuccess({configs})),
+        catchError(() => of(new ViewsAction.GetDefaultConfigsSuccess({configs: []})))
+      );
     })
   );
 

@@ -32,6 +32,7 @@ import {Perspective} from './perspectives/perspective';
 import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
+import {ViewDefaultConfigsGuard} from '../core/guards/data/view-default-configs.guard';
 
 const viewRoutes: Routes = [
   {
@@ -43,6 +44,7 @@ const viewRoutes: Routes = [
       views: ViewsGuard,
       linkTypes: LinkTypesGuard,
       users: UsersGuard,
+      defaultConfigs: ViewDefaultConfigsGuard,
     },
     component: ViewComponent,
     children: [

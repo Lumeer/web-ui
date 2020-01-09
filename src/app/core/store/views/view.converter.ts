@@ -20,12 +20,13 @@
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {ViewDto} from '../../dto';
 import {convertQueryDtoToModel, convertQueryModelToDto} from '../navigation/query/query.converter';
-import {View, ViewConfig} from './view';
+import {DefaultViewConfig, View, ViewConfig} from './view';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {convertPivotConfigDtoToModel} from '../pivots/pivot-config.converter';
 import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart-config-converter';
 import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-converter';
 import {convertKanbanConfigDtoToModel} from '../kanbans/kanban-config.converter';
+import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {
@@ -68,4 +69,12 @@ function convertViewConfigDtoToModel(perspective: Perspective, config: any): Vie
     default:
       return config;
   }
+}
+
+export function convertDefaultViewConfigDtoToModel(dto: DefaultViewConfigDto): DefaultViewConfig {
+  return {...dto};
+}
+
+export function convertDefaultViewConfigModelToDto(model: DefaultViewConfig): DefaultViewConfigDto {
+  return {...model};
 }
