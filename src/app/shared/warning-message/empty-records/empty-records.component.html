@@ -1,24 +1,27 @@
-<ng-container *ngIf="!(query | emptyQuery)">
+<ng-container *ngIf="!containsAnyDocument; else empty">
+  <ng-container *ngIf="!(query | emptyQuery)">
 
-  <empty-state *ngIf="(query | singleCollectionQuery) && collections?.length === 1 && (collections[0] | collectionPermissions | async)?.writeWithView; else empty"
-               [icon]="'fa fa-file-times'">
-    <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
-    <div class="mb-3">
-      <span i18n="@@search.records.empty.subtitle.singleCollection">Let's add some Records into</span>
-      <span [style.color]="collections[0].color">
+    <empty-state
+      *ngIf="(query | singleCollectionQuery) && collections?.length === 1 && (collections[0] | collectionPermissions | async)?.writeWithView; else empty"
+      [icon]="'fa fa-file-times'">
+      <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
+      <div class="mb-3">
+        <span i18n="@@search.records.empty.subtitle.singleCollection">Let's add some Records into</span>
+        <span [style.color]="collections[0].color">
         <i class="{{collections[0].icon}} fa-fw ml-2"></i>&nbsp;{{collections[0].name}}
       </span>
-    </div>
+      </div>
 
-    <ng-content></ng-content>
+      <ng-content></ng-content>
 
+    </empty-state>
+  </ng-container>
+  <empty-state *ngIf="query | emptyQuery"
+               [icon]="'fa fa-file-times'">
+    <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
+    <div i18n="@@search.records.empty.subtitle">Open a table by clicking on it and add your first record.</div>
   </empty-state>
 </ng-container>
-<empty-state *ngIf="query | emptyQuery"
-             [icon]="'fa fa-file-times'">
-  <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
-  <div i18n="@@search.records.empty.subtitle">Open a table by clicking on it and add your first record.</div>
-</empty-state>
 
 <ng-template #empty>
   <empty-search></empty-search>

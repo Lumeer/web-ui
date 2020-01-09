@@ -16,7 +16,6 @@
               [style.color]="cell.background && (cell.background | contrastColor)">
             <data-input-preview *ngIf="(cell | pivotTableCellHasValue) && cell.constraint"
                                 [constraint]="cell.constraint"
-                                [inline]="false"
                                 [minWidth]="40"
                                 [dataValue]="cell.value | dataValue:cell.constraint:constraintData">
             </data-input-preview>

@@ -67,7 +67,7 @@ import {NavigationAction} from '../navigation/navigation.action';
 import {selectQuery, selectViewCode, selectViewCursor} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
 import {convertQueryModelToString} from '../navigation/query/query.converter';
-import {isSingleCollectionQuery, queryWithoutLinks} from '../navigation/query/query.util';
+import {isSingleCollectionQuery} from '../navigation/query/query.util';
 import {RouterAction} from '../router/router.action';
 import {moveTableCursor, TableBodyCursor, TableCursor} from './table-cursor';
 import {
@@ -604,7 +604,7 @@ export class TablesEffects {
     switchMap(action =>
       combineLatest([
         this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsByCustomQuery(queryWithoutLinks(action.payload.query), false, true))),
+        this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false, true))),
         this.store$.pipe(select(selectMoveTableCursorDown)),
         this.store$.pipe(select(selectTableCursor)),
       ]).pipe(
@@ -612,6 +612,7 @@ export class TablesEffects {
         filter(([table]) => !!table),
         mergeMap(([table, documents, moveCursorDown, tableCursor]) => {
           const {collectionId} = table.config.parts[0];
+          const documentsByCollection = documents.filter(doc => doc.collectionId === collectionId);
           return this.store$.pipe(
             select(selectCollectionById(collectionId)),
             mergeMap(collection => this.collectionPermissionsPipe.transform(collection)),
@@ -621,8 +622,8 @@ export class TablesEffects {
               const {cursor} = action.payload;
               const {rows} = table.config;
 
-              const createdDocuments = filterNewlyCreatedDocuments(rows, documents);
-              const unknownDocuments = filterUnknownDocuments(rows, documents);
+              const createdDocuments = filterNewlyCreatedDocuments(rows, documentsByCollection);
+              const unknownDocuments = filterUnknownDocuments(rows, documentsByCollection);
 
               const actions: Action[] = [];
 
@@ -639,9 +640,9 @@ export class TablesEffects {
                 }
               }
 
-              const documentIds = new Set(documents.map(doc => doc.id));
+              const documentIds = new Set(documentsByCollection.map(doc => doc.id));
               if (rows.some(row => row.documentId && !documentIds.has(row.documentId))) {
-                actions.push(new TablesAction.CleanRows({cursor, documents, linkInstances: []}));
+                actions.push(new TablesAction.CleanRows({cursor, documents: documentsByCollection, linkInstances: []}));
               }
 
               if (unknownDocuments.length > 0) {

@@ -1,6 +1,6 @@
 <ng-container *ngIf="constraint | constraintAsText; else otherConstraint">
   <span [innerHTML]="dataValue | previewDataValue" class="white-space-normal"
-        [class.text-nowrap]="!inline">
+        [class.text-nowrap]="inline">
   </span>
 </ng-container>
 
@@ -11,8 +11,8 @@
     </boolean-data-input>
 
     <color-data-input *ngSwitchCase="constraintType.Color"
-                      [style.max-width.px]=" inline ? (hasValue ?  50 : 0) : null"
-                      [class.h-100]="!inline"
+                      [style.max-width.px]=" inline && limitColorWidth ? (hasValue ?  50 : 0) : null"
+                      [class.h-100]="inline"
                       [style.min-width.px]="minWidth"
                       [readonly]="true"
                       [value]="dataValue"
@@ -34,6 +34,13 @@
                      [value]="dataValue"
                      class="w-100">
     </user-data-input>
+
+    <files-data-input *ngSwitchCase="constraintType.Files"
+                      [focus]="false"
+                      [readonly]="true"
+                      [cursor]="cursor"
+                      [value]="dataValue">
+    </files-data-input>
 
   </ng-container>
 </ng-template>

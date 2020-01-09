@@ -34,14 +34,14 @@ export function filterCollectionsByQuery(
   query: Query,
   constraintData: ConstraintData
 ): Collection[] {
-  const filteredCollections = collections.filter(collection => collection && typeof collection === 'object');
+  const filteredCollections = (collections || []).filter(collection => collection && typeof collection === 'object');
   if (!query || queryIsEmptyExceptPagination(query)) {
     return collections;
   }
 
   const collectionIds = getAllCollectionIdsFromQuery(query, linkTypes);
   const collectionsByIds = collectionIds
-    .map(id => filteredCollections.find(coll => coll.id === id))
+    .map(id => (filteredCollections || []).find(coll => coll.id === id))
     .filter(collection => !!collection);
 
   const collectionsByFullTexts = filterCollectionsByFulltexts(

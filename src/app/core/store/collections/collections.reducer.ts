@@ -69,7 +69,7 @@ export function collectionsReducer(
 
 function addCollections(state: CollectionsState, collections: Collection[]): CollectionsState {
   const newState = {...state, loaded: true};
-  const filteredCollections = collections.filter(collection => {
+  const filteredCollections = (collections || []).filter(collection => {
     const oldCollection = state.entities[collection.id];
     return !oldCollection || isCollectionNewer(collection, oldCollection);
   });

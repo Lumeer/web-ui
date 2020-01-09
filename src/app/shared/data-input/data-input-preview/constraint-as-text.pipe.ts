@@ -34,7 +34,6 @@ export class ConstraintAsTextPipe implements PipeTransform {
       ConstraintType.Percentage,
       ConstraintType.Duration,
       ConstraintType.Address,
-      ConstraintType.Files,
       ConstraintType.DateTime,
     ];
     return !constraint || textConstraints.includes(constraint.type);

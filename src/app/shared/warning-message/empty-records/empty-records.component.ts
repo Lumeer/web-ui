@@ -33,4 +33,7 @@ export class EmptyRecordsComponent {
 
   @Input()
   public collections: Collection[];
+
+  @Input()
+  public containsAnyDocument: boolean;
 }

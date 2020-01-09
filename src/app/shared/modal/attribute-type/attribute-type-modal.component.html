@@ -10,8 +10,8 @@
   <div class="custom-header p-3">
     <h5 class="modal-title break-all">
       <icons-presenter
-        [colors]="data.collection ? [data.collection.color] : [data.linkCollections[0]?.color, data.linkCollections[1]?.color]"
-        [icons]="data.collection ? [data.collection.icon] : [data.linkCollections[0]?.icon, data.linkCollections[1]?.icon]">
+        [colors]="data.collection ? [data.collection.color] : (data.linkCollections ? [data.linkCollections[0]?.color, data.linkCollections[1]?.color] : [])"
+        [icons]="data.collection ? [data.collection.icon] :  (data.linkCollections ? [data.linkCollections[0]?.icon, data.linkCollections[1]?.icon] : [])">
       </icons-presenter>
       <span [style.color]="data.collection?.color"
             [title]="(data.collection?.name || data.linkType?.name) + '.' + data.attribute?.name"
