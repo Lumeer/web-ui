@@ -3,11 +3,11 @@
 
   <ng-container *ngIf="multi || readonly">
 
-    <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">
+    <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first; let index = index">
         <span class="d-inline-block px-2 py-1 tag text-nowrap" [title]="option.displayValue || option.value"
               [style.background]="option.background"
               [style.color]="option.background | contrastColor"
-              [class.invalid-value]="!(option | selectOptionIsValid:value.config?.options)"
+              [class.invalid-value]="!(option | selectOptionIsValid:value.config:index)"
               [spellcheck]="false"
               [class.ml-2]="!first">
           {{option.displayValue || option.value}}

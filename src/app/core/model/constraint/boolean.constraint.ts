@@ -25,6 +25,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 export class BooleanConstraint implements Constraint {
   public readonly type = ConstraintType.Boolean;
   public readonly config = {};
+  public readonly isTextRepresentation = false;
 
   public createDataValue(value: any): BooleanDataValue {
     return new BooleanDataValue(value);

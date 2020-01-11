@@ -25,6 +25,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 
 export class TextConstraint implements Constraint {
   public readonly type = ConstraintType.Text;
+  public readonly isTextRepresentation = true;
 
   constructor(public readonly config: TextConstraintConfig) {}
 

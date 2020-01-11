@@ -25,6 +25,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 
 export class AddressConstraint implements Constraint {
   public readonly type = ConstraintType.Address;
+  public readonly isTextRepresentation = true;
 
   constructor(public readonly config: AddressConstraintConfig) {}
 

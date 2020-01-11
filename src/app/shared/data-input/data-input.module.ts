@@ -58,6 +58,7 @@ import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
 import {UsersNamesPipe} from './user/pipes/users-names.pipe';
 import {DataInputPreviewComponent} from './data-input-preview/data-input-preview.component';
 import {ConstraintAsTextPipe} from './data-input-preview/constraint-as-text.pipe';
+import {UserIsValidPipe} from './user/pipes/user-is-valid.pipe';
 
 @NgModule({
   imports: [
@@ -100,6 +101,7 @@ import {ConstraintAsTextPipe} from './data-input-preview/constraint-as-text.pipe
     SelectOptionsValuesPipe,
     UsersEmailsPipe,
     UsersAreValidPipe,
+    UserIsValidPipe,
     UsersNamesPipe,
     DataInputPreviewComponent,
     ConstraintAsTextPipe,
@@ -112,6 +114,9 @@ import {ConstraintAsTextPipe} from './data-input-preview/constraint-as-text.pipe
     DataCursorPipe,
     FileAttachmentButtonComponent,
     SelectDataInputComponent,
+    TextDataInputComponent,
+    RichTextDataInputComponent,
+    ConstraintAsTextPipe,
   ],
 })
 export class DataInputModule {}

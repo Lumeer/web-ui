@@ -17,25 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FilesDataValue} from '../data-value/files.data-value';
-import {ConstraintType} from '../data/constraint';
-import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
+import {Pipe, PipeTransform} from '@angular/core';
+import {User} from '../../../../core/store/users/user';
+import {UserConstraintConfig} from '../../../../core/model/data/constraint-config';
 
-export class FilesConstraint implements Constraint {
-  public readonly type = ConstraintType.Files;
-  public readonly config = {};
-  public readonly isTextRepresentation = false;
+@Pipe({
+  name: 'userIsValid',
+})
+export class UserIsValidPipe implements PipeTransform {
+  public transform(selectedUser: User, definedUsers: User[], config: UserConstraintConfig, index: number): boolean {
+    if (config && !config.multi && index > 0) {
+      return false;
+    }
+    if (config && config.externalUsers) {
+      return true;
+    }
 
-  public createDataValue(value: any): FilesDataValue {
-    return new FilesDataValue(value, this.config);
-  }
-
-  public createInputDataValue(inputValue: string, value: any): FilesDataValue {
-    return new FilesDataValue(value, this.config);
-  }
-
-  public conditions(): QueryCondition[] {
-    return [QueryCondition.IsEmpty, QueryCondition.NotEmpty];
+    return definedUsers.some(user => selectedUser.email === user.email);
   }
 }

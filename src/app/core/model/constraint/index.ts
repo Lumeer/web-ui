@@ -34,6 +34,11 @@ export interface Constraint {
   config: Partial<ConstraintConfig>;
 
   /**
+   * Determine if constraint is visualized simply by text in readonly mode.
+   */
+  isTextRepresentation: boolean;
+
+  /**
    * Creates data value based on this constraint.
    */
   createDataValue(value: any, constraintData?: ConstraintData): DataValue;

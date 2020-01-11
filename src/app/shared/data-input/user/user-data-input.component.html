@@ -11,18 +11,19 @@
          [style.min-height.px]="avatarSize"
          [style.margin-left.rem]="!first ? -0.5 : 0.25">
 
-    <span *ngIf="value.config?.externalUsers || (selectedUsers | usersAreValid:users)"
+    <span *ngIf="selectedUsers | usersAreValid:users:value.config"
           class="d-inline-block ml-2 text-nowrap user"
           data-test="user-data-input">
         {{selectedUsers | usersNames | join}}
       </span>
 
-    <ng-container *ngIf="!value.config?.externalUsers && !(selectedUsers | usersAreValid:users)">
+    <ng-container *ngIf="!(selectedUsers | usersAreValid:users:value.config)">
 
-      <ng-container *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last">
+      <ng-container
+        *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last; let index = index">
 
         <span data-test="user-data-input"
-              [class.invalid-value]="!([user] | usersAreValid:users)"
+              [class.invalid-value]="!(user | userIsValid:users:value.config:index)"
               [class.ml-2]="first"
               class="d-inline-block user">
           {{user.name || user.email}}

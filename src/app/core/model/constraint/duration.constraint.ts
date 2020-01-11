@@ -25,6 +25,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 
 export class DurationConstraint implements Constraint {
   public readonly type = ConstraintType.Duration;
+  public readonly isTextRepresentation = true;
 
   constructor(public readonly config: DurationConstraintConfig) {}
 

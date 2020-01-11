@@ -19,23 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Constraint} from '../../../core/model/constraint';
-import {ConstraintType} from '../../../core/model/data/constraint';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 
 @Pipe({
   name: 'constraintAsText',
 })
 export class ConstraintAsTextPipe implements PipeTransform {
   public transform(constraint: Constraint): boolean {
-    const textConstraints = [
-      ConstraintType.Unknown,
-      ConstraintType.Coordinates,
-      ConstraintType.Text,
-      ConstraintType.Number,
-      ConstraintType.Percentage,
-      ConstraintType.Duration,
-      ConstraintType.Address,
-      ConstraintType.DateTime,
-    ];
-    return !constraint || textConstraints.includes(constraint.type);
+    return (constraint || new UnknownConstraint()).isTextRepresentation;
   }
 }

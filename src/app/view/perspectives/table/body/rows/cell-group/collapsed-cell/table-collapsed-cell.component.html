@@ -30,7 +30,6 @@
     </files-collapsed-cell>
 
     <user-data-input *ngSwitchCase="constraintType.User"
-                     [focus]="false"
                      [readonly]="true"
                      [title]="data.stringValues | join"
                      [value]="values | createCombinedUserValue:data.constraint:constraintData"
@@ -39,12 +38,18 @@
     </user-data-input>
 
     <select-data-input *ngSwitchCase="constraintType.Select"
-                       [focus]="false"
                        [readonly]="true"
                        [title]="data.stringValues | join"
                        [value]="values | createCombinedSelectValue:data.constraint"
                        class="h-100">
     </select-data-input>
+
+    <rich-text-data-input *ngSwitchCase="constraintType.Text"
+                          class="h-100"
+                          [readonly]="true"
+                          [title]="data.stringValues | join | stripHtml:false"
+                          [value]="(data.stringValues | join) | dataValue:data.constraint">
+    </rich-text-data-input>
 
     <ng-container *ngSwitchDefault>
       <ng-container *ngTemplateOutlet="defaultCollapsedCell"></ng-container>

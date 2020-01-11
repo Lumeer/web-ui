@@ -1,4 +1,4 @@
-<ng-container *ngIf="{attribute: attribute$ | async} as data">
+<ng-container *ngIf="{attribute: attribute$ | async, dataValue: dataValue$ | async} as data">
   <table-data-cell-menu *ngIf="selected"
                         [cursor]="cursor"
                         [document]="document"
@@ -8,36 +8,52 @@
                         (edit)="onEdit()">
   </table-data-cell-menu>
 
-  <data-input [constraint]="data.attribute?.constraint"
-              [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
-              [dataValue]="dataValue$ | async"
-              [focus]="true"
-              [readonly]="!allowedPermissions?.writeWithView || !((editing$ | async) || (data.attribute?.constraint?.type === constraintType.Boolean))"
-              (valueChange)="onValueChange($event)"
-              (save)="onValueSave($event)"
-              (cancel)="onCancelEditing()"
-              (enterInvalid)="onEnterInvalid()"
-              class="d-block h-100"
-              [class.cursor-default]="!(data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)"
-              data-test="table-data-input">
-  </data-input>
+  <ng-container
+    *ngIf="{readonly: !allowedPermissions?.writeWithView || !((editing$ | async) || (data.attribute?.constraint?.type === constraintType.Boolean)),
+    hasValue: !!(data.dataValue | formatDataValue),
+    asText: data.attribute?.constraint | constraintAsText
+    } as inputData">
+
+    <ng-container *ngIf="inputData.readonly && (inputData.asText || !inputData.hasValue)">
+      <div *ngIf="inputData.hasValue" class="text-nowrap overflow-hidden h-100 mx-1"
+           [innerHTML]="data.dataValue | previewDataValue">
+      </div>
+    </ng-container>
+
+    <data-input *ngIf="!inputData.readonly || (!inputData.asText && inputData.hasValue)"
+                [constraint]="data.attribute?.constraint"
+                [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
+                [dataValue]="data.dataValue"
+                [focus]="true"
+                [readonly]="inputData.readonly"
+                (valueChange)="onValueChange($event)"
+                (save)="onValueSave($event)"
+                (cancel)="onCancelEditing()"
+                (enterInvalid)="onEnterInvalid()"
+                class="d-block h-100"
+                [class.cursor-default]="!(data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)"
+                data-test="table-data-input">
+    </data-input>
+
+  </ng-container>
 
   <ng-container
     *ngIf="selected && !(cursor | isFirstPart) && (table | part:cursor)?.collectionId && (data.attribute | canShowAttributeHints) && (suggesting$ | async) && editedValue">
-    <document-hints *ngIf="{row: row$ | async, columns: table | documentHintColumns:cursor:canManageConfig} as hintsData"
-                    [attributeId]="column.attributeIds[0]"
-                    [collectionId]="(table | part:cursor)?.collectionId"
-                    [constraintData]="constraintData"
-                    [columns]="hintsData.columns"
-                    [excludedDocumentIds]="document && document.id ? [document.id] : []"
-                    [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
-                    [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
-                    [linkInstanceId]="hintsData.row?.linkInstanceId"
-                    [correlationId]="hintsData.row?.correlationId"
-                    [offsetLeft]="hintsData.columns | documentHintsOffset:column.attributeIds[0]"
-                    [dataValue]="editedValue"
-                    [origin]="element"
-                    (useHint)="onUseDocumentHint()">
+    <document-hints
+      *ngIf="{row: row$ | async, columns: table | documentHintColumns:cursor:canManageConfig} as hintsData"
+      [attributeId]="column.attributeIds[0]"
+      [collectionId]="(table | part:cursor)?.collectionId"
+      [constraintData]="constraintData"
+      [columns]="hintsData.columns"
+      [excludedDocumentIds]="document && document.id ? [document.id] : []"
+      [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"
+      [linkTypeId]="table.config?.parts[cursor.partIndex - 1].linkTypeId"
+      [linkInstanceId]="hintsData.row?.linkInstanceId"
+      [correlationId]="hintsData.row?.correlationId"
+      [offsetLeft]="hintsData.columns | documentHintsOffset:column.attributeIds[0]"
+      [dataValue]="editedValue"
+      [origin]="element"
+      (useHint)="onUseDocumentHint()">
     </document-hints>
   </ng-container>
 </ng-container>
