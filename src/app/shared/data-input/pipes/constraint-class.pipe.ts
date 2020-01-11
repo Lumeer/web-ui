@@ -19,24 +19,19 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Constraint} from '../../../core/model/constraint';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {TextConstraint} from '../../../core/model/constraint/text.constraint';
 
 @Pipe({
-  name: 'constraintAsText',
+  name: 'constraintClass',
 })
-export class ConstraintAsTextPipe implements PipeTransform {
-  public transform(constraint: Constraint): boolean {
-    const textConstraints = [
-      ConstraintType.Unknown,
-      ConstraintType.Coordinates,
-      ConstraintType.Text,
-      ConstraintType.Number,
-      ConstraintType.Percentage,
-      ConstraintType.Duration,
-      ConstraintType.Address,
-      ConstraintType.Files,
-      ConstraintType.DateTime,
-    ];
-    return !constraint || textConstraints.includes(constraint.type);
+export class ConstraintClassPipe implements PipeTransform {
+  public transform(constraint: Constraint): string {
+    return constraintTypeClass((constraint || new TextConstraint({})).type);
   }
+}
+
+export function constraintTypeClass(type: ConstraintType): string {
+  return `${(type || ConstraintType.Text).toLowerCase()}-input`;
 }

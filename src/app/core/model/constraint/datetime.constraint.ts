@@ -25,6 +25,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 
 export class DateTimeConstraint implements Constraint {
   public readonly type = ConstraintType.DateTime;
+  public readonly isTextRepresentation = true;
 
   constructor(public readonly config: DateTimeConstraintConfig) {}
 

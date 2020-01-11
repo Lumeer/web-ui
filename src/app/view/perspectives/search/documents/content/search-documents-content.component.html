@@ -42,6 +42,8 @@
                 class="text-attribute text-nowrap" [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
           <data-input-preview class="data-input d-inline-block"
                               [dataValue]="entry.dataValue"
+                              [cursor]="document | dataCursor:entry.attributeId"
+                              [inline]="false"
                               [constraint]="entry.constraint">
           </data-input-preview>
         </ng-container>

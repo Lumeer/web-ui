@@ -41,7 +41,7 @@ import {PercentageDataInputComponent} from './percentage/percentage-data-input.c
 import {SelectDataInputComponent} from './select/select-data-input.component';
 import {TextDataInputComponent} from './text/text-data-input.component';
 import {UserDataInputComponent} from './user/user-data-input.component';
-import {DataCursorPipe} from './data-cursor.pipe';
+import {DataCursorPipe} from './pipes/data-cursor.pipe';
 import {FileTypeIconPipe} from './files/file-type-icon.pipe';
 import {FilesDropdownComponent} from './files/dropdown/files-dropdown.component';
 import {FileAttachmentButtonComponent} from './files/button/file-attachment-button.component';
@@ -49,7 +49,7 @@ import {PickerModule} from '../picker/picker.module';
 import {RichTextDataInputComponent} from './rich-text/rich-text-data-input.component';
 import {TextEditorModalModule} from '../modal/text-editor/text-editor-modal.module';
 import {QuillModule} from 'ngx-quill';
-import {FilterDataSuggestionsPipe} from './filter-data-suggestions.pipe';
+import {FilterDataSuggestionsPipe} from './pipes/filter-data-suggestions.pipe';
 import {FilterUsersPipe} from './user/pipes/filter-users.pipe';
 import {SelectOptionIsValidPipe} from './select/pipes/select-option-is-valid.pipe';
 import {SelectOptionsValuesPipe} from './select/pipes/select-options-values.pipe';
@@ -57,7 +57,9 @@ import {UsersEmailsPipe} from './user/pipes/users-emails.pipe';
 import {UsersAreValidPipe} from './user/pipes/users-are-valid.pipe';
 import {UsersNamesPipe} from './user/pipes/users-names.pipe';
 import {DataInputPreviewComponent} from './data-input-preview/data-input-preview.component';
-import {ConstraintAsTextPipe} from './data-input-preview/constraint-as-text.pipe';
+import {ConstraintAsTextPipe} from './pipes/constraint-as-text.pipe';
+import {UserIsValidPipe} from './user/pipes/user-is-valid.pipe';
+import {ConstraintClassPipe} from './pipes/constraint-class.pipe';
 
 @NgModule({
   imports: [
@@ -100,9 +102,11 @@ import {ConstraintAsTextPipe} from './data-input-preview/constraint-as-text.pipe
     SelectOptionsValuesPipe,
     UsersEmailsPipe,
     UsersAreValidPipe,
+    UserIsValidPipe,
     UsersNamesPipe,
     DataInputPreviewComponent,
     ConstraintAsTextPipe,
+    ConstraintClassPipe,
   ],
   exports: [
     DataInputComponent,
@@ -112,6 +116,10 @@ import {ConstraintAsTextPipe} from './data-input-preview/constraint-as-text.pipe
     DataCursorPipe,
     FileAttachmentButtonComponent,
     SelectDataInputComponent,
+    TextDataInputComponent,
+    RichTextDataInputComponent,
+    ConstraintAsTextPipe,
+    ConstraintClassPipe,
   ],
 })
 export class DataInputModule {}

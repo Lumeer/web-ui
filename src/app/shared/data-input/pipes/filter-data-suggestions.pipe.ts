@@ -17,25 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {FilesDataValue} from '../data-value/files.data-value';
-import {ConstraintType} from '../data/constraint';
-import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
+import {Pipe, PipeTransform} from '@angular/core';
+import {DataSuggestion} from '../data-suggestion';
+import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
+import {removeAccent} from '../../utils/string.utils';
 
-export class FilesConstraint implements Constraint {
-  public readonly type = ConstraintType.Files;
-  public readonly config = {};
-  public readonly isTextRepresentation = false;
-
-  public createDataValue(value: any): FilesDataValue {
-    return new FilesDataValue(value, this.config);
-  }
-
-  public createInputDataValue(inputValue: string, value: any): FilesDataValue {
-    return new FilesDataValue(value, this.config);
-  }
-
-  public conditions(): QueryCondition[] {
-    return [QueryCondition.IsEmpty, QueryCondition.NotEmpty];
+@Pipe({
+  name: 'filterDataSuggestions',
+})
+export class FilterDataSuggestionsPipe implements PipeTransform {
+  public transform(suggestions: DataSuggestion[], text: string): DataDropdownOption[] {
+    return (suggestions || [])
+      .filter(suggestion =>
+        removeAccent(suggestion.title)
+          .trim()
+          .includes(removeAccent(text).trim())
+      )
+      .map(suggestion => ({value: suggestion.title, displayValue: suggestion.title}));
   }
 }

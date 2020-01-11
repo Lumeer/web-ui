@@ -19,12 +19,19 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {User} from '../../../../core/store/users/user';
+import {UserConstraintConfig} from '../../../../core/model/data/constraint-config';
 
 @Pipe({
   name: 'usersAreValid',
 })
 export class UsersAreValidPipe implements PipeTransform {
-  public transform(selectedUsers: User[], definedUsers: User[]): boolean {
+  public transform(selectedUsers: User[], definedUsers: User[], config: UserConstraintConfig): boolean {
+    if (config && !config.multi && (selectedUsers || []).length > 0) {
+      return false;
+    }
+    if (config && config.externalUsers) {
+      return true;
+    }
     return selectedUsers.every(selectedUser => definedUsers.some(user => selectedUser.email === user.email));
   }
 }

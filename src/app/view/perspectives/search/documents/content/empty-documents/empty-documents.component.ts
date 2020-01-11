@@ -17,17 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {Query} from '../../../../../../core/store/navigation/query/query';
+import {AppState} from '../../../../../../core/store/app.state';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {selectAllDocuments} from '../../../../../../core/store/documents/documents.state';
 
 @Component({
   selector: 'empty-documents',
   templateUrl: './empty-documents.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptyDocumentsComponent {
+export class EmptyDocumentsComponent implements OnInit {
   @Input()
   public query: Query;
 
@@ -36,6 +41,14 @@ export class EmptyDocumentsComponent {
 
   @Output()
   public tablePerspective = new EventEmitter();
+
+  public allDocuments$: Observable<DocumentModel[]>;
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.allDocuments$ = this.store$.pipe(select(selectAllDocuments));
+  }
 
   public onSwitchToTablePerspective() {
     this.tablePerspective.emit();

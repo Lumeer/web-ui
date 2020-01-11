@@ -1,5 +1,6 @@
 <empty-records
   [query]="query"
+  [containsAnyDocument]="(allDocuments$ | async)?.length > 0"
   [collections]="collections">
 
   <button type="button"

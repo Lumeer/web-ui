@@ -15,6 +15,7 @@
                          [table]="table$ | async"
                          [allowedPermissions]="data.linkInstances ? (resourceData.linkInstance | linkInstancePermissions | async) : (resourceData.document | documentPermissions | async)"
                          [query]="data.query"
+                         data-test="table-data-cell"
                          [constraintData]="data.constraintData"
                          (affect)="onAffect()">
         </table-data-cell>

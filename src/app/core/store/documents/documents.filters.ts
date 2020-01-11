@@ -64,7 +64,7 @@ export function filterDocumentsAndLinksByQuery(
 
   const stems =
     (query.stems || []).length > 0
-      ? query.stems
+      ? [...query.stems]
       : (collections || []).map(collection => ({collectionId: collection.id}));
   const documentsByCollections = groupDocumentsByCollection(documents);
   const linkInstancesByLinkTypes = groupLinkInstancesByLinkTypes(linkInstances);
@@ -180,7 +180,7 @@ function checkAndFillDataResources(
       linkInstance =>
         linkInstance.documentIds.includes(previousDocument.id) &&
         dataMeetsFiltersAndFulltexts(
-          linkInstance,
+          linkInstance.data,
           currentPipeline.resource,
           currentPipeline.filters,
           currentPipeline.fulltexts,

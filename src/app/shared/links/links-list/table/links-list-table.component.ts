@@ -105,7 +105,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.linkType || changes.collection || changes.query || changes.permissions) {
+    if (changes.document || changes.linkType || changes.collection || changes.query || changes.permissions) {
       this.mergeColumns();
     }
 
@@ -213,7 +213,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   public ngAfterViewInit() {
-    this.computeStickyColumnWidth();
+    setTimeout(() => this.computeStickyColumnWidth());
   }
 
   @HostListener('window:resize')

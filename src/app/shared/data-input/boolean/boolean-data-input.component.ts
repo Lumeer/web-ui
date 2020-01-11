@@ -34,6 +34,8 @@ import {
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
 import {generateCorrelationId} from '../../utils/resource.utils';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
 @Component({
   selector: 'boolean-data-input',
@@ -59,6 +61,8 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
 
   @Output()
   public onFocus = new EventEmitter<any>();
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Boolean);
 
   @HostBinding('class.cursor-pointer')
   public get cursorPointer(): boolean {

@@ -19,7 +19,7 @@
 
 import {Constraint} from '../../../../core/model/constraint';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -52,6 +52,7 @@ import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {pivotStemConfigIsEmpty} from './pivot-util';
 import {NumberConstraint} from '../../../../core/model/constraint/number.constraint';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {DataValue} from '../../../../core/model/data-value';
 
 interface PivotMergeData {
   configs: PivotStemConfig[];
@@ -109,9 +110,17 @@ export class PivotDataConverter {
     const pivotConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
     const overrideConstraint =
       pivotConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotConstraint);
-    return (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, constraintData)
-      .serialize();
+    const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
+    return this.formatDataValue(finalConstraint.createDataValue(value, constraintData), finalConstraint);
+  }
+
+  private formatDataValue(dataValue: DataValue, constraint: Constraint): any {
+    switch (constraint.type) {
+      case ConstraintType.DateTime:
+        return dataValue.format();
+      default:
+        return dataValue.serialize();
+    }
   }
 
   private updateData(

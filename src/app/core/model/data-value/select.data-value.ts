@@ -40,9 +40,9 @@ export class SelectDataValue implements DataValue {
       return this.inputValue;
     }
 
-    if (this.options.length && this.config) {
+    if (this.options.length) {
       return this.options
-        .map(option => (this.config && this.config.displayValues ? option.displayValue : option.value))
+        .map(option => (this.config && this.config.displayValues ? option.displayValue || option.value : option.value))
         .join(', ');
     }
     return formatUnknownDataValue(this.value);
@@ -147,11 +147,12 @@ function findOptionsByValue(config: SelectConstraintConfig, value: any): SelectC
   const values: any[] = (isArray(value) ? value : [value]).filter(
     val => isNotNullOrUndefined(val) && String(val).trim()
   );
+  const displayValues = config && config.displayValues;
   return values
     .map(val => {
       const option = options.find(opt => String(opt.value) === String(val));
       if (option) {
-        return {...option, displayValue: config.displayValues ? option.displayValue : option.value};
+        return {...option, displayValue: displayValues ? option.displayValue : option.value};
       }
 
       return {value: val, displayValue: val};

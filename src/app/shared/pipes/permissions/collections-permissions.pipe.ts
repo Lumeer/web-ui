@@ -58,7 +58,7 @@ export class CollectionsPermissionsPipe implements PipeTransform {
   }
 
   private managePermissionsOfCollections(collections: Collection[]): Record<string, AllowedPermissions> {
-    return collections.reduce((obj, collection) => {
+    return (collections || []).reduce((obj, collection) => {
       obj[collection.id] = this.managePermissions();
       return obj;
     }, {});
@@ -85,7 +85,7 @@ export class CollectionsPermissionsPipe implements PipeTransform {
 
         return this.getViewCollectionIds(currentView).pipe(
           map(collectionIdsInView =>
-            collections.reduce((collectionPermissions, collection) => {
+            (collections || []).reduce((collectionPermissions, collection) => {
               if (!collection) {
                 return collectionPermissions;
               }
@@ -116,7 +116,7 @@ export class CollectionsPermissionsPipe implements PipeTransform {
     collections: Collection[],
     currentUser: User
   ): Record<string, AllowedPermissions> {
-    return collections.reduce((collectionPermissions, collection) => {
+    return (collections || []).reduce((collectionPermissions, collection) => {
       collectionPermissions[collection.id] = this.checkCollectionPermissions(collection, currentUser);
       return collectionPermissions;
     }, {});

@@ -25,6 +25,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 
 export class UserConstraint implements Constraint {
   public readonly type = ConstraintType.User;
+  public readonly isTextRepresentation = false;
 
   constructor(public readonly config: UserConstraintConfig) {}
 

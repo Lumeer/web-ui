@@ -25,6 +25,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 export class UnknownConstraint implements Constraint {
   public readonly type = ConstraintType.Unknown;
   public readonly config = {};
+  public readonly isTextRepresentation = true;
 
   public createDataValue(value: any): UnknownDataValue {
     return new UnknownDataValue(value);

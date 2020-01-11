@@ -26,11 +26,13 @@ const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YY
 const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code', 'b'];
 
 export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true): string {
-  return keepFormattingTags
+  const htmlWithoutTags = keepFormattingTags
     ? stripFormattingHtmlTags(text, true)
     : stripFormattingHtmlTags(text)
         .replace(/<(?:.|\s)*?>/g, ' ')
         .trim();
+
+  return htmlWithoutTags.replace(/class=".*"/g, '');
 }
 
 function stripFormattingHtmlTags(text: string, negative?: boolean): string {

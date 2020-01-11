@@ -11,18 +11,19 @@
          [style.min-height.px]="avatarSize"
          [style.margin-left.rem]="!first ? -0.5 : 0.25">
 
-    <span *ngIf="value.config?.externalUsers || (selectedUsers | usersAreValid:users)"
-          class="d-inline-block ml-2 text-nowrap user"
-          data-test="user-data-input">
+    <span *ngIf="selectedUsers | usersAreValid:users:value.config"
+          [ngClass]="inputClass"
+          class="d-inline-block ml-2 text-nowrap user">
         {{selectedUsers | usersNames | join}}
       </span>
 
-    <ng-container *ngIf="!value.config?.externalUsers && !(selectedUsers | usersAreValid:users)">
+    <ng-container *ngIf="!(selectedUsers | usersAreValid:users:value.config)">
 
-      <ng-container *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last">
+      <ng-container
+        *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last; let index = index">
 
         <span data-test="user-data-input"
-              [class.invalid-value]="!([user] | usersAreValid:users)"
+              [class.invalid-value]="!(user | userIsValid:users:value.config:index)"
               [class.ml-2]="first"
               class="d-inline-block user">
           {{user.name || user.email}}
@@ -44,8 +45,8 @@
            (ngModelChange)="onInputChange()"
            [class.ml-1]="selectedUsers.length > 0"
            [spellcheck]="false"
-           class="border-0 w-100 h-100 bg-transparent user-input"
-           data-test="user-data-input"
+           [ngClass]="inputClass"
+           class="border-0 w-100 h-100 bg-transparent"
            type="text">
 
     <options-dropdown [options]="users | filterUsers:name"

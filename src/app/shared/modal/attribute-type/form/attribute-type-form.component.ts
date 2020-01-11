@@ -130,12 +130,14 @@ export class AttributeTypeFormComponent implements OnChanges {
           maxValue: this.configForm.get(PercentageConstraintFormControl.MaxValue).value,
         };
       case ConstraintType.Select:
+        const displayValues = this.configForm.get(SelectConstraintFormControl.DisplayValues).value;
+        const options = this.configForm
+          .get(SelectConstraintFormControl.Options)
+          .value.filter(option => option.value || option.value === 0);
         return {
           multi: this.configForm.get(SelectConstraintFormControl.Multi).value,
-          displayValues: this.configForm.get(SelectConstraintFormControl.DisplayValues).value,
-          options: this.configForm
-            .get(SelectConstraintFormControl.Options)
-            .value.filter(option => option.value || option.value === 0),
+          displayValues,
+          options: displayValues ? options : options.map(option => ({...option, displayValue: undefined})),
         };
       case ConstraintType.Text:
         return {

@@ -32,6 +32,8 @@ import {
 import {NumberDataValue} from '../../../core/model/data-value/number.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'number-data-input',
@@ -66,6 +68,8 @@ export class NumberDataInputComponent implements OnChanges {
 
   @ViewChild('numberInput', {static: false})
   public numberInput: ElementRef<HTMLInputElement>;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Number);
 
   public valid = true;
   private preventSave: boolean;

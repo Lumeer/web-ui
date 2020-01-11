@@ -49,7 +49,7 @@ export class TextDataValue implements DataValue {
 
   public serialize(): any {
     const formattedValue = this.format();
-    if (numberOfTags(formattedValue) === 1) {
+    if (numberOfPTags(formattedValue) === 1 && numberOfTags(formattedValue) === 1) {
       return stripTextHtmlTags(formattedValue, false);
     }
     return formattedValue;
@@ -127,5 +127,10 @@ export class TextDataValue implements DataValue {
 
 function numberOfTags(value: string): number {
   const match = value.match(/<([a-z]+)([0-9]*)(?=[\s>])(?:[^>=]|='[^']*'|="[^"]*"|=[^'"\s]*)*\s?\/?>/g);
+  return match ? match.length : 0;
+}
+
+function numberOfPTags(value: string): number {
+  const match = value.match(/<p>(.*)<\/p>/g);
   return match ? match.length : 0;
 }

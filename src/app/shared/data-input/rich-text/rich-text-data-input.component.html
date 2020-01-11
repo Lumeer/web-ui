@@ -1,7 +1,6 @@
-<quill-view-html class="quill-editor overflow-hidden"
+<quill-view-html class="quill-editor overflow-hidden {{inputClass}}"
                  [ngClass]="multilineMode ? 'multiline' : 'single-line'"
                  *ngIf="readonly"
-                 data-test="text-data-input"
                  [content]="value | formatDataValue | stripHtml"
                  [class.invalid-value]="!skipValidation && !valid">
 </quill-view-html>
@@ -13,7 +12,7 @@
 </span>
 
 <quill-editor *ngIf="!readonly"
-              class="w-100 quill-editor edit"
+              class="w-100 quill-editor edit {{inputClass}}"
               [ngClass]="multilineMode ? 'multiline' : 'single-line'"
               [class.h-100]="isMultiline"
               [(ngModel)]="text"
@@ -23,7 +22,6 @@
               [minLength]="value.config.minLength"
               [placeholder]="''"
               theme="bubble"
-              data-test="text-data-input"
               (onEditorCreated)="onEditorCreated($event)"
               (onContentChanged)="contentChanged()"
               (onBlur)="onBlur($event)">

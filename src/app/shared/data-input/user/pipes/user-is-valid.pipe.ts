@@ -18,21 +18,21 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DataSuggestion} from './data-suggestion';
-import {DataDropdownOption} from '../data-dropdown/data-options/data-dropdown-option';
-import {removeAccent} from '../utils/string.utils';
+import {User} from '../../../../core/store/users/user';
+import {UserConstraintConfig} from '../../../../core/model/data/constraint-config';
 
 @Pipe({
-  name: 'filterDataSuggestions',
+  name: 'userIsValid',
 })
-export class FilterDataSuggestionsPipe implements PipeTransform {
-  public transform(suggestions: DataSuggestion[], text: string): DataDropdownOption[] {
-    return (suggestions || [])
-      .filter(suggestion =>
-        removeAccent(suggestion.title)
-          .trim()
-          .includes(removeAccent(text).trim())
-      )
-      .map(suggestion => ({value: suggestion.title, displayValue: suggestion.title}));
+export class UserIsValidPipe implements PipeTransform {
+  public transform(selectedUser: User, definedUsers: User[], config: UserConstraintConfig, index: number): boolean {
+    if (config && !config.multi && index > 0) {
+      return false;
+    }
+    if (config && config.externalUsers) {
+      return true;
+    }
+
+    return definedUsers.some(user => selectedUser.email === user.email);
   }
 }

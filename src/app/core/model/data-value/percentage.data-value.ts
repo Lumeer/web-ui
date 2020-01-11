@@ -94,10 +94,10 @@ export class PercentageDataValue implements DataValue {
     }
 
     const {minValue, maxValue} = this.config;
-    if ((minValue || minValue === 0) && this.compareTo(this.copy(minValue / 100)) < 0) {
+    if ((minValue || minValue === 0) && this.compareTo(this.copy(minValue)) < 0) {
       return false;
     }
-    return !((maxValue || maxValue === 0) && this.compareTo(this.copy(maxValue / 100)) > 0);
+    return !((maxValue || maxValue === 0) && this.compareTo(this.copy(maxValue)) > 0);
   }
 
   public increment(): PercentageDataValue {

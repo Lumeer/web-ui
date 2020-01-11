@@ -25,6 +25,7 @@ import {QueryCondition} from '../../store/navigation/query/query';
 
 export class ColorConstraint implements Constraint {
   public readonly type = ConstraintType.Color;
+  public readonly isTextRepresentation = false;
 
   constructor(public readonly config: ColorConstraintConfig) {}
 

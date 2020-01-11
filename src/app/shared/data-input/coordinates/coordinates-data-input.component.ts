@@ -31,6 +31,8 @@ import {
 import {CoordinatesDataValue} from '../../../core/model/data-value/coordinates.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
 @Component({
   selector: 'coordinates-data-input',
@@ -62,6 +64,8 @@ export class CoordinatesDataInputComponent {
 
   @ViewChild('coordinatesInput', {static: false})
   public coordinatesInput: ElementRef<HTMLInputElement>;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Coordinates);
 
   private preventSave: boolean;
 

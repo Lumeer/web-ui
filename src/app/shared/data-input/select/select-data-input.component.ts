@@ -37,6 +37,8 @@ import {HtmlModifier} from '../../utils/html-modifier';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {uniqueValues} from '../../utils/array.utils';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'select-data-input',
@@ -78,6 +80,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   @ViewChild(OptionsDropdownComponent, {static: false})
   public dropdown: OptionsDropdownComponent;
 
+  public readonly inputClass = constraintTypeClass(ConstraintType.Select);
+
   public dropdownOptions: DropdownOption[] = [];
   public selectedOptions: SelectConstraintOption[] = [];
 
@@ -104,7 +108,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     return ((config && config.options) || []).map(option => ({
       ...option,
       value: option.value,
-      displayValue: config.displayValues ? option.displayValue : option.value,
+      displayValue: config.displayValues ? option.displayValue || option.value : option.value,
     }));
   }
 
@@ -168,7 +172,9 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     } else {
       const selectOption = (this.value.config.options || []).find(o => o.value === option.value);
       if (selectOption) {
-        this.selectedOptions = [...this.selectedOptions, selectOption];
+        const displayValues = this.value.config.displayValues;
+        const newOption = displayValues ? selectOption : {...selectOption, displayValue: selectOption.value};
+        this.selectedOptions = [...this.selectedOptions, newOption];
         setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
       }
     }

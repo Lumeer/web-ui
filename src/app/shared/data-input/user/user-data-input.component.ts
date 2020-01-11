@@ -39,6 +39,8 @@ import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.
 import {USER_AVATAR_SIZE} from '../../../core/constants';
 import {uniqueValues} from '../../utils/array.utils';
 import {isEmailValid} from '../../utils/email.utils';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'user-data-input',
@@ -81,6 +83,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public dropdown: OptionsDropdownComponent;
 
   public readonly avatarSize = USER_AVATAR_SIZE;
+  public readonly inputClass = constraintTypeClass(ConstraintType.User);
 
   public name: string = '';
   public users: User[];

@@ -8,7 +8,7 @@ describe('Table perspective :: Constraints', () => {
 
     // create first record by entering value to the first cell
 
-    cy.get('[data-test="text-data-input"]', {timeout: 10000})
+    cy.get('[data-test="table-data-cell"]', {timeout: 10000})
       .first()
       .should('be.empty')
       .dblclick();
@@ -23,10 +23,10 @@ describe('Table perspective :: Constraints', () => {
       .its('status')
       .should('eq', 200);
     cy.get('[data-test="table-column-input"]').should('have.length', 2);
-    cy.get('[data-test="text-data-input"]')
-      .should('have.length', 4)
+    cy.get('.text-input')
+      .should('have.length', 1)
       .first()
-      .should('have.value', 'Falcon 1');
+      .should('have.text', 'Falcon 1');
 
     // rename first column
 
@@ -77,9 +77,11 @@ describe('Table perspective :: Constraints', () => {
 
     // enter value into the second cell
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
       .eq(1)
-      .should('be.empty')
+      .should('not.exist');
+    cy.get('[data-test="table-data-cell"]')
+      .eq(1)
       .click({force: true});
     cy.get('[data-test="table-column-input"]')
       .eq(1)
@@ -88,25 +90,28 @@ describe('Table perspective :: Constraints', () => {
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('n');
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('o')
       .trigger('keydown', {code: 'Tab'});
 
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
       .eq(1)
-      .should('have.value', 'no');
+      .should('have.text', 'no');
 
     // enter value into the third cell
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
       .eq(2)
-      .should('be.empty');
+      .should('not.exist');
+    cy.get('[data-test="table-data-cell"]')
+      .eq(2)
+      .click({force: true});
     cy.focused().trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('24.3.2006')
       .blur();
 
@@ -120,7 +125,7 @@ describe('Table perspective :: Constraints', () => {
       .should('have.length', 4)
       .last()
       .should('have.value', 'B');
-    cy.get('[data-test="text-data-input"]').should('have.length', 8);
+    cy.get('.text-input').should('have.length', 3);
 
     // rename third column
 
@@ -162,51 +167,57 @@ describe('Table perspective :: Constraints', () => {
       .eq(3)
       .should('have.value', 'Number of flights')
       .should('not.have.value', 'A');
-    cy.get('[data-test="text-data-input"]').should('have.length', 10);
+    cy.get('.text-input').should('have.length', 3);
     cy.get('[data-test="table-column-input"]')
       .last()
       .should('have.value', 'A');
 
     // enter value into the fourth cell
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
+      .eq(3)
+      .should('not.exist');
+    cy.get('[data-test="table-data-cell"]')
       .eq(3)
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('four')
       .blur();
 
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
       .eq(3)
-      .should('have.value', 'four');
+      .should('have.text', 'four');
 
     // create second record by entering first column value
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
+      .eq(5)
+      .should('not.exist');
+    cy.get('[data-test="table-data-cell"]')
       .eq(5)
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('FALCON 9')
       .trigger('keydown', {code: 'Tab'});
 
     cy.wait('@createDocument')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="text-data-input"]')
-      .should('have.length', 15)
-      .eq(5)
-      .should('have.value', 'FALCON 9');
+    cy.get('.text-input')
+      .should('have.length', 5)
+      .eq(4)
+      .should('have.text', 'FALCON 9');
 
     // enter second column value for the second record
 
@@ -214,7 +225,7 @@ describe('Table perspective :: Constraints', () => {
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .should('have.value', '')
       .type('yes')
       .trigger('keydown', {code: 'Tab'});
@@ -229,7 +240,7 @@ describe('Table perspective :: Constraints', () => {
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .should('have.value', '')
       .type('2010')
       .trigger('keydown', {code: 'Tab'});
@@ -244,7 +255,7 @@ describe('Table perspective :: Constraints', () => {
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .should('have.value', '')
       .type('69')
       .trigger('keydown', {code: 'Enter'});
@@ -255,24 +266,27 @@ describe('Table perspective :: Constraints', () => {
 
     // create third record by entering first column value
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
+      .eq(10)
+      .should('not.exist');
+    cy.get('[data-test="table-data-cell"]')
       .eq(10)
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('falcon heavy')
       .trigger('keydown', {code: 'Tab'});
 
     cy.wait('@createDocument')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="text-data-input"]')
-      .should('have.length', 20)
-      .eq(10)
-      .should('have.value', 'falcon heavy');
+    cy.get('.text-input')
+      .should('have.length', 9)
+      .eq(8)
+      .should('have.text', 'falcon heavy');
 
     // enter second column value for the third record
 
@@ -280,7 +294,7 @@ describe('Table perspective :: Constraints', () => {
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .should('have.value', '')
       .type('almost')
       .trigger('keydown', {code: 'Tab'});
@@ -295,7 +309,7 @@ describe('Table perspective :: Constraints', () => {
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .should('have.value', '')
       .type('last year')
       .trigger('keydown', {code: 'Tab'});
@@ -306,24 +320,27 @@ describe('Table perspective :: Constraints', () => {
 
     // create fourth record by entering first column value
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
+      .eq(15)
+      .should('not.exist');
+    cy.get('[data-test="table-data-cell"]')
       .eq(15)
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('Super heavy')
       .trigger('keydown', {code: 'Tab'});
 
     cy.wait('@createDocument')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="text-data-input"]')
-      .should('have.length', 25)
-      .eq(15)
-      .should('have.value', 'Super heavy');
+    cy.get('.text-input')
+      .should('have.length', 12)
+      .eq(11)
+      .should('have.text', 'Super heavy');
 
     // skip second and third column value for the fourth record
 
@@ -340,7 +357,7 @@ describe('Table perspective :: Constraints', () => {
       .should('have.attr', 'data-test', 'table-hidden-input')
       .trigger('keydown', {code: 'Enter'});
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .should('have.value', '')
       .type('0')
       .trigger('keydown', {code: 'Enter'});
@@ -348,9 +365,9 @@ describe('Table perspective :: Constraints', () => {
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="text-data-input"]')
-      .eq(18)
-      .should('have.value', '0');
+    cy.get('.text-input')
+      .eq(12)
+      .should('have.text', '0');
   });
 
   it('changes column types and modifies some values', () => {
@@ -361,7 +378,7 @@ describe('Table perspective :: Constraints', () => {
         {name: 'First flight'},
         {name: 'Number of flights'},
       ]);
-      cy.createDocument(collection.id, {a1: 'Falcon 1', a2: 'no', a3: '24.3.2006', a4: 'four'});
+      cy.createDocument(collection.id, {a1: 'Falcon 1', a2: 'no', a3: '2006-03-24', a4: 'four'});
       cy.createDocument(collection.id, {a1: 'FALCON 9', a2: 'yes', a3: '2010', a4: '69'});
       cy.createDocument(collection.id, {a1: 'falcon heavy', a2: 'almost', a3: 'last year'});
       cy.createDocument(collection.id, {a1: 'Super heavy', a4: '0'});
@@ -396,17 +413,17 @@ describe('Table perspective :: Constraints', () => {
 
     // check format of first column values
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
       .first()
       .should('have.text', 'Falcon 1');
-    cy.get('[data-test="text-data-input"]')
-      .eq(5)
+    cy.get('.text-input')
+      .eq(4)
       .should('have.text', 'FALCON 9');
-    cy.get('[data-test="text-data-input"]')
-      .eq(10)
+    cy.get('.text-input')
+      .eq(8)
       .should('have.text', 'Falcon Heavy');
-    cy.get('[data-test="text-data-input"]')
-      .eq(15)
+    cy.get('.text-input')
+      .eq(11)
       .should('have.text', 'Super Heavy');
 
     // change second column type to boolean
@@ -432,26 +449,26 @@ describe('Table perspective :: Constraints', () => {
 
     // check format of second column values and make some changes
 
-    cy.get('[data-test="boolean-data-input"]')
+    cy.get('.boolean-input')
       .first()
       .should('not.have.attr', 'checked');
-    cy.get('[data-test="boolean-data-input"]')
+    cy.get('.boolean-input')
       .eq(1)
       .should('have.attr', 'checked');
-    cy.get('[data-test="boolean-data-input"]')
+    cy.get('.boolean-input')
       .eq(2)
       .should('not.have.attr', 'checked');
-    cy.get('[data-test="boolean-data-input"]')
+    cy.get('.boolean-input')
       .eq(3)
       .should('not.have.attr', 'checked');
 
     cy.get('[data-test="table-data-input"] > *')
-      .eq(11)
+      .eq(2)
       .click();
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="boolean-data-input"]')
+    cy.get('.boolean-input')
       .eq(2)
       .should('have.attr', 'checked');
 
@@ -482,22 +499,22 @@ describe('Table perspective :: Constraints', () => {
 
     // check format of third column values
 
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .first()
-      .should('have.value', '2006-03-24');
-    cy.get('[data-test="datetime-data-input"]')
+      .should('have.text', '2006-03-24');
+    cy.get('.datetime-input')
       .eq(1)
-      .should('have.value', '2010-01-01');
-    cy.get('[data-test="datetime-data-input"]')
+      .should('have.text', '2010-01-01');
+    cy.get('.datetime-input')
       .eq(2)
-      .should('have.value', 'last year');
-    cy.get('[data-test="datetime-data-input"]')
+      .should('have.text', 'last year');
+    cy.get('.datetime-input')
       .eq(3)
-      .should('have.value', '');
+      .should('not.exist');
 
     // change date value in the second row
 
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .eq(1)
       .dblclick();
 
@@ -509,13 +526,13 @@ describe('Table perspective :: Constraints', () => {
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .eq(1)
-      .should('have.value', '2010-07-04'); // bug in ngx-bootstrap (2010-06-04)
+      .should('have.text', '2010-07-04'); // bug in ngx-bootstrap (2010-06-04)
 
     // change date value in the third row
 
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .eq(2)
       .click({force: true});
     cy.focused()
@@ -531,44 +548,47 @@ describe('Table perspective :: Constraints', () => {
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .eq(2)
-      .should('have.value', '2018-01-06'); // bug in ngx-bootstrap (2018-02-06)
+      .should('have.text', '2018-01-06'); // bug in ngx-bootstrap (2018-02-06)
 
     // change date value in the fourth row
 
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .eq(3)
+      .should('not.exist');
+    cy.get('[data-test="table-data-cell"]')
+      .eq(17)
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('2');
     cy.focused()
-      .should('have.attr', 'data-test', 'datetime-data-input')
+      .should('have.class', 'datetime-input')
       .type('020')
       .trigger('keydown', {code: 'Enter'});
 
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .eq(3)
-      .should('have.value', '2020-01-01');
+      .should('have.text', '2020-01-01');
 
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .eq(3)
       .dblclick();
     cy.focused()
-      .should('have.attr', 'data-test', 'datetime-data-input')
+      .should('have.class', 'datetime-input')
       .clear()
       .trigger('keydown', {code: 'Enter'});
 
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="datetime-data-input"]')
+    cy.get('.datetime-input')
       .eq(3)
-      .should('have.value', '');
+      .should('not.exist');
 
     // change fourth column type to number
 
@@ -593,69 +613,65 @@ describe('Table perspective :: Constraints', () => {
 
     // check values in the fourth column
 
-    cy.get('[data-test="number-data-input"]')
+    cy.get('.number-input')
       .eq(0)
-      .should('have.value', 'four');
-    cy.get('[data-test="number-data-input"]')
+      .should('have.text', 'four');
+    cy.get('.number-input')
       .eq(1)
-      .should('have.value', '69');
-    cy.get('[data-test="number-data-input"]')
+      .should('have.text', '69');
+    cy.get('.number-input')
       .eq(2)
-      .should('have.value', '');
-    cy.get('[data-test="number-data-input"]')
-      .eq(3)
-      .should('have.value', '0');
+      .should('have.text', '0');
 
     // change number in the first row
 
-    cy.get('[data-test="number-data-input"]')
+    cy.get('.number-input')
       .first()
-      .should('have.value', 'four')
+      .should('have.text', 'four')
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('4');
     cy.focused()
-      .should('have.attr', 'data-test', 'number-data-input')
+      .should('have.class', 'number-input')
       .should('have.value', '4')
       .trigger('keydown', {code: 'Enter'});
 
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="number-data-input"]')
+    cy.get('.number-input')
       .first()
-      .should('have.value', '4');
+      .should('have.text', '4');
 
     // change number in the third row
 
-    cy.get('[data-test="number-data-input"]')
-      .eq(2)
-      .should('have.value', '')
+    cy.get('[data-test="table-data-cell"]')
+      .eq(13)
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('1');
     cy.focused()
-      .should('have.attr', 'data-test', 'number-data-input')
+      .should('have.class', 'number-input')
       .should('have.value', '1')
       .trigger('keydown', {code: 'Enter'});
 
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="number-data-input"]')
+    cy.get('.number-input')
       .eq(2)
-      .should('have.value', '1');
+      .should('have.text', '1');
 
     // remove number in the fourth row
 
-    cy.get('[data-test="number-data-input"]')
+    cy.get('.number-input')
       .eq(3)
-      .should('have.value', '0')
+      .should('have.text', '0')
       .dblclick();
     cy.focused()
-      .should('have.attr', 'data-test', 'number-data-input')
+      .should('have.class', 'number-input')
       .should('have.value', '0')
       .clear()
       .trigger('keydown', {code: 'Enter'});
@@ -663,8 +679,8 @@ describe('Table perspective :: Constraints', () => {
     cy.wait('@patchDocumentData')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="number-data-input"]')
+    cy.get('.number-input')
       .eq(3)
-      .should('have.value', '');
+      .should('not.exist');
   });
 });

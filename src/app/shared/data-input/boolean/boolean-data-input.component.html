@@ -7,8 +7,8 @@
          [style.cursor]="readonly ? 'unset' : null"
          (click)="onInputClick($event)"
          (focus)="onFocus.emit($event)"
-         type="checkbox"
-         data-test="boolean-data-input">
+         [ngClass]="inputClass"
+         type="checkbox">
   <label [for]="inputId"
          (click)="onLabelClick($event)">
   </label>

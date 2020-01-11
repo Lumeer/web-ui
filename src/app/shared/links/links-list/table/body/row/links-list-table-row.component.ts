@@ -113,9 +113,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public editedValue: DataValue;
   public subscriptions = new Subscription();
 
-  private preventSave = false;
-  private preventSaveTimer: number;
-
   constructor(public element: ElementRef) {}
 
   public ngOnInit() {
@@ -224,11 +221,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   private saveData(column: number, dataValue: DataValue) {
-    if (this.preventSave) {
-      this.preventSave = false;
-      return;
-    }
-
     if (this.creatingNewLink()) {
       this.createNewLink(column, dataValue);
     } else {
@@ -305,15 +297,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onUseHint() {
-    this.preventSaving();
-  }
-
-  private preventSaving() {
-    if (this.preventSaveTimer) {
-      window.clearTimeout(this.preventSaveTimer);
-    }
-    this.preventSave = true;
-    this.preventSaveTimer = window.setTimeout(() => (this.preventSave = false), 250);
+    this.endRowEditing();
   }
 
   public onEnterInvalid() {

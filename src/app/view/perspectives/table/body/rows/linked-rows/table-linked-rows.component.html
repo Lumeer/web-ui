@@ -7,6 +7,7 @@
   <div class="d-flex flex-column">
     <ng-container *ngIf="!table.linkedRows?.length || (rows && rows.length === 1 && rows[0].expanded); else collapsedRows">
       <table-linked-row *ngFor="let linkedRow of table.linkedRows; trackBy: trackByLinkInstanceId; index as rowIndex"
+                        class="h-100"
                         [cursor]="cursor | nextPartCursor | nextRowCursor:rowIndex"
                         [rows]="[linkedRow]"
                         [canManageConfig]="canManageConfig">
@@ -14,6 +15,7 @@
     </ng-container>
     <ng-template #collapsedRows>
       <table-linked-row [cursor]="cursor | nextPartCursor | nextRowCursor:0"
+                        class="h-100"
                         [rows]="table.linkedRows"
                         [canManageConfig]="canManageConfig">
       </table-linked-row>

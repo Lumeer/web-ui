@@ -3,6 +3,11 @@
     padding: 0 !important;
   }
 
+  & > select-data-input > * {
+    padding: 4px !important;
+    margin: -4px !important;
+  }
+
   .ql-editor {
     margin: 0 !important;
   }

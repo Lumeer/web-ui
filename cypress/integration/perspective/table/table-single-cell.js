@@ -9,8 +9,10 @@ describe('Table perspective :: Single cell', () => {
       .should('have.value', 'A');
 
     // select the only table body cell
-    cy.get('[data-test="text-data-input"]')
-      .should('have.value', '')
+    cy.get('.text-input').should('not.exist');
+
+    cy.get('[data-test="table-data-cell"]')
+      .first()
       .click({force: true});
 
     // switch to edit mode by pressing Enter
@@ -21,21 +23,22 @@ describe('Table perspective :: Single cell', () => {
 
     // leave edit mode by pressing Escape
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .should('have.value', '')
       .trigger('keydown', {code: 'Escape'});
 
     // check if the value is empty (bug LMR-1444) and switch to edit mode by double click
-    cy.get('[data-test="text-data-input"]')
-      .should('have.attr', 'readonly', 'readonly')
-      .should('have.value', '')
+    cy.get('.text-input').should('not.exist');
+
+    cy.get('[data-test="table-data-cell"]')
+      .first()
       .dblclick();
 
     // type text into input and save changes by loosing focus
     const firstValue = '0'; // LMR-1463
-    cy.get('[data-test="text-data-input"]').type(firstValue);
+    cy.get('.text-input').type(firstValue);
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .trigger('keydown', {code: 'Tab'});
     //      .blur();
 
@@ -49,13 +52,13 @@ describe('Table perspective :: Single cell', () => {
       .last()
       .should('have.value', 'B');
 
-    // check if the table consists of 2 columns and 2 rows
-    cy.get('[data-test="table-data-input"]').should('have.length', 4);
+    // check if the table has only one cell (other are empty and not in DOM)
+    cy.get('[data-test="table-data-input"]').should('have.length', 1);
 
     // select first table body cell
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
       .first()
-      .should('have.value', firstValue)
+      .should('have.text', firstValue)
       .click({force: true});
 
     // switch to edit mode by typing a special character
@@ -66,16 +69,16 @@ describe('Table perspective :: Single cell', () => {
 
     // check if the first table cell input has the special character and discard changes
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       // .should('not.have.attr', 'readonly')
       .should('have.value', 'ř')
       .trigger('keydown', {code: 'Escape'});
 
     // check if the input value has been reverted back to the first one
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
       .first()
       .should('have.attr', 'readonly', 'readonly')
-      .should('have.value', firstValue);
+      .should('have.text', firstValue);
 
     // start editing by pressing Enter
     cy.focused()
@@ -84,15 +87,15 @@ describe('Table perspective :: Single cell', () => {
 
     // type second value and save changes by pressing Enter
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .should('not.have.attr', 'readonly');
     cy.focused()
       .type('econd value')
       .trigger('keydown', {code: 'Enter'});
 
     // check if the second value has been saved
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
       .should('have.attr', 'readonly', 'readonly')
-      .should('have.value', 'second value');
+      .should('have.text', 'second value');
   });
 });

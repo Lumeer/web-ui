@@ -27,7 +27,7 @@ import {NavigationAction} from '../../../core/store/navigation/navigation.action
 import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {debounceTime, distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectQuery, selectViewCursor, selectWorkspace} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
@@ -41,6 +41,8 @@ import {filterStemsForCollection, queryIsEmpty} from '../../../core/store/naviga
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
+import {Actions, ofType} from '@ngrx/effects';
+import {ProjectsAction, ProjectsActionType} from '../../../core/store/projects/projects.action';
 
 @Component({
   selector: 'detail-perspective',
@@ -61,8 +63,13 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   private query: Query;
   private collectionSubscription = new Subscription();
   private subscriptions = new Subscription();
+  private selectionSubscription = new Subscription();
 
-  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
+  public constructor(
+    private store$: Store<AppState>,
+    private collectionPermissionsPipe: CollectionPermissionsPipe,
+    private actions$: Actions
+  ) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(
@@ -70,17 +77,25 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       tap(query => (this.query = query))
     );
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
+    this.subscribeToSwitchWorkspace();
     this.initSelection();
   }
 
+  private subscribeToSwitchWorkspace() {
+    const subscription = this.actions$
+      .pipe(ofType<ProjectsAction.ClearWorkspaceData>(ProjectsActionType.CLEAR_WORKSPACE_DATA))
+      .subscribe(() => this.unsubscribeAll());
+    this.subscriptions.add(subscription);
+  }
+
   private initSelection() {
-    const subscription = combineLatest([
+    this.selectionSubscription = combineLatest([
       this.store$.pipe(select(selectCollectionsByQueryWithoutLinks)),
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectViewCursor)),
     ])
       .pipe(
-        mergeMap(([collections, query, cursor]) => {
+        switchMap(([collections, query, cursor]) => {
           const selectedCollection =
             (cursor && (collections || []).find(coll => coll.id === cursor.collectionId)) ||
             (collections && collections[0]);
@@ -117,7 +132,6 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
           this.selected$.next({});
         }
       });
-    this.subscriptions.add(subscription);
   }
 
   private selectionIsSame(
@@ -132,6 +146,11 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  private unsubscribeAll() {
+    this.selectionSubscription.unsubscribe();
     this.collectionSubscription.unsubscribe();
     this.subscriptions.unsubscribe();
   }

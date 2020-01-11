@@ -118,9 +118,9 @@ export enum CaseStyle {
 }
 
 export interface TextConstraintConfig {
-  caseStyle: CaseStyle;
-  minLength: number;
-  maxLength: number;
+  caseStyle?: CaseStyle;
+  minLength?: number;
+  maxLength?: number;
   regexp?: string;
 }
 

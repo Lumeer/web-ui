@@ -21,6 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} fro
 import {Constraint} from '../../../core/model/constraint';
 import {DataValue} from '../../../core/model/data-value';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {DataCursor} from '../data-cursor';
 
 @Component({
   selector: 'data-input-preview',
@@ -40,6 +41,12 @@ export class DataInputPreviewComponent implements OnChanges {
 
   @Input()
   public minWidth: number;
+
+  @Input()
+  public cursor: DataCursor;
+
+  @Input()
+  public limitColorWidth = true;
 
   public readonly constraintType = ConstraintType;
 
