@@ -15,7 +15,7 @@
     } as inputData">
 
     <ng-container *ngIf="inputData.readonly && (inputData.asText || !inputData.hasValue)">
-      <div *ngIf="inputData.hasValue" class="text-nowrap overflow-hidden h-100 mx-1"
+      <div *ngIf="inputData.hasValue" class="text-nowrap overflow-hidden h-100 mx-1 d-flex align-items-center"
            [innerHTML]="data.dataValue | previewDataValue">
       </div>
     </ng-container>
