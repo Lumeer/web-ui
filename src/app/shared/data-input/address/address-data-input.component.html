@@ -3,7 +3,7 @@
        [title]="value | formatDataValue"
        [value]="value | formatDataValue"
        class="border-0 w-100 h-100 px-1 bg-transparent"
-       data-test="text-data-input"
+       [ngClass]="inputClass"
        spellcheck="false"
        type="text">
 
@@ -14,8 +14,8 @@
          (focus)="onFocused()"
          (blur)="onBlur()"
          (input)="onInput($event)"
+         [ngClass]="inputClass"
          class="border-0 w-100 h-100 px-1 bg-transparent"
-         data-test="text-data-input"
          spellcheck="false"
          type="text">
 

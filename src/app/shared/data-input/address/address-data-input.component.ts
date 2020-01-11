@@ -40,6 +40,9 @@ import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {AddressConstraint} from '../../../core/model/constraint/address.constraint';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'address-data-input',
@@ -73,6 +76,8 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   @ViewChild(OptionsDropdownComponent, {static: false})
   public dropdown: OptionsDropdownComponent;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Address);
 
   public value$ = new BehaviorSubject('');
   public addressOptions$: Observable<DropdownOption[]>;

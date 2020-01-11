@@ -32,6 +32,8 @@ import {
 import {DurationDataValue} from '../../../core/model/data-value/duration.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'duration-data-input',
@@ -66,6 +68,8 @@ export class DurationDataInputComponent implements OnChanges {
 
   @ViewChild('durationInput', {static: false})
   public durationInput: ElementRef<HTMLInputElement>;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Duration);
 
   public valid = true;
 

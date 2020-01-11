@@ -37,6 +37,8 @@ import {HtmlModifier} from '../../utils/html-modifier';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {uniqueValues} from '../../utils/array.utils';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'select-data-input',
@@ -77,6 +79,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
 
   @ViewChild(OptionsDropdownComponent, {static: false})
   public dropdown: OptionsDropdownComponent;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Select);
 
   public dropdownOptions: DropdownOption[] = [];
   public selectedOptions: SelectConstraintOption[] = [];

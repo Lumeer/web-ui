@@ -32,6 +32,8 @@ import {
 import {PercentageDataValue} from '../../../core/model/data-value/percentage.data-value';
 import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'percentage-data-input',
@@ -66,6 +68,8 @@ export class PercentageDataInputComponent implements OnChanges {
 
   @ViewChild('percentageInput', {static: false})
   public percentageInput: ElementRef<HTMLInputElement>;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Percentage);
 
   public valid = true;
   public percentageValue: any;

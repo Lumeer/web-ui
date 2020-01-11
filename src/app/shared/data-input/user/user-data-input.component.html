@@ -12,8 +12,8 @@
          [style.margin-left.rem]="!first ? -0.5 : 0.25">
 
     <span *ngIf="selectedUsers | usersAreValid:users:value.config"
-          class="d-inline-block ml-2 text-nowrap user"
-          data-test="user-data-input">
+          [ngClass]="inputClass"
+          class="d-inline-block ml-2 text-nowrap user">
         {{selectedUsers | usersNames | join}}
       </span>
 
@@ -45,8 +45,8 @@
            (ngModelChange)="onInputChange()"
            [class.ml-1]="selectedUsers.length > 0"
            [spellcheck]="false"
-           class="border-0 w-100 h-100 bg-transparent user-input"
-           data-test="user-data-input"
+           [ngClass]="inputClass"
+           class="border-0 w-100 h-100 bg-transparent"
            type="text">
 
     <options-dropdown [options]="users | filterUsers:name"

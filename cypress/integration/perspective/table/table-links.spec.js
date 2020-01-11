@@ -26,12 +26,14 @@ describe('Table perspective :: Links', () => {
       .last()
       .should('have.value', 'A');
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input').should('not.exist');
+
+    cy.get('[data-test="table-data-cell"]')
       .first()
-      .should('be.empty')
       .dblclick();
+
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('first value')
       .blur();
 
@@ -48,22 +50,26 @@ describe('Table perspective :: Links', () => {
     cy.get('[data-test="table-column-input"]')
       .last()
       .should('have.value', 'B');
-    cy.get('[data-test="text-data-input"]').should('have.length', 4);
+    cy.get('.text-input').should('have.length', 1);
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('.text-input')
+      .eq(2)
+      .should('not.exist');
+    cy.get('[data-test="table-data-cell"]')
       .eq(2)
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('s');
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('econd value')
       .blur();
     cy.wait('@createDocument')
       .its('status')
       .should('eq', 200);
-    cy.get('[data-test="text-data-input"]').should('have.length', 6);
+    cy.get('.text-input').should('have.length', 2);
+    cy.get('[data-test="table-data-cell"]').should('have.length', 6);
 
     cy.get('[data-test="table-header-add-button"]').click();
 
@@ -85,20 +91,21 @@ describe('Table perspective :: Links', () => {
       .should('have.length', 2)
       .should('have.value', 'A');
 
-    cy.get('[data-test="text-data-input"]').should('have.length', 6);
+    cy.get('.text-input').should('have.length', 2);
+    cy.get('[data-test="table-data-cell"]').should('have.length', 6);
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('[data-test="table-data-cell"]')
       .eq(1)
       .click({force: true});
     cy.focused()
       .should('have.attr', 'data-test', 'table-hidden-input')
       .type('l');
     cy.focused()
-      .should('have.attr', 'data-test', 'text-data-input')
+      .should('have.class', 'text-input')
       .type('inked value')
       .blur();
     // cannot find the value
-    //cy.get('[data-test="text-data-input"]')
+    //cy.get('.text-input')
     //.eq(1)
     //.should('have.attr', 'readonly', 'readonly')
     //.contains('linked value');
@@ -117,9 +124,9 @@ describe('Table perspective :: Links', () => {
       .should('have.length', 3)
       .last()
       .should('have.value', 'B');
-    cy.get('[data-test="text-data-input"]').should('have.length', 9);
+    cy.get('.text-input').should('have.length', 3);
 
-    cy.get('[data-test="text-data-input"]')
+    cy.get('[data-test="table-data-cell"]')
       .eq(4)
       .click({force: true});
     cy.focused()
@@ -136,6 +143,6 @@ describe('Table perspective :: Links', () => {
       .its('status')
       .should('eq', 200);
 
-    cy.get('[data-test="text-data-input"][title="linked value"]').should('have.length', 2);
+    cy.get('.text-input[title="linked value"]').should('have.length', 2);
   });
 });

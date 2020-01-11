@@ -18,25 +18,21 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {LinkInstance} from '../../core/store/link-instances/link.instance';
-import {DataCursor} from './data-cursor';
-import {DataResource} from '../../core/model/resource';
+import {DataSuggestion} from '../data-suggestion';
+import {DataDropdownOption} from '../../data-dropdown/data-options/data-dropdown-option';
+import {removeAccent} from '../../utils/string.utils';
 
 @Pipe({
-  name: 'dataCursor',
+  name: 'filterDataSuggestions',
 })
-export class DataCursorPipe implements PipeTransform {
-  public transform(entity: DataResource, attributeId: string): DataCursor {
-    const {collectionId} = entity as DocumentModel;
-    const {linkTypeId} = entity as LinkInstance;
-
-    return {
-      collectionId: collectionId,
-      documentId: collectionId && entity.id,
-      linkTypeId: linkTypeId,
-      linkInstanceId: linkTypeId && entity.id,
-      attributeId,
-    };
+export class FilterDataSuggestionsPipe implements PipeTransform {
+  public transform(suggestions: DataSuggestion[], text: string): DataDropdownOption[] {
+    return (suggestions || [])
+      .filter(suggestion =>
+        removeAccent(suggestion.title)
+          .trim()
+          .includes(removeAccent(text).trim())
+      )
+      .map(suggestion => ({value: suggestion.title, displayValue: suggestion.title}));
   }
 }

@@ -33,6 +33,8 @@ import {ColorDataValue} from '../../../core/model/data-value/color.data-value';
 import {KeyCode} from '../../key-code';
 import {ColorPickerComponent} from '../../picker/color/color-picker.component';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
 @Component({
   selector: 'color-data-input',
@@ -70,6 +72,8 @@ export class ColorDataInputComponent implements OnChanges {
 
   @ViewChild(ColorPickerComponent, {static: false})
   public colorPicker: ColorPickerComponent;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Color);
 
   public valid = true;
 

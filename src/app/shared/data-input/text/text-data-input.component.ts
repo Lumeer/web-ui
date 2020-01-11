@@ -37,6 +37,8 @@ import {HtmlModifier} from '../../utils/html-modifier';
 import {DataSuggestion} from '../data-suggestion';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'text-data-input',
@@ -79,6 +81,8 @@ export class TextDataInputComponent implements OnChanges {
 
   @ViewChild(OptionsDropdownComponent, {static: false})
   public dropdown: OptionsDropdownComponent;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Text);
 
   public text = '';
   public valid = true;

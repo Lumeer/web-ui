@@ -40,6 +40,8 @@ import {Subscription} from 'rxjs';
 import {KeyCode} from '../../key-code';
 import {ModalService} from '../../modal/modal.service';
 import {QuillEditorComponent} from 'ngx-quill';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -84,6 +86,8 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
   @ViewChild(QuillEditorComponent, {static: false})
   public textEditor: QuillEditorComponent;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.Text);
 
   public text = '';
   public valid = true;

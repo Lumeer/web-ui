@@ -7,7 +7,7 @@
   [class.invalid-value]="!skipValidation && readonly && !(value | isDataValueValid)"
   (input)="onInput($event.target.value)"
   [ngStyle]="{'background-color': valid ? (value | formatDataValue) : ''}"
-  data-test="color-data-input"
+  [ngClass]="inputClass"
   [spellcheck]="false"
   type="text">
 

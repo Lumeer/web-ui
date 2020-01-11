@@ -36,6 +36,8 @@ import {createDateTimeOptions, DateTimeOptions} from '../../date-time/date-time-
 import {DateTimePickerComponent} from '../../date-time/picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
 import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 
 @Component({
   selector: 'datetime-data-input',
@@ -73,6 +75,8 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   @ViewChild(DateTimePickerComponent, {static: false})
   public dateTimePicker: DateTimePickerComponent;
+
+  public readonly inputClass = constraintTypeClass(ConstraintType.DateTime);
 
   public date: Date;
   public options: DateTimeOptions;

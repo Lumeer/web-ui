@@ -18,21 +18,20 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DataSuggestion} from './data-suggestion';
-import {DataDropdownOption} from '../data-dropdown/data-options/data-dropdown-option';
-import {removeAccent} from '../utils/string.utils';
+import {Constraint} from '../../../core/model/constraint';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {ConstraintType} from '../../../core/model/data/constraint';
+import {TextConstraint} from '../../../core/model/constraint/text.constraint';
 
 @Pipe({
-  name: 'filterDataSuggestions',
+  name: 'constraintClass',
 })
-export class FilterDataSuggestionsPipe implements PipeTransform {
-  public transform(suggestions: DataSuggestion[], text: string): DataDropdownOption[] {
-    return (suggestions || [])
-      .filter(suggestion =>
-        removeAccent(suggestion.title)
-          .trim()
-          .includes(removeAccent(text).trim())
-      )
-      .map(suggestion => ({value: suggestion.title, displayValue: suggestion.title}));
+export class ConstraintClassPipe implements PipeTransform {
+  public transform(constraint: Constraint): string {
+    return constraintTypeClass((constraint || new TextConstraint({})).type);
   }
+}
+
+export function constraintTypeClass(type: ConstraintType): string {
+  return `${(type || ConstraintType.Text).toLowerCase()}-input`;
 }
