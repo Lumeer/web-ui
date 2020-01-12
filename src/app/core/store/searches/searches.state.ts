@@ -21,6 +21,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {DEFAULT_SEARCH_ID, Search} from './search';
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface SearchesState extends EntityState<Search> {}
 
@@ -39,8 +40,18 @@ export const selectSearchById = id =>
     searches => searches[id]
   );
 
-export const selectDefaultSearch = selectSearchById(DEFAULT_SEARCH_ID);
+export const selectSearchId = createSelector(
+  selectWorkspace,
+  workspace => (workspace && workspace.viewCode) || DEFAULT_SEARCH_ID
+);
+
+export const selectSearch = createSelector(
+  selectSearchesDictionary,
+  selectSearchId,
+  (searchesMap, searchId) => searchesMap[searchId] && searchesMap[searchId]
+);
+
 export const selectSearchConfig = createSelector(
-  selectDefaultSearch,
+  selectSearch,
   search => search && search.config
 );

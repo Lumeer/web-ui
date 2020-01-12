@@ -18,9 +18,10 @@
  */
 
 import {PermissionType} from '../permissions/permissions';
-import {DefaultViewConfig, View, ViewConfig} from './view';
+import {DefaultViewConfig, View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
+import {deepObjectCopy} from '../../../shared/utils/common.utils';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -46,7 +47,7 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: false}}, state);
     case ViewsActionType.REMOVE_FAVORITE_FAILURE:
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
-    case ViewsActionType.SET_DEFAULT_CONFIG:
+    case ViewsActionType.SET_DEFAULT_CONFIG_SUCCESS:
       return setDefaultConfig(state, action);
     case ViewsActionType.GET_DEFAULT_CONFIGS_SUCCESS:
       return updateDefaultConfigs(state, action.payload.configs);
@@ -57,21 +58,25 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
   }
 }
 
-function setDefaultConfig(state: ViewsState, action: ViewsAction.SetDefaultConfig): ViewsState {
-  const defaultConfigs = {...state.defaultConfigs};
-  setDefaultConfigInMap(defaultConfigs, action.payload.config);
+function setDefaultConfig(state: ViewsState, action: ViewsAction.SetDefaultConfigSuccess): ViewsState {
+  const defaultConfigs = deepObjectCopy(state.defaultConfigs);
+  setDefaultConfigInMap(defaultConfigs, action.payload.model);
 
   return {...state, defaultConfigs};
 }
 
-function setDefaultConfigInMap(configs: Record<string, Record<string, ViewConfig>>, config: DefaultViewConfig) {
-  if (!configs[config.perspective]) {
-    configs[config.perspective] = {};
+function setDefaultConfigInMap(
+  configs: Record<string, Record<string, DefaultViewConfig>>,
+  newConfig: DefaultViewConfig
+) {
+  if (!configs[newConfig.perspective]) {
+    configs[newConfig.perspective] = {};
   }
 
-  const perspectiveConfig = configs[config.perspective];
-  if (!perspectiveConfig[config.collectionId]) {
-    perspectiveConfig[config.collectionId] = config.config;
+  const perspectiveConfig = configs[newConfig.perspective];
+  const currentConfig = perspectiveConfig[newConfig.collectionId];
+  if (!currentConfig || !currentConfig.updatedAt || currentConfig.updatedAt.getTime() < newConfig.updatedAt.getTime()) {
+    perspectiveConfig[newConfig.collectionId] = newConfig;
   }
 }
 

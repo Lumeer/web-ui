@@ -65,7 +65,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
   }
 
   public onCreateAttribute() {
-    const name = this.newAttributeName.trim();
+    const name = (this.newAttributeName || '').trim();
     if (name === '') {
       return;
     }

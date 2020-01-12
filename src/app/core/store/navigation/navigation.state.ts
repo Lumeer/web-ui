@@ -51,6 +51,11 @@ export const selectQuery = createSelector(
   (state: NavigationState) => state.query
 );
 
+export const selectQueryMainCollectionId = createSelector(
+  selectQuery,
+  query => query && query.stems && query.stems[0] && query.stems[0].collectionId
+);
+
 export const selectQueryWithoutLinks = createSelector(
   selectQuery,
   currentQuery => queryWithoutLinks(currentQuery)

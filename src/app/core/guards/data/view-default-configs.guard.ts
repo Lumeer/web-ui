@@ -26,7 +26,7 @@ import {Observable} from 'rxjs';
 import {first, mergeMap, skipWhile, tap} from 'rxjs/operators';
 import {AppState} from '../../store/app.state';
 import {ViewsAction} from '../../store/views/views.action';
-import {selectDefaultViewConfigsLoaded, selectPerspectiveDefaultViewConfigs} from '../../store/views/views.state';
+import {selectDefaultViewConfigsLoaded, selectPerspectiveDefaultViewConfig} from '../../store/views/views.state';
 import {Project} from '../../store/projects/project';
 import {Organization} from '../../store/organizations/organization';
 import {WorkspaceService} from '../../../workspace/workspace.service';
@@ -54,7 +54,7 @@ export class ViewDefaultConfigsGuard implements Resolve<any> {
         }
       }),
       skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectPerspectiveDefaultViewConfigs))),
+      mergeMap(() => this.store$.pipe(select(selectPerspectiveDefaultViewConfig))),
       first()
     );
   }

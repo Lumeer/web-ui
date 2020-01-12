@@ -72,9 +72,9 @@ function convertViewConfigDtoToModel(perspective: Perspective, config: any): Vie
 }
 
 export function convertDefaultViewConfigDtoToModel(dto: DefaultViewConfigDto): DefaultViewConfig {
-  return {...dto};
+  return {...dto, updatedAt: dto.updatedAt ? new Date(dto.updatedAt) : new Date()};
 }
 
 export function convertDefaultViewConfigModelToDto(model: DefaultViewConfig): DefaultViewConfigDto {
-  return {...model};
+  return {...model, updatedAt: (model.updatedAt || new Date()).getTime()};
 }

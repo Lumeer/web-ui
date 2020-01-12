@@ -34,7 +34,7 @@ export class ColorConstraint implements Constraint {
   }
 
   public createInputDataValue(inputValue: string, value: any): ColorDataValue {
-    return new ColorDataValue(value, this.config, inputValue || '');
+    return new ColorDataValue(value, this.config, inputValue);
   }
 
   public conditions(): QueryCondition[] {

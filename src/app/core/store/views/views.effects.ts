@@ -368,11 +368,20 @@ export class ViewsEffects {
   @Effect({dispatch: false})
   public setDefaultConfig$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.SetDefaultConfig>(ViewsActionType.SET_DEFAULT_CONFIG),
-    mergeMap(action => {
-      return this.viewService.updateDefaultConfig(convertDefaultViewConfigModelToDto(action.payload.config)).pipe(
-        mergeMap(() => EMPTY),
-        catchError(() => EMPTY)
-      );
+    map(action => ({...action.payload.model, updatedAt: new Date()})),
+    tap(model => this.store$.dispatch(new ViewsAction.SetDefaultConfigSuccess({model}))),
+    mergeMap(model => {
+      return this.viewService
+        .updateDefaultConfig(
+          convertDefaultViewConfigModelToDto({
+            ...model,
+            updatedAt: new Date(),
+          })
+        )
+        .pipe(
+          mergeMap(() => EMPTY),
+          catchError(() => EMPTY)
+        );
     })
   );
 

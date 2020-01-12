@@ -25,8 +25,8 @@ import {UserConstraintConfig} from '../../../../core/model/data/constraint-confi
   name: 'userIsValid',
 })
 export class UserIsValidPipe implements PipeTransform {
-  public transform(selectedUser: User, definedUsers: User[], config: UserConstraintConfig, index: number): boolean {
-    if (config && !config.multi && index > 0) {
+  public transform(selectedUser: User, definedUsers: User[], config: UserConstraintConfig, length: number): boolean {
+    if (config && !config.multi && length > 1) {
       return false;
     }
     if (config && config.externalUsers) {

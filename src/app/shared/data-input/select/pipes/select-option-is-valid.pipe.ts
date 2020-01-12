@@ -19,14 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {SelectConstraintConfig, SelectConstraintOption} from '../../../../core/model/data/constraint-config';
-import {SelectDataValue} from '../../../../core/model/data-value/select.data-value';
 
 @Pipe({
   name: 'selectOptionIsValid',
 })
 export class SelectOptionIsValidPipe implements PipeTransform {
-  public transform(option: SelectConstraintOption, config: SelectConstraintConfig, index: number): boolean {
-    if (config && !config.multi && index > 0) {
+  public transform(option: SelectConstraintOption, config: SelectConstraintConfig, length: number): boolean {
+    if (config && !config.multi && length > 1) {
       return false;
     }
 

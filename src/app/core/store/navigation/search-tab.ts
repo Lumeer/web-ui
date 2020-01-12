@@ -17,16 +17,40 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
+
 export enum SearchTab {
   All = 'all',
-  Collections = 'collections',
+  Collections = 'tables',
   Records = 'records',
   Views = 'views',
 }
 
-export const searchTabsMap: {[key: string]: SearchTab} = {
+export const searchTabsMap: Record<string, SearchTab> = {
   [SearchTab.All]: SearchTab.All,
   [SearchTab.Collections]: SearchTab.Collections,
   [SearchTab.Records]: SearchTab.Records,
   [SearchTab.Views]: SearchTab.Views,
 };
+
+export function parseSearchTabFromUrl(url: string): SearchTab | null {
+  let questionIndex = url.indexOf('?');
+  if (questionIndex === -1) {
+    questionIndex = url.length;
+  }
+
+  const paths = url.substring(0, questionIndex).split('/');
+  let currentIndex = paths.indexOf('w');
+  if (currentIndex !== -1 && paths.length > currentIndex + 3) {
+    currentIndex += 3; // skip workspace paths
+
+    if (paths[currentIndex].startsWith('view') && paths.length > currentIndex++) {
+      const perspective = perspectivesMap[paths[currentIndex]];
+      if (perspective === Perspective.Search && paths.length > currentIndex++) {
+        return searchTabsMap[paths[currentIndex]];
+      }
+    }
+  }
+
+  return null;
+}

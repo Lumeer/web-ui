@@ -161,7 +161,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   private navigateToProject(notification: ProjectSharedUserNotification) {
     if (!this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
       this.getOrganization(notification.organizationId, organization => {
-        const path = ['w', organization.code, notification.projectCode, 'view', 'search', 'all'];
+        const path = ['w', organization.code, notification.projectCode, 'view', 'search'];
         this.router.navigate(path);
       });
     }

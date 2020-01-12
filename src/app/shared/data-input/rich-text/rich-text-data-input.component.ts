@@ -32,7 +32,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
-import {TextDataValue} from '../../../core/model/data-value/text.data-value';
+import {numberOfPTags, TextDataValue} from '../../../core/model/data-value/text.data-value';
 import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
 import {BsModalRef} from 'ngx-bootstrap';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
@@ -116,9 +116,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private initValue() {
     this.text = this.value.format();
     this.valid = this.value.isValid();
-
-    const numberOfPTagsMatch = this.text.match(/<p.*?>.+?<\/p>/g);
-    this.isMultiline = numberOfPTagsMatch && numberOfPTagsMatch.length > 1;
+    this.isMultiline = numberOfPTags(this.text) > 1;
   }
 
   private refreshBackgroundClass(value: DataValue) {

@@ -86,9 +86,10 @@
   </form>
   <div *ngIf="state.viewChanged && state.permissions.canManage"
        class="small text-right text-warning">
-    <i class="far fa-exclamation-triangle mr-1"
+    <i class="far fa-exclamation-triangle mr-1 text-warning"
        title="Changes are not saved yet" i18n-title="@@view.changes.not.saved">
     </i>
-    <span i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
+    <span class="text-warning" i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
+    <span class="btn-link text-primary ml-1 cursor-pointer" (click)="revertChanges()" i18n="@@view.changes.not.saved.revert">Revert changes</span>
   </div>
 </ng-container>

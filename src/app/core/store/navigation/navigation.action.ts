@@ -19,7 +19,6 @@
 
 import {Action} from '@ngrx/store';
 import {Query} from './query/query';
-import {SearchTab} from './search-tab';
 import {ViewCursor} from './view-cursor/view-cursor';
 
 export enum NavigationActionType {
@@ -75,7 +74,6 @@ export namespace NavigationAction {
         previousUrl: string;
         organizationCode: string;
         projectCode: string;
-        searchTab?: SearchTab;
       }
     ) {}
   }

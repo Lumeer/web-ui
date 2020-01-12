@@ -17,11 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, ViewContainerRef} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Constraint} from '../../../core/model/constraint';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
-@Directive({
-  selector: '[search-results]',
+@Pipe({
+  name: 'constraintAsText',
 })
-export class SearchResultsDirective {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+export class ConstraintAsTextPipe implements PipeTransform {
+  public transform(constraint: Constraint): boolean {
+    const textConstraints = [
+      ConstraintType.Unknown,
+      ConstraintType.Coordinates,
+      ConstraintType.Text,
+      ConstraintType.Number,
+      ConstraintType.Percentage,
+      ConstraintType.Duration,
+      ConstraintType.Address,
+      ConstraintType.Files,
+      ConstraintType.DateTime,
+    ];
+    return !constraint || textConstraints.includes(constraint.type);
+  }
 }

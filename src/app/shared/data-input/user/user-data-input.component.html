@@ -20,10 +20,10 @@
     <ng-container *ngIf="!(selectedUsers | usersAreValid:users:value.config)">
 
       <ng-container
-        *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last; let index = index">
+        *ngFor="let user of selectedUsers; trackBy:trackByUser; let first = first; let last = last">
 
         <span data-test="user-data-input"
-              [class.invalid-value]="!(user | userIsValid:users:value.config:index)"
+              [class.invalid-value]="!(user | userIsValid:users:value.config:selectedUsers.length)"
               [class.ml-2]="first"
               class="d-inline-block user">
           {{user.name || user.email}}

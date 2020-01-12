@@ -33,14 +33,14 @@ import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navi
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {View, ViewConfig, ViewGlobalConfig} from './view';
+import {DefaultViewConfig, View, ViewConfig, ViewGlobalConfig} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
   globalConfig: ViewGlobalConfig;
-  defaultConfigs: Record<string, Record<string, ViewConfig>>;
+  defaultConfigs: Record<string, Record<string, DefaultViewConfig>>;
   defaultConfigsLoaded: boolean;
 }
 
@@ -165,7 +165,7 @@ export const selectSidebarOpened = createSelector(
   config => config.sidebarOpened
 );
 
-export const selectPerspectiveDefaultViewConfigs = createSelector(
+export const selectPerspectiveDefaultViewConfig = createSelector(
   selectViewsState,
   selectPerspective,
   selectQuery,
@@ -179,6 +179,18 @@ export const selectPerspectiveDefaultViewConfigs = createSelector(
     return null;
   }
 );
+
+export const selectDefaultViewConfig = (perspective: Perspective, key: string) =>
+  createSelector(
+    selectViewsState,
+    state => {
+      const configsByPerspective = state.defaultConfigs[perspective];
+      if (configsByPerspective) {
+        return configsByPerspective[key];
+      }
+      return null;
+    }
+  );
 
 export const selectDefaultViewConfigsLoaded = createSelector(
   selectViewsState,

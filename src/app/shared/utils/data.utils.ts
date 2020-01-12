@@ -23,7 +23,7 @@ import {isNullOrUndefined} from './common.utils';
 import {resetUnusedMomentPart} from './date.utils';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
-const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code', 'b'];
+const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code', 'b', 'span'];
 
 export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true): string {
   const htmlWithoutTags = keepFormattingTags

@@ -34,7 +34,7 @@ export class CoordinatesConstraint implements Constraint {
   }
 
   public createInputDataValue(inputValue: string, value: any): CoordinatesDataValue {
-    return new CoordinatesDataValue(value, this.config, inputValue || '');
+    return new CoordinatesDataValue(value, this.config, inputValue);
   }
 
   public conditions(): QueryCondition[] {

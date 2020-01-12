@@ -79,7 +79,7 @@ export class WorkspaceSelectService {
 
   private goToProject(organization: Organization, project: Project, extras?: NavigationExtras) {
     if (organization && project) {
-      this.router.navigate(['w', organization.code, project.code, 'view', 'search', 'all'], extras);
+      this.router.navigate(['w', organization.code, project.code, 'view', 'search'], extras);
     }
   }
 

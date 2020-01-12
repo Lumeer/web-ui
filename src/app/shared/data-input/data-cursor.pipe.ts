@@ -17,9 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DefaultViewConfigDto {
-  collectionId: string;
-  perspective: string;
-  config: any;
-  updatedAt?: number;
+import {Pipe, PipeTransform} from '@angular/core';
+import {DocumentModel} from '../../core/store/documents/document.model';
+import {LinkInstance} from '../../core/store/link-instances/link.instance';
+import {DataCursor} from './data-cursor';
+import {DataResource} from '../../core/model/resource';
+
+@Pipe({
+  name: 'dataCursor',
+})
+export class DataCursorPipe implements PipeTransform {
+  public transform(entity: DataResource, attributeId: string): DataCursor {
+    const {collectionId} = entity as DocumentModel;
+    const {linkTypeId} = entity as LinkInstance;
+
+    return {
+      collectionId: collectionId,
+      documentId: collectionId && entity.id,
+      linkTypeId: linkTypeId,
+      linkInstanceId: linkTypeId && entity.id,
+      attributeId,
+    };
+  }
 }

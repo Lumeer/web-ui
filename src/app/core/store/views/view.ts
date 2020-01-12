@@ -72,4 +72,5 @@ export interface DefaultViewConfig {
   collectionId: string;
   perspective: string;
   config: ViewConfig;
+  updatedAt?: Date;
 }

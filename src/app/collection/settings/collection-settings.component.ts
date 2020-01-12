@@ -33,7 +33,6 @@ import {selectCollectionByWorkspace} from '../../core/store/collections/collecti
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
-import {SearchTab} from '../../core/store/navigation/search-tab';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
@@ -135,7 +134,6 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
         previousUrl: this.previousUrl,
         organizationCode: this.workspace.organizationCode,
         projectCode: this.workspace.projectCode,
-        searchTab: SearchTab.Collections,
       })
     );
   }

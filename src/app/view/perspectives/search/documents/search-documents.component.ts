@@ -35,7 +35,7 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {selectSearchConfig} from '../../../../core/store/searches/searches.state';
+import {selectSearchConfig, selectSearchId} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {sortDocumentsByFavoriteAndLastUsed} from '../../../../core/store/documents/document.utils';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
@@ -44,6 +44,10 @@ import {Project} from '../../../../core/store/projects/project';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {queryWithoutFilters} from '../../../../core/store/navigation/query/query.util';
+import {ViewsAction} from '../../../../core/store/views/views.action';
+import {Perspective} from '../../perspective';
 
 const PAGE_SIZE = 40;
 
@@ -68,7 +72,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public organization$: Observable<Organization>;
   public project$: Observable<Project>;
 
-  private searchId = DEFAULT_SEARCH_ID;
+  private searchId: string;
   private config: SearchConfig;
   private documentsOrder = [];
   private subscriptions = new Subscription();
@@ -89,7 +93,17 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.documents$ = this.subscribeDocuments$();
 
+    this.subscribeSearchId();
     this.subscribeQueryChange();
+  }
+
+  private subscribeSearchId() {
+    this.store$
+      .pipe(
+        select(selectSearchId),
+        take(1)
+      )
+      .subscribe(searchId => (this.searchId = searchId));
   }
 
   private selectDocumentsConfig$(): Observable<SearchDocumentsConfig> {
@@ -138,8 +152,21 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   public configChange(documentsConfig: SearchDocumentsConfig) {
-    const config = {...this.config, documents: documentsConfig};
-    this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config}));
+    if (this.searchId) {
+      const searchConfig = {...this.config, documents: documentsConfig};
+      this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config: searchConfig}));
+      if (this.searchId === DEFAULT_SEARCH_ID) {
+        this.store$.dispatch(
+          new ViewsAction.SetDefaultConfig({
+            model: {
+              collectionId: DEFAULT_SEARCH_ID,
+              perspective: Perspective.Search,
+              config: {search: searchConfig},
+            },
+          })
+        );
+      }
+    }
   }
 
   public onFetchNextPage() {
@@ -167,7 +194,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       .pipe(
         select(selectQuery),
         filter(query => !!query),
-        distinctUntilChanged()
+        distinctUntilChanged((a, b) => deepObjectsEquals(queryWithoutFilters(a), queryWithoutFilters(b)))
       )
       .subscribe(query => {
         this.clearDocumentsInfo();

@@ -67,11 +67,11 @@ export class NavigationEffects {
     ofType<NavigationAction.NavigateToPreviousUrl>(NavigationActionType.NAVIGATE_TO_PREVIOUS_URL),
     filter(action => !!action.payload.organizationCode && !!action.payload.projectCode),
     map(action => {
-      const {organizationCode, projectCode, searchTab, previousUrl} = action.payload;
+      const {organizationCode, projectCode, previousUrl} = action.payload;
 
       if (!previousUrl || previousUrl === '/') {
         return new RouterAction.Go({
-          path: ['/', 'w', organizationCode, projectCode, 'view', 'search', searchTab || SearchTab.All],
+          path: ['/', 'w', organizationCode, projectCode, 'view', 'search'],
         });
       }
 

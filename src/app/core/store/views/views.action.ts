@@ -21,7 +21,7 @@ import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {User} from '../users/user';
-import {DefaultViewConfig, View, ViewConfig} from './view';
+import {DefaultViewConfig, View} from './view';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -54,6 +54,7 @@ export enum ViewsActionType {
   REMOVE_FAVORITE_FAILURE = '[Views] Remove Favorite :: Failure',
 
   SET_DEFAULT_CONFIG = '[Views] Set Default Config',
+  SET_DEFAULT_CONFIG_SUCCESS = '[Views] Set Default Config :: Success',
 
   GET_DEFAULT_CONFIGS = '[Views] Get Default Configs',
   GET_DEFAULT_CONFIGS_SUCCESS = '[Views] Get Default Configs :: Success',
@@ -238,7 +239,13 @@ export namespace ViewsAction {
   export class SetDefaultConfig implements Action {
     public readonly type = ViewsActionType.SET_DEFAULT_CONFIG;
 
-    public constructor(public payload: {config: DefaultViewConfig}) {}
+    public constructor(public payload: {model: DefaultViewConfig}) {}
+  }
+
+  export class SetDefaultConfigSuccess implements Action {
+    public readonly type = ViewsActionType.SET_DEFAULT_CONFIG_SUCCESS;
+
+    public constructor(public payload: {model: DefaultViewConfig}) {}
   }
 
   export class Clear implements Action {
@@ -270,6 +277,7 @@ export namespace ViewsAction {
     | RemoveFavoriteFailure
     | SetSidebarOpened
     | SetDefaultConfig
+    | SetDefaultConfigSuccess
     | GetDefaultConfigs
     | GetDefaultConfigsSuccess
     | Clear;

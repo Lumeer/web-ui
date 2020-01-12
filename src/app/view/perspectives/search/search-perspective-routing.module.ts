@@ -24,18 +24,21 @@ import {SearchCollectionsComponent} from './collections/search-collections.compo
 import {SearchDocumentsComponent} from './documents/search-documents.component';
 import {SearchPerspectiveComponent} from './search-perspective.component';
 import {SearchViewsComponent} from './views/search-views.component';
+import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
 
 const searchRoutes: Routes = [
   {
     path: '',
     component: SearchPerspectiveComponent,
+    canActivate: [SearchPerspectiveRedirectGuard],
+    runGuardsAndResolvers: 'always',
     children: [
       {
         path: 'all',
         component: SearchAllComponent,
       },
       {
-        path: 'collections',
+        path: 'tables',
         component: SearchCollectionsComponent,
       },
       {
@@ -45,11 +48,6 @@ const searchRoutes: Routes = [
       {
         path: 'views',
         component: SearchViewsComponent,
-      },
-      {
-        path: '',
-        pathMatch: 'full',
-        redirectTo: 'all',
       },
     ],
   },
