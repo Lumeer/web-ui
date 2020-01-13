@@ -9,4 +9,10 @@ button {
   height: 50px;
   padding-left: 0.25rem;
   padding-right: 0.25rem;
+  transition: padding 0.1s ease;
+
+  &:hover {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
 }
