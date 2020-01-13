@@ -111,7 +111,7 @@
     "@types/jssha": "^2.0.0",
     "@types/mapbox-gl": "^1.5.1",
     "@types/node": "^12.12.21",
-    "@types/plotly.js": "^1.44.21",
+    "@types/plotly.js": "^1.44.24",
     "angular-http-server": "^1.9.0",
     "bundlesize": "^0.18.0",
     "codelyzer": "^5.2.0",
