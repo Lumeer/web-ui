@@ -50,4 +50,5 @@ export interface PivotDataHeader {
   targetIndex?: number;
   color: string;
   constraint?: Constraint;
+  isValueHeader: boolean;
 }

@@ -41,6 +41,7 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
+import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -131,7 +132,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public onBack(): void {
     this.store$.dispatch(
       new NavigationAction.NavigateToPreviousUrl({
-        previousUrl: this.previousUrl,
+        previousUrl: replaceWorkspacePathInUrl(this.previousUrl, this.workspace),
         organizationCode: this.workspace.organizationCode,
         projectCode: this.workspace.projectCode,
       })

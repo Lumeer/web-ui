@@ -29,10 +29,6 @@ import {queryConditionNumInputs} from '../../../../core/store/navigation/query/q
 import {createRange} from '../../../utils/array.utils';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {KeyCode} from '../../../key-code';
-import {Constraint} from '../../../../core/model/constraint';
-import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
-import {SelectConstraintConfig, UserConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
 
 @Component({
   selector: 'filter-builder-content',
@@ -66,13 +62,10 @@ export class FilterBuilderContentComponent implements OnChanges {
   public numInputs: number;
   public ngForIndexes: number[];
 
-  public constraint: Constraint;
-
   public dataValues: DataValue[];
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute || changes.selectedValues || changes.constraintData) {
-      this.constraint = this.createAndModifyConstraint();
       this.dataValues = this.createDataValues();
     }
     if (changes.selectedCondition) {
@@ -81,28 +74,11 @@ export class FilterBuilderContentComponent implements OnChanges {
     }
   }
 
-  private createAndModifyConstraint(): Constraint {
-    if (!this.attribute || !this.attribute.constraint) {
-      return new UnknownConstraint();
-    }
-
-    const constraint = this.attribute.constraint;
-    switch (constraint.type) {
-      case ConstraintType.Select:
-        const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
-        return new SelectConstraint(selectConfig);
-      case ConstraintType.User:
-        const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
-        return new UserConstraint(userConfig);
-      default:
-        return constraint;
-    }
-  }
-
   private createDataValues(): DataValue[] {
     return (this.selectedValues || []).map(selectedValue => {
       const value = selectedValue && selectedValue.value;
-      return this.constraint.createDataValue(value || '', this.constraintData);
+      const constraint = (this.attribute && this.attribute.constraint) || new UnknownConstraint();
+      return constraint.createDataValue(value || '', this.constraintData);
     });
   }
 

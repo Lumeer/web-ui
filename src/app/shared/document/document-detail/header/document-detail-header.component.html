@@ -2,11 +2,12 @@
   <div class="flex-grow-1 pr-lg-2 text-truncate">
     <div [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</div>
     <h3 *ngIf="row?.value || row?.value === 0" class="m-0 mb-0 mb-lg-2">
-      <data-input class="flex-fill d-block ml-n1 main-data-input"
-                  [readonly]="true"
-                  [dataValue]="row?.value | dataValue:row?.attribute?.constraint:constraintData"
-                  [constraint]="row?.attribute?.constraint">
-      </data-input>
+      <data-input-preview class="flex-fill d-block main-data-input"
+                          [inline]="false"
+                          [dataValue]="row?.value | dataValue:row?.attribute?.constraint:constraintData"
+                          [cursor]="document | dataCursor:row?.attribute?.id"
+                          [constraint]="row?.attribute?.constraint">
+      </data-input-preview>
     </h3>
 
   </div>

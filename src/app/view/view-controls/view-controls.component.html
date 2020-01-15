@@ -1,9 +1,11 @@
 <ng-container
   *ngIf="{permissions: view | viewControlsInfo:name:(perspective$ | async) | async, viewChanged: viewChanged$ | async} as state">
-  <form class="view-controls-grid">
-    <div class="perspective d-flex align-items-center justify-content-start">
-      <div class="input-group flex-nowrap mr-2 mb-2" data-tour="perspective">
-        <div class="input-group-prepend">
+  <ng-container
+    *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
+    <form class="view-controls-grid">
+      <div class="perspective d-flex align-items-center justify-content-start">
+        <div class="input-group flex-nowrap mr-2 mb-2" data-tour="perspective">
+          <div class="input-group-prepend">
         <span class="input-group-text">
           <strong *ngIf="novice"
                   i18n="@@view.perspective.guide.select">1.&nbsp;Select View</strong>
@@ -11,38 +13,37 @@
              class="far fa-eye fa-fw">
           </i>
         </span>
+          </div>
+          <ng-container *ngIf="perspective$ | async as perspective">
+
+            <button aria-expanded="false" aria-haspopup="true" type="button" #perspectiveElement
+                    class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
+                    (click)="onPerspectiveChooserClick($event)">
+              <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
+              <span class="ml-sm-1 text-nowrap"
+                    i18n="@@view.perspective.name">{perspective, select, detail {Detail} pivot {Pivot} kanban {Board} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table}}</span>
+            </button>
+
+            <options-dropdown
+              [closeOnClickOrigin]="true"
+              [showBackdrop]="false"
+              [origin]="perspectiveElement"
+              [options]="perspectives | sortPerspectives | perspectivesOptions"
+              [highlightedValue]="perspective"
+              (selectOption)="onSelectPerspective($event.value, state.permissions.canManage)">
+            </options-dropdown>
+
+          </ng-container>
+
         </div>
-        <ng-container *ngIf="perspective$ | async as perspective">
 
-          <button aria-expanded="false" aria-haspopup="true" type="button" #perspectiveElement
-                  class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
-                  (click)="onPerspectiveChooserClick($event)">
-            <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
-            <span class="ml-sm-1 text-nowrap"
-                  i18n="@@view.perspective.name">{perspective, select, detail {Detail} pivot {Pivot} kanban {Board} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table}}</span>
-          </button>
-
-          <options-dropdown
-            [closeOnClickOrigin]="true"
-            [showBackdrop]="false"
-            [origin]="perspectiveElement"
-            [options]="perspectives | sortPerspectives | perspectivesOptions"
-            [highlightedValue]="perspective"
-            (selectOption)="onSelectPerspective($event.value, state.permissions.canManage)">
-          </options-dropdown>
-
-        </ng-container>
-
+        <i *ngIf="novice"
+           class="view-arrow fas fa-arrow-circle-right mr-2 mb-2 text-muted">
+        </i>
       </div>
 
-      <i *ngIf="novice"
-         class="view-arrow fas fa-arrow-circle-right mr-2 mb-2 text-muted">
-      </i>
-    </div>
-
-    <div class="view-name input-group flex-nowrap flex-fill mb-2" data-tour="view"
-         *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
-      <div class="input-group-prepend">
+      <div class="view-name input-group flex-nowrap flex-fill mb-2" data-tour="view">
+        <div class="input-group-prepend">
       <span class="input-group-text">
         <strong *ngIf="novice"
                 i18n="@@view.perspective.guide.title">2.&nbsp;Set Title</strong>
@@ -50,46 +51,48 @@
            class="far fa-file-edit fa-fw">
         </i>
       </span>
+        </div>
+        <input #viewNameInput
+               [class.font-italic]="!view.code || view.name !== name"
+               [value]="name"
+               [disabled]="view && !state.permissions.canManage"
+               (input)="onNameInput(viewNameInput.value)"
+               id="viewName"
+               name="viewName"
+               (blur)="onInputBlur(state.permissions.canManage)"
+               (keypress)="onViewNameKeyPress(!buttonsData.disabled, $event, state.permissions.canClone)"
+               type="text"
+               class="form-control"
+               autocomplete="off"
+               placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
+        <div class="input-group-append">
+          <button [disabled]="buttonsData.disabled"
+                  class="btn"
+                  [class.btn-primary]="!buttonsData.disabled"
+                  [class.btn-outline-secondary]="buttonsData.disabled"
+                  [class.disabled]="buttonsData.disabled"
+                  type="button"
+                  title="Save" i18n-title="@@button.save"
+                  (click)="onSave(state.permissions.canClone)">
+            <i class="fas fa-save"></i>
+          </button>
+          <button [disabled]="!(view.code && state.permissions.canShare)"
+                  (click)="onShareClick()"
+                  class="btn btn-primary"
+                  type="button"
+                  title="Share" i18n-title="@@button.share" i18n="@@button.share">Share
+          </button>
+        </div>
       </div>
-      <input #viewNameInput
-             [class.font-italic]="!view.code || view.name !== name"
-             [value]="name"
-             [disabled]="view && !state.permissions.canManage"
-             (input)="onNameInput(viewNameInput.value)"
-             id="viewName"
-             name="viewName"
-             (blur)="onInputBlur(state.permissions.canManage)"
-             (keypress)="onViewNameKeyPress(!buttonsData.disabled, $event, state.permissions.canClone)"
-             type="text"
-             class="form-control"
-             autocomplete="off"
-             placeholder="Type a title of this page, save, and share!" i18n-placeholder="@@view.untitled">
-      <div class="input-group-append">
-        <button [disabled]="buttonsData.disabled"
-                class="btn"
-                [class.btn-primary]="!buttonsData.disabled"
-                [class.btn-outline-secondary]="buttonsData.disabled"
-                [class.disabled]="buttonsData.disabled"
-                type="button"
-                title="Save" i18n-title="@@button.save"
-                (click)="onSave(state.permissions.canClone)">
-          <i class="fas fa-save"></i>
-        </button>
-        <button [disabled]="!(view.code && state.permissions.canShare)"
-                (click)="onShareClick()"
-                class="btn btn-primary"
-                type="button"
-                title="Share" i18n-title="@@button.share" i18n="@@button.share">Share
-        </button>
-      </div>
+    </form>
+    <div *ngIf="state.viewChanged && state.permissions.canManage"
+         class="small text-right text-warning">
+      <i class="far fa-exclamation-triangle mr-1 text-warning"
+         title="Changes are not saved yet" i18n-title="@@view.changes.not.saved">
+      </i>
+      <span class="text-warning" i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
+      <span *ngIf="!buttonsData.disabled" class="btn-link text-primary ml-1 cursor-pointer" (click)="revertChanges()"
+            i18n="@@view.changes.not.saved.revert">Revert changes</span>
     </div>
-  </form>
-  <div *ngIf="state.viewChanged && state.permissions.canManage"
-       class="small text-right text-warning">
-    <i class="far fa-exclamation-triangle mr-1 text-warning"
-       title="Changes are not saved yet" i18n-title="@@view.changes.not.saved">
-    </i>
-    <span class="text-warning" i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
-    <span class="btn-link text-primary ml-1 cursor-pointer" (click)="revertChanges()" i18n="@@view.changes.not.saved.revert">Revert changes</span>
-  </div>
+  </ng-container>
 </ng-container>

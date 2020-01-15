@@ -93,15 +93,15 @@ export class KanbanConfigComponent implements OnChanges {
     return stem.collectionId + index;
   }
 
-  public onConfigChange(stemConfig: KanbanStemConfig, stem: QueryStem, index: number) {
+  public onConfigChange(newStemConfig: KanbanStemConfig, stem: QueryStem, index: number) {
     const newConfig = deepObjectCopy<KanbanConfig>(this.config);
-    newConfig.stemsConfigs[index] = {...stemConfig, stem};
+    newConfig.stemsConfigs[index] = {...newStemConfig, stem};
 
     // remove aggregation when the cards are from different collection
     if (newConfig && newConfig.aggregation) {
       const existingResources = (newConfig.stemsConfigs || [])
-        .map(_stemConfig => _stemConfig.attribute)
-        .filter(attribute => attribute.resourceType === AttributesResourceType.Collection)
+        .map(stemConfig => stemConfig.attribute)
+        .filter(attribute => attribute && attribute.resourceType === AttributesResourceType.Collection)
         .map(attribute => attribute.resourceId);
 
       if (existingResources.indexOf(this.config.aggregation.resourceId) < 0) {

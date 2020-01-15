@@ -37,10 +37,10 @@
       <div class="d-flex flex-row flex-wrap align-items-center">
         <ng-container
           *ngFor="let entry of document | dataValueEntries:collections:constraintData:config; let first = first">
-          <span *ngIf="!first">,&nbsp;</span>
+          <span class="mt-1 align-self-end" *ngIf="!first">,&nbsp;</span>
           <span *ngIf="entry.label"
-                class="text-attribute text-nowrap" [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
-          <data-input-preview class="data-input d-inline-block"
+                class="text-attribute text-nowrap mt-1 align-self-end" [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
+          <data-input-preview class="data-input d-inline-block mt-1"
                               [dataValue]="entry.dataValue"
                               [cursor]="document | dataCursor:entry.attributeId"
                               [inline]="false"

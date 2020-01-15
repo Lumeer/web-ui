@@ -32,6 +32,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {WorkspaceService} from '../../../workspace/workspace.service';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
+import {QueryParam} from '../../../core/store/navigation/query-param';
 
 @Injectable()
 export class SearchPerspectiveRedirectGuard implements CanActivate {
@@ -66,7 +67,7 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
         const searchConfig = defaultConfig && defaultConfig.config && defaultConfig.config.search;
         viewPath.push((searchConfig && searchConfig.searchTab) || SearchTab.All);
 
-        return this.router.createUrlTree(viewPath, {queryParamsHandling: 'preserve'});
+        return this.router.createUrlTree(viewPath, {queryParams: {[QueryParam.Query]: ''}});
       })
     );
   }
