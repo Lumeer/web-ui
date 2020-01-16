@@ -1,9 +1,13 @@
 <bookmark-toolbar [additionalClasses]="['mt-5']">
   <ng-container *ngFor="let view of (views$ | async | arrayReverse)">
-    <bookmark [color]="view.query | queryColor:(queryData$ | async)"
-              [icon]="getIconForPerspective(view.perspective)"
-              [link]="getViewLink(view)">
+    <bookmark *ngIf="{queryItems: view.query | queryItems:(queryData$ | async)} as data"
+              [color]="data.queryItems | queryColor"
+              [icon]="view.perspective | perspectiveIcon"
+              [link]="!(data.queryItems | containsDeletedQueryItem) && (view | viewLink:workspace)">
       {{view.name}}
+      <i *ngIf="data.queryItems | containsDeletedQueryItem" class="fa fa-exclamation-triangle text-warning ml-1"
+         title="View is not valid because some of the items are deleted"
+         i18n="@@view.detail.warning.deleted"></i>
     </bookmark>
   </ng-container>
 </bookmark-toolbar>

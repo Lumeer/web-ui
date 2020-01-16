@@ -33,7 +33,6 @@ import {selectAllViews} from '../../../core/store/views/views.state';
 @Component({
   selector: 'views-bookmarks',
   templateUrl: './views-bookmarks.component.html',
-  styleUrls: ['./views-bookmarks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewsBookmarksComponent implements OnInit {
@@ -54,13 +53,5 @@ export class ViewsBookmarksComponent implements OnInit {
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
     ]).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
-  }
-
-  public getIconForPerspective(perspective: string): string {
-    return (perspectiveIconsMap[perspective] || '').replace('fa-fw', '');
-  }
-
-  public getViewLink(view: View) {
-    return ['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}];
   }
 }

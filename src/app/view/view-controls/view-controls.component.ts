@@ -244,9 +244,15 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.saveLoading$.next(loading);
   }
 
-  public onViewNameKeyPress(canSave: boolean, $event: KeyboardEvent, canClone: boolean) {
+  public onViewNameKeyPress(
+    canSave: boolean,
+    $event: KeyboardEvent,
+    canClone: boolean,
+    viewNameInput: HTMLInputElement
+  ) {
     if (canSave && ($event.code === KeyCode.Enter || $event.code === KeyCode.NumpadEnter)) {
       this.onSave(canClone);
+      viewNameInput.blur();
     }
   }
 

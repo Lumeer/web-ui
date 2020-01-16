@@ -43,7 +43,7 @@ import {
   convertViewModelToDto,
 } from './view.converter';
 import {ViewsAction, ViewsActionType} from './views.action';
-import {selectViewsDictionary, selectViewsLoaded} from './views.state';
+import {selectViewsDictionary, selectViewsLoaded, selectViewsState} from './views.state';
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../environments/environment';
@@ -103,7 +103,9 @@ export class ViewsEffects {
       return this.viewService.createView(viewDto).pipe(
         map(dto => convertViewDtoToModel(dto)),
         flatMap(view => {
-          const actions: Action[] = [new ViewsAction.CreateSuccess({view: view})];
+          const actions: Action[] = [
+            new ViewsAction.CreateSuccess({view: view, nextAction: action.payload.nextAction}),
+          ];
           if (onSuccess) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(view)}));
           }
@@ -147,7 +149,11 @@ export class ViewsEffects {
           });
         }
       }
-      return new RouterAction.Go({path: paths, extras: {queryParamsHandling: 'merge'}});
+      return new RouterAction.Go({
+        path: paths,
+        extras: {queryParamsHandling: 'merge'},
+        nextAction: action.payload.nextAction,
+      });
     })
   );
 
@@ -394,6 +400,23 @@ export class ViewsEffects {
         map(configs => new ViewsAction.GetDefaultConfigsSuccess({configs})),
         catchError(() => of(new ViewsAction.GetDefaultConfigsSuccess({configs: []})))
       );
+    })
+  );
+
+  @Effect()
+  public resetDefaultConfigBySnapshot: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.ResetDefaultConfigBySnapshot>(ViewsActionType.RESET_DEFAULT_CONFIG_BY_SNAPSHOT),
+    withLatestFrom(this.store$.pipe(select(selectViewsState))),
+    flatMap(([action, viewsState]) => {
+      const {defaultConfigSnapshot} = viewsState;
+      if (!defaultConfigSnapshot || defaultConfigSnapshot.perspective !== action.payload.perspective) {
+        return [];
+      }
+
+      return [
+        new ViewsAction.SetDefaultConfig({model: defaultConfigSnapshot}),
+        new ViewsAction.SetDefaultConfigSnapshot({}),
+      ];
     })
   );
 

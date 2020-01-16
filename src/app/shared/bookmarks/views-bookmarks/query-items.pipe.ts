@@ -21,19 +21,13 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {QueryData} from '../../top-panel/search-box/util/query-data';
 import {QueryItemsConverter} from '../../top-panel/search-box/query-item/query-items.converter';
 import {Query} from '../../../core/store/navigation/query/query';
-import {COLOR_PRIMARY} from '../../../core/constants';
+import {QueryItem} from '../../top-panel/search-box/query-item/model/query-item';
 
 @Pipe({
-  name: 'queryColor',
+  name: 'queryItems',
 })
-export class QueryColorPipe implements PipeTransform {
-  public transform(query: Query, queryData: QueryData): string {
-    const queryItems = new QueryItemsConverter(queryData).fromQuery(query);
-
-    if (!queryItems || !queryItems.length || !queryItems[0].colors || !queryItems[0].colors.length) {
-      return COLOR_PRIMARY;
-    }
-
-    return queryItems[0].colors[0];
+export class QueryItemsPipe implements PipeTransform {
+  public transform(query: Query, queryData: QueryData): QueryItem[] {
+    return new QueryItemsConverter(queryData).fromQuery(query);
   }
 }

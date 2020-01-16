@@ -20,7 +20,7 @@
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
-import {DEFAULT_SEARCH_ID, Search} from './search';
+import {DEFAULT_SEARCH_ID, Search, SearchConfig} from './search';
 import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface SearchesState extends EntityState<Search> {}

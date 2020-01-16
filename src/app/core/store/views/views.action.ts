@@ -22,6 +22,7 @@ import {Workspace} from '../navigation/workspace';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {User} from '../users/user';
 import {DefaultViewConfig, View} from './view';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -56,8 +57,12 @@ export enum ViewsActionType {
   SET_DEFAULT_CONFIG = '[Views] Set Default Config',
   SET_DEFAULT_CONFIG_SUCCESS = '[Views] Set Default Config :: Success',
 
+  RESET_DEFAULT_CONFIG_BY_SNAPSHOT = '[Views] Reset Default Config By Snapshot',
+
   GET_DEFAULT_CONFIGS = '[Views] Get Default Configs',
   GET_DEFAULT_CONFIGS_SUCCESS = '[Views] Get Default Configs :: Success',
+
+  SET_DEFAULT_CONFIG_SNAPSHOT = '[Views] Set Default Config Snapshot',
 
   RESET_VIEW_GLOBAL_CONFIG = '[Views] Reset View Global Config',
   SET_SIDEBAR_OPENED = '[Views] Set Sidebar Opened',
@@ -93,13 +98,15 @@ export namespace ViewsAction {
   export class Create implements Action {
     public readonly type = ViewsActionType.CREATE;
 
-    public constructor(public payload: {view: View; onSuccess?: (View) => void; onFailure?: () => void}) {}
+    public constructor(
+      public payload: {view: View; nextAction?: Action; onSuccess?: (View) => void; onFailure?: () => void}
+    ) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = ViewsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {view: View}) {}
+    public constructor(public payload: {view: View; nextAction?: Action}) {}
   }
 
   export class CreateFailure implements Action {
@@ -248,6 +255,18 @@ export namespace ViewsAction {
     public constructor(public payload: {model: DefaultViewConfig}) {}
   }
 
+  export class ResetDefaultConfigBySnapshot implements Action {
+    public readonly type = ViewsActionType.RESET_DEFAULT_CONFIG_BY_SNAPSHOT;
+
+    public constructor(public payload: {perspective: Perspective}) {}
+  }
+
+  export class SetDefaultConfigSnapshot implements Action {
+    public readonly type = ViewsActionType.SET_DEFAULT_CONFIG_SNAPSHOT;
+
+    public constructor(public payload: {model?: DefaultViewConfig}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = ViewsActionType.CLEAR;
   }
@@ -277,7 +296,9 @@ export namespace ViewsAction {
     | RemoveFavoriteFailure
     | SetSidebarOpened
     | SetDefaultConfig
+    | ResetDefaultConfigBySnapshot
     | SetDefaultConfigSuccess
+    | SetDefaultConfigSnapshot
     | GetDefaultConfigs
     | GetDefaultConfigsSuccess
     | Clear;

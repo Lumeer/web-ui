@@ -27,13 +27,13 @@ import {convertQueryModelToString} from '../../../core/store/navigation/query/qu
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectCurrentView, selectDefaultViewConfig} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {createDefaultSearchConfig, DEFAULT_SEARCH_ID, Search, SearchConfig} from '../../../core/store/searches/search';
 import {SearchesAction} from '../../../core/store/searches/searches.action';
 import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/search-tab';
 import {Perspective} from '../perspective';
 import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
-import {View} from '../../../core/store/views/view';
+import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -57,6 +57,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.initialSearchTab = parseSearchTabFromUrl(this.router.url);
+    this.resetDefaultConfigSnapshot();
     this.subscribeToNavigation();
     this.subscribeToConfig();
     this.subscribeToSearchTab();
@@ -101,10 +102,15 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
             return this.store$.pipe(
               select(selectDefaultViewConfig(Perspective.Search, searchId)),
               withLatestFrom(this.store$.pipe(select(selectSearchById(searchId)))),
-              map(([defaultConfig, search]) => ({
-                searchId,
-                config: (defaultConfig && defaultConfig && defaultConfig.config.search) || (search && search.config),
-              }))
+              map(([defaultConfig, search], index) => {
+                if (index === 0) {
+                  this.setDefaultConfigSnapshot(defaultConfig);
+                }
+                return {
+                  searchId,
+                  config: (defaultConfig && defaultConfig && defaultConfig.config.search) || (search && search.config),
+                };
+              })
             );
           }
         })
@@ -132,6 +138,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       .subscribe(searchTab => {
         if (
           this.workspace &&
+          config &&
           config.searchTab &&
           searchTab &&
           config.searchTab !== searchTab &&
@@ -156,38 +163,63 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToSearchTab() {
-    const subscription = this.store$
-      .pipe(
-        select(selectSearchTab),
-        distinctUntilChanged(),
-        withLatestFrom(this.store$.pipe(select(selectSearch))),
-        filter(([searchTab, search]) => search && search.config && searchTab !== search.config.searchTab)
-      )
-      .subscribe(([searchTab, {id: searchId, config}]) => {
-        if (searchId === DEFAULT_SEARCH_ID) {
-          const searchConfig: SearchConfig = {...config, searchTab};
-          this.store$.dispatch(
-            new ViewsAction.SetDefaultConfig({
-              model: {
-                collectionId: searchId,
-                perspective: Perspective.Search,
-                config: {search: searchConfig},
-              },
-            })
-          );
-        } else {
-          this.store$.dispatch(
-            new SearchesAction.SetConfig({
-              searchId,
-              config: {...config, searchTab},
-            })
-          );
-        }
-      });
+    const subscription = this.selectCurrentTabWithSearch$().subscribe(({searchTab, search}) => {
+      const {id: searchId, config} = search;
+      if (searchId === DEFAULT_SEARCH_ID) {
+        const searchConfig: SearchConfig = {...config, searchTab};
+        this.store$.dispatch(
+          new ViewsAction.SetDefaultConfig({
+            model: {
+              key: searchId,
+              perspective: Perspective.Search,
+              config: {search: searchConfig},
+            },
+          })
+        );
+      } else {
+        this.store$.dispatch(
+          new SearchesAction.SetConfig({
+            searchId,
+            config: {...config, searchTab},
+          })
+        );
+      }
+    });
     this.subscriptions.add(subscription);
+  }
+
+  private selectCurrentTabWithSearch$(): Observable<{searchTab: SearchTab; search: Search}> {
+    return this.store$.pipe(
+      select(selectSearchTab),
+      distinctUntilChanged(),
+      withLatestFrom(this.store$.pipe(select(selectSearch))),
+      withLatestFrom(this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_SEARCH_ID)))),
+      filter(([[searchTab, search], defaultConfig]) => {
+        const config =
+          defaultConfig &&
+          defaultConfig.config &&
+          defaultConfig.config.search &&
+          search &&
+          search.id === DEFAULT_SEARCH_ID
+            ? defaultConfig.config.search
+            : search && search.config;
+        return config && config.searchTab !== searchTab;
+      }),
+      map(([[searchTab, search]]) => ({searchTab, search}))
+    );
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  private setDefaultConfigSnapshot(config: DefaultViewConfig) {
+    if (config) {
+      this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({model: config}));
+    }
+  }
+
+  private resetDefaultConfigSnapshot() {
+    this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({}));
   }
 }

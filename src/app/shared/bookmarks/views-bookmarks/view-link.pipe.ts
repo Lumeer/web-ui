@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {BookmarkComponent} from './bookmark/bookmark.component';
-import {BookmarkToolbarComponent} from './bookmark-toolbar/bookmark-toolbar.component';
-import {ViewsBookmarksComponent} from './views-bookmarks/views-bookmarks.component';
-import {QueryItemsPipe} from './views-bookmarks/query-items.pipe';
-import {PipesModule} from '../pipes/pipes.module';
-import {ViewLinkPipe} from './views-bookmarks/view-link.pipe';
+import {Pipe, PipeTransform} from '@angular/core';
+import {View} from '../../../core/store/views/view';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
-@NgModule({
-  declarations: [BookmarkComponent, BookmarkToolbarComponent, ViewsBookmarksComponent, QueryItemsPipe, ViewLinkPipe],
-  exports: [BookmarkToolbarComponent, BookmarkComponent, ViewsBookmarksComponent],
-  imports: [CommonModule, PipesModule],
+@Pipe({
+  name: 'viewLink',
 })
-export class BookmarksModule {}
+export class ViewLinkPipe implements PipeTransform {
+  public transform(view: View, workspace: Workspace): any[] {
+    if (!view || !workspace) {
+      return null;
+    }
+    return ['/w', workspace.organizationCode, workspace.projectCode, 'view', {vc: view.code}];
+  }
+}

@@ -84,6 +84,7 @@ import {ArrayReversePipe} from './array/array-reverse.pipe';
 import {RoleHumanReadablePipe} from './role-human-readable.pipe';
 import {RemoveSuffixPipe} from './remove-last-characters.pipe';
 import {SafeStylePipe} from './safe-style.pipe';
+import {ContainsDeletedQueryItemPipe} from './contains-deleted-query-item.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -151,6 +152,7 @@ import {SafeStylePipe} from './safe-style.pipe';
     RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
+    ContainsDeletedQueryItemPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -218,6 +220,7 @@ import {SafeStylePipe} from './safe-style.pipe';
     RoleHumanReadablePipe,
     RemoveSuffixPipe,
     SafeStylePipe,
+    ContainsDeletedQueryItemPipe,
   ],
 })
 export class PipesModule {}

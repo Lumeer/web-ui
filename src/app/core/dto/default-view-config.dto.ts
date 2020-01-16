@@ -18,7 +18,7 @@
  */
 
 export interface DefaultViewConfigDto {
-  collectionId: string;
+  key: string;
   perspective: string;
   config: any;
   updatedAt?: number;

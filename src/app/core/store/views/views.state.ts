@@ -42,6 +42,7 @@ export interface ViewsState extends EntityState<View> {
   globalConfig: ViewGlobalConfig;
   defaultConfigs: Record<string, Record<string, DefaultViewConfig>>;
   defaultConfigsLoaded: boolean;
+  defaultConfigSnapshot?: DefaultViewConfig;
 }
 
 export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id});

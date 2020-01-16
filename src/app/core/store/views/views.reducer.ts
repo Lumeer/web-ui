@@ -51,6 +51,8 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return setDefaultConfig(state, action);
     case ViewsActionType.GET_DEFAULT_CONFIGS_SUCCESS:
       return updateDefaultConfigs(state, action.payload.configs);
+    case ViewsActionType.SET_DEFAULT_CONFIG_SNAPSHOT:
+      return {...state, defaultConfigSnapshot: action.payload.model};
     case ViewsActionType.CLEAR:
       return initialViewsState;
     default:
@@ -74,9 +76,9 @@ function setDefaultConfigInMap(
   }
 
   const perspectiveConfig = configs[newConfig.perspective];
-  const currentConfig = perspectiveConfig[newConfig.collectionId];
+  const currentConfig = perspectiveConfig[newConfig.key];
   if (!currentConfig || !currentConfig.updatedAt || currentConfig.updatedAt.getTime() < newConfig.updatedAt.getTime()) {
-    perspectiveConfig[newConfig.collectionId] = newConfig;
+    perspectiveConfig[newConfig.key] = newConfig;
   }
 }
 

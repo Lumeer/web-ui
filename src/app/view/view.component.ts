@@ -182,6 +182,7 @@ export class ViewComponent implements OnInit {
     this.store$.dispatch(
       new ViewsAction.Create({
         view,
+        nextAction: new ViewsAction.ResetDefaultConfigBySnapshot({perspective: view.perspective}),
         onSuccess: () => this.endSaveLoading(),
         onFailure: () => this.endSaveLoading(),
       })

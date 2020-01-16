@@ -159,7 +159,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
         this.store$.dispatch(
           new ViewsAction.SetDefaultConfig({
             model: {
-              collectionId: DEFAULT_SEARCH_ID,
+              key: DEFAULT_SEARCH_ID,
               perspective: Perspective.Search,
               config: {search: searchConfig},
             },

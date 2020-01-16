@@ -69,7 +69,7 @@ export interface ViewGlobalConfig {
 }
 
 export interface DefaultViewConfig {
-  collectionId: string;
+  key: string;
   perspective: string;
   config: ViewConfig;
   updatedAt?: Date;

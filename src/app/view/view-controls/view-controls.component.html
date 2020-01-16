@@ -60,7 +60,7 @@
                id="viewName"
                name="viewName"
                (blur)="onInputBlur(state.permissions.canManage)"
-               (keypress)="onViewNameKeyPress(!buttonsData.disabled, $event, state.permissions.canClone)"
+               (keypress)="onViewNameKeyPress(!buttonsData.disabled, $event, state.permissions.canClone, viewNameInput)"
                type="text"
                class="form-control"
                autocomplete="off"
