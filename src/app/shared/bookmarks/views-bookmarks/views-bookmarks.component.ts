@@ -22,7 +22,6 @@ import {combineLatest, Observable} from 'rxjs';
 import {View} from '../../../core/store/views/view';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {perspectiveIconsMap} from '../../../view/perspectives/perspective';
 import {QueryData} from '../../top-panel/search-box/util/query-data';
 import {selectAllCollections} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';

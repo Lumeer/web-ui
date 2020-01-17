@@ -87,7 +87,7 @@ export class ProjectSettingsComponent implements OnInit {
     const project = this.project$.getValue();
     const projectCode = project && project.code;
     if (organizationCode && projectCode) {
-      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'collections']);
+      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'tables']);
     }
   }
 

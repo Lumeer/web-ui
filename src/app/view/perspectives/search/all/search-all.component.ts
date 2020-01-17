@@ -67,7 +67,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   public switchToCollectionsTab() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'tables'], {
       queryParams: {action: QueryAction.CreateCollection},
     });
   }
