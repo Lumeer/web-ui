@@ -17,11 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, ViewContainerRef} from '@angular/core';
-
-@Directive({
-  selector: '[search-results]',
-})
-export class SearchResultsDirective {
-  constructor(public viewContainerRef: ViewContainerRef) {}
+export interface DefaultViewConfigDto {
+  key: string;
+  perspective: string;
+  config: any;
+  updatedAt?: number;
 }

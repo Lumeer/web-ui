@@ -425,7 +425,7 @@ export class PivotDataConverter {
     valueTitles?: string[],
     additionalNum: number = 0
   ): {headers: PivotDataHeader[]; maxIndex: number} {
-    const headers = [];
+    const headers: PivotDataHeader[] = [];
     const data = {maxIndex: 0};
     if (levels === 0) {
       if ((valueTitles || []).length > 0) {
@@ -434,6 +434,7 @@ export class PivotDataConverter {
             title,
             targetIndex: index + additionalNum,
             color: valueColors[index],
+            isValueHeader: true,
           }))
         );
         data.maxIndex = valueTitles.length - 1 + additionalNum;
@@ -447,10 +448,11 @@ export class PivotDataConverter {
             targetIndex: currentIndex,
             color: colors[0],
             constraint: constraints[0],
+            isValueHeader: false,
           });
           data.maxIndex = Math.max(data.maxIndex, currentIndex);
         } else {
-          headers.push({title, color: colors[0], constraint: constraints[0]});
+          headers.push({title, color: colors[0], constraint: constraints[0], isValueHeader: false});
         }
 
         this.iterateThroughPivotDataHeader(
@@ -490,6 +492,7 @@ export class PivotDataConverter {
           title,
           targetIndex: headerIndex + index,
           color: valueColors[index],
+          isValueHeader: true,
         }));
         additionalData.maxIndex = Math.max(additionalData.maxIndex, headerIndex + valueTitles.length - 1);
       }
@@ -505,6 +508,7 @@ export class PivotDataConverter {
           targetIndex: currentIndex,
           color: colors[level],
           constraint: constraints[level],
+          isValueHeader: false,
         });
         additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
@@ -512,6 +516,7 @@ export class PivotDataConverter {
           title,
           color: colors[level],
           constraint: constraints[level],
+          isValueHeader: false,
         });
       }
 

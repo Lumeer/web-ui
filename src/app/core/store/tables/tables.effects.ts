@@ -139,10 +139,9 @@ export class TablesEffects {
         mergeMap(() => this.store$.select(selectLinkTypesDictionary))
       ),
       this.store$.pipe(select(selectDocumentsByQuery)),
-      this.store$.pipe(select(selectViewCode)),
-      this.store$.pipe(select(selectViewCursor))
+      this.store$.pipe(select(selectViewCode))
     ),
-    mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode, viewCursor]) => {
+    mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode]) => {
       const {config, query, tableId} = action.payload;
 
       const queryStem = query.stems[0];
@@ -156,20 +155,22 @@ export class TablesEffects {
 
       linkTypeIds.forEach((linkTypeId, index) => {
         const linkType = linkTypesMap[linkTypeId];
-        const linkTypePart = createLinkPart(linkType, index * 2 + 1, action.payload.config);
+        if (linkType) {
+          const linkTypePart = createLinkPart(linkType, index * 2 + 1, action.payload.config);
 
-        const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, lastCollectionId);
-        const collection = collectionsMap[collectionId];
-        const collectionPart = createCollectionPart(
-          collection,
-          index * 2 + 2,
-          !viewCode && index === linkTypeIds.length - 1,
-          config
-        );
+          const collectionId = LinkTypeHelper.getOtherCollectionId(linkType, lastCollectionId);
+          const collection = collectionsMap[collectionId];
+          const collectionPart = createCollectionPart(
+            collection,
+            index * 2 + 2,
+            !viewCode && index === linkTypeIds.length - 1,
+            config
+          );
 
-        lastCollectionId = collectionId;
+          lastCollectionId = collectionId;
 
-        parts.push(linkTypePart, collectionPart);
+          parts.push(linkTypePart, collectionPart);
+        }
       });
 
       const documentIds = (documents || []).map(document => document.id);

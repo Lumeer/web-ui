@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 
 import {AppState} from '../../../../core/store/app.state';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, Subscription} from 'rxjs';
 import {selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
@@ -36,15 +36,17 @@ import {NotificationService} from '../../../../core/notifications/notification.s
 import {Query} from '../../../../core/store/navigation/query/query';
 import {selectViewsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {DEFAULT_SEARCH_ID, SearchConfig, SearchViewsConfig} from '../../../../core/store/searches/search';
-import {selectSearchConfig} from '../../../../core/store/searches/searches.state';
+import {selectSearchConfig, selectSearchId} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
+import {Perspective} from '../../perspective';
 
 @Component({
   selector: 'search-views',
   templateUrl: './search-views.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SearchViewsComponent {
+export class SearchViewsComponent implements OnInit, OnDestroy {
   @Input()
   public maxLines: number = -1;
 
@@ -56,7 +58,8 @@ export class SearchViewsComponent {
   public viewsConfig$: Observable<SearchViewsConfig>;
 
   private config: SearchConfig;
-  private searchId = DEFAULT_SEARCH_ID;
+  private searchId: string;
+  private subscriptions = new Subscription();
 
   constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>) {}
 
@@ -70,6 +73,12 @@ export class SearchViewsComponent {
       this.store$.pipe(select(selectAllLinkTypes)),
     ]).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
     this.viewsConfig$ = this.selectViewsConfig$();
+
+    this.subscribeSearchId();
+  }
+
+  private subscribeSearchId() {
+    this.subscriptions.add(this.store$.pipe(select(selectSearchId)).subscribe(searchId => (this.searchId = searchId)));
   }
 
   private selectViewsConfig$(): Observable<SearchViewsConfig> {
@@ -81,8 +90,21 @@ export class SearchViewsComponent {
   }
 
   public onConfigChange(viewsConfig: SearchViewsConfig) {
-    const config = {...this.config, views: viewsConfig};
-    this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config}));
+    if (this.searchId) {
+      const searchConfig = {...this.config, views: viewsConfig};
+      this.store$.dispatch(new SearchesAction.SetConfig({searchId: this.searchId, config: searchConfig}));
+      if (this.searchId === DEFAULT_SEARCH_ID) {
+        this.store$.dispatch(
+          new ViewsAction.SetDefaultConfig({
+            model: {
+              key: DEFAULT_SEARCH_ID,
+              perspective: Perspective.Search,
+              config: {search: searchConfig},
+            },
+          })
+        );
+      }
+    }
   }
 
   public onDeleteView(view: View) {
@@ -102,5 +124,9 @@ export class SearchViewsComponent {
 
   public deleteView(view: View) {
     this.store$.dispatch(new ViewsAction.Delete({viewId: view.id}));
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

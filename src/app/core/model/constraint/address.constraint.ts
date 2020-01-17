@@ -34,7 +34,7 @@ export class AddressConstraint implements Constraint {
   }
 
   public createInputDataValue(inputValue: string, value: any, constraintData?: ConstraintData): AddressDataValue {
-    return new AddressDataValue(value, this.config, constraintData, inputValue || '');
+    return new AddressDataValue(value, this.config, constraintData, inputValue);
   }
 
   public conditions(): QueryCondition[] {

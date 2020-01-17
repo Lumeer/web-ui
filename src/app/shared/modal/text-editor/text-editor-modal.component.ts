@@ -31,11 +31,11 @@ import {DialogType} from '../dialog-type';
 import {BsModalRef} from 'ngx-bootstrap';
 import {Subject} from 'rxjs';
 import {KeyCode} from '../../key-code';
-import {StripHtmlPipe} from '../../pipes/strip-html.pipe';
 import {isMacOS} from '../../utils/system.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {defaultTextEditorOptions} from './text-editor.utils';
 import {QuillEditorComponent} from 'ngx-quill';
+import {stripTextHtmlTags} from '../../utils/data.utils';
 
 export interface TextEditorChanged {
   html: string;
@@ -78,12 +78,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public readonly dialogType = DialogType;
   public insertTextPlaceholder: string;
 
-  constructor(
-    private bsModalRef: BsModalRef,
-    private element: ElementRef<HTMLElement>,
-    private stripHtml: StripHtmlPipe,
-    private i18n: I18n
-  ) {}
+  constructor(private bsModalRef: BsModalRef, private element: ElementRef<HTMLElement>, private i18n: I18n) {}
 
   private hideDialog() {
     this.bsModalRef.hide();
@@ -144,7 +139,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   }
 
   public ngOnInit() {
-    this.checkValid(this.stripHtml.transform(this.content));
+    this.checkValid(stripTextHtmlTags(this.content));
 
     this.insertTextPlaceholder = this.i18n({
       id: 'textEditor.insertTextPlaceholder',
@@ -159,6 +154,11 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
         this.quillEditorComponent.quillEditor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
       }
     });
+  }
+
+  @HostListener('click', ['$event'])
+  public onClick(event: MouseEvent) {
+    event.stopImmediatePropagation();
   }
 
   @HostListener('keydown', ['$event'])

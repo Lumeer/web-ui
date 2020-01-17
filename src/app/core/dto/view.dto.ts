@@ -23,8 +23,8 @@ import {ResourceDto} from './resource.dto';
 export interface ViewDto extends ResourceDto {
   perspective: string;
   query: QueryDto;
-  config: any; // TODO create DTO
-  authorRights?: {[collectionId: string]: string[]};
+  config: any;
+  authorRights?: Record<string, string[]>;
   favorite?: boolean;
   lastTimeUsed?: number;
 }

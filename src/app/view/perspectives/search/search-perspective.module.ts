@@ -26,13 +26,12 @@ import {SearchCollectionsComponent} from './collections/search-collections.compo
 import {SearchDocumentsModule} from './documents/search-documents.module';
 import {SearchPerspectiveRoutingModule} from './search-perspective-routing.module';
 import {SearchPerspectiveComponent} from './search-perspective.component';
-import {SearchResultsDirective} from './search-results.directive';
 import {EmptyViewsComponent} from './views/content/empty-views/empty-views.component';
 import {SearchViewsComponent} from './views/search-views.component';
 import {ViewDetailComponent} from './views/content/view-detail/view-detail.component';
-import {ContainsDeletedQueryItemPipe} from './views/content/view-detail/contains-deleted-query-item.pipe';
 import {SearchViewsContentComponent} from './views/content/search-views-content.component';
 import {CreateDocumentModalModule} from '../../../shared/modal/create-document/create-document-modal.module';
+import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guard';
 
 @NgModule({
   imports: [
@@ -48,14 +47,13 @@ import {CreateDocumentModalModule} from '../../../shared/modal/create-document/c
     SearchAllComponent,
     SearchCollectionsComponent,
     SearchPerspectiveComponent,
-    SearchResultsDirective,
     SearchViewsComponent,
     EmptyViewsComponent,
     ViewDetailComponent,
-    ContainsDeletedQueryItemPipe,
     SearchViewsContentComponent,
   ],
   entryComponents: [SearchAllComponent, SearchCollectionsComponent, SearchPerspectiveComponent, SearchViewsComponent],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
+  providers: [SearchPerspectiveRedirectGuard],
 })
 export class SearchPerspectiveModule {}

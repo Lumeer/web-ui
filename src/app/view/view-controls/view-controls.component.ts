@@ -33,16 +33,16 @@ import {NavigationExtras} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {debounceTime, map, tap} from 'rxjs/operators';
+import {debounceTime, map, take, tap} from 'rxjs/operators';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPerspective, selectSearchTab, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectPerspective, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {RouterAction} from '../../core/store/router/router.action';
-import {View, ViewConfig} from '../../core/store/views/view';
+import {View} from '../../core/store/views/view';
 import {
-  selectPerspectiveViewConfig,
+  selectCurrentView,
   selectViewConfigChanged,
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
@@ -52,6 +52,10 @@ import {Query} from '../../core/store/navigation/query/query';
 import {OptionsDropdownComponent} from '../../shared/dropdown/options/options-dropdown.component';
 import {ModalService} from '../../shared/modal/modal.service';
 import {KeyCode} from '../../shared/key-code';
+import {SearchesAction} from '../../core/store/searches/searches.action';
+import {SearchTab} from '../../core/store/navigation/search-tab';
+import {QueryParam} from '../../core/store/navigation/query-param';
+import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -79,7 +83,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public name: string;
 
-  public config$: Observable<ViewConfig>;
   public perspective$: Observable<Perspective>;
 
   public saveLoading$ = new BehaviorSubject(false);
@@ -89,7 +92,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private configChanged: boolean;
   private queryChanged: boolean;
   private currentPerspective: Perspective;
-  private searchTab?: string;
   private workspace: Workspace;
 
   public readonly perspectives = Object.values(Perspective);
@@ -105,9 +107,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToWorkspace());
-    this.subscriptions.add(this.subscribeToSearchTab());
-
-    this.config$ = this.store$.pipe(select(selectPerspectiveViewConfig));
 
     this.perspective$ = this.store$.pipe(
       select(selectPerspective),
@@ -117,10 +116,6 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToWorkspace(): Subscription {
     return this.store$.pipe(select(selectWorkspace)).subscribe(workspace => (this.workspace = workspace));
-  }
-
-  private subscribeToSearchTab(): Subscription {
-    return this.store$.pipe(select(selectSearchTab)).subscribe(tab => (this.searchTab = tab));
   }
 
   public onNameInput(name: string) {
@@ -249,9 +244,52 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     this.saveLoading$.next(loading);
   }
 
-  public onViewNameKeyPress(canSave: boolean, $event: KeyboardEvent, canClone: boolean) {
+  public onViewNameKeyPress(
+    canSave: boolean,
+    $event: KeyboardEvent,
+    canClone: boolean,
+    viewNameInput: HTMLInputElement
+  ) {
     if (canSave && ($event.code === KeyCode.Enter || $event.code === KeyCode.NumpadEnter)) {
       this.onSave(canClone);
+      viewNameInput.blur();
     }
+  }
+
+  public revertChanges() {
+    this.store$
+      .pipe(
+        select(selectCurrentView),
+        take(1)
+      )
+      .subscribe(view => {
+        if (!view || !this.workspace) {
+          return;
+        }
+        const workspacePath = [
+          'w',
+          this.workspace.organizationCode,
+          this.workspace.projectCode,
+          'view',
+          {vc: view.code},
+          view.perspective,
+        ];
+        switch (view.perspective) {
+          case Perspective.Search:
+            const searchConfig = view.config && view.config.search;
+            const searchPath = [...workspacePath, (searchConfig && searchConfig.searchTab) || SearchTab.All];
+            this.revertQueryWithUrl(searchPath, view.query);
+            this.store$.dispatch(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
+        }
+      });
+  }
+
+  private revertQueryWithUrl(path: any[], query: Query) {
+    this.store$.dispatch(
+      new RouterAction.Go({
+        path,
+        queryParams: {[QueryParam.Query]: convertQueryModelToString(query)},
+      })
+    );
   }
 }

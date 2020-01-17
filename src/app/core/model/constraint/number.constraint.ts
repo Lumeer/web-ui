@@ -34,7 +34,7 @@ export class NumberConstraint implements Constraint {
   }
 
   public createInputDataValue(inputValue: string, value: any): NumberDataValue {
-    return new NumberDataValue(value, this.config, inputValue || '');
+    return new NumberDataValue(value, this.config, inputValue);
   }
 
   public conditions(): QueryCondition[] {

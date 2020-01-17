@@ -21,9 +21,10 @@ import Big from 'big.js';
 import * as moment from 'moment';
 import {isNullOrUndefined} from './common.utils';
 import {resetUnusedMomentPart} from './date.utils';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
-const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code', 'b'];
+const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code', 'b', 'span'];
 
 export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true): string {
   const htmlWithoutTags = keepFormattingTags
@@ -94,4 +95,25 @@ export function convertToBig(value: any): Big {
   } catch (e) {
     return null;
   }
+}
+
+export function replaceWorkspacePathInUrl(url: string, workspace: Workspace): string {
+  if (!url || !workspace) {
+    return url;
+  }
+
+  const urlParts = url.split('/');
+  const workspaceIndex = urlParts.indexOf('w');
+  if (workspaceIndex === -1) {
+    return url;
+  }
+
+  if (workspace.organizationCode) {
+    urlParts[workspaceIndex + 1] = workspace.organizationCode;
+  }
+  if (workspace.projectCode) {
+    urlParts[workspaceIndex + 2] = workspace.projectCode;
+  }
+
+  return urlParts.join('/');
 }

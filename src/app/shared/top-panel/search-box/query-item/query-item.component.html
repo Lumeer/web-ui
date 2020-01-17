@@ -21,9 +21,9 @@
   </span>
 
   <div class="mr-1 d-inline-flex flex-grow-1 text-truncate text-nowrap align-items-center"
-       *ngIf="queryItem | queryItemAttribute as attribute">
+       *ngIf="attribute">
     <span
-      class="mx-1">{{conditionControl?.value | translateCondition:(queryItem | queryItemAttribute)}}</span>
+      class="mx-1">{{conditionControl?.value | translateCondition:attribute}}</span>
     <ng-container *ngFor="let control of conditionValuesControl.controls; let index = index">
       <ng-container
         *ngIf="index < (conditionControl?.value | conditionNumValues) && control.get('type') as typeControl">
@@ -46,7 +46,7 @@
 </div>
 
 <filter-builder *ngIf="queryItem | isAttributeItem"
-                [attribute]="queryItem | queryItemAttribute"
+                [attribute]="attribute"
                 [origin]="hostElement"
                 [condition]="conditionControl?.value"
                 [conditionValues]="conditionValuesControl?.value"

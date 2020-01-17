@@ -7,7 +7,7 @@ Cypress.Commands.add('visitAndWait', url => {
 });
 
 Cypress.Commands.add('visitSearchCollections', () => {
-  cy.visitAndWait(`/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/collections`);
+  cy.visitAndWait(`/w/${Cypress.env('organizationCode')}/${Cypress.env('projectCode')}/view/search/tables`);
 });
 
 Cypress.Commands.add('visitTable', collectionId => {

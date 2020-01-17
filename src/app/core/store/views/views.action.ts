@@ -21,7 +21,8 @@ import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {User} from '../users/user';
-import {View} from './view';
+import {DefaultViewConfig, View} from './view';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 export enum ViewsActionType {
   GET = '[Views] Get',
@@ -52,6 +53,16 @@ export enum ViewsActionType {
   REMOVE_FAVORITE = '[Views] Remove Favorite',
   REMOVE_FAVORITE_SUCCESS = '[Views] Remove Favorite :: Success',
   REMOVE_FAVORITE_FAILURE = '[Views] Remove Favorite :: Failure',
+
+  SET_DEFAULT_CONFIG = '[Views] Set Default Config',
+  SET_DEFAULT_CONFIG_SUCCESS = '[Views] Set Default Config :: Success',
+
+  RESET_DEFAULT_CONFIG_BY_SNAPSHOT = '[Views] Reset Default Config By Snapshot',
+
+  GET_DEFAULT_CONFIGS = '[Views] Get Default Configs',
+  GET_DEFAULT_CONFIGS_SUCCESS = '[Views] Get Default Configs :: Success',
+
+  SET_DEFAULT_CONFIG_SNAPSHOT = '[Views] Set Default Config Snapshot',
 
   RESET_VIEW_GLOBAL_CONFIG = '[Views] Reset View Global Config',
   SET_SIDEBAR_OPENED = '[Views] Set Sidebar Opened',
@@ -87,13 +98,15 @@ export namespace ViewsAction {
   export class Create implements Action {
     public readonly type = ViewsActionType.CREATE;
 
-    public constructor(public payload: {view: View; onSuccess?: (View) => void; onFailure?: () => void}) {}
+    public constructor(
+      public payload: {view: View; nextAction?: Action; onSuccess?: (View) => void; onFailure?: () => void}
+    ) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = ViewsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {view: View}) {}
+    public constructor(public payload: {view: View; nextAction?: Action}) {}
   }
 
   export class CreateFailure implements Action {
@@ -218,6 +231,42 @@ export namespace ViewsAction {
     public constructor(public payload: {viewId: string; error: any}) {}
   }
 
+  export class GetDefaultConfigs implements Action {
+    public readonly type = ViewsActionType.GET_DEFAULT_CONFIGS;
+
+    public constructor(public payload: {workspace: Workspace}) {}
+  }
+
+  export class GetDefaultConfigsSuccess implements Action {
+    public readonly type = ViewsActionType.GET_DEFAULT_CONFIGS_SUCCESS;
+
+    public constructor(public payload: {configs: DefaultViewConfig[]}) {}
+  }
+
+  export class SetDefaultConfig implements Action {
+    public readonly type = ViewsActionType.SET_DEFAULT_CONFIG;
+
+    public constructor(public payload: {model: DefaultViewConfig}) {}
+  }
+
+  export class SetDefaultConfigSuccess implements Action {
+    public readonly type = ViewsActionType.SET_DEFAULT_CONFIG_SUCCESS;
+
+    public constructor(public payload: {model: DefaultViewConfig}) {}
+  }
+
+  export class ResetDefaultConfigBySnapshot implements Action {
+    public readonly type = ViewsActionType.RESET_DEFAULT_CONFIG_BY_SNAPSHOT;
+
+    public constructor(public payload: {perspective: Perspective}) {}
+  }
+
+  export class SetDefaultConfigSnapshot implements Action {
+    public readonly type = ViewsActionType.SET_DEFAULT_CONFIG_SNAPSHOT;
+
+    public constructor(public payload: {model?: DefaultViewConfig}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = ViewsActionType.CLEAR;
   }
@@ -246,5 +295,11 @@ export namespace ViewsAction {
     | RemoveFavoriteSuccess
     | RemoveFavoriteFailure
     | SetSidebarOpened
+    | SetDefaultConfig
+    | ResetDefaultConfigBySnapshot
+    | SetDefaultConfigSuccess
+    | SetDefaultConfigSnapshot
+    | GetDefaultConfigs
+    | GetDefaultConfigsSuccess
     | Clear;
 }

@@ -26,7 +26,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
 export class WorkspaceDefaultUrlPipe implements PipeTransform {
   public transform(workspace: Workspace): any[] {
     if (workspace && workspace.organizationCode && workspace.projectCode) {
-      return ['/', 'w', workspace.organizationCode, workspace.projectCode, 'view', 'search', 'all'];
+      return ['/', 'w', workspace.organizationCode, workspace.projectCode, 'view', 'search'];
     }
     return ['/'];
   }

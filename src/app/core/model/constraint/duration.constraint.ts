@@ -34,7 +34,7 @@ export class DurationConstraint implements Constraint {
   }
 
   public createInputDataValue(inputValue: string, value: any, constraintData: ConstraintData): DurationDataValue {
-    return new DurationDataValue(value, this.config, constraintData, inputValue || '');
+    return new DurationDataValue(value, this.config, constraintData, inputValue);
   }
 
   public conditions(): QueryCondition[] {

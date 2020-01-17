@@ -22,11 +22,12 @@ import {CommonModule} from '@angular/common';
 import {BookmarkComponent} from './bookmark/bookmark.component';
 import {BookmarkToolbarComponent} from './bookmark-toolbar/bookmark-toolbar.component';
 import {ViewsBookmarksComponent} from './views-bookmarks/views-bookmarks.component';
-import {QueryColorPipe} from './views-bookmarks/query-color.pipe';
+import {QueryItemsPipe} from './views-bookmarks/query-items.pipe';
 import {PipesModule} from '../pipes/pipes.module';
+import {ViewLinkPipe} from './views-bookmarks/view-link.pipe';
 
 @NgModule({
-  declarations: [BookmarkComponent, BookmarkToolbarComponent, ViewsBookmarksComponent, QueryColorPipe],
+  declarations: [BookmarkComponent, BookmarkToolbarComponent, ViewsBookmarksComponent, QueryItemsPipe, ViewLinkPipe],
   exports: [BookmarkToolbarComponent, BookmarkComponent, ViewsBookmarksComponent],
   imports: [CommonModule, PipesModule],
 })

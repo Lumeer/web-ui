@@ -27,12 +27,13 @@ import {TableConfig} from '../tables/table.model';
 import {KanbanConfig} from '../kanbans/kanban';
 import {PivotConfig} from '../pivots/pivot';
 import {SearchConfig} from '../searches/search';
+import {MapConfig} from '../maps/map.model';
 
 export interface View extends Resource {
   perspective: Perspective;
   query: Query;
   config: ViewConfig;
-  authorRights?: {[collectionId: string]: string[]};
+  authorRights?: Record<string, string[]>;
   lastTimeUsed?: Date;
   favorite?: boolean;
 }
@@ -46,6 +47,7 @@ export interface ViewConfig {
   chart?: ChartConfig;
   kanban?: KanbanConfig;
   pivot?: PivotConfig;
+  map?: MapConfig;
 }
 
 export interface DetailConfig {
@@ -64,4 +66,11 @@ export type PerspectiveConfig =
 
 export interface ViewGlobalConfig {
   sidebarOpened?: boolean;
+}
+
+export interface DefaultViewConfig {
+  key: string;
+  perspective: string;
+  config: ViewConfig;
+  updatedAt?: Date;
 }

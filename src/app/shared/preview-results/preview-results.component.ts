@@ -116,7 +116,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   public switchToCollectionsTab() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'tables'], {
       queryParams: {action: QueryAction.CreateCollection},
     });
   }

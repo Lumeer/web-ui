@@ -20,7 +20,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute, PivotSortValue} from '../../../../core/store/pivots/pivot';
 import {PivotDataHeader} from '../util/pivot-data';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 @Pipe({
   name: 'pivotSubSortValues',
@@ -52,13 +51,13 @@ export class PivotSubSortValuesPipe implements PipeTransform {
     }
 
     const items = index >= 0 ? values.slice(0, index + 1) : [];
-    if (!this.isLastHeader(currentOtherSideHeaders)) {
-      return [...items, null];
+    if (this.isLastHeader(currentOtherSideHeaders)) {
+      return items;
     }
-    return items;
+    return [...items, null];
   }
 
   private isLastHeader(otherSideHeaders: PivotDataHeader[]): boolean {
-    return otherSideHeaders.length === 0 || isNotNullOrUndefined(otherSideHeaders[0].targetIndex);
+    return otherSideHeaders.length === 0 || otherSideHeaders[0].isValueHeader;
   }
 }

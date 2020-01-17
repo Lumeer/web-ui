@@ -150,7 +150,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   }
 
   public onShowAllClicked() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'collections'], {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'tables'], {
       queryParams: {[QueryParam.Query]: convertQueryModelToString(this.query)},
     });
   }

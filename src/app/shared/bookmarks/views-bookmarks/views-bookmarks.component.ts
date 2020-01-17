@@ -22,7 +22,6 @@ import {combineLatest, Observable} from 'rxjs';
 import {View} from '../../../core/store/views/view';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {perspectiveIconsMap} from '../../../view/perspectives/perspective';
 import {QueryData} from '../../top-panel/search-box/util/query-data';
 import {selectAllCollections} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
@@ -33,7 +32,6 @@ import {selectAllViews} from '../../../core/store/views/views.state';
 @Component({
   selector: 'views-bookmarks',
   templateUrl: './views-bookmarks.component.html',
-  styleUrls: ['./views-bookmarks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ViewsBookmarksComponent implements OnInit {
@@ -54,13 +52,5 @@ export class ViewsBookmarksComponent implements OnInit {
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),
     ]).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
-  }
-
-  public getIconForPerspective(perspective: string): string {
-    return (perspectiveIconsMap[perspective] || '').replace('fa-fw', '');
-  }
-
-  public getViewLink(view: View) {
-    return ['/w', this.workspace.organizationCode, this.workspace.projectCode, 'view', {vc: view.code}];
   }
 }

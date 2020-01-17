@@ -18,30 +18,15 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Search, SearchConfig} from './search';
+import {SearchConfig} from './search';
 
 export enum SearchesActionType {
-  ADD_SEARCH = '[Search] Add search',
-  REMOVE_SEARCH = '[Search] Remove search',
-
   SET_CONFIG = '[Search] Set config',
 
   CLEAR = '[Search] Clear',
 }
 
 export namespace SearchesAction {
-  export class AddSearch implements Action {
-    public readonly type = SearchesActionType.ADD_SEARCH;
-
-    public constructor(public payload: {search: Search}) {}
-  }
-
-  export class RemoveSearch implements Action {
-    public readonly type = SearchesActionType.REMOVE_SEARCH;
-
-    public constructor(public payload: {searchId: string}) {}
-  }
-
   export class SetConfig implements Action {
     public readonly type = SearchesActionType.SET_CONFIG;
 
@@ -52,5 +37,5 @@ export namespace SearchesAction {
     public readonly type = SearchesActionType.CLEAR;
   }
 
-  export type All = AddSearch | RemoveSearch | SetConfig | Clear;
+  export type All = SetConfig | Clear;
 }

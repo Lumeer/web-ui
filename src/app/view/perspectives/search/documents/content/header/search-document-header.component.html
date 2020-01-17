@@ -11,7 +11,7 @@
      *ngIf="collection" aria-hidden="true"></i>
 </div>
 
-<div class="ml-1 flex-grow-1 text-truncate">
+<div class="ml-1 flex-grow-1">
   <div class="d-flex flex-row">
     <span *ngIf="collection" [style.color]="collection?.color">{{collection?.name}}</span>
     <data-input-preview class="ml-3" [constraint]="defaultConstraint"

@@ -42,8 +42,9 @@ export interface SearchViewsConfig {
   size: SizeType;
 }
 
-export function createDefaultSearchConfig(): SearchConfig {
+export function createDefaultSearchConfig(searchTab?: SearchTab): SearchConfig {
   return {
+    searchTab: searchTab || SearchTab.All,
     documents: {size: SizeType.L},
     views: {size: SizeType.L},
   };

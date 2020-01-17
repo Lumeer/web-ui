@@ -1,30 +1,30 @@
 <div class="container-fluid d-block col-12 col-lg-10 col-xl-9">
   <ul class="nav nav-tabs">
     <li role="presentation" class="nav-item">
-      <a [routerLink]="'all'"
-         [queryParams]="{q: stringifyQuery()}"
-         [class.active]="isLinkActive('all')"
+      <a [routerLink]="searchTab.All"
+         [queryParams]="{q: stringQuery}"
+         [class.active]="isLinkActive(searchTab.All)"
          class="nav-link"
          i18n="@@search.tab.all">All</a>
     </li>
     <li role="presentation" class="nav-item">
-      <a [routerLink]="'views'"
-         [queryParams]="{q: stringifyQuery()}"
-         [class.active]="isLinkActive('views')"
+      <a [routerLink]="searchTab.Views"
+         [queryParams]="{q: stringQuery}"
+         [class.active]="isLinkActive(searchTab.Views)"
          class="nav-link"
          i18n="@@search.tab.views">Views</a>
     </li>
     <li role="presentation" class="nav-item" data-tour="tables-tab">
-      <a [routerLink]="'collections'"
-         [queryParams]="{q: stringifyQuery()}"
-         [class.active]="isLinkActive('collections')"
+      <a [routerLink]="searchTab.Collections"
+         [queryParams]="{q: stringQuery}"
+         [class.active]="isLinkActive(searchTab.Collections)"
          class="nav-link"
          i18n="@@search.tab.collections">Tables</a>
     </li>
     <li role="presentation" class="nav-item">
-      <a [routerLink]="'records'"
-         [queryParams]="{q: stringifyQuery()}"
-         [class.active]="isLinkActive('records')"
+      <a [routerLink]="searchTab.Records"
+         [queryParams]="{q: stringQuery}"
+         [class.active]="isLinkActive(searchTab.Records)"
          class="nav-link"
          i18n="@@search.tab.documents">Records</a>
     </li>

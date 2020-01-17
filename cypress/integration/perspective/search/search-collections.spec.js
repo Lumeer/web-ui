@@ -7,7 +7,7 @@ describe('Search Perspective :: Collections', () => {
 
     cy.get('[data-test="empty-project-header"]').should('be.visible');
     cy.get('[data-test="empty-data-create-collection"]').click();
-    cy.url().should('contain', '/view/search/collections');
+    cy.url().should('contain', '/view/search/tables');
 
     cy.get('[data-test="icon-picker-dropdown"]').click();
     cy.get('[data-test="color-picker-saturated-color"]')

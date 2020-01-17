@@ -18,11 +18,10 @@
  */
 
 import {PermissionType} from '../permissions/permissions';
-import {View} from './view';
+import {DefaultViewConfig, View} from './view';
 import {ViewsAction, ViewsActionType} from './views.action';
 import {initialViewsState, viewsAdapter, ViewsState} from './views.state';
-import {DocumentsActionType} from '../documents/documents.action';
-import {documentsAdapter} from '../documents/documents.state';
+import {deepObjectCopy} from '../../../shared/utils/common.utils';
 
 export function viewsReducer(state: ViewsState = initialViewsState, action: ViewsAction.All): ViewsState {
   switch (action.type) {
@@ -48,11 +47,48 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: false}}, state);
     case ViewsActionType.REMOVE_FAVORITE_FAILURE:
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
+    case ViewsActionType.SET_DEFAULT_CONFIG_SUCCESS:
+      return setDefaultConfig(state, action);
+    case ViewsActionType.GET_DEFAULT_CONFIGS_SUCCESS:
+      return updateDefaultConfigs(state, action.payload.configs);
+    case ViewsActionType.SET_DEFAULT_CONFIG_SNAPSHOT:
+      return {...state, defaultConfigSnapshot: action.payload.model};
     case ViewsActionType.CLEAR:
       return initialViewsState;
     default:
       return state;
   }
+}
+
+function setDefaultConfig(state: ViewsState, action: ViewsAction.SetDefaultConfigSuccess): ViewsState {
+  const defaultConfigs = deepObjectCopy(state.defaultConfigs);
+  setDefaultConfigInMap(defaultConfigs, action.payload.model);
+
+  return {...state, defaultConfigs};
+}
+
+function setDefaultConfigInMap(
+  configs: Record<string, Record<string, DefaultViewConfig>>,
+  newConfig: DefaultViewConfig
+) {
+  if (!configs[newConfig.perspective]) {
+    configs[newConfig.perspective] = {};
+  }
+
+  const perspectiveConfig = configs[newConfig.perspective];
+  const currentConfig = perspectiveConfig[newConfig.key];
+  if (!currentConfig || !currentConfig.updatedAt || currentConfig.updatedAt.getTime() < newConfig.updatedAt.getTime()) {
+    perspectiveConfig[newConfig.key] = newConfig;
+  }
+}
+
+function updateDefaultConfigs(state: ViewsState, configs: DefaultViewConfig[]): ViewsState {
+  const defaultConfigs = (configs || []).reduce((map, config) => {
+    setDefaultConfigInMap(map, config);
+    return map;
+  }, {});
+
+  return {...state, defaultConfigs, defaultConfigsLoaded: true};
 }
 
 function addViews(state: ViewsState, views: View[]): ViewsState {

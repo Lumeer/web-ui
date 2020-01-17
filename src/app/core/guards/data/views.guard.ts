@@ -84,7 +84,7 @@ export class ViewsGuard implements Resolve<View[]> {
   }
 
   private onViewNotFound(organizationCode: string, projectCode: string) {
-    this.router.navigate(['w', organizationCode, projectCode, 'view', 'search', 'views']);
+    this.router.navigate(['w', organizationCode, projectCode, 'view', 'search']);
     const message = this.i18n({id: 'view.not.found', value: 'View not found'});
     this.notificationService.error(message);
   }

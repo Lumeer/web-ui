@@ -27,7 +27,7 @@ import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPreviousUrl} from '../../core/store/navigation/navigation.state';
+import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
@@ -37,6 +37,8 @@ import {
 import {Project} from '../../core/store/projects/project';
 import {selectProjectsForWorkspace} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
+import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
+import {Workspace} from '../../core/store/navigation/workspace';
 
 @Component({
   templateUrl: './organization-settings.component.html',
@@ -52,7 +54,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
 
   private firstProject: Project = null;
   private previousUrl: string;
-
+  private workspace: Workspace;
   private subscriptions = new Subscription();
 
   constructor(
@@ -113,7 +115,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
   public goBack() {
     this.store$.dispatch(
       new NavigationAction.NavigateToPreviousUrl({
-        previousUrl: this.previousUrl,
+        previousUrl: replaceWorkspacePathInUrl(this.previousUrl, this.workspace),
         organizationCode: this.organization$.getValue().code,
         projectCode: this.firstProject ? this.firstProject.code : null,
       })
@@ -152,6 +154,15 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
           take(1)
         )
         .subscribe(url => (this.previousUrl = url))
+    );
+
+    this.subscriptions.add(
+      this.store$
+        .pipe(
+          select(selectWorkspace),
+          filter(workspace => !!workspace)
+        )
+        .subscribe(workspace => (this.workspace = workspace))
     );
 
     this.store$.dispatch(new OrganizationsAction.GetCodes());

@@ -35,6 +35,7 @@ import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {selectProjectByWorkspace, selectProjectsCodesForOrganization} from '../../core/store/projects/projects.state';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
+import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -86,7 +87,7 @@ export class ProjectSettingsComponent implements OnInit {
     const project = this.project$.getValue();
     const projectCode = project && project.code;
     if (organizationCode && projectCode) {
-      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'collections']);
+      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'tables']);
     }
   }
 
@@ -114,7 +115,7 @@ export class ProjectSettingsComponent implements OnInit {
   public goBack(): void {
     this.store$.dispatch(
       new NavigationAction.NavigateToPreviousUrl({
-        previousUrl: this.previousUrl,
+        previousUrl: replaceWorkspacePathInUrl(this.previousUrl, this.workspace),
         organizationCode: this.workspace.organizationCode,
         projectCode: this.workspace.projectCode,
       })

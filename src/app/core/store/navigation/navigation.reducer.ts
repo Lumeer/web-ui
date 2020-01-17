@@ -27,7 +27,7 @@ import {RouterStateUrl} from '../router/lumeer-router-state-serializer';
 import {initialNavigationState, NavigationState} from './navigation.state';
 import {QueryParam} from './query-param';
 import {convertQueryStringToModel} from './query/query.converter';
-import {SearchTab, searchTabsMap} from './search-tab';
+import {parseSearchTabFromUrl, SearchTab, searchTabsMap} from './search-tab';
 import {convertStringToViewCursor} from './view-cursor/view-cursor';
 
 function onRouterNavigation(state: NavigationState, action: RouterNavigatedAction<RouterStateUrl>): NavigationState {
@@ -60,7 +60,7 @@ function onRouterNavigation(state: NavigationState, action: RouterNavigatedActio
     perspective: perspectivesMap[extractPerspectiveIdFromUrl(url)],
     viewName: queryParams['viewName'],
     viewCursor: deepObjectsEquals(viewCursor, state.viewCursor) ? state.viewCursor : viewCursor,
-    searchTab: tryToParseSearchTabPath(url),
+    searchTab: parseSearchTabFromUrl(url),
     previousUrl: state.url,
     url,
   };
@@ -75,28 +75,6 @@ function extractPerspectiveIdFromUrl(url: string): string {
     const regex = new RegExp(`^(${perspectiveNames}).*`);
     return perspectiveSegment.replace(regex, '$1');
   }
-}
-
-function tryToParseSearchTabPath(url: string): SearchTab | null {
-  let questionIndex = url.indexOf('?');
-  if (questionIndex === -1) {
-    questionIndex = url.length;
-  }
-
-  const paths = url.substring(0, questionIndex).split('/');
-  let currentIndex = paths.indexOf('w');
-  if (currentIndex !== -1 && paths.length > currentIndex + 3) {
-    currentIndex += 3; // skip workspace paths
-
-    if (paths[currentIndex].startsWith('view') && paths.length > currentIndex++) {
-      const perspective = perspectivesMap[paths[currentIndex]];
-      if (perspective === Perspective.Search && paths.length > currentIndex++) {
-        return searchTabsMap[paths[currentIndex]];
-      }
-    }
-  }
-
-  return null;
 }
 
 function onRouterCancel(state: NavigationState, action: RouterCancelAction<AppState>): NavigationState {

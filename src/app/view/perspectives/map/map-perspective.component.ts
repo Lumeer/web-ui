@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild}
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, map, take, withLatestFrom} from 'rxjs/operators';
+import {filter, take, withLatestFrom} from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -36,14 +36,9 @@ import {
 } from '../../../core/store/maps/maps.state';
 import {selectMapPosition, selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
-import {isAnyCollectionQuery} from '../../../core/store/navigation/query/query.util';
 import {View} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {
-  selectCurrentView,
-  selectPerspectiveViewConfig,
-  selectSidebarOpened,
-} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened, selectViewConfig} from '../../../core/store/views/views.state';
 import {MapContentComponent} from './content/map-content.component';
 
 @Component({
@@ -91,10 +86,10 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   private initMap(mapId: string) {
     this.store$
       .pipe(
-        select(selectPerspectiveViewConfig),
+        select(selectViewConfig),
         take(1)
       )
-      .subscribe(config => this.createMap(mapId, config));
+      .subscribe(config => this.createMap(mapId, config && config.map));
   }
 
   private createMap(mapId: string, viewConfig: MapConfig) {

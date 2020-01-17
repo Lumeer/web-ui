@@ -33,7 +33,6 @@ import {selectCollectionByWorkspace} from '../../core/store/collections/collecti
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
-import {SearchTab} from '../../core/store/navigation/search-tab';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
@@ -42,6 +41,7 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
+import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -132,10 +132,9 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
   public onBack(): void {
     this.store$.dispatch(
       new NavigationAction.NavigateToPreviousUrl({
-        previousUrl: this.previousUrl,
+        previousUrl: replaceWorkspacePathInUrl(this.previousUrl, this.workspace),
         organizationCode: this.workspace.organizationCode,
         projectCode: this.workspace.projectCode,
-        searchTab: SearchTab.Collections,
       })
     );
   }

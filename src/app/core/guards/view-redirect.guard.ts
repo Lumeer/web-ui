@@ -18,10 +18,17 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  NavigationExtras,
+  Router,
+  RouterStateSnapshot,
+  UrlTree,
+} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {map, skipWhile, switchMap, take, tap, mergeMap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {map, mergeMap, skipWhile, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {convertQueryModelToString} from '../store/navigation/query/query.converter';
 import {ViewsAction} from '../store/views/views.action';
@@ -30,6 +37,9 @@ import {Perspective} from '../../view/perspectives/perspective';
 import {WorkspaceService} from '../../workspace/workspace.service';
 import {Organization} from '../store/organizations/organization';
 import {Project} from '../store/projects/project';
+import {SearchTab} from '../store/navigation/search-tab';
+import {View} from '../store/views/view';
+import {selectSearchById} from '../store/searches/searches.state';
 
 @Injectable()
 export class ViewRedirectGuard implements CanActivate {
@@ -39,7 +49,7 @@ export class ViewRedirectGuard implements CanActivate {
     private workspaceService: WorkspaceService
   ) {}
 
-  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UrlTree> {
     const organizationCode = next.paramMap.get('organizationCode');
     const projectCode = next.paramMap.get('projectCode');
     const viewCode = next.paramMap.get('vc');
@@ -49,7 +59,7 @@ export class ViewRedirectGuard implements CanActivate {
       .pipe(mergeMap(({organization, project}) => this.canActivateView(organization, project, viewCode)));
   }
 
-  private canActivateView(organization: Organization, project: Project, viewCode: string): Observable<boolean> {
+  private canActivateView(organization: Organization, project: Project, viewCode: string): Observable<UrlTree> {
     return this.store$.pipe(
       select(selectViewsLoaded),
       tap(loaded => {
@@ -61,7 +71,7 @@ export class ViewRedirectGuard implements CanActivate {
       skipWhile(loaded => !loaded),
       switchMap(() => this.store$.pipe(select(selectViewByCode(viewCode)))),
       take(1),
-      map(view => {
+      mergeMap(view => {
         const perspective = view && view.perspective ? view.perspective : Perspective.Search;
         const query = view ? convertQueryModelToString(view.query) : null;
 
@@ -71,9 +81,26 @@ export class ViewRedirectGuard implements CanActivate {
         }
         viewPath.push(perspective);
 
-        this.router.navigate(viewPath, {queryParams: {q: query}});
+        const extras: NavigationExtras = {queryParams: {q: query}};
+        if (perspective === Perspective.Search) {
+          return this.redirectToSearchPerspective(view, viewPath, extras);
+        }
 
-        return false;
+        return of(this.router.createUrlTree(viewPath, extras));
+      })
+    );
+  }
+
+  private redirectToSearchPerspective(view: View, viewPath: any[], extras?: NavigationExtras): Observable<UrlTree> {
+    return this.store$.pipe(
+      select(selectSearchById(view.code)),
+      take(1),
+      map(search => {
+        const viewConfig = view && view.config && view.config.search;
+        viewPath.push(
+          (search && search.config && search.config.searchTab) || (viewConfig && viewConfig.searchTab) || SearchTab.All
+        );
+        return this.router.createUrlTree(viewPath, extras);
       })
     );
   }

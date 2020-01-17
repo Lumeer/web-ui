@@ -130,7 +130,7 @@ function numberOfTags(value: string): number {
   return match ? match.length : 0;
 }
 
-function numberOfPTags(value: string): number {
-  const match = value.match(/<p>(.*)<\/p>/g);
+export function numberOfPTags(value: string): number {
+  const match = value.match(/<p.*?>.+?<\/p>/g);
   return match ? match.length : 0;
 }

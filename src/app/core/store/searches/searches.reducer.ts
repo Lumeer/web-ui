@@ -25,12 +25,8 @@ export function searchesReducer(
   action: SearchesAction.All
 ): SearchesState {
   switch (action.type) {
-    case SearchesActionType.ADD_SEARCH:
-      return searchesAdapter.addOne(action.payload.search, state);
-    case SearchesActionType.REMOVE_SEARCH:
-      return searchesAdapter.removeOne(action.payload.searchId, state);
     case SearchesActionType.SET_CONFIG:
-      return searchesAdapter.updateOne({id: action.payload.searchId, changes: {config: action.payload.config}}, state);
+      return searchesAdapter.upsertOne({id: action.payload.searchId, config: action.payload.config}, state);
     case SearchesActionType.CLEAR:
       return initialSearchesState;
     default:

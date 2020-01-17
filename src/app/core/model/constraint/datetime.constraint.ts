@@ -34,7 +34,7 @@ export class DateTimeConstraint implements Constraint {
   }
 
   public createInputDataValue(inputValue: string, value: any): DateTimeDataValue {
-    return new DateTimeDataValue(value, this.config, inputValue || '');
+    return new DateTimeDataValue(value, this.config, inputValue);
   }
 
   public conditions(): QueryCondition[] {

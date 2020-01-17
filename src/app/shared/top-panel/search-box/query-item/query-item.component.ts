@@ -34,12 +34,17 @@ import {
 
 import {QueryItem} from './model/query-item';
 import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
 import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
 import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
 import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
-import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {SelectConstraintConfig, UserConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
+import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
+import {AttributeQueryItem} from './model/attribute.query-item';
+import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
+import {Attribute} from '../../../../core/store/collections/collection';
 
 @Component({
   selector: 'query-item',
@@ -75,6 +80,8 @@ export class QueryItemComponent implements OnInit, OnChanges {
   @ViewChild(FilterBuilderComponent, {static: false})
   public filterBuilderComponent: FilterBuilderComponent;
 
+  public attribute: Attribute;
+
   constructor(public hostElement: ElementRef) {}
 
   public get conditionControl(): AbstractControl {
@@ -87,6 +94,29 @@ export class QueryItemComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     this.cursorPointer = this.isAttributeType();
+    this.attribute = this.createAndModifyConstraint();
+  }
+
+  private createAndModifyConstraint(): Attribute {
+    const attribute =
+      (<AttributeQueryItem>this.queryItem).attribute || (<LinkAttributeQueryItem>this.queryItem).attribute;
+    if (!attribute || !attribute.constraint) {
+      return attribute;
+    }
+
+    const constraint = attribute.constraint;
+    switch (constraint.type) {
+      case ConstraintType.Select:
+        const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
+        const selectConstraint = new SelectConstraint(selectConfig);
+        return {...attribute, constraint: selectConstraint};
+      case ConstraintType.User:
+        const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
+        const userConstraint = new UserConstraint(userConfig);
+        return {...attribute, constraint: userConstraint};
+      default:
+        return attribute;
+    }
   }
 
   public ngOnInit() {

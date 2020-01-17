@@ -18,17 +18,17 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraintConfig, SelectConstraintOption} from '../../../../core/model/data/constraint-config';
+import {View} from '../../../core/store/views/view';
+import {Workspace} from '../../../core/store/navigation/workspace';
 
 @Pipe({
-  name: 'selectOptionIsValid',
+  name: 'viewLink',
 })
-export class SelectOptionIsValidPipe implements PipeTransform {
-  public transform(option: SelectConstraintOption, config: SelectConstraintConfig, length: number): boolean {
-    if (config && !config.multi && length > 1) {
-      return false;
+export class ViewLinkPipe implements PipeTransform {
+  public transform(view: View, workspace: Workspace): any[] {
+    if (!view || !workspace) {
+      return null;
     }
-
-    return ((config && config.options) || []).some(definedOption => definedOption.value === option.value);
+    return ['/w', workspace.organizationCode, workspace.projectCode, 'view', {vc: view.code}];
   }
 }
