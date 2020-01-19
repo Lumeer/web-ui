@@ -91,8 +91,8 @@
          title="Changes are not saved yet" i18n-title="@@view.changes.not.saved">
       </i>
       <span class="text-warning" i18n="@@view.changes.not.saved">Changes are not saved yet!</span>
-      <span *ngIf="!buttonsData.disabled" class="btn-link text-primary ml-1 cursor-pointer" (click)="revertChanges()"
-            i18n="@@view.changes.not.saved.revert">Revert changes</span>
+      <span *ngIf="!buttonsData.disabled" class="btn-link text-success ml-1 cursor-pointer text-underline" (click)="revertChanges()"
+            i18n="@@view.changes.not.saved.undo">Undo changes</span>
     </div>
   </ng-container>
 </ng-container>
