@@ -36,7 +36,7 @@ export function resetUnusedMomentPart(date: moment.Moment, format: string): mome
     dateCopy = resetYear(dateCopy);
   }
 
-  if (!dateTimeOptions.month && !dateTimeOptions.week) {
+  if (!dateTimeOptions.month && !dateTimeOptions.week && !dateTimeOptions.quarter) {
     dateCopy = resetMonth(dateCopy);
   }
 

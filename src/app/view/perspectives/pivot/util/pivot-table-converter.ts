@@ -35,6 +35,8 @@ import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
+import {Constraint} from '../../../../core/model/constraint';
+import {NumberConstraint} from '../../../../core/model/constraint/number.constraint';
 
 interface HeaderGroupInfo {
   background: string;
@@ -901,7 +903,7 @@ function sortPivotDataHeadersRecursive(
     return headers;
   }
   const sort = sorts && sorts[index];
-  const constraint = ((headers || [])[0] && (headers || [])[0].constraint) || new UnknownConstraint();
+  const constraint = getConstraintForSort(sort, headers);
   const valuesMap = createHeadersValuesMap(headers, sort, otherSideHeaders, values, valueTitles, isRows);
   return headers
     .map(header => ({
@@ -925,6 +927,14 @@ function sortPivotDataHeadersRecursive(
       const multiplier = !sort || sort.asc ? 1 : -1;
       return r1Value.compareTo(r2Value) * multiplier;
     });
+}
+
+function getConstraintForSort(sort: PivotSort, headers: PivotDataHeader[]): Constraint {
+  if (((sort && sort.list && sort.list.values) || []).length > 0) {
+    // sort is done by values in columns
+    return new NumberConstraint({});
+  }
+  return ((headers || [])[0] && (headers || [])[0].constraint) || new UnknownConstraint();
 }
 
 function isValuesHeaders(headers: PivotDataHeader[], valueTitles: string[]): boolean {
