@@ -195,9 +195,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it-collections/content/post-it/post-it-collection.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit>
             <trans-unit id="search.input.placeholder" datatype="html">
                 <source>Type anything you search for...</source>
-                <target>
-                    <x id="ICU" equiv-text="{queryItems.length, select, 0 {...} other {...}}"/>
-                </target>
+                <target>Napište cokoliv, co hledáte...</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             
