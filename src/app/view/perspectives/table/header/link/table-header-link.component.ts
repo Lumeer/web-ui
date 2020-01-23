@@ -48,6 +48,9 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public embedded: boolean;
+
   public collections$: Observable<Collection[]>;
   public linkType$: Observable<LinkType>;
 

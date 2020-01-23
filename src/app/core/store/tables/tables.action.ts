@@ -51,12 +51,6 @@ export enum TablesActionType {
   SYNC_COLUMNS = '[Tables] Sync Columns',
   UPDATE_COLUMNS = '[Tables] Update Columns',
 
-  GROUP_BY_COLUMN = '[Tables] Group By Column',
-  SORT_BY_COLUMN = '[Tables] Sort By Column',
-
-  LOAD_ROWS = '[Tables] Load Rows',
-  DISPOSE_ROWS = '[Tables] Dispose Rows',
-
   SYNC_PRIMARY_ROWS = '[Tables] Sync Primary Rows',
   SYNC_LINKED_ROWS = '[Tables] Sync Linked Rows',
   ADD_PRIMARY_ROWS = '[Tables] Add Primary Rows',
@@ -65,14 +59,11 @@ export enum TablesActionType {
   CLEAN_ROWS = '[Tables] Clean Rows',
   ORDER_PRIMARY_ROWS = '[Tables] Order Primary Rows',
 
-  ADD_ROWS = '[Tables] Add Rows',
   ADD_LINKED_ROWS = '[Tables] Add Linked Rows',
   REPLACE_ROWS = '[Tables] Replace Rows',
   MOVE_ROW_UP = '[Tables] Move Row Up',
   MOVE_ROW_DOWN = '[Tables] Move Row Down',
-  UNLINK_ROW = '[Tables] Unlink Row',
   REMOVE_ROW = '[Tables] Remove Row',
-  SELECT_ROW = '[Tables] Select Row',
   CLONE_ROW = '[Tables] Clone Row',
 
   INDENT_ROW = '[Tables] Indent Row',
@@ -83,18 +74,12 @@ export enum TablesActionType {
 
   EDIT_SELECTED_CELL = '[Tables] Edit Selected Cell',
   REMOVE_SELECTED_CELL = '[Tables] Remove Selected Cell',
-  COPY_CELL = '[Tables] Copy Cell',
-  PASTE_CELL = '[Tables] Paste Cell',
-  MOVE_CELL = '[Tables] Move Cell',
 
   SET_CURSOR = '[Tables] Set Cursor',
   MOVE_CURSOR = '[Tables] Move Cursor',
   USE_VIEW_CURSOR = '[Tables] Use View Cursor',
 
   SET_EDITED_ATTRIBUTE = '[Tables] Set Edited Attribute',
-
-  ADD_FUNCTION = '[Tables] Add Function',
-  REMOVE_FUNCTION = '[Tables] Remove Function',
 }
 
 export namespace TablesAction {
@@ -107,7 +92,7 @@ export namespace TablesAction {
   export class CreateTable implements Action {
     public readonly type = TablesActionType.CREATE_TABLE;
 
-    public constructor(public payload: {tableId: string; query: Query; config: TableConfig}) {}
+    public constructor(public payload: {tableId: string; query: Query; config: TableConfig; embedded?: boolean}) {}
   }
 
   export class AddTable implements Action {
@@ -131,7 +116,7 @@ export namespace TablesAction {
   export class SetConfig implements Action {
     public readonly type = TablesActionType.SET_CONFIG;
 
-    public constructor(public payload: {config: TableConfig}) {}
+    public constructor(public payload: {tableId: string; config: TableConfig}) {}
   }
 
   export class CreatePart implements Action {

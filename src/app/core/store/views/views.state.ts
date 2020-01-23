@@ -185,11 +185,17 @@ export const selectDefaultViewConfig = (perspective: Perspective, key: string) =
   createSelector(
     selectViewsState,
     state => {
-      const configsByPerspective = state.defaultConfigs[perspective];
-      if (configsByPerspective) {
-        return configsByPerspective[key];
-      }
-      return null;
+      const configsByPerspective = state.defaultConfigs[perspective] || {};
+      return key && configsByPerspective[key];
+    }
+  );
+
+export const selectDefaultViewConfigs = (perspective: Perspective, keys: string[]) =>
+  createSelector(
+    selectViewsState,
+    state => {
+      const configsByPerspective = state.defaultConfigs[perspective] || {};
+      return keys.map(key => configsByPerspective[key]).filter(config => !!config);
     }
   );
 

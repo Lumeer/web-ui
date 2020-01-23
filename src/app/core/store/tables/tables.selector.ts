@@ -19,14 +19,7 @@
 
 import {createSelector} from '@ngrx/store';
 import {selectDocumentsDictionary} from '../documents/documents.state';
-import {
-  areTableBodyCursorsEqual,
-  areTableCursorsEqual,
-  areTableHeaderCursorsEqual,
-  TableBodyCursor,
-  TableCursor,
-} from './table-cursor';
-import {DEFAULT_TABLE_ID} from './table.model';
+import {areTableCursorsEqual, TableBodyCursor, TableCursor} from './table-cursor';
 import {
   calculateRowHierarchyLevel,
   countLinkedRows,
@@ -35,7 +28,7 @@ import {
   findTableRow,
   isTableRowStriped,
 } from './table.utils';
-import {EditedAttribute, selectTablesDictionary, selectTablesState} from './tables.state';
+import {EditedAttribute, selectTable, selectTablesDictionary, selectTablesState} from './tables.state';
 
 export const selectTableById = (tableId: string) =>
   createSelector(
@@ -43,10 +36,8 @@ export const selectTableById = (tableId: string) =>
     tablesDictionary => tablesDictionary[tableId]
   );
 
-export const selectDefaultTable = selectTableById(DEFAULT_TABLE_ID);
-
 export const selectTableConfig = createSelector(
-  selectDefaultTable,
+  selectTable,
   table => table && table.config
 );
 

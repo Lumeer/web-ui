@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import isEqual from 'lodash/isEqual';
-import omitBy from 'lodash/omitBy';
-import isNil from 'lodash/isNil';
 import cloneDeep from 'lodash/cloneDeep';
 import {removeAccent} from './string.utils';
 
@@ -49,11 +47,54 @@ export function toNumber(value: any): number {
 }
 
 export function deepObjectsEquals(object1: any, object2: any): boolean {
-  return isEqual(cleanObject(object1), cleanObject(object2));
+  return isEqual(removeUndefinedProperties(object1), removeUndefinedProperties(object2));
 }
 
-export function cleanObject(object: any): any {
-  return isObject(object) ? omitBy(object, isNil) : object;
+function removeUndefinedProperties(value: any): any {
+  if (isNullOrUndefined(value)) {
+    return value;
+  }
+  if (isArray(value)) {
+    return removeUndefinedPropertiesFromArray(value);
+  } else if (isObject(value)) {
+    return removeUndefinedPropertiesFromObject(value);
+  }
+  return value;
+}
+
+function removeUndefinedPropertiesFromArray(array: any[]): any[] {
+  const returnArray = [];
+  for (const element of array) {
+    if (isNullOrUndefined(element)) {
+      continue;
+    }
+
+    if (isArray(element)) {
+      returnArray.push(removeUndefinedPropertiesFromArray(element));
+    } else if (isObject(element)) {
+      returnArray.push(removeUndefinedPropertiesFromObject(element));
+    } else {
+      returnArray.push(element);
+    }
+  }
+
+  return returnArray;
+}
+
+function removeUndefinedPropertiesFromObject(object: any): any {
+  const returnObj = {};
+  Object.entries(object).forEach(([key, val]) => {
+    if (isNotNullOrUndefined(val)) {
+      if (isArray(val)) {
+        returnObj[key] = removeUndefinedPropertiesFromArray(val);
+      } else if (isObject(val)) {
+        returnObj[key] = removeUndefinedPropertiesFromObject(val);
+      } else {
+        returnObj[key] = val;
+      }
+    }
+  });
+  return returnObj;
 }
 
 export function isObject(value: any): boolean {

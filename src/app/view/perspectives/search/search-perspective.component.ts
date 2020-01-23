@@ -37,6 +37,7 @@ import {DefaultViewConfig, View} from '../../../core/store/views/view';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {ViewsAction} from '../../../core/store/views/views.action';
+import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 
 @Component({
   templateUrl: './search-perspective.component.html',
@@ -84,36 +85,9 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         select(selectCurrentView),
         startWith(null as View),
         pairwise(),
-        switchMap(([previousView, view]) => {
-          if (view) {
-            const searchId = view.code;
-            return this.store$.pipe(
-              select(selectSearchById(searchId)),
-              take(1),
-              map(search => {
-                if (this.preferViewConfigUpdate(previousView, view, search)) {
-                  return {searchId, config: view.config && view.config.search, view};
-                }
-                return {};
-              })
-            );
-          } else {
-            const searchId = DEFAULT_SEARCH_ID;
-            return this.store$.pipe(
-              select(selectDefaultViewConfig(Perspective.Search, searchId)),
-              withLatestFrom(this.store$.pipe(select(selectSearchById(searchId)))),
-              map(([defaultConfig, search], index) => {
-                if (index === 0) {
-                  this.setDefaultConfigSnapshot(defaultConfig);
-                }
-                return {
-                  searchId,
-                  config: (defaultConfig && defaultConfig && defaultConfig.config.search) || (search && search.config),
-                };
-              })
-            );
-          }
-        })
+        switchMap(([previousView, view]) =>
+          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
+        )
       )
       .subscribe(({searchId, config, view}: {searchId?: string; config?: SearchConfig; view?: View}) => {
         if (searchId) {
@@ -127,6 +101,40 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         }
       });
     this.subscriptions.add(subscription);
+  }
+
+  private subscribeToView(
+    previousView: View,
+    view: View
+  ): Observable<{searchId?: string; config?: SearchConfig; view?: View}> {
+    const searchId = view.code;
+    return this.store$.pipe(
+      select(selectSearchById(searchId)),
+      take(1),
+      map(search => {
+        if (preferViewConfigUpdate(previousView, view, !!search)) {
+          return {searchId, config: view.config && view.config.search, view};
+        }
+        return {};
+      })
+    );
+  }
+
+  private subscribeToDefault(): Observable<{searchId?: string; config?: SearchConfig; view?: View}> {
+    const searchId = DEFAULT_SEARCH_ID;
+    return this.store$.pipe(
+      select(selectDefaultViewConfig(Perspective.Search, searchId)),
+      withLatestFrom(this.store$.pipe(select(selectSearchById(searchId)))),
+      map(([defaultConfig, search], index) => {
+        if (index === 0) {
+          this.setDefaultConfigSnapshot(defaultConfig);
+        }
+        return {
+          searchId,
+          config: (defaultConfig && defaultConfig && defaultConfig.config.search) || (search && search.config),
+        };
+      })
+    );
   }
 
   private checkSearchTabRedirect(config: SearchConfig, view: View) {
@@ -153,13 +161,6 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         }
         this.initialSearchTab = null;
       });
-  }
-
-  private preferViewConfigUpdate(previousView: View, view: View, search: Search): boolean {
-    if (!previousView) {
-      return !search;
-    }
-    return !deepObjectsEquals(previousView.config && previousView.config.search, view.config && view.config.search);
   }
 
   private subscribeToSearchTab() {

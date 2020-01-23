@@ -37,7 +37,7 @@
           class="dropdown-divider">
         </div>
 
-        <ng-container *ngIf="(cursor | isLastPart: state.table) && !(state.table | embedded)">
+        <ng-container *ngIf="(cursor | isLastPart: state.table) && !embedded">
           <ng-container *ngIf="!(state.linkedAttributes | empty)">
             <div class="dropdown-header cursor-not-allowed"
                  i18n="@@table.header.suggestion.link.existing">Use existing link

@@ -88,6 +88,9 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   @Input()
   public origin: ElementRef | HTMLElement;
 
+  @Input()
+  public embedded: boolean;
+
   @Output()
   public selected = new EventEmitter();
 

@@ -70,14 +70,7 @@ import {convertQueryModelToString} from '../navigation/query/query.converter';
 import {isSingleCollectionQuery} from '../navigation/query/query.util';
 import {RouterAction} from '../router/router.action';
 import {moveTableCursor, TableBodyCursor, TableCursor} from './table-cursor';
-import {
-  DEFAULT_TABLE_ID,
-  TableColumnType,
-  TableConfigColumn,
-  TableConfigPart,
-  TableConfigRow,
-  TableModel,
-} from './table.model';
+import {TableColumnType, TableConfigColumn, TableConfigPart, TableConfigRow, TableModel} from './table.model';
 import {
   addMissingTableColumns,
   areTableColumnsListsEqual,
@@ -101,7 +94,6 @@ import {
 } from './table.utils';
 import {TablesAction, TablesActionType} from './tables.action';
 import {
-  selectDefaultTable,
   selectMoveTableCursorDown,
   selectTableById,
   selectTableCursor,
@@ -120,6 +112,7 @@ import {
 } from './utils/table-row-sync.utils';
 import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInitialized} from './utils/table-row.utils';
 import {QueryParam} from '../navigation/query-param';
+import {selectTable} from './tables.state';
 
 @Injectable()
 export class TablesEffects {
@@ -142,7 +135,7 @@ export class TablesEffects {
       this.store$.pipe(select(selectViewCode))
     ),
     mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode]) => {
-      const {config, query, tableId} = action.payload;
+      const {config, query, embedded} = action.payload;
 
       const queryStem = query.stems[0];
       const primaryCollection = collectionsMap[queryStem.collectionId];
@@ -191,7 +184,7 @@ export class TablesEffects {
       actions.push(new DocumentsAction.Get({query}), new LinkInstancesAction.Get({query}));
 
       // if the table is embedded, file attachments are not loaded by guard
-      if (tableId !== DEFAULT_TABLE_ID) {
+      if (embedded) {
         actions.push(new FileAttachmentsAction.GetByQuery({query}));
       }
 
@@ -1102,10 +1095,6 @@ export class TablesEffects {
     ofType<TablesAction.SetCursor>(TablesActionType.SET_CURSOR),
     mergeMap(action => {
       const {cursor} = action.payload;
-      if (cursor && cursor.tableId !== DEFAULT_TABLE_ID) {
-        return [];
-      }
-
       return this.store$.pipe(
         select(selectTableById(cursor && cursor.tableId)),
         take(1),
@@ -1140,7 +1129,7 @@ export class TablesEffects {
     withLatestFrom(
       this.store$.pipe(select(selectViewCursor)),
       this.store$.pipe(select(selectTableCursor)),
-      this.store$.pipe(select(selectDefaultTable))
+      this.store$.pipe(select(selectTable))
     ),
     mergeMap(([, viewCursor, tableCursor, table]) => {
       if (tableCursor || !viewCursor) {

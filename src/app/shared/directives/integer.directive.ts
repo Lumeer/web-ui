@@ -38,6 +38,7 @@ const allowedCodes = [
   KeyCode.Tab,
   KeyCode.ArrowUp,
   KeyCode.ArrowDown,
+  KeyCode.Backspace,
 ];
 
 @Directive({
@@ -67,7 +68,7 @@ export class IntegerDirective extends DefaultValueAccessor {
 
   @HostListener('keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (!allowedCodes.includes(event.code as KeyCode)) {
+    if (!allowedCodes.includes(event.code as KeyCode) && !event.composed) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -98,6 +99,8 @@ export class IntegerDirective extends DefaultValueAccessor {
 
       this._sourceRenderer.setProperty(this._sourceElementRef.nativeElement, 'value', String(absolute));
       this.onChange(absolute);
+    } else {
+      this.onChange(null);
     }
   }
 }

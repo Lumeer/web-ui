@@ -66,6 +66,9 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public embedded: boolean;
+
   public readonly dragDelay = DRAG_DELAY;
   public resizedColumnIndex: number;
 
