@@ -64,7 +64,7 @@
     "big.js": "^5.2.2",
     "bootstrap": "^4.3.1",
     "coordinate-parser": "^1.0.2",
-    "core-js": "~3.4.0",
+    "core-js": "~3.6.4",
     "crc-32": "^1.2.0",
     "driver.js": "^0.9.8",
     "file-saver": "^2.0.2",
