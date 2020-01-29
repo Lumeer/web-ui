@@ -1,5 +1,5 @@
 <input *ngIf="readonly; else durationEditing"
-       [tooltip]="value | formatDataValue"
+       [title]="value | formatDataValue"
        [value]="value | formatDataValue"
        type="text"
        class="border-0 w-100 h-100 px-1 bg-transparent"
@@ -9,7 +9,7 @@
 
 <ng-template #durationEditing>
   <input #durationInput
-         [tooltip]="value | formatDataValue"
+         [title]="value | formatDataValue"
          [value]="value | formatDataValue"
          (blur)="onBlur()"
          (input)="onInput($event)"

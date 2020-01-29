@@ -91,45 +91,31 @@ export class DataRowService {
 
   private subscribeCollectionAndDocument() {
     const documentObservable = !this.isNewDataResource
-      ? this.store$.pipe(
-          select(selectDocumentById(this.dataResource.id)),
-          skip(1)
-        )
+      ? this.store$.pipe(select(selectDocumentById(this.dataResource.id)))
       : of(this.dataResource);
     this.subscriptions.add(
-      combineLatest([
-        documentObservable,
-        this.store$.pipe(
-          select(selectCollectionById(this.resource.id)),
-          skip(1)
-        ),
-      ]).subscribe(([document, collection]) => {
-        this.dataResource = document;
-        this.resource = collection;
-        this.refreshRows();
-      })
+      combineLatest([documentObservable, this.store$.pipe(select(selectCollectionById(this.resource.id)))])
+        .pipe(skip(1))
+        .subscribe(([document, collection]) => {
+          this.dataResource = document;
+          this.resource = collection;
+          this.refreshRows();
+        })
     );
   }
 
   private subscribeLinkTypeAndLink() {
     const linkInstanceObservable = !this.isNewDataResource
-      ? this.store$.pipe(
-          select(selectLinkInstanceById(this.dataResource.id)),
-          skip(1)
-        )
+      ? this.store$.pipe(select(selectLinkInstanceById(this.dataResource.id)))
       : of(this.dataResource);
     this.subscriptions.add(
-      combineLatest([
-        linkInstanceObservable,
-        this.store$.pipe(
-          select(selectLinkTypeById(this.resource.id)),
-          skip(1)
-        ),
-      ]).subscribe(([document, collection]) => {
-        this.dataResource = document;
-        this.resource = collection;
-        this.refreshRows();
-      })
+      combineLatest([linkInstanceObservable, this.store$.pipe(select(selectLinkTypeById(this.resource.id)))])
+        .pipe(skip(1))
+        .subscribe(([document, collection]) => {
+          this.dataResource = document;
+          this.resource = collection;
+          this.refreshRows();
+        })
     );
   }
 

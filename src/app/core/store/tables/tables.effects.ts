@@ -70,7 +70,15 @@ import {convertQueryModelToString} from '../navigation/query/query.converter';
 import {isSingleCollectionQuery} from '../navigation/query/query.util';
 import {RouterAction} from '../router/router.action';
 import {moveTableCursor, TableBodyCursor, TableCursor} from './table-cursor';
-import {TableColumnType, TableConfigColumn, TableConfigPart, TableConfigRow, TableModel} from './table.model';
+import {
+  DEFAULT_TABLE_ID,
+  TableColumnType,
+  TableConfig,
+  TableConfigColumn,
+  TableConfigPart,
+  TableConfigRow,
+  TableModel,
+} from './table.model';
 import {
   addMissingTableColumns,
   areTableColumnsListsEqual,
@@ -266,7 +274,16 @@ export class TablesEffects {
       const linkFilters = firstStem && firstStem.linkFilters;
       const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds, filters, linkFilters}]};
 
+      const actions: Action[] = [];
+      if (table.id === DEFAULT_TABLE_ID) {
+        const parts = [...table.config.parts];
+        parts.reverse();
+        const newConfig: TableConfig = {parts, rows: []};
+        actions.push(new TablesAction.SetConfig({tableId: table.id, config: newConfig}));
+      }
+
       return [
+        ...actions,
         new RouterAction.Go({
           path: [],
           queryParams: {

@@ -22,7 +22,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectNavigation, selectSearchTab} from '../../../core/store/navigation/navigation.state';
+import {selectNavigation, selectQuery, selectSearchTab} from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectCurrentView, selectDefaultViewConfig} from '../../../core/store/views/views.state';
@@ -34,10 +34,9 @@ import {parseSearchTabFromUrl, SearchTab} from '../../../core/store/navigation/s
 import {Perspective} from '../perspective';
 import {selectSearch, selectSearchById} from '../../../core/store/searches/searches.state';
 import {DefaultViewConfig, View} from '../../../core/store/views/view';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {Workspace} from '../../../core/store/navigation/workspace';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
+import {isNavigatingToOtherWorkspace} from '../../../core/store/navigation/query/query.util';
 
 @Component({
   templateUrl: './search-perspective.component.html',
@@ -50,7 +49,6 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   public stringQuery: string;
 
   private initialSearchTab: SearchTab;
-  private workspace: Workspace;
   private query: Query = {};
   private subscriptions = new Subscription();
 
@@ -65,12 +63,9 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    const subscription = this.store$.pipe(select(selectNavigation)).subscribe(navigation => {
-      if (navigation.query) {
-        this.query = navigation.query;
-        this.stringQuery = convertQueryModelToString(navigation.query);
-      }
-      this.workspace = navigation.workspace;
+    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+      this.query = query;
+      this.stringQuery = convertQueryModelToString(query);
     });
     this.subscriptions.add(subscription);
   }
@@ -141,18 +136,20 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
     this.store$
       .pipe(
         select(selectSearchTab),
-        take(1)
+        take(1),
+        withLatestFrom(this.store$.pipe(select(selectNavigation)))
       )
-      .subscribe(searchTab => {
+      .subscribe(([searchTab, navigation]) => {
         if (
-          this.workspace &&
+          navigation.workspace &&
+          !isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace) &&
           config &&
           config.searchTab &&
           searchTab &&
           config.searchTab !== searchTab &&
           !this.initialSearchTab
         ) {
-          const path: any[] = ['w', this.workspace.organizationCode, this.workspace.projectCode, 'view'];
+          const path: any[] = ['w', navigation.workspace.organizationCode, navigation.workspace.projectCode, 'view'];
           if (view) {
             path.push({vc: view.code});
           }

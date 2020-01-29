@@ -32,7 +32,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {
   debounceTime,
   filter,
@@ -43,6 +43,7 @@ import {
   startWith,
   switchMap,
   take,
+  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
@@ -54,7 +55,11 @@ import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../
 import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableConfigById, selectTableCursor} from '../../../core/store/tables/tables.selector';
 import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/view';
-import {selectCurrentView, selectDefaultViewConfig} from '../../../core/store/views/views.state';
+import {
+  selectCurrentView,
+  selectDefaultViewConfig,
+  selectDefaultViewConfigSnapshot,
+} from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
 import {PERSPECTIVE_CHOOSER_CLICK} from '../../view-controls/view-controls.component';
@@ -63,7 +68,7 @@ import {TableBodyComponent} from './body/table-body.component';
 import {TableHeaderComponent} from './header/table-header.component';
 import {TableRowNumberService} from './table-row-number.service';
 import {selectTable, selectTableId} from '../../../core/store/tables/tables.state';
-import {getBaseCollectionIdsFromQuery} from '../../../core/store/navigation/query/query.util';
+import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../core/store/navigation/query/query.util';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import CreateTable = TablesAction.CreateTable;
@@ -72,6 +77,7 @@ import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/d
 import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save-config.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -117,6 +123,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   public ngOnInit() {
+    this.resetDefaultConfigSnapshot();
     this.prepareTableId();
     this.initTable();
 
@@ -198,6 +205,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+    this.store$.dispatch(new TablesAction.DestroyTable({tableId: DEFAULT_TABLE_ID}));
   }
 
   private initTable() {
@@ -258,7 +266,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         select(selectTable),
         filter(table => !!table && !!table.config && table.id === DEFAULT_TABLE_ID),
-        mergeMap(table => this.waitForDocumentsLoaded$().pipe(map(() => table))),
+        mergeMap(table => this.waitForDataLoaded$().pipe(map(() => table))),
         debounceTime(200),
         withLatestFrom(this.selectCurrentDefaultViewConfig$())
       )
@@ -271,7 +279,6 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         const defaultConfigFirstPart = ((defaultConfigCleaned && defaultConfigCleaned.parts) || [])[0];
 
         if (!defaultConfigFirstPart || !deepObjectsEquals(config.table.parts[0], defaultConfigFirstPart)) {
-          console.log('saving table', config.table.parts[0], defaultConfigFirstPart);
           this.store$.dispatch(
             new ViewsAction.SetDefaultConfig({model: {key, config, perspective: Perspective.Table}})
           );
@@ -279,10 +286,17 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private waitForDocumentsLoaded$(): Observable<boolean> {
+  private waitForDataLoaded$(query?: Query): Observable<boolean> {
+    if (query) {
+      this.store$.dispatch(new DocumentsAction.Get({query}));
+      this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    }
     return this.store$.pipe(
       select(selectCurrentQueryDocumentsLoaded),
-      filter(loaded => loaded)
+      filter(loaded => loaded),
+      mergeMap(() => this.store$.pipe(select(selectCurrentQueryLinkInstancesLoaded))),
+      filter(loaded => loaded),
+      take(1)
     );
   }
 
@@ -321,26 +335,20 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         return this.store$.pipe(
           select(selectTableById(tableId)),
           take(1),
-          mergeMap(table => {
+          map(table => {
             if (previousView && previousView.id === view.id && this.queryHasNewLink(query)) {
-              return of({query, config: view.config.table, tableId});
+              return {query, config: view.config.table, tableId};
             }
 
             if (preferViewConfigUpdate(previousView, view, !!table)) {
-              console.log('prefering view config update', query, view.config.table);
-              this.store$.dispatch(new DocumentsAction.Get({query}));
-              this.store$.dispatch(new LinkInstancesAction.Get({query}));
-              return this.waitForDocumentsLoaded$().pipe(
-                map(() => ({
-                  query,
-                  config: view.config && view.config.table,
-                  tableId,
-                  forceRefresh: true,
-                }))
-              );
+              return {
+                query,
+                config: view.config && view.config.table,
+                tableId,
+                forceRefresh: true,
+              };
             }
-            console.log('prefering table config', query, table.config);
-            return of({query, config: table.config, tableId});
+            return {query, config: table.config, tableId};
           })
         );
       })
@@ -372,16 +380,30 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
               ),
               tableId,
             };
-          })
+          }),
+          tap(({config}) => this.checkConfigSnapshot(config))
         );
       })
     );
   }
 
+  private checkConfigSnapshot(config: TableConfig) {
+    combineLatest([this.selectTableDefaultConfigId$(), this.store$.pipe(select(selectDefaultViewConfigSnapshot))])
+      .pipe(take(1))
+      .subscribe(([tableId, snapshot]) => {
+        if (!snapshot || snapshot.key !== tableId || snapshot.perspective !== Perspective.Table) {
+          const defaultConfigSnapshot: DefaultViewConfig = {
+            key: tableId,
+            perspective: Perspective.Table,
+            config: {table: config},
+          };
+          this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({model: defaultConfigSnapshot}));
+        }
+      });
+  }
+
   private selectCurrentDefaultViewConfig$(): Observable<{key: string; defaultConfig: DefaultViewConfig}> {
-    return this.store$.pipe(
-      select(selectQuery),
-      map(query => getBaseCollectionIdsFromQuery(query)[0]),
+    return this.selectTableDefaultConfigId$().pipe(
       mergeMap(collectionId =>
         this.store$.pipe(
           select(selectDefaultViewConfig(Perspective.Table, collectionId)),
@@ -391,17 +413,34 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
+  private selectTableDefaultConfigId$(): Observable<string> {
+    return this.store$.pipe(
+      select(selectQuery),
+      map(query => getBaseCollectionIdsFromQuery(query)[0])
+    );
+  }
+
   private queryHasNewLink(query: Query): boolean {
     return this.table$.value && hasQueryNewLink(this.query, query);
   }
 
   private addTablePart(query: Query, tableId: string) {
     const linkTypeId = getNewLinkTypeIdFromQuery(this.query, query);
-    this.store$.dispatch(new TablesAction.CreatePart({tableId, linkTypeId, last: true}));
+    const subscription = this.waitForDataLoaded$(query).subscribe(() => {
+      this.store$.dispatch(new TablesAction.CreatePart({tableId, linkTypeId, last: true}));
+    });
+    this.subscriptions.add(subscription);
   }
 
   private refreshTable(query: Query, tableId: string, config: TableConfig) {
-    this.createTable(query, tableId, config);
+    if (queryIsEmpty(query) && tableId === DEFAULT_TABLE_ID) {
+      this.store$.dispatch(new TablesAction.DestroyTable({tableId: DEFAULT_TABLE_ID}));
+    } else {
+      const subscription = this.waitForDataLoaded$(query).subscribe(() => {
+        this.createTable(query, tableId, config);
+      });
+      this.subscriptions.add(subscription);
+    }
   }
 
   private subscribeToScrolling(): Subscription {
@@ -422,6 +461,10 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     if (this.selectedCursor && !event[PERSPECTIVE_CHOOSER_CLICK]) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
+  }
+
+  private resetDefaultConfigSnapshot() {
+    this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({}));
   }
 
   @HostListener('document:keydown', ['$event'])

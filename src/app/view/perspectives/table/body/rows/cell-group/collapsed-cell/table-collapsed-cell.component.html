@@ -58,7 +58,7 @@
   </ng-container>
 
   <ng-template #defaultCollapsedCell>
-    <div [tooltip]="data.stringValues | join"
+    <div [title]="data.stringValues | join"
          class="h-100 px-1 d-flex align-items-center"
          tabindex="0">
       {{ (data.stringValues | join) || '&nbsp;' }}

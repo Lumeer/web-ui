@@ -31,6 +31,7 @@ export interface NavigationState {
   mapPosition?: MapPosition;
   query: Query;
   workspace: Workspace;
+  navigatingWorkspace?: Workspace;
   perspective?: Perspective;
   searchTab?: SearchTab;
   viewName?: string;

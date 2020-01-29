@@ -1,5 +1,5 @@
 <i *ngIf="{downloading: downloading$ | async} as state"
-   [tooltip]="fileAttachment.fileName"
+   [title]="fileAttachment.fileName"
    (click)="onClick()"
    class="far fa-fw"
    [ngClass]="state.downloading ? 'fa-spinner fa-spin' : fileAttachment.fileName | fileTypeIcon"

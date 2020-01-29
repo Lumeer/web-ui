@@ -1,6 +1,6 @@
 <input *ngIf="readonly; else textEditing"
        [readonly]="readonly"
-       [tooltip]="value | formatDataValue"
+       [title]="value | formatDataValue"
        [value]="value | formatDataValue"
        [class.invalid-value]="!(value | isDataValueValid)"
        [ngClass]="inputClass"
@@ -9,7 +9,7 @@
 
 <ng-template #textEditing>
   <input #coordinatesInput
-         [tooltip]="value | formatDataValue"
+         [title]="value | formatDataValue"
          [value]="value | formatDataValue"
          (blur)="onBlur()"
          (input)="onInput($event)"

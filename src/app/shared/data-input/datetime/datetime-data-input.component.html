@@ -1,6 +1,6 @@
 <input #dateTimeInput
        [readonly]="readonly"
-       [tooltip]="value | formatDataValue"
+       [title]="value | formatDataValue"
        [value]="value | formatDataValue"
        [class.invalid-value]="!(value | isDataValueValid)"
        (input)="onInput($event)"

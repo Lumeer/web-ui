@@ -31,6 +31,7 @@ import {AttributesResource} from '../../../model/resource';
 import {ConstraintType} from '../../../model/data/constraint';
 import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
+import {Workspace} from '../workspace';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -365,4 +366,15 @@ export function filterStemsForCollection(collectionId: string, query: Query): Qu
   } else {
     return {stems: [{collectionId}], fulltexts: query && query.fulltexts};
   }
+}
+
+export function isNavigatingToOtherWorkspace(workspace: Workspace, navigatingWorkspace: Workspace): boolean {
+  if (!navigatingWorkspace || !workspace) {
+    return false;
+  }
+
+  return (
+    workspace.organizationCode !== navigatingWorkspace.organizationCode ||
+    workspace.projectCode !== navigatingWorkspace.projectCode
+  );
 }

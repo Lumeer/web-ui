@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center h-100 p-1 text-nowrap" #wrapperElement
-     [tooltip]="selectedUsers | usersNames | join"
+     [title]="selectedUsers | usersNames | join"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
   <ng-container *ngIf="multi || readonly">
@@ -12,7 +12,7 @@
          [style.min-height.px]="avatarSize"
          [style.margin-left.rem]="!first ? -0.5 : 0.25">
 
-    <span *ngIf="selectedUsers | usersAreValid:users:value.config"
+    <span *ngIf="selectedUsers?.length && (selectedUsers | usersAreValid:users:value.config)"
           [ngClass]="inputClass"
           class="d-inline-block ml-2 text-nowrap user">
         {{selectedUsers | usersNames | join}}

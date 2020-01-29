@@ -29,7 +29,12 @@ import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {selectQuery, selectViewCursor, selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {
+  selectNavigation,
+  selectQuery,
+  selectViewCursor,
+  selectWorkspace,
+} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
@@ -37,12 +42,14 @@ import {
   selectCollectionsByQueryWithoutLinks,
   selectDocumentsByCustomQuery,
 } from '../../../core/store/common/permissions.selectors';
-import {filterStemsForCollection, queryIsEmpty} from '../../../core/store/navigation/query/query.util';
+import {
+  filterStemsForCollection,
+  isNavigatingToOtherWorkspace,
+  queryIsEmpty,
+} from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
-import {Actions, ofType} from '@ngrx/effects';
-import {ProjectsAction, ProjectsActionType} from '../../../core/store/projects/projects.action';
 
 @Component({
   selector: 'detail-perspective',
@@ -65,11 +72,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private selectionSubscription = new Subscription();
 
-  public constructor(
-    private store$: Store<AppState>,
-    private collectionPermissionsPipe: CollectionPermissionsPipe,
-    private actions$: Actions
-  ) {}
+  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(
@@ -77,30 +80,22 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       tap(query => (this.query = query))
     );
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
-    this.subscribeToSwitchWorkspace();
     this.initSelection();
-  }
-
-  private subscribeToSwitchWorkspace() {
-    const subscription = this.actions$
-      .pipe(ofType<ProjectsAction.ClearWorkspaceData>(ProjectsActionType.CLEAR_WORKSPACE_DATA))
-      .subscribe(() => this.unsubscribeAll());
-    this.subscriptions.add(subscription);
   }
 
   private initSelection() {
     this.selectionSubscription = combineLatest([
       this.store$.pipe(select(selectCollectionsByQueryWithoutLinks)),
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectNavigation)),
       this.store$.pipe(select(selectViewCursor)),
     ])
       .pipe(
-        switchMap(([collections, query, cursor]) => {
+        switchMap(([collections, navigation, cursor]) => {
           const selectedCollection =
             (cursor && (collections || []).find(coll => coll.id === cursor.collectionId)) ||
             (collections && collections[0]);
           if (selectedCollection) {
-            const collectionQuery = filterStemsForCollection(selectedCollection.id, query);
+            const collectionQuery = filterStemsForCollection(selectedCollection.id, navigation && navigation.query);
             this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
             return this.store$.pipe(
               select(selectDocumentsByCustomQuery(collectionQuery)),
@@ -108,16 +103,16 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
                 const document =
                   (cursor && (documents || []).find(doc => doc.id === cursor.documentId)) ||
                   (documents && documents[0]);
-                return {collection: selectedCollection, document};
+                return {collection: selectedCollection, document, navigation};
               })
             );
           }
-          return of({collection: null, document: null});
+          return of({collection: null, document: null, navigation});
         }),
         debounceTime(100),
         distinctUntilChanged((a, b) => this.selectionIsSame(a, b))
       )
-      .subscribe(({collection, document}) => {
+      .subscribe(({collection, document, navigation}) => {
         if (collection) {
           const selectedCollection = this.selected$.value.collection;
           const selectedDocument = this.selected$.value.document;
@@ -125,7 +120,10 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
           const collectionIsSame = selectedCollection && collection.id === selectedCollection.id;
           const documentIsSame = selectedDocument && document && document.id === selectedDocument.id;
 
-          if (!collectionIsSame || !documentIsSame) {
+          if (
+            !isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace) &&
+            (!collectionIsSame || !documentIsSame)
+          ) {
             this.select(collection, document);
           }
         } else {

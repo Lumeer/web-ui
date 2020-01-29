@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center h-100 p-1" #wrapperElement
-     [tooltip]="selectedOptions | selectOptionsJoined"
+     [title]="selectedOptions | selectOptionsJoined"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
   <ng-container *ngIf="multi || readonly">

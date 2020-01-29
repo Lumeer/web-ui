@@ -60,7 +60,6 @@ import {DataInputPreviewComponent} from './data-input-preview/data-input-preview
 import {ConstraintAsTextPipe} from './pipes/constraint-as-text.pipe';
 import {UserIsValidPipe} from './user/pipes/user-is-valid.pipe';
 import {ConstraintClassPipe} from './pipes/constraint-class.pipe';
-import {TooltipModule} from 'ngx-bootstrap';
 import {SelectOptionsJoinedPipe} from './select/pipes/select-options-joined.pipe';
 
 @NgModule({
@@ -78,7 +77,6 @@ import {SelectOptionsJoinedPipe} from './select/pipes/select-options-joined.pipe
     DropdownModule,
     QuillModule,
     TextEditorModalModule,
-    TooltipModule,
   ],
   declarations: [
     DataInputComponent,

@@ -1,6 +1,6 @@
 <ng-container *ngIf="constraint | constraintAsText; else otherConstraint">
   <span [innerHTML]="dataValue | previewDataValue | safeHtml" class="white-space-normal"
-        [tooltip]="dataValue | previewDataValue | stripHtml:false"
+        [title]="dataValue | previewDataValue | stripHtml:false"
         [class.text-nowrap]="inline">
   </span>
 </ng-container>
