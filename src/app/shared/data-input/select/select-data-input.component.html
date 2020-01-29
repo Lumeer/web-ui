@@ -1,13 +1,14 @@
 <div class="d-flex align-items-center h-100 p-1" #wrapperElement
+     [tooltip]="selectedOptions | selectOptionsJoined"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
   <ng-container *ngIf="multi || readonly">
 
     <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">
-        <span class="d-inline-block px-2 py-1 tag text-nowrap" [title]="option.displayValue || option.value"
+        <span class="d-inline-block px-2 py-1 tag text-nowrap"
               [style.background]="option.background"
               [style.color]="option.background | contrastColor"
-              [class.invalid-value]="!(option | selectOptionIsValid:value.config:selectedOptions.length)"
+              [class.invalid-value]="!skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions.length)"
               [spellcheck]="false"
               [class.ml-2]="!first">
           {{option.displayValue || option.value}}

@@ -44,6 +44,7 @@ import {VideosAction} from './core/store/videos/videos.action';
 import {getAllVideos} from './core/store/videos/videos.data';
 import {SessionService} from './auth/session.service';
 import {ConstraintDataService} from './core/service/constraint-data.service';
+import {TooltipConfig} from 'ngx-bootstrap';
 
 @Component({
   selector: 'lmr-app',
@@ -66,6 +67,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private title: Title,
     private pusherService: PusherService,
     private sessionService: SessionService,
+    private tooltipConfig: TooltipConfig,
     private constraintDataService: ConstraintDataService, // for init constraint data
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
@@ -78,6 +80,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.startAnalyticsTracking();
     this.setUpExternalServicesUserContext();
     this.initCheckUserInteraction();
+
+    this.tooltipConfig.adaptivePosition = true;
+    this.tooltipConfig.container = 'body';
+    this.tooltipConfig.placement = 'auto';
+    this.tooltipConfig.delay = 100;
   }
 
   private initPushNotifications() {

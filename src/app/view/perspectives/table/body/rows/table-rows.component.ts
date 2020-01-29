@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
-import {debounceTime, map, tap} from 'rxjs/operators';
+import {debounceTime, map, mergeMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
 import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
@@ -40,6 +40,7 @@ import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
+import {selectCurrentQueryDocumentsLoaded} from '../../../../../core/store/documents/documents.state';
 
 @Component({
   selector: 'table-rows',
@@ -60,6 +61,7 @@ export class TableRowsComponent implements OnChanges {
   @ViewChild(CdkVirtualScrollViewport, {static: false})
   public virtualScrollViewport: CdkVirtualScrollViewport;
 
+  public loaded$: Observable<boolean>;
   public rows$: Observable<TableConfigRow[]>;
 
   public constructor(public element: ElementRef, private store$: Store<AppState>) {}
@@ -87,6 +89,14 @@ export class TableRowsComponent implements OnChanges {
       }),
       tap(() => this.store$.dispatch(new TablesAction.SyncPrimaryRows({cursor, query}))),
       tap(() => setTimeout(() => this.setScrollbarWidth()))
+    );
+    this.loaded$ = this.rows$.pipe(
+      mergeMap(() =>
+        this.store$.pipe(
+          select(selectCurrentQueryDocumentsLoaded),
+          take(1)
+        )
+      )
     );
   }
 

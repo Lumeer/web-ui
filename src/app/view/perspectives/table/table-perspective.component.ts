@@ -32,7 +32,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {
   debounceTime,
   filter,
@@ -70,6 +70,8 @@ import CreateTable = TablesAction.CreateTable;
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save-config.util';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -294,11 +296,9 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
           view ? this.initTableWithView(previousView, view) : this.initTableDefaultView()
         )
       )
-      .subscribe(({query, config, tableId}) => {
-        console.log(tableId, query, config);
-
+      .subscribe(({query, config, tableId, forceRefresh}) => {
         this.setElementId(tableId);
-        if (this.queryHasNewLink(query)) {
+        if (!forceRefresh && this.queryHasNewLink(query)) {
           this.addTablePart(query, tableId);
         } else {
           this.refreshTable(query, tableId, config);
@@ -313,7 +313,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private initTableWithView(
     previousView: View,
     view: View
-  ): Observable<{query: Query; config: TableConfig; tableId: string}> {
+  ): Observable<{query: Query; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
     return this.store$.pipe(
       select(selectQuery),
       switchMap(query => {
@@ -321,24 +321,38 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         return this.store$.pipe(
           select(selectTableById(tableId)),
           take(1),
-          map(table => {
-            if (this.queryHasNewLink(query)) {
-              return {query, config: view.config.table, tableId};
+          mergeMap(table => {
+            if (previousView && previousView.id === view.id && this.queryHasNewLink(query)) {
+              return of({query, config: view.config.table, tableId});
             }
 
             if (preferViewConfigUpdate(previousView, view, !!table)) {
-              console.log('prefering view config update', view.config.table);
-              return {query, config: view.config && view.config.table, tableId};
+              console.log('prefering view config update', query, view.config.table);
+              this.store$.dispatch(new DocumentsAction.Get({query}));
+              this.store$.dispatch(new LinkInstancesAction.Get({query}));
+              return this.waitForDocumentsLoaded$().pipe(
+                map(() => ({
+                  query,
+                  config: view.config && view.config.table,
+                  tableId,
+                  forceRefresh: true,
+                }))
+              );
             }
-            console.log('prefering table config', table.config);
-            return {query, config: table.config, tableId};
+            console.log('prefering table config', query, table.config);
+            return of({query, config: table.config, tableId});
           })
         );
       })
     );
   }
 
-  private initTableDefaultView(): Observable<{query: Query; config: TableConfig; tableId: string}> {
+  private initTableDefaultView(): Observable<{
+    query: Query;
+    config: TableConfig;
+    tableId: string;
+    forceRefresh?: boolean;
+  }> {
     return this.store$.pipe(
       select(selectQuery),
       switchMap(query => {
@@ -487,7 +501,13 @@ function mergeFirstTablePart(config: TableConfig, firstPartConfig: TableConfig):
   rows.push(...Object.values(currentRowsMap));
 
   const parts = [...config.parts];
-  parts[0] = firstPartConfig.parts[0];
+  if (
+    firstPartConfig.parts &&
+    firstPartConfig.parts[0] &&
+    (!parts[0] || parts[0].collectionId === firstPartConfig.parts[0].collectionId)
+  ) {
+    parts[0] = firstPartConfig.parts[0];
+  }
 
   return {rows, parts};
 }

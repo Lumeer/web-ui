@@ -22,7 +22,7 @@
 
   <div class="mr-1 d-inline-flex flex-grow-1 text-truncate text-nowrap align-items-center"
        *ngIf="attribute">
-    <span
+    <span [class.font-italic]="attribute.constraint?.type !== constraintType.Number"
       class="mx-1">{{conditionControl?.value | translateCondition:attribute}}</span>
     <ng-container *ngFor="let control of conditionValuesControl.controls; let index = index">
       <ng-container

@@ -1,6 +1,6 @@
 <input *ngIf="readonly; else textEditing"
        [readonly]="readonly"
-       [title]="value | formatDataValue"
+       [tooltip]="value | formatDataValue"
        [value]="value | formatDataValue"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [ngClass]="inputClass"
@@ -9,7 +9,7 @@
 
 <ng-template #textEditing>
   <input #addressInput
-         [title]="value | formatDataValue"
+         [tooltip]="value | formatDataValue"
          [value]="value | formatDataValue"
          (focus)="onFocused()"
          (blur)="onBlur()"

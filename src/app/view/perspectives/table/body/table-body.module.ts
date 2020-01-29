@@ -51,6 +51,7 @@ import {TableBodyComponent} from './table-body.component';
 import {FilesCollapsedCellComponent} from './rows/cell-group/collapsed-cell/files/files-collapsed-cell.component';
 import {CreateCombinedSelectValuePipe} from './rows/cell-group/collapsed-cell/select/create-combined-select-value.pipe';
 import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user/create-combined-user-value.pipe';
+import {TooltipModule} from 'ngx-bootstrap';
 
 @NgModule({
   imports: [
@@ -64,6 +65,7 @@ import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user
     DataInputModule,
     ScrollingModule,
     GravatarModule,
+    TooltipModule,
   ],
   declarations: [
     TableBodyComponent,

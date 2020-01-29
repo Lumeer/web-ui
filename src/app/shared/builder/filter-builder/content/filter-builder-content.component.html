@@ -5,6 +5,7 @@
        class="px-2 py-1 dropdown-item cursor-pointer"
        [class.mt-2]="first"
        [class.active]="item.value === selectedCondition"
+       [class.font-italic]="attribute.constraint?.type !== constraintType.Number"
        (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault()"
        (click)="$event.stopImmediatePropagation(); $event.preventDefault(); onConditionSelect(item)">{{item.title}}</div>
 </div>

@@ -1,7 +1,8 @@
 <quill-view-html class="quill-editor overflow-hidden {{inputClass}}"
-                 [ngClass]="multilineMode ? 'multiline' : 'single-line'"
                  *ngIf="readonly"
+                 [ngClass]="multilineMode ? 'multiline' : 'single-line'"
                  [content]="value | formatDataValue | stripHtml"
+                 [tooltip]="value | formatDataValue | stripHtml:false"
                  [class.invalid-value]="!skipValidation && !valid">
 </quill-view-html>
 

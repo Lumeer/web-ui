@@ -36,6 +36,6 @@ export class CreateCombinedUserValuePipe implements PipeTransform {
       }
       return arr;
     }, []);
-    return constraint.createDataValue(combined, constraintData);
+    return new UserConstraint({...constraint.config, multi: true}).createDataValue(combined, constraintData);
   }
 }

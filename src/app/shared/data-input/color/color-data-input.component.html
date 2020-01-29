@@ -1,5 +1,5 @@
 <input [readonly]="readonly" #colorInput
-  [title]="value | formatDataValue"
+  [tooltip]="value | formatDataValue"
   [value]="!valid || !readonly ? (value | formatDataValue) : ''"
   class="border-0 w-100 h-100 px-1 outline-none"
   [class.bg-transparent]="!readonly || !(value | serializeDataValue) || !valid"

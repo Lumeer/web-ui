@@ -1,5 +1,5 @@
 <input *ngIf="readonly; else percentageEditing"
-       [title]="value | formatDataValue"
+       [tooltip]="value | formatDataValue"
        [value]="value | formatDataValue"
        type="text"
        class="border-0 w-100 h-100 px-1 bg-transparent"
@@ -10,7 +10,7 @@
 <ng-template #percentageEditing>
   <input #percentageInput
          percentage
-         [title]="value | formatDataValue"
+         [tooltip]="value | formatDataValue"
          [value]="percentageValue"
          (blur)="onBlur()"
          (input)="onInput($event)"

@@ -1,7 +1,7 @@
 <input *ngIf="readonly; else textEditing"
        [attr.maxlength]="value?.config?.maxLength"
        [readonly]="readonly"
-       [title]="value | formatDataValue"
+       [tooltip]="value | formatDataValue"
        [value]="value | formatDataValue"
        [placeholder]="placeholder || ''"
        class="border-0 w-100 h-100 px-1 bg-transparent"

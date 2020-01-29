@@ -117,12 +117,14 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
 
   private setRowNumberColumnWidth(width: number) {
     const tableElement = getTableElement(this.cursor.tableId);
-    const rowNumberColumnWidth = Number(
-      (tableElement.style.getPropertyValue('--row-number-column-width') || '0px').slice(0, -2)
-    );
+    if (tableElement) {
+      const rowNumberColumnWidth = Number(
+        (tableElement.style.getPropertyValue('--row-number-column-width') || '0px').slice(0, -2)
+      );
 
-    if (width > rowNumberColumnWidth) {
-      tableElement.style.setProperty('--row-number-column-width', `${width}px`);
+      if (width > rowNumberColumnWidth) {
+        tableElement.style.setProperty('--row-number-column-width', `${width}px`);
+      }
     }
   }
 
