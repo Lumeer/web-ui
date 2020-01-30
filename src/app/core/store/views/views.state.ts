@@ -33,7 +33,7 @@ import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navi
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {DefaultViewConfig, View, ViewConfig, ViewGlobalConfig} from './view';
+import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 
@@ -78,6 +78,11 @@ export const selectCurrentView = createSelector(
 export const selectViewsLoaded = createSelector(
   selectViewsState,
   state => state.loaded
+);
+
+export const selectDefaultViewConfigSnapshot = createSelector(
+  selectViewsState,
+  state => state.defaultConfigSnapshot
 );
 
 const selectConfigs = createSelector(
@@ -185,11 +190,17 @@ export const selectDefaultViewConfig = (perspective: Perspective, key: string) =
   createSelector(
     selectViewsState,
     state => {
-      const configsByPerspective = state.defaultConfigs[perspective];
-      if (configsByPerspective) {
-        return configsByPerspective[key];
-      }
-      return null;
+      const configsByPerspective = state.defaultConfigs[perspective] || {};
+      return key && configsByPerspective[key];
+    }
+  );
+
+export const selectDefaultViewConfigs = (perspective: Perspective, keys: string[]) =>
+  createSelector(
+    selectViewsState,
+    state => {
+      const configsByPerspective = state.defaultConfigs[perspective] || {};
+      return keys.map(key => configsByPerspective[key]).filter(config => !!config);
     }
   );
 

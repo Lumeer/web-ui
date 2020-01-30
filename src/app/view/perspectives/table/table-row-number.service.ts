@@ -30,13 +30,15 @@ import {selectTableLinkedRowsCount} from '../../../core/store/tables/tables.sele
 @Injectable()
 export class TableRowNumberService {
   private observables = new Map<number, Observable<number>>();
+  private lastTableId: string;
 
   constructor(private store$: Store<{}>) {}
 
   public observeRowNumber(tableId: string, rowIndex: number): Observable<number> {
-    if (this.observables.has(rowIndex)) {
+    if (this.lastTableId === tableId && this.observables.has(rowIndex)) {
       return this.observables.get(rowIndex);
     }
+    this.lastTableId = tableId;
 
     const observable = this.createRowObservable(tableId, rowIndex);
     this.observables.set(rowIndex, observable);

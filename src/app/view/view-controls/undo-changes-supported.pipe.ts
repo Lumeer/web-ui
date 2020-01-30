@@ -18,23 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectConstraint} from '../../../../../../../../core/model/constraint/select.constraint';
-import {isArray, isNotNullOrUndefined} from '../../../../../../../../shared/utils/common.utils';
-import {SelectDataValue} from '../../../../../../../../core/model/data-value/select.data-value';
+import {Perspective} from '../perspectives/perspective';
 
 @Pipe({
-  name: 'createCombinedSelectValue',
+  name: 'undoChangesSupported',
 })
-export class CreateCombinedSelectValuePipe implements PipeTransform {
-  public transform(values: any[], constraint: SelectConstraint): SelectDataValue {
-    const combined = values.reduce((arr, value) => {
-      if (isArray(value)) {
-        arr.push(...value);
-      } else if (isNotNullOrUndefined(value)) {
-        arr.push(value);
-      }
-      return arr;
-    }, []);
-    return new SelectConstraint({...constraint.config, multi: true}).createDataValue(combined);
+export class UndoChangesSupportedPipe implements PipeTransform {
+  public transform(perspective: Perspective): any {
+    return [Perspective.Table, Perspective.Search].includes(perspective);
   }
 }

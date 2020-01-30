@@ -201,7 +201,7 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
         includeChildren
       );
       return {
-        documents: sortDocumentsByCreationDate(data.documents),
+        documents: sortDocumentsByCreationDate(data.documents, desc),
         linkInstances: sortLinkInstances(data.linkInstances),
       };
     }

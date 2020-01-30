@@ -18,13 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DEFAULT_TABLE_ID, TableModel} from '../../../../../core/store/tables/table.model';
+import {SelectConstraintOption} from '../../../../core/model/data/constraint-config';
 
 @Pipe({
-  name: 'embedded',
+  name: 'selectOptionsJoined',
 })
-export class EmbeddedPipe implements PipeTransform {
-  public transform(table: TableModel): boolean {
-    return table && table.id !== DEFAULT_TABLE_ID;
+export class SelectOptionsJoinedPipe implements PipeTransform {
+  public transform(options: SelectConstraintOption[]): string {
+    return (options || []).map(option => String(option.displayValue || option.value)).join(', ');
   }
 }

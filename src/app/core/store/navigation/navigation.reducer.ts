@@ -17,7 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ROUTER_CANCEL, ROUTER_NAVIGATED, RouterCancelAction, RouterNavigatedAction} from '@ngrx/router-store';
+import {
+  ROUTER_CANCEL,
+  ROUTER_NAVIGATED,
+  ROUTER_NAVIGATION,
+  RouterCancelAction,
+  RouterNavigatedAction,
+  RouterNavigationAction,
+} from '@ngrx/router-store';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
@@ -30,7 +37,20 @@ import {convertQueryStringToModel} from './query/query.converter';
 import {parseSearchTabFromUrl, SearchTab, searchTabsMap} from './search-tab';
 import {convertStringToViewCursor} from './view-cursor/view-cursor';
 
-function onRouterNavigation(state: NavigationState, action: RouterNavigatedAction<RouterStateUrl>): NavigationState {
+function onRouterNavigation(state: NavigationState, action: RouterNavigationAction<RouterStateUrl>): NavigationState {
+  const {params} = action.payload.routerState;
+
+  const navigatingWorkspace = {
+    organizationCode: params['organizationCode'],
+    projectCode: params['projectCode'],
+    collectionId: params['collectionId'],
+    viewCode: params['vc'],
+  };
+
+  return {...state, navigatingWorkspace};
+}
+
+function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction<RouterStateUrl>): NavigationState {
   const {data, params, queryParams, url} = action.payload.routerState;
 
   const mapPosition: MapPosition =
@@ -83,10 +103,12 @@ function onRouterCancel(state: NavigationState, action: RouterCancelAction<AppSt
 
 export function navigationReducer(
   state: NavigationState,
-  action: RouterNavigatedAction<RouterStateUrl> | RouterCancelAction<AppState>
+  action: RouterNavigatedAction<RouterStateUrl> | RouterCancelAction<AppState> | RouterNavigationAction<RouterStateUrl>
 ): NavigationState {
   switch (action.type) {
     case ROUTER_NAVIGATED:
+      return onRouterNavigated(state, action);
+    case ROUTER_NAVIGATION:
       return onRouterNavigation(state, action);
     case ROUTER_CANCEL:
       return onRouterCancel(state, action);

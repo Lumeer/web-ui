@@ -91,6 +91,9 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   @Input()
   public allowedPermissions: AllowedPermissions;
 
+  @Input()
+  public embedded: boolean;
+
   @ViewChild(TableAttributeSuggestionsComponent, {static: false})
   public suggestions: TableAttributeSuggestionsComponent;
 

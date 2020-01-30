@@ -51,6 +51,9 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public embedded: boolean;
+
   public singleCollection$: Observable<boolean>;
   public cursor: TableHeaderCursor;
 

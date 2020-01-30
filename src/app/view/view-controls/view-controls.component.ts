@@ -56,6 +56,7 @@ import {SearchesAction} from '../../core/store/searches/searches.action';
 import {SearchTab} from '../../core/store/navigation/search-tab';
 import {QueryParam} from '../../core/store/navigation/query-param';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
+import {TablesAction} from '../../core/store/tables/tables.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -266,22 +267,24 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         if (!view || !this.workspace) {
           return;
         }
-        const workspacePath = [
-          'w',
-          this.workspace.organizationCode,
-          this.workspace.projectCode,
-          'view',
-          {vc: view.code},
-          view.perspective,
-        ];
-        switch (view.perspective) {
-          case Perspective.Search:
-            const searchConfig = view.config && view.config.search;
-            const searchPath = [...workspacePath, (searchConfig && searchConfig.searchTab) || SearchTab.All];
-            this.revertQueryWithUrl(searchPath, view.query);
-            this.store$.dispatch(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
-        }
+        const workspacePath = [...this.workspacePaths(), 'view', {vc: view.code}, view.perspective];
+        this.revertChangesForView(view, workspacePath);
       });
+  }
+
+  private revertChangesForView(view: View, workspacePath: any[]) {
+    switch (view.perspective) {
+      case Perspective.Search:
+        const searchConfig = view.config && view.config.search;
+        const searchPath = [...workspacePath, (searchConfig && searchConfig.searchTab) || SearchTab.All];
+        this.revertQueryWithUrl(searchPath, view.query);
+        this.store$.dispatch(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
+        return;
+      case Perspective.Table:
+        const tableConfig = view.config && view.config.table;
+        this.revertQueryWithUrl(workspacePath, view.query);
+        this.store$.dispatch(new TablesAction.SetConfig({tableId: view.code, config: tableConfig}));
+    }
   }
 
   private revertQueryWithUrl(path: any[], query: Query) {

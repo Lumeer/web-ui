@@ -29,6 +29,7 @@
                              [linkType]="linkType"
                              [leaf]="!column.children.length"
                              [style.height.px]="column | columnHeight:table:cursor"
+                             [embedded]="embedded"
                              cdkDragHandle
                              class="d-block">
         </table-single-column>
@@ -40,6 +41,7 @@
                             [allowedPermissions]="allowedPermissions"
                             [collection]="collection"
                             [linkType]="linkType"
+                            [embedded]="embedded"
                             class="d-block">
         </table-column-group>
         <div mwlResizeHandle

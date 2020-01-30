@@ -11,12 +11,14 @@
                              [cursor]="cursor | partCursor:partIndex"
                              [table]="table"
                              [canManageConfig]="canManageConfig"
+                             [embedded]="embedded"
                              [part]="part">
     </table-header-collection>
     <table-header-link *ngIf="part.linkTypeId"
                        [cursor]="cursor | partCursor:partIndex"
                        [table]="table"
                        [canManageConfig]="canManageConfig"
+                       [embedded]="embedded"
                        [part]="part">
     </table-header-link>
   </ng-container>

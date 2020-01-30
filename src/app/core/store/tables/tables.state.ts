@@ -20,9 +20,9 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {areTableBodyCursorsEqual, areTableHeaderCursorsEqual, TableCursor} from './table-cursor';
-import {TableModel} from './table.model';
-import {filterLeafColumns} from './table.utils';
+import {TableCursor} from './table-cursor';
+import {DEFAULT_TABLE_ID, TableModel} from './table.model';
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface TablesState extends EntityState<TableModel> {
   cursor: TableCursor;
@@ -49,4 +49,15 @@ export const selectTablesState = (state: AppState) => state.tables;
 export const selectTablesDictionary = createSelector(
   selectTablesState,
   tablesAdapter.getSelectors().selectEntities
+);
+
+export const selectTableId = createSelector(
+  selectWorkspace,
+  workspace => (workspace && workspace.viewCode) || DEFAULT_TABLE_ID
+);
+
+export const selectTable = createSelector(
+  selectTablesDictionary,
+  selectTableId,
+  (tablesMap, tableId) => tableId && tablesMap[tableId]
 );

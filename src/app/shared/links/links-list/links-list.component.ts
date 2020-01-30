@@ -140,8 +140,10 @@ export class LinksListComponent implements OnChanges, OnInit {
 
   private readData(linkType: LinkType) {
     if (linkType) {
+      const otherCollectionId = getOtherLinkedCollectionId(linkType, this.collection.id);
+      const documentsQuery: Query = {stems: [{collectionId: otherCollectionId}]};
+      this.store$.dispatch(new DocumentsAction.Get({query: documentsQuery}));
       const query: Query = {stems: [{collectionId: this.collection.id, linkTypeIds: [linkType.id]}]};
-      this.store$.dispatch(new DocumentsAction.Get({query}));
       this.store$.dispatch(new LinkInstancesAction.Get({query}));
     }
   }

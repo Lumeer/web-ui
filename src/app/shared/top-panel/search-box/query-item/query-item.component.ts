@@ -80,6 +80,8 @@ export class QueryItemComponent implements OnInit, OnChanges {
   @ViewChild(FilterBuilderComponent, {static: false})
   public filterBuilderComponent: FilterBuilderComponent;
 
+  public readonly constraintType = ConstraintType;
+
   public attribute: Attribute;
 
   constructor(public hostElement: ElementRef) {}

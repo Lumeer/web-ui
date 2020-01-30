@@ -23,6 +23,8 @@ import {AppState} from '../app.state';
 import {LinkInstance} from './link.instance';
 import {Query} from '../navigation/query/query';
 import {sortLinkInstances} from './link-instance.utils';
+import {selectQuery} from '../navigation/navigation.state';
+import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
 
 export interface LinkInstancesState extends EntityState<LinkInstance> {
   queries: Query[];
@@ -48,6 +50,18 @@ export const selectLinkInstancesQueries = createSelector(
   selectLinkInstancesState,
   linkInstancesState => linkInstancesState.queries
 );
+
+export const selectCurrentQueryLinkInstancesLoaded = createSelector(
+  selectLinkInstancesQueries,
+  selectQuery,
+  (queries, currentQuery) => !!queries.find(query => areQueriesEqualExceptFiltersAndPagination(query, currentQuery))
+);
+
+export const selectQueryLinkInstancesLoaded = (query: Query) =>
+  createSelector(
+    selectLinkInstancesQueries,
+    queries => !!queries.find(q => areQueriesEqualExceptFiltersAndPagination(q, query))
+  );
 
 export const selectLinkInstanceById = (id: string) =>
   createSelector(

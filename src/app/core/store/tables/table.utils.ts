@@ -83,7 +83,11 @@ export function addTableColumn(
   }
 
   const oldColumn = columns[index];
-  const newColumn = {...oldColumn, children: addTableColumn(oldColumn.children, path.slice(1), column)};
+  const newColumn: TableConfigColumn = {
+    ...oldColumn,
+    children: addTableColumn(oldColumn.children, path.slice(1), column),
+    width: oldColumn.width || DEFAULT_COLUMN_WIDTH,
+  };
   return copyAndSpliceArray(columns, index, 1, newColumn);
 }
 
@@ -104,9 +108,10 @@ export function replaceTableColumns(
   }
 
   const oldColumn = columns[index];
-  const newColumn = {
+  const newColumn: TableConfigColumn = {
     ...oldColumn,
     children: replaceTableColumns(oldColumn.children, path.slice(1), deleteCount, addedColumns),
+    width: oldColumn.width || DEFAULT_COLUMN_WIDTH,
   };
   return copyAndSpliceArray(columns, index, 1, newColumn);
 }
@@ -170,6 +175,7 @@ export function createTableColumnsFromAttributes(
     type: TableColumnType.COMPOUND,
     attributeIds: [attribute.id],
     children: createTableColumnsFromAttributes(allAttributes, attribute),
+    width: DEFAULT_COLUMN_WIDTH,
   }));
 }
 
@@ -193,6 +199,7 @@ function createColumnsFromConfig(
       return preparedColumns.concat({
         ...column,
         children: attribute ? createTableColumnsFromAttributes(allAttributes, attribute, column.children) : [],
+        width: column.width || DEFAULT_COLUMN_WIDTH,
       });
     }
 

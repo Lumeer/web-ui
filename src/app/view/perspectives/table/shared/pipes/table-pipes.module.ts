@@ -35,7 +35,6 @@ import {CursorEqualsPipe} from './cursor-equals.pipe';
 import {DataCellDocumentPipe} from './data-cell-document.pipe';
 import {DataPipe} from './data.pipe';
 import {DocumentHintColumnsPipe} from './document-hint-columns.pipe';
-import {EmbeddedPipe} from './embedded.pipe';
 import {EntityCreatedPipe} from './entity-created.pipe';
 import {ExpandablePipe} from './expandable.pipe';
 import {ExtractValuePipe} from './extract-value.pipe';
@@ -89,7 +88,6 @@ import {DocumentHintsOffsetPipe} from './document-hints-offset.pipe';
     AttributeNamePipe,
     AttributeParentNamePipe,
     AttributeExistPipe,
-    EmbeddedPipe,
     IsFirstRowPipe,
     CursorEqualsPipe,
     ExtractValuePipe,
@@ -131,7 +129,6 @@ import {DocumentHintsOffsetPipe} from './document-hints-offset.pipe';
     AttributeNamePipe,
     AttributeParentNamePipe,
     AttributeExistPipe,
-    EmbeddedPipe,
     IsFirstRowPipe,
     CursorEqualsPipe,
     ExtractValuePipe,

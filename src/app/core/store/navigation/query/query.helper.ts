@@ -35,7 +35,7 @@ export function areQueriesEqualExceptFiltersAndPagination(first: Query, second: 
 
 export function hasQueryNewLink(oldQuery: Query, newQuery: Query) {
   if (
-    oldQuery.stems.length !== newQuery.stems.length ||
+    ((oldQuery && oldQuery.stems) || []).length !== ((newQuery && newQuery.stems) || []).length ||
     !deepArrayEquals(getBaseCollectionIdsFromQuery(oldQuery), getBaseCollectionIdsFromQuery(newQuery))
   ) {
     return false;

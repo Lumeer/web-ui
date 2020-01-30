@@ -30,8 +30,9 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {PerspectiveConfig} from './view';
+import {PerspectiveConfig, View} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -71,4 +72,14 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
     default:
       return config;
   }
+}
+
+export function preferViewConfigUpdate(previousView: View, view: View, hasStoreConfig: boolean): boolean {
+  if (!previousView) {
+    return !hasStoreConfig;
+  }
+  if (previousView.id !== view.id) {
+    return true;
+  }
+  return !deepObjectsEquals(previousView.config && previousView.config.search, view.config && view.config.search);
 }

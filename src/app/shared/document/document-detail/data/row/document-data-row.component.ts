@@ -329,7 +329,7 @@ export class DocumentDataRowComponent implements DataRowComponent, OnChanges, Af
   }
 
   public ngAfterViewInit() {
-    this.computeWidth();
+    setTimeout(() => this.computeWidth());
   }
 
   private computeWidth() {
