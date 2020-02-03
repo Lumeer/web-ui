@@ -34,29 +34,66 @@ describe('SelectDataValue', () => {
   };
 
   describe('meet condition', () => {
-    it('in', () => {
-      expect(new SelectDataValue(['0', '5'], config).meetCondition(QueryCondition.In, [{value: '0'}])).toBeTruthy();
-      expect(new SelectDataValue(['4', '5'], config).meetCondition(QueryCondition.In, [{value: '0'}])).toBeFalsy();
+    it('has some', () => {
       expect(
-        new SelectDataValue(['0', '1', '2', '3'], config).meetCondition(QueryCondition.In, [
+        new SelectDataValue(['0', '5'], config).meetCondition(QueryCondition.HasSome, [{value: '0'}])
+      ).toBeTruthy();
+      expect(new SelectDataValue(['4', '5'], config).meetCondition(QueryCondition.HasSome, [{value: '0'}])).toBeFalsy();
+      expect(
+        new SelectDataValue(['0', '1', '2', '3'], config).meetCondition(QueryCondition.HasSome, [
           {value: ['0', '1', '2', '3', '4']},
         ])
       ).toBeTruthy();
-      expect(new SelectDataValue(['3', '1'], config).meetCondition(QueryCondition.In, [{value: '0'}])).toBeFalsy();
+      expect(new SelectDataValue(['3', '1'], config).meetCondition(QueryCondition.HasSome, [{value: '0'}])).toBeFalsy();
     });
 
-    it('not in', () => {
+    it('has none of ', () => {
       expect(
-        new SelectDataValue(['0', '1', '2'], config).meetCondition(QueryCondition.NotIn, [{value: '3'}])
+        new SelectDataValue(['0', '1', '2'], config).meetCondition(QueryCondition.HasNoneOf, [{value: '3'}])
       ).toBeTruthy();
       expect(
-        new SelectDataValue(['0', '1', '2'], config).meetCondition(QueryCondition.NotIn, [{value: ['3', '4', '5']}])
+        new SelectDataValue(['0', '1', '2'], config).meetCondition(QueryCondition.HasNoneOf, [{value: ['3', '4', '5']}])
       ).toBeTruthy();
       expect(
-        new SelectDataValue(['0', '1', '2', '3'], config).meetCondition(QueryCondition.NotIn, [{value: ['0', '5']}])
+        new SelectDataValue(['0', '1', '2', '3'], config).meetCondition(QueryCondition.HasNoneOf, [{value: ['0', '5']}])
       ).toBeFalsy();
-      expect(new SelectDataValue(['3', '1'], config).meetCondition(QueryCondition.NotIn, [{value: '1'}])).toBeFalsy();
+      expect(
+        new SelectDataValue(['3', '1'], config).meetCondition(QueryCondition.HasNoneOf, [{value: '1'}])
+      ).toBeFalsy();
     });
+
+    it('in', () => {
+      expect(
+        new SelectDataValue(['a'], config).meetCondition(QueryCondition.In, [{value: ['a', 'b', 'c']}])
+      ).toBeTruthy();
+      expect(
+        new SelectDataValue(['a', 'b'], config).meetCondition(QueryCondition.In, [{value: ['a', 'b', 'c']}])
+      ).toBeTruthy();
+      expect(
+        new SelectDataValue(['a', 'c', 'b'], config).meetCondition(QueryCondition.In, [{value: ['a', 'b', 'c']}])
+      ).toBeTruthy();
+      expect(
+        new SelectDataValue(['a', 'b', 'c', 'd'], config).meetCondition(QueryCondition.In, [{value: ['a', 'b', 'c']}])
+      ).toBeFalsy();
+    });
+
+    it('has all', () => {
+      expect(
+        new SelectDataValue(['a'], config).meetCondition(QueryCondition.HasAll, [{value: ['a', 'b', 'c']}])
+      ).toBeFalsy();
+      expect(
+        new SelectDataValue(['a', 'b'], config).meetCondition(QueryCondition.HasAll, [{value: ['a', 'b', 'c']}])
+      ).toBeFalsy();
+      expect(
+        new SelectDataValue(['a', 'c', 'b'], config).meetCondition(QueryCondition.HasAll, [{value: ['a', 'b', 'c']}])
+      ).toBeTruthy();
+      expect(
+        new SelectDataValue(['a', 'b', 'c', 'd'], config).meetCondition(QueryCondition.HasAll, [
+          {value: ['a', 'b', 'c']},
+        ])
+      ).toBeTruthy();
+    });
+
     it('is empty', () => {
       expect(new SelectDataValue('0', config).meetCondition(QueryCondition.IsEmpty, [])).toBeFalsy();
       expect(new SelectDataValue('  ', config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();

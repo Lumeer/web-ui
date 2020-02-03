@@ -95,7 +95,7 @@ export function dataValuesMeetConditionByNumber(
   }
 }
 
-export function dataValuesMeetFulltexts(value: string, fulltexts: string[]): boolean {
+export function valueMeetFulltexts(value: string, fulltexts: string[]): boolean {
   const formattedValue = (value || '').toLowerCase().trim();
   return (fulltexts || [])
     .map(fulltext => fulltext.toLowerCase().trim())

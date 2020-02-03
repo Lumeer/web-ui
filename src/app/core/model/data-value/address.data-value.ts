@@ -23,7 +23,7 @@ import {ConstraintData} from '../data/constraint';
 import {AddressConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByText, valueMeetFulltexts} from './data-value.utils';
 
 export class AddressDataValue implements DataValue {
   public readonly address: Address;
@@ -121,6 +121,6 @@ export class AddressDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }

@@ -26,7 +26,7 @@ import {ColorConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByText, valueMeetFulltexts} from './data-value.utils';
 
 export class ColorDataValue implements DataValue {
   public readonly hexCode: string;
@@ -117,10 +117,7 @@ export class ColorDataValue implements DataValue {
 
   public meetFullTexts(fulltexts: string[]): boolean {
     const formattedFulltexts = (fulltexts || []).map(fulltext => this.copy(fulltext).format());
-    return (
-      dataValuesMeetFulltexts(this.format(), formattedFulltexts) ||
-      dataValuesMeetFulltexts(this.readableColor(), fulltexts)
-    );
+    return valueMeetFulltexts(this.format(), formattedFulltexts) || valueMeetFulltexts(this.readableColor(), fulltexts);
   }
 
   public readableColor(): string {

@@ -1402,11 +1402,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">91</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="view.changes.not.saved.undo" datatype="html">
         <source>Undo changes</source><target state="final">Undo changes</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
-          <context context-type="linenumber">95</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.document.favorite" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="collection.document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target state="final"><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="organization.settings.users.count" datatype="html">
@@ -2776,7 +2773,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.select" datatype="html">
-        <source>{VAR_SELECT, select, eq {In} neq {Not In} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} }</source><target state="final">{VAR_SELECT, select, eq {In} neq {Not In} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} }</target>
+        <source>{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source><target state="final">{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>

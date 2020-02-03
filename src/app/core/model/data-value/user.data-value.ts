@@ -25,8 +25,9 @@ import {DataValue} from './index';
 import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {isEmailValid} from '../../../shared/utils/email.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetFulltexts} from './data-value.utils';
+import {valueMeetFulltexts} from './data-value.utils';
 import {UserConstraintConditionValue} from '../data/constraint-condition';
+import {arrayIntersection} from '../../../shared/utils/array.utils';
 
 export class UserDataValue implements DataValue {
   public readonly users: User[];
@@ -127,15 +128,24 @@ export class UserDataValue implements DataValue {
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
     const dataValues = values && values.map(value => this.mapQueryConditionValue(value));
-    const otherUsers = dataValues.length > 0 && dataValues[0].users;
+    const otherUsers = (dataValues.length > 0 && dataValues[0].users) || [];
 
     switch (condition) {
-      case QueryCondition.In:
+      case QueryCondition.HasSome:
       case QueryCondition.Equals:
         return this.users.some(option => (otherUsers || []).some(otherOption => otherOption.email === option.email));
-      case QueryCondition.NotIn:
+      case QueryCondition.HasNoneOf:
       case QueryCondition.NotEquals:
         return this.users.every(option => (otherUsers || []).every(otherOption => otherOption.email !== option.email));
+      case QueryCondition.In:
+        return (
+          this.users.length > 0 &&
+          this.users.every(user => otherUsers.some(otherOption => otherOption.email === user.email))
+        );
+      case QueryCondition.HasAll:
+        return (
+          arrayIntersection(otherUsers.map(o => o.email), this.users.map(o => o.email)).length === otherUsers.length
+        );
       case QueryCondition.IsEmpty:
         return this.users.length === 0 && this.format().trim().length === 0;
       case QueryCondition.NotEmpty:
@@ -154,6 +164,6 @@ export class UserDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }

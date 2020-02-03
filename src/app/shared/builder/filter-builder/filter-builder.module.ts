@@ -25,6 +25,7 @@ import {QueryConditionItemsPipe} from './pipes/query-condition-items.pipe';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
 import {QueryConstraintConditionsPipe} from './pipes/query-constraint-conditions.pipe';
+import {ConditionShouldBeItalicPipe} from './pipes/condition-should-be-italic.pipe';
 
 @NgModule({
   declarations: [
@@ -32,8 +33,9 @@ import {QueryConstraintConditionsPipe} from './pipes/query-constraint-conditions
     QueryConditionItemsPipe,
     QueryConstraintConditionsPipe,
     FilterBuilderContentComponent,
+    ConditionShouldBeItalicPipe,
   ],
-  exports: [FilterBuilderComponent],
+  exports: [FilterBuilderComponent, ConditionShouldBeItalicPipe],
   imports: [CommonModule, DropdownModule, DataInputModule],
 })
 export class FilterBuilderModule {}
