@@ -17,17 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  ViewChild,
-  ElementRef,
-  Renderer2,
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {DialogType} from '../dialog-type';
+import {PlatformLocation} from '@angular/common';
+import {BsModalRef} from 'ngx-bootstrap';
 
 @Component({
   selector: 'modal-wrapper',
@@ -36,15 +29,6 @@ import {DialogType} from '../dialog-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModalWrapperComponent {
-  @ViewChild('modalHeader', {static: false})
-  public headerElement: ElementRef;
-
-  @ViewChild('modalFooter', {static: false})
-  public footerElement: ElementRef;
-
-  @ViewChild('modalBody', {static: false})
-  public bodyElement: ElementRef;
-
   @Input()
   public dialogType: DialogType;
 
@@ -78,7 +62,11 @@ export class ModalWrapperComponent {
   @Output()
   public onSubmit = new EventEmitter();
 
-  constructor(private renderer: Renderer2) {}
+  constructor(private location: PlatformLocation, private ref: BsModalRef) {
+    location.onPopState(() => {
+      this.ref.hide();
+    });
+  }
 
   public onCloseClick() {
     this.onClose.next();
