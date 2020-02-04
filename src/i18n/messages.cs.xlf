@@ -2678,7 +2678,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.select" datatype="html">
-        <source>{VAR_SELECT, select, eq {In} neq {Not In} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} }</source><target>{VAR_SELECT, select, eq {Je mezi} neq {Není mezi} in {Je mezi} nin {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} }</target>
+        <source>{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source><target>{VAR_SELECT, select, eq {Je mezi} neq {Není mezi} in {Je mezi} nin {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -4143,11 +4143,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">91</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="view.changes.not.saved.undo" datatype="html">
         <source>Undo changes</source><target>Vrátit změny</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
-          <context context-type="linenumber">95</context>
-        </context-group>
-      </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="label.terms.start" datatype="html">

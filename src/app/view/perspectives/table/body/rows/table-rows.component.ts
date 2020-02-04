@@ -40,15 +40,9 @@ import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {selectTableRows} from '../../../../../core/store/tables/tables.selector';
-import {
-  selectCurrentQueryDocumentsLoaded,
-  selectQueryDocumentsLoaded,
-} from '../../../../../core/store/documents/documents.state';
+import {selectQueryDocumentsLoaded} from '../../../../../core/store/documents/documents.state';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
-import {
-  selectCurrentQueryLinkInstancesLoaded,
-  selectQueryLinkInstancesLoaded,
-} from '../../../../../core/store/link-instances/link-instances.state';
+import {selectQueryLinkInstancesLoaded} from '../../../../../core/store/link-instances/link-instances.state';
 
 @Component({
   selector: 'table-rows',

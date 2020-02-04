@@ -24,7 +24,7 @@ import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isDateValid, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {ConstraintConditionValue, DateTimeConstraintConditionValue} from '../data/constraint-condition';
-import {dataValuesMeetFulltexts} from './data-value.utils';
+import {valueMeetFulltexts} from './data-value.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {createRange} from '../../../shared/utils/array.utils';
 import {queryConditionNumInputs} from '../../store/navigation/query/query.util';
@@ -230,7 +230,7 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(true), fulltexts);
+    return valueMeetFulltexts(this.format(true), fulltexts);
   }
 }
 

@@ -31,7 +31,7 @@ import {
 import {PercentageConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByNumber, dataValuesMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByNumber, valueMeetFulltexts} from './data-value.utils';
 
 export class PercentageDataValue implements DataValue {
   public readonly percentage: Big;
@@ -130,7 +130,7 @@ export class PercentageDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }
 

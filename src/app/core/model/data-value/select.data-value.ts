@@ -22,7 +22,8 @@ import {DataValue} from './index';
 import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetFulltexts} from './data-value.utils';
+import {valueMeetFulltexts} from './data-value.utils';
+import {arrayIntersection} from '../../../shared/utils/array.utils';
 
 export class SelectDataValue implements DataValue {
   public readonly options: SelectConstraintOption[];
@@ -115,18 +116,28 @@ export class SelectDataValue implements DataValue {
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new SelectDataValue(value.value, this.config));
-    const otherOptions = dataValues.length > 0 && dataValues[0].options;
+    const otherOptions = (dataValues.length > 0 && dataValues[0].options) || [];
 
     switch (condition) {
-      case QueryCondition.In:
+      case QueryCondition.HasSome:
       case QueryCondition.Equals:
         return this.options.some(option =>
           (otherOptions || []).some(otherOption => otherOption.value === option.value)
         );
-      case QueryCondition.NotIn:
+      case QueryCondition.HasNoneOf:
       case QueryCondition.NotEquals:
         return this.options.every(option =>
           (otherOptions || []).every(otherOption => otherOption.value !== option.value)
+        );
+      case QueryCondition.In:
+        return (
+          this.options.length > 0 &&
+          this.options.every(option => otherOptions.some(otherOption => otherOption.value === option.value))
+        );
+      case QueryCondition.HasAll:
+        return (
+          arrayIntersection(otherOptions.map(o => o.value), this.options.map(o => o.value)).length ===
+          otherOptions.length
         );
       case QueryCondition.IsEmpty:
         return this.options.length === 0 && this.format().trim().length === 0;
@@ -138,7 +149,7 @@ export class SelectDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }
 

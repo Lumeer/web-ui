@@ -273,14 +273,16 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       for (let i = 0; i < (stemConfig.categories || []).length; i++) {
         const category = stemConfig.categories[i];
 
-        const constraint = findAttributeConstraint(resource && resource.attributes, category.attributeId);
-        const saveValue = constraint
-          ? constraint.createDataValue(task.swimlanes[i], this.constraintData).serialize()
-          : task.swimlanes[i];
+        if (category.resourceId === resource.id && category.resourceType === metadata.resourceType) {
+          const constraint = findAttributeConstraint(resource && resource.attributes, category.attributeId);
+          const saveValue = constraint
+            ? constraint.createDataValue(task.swimlanes[i], this.constraintData).serialize()
+            : task.swimlanes[i];
 
-        const changed = (dataResource.data && dataResource.data[category.attributeId] !== saveValue) || false;
-        if (changed) {
-          patchData[category.attributeId] = saveValue;
+          const changed = (dataResource.data && dataResource.data[category.attributeId] !== saveValue) || false;
+          if (changed) {
+            patchData[category.attributeId] = saveValue;
+          }
         }
       }
     }

@@ -20,7 +20,7 @@
 import {FilesConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetFulltexts} from './data-value.utils';
+import {valueMeetFulltexts} from './data-value.utils';
 
 export class FilesDataValue implements DataValue {
   constructor(public readonly value: any, public readonly config: FilesConstraintConfig) {}
@@ -74,6 +74,6 @@ export class FilesDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }

@@ -30,7 +30,7 @@ import {DataValue} from './index';
 import {removeNonNumberCharacters} from '../../../shared/directives/number.directive';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByNumber, dataValuesMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByNumber, valueMeetFulltexts} from './data-value.utils';
 
 export class NumberDataValue implements DataValue {
   public readonly bigNumber: Big;
@@ -102,7 +102,7 @@ export class NumberDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }
 

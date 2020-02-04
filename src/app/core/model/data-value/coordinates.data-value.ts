@@ -24,7 +24,7 @@ import {MapCoordinates} from '../../store/maps/map.model';
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../data/constraint-config';
 import {DataValue} from './index';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByText, valueMeetFulltexts} from './data-value.utils';
 
 export class CoordinatesDataValue implements DataValue {
   public readonly coordinates: MapCoordinates;
@@ -102,6 +102,6 @@ export class CoordinatesDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }

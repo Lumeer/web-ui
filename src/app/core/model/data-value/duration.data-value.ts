@@ -32,7 +32,7 @@ import {DurationConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByNumber, dataValuesMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByNumber, valueMeetFulltexts} from './data-value.utils';
 
 export class DurationDataValue implements DataValue {
   public bigNumber: Big;
@@ -120,6 +120,6 @@ export class DurationDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }

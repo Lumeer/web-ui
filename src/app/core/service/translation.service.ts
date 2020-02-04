@@ -77,7 +77,7 @@ export class TranslationService {
       {
         id: 'query.filter.condition.constraint.select',
         value:
-          '{condition, select, eq {In} neq {Not In} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty}}',
+          '{condition, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty}}',
       },
       {condition}
     );

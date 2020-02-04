@@ -37,10 +37,7 @@ export class FileAttachmentsService implements OnDestroy {
 
   private subscribeToQuery(): Subscription {
     return this.store$
-      .pipe(
-        select(selectQuery),
-        filter(query => query && query.stems && query.stems.length > 0)
-      )
+      .pipe(select(selectQuery))
       .subscribe(query => this.store$.dispatch(new FileAttachmentsAction.GetByQuery({query})));
   }
 

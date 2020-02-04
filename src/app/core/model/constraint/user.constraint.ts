@@ -38,6 +38,13 @@ export class UserConstraint implements Constraint {
   }
 
   public conditions(): QueryCondition[] {
-    return [QueryCondition.In, QueryCondition.NotIn, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
+    return [
+      QueryCondition.HasSome,
+      QueryCondition.HasNoneOf,
+      QueryCondition.In,
+      QueryCondition.HasAll,
+      QueryCondition.IsEmpty,
+      QueryCondition.NotEmpty,
+    ];
   }
 }

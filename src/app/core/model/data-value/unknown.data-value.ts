@@ -21,7 +21,7 @@ import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {DataValue} from './index';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByText, dataValuesMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByText, valueMeetFulltexts} from './data-value.utils';
 
 export class UnknownDataValue implements DataValue {
   public readonly config: any = {};
@@ -91,6 +91,6 @@ export class UnknownDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return dataValuesMeetFulltexts(this.format(), fulltexts);
+    return valueMeetFulltexts(this.format(), fulltexts);
   }
 }
