@@ -18,7 +18,11 @@
  */
 
 export enum NumberConstraintFormControl {
-  Decimal = 'decimal',
+  Decimals = 'decimals',
   MinValue = 'minValue',
   MaxValue = 'maxValue',
+  Compact = 'compact',
+  Separated = 'separated',
+  ForceSign = 'forceSign',
+  Negative = 'negative',
 }

@@ -45,6 +45,8 @@ import {getAllVideos} from './core/store/videos/videos.data';
 import {SessionService} from './auth/session.service';
 import {ConstraintDataService} from './core/service/constraint-data.service';
 import {TooltipConfig} from 'ngx-bootstrap';
+import numbro from 'numbro';
+import csLanguage from 'numbro/languages/cs-CZ';
 
 @Component({
   selector: 'lmr-app',
@@ -80,11 +82,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.startAnalyticsTracking();
     this.setUpExternalServicesUserContext();
     this.initCheckUserInteraction();
-
-    this.tooltipConfig.adaptivePosition = true;
-    this.tooltipConfig.container = 'body';
-    this.tooltipConfig.placement = 'auto';
-    this.tooltipConfig.delay = 100;
+    this.initTooltipConfig();
+    this.initLanguage();
   }
 
   private initPushNotifications() {
@@ -154,7 +153,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const dimensions: {dimension1?: string; dimension2: string} = {dimension2: serviceLevel};
+    const dimensions: { dimension1?: string; dimension2: string } = {dimension2: serviceLevel};
     if (monthYear) {
       dimensions.dimension1 = monthYear;
     }
@@ -240,6 +239,19 @@ export class AppComponent implements OnInit, AfterViewInit {
     ['mousedown', 'keypress', 'onscroll', 'wheel'].forEach(type =>
       document.body.addEventListener(type, () => this.userInteracted())
     );
+  }
+
+  private initTooltipConfig() {
+    this.tooltipConfig.adaptivePosition = true;
+    this.tooltipConfig.container = 'body';
+    this.tooltipConfig.placement = 'auto';
+    this.tooltipConfig.delay = 100;
+  }
+
+  private initLanguage() {
+    if (environment.locale === 'cs') {
+      numbro.registerLanguage(csLanguage, true);
+    }
   }
 
   private userInteracted() {

@@ -23,6 +23,10 @@ import {NumberConstraintConfig} from '../../../../../../core/model/data/constrai
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {NumberConstraintFormControl} from './number-constraint-form-control';
+import {NumberDataValue} from '../../../../../../core/model/data-value/number.data-value';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
+import {NumberConstraint} from '../../../../../../core/model/constraint/number.constraint';
 
 @Component({
   selector: 'number-constraint-config-form',
@@ -35,6 +39,8 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
 
   @Input()
   public form: FormGroup;
+
+  public exampleValue$: Observable<NumberDataValue>;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -49,7 +55,11 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(NumberConstraintFormControl.Decimal, new FormControl(this.config && this.config.decimal));
+    this.form.addControl(NumberConstraintFormControl.Decimals, new FormControl(this.config && this.config.decimals));
+    this.form.addControl(NumberConstraintFormControl.Compact, new FormControl(this.config && this.config.compact));
+    this.form.addControl(NumberConstraintFormControl.ForceSign, new FormControl(this.config && this.config.forceSign));
+    this.form.addControl(NumberConstraintFormControl.Separated, new FormControl(this.config && this.config.separated));
+    this.form.addControl(NumberConstraintFormControl.Negative, new FormControl(this.config && this.config.negative));
     this.form.addControl(
       NumberConstraintFormControl.MinValue,
       new FormControl(this.config && this.config.minValue && this.config.minValue.toFixed())
@@ -61,5 +71,17 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
     this.form.setValidators(
       minMaxValidator(NumberConstraintFormControl.MinValue, NumberConstraintFormControl.MaxValue)
     );
+
+    this.exampleValue$ = this.form.valueChanges.pipe(startWith(''), map(() => this.createNumberDataValue()));
+  }
+
+  private createNumberDataValue(): NumberDataValue {
+    const config: NumberConstraintConfig = this.form.value;
+    let exampleValue = 123456789.123456789;
+    if (config.negative) {
+      exampleValue *= -1;
+    }
+
+    return new NumberConstraint(config).createDataValue(exampleValue);
   }
 }

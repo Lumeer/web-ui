@@ -9,9 +9,8 @@
 
 <ng-template #numberEditing>
   <input #numberInput
-         number
          [title]="value | formatDataValue"
-         [value]="value | formatDataValue"
+         [value]="rawValue"
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"

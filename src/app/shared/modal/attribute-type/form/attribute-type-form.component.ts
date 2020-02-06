@@ -58,7 +58,8 @@ export class AttributeTypeFormComponent implements OnChanges {
     config: new FormGroup({}),
   });
 
-  constructor(private i18n: I18n, private notificationService: NotificationService) {}
+  constructor(private i18n: I18n, private notificationService: NotificationService) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute && this.attribute) {
@@ -116,11 +117,13 @@ export class AttributeTypeFormComponent implements OnChanges {
         };
       case ConstraintType.Number:
         return {
-          decimal: this.configForm.get(NumberConstraintFormControl.Decimal).value,
-          format: undefined,
           minValue: convertToBig(this.configForm.get(NumberConstraintFormControl.MinValue).value),
           maxValue: convertToBig(this.configForm.get(NumberConstraintFormControl.MaxValue).value),
-          precision: undefined,
+          decimals: this.configForm.get(NumberConstraintFormControl.Decimals).value,
+          separated: this.configForm.get(NumberConstraintFormControl.Separated).value,
+          compact: this.configForm.get(NumberConstraintFormControl.Compact).value,
+          forceSign: this.configForm.get(NumberConstraintFormControl.ForceSign).value,
+          negative: this.configForm.get(NumberConstraintFormControl.Negative).value,
         };
       case ConstraintType.Percentage:
         return {

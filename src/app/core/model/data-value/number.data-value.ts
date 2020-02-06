@@ -20,17 +20,17 @@
 import Big from 'big.js';
 import {compareBigNumbers} from '../../../shared/utils/big/compare-big-numbers';
 import {
-  convertToBig,
-  decimalStoreToUser,
+  convertToBig, decimalStoreToUser,
   decimalUserToStore,
   formatUnknownDataValue,
 } from '../../../shared/utils/data.utils';
 import {NumberConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {removeNonNumberCharacters} from '../../../shared/directives/number.directive';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNumeric} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueMeetFulltexts} from './data-value.utils';
+import numbro from 'numbro';
 
 export class NumberDataValue implements DataValue {
   public readonly bigNumber: Big;
@@ -40,15 +40,20 @@ export class NumberDataValue implements DataValue {
     public readonly config: NumberConstraintConfig,
     public readonly inputValue?: string
   ) {
-    this.bigNumber = convertToBig(value);
+    const number = numbro.unformat(value, parseNumbroConfig(config));
+    this.bigNumber = convertToBig(number);
   }
 
-  public format(): string {
+  public format(raw?: boolean): string {
     if (isNotNullOrUndefined(this.inputValue)) {
       return removeNonNumberCharacters(this.inputValue);
     }
-    // TODO format based on config
-    return this.bigNumber ? decimalStoreToUser(this.bigNumber.toFixed()) : formatUnknownDataValue(this.value);
+
+    if (this.bigNumber) {
+      return raw ? decimalStoreToUser(this.bigNumber.toFixed()) : numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
+    }
+
+    return formatUnknownDataValue(this.value);
   }
 
   public preview(): string {
@@ -56,6 +61,9 @@ export class NumberDataValue implements DataValue {
   }
 
   public serialize(): any {
+    if (this.bigNumber) {
+      return decimalUserToStore(this.bigNumber.toFixed());
+    }
     return decimalUserToStore(String(this.value).trim());
   }
 
@@ -104,6 +112,31 @@ export class NumberDataValue implements DataValue {
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
+}
+
+function parseNumbroConfig(config: NumberConstraintConfig): any {
+  if (!config) {
+    return {};
+  }
+
+  const numbroConfig = {};
+  if (config.forceSign) {
+    numbroConfig['forceSign'] = true;
+  }
+  if (config.separated) {
+    numbroConfig['thousandSeparated'] = true;
+    numbroConfig['spaceSeparated'] = true;
+  }
+  if (config.compact) {
+    numbroConfig['average'] = true;
+  }
+  if (config.negative) {
+    numbroConfig['negative'] = 'parenthesis';
+  }
+  if (isNumeric(config.decimals)) {
+    numbroConfig['mantissa'] = config.decimals;
+  }
+  return numbroConfig;
 }
 
 function checkNumberRange(n: Big, config?: NumberConstraintConfig): boolean {

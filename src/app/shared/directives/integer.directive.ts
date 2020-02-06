@@ -88,17 +88,16 @@ export class IntegerDirective extends DefaultValueAccessor {
     const value = (<HTMLInputElement>event.currentTarget).value;
     if (isNotNullOrUndefined(value) && value !== '') {
       let absolute = Math.abs(+value);
-      if (minMax) {
-        if (isNotNullOrUndefined(this.minValue)) {
-          absolute = Math.max(this.minValue, absolute);
-        }
-        if (isNotNullOrUndefined(this.maxValue)) {
-          absolute = Math.min(this.maxValue, absolute);
-        }
+      let rangeAbsolute = absolute;
+      if (isNotNullOrUndefined(this.minValue)) {
+        rangeAbsolute = Math.max(this.minValue, rangeAbsolute);
+      }
+      if (isNotNullOrUndefined(this.maxValue)) {
+        rangeAbsolute = Math.min(this.maxValue, rangeAbsolute);
       }
 
-      this._sourceRenderer.setProperty(this._sourceElementRef.nativeElement, 'value', String(absolute));
-      this.onChange(absolute);
+      this._sourceRenderer.setProperty(this._sourceElementRef.nativeElement, 'value', String(minMax ? rangeAbsolute : absolute));
+      this.onChange(rangeAbsolute);
     } else {
       this.onChange(null);
     }
