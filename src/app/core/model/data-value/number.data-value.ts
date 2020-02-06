@@ -41,8 +41,8 @@ export class NumberDataValue implements DataValue {
     public readonly config: NumberConstraintConfig,
     public readonly inputValue?: string
   ) {
-    const number = numbro.unformat(value, parseNumbroConfig(config));
-    this.bigNumber = convertToBig(number);
+    const unformatted = numbro.unformat(value, parseNumbroConfig(config));
+    this.bigNumber = convertToBig(unformatted);
   }
 
   public format(raw?: boolean): string {
