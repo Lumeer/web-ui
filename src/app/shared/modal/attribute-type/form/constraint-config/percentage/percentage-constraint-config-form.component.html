@@ -12,23 +12,22 @@
       <label for="numberDecimals">
         <span class="d-inline-block"
               i18n="@@constraint.percentage.decimals.label">
-          Round to no. of decimal digits:
+         Round to no. of decimal digits (0-10):
         </span>
       </label>
       <input class="form-control"
              formControlName="decimals"
              id="numberDecimals"
              integer
+             maxValue="10"
+             min="0"
+             minValue="0"
+             max="10"
              type="number">
       <span class="d-inline-block text-muted small"
             i18n="@@constraint.percentage.decimals.description">
           Leave empty for no rounding.
         </span>
-      <div *ngIf="decimalsControl.errors?.min"
-           class="text-danger"
-           i18n="@@constraint.percentage.decimals.error">
-        The value must be greater than or equal to zero.
-      </div>
     </div>
   </div>
 
@@ -62,9 +61,10 @@
     </div>
   </div>
 
-  <div *ngIf="form.errors && form.errors['minMaxInvalid'] && form.controls['maxValue'].touched && form.controls['minValue'].touched"
-       class="text-danger"
-       i18n="@@form.errors.minMaxInvalid">
+  <div
+    *ngIf="form.errors && form.errors['minMaxInvalid'] && form.controls['maxValue'].touched && form.controls['minValue'].touched"
+    class="text-danger"
+    i18n="@@form.errors.minMaxInvalid">
     Minimum must be less or equal than maximum.
   </div>
 

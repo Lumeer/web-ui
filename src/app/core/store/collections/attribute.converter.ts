@@ -83,9 +83,7 @@ function convertDateTimeConstraintConfigDtoToModel(config: any): DateTimeConstra
 
 function convertNumberConstraintConfigDtoToModel(config: any): NumberConstraintConfig {
   return {
-    decimal: config.decimal,
-    format: config.format,
-    precision: config.precision,
+    ...config,
     minValue: convertToBig(config.minValue),
     maxValue: convertToBig(config.maxValue),
   };
@@ -126,9 +124,7 @@ function convertDateTimeConstraintConfigModelToDto(config: Partial<DateTimeConst
 
 function convertNumberConstraintConfigModelToDto(config: Partial<NumberConstraintConfig> | any): any {
   return {
-    decimal: config.decimal,
-    format: config.format,
-    precision: config.precision,
+    ...config,
     minValue: config.minValue && config.minValue.toFixed(),
     maxValue: config.maxValue && config.maxValue.toFixed(),
   };

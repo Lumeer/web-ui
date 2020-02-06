@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {PercentageConstraintFormControl} from './percentage-constraint-form-control';
 import {PercentageConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
@@ -52,7 +52,7 @@ export class PercentageConstraintConfigFormComponent implements OnChanges {
   private createForm() {
     this.form.addControl(
       PercentageConstraintFormControl.Decimals,
-      new FormControl(this.config && this.config.decimals, Validators.min(0))
+      new FormControl(this.config && this.config.decimals)
     );
     this.form.addControl(
       PercentageConstraintFormControl.MinValue,

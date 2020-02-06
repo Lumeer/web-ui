@@ -116,11 +116,13 @@ export class AttributeTypeFormComponent implements OnChanges {
         };
       case ConstraintType.Number:
         return {
-          decimal: this.configForm.get(NumberConstraintFormControl.Decimal).value,
-          format: undefined,
           minValue: convertToBig(this.configForm.get(NumberConstraintFormControl.MinValue).value),
           maxValue: convertToBig(this.configForm.get(NumberConstraintFormControl.MaxValue).value),
-          precision: undefined,
+          decimals: this.configForm.get(NumberConstraintFormControl.Decimals).value,
+          separated: this.configForm.get(NumberConstraintFormControl.Separated).value,
+          compact: this.configForm.get(NumberConstraintFormControl.Compact).value,
+          forceSign: this.configForm.get(NumberConstraintFormControl.ForceSign).value,
+          negative: this.configForm.get(NumberConstraintFormControl.Negative).value,
         };
       case ConstraintType.Percentage:
         return {
