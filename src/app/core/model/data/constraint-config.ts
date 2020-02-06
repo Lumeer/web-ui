@@ -25,11 +25,9 @@ export interface AddressConstraintConfig {
   fields: AddressField[];
 }
 
-export interface BooleanConstraintConfig {
-}
+export interface BooleanConstraintConfig {}
 
-export interface ColorConstraintConfig {
-}
+export interface ColorConstraintConfig {}
 
 export enum CoordinatesFormat {
   DecimalDegrees = 'DD',
@@ -68,8 +66,7 @@ export enum DurationType {
   Custom = 'Custom',
 }
 
-export interface FilesConstraintConfig {
-}
+export interface FilesConstraintConfig {}
 
 export interface NumberConstraintConfig {
   minValue?: Big;

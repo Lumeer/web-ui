@@ -58,8 +58,7 @@ export class AttributeTypeFormComponent implements OnChanges {
     config: new FormGroup({}),
   });
 
-  constructor(private i18n: I18n, private notificationService: NotificationService) {
-  }
+  constructor(private i18n: I18n, private notificationService: NotificationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute && this.attribute) {

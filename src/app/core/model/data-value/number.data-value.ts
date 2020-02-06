@@ -20,7 +20,8 @@
 import Big from 'big.js';
 import {compareBigNumbers} from '../../../shared/utils/big/compare-big-numbers';
 import {
-  convertToBig, decimalStoreToUser,
+  convertToBig,
+  decimalStoreToUser,
   decimalUserToStore,
   formatUnknownDataValue,
 } from '../../../shared/utils/data.utils';
@@ -50,7 +51,9 @@ export class NumberDataValue implements DataValue {
     }
 
     if (this.bigNumber) {
-      return raw ? decimalStoreToUser(this.bigNumber.toFixed()) : numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
+      return raw
+        ? decimalStoreToUser(this.bigNumber.toFixed())
+        : numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
     }
 
     return formatUnknownDataValue(this.value);

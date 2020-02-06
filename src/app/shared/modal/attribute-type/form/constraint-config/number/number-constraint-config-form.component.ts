@@ -72,7 +72,10 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
       minMaxValidator(NumberConstraintFormControl.MinValue, NumberConstraintFormControl.MaxValue)
     );
 
-    this.exampleValue$ = this.form.valueChanges.pipe(startWith(''), map(() => this.createNumberDataValue()));
+    this.exampleValue$ = this.form.valueChanges.pipe(
+      startWith(''),
+      map(() => this.createNumberDataValue())
+    );
   }
 
   private createNumberDataValue(): NumberDataValue {

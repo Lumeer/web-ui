@@ -153,7 +153,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    const dimensions: { dimension1?: string; dimension2: string } = {dimension2: serviceLevel};
+    const dimensions: {dimension1?: string; dimension2: string} = {dimension2: serviceLevel};
     if (monthYear) {
       dimensions.dimension1 = monthYear;
     }

@@ -96,7 +96,11 @@ export class IntegerDirective extends DefaultValueAccessor {
         rangeAbsolute = Math.min(this.maxValue, rangeAbsolute);
       }
 
-      this._sourceRenderer.setProperty(this._sourceElementRef.nativeElement, 'value', String(minMax ? rangeAbsolute : absolute));
+      this._sourceRenderer.setProperty(
+        this._sourceElementRef.nativeElement,
+        'value',
+        String(minMax ? rangeAbsolute : absolute)
+      );
       this.onChange(rangeAbsolute);
     } else {
       this.onChange(null);
