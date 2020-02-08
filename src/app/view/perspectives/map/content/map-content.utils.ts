@@ -43,19 +43,20 @@ export function createMarkerPropertiesList(
 ): MapMarkerProperties[] {
   return documents.reduce((propertiesList, document) => {
     const attributeIds = attributeIdsMap[document.collectionId] || [];
-    const attributeId = attributeIds.find(id => !!document.data[id]);
-    const collection = collectionsMap[document.collectionId];
-    const editable = collectionPermissions[document.collectionId].writeWithView;
+    for (const attributeId of attributeIds) {
+      const collection = collectionsMap[document.collectionId];
+      const editable = collectionPermissions[document.collectionId].writeWithView;
 
-    if (collection && attributeId) {
-      propertiesList.push({collection, document, attributeId, editable});
+      if (collection && !!document.data[attributeId]) {
+        propertiesList.push({collection, document, attributeId, editable});
+      }
     }
     return propertiesList;
   }, []);
 }
 
-export function populateCoordinateProperties(propertiesList: MapMarkerProperties[]): MapMarkerProperties[] {
-  return propertiesList.reduce((coordinatePropertiesList, properties) => {
+export function populateCoordinateProperties(propertiesList: MapMarkerProperties[]): { coordinateProperties: MapMarkerProperties[], otherProperties: MapMarkerProperties[] } {
+  return propertiesList.reduce((obj, properties) => {
     const value = properties.document.data[properties.attributeId];
     const coordinates = parseCoordinates(value);
     if (coordinates) {
@@ -64,18 +65,12 @@ export function populateCoordinateProperties(propertiesList: MapMarkerProperties
         coordinates,
         attributeType: MapAttributeType.Coordinates,
       };
-      coordinatePropertiesList.push(coordinateProperties);
+      obj.coordinateProperties.push(coordinateProperties);
+    } else {
+      obj.otherProperties.push(properties);
     }
-    return coordinatePropertiesList;
-  }, []);
-}
-
-export function filterUninitializedProperties(
-  allProperties: MapMarkerProperties[],
-  coordinateProperties: MapMarkerProperties[]
-): MapMarkerProperties[] {
-  const documentIdsMap = new Set(coordinateProperties.map(properties => properties.document.id));
-  return allProperties.filter(properties => !documentIdsMap.has(properties.document.id));
+    return obj;
+  }, {coordinateProperties: [], otherProperties: []});
 }
 
 export function areMapMarkerListsEqual(

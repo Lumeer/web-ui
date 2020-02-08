@@ -21,10 +21,12 @@ import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {MapModel} from './map.model';
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export const DEFAULT_MAP_ID = 'default';
 
-export interface MapsState extends EntityState<MapModel> {}
+export interface MapsState extends EntityState<MapModel> {
+}
 
 export const mapsAdapter = createEntityAdapter<MapModel>({selectId: map => map.id});
 
@@ -46,11 +48,12 @@ export const selectMapConfigById = (mapId: string) =>
     selectMapById(mapId),
     map => map && map.config
   );
-export const selectMapConfigPosition = (mapId: string) =>
-  createSelector(
-    selectMapConfigById(mapId),
-    config => config && config.position
-  );
 
-export const selectDefaultMap = selectMapById(DEFAULT_MAP_ID);
-export const selectMapConfig = selectMapConfigById(DEFAULT_MAP_ID);
+export const selectMapId = createSelector(
+  selectWorkspace,
+  workspace => (workspace && workspace.viewCode) || DEFAULT_MAP_ID
+);
+
+export const selectMap = createSelector(selectMapsDictionary, selectMapId, (maps, mapId) => maps[mapId]);
+
+export const selectMapConfig = createSelector(selectMap, map => map && map.config);

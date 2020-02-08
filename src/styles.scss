@@ -226,6 +226,15 @@ typeahead-container {
   white-space: pre !important;
 }
 
+.custom-checkbox {
+  cursor: pointer;
+  user-select: none;
+
+  label {
+    cursor: pointer;
+  }
+}
+
 modal-container {
   overflow-y: unset !important;
 

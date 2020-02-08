@@ -48,7 +48,7 @@ export const selectSearchId = createSelector(
 export const selectSearch = createSelector(
   selectSearchesDictionary,
   selectSearchId,
-  (searchesMap, searchId) => searchesMap[searchId] && searchesMap[searchId]
+  (searchesMap, searchId) => searchesMap[searchId]
 );
 
 export const selectSearchConfig = createSelector(

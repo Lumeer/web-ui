@@ -24,7 +24,7 @@ import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
 import {AddressConstraint} from '../../../../core/model/constraint/address.constraint';
 import {CoordinatesConstraint} from '../../../../core/model/constraint/coordinates.constraint';
-import {ConstraintType} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {CoordinatesConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -49,13 +49,14 @@ import {
   areMapMarkerListsEqual,
   createMarkerPropertiesList,
   extractCollectionsFromDocuments,
-  filterUninitializedProperties,
   populateCoordinateProperties,
 } from './map-content.utils';
 import {MapRenderComponent} from './render/map-render.component';
 import {MarkerMoveEvent} from './render/marker-move.event';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {ConstraintDataService} from '../../../../core/service/constraint-data.service';
+import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'map-content',
@@ -78,6 +79,7 @@ export class MapContentComponent implements OnInit, OnDestroy {
 
   public loading$ = new BehaviorSubject(true);
 
+  public constraintData$: Observable<ConstraintData>;
   public markers$: Observable<MapMarkerProperties[]>;
 
   private refreshMarkers$ = new BehaviorSubject(Date.now());
@@ -88,11 +90,14 @@ export class MapContentComponent implements OnInit, OnDestroy {
     private collectionsPermissions: CollectionsPermissionsPipe,
     private i18n: I18n,
     private notificationService: NotificationService,
+    private constraintDataService: ConstraintDataService,
     private store$: Store<{}>,
     private modalService: ModalService
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     const allProperties$ = this.bindAllProperties();
     this.markers$ = this.bindMarkers(allProperties$);
 
@@ -127,10 +132,8 @@ export class MapContentComponent implements OnInit, OnDestroy {
   private bindMarkers(allProperties$: Observable<MapMarkerProperties[]>): Observable<MapMarkerProperties[]> {
     return allProperties$.pipe(
       switchMap(allProperties => {
-        const coordinateProperties = populateCoordinateProperties(allProperties);
-        const uninitializedProperties = filterUninitializedProperties(allProperties, coordinateProperties);
-
-        return this.populateAddressProperties(uninitializedProperties).pipe(
+        const {coordinateProperties, otherProperties} = populateCoordinateProperties(allProperties);
+        return this.populateAddressProperties(otherProperties).pipe(
           map(addressProperties => coordinateProperties.concat(addressProperties))
         );
       }),
@@ -161,12 +164,7 @@ export class MapContentComponent implements OnInit, OnDestroy {
 
   private subscribeToUninitializedProperties(allProperties$: Observable<MapMarkerProperties[]>): Subscription {
     return allProperties$
-      .pipe(
-        map(allProperties => {
-          const coordinateProperties = populateCoordinateProperties(allProperties);
-          return filterUninitializedProperties(allProperties, coordinateProperties);
-        })
-      )
+      .pipe(map(allProperties => populateCoordinateProperties(allProperties).otherProperties))
       .subscribe(uninitializedProperties => this.getCoordinates(uninitializedProperties));
   }
 

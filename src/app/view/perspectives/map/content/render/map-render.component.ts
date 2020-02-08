@@ -29,7 +29,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  Renderer2,
+  Renderer2, SimpleChange,
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
@@ -66,6 +66,7 @@ import {
   createMapMarkersBounds,
 } from './map-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -90,6 +91,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   @Input()
   public markers: MapMarkerProperties[];
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public markerMove = new EventEmitter<MarkerMoveEvent>();
@@ -118,7 +122,8 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     private ngZone: NgZone,
     private platform: Platform,
     private renderer: Renderer2
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.mapElementId = `map-${this.map.id}`;
@@ -139,9 +144,53 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.markers && this.markers) {
+    if (changes.map) {
+      if (this.mapIdChanges(changes.map) && this.mapboxMap) {
+        console.log('refresh map');
+        this.refreshMap();
+      } else if (this.mapPositionChanged()) {
+        console.log('refresh map position');
+        this.refreshMapPosition();
+      }
+    }
+
+    if ((changes.markers || changes.constraintData) && this.markers) {
       this.markers$.next(this.markers);
     }
+  }
+
+  private mapIdChanges(change: SimpleChange) {
+    return (!change.previousValue || change.previousValue.id !== change.currentValue.id);
+  }
+
+  private mapPositionChanged() {
+    const position = this.map && this.map.config && this.map.config.position;
+    return this.mapboxMap && !this.mapIsMoving() && position && (
+      this.mapboxMap.getCenter().lat !== position.center.lat ||
+      this.mapboxMap.getCenter().lng !== position.center.lng ||
+      this.mapboxMap.getBearing() !== position.bearing ||
+      this.mapboxMap.getPitch() !== position.pitch ||
+      this.mapboxMap.getZoom() !== position.zoom
+    )
+  }
+
+  private mapIsMoving(): boolean {
+    return this.mapboxMap && (this.mapboxMap.isMoving() || this.mapboxMap.isEasing() || this.mapboxMap.isZooming() || this.mapboxMap.isRotating());
+  }
+
+  private refreshMapPosition() {
+    const position = this.map.config.position;
+    if (position && this.mapboxMap) {
+      this.mapboxMap.setZoom(position.zoom);
+      this.mapboxMap.setCenter({...position.center});
+      this.mapboxMap.setBearing(position.bearing);
+      this.mapboxMap.setPitch(position.pitch);
+    }
+  }
+
+  private refreshMap() {
+    this.destroyMap();
+    this.ngZone.runOutsideAngular(() => this.initMap(this.map.config));
   }
 
   public ngAfterViewInit() {
@@ -150,7 +199,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private initMap(config: MapConfig) {
-    this.mapboxMap = createMapboxMap(this.mapElementId, config);
+    this.mapboxMap = createMapboxMap(this.mapElementId, config, this.translateMap());
     this.mapboxMap.addControl(new NavigationControl(), 'top-right');
     this.mapboxMap.addControl(new ScaleControl(), 'bottom-right');
     // GeolocateControl needs to be added after ScaleControl to be shown above it
@@ -178,7 +227,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   private onMapLoad() {
     this.mapLoaded$.next(true);
 
-    this.translateNavigationControls();
     this.loadOpenMapTilesLanguage();
 
     this.mapboxMap.resize();
@@ -242,18 +290,19 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private getUnclusteredMarkers(): Marker[] {
     return [
-      ...this.mapboxMap.querySourceFeatures(MAP_SOURCE_ID).reduce((documentIds, feature) => {
-        const document = JSON.parse(feature.properties.document || null);
-        if (document) {
-          documentIds.add(document.id);
+      ...this.mapboxMap.querySourceFeatures(MAP_SOURCE_ID).reduce((markerIds, feature) => {
+        const properties: MapMarkerProperties = {
+          attributeId: feature.properties.attributeId,
+          document: JSON.parse(feature.properties.document || null),
+          collection: JSON.parse(feature.properties.collection || null),
+        };
+        const markerId = mapMarkerId(properties);
+        if (markerId) {
+          markerIds.add(markerId);
         }
-        return documentIds;
+        return markerIds;
       }, new Set<string>()),
-    ].map(documentId => this.allMarkers[documentId]);
-  }
-
-  private setControlButtonTitle(className: string, title: string) {
-    this.renderer.setAttribute(document.getElementsByClassName(className).item(0), 'title', title);
+    ].map(markerId => this.allMarkers[markerId]);
   }
 
   private addMarkersToMap(markers: MapMarkerProperties[]) {
@@ -273,9 +322,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private createAllMakers(markers: MapMarkerProperties[]) {
     return markers.reduce((markersMap, properties) => {
-      const marker = createMapMarker(properties, () => this.onMarkerDoubleClick(properties));
+      const marker = createMapMarker(properties, this.constraintData, () => this.onMarkerDoubleClick(properties));
       marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
-      markersMap[properties.document.id] = marker;
+      markersMap[mapMarkerId(properties)] = marker;
       return markersMap;
     }, {});
   }
@@ -304,7 +353,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     }
   }
 
-  private onMarkerDragEnd(event: {target: Marker}, properties: MapMarkerProperties) {
+  private onMarkerDragEnd(event: { target: Marker }, properties: MapMarkerProperties) {
     event.target.setDraggable(false); // disable dragging until map refresh
 
     const coordinates: MapCoordinates = event.target.getLngLat();
@@ -314,6 +363,10 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
 
+    this.destroyMap();
+  }
+
+  private destroyMap() {
     if (this.mapboxMap) {
       this.mapboxMap.remove();
       this.mapboxMap = null;
@@ -340,30 +393,37 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private activateMapTilesLanguageAutoDetection() {
-    (this.mapboxMap as any).autodetectLanguage(environment.locale);
+    const mapbox = (this.mapboxMap as any);
+    if (mapbox) {
+      mapbox.autodetectLanguage(environment.locale);
+    }
   }
 
-  private translateNavigationControls() {
-    this.setControlButtonTitle(
-      'mapboxgl-ctrl-zoom-in',
-      this.i18n({
-        id: 'map.control.zoom.in',
-        value: 'Zoom in',
-      })
-    );
-    this.setControlButtonTitle(
-      'mapboxgl-ctrl-zoom-out',
-      this.i18n({
-        id: 'map.control.zoom.out',
-        value: 'Zoom out',
-      })
-    );
-    this.setControlButtonTitle(
-      'mapboxgl-ctrl-icon mapboxgl-ctrl-compass',
-      this.i18n({
-        id: 'map.control.compass',
-        value: 'Reset bearing to north',
-      })
-    );
+  private translateMap(): Record<string, string> {
+    // ids can be found in node_modules/mapbox-gl/src/ui/default_locale.js
+    return {
+      'GeolocateControl.FindMyLocation': this.i18n({id: 'map.location.find', value: 'Find my location'}),
+      'GeolocateControl.LocationNotAvailable': this.i18n({
+        id: 'map.location.notAvailable',
+        value: 'Location not available'
+      }),
+      'NavigationControl.ResetBearing': this.i18n({id: 'map.control.compass', value: 'Reset bearing to north',}),
+      'NavigationControl.ZoomIn': this.i18n({id: 'map.control.zoom.in', value: 'Zoom in',}),
+      'NavigationControl.ZoomOut': this.i18n({id: 'map.control.zoom.out', value: 'Zoom out',}),
+      'ScaleControl.Feet': this.i18n({id: 'distance.feat', value: 'ft'}),
+      'ScaleControl.Meters': this.i18n({id: 'distance.meters', value: 'm'}),
+      'ScaleControl.Kilometers': this.i18n({id: 'distance.kilometers', value: 'km'}),
+      'ScaleControl.Miles': this.i18n({id: 'distance.miles', value: 'mi'}),
+      'ScaleControl.NauticalMiles': this.i18n({id: 'distance.nauticalMiles', value: 'nm'}),
+
+    };
   }
+
+}
+
+function mapMarkerId(properties: MapMarkerProperties): string {
+  if (!properties.document) {
+    return null;
+  }
+  return `${properties.document.id}:${properties.attributeId}`;
 }
