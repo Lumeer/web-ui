@@ -67,7 +67,6 @@ import {
   selectTablePart,
   selectTableRow,
 } from '../../../../../../../core/store/tables/tables.selector';
-import {selectCurrentUser} from '../../../../../../../core/store/users/users.state';
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
@@ -169,26 +168,21 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToEditing(): Subscription {
-    return this.editing$
-      .pipe(
-        skip(1),
-        distinctUntilChanged()
-      )
-      .subscribe(editing => {
-        this.edited = editing;
-        if (!editing) {
-          this.clearEditedAttribute();
-          this.editedValue = null;
-          this.checkSuggesting();
+    return this.editing$.pipe(skip(1), distinctUntilChanged()).subscribe(editing => {
+      this.edited = editing;
+      if (!editing) {
+        this.clearEditedAttribute();
+        this.editedValue = null;
+        this.checkSuggesting();
 
-          if (this.selected) {
-            // sets focus to hidden input
-            this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
-          }
-        } else {
-          this.setEditedAttribute();
+        if (this.selected) {
+          // sets focus to hidden input
+          this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
         }
-      });
+      } else {
+        this.setEditedAttribute();
+      }
+    });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -268,10 +262,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           linkInstanceId: this.linkInstance && this.linkInstance.id,
         })
       )
-      .pipe(
-        distinctUntilChanged(),
-        withLatestFrom(this.editing$)
-      )
+      .pipe(distinctUntilChanged(), withLatestFrom(this.editing$))
       .subscribe(([affected, editing]) => {
         this.affected = affected && !editing;
         // TODO run change detection in parent component some other way
@@ -295,10 +286,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
-      .pipe(
-        ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL),
-        withLatestFrom(this.attribute$)
-      )
+      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
       .subscribe(([action, attribute]) => {
         if (this.allowedPermissions && this.allowedPermissions.writeWithView && this.isAttributeEditable(attribute)) {
           if (action.payload.clear) {
@@ -706,17 +694,16 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           })
         )
       ),
-      this.store$.pipe(select(selectQuery)),
-      this.store$.pipe(select(selectCurrentUser))
+      this.store$.pipe(select(selectQuery))
     )
       .pipe(take(1))
-      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query, currentUser]) =>
+      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query]) =>
         this.store$.dispatch(
           new DocumentsAction.Create({
             document: {
               collectionId,
               correlationId,
-              data: generateDocumentDataByCollectionQuery(collectionId, query, currentUser),
+              data: generateDocumentDataByCollectionQuery(collectionId, query, this.constraintData),
             },
             onSuccess: documentId =>
               this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),

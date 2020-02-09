@@ -27,6 +27,7 @@ import {DataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueMeetFulltexts} from './data-value.utils';
+import {saturated} from '../../../shared/picker/colors';
 
 export class ColorDataValue implements DataValue {
   public readonly hexCode: string;
@@ -124,6 +125,21 @@ export class ColorDataValue implements DataValue {
     const formattedValue = this.format();
     const colorEntry = Object.entries(validDataColors).find(entry => entry[1] === this.hexCode);
     return (colorEntry && colorEntry[0]) || formattedValue;
+  }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    switch (condition) {
+      case QueryCondition.Equals:
+        return values[0].value;
+      case QueryCondition.NotEquals:
+        return saturated.find(color => color !== values[0].value);
+      case QueryCondition.IsEmpty:
+        return '';
+      case QueryCondition.NotEmpty:
+        return '#00b388';
+      default:
+        return '';
+    }
   }
 }
 

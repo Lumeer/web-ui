@@ -86,7 +86,7 @@ export function getDurationSaveValue(
   return String(value || '');
 }
 
-function getDurationUnitToMillisMap(
+export function getDurationUnitToMillisMap(
   config: DurationConstraintConfig,
   durationUnitsMap?: DurationUnitsMap
 ): Record<string, number> {

@@ -48,8 +48,6 @@ import {
 } from '../../../core/store/common/permissions.selectors';
 import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/collapsible-sidebar.component';
 import {KanbanColumnsComponent} from './columns/kanban-columns.component';
-import {User} from '../../../core/store/users/user';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformKanbanConfig, kanbanConfigIsEmpty} from './util/kanban.util';
 import {ConstraintData} from '../../../core/model/data/constraint';
@@ -84,7 +82,6 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public collections$: Observable<Collection[]>;
   public query$: Observable<Query>;
   public constraintData$: Observable<ConstraintData>;
-  public currentUser$: Observable<User>;
   public workspace$: Observable<Workspace>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
@@ -119,7 +116,6 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
   }
 

@@ -33,7 +33,6 @@ import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
 import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
 import {ResourceType} from '../../../../../core/model/resource-type';
-import {User} from '../../../../../core/store/users/user';
 import {CreateDocumentModalComponent} from '../../../../../shared/modal/create-document/create-document-modal.component';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
@@ -69,9 +68,6 @@ export class SearchDocumentsContentComponent implements OnInit {
   public workspace: Workspace;
 
   @Input()
-  public currentUser: User;
-
-  @Input()
   public organization: Organization;
 
   @Input()
@@ -80,7 +76,6 @@ export class SearchDocumentsContentComponent implements OnInit {
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();
 
-  public readonly sizeType = SizeType;
   public readonly projectType = ResourceType.Project;
 
   constructor(
@@ -143,7 +138,7 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   public onAdd(collections: Collection[]) {
     if (collections.length) {
-      const initialState = {collections, query: this.query, currentUser: this.currentUser};
+      const initialState = {collections, query: this.query, constraintData: this.constraintData};
       const config = {initialState, keyboard: false};
       config['backdrop'] = 'static';
       this.modalService.show(CreateDocumentModalComponent, config);

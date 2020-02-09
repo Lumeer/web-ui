@@ -23,7 +23,7 @@ import {TextConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByText} from './data-value.utils';
+import {dataValuesMeetConditionByText, valueByConditionText} from './data-value.utils';
 
 export class TextDataValue implements DataValue {
   constructor(
@@ -122,6 +122,10 @@ export class TextDataValue implements DataValue {
           .trim()
       )
       .every(fulltext => formattedValue.includes(fulltext));
+  }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    return valueByConditionText(condition, stripTextHtmlTags(values[0].value, false));
   }
 }
 

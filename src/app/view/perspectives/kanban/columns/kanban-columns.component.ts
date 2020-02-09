@@ -37,7 +37,6 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {User} from '../../../../core/store/users/user';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
@@ -100,9 +99,6 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public constraintData: ConstraintData;
-
-  @Input()
-  public currentUser: User;
 
   @Input()
   public workspace: Workspace;
@@ -253,7 +249,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   private createDocumentWithData(kanbanAttribute: KanbanAttribute, value: any): DocumentModel {
     const collection = (this.collections || []).find(coll => coll.id === kanbanAttribute.resourceId);
     const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
-    const data = generateDocumentData(collection, collectionsFilters, this.currentUser);
+    const data = generateDocumentData(collection, collectionsFilters, this.constraintData);
     const constraint = findAttributeConstraint(collection.attributes, kanbanAttribute.attributeId);
     data[kanbanAttribute.attributeId] = this.createValueByConstraint(constraint, value);
     return {collectionId: collection.id, data};

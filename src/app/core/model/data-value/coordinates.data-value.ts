@@ -104,4 +104,20 @@ export class CoordinatesDataValue implements DataValue {
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    const exampleCoordinates = '49.2019854,16.4378783';
+    switch (condition) {
+      case QueryCondition.Equals:
+        return values[0].value;
+      case QueryCondition.NotEquals:
+        return values[0].value ? '' : exampleCoordinates;
+      case QueryCondition.IsEmpty:
+        return '';
+      case QueryCondition.NotEmpty:
+        return exampleCoordinates;
+      default:
+        return '';
+    }
+  }
 }

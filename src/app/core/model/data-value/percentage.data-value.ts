@@ -29,19 +29,19 @@ import {
   formatUnknownDataValue,
 } from '../../../shared/utils/data.utils';
 import {PercentageConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {NumericDataValue} from './index';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByNumber, valueMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 
-export class PercentageDataValue implements DataValue {
-  public readonly percentage: Big;
+export class PercentageDataValue implements NumericDataValue {
+  public readonly bigNumber: Big;
 
   constructor(
     public readonly value: any,
     public readonly config: PercentageConstraintConfig,
     public readonly inputValue?: string
   ) {
-    this.percentage = this.createPercentage(value);
+    this.bigNumber = this.createPercentage(value);
   }
 
   private createPercentage(value: any): Big {
@@ -56,11 +56,11 @@ export class PercentageDataValue implements DataValue {
     if (isNotNullOrUndefined(this.inputValue)) {
       return this.inputValue;
     }
-    if (!this.percentage) {
+    if (!this.bigNumber) {
       return formatUnknownDataValue(this.value);
     }
 
-    return decimalStoreToUser(this.percentage.toString()) + suffix;
+    return decimalStoreToUser(this.bigNumber.toString()) + suffix;
   }
 
   public preview(): string {
@@ -68,12 +68,12 @@ export class PercentageDataValue implements DataValue {
   }
 
   public serialize(): any {
-    if (!this.percentage) {
+    if (!this.bigNumber) {
       return this.value ? String(this.value) : '';
     }
 
     const decimals = (this.config && this.config.decimals) || 0;
-    return convertBigToNumberSafely(this.percentage.div(100), decimals + 2);
+    return convertBigToNumberSafely(this.bigNumber.div(100), decimals + 2);
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
@@ -85,7 +85,7 @@ export class PercentageDataValue implements DataValue {
       return true;
     }
 
-    return Boolean(this.percentage && (ignoreConfig || this.isPercentageWithinRange()));
+    return Boolean(this.bigNumber && (ignoreConfig || this.isPercentageWithinRange()));
   }
 
   private isPercentageWithinRange(): boolean {
@@ -101,15 +101,15 @@ export class PercentageDataValue implements DataValue {
   }
 
   public increment(): PercentageDataValue {
-    return this.percentage && new PercentageDataValue(this.percentage.add(1), this.config);
+    return this.bigNumber && new PercentageDataValue(this.bigNumber.add(1), this.config);
   }
 
   public decrement(): PercentageDataValue {
-    return this.percentage && new PercentageDataValue(this.percentage.sub(1), this.config);
+    return this.bigNumber && new PercentageDataValue(this.bigNumber.sub(1), this.config);
   }
 
   public compareTo(otherValue: PercentageDataValue): number {
-    return compareBigNumbers(this.percentage, otherValue.percentage);
+    return compareBigNumbers(this.bigNumber, otherValue.bigNumber);
   }
 
   public copy(newValue?: any): PercentageDataValue {
@@ -123,14 +123,18 @@ export class PercentageDataValue implements DataValue {
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new PercentageDataValue(value.value, this.config));
-    const otherBigNumbers = dataValues.map(value => value.percentage);
+    const otherBigNumbers = dataValues.map(value => value.bigNumber);
     const otherValues = dataValues.map(value => value.value);
 
-    return dataValuesMeetConditionByNumber(condition, this.percentage, otherBigNumbers, this.value, otherValues);
+    return dataValuesMeetConditionByNumber(condition, this.bigNumber, otherBigNumbers, this.value, otherValues);
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
+  }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    return valueByConditionNumber(this, condition, values, '0.19');
   }
 }
 

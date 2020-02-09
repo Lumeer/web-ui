@@ -29,11 +29,8 @@ import {
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
-import {User} from '../../../core/store/users/user';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
-
 import {View, ViewConfig} from '../../../core/store/views/view';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -63,7 +60,6 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public linkTypes$: Observable<LinkType[]>;
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<View>;
-  public currentUser$: Observable<User>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public constraintData$: Observable<ConstraintData>;
 
@@ -153,7 +149,6 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.permissions$ = this.collections$.pipe(
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))

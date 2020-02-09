@@ -26,14 +26,14 @@ import {
   formatUnknownDataValue,
 } from '../../../shared/utils/data.utils';
 import {NumberConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {NumericDataValue} from './index';
 import {removeNonNumberCharacters} from '../../../shared/directives/number.directive';
 import {isNotNullOrUndefined, isNumeric} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByNumber, valueMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 import numbro from 'numbro';
 
-export class NumberDataValue implements DataValue {
+export class NumberDataValue implements NumericDataValue {
   public readonly bigNumber: Big;
 
   constructor(
@@ -114,6 +114,10 @@ export class NumberDataValue implements DataValue {
 
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
+  }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    return valueByConditionNumber(this, condition, values, '19');
   }
 }
 

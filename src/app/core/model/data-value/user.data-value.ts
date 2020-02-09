@@ -144,7 +144,10 @@ export class UserDataValue implements DataValue {
         );
       case QueryCondition.HasAll:
         return (
-          arrayIntersection(otherUsers.map(o => o.email), this.users.map(o => o.email)).length === otherUsers.length
+          arrayIntersection(
+            otherUsers.map(o => o.email),
+            this.users.map(o => o.email)
+          ).length === otherUsers.length
         );
       case QueryCondition.IsEmpty:
         return this.users.length === 0 && this.format().trim().length === 0;
@@ -165,5 +168,32 @@ export class UserDataValue implements DataValue {
 
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
+  }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    const dataValues = values && values.map(value => this.mapQueryConditionValue(value));
+    const otherUsers = (dataValues.length > 0 && dataValues[0].users) || [];
+
+    switch (condition) {
+      case QueryCondition.HasSome:
+      case QueryCondition.Equals:
+      case QueryCondition.In:
+        return otherUsers[0] && otherUsers[0].email;
+      case QueryCondition.HasAll:
+        return values[0].value;
+      case QueryCondition.HasNoneOf:
+      case QueryCondition.NotEquals:
+        const noneOptions = ((this.constraintData && this.constraintData.users) || []).filter(
+          user => !otherUsers.some(otherUser => otherUser.email === user.email)
+        );
+        return noneOptions[0] && noneOptions[0].email;
+      case QueryCondition.IsEmpty:
+        return '';
+      case QueryCondition.NotEmpty:
+        const firstUser = ((this.constraintData && this.constraintData.users) || [])[0];
+        return firstUser && firstUser.email;
+      default:
+        return;
+    }
   }
 }

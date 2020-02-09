@@ -20,6 +20,7 @@
 import {ConstraintData} from '../data/constraint';
 import {ConstraintConfig} from '../data/constraint-config';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import Big from 'big.js';
 
 export interface DataValue {
   /**
@@ -107,8 +108,20 @@ export interface DataValue {
    * Check if the value meet all provided fulltexts
    */
   meetFullTexts(fulltexts: string[]): boolean;
+
+  /**
+   * Create value that meets condition
+   */
+  valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any;
 }
 
 export class DataValueAccumulator {
   constructor(public readonly count: number, public readonly result: DataValue) {}
+}
+
+export interface NumericDataValue extends DataValue {
+  /**
+   * Value stored as big number
+   */
+  bigNumber: Big;
 }

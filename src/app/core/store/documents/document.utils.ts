@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Collection} from '../collections/collection';
-import {CollectionAttributeFilter, Query, QueryCondition} from '../navigation/query/query';
-import {getQueryFiltersForCollection} from '../navigation/query/query.util';
-import {User} from '../users/user';
+import {CollectionAttributeFilter, Query} from '../navigation/query/query';
+import {getQueryFiltersForCollection, queryConditionNumInputs} from '../navigation/query/query.util';
 import {DocumentData, DocumentModel} from './document.model';
-import {UserConstraintConditionValue} from '../../model/data/constraint-condition';
+import {ConstraintData} from '../../model/data/constraint';
+import {findAttribute} from '../collections/collection.util';
+import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
+import {createRange} from '../../../shared/utils/array.utils';
+import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -67,7 +70,7 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): Record<s
 export function generateDocumentData(
   collection: Collection,
   collectionFilters: CollectionAttributeFilter[],
-  currentUser?: User
+  constraintData: ConstraintData
 ): Record<string, any> {
   if (!collection) {
     return {};
@@ -80,49 +83,28 @@ export function generateDocumentData(
   (collectionFilters || [])
     .filter(filter => filter.collectionId === collection.id)
     .forEach(filter => {
-      const conditionValue =
-        (filter.conditionValues && filter.conditionValues[0] && filter.conditionValues[0].value) || '';
-      const isNumber = !isNaN(Number(conditionValue));
-      const value = isNumber ? +conditionValue : conditionValue.toString();
-
-      switch (filter.condition) {
-        case QueryCondition.GreaterThan:
-          data[filter.attributeId] = isNumber ? value + 1 : value + 'a';
-          break;
-        case QueryCondition.LowerThan:
-          data[filter.attributeId] = isNumber ? value - 1 : (value as string).slice(0, -1);
-          break;
-        case QueryCondition.NotEquals:
-          data[filter.attributeId] = isNumber ? value + 1 : '';
-          break;
-        case QueryCondition.GreaterThanEquals:
-        case QueryCondition.LowerThanEquals:
-        case QueryCondition.Equals:
-        default:
-          if (
-            currentUser &&
-            filter.conditionValues &&
-            filter.conditionValues[0] &&
-            filter.conditionValues[0].type === UserConstraintConditionValue.CurrentUser
-          ) {
-            data[filter.attributeId] = currentUser.email;
-          } else {
-            data[filter.attributeId] = conditionValue;
-          }
+      const attribute = findAttribute(collection.attributes, filter.attributeId);
+      const dataValue = (attribute.constraint || new UnknownConstraint()).createDataValue(null, constraintData);
+      const numInputs = queryConditionNumInputs(filter.condition);
+      const allValuesDefined = createRange(0, numInputs).every(
+        i => filter.conditionValues[i] && isNotNullOrUndefined(filter.conditionValues[i].value)
+      );
+      if (allValuesDefined) {
+        data[filter.attributeId] = dataValue.valueByCondition(filter.condition, filter.conditionValues);
       }
     });
   return data;
 }
 
-export function generateDocumentDataByQuery(query: Query, currentUser: User): Record<string, any> {
+export function generateDocumentDataByQuery(query: Query, constraintData: ConstraintData): Record<string, any> {
   const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
-  return generateDocumentDataByCollectionQuery(collectionId, query, currentUser);
+  return generateDocumentDataByCollectionQuery(collectionId, query, constraintData);
 }
 
 export function generateDocumentDataByCollectionQuery(
   collectionId: string,
   query: Query,
-  currentUser: User
+  constraintData: ConstraintData
 ): DocumentData {
   const collection: Collection = {
     id: collectionId,
@@ -130,7 +112,7 @@ export function generateDocumentDataByCollectionQuery(
     attributes: [],
   };
 
-  return generateDocumentData(collection, getQueryFiltersForCollection(query, collectionId), currentUser);
+  return generateDocumentData(collection, getQueryFiltersForCollection(query, collectionId), constraintData);
 }
 
 export function calculateDocumentHierarchyLevel(

@@ -18,43 +18,36 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
 import {generateDocumentDataByQuery} from '../../../../../core/store/documents/document.utils';
-import {selectQuery} from '../../../../../core/store/navigation/navigation.state';
-import {selectCurrentUser} from '../../../../../core/store/users/users.state';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/table.model';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 @Pipe({
   name: 'dataCellDocument',
 })
 export class DataCellDocumentPipe implements PipeTransform {
-  constructor(private store$: Store<{}>) {}
-
   public transform(
     documents: DocumentModel[],
     part: TableConfigPart,
     partIndex: number,
-    row: TableConfigRow
-  ): Observable<DocumentModel> {
-    return combineLatest(this.store$.pipe(select(selectQuery)), this.store$.pipe(select(selectCurrentUser))).pipe(
-      map(([query, currentUser]) => {
-        if (documents && documents[0]) {
-          return documents[0];
-        }
+    row: TableConfigRow,
+    query: Query,
+    constraintData: ConstraintData
+  ): DocumentModel {
+    if (documents && documents[0]) {
+      return documents[0];
+    }
 
-        if (!part.collectionId) {
-          return null;
-        }
+    if (!part.collectionId) {
+      return null;
+    }
 
-        return {
-          collectionId: part.collectionId,
-          correlationId: row.correlationId,
-          data: partIndex === 0 ? generateDocumentDataByQuery(query, currentUser) : {},
-        };
-      })
-    );
+    return {
+      collectionId: part.collectionId,
+      correlationId: row.correlationId,
+      data: partIndex === 0 ? generateDocumentDataByQuery(query, constraintData) : {},
+    };
   }
 }
