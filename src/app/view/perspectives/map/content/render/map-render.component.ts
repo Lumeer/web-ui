@@ -29,7 +29,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  Renderer2, SimpleChange,
+  Renderer2,
   SimpleChanges,
   ViewEncapsulation,
 } from '@angular/core';
@@ -144,23 +144,13 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.map) {
-      if (this.mapIdChanges(changes.map) && this.mapboxMap) {
-        console.log('refresh map');
-        this.refreshMap();
-      } else if (this.mapPositionChanged()) {
-        console.log('refresh map position');
-        this.refreshMapPosition();
-      }
+    if (changes.map && this.mapPositionChanged()) {
+      this.refreshMapPosition();
     }
 
     if ((changes.markers || changes.constraintData) && this.markers) {
       this.markers$.next(this.markers);
     }
-  }
-
-  private mapIdChanges(change: SimpleChange) {
-    return (!change.previousValue || change.previousValue.id !== change.currentValue.id);
   }
 
   private mapPositionChanged() {
@@ -186,11 +176,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       this.mapboxMap.setBearing(position.bearing);
       this.mapboxMap.setPitch(position.pitch);
     }
-  }
-
-  private refreshMap() {
-    this.destroyMap();
-    this.ngZone.runOutsideAngular(() => this.initMap(this.map.config));
   }
 
   public ngAfterViewInit() {
@@ -220,8 +205,8 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.mapboxMap.on('load', () => this.onMapLoad());
     this.mapboxMap.on('moveend', (event: MapboxEvent) => this.onMapMoveEnd(event));
     this.mapboxMap.on('click', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterClick(event));
-    this.mapboxMap.on('mouseenter', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseEnter(event));
-    this.mapboxMap.on('mouseleave', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseLeave(event));
+    this.mapboxMap.on('mouseenter', MAP_CLUSTER_CIRCLE_LAYER, () => this.onMapClusterMouseEnter());
+    this.mapboxMap.on('mouseleave', MAP_CLUSTER_CIRCLE_LAYER, () => this.onMapClusterMouseLeave());
   }
 
   private onMapLoad() {
@@ -262,30 +247,33 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       }
 
       this.mapboxMap.easeTo({
+        duration: Math.max(zoom / this.mapboxMap.getZoom() * 200, 300),
         center: (features[0].geometry as Point).coordinates as [number, number],
         zoom: zoom,
       });
     });
   }
 
-  private onMapClusterMouseEnter(event: MapLayerMouseEvent) {
+  private onMapClusterMouseEnter() {
     this.mapboxMap.getCanvas().style.cursor = 'pointer';
   }
 
-  private onMapClusterMouseLeave(event: MapLayerMouseEvent) {
+  private onMapClusterMouseLeave() {
     this.mapboxMap.getCanvas().style.cursor = '';
   }
 
   private redrawMarkers() {
-    const unclusteredMarkers = this.getUnclusteredMarkers();
+    if (this.mapboxMap) {
+      const unclusteredMarkers = this.getUnclusteredMarkers();
 
-    const addedMarkers = unclusteredMarkers.filter(marker => !this.drawnMarkers.includes(marker));
-    addedMarkers.forEach(marker => marker.addTo(this.mapboxMap));
+      const addedMarkers = unclusteredMarkers.filter(marker => !this.drawnMarkers.includes(marker));
+      addedMarkers.forEach(marker => marker.addTo(this.mapboxMap));
 
-    const removedMarkers = this.drawnMarkers.filter(marker => !unclusteredMarkers.includes(marker));
-    removedMarkers.forEach(marker => marker.remove());
+      const removedMarkers = this.drawnMarkers.filter(marker => !unclusteredMarkers.includes(marker));
+      removedMarkers.forEach(marker => marker.remove());
 
-    this.drawnMarkers = unclusteredMarkers;
+      this.drawnMarkers = unclusteredMarkers;
+    }
   }
 
   private getUnclusteredMarkers(): Marker[] {
@@ -302,7 +290,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
         }
         return markerIds;
       }, new Set<string>()),
-    ].map(markerId => this.allMarkers[markerId]);
+    ].map(markerId => this.allMarkers[markerId]).filter(marker => !!marker);
   }
 
   private addMarkersToMap(markers: MapMarkerProperties[]) {
@@ -334,15 +322,19 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private addSourceAndLayers(markers: MapMarkerProperties[]) {
-    this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
-    this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
-    this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+    if (this.mapboxMap.areTilesLoaded()) {
+      this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
+      this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
+      this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+    }
   }
 
   private removeSourceAndLayers() {
-    this.mapboxMap.removeLayer(MAP_CLUSTER_SYMBOL_LAYER);
-    this.mapboxMap.removeLayer(MAP_CLUSTER_CIRCLE_LAYER);
-    this.mapboxMap.removeSource(MAP_SOURCE_ID);
+    if (this.mapboxMap.areTilesLoaded()) {
+      this.mapboxMap.removeLayer(MAP_CLUSTER_SYMBOL_LAYER);
+      this.mapboxMap.removeLayer(MAP_CLUSTER_CIRCLE_LAYER);
+      this.mapboxMap.removeSource(MAP_SOURCE_ID);
+    }
   }
 
   private fitMarkersBounds(markers: MapMarkerProperties[]) {
@@ -400,7 +392,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private translateMap(): Record<string, string> {
-    // ids can be found in node_modules/mapbox-gl/src/ui/default_locale.js
+    // translation ids can be found in node_modules/mapbox-gl/src/ui/default_locale.js
     return {
       'GeolocateControl.FindMyLocation': this.i18n({id: 'map.location.find', value: 'Find my location'}),
       'GeolocateControl.LocationNotAvailable': this.i18n({
@@ -415,7 +407,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       'ScaleControl.Kilometers': this.i18n({id: 'distance.kilometers', value: 'km'}),
       'ScaleControl.Miles': this.i18n({id: 'distance.miles', value: 'mi'}),
       'ScaleControl.NauticalMiles': this.i18n({id: 'distance.nauticalMiles', value: 'nm'}),
-
     };
   }
 

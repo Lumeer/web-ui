@@ -20,7 +20,14 @@
 import {Attribute, Collection} from '../../collections/collection';
 import {DocumentModel} from '../../documents/document.model';
 import {LinkType} from '../../link-types/link.type';
-import {TableColumnType, TableConfig, TableConfigColumn, TableConfigPart, TableConfigRow} from '../table.model';
+import {
+  DEFAULT_COLUMN_WIDTH,
+  TableColumnType,
+  TableConfig,
+  TableConfigColumn,
+  TableConfigPart,
+  TableConfigRow
+} from '../table.model';
 import {filterTableColumnsByAttributes} from '../table.utils';
 
 export function isTableConfigChanged(
@@ -103,7 +110,7 @@ function isTableColumnChanged(savedColumn: TableConfigColumn, shownColumn: Table
 function isTableCompoundColumnChanged(savedColumn: TableConfigColumn, shownColumn: TableConfigColumn): boolean {
   return (
     savedColumn.attributeIds[0] !== shownColumn.attributeIds[0] ||
-    savedColumn.width !== shownColumn.width ||
+    (savedColumn.width || DEFAULT_COLUMN_WIDTH) !== (shownColumn.width || DEFAULT_COLUMN_WIDTH) ||
     areTableColumnsChanged(savedColumn.children, shownColumn.children)
   );
 }

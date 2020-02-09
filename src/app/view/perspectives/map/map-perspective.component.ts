@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -30,7 +30,7 @@ import {
   pairwise,
   startWith,
   switchMap,
-  take,
+  take, tap,
   withLatestFrom
 } from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
@@ -54,7 +54,7 @@ import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/vie
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {
   selectCurrentView,
-  selectDefaultViewConfig,
+  selectDefaultViewConfig, selectDefaultViewConfigSnapshot,
   selectSidebarOpened,
 } from '../../../core/store/views/views.state';
 import {MapContentComponent} from './content/map-content.component';
@@ -62,7 +62,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {Perspective} from '../perspective';
 import {filterLocationAttributes} from '../../../core/store/maps/map-config.utils';
-import {getBaseCollectionIdsFromQuery} from '../../../core/store/navigation/query/query.util';
+import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 @Component({
@@ -101,6 +101,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
     this.setupSidebar();
     this.subscribeToQuery();
+    this.resetDefaultConfigSnapshot();
   }
 
   private subscribeToQuery() {
@@ -161,14 +162,12 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
       select(selectCollectionsInQuery),
       distinctUntilChanged((a, b) => a.length === b.length),
       switchMap(collections =>
-        this.store$.pipe(
-          select(selectDefaultViewConfig(Perspective.Map, collectionsDefaultViewMapKey(collections))),
-          distinctUntilChanged((a,b) => deepObjectsEquals(defaultViewMapPosition(a), defaultViewMapPosition(b))),
+        this.selectCurrentDefaultViewConfig$().pipe(
+          distinctUntilChanged((a, b) => deepObjectsEquals(defaultViewMapPosition(a), defaultViewMapPosition(b))),
           withLatestFrom(this.store$.pipe(select(selectMapById(mapId))), this.store$.pipe(select(selectMapPosition))),
           map(([defaultConfig, map, position], index) => {
             const defaultMapConfig = defaultConfig && defaultConfig.config && defaultConfig.config.map;
 
-            console.log(index, defaultMapConfig && defaultMapConfig.position, map && map.config && map.config.position);
             const attributeIdsMap = {...map && map.config && map.config.attributeIdsMap || {}};
             for (const collection of collections) {
               if (!attributeIdsMap[collection.id]) {
@@ -185,7 +184,24 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
             return {mapId, config};
           })
         )
-      ));
+      ),
+      tap(({config}) => this.checkConfigSnapshot(config))
+    );
+  }
+
+  private checkConfigSnapshot(config: MapConfig) {
+    combineLatest([this.selectMapDefaultConfigId$(), this.store$.pipe(select(selectDefaultViewConfigSnapshot))])
+      .pipe(take(1))
+      .subscribe(([mapId, snapshot]) => {
+        if (!snapshot || snapshot.key !== mapId || snapshot.perspective !== Perspective.Map) {
+          const defaultConfigSnapshot: DefaultViewConfig = {
+            key: mapId,
+            perspective: Perspective.Map,
+            config: {map: config},
+          };
+          this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({model: defaultConfigSnapshot}));
+        }
+      });
   }
 
   private subscribeToMapConfig(): Subscription {
@@ -201,7 +217,6 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
         if (map.id === DEFAULT_MAP_ID && map.config && map.config.position) {
           const savedPosition = defaultViewMapPosition(currentViewConfig);
-          console.log(savedPosition, map.config.position, deepObjectsEquals(map.config.position, savedPosition));
           if (!deepObjectsEquals(map.config.position, savedPosition)) {
             this.saveMapDefaultViewConfig(collections, map.config);
           }
@@ -214,7 +229,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private selectCurrentDefaultViewConfig$(): Observable<DefaultViewConfig> {
-    return this.selectTableDefaultConfigId$().pipe(
+    return this.selectMapDefaultConfigId$().pipe(
       mergeMap(collectionId =>
         this.store$.pipe(
           select(selectDefaultViewConfig(Perspective.Map, collectionId)),
@@ -223,7 +238,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     );
   }
 
-  private selectTableDefaultConfigId$(): Observable<string> {
+  private selectMapDefaultConfigId$(): Observable<string> {
     return this.store$.pipe(
       select(selectQuery),
       map(query => getBaseCollectionIdsFromQuery(query)[0])
@@ -248,14 +263,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private redirectToMapPosition(position: MapPosition) {
-    const matrixParams = {
-      ...(position.bearing ? {mb: position.bearing.toFixed(1)} : undefined),
-      mc: formatMapCoordinates(position.center),
-      ...(position.pitch ? {mp: position.pitch.toFixed(1)} : undefined),
-      mz: position.zoom.toFixed(2),
-    };
-
-    this.router.navigate(['../map', matrixParams], {
+    this.router.navigate(['../map', mapPositionPathParams(position)], {
       queryParamsHandling: 'preserve',
       relativeTo: this.activatedRoute.parent,
     });
@@ -291,6 +299,10 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     const opened = !this.sidebarOpened$.getValue();
     this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
     this.sidebarOpened$.next(opened);
+  }
+
+  private resetDefaultConfigSnapshot() {
+    this.store$.dispatch(new ViewsAction.SetDefaultConfigSnapshot({}));
   }
 }
 

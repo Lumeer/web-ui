@@ -26,7 +26,12 @@ import {NotificationService} from '../core/notifications/notification.service';
 import {FileAttachmentsService} from '../core/service/file-attachments.service';
 import {AppState} from '../core/store/app.state';
 import {selectViewsByRead} from '../core/store/common/permissions.selectors';
-import {selectNavigation, selectPerspective, selectQuery} from '../core/store/navigation/navigation.state';
+import {
+  NavigationState,
+  selectNavigation,
+  selectPerspective,
+  selectQuery
+} from '../core/store/navigation/navigation.state';
 import {View} from '../core/store/views/view';
 import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
@@ -66,7 +71,7 @@ export class ViewComponent implements OnInit {
       filter(({workspace, perspective}) =>
         Boolean(workspace && workspace.organizationCode && workspace.projectCode && perspective)
       ),
-      startWith(null),
+      startWith(null as NavigationState),
       pairwise(),
       switchMap(([previousNavigation, {workspace, query, viewName}]) => {
         if (workspace.viewCode) {

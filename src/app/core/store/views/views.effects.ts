@@ -30,7 +30,7 @@ import {UserService, ViewService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {NavigationAction} from '../navigation/navigation.action';
-import {selectNavigation, selectSearchTab, selectWorkspace} from '../navigation/navigation.state';
+import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {PermissionsConverter} from '../permissions/permissions.converter';
@@ -53,6 +53,7 @@ import {User} from '../users/user';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {convertUserModelToDto} from '../users/user.converter';
 import {createCallbackActions} from '../store.utils';
+import {mapPositionPathParams} from '../navigation/query/query.util';
 
 @Injectable()
 export class ViewsEffects {
@@ -126,15 +127,18 @@ export class ViewsEffects {
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.CreateSuccess>(ViewsActionType.CREATE_SUCCESS),
     withLatestFrom(
-      this.store$.pipe(select(selectWorkspace)),
-      this.store$.pipe(select(selectSearchTab)),
+      this.store$.pipe(select(selectNavigation)),
       this.store$.pipe(select(selectViewsDictionary))
     ),
-    map(([action, workspace, searchTab, views]) => {
-      const paths = ['w', workspace.organizationCode, workspace.projectCode, 'view', {vc: action.payload.view.code}];
-      if (searchTab) {
+    map(([action, navigation, views]) => {
+      const paths: any[] = ['w', navigation.workspace.organizationCode, navigation.workspace.projectCode, 'view', {vc: action.payload.view.code}];
+      if (navigation.searchTab) {
         paths.push(Perspective.Search);
-        paths.push(searchTab);
+        paths.push(navigation.searchTab);
+      }
+      if (navigation.mapPosition) {
+        paths.push(Perspective.Map);
+        paths.push(mapPositionPathParams(navigation.mapPosition));
       }
       if (environment.analytics) {
         this.angulartics2.eventTrack.next({
@@ -428,5 +432,6 @@ export class ViewsEffects {
     private viewService: ViewService,
     private userService: UserService,
     private angulartics2: Angulartics2
-  ) {}
+  ) {
+  }
 }

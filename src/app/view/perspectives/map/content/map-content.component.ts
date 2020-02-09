@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit, SimpleChange,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
@@ -64,7 +73,7 @@ import {selectConstraintData} from '../../../../core/store/constraint-data/const
   styleUrls: ['./map-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapContentComponent implements OnInit, OnDestroy {
+export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public collections: Collection[] = [];
 
@@ -84,7 +93,7 @@ export class MapContentComponent implements OnInit, OnDestroy {
 
   private refreshMarkers$ = new BehaviorSubject(Date.now());
 
-  private subscriptions = new Subscription();
+  private propertiesSubscription = new Subscription();
 
   constructor(
     private collectionsPermissions: CollectionsPermissionsPipe,
@@ -98,22 +107,36 @@ export class MapContentComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    const allProperties$ = this.bindAllProperties();
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (this.mapIdChanges(changes.map)) {
+      this.initProperties();
+    }
+  }
+
+  private initProperties() {
+    const allProperties$ = this.bindAllProperties(this.map.id);
     this.markers$ = this.bindMarkers(allProperties$);
 
-    this.subscriptions.add(this.subscribeToUninitializedProperties(allProperties$));
+    this.propertiesSubscription.unsubscribe();
+    this.propertiesSubscription = this.subscribeToUninitializedProperties(allProperties$);
+  }
+
+  private mapIdChanges(change: SimpleChange) {
+    return change && change.currentValue && (!change.previousValue || change.previousValue.id !== change.currentValue.id);
   }
 
   public ngOnDestroy() {
-    this.subscriptions.unsubscribe();
+    this.propertiesSubscription.unsubscribe();
   }
 
-  private bindAllProperties(): Observable<MapMarkerProperties[]> {
+  private bindAllProperties(mapId: string): Observable<MapMarkerProperties[]> {
     return combineLatest([
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectDocumentsByQuery)),
       this.store$.pipe(
-        select(selectMapConfigById(this.map.id)),
+        select(selectMapConfigById(mapId)),
         map(config => config.attributeIdsMap),
         distinctUntilChanged()
       ),
