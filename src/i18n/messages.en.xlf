@@ -476,10 +476,10 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></source><target state="final">Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source><target state="final">{VAR_SELECT, select, organization {Organization} project {Project} other {} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="topPanel.organizationMenu.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="topPanel.organizationMenu.title" datatype="html">
         <source>Organization menu</source><target state="final">Organization menu</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/workspace-panel.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="topPanel.projectMenu.title" datatype="html">
@@ -488,7 +488,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/workspace-panel.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="panel.plan.free" datatype="html">
         <source>Free Plan: Upgrade now!</source><target state="final">Free Plan: Upgrade now!</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="topPanel.controlsToggle.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="topPanel.controlsToggle.title" datatype="html">
         <source>Show controls</source><target state="final">Show controls</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context>
@@ -601,27 +601,27 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="userNotifications.new" datatype="html">
         <source>new</source><target state="final">new</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="userNotifications.readOn" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="userNotifications.readOn" datatype="html">
         <source>read on</source><target state="final">read on</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="userNotifications.originallyReadOn" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="userNotifications.originallyReadOn" datatype="html">
         <source>originally read on</source><target state="final">originally read on</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="userNotifications.mark.unread" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="userNotifications.mark.unread" datatype="html">
         <source>Mark as unread</source><target state="final">Mark as unread</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="userNotifications.mark.read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="userNotifications.mark.read" datatype="html">
         <source>Mark as read</source><target state="final">Mark as read</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="userNotifications.delete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="userNotifications.delete" datatype="html">
         <source>Delete notification</source><target state="final">Delete notification</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="userNotifications.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="userNotifications.empty" datatype="html">
         <source>There are no notifications.
     </source><target state="final">There are no notifications.
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="userNotifications.organizationShared" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="userNotifications.organizationShared" datatype="html">
         <source>A new organization has been shared with you.</source><target state="final">A new organization has been shared with you.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/organization/notification-organization.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="userNotifications.clickHere" datatype="html">
@@ -648,32 +648,38 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/collection/notification-collection.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/view/notification-view.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="userNotifications.viewShared" datatype="html">
         <source>A new view has been shared with you.</source><target state="final">A new view has been shared with you.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/view/notification-view.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="language.czech" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/view/notification-view.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
+        <source>Show only unread</source><target state="final">Show only unread</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="language.czech" datatype="html">
         <source>Czech</source><target state="final">Czech</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="language.english" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="language.english" datatype="html">
         <source>English</source><target state="final">English</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="menu.sendFeedback" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="menu.sendFeedback" datatype="html">
         <source>Send Feedback</source><target state="final">Send Feedback</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">38</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="menu.applicationTour" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="menu.applicationTour" datatype="html">
         <source>Application Tour</source><target state="final">Application Tour</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">47</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
         <source>Solutions and Support</source><target state="final">Solutions and Support</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">57</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="menu.account" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="menu.account" datatype="html">
         <source>Account</source><target state="final">Account</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">66</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="menu.logout" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="menu.logout" datatype="html">
         <source>Logout</source><target state="final">Logout</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source><target state="final">{VAR_SELECT, select, organization {Organization} project {Project} other {} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="resource.detail.organization.invite" datatype="html">
@@ -912,7 +918,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="form.date.errors.customEmpty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">88</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="form.date.errors.customEmpty" datatype="html">
         <source>
     Format can not be empty.
   </source><target state="final">
@@ -939,14 +945,14 @@
         Minimum value
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="constraint.number.maxValue.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">64</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="constraint.number.maxValue.label" datatype="html">
         <source>
         Maximum value
       </source><target state="final">
         Maximum value
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">16</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="constraint.text.caseStyle.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">75</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="constraint.text.caseStyle.label" datatype="html">
         <source>
       Case style
     </source><target state="final">
@@ -1005,9 +1011,9 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="constraint.percentage.decimals.label" datatype="html">
         <source>
-          Round to no. of decimal digits:
+         Round to no. of decimal digits (0-10):
         </source><target state="final">
-          Round to no. of decimal digits:
+         Round to no. of decimal digits (0-10):
         </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="constraint.percentage.decimals.description" datatype="html">
@@ -1017,14 +1023,7 @@
           Leave empty for no rounding.
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="constraint.percentage.decimals.error" datatype="html">
-        <source>
-        The value must be greater than or equal to zero.
-      </source><target state="final">
-        The value must be greater than or equal to zero.
-      </target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="constraint.select.options.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="constraint.select.options.description" datatype="html">
         <source>
     Keeps a predefined set of valid values from which one can be selected. At least one value must be configured.
   </source><target state="final">
@@ -1163,10 +1162,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="constraint.address.fields.header" datatype="html">
         <source>Address fields</source><target state="final">Address fields</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="constraint.address.example" datatype="html">
-        <source>Example:</source><target state="final">Example:</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="form.errors.emptyFields" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="form.errors.emptyFields" datatype="html">
         <source>
   Please select at least one address field.
 </source><target state="final">
@@ -1209,14 +1205,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="constraint.duration.type" datatype="html">
         <source>{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</source><target state="final">{VAR_SELECT, select, Work {Work} Classic {Normal} Custom {Custom} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.duration.example" datatype="html">
-        <source>
-    Example: <x id="INTERPOLATION" equiv-text="{{exampleString}}"/>
-  </source><target state="final">
-    Example: <x id="INTERPOLATION" equiv-text="{{exampleString}}"/>
-  </target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.duration.unit.description" datatype="html">
         <source>
             <x id="ICU" equiv-text="{control.value.unit, select, w {...} d {...} h {...} m {...} s {...}}"/>
           </source><target state="final">
@@ -1236,7 +1225,54 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="2879182b054d70e714df9ad8e6dc901242ac383e" datatype="html">
         <source>{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }</source><target state="final">{VAR_SELECT, select, w {days} d {hours} h {minutes} m {seconds} s {milliseconds} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="button.share" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/conversion/duration-constraint-config-form-conversions.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="constraint.number.sign.label" datatype="html">
+        <source>Force sign</source><target state="final">Force sign</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.number.negative.label" datatype="html">
+        <source>Accounting negative numbers</source><target state="final">Accounting negative numbers</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.number.compact.label" datatype="html">
+        <source>Compact mode</source><target state="final">Compact mode</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.number.space.label" datatype="html">
+        <source>Thousands separated</source><target state="final">Thousands separated</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.number.decimals.label" datatype="html">
+        <source>
+          Round to no. of decimal digits (0-10):
+        </source><target state="final">
+          Round to no. of decimal digits (0-10):
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.number.decimals.description" datatype="html">
+        <source>
+          Leave empty for no rounding.
+    </source><target state="final">
+          Leave empty for no rounding.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.example" datatype="html">
+        <source>Example:</source><target state="final">Example:</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="button.share" datatype="html">
         <source>Share</source><target state="final">Share</target>
 
 
