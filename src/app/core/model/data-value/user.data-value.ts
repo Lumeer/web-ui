@@ -144,7 +144,10 @@ export class UserDataValue implements DataValue {
         );
       case QueryCondition.HasAll:
         return (
-          arrayIntersection(otherUsers.map(o => o.email), this.users.map(o => o.email)).length === otherUsers.length
+          arrayIntersection(
+            otherUsers.map(o => o.email),
+            this.users.map(o => o.email)
+          ).length === otherUsers.length
         );
       case QueryCondition.IsEmpty:
         return this.users.length === 0 && this.format().trim().length === 0;

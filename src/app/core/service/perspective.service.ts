@@ -52,25 +52,20 @@ export class PerspectiveService {
   }
 
   private navigateToPerspective(perspective: Perspective, cursor: string, queryToSet?: string) {
-    this.store$
-      .pipe(
-        select(selectWorkspace),
-        take(1)
-      )
-      .subscribe(workspace => {
-        const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
-        viewPath.push(perspective.toString());
+    this.store$.pipe(select(selectWorkspace), take(1)).subscribe(workspace => {
+      const viewPath: any[] = ['w', workspace.organizationCode, workspace.projectCode, 'view'];
+      viewPath.push(perspective.toString());
 
-        if (queryToSet || cursor) {
-          this.router.navigate(viewPath, {
-            queryParams: {
-              [QueryParam.Query]: queryToSet,
-              [QueryParam.ViewCursor]: cursor,
-            },
-          });
-        } else {
-          this.router.navigate(viewPath, {queryParamsHandling: 'preserve'});
-        }
-      });
+      if (queryToSet || cursor) {
+        this.router.navigate(viewPath, {
+          queryParams: {
+            [QueryParam.Query]: queryToSet,
+            [QueryParam.ViewCursor]: cursor,
+          },
+        });
+      } else {
+        this.router.navigate(viewPath, {queryParamsHandling: 'preserve'});
+      }
+    });
   }
 }

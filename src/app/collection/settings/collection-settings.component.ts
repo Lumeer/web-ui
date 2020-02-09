@@ -181,12 +181,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
       .subscribe(collection => this.collection$.next({...collection}));
     this.subscriptions.add(sub2);
 
-    this.store$
-      .pipe(
-        select(selectPreviousUrl),
-        take(1)
-      )
-      .subscribe(url => (this.previousUrl = url));
+    this.store$.pipe(select(selectPreviousUrl), take(1)).subscribe(url => (this.previousUrl = url));
   }
 
   public copyTableId() {

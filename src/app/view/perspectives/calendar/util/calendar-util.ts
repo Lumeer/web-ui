@@ -179,9 +179,15 @@ function createInterval(
   endAttributeId: string
 ): [{value: Date; attrId: string}, {value?: Date; attrId?: string}] {
   if (end && moment(end).isBefore(moment(start))) {
-    return [{value: end, attrId: endAttributeId}, {value: start, attrId: startAttributeId}];
+    return [
+      {value: end, attrId: endAttributeId},
+      {value: start, attrId: startAttributeId},
+    ];
   }
-  return [{value: start, attrId: startAttributeId}, {value: end, attrId: endAttributeId}];
+  return [
+    {value: start, attrId: startAttributeId},
+    {value: end, attrId: endAttributeId},
+  ];
 }
 
 export function isAllDayEvent(start: Date, end: Date): boolean {

@@ -55,22 +55,27 @@ export function createMarkerPropertiesList(
   }, []);
 }
 
-export function populateCoordinateProperties(propertiesList: MapMarkerProperties[]): { coordinateProperties: MapMarkerProperties[], otherProperties: MapMarkerProperties[] } {
-  return propertiesList.reduce((obj, properties) => {
-    const value = properties.document.data[properties.attributeId];
-    const coordinates = parseCoordinates(value);
-    if (coordinates) {
-      const coordinateProperties: MapMarkerProperties = {
-        ...properties,
-        coordinates,
-        attributeType: MapAttributeType.Coordinates,
-      };
-      obj.coordinateProperties.push(coordinateProperties);
-    } else {
-      obj.otherProperties.push(properties);
-    }
-    return obj;
-  }, {coordinateProperties: [], otherProperties: []});
+export function populateCoordinateProperties(
+  propertiesList: MapMarkerProperties[]
+): {coordinateProperties: MapMarkerProperties[]; otherProperties: MapMarkerProperties[]} {
+  return propertiesList.reduce(
+    (obj, properties) => {
+      const value = properties.document.data[properties.attributeId];
+      const coordinates = parseCoordinates(value);
+      if (coordinates) {
+        const coordinateProperties: MapMarkerProperties = {
+          ...properties,
+          coordinates,
+          attributeType: MapAttributeType.Coordinates,
+        };
+        obj.coordinateProperties.push(coordinateProperties);
+      } else {
+        obj.otherProperties.push(properties);
+      }
+      return obj;
+    },
+    {coordinateProperties: [], otherProperties: []}
+  );
 }
 
 export function areMapMarkerListsEqual(

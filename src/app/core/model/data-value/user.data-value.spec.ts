@@ -48,22 +48,25 @@ describe('UserDataValue', () => {
         )
       ).toBeTruthy();
       expect(
-        new UserDataValue(['one@lmr.com', 'two@lmr.com', 'three@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasSome,
-          [{value: ['two@lmr.com', 'three@lmr.com']}]
-        )
+        new UserDataValue(
+          ['one@lmr.com', 'two@lmr.com', 'three@lmr.com'],
+          config,
+          constraintData
+        ).meetCondition(QueryCondition.HasSome, [{value: ['two@lmr.com', 'three@lmr.com']}])
       ).toBeTruthy();
       expect(
-        new UserDataValue(['one@lmr.com', 'two@lmr.com', 'three@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasSome,
-          [{value: ['four@lmr.com']}]
-        )
+        new UserDataValue(
+          ['one@lmr.com', 'two@lmr.com', 'three@lmr.com'],
+          config,
+          constraintData
+        ).meetCondition(QueryCondition.HasSome, [{value: ['four@lmr.com']}])
       ).toBeFalsy();
       expect(
-        new UserDataValue(['one@lmr.com', 'other@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasSome,
-          [{value: ['lala@lmr.com', 'other@lmr.com']}]
-        )
+        new UserDataValue(
+          ['one@lmr.com', 'other@lmr.com'],
+          config,
+          constraintData
+        ).meetCondition(QueryCondition.HasSome, [{value: ['lala@lmr.com', 'other@lmr.com']}])
       ).toBeTruthy();
       expect(
         new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(
@@ -75,28 +78,32 @@ describe('UserDataValue', () => {
 
     it('not in', () => {
       expect(
-        new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasNoneOf,
-          [{value: 'other@lmr.com'}]
-        )
+        new UserDataValue(
+          ['one@lmr.com', 'two@lmr.com'],
+          config,
+          constraintData
+        ).meetCondition(QueryCondition.HasNoneOf, [{value: 'other@lmr.com'}])
       ).toBeTruthy();
       expect(
-        new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasNoneOf,
-          [{value: 'one@lmr.com'}]
-        )
+        new UserDataValue(
+          ['one@lmr.com', 'two@lmr.com'],
+          config,
+          constraintData
+        ).meetCondition(QueryCondition.HasNoneOf, [{value: 'one@lmr.com'}])
       ).toBeFalsy();
       expect(
-        new UserDataValue(['one@lmr.com', 'two@lmr.com', 'three@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasNoneOf,
-          [{value: ['other@lmr.com', 'four@lmr.com', 'l@lmr.com']}]
-        )
+        new UserDataValue(
+          ['one@lmr.com', 'two@lmr.com', 'three@lmr.com'],
+          config,
+          constraintData
+        ).meetCondition(QueryCondition.HasNoneOf, [{value: ['other@lmr.com', 'four@lmr.com', 'l@lmr.com']}])
       ).toBeTruthy();
       expect(
-        new UserDataValue(['one@lmr.com', 'two@lmr.com', 'three@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasNoneOf,
-          [{type: UserConstraintConditionValue.CurrentUser}]
-        )
+        new UserDataValue(
+          ['one@lmr.com', 'two@lmr.com', 'three@lmr.com'],
+          config,
+          constraintData
+        ).meetCondition(QueryCondition.HasNoneOf, [{type: UserConstraintConditionValue.CurrentUser}])
       ).toBeFalsy();
     });
 

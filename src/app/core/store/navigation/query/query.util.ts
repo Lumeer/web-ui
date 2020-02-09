@@ -338,7 +338,7 @@ export function queryStemAttributesResourcesOrder(
 }
 
 export function findBestStemConfigIndex(
-  stemsConfigs: { stem?: QueryStem }[],
+  stemsConfigs: {stem?: QueryStem}[],
   collectionIds: string[],
   linkTypes: LinkType[]
 ): number {

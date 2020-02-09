@@ -122,8 +122,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     private ngZone: NgZone,
     private platform: Platform,
     private renderer: Renderer2
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.mapElementId = `map-${this.map.id}`;
@@ -155,17 +154,26 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private mapPositionChanged() {
     const position = this.map && this.map.config && this.map.config.position;
-    return this.mapboxMap && !this.mapIsMoving() && position && (
-      this.mapboxMap.getCenter().lat !== position.center.lat ||
-      this.mapboxMap.getCenter().lng !== position.center.lng ||
-      this.mapboxMap.getBearing() !== position.bearing ||
-      this.mapboxMap.getPitch() !== position.pitch ||
-      this.mapboxMap.getZoom() !== position.zoom
-    )
+    return (
+      this.mapboxMap &&
+      !this.mapIsMoving() &&
+      position &&
+      (this.mapboxMap.getCenter().lat !== position.center.lat ||
+        this.mapboxMap.getCenter().lng !== position.center.lng ||
+        this.mapboxMap.getBearing() !== position.bearing ||
+        this.mapboxMap.getPitch() !== position.pitch ||
+        this.mapboxMap.getZoom() !== position.zoom)
+    );
   }
 
   private mapIsMoving(): boolean {
-    return this.mapboxMap && (this.mapboxMap.isMoving() || this.mapboxMap.isEasing() || this.mapboxMap.isZooming() || this.mapboxMap.isRotating());
+    return (
+      this.mapboxMap &&
+      (this.mapboxMap.isMoving() ||
+        this.mapboxMap.isEasing() ||
+        this.mapboxMap.isZooming() ||
+        this.mapboxMap.isRotating())
+    );
   }
 
   private refreshMapPosition() {
@@ -247,7 +255,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       }
 
       this.mapboxMap.easeTo({
-        duration: Math.max(zoom / this.mapboxMap.getZoom() * 200, 300),
+        duration: Math.max((zoom / this.mapboxMap.getZoom()) * 200, 300),
         center: (features[0].geometry as Point).coordinates as [number, number],
         zoom: zoom,
       });
@@ -290,7 +298,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
         }
         return markerIds;
       }, new Set<string>()),
-    ].map(markerId => this.allMarkers[markerId]).filter(marker => !!marker);
+    ]
+      .map(markerId => this.allMarkers[markerId])
+      .filter(marker => !!marker);
   }
 
   private addMarkersToMap(markers: MapMarkerProperties[]) {
@@ -345,7 +355,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     }
   }
 
-  private onMarkerDragEnd(event: { target: Marker }, properties: MapMarkerProperties) {
+  private onMarkerDragEnd(event: {target: Marker}, properties: MapMarkerProperties) {
     event.target.setDraggable(false); // disable dragging until map refresh
 
     const coordinates: MapCoordinates = event.target.getLngLat();
@@ -385,7 +395,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private activateMapTilesLanguageAutoDetection() {
-    const mapbox = (this.mapboxMap as any);
+    const mapbox = this.mapboxMap as any;
     if (mapbox) {
       mapbox.autodetectLanguage(environment.locale);
     }
@@ -397,11 +407,11 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       'GeolocateControl.FindMyLocation': this.i18n({id: 'map.location.find', value: 'Find my location'}),
       'GeolocateControl.LocationNotAvailable': this.i18n({
         id: 'map.location.notAvailable',
-        value: 'Location not available'
+        value: 'Location not available',
       }),
-      'NavigationControl.ResetBearing': this.i18n({id: 'map.control.compass', value: 'Reset bearing to north',}),
-      'NavigationControl.ZoomIn': this.i18n({id: 'map.control.zoom.in', value: 'Zoom in',}),
-      'NavigationControl.ZoomOut': this.i18n({id: 'map.control.zoom.out', value: 'Zoom out',}),
+      'NavigationControl.ResetBearing': this.i18n({id: 'map.control.compass', value: 'Reset bearing to north'}),
+      'NavigationControl.ZoomIn': this.i18n({id: 'map.control.zoom.in', value: 'Zoom in'}),
+      'NavigationControl.ZoomOut': this.i18n({id: 'map.control.zoom.out', value: 'Zoom out'}),
       'ScaleControl.Feet': this.i18n({id: 'distance.feat', value: 'ft'}),
       'ScaleControl.Meters': this.i18n({id: 'distance.meters', value: 'm'}),
       'ScaleControl.Kilometers': this.i18n({id: 'distance.kilometers', value: 'km'}),
@@ -409,7 +419,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       'ScaleControl.NauticalMiles': this.i18n({id: 'distance.nauticalMiles', value: 'nm'}),
     };
   }
-
 }
 
 function mapMarkerId(properties: MapMarkerProperties): string {

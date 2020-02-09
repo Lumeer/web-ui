@@ -274,19 +274,13 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   private copyCollectionAttribute(collectionId: string, attributeId: string) {
     this.store$
-      .pipe(
-        select(selectCollectionById(collectionId)),
-        take(1)
-      )
+      .pipe(select(selectCollectionById(collectionId)), take(1))
       .subscribe(collection => this.copyAttribute(collection, attributeId));
   }
 
   private copyLinkTypeAttribute(linkTypeId: string, attributeId: string) {
     this.store$
-      .pipe(
-        select(selectLinkTypeById(linkTypeId)),
-        take(1)
-      )
+      .pipe(select(selectLinkTypeById(linkTypeId)), take(1))
       .subscribe(linkType => this.copyAttribute(linkType, attributeId));
   }
 

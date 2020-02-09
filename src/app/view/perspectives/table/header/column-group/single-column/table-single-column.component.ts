@@ -131,12 +131,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
 
   private bindSelected(): Observable<boolean> {
     return this.cursor$.pipe(
-      switchMap(cursor =>
-        this.store$.pipe(
-          select(selectTableCursorSelected(cursor)),
-          distinctUntilChanged()
-        )
-      )
+      switchMap(cursor => this.store$.pipe(select(selectTableCursorSelected(cursor)), distinctUntilChanged()))
     );
   }
 

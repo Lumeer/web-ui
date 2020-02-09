@@ -112,19 +112,31 @@ const collections: Collection[] = [
     id: 'C1',
     name: 'collection',
     color: '#ffffff',
-    attributes: [{id: 'a1', name: 'Lala'}, {id: 'a2', name: 'Kala'}, {id: 'a3', name: 'Sala'}],
+    attributes: [
+      {id: 'a1', name: 'Lala'},
+      {id: 'a2', name: 'Kala'},
+      {id: 'a3', name: 'Sala'},
+    ],
   },
   {
     id: 'C2',
     name: 'collection2',
     color: '#ffffff',
-    attributes: [{id: 'a1', name: 'Lala'}, {id: 'a2', name: 'Kala'}, {id: 'a3', name: 'Sala'}],
+    attributes: [
+      {id: 'a1', name: 'Lala'},
+      {id: 'a2', name: 'Kala'},
+      {id: 'a3', name: 'Sala'},
+    ],
   },
   {
     id: 'C3',
     name: 'collection3',
     color: '#ffffff',
-    attributes: [{id: 'a1', name: 'Lala'}, {id: 'a2', name: 'Kala'}, {id: 'a3', name: 'Sala'}],
+    attributes: [
+      {id: 'a1', name: 'Lala'},
+      {id: 'a2', name: 'Kala'},
+      {id: 'a3', name: 'Sala'},
+    ],
   },
 ];
 
@@ -208,13 +220,19 @@ const linkTypes: LinkType[] = [
     id: 'LT1',
     name: 'LinkType1',
     collectionIds: ['C1', 'C2'],
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+    ],
   },
   {
     id: 'LT2',
     name: 'LinkType2',
     collectionIds: ['C2', 'C3'],
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+    ],
   },
 ];
 

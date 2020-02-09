@@ -894,10 +894,10 @@ export class TablesEffects {
           const rowIndex = cursor.rowPath[0];
           const {row, level} = rows[rowIndex];
           const {row: newParentRow = undefined} =
-          rows
-            .slice(0, cursor.rowPath[0])
-            .reverse()
-            .find(hierarchyRow => hierarchyRow.level === level) || {};
+            rows
+              .slice(0, cursor.rowPath[0])
+              .reverse()
+              .find(hierarchyRow => hierarchyRow.level === level) || {};
           const parentDocumentId = newParentRow && newParentRow.documentId;
 
           if (row.documentId) {
@@ -930,10 +930,10 @@ export class TablesEffects {
           const rowIndex = cursor.rowPath[0];
           const {row, level} = rows[rowIndex];
           const {row: previousParentRow = undefined} =
-          rows
-            .slice(0, cursor.rowPath[0])
-            .reverse()
-            .find(hierarchyRow => hierarchyRow.level === level - 1) || {};
+            rows
+              .slice(0, cursor.rowPath[0])
+              .reverse()
+              .find(hierarchyRow => hierarchyRow.level === level - 1) || {};
           const previousParentDocument = documentsMap[previousParentRow && previousParentRow.documentId];
           const parentDocumentId =
             (previousParentDocument && previousParentDocument.metaData && previousParentDocument.metaData.parentId) ||
@@ -1159,12 +1159,11 @@ export class TablesEffects {
     private actions$: Actions,
     private collectionPermissionsPipe: CollectionPermissionsPipe,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 
   private getLatestTable<A extends TablesAction.TableCursorAction>(
     action: A
-  ): Observable<{ action: A; table: TableModel }> {
+  ): Observable<{action: A; table: TableModel}> {
     return this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
       first(),
       filter(table => !!table),

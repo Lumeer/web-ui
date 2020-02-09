@@ -30,7 +30,7 @@ import {
   NavigationState,
   selectNavigation,
   selectPerspective,
-  selectQuery
+  selectQuery,
 } from '../core/store/navigation/navigation.state';
 import {View} from '../core/store/views/view';
 import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';

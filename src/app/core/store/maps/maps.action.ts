@@ -67,11 +67,5 @@ export namespace MapsAction {
     public readonly type = MapsActionType.CLEAR;
   }
 
-  export type All =
-    | CreateMap
-    | DestroyMap
-    | SelectAttribute
-    | ChangePosition
-    | ChangePositionSaved
-    | Clear;
+  export type All = CreateMap | DestroyMap | SelectAttribute | ChangePosition | ChangePositionSaved | Clear;
 }

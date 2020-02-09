@@ -69,18 +69,13 @@ export class InvalidQueryComponent implements OnInit {
   }
 
   public onCollectionSelect(collection: Collection) {
-    this.store$
-      .pipe(
-        select(selectQuery),
-        take(1)
-      )
-      .subscribe(query => {
-        let stem = ((query && query.stems) || []).find(s => s.collectionId === collection.id);
-        if (!stem) {
-          stem = {collectionId: collection.id};
-        }
-        const newQuery: Query = {...query, stems: [stem], fulltexts: query && query.fulltexts};
-        this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
-      });
+    this.store$.pipe(select(selectQuery), take(1)).subscribe(query => {
+      let stem = ((query && query.stems) || []).find(s => s.collectionId === collection.id);
+      if (!stem) {
+        stem = {collectionId: collection.id};
+      }
+      const newQuery: Query = {...query, stems: [stem], fulltexts: query && query.fulltexts};
+      this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
+    });
   }
 }

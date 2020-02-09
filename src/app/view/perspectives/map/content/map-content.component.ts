@@ -23,9 +23,10 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit, SimpleChange,
+  OnInit,
+  SimpleChange,
   SimpleChanges,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -102,8 +103,7 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
     private constraintDataService: ConstraintDataService,
     private store$: Store<{}>,
     private modalService: ModalService
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
@@ -124,7 +124,9 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private mapIdChanges(change: SimpleChange) {
-    return change && change.currentValue && (!change.previousValue || change.previousValue.id !== change.currentValue.id);
+    return (
+      change && change.currentValue && (!change.previousValue || change.previousValue.id !== change.currentValue.id)
+    );
   }
 
   public ngOnDestroy() {

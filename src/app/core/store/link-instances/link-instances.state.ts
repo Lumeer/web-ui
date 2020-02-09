@@ -64,37 +64,28 @@ export const selectQueryLinkInstancesLoaded = (query: Query) =>
   );
 
 export const selectLinkInstanceById = (id: string) =>
-  createSelector(
-    selectLinkInstancesDictionary,
-    linkInstancesMap => linkInstancesMap[id]
-  );
+  createSelector(selectLinkInstancesDictionary, linkInstancesMap => linkInstancesMap[id]);
 
 export const selectLinkInstancesByIds = (ids: string[]) =>
-  createSelector(
-    selectLinkInstancesDictionary,
-    linkInstancesMap => sortLinkInstances(ids.map(id => linkInstancesMap[id]).filter(linkInstance => !!linkInstance))
+  createSelector(selectLinkInstancesDictionary, linkInstancesMap =>
+    sortLinkInstances(ids.map(id => linkInstancesMap[id]).filter(linkInstance => !!linkInstance))
   );
 
 export const selectLinkInstancesByDocumentIds = (documentIds: string[]) =>
-  createSelector(
-    selectAllLinkInstances,
-    linkInstances =>
-      sortLinkInstances(
-        linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
-      )
+  createSelector(selectAllLinkInstances, linkInstances =>
+    sortLinkInstances(
+      linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
+    )
   );
 
 export const selectLinkInstancesByType = (linkTypeId: string) =>
-  createSelector(
-    selectAllLinkInstances,
-    linkInstances => sortLinkInstances(linkInstances.filter(linkInstance => linkInstance.linkTypeId === linkTypeId))
+  createSelector(selectAllLinkInstances, linkInstances =>
+    sortLinkInstances(linkInstances.filter(linkInstance => linkInstance.linkTypeId === linkTypeId))
   );
 
 export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, documentIds: string[]) =>
-  createSelector(
-    selectLinkInstancesByType(linkTypeId),
-    linkInstances =>
-      sortLinkInstances(
-        linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
-      )
+  createSelector(selectLinkInstancesByType(linkTypeId), linkInstances =>
+    sortLinkInstances(
+      linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
+    )
   );

@@ -37,20 +37,11 @@ export const initialGeocodingState: GeocodingState = {
 
 export const selectGeocodingState = (state: AppState) => state.geocoding;
 
-export const selectGeocodingQueryCoordinates = createSelector(
-  selectGeocodingState,
-  state => state.queryCoordinates
-);
+export const selectGeocodingQueryCoordinates = createSelector(selectGeocodingState, state => state.queryCoordinates);
 
-export const selectGeocodingQueryLocations = createSelector(
-  selectGeocodingState,
-  state => state.queryLocations
-);
+export const selectGeocodingQueryLocations = createSelector(selectGeocodingState, state => state.queryLocations);
 export const selectLocationsByQuery = (query: string) =>
-  createSelector(
-    selectGeocodingQueryLocations,
-    queryLocations => queryLocations[query]
-  );
+  createSelector(selectGeocodingQueryLocations, queryLocations => queryLocations[query]);
 
 export const selectGeocodingCoordinatesLocation = createSelector(
   selectGeocodingState,

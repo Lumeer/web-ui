@@ -123,8 +123,12 @@ export class OptionsDropdownComponent implements OnChanges {
     return changes.options && (isNullOrUndefined(value) || this.indexByValue(value) === -1);
   }
 
-  private highlightedValueWasDeleted(changes: SimpleChanges){
-    return changes.highlightedValue && isNotNullOrUndefined(changes.highlightedValue.previousValue) && isNullOrUndefined(changes.highlightedValue.currentValue);
+  private highlightedValueWasDeleted(changes: SimpleChanges) {
+    return (
+      changes.highlightedValue &&
+      isNotNullOrUndefined(changes.highlightedValue.previousValue) &&
+      isNullOrUndefined(changes.highlightedValue.currentValue)
+    );
   }
 
   public onOptionSelect(event: MouseEvent, option: DropdownOption) {

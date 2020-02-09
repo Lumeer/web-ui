@@ -134,11 +134,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkSearchTabRedirect(config: SearchConfig, view: View) {
     this.store$
-      .pipe(
-        select(selectSearchTab),
-        take(1),
-        withLatestFrom(this.store$.pipe(select(selectNavigation)))
-      )
+      .pipe(select(selectSearchTab), take(1), withLatestFrom(this.store$.pipe(select(selectNavigation))))
       .subscribe(([searchTab, navigation]) => {
         if (
           navigation.workspace &&

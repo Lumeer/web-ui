@@ -26,7 +26,7 @@ import {
   TableConfig,
   TableConfigColumn,
   TableConfigPart,
-  TableConfigRow
+  TableConfigRow,
 } from '../table.model';
 import {filterTableColumnsByAttributes} from '../table.utils';
 

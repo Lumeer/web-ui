@@ -32,11 +32,7 @@ export const selectGanttChartsDictionary = createSelector(
   selectGanttChartState,
   ganttChartsAdapter.getSelectors().selectEntities
 );
-export const selectGanttChartById = id =>
-  createSelector(
-    selectGanttChartsDictionary,
-    ganttCharts => ganttCharts[id]
-  );
+export const selectGanttChartById = id => createSelector(selectGanttChartsDictionary, ganttCharts => ganttCharts[id]);
 
 export const selectDefaultGanttChart = selectGanttChartById(DEFAULT_GANTT_CHART_ID);
 export const selectGanttChartConfig = createSelector(

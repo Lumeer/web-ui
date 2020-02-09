@@ -39,18 +39,12 @@ export const initialDocumentsState: DocumentsState = documentsAdapter.getInitial
 
 export const selectDocumentsState = (state: AppState) => state.documents;
 
-export const selectAllDocuments = createSelector(
-  selectDocumentsState,
-  documentsAdapter.getSelectors().selectAll
-);
+export const selectAllDocuments = createSelector(selectDocumentsState, documentsAdapter.getSelectors().selectAll);
 export const selectDocumentsDictionary = createSelector(
   selectDocumentsState,
   documentsAdapter.getSelectors().selectEntities
 );
-export const selectDocumentsQueries = createSelector(
-  selectDocumentsState,
-  documentsState => documentsState.queries
-);
+export const selectDocumentsQueries = createSelector(selectDocumentsState, documentsState => documentsState.queries);
 
 export const selectCurrentQueryDocumentsLoaded = createSelector(
   selectDocumentsQueries,
@@ -65,24 +59,12 @@ export const selectQueryDocumentsLoaded = (query: Query) =>
   );
 
 export const selectDocumentById = (id: string) =>
-  createSelector(
-    selectDocumentsDictionary,
-    documentsMap => documentsMap[id]
-  );
+  createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
 export const selectDocumentsByIds = (ids: string[]) =>
-  createSelector(
-    selectDocumentsDictionary,
-    documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc)
-  );
+  createSelector(selectDocumentsDictionary, documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc));
 
-const selectPendingDocumentDataUpdates = createSelector(
-  selectDocumentsState,
-  state => state.pendingDataUpdates
-);
+const selectPendingDocumentDataUpdates = createSelector(selectDocumentsState, state => state.pendingDataUpdates);
 
 export const selectPendingDocumentDataUpdatesByCorrelationId = (correlationId: string) =>
-  createSelector(
-    selectPendingDocumentDataUpdates,
-    pendingDataUpdates => pendingDataUpdates[correlationId]
-  );
+  createSelector(selectPendingDocumentDataUpdates, pendingDataUpdates => pendingDataUpdates[correlationId]);

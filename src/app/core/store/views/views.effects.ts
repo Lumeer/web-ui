@@ -126,12 +126,15 @@ export class ViewsEffects {
   @Effect()
   public createSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.CreateSuccess>(ViewsActionType.CREATE_SUCCESS),
-    withLatestFrom(
-      this.store$.pipe(select(selectNavigation)),
-      this.store$.pipe(select(selectViewsDictionary))
-    ),
+    withLatestFrom(this.store$.pipe(select(selectNavigation)), this.store$.pipe(select(selectViewsDictionary))),
     map(([action, navigation, views]) => {
-      const paths: any[] = ['w', navigation.workspace.organizationCode, navigation.workspace.projectCode, 'view', {vc: action.payload.view.code}];
+      const paths: any[] = [
+        'w',
+        navigation.workspace.organizationCode,
+        navigation.workspace.projectCode,
+        'view',
+        {vc: action.payload.view.code},
+      ];
       if (navigation.searchTab) {
         paths.push(Perspective.Search);
         paths.push(navigation.searchTab);
@@ -432,6 +435,5 @@ export class ViewsEffects {
     private viewService: ViewService,
     private userService: UserService,
     private angulartics2: Angulartics2
-  ) {
-  }
+  ) {}
 }

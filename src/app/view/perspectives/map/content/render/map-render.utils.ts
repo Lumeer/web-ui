@@ -31,11 +31,11 @@ import {ConstraintData} from '../../../../../core/model/data/constraint';
 export function createMapboxMap(elementId: string, config: MapConfig, locale: Record<string, string>): Map {
   const positionOptions: Partial<MapboxOptions> = config.position
     ? {
-      bearing: config.position.bearing,
-      center: config.position.center,
-      pitch: config.position.pitch,
-      zoom: config.position.zoom,
-    }
+        bearing: config.position.bearing,
+        center: config.position.center,
+        pitch: config.position.pitch,
+        zoom: config.position.zoom,
+      }
     : {};
 
   return new Map({
@@ -108,7 +108,11 @@ export function createMapClusterCountsLayer(id: string, source: string): Layer {
   };
 }
 
-export function createMapMarker(properties: MapMarkerProperties, constraintData: ConstraintData, onDoubleClick: () => void): Marker {
+export function createMapMarker(
+  properties: MapMarkerProperties,
+  constraintData: ConstraintData,
+  onDoubleClick: () => void
+): Marker {
   const popup = createMapMarkerPopup(properties, constraintData);
   const element = createMapMarkerIcon(properties.collection, properties.editable);
 
@@ -132,8 +136,16 @@ export function createMapMarker(properties: MapMarkerProperties, constraintData:
 function createMapMarkerPopup(properties: MapMarkerProperties, constraintData: ConstraintData): Popup {
   const defaultAttributeId = getDefaultAttributeId(properties.collection);
 
-  const defaultAttributeValue = formatValue(properties.document, findAttribute(properties.collection.attributes, defaultAttributeId), constraintData);
-  const positionAttributeValue = formatValue(properties.document, findAttribute(properties.collection.attributes, properties.attributeId), constraintData);
+  const defaultAttributeValue = formatValue(
+    properties.document,
+    findAttribute(properties.collection.attributes, defaultAttributeId),
+    constraintData
+  );
+  const positionAttributeValue = formatValue(
+    properties.document,
+    findAttribute(properties.collection.attributes, properties.attributeId),
+    constraintData
+  );
 
   const html = defaultAttributeValue ? `${defaultAttributeValue}<br>${positionAttributeValue}` : positionAttributeValue;
 

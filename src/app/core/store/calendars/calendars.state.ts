@@ -33,14 +33,7 @@ export const selectCalendarsDictionary = createSelector(
   selectCalendarState,
   calendarsAdapter.getSelectors().selectEntities
 );
-export const selectCalendarById = id =>
-  createSelector(
-    selectCalendarsDictionary,
-    calendars => calendars[id]
-  );
+export const selectCalendarById = id => createSelector(selectCalendarsDictionary, calendars => calendars[id]);
 
 export const selectDefaultCalendar = selectCalendarById(DEFAULT_CALENDAR_ID);
-export const selectCalendarConfig = createSelector(
-  selectDefaultCalendar,
-  calendar => calendar && calendar.config
-);
+export const selectCalendarConfig = createSelector(selectDefaultCalendar, calendar => calendar && calendar.config);
