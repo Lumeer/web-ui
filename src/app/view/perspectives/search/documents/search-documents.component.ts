@@ -96,7 +96,12 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private subscribeSearchId() {
-    this.store$.pipe(select(selectSearchId), take(1)).subscribe(searchId => (this.searchId = searchId));
+    this.store$
+      .pipe(
+        select(selectSearchId),
+        take(1)
+      )
+      .subscribe(searchId => (this.searchId = searchId));
   }
 
   private selectDocumentsConfig$(): Observable<SearchDocumentsConfig> {
@@ -164,9 +169,14 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public onFetchNextPage() {
     this.page$.next(this.page$.value + 1);
-    this.store$.pipe(select(selectQuery), take(1)).subscribe(query => {
-      this.fetchDocuments(query);
-    });
+    this.store$
+      .pipe(
+        select(selectQuery),
+        take(1)
+      )
+      .subscribe(query => {
+        this.fetchDocuments(query);
+      });
   }
 
   private fetchDocuments(query: Query) {
