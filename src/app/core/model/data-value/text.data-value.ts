@@ -125,7 +125,7 @@ export class TextDataValue implements DataValue {
   }
 
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
-    return valueByConditionText(condition, stripTextHtmlTags(values[0].value, false));
+    return valueByConditionText(condition, values[0] && stripTextHtmlTags(values[0].value, false));
   }
 }
 

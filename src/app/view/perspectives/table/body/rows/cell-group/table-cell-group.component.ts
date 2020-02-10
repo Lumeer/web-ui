@@ -43,6 +43,8 @@ import {
 } from '../../../../../../core/store/tables/tables.selector';
 import {ConstraintData, DurationUnitsMap} from '../../../../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
 
 @Component({
   selector: 'table-cell-group',
@@ -64,6 +66,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public linkInstances$: Observable<LinkInstance[]>;
   public query$: Observable<Query>;
   public constraintData$: Observable<ConstraintData>;
+  public collections$: Observable<Collection[]>;
 
   public columns$: Observable<TableConfigColumn[]>;
   public part$: Observable<TableConfigPart>;
@@ -81,6 +84,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.columns$ = this.bindColumns();
     this.documents$ = this.bindDocuments();
     this.linkInstances$ = this.bindLinkInstances();

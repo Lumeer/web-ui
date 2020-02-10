@@ -132,10 +132,8 @@ export class SelectDataValue implements DataValue {
         );
       case QueryCondition.HasAll:
         return (
-          arrayIntersection(
-            otherOptions.map(o => o.value),
-            this.options.map(o => o.value)
-          ).length === otherOptions.length
+          arrayIntersection(otherOptions.map(o => o.value), this.options.map(o => o.value)).length ===
+          otherOptions.length
         );
       case QueryCondition.IsEmpty:
         return this.options.length === 0 && this.format().trim().length === 0;
@@ -172,7 +170,7 @@ export class SelectDataValue implements DataValue {
       case QueryCondition.NotEmpty:
         return this.config && this.config.options[0] && this.config.options[0].value;
       default:
-        return;
+        return null;
     }
   }
 }

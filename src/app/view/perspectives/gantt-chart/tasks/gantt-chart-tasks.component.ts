@@ -373,7 +373,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     };
     const taskWithMetadata = {...task, metadata};
 
-    const data = generateDocumentDataByQuery(this.query, this.constraintData);
+    const data = generateDocumentDataByQuery(this.query, this.collections, this.constraintData);
     const patchData = this.createTaskPatchData(taskWithMetadata, document);
     Object.keys(patchData).forEach(key => (data[key] = patchData[key]));
     if (stemConfig.name && isNullOrUndefined(data[stemConfig.name.attributeId])) {

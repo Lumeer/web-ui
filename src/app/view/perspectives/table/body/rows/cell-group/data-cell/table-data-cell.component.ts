@@ -47,7 +47,10 @@ import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {isAttributeEditableWithQuery} from '../../../../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {selectCollectionAttributeById} from '../../../../../../../core/store/collections/collections.state';
+import {
+  selectAllCollections,
+  selectCollectionAttributeById,
+} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {generateDocumentDataByCollectionQuery} from '../../../../../../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
@@ -168,21 +171,26 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToEditing(): Subscription {
-    return this.editing$.pipe(skip(1), distinctUntilChanged()).subscribe(editing => {
-      this.edited = editing;
-      if (!editing) {
-        this.clearEditedAttribute();
-        this.editedValue = null;
-        this.checkSuggesting();
+    return this.editing$
+      .pipe(
+        skip(1),
+        distinctUntilChanged()
+      )
+      .subscribe(editing => {
+        this.edited = editing;
+        if (!editing) {
+          this.clearEditedAttribute();
+          this.editedValue = null;
+          this.checkSuggesting();
 
-        if (this.selected) {
-          // sets focus to hidden input
-          this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+          if (this.selected) {
+            // sets focus to hidden input
+            this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+          }
+        } else {
+          this.setEditedAttribute();
         }
-      } else {
-        this.setEditedAttribute();
-      }
-    });
+      });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -262,7 +270,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           linkInstanceId: this.linkInstance && this.linkInstance.id,
         })
       )
-      .pipe(distinctUntilChanged(), withLatestFrom(this.editing$))
+      .pipe(
+        distinctUntilChanged(),
+        withLatestFrom(this.editing$)
+      )
       .subscribe(([affected, editing]) => {
         this.affected = affected && !editing;
         // TODO run change detection in parent component some other way
@@ -286,7 +297,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private subscribeToEditSelectedCell(): Subscription {
     return this.actions$
-      .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
+      .pipe(
+        ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL),
+        withLatestFrom(this.attribute$)
+      )
       .subscribe(([action, attribute]) => {
         if (this.allowedPermissions && this.allowedPermissions.writeWithView && this.isAttributeEditable(attribute)) {
           if (action.payload.clear) {
@@ -694,22 +708,24 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           })
         )
       ),
-      this.store$.pipe(select(selectQuery))
+      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectAllCollections))
     )
       .pipe(take(1))
-      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query]) =>
+      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query, collections]) => {
+        const collection = (collections || []).find(coll => coll.id === collectionId);
         this.store$.dispatch(
           new DocumentsAction.Create({
             document: {
               collectionId,
               correlationId,
-              data: generateDocumentDataByCollectionQuery(collectionId, query, this.constraintData),
+              data: generateDocumentDataByCollectionQuery(collection, query, this.constraintData),
             },
             onSuccess: documentId =>
               this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),
           })
-        )
-      );
+        );
+      });
   }
 
   private createLinkInstanceWithData(documentIds: [string, string], data: Record<string, any>) {

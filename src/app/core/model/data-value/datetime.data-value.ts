@@ -234,11 +234,7 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
-    const otherMomentValues = this.mapConditionValues(values);
-    const dates = otherMomentValues
-      .map(value => resetUnusedMomentPart(this.momentDate, value.format))
-      .sort((a, b) => this.compareMoments(a, b))
-      .map(val => val.toDate());
+    const dates = this.mapConditionValues(values).map(value => value.moment.toDate());
 
     switch (condition) {
       case QueryCondition.Equals:
@@ -247,12 +243,19 @@ export class DateTimeDataValue implements DataValue {
         return this.copy(dates[0]).serialize();
       case QueryCondition.GreaterThan:
       case QueryCondition.Between:
-        return this.copy(dates[0]).increment();
+        if (dates[0].getTime() === dates[1].getTime()) {
+          return this.copy(dates[0]).serialize();
+        }
+        return this.copy(dates[0])
+          .increment()
+          .serialize();
       case QueryCondition.LowerThan:
       case QueryCondition.NotBetween:
-        return this.copy(dates[0]).decrement();
+        return this.copy(dates[0])
+          .decrement()
+          .serialize();
       case QueryCondition.NotEquals:
-        return values[0].value ? '' : this.copy(new Date()).serialize();
+        return values[0].value || values[0].type ? '' : this.copy(new Date()).serialize();
       case QueryCondition.IsEmpty:
         return '';
       case QueryCondition.NotEmpty:

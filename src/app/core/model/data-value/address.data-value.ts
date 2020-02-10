@@ -125,6 +125,6 @@ export class AddressDataValue implements DataValue {
   }
 
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
-    return valueByConditionText(condition, values[0].value);
+    return valueByConditionText(condition, values[0] && values[0].value);
   }
 }

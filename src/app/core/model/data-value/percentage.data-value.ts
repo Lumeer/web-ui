@@ -101,11 +101,31 @@ export class PercentageDataValue implements NumericDataValue {
   }
 
   public increment(): PercentageDataValue {
-    return this.bigNumber && new PercentageDataValue(this.bigNumber.add(1), this.config);
+    return (
+      (this.bigNumber &&
+        new PercentageDataValue(
+          this.bigNumber
+            .add(1)
+            .div(100)
+            .toFixed(),
+          this.config
+        )) ||
+      this.copy()
+    );
   }
 
   public decrement(): PercentageDataValue {
-    return this.bigNumber && new PercentageDataValue(this.bigNumber.sub(1), this.config);
+    return (
+      (this.bigNumber &&
+        new PercentageDataValue(
+          this.bigNumber
+            .sub(1)
+            .div(100)
+            .toFixed(),
+          this.config
+        )) ||
+      this.copy()
+    );
   }
 
   public compareTo(otherValue: PercentageDataValue): number {
@@ -134,7 +154,7 @@ export class PercentageDataValue implements NumericDataValue {
   }
 
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
-    return valueByConditionNumber(this, condition, values, '0.19');
+    return valueByConditionNumber(this, condition, values, '0.19', 100);
   }
 }
 

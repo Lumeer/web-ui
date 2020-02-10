@@ -21,7 +21,7 @@ import Big from 'big.js';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {setCharAt} from '../../../shared/utils/string.utils';
-import {DataValue, NumericDataValue} from './index';
+import {NumericDataValue} from './index';
 
 export function dataValuesMeetConditionByText(
   condition: QueryCondition,
@@ -139,7 +139,8 @@ export function valueByConditionNumber(
   dataValue: NumericDataValue,
   condition: QueryCondition,
   values: QueryConditionValue[],
-  exampleValue: any
+  exampleValue: any,
+  divider = 1
 ): any {
   switch (condition) {
     case QueryCondition.Equals:
@@ -163,10 +164,13 @@ export function valueByConditionNumber(
       const firstValue = (<NumericDataValue>dataValue.copy(values[0].value)).bigNumber;
       const secondValue = (<NumericDataValue>dataValue.copy(values[1].value)).bigNumber;
       if (firstValue && secondValue) {
-        return firstValue
-          .minus(secondValue)
+        const firstValueDivided = firstValue.div(new Big(divider));
+        const bigValue = firstValueDivided
+          .minus(secondValue.div(new Big(divider)))
+          .abs()
           .div(new Big(2))
-          .plus(firstValue);
+          .plus(firstValueDivided);
+        return dataValue.copy(bigValue.toFixed()).serialize();
       }
       return values[0].value || values[1].value;
     case QueryCondition.IsEmpty:

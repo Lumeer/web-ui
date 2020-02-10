@@ -23,6 +23,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {Collection} from '../../../../../core/store/collections/collection';
 
 @Pipe({
   name: 'dataCellDocument',
@@ -34,6 +35,7 @@ export class DataCellDocumentPipe implements PipeTransform {
     partIndex: number,
     row: TableConfigRow,
     query: Query,
+    collections: Collection[],
     constraintData: ConstraintData
   ): DocumentModel {
     if (documents && documents[0]) {
@@ -47,7 +49,7 @@ export class DataCellDocumentPipe implements PipeTransform {
     return {
       collectionId: part.collectionId,
       correlationId: row.correlationId,
-      data: partIndex === 0 ? generateDocumentDataByQuery(query, constraintData) : {},
+      data: partIndex === 0 ? generateDocumentDataByQuery(query, collections, constraintData) : {},
     };
   }
 }

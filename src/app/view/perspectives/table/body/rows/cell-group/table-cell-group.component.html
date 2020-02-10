@@ -1,7 +1,8 @@
-<ng-container *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, part: part$ | async, query: query$ | async, constraintData: constraintData$ | async} as data">
+<ng-container
+  *ngIf="{selectedCursor: selectedCursor$ | async, documents: documents$ | async, linkInstances: linkInstances$ | async, part: part$ | async, query: query$ | async, constraintData: constraintData$ | async} as data">
 
   <ng-container *ngIf="{linkInstance: data.linkInstances | dataCellLinkInstance : data.part : cursor.partIndex : rows[0],
-                        document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0]: data.query: data.constraintData } as resourceData">
+                        document: data.documents | dataCellDocument : data.part : cursor.partIndex : rows[0]: data.query:(collections$ | async) :data.constraintData } as resourceData">
     <ng-container *ngFor="let column of columns$ | async; trackBy: trackByAttributeIds; let columnIndex = index">
       <ng-container *ngIf="column | isCompoundColumn; else emptyCell">
         <table-data-cell *ngIf="!(cursor | cellCollapsed | async); else collapsedCell"

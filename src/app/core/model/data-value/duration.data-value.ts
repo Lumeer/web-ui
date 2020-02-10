@@ -29,7 +29,7 @@ import {
   sortedDurationUnits,
 } from '../../../shared/utils/constraint/duration-constraint.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {ConstraintData} from '../data/constraint';
+import {ConstraintData, DurationUnitsMap} from '../data/constraint';
 import {DurationConstraintConfig} from '../data/constraint-config';
 import {NumericDataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
@@ -52,6 +52,14 @@ export class DurationDataValue implements NumericDataValue {
   }
 
   public format(maxUnits?: number): string {
+    return this.formatWithUnitsMap(this.constraintData && this.constraintData.durationUnitsMap, maxUnits);
+  }
+
+  private formatToNativeLocale(): string {
+    return this.formatWithUnitsMap();
+  }
+
+  private formatWithUnitsMap(durationUnitsMap?: DurationUnitsMap, maxUnits?: number) {
     if (isNotNullOrUndefined(this.inputValue)) {
       return this.inputValue;
     }
@@ -60,12 +68,7 @@ export class DurationDataValue implements NumericDataValue {
       return formatUnknownDataValue(this.value);
     }
 
-    return formatDurationDataValue(
-      this.value,
-      this.config,
-      this.constraintData && this.constraintData.durationUnitsMap,
-      maxUnits
-    );
+    return formatDurationDataValue(this.value, this.config, durationUnitsMap, maxUnits);
   }
 
   public preview(): string {
@@ -94,15 +97,18 @@ export class DurationDataValue implements NumericDataValue {
   private addToSmallestUnit(multiplier: 1 | -1 = 1): DurationDataValue {
     const one = new Big(1);
     if (this.bigNumber) {
+      const formatted = this.formatToNativeLocale();
       const unitsMap = getDurationUnitToMillisMap(this.config);
       for (let i = sortedDurationUnits.length - 1; i >= 0; i--) {
-        const millis = unitsMap[sortedDurationUnits[i]] || 1;
-        if (this.bigNumber.div(new Big(millis * multiplier)).gte(one)) {
-          return this.copy(this.bigNumber.add(millis).toFixed());
+        if (formatted.includes(sortedDurationUnits[i])) {
+          const millis = unitsMap[sortedDurationUnits[i]] || 1;
+          if (this.bigNumber.div(new Big(millis)).gte(one)) {
+            return this.copy(this.bigNumber.add(millis * multiplier).toFixed());
+          }
         }
       }
     }
-    return null;
+    return this.copy();
   }
 
   public decrement(): DurationDataValue {
