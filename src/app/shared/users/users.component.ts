@@ -163,10 +163,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.add(subscription);
 
-    this.users$ = this.store$.pipe(
-      select(selectUsersForWorkspace),
-      map(this.sortUsers)
-    );
+    this.users$ = this.store$.pipe(select(selectUsersForWorkspace), map(this.sortUsers));
 
     this.currentUser$ = this.store$.pipe(select(selectCurrentUserForWorkspace));
 

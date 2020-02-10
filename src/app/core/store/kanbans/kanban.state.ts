@@ -29,18 +29,8 @@ export const kanbansAdapter = createEntityAdapter<Kanban>({selectId: kanban => k
 export const initialKanbansState: KanbansState = kanbansAdapter.getInitialState();
 
 export const selectKanbansState = (state: AppState) => state.kanbans;
-export const selectKanbansDictionary = createSelector(
-  selectKanbansState,
-  kanbansAdapter.getSelectors().selectEntities
-);
-export const selectKanbanById = id =>
-  createSelector(
-    selectKanbansDictionary,
-    kanbans => kanbans[id]
-  );
+export const selectKanbansDictionary = createSelector(selectKanbansState, kanbansAdapter.getSelectors().selectEntities);
+export const selectKanbanById = id => createSelector(selectKanbansDictionary, kanbans => kanbans[id]);
 
 export const selectDefaultKanban = selectKanbanById(DEFAULT_KANBAN_ID);
-export const selectKanbanConfig = createSelector(
-  selectDefaultKanban,
-  kanban => kanban && kanban.config
-);
+export const selectKanbanConfig = createSelector(selectDefaultKanban, kanban => kanban && kanban.config);

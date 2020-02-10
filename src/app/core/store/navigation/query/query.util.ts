@@ -32,6 +32,8 @@ import {ConstraintType} from '../../../model/data/constraint';
 import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
 import {Workspace} from '../workspace';
+import {MapPosition} from '../../maps/map.model';
+import {formatMapCoordinates} from '../../maps/map-coordinates';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -377,4 +379,13 @@ export function isNavigatingToOtherWorkspace(workspace: Workspace, navigatingWor
     workspace.organizationCode !== navigatingWorkspace.organizationCode ||
     workspace.projectCode !== navigatingWorkspace.projectCode
   );
+}
+
+export function mapPositionPathParams(position: MapPosition): Record<string, any> {
+  return {
+    ...(position.bearing ? {mb: position.bearing.toFixed(1)} : undefined),
+    mc: formatMapCoordinates(position.center),
+    ...(position.pitch ? {mp: position.pitch.toFixed(1)} : undefined),
+    mz: position.zoom.toFixed(2),
+  };
 }

@@ -35,17 +35,10 @@ export const initialSequencesState: SequencesState = sequencesAdapter.getInitial
 });
 
 export const selectSequencesState = (state: AppState) => state.sequences;
-export const selectAllSequences = createSelector(
-  selectSequencesState,
-  sequencesAdapter.getSelectors().selectAll
+export const selectAllSequences = createSelector(selectSequencesState, sequencesAdapter.getSelectors().selectAll);
+
+export const selectAllSequencesSorted = createSelector(selectAllSequences, sequences =>
+  sequences.sort((a, b) => a.name.localeCompare(b.name))
 );
 
-export const selectAllSequencesSorted = createSelector(
-  selectAllSequences,
-  sequences => sequences.sort((a, b) => a.name.localeCompare(b.name))
-);
-
-export const selectSequencesLoaded = createSelector(
-  selectSequencesState,
-  state => state.loaded
-);
+export const selectSequencesLoaded = createSelector(selectSequencesState, state => state.loaded);

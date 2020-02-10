@@ -66,14 +66,10 @@ export const selectOrganizationByWorkspace = createSelector(
 );
 
 export const selectOrganizationById = id =>
-  createSelector(
-    selectOrganizationsDictionary,
-    organizations => {
-      return organizations[id];
-    }
-  );
+  createSelector(selectOrganizationsDictionary, organizations => {
+    return organizations[id];
+  });
 export const selectOrganizationByCode = (organizationCode: string) =>
-  createSelector(
-    selectAllOrganizations,
-    organizations => organizations.find(organization => organization.code === organizationCode)
+  createSelector(selectAllOrganizations, organizations =>
+    organizations.find(organization => organization.code === organizationCode)
   );

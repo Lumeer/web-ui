@@ -46,7 +46,10 @@ const collections: Collection[] = [
   {
     id: 'x1',
     name: 'lala',
-    attributes: [{id: 'x1', name: 'x1'}, {id: 'x2', name: 'x2'}],
+    attributes: [
+      {id: 'x1', name: 'x1'},
+      {id: 'x2', name: 'x2'},
+    ],
   },
   {
     id: 'x2',
@@ -85,7 +88,10 @@ const linkTypes: LinkType[] = [
     name: 'x12',
     collectionIds: [collections[3].id, collections[4].id],
     collections: [collections[3], collections[4]],
-    attributes: [{id: 'x1', name: 'x1'}, {id: 'x2', name: 'x2'}],
+    attributes: [
+      {id: 'x1', name: 'x1'},
+      {id: 'x2', name: 'x2'},
+    ],
   },
   {
     id: 'x34',

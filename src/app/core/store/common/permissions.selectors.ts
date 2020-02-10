@@ -178,10 +178,7 @@ export const selectDocumentsByQueryIncludingChildren = createSelector(
 );
 
 export const selectDocumentsByQueryIncludingChildrenAndIds = (ids: string[]) =>
-  createSelector(
-    selectDocumentsByQueryIncludingChildren,
-    documents => documents.filter(doc => ids.includes(doc.id))
-  );
+  createSelector(selectDocumentsByQueryIncludingChildren, documents => documents.filter(doc => ids.includes(doc.id)));
 
 export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
   createSelector(
@@ -208,10 +205,7 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
   );
 
 export const selectDocumentsByCustomQuery = (query: Query, desc?: boolean, includeChildren?: boolean) =>
-  createSelector(
-    selectDocumentsAndLinksByCustomQuery(query, desc, includeChildren),
-    data => data.documents
-  );
+  createSelector(selectDocumentsAndLinksByCustomQuery(query, desc, includeChildren), data => data.documents);
 
 export const selectLinkTypesByReadPermission = createSelector(
   selectAllLinkTypes,
@@ -232,9 +226,8 @@ export const selectLinkTypesByQuery = createSelector(
 );
 
 export const selectLinkTypesByCollectionId = (collectionId: string) =>
-  createSelector(
-    selectLinkTypesByReadPermission,
-    linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
+  createSelector(selectLinkTypesByReadPermission, linkTypes =>
+    linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
   );
 
 export const selectViewsByRead = createSelector(
@@ -244,8 +237,6 @@ export const selectViewsByRead = createSelector(
   (views, user, isManager) => (isManager && views) || views.filter(view => userHasRoleInResource(user, view, Role.Read))
 );
 
-export const selectViewsByQuery = createSelector(
-  selectViewsByRead,
-  selectQuery,
-  (views, query): View[] => sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
+export const selectViewsByQuery = createSelector(selectViewsByRead, selectQuery, (views, query): View[] =>
+  sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
 );

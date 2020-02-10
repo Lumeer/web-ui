@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {updateAttributeIdsMap} from './map-config.utils';
 import {AttributeIdsMap, DEFAULT_MAP_CONFIG, MapModel} from './map.model';
 import {MapsAction, MapsActionType} from './maps.action';
 import {initialMapsState, mapsAdapter, MapsState} from './maps.state';
@@ -30,8 +29,6 @@ export function mapsReducer(state: MapsState = initialMapsState, action: MapsAct
       return mapsAdapter.removeOne(action.payload.mapId, state);
     case MapsActionType.SELECT_ATTRIBUTE:
       return selectAttribute(state, action);
-    case MapsActionType.UPDATE_ATTRIBUTES:
-      return updateAttributes(state, action);
     case MapsActionType.CHANGE_POSITION:
       return changePosition(state, action);
     case MapsActionType.CHANGE_POSITION_SAVED:
@@ -50,7 +47,7 @@ function createMap(state: MapsState, action: MapsAction.CreateMap): MapsState {
     id: mapId,
     config: {...DEFAULT_MAP_CONFIG, ...config},
   };
-  return mapsAdapter.addOne(map, state);
+  return mapsAdapter.upsertOne(map, state);
 }
 
 function selectAttribute(state: MapsState, action: MapsAction.SelectAttribute): MapsState {
@@ -71,20 +68,6 @@ function selectAttribute(state: MapsState, action: MapsAction.SelectAttribute): 
   }
 
   const attributeIdsMap: AttributeIdsMap = {...oldAttributeIdsMap, [collectionId]: attributeIds};
-  const config = {...map.config, attributeIdsMap};
-
-  return mapsAdapter.updateOne({id: mapId, changes: {config}}, state);
-}
-
-function updateAttributes(state: MapsState, action: MapsAction.UpdateAttributes): MapsState {
-  const {mapId, collections} = action.payload;
-
-  const map = state.entities[mapId];
-  if (!map) {
-    return state;
-  }
-
-  const attributeIdsMap = updateAttributeIdsMap(map.config && map.config.attributeIdsMap, collections);
   const config = {...map.config, attributeIdsMap};
 
   return mapsAdapter.updateOne({id: mapId, changes: {config}}, state);

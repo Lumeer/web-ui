@@ -29,18 +29,8 @@ export const pivotsAdapter = createEntityAdapter<Pivot>({selectId: pivot => pivo
 export const initialPivotsState: PivotsState = pivotsAdapter.getInitialState();
 
 export const selectPivotsState = (state: AppState) => state.pivots;
-export const selectPivotsDictionary = createSelector(
-  selectPivotsState,
-  pivotsAdapter.getSelectors().selectEntities
-);
-export const selectPivotById = id =>
-  createSelector(
-    selectPivotsDictionary,
-    pivots => pivots[id]
-  );
+export const selectPivotsDictionary = createSelector(selectPivotsState, pivotsAdapter.getSelectors().selectEntities);
+export const selectPivotById = id => createSelector(selectPivotsDictionary, pivots => pivots[id]);
 
 export const selectDefaultPivot = selectPivotById(DEFAULT_PIVOT_ID);
-export const selectPivotConfig = createSelector(
-  selectDefaultPivot,
-  pivot => pivot && pivot.config
-);
+export const selectPivotConfig = createSelector(selectDefaultPivot, pivot => pivot && pivot.config);

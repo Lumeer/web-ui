@@ -22,25 +22,8 @@ import {ConstraintType} from '../../model/data/constraint';
 import {Attribute, Collection} from '../collections/collection';
 import {AttributeIdsMap, MapConfig} from './map.model';
 
-export function updateAttributeIdsMap(attributeIdsMap: AttributeIdsMap, collections: Collection[]): AttributeIdsMap {
-  const collectionIds = collections.map(collection => collection.id);
-  const filteredAttributeIdsMap: AttributeIdsMap = Object.entries(attributeIdsMap || {})
-    .filter(([collectionId]) => collectionIds.includes(collectionId))
-    .reduce((idsMap, [collectionId, attributeIds]) => {
-      idsMap[collectionId] = attributeIds;
-      return idsMap;
-    }, {});
-
-  return collections.reduce((idsMap, collection) => {
-    if (!idsMap[collection.id]) {
-      idsMap[collection.id] = filterLocationAttributes(collection.attributes).map(attribute => attribute.id);
-    }
-    return idsMap;
-  }, filteredAttributeIdsMap);
-}
-
-function filterLocationAttributes(attributes: Attribute[]): Attribute[] {
-  return attributes.filter(
+export function filterLocationAttributes(attributes: Attribute[]): Attribute[] {
+  return (attributes || []).filter(
     attribute =>
       attribute.constraint && [ConstraintType.Address, ConstraintType.Coordinates].includes(attribute.constraint.type)
   );

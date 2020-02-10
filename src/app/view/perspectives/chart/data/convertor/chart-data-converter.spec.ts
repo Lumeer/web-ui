@@ -70,7 +70,11 @@ const collections: Collection[] = [
     id: 'C1',
     name: 'collection',
     color: '#ffffff',
-    attributes: [{id: 'a1', name: 'Lala'}, {id: 'a2', name: 'Kala'}, {id: 'a3', name: 'Sala'}],
+    attributes: [
+      {id: 'a1', name: 'Lala'},
+      {id: 'a2', name: 'Kala'},
+      {id: 'a3', name: 'Sala'},
+    ],
   },
 ];
 
@@ -142,7 +146,11 @@ describe('Chart data converter single collection', () => {
     };
     const set: ChartDataSet = {
       id: null,
-      points: [{id: null, x: 'Dance', y: null}, {id: null, x: 'Glass', y: null}, {id: null, x: 'Sport', y: null}],
+      points: [
+        {id: null, x: 'Dance', y: null},
+        {id: null, x: 'Glass', y: null},
+        {id: null, x: 'Sport', y: null},
+      ],
       color: '#ffffff',
       xAxis: {
         category: ChartAxisCategory.Text,
@@ -216,7 +224,11 @@ describe('Chart data converter single collection', () => {
     };
     const set: ChartDataSet = {
       id: 'a2',
-      points: [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}, {id: null, x: 'Sport', y: 3}],
+      points: [
+        {id: 'D2', x: 'Dance', y: 7},
+        {id: null, x: 'Glass', y: 51},
+        {id: null, x: 'Sport', y: 3},
+      ],
       color: 'rgba(255,255,255,1)',
       yAxis: {
         category: ChartAxisCategory.Number,
@@ -242,14 +254,22 @@ describe('Chart data converter single collection', () => {
     };
     const set2 = {
       ...set,
-      points: [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 7}, {id: null, x: 'Sport', y: 0}],
+      points: [
+        {id: 'D2', x: 'Dance', y: 7},
+        {id: null, x: 'Glass', y: 7},
+        {id: null, x: 'Sport', y: 0},
+      ],
     };
     expect(converter.convert(config2)).toEqual({sets: [set2], type: ChartType.Line, constraintData: undefined});
 
     const config3 = {...config, aggregations: null};
     const set3 = {
       ...set,
-      points: [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}, {id: null, x: 'Sport', y: 3}],
+      points: [
+        {id: 'D2', x: 'Dance', y: 7},
+        {id: null, x: 'Glass', y: 51},
+        {id: null, x: 'Sport', y: 3},
+      ],
     };
     expect(converter.convert(config3)).toEqual({sets: [set3], type: ChartType.Line, constraintData: undefined});
   });
@@ -281,7 +301,11 @@ describe('Chart data converter single collection', () => {
         [ChartAxisType.Y1]: DataAggregationType.Sum,
       },
     };
-    const points1 = [{id: 'D2', x: 'Dance', y: 7}, {id: null, x: 'Glass', y: 51}, {id: null, x: 'Sport', y: 3}];
+    const points1 = [
+      {id: 'D2', x: 'Dance', y: 7},
+      {id: null, x: 'Glass', y: 51},
+      {id: null, x: 'Sport', y: 3},
+    ];
     const points2 = [
       {id: 'D2', x: 'Dance', y: 'Salt'},
       {id: 'D5', x: 'Glass', y: 'Vibes'},
@@ -407,19 +431,31 @@ const collections2 = [
     id: 'C2',
     name: 'collection2',
     color: '#bcbcbc',
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}, {id: 'a3', name: 'a3'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+      {id: 'a3', name: 'a3'},
+    ],
   },
   {
     id: 'C3',
     name: 'collection3',
     color: '#aabb44',
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}, {id: 'a3', name: 'a3'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+      {id: 'a3', name: 'a3'},
+    ],
   },
   {
     id: 'C4',
     name: 'collection4',
     color: '#123456',
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}, {id: 'a3', name: 'a3'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+      {id: 'a3', name: 'a3'},
+    ],
   },
 ];
 
@@ -435,19 +471,28 @@ const linkTypes2: LinkType[] = [
     id: 'LT1',
     name: 'LinkType1',
     collectionIds: ['C1', 'C2'],
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+    ],
   },
   {
     id: 'LT2',
     name: 'LinkType2',
     collectionIds: ['C2', 'C3'],
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+    ],
   },
   {
     id: 'LT3',
     name: 'LinkType3',
     collectionIds: ['C3', 'C4'],
-    attributes: [{id: 'a1', name: 'a1'}, {id: 'a2', name: 'a2'}],
+    attributes: [
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+    ],
   },
 ];
 
@@ -1101,7 +1146,11 @@ describe('Chart data converter linked collections', () => {
     expect(chartDataMin.sets[0].points).toEqual(pointsMin);
 
     const configCount = {...configAvg, aggregations: {[ChartAxisType.Y1]: DataAggregationType.Count}};
-    const pointsCount = [{id: null, x: 'Kubo', y: 2}, {id: null, x: 'Martin', y: 3}, {id: null, x: 'Tomas', y: 4}];
+    const pointsCount = [
+      {id: null, x: 'Kubo', y: 2},
+      {id: null, x: 'Martin', y: 3},
+      {id: null, x: 'Tomas', y: 4},
+    ];
     const chartDataCount = converter.convert(configCount);
     expect(chartDataCount.sets.length).toEqual(1);
     expect(chartDataCount.sets[0].points).toEqual(pointsCount);

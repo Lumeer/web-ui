@@ -52,7 +52,7 @@ import {
 } from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
-import {selectCurrentQueryDocumentsLoaded, selectDocumentsDictionary} from '../documents/documents.state';
+import {selectDocumentsDictionary} from '../documents/documents.state';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
@@ -71,7 +71,6 @@ import {isSingleCollectionQuery} from '../navigation/query/query.util';
 import {RouterAction} from '../router/router.action';
 import {moveTableCursor, TableBodyCursor, TableCursor} from './table-cursor';
 import {
-  DEFAULT_TABLE_ID,
   TableColumnType,
   TableConfig,
   TableConfigColumn,
@@ -275,12 +274,10 @@ export class TablesEffects {
       const newQuery: Query = {...query, stems: [{collectionId, linkTypeIds, filters, linkFilters}]};
 
       const actions: Action[] = [];
-      if (table.id === DEFAULT_TABLE_ID) {
-        const parts = [...table.config.parts];
-        parts.reverse();
-        const newConfig: TableConfig = {parts, rows: []};
-        actions.push(new TablesAction.SetConfig({tableId: table.id, config: newConfig}));
-      }
+      const parts = [...table.config.parts];
+      parts.reverse();
+      const newConfig: TableConfig = {parts, rows: []};
+      actions.push(new TablesAction.SetConfig({tableId: table.id, config: newConfig}));
 
       return [
         ...actions,

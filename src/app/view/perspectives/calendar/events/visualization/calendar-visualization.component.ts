@@ -31,7 +31,7 @@ import {CalendarMode} from '../../../../../core/store/calendars/calendar';
 import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} from 'angular-calendar';
 import {Subject} from 'rxjs';
 import * as moment from 'moment';
-import {DayViewHourSegment, MonthViewDay, WeekViewHourColumn} from 'calendar-utils';
+import {WeekViewHourSegment, MonthViewDay, WeekViewHourColumn} from 'calendar-utils';
 import {CalendarMetaData} from '../../util/calendar-util';
 
 const DEFAULT_NEW_EVENT_HOUR = 9;
@@ -100,7 +100,7 @@ export class CalendarVisualizationComponent {
     this.newEvent.emit(segment.date.getTime());
   }
 
-  public dayDoubleClick(segment: DayViewHourSegment) {
+  public dayDoubleClick(segment: WeekViewHourSegment) {
     this.newEvent.emit(segment.date.getTime());
   }
 

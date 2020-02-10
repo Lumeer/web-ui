@@ -115,8 +115,20 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   private shouldResetActiveItem(changes: SimpleChanges): boolean {
+    return this.activeValueNotFound(changes) || this.highlightedValueWasDeleted(changes);
+  }
+
+  private activeValueNotFound(changes: SimpleChanges): boolean {
     const value = this.activeValue$.value;
     return changes.options && (isNullOrUndefined(value) || this.indexByValue(value) === -1);
+  }
+
+  private highlightedValueWasDeleted(changes: SimpleChanges) {
+    return (
+      changes.highlightedValue &&
+      isNotNullOrUndefined(changes.highlightedValue.previousValue) &&
+      isNullOrUndefined(changes.highlightedValue.currentValue)
+    );
   }
 
   public onOptionSelect(event: MouseEvent, option: DropdownOption) {

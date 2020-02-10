@@ -56,34 +56,17 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
 
 export const selectViewsState = (state: AppState) => state.views;
 
-export const selectAllViews = createSelector(
-  selectViewsState,
-  viewsAdapter.getSelectors().selectAll
-);
-export const selectViewsDictionary = createSelector(
-  selectViewsState,
-  viewsAdapter.getSelectors().selectEntities
-);
+export const selectAllViews = createSelector(selectViewsState, viewsAdapter.getSelectors().selectAll);
+export const selectViewsDictionary = createSelector(selectViewsState, viewsAdapter.getSelectors().selectEntities);
 export const selectViewByCode = (code: string) =>
-  createSelector(
-    selectAllViews,
-    views => views && views.find(view => view.code === code)
-  );
-export const selectCurrentView = createSelector(
-  selectViewCode,
-  selectAllViews,
-  (viewCode, views) => (viewCode ? views.find(view => view.code === viewCode) : null)
+  createSelector(selectAllViews, views => views && views.find(view => view.code === code));
+export const selectCurrentView = createSelector(selectViewCode, selectAllViews, (viewCode, views) =>
+  viewCode ? views.find(view => view.code === viewCode) : null
 );
 
-export const selectViewsLoaded = createSelector(
-  selectViewsState,
-  state => state.loaded
-);
+export const selectViewsLoaded = createSelector(selectViewsState, state => state.loaded);
 
-export const selectDefaultViewConfigSnapshot = createSelector(
-  selectViewsState,
-  state => state.defaultConfigSnapshot
-);
+export const selectDefaultViewConfigSnapshot = createSelector(selectViewsState, state => state.defaultConfigSnapshot);
 
 const selectConfigs = createSelector(
   selectTableConfig,
@@ -131,10 +114,7 @@ export const selectPerspectiveViewConfig = createSelector(
   (view, perspective) => view && view.config && view.config[perspective]
 );
 
-export const selectViewConfig = createSelector(
-  selectCurrentView,
-  view => view && view.config
-);
+export const selectViewConfig = createSelector(selectCurrentView, view => view && view.config);
 
 export const selectViewConfigChanged = createSelector(
   selectPerspective,
@@ -161,15 +141,9 @@ export const selectViewPerspectiveChanged = createSelector(
   (view, perspective) => view && perspective && view.perspective !== perspective
 );
 
-const selectViewGlobalConfig = createSelector(
-  selectViewsState,
-  state => state.globalConfig
-);
+const selectViewGlobalConfig = createSelector(selectViewsState, state => state.globalConfig);
 
-export const selectSidebarOpened = createSelector(
-  selectViewGlobalConfig,
-  config => config.sidebarOpened
-);
+export const selectSidebarOpened = createSelector(selectViewGlobalConfig, config => config.sidebarOpened);
 
 export const selectPerspectiveDefaultViewConfig = createSelector(
   selectViewsState,
@@ -187,24 +161,15 @@ export const selectPerspectiveDefaultViewConfig = createSelector(
 );
 
 export const selectDefaultViewConfig = (perspective: Perspective, key: string) =>
-  createSelector(
-    selectViewsState,
-    state => {
-      const configsByPerspective = state.defaultConfigs[perspective] || {};
-      return key && configsByPerspective[key];
-    }
-  );
+  createSelector(selectViewsState, state => {
+    const configsByPerspective = state.defaultConfigs[perspective] || {};
+    return key && configsByPerspective[key];
+  });
 
 export const selectDefaultViewConfigs = (perspective: Perspective, keys: string[]) =>
-  createSelector(
-    selectViewsState,
-    state => {
-      const configsByPerspective = state.defaultConfigs[perspective] || {};
-      return keys.map(key => configsByPerspective[key]).filter(config => !!config);
-    }
-  );
+  createSelector(selectViewsState, state => {
+    const configsByPerspective = state.defaultConfigs[perspective] || {};
+    return keys.map(key => configsByPerspective[key]).filter(config => !!config);
+  });
 
-export const selectDefaultViewConfigsLoaded = createSelector(
-  selectViewsState,
-  state => state.defaultConfigsLoaded
-);
+export const selectDefaultViewConfigsLoaded = createSelector(selectViewsState, state => state.defaultConfigsLoaded);

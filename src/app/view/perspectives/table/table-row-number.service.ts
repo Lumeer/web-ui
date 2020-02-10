@@ -57,10 +57,7 @@ export class TableRowNumberService {
     };
     return combineLatest(
       this.observeRowNumber(tableId, rowIndex - 1),
-      this.store$.pipe(
-        select(selectTableLinkedRowsCount(previousCursor)),
-        distinctUntilChanged()
-      )
+      this.store$.pipe(select(selectTableLinkedRowsCount(previousCursor)), distinctUntilChanged())
     ).pipe(
       map(([previousRowNumber, previousLinkedRowsCount]) => previousRowNumber + previousLinkedRowsCount),
       distinctUntilChanged()

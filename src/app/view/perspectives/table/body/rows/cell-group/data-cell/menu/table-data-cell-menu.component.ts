@@ -221,10 +221,7 @@ export class TableDataCellMenuComponent implements OnChanges {
   public onDocumentDetail() {
     if (this.document) {
       this.store$
-        .pipe(
-          select(selectCollectionById(this.document.collectionId)),
-          take(1)
-        )
+        .pipe(select(selectCollectionById(this.document.collectionId)), take(1))
         .subscribe(collection => this.modalService.showDocumentDetail(this.document, collection));
     }
   }

@@ -66,6 +66,7 @@ import {
   createMapMarkersBounds,
 } from './map-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -90,6 +91,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   @Input()
   public markers: MapMarkerProperties[];
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Output()
   public markerMove = new EventEmitter<MarkerMoveEvent>();
@@ -139,8 +143,46 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.markers && this.markers) {
+    if (changes.map && this.mapPositionChanged()) {
+      this.refreshMapPosition();
+    }
+
+    if ((changes.markers || changes.constraintData) && this.markers) {
       this.markers$.next(this.markers);
+    }
+  }
+
+  private mapPositionChanged() {
+    const position = this.map && this.map.config && this.map.config.position;
+    return (
+      this.mapboxMap &&
+      !this.mapIsMoving() &&
+      position &&
+      (this.mapboxMap.getCenter().lat !== position.center.lat ||
+        this.mapboxMap.getCenter().lng !== position.center.lng ||
+        this.mapboxMap.getBearing() !== position.bearing ||
+        this.mapboxMap.getPitch() !== position.pitch ||
+        this.mapboxMap.getZoom() !== position.zoom)
+    );
+  }
+
+  private mapIsMoving(): boolean {
+    return (
+      this.mapboxMap &&
+      (this.mapboxMap.isMoving() ||
+        this.mapboxMap.isEasing() ||
+        this.mapboxMap.isZooming() ||
+        this.mapboxMap.isRotating())
+    );
+  }
+
+  private refreshMapPosition() {
+    const position = this.map.config.position;
+    if (position && this.mapboxMap) {
+      this.mapboxMap.setZoom(position.zoom);
+      this.mapboxMap.setCenter({...position.center});
+      this.mapboxMap.setBearing(position.bearing);
+      this.mapboxMap.setPitch(position.pitch);
     }
   }
 
@@ -150,7 +192,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private initMap(config: MapConfig) {
-    this.mapboxMap = createMapboxMap(this.mapElementId, config);
+    this.mapboxMap = createMapboxMap(this.mapElementId, config, this.translateMap());
     this.mapboxMap.addControl(new NavigationControl(), 'top-right');
     this.mapboxMap.addControl(new ScaleControl(), 'bottom-right');
     // GeolocateControl needs to be added after ScaleControl to be shown above it
@@ -171,14 +213,13 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.mapboxMap.on('load', () => this.onMapLoad());
     this.mapboxMap.on('moveend', (event: MapboxEvent) => this.onMapMoveEnd(event));
     this.mapboxMap.on('click', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterClick(event));
-    this.mapboxMap.on('mouseenter', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseEnter(event));
-    this.mapboxMap.on('mouseleave', MAP_CLUSTER_CIRCLE_LAYER, event => this.onMapClusterMouseLeave(event));
+    this.mapboxMap.on('mouseenter', MAP_CLUSTER_CIRCLE_LAYER, () => this.onMapClusterMouseEnter());
+    this.mapboxMap.on('mouseleave', MAP_CLUSTER_CIRCLE_LAYER, () => this.onMapClusterMouseLeave());
   }
 
   private onMapLoad() {
     this.mapLoaded$.next(true);
 
-    this.translateNavigationControls();
     this.loadOpenMapTilesLanguage();
 
     this.mapboxMap.resize();
@@ -214,46 +255,52 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       }
 
       this.mapboxMap.easeTo({
+        duration: Math.max((zoom / this.mapboxMap.getZoom()) * 200, 300),
         center: (features[0].geometry as Point).coordinates as [number, number],
         zoom: zoom,
       });
     });
   }
 
-  private onMapClusterMouseEnter(event: MapLayerMouseEvent) {
+  private onMapClusterMouseEnter() {
     this.mapboxMap.getCanvas().style.cursor = 'pointer';
   }
 
-  private onMapClusterMouseLeave(event: MapLayerMouseEvent) {
+  private onMapClusterMouseLeave() {
     this.mapboxMap.getCanvas().style.cursor = '';
   }
 
   private redrawMarkers() {
-    const unclusteredMarkers = this.getUnclusteredMarkers();
+    if (this.mapboxMap) {
+      const unclusteredMarkers = this.getUnclusteredMarkers();
 
-    const addedMarkers = unclusteredMarkers.filter(marker => !this.drawnMarkers.includes(marker));
-    addedMarkers.forEach(marker => marker.addTo(this.mapboxMap));
+      const addedMarkers = unclusteredMarkers.filter(marker => !this.drawnMarkers.includes(marker));
+      addedMarkers.forEach(marker => marker.addTo(this.mapboxMap));
 
-    const removedMarkers = this.drawnMarkers.filter(marker => !unclusteredMarkers.includes(marker));
-    removedMarkers.forEach(marker => marker.remove());
+      const removedMarkers = this.drawnMarkers.filter(marker => !unclusteredMarkers.includes(marker));
+      removedMarkers.forEach(marker => marker.remove());
 
-    this.drawnMarkers = unclusteredMarkers;
+      this.drawnMarkers = unclusteredMarkers;
+    }
   }
 
   private getUnclusteredMarkers(): Marker[] {
     return [
-      ...this.mapboxMap.querySourceFeatures(MAP_SOURCE_ID).reduce((documentIds, feature) => {
-        const document = JSON.parse(feature.properties.document || null);
-        if (document) {
-          documentIds.add(document.id);
+      ...this.mapboxMap.querySourceFeatures(MAP_SOURCE_ID).reduce((markerIds, feature) => {
+        const properties: MapMarkerProperties = {
+          attributeId: feature.properties.attributeId,
+          document: JSON.parse(feature.properties.document || null),
+          collection: JSON.parse(feature.properties.collection || null),
+        };
+        const markerId = mapMarkerId(properties);
+        if (markerId) {
+          markerIds.add(markerId);
         }
-        return documentIds;
+        return markerIds;
       }, new Set<string>()),
-    ].map(documentId => this.allMarkers[documentId]);
-  }
-
-  private setControlButtonTitle(className: string, title: string) {
-    this.renderer.setAttribute(document.getElementsByClassName(className).item(0), 'title', title);
+    ]
+      .map(markerId => this.allMarkers[markerId])
+      .filter(marker => !!marker);
   }
 
   private addMarkersToMap(markers: MapMarkerProperties[]) {
@@ -273,9 +320,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private createAllMakers(markers: MapMarkerProperties[]) {
     return markers.reduce((markersMap, properties) => {
-      const marker = createMapMarker(properties, () => this.onMarkerDoubleClick(properties));
+      const marker = createMapMarker(properties, this.constraintData, () => this.onMarkerDoubleClick(properties));
       marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
-      markersMap[properties.document.id] = marker;
+      markersMap[mapMarkerId(properties)] = marker;
       return markersMap;
     }, {});
   }
@@ -285,15 +332,19 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private addSourceAndLayers(markers: MapMarkerProperties[]) {
-    this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
-    this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
-    this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+    if (this.mapboxMap.areTilesLoaded()) {
+      this.mapboxMap.addSource(MAP_SOURCE_ID, createMapClusterMarkersSource(markers));
+      this.mapboxMap.addLayer(createMapClustersLayer(MAP_CLUSTER_CIRCLE_LAYER, MAP_SOURCE_ID));
+      this.mapboxMap.addLayer(createMapClusterCountsLayer(MAP_CLUSTER_SYMBOL_LAYER, MAP_SOURCE_ID));
+    }
   }
 
   private removeSourceAndLayers() {
-    this.mapboxMap.removeLayer(MAP_CLUSTER_SYMBOL_LAYER);
-    this.mapboxMap.removeLayer(MAP_CLUSTER_CIRCLE_LAYER);
-    this.mapboxMap.removeSource(MAP_SOURCE_ID);
+    if (this.mapboxMap.areTilesLoaded()) {
+      this.mapboxMap.removeLayer(MAP_CLUSTER_SYMBOL_LAYER);
+      this.mapboxMap.removeLayer(MAP_CLUSTER_CIRCLE_LAYER);
+      this.mapboxMap.removeSource(MAP_SOURCE_ID);
+    }
   }
 
   private fitMarkersBounds(markers: MapMarkerProperties[]) {
@@ -314,6 +365,10 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
 
+    this.destroyMap();
+  }
+
+  private destroyMap() {
     if (this.mapboxMap) {
       this.mapboxMap.remove();
       this.mapboxMap = null;
@@ -340,30 +395,35 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private activateMapTilesLanguageAutoDetection() {
-    (this.mapboxMap as any).autodetectLanguage(environment.locale);
+    const mapbox = this.mapboxMap as any;
+    if (mapbox) {
+      mapbox.autodetectLanguage(environment.locale);
+    }
   }
 
-  private translateNavigationControls() {
-    this.setControlButtonTitle(
-      'mapboxgl-ctrl-zoom-in',
-      this.i18n({
-        id: 'map.control.zoom.in',
-        value: 'Zoom in',
-      })
-    );
-    this.setControlButtonTitle(
-      'mapboxgl-ctrl-zoom-out',
-      this.i18n({
-        id: 'map.control.zoom.out',
-        value: 'Zoom out',
-      })
-    );
-    this.setControlButtonTitle(
-      'mapboxgl-ctrl-icon mapboxgl-ctrl-compass',
-      this.i18n({
-        id: 'map.control.compass',
-        value: 'Reset bearing to north',
-      })
-    );
+  private translateMap(): Record<string, string> {
+    // translation ids can be found in node_modules/mapbox-gl/src/ui/default_locale.js
+    return {
+      'GeolocateControl.FindMyLocation': this.i18n({id: 'map.location.find', value: 'Find my location'}),
+      'GeolocateControl.LocationNotAvailable': this.i18n({
+        id: 'map.location.notAvailable',
+        value: 'Location not available',
+      }),
+      'NavigationControl.ResetBearing': this.i18n({id: 'map.control.compass', value: 'Reset bearing to north'}),
+      'NavigationControl.ZoomIn': this.i18n({id: 'map.control.zoom.in', value: 'Zoom in'}),
+      'NavigationControl.ZoomOut': this.i18n({id: 'map.control.zoom.out', value: 'Zoom out'}),
+      'ScaleControl.Feet': this.i18n({id: 'distance.feat', value: 'ft'}),
+      'ScaleControl.Meters': this.i18n({id: 'distance.meters', value: 'm'}),
+      'ScaleControl.Kilometers': this.i18n({id: 'distance.kilometers', value: 'km'}),
+      'ScaleControl.Miles': this.i18n({id: 'distance.miles', value: 'mi'}),
+      'ScaleControl.NauticalMiles': this.i18n({id: 'distance.nauticalMiles', value: 'nm'}),
+    };
   }
+}
+
+function mapMarkerId(properties: MapMarkerProperties): string {
+  if (!properties.document) {
+    return null;
+  }
+  return `${properties.document.id}:${properties.attributeId}`;
 }

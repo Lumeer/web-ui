@@ -30,10 +30,7 @@ export const contactsAdapter = createEntityAdapter<Contact>({selectId: contact =
 export const initialContactsState: ContactsState = contactsAdapter.getInitialState({});
 
 export const selectContactsState = (state: AppState) => state.contacts;
-export const selectAllContacts = createSelector(
-  selectContactsState,
-  contactsAdapter.getSelectors().selectAll
-);
+export const selectAllContacts = createSelector(selectContactsState, contactsAdapter.getSelectors().selectAll);
 
 export const selectContactByWorkspace = createSelector(
   selectAllContacts,

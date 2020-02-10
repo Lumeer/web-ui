@@ -38,9 +38,9 @@ export interface MapPosition {
 }
 
 export interface MapConfig {
-  attributeIdsMap: AttributeIdsMap;
+  attributeIdsMap?: AttributeIdsMap;
   position?: MapPosition;
-  positionSaved: boolean;
+  positionSaved?: boolean;
 }
 
 export type AttributeIdsMap = Record<string, string[]>;

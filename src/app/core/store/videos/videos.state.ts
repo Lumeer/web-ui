@@ -31,27 +31,11 @@ export const videosAdapter = createEntityAdapter<VideoModel>({selectId: video =>
 export const initialVideosState: VideosState = videosAdapter.getInitialState({});
 
 export const selectVideosState = (state: AppState) => state.videos;
-export const selectAllVideos = createSelector(
-  selectVideosState,
-  videosAdapter.getSelectors().selectAll
-);
-export const selectVideosByPriority = createSelector(
-  selectAllVideos,
-  videos => {
-    return videos.sort((video1, video2) => video1.priority - video2.priority);
-  }
-);
-export const selectVideosDictionary = createSelector(
-  selectVideosState,
-  videosAdapter.getSelectors().selectEntities
-);
-export const selectVideoById = (id: string) =>
-  createSelector(
-    selectVideosDictionary,
-    videosMap => videosMap[id]
-  );
+export const selectAllVideos = createSelector(selectVideosState, videosAdapter.getSelectors().selectAll);
+export const selectVideosByPriority = createSelector(selectAllVideos, videos => {
+  return videos.sort((video1, video2) => video1.priority - video2.priority);
+});
+export const selectVideosDictionary = createSelector(selectVideosState, videosAdapter.getSelectors().selectEntities);
+export const selectVideoById = (id: string) => createSelector(selectVideosDictionary, videosMap => videosMap[id]);
 export const selectVideosByUrl = (url: string) =>
-  createSelector(
-    selectVideosByPriority,
-    videos => filterVideosByIds(videos, getVideosByUrl(url))
-  );
+  createSelector(selectVideosByPriority, videos => filterVideosByIds(videos, getVideosByUrl(url)));

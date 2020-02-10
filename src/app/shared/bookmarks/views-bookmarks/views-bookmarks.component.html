@@ -3,7 +3,7 @@
     <bookmark *ngIf="{queryItems: view.query | queryItems:(queryData$ | async)} as data"
               [color]="data.queryItems | queryColor"
               [icon]="view.perspective | perspectiveIcon"
-              [link]="!(data.queryItems | containsDeletedQueryItem) && (view | viewLink:workspace)">
+              [link]="(view | viewLink:workspace)">
       {{view.name}}
       <i *ngIf="data.queryItems | containsDeletedQueryItem" class="fa fa-exclamation-triangle text-warning ml-1"
          title="View is not valid because some of the items are deleted"

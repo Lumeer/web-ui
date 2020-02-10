@@ -210,7 +210,11 @@ describe('Kanban converter', () => {
           id: '1',
           title: 'LMR',
           width: 200,
-          resourcesOrder: [{id: 'D350', resourceType}, {id: 'D10', resourceType}, {id: 'D7', resourceType}],
+          resourcesOrder: [
+            {id: 'D350', resourceType},
+            {id: 'D10', resourceType},
+            {id: 'D7', resourceType},
+          ],
         },
         {
           id: '2',

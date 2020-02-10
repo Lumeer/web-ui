@@ -46,10 +46,7 @@ export const initialTablesState = tablesAdapter.getInitialState({
 
 export const selectTablesState = (state: AppState) => state.tables;
 
-export const selectTablesDictionary = createSelector(
-  selectTablesState,
-  tablesAdapter.getSelectors().selectEntities
-);
+export const selectTablesDictionary = createSelector(selectTablesState, tablesAdapter.getSelectors().selectEntities);
 
 export const selectTableId = createSelector(
   selectWorkspace,

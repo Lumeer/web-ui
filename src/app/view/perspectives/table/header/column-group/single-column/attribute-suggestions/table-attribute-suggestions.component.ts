@@ -200,20 +200,15 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   }
 
   private renameUninitializedTableColumn(attribute: Attribute) {
-    this.store$
-      .pipe(
-        select(selectTableColumn(this.cursor)),
-        take(1)
+    this.store$.pipe(select(selectTableColumn(this.cursor)), take(1)).subscribe(column =>
+      this.store$.dispatch(
+        new TablesAction.ReplaceColumns({
+          cursor: this.cursor,
+          deleteCount: 1,
+          columns: [{...column, attributeName: extractAttributeLastName(attribute.name)}],
+        })
       )
-      .subscribe(column =>
-        this.store$.dispatch(
-          new TablesAction.ReplaceColumns({
-            cursor: this.cursor,
-            deleteCount: 1,
-            columns: [{...column, attributeName: extractAttributeLastName(attribute.name)}],
-          })
-        )
-      );
+    );
   }
 
   public useLinkType(linkType: LinkType) {
@@ -226,10 +221,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
     this.selected.emit();
     this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     this.store$
-      .pipe(
-        select(selectCollectionsByIds([this.collection.id, collection.id])),
-        first()
-      )
+      .pipe(select(selectCollectionsByIds([this.collection.id, collection.id])), first())
       .subscribe(collections => this.modalService.showCreateLink(collections, linkType => this.useLinkType(linkType)));
     this.close();
   }

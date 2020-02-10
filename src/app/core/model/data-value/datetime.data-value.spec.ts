@@ -63,10 +63,10 @@ describe('DateTimeDataValue', () => {
         ])
       ).toBeTruthy();
       expect(
-        new DateTimeDataValue(new Date(2019, 10, 20, 10, 20, 30, 123), secondsConfig).meetCondition(
-          QueryCondition.Equals,
-          [{value: new Date(2019, 10, 20, 10, 20, 30, 500)}]
-        )
+        new DateTimeDataValue(
+          new Date(2019, 10, 20, 10, 20, 30, 123),
+          secondsConfig
+        ).meetCondition(QueryCondition.Equals, [{value: new Date(2019, 10, 20, 10, 20, 30, 500)}])
       ).toBeTruthy();
       expect(
         new DateTimeDataValue(new Date(2019, 10, 20, 10, 20), dayConfig).meetCondition(QueryCondition.NotEquals, [
@@ -398,17 +398,17 @@ describe('DateTimeDataValue', () => {
       ).toBeTruthy();
 
       expect(
-        new DateTimeDataValue(new Date(2019, 10, 20, 10, 20), yearConfig).meetCondition(
-          QueryCondition.GreaterThanEquals,
-          [{value: new Date(2019, 3, 10, 20, 30)}]
-        )
+        new DateTimeDataValue(
+          new Date(2019, 10, 20, 10, 20),
+          yearConfig
+        ).meetCondition(QueryCondition.GreaterThanEquals, [{value: new Date(2019, 3, 10, 20, 30)}])
       ).toBeTruthy();
 
       expect(
-        new DateTimeDataValue(new Date(2019, 2, 20, 10, 20), monthConfig).meetCondition(
-          QueryCondition.GreaterThanEquals,
-          [{value: new Date(2019, 3, 10, 20, 30)}]
-        )
+        new DateTimeDataValue(
+          new Date(2019, 2, 20, 10, 20),
+          monthConfig
+        ).meetCondition(QueryCondition.GreaterThanEquals, [{value: new Date(2019, 3, 10, 20, 30)}])
       ).toBeFalsy();
     });
 

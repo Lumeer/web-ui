@@ -42,16 +42,12 @@ export const selectFileAttachmentsDictionary = createSelector(
 );
 
 export const selectFileAttachmentsByIds = (fileIds: string[]) =>
-  createSelector(
-    selectFileAttachments,
-    fileAttachments => (fileIds.length > 0 ? fileAttachments.filter(file => fileIds.includes(file.id)) : [])
+  createSelector(selectFileAttachments, fileAttachments =>
+    fileIds.length > 0 ? fileAttachments.filter(file => fileIds.includes(file.id)) : []
   );
 
 export const selectFileAttachmentById = (fileId: string) =>
-  createSelector(
-    selectFileAttachments,
-    fileAttachments => fileAttachments.find(file => file.id === fileId)
-  );
+  createSelector(selectFileAttachments, fileAttachments => fileAttachments.find(file => file.id === fileId));
 
 export const selectFileAttachmentsByWorkspace = createSelector(
   selectFileAttachments,
@@ -63,16 +59,14 @@ export const selectFileAttachmentsByWorkspace = createSelector(
 );
 
 export const selectFileAttachmentsByDataCursor = (cursor: DataCursor) =>
-  createSelector(
-    selectFileAttachmentsByWorkspace,
-    fileAttachments =>
-      fileAttachments.filter(
-        file =>
-          (cursor.collectionId || cursor.linkTypeId) &&
-          (!cursor.collectionId || file.collectionId === cursor.collectionId) &&
-          (!cursor.documentId || file.documentId === cursor.documentId) &&
-          (!cursor.linkTypeId || file.linkTypeId === cursor.linkTypeId) &&
-          (!cursor.linkInstanceId || file.linkInstanceId === cursor.linkInstanceId) &&
-          (!cursor.attributeId || file.attributeId === cursor.attributeId)
-      )
+  createSelector(selectFileAttachmentsByWorkspace, fileAttachments =>
+    fileAttachments.filter(
+      file =>
+        (cursor.collectionId || cursor.linkTypeId) &&
+        (!cursor.collectionId || file.collectionId === cursor.collectionId) &&
+        (!cursor.documentId || file.documentId === cursor.documentId) &&
+        (!cursor.linkTypeId || file.linkTypeId === cursor.linkTypeId) &&
+        (!cursor.linkInstanceId || file.linkInstanceId === cursor.linkInstanceId) &&
+        (!cursor.attributeId || file.attributeId === cursor.attributeId)
+    )
   );

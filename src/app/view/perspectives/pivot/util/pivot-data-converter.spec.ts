@@ -82,7 +82,10 @@ const collections: Collection[] = [
   {
     id: 'C4',
     name: 'collection4',
-    attributes: [{id: 'a1', name: 'Ddd'}, {id: 'a2', name: 'Eee'}],
+    attributes: [
+      {id: 'a1', name: 'Ddd'},
+      {id: 'a2', name: 'Eee'},
+    ],
   },
 ];
 

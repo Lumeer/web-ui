@@ -34,11 +34,7 @@ export const selectSearchesDictionary = createSelector(
   selectSearchesState,
   searchesAdapter.getSelectors().selectEntities
 );
-export const selectSearchById = id =>
-  createSelector(
-    selectSearchesDictionary,
-    searches => searches[id]
-  );
+export const selectSearchById = id => createSelector(selectSearchesDictionary, searches => searches[id]);
 
 export const selectSearchId = createSelector(
   selectWorkspace,
@@ -48,10 +44,7 @@ export const selectSearchId = createSelector(
 export const selectSearch = createSelector(
   selectSearchesDictionary,
   selectSearchId,
-  (searchesMap, searchId) => searchesMap[searchId] && searchesMap[searchId]
+  (searchesMap, searchId) => searchesMap[searchId]
 );
 
-export const selectSearchConfig = createSelector(
-  selectSearch,
-  search => search && search.config
-);
+export const selectSearchConfig = createSelector(selectSearch, search => search && search.config);

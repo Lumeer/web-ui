@@ -17,6 +17,7 @@
             <data-input-preview *ngIf="(cell | pivotTableCellHasValue) && cell.constraint"
                                 [constraint]="cell.constraint"
                                 [minWidth]="40"
+                                [limitColorWidth]="false"
                                 [dataValue]="cell.value | dataValue:cell.constraint:constraintData">
             </data-input-preview>
             <div class="text-truncate" *ngIf="(cell | pivotTableCellHasValue) && !cell.constraint"

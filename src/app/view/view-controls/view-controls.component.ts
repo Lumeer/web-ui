@@ -258,18 +258,13 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public revertChanges() {
-    this.store$
-      .pipe(
-        select(selectCurrentView),
-        take(1)
-      )
-      .subscribe(view => {
-        if (!view || !this.workspace) {
-          return;
-        }
-        const workspacePath = [...this.workspacePaths(), 'view', {vc: view.code}, view.perspective];
-        this.revertChangesForView(view, workspacePath);
-      });
+    this.store$.pipe(select(selectCurrentView), take(1)).subscribe(view => {
+      if (!view || !this.workspace) {
+        return;
+      }
+      const workspacePath = [...this.workspacePaths(), 'view', {vc: view.code}, view.perspective];
+      this.revertChangesForView(view, workspacePath);
+    });
   }
 
   private revertChangesForView(view: View, workspacePath: any[]) {

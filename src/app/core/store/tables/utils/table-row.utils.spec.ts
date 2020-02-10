@@ -158,7 +158,10 @@ describe('findTableRowsIncludingCollapsed()', () => {
     const linkedDocumentIds = rowsWithPath.map(row => row.row.documentId);
     expect(linkedDocumentIds).toEqual(['ca', 'cb']);
     const paths = rowsWithPath.map(row => row.path);
-    expect(paths).toEqual([[2, 0], [2, 1]]);
+    expect(paths).toEqual([
+      [2, 0],
+      [2, 1],
+    ]);
   });
 
   it('should find collapsed rows in third part', () => {
@@ -166,6 +169,11 @@ describe('findTableRowsIncludingCollapsed()', () => {
     const linkedDocumentIds = rowsWithPath.map(row => row.row.documentId);
     expect(linkedDocumentIds).toEqual(['caa', 'cab', 'cba', 'cbb']);
     const paths = rowsWithPath.map(row => row.path);
-    expect(paths).toEqual([[2, 0, 0], [2, 0, 1], [2, 1, 0], [2, 1, 1]]);
+    expect(paths).toEqual([
+      [2, 0, 0],
+      [2, 0, 1],
+      [2, 1, 0],
+      [2, 1, 1],
+    ]);
   });
 });

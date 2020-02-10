@@ -434,19 +434,14 @@ export class PusherService implements OnDestroy {
     this.channel.bind('Document:update', data => {
       if (this.isCurrentWorkspace(data)) {
         const document = convertDocumentDtoToModel(data.object, data.correlationId);
-        this.store$
-          .pipe(
-            select(selectDocumentById(document.id)),
-            take(1)
+        this.store$.pipe(select(selectDocumentById(document.id)), take(1)).subscribe(originalDocument =>
+          this.store$.dispatch(
+            new DocumentsAction.UpdateSuccess({
+              document,
+              originalDocument,
+            })
           )
-          .subscribe(originalDocument =>
-            this.store$.dispatch(
-              new DocumentsAction.UpdateSuccess({
-                document,
-                originalDocument,
-              })
-            )
-          );
+        );
       }
     });
     this.channel.bind('Document:update:ALT', data => {
@@ -523,10 +518,7 @@ export class PusherService implements OnDestroy {
       if (this.isCurrentWorkspace(data)) {
         const linkInstance = convertLinkInstanceDtoToModel(data.object, data.correlationId);
         this.store$
-          .pipe(
-            select(selectLinkInstanceById(linkInstance.id)),
-            take(1)
-          )
+          .pipe(select(selectLinkInstanceById(linkInstance.id)), take(1))
           .subscribe(originalLinkInstance =>
             this.store$.dispatch(new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}))
           );

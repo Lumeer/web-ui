@@ -192,12 +192,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   }
 
   private getOrganization(id: string, action: (Organization) => void) {
-    this.store$
-      .pipe(
-        select(selectOrganizationById(id)),
-        take(1)
-      )
-      .subscribe(organization => action(organization));
+    this.store$.pipe(select(selectOrganizationById(id)), take(1)).subscribe(organization => action(organization));
   }
 
   private navigateToView(notification: ViewSharedUserNotification) {

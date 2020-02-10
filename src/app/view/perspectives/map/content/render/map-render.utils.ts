@@ -19,12 +19,16 @@
 
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {GeoJSONSourceRaw, Layer, LngLat, LngLatBounds, Map, MapboxOptions, Marker, Popup} from 'mapbox-gl';
-import {Collection} from '../../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {findAttribute, getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
+import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 
-export function createMapboxMap(elementId: string, config: MapConfig): Map {
+export function createMapboxMap(elementId: string, config: MapConfig, locale: Record<string, string>): Map {
   const positionOptions: Partial<MapboxOptions> = config.position
     ? {
         bearing: config.position.bearing,
@@ -39,6 +43,7 @@ export function createMapboxMap(elementId: string, config: MapConfig): Map {
     style: mapStyleUrls[MapStyle.MapTilerStreets],
     minZoom: 1,
     maxZoom: 17,
+    locale,
     ...positionOptions,
   });
 }
@@ -103,8 +108,12 @@ export function createMapClusterCountsLayer(id: string, source: string): Layer {
   };
 }
 
-export function createMapMarker(properties: MapMarkerProperties, onDoubleClick: () => void): Marker {
-  const popup = createMapMarkerPopup(properties);
+export function createMapMarker(
+  properties: MapMarkerProperties,
+  constraintData: ConstraintData,
+  onDoubleClick: () => void
+): Marker {
+  const popup = createMapMarkerPopup(properties, constraintData);
   const element = createMapMarkerIcon(properties.collection, properties.editable);
 
   const marker = new Marker({element, draggable: properties.editable})
@@ -124,18 +133,35 @@ export function createMapMarker(properties: MapMarkerProperties, onDoubleClick: 
   return marker;
 }
 
-function createMapMarkerPopup(properties: MapMarkerProperties): Popup {
-  const defaultAttributeValue = properties.document.data[properties.collection.defaultAttributeId] || '';
-  const positionAttributeValue = properties.document.data[properties.attributeId] || '';
+function createMapMarkerPopup(properties: MapMarkerProperties, constraintData: ConstraintData): Popup {
+  const defaultAttributeId = getDefaultAttributeId(properties.collection);
 
-  const defaultAttributeHtml = `<span class="text-default-attribute">${defaultAttributeValue}</span>`;
-  const html = defaultAttributeValue ? `${defaultAttributeHtml}<br>${positionAttributeValue}` : positionAttributeValue;
+  const defaultAttributeValue = formatValue(
+    properties.document,
+    findAttribute(properties.collection.attributes, defaultAttributeId),
+    constraintData
+  );
+  const positionAttributeValue = formatValue(
+    properties.document,
+    findAttribute(properties.collection.attributes, properties.attributeId),
+    constraintData
+  );
+
+  const html = defaultAttributeValue ? `${defaultAttributeValue}<br>${positionAttributeValue}` : positionAttributeValue;
 
   return new Popup({
     anchor: 'top',
     closeButton: false,
     closeOnClick: false,
   }).setHTML(html);
+}
+
+function formatValue(document: DocumentModel, attribute: Attribute, constraintData: ConstraintData): string {
+  if (!document || !attribute) {
+    return '';
+  }
+  const value = document.data[attribute.id];
+  return (attribute.constraint || new UnknownConstraint()).createDataValue(value, constraintData).preview();
 }
 
 function createMapMarkerIcon(collection: Collection, editable?: boolean): HTMLDivElement {

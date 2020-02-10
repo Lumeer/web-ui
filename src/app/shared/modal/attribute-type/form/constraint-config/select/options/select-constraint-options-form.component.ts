@@ -144,7 +144,7 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
     return (formGroup: FormGroup): ValidationErrors | null => {
       const valueControl = formGroup.get(SelectConstraintOptionsFormControl.Value);
       const displayValueControl = formGroup.get(SelectConstraintOptionsFormControl.DisplayValue);
-      return this.displayValues && displayValueControl.value && (!valueControl.value && valueControl.value !== 0)
+      return this.displayValues && displayValueControl.value && !valueControl.value && valueControl.value !== 0
         ? {required: true}
         : null;
     };

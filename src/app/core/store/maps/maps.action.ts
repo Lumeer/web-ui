@@ -18,7 +18,6 @@
  */
 
 import {Action} from '@ngrx/store';
-import {Collection} from '../collections/collection';
 import {MapConfig, MapPosition} from './map.model';
 
 export enum MapsActionType {
@@ -26,7 +25,6 @@ export enum MapsActionType {
   DESTROY_MAP = '[Maps] Destroy Map',
 
   SELECT_ATTRIBUTE = '[Maps] Select Attribute',
-  UPDATE_ATTRIBUTES = '[Maps] Update Attributes',
 
   CHANGE_POSITION = '[Maps] Change Position',
   CHANGE_POSITION_SAVED = '[Maps] Change Position Saved',
@@ -53,12 +51,6 @@ export namespace MapsAction {
     constructor(public payload: {mapId: string; collectionId: string; index: number; attributeId: string}) {}
   }
 
-  export class UpdateAttributes implements Action {
-    public readonly type = MapsActionType.UPDATE_ATTRIBUTES;
-
-    constructor(public payload: {mapId: string; collections: Collection[]}) {}
-  }
-
   export class ChangePosition implements Action {
     public readonly type = MapsActionType.CHANGE_POSITION;
 
@@ -75,12 +67,5 @@ export namespace MapsAction {
     public readonly type = MapsActionType.CLEAR;
   }
 
-  export type All =
-    | CreateMap
-    | DestroyMap
-    | SelectAttribute
-    | UpdateAttributes
-    | ChangePosition
-    | ChangePositionSaved
-    | Clear;
+  export type All = CreateMap | DestroyMap | SelectAttribute | ChangePosition | ChangePositionSaved | Clear;
 }

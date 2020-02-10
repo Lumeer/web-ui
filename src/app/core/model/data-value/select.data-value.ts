@@ -136,8 +136,10 @@ export class SelectDataValue implements DataValue {
         );
       case QueryCondition.HasAll:
         return (
-          arrayIntersection(otherOptions.map(o => o.value), this.options.map(o => o.value)).length ===
-          otherOptions.length
+          arrayIntersection(
+            otherOptions.map(o => o.value),
+            this.options.map(o => o.value)
+          ).length === otherOptions.length
         );
       case QueryCondition.IsEmpty:
         return this.options.length === 0 && this.format().trim().length === 0;

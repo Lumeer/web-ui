@@ -153,12 +153,7 @@ export class ProjectSettingsComponent implements OnInit {
     );
 
     this.subscriptions.add(
-      this.store$
-        .pipe(
-          select(selectPreviousUrl),
-          take(1)
-        )
-        .subscribe(url => (this.previousUrl = url))
+      this.store$.pipe(select(selectPreviousUrl), take(1)).subscribe(url => (this.previousUrl = url))
     );
   }
 
