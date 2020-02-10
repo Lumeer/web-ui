@@ -279,7 +279,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-data/empty-data.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="view.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/></target>
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit>
 
 
             <trans-unit id="view.share.dialog.title" datatype="html">
@@ -908,7 +908,19 @@
     Neznámé jméno
   </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-stamp/user-stamp.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-stamp/user-stamp.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="filter.builder.condition" datatype="html">
+        <source>Choose Condition</source><target>Vyberte podmínku</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/builder/filter-builder/content/filter-builder-content.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter.builder.value" datatype="html">
+        <source>Choose Value</source><target>Vyberte hodnotu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/builder/filter-builder/content/filter-builder-content.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
 
 
             <trans-unit id="table.header.menu.add.column.next" datatype="html">
@@ -2380,12 +2392,12 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.title" datatype="html">
         <source>Cannot display anything</source><target>Nemohu nic zobrazit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
         <source>Please configure your view in the sidebar on the left
       first.
     </source><target>Nejdříve si prosím nastavte pohled v panelu nalevo.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
         <source>Select value aggregation</source><target>Zvolte způsob agregace hodnot</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/config/stem/kanban-value-attribute-config/kanban-value-attribute-config.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.valueAbsOrRel" datatype="html">
@@ -2714,7 +2726,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.select" datatype="html">
-        <source>{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source><target>{VAR_SELECT, select, eq {Je mezi} neq {Není mezi} in {Je mezi} nin {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} }</target>
+        <source>{VAR_SELECT, select, eq {In} neq {Has None Of} in {In} nin {Has None Of} hasAll {Has All} hasSome {Has Some} empty {Is Empty} notEmpty {Is Not Empty} }</source>
+        <target>{VAR_SELECT, select, eq {Je mezi} neq {Není mezi} in {Je mezi} nin {Není mezi} hasAll {Má všechny} hasSome {Má některé} empty {Je prázdný} notEmpty {Není prázdný} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -3955,6 +3968,18 @@
           <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="map.location.find" datatype="html">
+        <source>Find my location</source><target>Najdi mě</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.location.notAvailable" datatype="html">
+        <source>Location not available</source><target>Místo není dostupné</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="map.control.zoom.in" datatype="html">
         <source>Zoom in</source><target>Přiblížit</target>
         <context-group purpose="location">
@@ -3963,6 +3988,36 @@
         </context-group>
       </trans-unit><trans-unit id="map.control.zoom.out" datatype="html">
         <source>Zoom out</source><target>Oddálit</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="distance.feat" datatype="html">
+        <source>ft</source><target>ft</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="distance.meters" datatype="html">
+        <source>m</source><target>m</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="distance.kilometers" datatype="html">
+        <source>km</source><target>km</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="distance.miles" datatype="html">
+        <source>mi</source><target>mi</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="distance.nauticalMiles" datatype="html">
+        <source>nm</source><target>nm</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4051,7 +4106,7 @@
                 <source>Share</source>
                 <target>Sdílet</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit>
             <trans-unit id="remove.row" datatype="html">
                 <source>Remove Row</source>
                 <target>Odstranit řádek</target>
@@ -4240,7 +4295,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="delete" datatype="html">
         <source>Delete</source><target>Odstranit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.serviceLimit" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.serviceLimit" datatype="html">
         <source>
       You can have only a single rule in the Free Plan.
     </source><target>

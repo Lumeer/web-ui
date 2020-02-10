@@ -308,7 +308,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit><trans-unit id="collection.post.it.import" datatype="html">
         <source>Import Table
@@ -352,6 +352,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/users/user-stamp/user-stamp.component.html</context>
           <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter.builder.condition" datatype="html">
+        <source>Choose Condition</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/builder/filter-builder/content/filter-builder-content.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="filter.builder.value" datatype="html">
+        <source>Choose Value</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/builder/filter-builder/content/filter-builder-content.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="query.item.button.remove" datatype="html">
         <source>Remove query item</source>
@@ -2133,7 +2145,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.serviceLimit" datatype="html">
         <source>
@@ -2662,7 +2674,7 @@
         <source>Cannot display anything</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
         <source>Please configure your view in the sidebar on the left
@@ -2670,7 +2682,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.valueAbsOrRel" datatype="html">
         <source>Select absolute or relative display</source>
@@ -2943,7 +2955,7 @@
         <source><x id="INTERPOLATION" equiv-text="{{ view.favorite ?  &apos;Remove from favorites&apos; : &apos;Add to favorites&apos;}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="search.records.empty.button" datatype="html">
         <source>Open as Table</source>
@@ -5408,6 +5420,27 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="map.location.find" datatype="html">
+        <source>Find my location</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="map.location.notAvailable" datatype="html">
+        <source>Location not available</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="map.control.compass" datatype="html">
+        <source>Reset bearing to north</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="map.control.zoom.in" datatype="html">
         <source>Zoom in</source>
         <context-group purpose="location">
@@ -5422,8 +5455,36 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="map.control.compass" datatype="html">
-        <source>Reset bearing to north</source>
+      <trans-unit id="distance.feat" datatype="html">
+        <source>ft</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="distance.meters" datatype="html">
+        <source>m</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="distance.kilometers" datatype="html">
+        <source>km</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="distance.miles" datatype="html">
+        <source>mi</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="distance.nauticalMiles" datatype="html">
+        <source>nm</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
           <context context-type="linenumber">1</context>
