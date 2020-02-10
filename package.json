@@ -74,7 +74,7 @@
     "jssha": "^2.3.1",
     "lodash": "^4.17.15",
     "mapbox-gl": "^1.7.0",
-    "mixpanel-browser": "^2.33.1",
+    "mixpanel-browser": "^2.34.0",
     "moment": "^2.24.0",
     "ng-click-outside": "^6.0.0",
     "ng-snotify": "^4.3.1",
