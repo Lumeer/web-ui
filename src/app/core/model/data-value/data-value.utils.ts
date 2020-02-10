@@ -18,8 +18,10 @@
  */
 
 import Big from 'big.js';
-import {QueryCondition} from '../../store/navigation/query/query';
+import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {setCharAt} from '../../../shared/utils/string.utils';
+import {NumericDataValue} from './index';
 
 export function dataValuesMeetConditionByText(
   condition: QueryCondition,
@@ -46,6 +48,44 @@ export function dataValuesMeetConditionByText(
     default:
       return false;
   }
+}
+
+export function valueByConditionText(condition: QueryCondition, value: any): any {
+  switch (condition) {
+    case QueryCondition.Equals:
+    case QueryCondition.Contains:
+    case QueryCondition.StartsWith:
+    case QueryCondition.EndsWith:
+      return value;
+    case QueryCondition.NotEquals:
+      return value ? '' : 'a';
+    case QueryCondition.NotContains:
+      return createValueNotIncludes(value);
+    case QueryCondition.NotEmpty:
+      return 'a';
+    case QueryCondition.IsEmpty:
+      return '';
+    default:
+      return '';
+  }
+}
+
+function createValueNotIncludes(value: string): string {
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  let createdValue = '';
+  let position = 0;
+  while (value.includes(createdValue)) {
+    for (let i = 0; i < letters.length; i++) {
+      createdValue = setCharAt(createdValue, position, letters[i]);
+      if (!value.includes(createdValue)) {
+        break;
+      }
+    }
+
+    position++;
+  }
+
+  return createdValue;
 }
 
 export function dataValuesMeetConditionByNumber(
@@ -92,6 +132,53 @@ export function dataValuesMeetConditionByNumber(
       return isNotNullOrUndefined(value) && String(value).trim().length > 0;
     default:
       return false;
+  }
+}
+
+export function valueByConditionNumber(
+  dataValue: NumericDataValue,
+  condition: QueryCondition,
+  values: QueryConditionValue[],
+  exampleValue: any,
+  divider = 1
+): any {
+  switch (condition) {
+    case QueryCondition.Equals:
+    case QueryCondition.GreaterThanEquals:
+    case QueryCondition.LowerThanEquals:
+      return values[0].value;
+    case QueryCondition.NotEquals:
+      return values[0].value ? '' : exampleValue;
+    case QueryCondition.LowerThan:
+    case QueryCondition.NotBetween:
+      return dataValue
+        .copy(values[0].value)
+        .decrement()
+        .serialize();
+    case QueryCondition.GreaterThan:
+      return dataValue
+        .copy(values[0].value)
+        .increment()
+        .serialize();
+    case QueryCondition.Between:
+      const firstValue = (<NumericDataValue>dataValue.copy(values[0].value)).bigNumber;
+      const secondValue = (<NumericDataValue>dataValue.copy(values[1].value)).bigNumber;
+      if (firstValue && secondValue) {
+        const firstValueDivided = firstValue.div(new Big(divider));
+        const bigValue = firstValueDivided
+          .minus(secondValue.div(new Big(divider)))
+          .abs()
+          .div(new Big(2))
+          .plus(firstValueDivided);
+        return dataValue.copy(bigValue.toFixed()).serialize();
+      }
+      return values[0].value || values[1].value;
+    case QueryCondition.IsEmpty:
+      return '';
+    case QueryCondition.NotEmpty:
+      return exampleValue;
+    default:
+      return '';
   }
 }
 

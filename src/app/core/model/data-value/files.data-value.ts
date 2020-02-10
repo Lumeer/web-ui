@@ -76,4 +76,13 @@ export class FilesDataValue implements DataValue {
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    switch (condition) {
+      case QueryCondition.IsEmpty:
+        return '';
+      case QueryCondition.NotEmpty:
+        return 'a';
+    }
+  }
 }

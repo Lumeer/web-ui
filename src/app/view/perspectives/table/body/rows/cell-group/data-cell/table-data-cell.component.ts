@@ -47,7 +47,10 @@ import {AppState} from '../../../../../../../core/store/app.state';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {isAttributeEditableWithQuery} from '../../../../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../../../../core/store/collections/collections.action';
-import {selectCollectionAttributeById} from '../../../../../../../core/store/collections/collections.state';
+import {
+  selectAllCollections,
+  selectCollectionAttributeById,
+} from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {generateDocumentDataByCollectionQuery} from '../../../../../../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
@@ -67,7 +70,6 @@ import {
   selectTablePart,
   selectTableRow,
 } from '../../../../../../../core/store/tables/tables.selector';
-import {selectCurrentUser} from '../../../../../../../core/store/users/users.state';
 import {Direction} from '../../../../../../../shared/direction';
 import {DocumentHintsComponent} from '../../../../../../../shared/document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
@@ -696,22 +698,23 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         )
       ),
       this.store$.pipe(select(selectQuery)),
-      this.store$.pipe(select(selectCurrentUser))
+      this.store$.pipe(select(selectAllCollections))
     )
       .pipe(take(1))
-      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query, currentUser]) =>
+      .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query, collections]) => {
+        const collection = (collections || []).find(coll => coll.id === collectionId);
         this.store$.dispatch(
           new DocumentsAction.Create({
             document: {
               collectionId,
               correlationId,
-              data: generateDocumentDataByCollectionQuery(collectionId, query, currentUser),
+              data: generateDocumentDataByCollectionQuery(collection, query, this.constraintData),
             },
             onSuccess: documentId =>
               this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),
           })
-        )
-      );
+        );
+      });
   }
 
   private createLinkInstanceWithData(documentIds: [string, string], data: Record<string, any>) {

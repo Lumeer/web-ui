@@ -24,8 +24,8 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Query} from '../../../core/store/navigation/query/query';
 import {getQueryFiltersForCollection} from '../../../core/store/navigation/query/query.util';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
-import {User} from '../../../core/store/users/user';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
+import {ConstraintData} from '../../../core/model/data/constraint';
 
 @Component({
   selector: 'create-document-modal',
@@ -41,7 +41,7 @@ export class CreateDocumentModalComponent implements OnInit {
   public query: Query;
 
   @Input()
-  public currentUser: User;
+  public constraintData: ConstraintData;
 
   public collection$: Observable<Collection>;
   public document$: Observable<DocumentModel>;
@@ -60,7 +60,7 @@ export class CreateDocumentModalComponent implements OnInit {
     this.collection$ = of(collection);
 
     const queryFilters = getQueryFiltersForCollection(this.query, collectionId);
-    const queryData = generateDocumentData(collection, queryFilters, this.currentUser);
+    const queryData = generateDocumentData(collection, queryFilters, this.constraintData);
     const data = ((collection && collection.attributes) || []).reduce(
       (map, attr) => ({
         ...map,

@@ -44,7 +44,6 @@ import {GanttChartConfig, GanttChartMode} from '../../../../core/store/gantt-cha
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {User} from '../../../../core/store/users/user';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {
   deepObjectsEquals,
@@ -105,9 +104,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   @Input()
   public query: Query;
-
-  @Input()
-  public currentUser: User;
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
@@ -377,7 +373,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     };
     const taskWithMetadata = {...task, metadata};
 
-    const data = generateDocumentDataByQuery(this.query, this.currentUser);
+    const data = generateDocumentDataByQuery(this.query, this.collections, this.constraintData);
     const patchData = this.createTaskPatchData(taskWithMetadata, document);
     Object.keys(patchData).forEach(key => (data[key] = patchData[key]));
     if (stemConfig.name && isNullOrUndefined(data[stemConfig.name.attributeId])) {

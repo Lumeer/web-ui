@@ -30,7 +30,6 @@
       [query]="data.query"
       [canManageConfig]="data.canManageConfig"
       [constraintData]="data.constraintData"
-      [currentUser]="currentUser$ | async"
       [workspace]="workspace$ | async"
       (configChange)="onConfigChanged($event)"
       (patchDocumentData)="onPatchDocumentData($event)">

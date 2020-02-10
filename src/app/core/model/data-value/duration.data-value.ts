@@ -24,17 +24,19 @@ import {
   convertToBig,
   formatDurationDataValue,
   getDurationSaveValue,
+  getDurationUnitToMillisMap,
   isDurationDataValueValid,
+  sortedDurationUnits,
 } from '../../../shared/utils/constraint/duration-constraint.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {ConstraintData} from '../data/constraint';
+import {ConstraintData, DurationUnitsMap} from '../data/constraint';
 import {DurationConstraintConfig} from '../data/constraint-config';
-import {DataValue} from './index';
+import {NumericDataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByNumber, valueMeetFulltexts} from './data-value.utils';
+import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 
-export class DurationDataValue implements DataValue {
+export class DurationDataValue implements NumericDataValue {
   public bigNumber: Big;
 
   constructor(
@@ -50,6 +52,14 @@ export class DurationDataValue implements DataValue {
   }
 
   public format(maxUnits?: number): string {
+    return this.formatWithUnitsMap(this.constraintData && this.constraintData.durationUnitsMap, maxUnits);
+  }
+
+  private formatToNativeLocale(): string {
+    return this.formatWithUnitsMap();
+  }
+
+  private formatWithUnitsMap(durationUnitsMap?: DurationUnitsMap, maxUnits?: number) {
     if (isNotNullOrUndefined(this.inputValue)) {
       return this.inputValue;
     }
@@ -58,13 +68,7 @@ export class DurationDataValue implements DataValue {
       return formatUnknownDataValue(this.value);
     }
 
-    // TODO optimize
-    return formatDurationDataValue(
-      this.value,
-      this.config,
-      this.constraintData && this.constraintData.durationUnitsMap,
-      maxUnits
-    );
+    return formatDurationDataValue(this.value, this.config, durationUnitsMap, maxUnits);
   }
 
   public preview(): string {
@@ -87,13 +91,28 @@ export class DurationDataValue implements DataValue {
   }
 
   public increment(): DurationDataValue {
-    // TODO increment by smallest used unit
-    return this.bigNumber && this.copy(this.bigNumber.add(1));
+    return this.addToSmallestUnit();
+  }
+
+  private addToSmallestUnit(multiplier: 1 | -1 = 1): DurationDataValue {
+    const one = new Big(1);
+    if (this.bigNumber) {
+      const formatted = this.formatToNativeLocale();
+      const unitsMap = getDurationUnitToMillisMap(this.config);
+      for (let i = sortedDurationUnits.length - 1; i >= 0; i--) {
+        if (formatted.includes(sortedDurationUnits[i])) {
+          const millis = unitsMap[sortedDurationUnits[i]] || 1;
+          if (this.bigNumber.div(new Big(millis)).gte(one)) {
+            return this.copy(this.bigNumber.add(millis * multiplier).toFixed());
+          }
+        }
+      }
+    }
+    return this.copy();
   }
 
   public decrement(): DurationDataValue {
-    // TODO decrement by smallest used unit
-    return this.bigNumber && this.copy(this.bigNumber.sub(1));
+    return this.addToSmallestUnit(-1);
   }
 
   public compareTo(otherValue: DurationDataValue): number {
@@ -121,5 +140,9 @@ export class DurationDataValue implements DataValue {
 
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
+  }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    return valueByConditionNumber(this, condition, values, '19s');
   }
 }

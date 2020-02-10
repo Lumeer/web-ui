@@ -67,3 +67,7 @@ export function transformTextToSentenceCase(text: string): string {
     }, '')
     .trim();
 }
+
+export function setCharAt(value: string, position: number, char: string): string {
+  return value.substring(0, position) + char + value.substring(position + 1, value.length);
+}

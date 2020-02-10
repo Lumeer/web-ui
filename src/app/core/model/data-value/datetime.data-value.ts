@@ -232,6 +232,38 @@ export class DateTimeDataValue implements DataValue {
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(true), fulltexts);
   }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    const dates = this.mapConditionValues(values).map(value => value.moment.toDate());
+
+    switch (condition) {
+      case QueryCondition.Equals:
+      case QueryCondition.GreaterThanEquals:
+      case QueryCondition.LowerThanEquals:
+        return this.copy(dates[0]).serialize();
+      case QueryCondition.GreaterThan:
+      case QueryCondition.Between:
+        if (dates[0].getTime() === dates[1].getTime()) {
+          return this.copy(dates[0]).serialize();
+        }
+        return this.copy(dates[0])
+          .increment()
+          .serialize();
+      case QueryCondition.LowerThan:
+      case QueryCondition.NotBetween:
+        return this.copy(dates[0])
+          .decrement()
+          .serialize();
+      case QueryCondition.NotEquals:
+        return values[0].value || values[0].type ? '' : this.copy(new Date()).serialize();
+      case QueryCondition.IsEmpty:
+        return '';
+      case QueryCondition.NotEmpty:
+        return this.copy(new Date()).serialize();
+      default:
+        return null;
+    }
+  }
 }
 
 function constraintConditionValueFormat(value: ConstraintConditionValue): string {

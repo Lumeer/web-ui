@@ -91,3 +91,9 @@ export function createRange(from: number, to: number): number[] {
   const range = [...Array(to - from).keys()];
   return range.map(r => r + from);
 }
+
+export function reversedArray<T>(array: T[]): T[] {
+  const copy = [...(array || [])];
+  copy.reverse();
+  return copy;
+}

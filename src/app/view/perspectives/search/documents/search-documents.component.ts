@@ -28,7 +28,7 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {User} from '../../../../core/store/users/user';
-import {selectAllUsers, selectCurrentUser} from '../../../../core/store/users/users.state';
+import {selectAllUsers} from '../../../../core/store/users/users.state';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
@@ -68,7 +68,6 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   public query$: Observable<Query>;
   public users$: Observable<User[]>;
   public workspace$: Observable<Workspace>;
-  public currentUser$: Observable<User>;
   public organization$: Observable<Organization>;
   public project$: Observable<Project>;
 
@@ -87,7 +86,6 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.query$ = this.store$.pipe(select(selectQuery));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.documentsConfig$ = this.selectDocumentsConfig$();
-    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));

@@ -20,7 +20,7 @@
 import {BooleanConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {valueMeetFulltexts} from './data-value.utils';
+import {valueByConditionText, valueMeetFulltexts} from './data-value.utils';
 
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
 
@@ -88,5 +88,16 @@ export class BooleanDataValue implements DataValue {
 
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
+  }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    switch (condition) {
+      case QueryCondition.Equals:
+        return values[0].value;
+      case QueryCondition.NotEquals:
+        return !values[0].value;
+      default:
+        return null;
+    }
   }
 }

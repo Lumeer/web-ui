@@ -121,14 +121,10 @@ export class SelectDataValue implements DataValue {
     switch (condition) {
       case QueryCondition.HasSome:
       case QueryCondition.Equals:
-        return this.options.some(option =>
-          (otherOptions || []).some(otherOption => otherOption.value === option.value)
-        );
+        return this.options.some(option => otherOptions.some(otherOption => otherOption.value === option.value));
       case QueryCondition.HasNoneOf:
       case QueryCondition.NotEquals:
-        return this.options.every(option =>
-          (otherOptions || []).every(otherOption => otherOption.value !== option.value)
-        );
+        return this.options.every(option => otherOptions.every(otherOption => otherOption.value !== option.value));
       case QueryCondition.In:
         return (
           this.options.length > 0 &&
@@ -152,6 +148,32 @@ export class SelectDataValue implements DataValue {
 
   public meetFullTexts(fulltexts: string[]): boolean {
     return valueMeetFulltexts(this.format(), fulltexts);
+  }
+
+  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+    const dataValues = (values || []).map(value => new SelectDataValue(value.value, this.config));
+    const otherOptions = (dataValues.length > 0 && dataValues[0].options) || [];
+
+    switch (condition) {
+      case QueryCondition.HasSome:
+      case QueryCondition.Equals:
+      case QueryCondition.In:
+        return otherOptions[0].value;
+      case QueryCondition.HasAll:
+        return values[0].value;
+      case QueryCondition.HasNoneOf:
+      case QueryCondition.NotEquals:
+        const noneOptions = ((this.config && this.config.options) || []).filter(
+          option => !otherOptions.some(otherOption => otherOption.value === option.value)
+        );
+        return noneOptions[0] && noneOptions[0].value;
+      case QueryCondition.IsEmpty:
+        return '';
+      case QueryCondition.NotEmpty:
+        return this.config && this.config.options[0] && this.config.options[0].value;
+      default:
+        return null;
+    }
   }
 }
 
