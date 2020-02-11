@@ -42,6 +42,7 @@ import {Direction} from '../../../../../direction';
 import {DataValue} from '../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
+import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -105,6 +106,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public suggestions: DocumentHintsComponent;
 
   public readonly booleanConstraintType = ConstraintType.Boolean;
+  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
   public columnEditing$ = new BehaviorSubject<number>(null);
   public columnFocused$ = new BehaviorSubject<number>(null);

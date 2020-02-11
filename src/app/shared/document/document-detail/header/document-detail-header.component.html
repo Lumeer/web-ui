@@ -3,7 +3,7 @@
     <div [style.color]="collection?.color"><i class="{{collection?.icon}} mr-2"></i>{{collection?.name}}</div>
     <h3 *ngIf="row?.value || row?.value === 0" class="m-0 mb-0 mb-lg-2">
       <data-input-preview class="flex-fill d-block main-data-input"
-                          [inline]="false"
+                          [configuration]="configuration"
                           [dataValue]="row?.value | dataValue:row?.attribute?.constraint:constraintData"
                           [cursor]="document | dataCursor:row?.attribute?.id"
                           [constraint]="row?.attribute?.constraint">

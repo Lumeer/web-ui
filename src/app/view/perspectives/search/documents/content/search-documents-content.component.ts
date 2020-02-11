@@ -37,6 +37,7 @@ import {CreateDocumentModalComponent} from '../../../../../shared/modal/create-d
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
 import {ModalService} from '../../../../../shared/modal/modal.service';
+import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
 
 @Component({
   selector: 'search-documents-content',
@@ -76,6 +77,7 @@ export class SearchDocumentsContentComponent implements OnInit {
   @Output()
   public configChange = new EventEmitter<SearchDocumentsConfig>();
 
+  public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly projectType = ResourceType.Project;
 
   constructor(

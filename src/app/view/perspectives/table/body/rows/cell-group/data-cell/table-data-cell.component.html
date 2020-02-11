@@ -29,6 +29,7 @@
                 [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
                 [dataValue]="data.dataValue"
                 [focus]="true"
+                [configuration]="configuration"
                 [readonly]="inputData.readonly"
                 (valueChange)="onValueChange($event)"
                 (save)="onValueSave($event)"

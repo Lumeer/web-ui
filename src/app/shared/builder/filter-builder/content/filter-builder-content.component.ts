@@ -56,7 +56,7 @@ export class FilterBuilderContentComponent implements OnChanges {
   public finishEditing = new EventEmitter();
 
   public readonly constraintType = ConstraintType;
-  public readonly configuration: DataInputConfiguration = {skipValidation: true, fromQuery: true};
+  public readonly configuration: DataInputConfiguration = {common: {skipValidation: true}};
 
   public editing$ = new BehaviorSubject(-1);
   public numInputs: number;

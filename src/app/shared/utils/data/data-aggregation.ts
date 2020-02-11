@@ -89,8 +89,19 @@ function sumValues(values: any[], constraint: Constraint, onlyNumeric): any {
     case ConstraintType.Duration:
       return sumNumericValues(values, onlyNumeric);
     default:
+      if (formattedValuesAreNumeric(values, constraint)) {
+        return sumNumericValues(formattedValues(values, constraint), onlyNumeric);
+      }
       return sumAnyValues(values, onlyNumeric);
   }
+}
+
+function formattedValuesAreNumeric(values: any[], constraint: Constraint): boolean {
+  return formattedValues(values, constraint).every(value => isNumeric(value));
+}
+
+function formattedValues(values: any[], constraint: Constraint): any[] {
+  return values.map(value => constraint.createDataValue(value).format());
 }
 
 function sumNumericValues(values: any[], onlyNumeric: boolean): any {
@@ -147,6 +158,9 @@ function avgValues(values: any[], constraint: Constraint, onlyNumeric): any {
     case ConstraintType.Duration:
       return avgNumericValues(values, onlyNumeric);
     default:
+      if (formattedValuesAreNumeric(values, constraint)) {
+        return avgNumericValues(formattedValues(values, constraint), onlyNumeric);
+      }
       return avgAnyValues(values, onlyNumeric);
   }
 }
@@ -192,6 +206,9 @@ function minInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
     case ConstraintType.Duration:
       return minInNumericValues(values, onlyNumeric);
     default:
+      if (formattedValuesAreNumeric(values, constraint)) {
+        return minInNumericValues(formattedValues(values, constraint), onlyNumeric);
+      }
       return minInAnyValues(values, onlyNumeric);
   }
 }
@@ -221,6 +238,9 @@ function maxInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
     case ConstraintType.Duration:
       return maxInNumericValues(values, onlyNumeric);
     default:
+      if (formattedValuesAreNumeric(values, constraint)) {
+        return maxInNumericValues(formattedValues(values, constraint), onlyNumeric);
+      }
       return maxInAnyValues(values, onlyNumeric);
   }
 }

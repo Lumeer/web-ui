@@ -26,9 +26,11 @@ export interface PivotTable {
 export interface PivotTableCell {
   value: any;
   constraint?: Constraint;
+  summary?: string;
   rowSpan: number;
   colSpan: number;
   cssClass: string;
   isHeader: boolean;
   background?: string;
+  label?: string;
 }

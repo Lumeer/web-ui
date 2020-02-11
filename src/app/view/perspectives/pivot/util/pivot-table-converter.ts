@@ -155,7 +155,7 @@ export class PivotTableConverter {
     startIndex: number,
     showSums: boolean[],
     level: number,
-    parentTitle?: string
+    parentHeader?: PivotDataHeader
   ) {
     let currentIndex = startIndex;
     for (const header of headers) {
@@ -168,6 +168,7 @@ export class PivotTableConverter {
         colSpan: 1,
         background: this.getHeaderBackground(header, level),
         constraint: header.constraint,
+        label: header.attributeName,
       };
 
       if (header.children) {
@@ -178,7 +179,7 @@ export class PivotTableConverter {
           currentIndex,
           showSums,
           level + 1,
-          header.title
+          header
         );
       } else if (isNotNullOrUndefined(header.targetIndex)) {
         this.fillCellsForRow(cells, header.targetIndex);
@@ -189,15 +190,18 @@ export class PivotTableConverter {
 
     if (showSums[level]) {
       const background = this.getSummaryBackground(level);
-      const groupTitle = level === 0 ? this.summaryString : this.createHeaderTitle(parentTitle);
+      const summary = level === 0 ? this.summaryString : this.headerSummaryString;
       const columnIndex = Math.max(level - 1, 0);
       cells[currentIndex][columnIndex] = {
-        value: groupTitle,
+        value: parentHeader && parentHeader.title,
+        constraint: parentHeader && parentHeader.constraint,
+        label: parentHeader && parentHeader.attributeName,
         cssClass: PivotTableConverter.groupHeaderClass,
         isHeader: true,
         rowSpan: 1,
         colSpan: this.rowLevels - columnIndex,
         background,
+        summary,
       };
 
       const rowIndexes = getTargetIndexesForHeaders(headers);
@@ -225,10 +229,6 @@ export class PivotTableConverter {
   private getSummaryBackground(level: number): string {
     const index = Math.min(level, this.groupColors.length - 1);
     return this.groupColors[index];
-  }
-
-  public createHeaderTitle(value: string): string {
-    return `${this.headerSummaryString} ${value}`;
   }
 
   private fillCellsForRow(cells: PivotTableCell[][], row: number) {
@@ -366,7 +366,7 @@ export class PivotTableConverter {
     startIndex: number,
     showSums: boolean[],
     level: number,
-    parentTitle?: string
+    parentHeader?: PivotDataHeader
   ) {
     let currentIndex = startIndex;
     const numberOfSums = Math.max(1, this.data.valueTitles.length);
@@ -380,6 +380,7 @@ export class PivotTableConverter {
         colSpan,
         background: this.getHeaderBackground(header, level),
         constraint: header.constraint,
+        label: header.attributeName,
       };
 
       if (header.children) {
@@ -390,7 +391,7 @@ export class PivotTableConverter {
           currentIndex,
           showSums,
           level + 1,
-          header.title
+          header
         );
       } else if (isNotNullOrUndefined(header.targetIndex)) {
         this.fillCellsForColumn(cells, header.targetIndex);
@@ -401,18 +402,21 @@ export class PivotTableConverter {
 
     if (showSums[level]) {
       const background = this.getSummaryBackground(level);
-      const groupTitle = level === 0 ? this.summaryString : this.createHeaderTitle(parentTitle);
+      const summary = level === 0 ? this.summaryString : this.headerSummaryString;
       const numberOfValues = this.data.valueTitles.length;
       const rowIndex = Math.max(level - 1, 0);
       const shouldAddValueHeaders = numberOfValues > 1;
 
       cells[rowIndex][currentIndex] = {
-        value: groupTitle,
+        value: parentHeader && parentHeader.title,
+        constraint: parentHeader && parentHeader.constraint,
+        label: parentHeader && parentHeader.attributeName,
         cssClass: PivotTableConverter.groupHeaderClass,
         isHeader: true,
         rowSpan: this.columnLevels - rowIndex - (shouldAddValueHeaders ? 1 : 0),
         colSpan: numberOfSums,
         background,
+        summary,
       };
 
       if (numberOfValues > 0) {

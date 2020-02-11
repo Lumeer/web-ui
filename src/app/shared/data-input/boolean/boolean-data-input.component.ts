@@ -53,6 +53,9 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   @Input()
   public value: DataValue;
 
+  @Input()
+  public label: string;
+
   @Output()
   public valueChange = new EventEmitter<DataValue>();
 

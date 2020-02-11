@@ -45,6 +45,7 @@ import {UserConstraint} from '../../../../core/model/constraint/user.constraint'
 import {AttributeQueryItem} from './model/attribute.query-item';
 import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
 import {Attribute} from '../../../../core/store/collections/collection';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 
 @Component({
   selector: 'query-item',
@@ -81,6 +82,7 @@ export class QueryItemComponent implements OnInit, OnChanges {
   public filterBuilderComponent: FilterBuilderComponent;
 
   public readonly constraintType = ConstraintType;
+  public readonly configuration: DataInputConfiguration = {common: {inline: true}, color: {limitWidth: true}};
 
   public attribute: Attribute;
 

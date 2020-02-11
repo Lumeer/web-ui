@@ -27,6 +27,7 @@ import {SizeType} from '../../../../../../shared/slider/size-type';
 import {Role} from '../../../../../../core/model/role';
 import {findAttributeConstraint, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {Constraint} from '../../../../../../core/model/constraint';
+import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
 
 @Component({
   selector: 'search-document-header',
@@ -59,6 +60,7 @@ export class SearchDocumentHeaderComponent implements OnChanges {
   public readonly collectionType = ResourceType.Collection;
   public readonly sizeType = SizeType;
   public readonly readRole = Role.Read;
+  public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
 
   public defaultAttributeId: string;
   public defaultConstraint: Constraint;

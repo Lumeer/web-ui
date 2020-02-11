@@ -1,4 +1,4 @@
-<div class="lmr-checkbox d-flex"
+<div class="lmr-checkbox d-flex align-items-center"
      (click)="onDivClick($event)">
   <input #booleanInput
          [id]="inputId"
@@ -13,3 +13,4 @@
          (click)="onLabelClick($event)">
   </label>
 </div>
+<span class="ml-2" *ngIf="label">{{label}}</span>
