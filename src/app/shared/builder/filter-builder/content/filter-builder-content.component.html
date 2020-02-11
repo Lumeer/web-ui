@@ -1,6 +1,6 @@
 <div class="d-flex flex-column">
 
-  <div class="text-muted px-2">Choose Condition</div>
+  <div class="text-muted px-2" i18n="@@filter.builder.condition">Choose Condition</div>
   <div *ngFor="let item of attribute | queryConditionItems; let first = first"
        class="px-2 py-1 dropdown-item cursor-pointer"
        [class.mt-2]="first"
@@ -11,7 +11,7 @@
 </div>
 
 <div class="d-flex flex-column ml-3" *ngFor="let index of ngForIndexes">
-  <div class="text-muted px-2">Choose Value</div>
+  <div class="text-muted px-2" i18n="@@filter.builder.value">Choose Value</div>
   <data-input class="h-100 data-input mt-2 cursor-pointer"
               [class.data-input-border]="attribute.constraint?.type !== constraintType.Boolean"
               [class.data-input-padding]="attribute.constraint?.type !== constraintType.Color"
