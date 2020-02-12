@@ -157,7 +157,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
       if (this.shouldDirectEditValue(column)) {
         this.onNewValue(column, this.computeDirectEditValue(column));
       } else {
-        this.editedValue = this.createDataValue(column, value);
+        this.editedValue = this.createDataValue(column, value, true);
         this.suggesting$.next(this.editedValue);
         this.columnEditing$.next(column);
         return true;
@@ -279,8 +279,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     this.unLink.emit();
   }
 
-  public onValueChange(index: number, dataVa: DataValue) {
-    this.suggesting$.next(dataVa);
+  public onValueChange(index: number, dataValue: DataValue) {
+    this.suggesting$.next(dataValue);
   }
 
   public onDataInputKeyDown(event: KeyboardEvent) {

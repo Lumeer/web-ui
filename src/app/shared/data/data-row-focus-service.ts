@@ -166,7 +166,6 @@ export class DataRowFocusService {
     if (this.isEditing()) {
       const {offsetX, offsetY} = this.computeTabKeyDownOffset(event, this.edited);
       this.focused = {...this.edited};
-      this.resetEdit();
       this.moveFocus(offsetX, offsetY);
     } else if (this.isFocusing()) {
       const {offsetX, offsetY} = this.computeTabKeyDownOffset(event, this.focused);
