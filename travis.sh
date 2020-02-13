@@ -16,6 +16,7 @@ done
 echo "Starting backend..."
 ./travis-start-engine.sh
 
+PASSED=false
 echo "Running E2E tests..."
 set +e
 export CYPRESS_baseUrl="http://localhost:7000"
@@ -23,8 +24,13 @@ npm run cypress:run --  --record --key b43d988f-5145-4a2b-9df3-ce3b1607f203
 if [[ $? -ne 0 ]]; then
   set -e
   npm run cypress:run
+
+  if [[ $? -eq 0 ]]; then
+    PASSED=true
+  fi
 else
   set -e
+  PASSED=true
 fi
 
 echo "Stopping frontend..."
@@ -35,5 +41,10 @@ echo "Stopping backend..."
 
 echo "Printing bundle sizes..."
 npm run bundlesize
+
+if [ "x$PASSED" = "xtrue" ]; then
+  echo Tests passed, triggering docker image creation...
+  ./docker-trigger.sh
+fi
 
 kill $PING_LOOP_PID
