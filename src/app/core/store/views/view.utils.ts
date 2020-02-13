@@ -78,8 +78,5 @@ export function preferViewConfigUpdate(previousView: View, view: View, hasStoreC
   if (!previousView) {
     return !hasStoreConfig;
   }
-  if (previousView.id !== view.id) {
-    return true;
-  }
   return !deepObjectsEquals(previousView.config && previousView.config.search, view.config && view.config.search);
 }

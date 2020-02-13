@@ -18,17 +18,17 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {View, ViewConfig} from '../../../core/store/views/view';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {View} from '../../../core/store/views/view';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {take, withLatestFrom} from 'rxjs/operators';
+import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
-import {selectPivotById, selectPivotConfig} from '../../../core/store/pivots/pivots.state';
+import {selectPivotById, selectPivotConfig, selectPivotId} from '../../../core/store/pivots/pivots.state';
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
@@ -41,9 +41,10 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {checkOrTransformPivotConfig, pivotConfigIsEmpty} from './util/pivot-util';
+import {checkOrTransformPivotConfig, createDefaultPivotConfig} from './util/pivot-util';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 
 @Component({
   selector: 'pivot-perspective',
@@ -63,7 +64,6 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
-  private pivotId = DEFAULT_PIVOT_ID;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -71,57 +71,59 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
     this.initPivot();
     this.subscribeToQuery();
     this.subscribeData();
+    this.setupSidebar();
   }
 
   private initPivot() {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        withLatestFrom(this.store$.pipe(select(selectPivotById(this.pivotId)))),
-        withLatestFrom(this.store$.pipe(select(selectSidebarOpened)))
+        startWith(null as View),
+        pairwise(),
+        switchMap(([previousView, view]) =>
+          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
+        )
       )
-      .subscribe(([[view, pivot], sidebarOpened]) => {
-        if (pivot) {
-          this.refreshPivot(view && view.config);
-        } else {
-          this.createPivot(view, sidebarOpened);
+      .subscribe(({pivotId, config}: {pivotId?: string; config?: PivotConfig}) => {
+        if (pivotId) {
+          this.store$.dispatch(new PivotsAction.AddPivot({pivot: {id: pivotId, config}}));
         }
       });
     this.subscriptions.add(subscription);
   }
 
-  private refreshPivot(viewConfig: ViewConfig) {
-    if (viewConfig && viewConfig.pivot) {
-      this.store$.dispatch(new PivotsAction.SetConfig({pivotId: this.pivotId, config: viewConfig.pivot}));
-    }
+  private subscribeToView(previousView: View, view: View): Observable<{pivotId?: string; config?: PivotConfig}> {
+    const pivotId = view.code;
+    return this.store$.pipe(
+      select(selectPivotById(pivotId)),
+      take(1),
+      mergeMap(pivotEntity => {
+        const pivotConfig = view.config && view.config.pivot;
+        if (preferViewConfigUpdate(previousView, view, !!pivotEntity)) {
+          return this.checkPivotConfig(pivotConfig).pipe(map(config => ({pivotId, config})));
+        }
+        return of({pivotId, config: (pivotEntity && pivotEntity.config) || pivotConfig});
+      })
+    );
   }
 
-  private createPivot(view: View, sidebarOpened: boolean) {
-    combineLatest([
+  private checkPivotConfig(config: PivotConfig): Observable<PivotConfig> {
+    return combineLatest([
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
       this.store$.pipe(select(selectLinkTypesByQuery)),
-    ])
-      .pipe(take(1))
-      .subscribe(([query, collections, linkTypes]) => {
-        const config = checkOrTransformPivotConfig(
-          view && view.config && view.config.pivot,
-          query,
-          collections,
-          linkTypes
-        );
-        const pivot = {id: this.pivotId, config};
-        this.store$.dispatch(new PivotsAction.AddPivot({pivot}));
-        this.setupSidebar(view, config, sidebarOpened);
-      });
+    ]).pipe(
+      take(1),
+      map(([query, collections, linkTypes]) => checkOrTransformPivotConfig(config, query, collections, linkTypes))
+    );
   }
 
-  private setupSidebar(view: View, config: PivotConfig, opened: boolean) {
-    if (!view || pivotConfigIsEmpty(config)) {
-      this.sidebarOpened$.next(true);
-    } else {
-      this.sidebarOpened$.next(opened);
-    }
+  private subscribeToDefault(): Observable<{pivotId?: string; config?: PivotConfig}> {
+    return this.store$.pipe(
+      select(selectQuery),
+      map(query => createDefaultPivotConfig(query)),
+      map(config => ({pivotId: DEFAULT_PIVOT_ID, config}))
+    );
   }
 
   private subscribeToQuery() {
@@ -147,17 +149,32 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public onConfigChange(config: PivotConfig) {
-    this.store$.dispatch(new PivotsAction.SetConfig({pivotId: this.pivotId, config}));
+    this.store$
+      .pipe(select(selectPivotId), take(1))
+      .subscribe(pivotId => this.store$.dispatch(new PivotsAction.SetConfig({pivotId, config})));
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-    this.store$.dispatch(new PivotsAction.RemovePivot({pivotId: this.pivotId}));
   }
 
   public onSidebarToggle() {
     const opened = !this.sidebarOpened$.getValue();
     this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
     this.sidebarOpened$.next(opened);
+  }
+
+  private setupSidebar() {
+    this.store$
+      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
+      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
+  }
+
+  private openOrCloseSidebar(view: View, opened: boolean) {
+    if (view) {
+      this.sidebarOpened$.next(opened);
+    } else {
+      this.sidebarOpened$.next(true);
+    }
   }
 }

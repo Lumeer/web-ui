@@ -28,7 +28,6 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {ChartDataConverter} from './chart-data-converter';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
@@ -36,6 +35,7 @@ import {TestBed} from '@angular/core/testing';
 import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {NumberConstraint} from '../../../../../core/model/constraint/number.constraint';
 
 const documents: DocumentModel[] = [
   {

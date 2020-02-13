@@ -25,6 +25,6 @@ import {Perspective} from '../perspectives/perspective';
 })
 export class UndoChangesSupportedPipe implements PipeTransform {
   public transform(perspective: Perspective): any {
-    return [Perspective.Table, Perspective.Search].includes(perspective);
+    return [Perspective.Table, Perspective.Search, Perspective.Pivot, Perspective.Map].includes(perspective);
   }
 }

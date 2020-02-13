@@ -110,7 +110,7 @@ function sumNumericValues(values: any[], onlyNumeric: boolean): any {
     return onlyNumeric ? null : values[0];
   }
 
-  return bigValues.reduce((sum, val) => sum.add(val), new Big(0)).toFixed();
+  return toNumber(bigValues.reduce((sum, val) => sum.add(val), new Big(0)).toFixed());
 }
 
 function transformToBigValues(values: any[]): Big[] {
@@ -171,10 +171,12 @@ function avgNumericValues(values: any[], onlyNumeric: boolean): any {
     return onlyNumeric ? null : values[0];
   }
 
-  return bigValues
-    .reduce((sum, val) => sum.add(val), new Big(0))
-    .div(values.length)
-    .toFixed();
+  return toNumber(
+    bigValues
+      .reduce((sum, val) => sum.add(val), new Big(0))
+      .div(values.length)
+      .toFixed()
+  );
 }
 
 function avgAnyValues(values: any[], onlyNumeric): any {
@@ -219,7 +221,9 @@ function minInNumericValues(values: any[], onlyNumeric: boolean): any {
     return onlyNumeric ? null : values[0];
   }
 
-  return bigValues.reduce((minValue, value) => (value.cmp(minValue) < 0 ? value : minValue), bigValues[0]).toFixed();
+  return toNumber(
+    bigValues.reduce((minValue, value) => (value.cmp(minValue) < 0 ? value : minValue), bigValues[0]).toFixed()
+  );
 }
 
 function minInAnyValues(values: any[], onlyNumeric: boolean): any {
@@ -251,7 +255,9 @@ function maxInNumericValues(values: any[], onlyNumeric: boolean): any {
     return onlyNumeric ? null : values[0];
   }
 
-  return bigValues.reduce((minValue, value) => (value.cmp(minValue) > 0 ? value : minValue), bigValues[0]).toFixed();
+  return toNumber(
+    bigValues.reduce((minValue, value) => (value.cmp(minValue) > 0 ? value : minValue), bigValues[0]).toFixed()
+  );
 }
 
 function maxInAnyValues(values: any[], onlyNumeric: boolean): any {

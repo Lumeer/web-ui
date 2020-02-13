@@ -107,10 +107,11 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       select(selectSearchById(searchId)),
       take(1),
       map(search => {
+        const searchConfig = view.config && view.config.search;
         if (preferViewConfigUpdate(previousView, view, !!search)) {
-          return {searchId, config: view.config && view.config.search, view};
+          return {searchId, config: searchConfig, view};
         }
-        return {};
+        return {searchId, config: (search && search.config) || searchConfig || createDefaultSearchConfig()};
       })
     );
   }

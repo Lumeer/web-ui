@@ -23,7 +23,7 @@ import {PivotsAction, PivotsActionType} from './pivots.action';
 export function pivotsReducer(state: PivotsState = initialPivotsState, action: PivotsAction.All): PivotsState {
   switch (action.type) {
     case PivotsActionType.ADD_PIVOT:
-      return pivotsAdapter.addOne(action.payload.pivot, state);
+      return pivotsAdapter.upsertOne(action.payload.pivot, state);
     case PivotsActionType.REMOVE_PIVOT:
       return pivotsAdapter.removeOne(action.payload.pivotId, state);
     case PivotsActionType.SET_CONFIG:

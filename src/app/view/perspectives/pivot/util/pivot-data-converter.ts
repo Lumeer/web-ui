@@ -697,7 +697,7 @@ export class PivotDataConverter {
     );
     if (aggregatedDataValue) {
       const dataResources = aggregatedDataValue.objects;
-      const attribute = this.findAttributeByPivotAttribute(valueAttribute);
+      const attribute = this.pivotAttributeAttribute(valueAttribute);
       return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
     }
 

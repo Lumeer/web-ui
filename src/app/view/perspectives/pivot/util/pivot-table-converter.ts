@@ -19,7 +19,7 @@
 
 import Big from 'big.js';
 import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {
@@ -306,10 +306,14 @@ export class PivotTableConverter {
 
   private formatValueByConstraint(value: any, valueIndex: number): any {
     const constraint = this.data.valuesConstraints && this.data.valuesConstraints[valueIndex];
-    if (constraint) {
+    if (this.shouldFormatConstraint(constraint)) {
       return constraint.createDataValue(value, this.constraintData).preview();
     }
     return value;
+  }
+
+  private shouldFormatConstraint(constraint: Constraint): boolean {
+    return constraint && constraint.type !== ConstraintType.DateTime;
   }
 
   private fillCellsForGroupedRow(
