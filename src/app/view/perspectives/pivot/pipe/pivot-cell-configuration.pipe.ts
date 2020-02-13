@@ -17,20 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {initialPivotsState, pivotsAdapter, PivotsState} from './pivots.state';
-import {PivotsAction, PivotsActionType} from './pivots.action';
+import {Pipe, PipeTransform} from '@angular/core';
+import {PivotTableCell} from '../util/pivot-table';
+import {DataInputConfiguration} from '../../../../shared/data-input/data-input-configuration';
+import {ConstraintType} from '../../../../core/model/data/constraint';
 
-export function pivotsReducer(state: PivotsState = initialPivotsState, action: PivotsAction.All): PivotsState {
-  switch (action.type) {
-    case PivotsActionType.ADD_PIVOT:
-      return pivotsAdapter.upsertOne(action.payload.pivot, state);
-    case PivotsActionType.REMOVE_PIVOT:
-      return pivotsAdapter.removeOne(action.payload.pivotId, state);
-    case PivotsActionType.SET_CONFIG:
-      return pivotsAdapter.updateOne({id: action.payload.pivotId, changes: {config: action.payload.config}}, state);
-    case PivotsActionType.CLEAR:
-      return initialPivotsState;
-    default:
-      return state;
+@Pipe({
+  name: 'pivotCellConfiguration',
+})
+export class PivotCellConfigurationPipe implements PipeTransform {
+  public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40}};
+
+  public transform(cell: PivotTableCell): DataInputConfiguration {
+    const constraintType = cell && cell.constraint && cell.constraint.type;
+    if (constraintType === ConstraintType.Boolean) {
+      return {...this.configuration, boolean: {additionalLabel: cell.label}};
+    }
+
+    return this.configuration;
   }
 }

@@ -61,7 +61,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public readonly: boolean;
 
   @Input()
-  public configuration: DataInputConfiguration = {skipValidation: false, fromQuery: false, resizeToContent: false};
+  public configuration: DataInputConfiguration;
 
   @Input()
   public placeholder: string;
@@ -87,9 +87,13 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.dataValue && this.configuration.resizeToContent) {
+    if (changes.dataValue && this.resizeToContent) {
       this.recalculateWidth(this.dataValue);
     }
+  }
+
+  public get resizeToContent(): boolean {
+    return this.configuration && this.configuration.common && this.configuration.common.resizeToContent;
   }
 
   private recalculateWidth(value: DataValue) {
@@ -147,21 +151,21 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onSaveValue(dataValue: DataValue) {
-    if (this.configuration.resizeToContent) {
+    if (this.resizeToContent) {
       this.recalculateWidth(dataValue);
     }
     this.save.emit(dataValue);
   }
 
   public onValueChange(dataValue: DataValue) {
-    if (this.configuration.resizeToContent) {
+    if (this.resizeToContent) {
       this.recalculateWidth(dataValue);
     }
     this.valueChange.emit(dataValue);
   }
 
   public onCancel() {
-    if (this.configuration.resizeToContent) {
+    if (this.resizeToContent) {
       this.recalculateWidth(this.dataValue);
     }
     this.cancel.emit();

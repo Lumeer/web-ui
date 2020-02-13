@@ -45,6 +45,7 @@ import {DataValue} from '../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
 import {DocumentDataRowIconsComponent} from './icons/document-data-row-icons.component';
 import {BooleanConstraint} from '../../../../../core/model/constraint/boolean.constraint';
+import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 
 @Component({
   selector: 'document-data-row',
@@ -108,6 +109,7 @@ export class DocumentDataRowComponent implements DataRowComponent, OnChanges, Af
   public valueFocused: boolean;
 
   public readonly booleanConstraintType = ConstraintType.Boolean;
+  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
   public placeholder: string;
 

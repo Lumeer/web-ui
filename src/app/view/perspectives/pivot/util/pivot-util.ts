@@ -88,7 +88,7 @@ export function checkOrTransformPivotConfig(
   linkTypes: LinkType[]
 ): PivotConfig {
   if (!config) {
-    return createDefaultConfig(query);
+    return createDefaultPivotConfig(query);
   }
   return {
     ...config,
@@ -177,7 +177,7 @@ function checkOrTransformPivotAttributes<T extends PivotAttribute>(
   }, []);
 }
 
-function createDefaultConfig(query: Query): PivotConfig {
+export function createDefaultPivotConfig(query: Query): PivotConfig {
   const stems = (query && query.stems) || [];
   const stemsConfigs = stems.map(stem => createDefaultPivotStemConfig(stem));
   return {version: PivotConfigVersion.V1, stemsConfigs: stemsConfigs, mergeTables: true};

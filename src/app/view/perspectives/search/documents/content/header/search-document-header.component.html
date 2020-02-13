@@ -16,7 +16,7 @@
     <span *ngIf="collection" [style.color]="collection?.color">{{collection?.name}}</span>
     <data-input-preview class="ml-3" [constraint]="defaultConstraint"
                         [cursor]="document | dataCursor:defaultAttributeId"
-                        [inline]="false"
+                        [configuration]="configuration"
                         [dataValue]="(defaultAttributeId && document?.data && document?.data[defaultAttributeId]) | dataValue:defaultConstraint: constraintData">
     </data-input-preview>
     <div class="ml-auto text-nowrap" *ngIf="collection | permissions:collectionType:readRole | async">

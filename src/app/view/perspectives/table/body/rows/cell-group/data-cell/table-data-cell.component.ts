@@ -79,6 +79,7 @@ import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component'
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
 import {DataValue} from '../../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
+import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 
 @Component({
   selector: 'table-data-cell',
@@ -152,6 +153,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public editedValue: DataValue;
 
   public readonly constraintType = ConstraintType;
+  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
   private selectedSubscriptions = new Subscription();
   private affectedSubscription = new Subscription();

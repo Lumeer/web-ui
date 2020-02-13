@@ -32,7 +32,7 @@ import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {ConstraintData, DurationUnitsMap} from '../data/constraint';
 import {DurationConstraintConfig} from '../data/constraint-config';
 import {NumericDataValue} from './index';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 
@@ -46,8 +46,9 @@ export class DurationDataValue implements NumericDataValue {
     public readonly inputValue?: string
   ) {
     const durationUnitsMap = this.constraintData && this.constraintData.durationUnitsMap;
+    const modifiedValue = this.inputValue ? parseInputValue(this.inputValue) : value;
     if (isDurationDataValueValid(value, durationUnitsMap)) {
-      this.bigNumber = convertToBig(getDurationSaveValue(value, this.config, durationUnitsMap));
+      this.bigNumber = convertToBig(getDurationSaveValue(modifiedValue, this.config, durationUnitsMap));
     }
   }
 
@@ -145,4 +146,11 @@ export class DurationDataValue implements NumericDataValue {
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
     return valueByConditionNumber(this, condition, values, '19s');
   }
+}
+
+function parseInputValue(value: any): any {
+  if (isNumeric(value)) {
+    return toNumber(value) * 1000;
+  }
+  return value;
 }

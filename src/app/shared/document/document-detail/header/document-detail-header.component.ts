@@ -41,6 +41,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DocumentFavoriteToggleService} from '../../../toggle/document-favorite-toggle.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataRow} from '../../../data/data-row.service';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 
 @Component({
   selector: 'document-detail-header',
@@ -75,6 +76,7 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public removeDocument = new EventEmitter();
 
   public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
+  public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
 
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;

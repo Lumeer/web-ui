@@ -18,7 +18,23 @@
  */
 
 export interface DataInputConfiguration {
+  common?: CommonDataInputConfiguration;
+  color?: ColorDataInputConfiguration;
+  boolean?: BooleanDataInputConfiguration;
+}
+
+export interface CommonDataInputConfiguration {
   skipValidation?: boolean;
-  fromQuery?: boolean;
+  inline?: boolean;
+  minWidth?: number;
   resizeToContent?: boolean;
+  allowRichText?: boolean;
+}
+
+export interface ColorDataInputConfiguration {
+  limitWidth: boolean;
+}
+
+export interface BooleanDataInputConfiguration {
+  additionalLabel?: string;
 }

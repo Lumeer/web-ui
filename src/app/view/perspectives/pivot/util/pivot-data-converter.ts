@@ -78,8 +78,8 @@ interface PivotConfigData {
   rowSorts: PivotSort[];
   columnShowSums: boolean[];
   columnSorts: PivotSort[];
-  rowConstraints: Constraint[];
-  columnConstraints: Constraint[];
+  rowAttributes: Attribute[];
+  columnAttributes: Attribute[];
 }
 
 export class PivotDataConverter {
@@ -246,10 +246,10 @@ export class PivotDataConverter {
         additionalData = {
           rowShowSums: (config.rowAttributes || []).map(attr => attr.showSums),
           rowSorts: (config.rowAttributes || []).map(attr => attr.sort),
-          rowConstraints: (config.rowAttributes || []).map(attr => this.pivotAttributeConstraint(attr)),
+          rowAttributes: (config.rowAttributes || []).map(attr => this.pivotAttributeAttribute(attr)),
           columnShowSums: (config.columnAttributes || []).map(attr => attr.showSums),
           columnSorts: (config.columnAttributes || []).map(attr => attr.sort),
-          columnConstraints: (config.columnAttributes || []).map(attr => this.pivotAttributeConstraint(attr)),
+          columnAttributes: (config.columnAttributes || []).map(attr => this.pivotAttributeAttribute(attr)),
         };
       }
     }
@@ -264,6 +264,18 @@ export class PivotDataConverter {
       pivotAttribute.constraint &&
       this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.constraint);
     return overrideConstraint || constraint;
+  }
+
+  private pivotAttributeAttribute(pivotAttribute: PivotAttribute): Attribute {
+    const attribute = this.findAttributeByPivotAttribute(pivotAttribute);
+    if (attribute) {
+      const constraint = attribute && attribute.constraint;
+      const overrideConstraint =
+        pivotAttribute.constraint &&
+        this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.constraint);
+      return {...attribute, constraint: overrideConstraint || constraint};
+    }
+    return null;
   }
 
   private mergeAggregatedData(a1: AggregatedData, a2: AggregatedData): AggregatedData {
@@ -381,7 +393,7 @@ export class PivotDataConverter {
       aggregatedData.rowLevels,
       pivotColors.rows,
       pivotColors.values,
-      additionalData.rowConstraints
+      additionalData.rowAttributes
     );
 
     const {titles, constraints} = this.createValueTitles(valueAttributes);
@@ -390,7 +402,7 @@ export class PivotDataConverter {
       aggregatedData.columnLevels,
       pivotColors.columns,
       pivotColors.values,
-      additionalData.columnConstraints,
+      additionalData.columnAttributes,
       titles
     );
 
@@ -421,7 +433,7 @@ export class PivotDataConverter {
     levels: number,
     colors: string[],
     valueColors: string[],
-    constraints: Constraint[],
+    attributes: Attribute[],
     valueTitles?: string[],
     additionalNum: number = 0
   ): {headers: PivotDataHeader[]; maxIndex: number} {
@@ -442,17 +454,25 @@ export class PivotDataConverter {
     } else {
       let currentIndex = additionalNum;
       Object.keys(map).forEach((title, index) => {
+        const attribute = attributes && attributes[0];
         if (levels === 1 && (valueTitles || []).length <= 1) {
           headers.push({
             title,
             targetIndex: currentIndex,
             color: colors[0],
-            constraint: constraints[0],
+            constraint: attribute && attribute.constraint,
             isValueHeader: false,
+            attributeName: attribute && attribute.name,
           });
           data.maxIndex = Math.max(data.maxIndex, currentIndex);
         } else {
-          headers.push({title, color: colors[0], constraint: constraints[0], isValueHeader: false});
+          headers.push({
+            title,
+            color: colors[0],
+            constraint: attribute && attribute.constraint,
+            isValueHeader: false,
+            attributeName: attribute.name,
+          });
         }
 
         this.iterateThroughPivotDataHeader(
@@ -464,7 +484,7 @@ export class PivotDataConverter {
           colors,
           valueColors,
           valueTitles,
-          constraints,
+          attributes,
           data
         );
         currentIndex += this.numChildren(map[title], levels - 1, (valueTitles && valueTitles.length) || 1);
@@ -483,7 +503,7 @@ export class PivotDataConverter {
     colors: string[],
     valueColors: string[],
     valueTitles: string[],
-    constraints: Constraint[],
+    attributes: Attribute[],
     additionalData: {maxIndex: number}
   ) {
     if (level === maxLevels) {
@@ -502,21 +522,24 @@ export class PivotDataConverter {
     header.children = [];
     let currentIndex = headerIndex;
     Object.keys(currentMap).forEach((title, index) => {
+      const attribute = attributes && attributes[level];
       if (level + 1 === maxLevels && (valueTitles || []).length <= 1) {
         header.children.push({
           title,
           targetIndex: currentIndex,
           color: colors[level],
-          constraint: constraints[level],
+          constraint: attribute && attribute.constraint,
           isValueHeader: false,
+          attributeName: attribute && attribute.name,
         });
         additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
         header.children.push({
           title,
           color: colors[level],
-          constraint: constraints[level],
+          constraint: attribute && attribute.constraint,
           isValueHeader: false,
+          attributeName: attribute && attribute.name,
         });
       }
 
@@ -529,7 +552,7 @@ export class PivotDataConverter {
         colors,
         valueColors,
         valueTitles,
-        constraints,
+        attributes,
         additionalData
       );
 
@@ -674,7 +697,7 @@ export class PivotDataConverter {
     );
     if (aggregatedDataValue) {
       const dataResources = aggregatedDataValue.objects;
-      const attribute = this.findAttributeByPivotAttribute(valueAttribute);
+      const attribute = this.pivotAttributeAttribute(valueAttribute);
       return aggregateDataResources(valueAttribute.aggregation, dataResources, attribute, true);
     }
 

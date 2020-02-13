@@ -28,6 +28,7 @@
                   [cursor]="cursor"
                   [dataValue]="dataValue"
                   [focus]="true"
+                  [configuration]="configuration"
                   [readonly]="readonly || !((editing$ | async) || row.attribute?.constraint?.type === booleanConstraintType)"
                   (save)="onNewValue($event)"
                   (dblclick)="onDataInputDblClick($event)"

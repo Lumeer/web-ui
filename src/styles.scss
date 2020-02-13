@@ -211,11 +211,13 @@ typeahead-container {
 .hidden-input {
   background: transparent;
   border: none;
+  outline: none;
   caret-color: transparent;
   color: transparent !important;
   cursor: default;
   height: 1px;
   width: 1px;
+  border: 0;
 }
 
 .outline-none {

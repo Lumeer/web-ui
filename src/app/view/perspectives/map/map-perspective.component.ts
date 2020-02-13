@@ -37,7 +37,6 @@ import {
 import {Collection} from '../../../core/store/collections/collection';
 import {selectCollectionsInQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {formatMapCoordinates} from '../../../core/store/maps/map-coordinates';
 import {DEFAULT_MAP_CONFIG, MapConfig, MapModel, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {DEFAULT_MAP_ID, selectMap, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
@@ -132,15 +131,15 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
       take(1),
       withLatestFrom(this.store$.pipe(select(selectMapPosition))),
       map(([mapEntity, position]) => {
+        const mapConfig = view.config && view.config.map;
         if (preferViewConfigUpdate(previousView, view, !!mapEntity)) {
-          const mapConfig = view.config && view.config.map;
           const config: MapConfig = {
             ...mapConfig,
             position: mapConfig.positionSaved ? mapConfig.position : position,
           };
-          return {mapId, config: config, view};
+          return {mapId, config: config};
         }
-        return {mapId, config: mapEntity && mapEntity.config};
+        return {mapId, config: (mapEntity && mapEntity.config) || mapConfig || DEFAULT_MAP_CONFIG};
       })
     );
   }
@@ -293,8 +292,4 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
 function defaultViewMapPosition(config: DefaultViewConfig): MapPosition {
   return config && config.config && config.config.map && config.config.map.position;
-}
-
-function collectionsDefaultViewMapKey(collections: Collection[]): string {
-  return (collections && collections[0] && collections[0].id) || '';
 }

@@ -1,34 +1,44 @@
-<ng-container *ngIf="pivotTables$ | async as pivotTables">
-  <ng-container *ngIf="pivotTables.length; else emptyCells">
-    <table *ngFor="let pivotTable of pivotTables; let first"
-           class="table table-bordered table-md"
-           [class.mt-4]="!first">
-      <tr *ngFor="let row of pivotTable.cells">
+<ng-container *ngIf="pivotTables?.length; else emptyCells">
+  <table *ngFor="let pivotTable of pivotTables; let first"
+         class="table table-bordered table-md"
+         [class.mt-4]="!first">
+    <tr *ngFor="let row of pivotTable.cells">
 
-        <ng-container *ngFor="let cell of row">
-          <td *ngIf="cell"
-              class="cell {{cell.constraint ? (cell.constraint.type | lowercase) : ''}} text-truncate"
-              [style.max-width.px]="150"
-              [rowSpan]="cell.rowSpan"
-              [colSpan]="cell.colSpan"
-              [ngClass]="cell.cssClass"
-              [style.background]="cell.background"
-              [style.color]="cell.background && (cell.background | contrastColor)">
-            <data-input-preview *ngIf="(cell | pivotTableCellHasValue) && cell.constraint"
+      <ng-container *ngFor="let cell of row">
+        <td *ngIf="cell && {hasValue: cell | pivotTableCellHasValue} as cellData"
+            class="cell {{cell.constraint ? (cell.constraint.type | lowercase) : ''}} text-truncate"
+            [style.max-width.px]="200"
+            [rowSpan]="cell.rowSpan"
+            [colSpan]="cell.colSpan"
+            [ngClass]="cell.cssClass"
+            [style.background]="cell.background"
+            [style.color]="cell.background && (cell.background | contrastColor)">
+          <ng-container *ngIf="cell.summary">
+            <div class="d-flex align-items-center h-100">
+              <span class="summary">{{cell.summary}}</span>
+              <data-input-preview *ngIf="cellData.hasValue"
+                                  class="ml-2 flex-grow-1 h-100 text-truncate"
+                                  [constraint]="cell.constraint"
+                                  [configuration]="cell | pivotCellConfiguration"
+                                  [dataValue]="cell.value | dataValue:cell.constraint:constraintData">
+              </data-input-preview>
+            </div>
+          </ng-container>
+          <ng-container *ngIf="!cell.summary">
+            <data-input-preview *ngIf="cellData.hasValue && cell.constraint"
                                 [constraint]="cell.constraint"
-                                [minWidth]="40"
-                                [limitColorWidth]="false"
+                                [configuration]="cell | pivotCellConfiguration"
                                 [dataValue]="cell.value | dataValue:cell.constraint:constraintData">
             </data-input-preview>
-            <div class="text-truncate" *ngIf="(cell | pivotTableCellHasValue) && !cell.constraint"
+            <div class="text-truncate" *ngIf="cellData.hasValue && !cell.constraint"
                  [innerHTML]="cell.value | stripHtml"
                  [title]="cell.value"></div>
-            <ng-container *ngIf="!(cell | pivotTableCellHasValue)">&nbsp;</ng-container>
-          </td>
-        </ng-container>
-      </tr>
-    </table>
-  </ng-container>
+            <ng-container *ngIf="!cellData.hasValue">&nbsp;</ng-container>
+          </ng-container>
+        </td>
+      </ng-container>
+    </tr>
+  </table>
 </ng-container>
 
 <ng-template #emptyCells>

@@ -42,6 +42,7 @@ import {Direction} from '../../../../../direction';
 import {DataValue} from '../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
+import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -105,6 +106,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public suggestions: DocumentHintsComponent;
 
   public readonly booleanConstraintType = ConstraintType.Boolean;
+  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
   public columnEditing$ = new BehaviorSubject<number>(null);
   public columnFocused$ = new BehaviorSubject<number>(null);
@@ -155,7 +157,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
       if (this.shouldDirectEditValue(column)) {
         this.onNewValue(column, this.computeDirectEditValue(column));
       } else {
-        this.editedValue = this.createDataValue(column, value);
+        this.editedValue = this.createDataValue(column, value, true);
         this.suggesting$.next(this.editedValue);
         this.columnEditing$.next(column);
         return true;
@@ -277,8 +279,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     this.unLink.emit();
   }
 
-  public onValueChange(index: number, dataVa: DataValue) {
-    this.suggesting$.next(dataVa);
+  public onValueChange(index: number, dataValue: DataValue) {
+    this.suggesting$.next(dataValue);
   }
 
   public onDataInputKeyDown(event: KeyboardEvent) {

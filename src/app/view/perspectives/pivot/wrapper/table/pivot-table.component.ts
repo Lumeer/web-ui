@@ -24,6 +24,7 @@ import {PivotTable} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
 
 @Component({
   selector: 'pivot-table',
@@ -38,9 +39,11 @@ export class PivotTableComponent implements OnChanges {
   @Input()
   public constraintData: ConstraintData;
 
+  public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40}};
+
   private pivotTableConverter: PivotTableConverter;
 
-  public pivotTables$ = new BehaviorSubject<PivotTable[]>([]);
+  public pivotTables: PivotTable[];
 
   constructor(private i18n: I18n) {
     const headerSummaryString = i18n({id: 'perspective.pivot.table.summary.header', value: 'Summary of'});
@@ -50,7 +53,7 @@ export class PivotTableComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.pivotData) {
-      this.pivotTables$.next(this.pivotTableConverter.transform(this.pivotData));
+      this.pivotTables = this.pivotTableConverter.transform(this.pivotData);
     }
   }
 }

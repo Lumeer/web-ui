@@ -27,7 +27,6 @@ import {
   OnChanges,
   Output,
   QueryList,
-  SimpleChange,
   SimpleChanges,
   ViewChild,
   ViewChildren,
@@ -35,6 +34,7 @@ import {
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {ConstraintData} from '../../../core/model/data/constraint';
+import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 
 const PAGE_SIZE = 100;
 
@@ -71,6 +71,8 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
 
   @ViewChildren('tableRow')
   public rowsElements: QueryList<ElementRef>;
+
+  public readonly configuration: DataInputConfiguration = {common: {inline: true}};
 
   public page = 0;
 

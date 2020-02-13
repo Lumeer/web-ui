@@ -57,6 +57,8 @@ import {SearchTab} from '../../core/store/navigation/search-tab';
 import {QueryParam} from '../../core/store/navigation/query-param';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 import {TablesAction} from '../../core/store/tables/tables.action';
+import {PivotsAction} from '../../core/store/pivots/pivots.action';
+import {MapsAction} from '../../core/store/maps/maps.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -279,6 +281,17 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         const tableConfig = view.config && view.config.table;
         this.revertQueryWithUrl(workspacePath, view.query);
         this.store$.dispatch(new TablesAction.SetConfig({tableId: view.code, config: tableConfig}));
+        return;
+      case Perspective.Pivot:
+        const pivotConfig = view.config && view.config.pivot;
+        this.revertQueryWithUrl(workspacePath, view.query);
+        this.store$.dispatch(new PivotsAction.SetConfig({pivotId: view.code, config: pivotConfig}));
+        return;
+      case Perspective.Map:
+        const mapConfig = view.config && view.config.map;
+        this.revertQueryWithUrl(workspacePath, view.query);
+        this.store$.dispatch(new MapsAction.CreateMap({mapId: view.code, config: mapConfig}));
+        return;
     }
   }
 

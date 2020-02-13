@@ -40,7 +40,7 @@
           (click)="activate(document)">
         <td *ngFor="let attr of collection.attributes">
           <data-input-preview [constraint]="attr.constraint"
-                              [limitColorWidth]="false"
+                              [configuration]="configuration"
                               [cursor]="document | dataCursor : attr.id"
                               [dataValue]="document.data[attr.id] | dataValue:attr.constraint:constraintData">
           </data-input-preview>

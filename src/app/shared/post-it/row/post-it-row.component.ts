@@ -44,6 +44,7 @@ import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {DataValue} from '../../../core/model/data-value';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../core/model/constraint/boolean.constraint';
+import {DataInputConfiguration} from '../../data-input/data-input-configuration';
 
 @Component({
   selector: 'post-it-row',
@@ -101,6 +102,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
   public valueFocused: boolean;
 
   public readonly booleanConstraintType = ConstraintType.Boolean;
+  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
   public placeholder: string;
 

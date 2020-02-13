@@ -22,6 +22,7 @@ import {Constraint} from '../../../core/model/constraint';
 import {DataValue} from '../../../core/model/data-value';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {DataCursor} from '../data-cursor';
+import {DataInputConfiguration} from '../data-input-configuration';
 
 @Component({
   selector: 'data-input-preview',
@@ -37,16 +38,10 @@ export class DataInputPreviewComponent implements OnChanges {
   public dataValue: DataValue;
 
   @Input()
-  public inline = true;
-
-  @Input()
-  public minWidth: number;
+  public configuration: DataInputConfiguration;
 
   @Input()
   public cursor: DataCursor;
-
-  @Input()
-  public limitColorWidth = true;
 
   public readonly constraintType = ConstraintType;
 
