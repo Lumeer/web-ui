@@ -67,7 +67,7 @@ export class SearchInputComponent {
   public suggesting: boolean;
   public text = '';
 
-  constructor(private i18n: I18n, private hostElement: ElementRef) {
+  constructor(private i18n: I18n, public hostElement: ElementRef) {
     this.placeholder = i18n({id: 'search.input.placeholder', value: 'Type anything you search for...'});
   }
 
