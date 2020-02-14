@@ -32,3 +32,15 @@
 i.align-sub:before {
   vertical-align: sub;
 }
+
+.data-input-preview {
+  line-height: 1.4rem;
+
+  &.small-size {
+    max-height: 1.4rem;
+  }
+
+  &:not(.small-size) {
+    max-height: 4.2rem;
+  }
+}

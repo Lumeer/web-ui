@@ -40,7 +40,8 @@
           <span class="mt-1 align-self-end" *ngIf="!first">,&nbsp;</span>
           <span *ngIf="entry.label"
                 class="text-attribute text-nowrap mt-1 align-self-end" [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
-          <data-input-preview class="data-input d-inline-block mt-1"
+          <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
+                              [class.small-size]="config?.size === sizeType.S || config?.size === sizeType.M"
                               [dataValue]="entry.dataValue"
                               [cursor]="document | dataCursor:entry.attributeId"
                               [configuration]="configuration"

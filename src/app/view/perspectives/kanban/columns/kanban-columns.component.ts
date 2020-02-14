@@ -249,7 +249,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   private createDocumentWithData(kanbanAttribute: KanbanAttribute, value: any): DocumentModel {
     const collection = (this.collections || []).find(coll => coll.id === kanbanAttribute.resourceId);
     const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
-    const data = generateDocumentData(collection, collectionsFilters, this.constraintData);
+    const data = generateDocumentData(collection, collectionsFilters, this.constraintData, false);
     const constraint = findAttributeConstraint(collection.attributes, kanbanAttribute.attributeId);
     data[kanbanAttribute.attributeId] = this.createValueByConstraint(constraint, value);
     return {collectionId: collection.id, data};

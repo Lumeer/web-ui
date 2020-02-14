@@ -147,7 +147,9 @@ function createMapMarkerPopup(properties: MapMarkerProperties, constraintData: C
     constraintData
   );
 
-  const html = defaultAttributeValue ? `${defaultAttributeValue}<br>${positionAttributeValue}` : positionAttributeValue;
+  const html = defaultAttributeValue
+    ? `<div style="max-height: 14rem; line-height: 1.4rem; overflow: hidden">${defaultAttributeValue}</div>${positionAttributeValue}`
+    : positionAttributeValue;
 
   return new Popup({
     anchor: 'top',

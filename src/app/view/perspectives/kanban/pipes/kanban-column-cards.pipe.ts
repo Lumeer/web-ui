@@ -29,6 +29,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {ConstraintType} from '../../../../core/model/data/constraint';
 import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
+import {createDateTimeOptions} from '../../../../shared/date-time/date-time-options';
 
 @Pipe({
   name: 'kanbanColumnCards',
@@ -88,12 +89,28 @@ export class KanbanColumnCardsPipe implements PipeTransform {
           expectedFormat = (constraint.config as DateTimeConstraintConfig).format;
         }
 
-        const dueDate = parseDateTimeDataValue(document.data[stemConfig.dueDate.attributeId], expectedFormat);
+        const parsedDate = parseDateTimeDataValue(document.data[stemConfig.dueDate.attributeId], expectedFormat);
+        const dueDate = this.checkDueDate(parsedDate, expectedFormat);
 
-        return moment(dueDate).diff(moment(), 'hours');
+        return moment(dueDate).diff(moment(), 'hours', true);
       }
     }
 
     return null;
+  }
+
+  private checkDueDate(dueDate: Date, format: string): Date {
+    if (!dueDate || !format) {
+      return dueDate;
+    }
+
+    const options = createDateTimeOptions(format);
+    if (options.hours) {
+      return dueDate;
+    }
+
+    return moment(dueDate)
+      .endOf('day')
+      .toDate();
   }
 }

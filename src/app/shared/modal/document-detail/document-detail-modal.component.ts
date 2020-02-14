@@ -27,6 +27,8 @@ import {
   TemplateRef,
   Output,
   EventEmitter,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -48,7 +50,7 @@ import {KeyCode} from '../../key-code';
   styleUrls: ['./document-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailModalComponent implements OnInit, OnDestroy {
+export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public collection: Collection;
 
@@ -77,7 +79,15 @@ export class DocumentDetailModalComponent implements OnInit, OnDestroy {
   constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
 
   public ngOnInit() {
+    this.initData();
     this.query$ = this.store$.pipe(select(selectQuery));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.initData();
+  }
+
+  private initData() {
     this.collection$ = of(this.collection);
     this.document$ = of(this.document);
 

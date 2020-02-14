@@ -12,7 +12,7 @@
 
 <search-suggestions [queryItems]="queryItems"
                     class="cursor-default"
-                    [origin]="searchInput"
+                    [origin]="hostElement"
                     [text]="suggesting ? (text || '') : null"
                     (useSuggestion)="onUseSuggestion($event)">
 </search-suggestions>

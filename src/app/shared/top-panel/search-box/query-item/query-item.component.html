@@ -30,6 +30,7 @@
         <span *ngIf="index > 0">,&nbsp;</span>
         <data-input-preview *ngIf="!typeControl.value" [class.ml-1]="index === 0"
                             [dataValue]="control.get('value').value | dataValue:attribute.constraint:constraintData"
+                            [configuration]="configuration"
                             [constraint]="attribute.constraint">
         </data-input-preview>
         <span class="ml-1" [class.ml-1]="index === 0"

@@ -19,7 +19,7 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Query} from '../../../core/store/navigation/query/query';
 import {getQueryFiltersForCollection} from '../../../core/store/navigation/query/query.util';
@@ -43,8 +43,8 @@ export class CreateDocumentModalComponent implements OnInit {
   @Input()
   public constraintData: ConstraintData;
 
-  public collection$: Observable<Collection>;
-  public document$: Observable<DocumentModel>;
+  public collection$ = new BehaviorSubject<Collection>(null);
+  public document$ = new BehaviorSubject<DocumentModel>(null);
 
   public selectedId$ = new BehaviorSubject(null);
 
@@ -57,7 +57,7 @@ export class CreateDocumentModalComponent implements OnInit {
   public onSelect(collectionId: string) {
     this.selectedId$.next(collectionId);
     const collection = this.collections.find(coll => coll.id === collectionId);
-    this.collection$ = of(collection);
+    this.collection$.next(collection);
 
     const queryFilters = getQueryFiltersForCollection(this.query, collectionId);
     const queryData = generateDocumentData(collection, queryFilters, this.constraintData);
@@ -69,6 +69,6 @@ export class CreateDocumentModalComponent implements OnInit {
       queryData
     );
 
-    this.document$ = of({data, collectionId});
+    this.document$.next({data, collectionId});
   }
 }

@@ -417,18 +417,7 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Document:create:ALT', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(
-          new DocumentsAction.Get({
-            query: {
-              stems: [
-                {
-                  collectionId: data.extraId,
-                  documentIds: [data.id],
-                },
-              ],
-            },
-          })
-        );
+        this.store$.dispatch(new DocumentsAction.GetSingle({collectionId: data.extraId, documentId: data.id}));
       }
     });
     this.channel.bind('Document:update', data => {
@@ -446,18 +435,7 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Document:update:ALT', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(
-          new DocumentsAction.Get({
-            query: {
-              stems: [
-                {
-                  collectionId: data.extraId,
-                  documentIds: [data.id],
-                },
-              ],
-            },
-          })
-        );
+        this.store$.dispatch(new DocumentsAction.GetSingle({collectionId: data.extraId, documentId: data.id}));
       }
     });
     this.channel.bind('Document:remove', data => {

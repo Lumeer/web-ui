@@ -25,6 +25,7 @@ import {LinkInstance} from '../link-instances/link.instance';
 
 export enum DocumentsActionType {
   GET = '[Documents] Get',
+  GET_SINGLE = '[Documents] Get Single',
   GET_SUCCESS = '[Documents] Get :: Success',
   GET_FAILURE = '[Documents] Get :: Failure',
 
@@ -76,10 +77,16 @@ export namespace DocumentsAction {
     public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean}) {}
   }
 
+  export class GetSingle implements Action {
+    public readonly type = DocumentsActionType.GET_SINGLE;
+
+    public constructor(public payload: {collectionId: string; documentId: string}) {}
+  }
+
   export class GetSuccess implements Action {
     public readonly type = DocumentsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {documents: DocumentModel[]; query: Query}) {}
+    public constructor(public payload: {documents: DocumentModel[]; query?: Query}) {}
   }
 
   export class GetFailure implements Action {
@@ -293,6 +300,7 @@ export namespace DocumentsAction {
 
   export type All =
     | Get
+    | GetSingle
     | GetSuccess
     | GetFailure
     | Create
