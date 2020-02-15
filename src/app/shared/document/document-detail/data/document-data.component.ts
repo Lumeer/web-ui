@@ -107,6 +107,7 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
   private dataRowFocusService: DataRowFocusService;
 
   constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
+    this.dataRowService.shouldSetupAllAttributes(true);
     this.dataRowFocusService = new DataRowFocusService(
       () => 2,
       () => this.dataRowService.rows$.value.length,

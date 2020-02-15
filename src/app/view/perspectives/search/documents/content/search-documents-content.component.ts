@@ -79,6 +79,7 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly projectType = ResourceType.Project;
+  public readonly sizeType = SizeType;
 
   constructor(
     private perspectiveService: PerspectiveService,

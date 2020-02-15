@@ -32,7 +32,6 @@ import {QueryItem} from '../query-item/model/query-item';
 import {SearchSuggestionsComponent} from './suggestions/search-suggestions.component';
 import {QueryItemType} from '../query-item/model/query-item-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {HtmlModifier} from '../../../utils/html-modifier';
 
 @Component({
   selector: 'search-input',
@@ -68,7 +67,7 @@ export class SearchInputComponent {
   public suggesting: boolean;
   public text = '';
 
-  constructor(private i18n: I18n, private hostElement: ElementRef) {
+  constructor(private i18n: I18n, public hostElement: ElementRef) {
     this.placeholder = i18n({id: 'search.input.placeholder', value: 'Type anything you search for...'});
   }
 
@@ -89,9 +88,6 @@ export class SearchInputComponent {
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
-    if (this.suggesting) {
-      event.stopPropagation();
-    }
     this.focusInput();
   }
 

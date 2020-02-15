@@ -138,6 +138,8 @@ export class QueryItemComponent implements OnInit, OnChanges {
   public onClick() {
     if (this.isAttributeType() && !this.filterBuilderComponent.isOpen()) {
       this.filterBuilderComponent.open();
+    } else if (this.filterBuilderComponent) {
+      this.filterBuilderComponent.close();
     }
   }
 

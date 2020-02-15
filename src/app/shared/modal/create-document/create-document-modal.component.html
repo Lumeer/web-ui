@@ -8,6 +8,7 @@
   <select-item class="d-inline-block mb-3"
                [items]="collections | collectionsSelectItems"
                [removable]="false"
+               [fitParent]="false"
                [selectedId]="selectedId$ | async"
                (select)="onSelect($event)">
   </select-item>

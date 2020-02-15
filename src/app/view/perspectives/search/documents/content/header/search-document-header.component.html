@@ -14,7 +14,9 @@
 <div class="ml-1 flex-grow-1">
   <div class="d-flex flex-row">
     <span *ngIf="collection" [style.color]="collection?.color">{{collection?.name}}</span>
-    <data-input-preview class="ml-3" [constraint]="defaultConstraint"
+    <data-input-preview class="ml-3 data-input-preview text-truncate"
+                        [class.small-size]="size === sizeType.S || size === sizeType.M"
+                        [constraint]="defaultConstraint"
                         [cursor]="document | dataCursor:defaultAttributeId"
                         [configuration]="configuration"
                         [dataValue]="(defaultAttributeId && document?.data && document?.data[defaultAttributeId]) | dataValue:defaultConstraint: constraintData">

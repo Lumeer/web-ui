@@ -70,32 +70,32 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): Record<s
 export function generateDocumentData(
   collection: Collection,
   collectionFilters: CollectionAttributeFilter[],
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  setupAllAttributes = true
 ): Record<string, any> {
   if (!collection) {
     return {};
   }
-  const data = collection.attributes.reduce((acc, attr) => {
-    acc[attr.id] = '';
-    return acc;
-  }, {});
+  const data = setupAllAttributes
+    ? collection.attributes.reduce((acc, attr) => {
+        acc[attr.id] = '';
+        return acc;
+      }, {})
+    : {};
 
   (collectionFilters || [])
     .filter(filter => filter.collectionId === collection.id)
     .forEach(filter => {
       const attribute = findAttribute(collection.attributes, filter.attributeId);
-      const dataValue = ((attribute && attribute.constraint) || new UnknownConstraint()).createDataValue(
-        null,
-        constraintData
-      );
+      const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+      const dataValue = constraint.createDataValue(null, constraintData);
       const numInputs = queryConditionNumInputs(filter.condition);
       const allValuesDefined =
-        attribute.constraint.type === ConstraintType.Boolean ||
+        constraint.type === ConstraintType.Boolean ||
         createRange(0, numInputs).every(
           i =>
             filter.conditionValues[i] &&
-            (filter.conditionValues[i].type ||
-              isNotNullOrUndefined(isNotNullOrUndefined(filter.conditionValues[i].value)))
+            (filter.conditionValues[i].type || isNotNullOrUndefined(filter.conditionValues[i].value))
         );
       if (allValuesDefined) {
         data[filter.attributeId] = dataValue.valueByCondition(filter.condition, filter.conditionValues);
@@ -107,12 +107,13 @@ export function generateDocumentData(
 export function generateDocumentDataByQuery(
   query: Query,
   collections: Collection[],
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  setupAllAttributes = true
 ): Record<string, any> {
   const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
   const collection = collectionId && (collections || []).find(coll => coll.id === collectionId);
   if (collection) {
-    return generateDocumentDataByCollectionQuery(collection, query, constraintData);
+    return generateDocumentDataByCollectionQuery(collection, query, constraintData, setupAllAttributes);
   }
   return {};
 }
@@ -120,9 +121,15 @@ export function generateDocumentDataByQuery(
 export function generateDocumentDataByCollectionQuery(
   collection: Collection,
   query: Query,
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  setupAllAttributes = true
 ): DocumentData {
-  return generateDocumentData(collection, getQueryFiltersForCollection(query, collection.id), constraintData);
+  return generateDocumentData(
+    collection,
+    getQueryFiltersForCollection(query, collection.id),
+    constraintData,
+    setupAllAttributes
+  );
 }
 
 export function calculateDocumentHierarchyLevel(

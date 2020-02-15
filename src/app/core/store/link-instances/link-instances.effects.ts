@@ -67,7 +67,7 @@ export class LinkInstancesEffects {
       this.linkInstanceService.getLinkInstance(action.payload.linkTypeId, action.payload.linkInstanceId).pipe(
         map((dto: LinkInstanceDto) => convertLinkInstanceDtoToModel(dto)),
         map(linkInstance => new LinkInstancesAction.GetSuccess({linkInstances: [linkInstance]})),
-        catchError(error => of(new LinkInstancesAction.GetFailure({error})))
+        catchError(() => EMPTY)
       )
     )
   );

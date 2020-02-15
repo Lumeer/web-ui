@@ -710,7 +710,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
             document: {
               collectionId,
               correlationId,
-              data: generateDocumentDataByCollectionQuery(collection, query, this.constraintData),
+              data: generateDocumentDataByCollectionQuery(collection, query, this.constraintData, false),
             },
             onSuccess: documentId =>
               this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),

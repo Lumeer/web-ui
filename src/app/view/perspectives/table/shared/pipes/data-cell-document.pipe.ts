@@ -49,7 +49,7 @@ export class DataCellDocumentPipe implements PipeTransform {
     return {
       collectionId: part.collectionId,
       correlationId: row.correlationId,
-      data: partIndex === 0 ? generateDocumentDataByQuery(query, collections, constraintData) : {},
+      data: partIndex === 0 ? generateDocumentDataByQuery(query, collections, constraintData, false) : {},
     };
   }
 }

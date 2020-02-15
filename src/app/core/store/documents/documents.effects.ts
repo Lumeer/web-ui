@@ -76,6 +76,18 @@ export class DocumentsEffects {
   );
 
   @Effect()
+  public getSingle$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.GetSingle>(DocumentsActionType.GET_SINGLE),
+    mergeMap(action =>
+      this.documentService.getDocument(action.payload.collectionId, action.payload.documentId).pipe(
+        map(dto => convertDocumentDtoToModel(dto)),
+        map(document => new DocumentsAction.GetSuccess({documents: [document]})),
+        catchError(() => EMPTY)
+      )
+    )
+  );
+
+  @Effect()
   public getFailure$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),

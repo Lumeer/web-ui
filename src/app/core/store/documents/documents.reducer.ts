@@ -124,7 +124,10 @@ function updateDocument(state: DocumentsState, action: DocumentsAction.UpdateDat
 }
 
 function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess): DocumentsState {
-  const queriesState = {...state, queries: state.queries.concat(action.payload.query)};
+  const queriesState = {
+    ...state,
+    queries: action.payload.query ? state.queries.concat(action.payload.query) : state.queries,
+  };
 
   const filteredDocuments = action.payload.documents.filter(document => {
     const oldDocument = state.entities[document.id];

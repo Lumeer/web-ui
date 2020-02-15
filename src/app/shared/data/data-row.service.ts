@@ -61,7 +61,13 @@ export class DataRowService {
 
   private subscriptions = new Subscription();
 
+  private setupAllAttributes = false;
+
   constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
+
+  public shouldSetupAllAttributes(value: boolean) {
+    this.setupAllAttributes = value;
+  }
 
   public get isCollectionResource(): boolean {
     return this.resourceType === AttributesResourceType.Collection;
@@ -127,7 +133,7 @@ export class DataRowService {
     const rows = [];
 
     for (const attribute of attributes) {
-      if (dataKeys.includes(attribute.id)) {
+      if (dataKeys.includes(attribute.id) || this.setupAllAttributes) {
         const row: DataRow = {
           id: attribute.id,
           attribute,
