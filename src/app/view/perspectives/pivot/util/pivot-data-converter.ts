@@ -42,7 +42,7 @@ import {
   isValueAggregation,
 } from '../../../../shared/utils/data/data-aggregation';
 import {
-  AggregatedData,
+  AggregatedMapData,
   AggregatedDataMap,
   AggregatedDataValues,
   DataAggregator,
@@ -206,7 +206,7 @@ export class PivotDataConverter {
   private transformStems(configs: PivotStemConfig[], queryStems: QueryStem[]): PivotStemData {
     const pivotColors: PivotColors = {rows: [], columns: [], values: []};
     const mergedValueAttributes: PivotValueAttribute[] = [];
-    let mergedAggregatedData: AggregatedData = null;
+    let mergedAggregatedData: AggregatedMapData = null;
     let additionalData: PivotConfigData;
 
     for (let i = 0; i < configs.length; i++) {
@@ -278,7 +278,7 @@ export class PivotDataConverter {
     return null;
   }
 
-  private mergeAggregatedData(a1: AggregatedData, a2: AggregatedData): AggregatedData {
+  private mergeAggregatedData(a1: AggregatedMapData, a2: AggregatedMapData): AggregatedMapData {
     if (!a1 || !a2) {
       return a1 || a2;
     }
@@ -383,7 +383,7 @@ export class PivotDataConverter {
   }
 
   private convertAggregatedData(
-    aggregatedData: AggregatedData,
+    aggregatedData: AggregatedMapData,
     valueAttributes: PivotValueAttribute[],
     pivotColors: PivotColors,
     additionalData: PivotConfigData
@@ -632,7 +632,7 @@ export class PivotDataConverter {
     rowHeaders: PivotDataHeader[],
     columnHeaders: PivotDataHeader[],
     valueAttributes: PivotValueAttribute[],
-    aggregatedData: AggregatedData
+    aggregatedData: AggregatedMapData
   ) {
     if (rowHeaders.length > 0) {
       this.iterateThroughRowHeaders(values, rowHeaders, columnHeaders, valueAttributes, aggregatedData.map);

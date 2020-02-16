@@ -20,6 +20,7 @@
 import {Constraint} from '../../model/constraint';
 import {AttributesResourceType} from '../../model/resource';
 import {QueryStem} from '../navigation/query/query';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
@@ -54,7 +55,7 @@ export interface GanttChartStemConfig {
   start?: GanttChartBarModel;
   end?: GanttChartBarModel;
 
-  progress?: GanttChartBarModel;
+  progress?: GanttChartProgressBarModel;
   color?: GanttChartBarModel;
   categories?: GanttChartBarModel[];
 }
@@ -65,6 +66,10 @@ export interface GanttChartBarModel {
   resourceIndex?: number;
   resourceType: AttributesResourceType;
   constraint?: Constraint;
+}
+
+export interface GanttChartProgressBarModel extends GanttChartBarModel {
+  aggregation?: DataAggregationType;
 }
 
 export enum GanttChartMode {

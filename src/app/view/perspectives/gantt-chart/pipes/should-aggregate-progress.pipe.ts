@@ -18,27 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../../select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {DataAggregationType} from '../../utils/data/data-aggregation';
+import {GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'shouldAggregateProgress',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+export class ShouldAggregateProgressPipe implements PipeTransform {
+  public transform(config: GanttChartStemConfig): boolean {
+    if (!config || !config.progress) {
+      return false;
+    }
 
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: this.dataAggregationName(aggregation)}));
-  }
+    const resourceIndex = config.progress.resourceIndex;
+    const allowedResourceIndexes =
+      resourceIndex % 2 === 0 ? [resourceIndex, resourceIndex - 1] : [resourceIndex, resourceIndex + 1];
 
-  private dataAggregationName(type: DataAggregationType): string {
-    return this.i18n(
-      {
-        id: 'perspective.chart.config.aggregation.name',
-        value: '{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique}}',
-      },
-      {type}
-    );
+    return [config.start, config.end]
+      .filter(model => isNotNullOrUndefined(model))
+      .some(model => !allowedResourceIndexes.includes(model.resourceIndex));
   }
 }

@@ -28,6 +28,7 @@ import {SelectItemWithConstraintId} from '../../../../../shared/select/select-co
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 
 @Component({
   selector: 'gantt-chart-collection-config',
@@ -57,8 +58,8 @@ export class GanttChartStemConfigComponent implements OnChanges {
   public categoryRemove = new EventEmitter<number>();
 
   public readonly properties = ['name', 'start', 'end', 'progress', 'color'];
-
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
+  public readonly progressAggregations = [DataAggregationType.Avg, DataAggregationType.Sum];
 
   public categories: GanttChartBarModel[];
 
@@ -93,13 +94,24 @@ export class GanttChartStemConfigComponent implements OnChanges {
   }
 
   public onBarPropertySelect(type: string, bar: GanttChartBarModel) {
-    const newConfig = {...this.config, [type]: bar};
+    let newConfig: GanttChartStemConfig;
+    if (type === 'progress') {
+      newConfig = {...this.config, [type]: {...bar, aggregation: DataAggregationType.Avg}};
+    } else {
+      newConfig = {...this.config, [type]: bar};
+    }
     this.configChange.emit(newConfig);
   }
 
   public onBarPropertyRemoved(type: string) {
     const newConfig = {...this.config};
     delete newConfig[type];
+    this.configChange.emit(newConfig);
+  }
+
+  public onProgressAggregationSelect(aggregation: DataAggregationType) {
+    const progress = {...this.config.progress, aggregation};
+    const newConfig = {...this.config, progress};
     this.configChange.emit(newConfig);
   }
 }

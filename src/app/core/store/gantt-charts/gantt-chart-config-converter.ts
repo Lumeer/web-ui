@@ -33,6 +33,7 @@ import {
   GanttChartConfigV1,
   GanttChartStemConfigV1,
 } from './gantt-chart-old';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 
 export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig {
   if (!config) {
@@ -55,7 +56,20 @@ export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig
     version = isNotNullOrUndefined(convertedConfig.version) ? String(convertedConfig.version) : '';
   }
 
-  return convertedConfig;
+  return addDefaults(convertedConfig);
+}
+
+function addDefaults(config: GanttChartConfig): GanttChartConfig {
+  const stemsConfigs = (config.stemsConfigs || []).map(stemConfig => ({
+    ...stemConfig,
+    progress: stemConfig.progress
+      ? {
+          ...stemConfig.progress,
+          aggregation: stemConfig.progress.aggregation || DataAggregationType.Avg,
+        }
+      : stemConfig.progress,
+  }));
+  return {...config, stemsConfigs};
 }
 
 function convertGanttChartDtoToModelV1(config: GanttChartConfigV1): GanttChartConfig {

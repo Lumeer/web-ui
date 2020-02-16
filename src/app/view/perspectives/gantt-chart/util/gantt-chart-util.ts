@@ -228,3 +228,12 @@ function findBestInitialAttributes(
 export function ganttConfigIsEmpty(config: GanttChartConfig) {
   return config && config.stemsConfigs.filter(value => ganttStemConfigDefinedProperties(value).length > 0).length === 0;
 }
+
+export function cleanGanttBarModel(model: GanttChartBarModel): GanttChartBarModel {
+  return {
+    resourceIndex: model.resourceIndex,
+    attributeId: model.attributeId,
+    resourceId: model.resourceId,
+    resourceType: model.resourceType,
+  };
+}
