@@ -72,7 +72,8 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   public readonly dragDelay = DRAG_DELAY;
   public resizedColumnIndex: number;
 
-  public constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  public constructor(private element: ElementRef, private store$: Store<AppState>) {
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection || changes.linkType) {
@@ -90,7 +91,9 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
     if (height) {
       const tableElement = getTableElement(this.cursor.tableId);
-      tableElement.style.setProperty('--column-group-height', `${height}px`);
+      if (tableElement) {
+        tableElement.style.setProperty('--column-group-height', `${height}px`);
+      }
     }
   }
 

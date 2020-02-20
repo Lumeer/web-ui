@@ -30,7 +30,7 @@ import {QueryStem} from '../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
 import {isArray, isNotNullOrUndefined, isNullOrUndefined} from '../common.utils';
 
-type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
+type DataResourceWithLinks = DataResource & { from: DataResource[]; to: DataResource[] };
 
 interface AttributesResourceChain {
   resource: AttributesResource;
@@ -58,8 +58,9 @@ export interface AggregatedArrayData {
 }
 
 export interface AggregatedDataItem {
-  title: string;
+  value: any;
   dataResources: DataResource[];
+  documentsPaths: string[][];
   children?: AggregatedDataItem[];
   values?: AggregatedDataValues[];
 }
@@ -92,7 +93,8 @@ export class DataAggregator {
       data: ConstraintData,
       aggregatorAttribute: DataAggregatorAttribute
     ) => any
-  ) {}
+  ) {
+  }
 
   public updateData(
     collections: Collection[],
@@ -202,7 +204,7 @@ export class DataAggregator {
     rowAttributes: DataAggregatorAttribute[],
     columnAttributes: DataAggregatorAttribute[],
     valueAttributes: DataAggregatorAttribute[]
-  ): {chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][]} {
+  ): { chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][] } {
     if ((this.attributesResourcesOrder || []).length === 0) {
       return {chain: [], valuesChains: []};
     }
@@ -425,7 +427,7 @@ export class DataAggregator {
     const dataObjects = Object.values(this.dataMap[resourceId] || {});
     const items = [];
     const chainVisitedIds = [];
-    this.iterateRecursiveArray(dataObjects, items, chain, valuesChains, 0, chainVisitedIds);
+    this.iterateRecursiveArray(dataObjects, items, chain, valuesChains, 0, chainVisitedIds, []);
     return items;
   }
 
@@ -435,7 +437,8 @@ export class DataAggregator {
     chain: AttributesResourceChain[],
     valuesChains: AttributesResourceChain[][],
     index: number,
-    chainVisitedIds: string[]
+    chainVisitedIds: string[],
+    documentsPath: string[]
   ) {
     const stage = chain[index];
     const constraint = findAttributeConstraint(stage.resource && stage.resource.attributes, stage.attributeId);
@@ -469,7 +472,7 @@ export class DataAggregator {
                   chainVisitedIds
                 );
                 const lastStage = valueChain[valueChain.length - 1];
-                const dataAggregationValues = this.processLastStageArray(lastStage, items, formattedValue, object);
+                const dataAggregationValues = this.processLastStageArray(lastStage, items, formattedValue, object, documentsPath);
                 this.iterateThroughValues(
                   valueLinkedObjectDataWithLinks,
                   dataAggregationValues,
@@ -479,43 +482,55 @@ export class DataAggregator {
                 );
               }
             } else {
-              this.processLastStageArray(stage, items, formattedValue, object);
+              this.processLastStageArray(stage, items, formattedValue, object, documentsPath);
             }
           } else {
-            const stageItem = this.findStageItemArray(items, formattedValue, stage, object);
+            const stageItem = this.findStageItemArray(items, formattedValue, stage, object, documentsPath);
             this.iterateRecursiveArray(
               linkedObjectDataWithLinks,
               stageItem.children,
               chain,
               valuesChains,
               index + 1,
-              chainVisitedIds
+              chainVisitedIds,
+              []
             );
           }
         }
       } else {
-        this.iterateRecursiveArray(linkedObjectDataWithLinks, items, chain, valuesChains, index + 1, chainVisitedIds);
+        let newDocumentsPath = [...documentsPath];
+        if (this.attributesResourceTypeForIndex(stage.index) === AttributesResourceType.Collection) {
+          newDocumentsPath.push(object.id);
+        }
+        this.iterateRecursiveArray(linkedObjectDataWithLinks, items, chain, valuesChains, index + 1, chainVisitedIds, newDocumentsPath);
       }
     }
   }
 
   private findStageItemArray(
     items: AggregatedDataItem[],
-    value: string,
+    value: any,
     stage: AttributesResourceChain,
-    object?: DataResourceWithLinks
+    object: DataResourceWithLinks,
+    documentsPath: string[],
   ): AggregatedDataItem {
     const stageItem = items.find(
-      item => item.title === value && (!stage.unique || object.id === item.dataResources[0].id)
+      item => item.value === value && (!stage.unique || object.id === item.dataResources[0].id)
     );
     if (stageItem) {
       if (object) {
         stageItem.dataResources.push(convertToDataResource(object));
       }
+      stageItem.documentsPaths.push(documentsPath);
       return stageItem;
     }
 
-    const newStageItem = {title: value, dataResources: object ? [convertToDataResource(object)] : [], children: []};
+    const newStageItem = {
+      value,
+      dataResources: object ? [convertToDataResource(object)] : [],
+      documentsPaths: [documentsPath || []],
+      children: []
+    };
     items.push(newStageItem);
     return newStageItem;
   }
@@ -524,7 +539,8 @@ export class DataAggregator {
     lastStage: AttributesResourceChain,
     items: AggregatedDataItem[],
     formattedValue: string,
-    object: DataResourceWithLinks
+    object: DataResourceWithLinks,
+    documentsPath: string[]
   ): AggregatedDataValues {
     let dataAggregationValues: AggregatedDataValues = {
       resourceId: lastStage.resource.id,
@@ -532,7 +548,7 @@ export class DataAggregator {
       objects: [],
     };
 
-    const stageItem = this.findStageItemArray(items, formattedValue, lastStage, object);
+    const stageItem = this.findStageItemArray(items, formattedValue, lastStage, object, documentsPath);
     const existingAggregationValues = (stageItem.values || []).find(
       v => v.resourceId === dataAggregationValues.resourceId && v.type === dataAggregationValues.type
     );
@@ -577,11 +593,11 @@ export class DataAggregator {
           !!mandatoryVisitedId
             ? dataResource.id === mandatoryVisitedId
             : ((<LinkInstance>dataResource).linkTypeId &&
-                (<LinkInstance>dataResource).linkTypeId === nextStage.resource.id &&
-                nextStageType === AttributesResourceType.LinkType) ||
-              ((<DocumentModel>dataResource).collectionId &&
-                (<DocumentModel>dataResource).collectionId === nextStage.resource.id &&
-                nextStageType === AttributesResourceType.Collection)
+            (<LinkInstance>dataResource).linkTypeId === nextStage.resource.id &&
+            nextStageType === AttributesResourceType.LinkType) ||
+            ((<DocumentModel>dataResource).collectionId &&
+              (<DocumentModel>dataResource).collectionId === nextStage.resource.id &&
+              nextStageType === AttributesResourceType.Collection)
         )
         .map(dataResource => nextStageDataResourcesWithLinks[dataResource.id]);
     }
@@ -705,19 +721,30 @@ function createDataMap(
     };
 
     if (document1CollectionIndex > document2CollectionIndex) {
-      document1Map[document1.id].to.push(linkInstanceObjectData);
-      document2Map[document2.id].from.push(linkInstanceObjectData);
+      if (!dataResourcesContainsResource(document1Map[document1.id].to, linkInstanceObjectData)) {
+        document1Map[document1.id].to.push(linkInstanceObjectData);
+      }
+      if (!dataResourcesContainsResource(document1Map[document2.id].from, linkInstanceObjectData)) {
+        document2Map[document2.id].from.push(linkInstanceObjectData);
+      }
       linkInstanceMap[linkInstance.id].to.push(document2ObjectData);
       linkInstanceMap[linkInstance.id].from.push(document1ObjectData);
     } else {
-      document2Map[document2.id].to.push(linkInstanceObjectData);
-      document1Map[document1.id].from.push(linkInstanceObjectData);
+      if (!dataResourcesContainsResource(document2Map[document2.id].to, linkInstanceObjectData)) {
+        document2Map[document2.id].to.push(linkInstanceObjectData);
+      }
+      if (!dataResourcesContainsResource(document1Map[document1.id].from, linkInstanceObjectData)) {
+        document1Map[document1.id].from.push(linkInstanceObjectData);
+      }
       linkInstanceMap[linkInstance.id].to.push(document1ObjectData);
       linkInstanceMap[linkInstance.id].from.push(document2ObjectData);
     }
   }
-
   return map;
+}
+
+function dataResourcesContainsResource(dataResources: DataResource[], dataResource: DataResource): boolean {
+  return dataResources.some(dr => dr.id === dataResource.id);
 }
 
 function attributesResourceIdByIndex(resource: AttributesResource, index: number): string {

@@ -57,6 +57,8 @@ import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
+import {DataValue} from '../../../../core/model/data-value';
 
 interface Data {
   collections: Collection[];
@@ -118,7 +120,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public patchLinkData = new EventEmitter<LinkInstance>();
 
   @Output()
-  public patchMetaData = new EventEmitter<{collectionId: string; documentId: string; metaData: DocumentMetaData}>();
+  public patchMetaData = new EventEmitter<{ collectionId: string; documentId: string; metaData: DocumentMetaData }>();
 
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
@@ -135,7 +137,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   private options: GanttOptions;
 
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
-  public data$: Observable<{options: GanttOptions; tasks: GanttChartTask[]}>;
+  public data$: Observable<{ options: GanttOptions; tasks: GanttChartTask[] }>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
   constructor(
@@ -154,7 +156,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  private subscribeTasks$(): Observable<{options: GanttOptions; tasks: GanttChartTask[]}> {
+  private subscribeTasks$(): Observable<{ options: GanttOptions; tasks: GanttChartTask[] }> {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
@@ -163,7 +165,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     );
   }
 
-  private handleData(data: Data): {options: GanttOptions; tasks: GanttChartTask[]} {
+  private handleData(data: Data): { options: GanttOptions; tasks: GanttChartTask[] } {
     const config = checkOrTransformGanttConfig(data.config, data.query, data.collections, data.linkTypes);
     if (!deepObjectsEquals(config, data.config)) {
       this.configChange.emit(config);
@@ -220,6 +222,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onTaskChanged(task: GanttChartTask) {
+    console.log(task);
     const metadata = task.metadata as GanttChartTaskMetadata;
     const stemConfig = metadata.stemConfig;
     const patchData: PatchData[] = [];
@@ -240,8 +243,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       }
     }
 
+    // edit of computed progress is currently not supported
     if (stemConfig.progress && (metadata.progressDataIds || []).length === 1) {
-      // edit of computed progress is currently not supported
       const dataResource = this.getDataResource(metadata.progressDataIds[0], stemConfig.progress.resourceType);
       if (dataResource) {
         const data = this.getPatchData(patchData, dataResource, stemConfig.progress);
@@ -249,27 +252,31 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       }
     }
 
+    // we support drag swimlanes only whe
     if (isOnlyOneResourceConfig(this.config) && task.swimlanes && stemConfig) {
       for (let i = 0; i < (stemConfig.categories || []).length; i++) {
         const category = stemConfig.categories[i];
-
-        // TODO
-        // if (category.resourceId === resource.id && category.resourceType === metadata.resourceType) {
-        //   const constraint = findAttributeConstraint(resource && resource.attributes, category.attributeId);
-        //   const saveValue = constraint
-        //     ? constraint.createDataValue(task.swimlanes[i], this.constraintData).serialize()
-        //     : task.swimlanes[i];
-        //
-        //   const changed = (dataResource.data && dataResource.data[category.attributeId] !== saveValue) || false;
-        //   if (changed) {
-        //     patchData[category.attributeId] = saveValue;
-        //   }
-        // }
+        const dataResource = this.getDataResource(metadata.startDateDataId || metadata.endDateDataId, category.resourceType);
+        if (dataResource) {
+          const data = this.getPatchData(patchData, dataResource, category);
+          this.patchCategory(task.swimlanes[i].value || task.swimlanes[i].title, category, data, dataResource);
+        }
       }
     }
 
     for (const item of patchData) {
-      this.emitPatchData(item.data, item.resourceType, item.dataResource);
+      // this.emitPatchData(item.data, item.resourceType, item.dataResource);
+    }
+  }
+
+  private patchCategory(swimlane: any, model: GanttChartBarModel, patchData: Record<string, any>, dataResource: DataResource) {
+    const resource = this.getResource(dataResource, model.resourceType);
+    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
+    const saveValue = constraint ? constraint.createDataValue(swimlane, this.constraintData).serialize() : swimlane;
+
+    const changed = (dataResource.data && dataResource.data[model.attributeId] !== saveValue) || false;
+    if (changed) {
+      patchData[model.attributeId] = saveValue;
     }
   }
 
@@ -298,10 +305,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   ) {
     const end = moment(date, this.options && this.options.dateFormat);
     const resource = this.getResource(dataResource, model.resourceType);
-    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
-    const saveValue = constraint ? constraint.createDataValue(end, this.constraintData).serialize() : end.toISOString();
-    if (!dataResource || saveValue !== dataResource[model.attributeId]) {
-      patchData[model.attributeId] = saveValue;
+    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId) || new DateTimeConstraint({format: this.options && this.options.dateFormat});
+    const dataValue: DataValue = constraint.createDataValue(end.toDate(), this.constraintData);
+    if (!dataResource || dataValue.compareTo(constraint.createDataValue(dataResource.data[model.attributeId])) !== 0) {
+      patchData[model.attributeId] = dataValue.serialize();
     }
   }
 
@@ -315,11 +322,11 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
     const saveValue = constraint
       ? constraint
-          .createDataValue(progress, this.constraintData)
-          .parseInput(String(progress || 0))
-          .serialize()
+        .createDataValue(progress, this.constraintData)
+        .parseInput(String(progress || 0))
+        .serialize()
       : this.formatPercentage(dataResource, model.attributeId, progress);
-    if (!dataResource || saveValue !== dataResource[model.attributeId]) {
+    if (!dataResource || saveValue !== dataResource.data[model.attributeId]) {
       patchData[model.attributeId] = saveValue;
     }
   }
@@ -364,7 +371,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  public onAddDependency(data: {fromId: string; toId: string}) {
+  public onAddDependency(data: { fromId: string; toId: string }) {
     const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
     const documentTo = (this.documents || []).find(document => document.id === data.toId);
     if (!documentFrom || !documentTo) {
@@ -375,7 +382,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     this.patchMetaData.emit({collectionId: documentTo.collectionId, documentId: documentTo.id, metaData});
   }
 
-  public onRemoveDependency(data: {fromId: string; toId: string}) {
+  public onRemoveDependency(data: { fromId: string; toId: string }) {
     const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
     const documentTo = (this.documents || []).find(document => document.id === data.toId);
     if (!documentFrom || !documentTo) {
@@ -386,7 +393,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     this.patchMetaData.emit({collectionId: documentTo.collectionId, documentId: documentTo.id, metaData});
   }
 
-  public onSwimlaneResize(data: {index: number; width: number}) {
+  public onSwimlaneResize(data: { index: number; width: number }) {
     if (this.canManageConfig) {
       const swimlaneWidths = [...(this.config.swimlaneWidths || [])];
       swimlaneWidths[data.index] = data.width;

@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import Gantt from '@lumeer/lumeer-gantt';
 import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
@@ -28,7 +37,7 @@ import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
   templateUrl: './gantt-chart-visualization.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GanttChartVisualizationComponent implements OnChanges {
+export class GanttChartVisualizationComponent implements OnChanges, AfterViewInit {
   @Input()
   public tasks: GanttChartTask[];
 
@@ -48,13 +57,13 @@ export class GanttChartVisualizationComponent implements OnChanges {
   public taskChange = new EventEmitter<GanttChartTask>();
 
   @Output()
-  public addDependency = new EventEmitter<{fromId: string; toId: string}>();
+  public addDependency = new EventEmitter<{ fromId: string; toId: string }>();
 
   @Output()
-  public removeDependency = new EventEmitter<{fromId: string; toId: string}>();
+  public removeDependency = new EventEmitter<{ fromId: string; toId: string }>();
 
   @Output()
-  public swimlaneResize = new EventEmitter<{index: number; width: number}>();
+  public swimlaneResize = new EventEmitter<{ index: number; width: number }>();
 
   @Output()
   public taskCreate = new EventEmitter<GanttChartTask>();
@@ -98,6 +107,12 @@ export class GanttChartVisualizationComponent implements OnChanges {
 
   public scrollToToday() {
     this.ganttChart && this.ganttChart.scrollToToday();
+  }
+
+  public ngAfterViewInit() {
+    if (!this.ganttChart) {
+      this.createChart();
+    }
   }
 
   private createChartAndInitListeners() {

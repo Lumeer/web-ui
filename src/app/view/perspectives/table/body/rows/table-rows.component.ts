@@ -34,7 +34,7 @@ import {debounceTime, delay, filter, map, mergeMap, switchMap, take, tap} from '
 import {AppState} from '../../../../../core/store/app.state';
 import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {Query} from '../../../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
@@ -43,6 +43,8 @@ import {selectTableRows} from '../../../../../core/store/tables/tables.selector'
 import {selectQueryDocumentsLoaded} from '../../../../../core/store/documents/documents.state';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {selectQueryLinkInstancesLoaded} from '../../../../../core/store/link-instances/link-instances.state';
+import {selectAllLinkTypes} from '../../../../../core/store/link-types/link-types.state';
+import {getAllCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'table-rows',
@@ -117,8 +119,14 @@ export class TableRowsComponent implements OnChanges {
   }
 
   private retrieveDocuments(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query}));
-    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    this.store$.pipe(select(selectAllLinkTypes), take(1)).subscribe(linkTypes => {
+      this.store$.dispatch(new DocumentsAction.Get({query}));
+      this.store$.dispatch(new LinkInstancesAction.Get({query}));
+      const stems: QueryStem[] = getAllCollectionIdsFromQuery(query, linkTypes).slice(1).map(collectionId => ({collectionId}));
+      if (stems.length > 0) {
+        this.store$.dispatch(new DocumentsAction.Get({query: {stems}}));
+      }
+    })
   }
 
   @HostListener('click', ['$event'])
