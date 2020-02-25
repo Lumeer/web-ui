@@ -39,6 +39,9 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {ConstraintType} from '../../../../core/model/data/constraint';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {GanttTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import {GanttSwimlane, GanttSwimlaneData} from './gantt-chart-converter';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (!deepObjectsEquals({...viewConfig, stemsConfigs: null}, {...currentConfig, stemsConfigs: null})) {
@@ -208,7 +211,7 @@ export function createDefaultGanttChartStemConfig(
 
 function findBestInitialAttributes(
   attributesResourcesOrder: AttributesResource[]
-): {index: number; startAttribute?: Attribute; endAttribute?: Attribute} {
+): { index: number; startAttribute?: Attribute; endAttribute?: Attribute } {
   for (let i = 0; i < (attributesResourcesOrder || []).length; i++) {
     if (getAttributesResourceType(attributesResourcesOrder[i]) !== AttributesResourceType.Collection) {
       continue;
@@ -236,4 +239,22 @@ export function cleanGanttBarModel(model: GanttChartBarModel): GanttChartBarMode
     resourceId: model.resourceId,
     resourceType: model.resourceType,
   };
+}
+
+export function createDocumentsIdsChainMatrix(task: GanttTask, swimlaneData: GanttSwimlaneData[]): string[][] {
+  const previousSwimlanes: GanttSwimlane[] = task.metadata.swimlanes;
+  const swimlanes: GanttSwimlane[] = task.swimlanes;
+  const chainMatrix: string[][] = [];
+  const chainIndex = 0;
+  for (let i = 0; i < swimlanes.length; i++) {
+    const currentSwimlaneData = swimlaneData.find(data => data.value === swimlanes[i].value);
+    if (swimlanes[i].value !== previousSwimlanes[i].value) {
+
+    } else {
+
+    }
+  }
+
+
+  return chainMatrix;
 }

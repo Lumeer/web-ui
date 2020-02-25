@@ -60,9 +60,14 @@ export interface AggregatedArrayData {
 export interface AggregatedDataItem {
   value: any;
   dataResources: DataResource[];
-  documentsPaths: string[][];
+  dataResourcesChains: DataResourceChain[][];
   children?: AggregatedDataItem[];
   values?: AggregatedDataValues[];
+}
+
+export interface DataResourceChain {
+  documentId?: string;
+  linkInstanceId?: string;
 }
 
 // any represents AggregatedDataMap
@@ -438,7 +443,7 @@ export class DataAggregator {
     valuesChains: AttributesResourceChain[][],
     index: number,
     chainVisitedIds: string[],
-    documentsPath: string[]
+    dataResourcesChain: DataResourceChain[]
   ) {
     const stage = chain[index];
     const constraint = findAttributeConstraint(stage.resource && stage.resource.attributes, stage.attributeId);
@@ -472,7 +477,7 @@ export class DataAggregator {
                   chainVisitedIds
                 );
                 const lastStage = valueChain[valueChain.length - 1];
-                const dataAggregationValues = this.processLastStageArray(lastStage, items, formattedValue, object, documentsPath);
+                const dataAggregationValues = this.processLastStageArray(lastStage, items, formattedValue, object, dataResourcesChain);
                 this.iterateThroughValues(
                   valueLinkedObjectDataWithLinks,
                   dataAggregationValues,
@@ -482,10 +487,10 @@ export class DataAggregator {
                 );
               }
             } else {
-              this.processLastStageArray(stage, items, formattedValue, object, documentsPath);
+              this.processLastStageArray(stage, items, formattedValue, object, dataResourcesChain);
             }
           } else {
-            const stageItem = this.findStageItemArray(items, formattedValue, stage, object, documentsPath);
+            const stageItem = this.findStageItemArray(items, formattedValue, stage, object, dataResourcesChain);
             this.iterateRecursiveArray(
               linkedObjectDataWithLinks,
               stageItem.children,
@@ -498,13 +503,20 @@ export class DataAggregator {
           }
         }
       } else {
-        let newDocumentsPath = [...documentsPath];
-        if (this.attributesResourceTypeForIndex(stage.index) === AttributesResourceType.Collection) {
-          newDocumentsPath.push(object.id);
-        }
-        this.iterateRecursiveArray(linkedObjectDataWithLinks, items, chain, valuesChains, index + 1, chainVisitedIds, newDocumentsPath);
+        const newChain = this.concatDataResourceChain(stage, dataResourcesChain, object);
+        this.iterateRecursiveArray(linkedObjectDataWithLinks, items, chain, valuesChains, index + 1, chainVisitedIds, newChain);
       }
     }
+  }
+
+  private concatDataResourceChain(stage: AttributesResourceChain, dataResourcesChain: DataResourceChain[], object: DataResourceWithLinks): DataResourceChain[] {
+    const resourceType = this.attributesResourceTypeForIndex(stage.index);
+    if (resourceType === AttributesResourceType.Collection) {
+      return [...dataResourcesChain, {documentId: object.id}];
+    } else if (resourceType === AttributesResourceType.LinkType) {
+      return [...dataResourcesChain, {linkInstanceId: object.id}];
+    }
+    return [...dataResourcesChain, {}];
   }
 
   private findStageItemArray(
@@ -512,23 +524,22 @@ export class DataAggregator {
     value: any,
     stage: AttributesResourceChain,
     object: DataResourceWithLinks,
-    documentsPath: string[],
+    dataResourcesChain: DataResourceChain[],
   ): AggregatedDataItem {
     const stageItem = items.find(
       item => item.value === value && (!stage.unique || object.id === item.dataResources[0].id)
     );
+    const newChain = this.concatDataResourceChain(stage, dataResourcesChain, object);
     if (stageItem) {
-      if (object) {
-        stageItem.dataResources.push(convertToDataResource(object));
-      }
-      stageItem.documentsPaths.push(documentsPath);
+      stageItem.dataResources.push(convertToDataResource(object));
+      stageItem.dataResourcesChains.push(newChain);
       return stageItem;
     }
 
     const newStageItem = {
       value,
       dataResources: object ? [convertToDataResource(object)] : [],
-      documentsPaths: [documentsPath || []],
+      dataResourcesChains: [newChain || []],
       children: []
     };
     items.push(newStageItem);
@@ -540,7 +551,7 @@ export class DataAggregator {
     items: AggregatedDataItem[],
     formattedValue: string,
     object: DataResourceWithLinks,
-    documentsPath: string[]
+    dataResourcesChain: DataResourceChain[],
   ): AggregatedDataValues {
     let dataAggregationValues: AggregatedDataValues = {
       resourceId: lastStage.resource.id,
@@ -548,7 +559,7 @@ export class DataAggregator {
       objects: [],
     };
 
-    const stageItem = this.findStageItemArray(items, formattedValue, lastStage, object, documentsPath);
+    const stageItem = this.findStageItemArray(items, formattedValue, lastStage, object, dataResourcesChain);
     const existingAggregationValues = (stageItem.values || []).find(
       v => v.resourceId === dataAggregationValues.resourceId && v.type === dataAggregationValues.type
     );
@@ -724,7 +735,7 @@ function createDataMap(
       if (!dataResourcesContainsResource(document1Map[document1.id].to, linkInstanceObjectData)) {
         document1Map[document1.id].to.push(linkInstanceObjectData);
       }
-      if (!dataResourcesContainsResource(document1Map[document2.id].from, linkInstanceObjectData)) {
+      if (!dataResourcesContainsResource(document2Map[document2.id].from, linkInstanceObjectData)) {
         document2Map[document2.id].from.push(linkInstanceObjectData);
       }
       linkInstanceMap[linkInstance.id].to.push(document2ObjectData);

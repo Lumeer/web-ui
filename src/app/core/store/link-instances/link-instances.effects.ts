@@ -38,7 +38,11 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from './link-instance.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
-import {selectLinkInstanceById, selectLinkInstancesQueries} from './link-instances.state';
+import {
+  selectLinkInstanceById,
+  selectLinkInstancesDictionary,
+  selectLinkInstancesQueries
+} from './link-instances.state';
 import {queryWithoutFilters} from '../navigation/query/query.util';
 
 @Injectable()
@@ -205,6 +209,27 @@ export class LinkInstancesEffects {
   );
 
   @Effect()
+  public changeDocuments$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.ChangeDocuments>(LinkInstancesActionType.CHANGE_DOCUMENTS),
+    mergeMap(action => {
+      const {linkInstanceId, documentIds} = action.payload;
+
+      return this.store$.pipe(
+        select(selectLinkInstancesDictionary),
+        take(1),
+        map(dictionary => dictionary[linkInstanceId]),
+        mergeMap(linkInstance => {
+          if (linkInstance) {
+            const linkInstanceUpdate = {...linkInstance, documentIds};
+            return [new LinkInstancesAction.Update({linkInstance: linkInstanceUpdate})];
+          }
+          return EMPTY;
+        })
+      )
+    })
+  );
+
+  @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.Delete>(LinkInstancesActionType.DELETE),
     mergeMap(action =>
@@ -300,5 +325,6 @@ export class LinkInstancesEffects {
     private searchService: SearchService,
     private linkInstanceService: LinkInstanceService,
     private store$: Store<AppState>
-  ) {}
+  ) {
+  }
 }

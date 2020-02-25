@@ -120,6 +120,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public patchLinkData = new EventEmitter<LinkInstance>();
 
   @Output()
+  public updateLinkDocuments = new EventEmitter<{ linkInstanceId: string, documentIds: [string, string] }>();
+
+  @Output()
   public patchMetaData = new EventEmitter<{ collectionId: string; documentId: string; metaData: DocumentMetaData }>();
 
   @Output()
@@ -135,6 +138,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   private readonly newTaskName: string;
 
   private options: GanttOptions;
+  private tasks: GanttChartTask[];
 
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
   public data$: Observable<{ options: GanttOptions; tasks: GanttChartTask[] }>;
@@ -143,7 +147,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   constructor(
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
     private modalService: ModalService,
-    private i18n: I18n
+    private i18n: I18n,
   ) {
     this.converter = new GanttChartConverter(this.selectItemWithConstraintFormatter);
     this.newTaskName = i18n({id: 'gantt.perspective.task.create.title', value: 'New task'});
@@ -161,7 +165,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       filter(data => !!data),
       debounceTime(100),
       map(data => this.handleData(data)),
-      tap(data => (this.options = data.options))
+      tap(data => {
+        this.options = data.options;
+        this.tasks = data.tasks;
+      })
     );
   }
 
@@ -252,20 +259,55 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       }
     }
 
-    // we support drag swimlanes only whe
-    if (isOnlyOneResourceConfig(this.config) && task.swimlanes && stemConfig) {
-      for (let i = 0; i < (stemConfig.categories || []).length; i++) {
-        const category = stemConfig.categories[i];
-        const dataResource = this.getDataResource(metadata.startDateDataId || metadata.endDateDataId, category.resourceType);
-        if (dataResource) {
-          const data = this.getPatchData(patchData, dataResource, category);
-          this.patchCategory(task.swimlanes[i].value || task.swimlanes[i].title, category, data, dataResource);
-        }
+
+    if (this.someSwimlaneChanged(task)) {
+
+      if (isOnlyOneResourceConfig(this.config)) {
+        this.patchCategoriesSingleResource(task, patchData);
+      } else {
+        this.patchCategoryLink(task);
       }
+
+      console.log('changed swimlane', this.converter.swimlaneData, patchData);
+
     }
 
     for (const item of patchData) {
-      // this.emitPatchData(item.data, item.resourceType, item.dataResource);
+      this.emitPatchData(item.data, item.resourceType, item.dataResource);
+    }
+  }
+
+  private someSwimlaneChanged(task: GanttChartTask): boolean {
+    return task.metadata.swimlanes.some((swimlane, index) => task.swimlanes[index].value !== swimlane.value);
+  }
+
+  private patchCategoryLink(task: GanttChartTask) {
+    const swimlaneTasks = (this.tasks || []).filter(t => deepObjectsEquals(t.swimlanes, task.swimlanes));
+    const dataResourceChain = (<GanttChartTaskMetadata>task.metadata).dataResourceChain;
+    const linkChain = dataResourceChain[dataResourceChain.length - 2];
+    const documentChain = dataResourceChain[dataResourceChain.length - 1];
+    if (swimlaneTasks.length > 0 && linkChain && linkChain.linkInstanceId && documentChain) {
+      const swimlaneTaskChain = (<GanttChartTaskMetadata>swimlaneTasks[0].metadata).dataResourceChain;
+      const documentToLinkChain = swimlaneTaskChain[swimlaneTaskChain.length - 3];
+      if (documentToLinkChain && documentToLinkChain.documentId) {
+        const documentIds: [string, string] = [documentChain.documentId, documentToLinkChain.documentId];
+        console.log(swimlaneTasks, documentIds);
+        this.updateLinkDocuments.emit({linkInstanceId: linkChain.linkInstanceId, documentIds});
+      }
+
+    }
+
+  }
+
+  private patchCategoriesSingleResource(task: GanttChartTask, patchData: PatchData[]) {
+    const metadata = task.metadata as GanttChartTaskMetadata;
+    for (let i = 0; i < (metadata.stemConfig.categories || []).length; i++) {
+      const category = metadata.stemConfig.categories[i];
+      const dataResource = this.getDataResource(metadata.startDateDataId || metadata.endDateDataId, category.resourceType);
+      if (dataResource) {
+        const data = this.getPatchData(patchData, dataResource, category);
+        this.patchCategory(task.swimlanes[i].value || task.swimlanes[i].title, category, data, dataResource);
+      }
     }
   }
 
