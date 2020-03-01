@@ -26,7 +26,7 @@ import {
   GanttChartMode,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, findLastIndex} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -39,9 +39,10 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {ConstraintType} from '../../../../core/model/data/constraint';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {GanttTask} from '@lumeer/lumeer-gantt/dist/model/task';
-import {GanttSwimlane, GanttSwimlaneData} from './gantt-chart-converter';
+import {GanttChartTaskMetadata} from './gantt-chart-converter';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {uniqueValues} from '../../../../shared/utils/array.utils';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (!deepObjectsEquals({...viewConfig, stemsConfigs: null}, {...currentConfig, stemsConfigs: null})) {
@@ -211,7 +212,7 @@ export function createDefaultGanttChartStemConfig(
 
 function findBestInitialAttributes(
   attributesResourcesOrder: AttributesResource[]
-): { index: number; startAttribute?: Attribute; endAttribute?: Attribute } {
+): {index: number; startAttribute?: Attribute; endAttribute?: Attribute} {
   for (let i = 0; i < (attributesResourcesOrder || []).length; i++) {
     if (getAttributesResourceType(attributesResourcesOrder[i]) !== AttributesResourceType.Collection) {
       continue;
@@ -241,20 +242,31 @@ export function cleanGanttBarModel(model: GanttChartBarModel): GanttChartBarMode
   };
 }
 
-export function createDocumentsIdsChainMatrix(task: GanttTask, swimlaneData: GanttSwimlaneData[]): string[][] {
-  const previousSwimlanes: GanttSwimlane[] = task.metadata.swimlanes;
-  const swimlanes: GanttSwimlane[] = task.swimlanes;
-  const chainMatrix: string[][] = [];
-  const chainIndex = 0;
-  for (let i = 0; i < swimlanes.length; i++) {
-    const currentSwimlaneData = swimlaneData.find(data => data.value === swimlanes[i].value);
-    if (swimlanes[i].value !== previousSwimlanes[i].value) {
-
-    } else {
-
-    }
+export function createLinkDocumentsData(
+  task: GanttChartTask,
+  otherTasks: GanttChartTask[],
+  linkInstances: LinkInstance[]
+): {linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[]} {
+  const swimlaneTasks = (otherTasks || []).filter(t => deepObjectsEquals(t.swimlanes, task.swimlanes));
+  const dataResourceChain = (<GanttChartTaskMetadata>task.metadata).dataResourceChain || [];
+  const linkChainIndex = findLastIndex(dataResourceChain, chain => !!chain.linkInstanceId);
+  const linkChain = dataResourceChain[linkChainIndex];
+  const linkInstance = linkChain && (linkInstances || []).find(li => li.id === linkChain.linkInstanceId);
+  const documentChain = dataResourceChain[linkChainIndex - 1];
+  const documentId = getOtherLinkedDocumentId(linkInstance, documentChain && documentChain.documentId);
+  if (!linkInstance || !documentId) {
+    return {};
   }
 
-
-  return chainMatrix;
+  const otherDocumentIds = swimlaneTasks
+    .map(swimlaneTask => {
+      const swimlaneTaskChain = (<GanttChartTaskMetadata>swimlaneTask.metadata).dataResourceChain;
+      const documentToLinkChain = swimlaneTaskChain[linkChainIndex - 1];
+      if (documentToLinkChain && documentToLinkChain.documentId && documentToLinkChain.documentId !== documentId) {
+        return documentToLinkChain.documentId;
+      }
+      return null;
+    })
+    .filter(doc => !!doc);
+  return {linkInstanceId: linkChain.linkInstanceId, documentId, otherDocumentIds: uniqueValues(otherDocumentIds)};
 }

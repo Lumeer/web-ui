@@ -232,7 +232,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
             if (tablePart.collectionId) {
               this.copyDocumentValue(tableRow.documentId, tablePart.collectionId, attributeId);
             } else if (tablePart.linkTypeId) {
-              this.copyLinkValue(tablePart.linkTypeId, tableRow.linkInstanceId, attributeId);
+              this.copyLinkValue(tableRow.linkInstanceId, tablePart.linkTypeId, attributeId);
             }
           }
         } else if (tableColumn) {

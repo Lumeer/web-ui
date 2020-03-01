@@ -29,6 +29,6 @@ import {WarningMessageModule} from '../warning-message/warning-message.module';
 @NgModule({
   imports: [CommonModule, DataInputModule, PipesModule, WarningMessageModule],
   declarations: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
-  exports: [PreviewResultsComponent, PreviewResultsTableComponent],
+  exports: [PreviewResultsComponent, PreviewResultsTableComponent, PreviewResultsTabsComponent],
 })
 export class PreviewResultsModule {}

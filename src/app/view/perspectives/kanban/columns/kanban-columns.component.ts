@@ -161,14 +161,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
       if (previousDocuments.length === 1) {
         this.createDocument(resourceCreate.kanbanAttribute, column, previousDocuments[0], linkTypeId);
       } else {
-        const previousCollection = this.collections.find(coll => coll.id === previousDocuments[0].collectionId);
-        this.showChooseDocumentModal(
-          resourceCreate.kanbanAttribute,
-          column,
-          previousDocuments,
-          previousCollection,
-          linkTypeId
-        );
+        this.showChooseDocumentModal(resourceCreate.kanbanAttribute, column, previousDocuments, linkTypeId);
       }
     } else {
       this.createDocument(resourceCreate.kanbanAttribute, column);
@@ -179,11 +172,11 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     kanbanAttribute: KanbanAttribute,
     column: KanbanColumn,
     documents: DocumentModel[],
-    collection: Collection,
     linkTypeId: string
   ) {
     const callback = document => this.createDocument(kanbanAttribute, column, document, linkTypeId);
-    const config = {initialState: {documents, collection, callback}, keyboard: true, class: 'modal-lg'};
+    const documentIds = (documents || []).map(document => document.id);
+    const config = {initialState: {documentIds, callback}, keyboard: true, class: 'modal-lg'};
     this.modalService.show(ChooseLinkDocumentModalComponent, config);
   }
 

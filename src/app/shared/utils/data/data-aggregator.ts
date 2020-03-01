@@ -30,7 +30,7 @@ import {QueryStem} from '../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
 import {isArray, isNotNullOrUndefined, isNullOrUndefined} from '../common.utils';
 
-type DataResourceWithLinks = DataResource & { from: DataResource[]; to: DataResource[] };
+type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 
 interface AttributesResourceChain {
   resource: AttributesResource;
@@ -98,8 +98,7 @@ export class DataAggregator {
       data: ConstraintData,
       aggregatorAttribute: DataAggregatorAttribute
     ) => any
-  ) {
-  }
+  ) {}
 
   public updateData(
     collections: Collection[],
@@ -209,7 +208,7 @@ export class DataAggregator {
     rowAttributes: DataAggregatorAttribute[],
     columnAttributes: DataAggregatorAttribute[],
     valueAttributes: DataAggregatorAttribute[]
-  ): { chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][] } {
+  ): {chain: AttributesResourceChain[]; valuesChains: AttributesResourceChain[][]} {
     if ((this.attributesResourcesOrder || []).length === 0) {
       return {chain: [], valuesChains: []};
     }
@@ -477,7 +476,13 @@ export class DataAggregator {
                   chainVisitedIds
                 );
                 const lastStage = valueChain[valueChain.length - 1];
-                const dataAggregationValues = this.processLastStageArray(lastStage, items, formattedValue, object, dataResourcesChain);
+                const dataAggregationValues = this.processLastStageArray(
+                  lastStage,
+                  items,
+                  formattedValue,
+                  object,
+                  dataResourcesChain
+                );
                 this.iterateThroughValues(
                   valueLinkedObjectDataWithLinks,
                   dataAggregationValues,
@@ -504,12 +509,24 @@ export class DataAggregator {
         }
       } else {
         const newChain = this.concatDataResourceChain(stage, dataResourcesChain, object);
-        this.iterateRecursiveArray(linkedObjectDataWithLinks, items, chain, valuesChains, index + 1, chainVisitedIds, newChain);
+        this.iterateRecursiveArray(
+          linkedObjectDataWithLinks,
+          items,
+          chain,
+          valuesChains,
+          index + 1,
+          chainVisitedIds,
+          newChain
+        );
       }
     }
   }
 
-  private concatDataResourceChain(stage: AttributesResourceChain, dataResourcesChain: DataResourceChain[], object: DataResourceWithLinks): DataResourceChain[] {
+  private concatDataResourceChain(
+    stage: AttributesResourceChain,
+    dataResourcesChain: DataResourceChain[],
+    object: DataResourceWithLinks
+  ): DataResourceChain[] {
     const resourceType = this.attributesResourceTypeForIndex(stage.index);
     if (resourceType === AttributesResourceType.Collection) {
       return [...dataResourcesChain, {documentId: object.id}];
@@ -524,11 +541,9 @@ export class DataAggregator {
     value: any,
     stage: AttributesResourceChain,
     object: DataResourceWithLinks,
-    dataResourcesChain: DataResourceChain[],
+    dataResourcesChain: DataResourceChain[]
   ): AggregatedDataItem {
-    const stageItem = items.find(
-      item => item.value === value && (!stage.unique || object.id === item.dataResources[0].id)
-    );
+    const stageItem = items.find(item => item.value === value && !stage.unique);
     const newChain = this.concatDataResourceChain(stage, dataResourcesChain, object);
     if (stageItem) {
       stageItem.dataResources.push(convertToDataResource(object));
@@ -540,7 +555,7 @@ export class DataAggregator {
       value,
       dataResources: object ? [convertToDataResource(object)] : [],
       dataResourcesChains: [newChain || []],
-      children: []
+      children: [],
     };
     items.push(newStageItem);
     return newStageItem;
@@ -551,7 +566,7 @@ export class DataAggregator {
     items: AggregatedDataItem[],
     formattedValue: string,
     object: DataResourceWithLinks,
-    dataResourcesChain: DataResourceChain[],
+    dataResourcesChain: DataResourceChain[]
   ): AggregatedDataValues {
     let dataAggregationValues: AggregatedDataValues = {
       resourceId: lastStage.resource.id,
@@ -604,11 +619,11 @@ export class DataAggregator {
           !!mandatoryVisitedId
             ? dataResource.id === mandatoryVisitedId
             : ((<LinkInstance>dataResource).linkTypeId &&
-            (<LinkInstance>dataResource).linkTypeId === nextStage.resource.id &&
-            nextStageType === AttributesResourceType.LinkType) ||
-            ((<DocumentModel>dataResource).collectionId &&
-              (<DocumentModel>dataResource).collectionId === nextStage.resource.id &&
-              nextStageType === AttributesResourceType.Collection)
+                (<LinkInstance>dataResource).linkTypeId === nextStage.resource.id &&
+                nextStageType === AttributesResourceType.LinkType) ||
+              ((<DocumentModel>dataResource).collectionId &&
+                (<DocumentModel>dataResource).collectionId === nextStage.resource.id &&
+                nextStageType === AttributesResourceType.Collection)
         )
         .map(dataResource => nextStageDataResourcesWithLinks[dataResource.id]);
     }

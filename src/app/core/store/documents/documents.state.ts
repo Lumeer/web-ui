@@ -62,7 +62,7 @@ export const selectDocumentById = (id: string) =>
   createSelector(selectDocumentsDictionary, documentsMap => documentsMap[id]);
 
 export const selectDocumentsByIds = (ids: string[]) =>
-  createSelector(selectDocumentsDictionary, documentsMap => ids.map(id => documentsMap[id]).filter(doc => doc));
+  createSelector(selectDocumentsDictionary, documentsMap => (ids || []).map(id => documentsMap[id]).filter(doc => doc));
 
 const selectPendingDocumentDataUpdates = createSelector(selectDocumentsState, state => state.pendingDataUpdates);
 

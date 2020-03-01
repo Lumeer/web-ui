@@ -51,14 +51,15 @@ import {
   isNullOrUndefined,
   isNumeric,
 } from '../../../../shared/utils/common.utils';
-import {GanttChartConverter, GanttChartTaskMetadata, isOnlyOneResourceConfig} from '../util/gantt-chart-converter';
-import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
+import {GanttChartConverter, GanttChartTaskMetadata} from '../util/gantt-chart-converter';
+import {checkOrTransformGanttConfig, createLinkDocumentsData} from '../util/gantt-chart-util';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
 import {DataValue} from '../../../../core/model/data-value';
+import {ChooseLinkDocumentModalComponent} from '../../../../shared/modal/choose-link-document/choose-link-document-modal.component';
 
 interface Data {
   collections: Collection[];
@@ -120,10 +121,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public patchLinkData = new EventEmitter<LinkInstance>();
 
   @Output()
-  public updateLinkDocuments = new EventEmitter<{ linkInstanceId: string, documentIds: [string, string] }>();
+  public updateLinkDocuments = new EventEmitter<{linkInstanceId: string; documentIds: [string, string]}>();
 
   @Output()
-  public patchMetaData = new EventEmitter<{ collectionId: string; documentId: string; metaData: DocumentMetaData }>();
+  public patchMetaData = new EventEmitter<{collectionId: string; documentId: string; metaData: DocumentMetaData}>();
 
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
@@ -141,13 +142,13 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   private tasks: GanttChartTask[];
 
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
-  public data$: Observable<{ options: GanttOptions; tasks: GanttChartTask[] }>;
+  public data$: Observable<{options: GanttOptions; tasks: GanttChartTask[]}>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
   constructor(
     private selectItemWithConstraintFormatter: SelectItemWithConstraintFormatter,
     private modalService: ModalService,
-    private i18n: I18n,
+    private i18n: I18n
   ) {
     this.converter = new GanttChartConverter(this.selectItemWithConstraintFormatter);
     this.newTaskName = i18n({id: 'gantt.perspective.task.create.title', value: 'New task'});
@@ -160,7 +161,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  private subscribeTasks$(): Observable<{ options: GanttOptions; tasks: GanttChartTask[] }> {
+  private subscribeTasks$(): Observable<{options: GanttOptions; tasks: GanttChartTask[]}> {
     return this.dataSubject.pipe(
       filter(data => !!data),
       debounceTime(100),
@@ -172,7 +173,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     );
   }
 
-  private handleData(data: Data): { options: GanttOptions; tasks: GanttChartTask[] } {
+  private handleData(data: Data): {options: GanttOptions; tasks: GanttChartTask[]} {
     const config = checkOrTransformGanttConfig(data.config, data.query, data.collections, data.linkTypes);
     if (!deepObjectsEquals(config, data.config)) {
       this.configChange.emit(config);
@@ -229,13 +230,23 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onTaskChanged(task: GanttChartTask) {
-    console.log(task);
+    const patchData = this.createPatchData(task);
+    for (const item of patchData) {
+      this.emitPatchData(item.data, item.resourceType, item.dataResource);
+    }
+
+    if (someLinkSwimlaneChanged(task)) {
+      this.patchCategoryLink(task);
+    }
+  }
+
+  private createPatchData(task: GanttChartTask): PatchData[] {
     const metadata = task.metadata as GanttChartTaskMetadata;
     const stemConfig = metadata.stemConfig;
     const patchData: PatchData[] = [];
 
     if (stemConfig.start) {
-      const dataResource = this.getDataResource(metadata.startDateDataId, stemConfig.start.resourceType);
+      const dataResource = this.getDataResource(metadata.startDataId, stemConfig.start.resourceType);
       if (dataResource) {
         const data = this.getPatchData(patchData, dataResource, stemConfig.start);
         this.patchDate(task.start, stemConfig.start, data, dataResource);
@@ -243,7 +254,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
 
     if (stemConfig.end) {
-      const dataResource = this.getDataResource(metadata.endDateDataId, stemConfig.end.resourceType);
+      const dataResource = this.getDataResource(metadata.endDataId, stemConfig.end.resourceType);
       if (dataResource) {
         const data = this.getPatchData(patchData, dataResource, stemConfig.end);
         this.patchDate(task.end, stemConfig.end, data, dataResource);
@@ -259,59 +270,51 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       }
     }
 
-
-    if (this.someSwimlaneChanged(task)) {
-
-      if (isOnlyOneResourceConfig(this.config)) {
-        this.patchCategoriesSingleResource(task, patchData);
-      } else {
-        this.patchCategoryLink(task);
+    if (stemConfig.name || stemConfig.start) {
+      const taskModel = stemConfig.name || stemConfig.start;
+      for (let i = 0; i < (metadata.stemConfig.categories || []).length; i++) {
+        const category = metadata.stemConfig.categories[i];
+        if (modelsAreFromSameOrNearResource(taskModel, category)) {
+          const dataResource = this.getDataResource(metadata.swimlanesDataResourcesIds[i], category.resourceType);
+          if (dataResource) {
+            const data = this.getPatchData(patchData, dataResource, category);
+            this.patchCategory(task.swimlanes[i].value || task.swimlanes[i].title, category, data, dataResource);
+          }
+        }
       }
-
-      console.log('changed swimlane', this.converter.swimlaneData, patchData);
-
     }
 
-    for (const item of patchData) {
-      this.emitPatchData(item.data, item.resourceType, item.dataResource);
-    }
-  }
-
-  private someSwimlaneChanged(task: GanttChartTask): boolean {
-    return task.metadata.swimlanes.some((swimlane, index) => task.swimlanes[index].value !== swimlane.value);
+    return patchData;
   }
 
   private patchCategoryLink(task: GanttChartTask) {
-    const swimlaneTasks = (this.tasks || []).filter(t => deepObjectsEquals(t.swimlanes, task.swimlanes));
-    const dataResourceChain = (<GanttChartTaskMetadata>task.metadata).dataResourceChain;
-    const linkChain = dataResourceChain[dataResourceChain.length - 2];
-    const documentChain = dataResourceChain[dataResourceChain.length - 1];
-    if (swimlaneTasks.length > 0 && linkChain && linkChain.linkInstanceId && documentChain) {
-      const swimlaneTaskChain = (<GanttChartTaskMetadata>swimlaneTasks[0].metadata).dataResourceChain;
-      const documentToLinkChain = swimlaneTaskChain[swimlaneTaskChain.length - 3];
-      if (documentToLinkChain && documentToLinkChain.documentId) {
-        const documentIds: [string, string] = [documentChain.documentId, documentToLinkChain.documentId];
-        console.log(swimlaneTasks, documentIds);
-        this.updateLinkDocuments.emit({linkInstanceId: linkChain.linkInstanceId, documentIds});
-      }
+    const {linkInstanceId, documentId, otherDocumentIds} = createLinkDocumentsData(
+      task,
+      this.tasks,
+      this.linkInstances
+    );
 
-    }
-
-  }
-
-  private patchCategoriesSingleResource(task: GanttChartTask, patchData: PatchData[]) {
-    const metadata = task.metadata as GanttChartTaskMetadata;
-    for (let i = 0; i < (metadata.stemConfig.categories || []).length; i++) {
-      const category = metadata.stemConfig.categories[i];
-      const dataResource = this.getDataResource(metadata.startDateDataId || metadata.endDateDataId, category.resourceType);
-      if (dataResource) {
-        const data = this.getPatchData(patchData, dataResource, category);
-        this.patchCategory(task.swimlanes[i].value || task.swimlanes[i].title, category, data, dataResource);
+    if (linkInstanceId && documentId && (otherDocumentIds || []).length > 0) {
+      if (otherDocumentIds.length === 1) {
+        this.updateLinkDocuments.emit({linkInstanceId, documentIds: [documentId, otherDocumentIds[0]]});
+      } else {
+        const callback = selectedDocument =>
+          this.updateLinkDocuments.emit({
+            linkInstanceId,
+            documentIds: [documentId, selectedDocument.id],
+          });
+        const config = {initialState: {documentIds: otherDocumentIds, callback}, keyboard: true, class: 'modal-lg'};
+        this.modalService.show(ChooseLinkDocumentModalComponent, config);
       }
     }
   }
 
-  private patchCategory(swimlane: any, model: GanttChartBarModel, patchData: Record<string, any>, dataResource: DataResource) {
+  private patchCategory(
+    swimlane: any,
+    model: GanttChartBarModel,
+    patchData: Record<string, any>,
+    dataResource: DataResource
+  ) {
     const resource = this.getResource(dataResource, model.resourceType);
     const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
     const saveValue = constraint ? constraint.createDataValue(swimlane, this.constraintData).serialize() : swimlane;
@@ -347,7 +350,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   ) {
     const end = moment(date, this.options && this.options.dateFormat);
     const resource = this.getResource(dataResource, model.resourceType);
-    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId) || new DateTimeConstraint({format: this.options && this.options.dateFormat});
+    const constraint =
+      findAttributeConstraint(resource && resource.attributes, model.attributeId) ||
+      new DateTimeConstraint({format: this.options && this.options.dateFormat});
     const dataValue: DataValue = constraint.createDataValue(end.toDate(), this.constraintData);
     if (!dataResource || dataValue.compareTo(constraint.createDataValue(dataResource.data[model.attributeId])) !== 0) {
       patchData[model.attributeId] = dataValue.serialize();
@@ -364,9 +369,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
     const saveValue = constraint
       ? constraint
-        .createDataValue(progress, this.constraintData)
-        .parseInput(String(progress || 0))
-        .serialize()
+          .createDataValue(progress, this.constraintData)
+          .parseInput(String(progress || 0))
+          .serialize()
       : this.formatPercentage(dataResource, model.attributeId, progress);
     if (!dataResource || saveValue !== dataResource.data[model.attributeId]) {
       patchData[model.attributeId] = saveValue;
@@ -413,7 +418,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     }
   }
 
-  public onAddDependency(data: { fromId: string; toId: string }) {
+  public onAddDependency(data: {fromId: string; toId: string}) {
     const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
     const documentTo = (this.documents || []).find(document => document.id === data.toId);
     if (!documentFrom || !documentTo) {
@@ -424,7 +429,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     this.patchMetaData.emit({collectionId: documentTo.collectionId, documentId: documentTo.id, metaData});
   }
 
-  public onRemoveDependency(data: { fromId: string; toId: string }) {
+  public onRemoveDependency(data: {fromId: string; toId: string}) {
     const documentFrom = (this.documents || []).find(document => document.id === data.fromId);
     const documentTo = (this.documents || []).find(document => document.id === data.toId);
     if (!documentFrom || !documentTo) {
@@ -435,7 +440,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     this.patchMetaData.emit({collectionId: documentTo.collectionId, documentId: documentTo.id, metaData});
   }
 
-  public onSwimlaneResize(data: { index: number; width: number }) {
+  public onSwimlaneResize(data: {index: number; width: number}) {
     if (this.canManageConfig) {
       const swimlaneWidths = [...(this.config.swimlaneWidths || [])];
       swimlaneWidths[data.index] = data.width;
@@ -480,4 +485,48 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const collection = this.getResource(document, AttributesResourceType.Collection);
     return this.modalService.showDocumentDetail(document, collection);
   }
+}
+
+function modelsAreFromSameOrNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  return modelsAreFromSameResource(model1, model2) || modelsAreFromNearResource(model1, model2);
+}
+
+function modelsAreFromSameResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  return model1.resourceIndex === model2.resourceIndex;
+}
+
+function modelsAreFromNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  if (
+    model2.resourceType === AttributesResourceType.Collection &&
+    model1.resourceType === AttributesResourceType.LinkType &&
+    model2.resourceIndex === model1.resourceIndex + 1
+  ) {
+    return true;
+  }
+
+  if (
+    model2.resourceType === AttributesResourceType.LinkType &&
+    model1.resourceType === AttributesResourceType.Collection &&
+    model2.resourceIndex === model1.resourceIndex - 1
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function someLinkSwimlaneChanged(task: GanttChartTask): boolean {
+  const metadata = task.metadata as GanttChartTaskMetadata;
+  const taskModel = metadata.stemConfig.name || metadata.stemConfig.start;
+  if (!taskModel) {
+    return false;
+  }
+
+  return task.metadata.swimlanes.some((swimlane, index) => {
+    if (task.swimlanes[index].value !== swimlane.value) {
+      return !modelsAreFromSameOrNearResource(taskModel, metadata.stemConfig.categories[index]);
+    }
+
+    return false;
+  });
 }

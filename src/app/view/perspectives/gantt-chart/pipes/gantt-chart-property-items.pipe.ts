@@ -34,7 +34,7 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
       return this.filterSameResourceItems(selectItems, property, config);
     }
 
-    return this.filterAnyResourceItems(selectItems, property, config);
+    return selectItems;
   }
 
   private filterSameResourceItems(
@@ -60,23 +60,6 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
           )
         );
       });
-    }
-
-    return this.filterAnyResourceItems(selectItems, property, config);
-  }
-
-  private filterAnyResourceItems(
-    selectItems: SelectItemModel[],
-    property: string,
-    config: GanttChartStemConfig
-  ): SelectItemModel[] {
-    const definedModels = sameCollectionProperties
-      .filter(prop => prop !== property)
-      .map(prop => config[prop])
-      .filter(model => !!model);
-
-    if (definedModels.length > 0) {
-      return selectItems.filter(item => !definedModels.some(model => deepObjectsEquals(model, item.id)));
     }
 
     return selectItems;
