@@ -51,7 +51,7 @@ import {
   isNullOrUndefined,
   isNumeric,
 } from '../../../../shared/utils/common.utils';
-import {GanttChartConverter, GanttChartTaskMetadata} from '../util/gantt-chart-converter';
+import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
 import {checkOrTransformGanttConfig, createLinkDocumentsData} from '../util/gantt-chart-util';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
@@ -241,7 +241,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   private createPatchData(task: GanttChartTask): PatchData[] {
-    const metadata = task.metadata as GanttChartTaskMetadata;
+    const metadata = task.metadata as GanttTaskMetadata;
     const stemConfig = metadata.stemConfig;
     const patchData: PatchData[] = [];
 
@@ -470,7 +470,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onTaskDetail(task: GanttChartTask) {
-    const metadata = task.metadata as GanttChartTaskMetadata;
+    const metadata = task.metadata as GanttTaskMetadata;
     const resourceType = metadata.stemConfig.name && metadata.stemConfig.name.resourceType;
     if (resourceType !== AttributesResourceType.Collection) {
       return; // links are currently not supported in detail dialog
@@ -516,7 +516,7 @@ function modelsAreFromNearResource(model1: GanttChartBarModel, model2: GanttChar
 }
 
 function someLinkSwimlaneChanged(task: GanttChartTask): boolean {
-  const metadata = task.metadata as GanttChartTaskMetadata;
+  const metadata = task.metadata as GanttTaskMetadata;
   const taskModel = metadata.stemConfig.name || metadata.stemConfig.start;
   if (!taskModel) {
     return false;

@@ -39,7 +39,7 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {ConstraintType} from '../../../../core/model/data/constraint';
-import {GanttChartTaskMetadata} from './gantt-chart-converter';
+import {GanttTaskMetadata} from './gantt-chart-converter';
 import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
@@ -248,7 +248,7 @@ export function createLinkDocumentsData(
   linkInstances: LinkInstance[]
 ): {linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[]} {
   const swimlaneTasks = (otherTasks || []).filter(t => deepObjectsEquals(t.swimlanes, task.swimlanes));
-  const dataResourceChain = (<GanttChartTaskMetadata>task.metadata).dataResourceChain || [];
+  const dataResourceChain = (<GanttTaskMetadata>task.metadata).dataResourceChain || [];
   const linkChainIndex = findLastIndex(dataResourceChain, chain => !!chain.linkInstanceId);
   const linkChain = dataResourceChain[linkChainIndex];
   const linkInstance = linkChain && (linkInstances || []).find(li => li.id === linkChain.linkInstanceId);
@@ -260,7 +260,7 @@ export function createLinkDocumentsData(
 
   const otherDocumentIds = swimlaneTasks
     .map(swimlaneTask => {
-      const swimlaneTaskChain = (<GanttChartTaskMetadata>swimlaneTask.metadata).dataResourceChain;
+      const swimlaneTaskChain = (<GanttTaskMetadata>swimlaneTask.metadata).dataResourceChain;
       const documentToLinkChain = swimlaneTaskChain[linkChainIndex - 1];
       if (documentToLinkChain && documentToLinkChain.documentId && documentToLinkChain.documentId !== documentId) {
         return documentToLinkChain.documentId;

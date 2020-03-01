@@ -25,12 +25,10 @@ import {
   Input,
   OnChanges,
   Output,
-  SimpleChanges
+  SimpleChanges,
 } from '@angular/core';
 import {AttributesResourceType} from '../../../../../core/model/resource';
-import Gantt from '@lumeer/lumeer-gantt';
-import {GanttOptions} from '@lumeer/lumeer-gantt/dist/model/options';
-import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import Gantt, {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
 
 @Component({
   selector: 'gantt-chart-visualization',
@@ -39,7 +37,7 @@ import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 })
 export class GanttChartVisualizationComponent implements OnChanges, AfterViewInit {
   @Input()
-  public tasks: GanttChartTask[];
+  public tasks: GanttTask[];
 
   @Input()
   public canManageConfig: boolean;
@@ -54,22 +52,22 @@ export class GanttChartVisualizationComponent implements OnChanges, AfterViewIni
   public currentMode: string;
 
   @Output()
-  public taskChange = new EventEmitter<GanttChartTask>();
+  public taskChange = new EventEmitter<GanttTask>();
 
   @Output()
-  public addDependency = new EventEmitter<{ fromId: string; toId: string }>();
+  public addDependency = new EventEmitter<{fromId: string; toId: string}>();
 
   @Output()
-  public removeDependency = new EventEmitter<{ fromId: string; toId: string }>();
+  public removeDependency = new EventEmitter<{fromId: string; toId: string}>();
 
   @Output()
-  public swimlaneResize = new EventEmitter<{ index: number; width: number }>();
+  public swimlaneResize = new EventEmitter<{index: number; width: number}>();
 
   @Output()
-  public taskCreate = new EventEmitter<GanttChartTask>();
+  public taskCreate = new EventEmitter<GanttTask>();
 
   @Output()
-  public taskDetail = new EventEmitter<GanttChartTask>();
+  public taskDetail = new EventEmitter<GanttTask>();
 
   public ganttChart: Gantt;
 
@@ -134,31 +132,31 @@ export class GanttChartVisualizationComponent implements OnChanges, AfterViewIni
     this.swimlaneResize.emit({index, width});
   }
 
-  private onTaskChanged(task: GanttChartTask) {
+  private onTaskChanged(task: GanttTask) {
     this.taskChange.emit(task);
   }
 
-  private onTaskDetail(task: GanttChartTask) {
+  private onTaskDetail(task: GanttTask) {
     this.taskDetail.emit(task);
   }
 
-  private onTaskCreated(task: GanttChartTask) {
+  private onTaskCreated(task: GanttTask) {
     this.taskCreate.emit(task);
   }
 
-  private onDependencyAdded(fromTask: GanttChartTask, toTask: GanttChartTask) {
+  private onDependencyAdded(fromTask: GanttTask, toTask: GanttTask) {
     if (this.canEditDependency(fromTask, toTask)) {
       this.addDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
     }
   }
 
-  private onDependencyRemoved(fromTask: GanttChartTask, toTask: GanttChartTask) {
+  private onDependencyRemoved(fromTask: GanttTask, toTask: GanttTask) {
     if (this.canEditDependency(fromTask, toTask)) {
       this.removeDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
     }
   }
 
-  private canEditDependency(fromTask: GanttChartTask, toTask: GanttChartTask): boolean {
+  private canEditDependency(fromTask: GanttTask, toTask: GanttTask): boolean {
     return (
       fromTask.metadata.resourceType === AttributesResourceType.Collection &&
       fromTask.metadata.resourceType === toTask.metadata.resourceType &&
@@ -167,7 +165,7 @@ export class GanttChartVisualizationComponent implements OnChanges, AfterViewIni
     );
   }
 
-  public removeTask(task: GanttChartTask) {
+  public removeTask(task: GanttTask) {
     this.ganttChart.removeTask(task);
   }
 }
