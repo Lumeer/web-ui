@@ -72,8 +72,7 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   public readonly dragDelay = DRAG_DELAY;
   public resizedColumnIndex: number;
 
-  public constructor(private element: ElementRef, private store$: Store<AppState>) {
-  }
+  public constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection || changes.linkType) {

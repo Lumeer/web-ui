@@ -122,11 +122,13 @@ export class TableRowsComponent implements OnChanges {
     this.store$.pipe(select(selectAllLinkTypes), take(1)).subscribe(linkTypes => {
       this.store$.dispatch(new DocumentsAction.Get({query}));
       this.store$.dispatch(new LinkInstancesAction.Get({query}));
-      const stems: QueryStem[] = getAllCollectionIdsFromQuery(query, linkTypes).slice(1).map(collectionId => ({collectionId}));
+      const stems: QueryStem[] = getAllCollectionIdsFromQuery(query, linkTypes)
+        .slice(1)
+        .map(collectionId => ({collectionId}));
       if (stems.length > 0) {
         this.store$.dispatch(new DocumentsAction.Get({query: {stems}}));
       }
-    })
+    });
   }
 
   @HostListener('click', ['$event'])

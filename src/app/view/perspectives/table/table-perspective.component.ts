@@ -71,7 +71,7 @@ import {selectTable, selectTableId} from '../../../core/store/tables/tables.stat
 import {
   getAllCollectionIdsFromQuery,
   getBaseCollectionIdsFromQuery,
-  queryIsEmpty
+  queryIsEmpty,
 } from '../../../core/store/navigation/query/query.util';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -125,8 +125,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private scrollDispatcher: ScrollDispatcher,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     this.resetDefaultConfigSnapshot();
@@ -309,11 +308,13 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.pipe(select(selectAllLinkTypes), take(1)).subscribe(linkTypes => {
       this.store$.dispatch(new DocumentsAction.Get({query}));
       this.store$.dispatch(new LinkInstancesAction.Get({query}));
-      const stems: QueryStem[] = getAllCollectionIdsFromQuery(query, linkTypes).slice(1).map(collectionId => ({collectionId}));
+      const stems: QueryStem[] = getAllCollectionIdsFromQuery(query, linkTypes)
+        .slice(1)
+        .map(collectionId => ({collectionId}));
       if (stems.length > 0) {
         this.store$.dispatch(new DocumentsAction.Get({query: {stems}}));
       }
-    })
+    });
   }
 
   private initTableByQuery() {
@@ -343,7 +344,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   private initTableWithView(
     previousView: View,
     view: View
-  ): Observable<{ query: Query; config: TableConfig; tableId: string; forceRefresh?: boolean }> {
+  ): Observable<{query: Query; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
     return this.store$.pipe(
       select(selectQuery),
       switchMap(query => {
@@ -419,7 +420,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private selectCurrentDefaultViewConfig$(): Observable<{ key: string; defaultConfig: DefaultViewConfig }> {
+  private selectCurrentDefaultViewConfig$(): Observable<{key: string; defaultConfig: DefaultViewConfig}> {
     return this.selectTableDefaultConfigId$().pipe(
       mergeMap(collectionId =>
         this.store$.pipe(

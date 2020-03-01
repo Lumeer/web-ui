@@ -41,7 +41,7 @@ import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.act
 import {
   selectLinkInstanceById,
   selectLinkInstancesDictionary,
-  selectLinkInstancesQueries
+  selectLinkInstancesQueries,
 } from './link-instances.state';
 import {queryWithoutFilters} from '../navigation/query/query.util';
 
@@ -225,7 +225,7 @@ export class LinkInstancesEffects {
           }
           return EMPTY;
         })
-      )
+      );
     })
   );
 
@@ -325,6 +325,5 @@ export class LinkInstancesEffects {
     private searchService: SearchService,
     private linkInstanceService: LinkInstanceService,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 }

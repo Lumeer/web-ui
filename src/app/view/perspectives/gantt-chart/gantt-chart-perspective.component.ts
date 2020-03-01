@@ -56,7 +56,7 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
 })
 export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
-  public documentsAndLinks$: Observable<{ documents: DocumentModel[]; linkInstances: LinkInstance[] }>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public linkTypes$: Observable<LinkType[]>;
   public config$: Observable<GanttChartConfig>;
   public currentView$: Observable<View>;
@@ -69,8 +69,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {
-  }
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initGanttChart();
@@ -170,7 +169,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new DocumentsAction.PatchData({document}));
   }
 
-  public patchDocumentMetaData(payload: { collectionId: string; documentId: string; metaData: DocumentMetaData }) {
+  public patchDocumentMetaData(payload: {collectionId: string; documentId: string; metaData: DocumentMetaData}) {
     this.store$.dispatch(new DocumentsAction.PatchMetaData(payload));
   }
 
@@ -188,7 +187,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new DocumentsAction.Create({document}));
   }
 
-  public updateLinkDocuments(payload: { linkInstanceId: string; documentIds: [string, string] }) {
+  public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
     this.store$.dispatch(new LinkInstancesAction.ChangeDocuments(payload));
   }
 }

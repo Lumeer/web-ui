@@ -255,7 +255,7 @@ export function maxColumnDepth(columns: TableConfigColumn[]): number {
   );
 }
 
-export function splitColumnPath(path: number[]): { parentPath: number[]; columnIndex: number } {
+export function splitColumnPath(path: number[]): {parentPath: number[]; columnIndex: number} {
   if (!path || !path.length) {
     throw Error('Invalid table column path');
   }
@@ -266,7 +266,7 @@ export function splitColumnPath(path: number[]): { parentPath: number[]; columnI
   };
 }
 
-export function splitRowPath(rowPath: number[]): { parentPath: number[]; rowIndex: number } {
+export function splitRowPath(rowPath: number[]): {parentPath: number[]; rowIndex: number} {
   if (!rowPath || !rowPath.length) {
     throw Error('Invalid table column path');
   }
@@ -528,7 +528,7 @@ export function createTableRow(document: DocumentModel, linkInstance?: LinkInsta
 export function calculateRowHierarchyLevel(
   row: TableConfigRow,
   documentIds: Set<string>,
-  documentsMap: { [id: string]: DocumentModel }
+  documentsMap: {[id: string]: DocumentModel}
 ): number {
   if (!row.documentId && !row.parentDocumentId) {
     return 0;
@@ -541,7 +541,7 @@ export function calculateRowHierarchyLevel(
 
 export function isValidHierarchicalRowOrder(
   rows: TableConfigRow[],
-  documentsMap: { [id: string]: DocumentModel }
+  documentsMap: {[id: string]: DocumentModel}
 ): boolean {
   const documentIds = new Set(rows.filter(row => row.documentId).map(row => row.documentId));
   let documentIdsStack: string[] = [];
@@ -576,7 +576,7 @@ function updateDocumentIdsStack(
 
 export function sortTableRowsByHierarchy(
   rows: TableConfigRow[],
-  documentsMap: { [id: string]: DocumentModel }
+  documentsMap: {[id: string]: DocumentModel}
 ): TableConfigRow[] {
   const documentIds = new Set(rows.filter(row => row.documentId).map(row => row.documentId));
 
@@ -587,8 +587,8 @@ export function sortTableRowsByHierarchy(
 function createRowsMapByParentDocumentId(
   rows: TableConfigRow[],
   documentIdsFilter: Set<string>,
-  documentsMap: { [id: string]: DocumentModel }
-): { [parentDocumentId: string]: TableConfigRow[] } {
+  documentsMap: {[id: string]: DocumentModel}
+): {[parentDocumentId: string]: TableConfigRow[]} {
   return rows.reduce((map, row) => {
     const parentDocumentId = getRowParentDocumentId(row, documentIdsFilter, documentsMap) || null;
     const siblingRows = map[parentDocumentId] || [];
@@ -599,7 +599,7 @@ function createRowsMapByParentDocumentId(
 
 function createRowsFromRowsMap(
   documentId: string,
-  rowsMap: { [parentDocumentId: string]: TableConfigRow[] }
+  rowsMap: {[parentDocumentId: string]: TableConfigRow[]}
 ): TableConfigRow[] {
   const rows = rowsMap[documentId] || [];
   return rows.reduce((orderedRows, row) => {
@@ -614,7 +614,7 @@ function createRowsFromRowsMap(
 export function getRowParentDocumentId(
   row: TableConfigRow,
   documentIdsFilter: Set<string>,
-  documentsMap: { [id: string]: DocumentModel }
+  documentsMap: {[id: string]: DocumentModel}
 ): string {
   const document = documentsMap[row && row.documentId];
   const parentDocumentId =
