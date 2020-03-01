@@ -243,7 +243,7 @@ export class DateTimeDataValue implements DataValue {
         return this.copy(dates[0]).serialize();
       case QueryCondition.GreaterThan:
       case QueryCondition.Between:
-        if (dates[0].getTime() === dates[1].getTime()) {
+        if (dates[0] && dates[2] && dates[0].getTime() === dates[1].getTime()) {
           return this.copy(dates[0]).serialize();
         }
         return this.copy(dates[0])

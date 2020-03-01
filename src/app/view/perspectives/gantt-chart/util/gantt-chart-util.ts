@@ -26,7 +26,7 @@ import {
   GanttChartMode,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, findLastIndex} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -39,6 +39,10 @@ import {getAttributesResourceType} from '../../../../shared/utils/resource.utils
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {ConstraintType} from '../../../../core/model/data/constraint';
+import {GanttTaskMetadata} from './gantt-chart-converter';
+import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {uniqueValues} from '../../../../shared/utils/array.utils';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (!deepObjectsEquals({...viewConfig, stemsConfigs: null}, {...currentConfig, stemsConfigs: null})) {
@@ -227,4 +231,42 @@ function findBestInitialAttributes(
 
 export function ganttConfigIsEmpty(config: GanttChartConfig) {
   return config && config.stemsConfigs.filter(value => ganttStemConfigDefinedProperties(value).length > 0).length === 0;
+}
+
+export function cleanGanttBarModel(model: GanttChartBarModel): GanttChartBarModel {
+  return {
+    resourceIndex: model.resourceIndex,
+    attributeId: model.attributeId,
+    resourceId: model.resourceId,
+    resourceType: model.resourceType,
+  };
+}
+
+export function createLinkDocumentsData(
+  task: GanttChartTask,
+  otherTasks: GanttChartTask[],
+  linkInstances: LinkInstance[]
+): {linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[]} {
+  const swimlaneTasks = (otherTasks || []).filter(t => deepObjectsEquals(t.swimlanes, task.swimlanes));
+  const dataResourceChain = (<GanttTaskMetadata>task.metadata).dataResourceChain || [];
+  const linkChainIndex = findLastIndex(dataResourceChain, chain => !!chain.linkInstanceId);
+  const linkChain = dataResourceChain[linkChainIndex];
+  const linkInstance = linkChain && (linkInstances || []).find(li => li.id === linkChain.linkInstanceId);
+  const documentChain = dataResourceChain[linkChainIndex - 1];
+  const documentId = getOtherLinkedDocumentId(linkInstance, documentChain && documentChain.documentId);
+  if (!linkInstance || !documentId) {
+    return {};
+  }
+
+  const otherDocumentIds = swimlaneTasks
+    .map(swimlaneTask => {
+      const swimlaneTaskChain = (<GanttTaskMetadata>swimlaneTask.metadata).dataResourceChain;
+      const documentToLinkChain = swimlaneTaskChain[linkChainIndex - 1];
+      if (documentToLinkChain && documentToLinkChain.documentId && documentToLinkChain.documentId !== documentId) {
+        return documentToLinkChain.documentId;
+      }
+      return null;
+    })
+    .filter(doc => !!doc);
+  return {linkInstanceId: linkChain.linkInstanceId, documentId, otherDocumentIds: uniqueValues(otherDocumentIds)};
 }

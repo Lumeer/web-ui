@@ -135,7 +135,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
         if (preferViewConfigUpdate(previousView, view, !!mapEntity)) {
           const config: MapConfig = {
             ...mapConfig,
-            position: mapConfig.positionSaved ? mapConfig.position : position,
+            position: mapConfig && mapConfig.positionSaved ? mapConfig.position : position,
           };
           return {mapId, config: config};
         }

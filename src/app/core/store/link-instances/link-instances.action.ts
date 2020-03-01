@@ -40,6 +40,8 @@ export enum LinkInstancesActionType {
   UPDATE_SUCCESS = '[Link Instances] Update :: Success',
   UPDATE_FAILURE = '[Link Instances] Update :: Failure',
 
+  CHANGE_DOCUMENTS = '[Link Instances] Change Documents',
+
   DELETE = '[Link Instances] Delete',
   DELETE_CONFIRM = '[Link Instances] Delete :: Confirm',
   DELETE_SUCCESS = '[Link Instances] Delete :: Success',
@@ -129,6 +131,12 @@ export namespace LinkInstancesAction {
     public readonly type = LinkInstancesActionType.UPDATE_FAILURE;
 
     public constructor(public payload: {error: any; originalLinkInstance?: LinkInstance}) {}
+  }
+
+  export class ChangeDocuments implements Action {
+    public readonly type = LinkInstancesActionType.CHANGE_DOCUMENTS;
+
+    public constructor(public payload: {linkInstanceId: string; documentIds: [string, string]}) {}
   }
 
   export class Delete implements Action {

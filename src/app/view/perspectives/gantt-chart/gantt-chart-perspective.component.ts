@@ -186,4 +186,8 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public createDocument(document: DocumentModel) {
     this.store$.dispatch(new DocumentsAction.Create({document}));
   }
+
+  public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
+    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments(payload));
+  }
 }

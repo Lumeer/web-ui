@@ -2,23 +2,35 @@
   [dialogType]="dialogType.Primary"
   (onClose)="hideDialog()"
   (onSubmit)="onSubmit()"
-  [submitDisabled]="!(selectedDocumentId$ | async)">
+  [submitDisabled]="!(selectedDocumentId$ | async)"
+  *ngIf="{collections: collections$ | async, documents: documents$ | async, selectedCollectionId: selectedCollectionId$ | async} as data">
 
   <span class="title" i18n="@@modal.kanban.chooseDocument.title">Choose a record</span>
 
   <div class="body p-3">
-    <div class="text-muted text-center"
-         i18n="@@modal.kanban.chooseDocument.description">
-      Select to which record you want to link the new one.
+    <div *ngIf="data.collections.length && data.documents.length; else noData">
+      <div class="text-muted text-center"
+           i18n="@@modal.kanban.chooseDocument.description">
+        Select to which record you want to link the new one.
+      </div>
+
+      <preview-results-tabs
+        *ngIf="data.collections.length > 1"
+        class="d-block mt-2"
+        [collections]="data.collections"
+        [selectedCollection]="data.selectedCollectionId"
+        (selectCollection)="onSelectCollection($event)">
+      </preview-results-tabs>
+      <preview-results-table class="d-block mt-2"
+                             [documents]="data.documents | documentsByCollection:data.selectedCollectionId"
+                             [collection]="data.collections | collectionById:data.selectedCollectionId"
+                             [selectedDocumentId]="selectedDocumentId$ | async"
+                             [loaded]="true"
+                             [resizeable]="false"
+                             [constraintData]="constraintData$ | async"
+                             (selectDocument)="onSelectDocument($event)">
+      </preview-results-table>
     </div>
-    <preview-results-table class="d-block mt-2" [documents]="documents"
-                           [collection]="collection"
-                           [selectedDocumentId]="selectedDocumentId$ | async"
-                           [loaded]="true"
-                           [resizeable]="false"
-                           [constraintData]="constraintData$ | async"
-                           (selectDocument)="onSelectDocument($event)">
-    </preview-results-table>
   </div>
 
   <span class="button-cancel">
@@ -30,3 +42,7 @@
   </span>
 
 </modal-wrapper>
+
+<ng-template #noData>
+  <span class="text-muted" i18n="@@dialog.choose.document.empty">I am sorry but I did not find anything.</span>
+</ng-template>

@@ -18,7 +18,7 @@
  */
 
 import {GanttOptions, GanttSwimlaneInfo} from '@lumeer/lumeer-gantt/dist/model/options';
-import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
+import {GanttSwimlaneType, GanttSwimlane, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {environment} from '../../../../../environments/environment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
@@ -57,36 +57,52 @@ import {
 } from '../../../../shared/utils/common.utils';
 import {parseDateTimeDataValue, stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 import {
-  AggregatedDataValues,
+  AggregatedDataItem,
   DataAggregator,
   DataAggregatorAttribute,
+  DataResourceChain,
 } from '../../../../shared/utils/data/data-aggregator';
-import {formatData} from '../../../../shared/utils/data/format-data';
-import {validDataColors} from '../../../../shared/utils/data/valid-data-colors';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
+import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {ColorConstraint} from '../../../../core/model/constraint/color.constraint';
+import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
+import {Md5} from '../../../../shared/utils/md5';
 
-type DataResourceSwimlanes = DataResource & {swimlanes?: string[]};
+interface TaskHelperData {
+  nameDataResource: DataResource;
+  startDataResource: DataResource;
+  endDataResource: DataResource;
+  colorDataResources: DataResource[];
+  progressDataResources: DataResource[];
+  dataResourceChain: DataResourceChain[];
+  swimlanesDataResources: DataResource[];
+  swimlanes: GanttSwimlane[];
+}
 
-export interface GanttChartTaskMetadata {
-  dataResourceId: string;
-  startAttributeId: string;
-  endAttributeId: string;
-  progressAttributeId: string;
-  resourceId?: string;
-  resourceType: AttributesResourceType;
+export interface GanttTaskMetadata {
+  nameDataId: string;
+  startDataId: string;
+  endDataId: string;
+  progressDataIds: string[];
+  dataResourceChain: DataResourceChain[];
+  swimlanesDataResourcesIds: string[];
+  stemConfig: GanttChartStemConfig;
+  swimlanes: GanttSwimlane[];
 }
 
 export class GanttChartConverter {
-  private collections: Collection[];
+  private collectionsMap: Record<string, Collection>;
+  private linkTypesMap: Record<string, LinkType>;
   private documents: DocumentModel[];
-  private linkTypes: LinkType[];
   private linkInstances: LinkInstance[];
   private config: GanttChartConfig;
   private constraintData?: ConstraintData;
   private permissions: Record<string, AllowedPermissions>;
   private query: Query;
 
-  private dataAggregator = new DataAggregator();
+  private dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
+    this.formatDataAggregatorValue(value, constraint, data, aggregatorAttribute)
+  );
 
   constructor(private formatter: SelectItemWithConstraintFormatter) {}
 
@@ -99,10 +115,8 @@ export class GanttChartConverter {
     permissions: Record<string, AllowedPermissions>,
     constraintData: ConstraintData,
     query: Query
-  ): {options: GanttOptions; tasks: GanttChartTask[]} {
+  ): {options: GanttOptions; tasks: GanttTask[]} {
     this.updateData(config, collections, documents, linkTypes, linkInstances, permissions, constraintData, query);
-
-    const options = this.createGanttOptions(config);
 
     const tasks = ((query && query.stems) || [])
       .reduce((allTasks, stem, index) => {
@@ -112,10 +126,11 @@ export class GanttChartConverter {
       }, [])
       .sort((t1, t2) => this.compareTasks(t1, t2));
 
+    const options = this.createGanttOptions(config);
     return {options, tasks};
   }
 
-  private compareTasks(t1: GanttChartTask, t2: GanttChartTask): number {
+  private compareTasks(t1: GanttTask, t2: GanttTask): number {
     const t1Start = moment(t1.start, GANTT_DATE_FORMAT);
     const t2Start = moment(t2.start, GANTT_DATE_FORMAT);
     return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
@@ -132,9 +147,9 @@ export class GanttChartConverter {
     query: Query
   ) {
     this.config = config;
-    this.collections = collections;
+    this.collectionsMap = objectsMap(collections);
     this.documents = documents;
-    this.linkTypes = linkTypes;
+    this.linkTypesMap = objectsMap(linkTypes);
     this.linkInstances = linkInstances;
     this.permissions = permissions;
     this.constraintData = constraintData;
@@ -142,16 +157,14 @@ export class GanttChartConverter {
   }
 
   private createGanttOptions(config: GanttChartConfig): GanttOptions {
-    const isOnlyOneCollection = isOnlyOneResourceConfig(config);
-
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),
       resizeTaskRight: true,
       resizeProgress: true,
       resizeTaskLeft: true,
       resizeSwimlanes: true,
-      dragTaskSwimlanes: isOnlyOneCollection,
-      createTasks: isOnlyOneCollection,
+      dragTaskSwimlanes: true,
+      createTasks: true,
       language: environment.locale,
       lockResize: config.lockResize || false,
       padding: config.padding,
@@ -204,7 +217,7 @@ export class GanttChartConverter {
       const resource = this.getResource(model);
       background = shadeColor((<Collection>resource).color, 0.5);
       const attribute = resource && findAttribute(resource.attributes, model.attributeId);
-      title = attribute.name;
+      title = attribute && attribute.name;
     }
     return {
       background,
@@ -215,64 +228,138 @@ export class GanttChartConverter {
     };
   }
 
-  private convertByStem(index: number): GanttChartTask[] {
+  private convertByStem(index: number): GanttTask[] {
     const stemConfig = this.config && this.config.stemsConfigs && this.config.stemsConfigs[index];
     if (this.requiredPropertiesAreSet(stemConfig)) {
-      if (this.shouldAggregate(stemConfig)) {
-        return this.convertByAggregation(stemConfig, this.config.showDates);
-      }
-      return this.convertSimple(stemConfig, this.config.showDates);
+      return this.convertByAggregation(stemConfig, this.config.showDates);
     }
     return [];
   }
 
-  private convertByAggregation(stemConfig: GanttChartStemConfig, showDatesAsSwimlanes: boolean): GanttChartTask[] {
-    const resource = this.getResource(stemConfig.start);
-
-    const rowAttributes = (stemConfig.categories || [])
+  private convertByAggregation(stemConfig: GanttChartStemConfig, showDatesAsSwimlanes: boolean): GanttTask[] {
+    const aggregatorAttributes = (stemConfig.categories || [])
       .filter(property => isNotNullOrUndefined(property))
-      .map(property => this.convertGanttProperty(property));
-    const valueAttributes = [this.convertGanttProperty(stemConfig.start)];
-    const aggregatedData = this.dataAggregator.aggregate(rowAttributes, [], valueAttributes);
+      .map(property => ({...this.convertGanttProperty(property), unique: true}));
 
-    const dataResourcesSwimlanes: DataResourceSwimlanes[] = [];
-    this.convertByAggregationRecursive(
-      stemConfig,
-      aggregatedData.map,
-      0,
-      aggregatedData.rowLevels - 1,
-      [],
-      dataResourcesSwimlanes
+    if (stemConfig.name) {
+      aggregatorAttributes.push({...this.convertGanttProperty(stemConfig.name), unique: true});
+    }
+    aggregatorAttributes.push(
+      {...this.convertGanttProperty(stemConfig.start), unique: true},
+      {...this.convertGanttProperty(stemConfig.end), unique: true}
     );
 
-    return this.createGanttChartTasksForResource(stemConfig, resource, dataResourcesSwimlanes, showDatesAsSwimlanes);
+    const valueAttributes = [stemConfig.progress, stemConfig.color]
+      .filter(property => isNotNullOrUndefined(property))
+      .map(property => this.convertGanttProperty(property));
+
+    const aggregatedData = this.dataAggregator.aggregateArray(aggregatorAttributes, valueAttributes);
+
+    const helperData: TaskHelperData[] = [];
+    this.fillByAggregationRecursive(
+      stemConfig,
+      aggregatedData.items,
+      0,
+      (stemConfig.categories || []).length,
+      [],
+      helperData,
+      [],
+      []
+    );
+
+    return this.createGanttTasksForStem(stemConfig, helperData, showDatesAsSwimlanes);
   }
 
-  private convertByAggregationRecursive(
+  private fillByAggregationRecursive(
     stemConfig: GanttChartStemConfig,
-    map: Record<string, any>,
+    items: AggregatedDataItem[],
     level: number,
     maxLevel: number,
-    swimlanes: string[],
-    dataResourcesSwimlanes: DataResourceSwimlanes[]
+    swimlanes: GanttSwimlane[],
+    helperData: TaskHelperData[],
+    dataResourceChain: DataResourceChain[],
+    swimlaneDataResources: DataResource[]
   ) {
+    if (level === maxLevel) {
+      this.fillHelperData(helperData, stemConfig, items, swimlanes, dataResourceChain, swimlaneDataResources);
+      return;
+    }
+
     const property = stemConfig.categories[level];
-    const constraint = this.getConstraint(property);
-    for (const swimlaneValue of Object.keys(map)) {
-      const swimlane = this.formatSwimlaneValue(swimlaneValue, constraint, property);
-      if (level === maxLevel) {
-        const aggregatedDataValues = map[swimlaneValue] as AggregatedDataValues[];
-        const dataResources = aggregatedDataValues[0].objects;
-        dataResourcesSwimlanes.push(...dataResources.map(dr => ({...dr, swimlanes: [...swimlanes, swimlane]})));
-      } else {
-        this.convertByAggregationRecursive(
-          stemConfig,
-          map[swimlaneValue],
-          level + 1,
-          maxLevel,
-          [...swimlanes, swimlane],
-          dataResourcesSwimlanes
-        );
+    const constraint = this.findConstraintForModel(property);
+    for (const item of items) {
+      const swimlaneValue = this.formatSwimlaneValue(item.value, constraint, property);
+      this.fillByAggregationRecursive(
+        stemConfig,
+        item.children,
+        level + 1,
+        maxLevel,
+        [...swimlanes, swimlaneValue],
+        helperData,
+        [...dataResourceChain, ...item.dataResourcesChains[0]],
+        [...swimlaneDataResources, item.dataResources[0]] // we know that there is only one data resource because of unique aggregation
+      );
+    }
+  }
+
+  private fillHelperData(
+    helperData: TaskHelperData[],
+    stemConfig: GanttChartStemConfig,
+    items: AggregatedDataItem[],
+    swimlanes: GanttSwimlane[],
+    dataResourceChain: DataResourceChain[],
+    swimlanesDataResources: DataResource[]
+  ) {
+    const allItems = stemConfig.name
+      ? items
+      : [
+          {
+            title: null,
+            dataResources: [],
+            children: items,
+            dataResourcesChains: [[]],
+          },
+        ];
+
+    for (let nameIndex = 0; nameIndex < allItems.length; nameIndex++) {
+      const nameItem = allItems[nameIndex];
+      const nameDataResource = nameItem.dataResources[0];
+
+      for (let startIndex = 0; startIndex < nameItem.children.length; startIndex++) {
+        const startItem = nameItem.children[startIndex];
+        const startDataResource = startItem.dataResources[0];
+
+        for (let endIndex = 0; endIndex < startItem.children.length; endIndex++) {
+          const endItem = startItem.children[endIndex];
+          const endDataResource = endItem.dataResources[0];
+
+          const values = endItem.values || [];
+          const progressValues =
+            stemConfig.progress &&
+            values.find(
+              value =>
+                value.resourceId === stemConfig.progress.resourceId && value.type === stemConfig.progress.resourceType
+            );
+          const progressDataResources = (progressValues && progressValues.objects) || [];
+
+          const colorValues =
+            stemConfig.color &&
+            values.find(
+              value => value.resourceId === stemConfig.color.resourceId && value.type === stemConfig.color.resourceType
+            );
+          const colorDataResources = (colorValues && colorValues.objects) || [];
+
+          helperData.push({
+            nameDataResource,
+            startDataResource,
+            endDataResource,
+            progressDataResources,
+            colorDataResources,
+            swimlanes,
+            swimlanesDataResources,
+            dataResourceChain: [...dataResourceChain, ...nameItem.dataResourcesChains[0]],
+          });
+        }
       }
     }
   }
@@ -281,49 +368,51 @@ export class GanttChartConverter {
     return {attributeId: property.attributeId, resourceIndex: property.resourceIndex, data: property.constraint};
   }
 
-  private convertSimple(stemConfig: GanttChartStemConfig, showDatesAsSwimlanes: boolean): GanttChartTask[] {
-    const startProperty = stemConfig.start;
-    const dataResources = this.dataAggregator.getDataResources(startProperty.resourceIndex);
-    const resource = this.getResource(startProperty);
-
-    return this.createGanttChartTasksForResource(stemConfig, resource, dataResources, showDatesAsSwimlanes);
-  }
-
-  private createGanttChartTasksForResource(
+  private createGanttTasksForStem(
     stemConfig: GanttChartStemConfig,
-    resource: AttributesResource,
-    dataResources: DataResourceSwimlanes[],
+    helperData: TaskHelperData[],
     showDatesAsSwimlanes: boolean
-  ): GanttChartTask[] {
+  ): GanttTask[] {
     const validIds = [];
-    const validDataResourceIdsMap: Record<string, string[]> = dataResources.reduce((map, dataResource) => {
-      const start = stemConfig.start && dataResource.data[stemConfig.start.attributeId];
-      const end = stemConfig.end && dataResource.data[stemConfig.end.attributeId];
+    const validDataResourceIdsMap: Record<string, string[]> = helperData.reduce((map, item) => {
+      const start = stemConfig.start && item.startDataResource && item.startDataResource[stemConfig.start.attributeId];
+      const end = stemConfig.end && item.endDataResource && item.endDataResource[stemConfig.end.attributeId];
       if (isTaskValid(start, end)) {
-        validIds.push(dataResource.id);
+        const id = helperDataId(item);
+        validIds.push(id);
+        const dataResource = item.nameDataResource || item.startDataResource;
         const parentId = (<DocumentModel>dataResource).metaData && (<DocumentModel>dataResource).metaData.parentId;
-        if (map[parentId]) {
-          map[parentId].push(dataResource.id);
-        } else {
-          map[parentId] = [dataResource.id];
+        if (parentId) {
+          if (map[parentId]) {
+            map[parentId].push(id);
+          } else {
+            map[parentId] = [id];
+          }
         }
       }
       return map;
     }, {});
 
-    return dataResources.reduce<GanttChartTask[]>((arr, dataResource) => {
-      const formattedData = formatData(dataResource.data, resource.attributes, this.constraintData);
+    const nameConstraint = this.findConstraintForModel(stemConfig.name);
 
-      const name = stemConfig.name && dataResource.data[stemConfig.name.attributeId];
-      const nameAttribute = stemConfig.name && findAttribute(resource.attributes, stemConfig.name.attributeId);
+    const startEditable = this.isPropertyEditable(stemConfig.start);
+    const startConstraint = this.findConstraintForModel(stemConfig.start);
 
-      const start = stemConfig.start && dataResource.data[stemConfig.start.attributeId];
-      const startEditable = this.isPropertyEditable(stemConfig.start);
-      const startConstraint = stemConfig.start && this.getConstraint(stemConfig.start);
+    const endEditable = this.isPropertyEditable(stemConfig.end);
+    const endConstraint = stemConfig.end && this.findConstraintForModel(stemConfig.end);
 
-      const end = stemConfig.end && dataResource.data[stemConfig.end.attributeId];
-      const endEditable = this.isPropertyEditable(stemConfig.end);
-      const endConstraint = stemConfig.end && this.getConstraint(stemConfig.end);
+    const progressEditable = this.isPropertyEditable(stemConfig.progress);
+    const progressConstraint = this.findConstraintForModel(stemConfig.progress);
+
+    const progressPermission = this.getPermission(stemConfig.start);
+    const startPermission = this.getPermission(stemConfig.start);
+    const endPermission = this.getPermission(stemConfig.start);
+
+    return helperData.reduce<GanttTask[]>((arr, item) => {
+      const name = stemConfig.name && item.nameDataResource && item.nameDataResource.data[stemConfig.name.attributeId];
+      const start =
+        stemConfig.start && item.startDataResource && item.startDataResource.data[stemConfig.start.attributeId];
+      const end = stemConfig.end && item.endDataResource && item.endDataResource.data[stemConfig.end.attributeId];
 
       if (!isTaskValid(start, end)) {
         return arr;
@@ -337,34 +426,31 @@ export class GanttChartConverter {
         endEditable && stemConfig.end.attributeId,
         endConstraint
       );
-      const progress = stemConfig.progress && (formattedData[stemConfig.progress.attributeId] || 0);
-      const progressEditable = stemConfig.progress && this.isPropertyEditable(stemConfig.progress);
-      const progressConstraint =
-        stemConfig.progress && findAttributeConstraint(resource.attributes, stemConfig.progress.attributeId);
+      const progresses =
+        (stemConfig.progress &&
+          (item.progressDataResources || []).map(dataResource => dataResource.data[stemConfig.progress.attributeId])) ||
+        [];
+      const dataAggregationType = (stemConfig.progress && stemConfig.progress.aggregation) || DataAggregationType.Avg;
+      const progressRaw = aggregateDataValues(dataAggregationType, progresses, progressConstraint, true);
+      const progress = progressConstraint.createDataValue(progressRaw).format();
 
-      const resourceColor = this.getPropertyColor(stemConfig.start);
-      const dataResourceColor = stemConfig.color && dataResource.data[stemConfig.color.attributeId];
-      const colorConstraint =
-        stemConfig.color && findAttributeConstraint(resource.attributes, stemConfig.color.attributeId);
-      const dataValue = colorConstraint && colorConstraint.createDataValue(dataResourceColor);
-      const taskColor =
-        dataResourceColor && dataValue && dataValue.isValid()
-          ? validDataColors[dataResourceColor] || dataResourceColor
-          : resourceColor;
+      const resourceColor = this.getPropertyColor(stemConfig.name || stemConfig.start);
+      const taskColor = this.parseColor(stemConfig.color, item.colorDataResources) || resourceColor;
 
-      const nameConstraint = (nameAttribute && nameAttribute.constraint) || new UnknownConstraint();
-
-      const permission = this.getPermission(stemConfig.start);
-
-      const datesSwimlanes = [];
+      const datesSwimlanes: {value: any; title: string}[] = [];
       if (showDatesAsSwimlanes) {
-        const startString = (this.getConstraint(stemConfig.start) || new UnknownConstraint())
+        const startString = (this.findConstraintForModel(stemConfig.start) || new UnknownConstraint())
           .createDataValue(start, this.constraintData)
           .format();
-        const endString = (this.getConstraint(stemConfig.end) || new UnknownConstraint())
+        const endString = (this.findConstraintForModel(stemConfig.end) || new UnknownConstraint())
           .createDataValue(end, this.constraintData)
           .format();
-        datesSwimlanes.push(...[startString, endString]);
+        datesSwimlanes.push(
+          ...[
+            {value: startString, title: startString},
+            {value: endString, title: endString},
+          ]
+        );
       }
 
       let minProgress,
@@ -375,35 +461,38 @@ export class GanttChartConverter {
         maxProgress = isNotNullOrUndefined(config.maxValue) ? config.maxValue : null;
       }
 
-      const metadata: GanttChartTaskMetadata = {
-        dataResourceId: dataResource.id,
-        startAttributeId: interval[0].attrId,
-        endAttributeId: interval[1].attrId,
-        progressAttributeId: progressEditable && stemConfig.progress && stemConfig.progress.attributeId,
-        resourceId: resource.id,
-        resourceType: stemConfig.start.resourceType,
+      const metadata: GanttTaskMetadata = {
+        nameDataId: item.nameDataResource && item.nameDataResource.id,
+        startDataId: item.startDataResource && item.startDataResource.id,
+        endDataId: item.endDataResource && item.endDataResource.id,
+        progressDataIds: (item.progressDataResources || []).map(dataResource => dataResource.id),
+        swimlanesDataResourcesIds: (item.swimlanesDataResources || []).map(dataResource => dataResource.id),
+        dataResourceChain: item.dataResourceChain,
+        swimlanes: [...(item.swimlanes || [])],
+        stemConfig,
       };
 
       const names = isArray(name) ? name : [name];
       for (let i = 0; i < names.length; i++) {
         const nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).format();
 
+        const taskId = helperDataId(item);
         arr.push({
-          id: dataResource.id,
+          id: taskId,
           name: stripTextHtmlTags(nameFormatted, false),
           start: interval[0].value,
           end: interval[1].value,
           progress: createProgress(progress),
-          dependencies: validDataResourceIdsMap[dataResource.id] || [],
-          allowedDependencies: validIds.filter(id => id !== dataResource.id),
+          dependencies: validDataResourceIdsMap[taskId] || [],
+          allowedDependencies: validIds.filter(id => id !== taskId),
           barColor: shadeColor(taskColor, 0.5),
           progressColor: shadeColor(taskColor, 0.3),
-          startDrag: startEditable,
-          endDrag: endEditable,
-          progressDrag: progressEditable,
-          editable: permission && permission.writeWithView,
+          startDrag: startEditable && startPermission.writeWithView,
+          endDrag: endEditable && endPermission.writeWithView,
+          progressDrag: progressEditable && metadata.progressDataIds.length === 1 && progressPermission.writeWithView,
+          editable: startPermission.writeWithView && endPermission.writeWithView,
           textColor: contrastColor(shadeColor(taskColor, 0.5)),
-          swimlanes: [...(dataResource.swimlanes || []), ...datesSwimlanes],
+          swimlanes: [...(item.swimlanes || []), ...datesSwimlanes],
           minProgress,
           maxProgress,
 
@@ -415,15 +504,35 @@ export class GanttChartConverter {
     }, []);
   }
 
+  private parseColor(model: GanttChartBarModel, dataResources: DataResource[]): string {
+    const constraint = this.findConstraintForModel(model);
+    const values = (model && (dataResources || []).map(dataResource => dataResource.data[model.attributeId])) || [];
+
+    if (constraint.type === ConstraintType.Select) {
+      for (let i = 0; i < values.length; i++) {
+        const options = (<SelectConstraint>constraint).createDataValue(values[i]).options;
+        if (options.length > 0 && options[0].background) {
+          return options[0].background;
+        }
+      }
+    }
+
+    const colorConstraint = new ColorConstraint({});
+    const colorDataValue = values
+      .map(color => colorConstraint.createDataValue(color))
+      .find(dataValue => dataValue.isValid());
+    return colorDataValue && colorDataValue.format();
+  }
+
   private isPropertyEditable(model: GanttChartBarModel): boolean {
-    if (model.resourceType === AttributesResourceType.Collection) {
-      const collection = (this.collections || []).find(coll => coll.id === model.resourceId);
+    if (model && model.resourceType === AttributesResourceType.Collection) {
+      const collection = this.collectionsMap[model.resourceId];
       return (
         collection &&
         isCollectionAttributeEditable(model.attributeId, collection, this.getPermission(model), this.query)
       );
-    } else if (model.resourceType === AttributesResourceType.LinkType) {
-      const linkType = (this.linkTypes || []).find(lt => lt.id === model.resourceId);
+    } else if (model && model.resourceType === AttributesResourceType.LinkType) {
+      const linkType = this.linkTypesMap[model.resourceId];
       return (
         linkType && isLinkTypeAttributeEditable(model.attributeId, linkType, this.getPermission(model), this.query)
       );
@@ -433,6 +542,9 @@ export class GanttChartConverter {
   }
 
   private getPermission(model: GanttChartBarModel): AllowedPermissions {
+    if (!model) {
+      return {};
+    }
     const resource = this.getResource(model);
     if (model.resourceType === AttributesResourceType.Collection) {
       return resource && this.permissions[resource.id];
@@ -449,17 +561,17 @@ export class GanttChartConverter {
 
   private getResource(model: GanttChartBarModel): AttributesResource {
     if (model.resourceType === AttributesResourceType.Collection) {
-      return (this.collections || []).find(collection => collection.id === model.resourceId);
+      return this.collectionsMap[model.resourceId];
     } else if (model.resourceType === AttributesResourceType.LinkType) {
-      return (this.linkTypes || []).find(linkTypes => linkTypes.id === model.resourceId);
+      return this.linkTypesMap[model.resourceId];
     }
 
     return null;
   }
 
-  private getConstraint(model: GanttChartBarModel): Constraint {
-    const resource = this.getResource(model);
-    return resource && findAttributeConstraint(resource.attributes, model.attributeId);
+  private findConstraintForModel(model: GanttChartBarModel): Constraint {
+    const resource = model && this.getResource(model);
+    return (resource && findAttributeConstraint(resource.attributes, model.attributeId)) || new UnknownConstraint();
   }
 
   private getPropertyColor(model: GanttChartBarModel): string {
@@ -471,18 +583,69 @@ export class GanttChartConverter {
     return !!stemConfig.start && !!stemConfig.end;
   }
 
-  private shouldAggregate(stemConfig: GanttChartStemConfig): boolean {
-    return (stemConfig.categories || []).length > 0;
+  private formatSwimlaneValue(value: any, constraint: Constraint, barModel: GanttChartBarModel): GanttSwimlane | null {
+    const overrideConstraint =
+      barModel && barModel.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
+
+    const resultConstraint = overrideConstraint || constraint || new UnknownConstraint();
+    const formattedValue = resultConstraint.createDataValue(value, this.constraintData).format();
+    if (formattedValue) {
+      if (resultConstraint.type === ConstraintType.Color) {
+        return {background: formattedValue, value: formattedValue, title: ''};
+      } else if (resultConstraint.type === ConstraintType.Boolean) {
+        return {title: '', value: value, type: GanttSwimlaneType.Checkbox};
+      }
+
+      const textBackground = this.swimlaneBackground(value, resultConstraint);
+      const textColor = textBackground && contrastColor(textBackground);
+      return {
+        value,
+        title: formattedValue,
+        textBackground,
+        textColor,
+        avatarUrl: this.swimlaneAvatarUrl(value, resultConstraint),
+      };
+    }
+    return {value: '', title: ''};
   }
 
-  public formatSwimlaneValue(value: any, constraint: Constraint, barModel: GanttChartBarModel): string | null {
-    const overrideConstraint =
-      barModel.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
+  private swimlaneBackground(value: any, constraint: Constraint): string {
+    if (constraint.type === ConstraintType.Select) {
+      const options = (<SelectConstraint>constraint).createDataValue(value).options;
+      return options && options[0] && options[0].background;
+    }
+    return null;
+  }
 
-    const formattedValue = (overrideConstraint || constraint || new UnknownConstraint())
-      .createDataValue(value, this.constraintData)
-      .format();
-    return formattedValue && formattedValue !== '' ? formattedValue.toString() : undefined;
+  private swimlaneAvatarUrl(value: any, constraint: Constraint): string {
+    if (constraint.type === ConstraintType.User && isNotNullOrUndefined(value)) {
+      const md5hash = Md5.hashStr(String(value || ''));
+      return `https://www.gravatar.com/avatar/${md5hash}?r=g&d=retro`;
+    }
+
+    return null;
+  }
+
+  private formatDataAggregatorValue(
+    value: any,
+    constraint: Constraint,
+    data: ConstraintData,
+    aggregatorAttribute: DataAggregatorAttribute
+  ): any {
+    const ganttConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
+    const overrideConstraint =
+      ganttConstraint && this.formatter.checkValidConstraintOverride(constraint, ganttConstraint);
+    const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
+    const dataValue = finalConstraint.createDataValue(value, data);
+
+    switch (finalConstraint.type) {
+      case ConstraintType.Select:
+      case ConstraintType.User:
+      case ConstraintType.Boolean:
+        return dataValue.serialize();
+      default:
+        return dataValue.format();
+    }
   }
 }
 
@@ -534,12 +697,13 @@ function getFormatFromConstraint(constraint: Constraint): string {
   return null;
 }
 
-function isOnlyOneResourceConfig(config: GanttChartConfig): boolean {
-  if ((config.stemsConfigs || []).length !== 1) {
-    return false;
-  }
+function objectsMap<T extends {id?: string}>(objects: T[]): Record<string, T> {
+  return (objects || []).reduce((map, object) => ({...map, [object.id]: object}), {});
+}
 
-  const stemConfig = config.stemsConfigs[0];
-
-  return stemConfig.stem && (stemConfig.stem.linkTypeIds || []).length === 0 && !!stemConfig.start && !!stemConfig.end;
+function helperDataId(data: TaskHelperData): string {
+  return [data.nameDataResource, data.startDataResource, data.endDataResource]
+    .filter(resource => isNotNullOrUndefined(resource))
+    .map(resource => resource.id)
+    .join(':');
 }

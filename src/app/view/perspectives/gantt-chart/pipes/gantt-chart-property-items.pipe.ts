@@ -21,8 +21,9 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {cleanGanttBarModel} from '../util/gantt-chart-util';
 
-const sameCollectionProperties = ['start', 'end', 'name', 'color', 'progress'];
+const sameCollectionProperties = ['start', 'end'];
 
 @Pipe({
   name: 'ganttChartPropertyItems',
@@ -33,7 +34,7 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
       return this.filterSameResourceItems(selectItems, property, config);
     }
 
-    return this.filterAnyResourceItems(selectItems, property, config);
+    return selectItems;
   }
 
   private filterSameResourceItems(
@@ -47,31 +48,18 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
       .filter(model => !!model);
 
     if (sameCollectionModels.length > 0) {
+      const resourceIndex = sameCollectionModels[0].resourceIndex;
+      const allowedResourceIndexes =
+        resourceIndex % 2 === 0 ? [resourceIndex, resourceIndex - 1] : [resourceIndex, resourceIndex + 1];
       return selectItems.filter(item => {
         const model = item.id as GanttChartBarModel;
         return (
-          model.resourceIndex === sameCollectionModels[0].resourceIndex &&
-          model.resourceId === sameCollectionModels[0].resourceId &&
-          !sameCollectionModels.some(definedModel => deepObjectsEquals(definedModel, item.id))
+          allowedResourceIndexes.includes(model.resourceIndex) &&
+          !sameCollectionModels.some(definedModel =>
+            deepObjectsEquals(cleanGanttBarModel(definedModel), cleanGanttBarModel(model))
+          )
         );
       });
-    }
-
-    return this.filterAnyResourceItems(selectItems, property, config);
-  }
-
-  private filterAnyResourceItems(
-    selectItems: SelectItemModel[],
-    property: string,
-    config: GanttChartStemConfig
-  ): SelectItemModel[] {
-    const definedModels = sameCollectionProperties
-      .filter(prop => prop !== property)
-      .map(prop => config[prop])
-      .filter(model => !!model);
-
-    if (definedModels.length > 0) {
-      return selectItems.filter(item => !definedModels.some(model => deepObjectsEquals(model, item.id)));
     }
 
     return selectItems;

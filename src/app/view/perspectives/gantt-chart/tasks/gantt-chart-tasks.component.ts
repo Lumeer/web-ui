@@ -40,7 +40,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {DocumentMetaData, DocumentModel} from '../../../../core/store/documents/document.model';
 import {generateDocumentDataByQuery} from '../../../../core/store/documents/document.utils';
-import {GanttChartConfig, GanttChartMode} from '../../../../core/store/gantt-charts/gantt-chart';
+import {GanttChartBarModel, GanttChartConfig, GanttChartMode} from '../../../../core/store/gantt-charts/gantt-chart';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query} from '../../../../core/store/navigation/query/query';
@@ -51,12 +51,15 @@ import {
   isNullOrUndefined,
   isNumeric,
 } from '../../../../shared/utils/common.utils';
-import {GanttChartConverter, GanttChartTaskMetadata} from '../util/gantt-chart-converter';
-import {checkOrTransformGanttConfig} from '../util/gantt-chart-util';
+import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
+import {checkOrTransformGanttConfig, createLinkDocumentsData} from '../util/gantt-chart-util';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
+import {DataValue} from '../../../../core/model/data-value';
+import {ChooseLinkDocumentModalComponent} from '../../../../shared/modal/choose-link-document/choose-link-document-modal.component';
 
 interface Data {
   collections: Collection[];
@@ -67,6 +70,12 @@ interface Data {
   permissions: Record<string, AllowedPermissions>;
   query: Query;
   constraintData: ConstraintData;
+}
+
+interface PatchData {
+  dataResource: DataResource;
+  resourceType: AttributesResourceType;
+  data: Record<string, any>;
 }
 
 @Component({
@@ -112,6 +121,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   public patchLinkData = new EventEmitter<LinkInstance>();
 
   @Output()
+  public updateLinkDocuments = new EventEmitter<{linkInstanceId: string; documentIds: [string, string]}>();
+
+  @Output()
   public patchMetaData = new EventEmitter<{collectionId: string; documentId: string; metaData: DocumentMetaData}>();
 
   @Output()
@@ -127,6 +139,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   private readonly newTaskName: string;
 
   private options: GanttOptions;
+  private tasks: GanttChartTask[];
 
   public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
   public data$: Observable<{options: GanttOptions; tasks: GanttChartTask[]}>;
@@ -153,7 +166,10 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       filter(data => !!data),
       debounceTime(100),
       map(data => this.handleData(data)),
-      tap(data => (this.options = data.options))
+      tap(data => {
+        this.options = data.options;
+        this.tasks = data.tasks;
+      })
     );
   }
 
@@ -214,76 +230,152 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onTaskChanged(task: GanttChartTask) {
-    const metadata = task.metadata as GanttChartTaskMetadata;
-    const dataResource = this.getDataResource(metadata.dataResourceId, metadata.resourceType);
-    if (!dataResource) {
-      return;
+    const patchData = this.createPatchData(task);
+    for (const item of patchData) {
+      this.emitPatchData(item.data, item.resourceType, item.dataResource);
     }
 
-    const patchData = this.createTaskPatchData(task, dataResource);
-    this.emitPatchData(patchData, metadata.resourceType, dataResource);
+    if (someLinkSwimlaneChanged(task)) {
+      this.patchCategoryLink(task);
+    }
   }
 
-  private createTaskPatchData(task: GanttChartTask, dataResource: DataResource): Record<string, any> {
-    const metadata = task.metadata as GanttChartTaskMetadata;
-    const resource = this.getResource(dataResource, metadata.resourceType);
-    const patchData = {};
+  private createPatchData(task: GanttChartTask): PatchData[] {
+    const metadata = task.metadata as GanttTaskMetadata;
+    const stemConfig = metadata.stemConfig;
+    const patchData: PatchData[] = [];
 
-    if (metadata.startAttributeId) {
-      const start = moment(task.start, this.options && this.options.dateFormat);
-      const constraint = findAttributeConstraint(resource && resource.attributes, metadata.startAttributeId);
-      const saveValue = constraint
-        ? constraint.createDataValue(start, this.constraintData).serialize()
-        : start.toISOString();
-      if (saveValue !== dataResource[metadata.startAttributeId]) {
-        patchData[metadata.startAttributeId] = saveValue;
+    if (stemConfig.start) {
+      const dataResource = this.getDataResource(metadata.startDataId, stemConfig.start.resourceType);
+      if (dataResource) {
+        const data = this.getPatchData(patchData, dataResource, stemConfig.start);
+        this.patchDate(task.start, stemConfig.start, data, dataResource);
       }
     }
 
-    if (metadata.endAttributeId) {
-      const end = moment(task.end, this.options && this.options.dateFormat);
-      const constraint = findAttributeConstraint(resource && resource.attributes, metadata.endAttributeId);
-      const saveValue = constraint
-        ? constraint.createDataValue(end, this.constraintData).serialize()
-        : end.toISOString();
-      if (saveValue !== dataResource[metadata.endAttributeId]) {
-        patchData[metadata.endAttributeId] = saveValue;
+    if (stemConfig.end) {
+      const dataResource = this.getDataResource(metadata.endDataId, stemConfig.end.resourceType);
+      if (dataResource) {
+        const data = this.getPatchData(patchData, dataResource, stemConfig.end);
+        this.patchDate(task.end, stemConfig.end, data, dataResource);
       }
     }
 
-    if (metadata.progressAttributeId) {
-      const constraint = findAttributeConstraint(resource && resource.attributes, metadata.progressAttributeId);
-      const saveValue = constraint
-        ? constraint
-            .createDataValue(task.progress, this.constraintData)
-            .parseInput(String(task.progress || 0))
-            .serialize()
-        : this.formatPercentage(dataResource, metadata.progressAttributeId, task.progress);
-      if (saveValue !== dataResource[metadata.progressAttributeId]) {
-        patchData[metadata.progressAttributeId] = saveValue;
+    // edit of computed progress is currently not supported
+    if (stemConfig.progress && (metadata.progressDataIds || []).length === 1) {
+      const dataResource = this.getDataResource(metadata.progressDataIds[0], stemConfig.progress.resourceType);
+      if (dataResource) {
+        const data = this.getPatchData(patchData, dataResource, stemConfig.progress);
+        this.patchProgress(task.progress, stemConfig.progress, data, dataResource);
       }
     }
 
-    const stemConfig = this.config.stemsConfigs && this.config.stemsConfigs[0]; // we support drag swimlanes only in this situation
-    if (task.swimlanes && stemConfig) {
-      for (let i = 0; i < (stemConfig.categories || []).length; i++) {
-        const category = stemConfig.categories[i];
-
-        if (category.resourceId === resource.id && category.resourceType === metadata.resourceType) {
-          const constraint = findAttributeConstraint(resource && resource.attributes, category.attributeId);
-          const saveValue = constraint
-            ? constraint.createDataValue(task.swimlanes[i], this.constraintData).serialize()
-            : task.swimlanes[i];
-
-          const changed = (dataResource.data && dataResource.data[category.attributeId] !== saveValue) || false;
-          if (changed) {
-            patchData[category.attributeId] = saveValue;
+    if (stemConfig.name || stemConfig.start) {
+      const taskModel = stemConfig.name || stemConfig.start;
+      for (let i = 0; i < (metadata.stemConfig.categories || []).length; i++) {
+        const category = metadata.stemConfig.categories[i];
+        if (modelsAreFromSameOrNearResource(taskModel, category)) {
+          const dataResource = this.getDataResource(metadata.swimlanesDataResourcesIds[i], category.resourceType);
+          if (dataResource) {
+            const data = this.getPatchData(patchData, dataResource, category);
+            this.patchCategory(task.swimlanes[i].value || task.swimlanes[i].title, category, data, dataResource);
           }
         }
       }
     }
 
     return patchData;
+  }
+
+  private patchCategoryLink(task: GanttChartTask) {
+    const {linkInstanceId, documentId, otherDocumentIds} = createLinkDocumentsData(
+      task,
+      this.tasks,
+      this.linkInstances
+    );
+
+    if (linkInstanceId && documentId && (otherDocumentIds || []).length > 0) {
+      if (otherDocumentIds.length === 1) {
+        this.updateLinkDocuments.emit({linkInstanceId, documentIds: [documentId, otherDocumentIds[0]]});
+      } else {
+        const callback = selectedDocument =>
+          this.updateLinkDocuments.emit({
+            linkInstanceId,
+            documentIds: [documentId, selectedDocument.id],
+          });
+        const config = {initialState: {documentIds: otherDocumentIds, callback}, keyboard: true, class: 'modal-lg'};
+        this.modalService.show(ChooseLinkDocumentModalComponent, config);
+      }
+    }
+  }
+
+  private patchCategory(
+    swimlane: any,
+    model: GanttChartBarModel,
+    patchData: Record<string, any>,
+    dataResource: DataResource
+  ) {
+    const resource = this.getResource(dataResource, model.resourceType);
+    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
+    const saveValue = constraint ? constraint.createDataValue(swimlane, this.constraintData).serialize() : swimlane;
+
+    const changed = (dataResource.data && dataResource.data[model.attributeId] !== saveValue) || false;
+    if (changed) {
+      patchData[model.attributeId] = saveValue;
+    }
+  }
+
+  private getPatchData(
+    patchDataArray: PatchData[],
+    dataResource: DataResource,
+    model: GanttChartBarModel
+  ): Record<string, any> {
+    const patchDataObject = patchDataArray.find(
+      patchData => patchData.dataResource.id === dataResource.id && patchData.resourceType === model.resourceType
+    );
+    if (patchDataObject) {
+      return patchDataObject.data;
+    }
+
+    const data = {};
+    patchDataArray.push({data, resourceType: model.resourceType, dataResource});
+    return data;
+  }
+
+  private patchDate(
+    date: string,
+    model: GanttChartBarModel,
+    patchData: Record<string, any>,
+    dataResource: DataResource
+  ) {
+    const end = moment(date, this.options && this.options.dateFormat);
+    const resource = this.getResource(dataResource, model.resourceType);
+    const constraint =
+      findAttributeConstraint(resource && resource.attributes, model.attributeId) ||
+      new DateTimeConstraint({format: this.options && this.options.dateFormat});
+    const dataValue: DataValue = constraint.createDataValue(end.toDate(), this.constraintData);
+    if (!dataResource || dataValue.compareTo(constraint.createDataValue(dataResource.data[model.attributeId])) !== 0) {
+      patchData[model.attributeId] = dataValue.serialize();
+    }
+  }
+
+  private patchProgress(
+    progress: number,
+    model: GanttChartBarModel,
+    patchData: Record<string, any>,
+    dataResource: DataResource
+  ) {
+    const resource = this.getResource(dataResource, model.resourceType);
+    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
+    const saveValue = constraint
+      ? constraint
+          .createDataValue(progress, this.constraintData)
+          .parseInput(String(progress || 0))
+          .serialize()
+      : this.formatPercentage(dataResource, model.attributeId, progress);
+    if (!dataResource || saveValue !== dataResource.data[model.attributeId]) {
+      patchData[model.attributeId] = saveValue;
+    }
   }
 
   private emitPatchData(
@@ -304,7 +396,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (type === AttributesResourceType.Collection) {
       return (this.documents || []).find(document => document.id === id);
     } else if (type === AttributesResourceType.LinkType) {
-      return (this.linkInstances || []).find(linkInstanec => linkInstanec.id === id);
+      return (this.linkInstances || []).find(linkInstance => linkInstance.id === id);
     }
 
     return null;
@@ -362,35 +454,28 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (!stemConfig || !stemConfig.stem) {
       return;
     }
-    const document: DocumentModel = {collectionId: stemConfig.stem.collectionId, data: {}, id: null};
-    const metadata: GanttChartTaskMetadata = {
-      dataResourceId: document.id,
-      endAttributeId: stemConfig.end && stemConfig.end.attributeId,
-      progressAttributeId: stemConfig.progress && stemConfig.progress.attributeId,
-      startAttributeId: stemConfig.start && stemConfig.start.attributeId,
-      resourceId: document.collectionId,
-      resourceType: AttributesResourceType.Collection,
-    };
-    const taskWithMetadata = {...task, metadata};
 
     const data = generateDocumentDataByQuery(this.query, this.collections, this.constraintData, false);
-    const patchData = this.createTaskPatchData(taskWithMetadata, document);
-    Object.keys(patchData).forEach(key => (data[key] = patchData[key]));
+    const document: DocumentModel = {collectionId: stemConfig.stem.collectionId, data, id: null};
+
+    this.patchDate(task.start, stemConfig.start, data, document);
+    this.patchDate(task.end, stemConfig.end, data, document);
+
     if (stemConfig.name && isNullOrUndefined(data[stemConfig.name.attributeId])) {
       data[stemConfig.name.attributeId] = this.newTaskName;
     }
-    document.data = data;
 
     const modalRef = this.openDocumentDetailModal(document);
     modalRef.content.onCancel$.subscribe(() => this.ganttChartVisualizationComponent.removeTask(task));
   }
 
   public onTaskDetail(task: GanttChartTask) {
-    const metadata = task.metadata as GanttChartTaskMetadata;
-    if (metadata.resourceType !== AttributesResourceType.Collection) {
-      return; // TODO support links in detail dialog
+    const metadata = task.metadata as GanttTaskMetadata;
+    const resourceType = metadata.stemConfig.name && metadata.stemConfig.name.resourceType;
+    if (resourceType !== AttributesResourceType.Collection) {
+      return; // links are currently not supported in detail dialog
     }
-    const document = this.getDataResource(metadata.dataResourceId, metadata.resourceType);
+    const document = this.getDataResource(metadata.nameDataId, resourceType);
     if (document) {
       this.openDocumentDetailModal(document as DocumentModel);
     }
@@ -400,4 +485,48 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const collection = this.getResource(document, AttributesResourceType.Collection);
     return this.modalService.showDocumentDetail(document, collection);
   }
+}
+
+function modelsAreFromSameOrNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  return modelsAreFromSameResource(model1, model2) || modelsAreFromNearResource(model1, model2);
+}
+
+function modelsAreFromSameResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  return model1.resourceIndex === model2.resourceIndex;
+}
+
+function modelsAreFromNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  if (
+    model2.resourceType === AttributesResourceType.Collection &&
+    model1.resourceType === AttributesResourceType.LinkType &&
+    model2.resourceIndex === model1.resourceIndex + 1
+  ) {
+    return true;
+  }
+
+  if (
+    model2.resourceType === AttributesResourceType.LinkType &&
+    model1.resourceType === AttributesResourceType.Collection &&
+    model2.resourceIndex === model1.resourceIndex - 1
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+function someLinkSwimlaneChanged(task: GanttChartTask): boolean {
+  const metadata = task.metadata as GanttTaskMetadata;
+  const taskModel = metadata.stemConfig.name || metadata.stemConfig.start;
+  if (!taskModel) {
+    return false;
+  }
+
+  return task.metadata.swimlanes.some((swimlane, index) => {
+    if (task.swimlanes[index].value !== swimlane.value) {
+      return !modelsAreFromSameOrNearResource(taskModel, metadata.stemConfig.categories[index]);
+    }
+
+    return false;
+  });
 }

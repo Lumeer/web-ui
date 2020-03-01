@@ -48,7 +48,7 @@ import {
 } from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {Query} from '../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query/query.helper';
 import {isFirstTableCell, isLastTableCell, TableCursor} from '../../../core/store/tables/table-cursor';
 import {DEFAULT_TABLE_ID, TableColumnType, TableConfig, TableModel} from '../../../core/store/tables/table.model';
@@ -68,7 +68,11 @@ import {TableBodyComponent} from './body/table-body.component';
 import {TableHeaderComponent} from './header/table-header.component';
 import {TableRowNumberService} from './table-row-number.service';
 import {selectTable, selectTableId} from '../../../core/store/tables/tables.state';
-import {getBaseCollectionIdsFromQuery, queryIsEmpty} from '../../../core/store/navigation/query/query.util';
+import {
+  getAllCollectionIdsFromQuery,
+  getBaseCollectionIdsFromQuery,
+  queryIsEmpty,
+} from '../../../core/store/navigation/query/query.util';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import CreateTable = TablesAction.CreateTable;
@@ -78,6 +82,7 @@ import {createTableSaveConfig} from '../../../core/store/tables/utils/table-save
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
+import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -288,8 +293,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   private waitForDataLoaded$(query?: Query): Observable<boolean> {
     if (query) {
-      this.store$.dispatch(new DocumentsAction.Get({query}));
-      this.store$.dispatch(new LinkInstancesAction.Get({query}));
+      this.fetchData(query);
     }
     return this.store$.pipe(
       select(selectCurrentQueryDocumentsLoaded),
@@ -298,6 +302,19 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       filter(loaded => loaded),
       take(1)
     );
+  }
+
+  private fetchData(query: Query) {
+    this.store$.pipe(select(selectAllLinkTypes), take(1)).subscribe(linkTypes => {
+      this.store$.dispatch(new DocumentsAction.Get({query}));
+      this.store$.dispatch(new LinkInstancesAction.Get({query}));
+      const stems: QueryStem[] = getAllCollectionIdsFromQuery(query, linkTypes)
+        .slice(1)
+        .map(collectionId => ({collectionId}));
+      if (stems.length > 0) {
+        this.store$.dispatch(new DocumentsAction.Get({query: {stems}}));
+      }
+    });
   }
 
   private initTableByQuery() {

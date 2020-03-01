@@ -33,7 +33,11 @@ export interface LinkInstance {
 }
 
 export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {
-  return linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0];
+  return (
+    (linkInstance &&
+      (linkInstance.documentIds[0] === documentId ? linkInstance.documentIds[1] : linkInstance.documentIds[0])) ||
+    null
+  );
 }
 
 export function getOtherLinkedDocumentIds(linkInstances: LinkInstance[], documentId: string): string[] {

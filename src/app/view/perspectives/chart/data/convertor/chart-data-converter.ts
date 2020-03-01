@@ -52,7 +52,7 @@ import {getDurationSaveValue} from '../../../../../shared/utils/constraint/durat
 import {decimalUserToStore, parseMomentDate} from '../../../../../shared/utils/data.utils';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
 import {
-  AggregatedData,
+  AggregatedMapData,
   AggregatedDataValues,
   DataAggregator,
   DataAggregatorAttribute,
@@ -301,7 +301,7 @@ export class ChartDataConverter {
   }
 
   private convertAggregatedData(
-    aggregatedData: AggregatedData,
+    aggregatedData: AggregatedMapData,
     config: ChartConfig,
     yAxisType: ChartYAxisType
   ): ChartDataSet[] {

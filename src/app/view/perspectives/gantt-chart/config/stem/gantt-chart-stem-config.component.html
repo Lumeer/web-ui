@@ -3,17 +3,33 @@
   <b>{{collection.name}}</b>
 </div>
 
-<select-item *ngFor="let property of properties"
-             class="d-block w-100 mt-2"
-             [items]="selectItems | ganttChartPropertyItems:property:config"
-             [selectedId]="config[property]"
-             [placeholderText]="property | ganttChartBarPlaceholder"
-             [emptyValue]="property | ganttChartBarEmptyValue"
-             [removable]="true"
-             [buttonClasses]="buttonClasses"
-             (select)="onBarPropertySelect(property, $event)"
-             (remove)="onBarPropertyRemoved(property)">
-</select-item>
+<ng-container *ngFor="let property of properties">
+
+  <select-item class="d-block w-100 mt-2"
+               [items]="selectItems | ganttChartPropertyItems:property:config"
+               [selectedId]="config[property] | cleanGanttModel"
+               [placeholderText]="property | ganttChartBarPlaceholder"
+               [emptyValue]="property | ganttChartBarEmptyValue"
+               [removable]="true"
+               [buttonClasses]="buttonClasses"
+               (select)="onBarPropertySelect(property, $event)"
+               (remove)="onBarPropertyRemoved(property)">
+  </select-item>
+
+  <select-item *ngIf="property === 'progress' && config | shouldAggregateProgress"
+               class="d-block mt-1"
+               [items]="progressAggregations | aggregationSelectItems"
+               [removable]="false"
+               [buttonClasses]="buttonClasses"
+               [selectedId]="config[property].aggregation"
+               placeholderText="Aggregation"
+               i18n-placeholderText="@@aggregation"
+               placeholderTitle="Select progress aggregation"
+               i18n-placeholderTitle="@@perspective.gantt.config.progressAggregation"
+               (select)="onProgressAggregationSelect($event)">
+  </select-item>
+
+</ng-container>
 
 <select-item-with-constraint class="d-block w-100 mt-2"
                              *ngFor="let category of categories; let index = index"

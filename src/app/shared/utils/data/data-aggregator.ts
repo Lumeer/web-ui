@@ -39,16 +39,35 @@ interface AttributesResourceChain {
   data?: any;
   isRow?: boolean;
   isColumn?: boolean;
+  unique?: boolean;
 }
 
 // <resourceId, <docId/linkId, DataResourceWithLinks>>
 type DataResourceMap = Record<string, Record<string, DataResourceWithLinks>>;
 
-export interface AggregatedData {
+export interface AggregatedMapData {
   map: AggregatedDataMap;
   columnsMap: Record<string, any>;
   rowLevels: number;
   columnLevels: number;
+}
+
+export interface AggregatedArrayData {
+  items: AggregatedDataItem[];
+  levels: number;
+}
+
+export interface AggregatedDataItem {
+  value: any;
+  dataResources: DataResource[];
+  dataResourcesChains: DataResourceChain[][];
+  children?: AggregatedDataItem[];
+  values?: AggregatedDataValues[];
+}
+
+export interface DataResourceChain {
+  documentId?: string;
+  linkInstanceId?: string;
 }
 
 // any represents AggregatedDataMap
@@ -64,6 +83,7 @@ export interface DataAggregatorAttribute {
   attributeId: string;
   resourceIndex: number;
   data?: any;
+  unique?: boolean;
 }
 
 export class DataAggregator {
@@ -111,23 +131,39 @@ export class DataAggregator {
     rowAttributes: DataAggregatorAttribute[],
     columnAttributes: DataAggregatorAttribute[],
     valueAttributes: DataAggregatorAttribute[]
-  ) {
+  ): AggregatedMapData {
     if ((rowAttributes || []).length === 0 && (columnAttributes || []).length === 0) {
-      return this.emptyAggregate();
+      return {map: {}, columnsMap: {}, rowLevels: 0, columnLevels: 0};
     }
 
     return this.aggregateByRowsAndColumns(rowAttributes || [], columnAttributes || [], valueAttributes || []);
   }
 
-  private emptyAggregate(): AggregatedData {
-    return {map: {}, columnsMap: {}, rowLevels: 0, columnLevels: 0};
+  public aggregateArray(
+    attributes: DataAggregatorAttribute[],
+    valueAttributes: DataAggregatorAttribute[]
+  ): AggregatedArrayData {
+    if ((attributes || []).length === 0) {
+      return {items: [], levels: 0};
+    }
+
+    return this.aggregateByArray(attributes, valueAttributes);
+  }
+
+  private aggregateByArray(
+    attributes: DataAggregatorAttribute[],
+    valueAttributes: DataAggregatorAttribute[]
+  ): AggregatedArrayData {
+    const {chain, valuesChains} = this.createAttributesResourceChain(attributes, [], valueAttributes);
+    const items = this.iterateArray(chain, valuesChains);
+    return {items, levels: attributes.length};
   }
 
   private aggregateByRowsAndColumns(
     rowAttributes: DataAggregatorAttribute[],
     columnAttributes: DataAggregatorAttribute[],
     valueAttributes: DataAggregatorAttribute[]
-  ): AggregatedData {
+  ): AggregatedMapData {
     const {chain, valuesChains} = this.createAttributesResourceChain(rowAttributes, columnAttributes, valueAttributes);
     const map = this.iterate(chain, valuesChains);
     const columnsMap = this.createColumnsMap(map, rowAttributes.length, columnAttributes.length);
@@ -240,6 +276,7 @@ export class DataAggregator {
         index,
         isRow,
         isColumn,
+        unique: aggregationAttribute.unique,
       });
 
       const nextRowAttribute = aggregationAttributes[i + 1];
@@ -383,6 +420,175 @@ export class DataAggregator {
     return dataAggregationValues;
   }
 
+  private iterateArray(
+    chain: AttributesResourceChain[],
+    valuesChains: AttributesResourceChain[][]
+  ): AggregatedDataItem[] {
+    if (chain.length === 0) {
+      return [];
+    }
+    const resourceId = this.attributesResourceIdForIndex(chain[0].index);
+    const dataObjects = Object.values(this.dataMap[resourceId] || {});
+    const items = [];
+    const chainVisitedIds = [];
+    this.iterateRecursiveArray(dataObjects, items, chain, valuesChains, 0, chainVisitedIds, []);
+    return items;
+  }
+
+  private iterateRecursiveArray(
+    objectData: DataResourceWithLinks[],
+    items: AggregatedDataItem[],
+    chain: AttributesResourceChain[],
+    valuesChains: AttributesResourceChain[][],
+    index: number,
+    chainVisitedIds: string[],
+    dataResourcesChain: DataResourceChain[]
+  ) {
+    const stage = chain[index];
+    const constraint = findAttributeConstraint(stage.resource && stage.resource.attributes, stage.attributeId);
+
+    for (const object of objectData) {
+      chainVisitedIds[index] = object.id;
+      const linkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(object, chain, index, chainVisitedIds);
+
+      if (stage.isRow || stage.isColumn) {
+        const values = this.getValues(object, stage.attributeId);
+        if (values.length === 0) {
+          continue;
+        }
+
+        for (const value of values) {
+          let formattedValue = this.formatAggregationValue(value, constraint, {
+            resourceIndex: stage.index,
+            attributeId: stage.attributeId,
+            data: stage.data,
+          });
+          formattedValue = isNotNullOrUndefined(formattedValue) ? formattedValue : '';
+
+          if (index === chain.length - 1) {
+            if (valuesChains.length > 0) {
+              for (const valueChain of valuesChains) {
+                const fullChain = [...chain, ...valueChain];
+                const valueLinkedObjectDataWithLinks = this.getLinkedObjectDataWithLinks(
+                  object,
+                  fullChain,
+                  index,
+                  chainVisitedIds
+                );
+                const lastStage = valueChain[valueChain.length - 1];
+                const dataAggregationValues = this.processLastStageArray(
+                  lastStage,
+                  items,
+                  formattedValue,
+                  object,
+                  dataResourcesChain
+                );
+                this.iterateThroughValues(
+                  valueLinkedObjectDataWithLinks,
+                  dataAggregationValues,
+                  fullChain,
+                  index + 1,
+                  chainVisitedIds
+                );
+              }
+            } else {
+              this.processLastStageArray(stage, items, formattedValue, object, dataResourcesChain);
+            }
+          } else {
+            const stageItem = this.findStageItemArray(items, formattedValue, stage, object, dataResourcesChain);
+            this.iterateRecursiveArray(
+              linkedObjectDataWithLinks,
+              stageItem.children,
+              chain,
+              valuesChains,
+              index + 1,
+              chainVisitedIds,
+              []
+            );
+          }
+        }
+      } else {
+        const newChain = this.concatDataResourceChain(stage, dataResourcesChain, object);
+        this.iterateRecursiveArray(
+          linkedObjectDataWithLinks,
+          items,
+          chain,
+          valuesChains,
+          index + 1,
+          chainVisitedIds,
+          newChain
+        );
+      }
+    }
+  }
+
+  private concatDataResourceChain(
+    stage: AttributesResourceChain,
+    dataResourcesChain: DataResourceChain[],
+    object: DataResourceWithLinks
+  ): DataResourceChain[] {
+    const resourceType = this.attributesResourceTypeForIndex(stage.index);
+    if (resourceType === AttributesResourceType.Collection) {
+      return [...dataResourcesChain, {documentId: object.id}];
+    } else if (resourceType === AttributesResourceType.LinkType) {
+      return [...dataResourcesChain, {linkInstanceId: object.id}];
+    }
+    return [...dataResourcesChain, {}];
+  }
+
+  private findStageItemArray(
+    items: AggregatedDataItem[],
+    value: any,
+    stage: AttributesResourceChain,
+    object: DataResourceWithLinks,
+    dataResourcesChain: DataResourceChain[]
+  ): AggregatedDataItem {
+    const stageItem = items.find(item => item.value === value && !stage.unique);
+    const newChain = this.concatDataResourceChain(stage, dataResourcesChain, object);
+    if (stageItem) {
+      stageItem.dataResources.push(convertToDataResource(object));
+      stageItem.dataResourcesChains.push(newChain);
+      return stageItem;
+    }
+
+    const newStageItem = {
+      value,
+      dataResources: object ? [convertToDataResource(object)] : [],
+      dataResourcesChains: [newChain || []],
+      children: [],
+    };
+    items.push(newStageItem);
+    return newStageItem;
+  }
+
+  private processLastStageArray(
+    lastStage: AttributesResourceChain,
+    items: AggregatedDataItem[],
+    formattedValue: string,
+    object: DataResourceWithLinks,
+    dataResourcesChain: DataResourceChain[]
+  ): AggregatedDataValues {
+    let dataAggregationValues: AggregatedDataValues = {
+      resourceId: lastStage.resource.id,
+      type: this.attributesResourceTypeForIndex(lastStage.index),
+      objects: [],
+    };
+
+    const stageItem = this.findStageItemArray(items, formattedValue, lastStage, object, dataResourcesChain);
+    const existingAggregationValues = (stageItem.values || []).find(
+      v => v.resourceId === dataAggregationValues.resourceId && v.type === dataAggregationValues.type
+    );
+    if (existingAggregationValues) {
+      dataAggregationValues = existingAggregationValues;
+    } else if (stageItem.values) {
+      stageItem.values.push(dataAggregationValues);
+    } else {
+      stageItem.values = [dataAggregationValues];
+    }
+
+    return dataAggregationValues;
+  }
+
   private getLinkedObjectDataWithLinks(
     object: DataResourceWithLinks,
     chain: AttributesResourceChain[],
@@ -458,8 +664,7 @@ export class DataAggregator {
     chainVisitedIds: string[]
   ) {
     if (index === chain.length - 1) {
-      const objects = objectData.map(object => ({...object, from: null, to: null}));
-      values.objects.push(...objects);
+      values.objects.push(...objectData.map(object => convertToDataResource(object)));
     } else {
       for (const object of objectData) {
         chainVisitedIds[index] = object.id;
@@ -542,19 +747,30 @@ function createDataMap(
     };
 
     if (document1CollectionIndex > document2CollectionIndex) {
-      document1Map[document1.id].to.push(linkInstanceObjectData);
-      document2Map[document2.id].from.push(linkInstanceObjectData);
+      if (!dataResourcesContainsResource(document1Map[document1.id].to, linkInstanceObjectData)) {
+        document1Map[document1.id].to.push(linkInstanceObjectData);
+      }
+      if (!dataResourcesContainsResource(document2Map[document2.id].from, linkInstanceObjectData)) {
+        document2Map[document2.id].from.push(linkInstanceObjectData);
+      }
       linkInstanceMap[linkInstance.id].to.push(document2ObjectData);
       linkInstanceMap[linkInstance.id].from.push(document1ObjectData);
     } else {
-      document2Map[document2.id].to.push(linkInstanceObjectData);
-      document1Map[document1.id].from.push(linkInstanceObjectData);
+      if (!dataResourcesContainsResource(document2Map[document2.id].to, linkInstanceObjectData)) {
+        document2Map[document2.id].to.push(linkInstanceObjectData);
+      }
+      if (!dataResourcesContainsResource(document1Map[document1.id].from, linkInstanceObjectData)) {
+        document1Map[document1.id].from.push(linkInstanceObjectData);
+      }
       linkInstanceMap[linkInstance.id].to.push(document1ObjectData);
       linkInstanceMap[linkInstance.id].from.push(document2ObjectData);
     }
   }
-
   return map;
+}
+
+function dataResourcesContainsResource(dataResources: DataResource[], dataResource: DataResource): boolean {
+  return dataResources.some(dr => dr.id === dataResource.id);
 }
 
 function attributesResourceIdByIndex(resource: AttributesResource, index: number): string {
@@ -575,4 +791,11 @@ function linkTypeResourceId(id: string): string {
 
 function attributesResourceId(type: AttributesResourceType, id: string): string {
   return `${type}:${id}`;
+}
+
+function convertToDataResource(dataResourceWithLinks: DataResourceWithLinks): DataResource {
+  const copy: DataResourceWithLinks = {...dataResourceWithLinks};
+  delete copy.from;
+  delete copy.to;
+  return copy;
 }

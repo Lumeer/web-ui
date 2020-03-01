@@ -18,27 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from '../../select/select-item/select-item.model';
-import {I18n} from '@ngx-translate/i18n-polyfill';
-import {DataAggregationType} from '../../utils/data/data-aggregation';
+import {GanttChartBarModel} from '../../../../core/store/gantt-charts/gantt-chart';
+import {cleanGanttBarModel} from '../util/gantt-chart-util';
 
 @Pipe({
-  name: 'aggregationSelectItems',
+  name: 'cleanGanttModel',
 })
-export class AggregationSelectItemsPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
-  public transform(aggregations: DataAggregationType[]): SelectItemModel[] {
-    return aggregations.map(aggregation => ({id: aggregation, value: this.dataAggregationName(aggregation)}));
-  }
-
-  private dataAggregationName(type: DataAggregationType): string {
-    return this.i18n(
-      {
-        id: 'perspective.chart.config.aggregation.name',
-        value: '{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique}}',
-      },
-      {type}
-    );
+export class CleanGanttModelPipe implements PipeTransform {
+  public transform(model: GanttChartBarModel): GanttChartBarModel {
+    return model && cleanGanttBarModel(model);
   }
 }

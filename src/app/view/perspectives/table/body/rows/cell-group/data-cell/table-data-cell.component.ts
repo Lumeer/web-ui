@@ -413,7 +413,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private useSelectionOrSave(dataValue: DataValue) {
     if (!this.isPreviousLinkedRowInitialized()) {
-      this.showUninitializedLinkedRowWarningAndResetValue();
+      if (dataValue.format()) {
+        this.showUninitializedLinkedRowWarningAndResetValue();
+      }
       return;
     }
 
@@ -672,7 +674,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private createLinkInstanceWithExistingAttribute(attributeId: string, value: any) {
-    combineLatest(
+    combineLatest([
       this.store$.pipe(
         select(
           selectTablePart({
@@ -700,8 +702,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         )
       ),
       this.store$.pipe(select(selectQuery)),
-      this.store$.pipe(select(selectAllCollections))
-    )
+      this.store$.pipe(select(selectAllCollections)),
+    ])
       .pipe(take(1))
       .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query, collections]) => {
         const collection = (collections || []).find(coll => coll.id === collectionId);

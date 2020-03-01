@@ -308,6 +308,10 @@ export function createCollectionPart(
   last?: boolean,
   config?: TableConfig
 ): TableConfigPart {
+  if (!collection) {
+    return {columns: []};
+  }
+
   const configPart = getConfigPart(config, index);
   const columnsConfig = configPart && configPart.collectionId === collection.id ? configPart.columns : null;
 

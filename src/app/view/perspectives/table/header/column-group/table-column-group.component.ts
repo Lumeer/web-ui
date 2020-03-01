@@ -90,7 +90,9 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
 
     if (height) {
       const tableElement = getTableElement(this.cursor.tableId);
-      tableElement.style.setProperty('--column-group-height', `${height}px`);
+      if (tableElement) {
+        tableElement.style.setProperty('--column-group-height', `${height}px`);
+      }
     }
   }
 
