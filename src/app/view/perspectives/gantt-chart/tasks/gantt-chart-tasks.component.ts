@@ -52,7 +52,12 @@ import {
   isNumeric,
 } from '../../../../shared/utils/common.utils';
 import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
-import {checkOrTransformGanttConfig, createLinkDocumentsData} from '../util/gantt-chart-util';
+import {
+  canCreateTaskByStemConfig,
+  checkOrTransformGanttConfig,
+  createLinkDocumentsData,
+  ganttModelsAreFromSameOrNearResource
+} from '../util/gantt-chart-util';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
 import {BsModalRef} from 'ngx-bootstrap';
@@ -274,7 +279,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       const taskModel = stemConfig.name || stemConfig.start;
       for (let i = 0; i < (metadata.stemConfig.categories || []).length; i++) {
         const category = metadata.stemConfig.categories[i];
-        if (modelsAreFromSameOrNearResource(taskModel, category)) {
+        if (ganttModelsAreFromSameOrNearResource(taskModel, category)) {
           const dataResource = this.getDataResource(metadata.swimlanesDataResourcesIds[i], category.resourceType);
           if (dataResource) {
             const data = this.getPatchData(patchData, dataResource, category);
@@ -450,23 +455,26 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onTaskCreated(task: GanttChartTask) {
-    const stemConfig = this.config.stemsConfigs && this.config.stemsConfigs[0]; // we support creating tasks only in this situation
+    const stemConfig = (this.config.stemsConfigs || []).find(stemConfig => canCreateTaskByStemConfig(stemConfig));
     if (!stemConfig || !stemConfig.stem) {
       return;
     }
 
-    const data = generateDocumentDataByQuery(this.query, this.collections, this.constraintData, false);
-    const document: DocumentModel = {collectionId: stemConfig.stem.collectionId, data, id: null};
+    console.log(task);
 
-    this.patchDate(task.start, stemConfig.start, data, document);
-    this.patchDate(task.end, stemConfig.end, data, document);
 
-    if (stemConfig.name && isNullOrUndefined(data[stemConfig.name.attributeId])) {
-      data[stemConfig.name.attributeId] = this.newTaskName;
-    }
-
-    const modalRef = this.openDocumentDetailModal(document);
-    modalRef.content.onCancel$.subscribe(() => this.ganttChartVisualizationComponent.removeTask(task));
+    // const data = generateDocumentDataByQuery(this.query, this.collections, this.constraintData, false);
+    // const document: DocumentModel = {collectionId: stemConfig.stem.collectionId, data, id: null};
+    //
+    // this.patchDate(task.start, stemConfig.start, data, document);
+    // this.patchDate(task.end, stemConfig.end, data, document);
+    //
+    // if (stemConfig.name && isNullOrUndefined(data[stemConfig.name.attributeId])) {
+    //   data[stemConfig.name.attributeId] = this.newTaskName;
+    // }
+    //
+    // const modalRef = this.openDocumentDetailModal(document);
+    // modalRef.content.onCancel$.subscribe(() => this.ganttChartVisualizationComponent.removeTask(task));
   }
 
   public onTaskDetail(task: GanttChartTask) {
@@ -487,34 +495,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 }
 
-function modelsAreFromSameOrNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
-  return modelsAreFromSameResource(model1, model2) || modelsAreFromNearResource(model1, model2);
-}
-
-function modelsAreFromSameResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
-  return model1.resourceIndex === model2.resourceIndex;
-}
-
-function modelsAreFromNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
-  if (
-    model2.resourceType === AttributesResourceType.Collection &&
-    model1.resourceType === AttributesResourceType.LinkType &&
-    model2.resourceIndex === model1.resourceIndex + 1
-  ) {
-    return true;
-  }
-
-  if (
-    model2.resourceType === AttributesResourceType.LinkType &&
-    model1.resourceType === AttributesResourceType.Collection &&
-    model2.resourceIndex === model1.resourceIndex - 1
-  ) {
-    return true;
-  }
-
-  return false;
-}
-
 function someLinkSwimlaneChanged(task: GanttChartTask): boolean {
   const metadata = task.metadata as GanttTaskMetadata;
   const taskModel = metadata.stemConfig.name || metadata.stemConfig.start;
@@ -524,7 +504,7 @@ function someLinkSwimlaneChanged(task: GanttChartTask): boolean {
 
   return task.metadata.swimlanes.some((swimlane, index) => {
     if (task.swimlanes[index].value !== swimlane.value) {
-      return !modelsAreFromSameOrNearResource(taskModel, metadata.stemConfig.categories[index]);
+      return !ganttModelsAreFromSameOrNearResource(taskModel, metadata.stemConfig.categories[index]);
     }
 
     return false;

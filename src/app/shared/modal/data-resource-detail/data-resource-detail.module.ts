@@ -19,34 +19,19 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {PostItComponent} from './post-it.component';
-import {DataInputModule} from '../data-input/data-input.module';
-import {PostItRowComponent} from './row/post-it-row.component';
-import {PipesModule} from '../pipes/pipes.module';
-import {ClickOutsideModule} from 'ng-click-outside';
-import {PostItHeaderComponent} from './header/post-it-header.component';
-import {PresenterModule} from '../presenter/presenter.module';
-import {DataResourceFavoritePipe} from './pipes/data-resource-favorite.pipe';
-import {InputModule} from '../input/input.module';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {DataResourceDetailComponent} from './data-resource-detail.component';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+
 
 @NgModule({
-  declarations: [
-    PostItComponent,
-    PostItRowComponent,
-    PostItHeaderComponent,
-    DataResourceFavoritePipe,
-  ],
+  declarations: [DataResourceDetailComponent],
   imports: [
     CommonModule,
-    DataInputModule,
-    PipesModule,
-    PresenterModule,
-    ClickOutsideModule,
-    InputModule,
-    DragDropModule,
-  ],
-  exports: [PostItComponent],
+    FormsModule,
+    ReactiveFormsModule,
+    ModalWrapperModule,
+  ]
 })
-export class PostItModule {
+export class DataResourceDetailModule {
 }

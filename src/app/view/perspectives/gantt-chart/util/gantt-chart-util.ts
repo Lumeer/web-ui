@@ -212,7 +212,7 @@ export function createDefaultGanttChartStemConfig(
 
 function findBestInitialAttributes(
   attributesResourcesOrder: AttributesResource[]
-): {index: number; startAttribute?: Attribute; endAttribute?: Attribute} {
+): { index: number; startAttribute?: Attribute; endAttribute?: Attribute } {
   for (let i = 0; i < (attributesResourcesOrder || []).length; i++) {
     if (getAttributesResourceType(attributesResourcesOrder[i]) !== AttributesResourceType.Collection) {
       continue;
@@ -246,9 +246,9 @@ export function createLinkDocumentsData(
   task: GanttChartTask,
   otherTasks: GanttChartTask[],
   linkInstances: LinkInstance[]
-): {linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[]} {
+): { linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[] } {
   const swimlaneTasks = (otherTasks || []).filter(t => deepObjectsEquals(t.swimlanes, task.swimlanes));
-  const dataResourceChain = (<GanttTaskMetadata>task.metadata).dataResourceChain || [];
+  const dataResourceChain = task.metadata && (<GanttTaskMetadata>task.metadata).dataResourceChain || [];
   const linkChainIndex = findLastIndex(dataResourceChain, chain => !!chain.linkInstanceId);
   const linkChain = dataResourceChain[linkChainIndex];
   const linkInstance = linkChain && (linkInstances || []).find(li => li.id === linkChain.linkInstanceId);
@@ -269,4 +269,43 @@ export function createLinkDocumentsData(
     })
     .filter(doc => !!doc);
   return {linkInstanceId: linkChain.linkInstanceId, documentId, otherDocumentIds: uniqueValues(otherDocumentIds)};
+}
+
+export function canCreateTaskByStemConfig(config: GanttChartStemConfig): boolean {
+  if (!config.start || !config.end) {
+    return false;
+  }
+  if (config.name) {
+    return ganttModelsAreFromSameOrNearResource(config.name, config.start) && ganttModelsAreFromSameOrNearResource(config.name, config.start);
+  }
+
+  return ganttModelsAreFromSameOrNearResource(config.start, config.end);
+}
+
+export function ganttModelsAreFromSameOrNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  return ganttModelsAreFromSameResource(model1, model2) || ganttModelsAreFromNearResource(model1, model2);
+}
+
+export function ganttModelsAreFromSameResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  return model1.resourceIndex === model2.resourceIndex;
+}
+
+export function ganttModelsAreFromNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+  if (
+    model2.resourceType === AttributesResourceType.Collection &&
+    model1.resourceType === AttributesResourceType.LinkType &&
+    model2.resourceIndex === model1.resourceIndex + 1
+  ) {
+    return true;
+  }
+
+  if (
+    model2.resourceType === AttributesResourceType.LinkType &&
+    model1.resourceType === AttributesResourceType.Collection &&
+    model2.resourceIndex === model1.resourceIndex - 1
+  ) {
+    return true;
+  }
+
+  return false;
 }

@@ -45,8 +45,8 @@ export enum AttributesResourceType {
 }
 
 export type DataResource =
-  | Pick<DocumentModel, 'id' | 'data' | 'collectionId'>
-  | Pick<LinkInstance, 'id' | 'data' | 'linkTypeId'>;
+  | Pick<DocumentModel, 'id' | 'data' | 'collectionId' | 'newData'>
+  | Pick<LinkInstance, 'id' | 'data' | 'linkTypeId' | 'newData'>;
 
 export type AttributesResource =
   | Pick<Collection, 'id' | 'attributes' | 'name' | 'color' | 'icon'>

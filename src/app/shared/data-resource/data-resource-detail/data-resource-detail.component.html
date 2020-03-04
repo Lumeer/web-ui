@@ -1,0 +1,14 @@
+<data-resource-data [resource]="resource"
+                    [dataResource]="dataResource"
+                    [resourceType]="resourceType"
+                    [permissions]="permissions"
+                    [constraintData]="constraintData$ | async"
+                    [workspace]="workspace$ | async"
+                    [query]="query"
+                    [toolbarRef]="toolbarRef"
+                    (attributeTypeClick)="onAttributeTypeClick($event)"
+                    (attributeFunctionCLick)="onAttributeFunctionClick($event)"
+                    (removeDocument)="onRemove()"
+                    (switchToTable)="onSwitchToTable()"
+                    (dataResourceChanged)="documentChanged.emit($event)">
+</data-resource-data>

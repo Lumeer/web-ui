@@ -52,7 +52,7 @@ import {
   isDateValid,
   isNotNullOrUndefined,
   isNullOrUndefined,
-  isNumeric,
+  isNumeric, objectsByIdMap,
   toNumber,
 } from '../../../../shared/utils/common.utils';
 import {parseDateTimeDataValue, stripTextHtmlTags} from '../../../../shared/utils/data.utils';
@@ -67,6 +67,7 @@ import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils
 import {ColorConstraint} from '../../../../core/model/constraint/color.constraint';
 import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
 import {Md5} from '../../../../shared/utils/md5';
+import {canCreateTaskByStemConfig} from './gantt-chart-util';
 
 interface TaskHelperData {
   nameDataResource: DataResource;
@@ -104,7 +105,8 @@ export class GanttChartConverter {
     this.formatDataAggregatorValue(value, constraint, data, aggregatorAttribute)
   );
 
-  constructor(private formatter: SelectItemWithConstraintFormatter) {}
+  constructor(private formatter: SelectItemWithConstraintFormatter) {
+  }
 
   public convert(
     config: GanttChartConfig,
@@ -115,7 +117,7 @@ export class GanttChartConverter {
     permissions: Record<string, AllowedPermissions>,
     constraintData: ConstraintData,
     query: Query
-  ): {options: GanttOptions; tasks: GanttTask[]} {
+  ): { options: GanttOptions; tasks: GanttTask[] } {
     this.updateData(config, collections, documents, linkTypes, linkInstances, permissions, constraintData, query);
 
     const tasks = ((query && query.stems) || [])
@@ -147,9 +149,9 @@ export class GanttChartConverter {
     query: Query
   ) {
     this.config = config;
-    this.collectionsMap = objectsMap(collections);
+    this.collectionsMap = objectsByIdMap(collections);
     this.documents = documents;
-    this.linkTypesMap = objectsMap(linkTypes);
+    this.linkTypesMap = objectsByIdMap(linkTypes);
     this.linkInstances = linkInstances;
     this.permissions = permissions;
     this.constraintData = constraintData;
@@ -157,6 +159,7 @@ export class GanttChartConverter {
   }
 
   private createGanttOptions(config: GanttChartConfig): GanttOptions {
+    const createTasks = (config.stemsConfigs || []).some(stemConfig => canCreateTaskByStemConfig(stemConfig));
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),
       resizeTaskRight: true,
@@ -164,7 +167,7 @@ export class GanttChartConverter {
       resizeTaskLeft: true,
       resizeSwimlanes: true,
       dragTaskSwimlanes: true,
-      createTasks: true,
+      createTasks,
       language: environment.locale,
       lockResize: config.lockResize || false,
       padding: config.padding,
@@ -313,13 +316,13 @@ export class GanttChartConverter {
     const allItems = stemConfig.name
       ? items
       : [
-          {
-            title: null,
-            dataResources: [],
-            children: items,
-            dataResourcesChains: [[]],
-          },
-        ];
+        {
+          title: null,
+          dataResources: [],
+          children: items,
+          dataResourcesChains: [[]],
+        },
+      ];
 
     for (let nameIndex = 0; nameIndex < allItems.length; nameIndex++) {
       const nameItem = allItems[nameIndex];
@@ -437,7 +440,7 @@ export class GanttChartConverter {
       const resourceColor = this.getPropertyColor(stemConfig.name || stemConfig.start);
       const taskColor = this.parseColor(stemConfig.color, item.colorDataResources) || resourceColor;
 
-      const datesSwimlanes: {value: any; title: string}[] = [];
+      const datesSwimlanes: { value: any; title: string }[] = [];
       if (showDatesAsSwimlanes) {
         const startString = (this.findConstraintForModel(stemConfig.start) || new UnknownConstraint())
           .createDataValue(start, this.constraintData)
@@ -676,7 +679,7 @@ function createInterval(
   end: string,
   endAttributeId: string,
   endConstraint: Constraint
-): [{value: string; attrId: string}, {value: string; attrId: string}] {
+): [{ value: string; attrId: string }, { value: string; attrId: string }] {
   const startDate = parseDateTimeDataValue(start, getFormatFromConstraint(startConstraint));
   const endDate = parseDateTimeDataValue(end, getFormatFromConstraint(endConstraint));
 
@@ -695,10 +698,6 @@ function getFormatFromConstraint(constraint: Constraint): string {
     return config.format;
   }
   return null;
-}
-
-function objectsMap<T extends {id?: string}>(objects: T[]): Record<string, T> {
-  return (objects || []).reduce((map, object) => ({...map, [object.id]: object}), {});
 }
 
 function helperDataId(data: TaskHelperData): string {

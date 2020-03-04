@@ -21,7 +21,7 @@ export interface DocumentModel {
   id?: string;
   collectionId: string;
   data: DocumentData;
-  newData?: {[attributeName: string]: {value: any; correlationId?: string}};
+  newData?: Record<string, {value: any; correlationId?: string}>;
 
   metaData?: DocumentMetaData;
 

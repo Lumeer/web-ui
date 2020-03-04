@@ -154,7 +154,7 @@ export function getQueryFiltersForCollection(query: Query, collectionId: string)
   }, []);
 }
 
-export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): CollectionAttributeFilter[] {
+export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): LinkAttributeFilter[] {
   const stems = (query && query.stems) || [];
   return stems.reduce((filters, stem) => {
     const newFilters = (stem.linkFilters || []).filter(

@@ -30,6 +30,7 @@ export interface LinkInstance {
   dataVersion?: number;
 
   data?: Record<string, any>;
+  newData?: Record<string, {value: any; correlationId?: string}>;
 }
 
 export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {

@@ -27,7 +27,7 @@ import {PresenterModule} from '../../presenter/presenter.module';
 import {BlocklyModule} from '../../blockly/blockly.module';
 import {DocumentDetailModalComponent} from './document-detail-modal.component';
 import {LinksModule} from '../../links/links.module';
-import {DocumentModule} from '../../document/document.module';
+import {DataResourceModule} from '../../data-resource/data-resource.module';
 
 @NgModule({
   declarations: [DocumentDetailModalComponent],
@@ -39,7 +39,7 @@ import {DocumentModule} from '../../document/document.module';
     BlocklyModule,
     PresenterModule,
     LinksModule,
-    DocumentModule,
+    DataResourceModule,
     PipesModule,
   ],
   exports: [DocumentDetailModalComponent],

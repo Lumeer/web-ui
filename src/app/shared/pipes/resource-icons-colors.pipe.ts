@@ -18,10 +18,10 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
-import {getAttributesResourceType} from '../../utils/resource.utils';
-import {Collection} from '../../../core/store/collections/collection';
-import {LinkType} from '../../../core/store/link-types/link.type';
+import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
+import {getAttributesResourceType} from '../utils/resource.utils';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'resourceIconsColors',

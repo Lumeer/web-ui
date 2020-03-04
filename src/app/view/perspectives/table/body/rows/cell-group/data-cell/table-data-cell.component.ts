@@ -52,7 +52,9 @@ import {
   selectCollectionAttributeById,
 } from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
-import {generateDocumentDataByCollectionQuery} from '../../../../../../../core/store/documents/document.utils';
+import {
+  generateDocumentDataByResourceQuery
+} from '../../../../../../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
@@ -712,7 +714,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
             document: {
               collectionId,
               correlationId,
-              data: generateDocumentDataByCollectionQuery(collection, query, this.constraintData, false),
+              data: generateDocumentDataByResourceQuery(collection, query, this.constraintData, false),
             },
             onSuccess: documentId =>
               this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),

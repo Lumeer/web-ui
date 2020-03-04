@@ -11,11 +11,11 @@
     </preview-results>
 
     <div class="card p-4 mb-4" *ngIf="data.selected.collection && data.selected.document">
-      <document-detail [collection]="data.selected.collection"
-                       [document]="data.selected.document"
-                       [query]="data.query"
-                       [permissions]="collectionPermission$ | async">
-      </document-detail>
+      <data-resource-detail [resource]="data.selected.collection"
+                            [dataResource]="data.selected.document"
+                            [query]="data.query"
+                            [permissions]="collectionPermission$ | async">
+      </data-resource-detail>
       <links-list class="d-block mt-5"
                   [document]="data.selected.document"
                   [collection]="data.selected.collection"

@@ -18,17 +18,16 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  SimpleChanges,
+  Component,
   EventEmitter,
-  Output,
-  OnInit,
+  Input,
   OnChanges,
   OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
@@ -42,6 +41,7 @@ import {DocumentFavoriteToggleService} from '../../../toggle/document-favorite-t
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataRow} from '../../../data/data-row.service';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 
 @Component({
   selector: 'document-detail-header',
@@ -52,10 +52,13 @@ import {DataInputConfiguration} from '../../../data-input/data-input-configurati
 })
 export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public collection: Collection;
+  public resource: AttributesResource;
 
   @Input()
-  public document: DocumentModel;
+  public dataResource: DataResource;
+
+  @Input()
+  public resourceType: AttributesResourceType;
 
   @Input()
   public row: DataRow;
@@ -73,10 +76,11 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public switchToTable = new EventEmitter();
 
   @Output()
-  public removeDocument = new EventEmitter();
+  public remove = new EventEmitter();
 
   public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
+  public readonly collectionResourceType = AttributesResourceType.Collection;
 
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
@@ -94,14 +98,14 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   }
 
   private renewSubscriptions() {
-    if (this.document) {
+    if (this.dataResource && this.resourceType === AttributesResourceType.Collection) {
       this.createdBy$ = this.store$.pipe(
-        select(selectUserById(this.document.createdBy)),
+        select(selectUserById((<DocumentModel>this.dataResource).createdBy)),
         filter(user => !!user),
         map(user => user.name || user.email || 'Guest')
       );
       this.updatedBy$ = this.store$.pipe(
-        select(selectUserById(this.document.updatedBy)),
+        select(selectUserById((<DocumentModel>this.dataResource).updatedBy)),
         filter(user => !!user),
         map(user => user.name || user.email || 'Guest')
       );
@@ -113,8 +117,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   }
 
   public onFavoriteToggle() {
-    if (this.document) {
-      this.toggleService.set(this.document.id, !this.document.favorite, this.document);
+    if (this.dataResource && this.resourceType === AttributesResourceType.Collection) {
+      const document = <DocumentModel>this.dataResource;
+      this.toggleService.set(document.id, !document.favorite, document);
     }
   }
 
@@ -122,7 +127,7 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
     this.toggleService.onDestroy();
   }
 
-  public onRemoveDocument() {
-    this.removeDocument.emit();
+  public onRemove() {
+    this.remove.emit();
   }
 }

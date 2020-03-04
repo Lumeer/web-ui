@@ -17,41 +17,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  TemplateRef
+} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {ConstraintData, DurationUnitsMap} from '../../../core/model/data/constraint';
+import {ConstraintData} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {Attribute} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Query} from '../../../core/store/navigation/query/query';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import DeleteConfirm = DocumentsAction.DeleteConfirm;
-import {User} from '../../../core/store/users/user';
 import {AppState} from '../../../core/store/app.state';
-import {selectAllUsers} from '../../../core/store/users/users.state';
 import {ModalService} from '../../modal/modal.service';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
+import {getAttributesResourceType} from '../../utils/resource.utils';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 
 @Component({
-  selector: 'document-detail',
-  templateUrl: './document-detail.component.html',
-  styleUrls: ['./document-detail.component.scss'],
+  selector: 'data-resource-detail',
+  templateUrl: './data-resource-detail.component.html',
+  styleUrls: ['./data-resource-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDetailComponent implements OnInit {
+export class DataResourceDetailComponent implements OnInit, OnChanges {
   @Input()
-  public collection: Collection;
+  public resource: AttributesResource;
 
   @Input()
-  public document: DocumentModel;
+  public dataResource: DataResource;
 
   @Input()
   public query: Query;
@@ -65,11 +76,10 @@ export class DocumentDetailComponent implements OnInit {
   @Output()
   public documentChanged = new EventEmitter<DocumentModel>();
 
-  public users$: Observable<User[]>;
-  public readonly durationUnitsMap: DurationUnitsMap;
   public workspace$: Observable<Workspace>;
-
   public constraintData$: Observable<ConstraintData>;
+
+  public resourceType: AttributesResourceType;
 
   constructor(
     private i18n: I18n,
@@ -77,35 +87,68 @@ export class DocumentDetailComponent implements OnInit {
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
     private modalService: ModalService
-  ) {}
+  ) {
+  }
+
+  public get isCollection(): boolean {
+    return this.resourceType === AttributesResourceType.Collection;
+  }
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.users$ = this.store$.pipe(select(selectAllUsers));
     this.workspace$ = this.store$.pipe(select(selectWorkspace));
   }
 
-  public onRemoveDocument() {
-    this.store$.dispatch(
-      new DeleteConfirm({
-        collectionId: this.document.collectionId,
-        documentId: this.document.id,
-      })
-    );
+  public ngOnChanges(changes: SimpleChanges) {
+    this.resourceType = getAttributesResourceType(this.resource);
   }
 
-  public onSwitchToTable() {
-    if (this.collection && this.document) {
-      const queryString = convertQueryModelToString({stems: [{collectionId: this.collection.id}]});
-      this.perspectiveService.switchPerspective(Perspective.Table, this.collection, this.document, queryString);
+  public onRemove() {
+    if (this.isCollection) {
+      this.store$.dispatch(
+        new DocumentsAction.DeleteConfirm({
+          collectionId: (<DocumentModel>this.dataResource).collectionId,
+          documentId: this.dataResource.id,
+        })
+      );
+    } else {
+      this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: this.dataResource.id}))
     }
   }
 
+  public onSwitchToTable() {
+    if (this.resource && this.dataResource) {
+      this.perspectiveService.switchPerspective(Perspective.Table, this.createCursor(), this.createQueryString());
+    }
+  }
+
+  private createQueryString(): string {
+    if (this.isCollection) {
+      return convertQueryModelToString({stems: [{collectionId: this.resource.id}]});
+    }
+    return convertQueryModelToString({stems: [{collectionId: '', linkTypeIds: [this.resource.id]}]}); // TODO
+  }
+
+  private createCursor(): ViewCursor {
+    if (this.isCollection) {
+      return {collectionId: this.resource.id, documentId: this.dataResource.id};
+    }
+    return {linkTypeId: this.resource.id, linkInstanceId: this.dataResource.id};
+  }
+
   public onAttributeTypeClick(attribute: Attribute) {
-    this.modalService.showAttributeType(attribute.id, this.collection.id);
+    if (this.isCollection) {
+      this.modalService.showAttributeType(attribute.id, this.resource.id);
+    } else {
+      this.modalService.showAttributeType(attribute.id, '', this.resource.id); // TODO
+    }
   }
 
   public onAttributeFunctionClick(attribute: Attribute) {
-    this.modalService.showAttributeFunction(attribute.id, this.collection.id);
+    if (this.isCollection) {
+      this.modalService.showAttributeFunction(attribute.id, this.resource.id);
+    } else {
+      this.modalService.showAttributeFunction(attribute.id, '', this.resource.id); // TODO
+    }
   }
 }

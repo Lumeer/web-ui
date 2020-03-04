@@ -47,6 +47,7 @@ import {getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {ModalService} from '../modal/modal.service';
+import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 
 export interface PostItTag {
   title: string;
@@ -183,12 +184,16 @@ export class PostItComponent implements OnDestroy {
           documentId: this.dataResource.id,
         })
       );
+    } else {
+      this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: this.dataResource.id}));
     }
   }
 
   public onDetail() {
     if (getAttributesResourceType(this.resource) === AttributesResourceType.Collection) {
       this.modalService.showDocumentDetail(this.dataResource as DocumentModel, this.resource);
+    } else {
+      // TODO
     }
   }
 }

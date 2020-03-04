@@ -17,14 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Collection} from '../collections/collection';
-import {CollectionAttributeFilter, Query} from '../navigation/query/query';
-import {getQueryFiltersForCollection, queryConditionNumInputs} from '../navigation/query/query.util';
+import {AttributeFilter, Query} from '../navigation/query/query';
+import {
+  getQueryFiltersForCollection,
+  getQueryFiltersForLinkType,
+  queryConditionNumInputs
+} from '../navigation/query/query.util';
 import {DocumentData, DocumentModel} from './document.model';
 import {ConstraintData, ConstraintType} from '../../model/data/constraint';
 import {findAttribute} from '../collections/collection.util';
 import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 import {createRange} from '../../../shared/utils/array.utils';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {AttributesResource, AttributesResourceType} from '../../model/resource';
+import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -68,25 +74,24 @@ export function groupDocumentsByCollection(documents: DocumentModel[]): Record<s
 }
 
 export function generateDocumentData(
-  collection: Collection,
-  collectionFilters: CollectionAttributeFilter[],
+  attributesResource: AttributesResource,
+  filters: AttributeFilter[],
   constraintData: ConstraintData,
   setupAllAttributes = true
 ): Record<string, any> {
-  if (!collection) {
+  if (!attributesResource) {
     return {};
   }
   const data = setupAllAttributes
-    ? collection.attributes.reduce((acc, attr) => {
-        acc[attr.id] = '';
-        return acc;
-      }, {})
+    ? attributesResource.attributes.reduce((acc, attr) => {
+      acc[attr.id] = '';
+      return acc;
+    }, {})
     : {};
 
-  (collectionFilters || [])
-    .filter(filter => filter.collectionId === collection.id)
+  (filters || [])
     .forEach(filter => {
-      const attribute = findAttribute(collection.attributes, filter.attributeId);
+      const attribute = findAttribute(attributesResource.attributes, filter.attributeId);
       const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
       const dataValue = constraint.createDataValue(null, constraintData);
       const numInputs = queryConditionNumInputs(filter.condition);
@@ -113,20 +118,24 @@ export function generateDocumentDataByQuery(
   const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
   const collection = collectionId && (collections || []).find(coll => coll.id === collectionId);
   if (collection) {
-    return generateDocumentDataByCollectionQuery(collection, query, constraintData, setupAllAttributes);
+    return generateDocumentDataByResourceQuery(collection, query, constraintData, setupAllAttributes);
   }
   return {};
 }
 
-export function generateDocumentDataByCollectionQuery(
-  collection: Collection,
+export function generateDocumentDataByResourceQuery(
+  attributesResource: AttributesResource,
   query: Query,
   constraintData: ConstraintData,
   setupAllAttributes = true
 ): DocumentData {
+  const resourceType = getAttributesResourceType(attributesResource);
+  const queryFilters = resourceType === AttributesResourceType.Collection ? getQueryFiltersForCollection(query, attributesResource.id)
+    : getQueryFiltersForLinkType(query, attributesResource.id);
+
   return generateDocumentData(
-    collection,
-    getQueryFiltersForCollection(query, collection.id),
+    attributesResource,
+    queryFilters,
     constraintData,
     setupAllAttributes
   );
