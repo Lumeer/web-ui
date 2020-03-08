@@ -52,9 +52,7 @@ import {
   selectCollectionAttributeById,
 } from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
-import {
-  generateDocumentDataByResourceQuery
-} from '../../../../../../../core/store/documents/document.utils';
+import {generateDocumentDataByResourceQuery} from '../../../../../../../core/store/documents/document.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';

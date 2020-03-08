@@ -21,7 +21,7 @@ import {AttributeFilter, Query} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,
-  queryConditionNumInputs
+  queryConditionNumInputs,
 } from '../navigation/query/query.util';
 import {DocumentData, DocumentModel} from './document.model';
 import {ConstraintData, ConstraintType} from '../../model/data/constraint';
@@ -84,28 +84,27 @@ export function generateDocumentData(
   }
   const data = setupAllAttributes
     ? attributesResource.attributes.reduce((acc, attr) => {
-      acc[attr.id] = '';
-      return acc;
-    }, {})
+        acc[attr.id] = '';
+        return acc;
+      }, {})
     : {};
 
-  (filters || [])
-    .forEach(filter => {
-      const attribute = findAttribute(attributesResource.attributes, filter.attributeId);
-      const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
-      const dataValue = constraint.createDataValue(null, constraintData);
-      const numInputs = queryConditionNumInputs(filter.condition);
-      const allValuesDefined =
-        constraint.type === ConstraintType.Boolean ||
-        createRange(0, numInputs).every(
-          i =>
-            filter.conditionValues[i] &&
-            (filter.conditionValues[i].type || isNotNullOrUndefined(filter.conditionValues[i].value))
-        );
-      if (allValuesDefined) {
-        data[filter.attributeId] = dataValue.valueByCondition(filter.condition, filter.conditionValues);
-      }
-    });
+  (filters || []).forEach(filter => {
+    const attribute = findAttribute(attributesResource.attributes, filter.attributeId);
+    const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+    const dataValue = constraint.createDataValue(null, constraintData);
+    const numInputs = queryConditionNumInputs(filter.condition);
+    const allValuesDefined =
+      constraint.type === ConstraintType.Boolean ||
+      createRange(0, numInputs).every(
+        i =>
+          filter.conditionValues[i] &&
+          (filter.conditionValues[i].type || isNotNullOrUndefined(filter.conditionValues[i].value))
+      );
+    if (allValuesDefined) {
+      data[filter.attributeId] = dataValue.valueByCondition(filter.condition, filter.conditionValues);
+    }
+  });
   return data;
 }
 
@@ -130,15 +129,12 @@ export function generateDocumentDataByResourceQuery(
   setupAllAttributes = true
 ): DocumentData {
   const resourceType = getAttributesResourceType(attributesResource);
-  const queryFilters = resourceType === AttributesResourceType.Collection ? getQueryFiltersForCollection(query, attributesResource.id)
-    : getQueryFiltersForLinkType(query, attributesResource.id);
+  const queryFilters =
+    resourceType === AttributesResourceType.Collection
+      ? getQueryFiltersForCollection(query, attributesResource.id)
+      : getQueryFiltersForLinkType(query, attributesResource.id);
 
-  return generateDocumentData(
-    attributesResource,
-    queryFilters,
-    constraintData,
-    setupAllAttributes
-  );
+  return generateDocumentData(attributesResource, queryFilters, constraintData, setupAllAttributes);
 }
 
 export function calculateDocumentHierarchyLevel(

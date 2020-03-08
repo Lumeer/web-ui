@@ -34,7 +34,7 @@ import * as moment from 'moment';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map, tap} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
@@ -54,6 +54,7 @@ import {
   isNotNullOrUndefined,
   isNumeric,
   objectsByIdMap,
+  toNumber,
 } from '../../../../shared/utils/common.utils';
 import {GanttChartConverter, GanttTaskMetadata} from '../util/gantt-chart-converter';
 import {
@@ -75,6 +76,8 @@ import {
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
 import {generateDocumentData} from '../../../../core/store/documents/document.utils';
+import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
+import {DurationUnit} from '../../../../core/model/data/constraint-config';
 
 interface Data {
   collections: Collection[];
@@ -225,6 +228,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         constraintData: this.constraintData,
       });
     }
+    if (changes.config && this.config) {
+      this.currentMode$.next(this.config.mode);
+    }
   }
 
   private shouldConvertData(changes: SimpleChanges): boolean {
@@ -239,7 +245,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         changes.linkInstances ||
         changes.query ||
         changes.constraintData) &&
-        !!this.config
+      !!this.config
     );
   }
 
@@ -295,7 +301,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       const dataResource = this.getDataResource(metadata.endDataId, stemConfig.end.resourceType);
       if (dataResource) {
         const data = this.getPatchData(patchData, dataResource, stemConfig.end);
-        this.patchDate(task.end, stemConfig.end, data, dataResource);
+        this.patchEndDate(task, stemConfig.end, data, dataResource);
       }
     }
 
@@ -377,6 +383,27 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     const data = {};
     patchDataArray.push({data, resourceType: model.resourceType, dataResource});
     return data;
+  }
+
+  private patchEndDate(
+    task: GanttTask,
+    model: GanttChartBarModel,
+    patchData: Record<string, any>,
+    dataResource: DataResource = null
+  ) {
+    const resource = this.getResourceById(model.resourceId, model.resourceType);
+    const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
+    if (constraint && constraint.type === ConstraintType.Duration) {
+      const start = moment(task.start, this.options && this.options.dateFormat);
+      const end = moment(task.end, this.options && this.options.dateFormat);
+      const daysDiff = end.diff(start, 'days', true);
+      const daysString = Math.floor(daysDiff * 100) + DurationUnit.Days;
+      const dataValue = (<DurationConstraint>constraint).createDataValue(daysString, this.constraintData);
+
+      patchData[model.attributeId] = toNumber(dataValue.serialize()) / 100;
+    } else {
+      this.patchDate(task.end, model, patchData, dataResource);
+    }
   }
 
   private patchDate(
@@ -522,7 +549,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       const data = this.generateDataForModel(stemConfig.end, stemConfig.stem);
       patchDataMap[stemConfig.end.resourceId] = {...data};
     }
-    this.patchDate(task.end, stemConfig.end, patchDataMap[stemConfig.end.resourceId]);
+    this.patchEndDate(task, stemConfig.end, patchDataMap[stemConfig.end.resourceId]);
 
     (stemConfig.categories || []).forEach((category, index) => {
       const patchData = patchDataMap[category.resourceId];

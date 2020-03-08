@@ -69,6 +69,8 @@ import {ColorConstraint} from '../../../../core/model/constraint/color.constrain
 import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
 import {Md5} from '../../../../shared/utils/md5';
 import {canCreateTaskByStemConfig, ganttModelPermissions} from './gantt-chart-util';
+import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
+import {addDurationToDate} from '../../../../shared/utils/date.utils';
 
 interface TaskHelperData {
   nameDataResource: DataResource;
@@ -383,12 +385,15 @@ export class GanttChartConverter {
     helperData: TaskHelperData[],
     showDatesAsSwimlanes: boolean
   ): GanttTask[] {
+    const endEditable = this.isPropertyEditable(stemConfig.end);
+    const endConstraint = stemConfig.end && this.findConstraintForModel(stemConfig.end);
+
     const validTaskIds = [];
     const validDataResourceIdsMap: Record<string, string[]> = helperData.reduce((map, item) => {
       const start =
         stemConfig.start && item.startDataResource && item.startDataResource.data[stemConfig.start.attributeId];
       const end = stemConfig.end && item.endDataResource && item.endDataResource.data[stemConfig.end.attributeId];
-      if (isTaskValid(start, end)) {
+      if (isTaskValid(start, end, endConstraint)) {
         const id = helperDataId(item);
         validTaskIds.push(id);
         const dataResource = item.nameDataResource || item.startDataResource;
@@ -409,9 +414,6 @@ export class GanttChartConverter {
     const startEditable = this.isPropertyEditable(stemConfig.start);
     const startConstraint = this.findConstraintForModel(stemConfig.start);
 
-    const endEditable = this.isPropertyEditable(stemConfig.end);
-    const endConstraint = stemConfig.end && this.findConstraintForModel(stemConfig.end);
-
     const progressEditable = this.isPropertyEditable(stemConfig.progress);
     const progressConstraint = this.findConstraintForModel(stemConfig.progress);
 
@@ -428,7 +430,7 @@ export class GanttChartConverter {
         stemConfig.start && item.startDataResource && item.startDataResource.data[stemConfig.start.attributeId];
       const end = stemConfig.end && item.endDataResource && item.endDataResource.data[stemConfig.end.attributeId];
 
-      if (!isTaskValid(start, end)) {
+      if (!isTaskValid(start, end, endConstraint)) {
         return arr;
       }
 
@@ -438,7 +440,8 @@ export class GanttChartConverter {
         startConstraint,
         end,
         endEditable && stemConfig.end.attributeId,
-        endConstraint
+        endConstraint,
+        this.constraintData
       );
       const progresses =
         (stemConfig.progress &&
@@ -654,12 +657,18 @@ export class GanttChartConverter {
   }
 }
 
-function isTaskValid(start: string, end: string): boolean {
-  return areDatesValid(start, end);
+function isTaskValid(start: string, end: string, endConstraint: Constraint): boolean {
+  return areDatesValid(start, end, endConstraint);
 }
 
-function areDatesValid(start: string, end: string): boolean {
-  return isDateValid(parseDateTimeDataValue(start)) && isDateValid(parseDateTimeDataValue(end));
+function areDatesValid(start: string, end: string, endConstraint: Constraint): boolean {
+  return isDateValidRange(start) && (isDateValidRange(end) || endConstraint.type === ConstraintType.Duration);
+}
+
+function isDateValidRange(dateString: string): boolean {
+  const startDate = parseDateTimeDataValue(dateString);
+  const momentDate = startDate && moment(startDate);
+  return isDateValid(startDate) && momentDate.year() > 1970 && momentDate.year() < 2200;
 }
 
 function createProgress(progress: any): number {
@@ -680,10 +689,19 @@ function createInterval(
   startConstraint: Constraint,
   end: string,
   endAttributeId: string,
-  endConstraint: Constraint
+  endConstraint: Constraint,
+  constraintData: ConstraintData
 ): [{value: string; attrId: string}, {value: string; attrId: string}] {
   const startDate = parseDateTimeDataValue(start, getFormatFromConstraint(startConstraint));
-  const endDate = parseDateTimeDataValue(end, getFormatFromConstraint(endConstraint));
+
+  let endDate: Date;
+
+  if (endConstraint.type === ConstraintType.Duration) {
+    const dataValue = (<DurationConstraint>endConstraint).createDataValue(end, constraintData);
+    endDate = addDurationToDate(startDate, dataValue.unitsCountMap);
+  } else {
+    endDate = parseDateTimeDataValue(end, getFormatFromConstraint(endConstraint));
+  }
 
   const startDateObj = {value: moment(startDate).format(GANTT_DATE_FORMAT), attrId: startAttributeId};
   const endDateObj = {value: moment(endDate).format(GANTT_DATE_FORMAT), attrId: endAttributeId};

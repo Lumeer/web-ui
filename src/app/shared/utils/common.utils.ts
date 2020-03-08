@@ -156,7 +156,7 @@ function getValueFromObjectParams<T>(object: T, params: string[]): any {
   return '';
 }
 
-export function objectsByIdMap<T extends { id?: string }>(objects: T[]): Record<string, T> {
+export function objectsByIdMap<T extends {id?: string}>(objects: T[]): Record<string, T> {
   return (objects || []).reduce((map, object) => ({...map, [object.id]: object}), {});
 }
 

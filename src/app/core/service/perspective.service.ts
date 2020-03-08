@@ -33,11 +33,7 @@ import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cu
 export class PerspectiveService {
   constructor(private store$: Store<AppState>, private router: Router) {}
 
-  public switchPerspective(
-    perspective: Perspective,
-    cursor?: ViewCursor,
-    queryToSet?: string
-  ): void {
+  public switchPerspective(perspective: Perspective, cursor?: ViewCursor, queryToSet?: string): void {
     if (cursor) {
       const cursorString = convertViewCursorToString(cursor);
 

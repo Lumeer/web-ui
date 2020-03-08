@@ -22,6 +22,7 @@ import {compareBigNumbers} from '../../../shared/utils/big/compare-big-numbers';
 import {convertBigToNumberSafely} from '../../../shared/utils/big/convert-big-to-number-safely';
 import {
   convertToBig,
+  createDurationUnitsCountsMap,
   formatDurationDataValue,
   getDurationSaveValue,
   getDurationUnitToMillisMap,
@@ -30,7 +31,7 @@ import {
 } from '../../../shared/utils/constraint/duration-constraint.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {ConstraintData, DurationUnitsMap} from '../data/constraint';
-import {DurationConstraintConfig} from '../data/constraint-config';
+import {DurationConstraintConfig, DurationUnit} from '../data/constraint-config';
 import {NumericDataValue} from './index';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
@@ -38,6 +39,7 @@ import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFullte
 
 export class DurationDataValue implements NumericDataValue {
   public bigNumber: Big;
+  public unitsCountMap: Record<DurationUnit, number>;
 
   constructor(
     public readonly value: any,
@@ -48,7 +50,9 @@ export class DurationDataValue implements NumericDataValue {
     const durationUnitsMap = this.constraintData && this.constraintData.durationUnitsMap;
     const modifiedValue = this.inputValue ? parseInputValue(this.inputValue) : value;
     if (isDurationDataValueValid(value, durationUnitsMap)) {
-      this.bigNumber = convertToBig(getDurationSaveValue(modifiedValue, this.config, durationUnitsMap));
+      const saveValue = getDurationSaveValue(modifiedValue, this.config, durationUnitsMap);
+      this.bigNumber = convertToBig(saveValue);
+      this.unitsCountMap = createDurationUnitsCountsMap(saveValue, this.config);
     }
   }
 

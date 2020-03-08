@@ -19,6 +19,7 @@
 
 import * as moment from 'moment';
 import {createDateTimeOptions} from '../date-time/date-time-options';
+import {DurationUnit} from '../../core/model/data/constraint-config';
 
 export function resetUnusedDatePart(date: Date, format: string): Date {
   return resetUnusedMomentPart(moment(date), format).toDate();
@@ -125,4 +126,29 @@ export function getSmallestDateUnit(format: string): moment.unitOfTime.Base {
     return 'year';
   }
   return undefined;
+}
+
+export function addDurationToDate(date: Date, durationCountsMap: Record<DurationUnit, number>): Date {
+  const dateMoment = moment(date);
+  Object.entries(durationCountsMap).forEach(([unit, count]) => {
+    switch (unit) {
+      case DurationUnit.Weeks:
+        dateMoment.add(count, 'weeks');
+        break;
+      case DurationUnit.Days:
+        dateMoment.add(count, 'days');
+        break;
+      case DurationUnit.Hours:
+        dateMoment.add(count, 'hours');
+        break;
+      case DurationUnit.Minutes:
+        dateMoment.add(count, 'minutes');
+        break;
+      case DurationUnit.Seconds:
+        dateMoment.add(count, 'seconds');
+        break;
+    }
+  });
+
+  return dateMoment.toDate();
 }

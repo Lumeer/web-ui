@@ -31,12 +31,7 @@ import {InputModule} from '../input/input.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
-  declarations: [
-    PostItComponent,
-    PostItRowComponent,
-    PostItHeaderComponent,
-    DataResourceFavoritePipe,
-  ],
+  declarations: [PostItComponent, PostItRowComponent, PostItHeaderComponent, DataResourceFavoritePipe],
   imports: [
     CommonModule,
     DataInputModule,
@@ -48,5 +43,4 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
   ],
   exports: [PostItComponent],
 })
-export class PostItModule {
-}
+export class PostItModule {}
