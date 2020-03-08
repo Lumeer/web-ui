@@ -27,8 +27,11 @@ export enum LinkInstancesActionType {
   GET_SUCCESS = '[Link Instances] Get :: Success',
   GET_FAILURE = '[Link Instances] Get :: Failure',
 
+  GET_BY_IDS = '[Link Instances] Get By Ids',
+
   CREATE = '[Link Instances] Create',
   CREATE_SUCCESS = '[Link Instances] Create :: Success',
+  CREATE_MULTIPLE_SUCCESS = '[Link Instances] Create Multiple :: Success',
   CREATE_FAILURE = '[Link Instances] Create :: Failure',
 
   UPDATE = '[Link Instances] Update',
@@ -67,6 +70,12 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {linkTypeId: string; linkInstanceId: string}) {}
   }
 
+  export class GetByIds implements Action {
+    public readonly type = LinkInstancesActionType.GET_BY_IDS;
+
+    public constructor(public payload: {linkInstancesIds: string[]}) {}
+  }
+
   export class GetSuccess implements Action {
     public readonly type = LinkInstancesActionType.GET_SUCCESS;
 
@@ -82,13 +91,25 @@ export namespace LinkInstancesAction {
   export class Create implements Action {
     public readonly type = LinkInstancesActionType.CREATE;
 
-    public constructor(public payload: {linkInstance: LinkInstance; callback?: (linkInstanceId: string) => void}) {}
+    public constructor(
+      public payload: {
+        linkInstance: LinkInstance;
+        onSuccess?: (linkInstanceId: string) => void;
+        onFailure?: () => void;
+      }
+    ) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = LinkInstancesActionType.CREATE_SUCCESS;
 
     public constructor(public payload: {linkInstance: LinkInstance}) {}
+  }
+
+  export class CreateMultipleSuccess implements Action {
+    public readonly type = LinkInstancesActionType.CREATE_MULTIPLE_SUCCESS;
+
+    public constructor(public payload: {linkInstances: LinkInstance[]}) {}
   }
 
   export class CreateFailure implements Action {
@@ -201,6 +222,7 @@ export namespace LinkInstancesAction {
     | GetFailure
     | Create
     | CreateSuccess
+    | CreateMultipleSuccess
     | CreateFailure
     | PatchData
     | PatchDataInternal

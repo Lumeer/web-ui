@@ -18,6 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, ElementRef, Input} from '@angular/core';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'lumeer-logo',
@@ -35,5 +36,12 @@ export class LumeerLogoComponent {
   @Input()
   public text: string;
 
-  constructor(public element: ElementRef<HTMLElement>) {}
+  @Input()
+  public showTooltip: boolean;
+
+  public readonly tooltip: string;
+
+  constructor(public element: ElementRef<HTMLElement>, private i18n: I18n) {
+    this.tooltip = this.i18n({id: 'topPanel.home.title', value: 'Back to home screen'});
+  }
 }

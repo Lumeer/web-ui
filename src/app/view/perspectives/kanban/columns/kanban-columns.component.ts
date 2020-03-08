@@ -47,7 +47,6 @@ import {ConstraintData, ConstraintType} from '../../../../core/model/data/constr
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {KanbanResourceCreate} from './column/footer/kanban-column-footer.component';
-import {ChooseLinkDocumentModalComponent} from '../../../../shared/modal/choose-link-document/choose-link-document-modal.component';
 import {filterDocumentsAndLinksByStem} from '../../../../core/store/documents/documents.filters';
 import {generateDocumentData, groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
 import {
@@ -176,8 +175,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   ) {
     const callback = document => this.createDocument(kanbanAttribute, column, document, linkTypeId);
     const documentIds = (documents || []).map(document => document.id);
-    const config = {initialState: {documentIds, callback}, keyboard: true, class: 'modal-lg'};
-    this.modalService.show(ChooseLinkDocumentModalComponent, config);
+    this.modalService.showChooseLinkDocument(documentIds, callback);
   }
 
   private getPreviousDocumentByKanbanResource(resourceCreate: KanbanResourceCreate): DocumentModel[] {
@@ -221,7 +219,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
             linkTypeId,
             correlationId: generateCorrelationId(),
           },
-          callback: documentId => this.onDocumentCreated(documentId, column),
+          onSuccess: documentId => this.onDocumentCreated(documentId, column),
         })
       );
     } else {

@@ -41,9 +41,6 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
   public documentIds: string[];
 
   @Input()
-  public collectionId: Collection;
-
-  @Input()
   public callback: (document: DocumentModel) => void;
 
   public selectedCollectionId$ = new BehaviorSubject<string>(null);

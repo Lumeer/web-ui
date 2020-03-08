@@ -29,7 +29,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {ConstraintData} from '../../../../core/model/data/constraint';
@@ -42,6 +42,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DataRow} from '../../../data/data-row.service';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
 
 @Component({
   selector: 'document-detail-header',
@@ -82,6 +83,8 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
+  public resource$: Observable<AttributesResource>;
+
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
 
@@ -92,8 +95,19 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.document) {
+    if (changes.dataResource) {
       this.renewSubscriptions();
+    }
+    if (changes.resource) {
+      this.subscribeToResource();
+    }
+  }
+
+  private subscribeToResource() {
+    if (this.resourceType === AttributesResourceType.Collection) {
+      this.resource$ = of(this.resource);
+    } else {
+      this.resource$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.resource.id)));
     }
   }
 

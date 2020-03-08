@@ -24,7 +24,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
-import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {ConstraintType} from '../../model/data/constraint';
 import {LinkInstanceService, SearchService} from '../../rest';
@@ -69,8 +68,20 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.GetSingle>(LinkInstancesActionType.GET_SINGLE),
     mergeMap(action =>
       this.linkInstanceService.getLinkInstance(action.payload.linkTypeId, action.payload.linkInstanceId).pipe(
-        map((dto: LinkInstanceDto) => convertLinkInstanceDtoToModel(dto)),
+        map(dto => convertLinkInstanceDtoToModel(dto)),
         map(linkInstance => new LinkInstancesAction.GetSuccess({linkInstances: [linkInstance]})),
+        catchError(() => EMPTY)
+      )
+    )
+  );
+
+  @Effect()
+  public getByIds$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.GetByIds>(LinkInstancesActionType.GET_BY_IDS),
+    mergeMap(action =>
+      this.linkInstanceService.getLinkInstances(action.payload.linkInstancesIds).pipe(
+        map(dtos => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
+        map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances})),
         catchError(() => EMPTY)
       )
     )
@@ -94,14 +105,13 @@ export class LinkInstancesEffects {
 
       return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
         map(dto => convertLinkInstanceDtoToModel(dto, linkInstanceDto.correlationId)),
-        tap(linkInstance => {
-          const callback = action.payload.callback;
-          if (callback) {
-            callback(linkInstance.id);
-          }
-        }),
-        map(linkInstance => new LinkInstancesAction.CreateSuccess({linkInstance})),
-        catchError(error => of(new LinkInstancesAction.CreateFailure({error})))
+        mergeMap(linkInstance => [
+          ...createCallbackActions(action.payload.onSuccess, linkInstance.id),
+          new LinkInstancesAction.CreateSuccess({linkInstance}),
+        ]),
+        catchError(error =>
+          of(...createCallbackActions(action.payload.onFailure), new LinkInstancesAction.CreateFailure({error}))
+        )
       );
     })
   );

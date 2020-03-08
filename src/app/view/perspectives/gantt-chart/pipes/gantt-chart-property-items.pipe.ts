@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {cleanGanttBarModel} from '../util/gantt-chart-util';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 const sameCollectionProperties = ['start', 'end'];
 
@@ -56,7 +56,7 @@ export class GanttChartPropertyItemsPipe implements PipeTransform {
         return (
           allowedResourceIndexes.includes(model.resourceIndex) &&
           !sameCollectionModels.some(definedModel =>
-            deepObjectsEquals(cleanGanttBarModel(definedModel), cleanGanttBarModel(model))
+            deepObjectsEquals(cleanQueryAttribute(definedModel), cleanQueryAttribute(model))
           )
         );
       });

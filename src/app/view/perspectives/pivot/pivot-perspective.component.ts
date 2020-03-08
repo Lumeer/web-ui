@@ -41,7 +41,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {ViewsAction} from '../../../core/store/views/views.action';
-import {checkOrTransformPivotConfig, createDefaultPivotConfig} from './util/pivot-util';
+import {checkOrTransformPivotConfig} from './util/pivot-util';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
@@ -119,10 +119,12 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToDefault(): Observable<{pivotId?: string; config?: PivotConfig}> {
+    const pivotId = DEFAULT_PIVOT_ID;
     return this.store$.pipe(
       select(selectQuery),
-      map(query => createDefaultPivotConfig(query)),
-      map(config => ({pivotId: DEFAULT_PIVOT_ID, config}))
+      withLatestFrom(this.store$.pipe(select(selectPivotById(pivotId)))),
+      mergeMap(([, pivot]) => this.checkPivotConfig(pivot && pivot.config)),
+      map(config => ({pivotId, config}))
     );
   }
 

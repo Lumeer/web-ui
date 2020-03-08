@@ -1,43 +1,17 @@
-<div class="custom-control custom-checkbox mt-4">
-  <input [id]="showDatesId"
-         [attr.checked]="config.showDates"
-         [checked]="config.showDates"
-         (change)="onShowDatesChange($event.target.checked)"
-         type="checkbox"
-         #datesCheckbox
-         class="custom-control-input">
-  <label [for]="showDatesId"
-         class="custom-control-label">
-  </label>
-  <span i18n="@@perspective.gantt.config.dates.show" class="user-select-none cursor-pointer"
-        (click)="datesCheckbox.click()">Show task dates</span>
-</div>
+<gantt-chart-config-settings [config]="config"
+                             (configChange)="configChange.emit($event)">
+</gantt-chart-config-settings>
 
-<div class="custom-control custom-checkbox mt-2">
-  <input [id]="lockResizeId"
-         [attr.checked]="config.lockResize"
-         [checked]="config.lockResize"
-         (change)="onLockResizeChange($event.target.checked)"
-         type="checkbox"
-         #resizeCheckbox
-         class="custom-control-input">
-  <label [for]="lockResizeId"
-         class="custom-control-label">
-  </label>
-  <span i18n="@@perspective.gantt.config.resize.lock" class="user-select-none cursor-pointer"
-        (click)="resizeCheckbox.click()">Lock dependent task position</span>
-</div>
-
-<gantt-chart-collection-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
-                               class="d-block mt-4"
-                               [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
-                               [stem]="stem"
-                               [collections]="collections"
-                               [linkTypes]="linkTypes"
-                               [selectItems]="stem | ganttChartSelectItems:collections:linkTypes"
-                               (configChange)="onConfigChange($event, stem, index)"
-                               (categoryRemove)="onCategoryRemoved($event, index)">
-</gantt-chart-collection-config>
+<gantt-chart-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
+                         class="d-block mt-4"
+                         [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
+                         [stem]="stem"
+                         [collections]="collections"
+                         [linkTypes]="linkTypes"
+                         [selectItems]="stem | ganttChartSelectItems:collections:linkTypes"
+                         (configChange)="onStemConfigChange($event, stem, index)"
+                         (categoryRemove)="onCategoryRemoved($event, index)">
+</gantt-chart-stem-config>
 
 
 

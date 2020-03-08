@@ -21,6 +21,7 @@ import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {Constraint} from '../../model/constraint';
 import {AttributesResourceType} from '../../model/resource';
 import {QueryStem} from '../navigation/query/query';
+import {QueryAttribute} from '../../model/query-attribute';
 
 export const DEFAULT_PIVOT_ID = 'default';
 
@@ -46,11 +47,7 @@ export enum PivotConfigVersion {
   V1 = '1',
 }
 
-export interface PivotAttribute {
-  resourceId: string;
-  attributeId: string;
-  resourceIndex?: number;
-  resourceType: AttributesResourceType;
+export interface PivotAttribute extends QueryAttribute {
   constraint?: Constraint;
 }
 

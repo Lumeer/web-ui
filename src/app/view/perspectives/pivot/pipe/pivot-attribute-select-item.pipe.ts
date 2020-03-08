@@ -23,9 +23,9 @@ import {AttributesResource, AttributesResourceType} from '../../../../core/model
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {cleanPivotAttribute} from '../util/pivot-util';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 @Pipe({
   name: 'pivotAttributeSelectItem',
@@ -40,7 +40,7 @@ export class PivotAttributeSelectItemPipe implements PipeTransform {
       return null;
     }
 
-    const cleanedAttribute = cleanPivotAttribute(pivotAttribute);
+    const cleanedAttribute = cleanQueryAttribute(pivotAttribute);
     const resourceType = getAttributesResourceType(resource);
     if (resourceType === AttributesResourceType.Collection) {
       const collection = resource as Collection;

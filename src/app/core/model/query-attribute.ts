@@ -17,15 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {PivotAttribute} from '../../../../core/store/pivots/pivot';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {AttributesResourceType} from './resource';
 
-@Pipe({
-  name: 'pivotCleanAttribute',
-})
-export class PivotCleanAttributePipe implements PipeTransform {
-  public transform(attribute: PivotAttribute): PivotAttribute {
-    return attribute && cleanQueryAttribute(attribute);
-  }
+export interface QueryAttribute {
+  resourceId: string;
+  attributeId: string;
+  resourceIndex?: number;
+  resourceType: AttributesResourceType;
+}
+
+export function cleanQueryAttribute(attribute: QueryAttribute): QueryAttribute {
+  return {
+    resourceIndex: attribute.resourceIndex,
+    attributeId: attribute.attributeId,
+    resourceId: attribute.resourceId,
+    resourceType: attribute.resourceType,
+  };
 }

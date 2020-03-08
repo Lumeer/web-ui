@@ -26,7 +26,7 @@ import {
   GanttChartMode,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
-import {deepObjectsEquals, findLastIndex} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, findLastIndex, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -43,9 +43,35 @@ import {GanttTaskMetadata} from './gantt-chart-converter';
 import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
+import {AllowedPermissions, mergeAllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
-  if (!deepObjectsEquals({...viewConfig, stemsConfigs: null}, {...currentConfig, stemsConfigs: null})) {
+  if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
+    return false;
+  }
+
+  if (isNullOrUndefined(viewConfig) !== isNullOrUndefined(currentConfig)) {
+    return true;
+  }
+
+  if (Boolean(viewConfig.positionSaved) !== Boolean(currentConfig.positionSaved)) {
+    return true;
+  }
+
+  if (viewConfig.positionSaved || currentConfig.positionSaved) {
+    return !deepObjectsEquals(viewConfig.position, currentConfig.position);
+  }
+
+  if (
+    !deepObjectsEquals(
+      {...viewConfig, stemsConfigs: null, position: null},
+      {
+        ...currentConfig,
+        stemsConfigs: null,
+        position: null,
+      }
+    )
+  ) {
     return true;
   }
 
@@ -88,7 +114,7 @@ export function checkOrTransformGanttConfig(
   linkTypes: LinkType[]
 ): GanttChartConfig {
   if (!config) {
-    return createDefaultConfig(query, collections, linkTypes);
+    return createDefaultGanttChartConfig(query, collections, linkTypes);
   }
 
   return {
@@ -103,11 +129,7 @@ function checkOrTransformGanttStemsConfig(
   collections: Collection[],
   linkTypes: LinkType[]
 ): GanttChartStemConfig[] {
-  if (!stemsConfigs) {
-    return stemsConfigs;
-  }
-
-  const stemsConfigsCopy = [...stemsConfigs];
+  const stemsConfigsCopy = [...(stemsConfigs || [])];
   return ((query && query.stems) || []).map(stem => {
     const stemCollectionIds = collectionIdsChainForStem(stem, []);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
@@ -123,7 +145,7 @@ function checkOrTransformGanttStemConfig(
   linkTypes: LinkType[]
 ): GanttChartStemConfig {
   if (!stemConfig) {
-    return createDefaultGanttChartStemConfig(stem);
+    return createDefaultGanttChartStemConfig(stem, collections, linkTypes);
   }
 
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
@@ -172,7 +194,11 @@ function checkOrTransformGanttBarModel(
   return null;
 }
 
-function createDefaultConfig(query: Query, collections: Collection[], linkTypes: LinkType[]): GanttChartConfig {
+export function createDefaultGanttChartConfig(
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): GanttChartConfig {
   const stems = (query && query.stems) || [];
   const stemsConfigs = stems.map(stem => createDefaultGanttChartStemConfig(stem, collections, linkTypes));
   return {
@@ -212,7 +238,7 @@ export function createDefaultGanttChartStemConfig(
 
 function findBestInitialAttributes(
   attributesResourcesOrder: AttributesResource[]
-): { index: number; startAttribute?: Attribute; endAttribute?: Attribute } {
+): {index: number; startAttribute?: Attribute; endAttribute?: Attribute} {
   for (let i = 0; i < (attributesResourcesOrder || []).length; i++) {
     if (getAttributesResourceType(attributesResourcesOrder[i]) !== AttributesResourceType.Collection) {
       continue;
@@ -229,26 +255,39 @@ function findBestInitialAttributes(
   return {index: 0};
 }
 
-export function ganttConfigIsEmpty(config: GanttChartConfig) {
-  return config && config.stemsConfigs.filter(value => ganttStemConfigDefinedProperties(value).length > 0).length === 0;
+export function ganttStemConfigIsEmpty(stemConfig: GanttChartStemConfig) {
+  return stemConfig && ganttStemConfigDefinedProperties(stemConfig).length === 0;
 }
 
-export function cleanGanttBarModel(model: GanttChartBarModel): GanttChartBarModel {
-  return {
-    resourceIndex: model.resourceIndex,
-    attributeId: model.attributeId,
-    resourceId: model.resourceId,
-    resourceType: model.resourceType,
-  };
+export function createLinkDocumentsDataNewTask(task: GanttChartTask, otherTasks: GanttChartTask[]): string[] {
+  const swimlaneTasks = (otherTasks || []).filter(otherTask => tasksHasSameSwimlanes(otherTask, task));
+  return uniqueValues(
+    swimlaneTasks
+      .map(swimlaneTask => {
+        const dataResourceChain =
+          (swimlaneTask.metadata && (<GanttTaskMetadata>swimlaneTask.metadata).dataResourceChain) || [];
+        const linkChainIndex = findLastIndex(dataResourceChain, chain => !!chain.linkInstanceId);
+        const documentChain = dataResourceChain[linkChainIndex - 1];
+        return documentChain && documentChain.documentId;
+      })
+      .filter(documentId => !!documentId)
+  );
+}
+
+function tasksHasSameSwimlanes(task1: GanttChartTask, task2: GanttChartTask): boolean {
+  return (task1.swimlanes || []).every((swimlane, index) => {
+    const otherSwimlane = (task2.swimlanes || [])[index];
+    return (isNullOrUndefined(swimlane) && isNullOrUndefined(otherSwimlane)) || swimlane.value === otherSwimlane.value;
+  });
 }
 
 export function createLinkDocumentsData(
   task: GanttChartTask,
   otherTasks: GanttChartTask[],
   linkInstances: LinkInstance[]
-): { linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[] } {
-  const swimlaneTasks = (otherTasks || []).filter(t => deepObjectsEquals(t.swimlanes, task.swimlanes));
-  const dataResourceChain = task.metadata && (<GanttTaskMetadata>task.metadata).dataResourceChain || [];
+): {linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[]} {
+  const swimlaneTasks = (otherTasks || []).filter(otherTask => tasksHasSameSwimlanes(otherTask, task));
+  const dataResourceChain = (task.metadata && (<GanttTaskMetadata>task.metadata).dataResourceChain) || [];
   const linkChainIndex = findLastIndex(dataResourceChain, chain => !!chain.linkInstanceId);
   const linkChain = dataResourceChain[linkChainIndex];
   const linkInstance = linkChain && (linkInstances || []).find(li => li.id === linkChain.linkInstanceId);
@@ -271,26 +310,108 @@ export function createLinkDocumentsData(
   return {linkInstanceId: linkChain.linkInstanceId, documentId, otherDocumentIds: uniqueValues(otherDocumentIds)};
 }
 
-export function canCreateTaskByStemConfig(config: GanttChartStemConfig): boolean {
+export function ganttTaskDataResourceId(task: GanttChartTask): string {
+  const metadata = task.metadata as GanttTaskMetadata;
+  return metadata && (metadata.nameDataId || metadata.startDataId);
+}
+
+export function ganttTaskBarModel(task: GanttChartTask): GanttChartBarModel {
+  const metadata = task.metadata as GanttTaskMetadata;
+  return metadata && metadata.stemConfig && (metadata.stemConfig.name || metadata.stemConfig.start);
+}
+
+export function canCreateTaskByStemConfig(
+  config: GanttChartStemConfig,
+  permissions: Record<string, AllowedPermissions>,
+  linkTypesMap: Record<string, LinkType>
+): boolean {
   if (!config.start || !config.end) {
     return false;
   }
+
+  const maxDistance = 1;
   if (config.name) {
-    return ganttModelsAreFromSameOrNearResource(config.name, config.start) && ganttModelsAreFromSameOrNearResource(config.name, config.start);
+    return (
+      ganttModelsAreAtDistance(config.name, config.start, maxDistance) &&
+      ganttModelsAreAtDistance(config.name, config.end, maxDistance) &&
+      ganttModelsAreAtDistance(config.start, config.end, maxDistance) &&
+      hasPermissionByConfig(config, permissions, linkTypesMap)
+    );
   }
 
-  return ganttModelsAreFromSameOrNearResource(config.start, config.end);
+  return (
+    ganttModelsAreAtDistance(config.start, config.end, maxDistance) &&
+    hasPermissionByConfig(config, permissions, linkTypesMap)
+  );
 }
 
-export function ganttModelsAreFromSameOrNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
-  return ganttModelsAreFromSameResource(model1, model2) || ganttModelsAreFromNearResource(model1, model2);
+function hasPermissionByConfig(
+  config: GanttChartStemConfig,
+  permissions: Record<string, AllowedPermissions>,
+  linkTypesMap: Record<string, LinkType>
+): boolean {
+  let hasPermission = true;
+  if (config.name) {
+    const permission = ganttModelPermissions(config.name, permissions, linkTypesMap);
+    hasPermission = hasPermission && permission && permission.writeWithView;
+  }
+
+  if (config.start) {
+    const permission = ganttModelPermissions(config.start, permissions, linkTypesMap);
+    hasPermission = hasPermission && permission.writeWithView;
+  }
+
+  if (config.end) {
+    const permission = ganttModelPermissions(config.end, permissions, linkTypesMap);
+    hasPermission = hasPermission && permission.writeWithView;
+  }
+
+  return hasPermission;
 }
 
-export function ganttModelsAreFromSameResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
-  return model1.resourceIndex === model2.resourceIndex;
+export function ganttModelPermissions(
+  model: GanttChartBarModel,
+  permissions: Record<string, AllowedPermissions>,
+  linkTypesMap: Record<string, LinkType>
+): AllowedPermissions {
+  if (model.resourceType === AttributesResourceType.Collection) {
+    return permissions[model.resourceId] && permissions[model.resourceId];
+  }
+  const linkType = linkTypesMap[model.resourceId];
+  if (linkType) {
+    return mergeAllowedPermissions(permissions[linkType.collectionIds[0]], permissions[linkType.collectionIds[1]]);
+  }
+  return {};
 }
 
-export function ganttModelsAreFromNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
+function ganttModelsAreAtDistance(
+  model1: GanttChartBarModel,
+  model2: GanttChartBarModel,
+  maxDistance: number
+): boolean {
+  return Math.abs(model1.resourceIndex - model2.resourceIndex) / 2 <= maxDistance;
+}
+
+export function ganttModelsAreFromSameOrNearResource(
+  model1: GanttChartBarModel,
+  model2: GanttChartBarModel,
+  maxDistance = 0
+): boolean {
+  return ganttModelsAreFromSameResource(model1, model2, maxDistance) || ganttModelsAreFromNearResource(model1, model2);
+}
+
+function ganttModelsAreFromSameResource(
+  model1: GanttChartBarModel,
+  model2: GanttChartBarModel,
+  maxDistance = 0
+): boolean {
+  return (
+    model1.resourceType === model2.resourceType &&
+    Math.abs(model1.resourceIndex - model2.resourceIndex) / 2 <= maxDistance
+  );
+}
+
+function ganttModelsAreFromNearResource(model1: GanttChartBarModel, model2: GanttChartBarModel): boolean {
   if (
     model2.resourceType === AttributesResourceType.Collection &&
     model1.resourceType === AttributesResourceType.LinkType &&

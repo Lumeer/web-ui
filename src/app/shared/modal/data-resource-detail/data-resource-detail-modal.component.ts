@@ -1,0 +1,198 @@
+/*
+ * Lumeer: Modern Data Definition and Processing Platform
+ *
+ * Copyright (C) since 2017 Lumeer.io, s.r.o. and/or its affiliates.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  TemplateRef,
+} from '@angular/core';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {getAttributesResourceType} from '../../utils/resource.utils';
+import {KeyCode} from '../../key-code';
+import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
+import {Query} from '../../../core/store/navigation/query/query';
+import {select, Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
+import {BsModalRef} from 'ngx-bootstrap';
+import {DialogType} from '../dialog-type';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {DocumentModel} from '../../../core/store/documents/document.model';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {Collection} from '../../../core/store/collections/collection';
+
+@Component({
+  templateUrl: './data-resource-detail-modal.component.html',
+  styleUrls: ['./data-resource-detail-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class DataResourceDetailModalComponent implements OnInit, OnChanges {
+  @Input()
+  public resource: AttributesResource;
+
+  @Input()
+  public dataResource: DataResource;
+
+  @Input()
+  public toolbarRef: TemplateRef<any>;
+
+  @Input()
+  public createDirectly: boolean;
+
+  @Output()
+  public dataResourceChanged = new EventEmitter<DataResource>();
+
+  public readonly dialogType = DialogType;
+  public readonly collectionResourceType = AttributesResourceType.Collection;
+
+  public resourceType: AttributesResourceType;
+
+  public onSubmit$ = new Subject<DataResource>();
+  public onCancel$ = new Subject();
+  public performingAction$ = new BehaviorSubject(false);
+
+  public query$: Observable<Query>;
+  public resource$: Observable<AttributesResource>;
+  public dataResource$: Observable<DataResource>;
+
+  private dataExistSubscription = new Subscription();
+  private currentDataResource: DataResource;
+
+  constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
+
+  public ngOnInit() {
+    this.initData();
+    this.query$ = this.store$.pipe(select(selectQuery));
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.initData();
+  }
+
+  private initData() {
+    this.resourceType = getAttributesResourceType(this.resource);
+    this.resource$ = of(this.resource);
+    this.dataResource$ = of(this.dataResource);
+
+    this.subscribeExist(this.resource, this.dataResource);
+  }
+
+  private subscribeExist(resource: AttributesResource, dataResource: DataResource) {
+    this.dataExistSubscription.unsubscribe();
+    this.dataExistSubscription = combineLatest([
+      resource.id ? this.selectResource$(resource.id) : of(true),
+      dataResource.id ? this.selectDataResource$(dataResource.id) : of(true),
+    ]).subscribe(([currentResource, currentDataResource]) => {
+      if (!currentResource || !currentDataResource) {
+        this.hideDialog();
+      }
+    });
+  }
+
+  private selectResource$(id: string): Observable<AttributesResource> {
+    if (this.resourceType === AttributesResourceType.Collection) {
+      return this.store$.pipe(select(selectCollectionById(id)));
+    }
+    return this.store$.pipe(select(selectLinkTypeById(id)));
+  }
+
+  private selectDataResource$(id: string): Observable<DataResource> {
+    if (this.resourceType === AttributesResourceType.Collection) {
+      return this.store$.pipe(select(selectDocumentById(id)));
+    }
+    return this.store$.pipe(select(selectLinkInstanceById(id)));
+  }
+
+  public onSubmit() {
+    const dataResource = this.currentDataResource || this.dataResource;
+    if (this.createDirectly) {
+      this.performingAction$.next(true);
+
+      if (this.resourceType === AttributesResourceType.Collection) {
+        this.createDocument(<DocumentModel>dataResource);
+      } else {
+        this.createLink(<LinkInstance>dataResource);
+      }
+    } else {
+      this.onSubmit$.next(dataResource);
+      this.hideDialog();
+    }
+  }
+
+  private createDocument(document: DocumentModel) {
+    this.store$.dispatch(
+      new DocumentsAction.Create({
+        document,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
+  }
+
+  private createLink(linkInstance: LinkInstance) {
+    this.store$.dispatch(
+      new LinkInstancesAction.Create({
+        linkInstance,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
+  }
+
+  public onClose() {
+    this.onCancel$.next();
+    this.hideDialog();
+  }
+
+  private hideDialog() {
+    this.bsModalRef.hide();
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+      this.onClose();
+    }
+  }
+
+  public onDataResourceChanged(dataResource: DataResource) {
+    this.dataResourceChanged.emit(dataResource);
+    this.dataResource = dataResource;
+  }
+
+  public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
+    this.resourceType = AttributesResourceType.Collection;
+    this.resource$ = of(data.collection);
+    this.dataResource$ = of(data.document);
+    this.subscribeExist(data.collection, data.document);
+    this.currentDataResource = data.document;
+  }
+}

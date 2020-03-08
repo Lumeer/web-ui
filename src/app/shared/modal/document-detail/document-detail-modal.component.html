@@ -13,7 +13,7 @@
                           [query]="query$ | async"
                           [permissions]="data.collection | collectionPermissions | async"
                           [toolbarRef]="toolbarRef"
-                          (documentChanged)="onDocumentChanged($event)">
+                          (dataResourceChanged)="onDocumentChanged($event)">
     </data-resource-detail>
     <links-list class="d-block mt-5"
                 *ngIf="data.collection && data.document?.id"

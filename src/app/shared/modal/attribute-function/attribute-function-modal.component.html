@@ -1,5 +1,5 @@
 <modal-wrapper
-  *ngIf="{collection: collection$ | async, linkType: linkType$ | async, linkCollections: linkTypeCollections$ | async, attribute: attribute$ | async} as data"
+  *ngIf="{collection: collection$ | async, linkType: linkType$ | async,  attribute: attribute$ | async} as data"
   [dialogType]="dialogType.Primary"
   [performingAction]="performingAction$ | async"
   [customHeader]="true"
@@ -10,9 +10,10 @@
     <h5 class="modal-title break-all">
       <span i18n="@@dialog.attribute.function.title">Configure function of</span>
       <icons-presenter
+        *ngIf="(data.collection || data.linkType) | resourceIconsColors as iconColors"
         class="ml-2"
-        [colors]="data.collection ? [data.collection.color] : (data.linkCollections ? [data.linkCollections[0]?.color, data.linkCollections[1]?.color] : [])"
-        [icons]="data.collection ? [data.collection.icon] :  (data.linkCollections ? [data.linkCollections[0]?.icon, data.linkCollections[1]?.icon] : [])">
+        [colors]="iconColors.colors"
+        [icons]="iconColors.icons">
       </icons-presenter>
       <span class="ml-1">{{data.attribute.name}}</span>
     </h5>

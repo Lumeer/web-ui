@@ -40,7 +40,9 @@ import {LinkType} from '../../core/store/link-types/link.type';
 import {CreateLinkModalComponent} from './create-link/create-link-modal.component';
 import {View} from '../../core/store/views/view';
 import {ShareViewModalComponent} from './share-view/share-view-modal.component';
-import {DocumentDetailModalComponent} from './document-detail/document-detail-modal.component';
+import {AttributesResource, DataResource} from '../../core/model/resource';
+import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
+import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
 import {DocumentModel} from '../../core/store/documents/document.model';
 
 @Injectable({
@@ -57,13 +59,24 @@ export class ModalService {
     return modalRef;
   }
 
-  public showDocumentDetail(document: DocumentModel, collection: Collection): BsModalRef {
+  public showChooseLinkDocument(documentIds: string[], callback?: (document: DocumentModel) => void): BsModalRef {
+    const config = {initialState: {documentIds, callback}, keyboard: true, class: 'modal-lg'};
+    const modalRef = this.bsModalService.show(ChooseLinkDocumentModalComponent, config);
+    this.modalRefs.push(modalRef);
+    return modalRef;
+  }
+
+  public showDataResourceDetail(
+    dataResource: DataResource,
+    resource: AttributesResource,
+    createDirectly: boolean = true
+  ): BsModalRef {
     const config = {
-      initialState: {document: document, collection: collection},
+      initialState: {dataResource, resource, createDirectly},
       keyboard: true,
       class: 'modal-lg',
     };
-    const modalRef = this.bsModalService.show(DocumentDetailModalComponent, config);
+    const modalRef = this.bsModalService.show(DataResourceDetailModalComponent, config);
     this.modalRefs.push(modalRef);
     return modalRef;
   }

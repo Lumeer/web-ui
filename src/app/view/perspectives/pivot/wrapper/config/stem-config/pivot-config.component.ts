@@ -30,12 +30,13 @@ import {PivotStemData} from '../../../util/pivot-data';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {cleanPivotAttribute, pivotAttributesAreSame} from '../../../util/pivot-util';
+import {pivotAttributesAreSame} from '../../../util/pivot-util';
 import {CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {deepObjectCopy, isNotNullOrUndefined} from '../../../../../../shared/utils/common.utils';
 import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 import {DRAG_DELAY} from '../../../../../../core/constants';
+import {cleanQueryAttribute} from '../../../../../../core/model/query-attribute';
 
 @Component({
   selector: 'pivot-config',
@@ -178,7 +179,7 @@ export class PivotConfigComponent {
     currentIndex: number
   ) {
     const pivotAttribute = containerArray[currentIndex];
-    const cleanedAttribute = cleanPivotAttribute(pivotAttribute);
+    const cleanedAttribute = cleanQueryAttribute(pivotAttribute);
     if (this.movedFromValuesOrHeaderToHeader(previousContainer, container)) {
       const asc = !!(<PivotRowColumnAttribute>cleanedAttribute).sort
         ? (<PivotRowColumnAttribute>cleanedAttribute).sort.asc

@@ -52,6 +52,7 @@ import {
 import {Direction} from '../../../../../../../../shared/direction';
 import {selectCollectionById} from '../../../../../../../../core/store/collections/collections.state';
 import {ModalService} from '../../../../../../../../shared/modal/modal.service';
+import {selectLinkTypeById} from '../../../../../../../../core/store/link-types/link-types.state';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -222,7 +223,11 @@ export class TableDataCellMenuComponent implements OnChanges {
     if (this.document) {
       this.store$
         .pipe(select(selectCollectionById(this.document.collectionId)), take(1))
-        .subscribe(collection => this.modalService.showDocumentDetail(this.document, collection));
+        .subscribe(collection => this.modalService.showDataResourceDetail(this.document, collection));
+    } else if (this.linkInstance) {
+      this.store$
+        .pipe(select(selectLinkTypeById(this.linkInstance.linkTypeId)), take(1))
+        .subscribe(linkType => this.modalService.showDataResourceDetail(this.linkInstance, linkType));
     }
   }
 }

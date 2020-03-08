@@ -19,19 +19,16 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {DataResourceDetailComponent} from './data-resource-detail.component';
+import {DataResourceDetailModalComponent} from './data-resource-detail-modal.component';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-
+import {DataResourceModule} from '../../data-resource/data-resource.module';
+import {PipesModule} from '../../pipes/pipes.module';
+import {LinksModule} from '../../links/links.module';
 
 @NgModule({
-  declarations: [DataResourceDetailComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ModalWrapperModule,
-  ]
+  declarations: [DataResourceDetailModalComponent],
+  imports: [CommonModule, DataResourceModule, ModalWrapperModule, PipesModule, LinksModule],
+  exports: [DataResourceDetailModalComponent],
+  entryComponents: [DataResourceDetailModalComponent],
 })
-export class DataResourceDetailModule {
-}
+export class DataResourceDetailModalModule {}

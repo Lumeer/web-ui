@@ -1,0 +1,44 @@
+<div class="custom-control custom-checkbox mt-2">
+  <input [id]="savePositionId"
+         [attr.checked]="config.positionSaved"
+         [checked]="config.positionSaved"
+         (change)="onSavePositionChange($event.target.checked)"
+         type="checkbox"
+         #savePositionCheckbox
+         class="custom-control-input">
+  <label [for]="savePositionId"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.gantt.config.position.save" class="user-select-none cursor-pointer"
+        (click)="savePositionCheckbox.click()">Save position to view</span>
+</div>
+
+<div class="custom-control custom-checkbox mt-2">
+  <input [id]="showDatesId"
+         [attr.checked]="config.showDates"
+         [checked]="config.showDates"
+         (change)="onShowDatesChange($event.target.checked)"
+         type="checkbox"
+         #datesCheckbox
+         class="custom-control-input">
+  <label [for]="showDatesId"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.gantt.config.dates.show" class="user-select-none cursor-pointer"
+        (click)="datesCheckbox.click()">Show task dates</span>
+</div>
+
+<div class="custom-control custom-checkbox mt-2">
+  <input [id]="lockResizeId"
+         [attr.checked]="config.lockResize"
+         [checked]="config.lockResize"
+         (change)="onLockResizeChange($event.target.checked)"
+         type="checkbox"
+         #resizeCheckbox
+         class="custom-control-input">
+  <label [for]="lockResizeId"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.gantt.config.resize.lock" class="user-select-none cursor-pointer"
+        (click)="resizeCheckbox.click()">Lock dependent task position</span>
+</div>

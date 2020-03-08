@@ -25,10 +25,10 @@ import {
   PivotSortList,
   PivotSortValue,
 } from '../../../../../../../../../core/store/pivots/pivot';
-import {PivotData, PivotStemData} from '../../../../../../util/pivot-data';
-import {cleanPivotAttribute} from '../../../../../../util/pivot-util';
+import {PivotStemData} from '../../../../../../util/pivot-data';
 import {SelectItemModel} from '../../../../../../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {cleanQueryAttribute} from '../../../../../../../../../core/model/query-attribute';
 
 @Component({
   selector: 'pivot-attribute-sort',
@@ -78,7 +78,7 @@ export class PivotAttributeSortComponent {
 
   public onSortToggle() {
     const currentSort: PivotSort = this.pivotAttribute.sort || {
-      attribute: cleanPivotAttribute(this.pivotAttribute),
+      attribute: cleanQueryAttribute(this.pivotAttribute),
       asc: true,
     };
     const newAttribute = {...this.pivotAttribute, sort: {...currentSort, asc: !currentSort.asc}};
@@ -86,7 +86,7 @@ export class PivotAttributeSortComponent {
   }
 
   private getCurrentSort(): PivotSort {
-    return this.pivotAttribute.sort || {attribute: cleanPivotAttribute(this.pivotAttribute), asc: true};
+    return this.pivotAttribute.sort || {attribute: cleanQueryAttribute(this.pivotAttribute), asc: true};
   }
 
   public onSubSortSelected(index: number, value: PivotSortValue) {

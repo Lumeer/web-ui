@@ -1,5 +1,5 @@
 <div class="d-flex flex-column flex-lg-row">
-  <div class="flex-grow-1 pr-lg-2 text-truncate" *ngIf="{iconColors : resource | resourceIconsColors} as data">
+  <div class="flex-grow-1 pr-lg-2 text-truncate" *ngIf="{iconColors : resource$ | async | resourceIconsColors} as data">
     <icons-presenter class="mr-2"
                      [icons]="data.iconColors.icons"
                      [colors]="data.iconColors.colors">

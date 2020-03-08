@@ -190,10 +190,6 @@ export class PostItComponent implements OnDestroy {
   }
 
   public onDetail() {
-    if (getAttributesResourceType(this.resource) === AttributesResourceType.Collection) {
-      this.modalService.showDocumentDetail(this.dataResource as DocumentModel, this.resource);
-    } else {
-      // TODO
-    }
+    this.modalService.showDataResourceDetail(this.dataResource, this.resource);
   }
 }

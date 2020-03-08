@@ -88,6 +88,18 @@ export class DocumentsEffects {
   );
 
   @Effect()
+  public getByIds$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.GetByIds>(DocumentsActionType.GET_BY_IDS),
+    mergeMap(action =>
+      this.documentService.getDocuments(action.payload.documentsIds).pipe(
+        map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
+        map(documents => new DocumentsAction.GetSuccess({documents})),
+        catchError(() => EMPTY)
+      )
+    )
+  );
+
+  @Effect()
   public getFailure$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.GetFailure>(DocumentsActionType.GET_FAILURE),
     tap(action => console.error(action.payload.error)),
@@ -136,7 +148,7 @@ export class DocumentsEffects {
   public createWithLink$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.CreateWithLink>(DocumentsActionType.CREATE_WITH_LINK),
     mergeMap(action => {
-      const {document, otherDocumentId, linkInstance: preparedLinkInstance, callback} = action.payload;
+      const {document, otherDocumentId, linkInstance: preparedLinkInstance, onSuccess, onFailure} = action.payload;
       const documentDto = convertDocumentModelToDto(document);
 
       return this.documentService.createDocument(documentDto).pipe(
@@ -152,11 +164,11 @@ export class DocumentsEffects {
             mergeMap(newLink => [
               new DocumentsAction.CreateSuccess({document: newDocument}),
               new LinkInstancesAction.CreateSuccess({linkInstance: newLink}),
-              new CommonAction.ExecuteCallback({callback: () => callback && callback(newDocument.id)}),
+              ...createCallbackActions(onSuccess, newDocument.id),
             ])
           );
         }),
-        catchError(error => of(new DocumentsAction.CreateFailure({error: error})))
+        catchError(error => of(...createCallbackActions(onFailure), new DocumentsAction.CreateFailure({error: error})))
       );
     })
   );
@@ -203,6 +215,28 @@ export class DocumentsEffects {
       }
       const errorMessage = this.i18n({id: 'document.create.fail', value: 'Could not create the record'});
       return new NotificationsAction.Error({message: errorMessage});
+    })
+  );
+
+  @Effect()
+  public createChain$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.CreateChain>(DocumentsActionType.CREATE_CHAIN),
+    mergeMap(action => {
+      const {documents, linkInstances, failureMessage} = action.payload;
+      const documentsDtos = documents.map(document => convertDocumentModelToDto(document));
+      const linkInstancesDtos = linkInstances.map(link => convertLinkInstanceModelToDto(link));
+
+      return this.documentService.createChain(documentsDtos, linkInstancesDtos).pipe(
+        mergeMap(({documents: documentDtos, linkInstances: linkDtos}) => {
+          const newDocuments = documentDtos.map(dto => convertDocumentDtoToModel(dto));
+          const newLinks = linkDtos.map(dto => convertLinkInstanceDtoToModel(dto));
+          return [
+            new DocumentsAction.CreateChainSuccess({documents: newDocuments}),
+            new LinkInstancesAction.CreateMultipleSuccess({linkInstances: newLinks}),
+          ];
+        }),
+        catchError(() => of(new NotificationsAction.Error({message: failureMessage})))
+      );
     })
   );
 

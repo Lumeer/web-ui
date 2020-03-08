@@ -21,6 +21,7 @@ import {Constraint} from '../../model/constraint';
 import {AttributesResourceType} from '../../model/resource';
 import {QueryStem} from '../navigation/query/query';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {QueryAttribute} from '../../model/query-attribute';
 
 export const DEFAULT_GANTT_CHART_ID = 'default';
 export const GANTT_DATE_FORMAT = 'YYYY-MM-DD HH:MM';
@@ -41,7 +42,13 @@ export interface GanttChartConfig {
   barHeight?: number;
   showDates?: boolean;
   swimlaneWidths?: number[];
+  positionSaved?: boolean;
+  position?: GanttChartPosition;
   version?: GanttChartConfigVersion;
+}
+
+export interface GanttChartPosition {
+  value: any;
 }
 
 export enum GanttChartConfigVersion {
@@ -60,11 +67,7 @@ export interface GanttChartStemConfig {
   categories?: GanttChartBarModel[];
 }
 
-export interface GanttChartBarModel {
-  resourceId: string;
-  attributeId: string;
-  resourceIndex?: number;
-  resourceType: AttributesResourceType;
+export interface GanttChartBarModel extends QueryAttribute {
   constraint?: Constraint;
 }
 

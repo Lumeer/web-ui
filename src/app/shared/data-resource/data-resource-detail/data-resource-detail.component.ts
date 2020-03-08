@@ -26,7 +26,7 @@ import {
   OnInit,
   Output,
   SimpleChanges,
-  TemplateRef
+  TemplateRef,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -50,6 +50,7 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {LinkType} from '../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'data-resource-detail',
@@ -74,7 +75,10 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public toolbarRef: TemplateRef<any>;
 
   @Output()
-  public documentChanged = new EventEmitter<DocumentModel>();
+  public dataResourceChanged = new EventEmitter<DataResource>();
+
+  @Output()
+  public routingPerformed = new EventEmitter();
 
   public workspace$: Observable<Workspace>;
   public constraintData$: Observable<ConstraintData>;
@@ -87,8 +91,7 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
     private modalService: ModalService
-  ) {
-  }
+  ) {}
 
   public get isCollection(): boolean {
     return this.resourceType === AttributesResourceType.Collection;
@@ -112,13 +115,14 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
         })
       );
     } else {
-      this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: this.dataResource.id}))
+      this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: this.dataResource.id}));
     }
   }
 
   public onSwitchToTable() {
     if (this.resource && this.dataResource) {
       this.perspectiveService.switchPerspective(Perspective.Table, this.createCursor(), this.createQueryString());
+      this.routingPerformed.emit();
     }
   }
 
@@ -126,7 +130,8 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     if (this.isCollection) {
       return convertQueryModelToString({stems: [{collectionId: this.resource.id}]});
     }
-    return convertQueryModelToString({stems: [{collectionId: '', linkTypeIds: [this.resource.id]}]}); // TODO
+    const collectionIds = (<LinkType>this.resource).collectionIds || [];
+    return convertQueryModelToString({stems: [{collectionId: collectionIds[0], linkTypeIds: [this.resource.id]}]});
   }
 
   private createCursor(): ViewCursor {
@@ -140,7 +145,7 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     if (this.isCollection) {
       this.modalService.showAttributeType(attribute.id, this.resource.id);
     } else {
-      this.modalService.showAttributeType(attribute.id, '', this.resource.id); // TODO
+      this.modalService.showAttributeType(attribute.id, null, this.resource.id);
     }
   }
 
@@ -148,7 +153,7 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     if (this.isCollection) {
       this.modalService.showAttributeFunction(attribute.id, this.resource.id);
     } else {
-      this.modalService.showAttributeFunction(attribute.id, '', this.resource.id); // TODO
+      this.modalService.showAttributeFunction(attribute.id, null, this.resource.id);
     }
   }
 }
