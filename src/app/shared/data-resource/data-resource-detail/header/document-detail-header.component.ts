@@ -83,6 +83,8 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
+  public document: DocumentModel;
+
   public resource$: Observable<AttributesResource>;
 
   public createdBy$: Observable<string>;
@@ -97,6 +99,7 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.dataResource) {
       this.renewSubscriptions();
+      this.document = <DocumentModel>this.dataResource;
     }
     if (changes.resource) {
       this.subscribeToResource();

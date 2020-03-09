@@ -32,12 +32,12 @@
          title="Switch to Table perspective"
          i18n-title="@@document.detail.switch.table"
          (click)="onSwitchToTable()"></i>
-      <ng-container *ngIf="permissions?.read && resourceType === collectionResourceType">
-        <i *ngIf="dataResource.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
+      <ng-container *ngIf="permissions?.read && resourceType === collectionResourceType && document">
+        <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
            title="Remove from favorites"
            i18n-title="@@document.detail.favorite.remove"
            (click)="onFavoriteToggle()"></i>
-        <i *ngIf="!dataResource.favorite"
+        <i *ngIf="!document.favorite"
            class="far fa-fw fa-star text-warning clickable mr-2"
            title="Add to favorites"
            i18n-title="@@document.detail.favorite.add"
