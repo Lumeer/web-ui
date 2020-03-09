@@ -99,7 +99,7 @@
     "@angular-devkit/schematics": "^8.3.21",
     "@angular/cli": "^8.3.23",
     "@angular/compiler-cli": "^8.2.10",
-    "@angular/language-service": "^8.2.13",
+    "@angular/language-service": "^9.0.5",
     "@compodoc/compodoc": "^1.1.11",
     "@ngrx/schematics": "^8.5.2",
     "@sentry/cli": "^1.49.0",
