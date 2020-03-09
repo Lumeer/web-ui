@@ -184,12 +184,10 @@
   },
   "lint-staged": {
     "*.{ts,js,json,scss,md}": [
-      "npm run format:fix",
-      "git add"
+      "npm run format:fix"
     ],
     "**/!(*.spec).ts": [
-      "npm run tslint",
-      "git add"
+      "npm run tslint"
     ]
   }
 }

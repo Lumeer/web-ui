@@ -77,7 +77,8 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {generateDocumentData} from '../../../../core/store/documents/document.utils';
 import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
-import {DurationUnit} from '../../../../core/model/data/constraint-config';
+import {subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
+import {durationCountsMapToString} from '../../../../shared/utils/constraint/duration-constraint.utils';
 
 interface Data {
   collections: Collection[];
@@ -396,11 +397,12 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     if (constraint && constraint.type === ConstraintType.Duration) {
       const start = moment(task.start, this.options && this.options.dateFormat);
       const end = moment(task.end, this.options && this.options.dateFormat);
-      const daysDiff = end.diff(start, 'days', true);
-      const daysString = Math.floor(daysDiff * 100) + DurationUnit.Days;
-      const dataValue = (<DurationConstraint>constraint).createDataValue(daysString, this.constraintData);
 
-      patchData[model.attributeId] = toNumber(dataValue.serialize()) / 100;
+      const durationCountsMap = subtractDatesToDurationCountsMap(end.toDate(), start.toDate());
+      const durationString = durationCountsMapToString(durationCountsMap);
+      const dataValue = (<DurationConstraint>constraint).createDataValue(durationString, this.constraintData);
+
+      patchData[model.attributeId] = toNumber(dataValue.serialize());
     } else {
       this.patchDate(task.end, model, patchData, dataResource);
     }

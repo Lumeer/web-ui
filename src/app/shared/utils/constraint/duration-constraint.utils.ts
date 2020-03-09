@@ -197,17 +197,8 @@ export function formatDurationDataValue(
   const saveValue = getDurationSaveValue(value, config, durationUnitsMap);
   if (isNumeric(saveValue) && toNumber(saveValue) >= 0) {
     const unitsCountMap = createDurationUnitsCountsMap(saveValue, config, maxUnits);
-
-    const reducedValue = [...sortedDurationUnits].reduce((result, unit) => {
-      const numUnits = new Big(unitsCountMap[unit] || 0);
-      if (numUnits.cmp(new Big(0)) === Comparison.GT) {
-        const unitString = (durationUnitsMap && durationUnitsMap[unit]) || unit;
-        return result + numUnits.toFixed(0) + unitString;
-      }
-      return result;
-    }, '');
-
-    return reducedValue || (toNumber(saveValue) > 0 ? '0' : '');
+    const resultValue = durationCountsMapToString(unitsCountMap, durationUnitsMap);
+    return resultValue || (toNumber(saveValue) > 0 ? '0' : '');
   }
 
   return saveValue;
@@ -258,4 +249,18 @@ export function createDurationUnitsCountsMap(
   }
 
   return {};
+}
+
+export function durationCountsMapToString(
+  durationCountsMap: Record<DurationUnit, number>,
+  durationUnitsMap?: DurationUnitsMap
+): string {
+  return [...sortedDurationUnits].reduce((result, unit) => {
+    const numUnits = new Big(durationCountsMap[unit] || 0);
+    if (numUnits.cmp(new Big(0)) === Comparison.GT) {
+      const unitString = (durationUnitsMap && durationUnitsMap[unit]) || unit;
+      return result + numUnits.toFixed(0) + unitString;
+    }
+    return result;
+  }, '');
 }
