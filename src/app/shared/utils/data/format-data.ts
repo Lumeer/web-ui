@@ -20,14 +20,14 @@
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {Attribute} from '../../../core/store/collections/collection';
-import {DocumentData} from '../../../core/store/documents/document.model';
+import {DataResourceData} from '../../../core/model/resource';
 
 export function formatData(
-  data: DocumentData,
+  data: DataResourceData,
   attributes: Attribute[],
   constraintData: ConstraintData,
   filterInvalid?: boolean
-): DocumentData {
+): DataResourceData {
   const idsMap: Record<string, Attribute> = (attributes || []).reduce((attributesMap, attr) => {
     attributesMap[attr.id] = attr;
     return attributesMap;

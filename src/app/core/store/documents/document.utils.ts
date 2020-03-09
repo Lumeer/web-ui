@@ -23,13 +23,13 @@ import {
   getQueryFiltersForLinkType,
   queryConditionNumInputs,
 } from '../navigation/query/query.util';
-import {DocumentData, DocumentModel} from './document.model';
+import {DocumentModel} from './document.model';
 import {ConstraintData, ConstraintType} from '../../model/data/constraint';
 import {findAttribute} from '../collections/collection.util';
 import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 import {createRange} from '../../../shared/utils/array.utils';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
-import {AttributesResource, AttributesResourceType} from '../../model/resource';
+import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
@@ -127,7 +127,7 @@ export function generateDocumentDataByResourceQuery(
   query: Query,
   constraintData: ConstraintData,
   setupAllAttributes = true
-): DocumentData {
+): DataResourceData {
   const resourceType = getAttributesResourceType(attributesResource);
   const queryFilters =
     resourceType === AttributesResourceType.Collection

@@ -730,17 +730,18 @@ function createDataMap(
 
     const document1CollectionIndex = idsOrderMap[collectionResourceId(document1.collectionId)];
     const document2CollectionIndex = idsOrderMap[collectionResourceId(document2.collectionId)];
-    const linkInstanceObjectData: DataResource = {
+    const linkInstanceObjectData: LinkInstance = {
       id: linkInstance.id,
       data: linkInstance.data,
+      documentIds: [document1.id, document2.id],
       linkTypeId: linkInstance.linkTypeId,
     };
-    const document1ObjectData: DataResource = {
+    const document1ObjectData: DocumentModel = {
       id: document1.id,
       data: document1.data,
       collectionId: document1.collectionId,
     };
-    const document2ObjectData: DataResource = {
+    const document2ObjectData: DocumentModel = {
       id: document2.id,
       data: document2.data,
       collectionId: document2.collectionId,
