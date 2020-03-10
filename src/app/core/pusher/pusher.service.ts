@@ -550,6 +550,19 @@ export class PusherService implements OnDestroy {
   }
 
   private bindOtherEvents() {
+    this.channel.bind('Chain:create', data => {
+      if (this.isCurrentWorkspace(data)) {
+        const documentsIds: string[] = data.object.documentsIds || [];
+        const linkInstancesIds: string[] = data.object.linkInstancesIds || [];
+        if (documentsIds.length) {
+          this.store$.dispatch(new DocumentsAction.GetByIds({documentsIds}));
+        }
+        if (linkInstancesIds.length) {
+          this.store$.dispatch(new LinkInstancesAction.GetByIds({linkInstancesIds}));
+        }
+      }
+    });
+
     this.channel.bind('CompanyContact:update', data => {
       this.store$.dispatch(new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(data)}));
     });

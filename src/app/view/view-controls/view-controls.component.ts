@@ -59,6 +59,7 @@ import {convertQueryModelToString} from '../../core/store/navigation/query/query
 import {TablesAction} from '../../core/store/tables/tables.action';
 import {PivotsAction} from '../../core/store/pivots/pivots.action';
 import {MapsAction} from '../../core/store/maps/maps.action';
+import {GanttChartAction} from '../../core/store/gantt-charts/gantt-charts.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -286,6 +287,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         const pivotConfig = view.config && view.config.pivot;
         this.revertQueryWithUrl(workspacePath, view.query);
         this.store$.dispatch(new PivotsAction.SetConfig({pivotId: view.code, config: pivotConfig}));
+        return;
+      case Perspective.GanttChart:
+        const ganttConfig = view.config && view.config.ganttChart;
+        this.revertQueryWithUrl(workspacePath, view.query);
+        this.store$.dispatch(new GanttChartAction.SetConfig({ganttChartId: view.code, config: ganttConfig}));
         return;
       case Perspective.Map:
         const mapConfig = view.config && view.config.map;

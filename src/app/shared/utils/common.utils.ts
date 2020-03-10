@@ -156,6 +156,10 @@ function getValueFromObjectParams<T>(object: T, params: string[]): any {
   return '';
 }
 
+export function objectsByIdMap<T extends {id?: string}>(objects: T[]): Record<string, T> {
+  return (objects || []).reduce((map, object) => ({...map, [object.id]: object}), {});
+}
+
 /**
  * Returns the index of the last element in the array where predicate is true, and -1
  * otherwise.

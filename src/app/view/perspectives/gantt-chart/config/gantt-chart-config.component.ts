@@ -20,12 +20,10 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {GanttChartStemConfig, GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {createDefaultGanttChartStemConfig} from '../util/gantt-chart-util';
-import {generateId} from '../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'gantt-chart-config',
@@ -48,17 +46,9 @@ export class GanttChartConfigComponent {
   @Output()
   public configChange = new EventEmitter<GanttChartConfig>();
 
-  public readonly showDatesId = generateId();
-  public readonly lockResizeId = generateId();
-
-  public readonly viewModePlaceholder: string;
   public readonly defaultStemConfig = createDefaultGanttChartStemConfig();
 
-  constructor(private i18n: I18n) {
-    this.viewModePlaceholder = i18n({id: 'ganttChart.mode.placeholder', value: 'View mode'});
-  }
-
-  public onConfigChange(collectionConfig: GanttChartStemConfig, stem: QueryStem, index: number) {
+  public onStemConfigChange(collectionConfig: GanttChartStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<GanttChartConfig>(this.config);
     config.stemsConfigs[index] = {...collectionConfig, stem};
     this.configChange.emit(config);
@@ -79,25 +69,6 @@ export class GanttChartConfigComponent {
     if ((config.swimlaneWidths || []).length > maxCategories) {
       config.swimlaneWidths.splice(index, 1);
     }
-    this.configChange.emit(config);
-  }
-
-  public onShowDatesChange(checked: boolean) {
-    this.onBooleanPropertyChange('showDates', checked);
-  }
-
-  public onLockResizeChange(checked: boolean) {
-    this.onBooleanPropertyChange('lockResize', checked);
-  }
-
-  private onBooleanPropertyChange(property: string, checked: boolean) {
-    const config = deepObjectCopy<GanttChartConfig>(this.config);
-    if (checked) {
-      config[property] = true;
-    } else {
-      delete config[property];
-    }
-
     this.configChange.emit(config);
   }
 }

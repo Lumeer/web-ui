@@ -30,6 +30,7 @@ import {ShareViewModalModule} from './share-view/share-view-modal.module';
 import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
 import {CalendarEventDetailModalModule} from './calendar-event-detail/calendar-event-detail-modal.module';
 import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
+import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
 
 @NgModule({
   declarations: [],
@@ -46,6 +47,7 @@ import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-
     TextEditorModalModule,
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
+    DataResourceDetailModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -59,6 +61,7 @@ import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-
     TextEditorModalModule,
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
+    DataResourceDetailModalModule,
   ],
 })
 export class ModalModule {}

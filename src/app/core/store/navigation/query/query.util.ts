@@ -21,13 +21,20 @@ import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Va
 
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryCondition, QueryStem} from './query';
+import {
+  AttributeFilter,
+  CollectionAttributeFilter,
+  LinkAttributeFilter,
+  Query,
+  QueryCondition,
+  QueryStem,
+} from './query';
 import {LinkType} from '../../link-types/link.type';
 import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
 import {Collection} from '../../collections/collection';
-import {AttributesResource} from '../../../model/resource';
+import {AttributesResource, AttributesResourceType} from '../../../model/resource';
 import {ConstraintType} from '../../../model/data/constraint';
 import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
@@ -143,6 +150,19 @@ export function isAnyCollectionQuery(query: Query): boolean {
   return query && query.stems && query.stems.length > 0;
 }
 
+export function getQueryStemFiltersForResource(
+  stem: QueryStem,
+  id: string,
+  type: AttributesResourceType
+): AttributeFilter[] {
+  if (type === AttributesResourceType.Collection) {
+    return getQueryFiltersForCollection({stems: [stem]}, id);
+  } else if (type === AttributesResourceType.LinkType) {
+    return getQueryFiltersForLinkType({stems: [stem]}, id);
+  }
+  return [];
+}
+
 export function getQueryFiltersForCollection(query: Query, collectionId: string): CollectionAttributeFilter[] {
   const stems = (query && query.stems) || [];
   return stems.reduce((filters, stem) => {
@@ -154,7 +174,7 @@ export function getQueryFiltersForCollection(query: Query, collectionId: string)
   }, []);
 }
 
-export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): CollectionAttributeFilter[] {
+export function getQueryFiltersForLinkType(query: Query, linkTypeId: string): LinkAttributeFilter[] {
   const stems = (query && query.stems) || [];
   return stems.reduce((filters, stem) => {
     const newFilters = (stem.linkFilters || []).filter(

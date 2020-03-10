@@ -19,6 +19,9 @@
 
 import * as moment from 'moment';
 import {createDateTimeOptions} from '../date-time/date-time-options';
+import {DurationUnit} from '../../core/model/data/constraint-config';
+import {DurationInputArg2} from 'moment';
+import {sortedDurationUnits} from './constraint/duration-constraint.utils';
 
 export function resetUnusedDatePart(date: Date, format: string): Date {
   return resetUnusedMomentPart(moment(date), format).toDate();
@@ -125,4 +128,38 @@ export function getSmallestDateUnit(format: string): moment.unitOfTime.Base {
     return 'year';
   }
   return undefined;
+}
+
+const durationUnitToMomentUnitMap: Record<DurationUnit, DurationInputArg2> = {
+  [DurationUnit.Weeks]: 'weeks',
+  [DurationUnit.Days]: 'days',
+  [DurationUnit.Hours]: 'hours',
+  [DurationUnit.Minutes]: 'minutes',
+  [DurationUnit.Seconds]: 'seconds',
+};
+
+export function addDurationToDate(date: Date, durationCountsMap: Record<DurationUnit, number>): Date {
+  const dateMoment = moment(date);
+  Object.entries(durationCountsMap).forEach(([unit, count]) => {
+    dateMoment.add(count, durationUnitToMomentUnitMap[unit]);
+  });
+
+  return dateMoment.toDate();
+}
+
+export function subtractDatesToDurationCountsMap(end: Date, start: Date): Record<DurationUnit | string, number> {
+  let endMoment = moment(end);
+  const startMoment = moment(start);
+
+  return sortedDurationUnits.reduce((map, unit) => {
+    const momentUnit = durationUnitToMomentUnitMap[unit];
+    const count = Math.floor(endMoment.diff(startMoment, momentUnit, true));
+    if (count > 0) {
+      endMoment = endMoment.subtract(count, momentUnit);
+    }
+
+    map[unit] = count;
+
+    return map;
+  }, {});
 }

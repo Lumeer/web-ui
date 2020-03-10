@@ -22,11 +22,11 @@ import {DataRow} from '../../../../../data/data-row.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 
 @Component({
-  selector: 'document-data-row-icons',
-  templateUrl: './document-data-row-icons.component.html',
+  selector: 'data-resource-data-row-icons',
+  templateUrl: './data-resource-data-row-icons.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDataRowIconsComponent {
+export class DataResourceDataRowIconsComponent {
   @Input()
   public row: DataRow;
 

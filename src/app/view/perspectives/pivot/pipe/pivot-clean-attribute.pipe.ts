@@ -19,13 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotAttribute} from '../../../../core/store/pivots/pivot';
-import {cleanPivotAttribute} from '../util/pivot-util';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 @Pipe({
   name: 'pivotCleanAttribute',
 })
 export class PivotCleanAttributePipe implements PipeTransform {
   public transform(attribute: PivotAttribute): PivotAttribute {
-    return attribute && cleanPivotAttribute(attribute);
+    return attribute && cleanQueryAttribute(attribute);
   }
 }

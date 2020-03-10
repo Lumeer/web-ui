@@ -28,6 +28,7 @@ import {LinkInstanceDto} from '../dto';
 import {LinkInstanceDuplicateDto} from '../dto/link-instance.dto';
 import {AppState} from '../store/app.state';
 import {BaseService} from './base.service';
+import {Workspace} from '../store/navigation/workspace';
 
 @Injectable()
 export class LinkInstanceService extends BaseService {
@@ -36,34 +37,43 @@ export class LinkInstanceService extends BaseService {
   }
 
   public getLinkInstance(linkTypeId: string, linkInstanceId: string): Observable<LinkInstanceDto> {
-    return this.httpClient.get<LinkInstanceDto>(this.restApiPrefix(linkTypeId, linkInstanceId));
+    return this.httpClient.get<LinkInstanceDto>(this.apiPrefix(linkTypeId, linkInstanceId));
+  }
+
+  public getLinkInstances(linkInstanceIds: string[]): Observable<LinkInstanceDto[]> {
+    return this.httpClient.post<LinkInstanceDto[]>(`${this.workspaceApiPrefix()}/data/linkInstances`, linkInstanceIds);
   }
 
   public updateLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.httpClient.put<LinkInstanceDto>(this.restApiPrefix(linkInstance.id), linkInstance);
+    return this.httpClient.put<LinkInstanceDto>(this.apiPrefix(linkInstance.id), linkInstance);
   }
 
   public createLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.httpClient.post<LinkInstanceDto>(this.restApiPrefix(), linkInstance);
+    return this.httpClient.post<LinkInstanceDto>(this.apiPrefix(), linkInstance);
   }
 
   public patchLinkInstanceData(linkInstanceId: string, data: Record<string, any>): Observable<LinkInstanceDto> {
-    return this.httpClient.patch<LinkInstanceDto>(`${this.restApiPrefix(linkInstanceId)}/data`, data);
+    return this.httpClient.patch<LinkInstanceDto>(`${this.apiPrefix(linkInstanceId)}/data`, data);
   }
 
   public deleteLinkInstance(id: string): Observable<string> {
-    return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
+    return this.httpClient.delete(this.apiPrefix(id)).pipe(map(() => id));
   }
 
   public duplicateLinkInstances(linkInstanceDuplicate: LinkInstanceDuplicateDto): Observable<LinkInstanceDto[]> {
-    return this.httpClient.post<LinkInstanceDto[]>(`${this.restApiPrefix()}/duplicate`, linkInstanceDuplicate);
+    return this.httpClient.post<LinkInstanceDto[]>(`${this.apiPrefix()}/duplicate`, linkInstanceDuplicate);
   }
 
-  private restApiPrefix(id?: string, secondId?: string): string {
-    const organizationId = this.getOrCurrentOrganizationId();
-    const projectId = this.getOrCurrentProjectId();
-    const suffix = (id ? `/${id}` : '') + (secondId ? `/${secondId}` : '');
+  private apiPrefix(linkTypeId?: string, linkInstanceId?: string): string {
+    const suffix = (linkTypeId ? `/${linkTypeId}` : '') + (linkInstanceId ? `/${linkInstanceId}` : '');
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/link-instances${suffix}`;
+    return `${this.workspaceApiPrefix()}/link-instances${suffix}`;
+  }
+
+  private workspaceApiPrefix(workspace?: Workspace): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
+
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}`;
   }
 }

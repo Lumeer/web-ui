@@ -94,7 +94,8 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   public onDetailClick(document: DocumentModel) {
     const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
-    this.perspectiveService.switchPerspective(Perspective.Detail, collection, document);
+    const cursor = collection && document && {collectionId: collection.id, documentId: document.id};
+    this.perspectiveService.switchPerspective(Perspective.Detail, cursor);
   }
 
   public switchPerspectiveToTable() {

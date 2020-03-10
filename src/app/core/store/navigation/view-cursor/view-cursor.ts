@@ -27,7 +27,9 @@ import {
 
 export interface ViewCursor {
   collectionId?: string;
+  linkTypeId?: string;
   documentId?: string;
+  linkInstanceId?: string;
   attributeId?: string;
 }
 

@@ -30,6 +30,8 @@ export function linkInstancesReducer(
       return addLinkInstances(state, action);
     case LinkInstancesActionType.CREATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
+    case LinkInstancesActionType.CREATE_MULTIPLE_SUCCESS:
+      return linkInstancesAdapter.upsertMany(action.payload.linkInstances, state);
     case LinkInstancesActionType.PATCH_DATA_INTERNAL:
       return patchData(state, action);
     case LinkInstancesActionType.UPDATE_INTERNAL:

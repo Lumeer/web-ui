@@ -29,10 +29,15 @@ export enum DocumentsActionType {
   GET_SUCCESS = '[Documents] Get :: Success',
   GET_FAILURE = '[Documents] Get :: Failure',
 
+  GET_BY_IDS = '[Documents] Get By Ids',
+
   CREATE = '[Documents] Create',
   CREATE_WITH_LINK = '[Documents] Create With Link',
   CREATE_SUCCESS = '[Documents] Create :: Success',
   CREATE_FAILURE = '[Documents] Create :: Failure',
+
+  CREATE_CHAIN = '[Documents] Create Chain',
+  CREATE_CHAIN_SUCCESS = '[Documents] Create Chain :: Success',
 
   PATCH = '[Documents] Patch Document',
 
@@ -83,6 +88,12 @@ export namespace DocumentsAction {
     public constructor(public payload: {collectionId: string; documentId: string}) {}
   }
 
+  export class GetByIds implements Action {
+    public readonly type = DocumentsActionType.GET_BY_IDS;
+
+    public constructor(public payload: {documentsIds: string[]}) {}
+  }
+
   export class GetSuccess implements Action {
     public readonly type = DocumentsActionType.GET_SUCCESS;
 
@@ -127,9 +138,24 @@ export namespace DocumentsAction {
         document: DocumentModel;
         otherDocumentId: string;
         linkInstance: LinkInstance;
-        callback?: (documentId: string) => void;
+        onSuccess?: (documentId: string) => void;
+        onFailure?: () => void;
       }
     ) {}
+  }
+
+  export class CreateChain implements Action {
+    public readonly type = DocumentsActionType.CREATE_CHAIN;
+
+    public constructor(
+      public payload: {documents: DocumentModel[]; linkInstances: LinkInstance[]; failureMessage: string}
+    ) {}
+  }
+
+  export class CreateChainSuccess implements Action {
+    public readonly type = DocumentsActionType.CREATE_CHAIN_SUCCESS;
+
+    public constructor(public payload: {documents: DocumentModel[]}) {}
   }
 
   export class Patch implements Action {
@@ -307,6 +333,8 @@ export namespace DocumentsAction {
     | CreateWithLink
     | CreateSuccess
     | CreateFailure
+    | CreateChain
+    | CreateChainSuccess
     | Patch
     | AddFavorite
     | AddFavoriteSuccess

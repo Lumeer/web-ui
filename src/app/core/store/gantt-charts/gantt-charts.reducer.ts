@@ -26,7 +26,7 @@ export function ganttChartsReducer(
 ): GanttChartsState {
   switch (action.type) {
     case GanttChartActionType.ADD_GANTT_CHART:
-      return ganttChartsAdapter.addOne(action.payload.ganttChart, state);
+      return ganttChartsAdapter.upsertOne(action.payload.ganttChart, state);
     case GanttChartActionType.REMOVE_GANTT_CHART:
       return ganttChartsAdapter.removeOne(action.payload.ganttChartId, state);
     case GanttChartActionType.SET_CONFIG:

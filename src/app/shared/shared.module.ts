@@ -27,7 +27,7 @@ import {CollapsibleSidebarModule} from './collapsible-sidebar/collapsible-sideba
 import {DateTimeModule} from './date-time/date-time.module';
 import {DirectivesModule} from './directives/directives.module';
 import {DocumentHintsModule} from './document-hints/document-hints.module';
-import {DocumentModule} from './document/document.module';
+import {DataResourceModule} from './data-resource/data-resource.module';
 import {InputModule} from './input/input.module';
 import {LinksModule} from './links/links.module';
 import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.component';
@@ -67,7 +67,7 @@ import {BuilderModule} from './builder/builder.module';
     InputModule,
     InfiniteScrollModule,
     PostItCollectionsModule,
-    DocumentModule,
+    DataResourceModule,
     PreviewResultsModule,
     LinksModule,
     PipesModule,
@@ -112,7 +112,7 @@ import {BuilderModule} from './builder/builder.module';
     TagModule,
     InputModule,
     ResourceHeaderComponent,
-    DocumentModule,
+    DataResourceModule,
     PreviewResultsModule,
     LinksModule,
     DirectivesModule,

@@ -173,11 +173,13 @@ const linkInstances: LinkInstance[] = [
     id: 'li1',
     linkTypeId: 'lt1',
     documentIds: ['d2', 'd7'],
+    data: {},
   },
   {
     id: 'li2',
     linkTypeId: 'lt1',
     documentIds: ['d3', 'd8'],
+    data: {},
   },
 ];
 

@@ -110,11 +110,11 @@ describe('duration utils', () => {
     expect(formatDurationDataValue('10w', config, durationMap)).toEqual('10t');
   });
 
-  it('should format duration value weeks group with days', () => {
+  it('should format duration value weeks group with days native', () => {
     expect(formatDurationDataValue('w21d', config, durationMap)).toEqual('5t1d');
   });
 
-  it('should format duration value weeks group with days', () => {
+  it('should format duration value weeks group with days translated', () => {
     expect(
       formatDurationDataValue(String(4 * weekToMillis + 3 * hourToMillis + 2 * secondToMillis), config, durationMap)
     ).toEqual('4t3h2s');

@@ -24,18 +24,23 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import Gantt, {GanttOptions, GanttTask} from '@lumeer/lumeer-gantt';
+import {Subject, Subscription} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
+import {ganttTaskBarModel, ganttTaskDataResourceId} from '../../util/gantt-chart-util';
 
 @Component({
   selector: 'gantt-chart-visualization',
   templateUrl: './gantt-chart-visualization.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GanttChartVisualizationComponent implements OnChanges, AfterViewInit {
+export class GanttChartVisualizationComponent implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @Input()
   public tasks: GanttTask[];
 
@@ -64,12 +69,25 @@ export class GanttChartVisualizationComponent implements OnChanges, AfterViewIni
   public swimlaneResize = new EventEmitter<{index: number; width: number}>();
 
   @Output()
+  public positionChanged = new EventEmitter<number>();
+
+  @Output()
   public taskCreate = new EventEmitter<GanttTask>();
 
   @Output()
   public taskDetail = new EventEmitter<GanttTask>();
 
   public ganttChart: Gantt;
+
+  private positionSubject = new Subject<number>();
+  private subscriptions = new Subscription();
+
+  public ngOnInit() {
+    const subscription = this.positionSubject
+      .pipe(debounceTime(300))
+      .subscribe(scroll => this.positionChanged.emit(scroll));
+    this.subscriptions.add(subscription);
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.tasks || changes.options) {
@@ -126,6 +144,7 @@ export class GanttChartVisualizationComponent implements OnChanges, AfterViewIni
     this.ganttChart.onTaskDependencyRemoved = (fromTask, toTask) => this.onDependencyRemoved(fromTask, toTask);
     this.ganttChart.onTaskCreated = task => this.onTaskCreated(task);
     this.ganttChart.onTaskDetail = task => this.onTaskDetail(task);
+    this.ganttChart.onScrolledHorizontally = value => this.positionSubject.next(value);
   }
 
   private onSwimlaneResized(index: number, width: number) {
@@ -146,26 +165,36 @@ export class GanttChartVisualizationComponent implements OnChanges, AfterViewIni
 
   private onDependencyAdded(fromTask: GanttTask, toTask: GanttTask) {
     if (this.canEditDependency(fromTask, toTask)) {
-      this.addDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
+      this.addDependency.next({fromId: ganttTaskDataResourceId(fromTask), toId: ganttTaskDataResourceId(toTask)});
     }
   }
 
   private onDependencyRemoved(fromTask: GanttTask, toTask: GanttTask) {
     if (this.canEditDependency(fromTask, toTask)) {
-      this.removeDependency.next({fromId: fromTask.metadata.dataResourceId, toId: toTask.metadata.dataResourceId});
+      this.removeDependency.next({fromId: ganttTaskDataResourceId(fromTask), toId: ganttTaskDataResourceId(toTask)});
     }
   }
 
   private canEditDependency(fromTask: GanttTask, toTask: GanttTask): boolean {
+    const fromTaskModel = ganttTaskBarModel(fromTask);
+    const toTaskModel = ganttTaskBarModel(toTask);
+    if (!fromTask || !toTask) {
+      return false;
+    }
+
     return (
-      fromTask.metadata.resourceType === AttributesResourceType.Collection &&
-      fromTask.metadata.resourceType === toTask.metadata.resourceType &&
-      fromTask.metadata.resourceId === toTask.metadata.resourceId &&
-      fromTask.metadata.dataResourceId !== toTask.metadata.dataResourceId
+      fromTaskModel.resourceType === AttributesResourceType.Collection &&
+      fromTaskModel.resourceType === toTaskModel.resourceType &&
+      fromTaskModel.resourceId === toTaskModel.resourceId &&
+      ganttTaskDataResourceId(fromTask) !== ganttTaskDataResourceId(toTask)
     );
   }
 
   public removeTask(task: GanttTask) {
     this.ganttChart.removeTask(task);
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

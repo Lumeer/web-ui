@@ -19,8 +19,6 @@
 
 import {Permissions} from '../store/permissions/permissions';
 import {Collection} from '../store/collections/collection';
-import {DocumentModel} from '../store/documents/document.model';
-import {LinkInstance} from '../store/link-instances/link.instance';
 import {LinkType} from '../store/link-types/link.type';
 
 export interface Resource {
@@ -44,9 +42,22 @@ export enum AttributesResourceType {
   LinkType = 'linkType',
 }
 
-export type DataResource =
-  | Pick<DocumentModel, 'id' | 'data' | 'collectionId'>
-  | Pick<LinkInstance, 'id' | 'data' | 'linkTypeId'>;
+export interface DataResource {
+  id?: string;
+  data: DataResourceData;
+  newData?: DataResourceNewData;
+
+  creationDate?: Date;
+  updateDate?: Date;
+  createdBy?: string;
+  updatedBy?: string;
+  dataVersion?: number;
+
+  correlationId?: string;
+}
+
+export type DataResourceData = Record<string, any>;
+export type DataResourceNewData = Record<string, {value: any; correlationId?: string}>;
 
 export type AttributesResource =
   | Pick<Collection, 'id' | 'attributes' | 'name' | 'color' | 'icon'>

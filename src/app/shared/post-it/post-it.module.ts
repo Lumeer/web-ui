@@ -26,19 +26,12 @@ import {PipesModule} from '../pipes/pipes.module';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {PostItHeaderComponent} from './header/post-it-header.component';
 import {PresenterModule} from '../presenter/presenter.module';
-import {ResourceIconsColorsPipe} from './pipes/resource-icons-colors.pipe';
 import {DataResourceFavoritePipe} from './pipes/data-resource-favorite.pipe';
 import {InputModule} from '../input/input.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
-  declarations: [
-    PostItComponent,
-    PostItRowComponent,
-    PostItHeaderComponent,
-    ResourceIconsColorsPipe,
-    DataResourceFavoritePipe,
-  ],
+  declarations: [PostItComponent, PostItRowComponent, PostItHeaderComponent, DataResourceFavoritePipe],
   imports: [
     CommonModule,
     DataInputModule,

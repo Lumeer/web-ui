@@ -19,29 +19,16 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {PipesModule} from '../../pipes/pipes.module';
-import {PresenterModule} from '../../presenter/presenter.module';
-import {BlocklyModule} from '../../blockly/blockly.module';
 import {DocumentDetailModalComponent} from './document-detail-modal.component';
 import {LinksModule} from '../../links/links.module';
-import {DocumentModule} from '../../document/document.module';
+import {DataResourceModule} from '../../data-resource/data-resource.module';
 
 @NgModule({
   declarations: [DocumentDetailModalComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ModalWrapperModule,
-    BlocklyModule,
-    PresenterModule,
-    LinksModule,
-    DocumentModule,
-    PipesModule,
-  ],
+  imports: [CommonModule, ModalWrapperModule, LinksModule, DataResourceModule, PipesModule],
   exports: [DocumentDetailModalComponent],
   entryComponents: [DocumentDetailModalComponent],
 })

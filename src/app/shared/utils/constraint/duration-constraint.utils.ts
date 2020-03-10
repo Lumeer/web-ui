@@ -196,8 +196,23 @@ export function formatDurationDataValue(
 ): string {
   const saveValue = getDurationSaveValue(value, config, durationUnitsMap);
   if (isNumeric(saveValue) && toNumber(saveValue) >= 0) {
+    const unitsCountMap = createDurationUnitsCountsMap(saveValue, config, maxUnits);
+    const resultValue = durationCountsMapToString(unitsCountMap, durationUnitsMap);
+    return resultValue || (toNumber(saveValue) > 0 ? '0' : '');
+  }
+
+  return saveValue;
+}
+
+export function createDurationUnitsCountsMap(
+  saveValue: any,
+  config: DurationConstraintConfig,
+  maxUnits?: number
+): Record<DurationUnit | string, number> {
+  if (isNumeric(saveValue) && toNumber(saveValue) >= 0) {
     const durationToMillisMap = getDurationUnitToMillisMap(config);
     let currentDuration = convertToBig(saveValue, 0);
+
     let usedNumUnits = 0;
     const maximumUnits = maxUnits || Number.MAX_SAFE_INTEGER;
 
@@ -207,7 +222,7 @@ export function formatDurationDataValue(
       durationUnits = durationUnits.slice(index, index + 2);
     }
 
-    const reducedValue = durationUnits.reduce((result, unit) => {
+    return durationUnits.reduce((result, unit) => {
       const unitToMillis = durationToMillisMap[unit];
       if (unitToMillis) {
         const unitToMillisBig = new Big(unitToMillis);
@@ -219,23 +234,33 @@ export function formatDurationDataValue(
 
         currentDuration = currentDuration.sub(numUnits.times(unitToMillisBig));
 
-        // when maxUnits is set, rounding is needed
         if (usedNumUnits + 1 === maximumUnits && currentDuration.cmp(unitToMillisBig.div(2)) === Comparison.GT) {
           numUnits = numUnits.add(1);
         }
 
+        result[unit] = toNumber(numUnits.toFixed(0));
         if (numUnits.cmp(new Big(0)) === Comparison.GT) {
-          const unitString = (durationUnitsMap && durationUnitsMap[unit]) || unit;
           usedNumUnits++;
-          return result + numUnits.toFixed(0) + unitString;
         }
       }
 
       return result;
-    }, '');
-
-    return reducedValue || (toNumber(saveValue) > 0 ? '0' : '');
+    }, {});
   }
 
-  return saveValue;
+  return {};
+}
+
+export function durationCountsMapToString(
+  durationCountsMap: Record<DurationUnit, number>,
+  durationUnitsMap?: DurationUnitsMap
+): string {
+  return [...sortedDurationUnits].reduce((result, unit) => {
+    const numUnits = new Big(durationCountsMap[unit] || 0);
+    if (numUnits.cmp(new Big(0)) === Comparison.GT) {
+      const unitString = (durationUnitsMap && durationUnitsMap[unit]) || unit;
+      return result + numUnits.toFixed(0) + unitString;
+    }
+    return result;
+  }, '');
 }

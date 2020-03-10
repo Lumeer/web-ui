@@ -1,17 +1,20 @@
-<form class="form-inline d-flex">
+<form class="input-group">
   <input ngModel [value]="email" name="emailField" #emailField="ngModel"
-         id="emailField" class="form-control form-control-sm mr-sm-2 flex-fill" type="email"
+         id="emailField" class="form-control form-control-sm" type="email"
          [placeholder]="emailPlaceHolder()"
          (input)="onInputChanged(emailField.control.value)" email>
-  <button type="button"
-          class="btn btn-sm btn-primary"
-          [disabled]="emailField.invalid || !email || isDuplicate"
-          (click)="onAddUser()">
-    <i class="fas fa-plus mr-2"></i>
-    <span class="font-weight-bold" i18n="@@users.add.button">Invite user</span>
-  </button>
+  <div class="input-group-append">
+    <button type="button"
+            class="btn btn-sm btn-primary"
+            [disabled]="emailField.invalid || !email || isDuplicate"
+            (click)="onAddUser()">
+      <i class="fas fa-plus mr-2"></i>
+      <span class="font-weight-bold" i18n="@@users.add.button">Invite user</span>
+    </button>
+  </div>
 </form>
-<small id="emailValid" class="invalid-message" *ngIf="emailField.invalid && emailField.touched" i18n="@@users.user.email.invalid">
+<small id="emailValid" class="invalid-message" *ngIf="emailField.invalid && emailField.touched"
+       i18n="@@users.user.email.invalid">
   Please enter a valid e-mail address (e.g. alan.turing@lumeer.io).
 </small>
 <small class="invalid-message" *ngIf="isDuplicate" i18n="@@users.user.email.duplicate">

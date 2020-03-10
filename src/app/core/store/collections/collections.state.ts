@@ -20,7 +20,6 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {selectLinkTypeById} from '../link-types/link-types.state';
 import {selectWorkspace} from '../navigation/navigation.state';
 import {Collection} from './collection';
 
@@ -61,11 +60,6 @@ export const selectCollectionsByIds = (ids: string[]) =>
   createSelector(selectCollectionsDictionary, collectionsDictionary =>
     ids.map(id => collectionsDictionary[id]).filter(collection => !!collection)
   );
-
-export const selectCollectionsByLinkType = (linkTypeId: string) =>
-  createSelector(selectCollectionsDictionary, selectLinkTypeById(linkTypeId), (collectionsMap, linkType) => {
-    return (linkType && linkType.collectionIds.map(id => collectionsMap[id])) || [];
-  });
 
 export const selectCollectionAttributeById = (collectionId: string, attributeId: string) => {
   return createSelector(

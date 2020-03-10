@@ -18,29 +18,28 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
   Input,
   OnChanges,
-  SimpleChanges,
-  EventEmitter,
-  Output,
-  SimpleChange,
   OnDestroy,
-  ViewChildren,
-  QueryList,
-  HostListener,
-  ViewChild,
   OnInit,
+  Output,
+  QueryList,
+  SimpleChange,
+  SimpleChanges,
   TemplateRef,
+  ViewChild,
+  ViewChildren,
 } from '@angular/core';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Attribute} from '../../../../core/store/collections/collection';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DataRow, DataRowService} from '../../../data/data-row.service';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {DocumentDataRowComponent} from './row/document-data-row.component';
+import {DataResourceDataRowComponent} from './row/data-resource-data-row.component';
 import {filterUnusedAttributes} from '../../../utils/attribute.utils';
 import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
 import {DataRowFocusService} from '../../../data/data-row-focus-service';
@@ -50,19 +49,25 @@ import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionById} from '../../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../../core/store/documents/documents.state';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
+import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 
 @Component({
-  selector: 'document-data',
-  templateUrl: './document-data.component.html',
+  selector: 'data-resource-data',
+  templateUrl: './data-resource-data.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DataRowService],
 })
-export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
+export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public collection: Collection;
+  public resource: AttributesResource;
 
   @Input()
-  public document: DocumentModel;
+  public dataResource: DataResource;
+
+  @Input()
+  public resourceType: AttributesResourceType;
 
   @Input()
   public constraintData: ConstraintData;
@@ -85,8 +90,8 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public attributeFunctionCLick = new EventEmitter<Attribute>();
 
-  @ViewChildren(DocumentDataRowComponent)
-  public rows: QueryList<DocumentDataRowComponent>;
+  @ViewChildren(DataResourceDataRowComponent)
+  public rows: QueryList<DataResourceDataRowComponent>;
 
   @ViewChild(HiddenInputComponent, {static: false})
   public hiddenInputComponent: HiddenInputComponent;
@@ -98,11 +103,11 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
   public removeDocument = new EventEmitter();
 
   @Output()
-  public documentChanged = new EventEmitter<DocumentModel>();
+  public dataResourceChanged = new EventEmitter<DataResource>();
 
   public unusedAttributes$ = new BehaviorSubject<Attribute[]>([]);
-  public collection$: Observable<Collection>;
-  public document$: Observable<DocumentModel>;
+  public resource$: Observable<AttributesResource>;
+  public dataResource$: Observable<DataResource>;
 
   private dataRowFocusService: DataRowFocusService;
 
@@ -118,31 +123,47 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.dataRowService.rows$.asObservable().subscribe(() => {
-      const currentDocument = this.getCurrentDocument();
+      const currentDataResource = this.getCurrentDataResource();
       const unusedAttributes = filterUnusedAttributes(
-        this.collection && this.collection.attributes,
-        currentDocument && currentDocument.data
+        this.resource && this.resource.attributes,
+        currentDataResource && currentDataResource.data
       );
       this.unusedAttributes$.next(unusedAttributes);
-      this.documentChanged.emit(currentDocument);
+      this.dataResourceChanged.emit(currentDataResource);
     });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldRefreshObservables(changes)) {
-      this.dataRowService.init(this.collection, this.document);
-      this.collection$ = this.store$.pipe(select(selectCollectionById(this.collection.id)));
-      this.document$ =
-        (this.document.id && this.store$.pipe(select(selectDocumentById(this.document.id)))) || of(this.document);
+      this.dataRowService.init(this.resource, this.dataResource);
+      this.resource$ = this.selectResource$();
+      this.dataResource$ = this.selectDataResource$();
     }
   }
 
+  private selectResource$(): Observable<AttributesResource> {
+    if (this.resourceType === AttributesResourceType.Collection) {
+      return this.store$.pipe(select(selectCollectionById(this.resource.id)));
+    }
+    return this.store$.pipe(select(selectLinkTypeById(this.resource.id)));
+  }
+
+  private selectDataResource$(): Observable<DataResource> {
+    if (!this.dataResource.id) {
+      return of(this.dataResource);
+    }
+    if (this.resourceType === AttributesResourceType.Collection) {
+      return this.store$.pipe(select(selectDocumentById(this.dataResource.id)));
+    }
+    return this.store$.pipe(select(selectLinkInstanceById(this.dataResource.id)));
+  }
+
   private shouldRefreshObservables(changes: SimpleChanges): boolean {
-    if (this.collection && this.document) {
-      if (this.document.id) {
-        return this.objectChanged(changes.collection) || this.objectChanged(changes.document);
+    if (this.resource && this.dataResource) {
+      if (this.dataResource.id) {
+        return this.objectChanged(changes.resource) || this.objectChanged(changes.dataResource);
       } else {
-        return !!changes.collection || !!changes.document;
+        return !!changes.resource || !!changes.dataResource;
       }
     }
     return false;
@@ -209,8 +230,8 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
     this.dataRowFocusService.newHiddenInput(value);
   }
 
-  private getCurrentDocument(): DocumentModel {
-    if (!this.document) {
+  private getCurrentDataResource(): DataResource {
+    if (!this.dataResource) {
       return null;
     }
 
@@ -227,7 +248,7 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
         return d;
       }, {});
 
-    const currentAttributeNames = (this.collection && this.collection.attributes).map(attr => attr.name);
+    const currentAttributeNames = (this.resource && this.resource.attributes).map(attr => attr.name);
     const newData = rows
       .filter(row => row.key && (!row.attribute || !row.attribute.id) && !currentAttributeNames.includes(row.key))
       .reduce(
@@ -238,6 +259,6 @@ export class DocumentDataComponent implements OnInit, OnChanges, OnDestroy {
         {}
       );
 
-    return {...this.document, data, newData};
+    return {...this.dataResource, data, newData};
   }
 }

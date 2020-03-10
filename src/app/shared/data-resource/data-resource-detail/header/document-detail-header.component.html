@@ -1,0 +1,62 @@
+<div class="d-flex flex-column flex-lg-row">
+  <div class="flex-grow-1 pr-lg-2 text-truncate" *ngIf="{iconColors : resource$ | async | resourceIconsColors} as data">
+    <icons-presenter class="mr-2"
+                     [icons]="data.iconColors.icons"
+                     [colors]="data.iconColors.colors">
+    </icons-presenter>
+    <span>{{resource?.name}}</span>
+    <data-input-preview *ngIf="row?.value || row?.value === 0"
+                        class="flex-fill d-block main-data-input font-weight-bold"
+                        [configuration]="configuration"
+                        [dataValue]="row?.value | dataValue:row?.attribute?.constraint:constraintData"
+                        [cursor]="dataResource | dataCursor:row?.attribute?.id"
+                        [constraint]="row?.attribute?.constraint">
+    </data-input-preview>
+
+  </div>
+
+  <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
+    <div class="small text-notice text-nowrap" *ngIf="resourceType === collectionResourceType">
+      <span i18n="@@document.detail.version">Version {{dataResource?.dataVersion}}</span><br/>
+      <span i18n="@@document.detail.createdBy">Created on {{dataResource?.creationDate | date : 'mediumDate'}}
+        by {{createdBy$ | async}}</span>
+      <span *ngIf="dataResource.updateDate"
+            i18n="@@document.detail.modifiedBy"><br/>Last modified on {{dataResource.updateDate | date : 'mediumDate'}}
+        by {{updatedBy$ | async}}</span>
+    </div>
+
+    <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
+      <i class="{{tableIcon}} mr-2 clickable"
+         aria-hidden="true"
+         *ngIf="permissions?.writeWithView"
+         title="Switch to Table perspective"
+         i18n-title="@@document.detail.switch.table"
+         (click)="onSwitchToTable()"></i>
+      <ng-container *ngIf="permissions?.read && resourceType === collectionResourceType && document">
+        <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
+           title="Remove from favorites"
+           i18n-title="@@document.detail.favorite.remove"
+           (click)="onFavoriteToggle()"></i>
+        <i *ngIf="!document.favorite"
+           class="far fa-fw fa-star text-warning clickable mr-2"
+           title="Add to favorites"
+           i18n-title="@@document.detail.favorite.add"
+           (click)="onFavoriteToggle()"></i>
+      </ng-container>
+      <i class="fas fa-fw fa-trash text-danger clickable"
+         aria-hidden="true"
+         *ngIf="permissions?.writeWithView && resourceType === collectionResourceType"
+         title="Remove Record"
+         i18n-title="@@document.detail.remove"
+         (click)="onRemove()"
+      ></i>
+      <i class="fas fa-fw fa-unlink text-warning clickable"
+         aria-hidden="true"
+         *ngIf="permissions?.writeWithView  && resourceType !== collectionResourceType"
+         title="Unlink"
+         i18n-title="@@link.detail.unlink"
+         (click)="onRemove()"
+      ></i>
+    </div>
+  </div>
+</div>

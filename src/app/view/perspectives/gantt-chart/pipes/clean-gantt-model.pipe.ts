@@ -19,13 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {GanttChartBarModel} from '../../../../core/store/gantt-charts/gantt-chart';
-import {cleanGanttBarModel} from '../util/gantt-chart-util';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 @Pipe({
   name: 'cleanGanttModel',
 })
 export class CleanGanttModelPipe implements PipeTransform {
   public transform(model: GanttChartBarModel): GanttChartBarModel {
-    return model && cleanGanttBarModel(model);
+    return model && cleanQueryAttribute(model);
   }
 }

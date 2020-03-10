@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
-import {DocumentData, DocumentModel} from '../../../core/store/documents/document.model';
+import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -42,6 +42,7 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import * as moment from 'moment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {DataResourceData} from '../../../core/model/resource';
 
 @Component({
   templateUrl: './calendar-event-detail-modal.component.html',
@@ -198,7 +199,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
     }
   }
 
-  private emitNewDocument(document: DocumentModel, patchData: DocumentData) {
+  private emitNewDocument(document: DocumentModel, patchData: DataResourceData) {
     if (document.id) {
       this.store$.dispatch(new DocumentsAction.PatchData({document: {...document, data: patchData}}));
     } else {

@@ -31,7 +31,7 @@ import {getAttributesResourceType} from '../../../../../shared/utils/resource.ut
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 
 @Component({
-  selector: 'gantt-chart-collection-config',
+  selector: 'gantt-chart-stem-config',
   templateUrl: './gantt-chart-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -28,15 +28,11 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {BlocklyDebugDisplay} from '../../blockly/blockly-debugger/blockly-debugger.component';
 import {select, Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap';
-import {
-  selectAllCollections,
-  selectCollectionById,
-  selectCollectionsByLinkType,
-} from '../../../core/store/collections/collections.state';
+import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {first, map} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/link-types.state';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {KeyCode} from '../../key-code';
@@ -68,7 +64,6 @@ export class AttributeFunctionModalComponent implements OnInit {
   public attribute$: Observable<Attribute>;
   public linkTypes$: Observable<LinkType[]>;
   public linkType$: Observable<LinkType>;
-  public linkTypeCollections$: Observable<Collection[]>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -93,8 +88,7 @@ export class AttributeFunctionModalComponent implements OnInit {
       this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByCollectionId(this.collectionId)));
       this.variables = [{name: 'thisDocument', collectionId: this.collectionId} as RuleVariable];
     } else if (this.linkTypeId) {
-      this.linkType$ = this.store$.pipe(select(selectLinkTypeById(this.linkTypeId)));
-      this.linkTypeCollections$ = this.store$.pipe(select(selectCollectionsByLinkType(this.linkTypeId)));
+      this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
       this.attribute$ = this.linkType$.pipe(
         map(linkType => findAttribute(linkType && linkType.attributes, this.attributeId))
       );

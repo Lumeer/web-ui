@@ -23,7 +23,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {DocumentDto} from '../dto';
+import {DocumentDto, LinkInstanceDto} from '../dto';
 import {DocumentMetaDataDto} from '../dto/document.dto';
 import {AppState} from '../store/app.state';
 import {Workspace} from '../store/navigation/workspace';
@@ -98,6 +98,10 @@ export class DocumentService extends BaseService {
     return this.httpClient.get<DocumentDto>(`${this.apiPrefix({collectionId})}/${documentId}`);
   }
 
+  public getDocuments(documentsId: string[]): Observable<DocumentDto[]> {
+    return this.httpClient.post<DocumentDto[]>(`${this.workspaceApiPrefix()}/data/documents`, documentsId);
+  }
+
   public duplicateDocuments(
     collectionId: string,
     documentIds: string[],
@@ -107,11 +111,29 @@ export class DocumentService extends BaseService {
     return this.httpClient.post<DocumentDto[]>(`${this.apiPrefix({collectionId})}/duplicate`, documentIds, options);
   }
 
+  public createChain(
+    documents: DocumentDto[],
+    linkInstances: LinkInstanceDto[]
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
+    return this.httpClient.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
+      `${this.workspaceApiPrefix()}/data/documentsChain`,
+      {
+        documents,
+        linkInstances,
+      }
+    );
+  }
+
   private apiPrefix(workspace?: Workspace): string {
-    const organizationId = this.getOrCurrentOrganizationId(workspace);
-    const projectId = this.getOrCurrentProjectId(workspace);
     const collectionId = this.getOrCurrentCollectionId(workspace);
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/collections/${collectionId}/documents`;
+    return `${this.workspaceApiPrefix(workspace)}/collections/${collectionId}/documents`;
+  }
+
+  private workspaceApiPrefix(workspace?: Workspace): string {
+    const organizationId = this.getOrCurrentOrganizationId(workspace);
+    const projectId = this.getOrCurrentProjectId(workspace);
+
+    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}`;
   }
 }

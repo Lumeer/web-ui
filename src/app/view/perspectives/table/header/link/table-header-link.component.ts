@@ -20,9 +20,7 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {selectCollectionsByLinkType} from '../../../../../core/store/collections/collections.state';
-import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
+import {selectLinkTypeByIdWithCollections} from '../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
@@ -51,7 +49,6 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   @Input()
   public embedded: boolean;
 
-  public collections$: Observable<Collection[]>;
   public linkType$: Observable<LinkType>;
 
   public linkInfoWidth = 0;
@@ -60,8 +57,7 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {
-      this.linkType$ = this.store$.select(selectLinkTypeById(this.part.linkTypeId));
-      this.collections$ = this.store$.select(selectCollectionsByLinkType(this.part.linkTypeId));
+      this.linkType$ = this.store$.select(selectLinkTypeByIdWithCollections(this.part.linkTypeId));
     }
   }
 

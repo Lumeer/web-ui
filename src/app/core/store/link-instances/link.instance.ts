@@ -17,19 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface LinkInstance {
-  id?: string;
+import {DataResource} from '../../model/resource';
+
+export interface LinkInstance extends DataResource {
   linkTypeId: string;
   documentIds: [string, string];
-  correlationId?: string;
-
-  creationDate?: Date;
-  updateDate?: Date;
-  createdBy?: string;
-  updatedBy?: string;
-  dataVersion?: number;
-
-  data?: Record<string, any>;
 }
 
 export function getOtherLinkedDocumentId(linkInstance: LinkInstance, documentId: string): string {

@@ -20,8 +20,8 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {cleanPivotAttribute} from '../util/pivot-util';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 @Pipe({
   name: 'pivotSortSelectedId',
@@ -35,7 +35,7 @@ export class PivotSortSelectedIdPipe implements PipeTransform {
     ) {
       return pivotAttribute.sort.list.valueTitle;
     }
-    return cleanPivotAttribute(pivotAttribute);
+    return cleanQueryAttribute(pivotAttribute);
   }
 
   private itemsContainsId(items: SelectItemModel[], id: any): boolean {

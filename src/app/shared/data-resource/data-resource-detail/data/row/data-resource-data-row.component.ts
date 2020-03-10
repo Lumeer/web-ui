@@ -43,17 +43,17 @@ import {DataRowComponent} from '../../../../data/data-row-component';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DataValue} from '../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
-import {DocumentDataRowIconsComponent} from './icons/document-data-row-icons.component';
+import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
 import {BooleanConstraint} from '../../../../../core/model/constraint/boolean.constraint';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 
 @Component({
-  selector: 'document-data-row',
-  templateUrl: './document-data-row.component.html',
-  styleUrls: ['./document-data-row.component.scss'],
+  selector: 'data-resource-data-row',
+  templateUrl: './data-resource-data-row.component.html',
+  styleUrls: ['./data-resource-data-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentDataRowComponent implements DataRowComponent, OnChanges, AfterViewInit {
+export class DataResourceDataRowComponent implements DataRowComponent, OnChanges, AfterViewInit {
   @Input()
   public row: DataRow;
 
@@ -99,7 +99,7 @@ export class DocumentDataRowComponent implements DataRowComponent, OnChanges, Af
   @ViewChild('wrapperElement', {static: false, read: ElementRef})
   public wrapperElement: ElementRef;
 
-  @ViewChild(DocumentDataRowIconsComponent, {static: false, read: ElementRef})
+  @ViewChild(DataResourceDataRowIconsComponent, {static: false, read: ElementRef})
   public iconsElement: ElementRef;
 
   @HostBinding('class.key-focused')

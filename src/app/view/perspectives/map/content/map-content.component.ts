@@ -283,6 +283,6 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onMarkerDetail(properties: MapMarkerProperties) {
-    this.modalService.showDocumentDetail(properties.document, properties.collection);
+    this.modalService.showDataResourceDetail(properties.document, properties.collection);
   }
 }

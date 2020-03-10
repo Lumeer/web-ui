@@ -18,11 +18,11 @@
  */
 
 import {GanttOptions, GanttSwimlaneInfo} from '@lumeer/lumeer-gantt/dist/model/options';
-import {GanttSwimlaneType, GanttSwimlane, GanttTask} from '@lumeer/lumeer-gantt';
+import {GanttSwimlane, GanttSwimlaneType, GanttTask} from '@lumeer/lumeer-gantt';
 import * as moment from 'moment';
 import {environment} from '../../../../../environments/environment';
 import {COLOR_PRIMARY} from '../../../../core/constants';
-import {AllowedPermissions, mergeAllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Constraint} from '../../../../core/model/constraint';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
@@ -53,6 +53,7 @@ import {
   isNotNullOrUndefined,
   isNullOrUndefined,
   isNumeric,
+  objectsByIdMap,
   toNumber,
 } from '../../../../shared/utils/common.utils';
 import {parseDateTimeDataValue, stripTextHtmlTags} from '../../../../shared/utils/data.utils';
@@ -67,6 +68,9 @@ import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils
 import {ColorConstraint} from '../../../../core/model/constraint/color.constraint';
 import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
 import {Md5} from '../../../../shared/utils/md5';
+import {canCreateTaskByStemConfig, ganttModelPermissions} from './gantt-chart-util';
+import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
+import {addDurationToDate} from '../../../../shared/utils/date.utils';
 
 interface TaskHelperData {
   nameDataResource: DataResource;
@@ -100,6 +104,8 @@ export class GanttChartConverter {
   private permissions: Record<string, AllowedPermissions>;
   private query: Query;
 
+  private convertCount = 0;
+
   private dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
     this.formatDataAggregatorValue(value, constraint, data, aggregatorAttribute)
   );
@@ -127,6 +133,8 @@ export class GanttChartConverter {
       .sort((t1, t2) => this.compareTasks(t1, t2));
 
     const options = this.createGanttOptions(config);
+
+    this.convertCount++;
     return {options, tasks};
   }
 
@@ -147,9 +155,9 @@ export class GanttChartConverter {
     query: Query
   ) {
     this.config = config;
-    this.collectionsMap = objectsMap(collections);
+    this.collectionsMap = objectsByIdMap(collections);
     this.documents = documents;
-    this.linkTypesMap = objectsMap(linkTypes);
+    this.linkTypesMap = objectsByIdMap(linkTypes);
     this.linkInstances = linkInstances;
     this.permissions = permissions;
     this.constraintData = constraintData;
@@ -157,6 +165,9 @@ export class GanttChartConverter {
   }
 
   private createGanttOptions(config: GanttChartConfig): GanttOptions {
+    const createTasks = (config.stemsConfigs || []).some(stemConfig =>
+      canCreateTaskByStemConfig(stemConfig, this.permissions, this.linkTypesMap)
+    );
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),
       resizeTaskRight: true,
@@ -164,13 +175,14 @@ export class GanttChartConverter {
       resizeTaskLeft: true,
       resizeSwimlanes: true,
       dragTaskSwimlanes: true,
-      createTasks: true,
+      createTasks,
       language: environment.locale,
       lockResize: config.lockResize || false,
       padding: config.padding,
       dateFormat: GANTT_DATE_FORMAT,
       columnWidth: config.columnWidth,
       barHeight: config.barHeight,
+      initialScroll: config.positionSaved && config.position && this.convertCount === 0 ? config.position.value : null,
       viewMode: config.mode as any,
     };
   }
@@ -373,13 +385,17 @@ export class GanttChartConverter {
     helperData: TaskHelperData[],
     showDatesAsSwimlanes: boolean
   ): GanttTask[] {
-    const validIds = [];
+    const endEditable = this.isPropertyEditable(stemConfig.end);
+    const endConstraint = stemConfig.end && this.findConstraintForModel(stemConfig.end);
+
+    const validTaskIds = [];
     const validDataResourceIdsMap: Record<string, string[]> = helperData.reduce((map, item) => {
-      const start = stemConfig.start && item.startDataResource && item.startDataResource[stemConfig.start.attributeId];
-      const end = stemConfig.end && item.endDataResource && item.endDataResource[stemConfig.end.attributeId];
-      if (isTaskValid(start, end)) {
+      const start =
+        stemConfig.start && item.startDataResource && item.startDataResource.data[stemConfig.start.attributeId];
+      const end = stemConfig.end && item.endDataResource && item.endDataResource.data[stemConfig.end.attributeId];
+      if (isTaskValid(start, end, endConstraint)) {
         const id = helperDataId(item);
-        validIds.push(id);
+        validTaskIds.push(id);
         const dataResource = item.nameDataResource || item.startDataResource;
         const parentId = (<DocumentModel>dataResource).metaData && (<DocumentModel>dataResource).metaData.parentId;
         if (parentId) {
@@ -398,15 +414,15 @@ export class GanttChartConverter {
     const startEditable = this.isPropertyEditable(stemConfig.start);
     const startConstraint = this.findConstraintForModel(stemConfig.start);
 
-    const endEditable = this.isPropertyEditable(stemConfig.end);
-    const endConstraint = stemConfig.end && this.findConstraintForModel(stemConfig.end);
-
     const progressEditable = this.isPropertyEditable(stemConfig.progress);
     const progressConstraint = this.findConstraintForModel(stemConfig.progress);
 
-    const progressPermission = this.getPermission(stemConfig.start);
-    const startPermission = this.getPermission(stemConfig.start);
-    const endPermission = this.getPermission(stemConfig.start);
+    const progressPermission = this.modelPermissions(stemConfig.start);
+    const startPermission = this.modelPermissions(stemConfig.start);
+    const endPermission = this.modelPermissions(stemConfig.start);
+
+    const dataModel = stemConfig.start || stemConfig.name;
+    const canEditDependencies = dataModel && dataModel.resourceType === AttributesResourceType.Collection;
 
     return helperData.reduce<GanttTask[]>((arr, item) => {
       const name = stemConfig.name && item.nameDataResource && item.nameDataResource.data[stemConfig.name.attributeId];
@@ -414,7 +430,7 @@ export class GanttChartConverter {
         stemConfig.start && item.startDataResource && item.startDataResource.data[stemConfig.start.attributeId];
       const end = stemConfig.end && item.endDataResource && item.endDataResource.data[stemConfig.end.attributeId];
 
-      if (!isTaskValid(start, end)) {
+      if (!isTaskValid(start, end, endConstraint)) {
         return arr;
       }
 
@@ -424,7 +440,8 @@ export class GanttChartConverter {
         startConstraint,
         end,
         endEditable && stemConfig.end.attributeId,
-        endConstraint
+        endConstraint,
+        this.constraintData
       );
       const progresses =
         (stemConfig.progress &&
@@ -477,14 +494,15 @@ export class GanttChartConverter {
         const nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).format();
 
         const taskId = helperDataId(item);
+        const dataResourceId = (item.nameDataResource || item.startDataResource).id;
         arr.push({
           id: taskId,
           name: stripTextHtmlTags(nameFormatted, false),
           start: interval[0].value,
           end: interval[1].value,
           progress: createProgress(progress),
-          dependencies: validDataResourceIdsMap[taskId] || [],
-          allowedDependencies: validIds.filter(id => id !== taskId),
+          dependencies: (canEditDependencies && validDataResourceIdsMap[dataResourceId]) || [],
+          allowedDependencies: canEditDependencies ? validTaskIds.filter(id => id !== taskId) : [],
           barColor: shadeColor(taskColor, 0.5),
           progressColor: shadeColor(taskColor, 0.3),
           startDrag: startEditable && startPermission.writeWithView,
@@ -529,34 +547,24 @@ export class GanttChartConverter {
       const collection = this.collectionsMap[model.resourceId];
       return (
         collection &&
-        isCollectionAttributeEditable(model.attributeId, collection, this.getPermission(model), this.query)
+        isCollectionAttributeEditable(model.attributeId, collection, this.modelPermissions(model), this.query)
       );
     } else if (model && model.resourceType === AttributesResourceType.LinkType) {
       const linkType = this.linkTypesMap[model.resourceId];
       return (
-        linkType && isLinkTypeAttributeEditable(model.attributeId, linkType, this.getPermission(model), this.query)
+        linkType && isLinkTypeAttributeEditable(model.attributeId, linkType, this.modelPermissions(model), this.query)
       );
     }
 
     return false;
   }
 
-  private getPermission(model: GanttChartBarModel): AllowedPermissions {
+  private modelPermissions(model: GanttChartBarModel): AllowedPermissions {
     if (!model) {
       return {};
     }
-    const resource = this.getResource(model);
-    if (model.resourceType === AttributesResourceType.Collection) {
-      return resource && this.permissions[resource.id];
-    } else {
-      return (
-        resource &&
-        mergeAllowedPermissions(
-          this.permissions[(<LinkType>resource).collectionIds[0]],
-          this.permissions[(<LinkType>resource).collectionIds[1]]
-        )
-      );
-    }
+
+    return ganttModelPermissions(model, this.permissions, this.linkTypesMap);
   }
 
   private getResource(model: GanttChartBarModel): AttributesResource {
@@ -649,12 +657,18 @@ export class GanttChartConverter {
   }
 }
 
-function isTaskValid(start: string, end: string): boolean {
-  return areDatesValid(start, end);
+function isTaskValid(start: string, end: string, endConstraint: Constraint): boolean {
+  return areDatesValid(start, end, endConstraint);
 }
 
-function areDatesValid(start: string, end: string): boolean {
-  return isDateValid(parseDateTimeDataValue(start)) && isDateValid(parseDateTimeDataValue(end));
+function areDatesValid(start: string, end: string, endConstraint: Constraint): boolean {
+  return isDateValidRange(start) && (isDateValidRange(end) || endConstraint.type === ConstraintType.Duration);
+}
+
+function isDateValidRange(dateString: string): boolean {
+  const startDate = parseDateTimeDataValue(dateString);
+  const momentDate = startDate && moment(startDate);
+  return isDateValid(startDate) && momentDate.year() > 1970 && momentDate.year() < 2200;
 }
 
 function createProgress(progress: any): number {
@@ -675,10 +689,19 @@ function createInterval(
   startConstraint: Constraint,
   end: string,
   endAttributeId: string,
-  endConstraint: Constraint
+  endConstraint: Constraint,
+  constraintData: ConstraintData
 ): [{value: string; attrId: string}, {value: string; attrId: string}] {
   const startDate = parseDateTimeDataValue(start, getFormatFromConstraint(startConstraint));
-  const endDate = parseDateTimeDataValue(end, getFormatFromConstraint(endConstraint));
+
+  let endDate: Date;
+
+  if (endConstraint.type === ConstraintType.Duration) {
+    const dataValue = (<DurationConstraint>endConstraint).createDataValue(end, constraintData);
+    endDate = addDurationToDate(startDate, dataValue.unitsCountMap);
+  } else {
+    endDate = parseDateTimeDataValue(end, getFormatFromConstraint(endConstraint));
+  }
 
   const startDateObj = {value: moment(startDate).format(GANTT_DATE_FORMAT), attrId: startAttributeId};
   const endDateObj = {value: moment(endDate).format(GANTT_DATE_FORMAT), attrId: endAttributeId};
@@ -695,10 +718,6 @@ function getFormatFromConstraint(constraint: Constraint): string {
     return config.format;
   }
   return null;
-}
-
-function objectsMap<T extends {id?: string}>(objects: T[]): Record<string, T> {
-  return (objects || []).reduce((map, object) => ({...map, [object.id]: object}), {});
 }
 
 function helperDataId(data: TaskHelperData): string {

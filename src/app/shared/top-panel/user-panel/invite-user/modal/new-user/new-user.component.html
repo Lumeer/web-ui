@@ -1,9 +1,9 @@
 <form class="p-3">
 
   <ng-container *ngIf="allowedUsers && allowedUsers.length; else noAllowedUsers">
-    <div class="input-group flex-row">
+    <div class="input-group">
       <input ngModel [value]="email" name="emailDropdown" #emailDropdown="ngModel"
-             id="emailDropdown" class="form-control form-control-sm flex-fill" type="email"
+             id="emailDropdown" class="form-control form-control-sm" type="email"
              list="allowedUsersList"
              [placeholder]="emailPlaceHolder()"
              (keypress)="onKeyPress($event)"
@@ -30,9 +30,9 @@
   </ng-container>
 
   <ng-template #noAllowedUsers>
-    <div class="input-group flex-row">
+    <div class="input-group">
       <input ngModel [value]="email" name="emailField" #emailField="ngModel"
-             id="emailField" class="form-control form-control-sm flex-fill" type="email"
+             id="emailField" class="form-control form-control-sm" type="email"
              [placeholder]="emailPlaceHolder()"
              (keypress)="onKeyPress($event)"
              (input)="onInputChanged(emailField.control.value)" email>

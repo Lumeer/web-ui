@@ -26,6 +26,7 @@
                        [permissions]="permissions$ | async"
                        [documents]="data.documentsAndLinks.documents"
                        [linkTypes]="data.linkTypes"
+                       [dataLoaded]="dataLoaded$ | async"
                        [linkInstances]="data.documentsAndLinks.linkInstances"
                        [config]="data.config"
                        [constraintData]="constraintData$ | async"
@@ -33,7 +34,7 @@
                        (patchDocumentData)="patchDocumentData($event)"
                        (patchLinkData)="patchLinkInstanceData($event)"
                        (patchMetaData)="patchDocumentMetaData($event)"
-                       (createDocument)="createDocument($event)"
+                       (createDocumentsChain)="createDocumentsChain($event)"
                        (updateLinkDocuments)="updateLinkDocuments($event)"
                        (configChange)="onConfigChanged($event)">
     </gantt-chart-tasks>

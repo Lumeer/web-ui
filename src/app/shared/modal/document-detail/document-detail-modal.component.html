@@ -7,14 +7,14 @@
   (onSubmit)="onSubmit()">
 
   <div class="body p-3" *ngIf="{collection: collection$ | async, document: document$ | async} as data">
-    <document-detail *ngIf="data.collection && data.document"
-                     [collection]="data.collection"
-                     [document]="data.document"
-                     [query]="query$ | async"
-                     [permissions]="data.collection | collectionPermissions | async"
-                     [toolbarRef]="toolbarRef"
-                     (documentChanged)="onDocumentChanged($event)">
-    </document-detail>
+    <data-resource-detail *ngIf="data.collection && data.document"
+                          [resource]="data.collection"
+                          [dataResource]="data.document"
+                          [query]="query$ | async"
+                          [permissions]="data.collection | collectionPermissions | async"
+                          [toolbarRef]="toolbarRef"
+                          (dataResourceChanged)="onDocumentChanged($event)">
+    </data-resource-detail>
     <links-list class="d-block mt-5"
                 *ngIf="data.collection && data.document?.id"
                 [document]="data.document"

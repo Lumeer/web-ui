@@ -19,10 +19,10 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {PivotRowColumnAttribute} from '../../../../core/store/pivots/pivot';
-import {PivotData, PivotStemData} from '../util/pivot-data';
+import {PivotStemData} from '../util/pivot-data';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {cleanPivotAttribute} from '../util/pivot-util';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 @Pipe({
   name: 'pivotSortSelectItems',
@@ -40,7 +40,7 @@ export class PivotSortSelectItemsPipe implements PipeTransform {
     pivotData: PivotStemData
   ): SelectItemModel[] {
     const items: SelectItemModel[] = [];
-    const cleanedPivotAttribute = cleanPivotAttribute(pivotAttribute);
+    const cleanedPivotAttribute = cleanQueryAttribute(pivotAttribute);
     if (attributeSelectItem) {
       items.push({...attributeSelectItem, id: cleanedPivotAttribute});
     }

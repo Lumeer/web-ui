@@ -46,7 +46,7 @@ import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component'
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import * as moment from 'moment';
-import {AttributesResourceType} from '../../../../core/model/resource';
+import {AttributesResourceType, DataResource, Resource} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
 import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
 import {ModalService} from '../../../../shared/modal/modal.service';
@@ -338,13 +338,20 @@ export class ChartDataComponent implements OnInit, OnChanges {
   }
 
   public onDetail(event: ClickEvent) {
-    if (event.resourceType === AttributesResourceType.Collection) {
-      const documentId = event.pointId;
-      const document = (this.documents || []).find(doc => doc.id === documentId);
-      const collection = document && (this.collections || []).find(coll => coll.id === document.collectionId);
-      if (collection && document) {
-        this.modalService.showDocumentDetail(document, collection);
-      }
+    const {resource, dataResource} = this.findResourceAndDataResource(event);
+    if (resource && dataResource) {
+      this.modalService.showDataResourceDetail(dataResource, resource);
     }
+  }
+
+  private findResourceAndDataResource(event: ClickEvent): {resource: Resource; dataResource: DataResource} {
+    if (event.resourceType === AttributesResourceType.Collection) {
+      const document = (this.documents || []).find(doc => doc.id === event.pointId);
+      const collection = document && (this.collections || []).find(coll => coll.id === document.collectionId);
+      return {resource: collection, dataResource: document};
+    }
+    const linkInstance = (this.linkInstances || []).find(linkIstance => linkIstance.id === event.pointId);
+    const linkType = linkInstance && (this.linkTypes || []).find(lt => lt.id === linkInstance.linkTypeId);
+    return {resource: linkType, dataResource: linkInstance};
   }
 }

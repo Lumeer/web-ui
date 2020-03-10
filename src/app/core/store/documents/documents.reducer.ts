@@ -40,6 +40,8 @@ export function documentsReducer(
       return patchData(state, action);
     case DocumentsActionType.PATCH_DATA_PENDING:
       return removeEmptyPendingData(state, action);
+    case DocumentsActionType.CREATE_CHAIN_SUCCESS:
+      return documentsAdapter.upsertMany(action.payload.documents, state);
     case DocumentsActionType.UPDATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
     case DocumentsActionType.UPDATE_FAILURE:

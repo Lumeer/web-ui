@@ -26,13 +26,12 @@ import {BsModalRef} from 'ngx-bootstrap';
 import {findAttribute} from '../../../core/store/collections/collection.util';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {selectCollectionById, selectCollectionsByLinkType} from '../../../core/store/collections/collections.state';
-import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/link-types.state';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {AppState} from '../../../core/store/app.state';
 import {KeyCode} from '../../key-code';
-import {CreateResourceDialogFormComponent} from '../create-resource/form/create-resource-dialog-form.component';
 
 @Component({
   templateUrl: './attribute-type-modal.component.html',
@@ -75,8 +74,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
         map(collection => findAttribute(collection && collection.attributes, this.attributeId))
       );
     } else if (this.linkTypeId) {
-      this.linkType$ = this.store$.pipe(select(selectLinkTypeById(this.linkTypeId)));
-      this.linkCollections$ = this.store$.pipe(select(selectCollectionsByLinkType(this.linkTypeId)));
+      this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
       this.attribute$ = this.linkType$.pipe(
         map(linkType => findAttribute(linkType && linkType.attributes, this.attributeId))
       );

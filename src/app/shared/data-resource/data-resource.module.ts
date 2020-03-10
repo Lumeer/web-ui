@@ -19,19 +19,20 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {DocumentDetailComponent} from './document-detail/document-detail.component';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DataInputModule} from '../data-input/data-input.module';
-import {DocumentDetailHeaderComponent} from './document-detail/header/document-detail-header.component';
-import {DocumentDataComponent} from './document-detail/data/document-data.component';
-import {DocumentDataRowComponent} from './document-detail/data/row/document-data-row.component';
-import {DocumentDataRowIconsComponent} from './document-detail/data/row/icons/document-data-row-icons.component';
+import {DocumentDetailHeaderComponent} from './data-resource-detail/header/document-detail-header.component';
 import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {ColorPickerModule} from 'ngx-color-picker';
-import {DefaultDataRowPipe} from './document-detail/header/default-data-row.pipe';
+import {DefaultDataRowPipe} from './data-resource-detail/header/default-data-row.pipe';
+import {PresenterModule} from '../presenter/presenter.module';
+import {DataResourceDataComponent} from './data-resource-detail/data/data-resource-data.component';
+import {DataResourceDetailComponent} from './data-resource-detail/data-resource-detail.component';
+import {DataResourceDataRowIconsComponent} from './data-resource-detail/data/row/icons/data-resource-data-row-icons.component';
+import {DataResourceDataRowComponent} from './data-resource-detail/data/row/data-resource-data-row.component';
 
 @NgModule({
   imports: [
@@ -44,15 +45,16 @@ import {DefaultDataRowPipe} from './document-detail/header/default-data-row.pipe
     InputModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
+    PresenterModule,
   ],
   declarations: [
-    DocumentDetailComponent,
+    DataResourceDetailComponent,
     DocumentDetailHeaderComponent,
-    DocumentDataComponent,
-    DocumentDataRowComponent,
-    DocumentDataRowIconsComponent,
+    DataResourceDataComponent,
+    DataResourceDataRowComponent,
+    DataResourceDataRowIconsComponent,
     DefaultDataRowPipe,
   ],
-  exports: [DocumentDetailComponent],
+  exports: [DataResourceDetailComponent],
 })
-export class DocumentModule {}
+export class DataResourceModule {}

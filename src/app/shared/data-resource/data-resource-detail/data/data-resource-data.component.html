@@ -1,0 +1,45 @@
+<ng-container *ngIf="{rows: dataRowService.rows$ | async, resource: resource$ | async} as data">
+
+  <document-detail-header class="d-block mb-4"
+                          [resource]="data.resource"
+                          [dataResource]="dataResource$ | async"
+                          [resourceType]="resourceType"
+                          [row]="data.rows | defaultDataRow"
+                          [constraintData]="constraintData"
+                          [permissions]="permissions"
+                          [workspace]="workspace"
+                          (switchToTable)="switchToTable.emit()"
+                          (remove)="removeDocument.emit()">
+  </document-detail-header>
+
+  <hidden-input (newInput)="onNewHiddenInput($event)"
+                class="position-fixed">
+  </hidden-input>
+
+  <ng-container *ngIf="toolbarRef" [ngTemplateOutlet]="toolbarRef"></ng-container>
+
+  <data-resource-data-row *ngFor="let row of data.rows; trackBy:trackByRow; let index = index"
+                          [row]="row"
+                          [permissions]="permissions"
+                          [cursor]="dataResource | dataCursor : row.attribute?.id"
+                          [constraintData]="constraintData"
+                          [readonly]="!(data.resource | resourceAttributeEditable : row.id: permissions: query)"
+                          [unusedAttributes]="unusedAttributes$ | async"
+                          (newValue)="onNewValue($event, row, index)"
+                          (newKey)="onNewKey($event, index)"
+                          (deleteRow)="onRemoveRow(index)"
+                          (attributeFunctionClick)="onAttributeFunction(row)"
+                          (attributeTypeClick)="onAttributeType(row)"
+                          (onFocus)="onFocus(index, $event)"
+                          (onEdit)="onEdit(index, $event)"
+                          (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
+  </data-resource-data-row>
+
+  <div *ngIf="permissions?.writeWithView" class="pt-2 border-top">
+    <button class="btn btn-sm btn-light btn-block" (click)="onCreateRow()">
+      <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
+      <span i18n="@@document.detail.attribute.add">Add Row</span>
+    </button>
+  </div>
+
+</ng-container>

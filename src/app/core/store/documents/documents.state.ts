@@ -23,10 +23,11 @@ import {AppState} from '../app.state';
 import {selectQuery} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
 import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
-import {DocumentData, DocumentModel} from './document.model';
+import {DocumentModel} from './document.model';
+import {DataResourceData} from '../../model/resource';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
-  pendingDataUpdates: Record<string, DocumentData>; // key is correlationId
+  pendingDataUpdates: Record<string, DataResourceData>; // key is correlationId
   queries: Query[];
 }
 

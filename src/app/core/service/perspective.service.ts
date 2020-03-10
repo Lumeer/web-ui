@@ -23,8 +23,6 @@ import {select, Store} from '@ngrx/store';
 import {take} from 'rxjs/operators';
 import {Perspective} from '../../view/perspectives/perspective';
 import {AppState} from '../store/app.state';
-import {Collection} from '../store/collections/collection';
-import {DocumentModel} from '../store/documents/document.model';
 import {selectWorkspace} from '../store/navigation/navigation.state';
 import {QueryParam} from '../store/navigation/query-param';
 import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cursor/view-cursor';
@@ -35,14 +33,8 @@ import {convertViewCursorToString, ViewCursor} from '../store/navigation/view-cu
 export class PerspectiveService {
   constructor(private store$: Store<AppState>, private router: Router) {}
 
-  public switchPerspective(
-    perspective: Perspective,
-    collection?: Collection,
-    document?: DocumentModel,
-    queryToSet?: string
-  ): void {
-    if (collection && document) {
-      const cursor: ViewCursor = {collectionId: collection.id, documentId: document.id};
+  public switchPerspective(perspective: Perspective, cursor?: ViewCursor, queryToSet?: string): void {
+    if (cursor) {
       const cursorString = convertViewCursorToString(cursor);
 
       this.navigateToPerspective(perspective, cursorString, queryToSet);

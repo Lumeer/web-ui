@@ -36,16 +36,11 @@ import {
 import {AttributesResource} from '../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {isArraySubset} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
 export function pivotAttributesAreSame(a1: PivotAttribute, a2: PivotAttribute): boolean {
-  return (
-    a1.resourceId === a2.resourceId &&
-    a1.resourceIndex === a2.resourceIndex &&
-    a1.attributeId === a2.attributeId &&
-    a1.resourceType === a2.resourceType
-  );
+  return deepObjectsEquals(cleanQueryAttribute(a1), cleanQueryAttribute(a2));
 }
 
 export function isPivotConfigChanged(viewConfig: PivotConfig, currentConfig: PivotConfig): boolean {
@@ -70,15 +65,6 @@ function pivotStemConfigHasChanged(s1: PivotStemConfig, s2: PivotStemConfig): bo
     !deepObjectsEquals(s1.columnAttributes || [], s2.columnAttributes || []) ||
     !deepObjectsEquals(s1.valueAttributes || [], s2.valueAttributes || [])
   );
-}
-
-export function cleanPivotAttribute(attribute: PivotAttribute): PivotAttribute {
-  return {
-    resourceIndex: attribute.resourceIndex,
-    attributeId: attribute.attributeId,
-    resourceId: attribute.resourceId,
-    resourceType: attribute.resourceType,
-  };
 }
 
 export function checkOrTransformPivotConfig(
