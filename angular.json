@@ -5,15 +5,11 @@
   "projects": {
     "lumeer": {
       "i18n": {
-        "sourceLocale": "en-US",
+        "sourceLocale": "en",
         "locales": {
           "cs": {
             "translation": "src/i18n/messages.cs.xlf",
             "baseHref": "/cs/"
-          },
-          "en": {
-            "translation": "src/i18n/messages.en.xlf",
-            "baseHref": "/en/"
           }
         }
       },
@@ -162,18 +158,14 @@
             },
             "cs": {
               "aot": true,
-              "i18nFile": "src/i18n/messages.cs.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "cs",
+              "localize": ["cs"],
               "buildOptimizer": false,
               "optimization": false,
               "sourceMap": false
             },
             "en": {
               "aot": true,
-              "i18nFile": "src/i18n/messages.en.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "en",
+              "localize": ["en"],
               "buildOptimizer": false,
               "optimization": false,
               "sourceMap": false
