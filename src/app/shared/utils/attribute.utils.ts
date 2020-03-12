@@ -23,27 +23,27 @@ import {Attribute} from '../../core/store/collections/collection';
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 
 export function findAttributeById(attributes: Attribute[], attributeId: string): Attribute {
-  return attributes.find(attribute => attribute.id === attributeId);
+  return (attributes || []).find(attribute => attribute.id === attributeId);
 }
 
 export function findAttributeByName(attributes: Attribute[], name: string): Attribute {
-  return attributes.find(attribute => attribute.name === name);
+  return (attributes || []).find(attribute => attribute.name === name);
 }
 
 export function maxAttributeDepth(attributes: Attribute[]): number {
-  return Math.max(...attributes.map(attribute => getAttributeDepth(attribute)));
+  return Math.max(...(attributes || []).map(attribute => getAttributeDepth(attribute)));
 }
 
 export function filterAttributesByDepth(attributes: Attribute[], depth: number): Attribute[] {
-  return attributes.filter(attribute => getAttributeDepth(attribute) === depth);
+  return (attributes || []).filter(attribute => getAttributeDepth(attribute) === depth);
 }
 
 export function filterDirectAttributeChildren(attributes: Attribute[], parent: Attribute): Attribute[] {
   if (!parent) {
-    return attributes.filter(attribute => getAttributeDepth(attribute) === 1);
+    return (attributes || []).filter(attribute => getAttributeDepth(attribute) === 1);
   }
 
-  return attributes.filter(attribute => isDirectAttributeChild(parent, attribute));
+  return (attributes || []).filter(attribute => isDirectAttributeChild(parent, attribute));
 }
 
 export function isDirectAttributeChild(parent: Attribute, potentialChild: Attribute): boolean {
@@ -53,11 +53,11 @@ export function isDirectAttributeChild(parent: Attribute, potentialChild: Attrib
 }
 
 export function hasAttributeChildren(attributes: Attribute[], parent: Attribute): boolean {
-  return attributes.some(attribute => isDirectAttributeChild(parent, attribute));
+  return (attributes || []).some(attribute => isDirectAttributeChild(parent, attribute));
 }
 
 export function getAttributeDepth(attribute: Attribute): number {
-  return attribute.name.split('.').length;
+  return attribute?.name.split('.').length;
 }
 
 export function extractAttributeLastName(name: string): string {
@@ -85,7 +85,7 @@ export function generateAttributeName(
   attributeNames: string[] = [],
   parentName?: string
 ): string {
-  const existingNames = otherAttributes.map(attr => attr.name).concat(attributeNames);
+  const existingNames = (otherAttributes || []).map(attr => attr.name).concat(attributeNames);
   const prefix = parentName ? `${parentName}.` : '';
 
   let lastName = 'A';
@@ -111,10 +111,10 @@ export function increaseChar(name: string): string {
 }
 
 export function updateAttributes(attributes: Attribute[], newAttribute: Attribute): Attribute[] {
-  const index = attributes.findIndex(attr => attr.id === newAttribute.id);
+  const index = (attributes || []).findIndex(attr => attr.id === newAttribute.id);
 
   if (index < 0) {
-    return attributes.concat(newAttribute);
+    return (attributes || []).concat(newAttribute);
   }
 
   const oldAttribute = attributes[index];

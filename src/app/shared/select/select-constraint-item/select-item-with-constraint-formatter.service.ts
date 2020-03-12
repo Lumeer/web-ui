@@ -59,7 +59,7 @@ export class SelectItemWithConstraintFormatter {
       return constraint;
     }
 
-    switch (constraint.type) {
+    switch (constraint?.type) {
       case ConstraintType.DateTime:
         return this.dateTimeConfigOverrideService.isValidOverride(constraint, overrideConstraint);
       case ConstraintType.Duration:
