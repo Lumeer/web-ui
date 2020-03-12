@@ -83,7 +83,7 @@ import 'zone.js/dist/zone'; // Included with Angular CLI.
 // Add global to window, assigning the value of window itself.
 (window as any).global = window;
 
-/******************************************************************
- * Load `$localize` - used if i18n tags appear in Angular templates.
+/***************************************************************************************************
+ * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
  */
 import '@angular/localize/init';

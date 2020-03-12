@@ -149,16 +149,18 @@
             },
             "cs": {
               "aot": true,
-              "locales": "src/i18n/messages.cs.xlf",
-              "localize": "cs",
+              "i18nFile": "src/i18n/messages.cs.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "cs",
               "buildOptimizer": false,
               "optimization": false,
               "sourceMap": false
             },
             "en": {
               "aot": true,
-              "locales": "src/i18n/messages.en.xlf",
-              "localize": "en",
+              "i18nFile": "src/i18n/messages.en.xlf",
+              "i18nFormat": "xlf",
+              "i18nLocale": "en",
               "buildOptimizer": false,
               "optimization": false,
               "sourceMap": false

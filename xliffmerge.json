@@ -3,7 +3,7 @@
     "srcDir": "src/i18n",
     "genDir": "src/i18n",
     "defaultLanguage": "en",
-    "locales": "messages.xlf",
+    "i18nFile": "messages.xlf",
     "useSourceAsTarget": true
   }
 }
