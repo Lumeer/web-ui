@@ -29,6 +29,5 @@ import {PreviewResultsModule} from '../../preview-results/preview-results.module
   declarations: [ChooseLinkDocumentModalComponent],
   imports: [CommonModule, SelectModule, PipesModule, ModalWrapperModule, PreviewResultsModule],
   exports: [ChooseLinkDocumentModalComponent],
-  entryComponents: [ChooseLinkDocumentModalComponent],
 })
 export class ChooseLinkDocumentModalModule {}

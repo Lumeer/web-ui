@@ -89,7 +89,6 @@ import {PostItModule} from '../../../shared/post-it/post-it.module';
     PresenterModule,
     PostItModule,
   ],
-  entryComponents: [KanbanPerspectiveComponent],
   exports: [KanbanPerspectiveComponent],
 })
 export class KanbanPerspectiveModule {}

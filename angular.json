@@ -4,6 +4,19 @@
   "newProjectRoot": "projects",
   "projects": {
     "lumeer": {
+      "i18n": {
+        "sourceLocale": "en-US",
+        "locales": {
+          "cs": {
+            "translation": "src/i18n/messages.cs.xlf",
+            "baseHref": "/cs/"
+          },
+          "en": {
+            "translation": "src/i18n/messages.en.xlf",
+            "baseHref": "/en/"
+          }
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",

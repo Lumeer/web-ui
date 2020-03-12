@@ -30,6 +30,5 @@ import {DataResourceModule} from '../../data-resource/data-resource.module';
   declarations: [DocumentDetailModalComponent],
   imports: [CommonModule, ModalWrapperModule, LinksModule, DataResourceModule, PipesModule],
   exports: [DocumentDetailModalComponent],
-  entryComponents: [DocumentDetailModalComponent],
 })
 export class DocumentDetailModalModule {}

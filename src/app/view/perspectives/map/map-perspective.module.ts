@@ -46,7 +46,6 @@ import {ModalModule} from '../../../shared/modal/modal.module';
     MapPositionCheckboxComponent,
     MapLoadingComponent,
   ],
-  entryComponents: [MapPerspectiveComponent],
   exports: [MapPerspectiveComponent],
 })
 export class MapPerspectiveModule {}

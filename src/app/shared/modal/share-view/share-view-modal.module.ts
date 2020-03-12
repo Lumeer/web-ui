@@ -56,6 +56,5 @@ import {UsersModule} from '../../users/users.module';
     UsersModule,
   ],
   exports: [ShareViewModalComponent],
-  entryComponents: [ShareViewModalComponent],
 })
 export class ShareViewModalModule {}

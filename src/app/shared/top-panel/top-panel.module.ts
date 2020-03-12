@@ -86,6 +86,5 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     PlayVideoModalComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],
-  entryComponents: [InviteUserModalComponent, UserFeedbackModalComponent, PlayVideoModalComponent],
 })
 export class TopPanelModule {}

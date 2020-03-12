@@ -210,9 +210,6 @@ The module needs to provide the perspective component:
 declarations: [
   <perspective component>
 ],
-entryComponents: [
-  <perspective component>
-],
 exports: [
   <perspective component>
 ]

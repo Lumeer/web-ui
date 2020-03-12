@@ -40,7 +40,6 @@ import {ModalModule} from '../../../shared/modal/modal.module';
     ChartMainConfigComponent,
     ChartYAxisConfigComponent,
   ],
-  entryComponents: [ChartPerspectiveComponent],
   exports: [ChartPerspectiveComponent],
 })
 export class ChartPerspectiveModule {}

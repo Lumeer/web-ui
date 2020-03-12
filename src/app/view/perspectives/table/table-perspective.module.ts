@@ -42,7 +42,6 @@ import {ModalModule} from '../../../shared/modal/modal.module';
     ModalModule,
   ],
   declarations: [TablePerspectiveComponent],
-  entryComponents: [TablePerspectiveComponent],
   exports: [TablePerspectiveComponent],
 })
 export class TablePerspectiveModule {}

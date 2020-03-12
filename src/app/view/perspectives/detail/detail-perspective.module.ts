@@ -27,7 +27,6 @@ import {DetailGuard} from './detail-guard';
 @NgModule({
   imports: [SharedModule, RouterModule, DetailPerspectiveRoutingModule],
   declarations: [DetailPerspectiveComponent],
-  entryComponents: [DetailPerspectiveComponent],
   exports: [DetailPerspectiveComponent],
   providers: [DetailGuard],
 })

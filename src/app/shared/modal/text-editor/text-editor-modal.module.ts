@@ -40,6 +40,5 @@ import {SharedModule} from '../../shared.module';
     QuillModule.forRoot(),
   ],
   exports: [TextEditorModalComponent],
-  entryComponents: [TextEditorModalComponent],
 })
 export class TextEditorModalModule {}
