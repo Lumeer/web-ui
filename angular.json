@@ -177,14 +177,26 @@
               "localize": ["cs"],
               "buildOptimizer": false,
               "optimization": false,
-              "sourceMap": false
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
             },
             "en": {
               "aot": true,
               "localize": ["en"],
               "buildOptimizer": false,
               "optimization": false,
-              "sourceMap": false
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
             }
           }
         },
