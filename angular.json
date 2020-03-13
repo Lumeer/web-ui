@@ -82,7 +82,13 @@
               "outputHashing": "all",
               "showCircularDependencies": false,
               "sourceMap": true,
-              "vendorChunk": false
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
             },
             "staging": {
               "aot": true,
@@ -100,7 +106,13 @@
               "outputHashing": "all",
               "showCircularDependencies": false,
               "sourceMap": true,
-              "vendorChunk": false
+              "vendorChunk": false,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
             },
             "testing": {
               "aot": true,
@@ -138,6 +150,10 @@
                   "baseline": "87kb",
                   "maximumWarning": "10%",
                   "maximumError": "50%"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "buildOptimizer": true,
