@@ -55,7 +55,7 @@ export class SelectItemWithConstraintFormatter {
   }
 
   public checkValidConstraintOverride(constraint: Constraint, overrideConstraint: Constraint): Constraint {
-    if (!overrideConstraint || constraint.type !== overrideConstraint.type) {
+    if (!overrideConstraint || !constraint || constraint.type !== overrideConstraint.type) {
       return constraint;
     }
 
