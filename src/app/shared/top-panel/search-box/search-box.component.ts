@@ -105,17 +105,18 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
         map(([[query, data], event]) => ({query, data, event})),
         filter(({query, event}) => !!query && (!event || event instanceof NavigationEnd)),
         tap(({data}) => (this.queryData = data)),
-        map(({query, data}) => ({queryItems: new QueryItemsConverter(data).fromQuery(query, true), query})),
-        tap(({queryItems}) => this.queryItems$.next(queryItems)),
-        filter(({queryItems}) => this.itemsChanged(queryItems))
+        map(({query, data}) => ({queryItems: new QueryItemsConverter(data).fromQuery(query, true), query}))
       )
       .subscribe(({queryItems, query}) => {
-        this.initForm(queryItems);
+        if (this.itemsChanged(queryItems)) {
+          this.initForm(queryItems);
 
-        const newQuery = convertQueryItemsToQueryModel(queryItems);
-        if (!areQueriesEqual(query, newQuery)) {
-          this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
+          const newQuery = convertQueryItemsToQueryModel(queryItems);
+          if (!areQueriesEqual(query, newQuery)) {
+            this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
+          }
         }
+        this.queryItems$.next(queryItems);
       });
     this.subscriptions.add(querySubscription);
   }
