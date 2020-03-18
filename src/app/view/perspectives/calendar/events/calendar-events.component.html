@@ -1,21 +1,27 @@
-<ng-container *ngIf="{mode: currentMode$ | async, date: currentDate$ | async} as data">
-  <calendar-header
-    class="d-block mb-3 mx-5"
-    [mode]="data.mode"
-    [viewDate]="data.date"
-    [locale]="locale"
-    (modeChange)="onModeChange($event)"
-    (viewDateChange)="onViewDateChange($event)">
-  </calendar-header>
+<!--<ng-container *ngIf="{mode: currentMode$ | async, date: currentDate$ | async} as data">-->
+<!--  <calendar-header-->
+<!--    class="d-block mb-3 mx-5"-->
+<!--    [mode]="data.mode"-->
+<!--    [viewDate]="data.date"-->
+<!--    [locale]="locale"-->
+<!--    (modeChange)="onModeChange($event)"-->
+<!--    (viewDateChange)="onViewDateChange($event)">-->
+<!--  </calendar-header>-->
 
-  <calendar-visualization
-    class="h-100 d-block"
-    [events]="(events$ | async) || []"
-    [currentMode]="data.mode"
-    [currentDate]="data.date"
-    (timesChange)="onValueChanged($event)"
-    (newEvent)="onNewEvent($event)"
-    (eventClick)="onEventClicked($event)">
-  </calendar-visualization>
+<!--  <calendar-visualization-->
+<!--    class="h-100 d-block"-->
+<!--    [events]="(events$ | async) || []"-->
+<!--    [currentMode]="data.mode"-->
+<!--    [currentDate]="data.date"-->
+<!--    (timesChange)="onValueChanged($event)"-->
+<!--    (newEvent)="onNewEvent($event)"-->
+<!--    (eventClick)="onEventClicked($event)">-->
+<!--  </calendar-visualization>-->
 
-</ng-container>
+<!--</ng-container>-->
+
+<calendar-visualization2 [events]="events$ | async"
+                         (eventClick)="onEventClicked($event)"
+                         (newEvent)="onNewEvent($event)">
+
+</calendar-visualization2>

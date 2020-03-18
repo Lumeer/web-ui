@@ -39,9 +39,8 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {CalendarBarPropertyRequired, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {CalendarEvent} from 'angular-calendar';
 import {debounceTime, filter, map} from 'rxjs/operators';
-import {CalendarMetaData, checkOrTransformCalendarConfig, createCalendarEvents} from '../util/calendar-util';
+import {checkOrTransformCalendarConfig, createCalendarEvents} from '../util/calendar-util';
 import {Query} from '../../../../core/store/navigation/query/query';
 import * as moment from 'moment';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
@@ -50,6 +49,7 @@ import {CalendarHeaderComponent} from './header/calendar-header.component';
 import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
 import {CalendarEventDetailModalComponent} from '../../../../shared/modal/calendar-event-detail/calendar-event-detail-modal.component';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {CalendarEvent} from '../util/calendar-event';
 
 interface Data {
   collections: Collection[];
@@ -107,7 +107,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   public currentMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
   public currentDate$ = new BehaviorSubject<Date>(new Date());
 
-  public events$: Observable<CalendarEvent<CalendarMetaData>[]>;
+  public events$: Observable<CalendarEvent[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
 
   constructor(
@@ -213,10 +213,10 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }
   }
 
-  public onNewEvent(initialTime: number) {
+  public onNewEvent(data: {start: Date, end: Date}) {
     if (this.isAtLeastOneCollectionWritable()) {
       const config = {
-        initialState: {initialTime, config: this.config, permissions: this.permissions},
+        initialState: {...data, config: this.config, permissions: this.permissions},
         class: 'modal-lg',
       };
       config['backdrop'] = 'static';
@@ -244,10 +244,10 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     );
   }
 
-  public onEventClicked(event: CalendarEvent<CalendarMetaData>) {
-    const collection = (this.collections || []).find(coll => coll.id === event.meta.collectionId);
-    const document = (this.documents || []).find(doc => doc.id === event.meta.documentId);
-    const stemIndex = event.meta.stemIndex;
+  public onEventClicked(event: CalendarEvent) {
+    const collection = (this.collections || []).find(coll => coll.id === event.extendedProps.collectionId);
+    const document = (this.documents || []).find(doc => doc.id === event.extendedProps.documentId);
+    const stemIndex = event.extendedProps.stemIndex;
     if (collection && document) {
       const config = {
         initialState: {document, collection, stemIndex, config: this.config, permissions: this.permissions},

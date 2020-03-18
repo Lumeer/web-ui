@@ -40,6 +40,8 @@ import {adapterFactory} from 'angular-calendar/date-adapters/moment';
 import * as moment from 'moment';
 import {CalendarEventsComponent} from './events/calendar-events.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
+import {FullCalendarModule} from '@fullcalendar/angular';
+import { CalendarVisualization2Component } from './events/calendar-visualization2/calendar-visualization2.component';
 
 export function momentAdapterFactory() {
   return adapterFactory(moment);
@@ -65,6 +67,7 @@ export function momentAdapterFactory() {
     ),
     CalendarPerspectiveRoutingModule,
     CalendarPipesModule,
+    FullCalendarModule,
     ModalModule,
   ],
   declarations: [
@@ -74,6 +77,7 @@ export function momentAdapterFactory() {
     CalendarHeaderComponent,
     CalendarCollectionConfigComponent,
     CalendarEventsComponent,
+    CalendarVisualization2Component,
   ],
   exports: [CalendarPerspectiveComponent],
   providers: [

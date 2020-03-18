@@ -59,7 +59,10 @@ export class CalendarEventDetailModalComponent implements OnInit {
   public stemIndex: number = 0;
 
   @Input()
-  public initialTime: number;
+  public start: Date;
+
+  @Input()
+  public end: Date;
 
   @Input()
   public config: CalendarConfig;
@@ -130,12 +133,12 @@ export class CalendarEventDetailModalComponent implements OnInit {
 
           const startProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyRequired.StartDate];
           if (startProperty) {
-            data[startProperty.attributeId] = this.getInitialEventStart();
+            data[startProperty.attributeId] = this.start;
           }
 
           const endProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyOptional.EndDate];
           if (endProperty) {
-            data[endProperty.attributeId] = this.getInitialEventEnd();
+            data[endProperty.attributeId] = this.end;
           }
         }
         return {data, collectionId: collection?.id};
@@ -143,15 +146,6 @@ export class CalendarEventDetailModalComponent implements OnInit {
       take(1),
       tap(document => (this.currentDocument = document))
     );
-  }
-
-  private getInitialEventStart(): Date {
-    return new Date(this.initialTime);
-  }
-
-  private getInitialEventEnd(): Date {
-    const eventStart = moment(this.getInitialEventStart());
-    return eventStart.add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
   }
 
   private getInitialTitleName(): string {
@@ -174,8 +168,8 @@ export class CalendarEventDetailModalComponent implements OnInit {
           const start = this.currentDocument?.data?.[startProperty.attributeId];
           newStart = start && this.cleanDateWhenAllDay(start);
           data[startProperty.attributeId] = newStart;
-        } else if (this.initialTime) {
-          newStart = this.getInitialEventStart();
+        } else if (this.start) {
+          newStart = this.start;
           data[startProperty.attributeId] = newStart;
         }
       }

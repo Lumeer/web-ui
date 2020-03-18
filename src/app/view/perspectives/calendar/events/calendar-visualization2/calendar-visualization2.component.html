@@ -1,0 +1,15 @@
+<full-calendar defaultView="dayGridMonth"
+               #calendar
+               [events]="events"
+               [plugins]="calendarPlugins"
+               [navLinks]="true"
+               [selectable]="true"
+               [locale]="locale"
+               [firstDay]="locale | firstDayOfWeek"
+               [buttonText]="buttonText"
+               [header]="header"
+               (dateClick)="onDateClick($event)"
+               (eventClick)="onEventClick($event)"
+               (select)="onRangeSelected($event)"
+               (navLinkDayClick)="onNavLinkDayClick($event)">
+</full-calendar>

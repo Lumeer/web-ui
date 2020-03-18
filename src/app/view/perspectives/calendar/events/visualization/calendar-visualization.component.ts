@@ -32,7 +32,7 @@ import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} fro
 import {Subject} from 'rxjs';
 import * as moment from 'moment';
 import {WeekViewHourSegment, MonthViewDay, WeekViewHourColumn} from 'calendar-utils';
-import {CalendarMetaData} from '../../util/calendar-util';
+import {CalendarMetaData} from '../../util/calendar-event';
 
 const DEFAULT_NEW_EVENT_HOUR = 9;
 

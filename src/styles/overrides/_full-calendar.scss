@@ -1,0 +1,14 @@
+@import '../variables';
+
+.fc-toolbar {
+
+  .fc-button-primary {
+    background: $primary;
+  }
+
+  .fc-button br {
+    display: none;
+  }
+
+}
+
