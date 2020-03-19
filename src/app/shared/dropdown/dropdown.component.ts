@@ -77,7 +77,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Output()
   public onCloseByClickOutside = new EventEmitter();
 
-  @ViewChild('dropdown', {static: false})
+  @ViewChild('dropdown')
   public dropdown: TemplateRef<any>;
 
   public clickListener: any;

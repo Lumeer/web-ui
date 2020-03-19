@@ -76,7 +76,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public readonly dropdownPositions = [

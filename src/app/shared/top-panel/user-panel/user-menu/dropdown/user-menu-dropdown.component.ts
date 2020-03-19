@@ -63,7 +63,7 @@ export class UserMenuDropdownComponent implements OnDestroy {
   @Output()
   public feedback = new EventEmitter();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public readonly dropdownPositions = [DropdownPosition.BottomEnd];

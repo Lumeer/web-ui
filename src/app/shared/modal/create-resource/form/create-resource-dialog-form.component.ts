@@ -55,7 +55,7 @@ export class CreateResourceDialogFormComponent implements OnInit {
   @Output()
   public submitResource = new EventEmitter<{resource: Organization | Project; template?: TemplateType}>();
 
-  @ViewChild(IconColorPickerComponent, {static: false})
+  @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
   public selectedTemplate$ = new BehaviorSubject<TemplateType>(TemplateType.PROJ);

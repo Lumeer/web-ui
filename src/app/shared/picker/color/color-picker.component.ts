@@ -57,7 +57,7 @@ export class ColorPickerComponent {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public showPicker$ = new BehaviorSubject(false);

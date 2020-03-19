@@ -62,7 +62,7 @@ export class TableRowsComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
-  @ViewChild(CdkVirtualScrollViewport, {static: false})
+  @ViewChild(CdkVirtualScrollViewport)
   public virtualScrollViewport: CdkVirtualScrollViewport;
 
   public loaded$: Observable<boolean>;

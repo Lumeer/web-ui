@@ -82,7 +82,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public saveOrClone = new EventEmitter<string>();
 
-  @ViewChild(OptionsDropdownComponent, {static: false})
+  @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
   public name: string;

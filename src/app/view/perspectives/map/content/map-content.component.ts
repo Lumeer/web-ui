@@ -84,7 +84,7 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public map: MapModel;
 
-  @ViewChild(MapRenderComponent, {static: false})
+  @ViewChild(MapRenderComponent)
   public mapRenderComponent: MapRenderComponent;
 
   public loading$ = new BehaviorSubject(true);

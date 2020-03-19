@@ -45,7 +45,7 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
   providers: [FileAttachmentsService],
 })
 export class ViewComponent implements OnInit {
-  @ViewChild(ViewControlsComponent, {static: false})
+  @ViewChild(ViewControlsComponent)
   public viewControlsComponent: ViewControlsComponent;
 
   public view$: Observable<View>;

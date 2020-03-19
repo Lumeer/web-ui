@@ -96,10 +96,10 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   @Output()
   public resetFocusAndEdit = new EventEmitter<number>();
 
-  @ViewChild('wrapperElement', {static: false, read: ElementRef})
+  @ViewChild('wrapperElement', {read: ElementRef})
   public wrapperElement: ElementRef;
 
-  @ViewChild(DataResourceDataRowIconsComponent, {static: false, read: ElementRef})
+  @ViewChild(DataResourceDataRowIconsComponent, {read: ElementRef})
   public iconsElement: ElementRef;
 
   @HostBinding('class.key-focused')

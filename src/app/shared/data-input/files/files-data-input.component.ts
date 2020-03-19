@@ -69,7 +69,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('hiddenInput', {static: false})
+  @ViewChild('hiddenInput')
   public hiddenInput: ElementRef<HTMLInputElement>;
 
   public fileAttachments$: Observable<FileAttachment[]>;

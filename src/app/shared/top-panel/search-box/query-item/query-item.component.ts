@@ -78,7 +78,7 @@ export class QueryItemComponent implements OnInit, OnChanges {
   @HostBinding('class.cursor-pointer')
   public cursorPointer: boolean;
 
-  @ViewChild(FilterBuilderComponent, {static: false})
+  @ViewChild(FilterBuilderComponent)
   public filterBuilderComponent: FilterBuilderComponent;
 
   public readonly constraintType = ConstraintType;

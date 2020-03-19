@@ -156,7 +156,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   @Output()
   public createDocumentsChain = new EventEmitter<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>();
 
-  @ViewChild(GanttChartVisualizationComponent, {static: false})
+  @ViewChild(GanttChartVisualizationComponent)
   public ganttChartVisualizationComponent: GanttChartVisualizationComponent;
 
   private readonly converter: GanttChartConverter;

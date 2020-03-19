@@ -60,10 +60,10 @@ export class IconColorPickerComponent implements OnDestroy {
   @Output()
   public preview = new EventEmitter<{icon: string; color: string}>();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
-  @ViewChild(IconChooseComponent, {static: false})
+  @ViewChild(IconChooseComponent)
   public iconPickerComponent: IconChooseComponent;
 
   private initialIcon: string;

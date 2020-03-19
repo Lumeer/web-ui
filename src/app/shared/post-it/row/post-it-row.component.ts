@@ -89,10 +89,10 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
   @Output()
   public resetFocusAndEdit = new EventEmitter<number>();
 
-  @ViewChild('wrapperElement', {static: false, read: ElementRef})
+  @ViewChild('wrapperElement', {read: ElementRef})
   public wrapperElement: ElementRef;
 
-  @ViewChild('iconsElement', {static: false, read: ElementRef})
+  @ViewChild('iconsElement', {read: ElementRef})
   public iconsElement: ElementRef;
 
   @HostBinding('class.key-focused')

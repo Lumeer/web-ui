@@ -63,7 +63,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  @ViewChild('tableId', {static: false})
+  @ViewChild('tableId')
   private tableIdElement: ElementRef<HTMLInputElement>;
 
   constructor(

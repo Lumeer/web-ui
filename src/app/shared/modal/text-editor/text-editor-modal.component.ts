@@ -61,10 +61,10 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   @Input()
   public minLength: number;
 
-  @ViewChild('dialogBody', {static: false})
+  @ViewChild('dialogBody')
   public dialogBody: ElementRef;
 
-  @ViewChild(QuillEditorComponent, {static: false})
+  @ViewChild(QuillEditorComponent)
   public quillEditorComponent: QuillEditorComponent;
 
   public onSave$ = new Subject<string>();

@@ -64,10 +64,10 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(CollapsibleSidebarComponent, {read: ElementRef, static: false})
+  @ViewChild(CollapsibleSidebarComponent, {read: ElementRef})
   public sidebarComponent: ElementRef;
 
-  @ViewChild(KanbanColumnsComponent, {read: ElementRef, static: false})
+  @ViewChild(KanbanColumnsComponent, {read: ElementRef})
   set content(content: ElementRef) {
     this.kanbanColumnsComponent = content;
     this.computeKanbansWidth();

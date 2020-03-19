@@ -93,7 +93,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChildren(DataResourceDataRowComponent)
   public rows: QueryList<DataResourceDataRowComponent>;
 
-  @ViewChild(HiddenInputComponent, {static: false})
+  @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
 
   @Output()

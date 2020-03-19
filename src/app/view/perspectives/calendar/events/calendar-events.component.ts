@@ -66,10 +66,10 @@ interface Data {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarEventsComponent implements OnInit, OnChanges {
-  @ViewChild(CalendarHeaderComponent, {read: ElementRef, static: false})
+  @ViewChild(CalendarHeaderComponent, {read: ElementRef})
   public calendarHeaderElement: ElementRef;
 
-  @ViewChild(CalendarVisualizationComponent, {read: ElementRef, static: false})
+  @ViewChild(CalendarVisualizationComponent, {read: ElementRef})
   set content(content: ElementRef) {
     this.calendarVisualizationElement = content;
     this.computeMaxVisualizationHeight();

@@ -94,10 +94,10 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   @Input()
   public embedded: boolean;
 
-  @ViewChild(TableAttributeSuggestionsComponent, {static: false})
+  @ViewChild(TableAttributeSuggestionsComponent)
   public suggestions: TableAttributeSuggestionsComponent;
 
-  @ViewChild(TableColumnContextMenuComponent, {static: false})
+  @ViewChild(TableColumnContextMenuComponent)
   public contextMenuComponent: TableColumnContextMenuComponent;
 
   private attributes: Attribute[];

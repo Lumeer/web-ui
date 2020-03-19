@@ -63,7 +63,7 @@ export class TableColumnInputComponent implements OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('textInput', {static: false})
+  @ViewChild('textInput')
   public textInput: ElementRef<HTMLInputElement>;
 
   private preventSave: boolean;

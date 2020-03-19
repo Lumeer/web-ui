@@ -65,7 +65,7 @@ export class DateTimeInputComponent implements OnChanges {
   @ViewChild('dateTimeInput', {static: true})
   public dateTimeInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(DateTimePickerComponent, {static: false})
+  @ViewChild(DateTimePickerComponent)
   public dateTimePicker: DateTimePickerComponent;
 
   private shouldSaveOnBlur = false;

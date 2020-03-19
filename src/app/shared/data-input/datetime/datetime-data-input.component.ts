@@ -73,7 +73,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   @ViewChild('dateTimeInput', {static: true})
   public dateTimeInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(DateTimePickerComponent, {static: false})
+  @ViewChild(DateTimePickerComponent)
   public dateTimePicker: DateTimePickerComponent;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.DateTime);

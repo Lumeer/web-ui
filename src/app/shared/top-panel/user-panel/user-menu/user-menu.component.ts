@@ -62,7 +62,7 @@ export class UserMenuComponent {
   @Output()
   public toggleControls = new EventEmitter();
 
-  @ViewChild(UserMenuDropdownComponent, {static: false})
+  @ViewChild(UserMenuDropdownComponent)
   public userMenuComponent: UserMenuDropdownComponent;
 
   public currentUser$: Observable<User>;

@@ -4,6 +4,18 @@
   "newProjectRoot": "projects",
   "projects": {
     "lumeer": {
+      "i18n": {
+        "locales": {
+          "cs": {
+            "translation": "src/i18n/messages.cs.xlf",
+            "baseHref": ""
+          },
+          "en": {
+            "translation": "src/i18n/messages.en.xlf",
+            "baseHref": ""
+          }
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -11,26 +23,27 @@
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
-          "spec": false,
-          "styleext": "scss"
+          "skipTests": true,
+          "style": "scss"
         },
         "@schematics/angular:guard": {
-          "spec": false
+          "skipTests": true
         },
         "@schematics/angular:module": {
-          "spec": false
+          "skipTests": true
         },
         "@schematics/angular:pipe": {
-          "spec": false
+          "skipTests": true
         },
         "@schematics/angular:service": {
-          "spec": false
+          "skipTests": true
         }
       },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/lumeer",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -58,6 +71,12 @@
           "configurations": {
             "production": {
               "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "buildOptimizer": true,
               "extractCss": true,
               "extractLicenses": true,
@@ -76,6 +95,12 @@
             },
             "staging": {
               "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "buildOptimizer": true,
               "extractCss": true,
               "extractLicenses": true,
@@ -128,6 +153,10 @@
                   "baseline": "87kb",
                   "maximumWarning": "10%",
                   "maximumError": "50%"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "buildOptimizer": true,
@@ -148,19 +177,27 @@
             },
             "cs": {
               "aot": true,
-              "i18nFile": "src/i18n/messages.cs.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "cs",
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "buildOptimizer": false,
+              "localize": ["cs"],
               "optimization": false,
               "sourceMap": false
             },
             "en": {
               "aot": true,
-              "i18nFile": "src/i18n/messages.en.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "en",
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "buildOptimizer": false,
+              "localize": ["en"],
               "optimization": false,
               "sourceMap": false
             }

@@ -38,7 +38,7 @@ export class VideoMenuDropdownComponent {
   @Output()
   public openPlayer = new EventEmitter<VideoModel>();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public readonly dropdownPositions = [DropdownPosition.BottomEnd];

@@ -106,7 +106,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   @Output()
   public useHint = new EventEmitter();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public readonly dropdownPositions = [DropdownPosition.BottomStart, DropdownPosition.TopStart];

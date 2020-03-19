@@ -66,7 +66,7 @@ export class DurationDataInputComponent implements OnChanges {
   @Output()
   public enterInvalid = new EventEmitter();
 
-  @ViewChild('durationInput', {static: false})
+  @ViewChild('durationInput')
   public durationInput: ElementRef<HTMLInputElement>;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Duration);

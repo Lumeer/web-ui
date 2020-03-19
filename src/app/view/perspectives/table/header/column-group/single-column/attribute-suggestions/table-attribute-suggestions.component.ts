@@ -94,7 +94,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
   @Output()
   public selected = new EventEmitter();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public readonly dropdownPositions = [

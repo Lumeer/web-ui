@@ -57,13 +57,13 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   @Input()
   public searchBoxShown: boolean;
 
-  @ViewChild(LumeerLogoComponent, {static: false})
+  @ViewChild(LumeerLogoComponent)
   public logo: LumeerLogoComponent;
 
-  @ViewChild(WorkspacePanelComponent, {static: false})
+  @ViewChild(WorkspacePanelComponent)
   public workspacePanel: WorkspacePanelComponent;
 
-  @ViewChild(UserPanelComponent, {static: false})
+  @ViewChild(UserPanelComponent)
   public userPanel: UserPanelComponent;
 
   public readonly firstLineHeight = 50;

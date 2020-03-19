@@ -59,7 +59,7 @@ export class FilesDropdownComponent implements AfterViewInit {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public fileSizeError$ = new BehaviorSubject(null);

@@ -60,7 +60,7 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
   @Input()
   public cursor: TableBodyCursor;
 
-  @ViewChild(ContextMenuComponent, {static: false})
+  @ViewChild(ContextMenuComponent)
   public contextMenuComponent: ContextMenuComponent;
 
   public collections$: Observable<Collection[]>;

@@ -76,10 +76,10 @@ export class TextDataInputComponent implements OnChanges {
   @Output()
   public enterInvalid = new EventEmitter();
 
-  @ViewChild('textInput', {static: false})
+  @ViewChild('textInput')
   public textInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(OptionsDropdownComponent, {static: false})
+  @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Text);

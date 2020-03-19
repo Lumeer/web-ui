@@ -84,7 +84,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   @HostBinding('class.bg-danger-light')
   public invalidBackground = false;
 
-  @ViewChild(QuillEditorComponent, {static: false})
+  @ViewChild(QuillEditorComponent)
   public textEditor: QuillEditorComponent;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Text);
