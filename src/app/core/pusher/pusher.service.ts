@@ -111,6 +111,7 @@ export class PusherService implements OnDestroy {
       cluster: environment.pusherCluster,
       authEndpoint: `${environment.apiUrl}/rest/pusher`,
       auth: {
+        params: {},
         headers: {
           Authorization: `Bearer ${this.authService.getAccessToken()}`,
         },

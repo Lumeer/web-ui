@@ -17,131 +17,79 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, NgZone} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Snotify, SnotifyButton, SnotifyPosition, SnotifyService, SnotifyToastConfig} from 'ng-snotify';
-import {Observable} from 'rxjs';
+import {IndividualConfig, ToastrService} from 'ngx-toastr';
+import {NotificationButton} from './notification-button';
+import {NotificationComponent} from './notification/notification.component';
 
 @Injectable()
 export class NotificationService {
-  constructor(private zone: NgZone, private notifications: SnotifyService, private i18n: I18n) {}
+  constructor(private notifications: ToastrService, private i18n: I18n) {}
 
-  public simple(message: string): void {
-    if (this.areNotificationsDisabled()) {
-      return;
-    }
-    this.zone.runOutsideAngular(() =>
-      this.notifications.simple(message, this.i18n({id: 'notification.service.Hey', value: 'Hey'}))
-    );
+  public success(message: string, config?: Partial<IndividualConfig>) {
+    this.notifications.success(message, this.i18n({id: 'notification.service.Success', value: 'Success'}), config);
   }
 
-  public success(message: string): void {
-    if (this.areNotificationsDisabled()) {
-      return;
-    }
-    this.zone.runOutsideAngular(() =>
-      this.notifications.success(message, this.i18n({id: 'notification.service.Success', value: 'Success'}))
-    );
+  public info(message: string, config?: Partial<IndividualConfig>) {
+    this.notifications.info(message, this.i18n({id: 'notification.service.Info', value: 'Info'}), config);
   }
 
-  public info(message: string): void {
-    if (this.areNotificationsDisabled()) {
-      return;
-    }
-    this.zone.runOutsideAngular(() =>
-      this.notifications.info(message, this.i18n({id: 'notification.service.Info', value: 'Info'}), {timeout: 5000})
-    );
+  public warning(message: string, config?: Partial<IndividualConfig>) {
+    this.notifications.warning(message, this.i18n({id: 'notification.service.Warning', value: 'Warning'}), config);
   }
 
-  public warning(message: string, config?: SnotifyToastConfig): void {
-    if (this.areNotificationsDisabled()) {
-      return;
-    }
-    this.zone.runOutsideAngular(() =>
-      this.notifications.warning(message, this.i18n({id: 'notification.service.Warning', value: 'Warning'}), config)
-    );
+  public error(message: string, config?: Partial<IndividualConfig>) {
+    this.notifications.error(message, this.i18n({id: 'notification.service.Error', value: 'Error'}), config);
   }
 
-  public error(message: string): void {
-    if (this.areNotificationsDisabled()) {
-      return;
-    }
-    this.zone.runOutsideAngular(() =>
-      this.notifications.error(message, this.i18n({id: 'notification.service.Error', value: 'Error'}))
-    );
+  public confirm(
+    message: string,
+    title: string,
+    buttons: NotificationButton[],
+    type?: string,
+    config?: Partial<IndividualConfig>
+  ): NotificationComponent {
+    const overrideConfig: Partial<IndividualConfig> = config || {
+      disableTimeOut: true,
+      tapToDismiss: false,
+      positionClass: 'toast-top-center',
+    };
+    overrideConfig.toastComponent = NotificationComponent;
+
+    const toast = this.notifications.show(message, title, overrideConfig, 'success');
+    const component = <NotificationComponent>toast.toastRef.componentInstance;
+    component.toastId = toast.toastId;
+    component.buttons$.next(buttons);
+    component.type$.next(type);
+    return component;
   }
 
-  public async(message: string, finishAction: Promise<Snotify> | Observable<Snotify>): void {
-    if (this.areNotificationsDisabled()) {
-      return;
-    }
-    this.zone.runOutsideAngular(() => this.notifications.async(message, finishAction));
-  }
-
-  public prompt(message: string, title: string, buttons: SnotifyButton[], placeholder: string): void {
-    this.zone.runOutsideAngular(() =>
-      this.notifications.prompt(message, title, {
-        buttons,
-        placeholder,
-        position: SnotifyPosition.centerTop,
-        timeout: null,
-      })
-    );
-  }
-
-  public confirm(message: string, title: string, buttons: SnotifyButton[]): void {
-    this.zone.runOutsideAngular(() =>
-      this.notifications.confirm(message, title, {
-        timeout: null,
-        buttons: buttons,
-        position: SnotifyPosition.centerTop,
-        closeOnClick: true,
-      })
-    );
-  }
-
-  public confirmYesOrNo(message: string, title: string, onConfirm: () => void, onCancel?: () => void) {
+  public confirmYesOrNo(message: string, title: string, type: string, onConfirm: () => void, onCancel?: () => void) {
     const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
     const yesButton = {text: yesButtonText, action: () => onConfirm()};
 
     const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-    const noButton = {text: noButtonText, action: () => onCancel && onCancel()};
+    const noButton = {text: noButtonText, action: () => onCancel?.()};
 
-    this.confirm(message, title, [noButton, yesButton]);
+    this.confirm(message, title, [noButton, yesButton], type);
   }
 
-  public hint(message: string, title: string, buttons: SnotifyButton[]): void {
-    this.zone.runOutsideAngular(() =>
-      this.notifications.success(message, title, {
-        timeout: 8000,
-        icon: 'assets/img/lumeer.svg',
-        iconClass: 'lumeer-logo',
-        pauseOnHover: true,
-        closeOnClick: true,
-        showProgressBar: true,
-        buttons: buttons,
-        type: 'success',
-        position: SnotifyPosition.leftTop,
-      })
-    );
-  }
+  public hint(message: string, title: string, buttons: NotificationButton[]) {
+    const component = this.confirm(message, title, buttons, 'success', {
+      timeOut: 8000,
+      extendedTimeOut: 2000,
+      progressBar: true,
+      progressAnimation: 'decreasing',
+      tapToDismiss: true,
+      positionClass: 'toast-top-left',
+    });
 
-  public html(html: string): void {
-    if (this.areNotificationsDisabled()) {
-      return;
-    }
-    this.zone.runOutsideAngular(() => this.notifications.html(html));
-  }
-
-  public remove(id: number) {
-    this.zone.runOutsideAngular(() => this.notifications.remove(id));
+    component.icon$.next('assets/img/lumeer.svg');
+    component.iconClass$.next('lumeer-logo');
   }
 
   public clear() {
-    this.zone.runOutsideAngular(() => this.notifications.clear());
-  }
-
-  private areNotificationsDisabled(): boolean {
-    return false;
+    this.notifications.clear();
   }
 }

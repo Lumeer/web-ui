@@ -17,14 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Resource} from '../../core/model/resource';
-
-@Pipe({
-  name: 'colors',
-})
-export class ColorsPipe implements PipeTransform {
-  public transform(entities: Resource[]): string[] {
-    return entities?.filter(entity => !!entity).map(entity => entity.color) || [];
-  }
+export interface NotificationButton {
+  text: string;
+  action?: () => void;
+  bold?: boolean;
 }

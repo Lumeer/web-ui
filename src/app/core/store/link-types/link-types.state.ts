@@ -59,7 +59,6 @@ export const selectLinkTypeByIdWithCollections = (linkTypeId: string) =>
   });
 
 export const selectLinkTypeAttributeById = (linkTypeId: string, attributeId: string) =>
-  createSelector(
-    selectLinkTypeById(linkTypeId),
-    linkType => linkType && linkType.attributes && linkType.attributes.find(attribute => attribute.id === attributeId)
+  createSelector(selectLinkTypeById(linkTypeId), linkType =>
+    linkType?.attributes?.find(attribute => attribute.id === attributeId)
   );

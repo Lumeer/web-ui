@@ -524,7 +524,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       .origin(function(datum: any) {
         const traceIx = plotMaker.getTraceIndexForPoint(this);
         const setIx = plotMaker.getSetIndexForTraceIndex(traceIx);
-        const yScale = plotMaker.createYScale(setIx);
+        const yScale: any = plotMaker.createYScale(setIx);
         let initialValue = plotMaker.getInitialValue(setIx, datum.i);
         initialValue = isNumeric(initialValue) ? toNumber(initialValue) : initialValue;
         const lastValue = initialValue;
@@ -536,7 +536,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, axisCategory, config};
 
         if (isNotNullOrUndefined(datum.y)) {
-          const initialY = yScale.invert(initialValue as any);
+          const initialY = yScale.invert(initialValue);
           const event = d3.event as MouseEvent;
           const offset = plotMaker.getElementOffset(event.target as Element);
           const elementClickedY = event.pageY - offset.top;

@@ -73,12 +73,12 @@ export function queryItemToForm(queryItem: QueryItem): AbstractControl {
 
 function queryItemConstraintType(queryItem: QueryItem): ConstraintType {
   const attribute = (<AttributeQueryItem>queryItem).attribute || (<LinkAttributeQueryItem>queryItem).attribute;
-  return (attribute && attribute.constraint && attribute.constraint.type) || ConstraintType.Unknown;
+  return attribute?.constraint?.type || ConstraintType.Unknown;
 }
 
 function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
   return createRange(0, 2).map(index => {
-    const conditionValue = queryItem.conditionValues && queryItem.conditionValues[index];
+    const conditionValue = queryItem.conditionValues && queryItem.conditionValues?.[index];
     return new FormGroup({
       type: new FormControl(conditionValue && conditionValue.type),
       value: new FormControl(conditionValue && conditionValue.value),

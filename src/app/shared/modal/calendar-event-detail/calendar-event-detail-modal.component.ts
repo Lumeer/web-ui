@@ -105,13 +105,13 @@ export class CalendarEventDetailModalComponent implements OnInit {
   }
 
   private getStemConfig(stemIndex: number): CalendarStemConfig {
-    return ((this.config && this.config.stemsConfigs) || [])[stemIndex];
+    return this.config?.stemsConfigs?.[stemIndex];
   }
 
   private selectCollectionByStemIndex$(index: number): Observable<Collection> {
     return this.store$.pipe(
       select(selectQuery),
-      map(query => ((query && query.stems) || [])[index]),
+      map(query => query?.stems?.[index]),
       mergeMap(stem => (stem && this.store$.pipe(select(selectCollectionById(stem.collectionId)))) || of(null))
     );
   }
@@ -138,7 +138,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
             data[endProperty.attributeId] = this.getInitialEventEnd();
           }
         }
-        return {data, collectionId: collection && collection.id};
+        return {data, collectionId: collection?.id};
       }),
       take(1),
       tap(document => (this.currentDocument = document))
@@ -171,7 +171,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
       let newStart = null;
       if (startProperty) {
         if (allDay) {
-          const start = this.currentDocument.data && this.currentDocument.data[startProperty.attributeId];
+          const start = this.currentDocument?.data?.[startProperty.attributeId];
           newStart = start && this.cleanDateWhenAllDay(start);
           data[startProperty.attributeId] = newStart;
         } else if (this.initialTime) {
@@ -182,7 +182,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
 
       const endProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyOptional.EndDate];
       if (endProperty) {
-        const start = this.currentDocument.data && this.currentDocument.data[endProperty.attributeId];
+        const start = this.currentDocument?.data?.[endProperty.attributeId];
         if (allDay) {
           data[endProperty.attributeId] = start && this.cleanDateWhenAllDay(start);
         } else if (newStart) {

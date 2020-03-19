@@ -18,9 +18,25 @@
  */
 
 import {Component} from '@angular/core';
+import {Toast} from 'ngx-toastr';
+import {BehaviorSubject} from 'rxjs';
+import {NotificationButton} from '../notification-button';
 
 @Component({
-  selector: 'notifications',
-  template: '<ng-snotify></ng-snotify>',
+  selector: 'notification',
+  templateUrl: './notification.component.html',
+  styleUrls: ['./notification.component.scss'],
 })
-export class NotificationsComponent {}
+export class NotificationComponent extends Toast {
+  public toastId: number;
+
+  public buttons$ = new BehaviorSubject<NotificationButton[]>([]);
+  public type$ = new BehaviorSubject<string>('');
+  public icon$ = new BehaviorSubject<string>(null);
+  public iconClass$ = new BehaviorSubject<string>(null);
+
+  public onButtonClick(button: NotificationButton) {
+    button.action?.();
+    this.toastrService.clear(this.toastId);
+  }
+}

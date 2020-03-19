@@ -24,6 +24,6 @@ import {Pipe, PipeTransform} from '@angular/core';
 })
 export class LengthGreaterThanPipe implements PipeTransform {
   public transform(value: {length: number}, threshold: number): boolean {
-    return value && value.length && value.length > threshold;
+    return value?.length > threshold;
   }
 }

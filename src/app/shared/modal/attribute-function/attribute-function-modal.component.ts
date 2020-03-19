@@ -83,15 +83,13 @@ export class AttributeFunctionModalComponent implements OnInit {
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
       this.attribute$ = this.collection$.pipe(
-        map(collection => findAttribute(collection && collection.attributes, this.attributeId))
+        map(collection => findAttribute(collection?.attributes, this.attributeId))
       );
       this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByCollectionId(this.collectionId)));
       this.variables = [{name: 'thisDocument', collectionId: this.collectionId} as RuleVariable];
     } else if (this.linkTypeId) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
-      this.attribute$ = this.linkType$.pipe(
-        map(linkType => findAttribute(linkType && linkType.attributes, this.attributeId))
-      );
+      this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType?.attributes, this.attributeId)));
       this.linkTypes$ = this.linkType$.pipe(map(linkType => [linkType]));
       this.variables = [{name: 'thisLink', linkTypeId: this.linkTypeId} as RuleVariable];
     }

@@ -384,7 +384,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
       value: 'Do you really want to delete the column? This will permanently remove the attribute and all its data.',
     });
 
-    return new NotificationsAction.Confirm({title, message, action});
+    return new NotificationsAction.Confirm({title, message, action, type: 'danger'});
   }
 
   private removeUninitializedColumn() {

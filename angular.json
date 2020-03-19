@@ -38,8 +38,9 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets", "src/browserconfig.xml", "src/manifest.json"],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@lumeer/lumeer-gantt/dist/lumeer-gantt.css",
               "node_modules/driver.js/dist/driver.min.css",
               "node_modules/@angular/cdk/overlay-prebuilt.css",
@@ -148,18 +149,16 @@
             },
             "cs": {
               "aot": true,
-              "i18nFile": "src/i18n/messages.cs.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "cs",
+              "locales": "src/i18n/messages.cs.xlf",
+              "localize": "cs",
               "buildOptimizer": false,
               "optimization": false,
               "sourceMap": false
             },
             "en": {
               "aot": true,
-              "i18nFile": "src/i18n/messages.en.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "en",
+              "locales": "src/i18n/messages.en.xlf",
+              "localize": "en",
               "buildOptimizer": false,
               "optimization": false,
               "sourceMap": false

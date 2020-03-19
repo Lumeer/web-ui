@@ -53,7 +53,7 @@ export class CreateResourceDialogTemplatesComponent implements OnInit, AfterView
     if (large) {
       const templateElement = document.getElementById(`${this.idPrefix}${this.selectedTemplate}`);
       setTimeout(() => {
-        templateElement && templateElement.scrollIntoView();
+        templateElement?.scrollIntoView();
       }, 500);
     }
   }

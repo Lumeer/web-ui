@@ -180,6 +180,7 @@ export class UsersEffects {
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'},
           }),
+          type: 'warning',
           yesFirst: false,
         });
       }

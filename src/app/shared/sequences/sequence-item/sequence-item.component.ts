@@ -45,13 +45,7 @@ export class SequenceItemComponent {
       value: 'Do you want to permanently remove this sequence?',
     });
     const title = this.i18n({id: 'sequence.item.delete.title', value: 'Remove sequence?'});
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.removeSequence.emit(this.sequence), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.removeSequence.emit(this.sequence));
   }
 
   private update(seq: number): void {

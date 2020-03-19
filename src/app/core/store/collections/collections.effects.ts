@@ -156,6 +156,7 @@ export class CollectionsEffects {
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'},
           }),
+          type: 'warning',
           yesFirst: false,
         });
       }
@@ -206,6 +207,7 @@ export class CollectionsEffects {
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'},
           }),
+          type: 'warning',
           yesFirst: false,
         });
       }

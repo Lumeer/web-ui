@@ -190,13 +190,7 @@ export class AttributeTypeFormComponent implements OnChanges {
       value:
         'You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?',
     });
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.attributeChange.emit(attribute), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.attributeChange.emit(attribute));
   }
 
   public get typeControl(): AbstractControl {

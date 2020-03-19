@@ -18,6 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
+import {NotificationButton} from '../../notifications/notification-button';
 
 export enum NotificationsActionType {
   CONFIRM = '[Notifications] Confirm',
@@ -34,7 +35,9 @@ export namespace NotificationsAction {
   export class Confirm implements Action {
     public readonly type = NotificationsActionType.CONFIRM;
 
-    public constructor(public payload: {title: string; message: string; action: Action; yesFirst?: boolean}) {}
+    public constructor(
+      public payload: {title: string; message: string; action: Action; type: string; yesFirst?: boolean}
+    ) {}
   }
 
   export class Info implements Action {
@@ -64,7 +67,7 @@ export namespace NotificationsAction {
   export class Hint implements Action {
     public readonly type = NotificationsActionType.HINT;
 
-    public constructor(public payload: {message: string; buttons: {text: string; action?: () => void}[]}) {}
+    public constructor(public payload: {message: string; buttons: NotificationButton[]}) {}
   }
 
   export class ForceRefresh implements Action {

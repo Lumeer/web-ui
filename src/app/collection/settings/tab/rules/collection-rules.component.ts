@@ -29,7 +29,6 @@ import {NotificationsAction} from '../../../../core/store/notifications/notifica
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {filter, first, map} from 'rxjs/operators';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
-import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {RouterAction} from '../../../../core/store/router/router.action';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 
@@ -128,7 +127,7 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
       value: 'Do you really want to delete this rule?',
     });
 
-    return new NotificationsAction.Confirm({title, message, action});
+    return new NotificationsAction.Confirm({title, message, type: 'danger', action});
   }
 
   public deleteRule(collection: Collection, rule: Rule) {

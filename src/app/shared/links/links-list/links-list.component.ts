@@ -103,7 +103,7 @@ export class LinksListComponent implements OnChanges, OnInit {
   }
 
   private objectChanged(change: SimpleChange): boolean {
-    return change && (!change.previousValue || change.previousValue.id !== change.currentValue.id);
+    return change && (!change.previousValue || change.previousValue.id !== change.currentValue?.id);
   }
 
   private initActiveLinkType(linkTypes: LinkType[]) {
@@ -128,7 +128,7 @@ export class LinksListComponent implements OnChanges, OnInit {
     this.otherCollection$ = this.store$.pipe(
       select(selectCollectionsDictionary),
       map(collectionsMap => {
-        const collectionId = getOtherLinkedCollectionId(linkType, this.document && this.document.collectionId);
+        const collectionId = getOtherLinkedCollectionId(linkType, this.document?.collectionId);
         return collectionId && collectionsMap[collectionId];
       })
     );

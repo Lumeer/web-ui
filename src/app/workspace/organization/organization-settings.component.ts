@@ -78,13 +78,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
       value: 'Do you really want to permanently delete this organization?',
     });
     const title = this.i18n({id: 'organization.delete.dialog.title', value: 'Delete organization?'});
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.deleteOrganization(), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteOrganization());
   }
 
   public onNewDescription(newDescription: string) {

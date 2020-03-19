@@ -49,10 +49,7 @@ export const initialNavigationState: NavigationState = {
 export const selectNavigation = (state: AppState) => state.navigation;
 export const selectQuery = createSelector(selectNavigation, (state: NavigationState) => state.query);
 
-export const selectQueryMainCollectionId = createSelector(
-  selectQuery,
-  query => query && query.stems && query.stems[0] && query.stems[0].collectionId
-);
+export const selectQueryMainCollectionId = createSelector(selectQuery, query => query.stems?.[0]?.collectionId);
 
 export const selectQueryWithoutLinks = createSelector(selectQuery, currentQuery => queryWithoutLinks(currentQuery));
 
@@ -63,7 +60,7 @@ export const selectSearchTab = createSelector(selectNavigation, (state: Navigati
 export const selectUrl = createSelector(selectNavigation, state => state.url);
 export const selectPreviousUrl = createSelector(selectNavigation, state => state.previousUrl);
 
-export const selectViewCode = createSelector(selectWorkspace, workspace => workspace && workspace.viewCode);
-export const selectViewCursor = createSelector(selectNavigation, state => state && state.viewCursor);
+export const selectViewCode = createSelector(selectWorkspace, workspace => workspace?.viewCode);
+export const selectViewCursor = createSelector(selectNavigation, state => state?.viewCursor);
 
 export const selectMapPosition = createSelector(selectNavigation, navigation => navigation.mapPosition);

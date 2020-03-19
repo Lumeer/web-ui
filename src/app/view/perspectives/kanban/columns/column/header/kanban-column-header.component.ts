@@ -62,11 +62,11 @@ export class KanbanColumnHeaderComponent implements OnChanges {
   }
 
   private createColumnConstraint(): Constraint {
-    const createdFromAttributes = (this.column && this.column.createdFromAttributes) || [];
+    const createdFromAttributes = this.column?.createdFromAttributes || [];
     const constraints = createdFromAttributes
       .map(attr => {
         const resource = this.findResource(attr);
-        return resource && findAttributeConstraint(resource.attributes, attr.attributeId);
+        return findAttributeConstraint(resource?.attributes, attr.attributeId);
       })
       .filter(attr => !!attr);
     return constraints[0];
