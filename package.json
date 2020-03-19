@@ -76,7 +76,7 @@
     "mapbox-gl": "^1.7.0",
     "mixpanel-browser": "^2.34.0",
     "moment": "^2.24.0",
-    "ng-click-outside": "^6.0.0",
+    "ng-click-outside": "^5.3.0",
     "ng-snotify": "^4.3.1",
     "ngx-bootstrap": "^5.3.2",
     "ngx-color-picker": "^8.2.0",
