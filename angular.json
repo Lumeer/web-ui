@@ -5,14 +5,11 @@
   "projects": {
     "lumeer": {
       "i18n": {
+        "sourceLocale": "en",
         "locales": {
           "cs": {
             "translation": "src/i18n/messages.cs.xlf",
-            "baseHref": ""
-          },
-          "en": {
-            "translation": "src/i18n/messages.en.xlf",
-            "baseHref": ""
+            "baseHref": "/cs/"
           }
         }
       },
@@ -23,20 +20,20 @@
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
-          "skipTests": true,
+          "skipTests": false,
           "style": "scss"
         },
         "@schematics/angular:guard": {
-          "skipTests": true
+          "skipTests": false
         },
         "@schematics/angular:module": {
-          "skipTests": true
+          "skipTests": false
         },
         "@schematics/angular:pipe": {
-          "skipTests": true
+          "skipTests": false
         },
         "@schematics/angular:service": {
-          "skipTests": true
+          "skipTests": false
         }
       },
       "architect": {

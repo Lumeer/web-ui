@@ -9,7 +9,7 @@
     "docs": "./node_modules/.bin/compodoc -p src/tsconfig.app.json -d ../web-ui-docs -n 'Lumeer Web UI documentation'",
     "format:check": "prettier --check '**/*.{ts,js,json,scss,md}'",
     "format:fix": "prettier --write",
-    "http-server": "angular-http-server --path ./dist/lumeer -p 7000",
+    "http-server": "angular-http-server --path ./dist/lumeer/en -p 7000",
     "i18n": "npm run i18n-html && npm run i18n-ts && npm run i18n-merge",
     "i18n-html": "ng xi18n --output-path i18n",
     "i18n-ts": "ngx-extractor -i \"src/app/**/*.ts\" -f xlf -o src/i18n/messages.xlf",
