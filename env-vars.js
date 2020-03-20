@@ -29,7 +29,7 @@ config.VIDEO_KEY = env.VIDEO_KEY;
 
 writeFileSync('./src/environments/.env.json', JSON.stringify(config));
 
-const buildSwitches = `--aot --base-href=${config.PUBLIC_PATH} ${
+const buildSwitches = `${config.LUMEER_ENV === 'production' ? '--prod' : '--aot'} --base-href=${config.PUBLIC_PATH} ${
   config.LUMEER_ENV ? '--configuration=' + config.LUMEER_ENV : ''
 } --i18n-file=${config.I18N_PATH} --i18n-format=${config.I18N_FORMAT} --i18n-locale=${config.I18N_LOCALE}`;
 

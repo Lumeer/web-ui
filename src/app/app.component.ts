@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ViewContainerRef} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
@@ -26,7 +26,6 @@ import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
-import {SnotifyService} from 'ng-snotify';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {catchError, filter, first, timeout, withLatestFrom} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
@@ -52,9 +51,7 @@ import csLanguage from 'numbro/languages/cs-CZ';
   selector: 'lmr-app',
   templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  public isChrome = true;
-
+export class AppComponent implements AfterViewInit {
   public lazyLoading$ = new BehaviorSubject(false);
 
   constructor(
@@ -64,7 +61,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     private i18n: I18n,
     private moduleLazyLoadingService: ModuleLazyLoadingService,
     private router: Router,
-    private snotifyService: SnotifyService,
     private store$: Store<AppState>,
     private title: Title,
     private pusherService: PusherService,
@@ -175,33 +171,6 @@ export class AppComponent implements OnInit, AfterViewInit {
         id: userIdHash,
       });
     });
-  }
-
-  public ngOnInit() {
-    this.setNotificationStyle();
-    this.showBrowserWarningOutsideChrome();
-  }
-
-  public setNotificationStyle(): void {
-    this.snotifyService.setDefaults({
-      toast: {
-        titleMaxLength: 20,
-        backdrop: -1,
-        timeout: 3000,
-        showProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-      },
-    });
-  }
-
-  private showBrowserWarningOutsideChrome() {
-    try {
-      const userAgent = (navigator as any).userAgent as string;
-      this.isChrome = userAgent.toLowerCase().includes('chrome') || userAgent.includes('CriOS'); // Chrome for iOS
-    } catch (e) {
-      this.isChrome = false;
-    }
   }
 
   public ngAfterViewInit() {
