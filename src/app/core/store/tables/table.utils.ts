@@ -313,9 +313,9 @@ export function createCollectionPart(
   }
 
   const configPart = getConfigPart(config, index);
-  const columnsConfig = configPart && configPart.collectionId === collection.id ? configPart.columns : null;
+  const columnsConfig = configPart?.collectionId === collection?.id ? configPart.columns : null;
 
-  const columns = createTableColumnsFromAttributes(collection.attributes, null, columnsConfig);
+  const columns = createTableColumnsFromAttributes(collection?.attributes, null, columnsConfig);
 
   const lastColumn = columns[columns.length - 1];
   if (last && (!lastColumn || lastColumn.attributeIds.length > 0)) {

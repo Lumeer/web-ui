@@ -28,6 +28,5 @@ import {PipesModule} from '../../pipes/pipes.module';
   declarations: [CreateDocumentModalComponent],
   imports: [CommonModule, DocumentDetailModalModule, SelectModule, PipesModule],
   exports: [CreateDocumentModalComponent],
-  entryComponents: [CreateDocumentModalComponent],
 })
 export class CreateDocumentModalModule {}

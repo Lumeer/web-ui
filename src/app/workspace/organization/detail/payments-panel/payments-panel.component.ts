@@ -158,6 +158,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
             }
           ),
           action: new PaymentsAction.CreatePayment({organizationId: this.organization.id, payment}),
+          type: 'warning',
         })
       );
     } else {

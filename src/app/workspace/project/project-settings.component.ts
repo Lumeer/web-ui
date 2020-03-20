@@ -73,13 +73,8 @@ export class ProjectSettingsComponent implements OnInit {
       value: 'Do you really want to permanently delete this project?',
     });
     const title = this.i18n({id: 'project.delete.dialog.title', value: 'Delete project?'});
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.deleteProject(), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteProject());
   }
 
   public onCollectionsClick() {

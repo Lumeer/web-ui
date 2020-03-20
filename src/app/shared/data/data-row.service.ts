@@ -127,8 +127,8 @@ export class DataRowService {
 
   public createDataRows(): DataRow[] {
     const defaultAttributeId = this.isCollectionResource ? getDefaultAttributeId(this.resource) : null;
-    const attributes = (this.resource && this.resource.attributes) || [];
-    const data = (this.dataResource && this.dataResource.data) || {};
+    const attributes = this.resource?.attributes || [];
+    const data = this.dataResource?.data || {};
     const dataKeys = Object.keys(data);
     const rows = [];
 
@@ -152,7 +152,7 @@ export class DataRowService {
 
     for (let i = 0; i < this.rows$.value.length; i++) {
       const row = this.rows$.value[i];
-      if (!(row.attribute && row.attribute.id) && !rowNames.includes(row.key)) {
+      if (!row.attribute?.id && !rowNames.includes(row.key)) {
         if (i < rows.length) {
           rows.splice(i, 0, row);
         } else {
@@ -197,13 +197,7 @@ export class DataRowService {
       value: 'Are you sure you want to delete this row?',
     });
     const title = this.i18n({id: 'resource.delete.dialog.title', value: 'Delete?'});
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.store$.dispatch(action), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.store$.dispatch(action));
   }
 
   private deleteNewRow(index: number) {
@@ -224,7 +218,7 @@ export class DataRowService {
   }
 
   private updateAttribute(row: DataRow, index: number, name: string) {
-    const existingAttribute = findAttributeByName(this.resource && this.resource.attributes, name);
+    const existingAttribute = findAttributeByName(this.resource?.attributes, name);
     if (existingAttribute) {
       this.updateExistingAttribute(row, index, existingAttribute);
     } else {
@@ -233,7 +227,7 @@ export class DataRowService {
   }
 
   private updateExistingAttribute(row: DataRow, index: number, attribute: Attribute) {
-    const usedKeys = Object.keys((this.dataResource && this.dataResource.data) || {});
+    const usedKeys = Object.keys(this.dataResource?.data || {});
     if (!this.dataResource || usedKeys.includes(attribute.id)) {
       return; // attribute is already used in document
     }
@@ -262,7 +256,7 @@ export class DataRowService {
 
   private updateNewAttribute(row: DataRow, index: number, name: string) {
     const value = isNotNullOrUndefined(row.value) ? row.value : '';
-    const newAttribute = {name, constraint: row.attribute && row.attribute.constraint};
+    const newAttribute = {name, constraint: row.attribute?.constraint};
     const rows = [...this.rows$.value];
     const newRow = {
       attribute: newAttribute,

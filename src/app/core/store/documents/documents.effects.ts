@@ -210,6 +210,7 @@ export class DocumentsEffects {
             path: ['/organization', organization.code, 'detail'],
             extras: {fragment: 'orderService'},
           }),
+          type: 'warning',
           yesFirst: false,
         });
       }
@@ -560,6 +561,7 @@ export class DocumentsEffects {
         title,
         message,
         action: new DocumentsAction.Delete(action.payload),
+        type: 'danger',
       });
     })
   );

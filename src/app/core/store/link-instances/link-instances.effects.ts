@@ -273,6 +273,7 @@ export class LinkInstancesEffects {
         title,
         message,
         action: new LinkInstancesAction.Delete(action.payload),
+        type: 'danger',
       });
     })
   );

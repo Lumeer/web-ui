@@ -21,13 +21,13 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {SnotifyButton, SnotifyPosition, SnotifyToastConfig} from 'ng-snotify';
 import {tap} from 'rxjs/operators';
 import {NotificationService} from '../../notifications/notification.service';
 import {AppState} from '../app.state';
 import {NotificationsAction, NotificationsActionType} from './notifications.action';
 import {Observable} from 'rxjs';
 import {Router} from '@angular/router';
+import {NotificationButton} from '../../notifications/notification-button';
 
 @Injectable()
 export class NotificationsEffects {
@@ -40,7 +40,7 @@ export class NotificationsEffects {
       const yesButton = {text: yesButtonText, action: () => this.store$.dispatch(action.payload.action)};
       const noButton = {text: noButtonText};
 
-      const buttons: SnotifyButton[] = [];
+      const buttons: NotificationButton[] = [];
       if (action.payload.yesFirst) {
         buttons.push(yesButton);
         buttons.push(noButton);
@@ -48,7 +48,7 @@ export class NotificationsEffects {
         buttons.push(noButton);
         buttons.push(yesButton);
       }
-      this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
+      this.notificationService.confirm(action.payload.message, action.payload.title, buttons, action.payload.type);
     })
   );
 
@@ -58,7 +58,7 @@ export class NotificationsEffects {
     tap(action => {
       const okButtonText = this.i18n({id: 'button.ok', value: 'OK'});
 
-      const buttons: SnotifyButton[] = [{text: okButtonText, bold: true}];
+      const buttons: NotificationButton[] = [{text: okButtonText, bold: true}];
       this.notificationService.confirm(action.payload.message, action.payload.title, buttons);
     })
   );
@@ -100,15 +100,13 @@ export class NotificationsEffects {
           'I am sorry, the project has been significantly updated by a different user. Please refresh this page in the browser.',
       });
       const refreshButtonText = this.i18n({id: 'refresh', value: 'Refresh'});
-      const button: SnotifyButton = {text: refreshButtonText, bold: true, action: () => (window.location.href = '/')};
-      const config: SnotifyToastConfig = {
-        timeout: 0,
-        closeOnClick: false,
-        buttons: [button],
-        position: SnotifyPosition.rightTop,
+      const button: NotificationButton = {
+        text: refreshButtonText,
+        bold: true,
+        action: () => (window.location.href = '/'),
       };
 
-      this.notificationService.warning(message, config);
+      this.notificationService.confirm(message, '', [button], 'warning');
     })
   );
 

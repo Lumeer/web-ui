@@ -4,9 +4,8 @@
 @import 'styles/custom/cursor';
 @import 'styles/custom/checkbox';
 @import 'styles/overrides/driver';
-@import 'styles/overrides/muuri';
 @import 'styles/overrides/ngx-bootstrap';
-@import 'styles/overrides/ng-snotify';
+@import 'styles/overrides/toastr';
 
 $flag-icon-css-path: '~flag-icon-css/flags' !default;
 @import '~flag-icon-css/sass/flag-icon';

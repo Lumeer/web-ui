@@ -150,7 +150,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public ngAfterViewInit() {
     setTimeout(() => {
       this.editorHeight();
-      if (this.quillEditorComponent && this.quillEditorComponent.quillEditor) {
+      if (this.quillEditorComponent?.quillEditor) {
         this.quillEditorComponent.quillEditor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
       }
     });

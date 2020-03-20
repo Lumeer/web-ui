@@ -81,6 +81,5 @@ import {DirectivesModule} from '../../directives/directives.module';
     DirectivesModule,
   ],
   exports: [AttributeTypeModalComponent],
-  entryComponents: [AttributeTypeModalComponent],
 })
 export class AttributeTypeModalModule {}

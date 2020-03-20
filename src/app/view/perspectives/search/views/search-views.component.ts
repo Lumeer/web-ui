@@ -113,13 +113,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
       value: 'Do you really want to permanently delete this view?',
     });
     const title = this.i18n({id: 'views.delete.title', value: 'Delete view?'});
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.deleteView(view), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteView(view));
   }
 
   public deleteView(view: View) {

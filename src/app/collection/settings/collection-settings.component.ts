@@ -111,14 +111,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
       value: 'Do you really want to delete this table?',
     });
     const title = this.i18n({id: 'collection.delete.dialog.title', value: 'Delete?'});
-
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.removeCollection(), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.removeCollection());
   }
 
   public removeCollection(): void {

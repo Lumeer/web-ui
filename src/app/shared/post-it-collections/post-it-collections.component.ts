@@ -85,6 +85,7 @@ export class PostItCollectionsComponent implements OnInit {
         title,
         message,
         action: new CollectionsAction.Delete({collectionId: collection.id}),
+        type: 'danger',
       })
     );
   }

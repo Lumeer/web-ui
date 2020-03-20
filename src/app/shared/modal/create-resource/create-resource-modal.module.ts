@@ -53,6 +53,5 @@ import {PresenterModule} from '../../presenter/presenter.module';
     PipesModule,
   ],
   exports: [CreateResourceModalComponent],
-  entryComponents: [CreateResourceModalComponent],
 })
 export class CreateResourceModalModule {}

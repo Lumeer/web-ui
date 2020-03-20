@@ -63,13 +63,7 @@ export class UserComponent {
   public onDelete() {
     const message = this.i18n({id: 'users.user.delete.message', value: 'Do you want to permanently remove this user?'});
     const title = this.i18n({id: 'users.user.delete.title', value: 'Remove user?'});
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.deleteUser(), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteUser());
   }
 
   public deleteUser() {

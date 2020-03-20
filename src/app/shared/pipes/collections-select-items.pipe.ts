@@ -26,7 +26,7 @@ import {SelectItemModel} from '../select/select-item/select-item.model';
 })
 export class CollectionsSelectItemsPipe implements PipeTransform {
   public transform(collections: Collection[]): SelectItemModel[] {
-    return (collections && collections.map(collection => this.collectionSelectItem(collection))) || [];
+    return collections?.map(collection => this.collectionSelectItem(collection)) || [];
   }
 
   private collectionSelectItem(collection: Collection): SelectItemModel {

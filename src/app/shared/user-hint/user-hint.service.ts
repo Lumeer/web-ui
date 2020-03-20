@@ -67,6 +67,7 @@ export class UserHintService {
       buttons: [
         {
           text: yesButtonText,
+          bold: true,
           action: () => {
             this.store$.dispatch(
               new CollectionsAction.ChangeAttribute({

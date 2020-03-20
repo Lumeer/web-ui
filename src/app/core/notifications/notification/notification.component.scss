@@ -1,0 +1,52 @@
+@import '../../../../styles/variables';
+
+:host {
+  display: block;
+  padding: 0 !important;
+  background: white;
+  margin-top: 1rem !important;
+}
+
+.notification-wrapper {
+  border-radius: 3px;
+  color: $primary;
+
+  &.success {
+    border: 2px solid $success;
+  }
+
+  &.danger {
+    border: 2px solid $danger;
+  }
+
+  &.warning {
+    border: 2px solid $warning;
+  }
+
+  &.info {
+    border: 2px solid $info;
+  }
+
+  .btn {
+    border-radius: 0 !important;
+    color: $primary !important;
+  }
+
+  .content {
+    .title.success {
+      color: $success;
+    }
+
+    .title.warning {
+      color: $warning;
+    }
+
+    .title.info {
+      color: $info;
+    }
+
+    .title.danger {
+      color: $danger;
+    }
+  }
+}

@@ -29,11 +29,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context>
@@ -44,16 +44,16 @@
           <context context-type="linenumber">21</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context>
           <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
-          <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context>
@@ -126,6 +126,10 @@
           <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
@@ -148,11 +152,11 @@
         <source>Save</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
@@ -174,7 +178,7 @@
         <source>Such an attribute does not exist.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit><trans-unit id="message.loading" datatype="html">
         <source>Loading...</source>
@@ -253,6 +257,10 @@
           <context context-type="linenumber">43</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
@@ -268,7 +276,7 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="link.new.dialog.title" datatype="html">
         <source>Create new link</source>
@@ -310,6 +318,32 @@
           <context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
+      </trans-unit><trans-unit id="modal.kanban.chooseDocument.title" datatype="html">
+        <source>Choose a record</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="modal.kanban.chooseDocument.description" datatype="html">
+        <source>
+        Select to which record you want to link the new one.
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="modal.kanban.chooseDocument.submit" datatype="html">
+        <source>Choose</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.choose.document.empty" datatype="html">
+        <source>I am sorry but I did not find anything.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
       </trans-unit><trans-unit id="collection.post.it.import" datatype="html">
         <source>Import Table
   </source>
@@ -327,7 +361,7 @@
         <source>Invite user</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/users/new-user/new-user.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="users.user.email.invalid" datatype="html">
         <source>
@@ -335,7 +369,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/users/new-user/new-user.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="users.user.email.duplicate" datatype="html">
         <source>
@@ -343,7 +377,7 @@
 </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/users/new-user/new-user.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="view.share.dialog.userName.unknown" datatype="html">
         <source>
@@ -369,7 +403,7 @@
         <source>Remove query item</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/search-box/query-item/query-item.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="tag.remove" datatype="html">
         <source>Remove tag</source>
@@ -464,12 +498,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/links-list.component.html</context>
           <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="topPanel.home.title" datatype="html">
-        <source>Back to home screen</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/lumeer-logo/lumeer-logo.component.html</context>
-          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="search.result.empty" datatype="html">
         <source>
@@ -570,26 +598,6 @@
         <source>All day event</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-      </trans-unit><trans-unit id="modal.kanban.chooseDocument.title" datatype="html">
-        <source>Choose a record</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit><trans-unit id="modal.kanban.chooseDocument.description" datatype="html">
-        <source>
-      Select to which record you want to link the new one.
-    </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit><trans-unit id="modal.kanban.chooseDocument.submit" datatype="html">
-        <source>Choose</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="sequence.list.sequenceName" datatype="html">
@@ -868,7 +876,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit><trans-unit id="files.dropdown.button.delete" datatype="html">
         <source>Delete file</source>
@@ -883,53 +891,59 @@
           <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.version" datatype="html">
-        <source>Version <x id="INTERPOLATION" equiv-text="{{document?.dataVersion}}"/></source>
+        <source>Version <x id="INTERPOLATION" equiv-text="{{dataResource?.dataVersion}}"/></source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/header/document-detail-header.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.createdBy" datatype="html">
-        <source>Created on <x id="INTERPOLATION" equiv-text="{{document?.creationDate | date : &apos;mediumDate&apos;}}"/>
+        <source>Created on <x id="INTERPOLATION" equiv-text="{{dataResource?.creationDate | date : &apos;mediumDate&apos;}}"/>
         by <x id="INTERPOLATION_1" equiv-text="{{createdBy$ | async}}"/></source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/header/document-detail-header.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.modifiedBy" datatype="html">
-        <source><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Last modified on <x id="INTERPOLATION" equiv-text="{{document.updateDate | date : &apos;mediumDate&apos;}}"/>
+        <source><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/>Last modified on <x id="INTERPOLATION" equiv-text="{{dataResource.updateDate | date : &apos;mediumDate&apos;}}"/>
         by <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/header/document-detail-header.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.switch.table" datatype="html">
         <source>Switch to Table perspective</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/header/document-detail-header.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.favorite.remove" datatype="html">
         <source>Remove from favorites</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/header/document-detail-header.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.favorite.add" datatype="html">
         <source>Add to favorites</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/header/document-detail-header.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.remove" datatype="html">
         <source>Remove Record</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/header/document-detail-header.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit><trans-unit id="link.detail.unlink" datatype="html">
+        <source>Unlink</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
+          <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit><trans-unit id="remove.row" datatype="html">
         <source>Remove Row</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/data/row/icons/document-data-row-icons.component.html</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
@@ -939,20 +953,20 @@
       </trans-unit><trans-unit id="document.detail.configure.constraint" datatype="html">
         <source>Set Attribute Type</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/data/row/icons/document-data-row-icons.component.html</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.configure.function" datatype="html">
         <source>Set Attribute Function</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/data/row/icons/document-data-row-icons.component.html</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
         <source>Add Row</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/document/document-detail/data/document-data.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/data-resource-data.component.html</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.address.description" datatype="html">
         <source>
@@ -1407,7 +1421,7 @@
         <source>Show detail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/table/body/row/links-list-table-row.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it/header/post-it-header.component.html</context>
@@ -1417,7 +1431,7 @@
         <source>Unlink</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/table/body/row/links-list-table-row.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></source>
@@ -1961,13 +1975,13 @@
         <source>Enter user email and press Enter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/share-view/body/input/share-view-input.component.html</context>
-          <context context-type="linenumber">9</context>
+          <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="view.share.dialog.input.button" datatype="html">
         <source>Add</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/share-view/body/input/share-view-input.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="view.share.dialog.link.title" datatype="html">
         <source>Only team members in the list below can open this link</source>
@@ -2674,7 +2688,7 @@
         <source>Cannot display anything</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
         <source>Please configure your view in the sidebar on the left
@@ -2682,7 +2696,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.valueAbsOrRel" datatype="html">
         <source>Select absolute or relative display</source>
@@ -2790,17 +2804,17 @@
           <context context-type="sourcefile">app/view/perspectives/map/content/loading/map-loading.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="perspective.gantt.config.dates.show" datatype="html">
-        <source>Show task dates</source>
+      </trans-unit><trans-unit id="aggregation" datatype="html">
+        <source>Aggregation</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/gantt-chart-config.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context>
+          <context context-type="linenumber">25</context>
         </context-group>
-      </trans-unit><trans-unit id="perspective.gantt.config.resize.lock" datatype="html">
-        <source>Lock dependent task position</source>
+      </trans-unit><trans-unit id="perspective.gantt.config.progressAggregation" datatype="html">
+        <source>Select progress aggregation</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/gantt-chart-config.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.header.scroll.today" datatype="html">
         <source>Scroll to Today
@@ -2822,6 +2836,24 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.gantt.config.position.save" datatype="html">
+        <source>Save position to view</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.gantt.config.dates.show" datatype="html">
+        <source>Show task dates</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.gantt.config.resize.lock" datatype="html">
+        <source>Lock dependent task position</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.calendar.header.previous" datatype="html">
         <source>
@@ -2973,7 +3005,7 @@
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  &apos;Remove from favorites&apos; : &apos;Add to favorites&apos;}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="organization.settings.users.count" datatype="html">
         <source>Number of users</source>
@@ -3594,124 +3626,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="button.yes" datatype="html">
-        <source>Yes</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/view.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.no" datatype="html">
-        <source>No</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/tab/attributes/collection-attributes.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/tab/link-types/collection-link-types.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/search/views/search-views.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/view.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/organization/organization-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/workspace/project/project-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="collection.tab.attributes.delete.title" datatype="html">
         <source>Delete attribute?</source>
         <context-group purpose="location">
@@ -3807,13 +3721,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="notification.service.Hey" datatype="html">
-        <source>Hey</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="notification.service.Success" datatype="html">
         <source>Success</source>
         <context-group purpose="location">
@@ -3839,6 +3746,36 @@
         <source>Error</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="button.yes" datatype="html">
+        <source>Yes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="button.no" datatype="html">
+        <source>No</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -4707,6 +4644,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="dataResource.attribute.placeholder" datatype="html">
+        <source>Enter attribute name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/data/row/data-resource-data-row.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="dataResource.detail.attribute.remove.confirm" datatype="html">
         <source>Are you sure you want to delete this row?</source>
         <context-group purpose="location">
@@ -4718,13 +4662,6 @@
         <source>Delete?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="dataResource.attribute.placeholder" datatype="html">
-        <source>Enter attribute name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/document/document-detail/data/row/document-data-row.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -4946,6 +4883,13 @@
         <source>Remove sequence?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/sequences/sequence-item/sequence-item.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="topPanel.home.title" datatype="html">
+        <source>Back to home screen</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/lumeer-logo/lumeer-logo.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5293,10 +5237,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ganttChart.mode.placeholder" datatype="html">
-        <source>View mode</source>
+      <trans-unit id="@@perspective.gantt.create.task.failure" datatype="html">
+        <source>Could not create task</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/config/gantt-chart-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5378,17 +5322,6 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="aggregation" datatype="html">
-        <source>Aggregation</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-value-attribute-config/kanban-value-attribute-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

@@ -31,6 +31,6 @@ export class TranslateConditionValuePipe implements PipeTransform {
   constructor(private translationService: TranslationService) {}
 
   public transform(value: ConstraintConditionValue, attribute: Attribute): string {
-    return this.translationService.translateConstraintConditionValue(value, attribute && attribute.constraint);
+    return this.translationService.translateConstraintConditionValue(value, attribute?.constraint);
   }
 }

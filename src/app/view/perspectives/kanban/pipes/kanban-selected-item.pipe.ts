@@ -26,7 +26,7 @@ import {SelectItemWithConstraintId} from '../../../../shared/select/select-const
 })
 export class KanbanSelectedItemPipe implements PipeTransform {
   public transform(config: KanbanStemConfig): SelectItemWithConstraintId {
-    if (config && config.attribute) {
+    if (config?.attribute) {
       return {resourceIndex: config.attribute.resourceIndex, attributeId: config.attribute.attributeId};
     }
     return null;

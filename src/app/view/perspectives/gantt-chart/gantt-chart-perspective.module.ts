@@ -42,7 +42,6 @@ import {GanttChartConfigSettingsComponent} from './config/settings/gantt-chart-c
     GanttChartInvalidRangeComponent,
     GanttChartConfigSettingsComponent,
   ],
-  entryComponents: [GanttChartPerspectiveComponent],
   exports: [GanttChartPerspectiveComponent],
 })
 export class GanttChartPerspectiveModule {}

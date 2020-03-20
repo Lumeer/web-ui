@@ -51,8 +51,9 @@
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets", "src/browserconfig.xml", "src/manifest.json"],
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@lumeer/lumeer-gantt/dist/lumeer-gantt.css",
               "node_modules/driver.js/dist/driver.min.css",
               "node_modules/@angular/cdk/overlay-prebuilt.css",
@@ -190,16 +191,16 @@
             },
             "en": {
               "aot": true,
+              "buildOptimizer": false,
+              "localize": ["en"],
+              "optimization": false,
+              "sourceMap": false,
               "budgets": [
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "6kb"
                 }
-              ],
-              "buildOptimizer": false,
-              "localize": ["en"],
-              "optimization": false,
-              "sourceMap": false
+              ]
             }
           }
         },

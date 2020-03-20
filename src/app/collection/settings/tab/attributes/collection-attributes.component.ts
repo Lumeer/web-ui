@@ -114,13 +114,7 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
         name: attribute.name,
       }
     );
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText, action: onCancel},
-      {text: yesButtonText, action: () => this.deleteAttribute(attribute), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteAttribute(attribute));
   }
 
   public deleteAttribute(attribute: Attribute) {
