@@ -37,6 +37,7 @@ import {TableBodyCursor} from '../../../../../../../core/store/tables/table-curs
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
 import {TableRowNumberService} from '../../../../table-row-number.service';
+import {ResizeObserverEntry, ResizeObserver} from '../../../../../../../shared/resize-observer';
 
 declare let ResizeObserver: ResizeObserver;
 

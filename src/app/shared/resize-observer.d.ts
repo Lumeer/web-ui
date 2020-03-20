@@ -23,7 +23,7 @@
  *
  * It is modeled after MutationObserver and IntersectionObserver.
  */
-interface ResizeObserver {
+export interface ResizeObserver {
   new (callback: ResizeObserverCallback);
 
   /**
@@ -46,11 +46,11 @@ interface ResizeObserver {
  * This callback delivers ResizeObserver's notifications. It is invoked by a
  * broadcast active observations algorithm.
  */
-interface ResizeObserverCallback {
+export interface ResizeObserverCallback {
   (entries: ResizeObserverEntry[], observer: ResizeObserver): void;
 }
 
-interface ResizeObserverEntry {
+export interface ResizeObserverEntry {
   /**
    * @param target The Element whose size has changed.
    */

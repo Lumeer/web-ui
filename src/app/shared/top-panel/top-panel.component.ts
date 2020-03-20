@@ -41,6 +41,7 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
 import {UserPanelComponent} from './user-panel/user-panel.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
+import {ResizeObserverEntry, ResizeObserver} from '../resize-observer';
 
 declare let ResizeObserver: ResizeObserver;
 
