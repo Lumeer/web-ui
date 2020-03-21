@@ -75,7 +75,7 @@ export class NotificationsMenuDropdownComponent implements OnDestroy {
   @Output()
   public clickNotification = new EventEmitter<UserNotification>();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public readonly notificationType = UserNotificationType;

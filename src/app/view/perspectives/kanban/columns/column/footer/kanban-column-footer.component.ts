@@ -56,7 +56,7 @@ export class KanbanColumnFooterComponent implements OnChanges {
   @Output()
   public selectResource = new EventEmitter<KanbanResourceCreate>();
 
-  @ViewChild(OptionsDropdownComponent, {static: false})
+  @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
   public dropdownOptions: DropdownOption[] = [];

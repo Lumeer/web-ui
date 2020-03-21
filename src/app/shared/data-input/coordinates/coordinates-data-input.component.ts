@@ -62,7 +62,7 @@ export class CoordinatesDataInputComponent {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('coordinatesInput', {static: false})
+  @ViewChild('coordinatesInput')
   public coordinatesInput: ElementRef<HTMLInputElement>;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Coordinates);

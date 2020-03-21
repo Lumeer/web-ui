@@ -87,12 +87,10 @@ export class QueryItemsConverter {
 
   private createStemsItems(stems: QueryStem[], skipDeleted: boolean): QueryItem[] {
     return (
-      (stems &&
-        stems.reduce((items, stem) => {
-          items.push(...this.createStemItems(stem, skipDeleted));
-          return items;
-        }, [])) ||
-      []
+      stems?.reduce((items, stem) => {
+        items.push(...this.createStemItems(stem, skipDeleted));
+        return items;
+      }, []) || []
     );
   }
 

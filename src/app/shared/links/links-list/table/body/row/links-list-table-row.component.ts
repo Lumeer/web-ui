@@ -102,7 +102,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   @Output()
   public newLink = new EventEmitter<{column: LinkColumn; value: any; correlationId: string}>();
 
-  @ViewChild(DocumentHintsComponent, {static: false})
+  @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
 
   public readonly booleanConstraintType = ConstraintType.Boolean;

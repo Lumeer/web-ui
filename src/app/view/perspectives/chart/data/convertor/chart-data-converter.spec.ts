@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {TestBed} from '@angular/core/testing';
+import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+
 import {PercentageConstraint} from '../../../../../core/model/constraint/percentage.constraint';
 import {PercentageConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
@@ -31,11 +34,8 @@ import {AllowedPermissions} from '../../../../../core/model/allowed-permissions'
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {TestBed} from '@angular/core/testing';
-import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NumberConstraint} from '../../../../../core/model/constraint/number.constraint';
 
 const documents: DocumentModel[] = [
   {
@@ -105,7 +105,7 @@ describe('Chart data converter single collection', () => {
         I18n,
       ],
     });
-    constraintReadableFormatter = TestBed.get(SelectItemWithConstraintFormatter);
+    constraintReadableFormatter = TestBed.inject(SelectItemWithConstraintFormatter);
     converter = new ChartDataConverter(constraintReadableFormatter);
   });
 
@@ -734,7 +734,7 @@ describe('Chart data converter linked collections', () => {
         I18n,
       ],
     });
-    constraintReadableFormatter = TestBed.get(SelectItemWithConstraintFormatter);
+    constraintReadableFormatter = TestBed.inject(SelectItemWithConstraintFormatter);
     converter = new ChartDataConverter(constraintReadableFormatter);
   });
 

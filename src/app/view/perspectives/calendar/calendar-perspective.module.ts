@@ -75,7 +75,6 @@ export function momentAdapterFactory() {
     CalendarCollectionConfigComponent,
     CalendarEventsComponent,
   ],
-  entryComponents: [CalendarPerspectiveComponent],
   exports: [CalendarPerspectiveComponent],
   providers: [
     {

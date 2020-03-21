@@ -73,13 +73,13 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   @Output()
   public enterInvalid = new EventEmitter();
 
-  @ViewChild('wrapperElement', {static: false})
+  @ViewChild('wrapperElement')
   public wrapperElement: ElementRef<HTMLElement>;
 
-  @ViewChild('textInput', {static: false})
+  @ViewChild('textInput')
   public textInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(OptionsDropdownComponent, {static: false})
+  @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
   public readonly avatarSize = USER_AVATAR_SIZE;

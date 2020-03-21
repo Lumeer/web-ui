@@ -66,7 +66,7 @@ export class NumberDataInputComponent implements OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('numberInput', {static: false})
+  @ViewChild('numberInput')
   public numberInput: ElementRef<HTMLInputElement>;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Number);

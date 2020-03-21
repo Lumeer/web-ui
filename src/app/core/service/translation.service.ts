@@ -35,7 +35,7 @@ import {
 export class TranslationService {
   constructor(private i18n: I18n) {}
 
-  public createDurationUnitsMap(): Record<DurationUnit, string> {
+  public createDurationUnitsMap(): Record<DurationUnit | string, string> {
     return Object.values(DurationUnit).reduce((map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}), {});
   }
 

@@ -107,11 +107,11 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       select(selectSearchById(searchId)),
       take(1),
       map(search => {
-        const searchConfig = view.config && view.config.search;
+        const searchConfig = view.config?.search;
         if (preferViewConfigUpdate(previousView, view, !!search)) {
           return {searchId, config: searchConfig, view};
         }
-        return {searchId, config: (search && search.config) || searchConfig || createDefaultSearchConfig()};
+        return {searchId, config: search?.config || searchConfig || createDefaultSearchConfig()};
       })
     );
   }
@@ -127,7 +127,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         }
         return {
           searchId,
-          config: (defaultConfig && defaultConfig && defaultConfig.config.search) || (search && search.config),
+          config: defaultConfig?.config?.search || search?.config,
         };
       })
     );
@@ -140,8 +140,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
         if (
           navigation.workspace &&
           !isNavigatingToOtherWorkspace(navigation.workspace, navigation.navigatingWorkspace) &&
-          config &&
-          config.searchTab &&
+          config?.searchTab &&
           searchTab &&
           config.searchTab !== searchTab &&
           !this.initialSearchTab
@@ -191,14 +190,10 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
       withLatestFrom(this.store$.pipe(select(selectDefaultViewConfig(Perspective.Search, DEFAULT_SEARCH_ID)))),
       filter(([[searchTab, search], defaultConfig]) => {
         const config =
-          defaultConfig &&
-          defaultConfig.config &&
-          defaultConfig.config.search &&
-          search &&
-          search.id === DEFAULT_SEARCH_ID
+          defaultConfig?.config?.search && search?.id === DEFAULT_SEARCH_ID
             ? defaultConfig.config.search
-            : search && search.config;
-        return config && config.searchTab !== searchTab;
+            : search?.config;
+        return config?.searchTab !== searchTab;
       }),
       map(([[searchTab, search]]) => ({searchTab, search}))
     );

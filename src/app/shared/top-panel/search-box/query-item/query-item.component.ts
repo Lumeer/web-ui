@@ -78,7 +78,7 @@ export class QueryItemComponent implements OnInit, OnChanges {
   @HostBinding('class.cursor-pointer')
   public cursorPointer: boolean;
 
-  @ViewChild(FilterBuilderComponent, {static: false})
+  @ViewChild(FilterBuilderComponent)
   public filterBuilderComponent: FilterBuilderComponent;
 
   public readonly constraintType = ConstraintType;
@@ -89,11 +89,11 @@ export class QueryItemComponent implements OnInit, OnChanges {
   constructor(public hostElement: ElementRef) {}
 
   public get conditionControl(): AbstractControl {
-    return this.queryItemForm && this.queryItemForm.controls.condition;
+    return this.queryItemForm?.controls?.condition;
   }
 
   public get conditionValuesControl(): FormArray {
-    return this.queryItemForm && (this.queryItemForm.controls.conditionValues as FormArray);
+    return this.queryItemForm?.controls?.conditionValues as FormArray;
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -142,8 +142,8 @@ export class QueryItemComponent implements OnInit, OnChanges {
 
     if (this.filterBuilderComponent.isOpen()) {
       this.filterBuilderComponent.close();
-    } else if (this.filterBuilderComponent) {
-      this.filterBuilderComponent.close();
+    } else {
+      this.filterBuilderComponent.open();
     }
   }
 

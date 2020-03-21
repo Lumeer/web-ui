@@ -41,6 +41,7 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
 import {UserPanelComponent} from './user-panel/user-panel.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
+import {ResizeObserverEntry, ResizeObserver} from '../resize-observer';
 
 declare let ResizeObserver: ResizeObserver;
 
@@ -57,13 +58,13 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
   @Input()
   public searchBoxShown: boolean;
 
-  @ViewChild(LumeerLogoComponent, {static: false})
+  @ViewChild(LumeerLogoComponent)
   public logo: LumeerLogoComponent;
 
-  @ViewChild(WorkspacePanelComponent, {static: false})
+  @ViewChild(WorkspacePanelComponent)
   public workspacePanel: WorkspacePanelComponent;
 
-  @ViewChild(UserPanelComponent, {static: false})
+  @ViewChild(UserPanelComponent)
   public userPanel: UserPanelComponent;
 
   public readonly firstLineHeight = 50;

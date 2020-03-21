@@ -94,10 +94,10 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   @Input()
   public embedded: boolean;
 
-  @ViewChild(TableAttributeSuggestionsComponent, {static: false})
+  @ViewChild(TableAttributeSuggestionsComponent)
   public suggestions: TableAttributeSuggestionsComponent;
 
-  @ViewChild(TableColumnContextMenuComponent, {static: false})
+  @ViewChild(TableColumnContextMenuComponent)
   public contextMenuComponent: TableColumnContextMenuComponent;
 
   private attributes: Attribute[];
@@ -384,7 +384,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
       value: 'Do you really want to delete the column? This will permanently remove the attribute and all its data.',
     });
 
-    return new NotificationsAction.Confirm({title, message, action});
+    return new NotificationsAction.Confirm({title, message, action, type: 'danger'});
   }
 
   private removeUninitializedColumn() {

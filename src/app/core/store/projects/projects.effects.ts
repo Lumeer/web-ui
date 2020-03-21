@@ -186,6 +186,7 @@ export class ProjectsEffects {
             path: ['/organization', action.payload.organizationCode, 'detail'],
             extras: {fragment: 'orderService'},
           }),
+          type: 'warning',
           yesFirst: false,
         });
       }

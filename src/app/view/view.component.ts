@@ -45,7 +45,7 @@ import {ViewControlsComponent} from './view-controls/view-controls.component';
   providers: [FileAttachmentsService],
 })
 export class ViewComponent implements OnInit {
-  @ViewChild(ViewControlsComponent, {static: false})
+  @ViewChild(ViewControlsComponent)
   public viewControlsComponent: ViewControlsComponent;
 
   public view$: Observable<View>;
@@ -149,13 +149,7 @@ export class ViewComponent implements OnInit {
       },
       {create: !!view.code ? '0' : '1'}
     );
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
-
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.createOrUpdateView(view), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.createOrUpdateView(view));
   }
 
   private createOrUpdateView(view: View) {
@@ -175,10 +169,15 @@ export class ViewComponent implements OnInit {
     const cloneButtonText = this.i18n({id: 'view.dialog.clone.clone', value: 'Make a copy'});
     const renameButtonText = this.i18n({id: 'view.dialog.clone.update', value: 'Rename'});
 
-    this.notificationService.confirm(message, title, [
-      {text: cloneButtonText, action: () => this.createView({...view, code: null}), bold: false},
-      {text: renameButtonText, action: () => this.updateView(view), bold: false},
-    ]);
+    this.notificationService.confirm(
+      message,
+      title,
+      [
+        {text: cloneButtonText, action: () => this.createView({...view, code: null}), bold: false},
+        {text: renameButtonText, action: () => this.updateView(view), bold: false},
+      ],
+      'info'
+    );
   }
 
   private createView(view: View) {

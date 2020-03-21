@@ -90,7 +90,7 @@ export class PostItComponent implements OnDestroy {
   @ViewChildren(PostItRowComponent)
   public rows: QueryList<PostItRowComponent>;
 
-  @ViewChild(HiddenInputComponent, {static: false})
+  @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
 
   public unusedAttributes: Attribute[] = [];

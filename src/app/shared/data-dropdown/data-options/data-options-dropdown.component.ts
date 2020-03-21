@@ -65,7 +65,7 @@ export class DataOptionsDropdownComponent implements AfterViewInit, OnChanges {
   @Output()
   public selectOption = new EventEmitter<DataDropdownOption>();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   @ViewChildren(DropdownOptionDirective)

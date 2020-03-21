@@ -1,0 +1,17 @@
+@import '../variables';
+
+.toast-info {
+  background-color: $info !important;
+}
+
+.toast-error {
+  background-color: $danger !important;
+}
+
+.toast-warning {
+  background-color: $warning !important;
+}
+
+.toast-success {
+  background-color: $success !important;
+}

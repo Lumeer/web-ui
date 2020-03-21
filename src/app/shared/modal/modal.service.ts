@@ -44,6 +44,7 @@ import {AttributesResource, DataResource} from '../../core/model/resource';
 import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
 import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
 import {DocumentModel} from '../../core/store/documents/document.model';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -51,7 +52,12 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 export class ModalService {
   private modalRefs: BsModalRef[] = [];
 
-  constructor(private store$: Store<AppState>, private i18n: I18n, private bsModalService: BsModalService) {}
+  constructor(
+    private store$: Store<AppState>,
+    private i18n: I18n,
+    private bsModalService: BsModalService,
+    private toastrService: ToastrService
+  ) {}
 
   public show(content: string | TemplateRef<any> | any, config?: ModalOptions): BsModalRef {
     const modalRef = this.bsModalService.show(content, config);
@@ -117,9 +123,9 @@ export class ModalService {
       .pipe(first())
       .subscribe(([limits, attributesResource]) => {
         const functions = (attributesResource.attributes || []).filter(
-          attr => attr.id !== attributeId && !!attr.function && !!attr.function.js
+          attr => attr.id !== attributeId && !!attr.function?.js
         ).length;
-        if (limits && limits.functionsPerCollection !== 0 && functions >= limits.functionsPerCollection) {
+        if (limits?.functionsPerCollection !== 0 && functions >= limits.functionsPerCollection) {
           this.notifyFunctionsLimit();
         } else {
           this.showAttributeFunctionDialog(attributeId, collectionId, linkTypeId);
@@ -166,6 +172,7 @@ export class ModalService {
           path: ['/organization', organization.code, 'detail'],
           extras: {fragment: 'orderService'},
         }),
+        type: 'warning',
         yesFirst: false,
       })
     );
@@ -181,6 +188,7 @@ export class ModalService {
   }
 
   public destroy() {
-    this.modalRefs.forEach(ref => ref && ref.hide());
+    this.modalRefs.forEach(ref => ref?.hide());
+    this.toastrService.toasts.forEach(toast => toast.toastRef.close());
   }
 }

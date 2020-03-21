@@ -47,10 +47,10 @@ export class WorkspacePanelComponent implements OnInit {
   @Input()
   public contentHeight: number;
 
-  @ViewChild('organizationMenu', {static: false})
+  @ViewChild('organizationMenu')
   public organizationMenuComponent: ResourceMenuComponent;
 
-  @ViewChild('projectMenu', {static: false})
+  @ViewChild('projectMenu')
   public projectMenuComponent: ResourceMenuComponent;
 
   public readonly organizationResourceType = ResourceType.Organization;

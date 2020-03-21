@@ -4,6 +4,15 @@
   "newProjectRoot": "projects",
   "projects": {
     "lumeer": {
+      "i18n": {
+        "sourceLocale": "en",
+        "locales": {
+          "cs": {
+            "translation": "src/i18n/messages.cs.xlf",
+            "baseHref": "/cs/"
+          }
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -11,35 +20,38 @@
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
-          "spec": false,
-          "styleext": "scss"
+          "skipTests": false,
+          "style": "scss"
         },
         "@schematics/angular:guard": {
-          "spec": false
+          "skipTests": false
         },
         "@schematics/angular:module": {
-          "spec": false
+          "skipTests": false
         },
         "@schematics/angular:pipe": {
-          "spec": false
+          "skipTests": false
         },
         "@schematics/angular:service": {
-          "spec": false
+          "skipTests": false
         }
       },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/lumeer",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets", "src/browserconfig.xml", "src/manifest.json"],
+            "i18nMissingTranslation": "error",
             "styles": [
-              "./node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "./node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css",
               "node_modules/@lumeer/lumeer-gantt/dist/lumeer-gantt.css",
               "node_modules/driver.js/dist/driver.min.css",
               "node_modules/@angular/cdk/overlay-prebuilt.css",
@@ -58,6 +70,12 @@
           "configurations": {
             "production": {
               "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "buildOptimizer": true,
               "extractCss": true,
               "extractLicenses": true,
@@ -76,6 +94,12 @@
             },
             "staging": {
               "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "buildOptimizer": true,
               "extractCss": true,
               "extractLicenses": true,
@@ -128,6 +152,10 @@
                   "baseline": "87kb",
                   "maximumWarning": "10%",
                   "maximumError": "50%"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "buildOptimizer": true,
@@ -148,21 +176,29 @@
             },
             "cs": {
               "aot": true,
-              "i18nFile": "src/i18n/messages.cs.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "cs",
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "buildOptimizer": false,
+              "localize": ["cs"],
               "optimization": false,
               "sourceMap": false
             },
             "en": {
               "aot": true,
-              "i18nFile": "src/i18n/messages.en.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "en",
               "buildOptimizer": false,
+              "localize": ["en"],
               "optimization": false,
-              "sourceMap": false
+              "sourceMap": false,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ]
             }
           }
         },

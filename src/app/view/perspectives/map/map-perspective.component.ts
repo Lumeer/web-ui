@@ -68,7 +68,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   @Input()
   public query: Query;
 
-  @ViewChild(MapContentComponent, {static: false})
+  @ViewChild(MapContentComponent)
   public mapContentComponent: MapContentComponent;
 
   public collections$: Observable<Collection[]>;

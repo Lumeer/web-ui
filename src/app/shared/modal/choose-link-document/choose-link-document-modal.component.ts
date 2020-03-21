@@ -79,8 +79,8 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
     if (this.selectedDocumentId$.value) {
       const documentExist = documents.some(document => document.id === this.selectedDocumentId$.value);
       if (!documentExist) {
-        this.selectedDocumentId$.next(documents[0] && documents[0].id);
-        this.selectedCollectionId$.next(documents[0] && documents[0].collectionId);
+        this.selectedDocumentId$.next(documents[0]?.id);
+        this.selectedCollectionId$.next(documents[0]?.collectionId);
       }
     }
   }
@@ -90,10 +90,10 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
       const collectionExist = collections.some(collection => collection.id === this.selectedCollectionId$.value);
       if (!collectionExist) {
         this.selectedDocumentId$.next(null);
-        this.selectedCollectionId$.next(collections[0] && collections[0].id);
+        this.selectedCollectionId$.next(collections[0]?.id);
       }
     } else {
-      this.selectedCollectionId$.next(collections[0] && collections[0].id);
+      this.selectedCollectionId$.next(collections[0]?.id);
     }
   }
 

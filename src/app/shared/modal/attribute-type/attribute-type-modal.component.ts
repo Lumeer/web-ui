@@ -47,7 +47,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
   @Input()
   public attributeId: string;
 
-  @ViewChild(AttributeTypeFormComponent, {static: false})
+  @ViewChild(AttributeTypeFormComponent)
   set content(content: AttributeTypeFormComponent) {
     if (content) {
       this.constraintForm = content;

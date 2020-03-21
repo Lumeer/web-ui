@@ -62,10 +62,10 @@ export class FilterBuilderComponent implements OnInit {
   @Output()
   public finishEditing = new EventEmitter();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
-  @ViewChild(FilterBuilderContentComponent, {static: false})
+  @ViewChild(FilterBuilderContentComponent)
   public contentComponent: FilterBuilderContentComponent;
 
   public readonly dropdownPositions = [DropdownPosition.BottomStart];

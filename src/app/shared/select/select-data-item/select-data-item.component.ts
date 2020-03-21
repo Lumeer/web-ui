@@ -83,7 +83,7 @@ export class SelectDataItemComponent implements OnInit, OnChanges {
   @Output()
   public remove = new EventEmitter();
 
-  @ViewChild(DataOptionsDropdownComponent, {static: false})
+  @ViewChild(DataOptionsDropdownComponent)
   public dropdown: DataOptionsDropdownComponent;
 
   public dropdownOptions: DataDropdownOption[] = [];

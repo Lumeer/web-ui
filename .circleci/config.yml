@@ -1,13 +1,13 @@
-# Javascript Node CircleCI 2.0 configuration file
+# Javascript Node CircleCI 2.1 configuration file
 #
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
-version: 2
+version: 2.1
 jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: circleci/node:10-browsers
+      - image: circleci/node:12-browsers
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
@@ -19,28 +19,38 @@ jobs:
     steps:
       - checkout
 
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v6-dependencies-{{ checksum "package-lock.json" }}
+            - v8-dependencies-{{ checksum "package-lock.json" }}
             # fallback to using the latest cache if no exact match is found
-            - v6-dependencies-
+            - v8-dependencies-
 
-      - run: npm install
+      - run:
+          name: install
+          command: npm install
 
       - save_cache:
           paths:
             - node_modules
-          key: v6-dependencies-{{ checksum "package-lock.json" }}
+          key: v7-dependencies-{{ checksum "package-lock.json" }}
 
-      # run AOT build
-      - run: npm run build
+      - run: # run AOT build
+          name: build
+          command: npm run build
 
-      # run unit tests
-      - run: npm run test
+      - run: # run unit tests
+          name: test
+          command: npm run test
 
-      # check formatting
-      - run: npm run format:check
+      - run:  # check formatting
+          name: format
+          command: npm run format:check
 
-      # check lint errors
-      - run: npm run lint
+      - run:  # check lint errors
+          name: lint
+          command: npm run lint

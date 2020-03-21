@@ -60,7 +60,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
   @Input()
   public callback: (resource: Project | Organization) => void;
 
-  @ViewChild(CreateResourceDialogFormComponent, {static: false})
+  @ViewChild(CreateResourceDialogFormComponent)
   set content(content: CreateResourceDialogFormComponent) {
     if (content) {
       this.resourceFormComponent = content;

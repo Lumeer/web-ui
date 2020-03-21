@@ -117,13 +117,8 @@ export class CollectionLinkTypesComponent implements OnInit, OnDestroy {
         name: linkType.name,
       }
     );
-    const yesButtonText = this.i18n({id: 'button.yes', value: 'Yes'});
-    const noButtonText = this.i18n({id: 'button.no', value: 'No'});
 
-    this.notificationService.confirm(message, title, [
-      {text: noButtonText},
-      {text: yesButtonText, action: () => this.deleteLinkType(linkType), bold: false},
-    ]);
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteLinkType(linkType));
   }
 
   private deleteLinkType(linkType: LinkType) {

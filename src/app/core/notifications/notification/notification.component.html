@@ -1,0 +1,35 @@
+<ng-container *ngIf="{buttons: buttons$ | async, type: type$ | async, icon: icon$ | async} as data">
+  <div class="notification-wrapper" [style.display]="state.value === 'inactive' ? 'none' : ''"
+       [ngClass]="data.type">
+    <div class="content p-3 d-flex align-items-center">
+      <div class="flex-grow-1">
+        <h4 *ngIf="title" class="title mb-1" [ngClass]="data.type" [attr.aria-label]="title">
+          {{ title }}
+        </h4>
+        <div *ngIf="message && options.enableHtml" role="alert" aria-live="polite" [innerHTML]="message">
+        </div>
+        <div *ngIf="message && !options.enableHtml" role="alert" aria-live="polite" [attr.aria-label]="message">
+          {{ message }}
+        </div>
+      </div>
+      <div *ngIf="data.icon" class="ml-2">
+        <img [style.height.px]="36"
+             [ngClass]="iconClass$ | async"
+             [src]="data.icon">
+      </div>
+    </div>
+    <div *ngIf="options.progressBar">
+      <div class="toast-progress position-relative" [style.width]="width + '%'"></div>
+    </div>
+    <div *ngIf="data.buttons?.length" class="btn-group w-100" role="group">
+      <button *ngFor="let button of data.buttons; let first = first; let last = last" type="button"
+              class="btn btn-outline-secondary border-bottom-0"
+              [class.font-weight-bold]="button.bold"
+              [class.border-left-0]="first"
+              [class.border-right-0]="last"
+              (click)="onButtonClick(button)">
+        {{button.text}}
+      </button>
+    </div>
+  </div>
+</ng-container>

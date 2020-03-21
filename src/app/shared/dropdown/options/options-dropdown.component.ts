@@ -82,7 +82,7 @@ export class OptionsDropdownComponent implements OnChanges {
   @Output()
   public selectOption = new EventEmitter<DropdownOption>();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   @ViewChildren(DropdownOptionDirective)

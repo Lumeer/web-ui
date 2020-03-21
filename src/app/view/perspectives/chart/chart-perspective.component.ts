@@ -60,7 +60,7 @@ import {TranslationService} from '../../../core/service/translation.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChartPerspectiveComponent implements OnInit, OnDestroy {
-  @ViewChild(ChartDataComponent, {static: false})
+  @ViewChild(ChartDataComponent)
   public chartDataComponent: ChartDataComponent;
 
   public collections$: Observable<Collection[]>;

@@ -55,7 +55,7 @@ export class PostItCollectionComponent {
   @Output()
   public unselected = new EventEmitter();
 
-  @ViewChild(IconColorPickerComponent, {static: false})
+  @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
   public onNameChanged(name: string) {

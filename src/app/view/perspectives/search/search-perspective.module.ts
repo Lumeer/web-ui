@@ -52,7 +52,6 @@ import {SearchPerspectiveRedirectGuard} from './search-perspective-redirect.guar
     ViewDetailComponent,
     SearchViewsContentComponent,
   ],
-  entryComponents: [SearchAllComponent, SearchCollectionsComponent, SearchPerspectiveComponent, SearchViewsComponent],
   exports: [SearchPerspectiveComponent, ViewDetailComponent],
   providers: [SearchPerspectiveRedirectGuard],
 })

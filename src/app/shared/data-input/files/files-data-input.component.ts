@@ -69,7 +69,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('hiddenInput', {static: false})
+  @ViewChild('hiddenInput')
   public hiddenInput: ElementRef<HTMLInputElement>;
 
   public fileAttachments$: Observable<FileAttachment[]>;
@@ -211,7 +211,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     });
     const title = this.i18n({id: 'file.attachment.delete.confirm.title', value: 'Delete file?'});
 
-    this.notificationService.confirmYesOrNo(message, title, () => {
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => {
       this.removeFileAttachment(fileId);
       this.removeFileNameFromData(fileId, fileAttachments);
     });

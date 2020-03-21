@@ -29,7 +29,7 @@ export class HiddenInputComponent implements DataRowHiddenComponent {
   @Output()
   public newInput = new EventEmitter<string>();
 
-  @ViewChild('hiddenInput', {static: false})
+  @ViewChild('hiddenInput')
   public hiddenInput: ElementRef<HTMLInputElement>;
 
   private skipCompose = false;

@@ -19,14 +19,26 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {SnotifyModule, SnotifyService, ToastDefaults} from 'ng-snotify';
 import {NotificationService} from './notification.service';
-import {NotificationsComponent} from './notifications.component';
+import {ToastrModule} from 'ngx-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NotificationComponent} from './notification/notification.component';
 
 @NgModule({
-  imports: [CommonModule, SnotifyModule],
-  declarations: [NotificationsComponent],
-  providers: [{provide: 'SnotifyToastConfig', useValue: ToastDefaults}, SnotifyService, NotificationService],
-  exports: [NotificationsComponent],
+  declarations: [NotificationComponent],
+  imports: [
+    CommonModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right',
+      extendedTimeOut: 0,
+      preventDuplicates: true,
+      progressBar: false,
+      enableHtml: true,
+      tapToDismiss: true,
+    }),
+  ],
+  providers: [NotificationService],
 })
 export class NotificationsModule {}

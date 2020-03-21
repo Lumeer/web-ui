@@ -80,7 +80,7 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   @ViewChildren('tableRow')
   public tableRows: QueryList<LinksListTableRowComponent>;
 
-  @ViewChild(HiddenInputComponent, {static: false})
+  @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
 
   @Output()

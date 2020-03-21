@@ -39,6 +39,5 @@ import {PresenterModule} from '../../presenter/presenter.module';
     PresenterModule,
   ],
   exports: [CreateLinkModalComponent],
-  entryComponents: [CreateLinkModalComponent],
 })
 export class CreateLinkModalModule {}

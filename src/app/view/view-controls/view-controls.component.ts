@@ -82,7 +82,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public saveOrClone = new EventEmitter<string>();
 
-  @ViewChild(OptionsDropdownComponent, {static: false})
+  @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
   public name: string;
@@ -184,10 +184,15 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
     const discard = this.i18n({id: 'button.discard', value: 'Discard'});
     const save = this.i18n({id: 'button.save', value: 'Save'});
 
-    this.notificationService.confirm(message, title, [
-      {text: save, action: () => this.save.emit(this.view.name)},
-      {text: discard, action: () => this.navigateToUrlWithoutView({}), bold: false},
-    ]);
+    this.notificationService.confirm(
+      message,
+      title,
+      [
+        {text: save, action: () => this.save.emit(this.view.name)},
+        {text: discard, action: () => this.navigateToUrlWithoutView({}), bold: false},
+      ],
+      'danger'
+    );
   }
 
   public navigateToUrlWithoutView(query?: Query) {

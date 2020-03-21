@@ -29,6 +29,5 @@ import {StemCollectionItemsPipe} from './stem-collection-items.pipe';
   declarations: [CalendarEventDetailModalComponent, StemCollectionItemsPipe],
   imports: [CommonModule, DocumentDetailModalModule, SelectModule, PipesModule],
   exports: [CalendarEventDetailModalComponent],
-  entryComponents: [CalendarEventDetailModalComponent],
 })
 export class CalendarEventDetailModalModule {}

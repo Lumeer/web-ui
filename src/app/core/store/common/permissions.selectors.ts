@@ -104,7 +104,7 @@ export const selectCollectionsInQuery = createSelector(
   selectCollectionsDictionary,
   selectQuery,
   (collectionsMap, query) => {
-    const collectionIds = uniqueValues(((query && query.stems) || []).map(stem => stem.collectionId));
+    const collectionIds = uniqueValues(query?.stems?.map(stem => stem.collectionId) || []);
     return collectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
   }
 );

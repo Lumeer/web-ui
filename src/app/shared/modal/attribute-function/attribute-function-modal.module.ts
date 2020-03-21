@@ -39,6 +39,5 @@ import {BlocklyModule} from '../../blockly/blockly.module';
     PipesModule,
   ],
   exports: [AttributeFunctionModalComponent],
-  entryComponents: [AttributeFunctionModalComponent],
 })
 export class AttributeFunctionModalModule {}

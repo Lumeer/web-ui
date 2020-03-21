@@ -61,10 +61,10 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   @Input()
   public minLength: number;
 
-  @ViewChild('dialogBody', {static: false})
+  @ViewChild('dialogBody')
   public dialogBody: ElementRef;
 
-  @ViewChild(QuillEditorComponent, {static: false})
+  @ViewChild(QuillEditorComponent)
   public quillEditorComponent: QuillEditorComponent;
 
   public onSave$ = new Subject<string>();
@@ -150,7 +150,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   public ngAfterViewInit() {
     setTimeout(() => {
       this.editorHeight();
-      if (this.quillEditorComponent && this.quillEditorComponent.quillEditor) {
+      if (this.quillEditorComponent?.quillEditor) {
         this.quillEditorComponent.quillEditor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
       }
     });

@@ -49,7 +49,7 @@ export class CreateResourceDialogParentComponent implements OnInit {
       this.parent$ = this.store$.pipe(select(selectOrganizationById(this.parentId)));
       this.first$ = this.store$.pipe(
         select(selectProjectsByOrganizationId(this.parentId)),
-        map(projects => projects && projects.length === 0)
+        map(projects => projects?.length === 0)
       );
     }
   }

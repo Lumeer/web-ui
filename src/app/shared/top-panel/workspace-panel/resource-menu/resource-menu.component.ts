@@ -70,7 +70,7 @@ export class ResourceMenuComponent implements OnChanges, OnDestroy {
   @Output()
   public onResourceSelect = new EventEmitter<Resource>();
 
-  @ViewChild(DropdownComponent, {static: false})
+  @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
   public readonly dropdownPositions = [DropdownPosition.BottomStart];

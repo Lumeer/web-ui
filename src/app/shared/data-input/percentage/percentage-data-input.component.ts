@@ -66,7 +66,7 @@ export class PercentageDataInputComponent implements OnChanges {
   @Output()
   public enterInvalid = new EventEmitter();
 
-  @ViewChild('percentageInput', {static: false})
+  @ViewChild('percentageInput')
   public percentageInput: ElementRef<HTMLInputElement>;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Percentage);

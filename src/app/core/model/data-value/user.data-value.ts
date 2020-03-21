@@ -74,11 +74,11 @@ export class UserDataValue implements DataValue {
   }
 
   public serialize(): any {
-    if (this.config && this.config.multi) {
+    if (this.config?.multi) {
       return this.users.map(user => user.email);
     }
 
-    return this.users.length ? this.users[0].email : null;
+    return this.users?.[0]?.email;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
@@ -89,10 +89,10 @@ export class UserDataValue implements DataValue {
   }
 
   private isUserValid(user: User): boolean {
-    if (((this.constraintData && this.constraintData.users) || []).some(u => u.email === user.email)) {
+    if (this.constraintData?.users?.some(u => u.email === user.email)) {
       return true;
     }
-    return this.config && this.config.externalUsers && isEmailValid(user.email);
+    return this.config?.externalUsers && isEmailValid(user.email);
   }
 
   public increment(): UserDataValue {
@@ -127,7 +127,7 @@ export class UserDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = values && values.map(value => this.mapQueryConditionValue(value));
+    const dataValues = values?.map(value => this.mapQueryConditionValue(value));
     const otherUsers = (dataValues.length > 0 && dataValues[0].users) || [];
 
     switch (condition) {
@@ -159,8 +159,8 @@ export class UserDataValue implements DataValue {
   }
 
   private mapQueryConditionValue(value: QueryConditionValue): UserDataValue {
-    if (value.type && value.type === UserConstraintConditionValue.CurrentUser) {
-      const currentUser = this.constraintData && this.constraintData.currentUser && this.constraintData.currentUser;
+    if (value.type === UserConstraintConditionValue.CurrentUser) {
+      const currentUser = this.constraintData?.currentUser;
       return new UserDataValue(currentUser && currentUser.email, this.config, this.constraintData);
     }
     return new UserDataValue(value.value, this.config, this.constraintData);
@@ -171,27 +171,26 @@ export class UserDataValue implements DataValue {
   }
 
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
-    const dataValues = values && values.map(value => this.mapQueryConditionValue(value));
+    const dataValues = values?.map(value => this.mapQueryConditionValue(value));
     const otherUsers = (dataValues.length > 0 && dataValues[0].users) || [];
 
     switch (condition) {
       case QueryCondition.HasSome:
       case QueryCondition.Equals:
       case QueryCondition.In:
-        return otherUsers[0] && otherUsers[0].email;
+        return otherUsers?.[0]?.email;
       case QueryCondition.HasAll:
         return values[0].value;
       case QueryCondition.HasNoneOf:
       case QueryCondition.NotEquals:
-        const noneOptions = ((this.constraintData && this.constraintData.users) || []).filter(
+        const noneOptions = (this.constraintData?.users || []).filter(
           user => !otherUsers.some(otherUser => otherUser.email === user.email)
         );
-        return noneOptions[0] && noneOptions[0].email;
+        return noneOptions?.[0]?.email;
       case QueryCondition.IsEmpty:
         return '';
       case QueryCondition.NotEmpty:
-        const firstUser = ((this.constraintData && this.constraintData.users) || [])[0];
-        return firstUser && firstUser.email;
+        return this.constraintData?.users?.[0]?.email;
       default:
         return null;
     }

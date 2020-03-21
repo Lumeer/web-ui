@@ -67,10 +67,10 @@ export class ColorDataInputComponent implements OnChanges {
   @Output()
   public enterInvalid = new EventEmitter();
 
-  @ViewChild('colorInput', {static: false})
+  @ViewChild('colorInput')
   public colorInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(ColorPickerComponent, {static: false})
+  @ViewChild(ColorPickerComponent)
   public colorPicker: ColorPickerComponent;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Color);

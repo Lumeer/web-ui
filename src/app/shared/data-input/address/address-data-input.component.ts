@@ -71,10 +71,10 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   @Output()
   public cancel = new EventEmitter();
 
-  @ViewChild('addressInput', {static: false})
+  @ViewChild('addressInput')
   public addressInput: ElementRef<HTMLInputElement>;
 
-  @ViewChild(OptionsDropdownComponent, {static: false})
+  @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Address);

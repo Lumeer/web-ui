@@ -29,6 +29,5 @@ import {LinksModule} from '../../links/links.module';
   declarations: [DataResourceDetailModalComponent],
   imports: [CommonModule, DataResourceModule, ModalWrapperModule, PipesModule, LinksModule],
   exports: [DataResourceDetailModalComponent],
-  entryComponents: [DataResourceDetailModalComponent],
 })
 export class DataResourceDetailModalModule {}

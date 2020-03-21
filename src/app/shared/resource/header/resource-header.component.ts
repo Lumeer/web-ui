@@ -57,7 +57,7 @@ export class ResourceHeaderComponent {
   @Output()
   public back = new EventEmitter();
 
-  @ViewChild(IconColorPickerComponent, {static: false})
+  @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
   public isDuplicate: boolean;

@@ -84,7 +84,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   @Input()
   public permissions: AllowedPermissions;
 
-  @ViewChild('tableWrapper', {static: false})
+  @ViewChild('tableWrapper')
   public tableWrapperComponent: ElementRef;
 
   @Output()

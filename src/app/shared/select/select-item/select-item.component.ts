@@ -79,7 +79,7 @@ export class SelectItemComponent implements OnChanges, OnDestroy {
   @Output()
   public remove = new EventEmitter();
 
-  @ViewChild(OptionsDropdownComponent, {static: false})
+  @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
 
   public dropdownOptions: DropdownOption[] = [];
