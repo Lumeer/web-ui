@@ -119,7 +119,7 @@
     "angular-http-server": "^1.9.0",
     "bundlesize": "^0.18.0",
     "codelyzer": "^5.1.2",
-    "cypress": "^3.8.3",
+    "cypress": "^4.2.0",
     "husky": "^4.2.3",
     "jasmine": "~3.5.0",
     "jasmine-core": "~3.5.0",
