@@ -29,9 +29,9 @@ config.VIDEO_KEY = env.VIDEO_KEY;
 
 writeFileSync('./src/environments/.env.json', JSON.stringify(config));
 
-const buildSwitches = `${config.LUMEER_ENV === 'production' ? '--prod' : '--aot'} --base-href=${config.PUBLIC_PATH} ${
-  config.LUMEER_ENV ? '--configuration=' + config.LUMEER_ENV : ''
-} --localize`;
+const buildSwitches = `--base-href=${config.PUBLIC_PATH}
+    ${config.LUMEER_ENV ? '--configuration=' + config.LUMEER_ENV : ''}
+    ${config.LUMEER_ENV === 'production' || config.LUMEER_ENV === 'staging' ? '--localize' : ''}`;
 
 // keep only this single output here because it is consumed by 'ng build' command
 console.log(buildSwitches);

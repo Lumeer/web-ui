@@ -204,7 +204,7 @@
                 <target>Napište cokoliv, co hledáte...</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/search-box/input/search-input.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
-            
+
             <trans-unit id="search.button" datatype="html">
                 <source>Search</source>
                 <target>Hledat</target>
@@ -224,7 +224,7 @@
         </source><target>
           Pravidla
         </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit>
             <trans-unit id="collection.config.tab.permissions" datatype="html">
                 <source>
@@ -668,7 +668,7 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.example" datatype="html">
         <source>Example:</source><target>Příklad:</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
                 <source>View does not exist!
@@ -782,8 +782,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="show.detail" datatype="html">
         <source>Show detail</source><target>Zobrazit detail</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/body/row/links-list-table-row.component.html</context><context context-type="linenumber">50</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
 
             <trans-unit id="table.header.menu.hide" datatype="html">
@@ -907,7 +907,7 @@
   </source><target>
     Neznámé jméno
   </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/users/user-stamp/user-stamp.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="filter.builder.condition" datatype="html">
         <source>Choose Condition</source><target>Vyberte podmínku</target>
         <context-group purpose="location">
@@ -949,19 +949,19 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/link/info/table-link-info.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="modal.kanban.chooseDocument.title" datatype="html">
         <source>Choose a record</source><target>Vyberte záznam</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="modal.kanban.chooseDocument.description" datatype="html">
         <source>
         Select to which record you want to link the new one.
       </source><target>
       Vyberte si záznam, ke kterému chcete připojit ten nový.
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="modal.kanban.chooseDocument.submit" datatype="html">
         <source>Choose</source><target>Vybrat</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="dialog.choose.document.empty" datatype="html">
-        <source>I am sorry but I did not find anything.</source><target state="new">I am sorry but I did not find anything.</target>
+        <source>I am sorry but I did not find anything.</source><target>Je mi líto, ale nepodařilo se mi nic najít.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
           <context context-type="linenumber">47</context>
@@ -1515,7 +1515,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="dataResource.attribute.placeholder" datatype="html">
         <source>Enter attribute name</source><target>Zadejte název atributu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.title" datatype="html">
         <source>Remove options?</source><target>Odstranit možnosti?</target>
 
@@ -2295,7 +2295,7 @@
           <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.config.position.save" datatype="html">
-        <source>Save position to view</source><target state="new">Save position to view</target>
+        <source>Save position to view</source><target>Ukládat polohu na ose</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context>
           <context context-type="linenumber">13</context>
@@ -2360,10 +2360,10 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.config.dates.show" datatype="html">
         <source>Show task dates</source><target>Zobrazit datum úkolů</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="perspective.gantt.config.resize.lock" datatype="html">
         <source>Lock dependent task position</source><target>Závisející úkoly nemohou před nadřazené</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="perspective.gantt.header.scroll.today" datatype="html">
         <source>Scroll to Today
   </source><target>Posunout na dnešek
@@ -2417,7 +2417,7 @@
         </context-group>
       </trans-unit><trans-unit id="button.remove" datatype="html">
         <source>Delete</source><target>Smazat</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAbsOrRel" datatype="html">
         <source>Select absolute or relative display</source><target>Zvolte absolutní nebo relativní zobrazení</target>
 
@@ -2439,14 +2439,14 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/sort/pivot-attribute-sort.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.merge" datatype="html">
         <source>Merge tables</source><target>Sloučit tabulky</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config-wrapper.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.merge.fail" datatype="html">
         <source>
   There are some tables that cannot be merged.
 </source><target>
   Některé tabulky nemohou být spojeny.
 </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/pivot-config-wrapper.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
 
             <trans-unit id="button.close" datatype="html">
@@ -2464,11 +2464,11 @@
         </context-group>
       </trans-unit><trans-unit id="4be44482feb952b217f702aaf0bad3536a4d03ad" datatype="html">
         <source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source><target>Minimální délka textu musí být alespoň <x id="INTERPOLATION" equiv-text="{{minLength}}"/> znaků. </target>
-        
+
         <note priority="1" from="description">textEditor.minLength</note>
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="81a825c813cc67a514bb711507b538569209cd79" datatype="html">
         <source>Maximal text length can be <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> characters.</source><target>Maximální délka textu může být nejvýše <x id="INTERPOLATION" equiv-text="{{maxLength}}"/> znaků.</target>
-        
+
         <note priority="1" from="description">textEditor.maxLength</note>
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit>
 
@@ -2556,7 +2556,7 @@
                 <target>Pohled nenalezen</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/core/guards/data/views.guard.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
-            
+
             <trans-unit id="notification.service.Success" datatype="html">
                 <source>Success</source>
                 <target>Úspěch</target>
@@ -3108,7 +3108,7 @@
                 </context-group>
             </trans-unit>
 
-            
+
             <trans-unit id="collection.document.icon.set" datatype="html">
                 <source>Click icon to set it
     </source>
@@ -3138,7 +3138,7 @@
                 <target>Smazat záznam</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="link.detail.unlink" datatype="html">
-        <source>Unlink</source><target state="new">Unlink</target>
+        <source>Unlink</source><target>Odpojit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
           <context context-type="linenumber">56</context>
@@ -3266,10 +3266,10 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="topPanel.organizationMenu.title" datatype="html">
         <source>Organization menu</source><target>Nabídka organizace</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/workspace-panel.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="topPanel.projectMenu.title" datatype="html">
         <source>Project menu</source><target>Nabídka projektová</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/workspace-panel.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
             <trans-unit id="panel.plan.free" datatype="html">
                 <source>Free Plan: Upgrade now!</source>
@@ -3287,8 +3287,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
         <source>Solutions and Support</source><target>Řešení a Podpora</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit>
             <trans-unit id="resource.detail.organization.invite" datatype="html">
                 <source>Invite Colleagues</source>
@@ -3514,12 +3514,12 @@
             <trans-unit id="dialog.feedback.success" datatype="html">
                 <source>Your feedback has been sent.</source>
                 <target>Vaše zpětná vazba byla odeslána.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="dialog.feedback.error" datatype="html">
                 <source>Could not send feedback.</source>
                 <target>Nelze odeslat zpětnou vazbu.</target>
-                
+
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="file.attachment.download.failure" datatype="html">
         <source>Could not download the file attachment. Please try again later.</source>
         <target>Nepodařilo se mi stáhnout tuto přílohu. Prosím zkuste to za chvíli znovu.</target>
@@ -3581,8 +3581,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="function.create.serviceLimits.noRights" datatype="html">
         <source>You can have only a single function per table/link type in the Free Plan.</source><target>Ve verzi Zdarma můžete mít v každé tabulce a vazbě jen jednu funkci.</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="textEditor.insertTextPlaceholder" datatype="html">
         <source>Insert text here...</source><target>Tady napište text...</target>
         <context-group purpose="location">
@@ -3642,7 +3642,7 @@
                 </context-group>
             </trans-unit><trans-unit id="inviteUser.dialog.input.add.placeholder" datatype="html">
         <source>Enter an email and press Enter</source><target>Zadejte email a stiskněte Enter</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="button.dismiss" datatype="html">
         <source>Dismiss</source><target>Ukončit</target>
 
@@ -3883,7 +3883,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="@@perspective.gantt.create.task.failure" datatype="html">
-        <source>Could not create task</source><target state="new">Could not create task</target>
+        <source>Could not create task</source><target>Úkol nelze vytvořit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4058,7 +4058,7 @@
         <source>Aggregation</source><target>Agregace</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="perspective.gantt.config.progressAggregation" datatype="html">
-        <source>Select progress aggregation</source><target state="new">Select progress aggregation</target>
+        <source>Select progress aggregation</source><target>Zvolte způsob výpočtu postupu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/stem/gantt-chart-stem-config.component.html</context>
           <context context-type="linenumber">27</context>
@@ -4132,10 +4132,10 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">128</context></context-group></trans-unit><trans-unit id="document.detail.configure.constraint" datatype="html">
         <source>Set Attribute Type</source><target>Nastavit typ atributu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="document.detail.configure.function" datatype="html">
         <source>Set Attribute Function</source><target>Nastavit vzorec</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="files.dropdown.button.delete" datatype="html">
         <source>Delete file</source><target>Smazat soubor</target>
 
@@ -4225,10 +4225,10 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-data/empty-data.component.html</context><context context-type="linenumber">10</context></context-group></trans-unit><trans-unit id="invalid-query.at-least-one-collection" datatype="html">
         <source>Start by selecting any collection bellow.</source><target>Musíte vybrat alespoň jednu tabulku.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="invalid-query.exactly-one-collection" datatype="html">
         <source>Select only one table to make perspective work.</source><target>Musíte vybrat přesně jednu tabulku.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit><trans-unit id="search.views.empty.title" datatype="html">
         <source>Your first task is to create a view!</source><target>Nemáte ještě žádné pohledy!</target>
 
@@ -4251,7 +4251,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">91</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="view.changes.not.saved.undo" datatype="html">
         <source>Undo changes</source><target>Vrátit změny</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
 
@@ -4308,7 +4308,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/empty-documents/empty-documents.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Odstranit z oblíbených' : 'Přidat k oblíbeným'}}"/></target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="delete" datatype="html">
         <source>Delete</source><target>Odstranit</target>
 
@@ -4639,7 +4639,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="topPanel.home.title" datatype="html">
         <source>Back to home screen</source><target>Zpět na domovskou obrazovku</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/lumeer-logo/lumeer-logo.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.usage" datatype="html">
         <source>Usage Count</source><target>Počet použití</target>
         <context-group purpose="location">
