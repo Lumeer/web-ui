@@ -25,6 +25,8 @@ export enum FileAttachmentsActionType {
   CREATE = '[File Attachments] Create',
   CREATE_SUCCESS = '[File Attachments] Create :: Success',
 
+  SET_UPLOADING = '[File Attachments] Set Uploading',
+
   REMOVE = '[File Attachments] Remove',
   REMOVE_SUCCESS = '[File Attachments] Remove :: Success',
 
@@ -55,6 +57,12 @@ export namespace FileAttachmentsAction {
     public readonly type = FileAttachmentsActionType.CREATE_SUCCESS;
 
     constructor(public payload: {fileAttachment: FileAttachment}) {}
+  }
+
+  export class SetUploading implements Action {
+    public readonly type = FileAttachmentsActionType.SET_UPLOADING;
+
+    constructor(public payload: {fileId: string; uploading: boolean}) {}
   }
 
   export class Remove implements Action {
@@ -118,6 +126,7 @@ export namespace FileAttachmentsAction {
     | CreateSuccess
     | Remove
     | RemoveSuccess
+    | SetUploading
     | Get
     | GetSuccess
     | GetByQuery

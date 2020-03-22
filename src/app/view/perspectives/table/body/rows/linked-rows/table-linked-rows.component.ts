@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
-import {distinctUntilChanged, filter, map, switchMap, tap} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, Subject, Subscription} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map, switchMap, tap} from 'rxjs/operators';
 import {selectLinkInstancesByDocumentIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
@@ -34,7 +34,7 @@ import {TablesAction} from '../../../../../../core/store/tables/tables.action';
   styleUrls: ['./table-linked-rows.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableLinkedRowsComponent implements OnInit, OnChanges {
+export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public cursor: TableBodyCursor;
 
@@ -52,10 +52,26 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges {
 
   public linkedRows$: Observable<TableConfigRow[]>;
 
+  private syncSubject$ = new Subject<TableBodyCursor>();
+  private subscriptions = new Subscription();
+
   constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.linkedRows$ = this.bindLinkedRows();
+    this.subscribeToSync();
+  }
+
+  private subscribeToSync() {
+    this.subscriptions.add(
+      this.syncSubject$.pipe(debounceTime(100)).subscribe(cursor =>
+        this.store$.dispatch(
+          new TablesAction.SyncLinkedRows({
+            cursor: {...cursor, partIndex: cursor.partIndex + 1},
+          })
+        )
+      )
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -80,13 +96,7 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges {
           select(selectLinkInstancesByDocumentIds(documentIds)),
           map(linkInstances => filterRowsByExistingLinkInstance(linkedRows, linkInstances)),
           distinctUntilChanged(),
-          tap(() =>
-            this.store$.dispatch(
-              new TablesAction.SyncLinkedRows({
-                cursor: {...cursor, partIndex: cursor.partIndex + 1},
-              })
-            )
-          )
+          tap(() => this.syncSubject$.next(cursor))
         );
       }),
       map(linkedRows => (linkedRows && linkedRows.length > 0 ? linkedRows : [createEmptyTableRow()]))
@@ -103,6 +113,10 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges {
 
   public trackByLinkInstanceId(index: number, linkedRow: TableConfigRow): string | object {
     return linkedRow.correlationId || linkedRow.linkInstanceId;
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }
 

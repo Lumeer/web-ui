@@ -169,6 +169,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
 
   private onSuccess(fileAttachment: FileAttachment) {
     this.showSuccessNotification();
+    this.store$.dispatch(new FileAttachmentsAction.SetUploading({fileId: fileAttachment.id, uploading: false}));
     this.addFileNameToData(fileAttachment.fileName);
   }
 

@@ -272,7 +272,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
         select(selectTable),
         filter(table => !!table && !!table.config && table.id === DEFAULT_TABLE_ID),
         mergeMap(table => this.waitForDataLoaded$().pipe(map(() => table))),
-        debounceTime(200),
+        debounceTime(1000),
         withLatestFrom(this.selectCurrentDefaultViewConfig$())
       )
       .subscribe(([table, {key, defaultConfig}]) => {
