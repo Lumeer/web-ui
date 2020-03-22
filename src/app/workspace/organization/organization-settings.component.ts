@@ -138,7 +138,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
           select(selectOrganizationByWorkspace),
           filter(organization => !!organization)
         )
-        .subscribe(organization => this.organization$.next(organization))
+        .subscribe(organization => this.organization$.next({...organization}))
     );
 
     this.subscriptions.add(

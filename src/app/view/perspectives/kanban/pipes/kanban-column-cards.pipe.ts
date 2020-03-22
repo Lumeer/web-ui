@@ -60,8 +60,9 @@ export class KanbanColumnCardsPipe implements PipeTransform {
           isNotNullOrUndefined(order.stemIndex) &&
           ((stemsConfigs[order.stemIndex] && stemsConfigs[order.stemIndex].doneColumnTitles) || []).indexOf(
             column.title
-          ) < 0 &&
-          this.getDueHours(document, collections, stemsConfigs[order.stemIndex]);
+          ) < 0
+            ? this.getDueHours(document, collections, stemsConfigs[order.stemIndex])
+            : null;
 
         arr.push({
           attributeId: order.attributeId,

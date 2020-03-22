@@ -9,13 +9,10 @@
   </table-data-cell-menu>
 
   <ng-container
-    *ngIf="{readonly: !allowedPermissions?.writeWithView || !((editing$ | async) || (data.attribute?.constraint?.type === constraintType.Boolean)),
-    hasValue: !!(data.dataValue | formatDataValue),
-    asText: data.attribute?.constraint | constraintAsText
-    } as inputData">
+    *ngIf="data.attribute | cellDataInputInfo:data.dataValue:allowedPermissions: (editing$ | async) as dataInputInfo">
 
-    <ng-container *ngIf="inputData.readonly && (inputData.asText || !inputData.hasValue)">
-      <div *ngIf="inputData.hasValue" class="text-pre overflow-hidden h-100 mx-1 d-flex align-items-center"
+    <ng-container *ngIf="!dataInputInfo.showDataInput">
+      <div *ngIf="dataInputInfo.hasValue" class="text-pre overflow-hidden h-100 mx-1 d-flex align-items-center"
            [innerHTML]="data.dataValue | previewDataValue | safeHtml"
            [title]="data.dataValue | formatDataValue | stripHtml:false"
            [ngClass]="data.attribute?.constraint | constraintClass"
@@ -24,13 +21,13 @@
       </div>
     </ng-container>
 
-    <data-input *ngIf="!inputData.readonly || (!inputData.asText && inputData.hasValue)"
+    <data-input *ngIf="dataInputInfo.showDataInput"
                 [constraint]="data.attribute?.constraint"
                 [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
                 [dataValue]="data.dataValue"
                 [focus]="true"
                 [configuration]="configuration"
-                [readonly]="inputData.readonly"
+                [readonly]="dataInputInfo.readonly"
                 (valueChange)="onValueChange($event)"
                 (save)="onValueSave($event)"
                 (cancel)="onCancelEditing()"

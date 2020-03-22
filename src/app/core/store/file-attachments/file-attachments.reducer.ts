@@ -27,6 +27,14 @@ export function fileAttachmentsReducer(
   switch (action.type) {
     case FileAttachmentsActionType.GET_SUCCESS:
       return fileAttachmentsAdapter.upsertMany(action.payload.fileAttachments, state);
+    case FileAttachmentsActionType.SET_UPLOADING:
+      return fileAttachmentsAdapter.updateOne(
+        {
+          id: action.payload.fileId,
+          changes: {uploading: action.payload.uploading},
+        },
+        state
+      );
     case FileAttachmentsActionType.CREATE_SUCCESS:
       return fileAttachmentsAdapter.addOne(action.payload.fileAttachment, state);
     case FileAttachmentsActionType.REMOVE_SUCCESS:
