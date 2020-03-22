@@ -7,10 +7,7 @@
       "i18n": {
         "sourceLocale": "en",
         "locales": {
-          "cs": {
-            "translation": "src/i18n/messages.cs.xlf",
-            "baseHref": "/cs/"
-          }
+          "cs": "src/i18n/messages.cs.xlf"
         }
       },
       "root": "",
@@ -20,20 +17,20 @@
       "schematics": {
         "@schematics/angular:component": {
           "changeDetection": "OnPush",
-          "skipTests": false,
+          "skipTests": true,
           "style": "scss"
         },
         "@schematics/angular:guard": {
-          "skipTests": false
+          "skipTests": true
         },
         "@schematics/angular:module": {
-          "skipTests": false
+          "skipTests": true
         },
         "@schematics/angular:pipe": {
-          "skipTests": false
+          "skipTests": true
         },
         "@schematics/angular:service": {
-          "skipTests": false
+          "skipTests": true
         }
       },
       "architect": {

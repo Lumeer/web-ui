@@ -12,6 +12,7 @@
   <properties>
     <context.root>ui</context.root>
     <source.root>/</source.root>
+    <public.path>/</public.path>
   </properties>
 
    <build>
@@ -76,7 +77,7 @@
                      </arguments>
                      <workingDirectory>${basedir}</workingDirectory>
                      <environmentVariables>
-                        <PUBLIC_PATH>/${context.root}/</PUBLIC_PATH>
+                        <PUBLIC_PATH>/${public.path}/</PUBLIC_PATH>
                      </environmentVariables>
                   </configuration>
                   <goals>
@@ -90,7 +91,7 @@
                   <executable>./sentry-upload-sourcemaps.sh</executable>
                   <workingDirectory>${basedir}</workingDirectory>
                   <environmentVariables>
-                    <PUBLIC_PATH>/${context.root}/</PUBLIC_PATH>
+                    <PUBLIC_PATH>/${public.path}/</PUBLIC_PATH>
                   </environmentVariables>
                 </configuration>
                 <goals>
