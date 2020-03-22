@@ -23,29 +23,14 @@ import {FormsModule} from '@angular/forms';
 import {SharedModule} from '../../../shared/shared.module';
 import {CalendarPerspectiveComponent} from './calendar-perspective.component';
 import {CalendarPerspectiveRoutingModule} from './calendar-perspective-routing.module';
-import {
-  CalendarDateFormatter,
-  CalendarModule,
-  CalendarMomentDateFormatter,
-  DateAdapter,
-  MOMENT,
-} from 'angular-calendar';
 import {CalendarConfigComponent} from './config/calendar-config.component';
 import {CalendarPipesModule} from './pipes/calendar-pipes.module';
-import {CalendarVisualizationComponent} from './events/visualization/calendar-visualization.component';
-import {CalendarHeaderComponent} from './events/header/calendar-header.component';
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import {CalendarCollectionConfigComponent} from './config/collection-config/calendar-collection-config.component';
-import {adapterFactory} from 'angular-calendar/date-adapters/moment';
-import * as moment from 'moment';
 import {CalendarEventsComponent} from './events/calendar-events.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
 import {FullCalendarModule} from '@fullcalendar/angular';
-import { CalendarVisualization2Component } from './events/calendar-visualization2/calendar-visualization2.component';
-
-export function momentAdapterFactory() {
-  return adapterFactory(moment);
-}
+import {CalendarVisualizationComponent} from './events/visualization/calendar-visualization.component';
 
 @NgModule({
   imports: [
@@ -53,18 +38,6 @@ export function momentAdapterFactory() {
     CommonModule,
     FormsModule,
     PopoverModule,
-    CalendarModule.forRoot(
-      {
-        provide: DateAdapter,
-        useFactory: momentAdapterFactory,
-      },
-      {
-        dateFormatter: {
-          provide: CalendarDateFormatter,
-          useClass: CalendarMomentDateFormatter,
-        },
-      }
-    ),
     CalendarPerspectiveRoutingModule,
     CalendarPipesModule,
     FullCalendarModule,
@@ -73,18 +46,10 @@ export function momentAdapterFactory() {
   declarations: [
     CalendarPerspectiveComponent,
     CalendarConfigComponent,
-    CalendarVisualizationComponent,
-    CalendarHeaderComponent,
     CalendarCollectionConfigComponent,
     CalendarEventsComponent,
-    CalendarVisualization2Component,
+    CalendarVisualizationComponent,
   ],
   exports: [CalendarPerspectiveComponent],
-  providers: [
-    {
-      provide: MOMENT,
-      useValue: moment,
-    },
-  ],
 })
 export class CalendarPerspectiveModule {}

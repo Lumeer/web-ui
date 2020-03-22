@@ -9,11 +9,12 @@
   <div class="d-flex flex-row flex-nowrap align-items-center mb-3">
 
     <select-item *ngIf="!document"
-      class="d-block mr-2"
-      [items]="query$ | async | stemCollectionsItems:(collections$ | async):permissions"
-      [removable]="false"
-      [selectedId]="stemIndex$ | async"
-      (select)="onStemIndexSelect($event)">
+                 class="d-block mr-2"
+                 [items]="query$ | async | stemCollectionsItems:(collections$ | async):permissions"
+                 [removable]="false"
+                 [fitParent]="false"
+                 [selectedId]="stemIndex$ | async"
+                 (select)="onStemIndexSelect($event)">
     </select-item>
 
     <div class="custom-control custom-checkbox">

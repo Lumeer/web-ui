@@ -20,9 +20,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
-  HostListener,
   Inject,
   Input,
   LOCALE_ID,
@@ -31,7 +29,6 @@ import {
   Output,
   Renderer2,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 import {Constraint} from '../../../../core/model/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -45,11 +42,9 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import * as moment from 'moment';
 import {deepObjectsEquals, isDateValid} from '../../../../shared/utils/common.utils';
 import {ConstraintData} from '../../../../core/model/data/constraint';
-import {CalendarHeaderComponent} from './header/calendar-header.component';
-import {CalendarVisualizationComponent} from './visualization/calendar-visualization.component';
 import {CalendarEventDetailModalComponent} from '../../../../shared/modal/calendar-event-detail/calendar-event-detail-modal.component';
 import {ModalService} from '../../../../shared/modal/modal.service';
-import {CalendarEvent} from '../util/calendar-event';
+import {CalendarEvent, CalendarMetaData} from '../util/calendar-event';
 
 interface Data {
   collections: Collection[];
@@ -66,17 +61,6 @@ interface Data {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarEventsComponent implements OnInit, OnChanges {
-  @ViewChild(CalendarHeaderComponent, {read: ElementRef})
-  public calendarHeaderElement: ElementRef;
-
-  @ViewChild(CalendarVisualizationComponent, {read: ElementRef})
-  set content(content: ElementRef) {
-    this.calendarVisualizationElement = content;
-    this.computeMaxVisualizationHeight();
-  }
-
-  private calendarVisualizationElement: ElementRef;
-
   @Input()
   public collections: Collection[];
 
@@ -103,9 +87,6 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   @Output()
   public configChange = new EventEmitter<CalendarConfig>();
-
-  public currentMode$ = new BehaviorSubject<CalendarMode>(CalendarMode.Month);
-  public currentDate$ = new BehaviorSubject<Date>(new Date());
 
   public events$: Observable<CalendarEvent[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
@@ -163,47 +144,40 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         constraintData: this.constraintData,
       });
     }
-    if (changes.config && this.config) {
-      this.currentMode$.next(this.config.mode);
-      this.currentDate$.next(this.config.date);
-    }
   }
 
-  public onModeChange(mode: CalendarMode) {
+  public onRangeChanged(data: {newMode: CalendarMode; newDate: Date}) {
     if (this.canManageConfig) {
-      const config = {...this.config, mode};
+      const config = {...this.config, mode: data.newMode, date: data.newDate};
       this.configChange.next(config);
-    } else {
-      this.currentMode$.next(mode);
     }
   }
 
-  public onViewDateChange(date: Date) {
-    if (this.canManageConfig) {
-      const config = {...this.config, date};
-      this.configChange.next(config);
-    } else {
-      this.currentDate$.next(date);
-    }
-  }
-
-  public onValueChanged(data: {documentId: string; changes: {attributeId: string; value: any}[]}) {
-    const {documentId, changes} = data;
-    const changedDocument = this.documents.find(document => document.id === documentId);
+  public onDocumentRangeChanged(data: {metadata: CalendarMetaData; start: Date; end?: Date}) {
+    const {metadata, start, end} = data;
+    const changedDocument = this.documents.find(document => document.id === metadata.documentId);
     if (!changedDocument) {
       return;
     }
     const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
 
     const patchDocument = {...changedDocument, data: {}};
-    changes.forEach(change => {
-      const attribute = ((collection && collection.attributes) || []).find(a => a.id === change.attributeId);
-      patchDocument.data[change.attributeId] = this.getSaveValue(change.value, attribute && attribute.constraint);
-    });
+
+    const attributes = collection?.attributes || [];
+    if (start) {
+      const attribute = attributes.find(a => a.id === metadata.startAttributeId);
+      patchDocument.data[attribute.id] = this.getSaveValue(start, attribute?.constraint);
+    }
+
+    if (end && metadata.endAttributeId) {
+      const attribute = attributes.find(a => a.id === metadata.endAttributeId);
+      patchDocument.data[attribute.id] = this.getSaveValue(end, attribute?.constraint);
+    }
+
     this.patchData.emit(patchDocument);
   }
 
-  private getSaveValue(value: any, constraint: Constraint): any {
+  private getSaveValue(value: Date, constraint: Constraint): any {
     if (constraint) {
       return constraint.createDataValue(value, this.constraintData).serialize();
     } else if (isDateValid(value)) {
@@ -213,7 +187,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }
   }
 
-  public onNewEvent(data: {start: Date, end: Date}) {
+  public onNewEvent(data: {start: Date; end: Date}) {
     if (this.isAtLeastOneCollectionWritable()) {
       const config = {
         initialState: {...data, config: this.config, permissions: this.permissions},
@@ -254,23 +228,6 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         class: 'modal-lg',
       };
       this.modalService.show(CalendarEventDetailModalComponent, config);
-    }
-  }
-
-  @HostListener('window:resize')
-  public onWindowResize() {
-    this.computeMaxVisualizationHeight();
-  }
-
-  private computeMaxVisualizationHeight() {
-    if (this.calendarVisualizationElement) {
-      const calendarHeaderHeight =
-        (this.calendarHeaderElement && this.calendarHeaderElement.nativeElement.offsetHeight) || 0;
-      this.renderer.setStyle(
-        this.calendarVisualizationElement.nativeElement,
-        'max-height',
-        `calc(100% - 1rem - ${calendarHeaderHeight}px)`
-      );
     }
   }
 }

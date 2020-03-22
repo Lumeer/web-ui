@@ -20,13 +20,18 @@
 import {AttributesResourceType} from '../../model/resource';
 import {CalendarBar, CalendarConfig, CalendarConfigVersion, CalendarStemConfig} from './calendar';
 import {CalendarCollectionConfigV0, CalendarConfigV0} from './calendar-old';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isDateValid, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
   if (!config) {
     return config;
   }
 
+  const convertedConfig = convertCalendarConfigDtoToModelWithVersion(config);
+  return convertConfigValues(convertedConfig);
+}
+
+function convertCalendarConfigDtoToModelWithVersion(config: any): CalendarConfig {
   const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
   switch (version) {
     case CalendarConfigVersion.V1:
@@ -34,6 +39,13 @@ export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
     default:
       return convertCalendarDtoToModelV0(config);
   }
+}
+
+function convertConfigValues(config: CalendarConfig): CalendarConfig {
+  if (config.date && !isDateValid(config.date)) {
+    return {...config, date: new Date(config.date)};
+  }
+  return config;
 }
 
 function convertCalendarDtoToModelV1(config: CalendarConfig): CalendarConfig {

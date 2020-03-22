@@ -137,7 +137,10 @@ export function createCalendarEventsForCollection(
 
     const titles = isArray(title) ? title : [title];
     for (let i = 0; i < titles.length; i++) {
-      const titleFormatted = stripTextHtmlTags(titleConstraint.createDataValue(titles[i], constraintData).preview(), false);
+      const titleFormatted = stripTextHtmlTags(
+        titleConstraint.createDataValue(titles[i], constraintData).preview(),
+        false
+      );
 
       const event: CalendarEvent = {
         id: document.id,
@@ -150,7 +153,7 @@ export function createCalendarEventsForCollection(
         textColor,
         allDay,
         startEditable: draggableStart,
-        durationEditable: draggableEnd,
+        durationEditable: !!endProperty && draggableEnd,
         editable: draggableStart && draggableEnd,
         extendedProps: {
           documentId: document.id,
@@ -188,9 +191,11 @@ function createInterval(
 }
 
 export function isAllDayEvent(start: Date, end: Date): boolean {
-  return (
-    start && end && start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 0 && end.getMinutes() === 0
-  );
+  return isAllDayEventSingle(start) && isAllDayEventSingle(end);
+}
+
+export function isAllDayEventSingle(date: Date): boolean {
+  return date && date.getHours() === 0 && date.getMinutes() === 0 && date.getHours() === 0 && date.getMinutes() === 0;
 }
 
 const dateFormats = [
