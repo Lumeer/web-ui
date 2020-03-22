@@ -21,7 +21,7 @@ jobs:
 
       - run:
           name: update-git
-          command: 'sudo add-apt-repository ppa:git-core/ppa -y && sudo apt-get update && sudo apt-get install git -y && git --version'
+          command: 'sudo apt-get update && sudo apt-get install git -y && git --version'
 
       - run:
           name: update-npm
