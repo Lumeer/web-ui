@@ -132,10 +132,10 @@ export class CalendarVisualizationComponent implements OnChanges {
   }
 
   public onEventDrop(data: {event: CalendarEvent}) {
-    this.eventRangeChanged.emit({...data.event, metadata: data.event.extendedProps});
+    this.eventRangeChanged.emit({start: data.event.start, end: data.event.end, metadata: data.event.extendedProps});
   }
 
   public onEventResize(data: {event: CalendarEvent}) {
-    this.eventRangeChanged.emit({...data.event, metadata: data.event.extendedProps});
+    this.eventRangeChanged.emit({start: data.event.start, end: data.event.end, metadata: data.event.extendedProps});
   }
 }
