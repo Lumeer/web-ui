@@ -1,0 +1,49 @@
+@import '../variables';
+
+.fc-toolbar {
+  .fc-button-primary {
+    background: $primary;
+  }
+
+  .fc-button br {
+    display: none;
+  }
+}
+
+.fc .fc-head .fc-widget-header {
+  margin-top: 15px;
+}
+.fc .fc-widget-header {
+  border: 0;
+}
+
+.fc th {
+  text-align: right;
+  border-bottom-width: 1px;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  color: #9a9a9a;
+  font-weight: 400;
+  padding-bottom: 3px;
+}
+
+.fc td:first-child {
+  border-left: 0;
+}
+
+.fc td:last-child {
+  border-right: 0;
+}
+
+.fc-toolbar .fc-center {
+  text-align: center;
+  min-width: 260px;
+}
+
+.fc .fc-row:last-child td {
+  border-bottom: 0;
+}
+
+.fc .fc-body .fc-widget-content {
+  border-bottom: 0;
+}

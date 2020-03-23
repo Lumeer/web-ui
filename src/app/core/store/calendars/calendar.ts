@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesResourceType} from '../../model/resource';
 import {QueryStem} from '../navigation/query/query';
+import {QueryAttribute} from '../../model/query-attribute';
 
 export const DEFAULT_CALENDAR_ID = 'default';
-export const CALENDAR_DATE_FORMAT = 'YYYY-MM-DD HH:mm';
 
 export interface Calendar {
   id: string;
@@ -50,12 +49,7 @@ export interface CalendarStemConfig {
   barsProperties?: Record<string, CalendarBar>;
 }
 
-export interface CalendarBar {
-  resourceId: string;
-  attributeId: string;
-  resourceIndex?: number;
-  resourceType: AttributesResourceType;
-}
+export interface CalendarBar extends QueryAttribute {}
 
 export type CalendarBarProperty = CalendarBarPropertyRequired | CalendarBarPropertyOptional;
 

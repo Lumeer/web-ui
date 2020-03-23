@@ -9,7 +9,11 @@
 
 $flag-icon-css-path: '~flag-icon-css/flags' !default;
 @import '~flag-icon-css/sass/flag-icon';
-@import '~angular-calendar/css/angular-calendar.css';
+
+@import '~@fullcalendar/core/main.css';
+@import '~@fullcalendar/daygrid/main.css';
+@import '~@fullcalendar/timegrid/main.css';
+@import 'styles/overrides/full-calendar';
 
 *[contenteditable] {
   -webkit-user-select: auto !important;

@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CalendarEvent} from 'angular-calendar';
 import * as moment from 'moment';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {ConstraintData} from '../../../../core/model/data/constraint';
@@ -48,15 +47,9 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-
-export interface CalendarMetaData {
-  documentId: string;
-  collectionId: string;
-  stemIndex: number;
-  color: string;
-  startAttributeId: string;
-  endAttributeId: string;
-}
+import {CalendarEvent} from './calendar-event';
+import {contrastColor} from '../../../../shared/utils/color.utils';
+import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 
 export function createCalendarEvents(
   config: CalendarConfig,
@@ -65,7 +58,7 @@ export function createCalendarEvents(
   permissions: Record<string, AllowedPermissions>,
   constraintData: ConstraintData,
   query: Query
-): CalendarEvent<CalendarMetaData>[] {
+): CalendarEvent[] {
   return (query.stems || []).reduce((tasks, stem, index) => {
     const collection = (collections || []).find(coll => coll.id === stem.collectionId);
     if (collection) {
@@ -97,7 +90,7 @@ export function createCalendarEventsForCollection(
   constraintData: ConstraintData,
   query: Query,
   stemIndex: number
-): CalendarEvent<CalendarMetaData>[] {
+): CalendarEvent[] {
   if (!config) {
     return [];
   }
@@ -114,10 +107,12 @@ export function createCalendarEventsForCollection(
   const draggableEnd =
     permissions.writeWithView &&
     isCollectionAttributeEditable(endProperty && endProperty.attributeId, collection, permissions, query);
-  const allDayColor = getColor(true, collection.color);
-  const color = getColor(false, collection.color);
 
-  const events = [];
+  const borderColor = shadeColor(collection.color, 0.4);
+  const backgroundColor = shadeColor(collection.color, 0.5);
+  const textColor = contrastColor(backgroundColor);
+
+  const events: CalendarEvent[] = [];
 
   for (const document of documents) {
     const formattedData = formatData(document.data, collection.attributes, constraintData);
@@ -142,20 +137,25 @@ export function createCalendarEventsForCollection(
 
     const titles = isArray(title) ? title : [title];
     for (let i = 0; i < titles.length; i++) {
-      const titleFormatted = titleConstraint.createDataValue(titles[i], constraintData).format();
+      const titleFormatted = stripTextHtmlTags(
+        titleConstraint.createDataValue(titles[i], constraintData).preview(),
+        false
+      );
 
-      const event = {
+      const event: CalendarEvent = {
+        id: document.id,
+        groupId: document.id,
         title: titleFormatted,
         start: interval[0].value,
         end: interval[1].value,
-        color: allDay ? allDayColor : color,
+        backgroundColor,
+        borderColor,
+        textColor,
         allDay,
-        draggable: draggableStart || draggableEnd,
-        resizable: {
-          beforeStart: draggableStart && interval[1].value, // an end date is always required for resizable events to work
-          afterEnd: draggableEnd && interval[1].value,
-        },
-        meta: {
+        startEditable: draggableStart,
+        durationEditable: !!endProperty && draggableEnd,
+        editable: draggableStart && draggableEnd,
+        extendedProps: {
           documentId: document.id,
           collectionId: document.collectionId,
           stemIndex,
@@ -191,22 +191,11 @@ function createInterval(
 }
 
 export function isAllDayEvent(start: Date, end: Date): boolean {
-  return (
-    start && end && start.getHours() === 0 && start.getMinutes() === 0 && end.getHours() === 0 && end.getMinutes() === 0
-  );
+  return isAllDayEventSingle(start) && isAllDayEventSingle(end);
 }
 
-function getColor(allDay: boolean, color: string) {
-  if (!allDay) {
-    return {
-      primary: color,
-      secondary: shadeColor(color, 0.9),
-    };
-  }
-  return {
-    primary: shadeColor(color, 0.8),
-    secondary: shadeColor(color, 0.7),
-  };
+export function isAllDayEventSingle(date: Date): boolean {
+  return date && date.getHours() === 0 && date.getMinutes() === 0 && date.getHours() === 0 && date.getMinutes() === 0;
 }
 
 const dateFormats = [

@@ -36,6 +36,7 @@ import {
 import {
   DEFAULT_EVENT_DURATION,
   isAllDayEvent,
+  isAllDayEventSingle,
   parseCalendarEventDate,
 } from '../../../view/perspectives/calendar/util/calendar-util';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
@@ -59,7 +60,10 @@ export class CalendarEventDetailModalComponent implements OnInit {
   public stemIndex: number = 0;
 
   @Input()
-  public initialTime: number;
+  public start: Date;
+
+  @Input()
+  public end: Date;
 
   @Input()
   public config: CalendarConfig;
@@ -95,12 +99,12 @@ export class CalendarEventDetailModalComponent implements OnInit {
   private checkIsAllDay(stemIndex: number, document: DocumentModel) {
     const stemConfig = this.getStemConfig(stemIndex);
     if (stemConfig) {
-      const startProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyRequired.StartDate];
-      const endProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyOptional.EndDate];
+      const startProperty = stemConfig.barsProperties?.[CalendarBarPropertyRequired.StartDate];
+      const endProperty = stemConfig.barsProperties?.[CalendarBarPropertyOptional.EndDate];
 
       const start = parseCalendarEventDate(startProperty && document.data[startProperty.attributeId]);
       const end = parseCalendarEventDate(endProperty && document.data[endProperty.attributeId]);
-      this.allDay$.next(isAllDayEvent(start, end));
+      this.allDay$.next(end ? isAllDayEvent(start, end) : isAllDayEventSingle(start));
     }
   }
 
@@ -130,12 +134,12 @@ export class CalendarEventDetailModalComponent implements OnInit {
 
           const startProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyRequired.StartDate];
           if (startProperty) {
-            data[startProperty.attributeId] = this.getInitialEventStart();
+            data[startProperty.attributeId] = this.start;
           }
 
           const endProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyOptional.EndDate];
           if (endProperty) {
-            data[endProperty.attributeId] = this.getInitialEventEnd();
+            data[endProperty.attributeId] = this.end;
           }
         }
         return {data, collectionId: collection?.id};
@@ -143,15 +147,6 @@ export class CalendarEventDetailModalComponent implements OnInit {
       take(1),
       tap(document => (this.currentDocument = document))
     );
-  }
-
-  private getInitialEventStart(): Date {
-    return new Date(this.initialTime);
-  }
-
-  private getInitialEventEnd(): Date {
-    const eventStart = moment(this.getInitialEventStart());
-    return eventStart.add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
   }
 
   private getInitialTitleName(): string {
@@ -167,24 +162,39 @@ export class CalendarEventDetailModalComponent implements OnInit {
     const data = {};
     const stemConfig = this.getStemConfig(this.stemIndex$.value);
     if (stemConfig) {
-      const startProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyRequired.StartDate];
+      const startProperty = stemConfig.barsProperties?.[CalendarBarPropertyRequired.StartDate];
+      const endProperty = stemConfig.barsProperties?.[CalendarBarPropertyOptional.EndDate];
       let newStart = null;
       if (startProperty) {
         if (allDay) {
           const start = this.currentDocument?.data?.[startProperty.attributeId];
           newStart = start && this.cleanDateWhenAllDay(start);
           data[startProperty.attributeId] = newStart;
-        } else if (this.initialTime) {
-          newStart = this.getInitialEventStart();
-          data[startProperty.attributeId] = newStart;
+        } else if (endProperty ? isAllDayEvent(this.start, this.end) : isAllDayEventSingle(this.start)) {
+          const cleaned = this.cleanDateWhenAllDay(this.start);
+          cleaned.setHours(9);
+          newStart = cleaned;
+          data[startProperty.attributeId] = cleaned;
+        } else if (this.start) {
+          newStart = this.start;
+          data[startProperty.attributeId] = this.start;
         }
       }
 
-      const endProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyOptional.EndDate];
       if (endProperty) {
         const start = this.currentDocument?.data?.[endProperty.attributeId];
         if (allDay) {
-          data[endProperty.attributeId] = start && this.cleanDateWhenAllDay(start);
+          if (this.end) {
+            data[endProperty.attributeId] = this.cleanDateWhenAllDay(this.end);
+          } else {
+            data[endProperty.attributeId] = start && this.cleanDateWhenAllDay(start);
+          }
+        } else if (isAllDayEvent(this.start, this.end)) {
+          data[endProperty.attributeId] = moment(newStart)
+            .add(DEFAULT_EVENT_DURATION, 'minutes')
+            .toDate();
+        } else if (this.end) {
+          data[endProperty.attributeId] = this.end;
         } else if (newStart) {
           data[endProperty.attributeId] = moment(newStart)
             .add(DEFAULT_EVENT_DURATION, 'minutes')

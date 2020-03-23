@@ -21,31 +21,32 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Inject,
   Input,
-  LOCALE_ID,
+  OnChanges,
   Output,
-  ViewEncapsulation,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import View from '@fullcalendar/core/View';
+import {FullCalendarComponent} from '@fullcalendar/angular';
+import {ButtonTextCompoundInput, ToolbarInput} from '@fullcalendar/core/types/input-types';
+import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
+import {environment} from '../../../../../../environments/environment';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 import {CalendarMode} from '../../../../../core/store/calendars/calendar';
-import {CalendarEvent, CalendarEventTimesChangedEvent, CalendarMonthViewDay} from 'angular-calendar';
-import {Subject} from 'rxjs';
-import * as moment from 'moment';
-import {WeekViewHourSegment, MonthViewDay, WeekViewHourColumn} from 'calendar-utils';
-import {CalendarMetaData} from '../../util/calendar-util';
-
-const DEFAULT_NEW_EVENT_HOUR = 9;
 
 @Component({
   selector: 'calendar-visualization',
   templateUrl: './calendar-visualization.component.html',
   styleUrls: ['./calendar-visualization.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarVisualizationComponent {
+export class CalendarVisualizationComponent implements OnChanges {
   @Input()
-  public events: CalendarEvent<CalendarMetaData>[] = [];
+  public events: CalendarEvent[];
 
   @Input()
   public currentMode: CalendarMode;
@@ -54,79 +55,87 @@ export class CalendarVisualizationComponent {
   public currentDate: Date;
 
   @Output()
-  public timesChange = new EventEmitter<{documentId: string; changes: {attributeId: string; value: any}[]}>();
+  public eventClick = new EventEmitter<CalendarEvent>();
 
   @Output()
-  public newEvent = new EventEmitter<number>();
+  public newEvent = new EventEmitter<{start: Date; end: Date}>();
 
   @Output()
-  public eventClick = new EventEmitter<CalendarEvent<CalendarMetaData>>();
+  public rangeChanged = new EventEmitter<{newMode: CalendarMode; newDate: Date}>();
 
-  public readonly calendarMode = CalendarMode;
+  @Output()
+  public eventRangeChanged = new EventEmitter<{metadata: CalendarMetaData; start: Date; end?: Date}>();
 
-  public refresh: Subject<any> = new Subject();
+  @ViewChild('calendar', {static: true})
+  public calendarComponent: FullCalendarComponent;
 
-  constructor(@Inject(LOCALE_ID) public locale: string) {}
+  public readonly locale = environment.locale;
+  public readonly calendarPlugins = [timeGridPlugin, dayGridPlugin, interactionPlugin];
+  public readonly buttonText: ButtonTextCompoundInput = {};
+  public readonly calendarModesMap: Record<CalendarMode, string> = {
+    [CalendarMode.Month]: 'dayGridMonth',
+    [CalendarMode.Week]: 'timeGridWeek',
+    [CalendarMode.Day]: 'timeGridDay',
+  };
+  public readonly header: ToolbarInput = {
+    left: Object.values(this.calendarModesMap).join(','),
+    center: 'title',
+    right: 'prev,today,next',
+  };
 
-  public eventTimesChanged({event, newStart, newEnd}: CalendarEventTimesChangedEvent): void {
-    event.start = newStart;
-    event.end = newEnd;
-    this.refresh.next();
+  public defaultView: string;
+  public defaultDate: Date;
 
-    this.onDocumentTimesChange(event);
+  constructor(private i18n: I18n) {
+    this.buttonText = {
+      today: i18n({id: 'perspective.calendar.header.today', value: 'Today'}),
+      month: i18n({id: 'perspective.calendar.header.month', value: 'Month'}),
+      week: i18n({id: 'perspective.calendar.header.week', value: 'Week'}),
+      day: i18n({id: 'perspective.calendar.header.day', value: 'Day'}),
+    };
   }
 
-  private onDocumentTimesChange(event: CalendarEvent) {
-    const {startAttributeId, endAttributeId} = event.meta;
-
-    const changes = [];
-
-    startAttributeId && changes.push({attributeId: startAttributeId, value: event.start});
-    endAttributeId && changes.push({attributeId: endAttributeId, value: event.end});
-
-    if (changes.length) {
-      this.timesChange.emit({documentId: event.meta.documentId, changes});
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.currentMode && this.currentMode && !this.defaultView) {
+      this.defaultView = this.calendarModesMap[this.currentMode];
+    }
+    if (changes.currentDate && this.currentDate && !this.defaultDate) {
+      this.defaultDate = this.currentDate;
     }
   }
 
-  public monthDoubleClick(day: MonthViewDay) {
-    const date = moment(day.date)
-      .hours(DEFAULT_NEW_EVENT_HOUR)
-      .toDate();
-    this.newEvent.emit(date.getTime());
+  public onEventClick(data: {event: CalendarEvent}) {
+    this.eventClick.emit(data.event);
   }
 
-  public weekDoubleClick(segment: WeekViewHourColumn) {
-    this.newEvent.emit(segment.date.getTime());
+  public onNavLinkDayClick(date: Date) {
+    const defaultView = this.calendarModesMap[CalendarMode.Day];
+    this.calendarComponent.getApi().changeView(defaultView, date);
   }
 
-  public dayDoubleClick(segment: WeekViewHourSegment) {
-    this.newEvent.emit(segment.date.getTime());
+  public onRangeSelected(data: {start: Date; end: Date}) {
+    this.newEvent.emit(data);
   }
 
-  public beforeMonthViewRender({body}: {body: CalendarMonthViewDay[]}): void {
-    body.forEach(cell => {
-      const numGroups = new Set(cell.events.map(event => event.meta.collectionId)).size;
-      if (numGroups >= 2 && cell.events.length >= 8) {
-        const groups: Record<string, {color: string; length: number}> = {};
-        cell.events.forEach((event: CalendarEvent<{collectionId: string; color: string}>) => {
-          if (!groups[event.meta.collectionId]) {
-            groups[event.meta.collectionId] = {color: event.meta.color, length: 0};
-          }
-          groups[event.meta.collectionId].length++;
-        });
-
-        cell['eventGroups'] = Object.values(groups);
-      }
-    });
+  private calendarModeByDefaultView(newView: string): CalendarMode | null {
+    const index = Object.values(this.calendarModesMap).findIndex(view => view === newView);
+    return index >= 0 ? (Object.keys(this.calendarModesMap)[index] as CalendarMode) : null;
   }
 
-  public trackByEventId(index: number, event: CalendarEvent) {
-    return event.id ? event.id : event;
+  public datesRender(event: {view: View; el: HTMLElement}) {
+    const newView = event.view?.type;
+    const newMode = this.calendarModeByDefaultView(newView);
+    const newDate = event.view?.currentStart;
+    if (newMode !== this.currentMode || newDate !== this.currentDate) {
+      this.rangeChanged.emit({newMode, newDate});
+    }
   }
 
-  public onEventClicked(data: {event: CalendarEvent<CalendarMetaData>}) {
-    const {event} = data;
-    this.eventClick.emit(event);
+  public onEventDrop(data: {event: CalendarEvent}) {
+    this.eventRangeChanged.emit({...data.event, metadata: data.event.extendedProps});
+  }
+
+  public onEventResize(data: {event: CalendarEvent}) {
+    this.eventRangeChanged.emit({...data.event, metadata: data.event.extendedProps});
   }
 }

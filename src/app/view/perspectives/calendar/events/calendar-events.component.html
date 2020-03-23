@@ -1,21 +1,8 @@
-<ng-container *ngIf="{mode: currentMode$ | async, date: currentDate$ | async} as data">
-  <calendar-header
-    class="d-block mb-3 mx-5"
-    [mode]="data.mode"
-    [viewDate]="data.date"
-    [locale]="locale"
-    (modeChange)="onModeChange($event)"
-    (viewDateChange)="onViewDateChange($event)">
-  </calendar-header>
-
-  <calendar-visualization
-    class="h-100 d-block"
-    [events]="(events$ | async) || []"
-    [currentMode]="data.mode"
-    [currentDate]="data.date"
-    (timesChange)="onValueChanged($event)"
-    (newEvent)="onNewEvent($event)"
-    (eventClick)="onEventClicked($event)">
-  </calendar-visualization>
-
-</ng-container>
+<calendar-visualization [events]="events$ | async"
+                        (eventClick)="onEventClicked($event)"
+                        [currentMode]="config.mode"
+                        [currentDate]="config.date"
+                        (newEvent)="onNewEvent($event)"
+                        (rangeChanged)="onRangeChanged($event)"
+                        (eventRangeChanged)="onDocumentRangeChanged($event)">
+</calendar-visualization>
