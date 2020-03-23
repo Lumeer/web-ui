@@ -106,7 +106,7 @@
     "@compodoc/compodoc": "^1.1.11",
     "@ngrx/schematics": "^9.0.0",
     "@sentry/cli": "^1.51.1",
-    "@types/auth0-js": "^9.12.3",
+    "@types/auth0-js": "^9.12.4",
     "@types/big.js": "^4.0.5",
     "@types/geojson": "^7946.0.7",
     "@types/jasmine": "^3.5.4",
