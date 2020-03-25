@@ -18,8 +18,8 @@
  */
 
 import {Constraint} from '../../model/constraint';
-import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {QueryAttribute} from '../../model/query-attribute';
 
 export const DEFAULT_CHART_ID = 'default';
 
@@ -37,11 +37,7 @@ export interface ChartConfig {
   sort?: ChartSort;
 }
 
-export interface ChartAxis {
-  resourceId: string;
-  attributeId: string;
-  resourceIndex?: number;
-  resourceType: AttributesResourceType;
+export interface ChartAxis extends QueryAttribute {
   constraint?: Constraint;
 }
 

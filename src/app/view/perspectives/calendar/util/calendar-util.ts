@@ -21,8 +21,7 @@ import * as moment from 'moment';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {
-  CalendarBarPropertyOptional,
-  CalendarBarPropertyRequired,
+  CalendarBar,
   CalendarConfig,
   CalendarConfigVersion,
   CalendarMode,
@@ -30,7 +29,6 @@ import {
 } from '../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../core/store/collections/collection';
 import {
-  findAttribute,
   findAttributeConstraint,
   isCollectionAttributeEditable,
 } from '../../../../core/store/collections/collection.util';
@@ -41,15 +39,16 @@ import {formatData} from '../../../../shared/utils/data/format-data';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
+  checkOrTransformQueryAttribute,
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
-import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {CalendarEvent} from './calendar-event';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
+import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 
 export function createCalendarEvents(
   config: CalendarConfig,
@@ -95,12 +94,10 @@ export function createCalendarEventsForCollection(
     return [];
   }
 
-  const properties = config.barsProperties || {};
+  const nameProperty = config.name;
+  const startProperty = config.start;
 
-  const nameProperty = properties[CalendarBarPropertyRequired.Name];
-  const startProperty = properties[CalendarBarPropertyRequired.StartDate];
-
-  const endProperty = properties[CalendarBarPropertyOptional.EndDate];
+  const endProperty = config.end;
   const draggableStart =
     permissions.writeWithView &&
     isCollectionAttributeEditable(startProperty && startProperty.attributeId, collection, permissions, query);
@@ -256,7 +253,7 @@ export function isCalendarConfigChanged(viewConfig: CalendarConfig, currentConfi
     return true;
   }
 
-  return calendarConfigCollectionsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
+  return calendarStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
 }
 
 function datesChanged(date1: Date, date2: Date): boolean {
@@ -272,44 +269,54 @@ function datesChanged(date1: Date, date2: Date): boolean {
   return date1.getTime() !== date2.getTime();
 }
 
-function calendarConfigCollectionsChanged(c1: CalendarStemConfig[], c2: CalendarStemConfig[]): boolean {
+function calendarStemsConfigsChanged(c1: CalendarStemConfig[], c2: CalendarStemConfig[]): boolean {
   if (c1.length !== c2.length) {
     return true;
   }
 
-  return c1.some((config, index) => calendarConfigCollectionChanged(config, c2[index]));
+  return c1.some((config, index) => calendarStemConfigChanged(config, c2[index]));
 }
 
-function calendarConfigCollectionChanged(config1: CalendarStemConfig, config2: CalendarStemConfig): boolean {
-  if (Object.keys(config1.barsProperties).length !== Object.keys(config2.barsProperties).length) {
+function calendarStemConfigChanged(config1: CalendarStemConfig, config2: CalendarStemConfig): boolean {
+  const config1DefinedProperties = calendarConfigDefinedProperties(config1);
+  const config2DefinedProperties = calendarConfigDefinedProperties(config2);
+  if (config1DefinedProperties.length !== config2DefinedProperties.length) {
     return true;
   }
 
-  return Object.entries(config1.barsProperties).some(([key, value]) => {
-    return !config2.barsProperties[key] || !deepObjectsEquals(value, config2.barsProperties[key]);
+  const config2Properties = calendarStemConfigProperties(config2);
+  return calendarStemConfigProperties(config1).some((bar, index) => {
+    return !deepObjectsEquals(bar, config2Properties[index]);
   });
+}
+
+function calendarStemConfigProperties(config: CalendarStemConfig): CalendarBar[] {
+  return [config.start, config.end, config.name, config.color];
+}
+
+function calendarConfigDefinedProperties(config: CalendarStemConfig): CalendarBar[] {
+  return calendarStemConfigProperties(config).filter(bar => !!bar);
 }
 
 export function calendarConfigIsEmpty(config: CalendarConfig): boolean {
   return (
-    config &&
-    config.stemsConfigs.filter(value => Object.values(value.barsProperties || {}).filter(bar => !!bar).length > 0)
-      .length === 0
+    config?.stemsConfigs?.filter(stemConfig => calendarConfigDefinedProperties(stemConfig).length > 0).length === 0
   );
 }
 
 export function checkOrTransformCalendarConfig(
   config: CalendarConfig,
   query: Query,
-  collections: Collection[]
+  collections: Collection[],
+  linkTypes: LinkType[]
 ): CalendarConfig {
   if (!config) {
-    return calendarDefaultConfig(query);
+    return calendarDefaultConfig(query, collections, linkTypes);
   }
 
   return {
     ...config,
-    stemsConfigs: checkOrTransformCalendarStemsConfig(config.stemsConfigs || [], query, collections, []),
+    stemsConfigs: checkOrTransformCalendarStemsConfig(config.stemsConfigs || [], query, collections, linkTypes),
   };
 }
 
@@ -319,8 +326,8 @@ function checkOrTransformCalendarStemsConfig(
   collections: Collection[],
   linkTypes: LinkType[]
 ): CalendarStemConfig[] {
-  const stemsConfigsCopy = [...stemsConfigs];
-  return ((query && query.stems) || []).map(stem => {
+  const stemsConfigsCopy = [...(stemsConfigs || [])];
+  return (query?.stems || []).map(stem => {
     const stemCollectionIds = collectionIdsChainForStem(stem, []);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
@@ -334,51 +341,41 @@ function checkOrTransformCalendarStemConfig(
   collections: Collection[],
   linkTypes: LinkType[]
 ): CalendarStemConfig {
-  if (!stemConfig || !stemConfig.barsProperties) {
-    return getCalendarDefaultStemConfig(stem);
+  if (!stemConfig) {
+    return getCalendarDefaultStemConfig(stem, collections, linkTypes);
   }
 
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
-  const barsProperties = Object.entries(stemConfig.barsProperties)
-    .filter(([, bar]) => !!bar)
-    .reduce((map, [type, bar]) => {
-      const attributesResource = attributesResourcesOrder[bar.resourceIndex];
-      if (
-        attributesResource &&
-        attributesResource.id === bar.resourceId &&
-        getAttributesResourceType(attributesResource) === bar.resourceType
-      ) {
-        const attribute = findAttribute(attributesResource.attributes, bar.attributeId);
-        if (attribute) {
-          map[type] = bar;
-        }
-      } else {
-        const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
-          ar => ar.id === bar.resourceId && getAttributesResourceType(ar) === bar.resourceType
-        );
-        if (newAttributesResourceIndex >= 0) {
-          const attribute = findAttribute(
-            attributesResourcesOrder[newAttributesResourceIndex].attributes,
-            bar.attributeId
-          );
-          if (attribute) {
-            map[type] = {...bar, resourceIndex: newAttributesResourceIndex};
-          }
-        }
-      }
-      return map;
-    }, {});
-
-  return {barsProperties, stem};
+  return {
+    stem,
+    name: checkOrTransformQueryAttribute(stemConfig.name, attributesResourcesOrder),
+    start: checkOrTransformQueryAttribute(stemConfig.start, attributesResourcesOrder),
+    end: checkOrTransformQueryAttribute(stemConfig.end, attributesResourcesOrder),
+    color: checkOrTransformQueryAttribute(stemConfig.color, attributesResourcesOrder),
+  };
 }
 
-function calendarDefaultConfig(query: Query): CalendarConfig {
-  const stemsConfigs = (query.stems || []).map(stem => getCalendarDefaultStemConfig(stem));
-  return {mode: CalendarMode.Month, date: new Date(), version: CalendarConfigVersion.V1, stemsConfigs};
+function calendarDefaultConfig(query: Query, collections: Collection[], linkTypes: LinkType[]): CalendarConfig {
+  const stems = query?.stems || [];
+  const stemsConfigs = stems.map(stem => getCalendarDefaultStemConfig(stem, collections, linkTypes));
+  return {
+    mode: CalendarMode.Month,
+    date: new Date(),
+    version: CalendarConfigVersion.V2,
+    stemsConfigs,
+  };
 }
 
-export function getCalendarDefaultStemConfig(stem?: QueryStem): CalendarStemConfig {
-  return {barsProperties: {}, stem};
+export function getCalendarDefaultStemConfig(
+  stem?: QueryStem,
+  collections?: Collection[],
+  linkTypes?: LinkType[]
+): CalendarStemConfig {
+  if (stem && collections && linkTypes) {
+    const config = createDefaultNameAndDateRangeConfig(stem, collections, linkTypes);
+    return {stem, ...config};
+  }
+  return {};
 }
 
 export const DEFAULT_EVENT_DURATION = 60;

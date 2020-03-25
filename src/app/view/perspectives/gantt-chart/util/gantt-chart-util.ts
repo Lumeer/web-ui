@@ -28,22 +28,21 @@ import {
 } from '../../../../core/store/gantt-charts/gantt-chart';
 import {deepObjectsEquals, findLastIndex, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
+  checkOrTransformQueryAttribute,
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
-import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
-import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
-import {ConstraintType} from '../../../../core/model/data/constraint';
+import {AttributesResourceType} from '../../../../core/model/resource';
 import {GanttTaskMetadata} from './gantt-chart-converter';
 import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
 import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {AllowedPermissions, mergeAllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
@@ -130,7 +129,7 @@ function checkOrTransformGanttStemsConfig(
   linkTypes: LinkType[]
 ): GanttChartStemConfig[] {
   const stemsConfigsCopy = [...(stemsConfigs || [])];
-  return ((query && query.stems) || []).map(stem => {
+  return (query?.stems || []).map(stem => {
     const stemCollectionIds = collectionIdsChainForStem(stem, []);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
@@ -151,47 +150,15 @@ function checkOrTransformGanttStemConfig(
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
   return {
     stem,
-    start: checkOrTransformGanttBarModel(stemConfig.start, attributesResourcesOrder),
-    end: checkOrTransformGanttBarModel(stemConfig.end, attributesResourcesOrder),
-    name: checkOrTransformGanttBarModel(stemConfig.name, attributesResourcesOrder),
-    progress: checkOrTransformGanttBarModel(stemConfig.progress, attributesResourcesOrder),
-    color: checkOrTransformGanttBarModel(stemConfig.color, attributesResourcesOrder),
+    start: checkOrTransformQueryAttribute(stemConfig.start, attributesResourcesOrder),
+    end: checkOrTransformQueryAttribute(stemConfig.end, attributesResourcesOrder),
+    name: checkOrTransformQueryAttribute(stemConfig.name, attributesResourcesOrder),
+    progress: checkOrTransformQueryAttribute(stemConfig.progress, attributesResourcesOrder),
+    color: checkOrTransformQueryAttribute(stemConfig.color, attributesResourcesOrder),
     categories: (stemConfig.categories || [])
-      .map(category => checkOrTransformGanttBarModel(category, attributesResourcesOrder))
+      .map(category => checkOrTransformQueryAttribute(category, attributesResourcesOrder))
       .filter(val => !!val),
   };
-}
-
-function checkOrTransformGanttBarModel(
-  bar: GanttChartBarModel,
-  attributesResourcesOrder: AttributesResource[]
-): GanttChartBarModel {
-  if (!bar) {
-    return bar;
-  }
-
-  const attributesResource = attributesResourcesOrder[bar.resourceIndex];
-  if (
-    attributesResource &&
-    attributesResource.id === bar.resourceId &&
-    getAttributesResourceType(attributesResource) === bar.resourceType
-  ) {
-    const attribute = findAttribute(attributesResource.attributes, bar.attributeId);
-    if (attribute) {
-      return bar;
-    }
-  } else {
-    const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
-      ar => ar.id === bar.resourceId && getAttributesResourceType(ar) === bar.resourceType
-    );
-    if (newAttributesResourceIndex >= 0) {
-      const attribute = findAttribute(attributesResourcesOrder[newAttributesResourceIndex].attributes, bar.attributeId);
-      if (attribute) {
-        return {...bar, resourceIndex: newAttributesResourceIndex};
-      }
-    }
-  }
-  return null;
 }
 
 export function createDefaultGanttChartConfig(
@@ -199,7 +166,7 @@ export function createDefaultGanttChartConfig(
   collections: Collection[],
   linkTypes: LinkType[]
 ): GanttChartConfig {
-  const stems = (query && query.stems) || [];
+  const stems = query?.stems || [];
   const stemsConfigs = stems.map(stem => createDefaultGanttChartStemConfig(stem, collections, linkTypes));
   return {
     mode: GanttChartMode.Month,
@@ -217,46 +184,10 @@ export function createDefaultGanttChartStemConfig(
   linkTypes?: LinkType[]
 ): GanttChartStemConfig {
   if (stem && collections && linkTypes) {
-    const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
-    const {index, startAttribute, endAttribute} = findBestInitialAttributes(attributesResourcesOrder);
-    if (attributesResourcesOrder[index]) {
-      const defaultAttributeId = getDefaultAttributeId(attributesResourcesOrder[index]);
-      const defaultAttribute = findAttribute(attributesResourcesOrder[index].attributes, defaultAttributeId);
-      const resourceId = attributesResourcesOrder[index].id;
-      const resourceType = getAttributesResourceType(attributesResourcesOrder[index]);
-      const resourceIndex = index;
-      const name = defaultAttribute && {attributeId: defaultAttribute.id, resourceId, resourceType, resourceIndex};
-      const start = startAttribute && {attributeId: startAttribute.id, resourceId, resourceType, resourceIndex};
-      const end = endAttribute && {attributeId: endAttribute.id, resourceId, resourceType, resourceIndex};
-      return {stem, name, start, end};
-    }
-
-    return {stem};
+    const config = createDefaultNameAndDateRangeConfig(stem, collections, linkTypes);
+    return {stem, ...config};
   }
   return {};
-}
-
-function findBestInitialAttributes(
-  attributesResourcesOrder: AttributesResource[]
-): {index: number; startAttribute?: Attribute; endAttribute?: Attribute} {
-  for (let i = 0; i < (attributesResourcesOrder || []).length; i++) {
-    if (getAttributesResourceType(attributesResourcesOrder[i]) !== AttributesResourceType.Collection) {
-      continue;
-    }
-
-    const dateAttributes = (attributesResourcesOrder[i].attributes || []).filter(
-      attribute => attribute.constraint && attribute.constraint.type === ConstraintType.DateTime
-    );
-    if (dateAttributes.length >= 2) {
-      return {index: i, startAttribute: dateAttributes[0], endAttribute: dateAttributes[1]};
-    }
-  }
-
-  return {index: 0};
-}
-
-export function ganttStemConfigIsEmpty(stemConfig: GanttChartStemConfig) {
-  return stemConfig && ganttStemConfigDefinedProperties(stemConfig).length === 0;
 }
 
 export function createLinkDocumentsDataNewTask(task: GanttChartTask, otherTasks: GanttChartTask[]): string[] {

@@ -33,7 +33,7 @@ import {LinkType} from '../../link-types/link.type';
 import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {getOtherLinkedCollectionId} from '../../../../shared/utils/link-type.utils';
-import {Collection} from '../../collections/collection';
+import {Attribute, Collection} from '../../collections/collection';
 import {AttributesResource, AttributesResourceType} from '../../../model/resource';
 import {ConstraintType} from '../../../model/data/constraint';
 import {AttributeQueryItem} from '../../../../shared/top-panel/search-box/query-item/model/attribute.query-item';
@@ -41,6 +41,8 @@ import {LinkAttributeQueryItem} from '../../../../shared/top-panel/search-box/qu
 import {Workspace} from '../workspace';
 import {MapPosition} from '../../maps/map.model';
 import {formatMapCoordinates} from '../../maps/map-coordinates';
+import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+import {QueryAttribute} from '../../../model/query-attribute';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -408,4 +410,43 @@ export function mapPositionPathParams(position: MapPosition): Record<string, any
     ...(position.pitch ? {mp: position.pitch.toFixed(1)} : undefined),
     mz: position.zoom.toFixed(2),
   };
+}
+
+export function checkOrTransformQueryAttribute<T extends QueryAttribute>(
+  queryAttribute: T,
+  attributesResourcesOrder: AttributesResource[]
+): T {
+  if (!queryAttribute) {
+    return queryAttribute;
+  }
+
+  const attributesResource = attributesResourcesOrder[queryAttribute.resourceIndex];
+  if (
+    attributesResource &&
+    attributesResource.id === queryAttribute.resourceId &&
+    getAttributesResourceType(attributesResource) === queryAttribute.resourceType
+  ) {
+    const attribute = findAttribute(attributesResource.attributes, queryAttribute.attributeId);
+    if (attribute) {
+      return queryAttribute;
+    }
+  } else {
+    const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
+      ar => ar.id === queryAttribute.resourceId && getAttributesResourceType(ar) === queryAttribute.resourceType
+    );
+    if (newAttributesResourceIndex >= 0) {
+      const attribute = findAttribute(
+        attributesResourcesOrder[newAttributesResourceIndex].attributes,
+        queryAttribute.attributeId
+      );
+      if (attribute) {
+        return {...queryAttribute, resourceIndex: newAttributesResourceIndex};
+      }
+    }
+  }
+  return null;
+}
+
+function findAttribute(attributes: Attribute[], attributeId: string): Attribute {
+  return (attributes || []).find(attr => attr.id === attributeId);
 }

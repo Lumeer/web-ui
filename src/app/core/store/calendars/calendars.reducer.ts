@@ -26,7 +26,7 @@ export function calendarsReducer(
 ): CalendarsState {
   switch (action.type) {
     case CalendarsActionType.ADD_CALENDAR:
-      return calendarsAdapter.addOne(action.payload.calendar, state);
+      return calendarsAdapter.upsertOne(action.payload.calendar, state);
     case CalendarsActionType.REMOVE_CALENDAR:
       return calendarsAdapter.removeOne(action.payload.calendarId, state);
     case CalendarsActionType.SET_CONFIG:

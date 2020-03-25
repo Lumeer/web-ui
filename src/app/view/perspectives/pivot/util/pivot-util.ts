@@ -29,13 +29,12 @@ import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
+  checkOrTransformQueryAttribute,
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
 import {AttributesResource} from '../../../../core/model/resource';
-import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
 
@@ -133,34 +132,9 @@ function checkOrTransformPivotAttributes<T extends PivotAttribute>(
     return pivotAttributes;
   }
 
-  return pivotAttributes.reduce((array, pivotAttribute) => {
-    const attributesResource = attributesResourcesOrder[pivotAttribute.resourceIndex];
-    if (
-      attributesResource &&
-      attributesResource.id === pivotAttribute.resourceId &&
-      getAttributesResourceType(attributesResource) === pivotAttribute.resourceType
-    ) {
-      const attribute = findAttribute(attributesResource.attributes, pivotAttribute.attributeId);
-      if (attribute) {
-        array.push(pivotAttribute);
-      }
-    } else {
-      const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
-        ar => ar.id === pivotAttribute.resourceId && getAttributesResourceType(ar) === pivotAttribute.resourceType
-      );
-      if (newAttributesResourceIndex >= 0) {
-        const attribute = findAttribute(
-          attributesResourcesOrder[newAttributesResourceIndex].attributes,
-          pivotAttribute.attributeId
-        );
-        if (attribute) {
-          array.push({...pivotAttribute, resourceIndex: newAttributesResourceIndex});
-        }
-      }
-    }
-
-    return array;
-  }, []);
+  return pivotAttributes
+    .map(pivotAttribute => checkOrTransformQueryAttribute(pivotAttribute, attributesResourcesOrder))
+    .filter(attribute => !!attribute);
 }
 
 export function createDefaultPivotConfig(query: Query): PivotConfig {

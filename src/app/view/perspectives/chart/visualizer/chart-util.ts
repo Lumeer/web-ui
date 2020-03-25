@@ -25,7 +25,10 @@ import {DataAggregationType} from '../../../../shared/utils/data/data-aggregatio
 import {AttributesResource} from '../../../../core/model/resource';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
-import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query/query.util';
+import {
+  checkOrTransformQueryAttribute,
+  queryStemAttributesResourcesOrder,
+} from '../../../../core/store/navigation/query/query.util';
 
 export function convertChartDateTickFormat(format: string): string {
   if (!format) {
@@ -63,7 +66,7 @@ export function checkOrTransformChartConfig(
   const names = checkOrTransformChartAxisMap(config.names, attributesResourcesOrder);
   const sort = config.sort && {
     ...config.sort,
-    axis: checkOrTransformChartAxis(config.sort.axis, attributesResourcesOrder),
+    axis: checkOrTransformQueryAttribute(config.sort.axis, attributesResourcesOrder),
   };
 
   return {...config, axes, names, sort};
@@ -80,46 +83,13 @@ function checkOrTransformChartAxisMap(
   return Object.entries(axisMap)
     .filter(([, axis]) => !!axis)
     .reduce((map, [type, axis]) => {
-      const newAxis = checkOrTransformChartAxis(axis, attributesResourcesOrder);
+      const newAxis = checkOrTransformQueryAttribute(axis, attributesResourcesOrder);
       if (newAxis) {
         map[type] = axis;
       }
 
       return map;
     }, {});
-}
-
-function checkOrTransformChartAxis(axis: ChartAxis, attributesResourcesOrder: AttributesResource[]): ChartAxis {
-  if (!axis) {
-    return axis;
-  }
-
-  const attributesResource = attributesResourcesOrder[axis.resourceIndex];
-  if (
-    attributesResource &&
-    attributesResource.id === axis.resourceId &&
-    getAttributesResourceType(attributesResource) === axis.resourceType
-  ) {
-    const attribute = findAttribute(attributesResource.attributes, axis.attributeId);
-    if (attribute) {
-      return axis;
-    }
-  } else {
-    const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
-      ar => ar.id === axis.resourceId && getAttributesResourceType(ar) === axis.resourceType
-    );
-    if (newAttributesResourceIndex >= 0) {
-      const attribute = findAttribute(
-        attributesResourcesOrder[newAttributesResourceIndex].attributes,
-        axis.attributeId
-      );
-      if (attribute) {
-        return {...axis, resourceIndex: newAttributesResourceIndex};
-      }
-    }
-  }
-
-  return null;
 }
 
 function createDefaultConfig(): ChartConfig {

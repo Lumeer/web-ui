@@ -22,8 +22,6 @@ import {CommonModule} from '@angular/common';
 import {CalendarPropertyItemsPipe} from './calendar-property-items.pipe';
 import {CalendarPropertyPlaceholderPipe} from './calendar-property-placeholder.pipe';
 import {CalendarValuePropertyPipe} from './calendar-value-property.pipe';
-import {CalendarRequiredPropertiesSetPipe} from './calendar-required-properties-set.pipe';
-import {CalendarModesToSelectPipe} from './calendar-modes-to-select.pipe';
 import {FirstDayOfWeekPipe} from './first-day-of-week.pipe';
 
 @NgModule({
@@ -32,17 +30,8 @@ import {FirstDayOfWeekPipe} from './first-day-of-week.pipe';
     CalendarPropertyItemsPipe,
     CalendarPropertyPlaceholderPipe,
     CalendarValuePropertyPipe,
-    CalendarRequiredPropertiesSetPipe,
-    CalendarModesToSelectPipe,
     FirstDayOfWeekPipe,
   ],
-  exports: [
-    CalendarPropertyItemsPipe,
-    CalendarPropertyPlaceholderPipe,
-    CalendarValuePropertyPipe,
-    CalendarRequiredPropertiesSetPipe,
-    CalendarModesToSelectPipe,
-    FirstDayOfWeekPipe,
-  ],
+  exports: [CalendarPropertyItemsPipe, CalendarPropertyPlaceholderPipe, CalendarValuePropertyPipe, FirstDayOfWeekPipe],
 })
 export class CalendarPipesModule {}

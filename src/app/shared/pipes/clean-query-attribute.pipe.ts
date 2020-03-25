@@ -18,26 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {
-  CalendarBarPropertyOptional,
-  CalendarBarPropertyRequired,
-  CalendarStemConfig,
-} from '../../../../core/store/calendars/calendar';
+import {cleanQueryAttribute, QueryAttribute} from '../../core/model/query-attribute';
 
 @Pipe({
-  name: 'calendarRequiredPropertiesSet',
+  name: 'cleanQueryAttribute',
 })
-export class CalendarRequiredPropertiesSetPipe implements PipeTransform {
-  public transform(config: CalendarStemConfig, propertyOptional: CalendarBarPropertyOptional): boolean {
-    const requiredProperties = this.requiredProperties(propertyOptional);
-    return config && config.barsProperties && requiredProperties.every(property => !!config.barsProperties[property]);
-  }
-
-  private requiredProperties(property: CalendarBarPropertyOptional): string[] {
-    if (property === CalendarBarPropertyOptional.EndDate) {
-      return [CalendarBarPropertyRequired.StartDate];
-    }
-
-    return Object.values(CalendarBarPropertyRequired);
+export class CleanQueryAttributePipe implements PipeTransform {
+  public transform(model: QueryAttribute): QueryAttribute {
+    return model && cleanQueryAttribute(model);
   }
 }
