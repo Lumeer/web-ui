@@ -27,12 +27,7 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {map, mergeMap, take, tap} from 'rxjs/operators';
-import {
-  CalendarBarPropertyOptional,
-  CalendarBarPropertyRequired,
-  CalendarConfig,
-  CalendarStemConfig,
-} from '../../../core/store/calendars/calendar';
+import {CalendarConfig, CalendarStemConfig} from '../../../core/store/calendars/calendar';
 import {
   DEFAULT_EVENT_DURATION,
   isAllDayEvent,
@@ -99,8 +94,8 @@ export class CalendarEventDetailModalComponent implements OnInit {
   private checkIsAllDay(stemIndex: number, document: DocumentModel) {
     const stemConfig = this.getStemConfig(stemIndex);
     if (stemConfig) {
-      const startProperty = stemConfig.barsProperties?.[CalendarBarPropertyRequired.StartDate];
-      const endProperty = stemConfig.barsProperties?.[CalendarBarPropertyOptional.EndDate];
+      const startProperty = stemConfig.start;
+      const endProperty = stemConfig.end;
 
       const start = parseCalendarEventDate(startProperty && document.data[startProperty.attributeId]);
       const end = parseCalendarEventDate(endProperty && document.data[endProperty.attributeId]);
@@ -126,21 +121,16 @@ export class CalendarEventDetailModalComponent implements OnInit {
         const data = {};
 
         const stemConfig = this.getStemConfig(stemIndex);
-        if (stemConfig) {
-          const titleProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyRequired.Name];
-          if (titleProperty) {
-            data[titleProperty.attributeId] = this.getInitialTitleName();
-          }
+        if (stemConfig?.name) {
+          data[stemConfig.name.attributeId] = this.getInitialTitleName();
+        }
 
-          const startProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyRequired.StartDate];
-          if (startProperty) {
-            data[startProperty.attributeId] = this.start;
-          }
+        if (stemConfig?.start) {
+          data[stemConfig.end.attributeId] = this.start;
+        }
 
-          const endProperty = (stemConfig.barsProperties || {})[CalendarBarPropertyOptional.EndDate];
-          if (endProperty) {
-            data[endProperty.attributeId] = this.end;
-          }
+        if (stemConfig?.end) {
+          data[stemConfig.end.attributeId] = this.end;
         }
         return {data, collectionId: collection?.id};
       }),
@@ -162,8 +152,8 @@ export class CalendarEventDetailModalComponent implements OnInit {
     const data = {};
     const stemConfig = this.getStemConfig(this.stemIndex$.value);
     if (stemConfig) {
-      const startProperty = stemConfig.barsProperties?.[CalendarBarPropertyRequired.StartDate];
-      const endProperty = stemConfig.barsProperties?.[CalendarBarPropertyOptional.EndDate];
+      const startProperty = stemConfig.start;
+      const endProperty = stemConfig.end;
       let newStart = null;
       if (startProperty) {
         if (allDay) {

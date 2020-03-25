@@ -19,17 +19,26 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectQuery, selectQueryWithoutLinks} from '../../../core/store/navigation/navigation.state';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {
-  selectCollectionsByCustomQuery,
   selectCollectionsByQuery,
-  selectDocumentsByCustomQuery,
+  selectDocumentsAndLinksByQuery,
+  selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
-import {View, ViewConfig} from '../../../core/store/views/view';
+import {
+  distinctUntilChanged,
+  map,
+  mergeMap,
+  pairwise,
+  startWith,
+  switchMap,
+  take,
+  withLatestFrom,
+} from 'rxjs/operators';
+import {View} from '../../../core/store/views/view';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
@@ -42,8 +51,13 @@ import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/coll
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {calendarConfigIsEmpty, checkOrTransformCalendarConfig} from './util/calendar-util';
+import {checkOrTransformCalendarConfig} from './util/calendar-util';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'calendar',
@@ -52,8 +66,10 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
-  public documents$: Observable<DocumentModel[]>;
   public collections$: Observable<Collection[]>;
+  public documents$: Observable<DocumentModel[]>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
+  public linkTypes$: Observable<LinkType[]>;
   public config$: Observable<CalendarConfig>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
@@ -61,86 +77,109 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
+  private calendarId: string;
 
   private subscriptions = new Subscription();
-  private calendarId = DEFAULT_CALENDAR_ID;
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(
+    private store$: Store<AppState>,
+    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
+    private i18n: I18n
+  ) {}
 
   public ngOnInit() {
     this.initCalendar();
     this.subscribeToQuery();
     this.subscribeData();
+    this.setupSidebar();
   }
 
   private initCalendar() {
     const subscription = this.store$
       .pipe(
         select(selectCurrentView),
-        withLatestFrom(this.store$.pipe(select(selectCalendarById(this.calendarId)))),
-        withLatestFrom(this.store$.pipe(select(selectSidebarOpened)))
+        startWith(null as View),
+        pairwise(),
+        switchMap(([previousView, view]) =>
+          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
+        )
       )
-      .subscribe(([[view, calendar], sidebarOpened]) => {
-        if (calendar) {
-          this.refreshCalendar(view && view.config);
-        } else {
-          this.createCalendar(view, sidebarOpened);
+      .subscribe(({calendarId, config}: {calendarId?: string; config?: CalendarConfig}) => {
+        if (calendarId) {
+          this.calendarId = calendarId;
+          this.store$.dispatch(new CalendarsAction.AddCalendar({calendar: {id: calendarId, config}}));
         }
       });
     this.subscriptions.add(subscription);
   }
 
-  private refreshCalendar(viewConfig: ViewConfig) {
-    if (viewConfig && viewConfig.calendar) {
-      this.store$.dispatch(new CalendarsAction.SetConfig({calendarId: this.calendarId, config: viewConfig.calendar}));
-    }
+  private subscribeToView(previousView: View, view: View): Observable<{calendarId?: string; config?: CalendarConfig}> {
+    const calendarId = view.code;
+    return this.store$.pipe(
+      select(selectCalendarById(calendarId)),
+      take(1),
+      mergeMap(calendarEntity => {
+        const calendarConfig = view.config && view.config.calendar;
+        if (preferViewConfigUpdate(previousView, view, !!calendarEntity)) {
+          return this.checkCalendarConfig(calendarConfig).pipe(map(config => ({calendarId, config})));
+        }
+        return of({calendarId, config: calendarEntity?.config || calendarConfig});
+      })
+    );
   }
 
-  private createCalendar(view: View, sidebarOpened: boolean) {
-    combineLatest([this.store$.pipe(select(selectQuery)), this.store$.pipe(select(selectCollectionsByQuery))])
-      .pipe(take(1))
-      .subscribe(([query, collections]) => {
-        const config = checkOrTransformCalendarConfig(view && view.config && view.config.calendar, query, collections);
-        const calendar = {id: this.calendarId, config};
-        this.store$.dispatch(new CalendarsAction.AddCalendar({calendar}));
-        this.setupSidebar(view, config, sidebarOpened);
-      });
+  private checkCalendarConfig(config: CalendarConfig): Observable<CalendarConfig> {
+    return combineLatest([
+      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectCollectionsByQuery)),
+      this.store$.pipe(select(selectLinkTypesByQuery)),
+    ]).pipe(
+      take(1),
+      map(([query, collections, linkTypes]) => checkOrTransformCalendarConfig(config, query, collections, linkTypes))
+    );
   }
 
-  private setupSidebar(view: View, config: CalendarConfig, opened: boolean) {
-    if (!view || calendarConfigIsEmpty(config)) {
-      this.sidebarOpened$.next(true);
-    } else {
-      this.sidebarOpened$.next(opened);
-    }
+  private subscribeToDefault(): Observable<{calendarId?: string; config?: CalendarConfig}> {
+    const calendarId = DEFAULT_CALENDAR_ID;
+    return this.store$.pipe(
+      select(selectQuery),
+      withLatestFrom(this.store$.pipe(select(selectCalendarById(calendarId)))),
+      mergeMap(([, gantt]) => this.checkCalendarConfig(gantt?.config)),
+      map(config => ({calendarId, config}))
+    );
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQueryWithoutLinks)).subscribe(query => {
+    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
       this.query$.next(query);
-      this.fetchDocuments(query);
-      this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(query)));
-      this.collections$ = this.store$.pipe(select(selectCollectionsByCustomQuery(query)));
-      this.permissions$ = this.collections$.pipe(
-        mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-        distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-      );
+      this.fetchData(query);
     });
     this.subscriptions.add(subscription);
   }
 
-  private fetchDocuments(query: Query) {
+  private fetchData(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
   }
 
   private subscribeData() {
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
+    this.permissions$ = this.collections$.pipe(
+      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+    );
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public onConfigChanged(config: CalendarConfig) {
-    this.store$.dispatch(new CalendarsAction.SetConfig({calendarId: this.calendarId, config}));
+    if (this.calendarId) {
+      this.store$.dispatch(new CalendarsAction.SetConfig({calendarId: this.calendarId, config}));
+    }
   }
 
   public patchDocumentData(document: DocumentModel) {
@@ -149,12 +188,41 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
-    this.store$.dispatch(new CalendarsAction.RemoveCalendar({calendarId: this.calendarId}));
   }
 
   public onSidebarToggle() {
     const opened = !this.sidebarOpened$.getValue();
     this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
     this.sidebarOpened$.next(opened);
+  }
+
+  public patchLinkInstanceData(linkInstance: LinkInstance) {
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+  }
+
+  public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
+    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments(payload));
+  }
+
+  public createDocumentsChain(data: {documents: DocumentModel[]; linkInstances: LinkInstance[]}) {
+    const failureMessage = this.i18n({
+      id: '@@perspective.calendar.create.event.failure',
+      value: 'Could not create event',
+    });
+    this.store$.dispatch(new DocumentsAction.CreateChain({...data, failureMessage}));
+  }
+
+  private setupSidebar() {
+    this.store$
+      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
+      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
+  }
+
+  private openOrCloseSidebar(view: View, opened: boolean) {
+    if (view) {
+      this.sidebarOpened$.next(opened);
+    } else {
+      this.sidebarOpened$.next(true);
+    }
   }
 }

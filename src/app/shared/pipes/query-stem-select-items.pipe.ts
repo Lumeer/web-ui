@@ -18,18 +18,18 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryStem} from '../../../../core/store/navigation/query/query';
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query/query.util';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {GanttChartBarModel} from '../../../../core/store/gantt-charts/gantt-chart';
+import {QueryStem} from '../../core/store/navigation/query/query';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {AttributesResourceType} from '../../core/model/resource';
+import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/query/query.util';
+import {SelectItemModel} from '../select/select-item/select-item.model';
+import {GanttChartBarModel} from '../../core/store/gantt-charts/gantt-chart';
 
 @Pipe({
-  name: 'ganttChartSelectItems',
+  name: 'queryStemSelectItems',
 })
-export class GanttChartSelectItemsPipe implements PipeTransform {
+export class QueryStemSelectItemsPipe implements PipeTransform {
   public transform(stem: QueryStem, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
     if (!stem) {
       return [];

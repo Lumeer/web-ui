@@ -1,6 +1,8 @@
-<calendar-collection-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
-                            class="d-block mt-4"
-                            [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
-                            [collection]="collections | collectionById:stem.collectionId"
-                            (configChange)="onCollectionConfigChange($event, stem, index)">
-</calendar-collection-config>
+<calendar-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
+                      class="d-block mt-4"
+                      [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
+                      [collection]="collections | collectionById:stem.collectionId"
+                      [stem]="stem"
+                      [selectItems]="stem | queryStemSelectItems:collections:linkTypes"
+                      (configChange)="onStemConfigChange($event, stem, index)">
+</calendar-stem-config>

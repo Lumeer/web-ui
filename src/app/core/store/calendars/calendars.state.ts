@@ -21,6 +21,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {Calendar, DEFAULT_CALENDAR_ID} from './calendar';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface CalendarsState extends EntityState<Calendar> {}
 
@@ -35,5 +36,10 @@ export const selectCalendarsDictionary = createSelector(
 );
 export const selectCalendarById = id => createSelector(selectCalendarsDictionary, calendars => calendars[id]);
 
-export const selectDefaultCalendar = selectCalendarById(DEFAULT_CALENDAR_ID);
-export const selectCalendarConfig = createSelector(selectDefaultCalendar, calendar => calendar && calendar.config);
+export const selectCalendarId = createSelector(
+  selectWorkspace,
+  workspace => (workspace && workspace.viewCode) || DEFAULT_CALENDAR_ID
+);
+
+export const selectCalendar = createSelector(selectCalendarsDictionary, selectCalendarId, (map, id) => map[id]);
+export const selectCalendarConfig = createSelector(selectCalendar, calendar => calendar?.config);

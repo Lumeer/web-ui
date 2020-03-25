@@ -60,6 +60,7 @@ import {TablesAction} from '../../core/store/tables/tables.action';
 import {PivotsAction} from '../../core/store/pivots/pivots.action';
 import {MapsAction} from '../../core/store/maps/maps.action';
 import {GanttChartAction} from '../../core/store/gantt-charts/gantt-charts.action';
+import {CalendarsAction} from '../../core/store/calendars/calendars.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -302,6 +303,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         const mapConfig = view.config && view.config.map;
         this.revertQueryWithUrl(workspacePath, view.query);
         this.store$.dispatch(new MapsAction.CreateMap({mapId: view.code, config: mapConfig}));
+        return;
+      case Perspective.Calendar:
+        const calendarConfig = view.config && view.config.calendar;
+        this.revertQueryWithUrl(workspacePath, view.query);
+        this.store$.dispatch(new CalendarsAction.SetConfig({calendarId: view.code, config: calendarConfig}));
         return;
     }
   }

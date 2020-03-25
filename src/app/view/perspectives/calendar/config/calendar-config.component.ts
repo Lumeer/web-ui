@@ -23,6 +23,7 @@ import {CalendarStemConfig, CalendarConfig} from '../../../../core/store/calenda
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {getCalendarDefaultStemConfig} from '../util/calendar-util';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'calendar-config',
@@ -37,6 +38,9 @@ export class CalendarConfigComponent {
   public config: CalendarConfig;
 
   @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
   public query: Query;
 
   @Output()
@@ -44,7 +48,7 @@ export class CalendarConfigComponent {
 
   public readonly defaultStemConfig = getCalendarDefaultStemConfig();
 
-  public onCollectionConfigChange(stemConfig: CalendarStemConfig, stem: QueryStem, index: number) {
+  public onStemConfigChange(stemConfig: CalendarStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<CalendarConfig>(this.config);
     config.stemsConfigs[index] = {...stemConfig, stem};
     this.configChange.emit(config);

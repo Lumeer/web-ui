@@ -18,23 +18,25 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {
-  CalendarBar,
-  CalendarBarProperty,
-  CalendarBarPropertyOptional,
-  CalendarBarPropertyRequired,
-  CalendarStemConfig,
-} from '../../../../../core/store/calendars/calendar';
+import {CalendarBar, CalendarStemConfig} from '../../../../../core/store/calendars/calendar';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {QueryStem} from '../../../../../core/store/navigation/query/query';
+import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 
 @Component({
-  selector: 'calendar-collection-config',
-  templateUrl: './calendar-collection-config.component.html',
+  selector: 'calendar-stem-config',
+  templateUrl: './calendar-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CalendarCollectionConfigComponent {
+export class CalendarStemConfigComponent {
+  @Input()
+  public selectItems: SelectItemModel[];
+
   @Input()
   public collection: Collection;
+
+  @Input()
+  public stem: QueryStem;
 
   @Input()
   public config: CalendarStemConfig;
@@ -42,28 +44,17 @@ export class CalendarCollectionConfigComponent {
   @Output()
   public configChange = new EventEmitter<CalendarStemConfig>();
 
-  public readonly calendarBarsPropertiesRequired = Object.values(CalendarBarPropertyRequired);
-  public readonly calendarBarsPropertiesOptional = Object.values(CalendarBarPropertyOptional);
+  public readonly properties = ['name', 'start', 'end', 'color'];
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
-  public onBarPropertySelect(type: CalendarBarProperty, bar: CalendarBar) {
-    const bars = {...this.config.barsProperties, [type]: bar};
-    const newConfig: CalendarStemConfig = {...this.config, barsProperties: bars};
+  public onBarPropertySelect(type: string, bar: CalendarBar) {
+    const newConfig = {...this.config, [type]: bar};
     this.configChange.emit(newConfig);
   }
 
-  public onBarPropertyRemoved(type: CalendarBarProperty) {
-    const bars = {...this.config.barsProperties};
-    delete bars[type];
-    this.removeOptionalProperties(bars, type);
-
-    const newConfig: CalendarStemConfig = {...this.config, barsProperties: bars};
+  public onBarPropertyRemoved(type: string) {
+    const newConfig = {...this.config};
+    delete newConfig[type];
     this.configChange.emit(newConfig);
-  }
-
-  private removeOptionalProperties(bars: Record<string, CalendarBar>, type: CalendarBarProperty) {
-    if (type === CalendarBarPropertyRequired.StartDate) {
-      delete bars[CalendarBarPropertyOptional.EndDate];
-    }
   }
 }

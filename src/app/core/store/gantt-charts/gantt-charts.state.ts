@@ -42,4 +42,4 @@ export const selectGanttChartId = createSelector(
 );
 
 export const selectGanttChart = createSelector(selectGanttChartsDictionary, selectGanttChartId, (map, id) => map[id]);
-export const selectGanttChartConfig = createSelector(selectGanttChart, ganttChart => ganttChart && ganttChart.config);
+export const selectGanttChartConfig = createSelector(selectGanttChart, ganttChart => ganttChart?.config);

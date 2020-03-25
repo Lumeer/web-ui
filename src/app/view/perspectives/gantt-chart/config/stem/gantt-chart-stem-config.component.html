@@ -7,7 +7,7 @@
 
   <select-item class="d-block w-100 mt-2"
                [items]="selectItems | ganttChartPropertyItems:property:config"
-               [selectedId]="config[property] | cleanGanttModel"
+               [selectedId]="config[property] | cleanQueryAttribute"
                [placeholderText]="property | ganttChartBarPlaceholder"
                [emptyValue]="property | ganttChartBarEmptyValue"
                [removable]="true"

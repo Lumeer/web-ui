@@ -102,6 +102,24 @@ export class CalendarVisualizationComponent implements OnChanges {
     if (changes.currentDate && this.currentDate && !this.defaultDate) {
       this.defaultDate = this.currentDate;
     }
+    if (changes.currentMode || changes.currentDate) {
+      this.checkCalendarModeChanged();
+    }
+  }
+
+  private checkCalendarModeChanged() {
+    const currentView = this.calendarComponent?.getApi()?.view?.type;
+    const currentMode = this.calendarModeByDefaultView(currentView);
+    const currentDate = this.calendarComponent?.getApi()?.getDate();
+
+    if (
+      currentMode &&
+      currentDate &&
+      this.currentDate &&
+      (currentMode !== this.currentMode || currentDate.getTime() !== this.currentDate.getTime())
+    ) {
+      this.calendarComponent.getApi().changeView(this.calendarModesMap[this.currentMode], this.currentDate);
+    }
   }
 
   public onEventClick(data: {event: CalendarEvent}) {

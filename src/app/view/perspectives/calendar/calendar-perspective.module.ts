@@ -26,7 +26,7 @@ import {CalendarPerspectiveRoutingModule} from './calendar-perspective-routing.m
 import {CalendarConfigComponent} from './config/calendar-config.component';
 import {CalendarPipesModule} from './pipes/calendar-pipes.module';
 import {PopoverModule} from 'ngx-bootstrap/popover';
-import {CalendarCollectionConfigComponent} from './config/collection-config/calendar-collection-config.component';
+import {CalendarStemConfigComponent} from './config/stem-config/calendar-stem-config.component';
 import {CalendarEventsComponent} from './events/calendar-events.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
 import {FullCalendarModule} from '@fullcalendar/angular';
@@ -46,7 +46,7 @@ import {CalendarVisualizationComponent} from './events/visualization/calendar-vi
   declarations: [
     CalendarPerspectiveComponent,
     CalendarConfigComponent,
-    CalendarCollectionConfigComponent,
+    CalendarStemConfigComponent,
     CalendarEventsComponent,
     CalendarVisualizationComponent,
   ],

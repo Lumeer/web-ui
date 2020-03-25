@@ -33,7 +33,7 @@ import {
 import {Constraint} from '../../../../core/model/constraint';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {CalendarBarPropertyRequired, CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
+import {CalendarConfig, CalendarMode} from '../../../../core/store/calendars/calendar';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {debounceTime, filter, map} from 'rxjs/operators';
@@ -45,6 +45,8 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {CalendarEventDetailModalComponent} from '../../../../shared/modal/calendar-event-detail/calendar-event-detail-modal.component';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {CalendarEvent, CalendarMetaData} from '../util/calendar-event';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 
 interface Data {
   collections: Collection[];
@@ -63,6 +65,12 @@ interface Data {
 export class CalendarEventsComponent implements OnInit, OnChanges {
   @Input()
   public collections: Collection[];
+
+  @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
+  public linkInstances: LinkInstance[];
 
   @Input()
   public documents: DocumentModel[];
@@ -110,7 +118,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   private handleData(data: Data): CalendarEvent[] {
-    const config = checkOrTransformCalendarConfig(data.config, data.query, data.collections);
+    const config = checkOrTransformCalendarConfig(data.config, data.query, data.collections, []);
     if (!deepObjectsEquals(config, data.config)) {
       this.configChange.emit(config);
     }
@@ -209,12 +217,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private collectionHasConfig(collectionId: string): boolean {
     return (this.config.stemsConfigs || []).some(
-      config =>
-        config.stem &&
-        config.stem.collectionId === collectionId &&
-        config.barsProperties &&
-        !!config.barsProperties[CalendarBarPropertyRequired.Name] &&
-        !!config.barsProperties[CalendarBarPropertyRequired.StartDate]
+      config => config.stem?.collectionId === collectionId && config.name && config.start
     );
   }
 

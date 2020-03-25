@@ -17,7 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CalendarMode} from './calendar';
+import {CalendarBar, CalendarConfigVersion, CalendarMode} from './calendar';
+import {QueryStem} from '../navigation/query/query';
+
+export interface CalendarConfigV1 {
+  date: Date;
+  mode: CalendarMode;
+  stemsConfigs: CalendarStemConfigV1[];
+  version: CalendarConfigVersion;
+}
+
+export interface CalendarStemConfigV1 {
+  stem?: QueryStem;
+  barsProperties?: Record<string, CalendarBar>;
+}
 
 export interface CalendarConfigV0 {
   date: Date;
