@@ -91,6 +91,7 @@
                   <executable>./sentry-upload-sourcemaps.sh</executable>
                   <workingDirectory>${basedir}</workingDirectory>
                   <environmentVariables>
+                    <SOURCE_ROOT>/${source.root}/</SOURCE_ROOT>
                     <PUBLIC_PATH>/${public.path}/</PUBLIC_PATH>
                   </environmentVariables>
                 </configuration>
