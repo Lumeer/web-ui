@@ -32,4 +32,4 @@ then
 fi
 
 ./node_modules/.bin/sentry-cli releases new $BUILD_NUMBER \
-  && ./node_modules/.bin/sentry-cli releases files $BUILD_NUMBER upload-sourcemaps --no-rewrite --url-prefix https://get.lumeer.io$PUBLIC_PATH ./dist/lumeer
+  && ./node_modules/.bin/sentry-cli releases files $BUILD_NUMBER upload-sourcemaps --no-rewrite --url-prefix https://get.lumeer.io$SOURCE_ROOT ./dist/lumeer$SOURCE_ROOT
