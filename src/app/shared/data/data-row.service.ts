@@ -189,7 +189,7 @@ export class DataRowService {
     if (this.isCollectionResource) {
       action = new DocumentsAction.UpdateData({document: {...(<DocumentModel>this.dataResource), data}});
     } else {
-      // action = new LinkInstancesAction.UpdateData({linkInstance: {...<LinkInstance>this.dataResource, data}});
+      action = new LinkInstancesAction.UpdateData({linkInstance: {...(<LinkInstance>this.dataResource), data}});
     }
 
     const message = this.i18n({
@@ -249,7 +249,7 @@ export class DataRowService {
       if (this.isCollectionResource) {
         this.store$.dispatch(new DocumentsAction.UpdateData({document: <DocumentModel>newDataResource}));
       } else {
-        // this.store$.dispatch(new LinkInstancesAction.UpdateData({linkInstance: <LinkInstance>newDataResource}));
+        this.store$.dispatch(new LinkInstancesAction.UpdateData({linkInstance: <LinkInstance>newDataResource}));
       }
     }
   }
@@ -289,7 +289,7 @@ export class DataRowService {
           new LinkTypesAction.CreateAttributes({
             linkTypeId: (<LinkInstance>this.dataResource).linkTypeId,
             attributes: [newAttribute],
-            // TODO on success or next action
+            nextAction: new LinkInstancesAction.UpdateData({linkInstance: <LinkInstance>newDataResource}),
           })
         );
       }

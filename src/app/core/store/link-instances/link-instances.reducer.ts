@@ -35,7 +35,9 @@ export function linkInstancesReducer(
     case LinkInstancesActionType.PATCH_DATA_INTERNAL:
       return patchData(state, action);
     case LinkInstancesActionType.UPDATE_INTERNAL:
-      return updateLinkInstance(state, action);
+      return updateLinkInstance(state, action.payload.linkInstance);
+    case LinkInstancesActionType.UPDATE_DATA_INTERNAL:
+      return updateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.UPDATE_SUCCESS:
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.UPDATE_FAILURE:
@@ -58,11 +60,11 @@ export function linkInstancesReducer(
   }
 }
 
-function updateLinkInstance(state: LinkInstancesState, action: LinkInstancesAction.UpdateInternal): LinkInstancesState {
+function updateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstance): LinkInstancesState {
   return linkInstancesAdapter.upsertOne(
     {
-      ...action.payload.linkInstance,
-      dataVersion: action.payload.linkInstance.dataVersion + 1,
+      ...linkInstance,
+      dataVersion: linkInstance.dataVersion + 1,
     },
     state
   );

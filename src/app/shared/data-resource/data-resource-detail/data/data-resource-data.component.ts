@@ -43,7 +43,7 @@ import {DataResourceDataRowComponent} from './row/data-resource-data-row.compone
 import {filterUnusedAttributes} from '../../../utils/attribute.utils';
 import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
 import {DataRowFocusService} from '../../../data/data-row-focus-service';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of, Subscription} from 'rxjs';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -110,6 +110,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   public dataResource$: Observable<DataResource>;
 
   private dataRowFocusService: DataRowFocusService;
+  private subscriptions = new Subscription();
 
   constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
     this.dataRowService.shouldSetupAllAttributes(true);
@@ -122,7 +123,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnInit() {
-    this.dataRowService.rows$.asObservable().subscribe(() => {
+    const subscription = this.dataRowService.rows$.subscribe(rows => {
       const currentDataResource = this.getCurrentDataResource();
       const unusedAttributes = filterUnusedAttributes(
         this.resource && this.resource.attributes,
@@ -131,6 +132,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
       this.unusedAttributes$.next(unusedAttributes);
       this.dataResourceChanged.emit(currentDataResource);
     });
+    this.subscriptions.add(subscription);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -182,6 +184,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
     this.dataRowService.destroy();
   }
 

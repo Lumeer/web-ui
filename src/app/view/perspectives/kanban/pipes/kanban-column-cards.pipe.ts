@@ -22,7 +22,6 @@ import {KanbanColumn, KanbanConfig, KanbanStemConfig} from '../../../../core/sto
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {KanbanCard} from '../columns/column/kanban-column.component';
-import {parseDateTimeDataValue} from '../../../../shared/utils/data.utils';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import * as moment from 'moment';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -30,6 +29,7 @@ import {ConstraintType} from '../../../../core/model/data/constraint';
 import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {createDateTimeOptions} from '../../../../shared/date-time/date-time-options';
+import {parseDateTimeByConstraint} from '../../../../shared/utils/date.utils';
 
 @Pipe({
   name: 'kanbanColumnCards',
@@ -90,7 +90,7 @@ export class KanbanColumnCardsPipe implements PipeTransform {
           expectedFormat = (constraint.config as DateTimeConstraintConfig).format;
         }
 
-        const parsedDate = parseDateTimeDataValue(document.data[stemConfig.dueDate.attributeId], expectedFormat);
+        const parsedDate = parseDateTimeByConstraint(document.data[stemConfig.dueDate.attributeId], constraint);
         const dueDate = this.checkDueDate(parsedDate, expectedFormat);
 
         return moment(dueDate).diff(moment(), 'hours', true);

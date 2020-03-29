@@ -27,7 +27,8 @@
                      [permissions]="permissions$ | async"
                      [constraintData]="constraintData$ | async"
                      [query]="data.query"
-                     (patchData)="patchDocumentData($event)"
+                     (patchDocumentData)="patchDocumentData($event)"
+                     (patchLinkData)="patchLinkInstanceData($event)"
                      (configChange)="onConfigChanged($event)">
     </calendar-events>
   </ng-container>

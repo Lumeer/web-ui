@@ -66,6 +66,7 @@ function convertCalendarDtoToModelV1(config: CalendarConfigV1): CalendarConfig {
   return {
     date: config.date,
     mode: config.mode,
+    list: false,
     version: CalendarConfigVersion.V2,
     stemsConfigs: (config.stemsConfigs || []).map(stemConfig => {
       const newConfig: CalendarStemConfig = {stem: stemConfig.stem};

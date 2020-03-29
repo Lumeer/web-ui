@@ -50,6 +50,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {Collection} from '../../../core/store/collections/collection';
 
 @Component({
+  selector: 'data-resource-detail-modal',
   templateUrl: './data-resource-detail-modal.component.html',
   styleUrls: ['./data-resource-detail-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

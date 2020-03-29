@@ -18,12 +18,9 @@
  */
 
 import Big from 'big.js';
-import * as moment from 'moment';
 import {isNullOrUndefined} from './common.utils';
-import {resetUnusedMomentPart} from './date.utils';
 import {Workspace} from '../../core/store/navigation/workspace';
 
-const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code', 'b', 'span'];
 
 export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true): string {
@@ -41,27 +38,6 @@ function stripFormattingHtmlTags(text: string, negative?: boolean): string {
   return (text || '')
     .replace(new RegExp(`<(${negativePart}\/?(${formattingTags.join('|')})\s*\/?)[^>]*>`, 'g'), negative ? ' ' : '')
     .trim();
-}
-
-export function parseDateTimeDataValue(value: any, expectedFormat?: string): Date {
-  if (!value) {
-    return value;
-  }
-
-  const momentDate = parseMomentDate(value, expectedFormat);
-  if (!momentDate.isValid()) {
-    return null;
-  }
-
-  return resetUnusedMomentPart(momentDate, expectedFormat).toDate();
-}
-
-export function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
-  const formats = [moment.ISO_8601, ...dateFormats];
-  if (expectedFormat) {
-    formats.splice(1, 0, expectedFormat);
-  }
-  return moment(value, formats);
 }
 
 export function formatUnknownDataValue(value: any, skipDecimal = false): string {

@@ -1,23 +1,29 @@
-<document-detail-modal [collection]="collection$ | async"
-                       [document]="document$ | async"
-                       [toolbarRef]="toolbar"
-                       (documentChanged)="onDocumentChanged($event)">
-</document-detail-modal>
+<data-resource-detail-modal [resource]="resource$ | async"
+                            [dataResource]="dataResource$ | async"
+                            [toolbarRef]="toolbar"
+                            [createDirectly]="true"
+                            (dataResourceChanged)="onDataResourceChanged($event)">
+</data-resource-detail-modal>
 
 <ng-template #toolbar>
 
-  <div class="d-flex flex-row flex-nowrap align-items-center mb-3">
+  <div class="d-flex flex-row flex-nowrap align-items-center mb-3" *ngIf="{
+  stemIndex: stemIndex$ | async,
+  collections: collections$ | async,
+  linkTypes: linkTypes$ | async
+  } as data">
 
-    <select-item *ngIf="!document"
+    <select-item *ngIf="!dataResource"
                  class="d-block mr-2"
-                 [items]="query$ | async | stemCollectionsItems:(collections$ | async):permissions"
+                 [items]="query$ | async | stemCollectionsItems:config:data.collections:data.linkTypes:(permissions$ | async)"
                  [removable]="false"
                  [fitParent]="false"
                  [selectedId]="stemIndex$ | async"
                  (select)="onStemIndexSelect($event)">
     </select-item>
 
-    <div class="custom-control custom-checkbox">
+    <div class="custom-control custom-checkbox"
+         *ngIf="config | canToggleAllDay:data.stemIndex:data.collections:data.linkTypes">
       <input id="allDayCheckbox"
              [attr.checked]="allDay$ | async"
              [checked]="allDay$ | async"

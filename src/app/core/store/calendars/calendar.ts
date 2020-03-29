@@ -30,6 +30,7 @@ export interface Calendar {
 export interface CalendarConfig {
   date: Date;
   mode: CalendarMode;
+  list?: boolean;
   stemsConfigs: CalendarStemConfig[];
   version?: CalendarConfigVersion;
 }

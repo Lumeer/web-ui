@@ -17,6 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CalendarStemConfig} from '../../../../core/store/calendars/calendar';
+import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
+
 export interface CalendarEvent {
   id?: string;
   groupId?: string;
@@ -26,7 +29,6 @@ export interface CalendarEvent {
   title: string;
   classNames?: string[];
 
-  editable: boolean;
   startEditable: boolean;
   durationEditable: boolean;
 
@@ -37,10 +39,10 @@ export interface CalendarEvent {
 }
 
 export interface CalendarMetaData {
-  documentId: string;
-  collectionId: string;
+  nameDataId: string;
+  startDataId: string;
+  endDataId: string;
+  stemConfig: CalendarStemConfig;
   stemIndex: number;
-  color: string;
-  startAttributeId: string;
-  endAttributeId: string;
+  dataResourcesChain: DataResourceChain[];
 }

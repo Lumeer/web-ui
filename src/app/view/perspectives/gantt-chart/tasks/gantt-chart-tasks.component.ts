@@ -409,17 +409,17 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   private patchDate(
-    date: string,
+    dateString: string,
     model: GanttChartBarModel,
     patchData: Record<string, any>,
     dataResource: DataResource = null
   ) {
-    const end = moment(date, this.options && this.options.dateFormat);
+    const date = moment(dateString, this.options && this.options.dateFormat).toDate();
     const resource = this.getResourceById(model.resourceId, model.resourceType);
     const constraint =
       findAttributeConstraint(resource && resource.attributes, model.attributeId) ||
       new DateTimeConstraint({format: this.options && this.options.dateFormat});
-    const dataValue: DataValue = constraint.createDataValue(end.toDate(), this.constraintData);
+    const dataValue: DataValue = constraint.createDataValue(date, this.constraintData);
     if (!dataResource || dataValue.compareTo(constraint.createDataValue(dataResource.data[model.attributeId])) !== 0) {
       patchData[model.attributeId] = dataValue.serialize();
     }
@@ -704,10 +704,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public onTaskDetail(task: GanttTask) {
     const metadata = task.metadata as GanttTaskMetadata;
-    const resourceType =
-      (metadata.stemConfig.name && metadata.stemConfig.name.resourceType) ||
-      (metadata.stemConfig.start && metadata.stemConfig.start.resourceType);
-    const dataResource = this.getDataResource(metadata.nameDataId, resourceType);
+    const resourceType = metadata.stemConfig.name?.resourceType || metadata.stemConfig.start?.resourceType;
+    const dataResource = this.getDataResource(metadata.nameDataId || metadata.startDataId, resourceType);
     if (dataResource) {
       this.openDataResourceModal(dataResource, resourceType);
     }
