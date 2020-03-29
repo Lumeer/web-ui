@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {Attribute, Collection, ImportedCollection} from './collection';
 import {Workspace} from '../navigation/workspace';
+import {DocumentsAction} from '../documents/documents.action';
 
 export enum CollectionsActionType {
   GET = '[Collections] Get',
@@ -239,7 +240,7 @@ export namespace CollectionsAction {
       public payload: {
         collectionId: string;
         attributes: Attribute[];
-        nextAction?: Action;
+        nextAction?: DocumentsAction.All;
         callback?: (attributes: Attribute[]) => void;
       }
     ) {}

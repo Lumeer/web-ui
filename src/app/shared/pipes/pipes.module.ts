@@ -47,7 +47,6 @@ import {LogPipe} from './log.pipe';
 import {NativeDatePipe} from './native-date.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
 import {PageSlicePipe} from './page-slice.pipe';
-import {ParseDatePipe} from './parse-date.pipe';
 import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PrefixPipe} from './prefix.pipe';
@@ -118,7 +117,6 @@ import {QueryStemSelectItemsPipe} from './query-stem-select-items.pipe';
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
-    ParseDatePipe,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,
@@ -189,7 +187,6 @@ import {QueryStemSelectItemsPipe} from './query-stem-select-items.pipe';
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
     DataPipesModule,
-    ParseDatePipe,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,

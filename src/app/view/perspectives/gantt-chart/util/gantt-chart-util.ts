@@ -43,6 +43,7 @@ import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/lin
 import {uniqueValues} from '../../../../shared/utils/array.utils';
 import {AllowedPermissions, mergeAllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
+import {queryAttributePermissions} from '../../../../core/model/query-attribute';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
@@ -283,36 +284,21 @@ function hasPermissionByConfig(
 ): boolean {
   let hasPermission = true;
   if (config.name) {
-    const permission = ganttModelPermissions(config.name, permissions, linkTypesMap);
+    const permission = queryAttributePermissions(config.name, permissions, linkTypesMap);
     hasPermission = hasPermission && permission && permission.writeWithView;
   }
 
   if (config.start) {
-    const permission = ganttModelPermissions(config.start, permissions, linkTypesMap);
+    const permission = queryAttributePermissions(config.start, permissions, linkTypesMap);
     hasPermission = hasPermission && permission.writeWithView;
   }
 
   if (config.end) {
-    const permission = ganttModelPermissions(config.end, permissions, linkTypesMap);
+    const permission = queryAttributePermissions(config.end, permissions, linkTypesMap);
     hasPermission = hasPermission && permission.writeWithView;
   }
 
   return hasPermission;
-}
-
-export function ganttModelPermissions(
-  model: GanttChartBarModel,
-  permissions: Record<string, AllowedPermissions>,
-  linkTypesMap: Record<string, LinkType>
-): AllowedPermissions {
-  if (model.resourceType === AttributesResourceType.Collection) {
-    return permissions[model.resourceId] && permissions[model.resourceId];
-  }
-  const linkType = linkTypesMap[model.resourceId];
-  if (linkType) {
-    return mergeAllowedPermissions(permissions[linkType.collectionIds[0]], permissions[linkType.collectionIds[1]]);
-  }
-  return {};
 }
 
 function ganttModelsAreAtDistance(

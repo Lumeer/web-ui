@@ -49,7 +49,7 @@ import {
   toNumber,
 } from '../../../../../shared/utils/common.utils';
 import {getDurationSaveValue} from '../../../../../shared/utils/constraint/duration-constraint.utils';
-import {decimalUserToStore, parseMomentDate} from '../../../../../shared/utils/data.utils';
+import {decimalUserToStore} from '../../../../../shared/utils/data.utils';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
 import {
   AggregatedMapData,
@@ -67,6 +67,7 @@ import {
   ChartYAxisType,
   convertChartDateFormat,
 } from './chart-data';
+import {parseMomentDate} from '../../../../../shared/utils/date.utils';
 
 @Injectable()
 export class ChartDataConverter {

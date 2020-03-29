@@ -28,11 +28,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {parseDateTimeDataValue} from '../../utils/data.utils';
-import {resetUnusedDatePart} from '../../utils/date.utils';
+import {parseDateTimeByConstraint, resetUnusedDatePart} from '../../utils/date.utils';
 import {createDateTimeOptions, DateTimeOptions} from '../date-time-options';
 import {DateTimePickerComponent} from '../picker/date-time-picker.component';
 import {KeyCode} from '../../key-code';
+import {DateTimeConstraint} from '../../../core/model/constraint/datetime.constraint';
 
 @Component({
   selector: 'date-time-input',
@@ -92,7 +92,10 @@ export class DateTimeInputComponent implements OnChanges {
 
   public onBlur() {
     if (this.dateTimeInput && this.shouldSaveOnBlur) {
-      const value = parseDateTimeDataValue(this.dateTimeInput.nativeElement.value, this.format);
+      const value = parseDateTimeByConstraint(
+        this.dateTimeInput.nativeElement.value,
+        new DateTimeConstraint({format: this.format})
+      );
       this.valueChange.emit(value);
     }
 

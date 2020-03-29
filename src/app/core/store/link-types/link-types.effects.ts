@@ -35,6 +35,11 @@ import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypeAttributeById, selectLinkTypesLoaded} from './link-types.state';
+import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
+import {Attribute} from '../collections/collection';
+import {DocumentModel} from '../documents/document.model';
+import {LinkInstance} from '../link-instances/link.instance';
+import {CollectionsAction} from '../collections/collections.action';
 
 @Injectable()
 export class LinkTypesEffects {
@@ -171,13 +176,18 @@ export class LinkTypesEffects {
         return correlationMap;
       }, {});
 
-      const {linkTypeId, onSuccess, onFailure} = action.payload;
+      const {linkTypeId, onSuccess, onFailure, nextAction} = action.payload;
       return this.linkTypeService.createAttributes(linkTypeId, attributesDto).pipe(
         map(attributes => attributes.map(attr => convertAttributeDtoToModel(attr, correlationIdsMap[attr.name]))),
-        mergeMap(attributes => [
-          new LinkTypesAction.CreateAttributesSuccess({linkTypeId, attributes}),
-          ...createCallbackActions(onSuccess, attributes),
-        ]),
+        mergeMap(attributes => {
+          const actions: Action[] = [new LinkTypesAction.CreateAttributesSuccess({linkTypeId, attributes})];
+          if (nextAction) {
+            actions.push(updateCreateAttributesNextAction(nextAction, attributes));
+          }
+
+          actions.push(...createCallbackActions(onSuccess, attributes));
+          return actions;
+        }),
         catchError(error => emitErrorActions(error, onFailure))
       );
     })
@@ -228,4 +238,43 @@ export class LinkTypesEffects {
     private linkTypeService: LinkTypeService,
     private store$: Store<AppState>
   ) {}
+}
+
+function updateCreateAttributesNextAction(action: LinkInstancesAction.All, attributes: Attribute[]): Action {
+  switch (action.type) {
+    case LinkInstancesActionType.CREATE:
+      return new LinkInstancesAction.Create({
+        ...action.payload,
+        linkInstance: convertNewAttributes(attributes, action),
+      });
+    case LinkInstancesActionType.PATCH_DATA:
+      return new LinkInstancesAction.PatchData({
+        ...action.payload,
+        linkInstance: convertNewAttributes(attributes, action),
+      });
+    case LinkInstancesActionType.UPDATE_DATA:
+      return new LinkInstancesAction.UpdateData({
+        ...action.payload,
+        linkInstance: convertNewAttributes(attributes, action),
+      });
+    default:
+      return action;
+  }
+}
+
+function convertNewAttributes(
+  attributes: Attribute[],
+  action: LinkInstancesAction.Create | LinkInstancesAction.UpdateData | LinkInstancesAction.PatchData
+): LinkInstance {
+  const linkInstance = action.payload.linkInstance;
+  const newAttributes = Object.keys(linkInstance.newData).reduce((acc, attrName) => {
+    const attribute = attributes.find(attr => attr.name === attrName);
+    if (attribute) {
+      acc[attribute.id] = linkInstance.newData[attrName].value;
+    }
+    return acc;
+  }, {});
+
+  const newData = {...linkInstance.data, ...newAttributes};
+  return {...linkInstance, data: newData};
 }

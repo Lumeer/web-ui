@@ -18,12 +18,16 @@
  */
 
 import {AttributesResourceType} from './resource';
+import {Constraint} from './constraint';
+import {AllowedPermissions, mergeAllowedPermissions} from './allowed-permissions';
+import {LinkType} from '../store/link-types/link.type';
 
 export interface QueryAttribute {
   resourceId: string;
   attributeId: string;
   resourceIndex?: number;
   resourceType: AttributesResourceType;
+  constraint?: Constraint;
 }
 
 export function cleanQueryAttribute(attribute: QueryAttribute): QueryAttribute {
@@ -33,4 +37,19 @@ export function cleanQueryAttribute(attribute: QueryAttribute): QueryAttribute {
     resourceId: attribute.resourceId,
     resourceType: attribute.resourceType,
   };
+}
+
+export function queryAttributePermissions(
+  attribute: QueryAttribute,
+  permissions: Record<string, AllowedPermissions>,
+  linkTypesMap: Record<string, LinkType>
+): AllowedPermissions {
+  if (attribute.resourceType === AttributesResourceType.Collection) {
+    return permissions[attribute.resourceId] && permissions[attribute.resourceId];
+  }
+  const linkType = linkTypesMap[attribute.resourceId];
+  if (linkType) {
+    return mergeAllowedPermissions(permissions[linkType.collectionIds[0]], permissions[linkType.collectionIds[1]]);
+  }
+  return {};
 }

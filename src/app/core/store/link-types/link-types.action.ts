@@ -21,6 +21,7 @@ import {Action} from '@ngrx/store';
 import {Attribute} from '../collections/collection';
 import {LinkType} from './link.type';
 import {Workspace} from '../navigation/workspace';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
 
 export enum LinkTypesActionType {
   GET = '[Link Types] Get',
@@ -147,6 +148,7 @@ export namespace LinkTypesAction {
       public payload: {
         linkTypeId: string;
         attributes: Attribute[];
+        nextAction?: LinkInstancesAction.All;
         onSuccess?: (attributes: Attribute[]) => void;
         onFailure?: (error: any) => void;
       }

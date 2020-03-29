@@ -23,11 +23,13 @@ import {DocumentDetailModalModule} from '../document-detail/document-detail-moda
 import {SelectModule} from '../../select/select.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {CalendarEventDetailModalComponent} from './calendar-event-detail-modal.component';
-import {StemCollectionItemsPipe} from './stem-collection-items.pipe';
+import {StemCollectionItemsPipe} from './pipes/stem-collection-items.pipe';
+import {DataResourceDetailModalModule} from '../data-resource-detail/data-resource-detail-modal.module';
+import {CanToggleAllDayPipe} from './pipes/can-toggle-all-day.pipe';
 
 @NgModule({
-  declarations: [CalendarEventDetailModalComponent, StemCollectionItemsPipe],
-  imports: [CommonModule, DocumentDetailModalModule, SelectModule, PipesModule],
+  declarations: [CalendarEventDetailModalComponent, StemCollectionItemsPipe, CanToggleAllDayPipe],
+  imports: [CommonModule, DocumentDetailModalModule, SelectModule, PipesModule, DataResourceDetailModalModule],
   exports: [CalendarEventDetailModalComponent],
 })
 export class CalendarEventDetailModalModule {}
