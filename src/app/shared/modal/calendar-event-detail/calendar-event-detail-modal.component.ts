@@ -124,14 +124,18 @@ export class CalendarEventDetailModalComponent implements OnInit {
       const startProperty = stemConfig.start;
       const endProperty = stemConfig.end;
 
-      const start = parseDateTimeByConstraint(
-        startProperty && dataResource.data?.[startProperty.attributeId],
-        findAttributeConstraint(resource?.attributes, startProperty.attributeId)
-      );
-      const end = parseDateTimeByConstraint(
-        endProperty && dataResource.data?.[endProperty.attributeId],
-        findAttributeConstraint(resource?.attributes, endProperty.attributeId)
-      );
+      const start =
+        startProperty &&
+        parseDateTimeByConstraint(
+          dataResource.data?.[startProperty.attributeId],
+          findAttributeConstraint(resource?.attributes, startProperty.attributeId)
+        );
+      const end =
+        endProperty &&
+        parseDateTimeByConstraint(
+          dataResource.data?.[endProperty.attributeId],
+          findAttributeConstraint(resource?.attributes, endProperty.attributeId)
+        );
       this.allDay$.next(end ? isAllDayEvent(start, end) : isAllDayEventSingle(start));
     }
   }
