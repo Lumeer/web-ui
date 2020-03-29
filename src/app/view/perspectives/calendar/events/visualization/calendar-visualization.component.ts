@@ -85,18 +85,10 @@ export class CalendarVisualizationComponent implements OnChanges {
   public readonly buttonText: ButtonTextCompoundInput = {};
   public readonly allDayText: string;
   public readonly noEventsText: string;
-  public readonly listCustomButtons: Record<string, CustomButtonInput> = {
-    calendarToggle: {
-      text: 'Calendar',
-      click: () => this.listToggle.emit(false),
-    },
-  };
-  public readonly calendarCustomButtons: Record<string, CustomButtonInput> = {
-    listToggle: {
-      text: 'List',
-      click: () => this.listToggle.emit(true),
-    },
-  };
+  public readonly calendarText: string;
+  public readonly listText: string;
+  public readonly listCustomButtons: Record<string, CustomButtonInput>;
+  public readonly calendarCustomButtons: Record<string, CustomButtonInput>;
   public readonly listHeader: ToolbarInput = {
     left: `listMonth,listWeek,listDay calendarToggle`,
     center: 'title',
@@ -112,6 +104,8 @@ export class CalendarVisualizationComponent implements OnChanges {
   public defaultDate: Date;
 
   constructor(private i18n: I18n) {
+    this.calendarText = this.i18n({id: 'perspective.calendar.display.calendar', value: 'Calendar'});
+    this.listText = this.i18n({id: 'perspective.calendar.display.list', value: 'List'});
     this.allDayText = this.i18n({id: 'perspective.calendar.display.allDay', value: 'All day'});
     this.noEventsText = this.i18n({
       id: 'perspective.calendar.display.empty',
@@ -122,6 +116,18 @@ export class CalendarVisualizationComponent implements OnChanges {
       month: i18n({id: 'perspective.calendar.header.month', value: 'Month'}),
       week: i18n({id: 'perspective.calendar.header.week', value: 'Week'}),
       day: i18n({id: 'perspective.calendar.header.day', value: 'Day'}),
+    };
+    this.listCustomButtons = {
+      calendarToggle: {
+        text: this.calendarText,
+        click: () => this.listToggle.emit(false),
+      },
+    };
+    this.calendarCustomButtons = {
+      listToggle: {
+        text: this.listText,
+        click: () => this.listToggle.emit(true),
+      },
     };
   }
 
