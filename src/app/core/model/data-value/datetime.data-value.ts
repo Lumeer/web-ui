@@ -211,7 +211,7 @@ export class DateTimeDataValue implements DataValue {
             format: constraintConditionValueFormat(value.type),
           };
         }
-        const format = this.config?.format || '';
+        const format = this.config?.format;
         return {
           moment: resetUnusedMomentPart(new DateTimeDataValue(value.value, this.config).momentDate, format),
           format,

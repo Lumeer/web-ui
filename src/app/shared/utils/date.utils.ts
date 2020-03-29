@@ -218,14 +218,7 @@ export function parseDateTimeByConstraint(value: any, constraint: Constraint): D
     return parseDateTimeDataValue(value, format);
   }
 
-  const dateAndTimeFormats = dateFormats.reduce((formats, format) => {
-    formats.push(...timeFormats.map(tf => [format, tf].join(' ')));
-    return formats;
-  }, []);
-
-  const allFormats = [moment.ISO_8601, ...dateFormats, ...dateAndTimeFormats];
-  const momentDate = moment(value, allFormats);
-  return momentDate.isValid() ? momentDate.toDate() : null;
+  return parseMomentDate(value, null).toDate();
 }
 
 function parseDateTimeDataValue(value: any, expectedFormat: string): Date {
@@ -242,11 +235,18 @@ function parseDateTimeDataValue(value: any, expectedFormat: string): Date {
 }
 
 export function parseMomentDate(value: any, expectedFormat: string): moment.Moment {
-  const formats: any[] = [moment.ISO_8601];
+  const allFormats: any[] = [moment.ISO_8601];
   if (expectedFormat) {
-    formats.push(expectedFormat);
+    allFormats.push(expectedFormat);
   }
-  return moment(value, formats);
+  allFormats.push(...dateFormats);
+
+  const dateAndTimeFormats = dateFormats.reduce((formats, format) => {
+    formats.push(...timeFormats.map(tf => [format, tf].join(' ')));
+    return formats;
+  }, []);
+  allFormats.push(...dateAndTimeFormats);
+  return moment(value, allFormats);
 }
 
 export function createDatesInterval(
