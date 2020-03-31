@@ -29,6 +29,7 @@ export interface Template {
 export enum TemplateType {
   PROJ = 'PROJ',
   WORK = 'WORK',
+  SCRUM = 'SCRUM',
   SUPPLY = 'SUPPLY',
   BUG = 'BUG',
   HR = 'HR',
@@ -52,4 +53,5 @@ export const templateTypesMap: Record<string, TemplateType> = {
   [TemplateType.SUPPLY]: TemplateType.SUPPLY,
   [TemplateType.EDCAL]: TemplateType.EDCAL,
   [TemplateType.TASK]: TemplateType.TASK,
+  [TemplateType.SCRUM]: TemplateType.SCRUM,
 };
