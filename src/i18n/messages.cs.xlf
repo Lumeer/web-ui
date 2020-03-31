@@ -2681,6 +2681,18 @@
           <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="template.scrum.title" datatype="html">
+        <source>Scrum</source><target>Scrum</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.scrum.description" datatype="html">
+        <source>Turn your projects into agile ones with Scrum. Plan sprints, assign tasks and manage your backlog.</source><target>Přeměňte svoje projekty na agilní díky Scrumu. Plánujte sprinty, rozdělujte úkoly a zvládněte udělat vše, co jste si naplánovali.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="constraint.duration.unit" datatype="html">
         <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source><target>{VAR_SELECT, select, w {t} d {d} h {h} m {m} s {s} }</target>
         <context-group purpose="location">

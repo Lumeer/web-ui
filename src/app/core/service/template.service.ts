@@ -217,8 +217,7 @@ export class TemplateService {
       title: this.i18n({id: 'template.scrum.title', value: 'Scrum'}),
       description: this.i18n({
         id: 'template.scrum.description',
-        value:
-          'Win deals your way with a visual CRM to manage accounts, contacts, activities, sales teams, deals, and pipelines.',
+        value: 'Turn your projects into agile ones with Scrum. Plan sprints, assign tasks and manage your backlog.',
       }),
       url: this.createUrlForType(TemplateType.SCRUM),
     };
