@@ -61,6 +61,8 @@ export class TemplateService {
         return this.createTaskTemplate();
       case TemplateType.CRM:
         return this.createCrmTemplate();
+      case TemplateType.SCRUM:
+        return this.createScrumTemplate();
       default:
         return null;
     }
@@ -208,6 +210,20 @@ export class TemplateService {
     };
   }
 
+  private createScrumTemplate(): Template {
+    return {
+      type: TemplateType.SCRUM,
+      imagePath: 'assets/templates/scrum.jpg',
+      title: this.i18n({id: 'template.scrum.title', value: 'Scrum'}),
+      description: this.i18n({
+        id: 'template.scrum.description',
+        value:
+          'Win deals your way with a visual CRM to manage accounts, contacts, activities, sales teams, deals, and pipelines.',
+      }),
+      url: this.createUrlForType(TemplateType.SCRUM),
+    };
+  }
+
   private createUrlForType(type: TemplateType): string | null {
     switch (type) {
       case TemplateType.Empty:
@@ -232,6 +248,8 @@ export class TemplateService {
         return this.getTaskUrl();
       case TemplateType.CRM:
         return this.getCrmUrl();
+      case TemplateType.SCRUM:
+        return this.getScrumUrl();
     }
   }
 
@@ -331,6 +349,15 @@ export class TemplateService {
         return this.createUrl('cs/typ-sloupce-datum');
       default:
         return this.createUrl('date-column-type');
+    }
+  }
+
+  public getScrumUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/scrum-sablona');
+      default:
+        return this.createUrl('scrum-templatee');
     }
   }
 
