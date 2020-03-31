@@ -18,39 +18,52 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CalendarBar, CalendarBarProperty, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
+import {CalendarBar, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {AttributesResourceType} from '../../../../core/model/resource';
+import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+
+const sameCollectionProperties = ['start', 'end'];
 
 @Pipe({
   name: 'calendarPropertyItems',
 })
 export class CalendarPropertyItemsPipe implements PipeTransform {
-  public transform(
-    collection: Collection,
-    property: CalendarBarProperty,
-    config: CalendarStemConfig
+  public transform(selectItems: SelectItemModel[], property: string, config: CalendarStemConfig): SelectItemModel[] {
+    if (sameCollectionProperties.includes(property)) {
+      return this.filterSameResourceItems(selectItems, property, config);
+    }
+
+    return selectItems;
+  }
+
+  private filterSameResourceItems(
+    selectItems: SelectItemModel[],
+    property: string,
+    config: GanttChartStemConfig
   ): SelectItemModel[] {
-    const restrictedIds = this.getSelectedAttributesIdsInsteadBar(property, config);
-    return ((collection && collection.attributes) || [])
-      .filter(attribute => !restrictedIds.includes(attribute.id))
-      .map(attribute => this.attributeToItem(collection, attribute));
-  }
+    const sameCollectionModels = sameCollectionProperties
+      .filter(prop => prop !== property)
+      .map(prop => config[prop])
+      .filter(model => !!model);
 
-  public getSelectedAttributesIdsInsteadBar(property: CalendarBarProperty, config: CalendarStemConfig): string[] {
-    return Object.entries(config.barsProperties || {})
-      .filter(entry => entry[0] !== property)
-      .map(entry => entry[1].attributeId);
-  }
+    if (sameCollectionModels.length > 0) {
+      const resourceIndex = sameCollectionModels[0].resourceIndex;
+      const allowedResourceIndexes =
+        resourceIndex % 2 === 0 ? [resourceIndex, resourceIndex - 1] : [resourceIndex, resourceIndex + 1];
+      return selectItems.filter(item => {
+        const model = item.id as GanttChartBarModel;
+        return (
+          allowedResourceIndexes.includes(model.resourceIndex) &&
+          !sameCollectionModels.some(definedModel =>
+            deepObjectsEquals(cleanQueryAttribute(definedModel), cleanQueryAttribute(model))
+          )
+        );
+      });
+    }
 
-  public attributeToItem(collection: Collection, attribute: Attribute): SelectItemModel {
-    const bar: CalendarBar = {
-      resourceId: collection.id,
-      attributeId: attribute.id,
-      resourceIndex: 0,
-      resourceType: AttributesResourceType.Collection,
-    };
-    return {id: bar, value: attribute.name, icons: [collection.icon], iconColors: [collection.color]};
+    return selectItems;
   }
 }

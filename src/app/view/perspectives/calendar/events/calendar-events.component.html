@@ -2,7 +2,10 @@
                         (eventClick)="onEventClicked($event)"
                         [currentMode]="config.mode"
                         [currentDate]="config.date"
+                        [list]="list$ | async"
+                        [canCreateEvents]="canCreateEvents"
                         (newEvent)="onNewEvent($event)"
+                        (listToggle)="onListToggle($event)"
                         (rangeChanged)="onRangeChanged($event)"
-                        (eventRangeChanged)="onDocumentRangeChanged($event)">
+                        (eventRangeChanged)="onEventRangeChanged($event)">
 </calendar-visualization>

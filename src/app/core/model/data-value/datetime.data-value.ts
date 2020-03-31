@@ -18,8 +18,8 @@
  */
 
 import * as moment from 'moment';
-import {formatUnknownDataValue, parseMomentDate} from '../../../shared/utils/data.utils';
-import {getSmallestDateUnit, resetUnusedMomentPart} from '../../../shared/utils/date.utils';
+import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
+import {getSmallestDateUnit, parseMomentDate, resetUnusedMomentPart} from '../../../shared/utils/date.utils';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isDateValid, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
@@ -41,7 +41,7 @@ export class DateTimeDataValue implements DataValue {
       this.momentDate = moment(this.value);
       this.value = this.value.getTime();
     } else if (this.value || this.value === 0) {
-      this.momentDate = parseMomentDate(this.value, this.config && this.config.format);
+      this.momentDate = parseMomentDate(this.value, this.config?.format);
     }
   }
 
@@ -66,9 +66,7 @@ export class DateTimeDataValue implements DataValue {
       return showInvalid ? formatUnknownDataValue(this.value, true) : '';
     }
 
-    return this.config && this.config.format
-      ? this.momentDate.format(this.config.format)
-      : formatUnknownDataValue(this.value);
+    return this.config?.format ? this.momentDate.format(this.config.format) : formatUnknownDataValue(this.value);
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
@@ -118,13 +116,13 @@ export class DateTimeDataValue implements DataValue {
   }
 
   public increment(): DateTimeDataValue {
-    const smallestUnit = getSmallestDateUnit(this.config.format);
+    const smallestUnit = getSmallestDateUnit(this.config?.format || '');
     const nextValue = this.momentDate.add(1, smallestUnit).toISOString();
     return new DateTimeDataValue(nextValue, this.config);
   }
 
   public decrement(): DateTimeDataValue {
-    const smallestUnit = getSmallestDateUnit(this.config.format);
+    const smallestUnit = getSmallestDateUnit(this.config?.format || '');
     const nextValue = this.momentDate.subtract(1, smallestUnit).toISOString();
     return new DateTimeDataValue(nextValue, this.config);
   }
@@ -134,13 +132,13 @@ export class DateTimeDataValue implements DataValue {
       return this.momentDate ? 1 : -1;
     }
 
-    return resetUnusedMomentPart(this.momentDate, this.config.format).diff(
-      resetUnusedMomentPart(otherValue.momentDate, otherValue.config.format)
+    return resetUnusedMomentPart(this.momentDate, this.config?.format).diff(
+      resetUnusedMomentPart(otherValue.momentDate, otherValue.config?.format)
     );
   }
 
   public copy(newValue?: any): DateTimeDataValue {
-    const value = newValue !== undefined ? newValue : this.momentDate && this.momentDate.toDate();
+    const value = newValue !== undefined ? newValue : this.momentDate?.toDate();
     return new DateTimeDataValue(value, this.config);
   }
 
@@ -213,7 +211,7 @@ export class DateTimeDataValue implements DataValue {
             format: constraintConditionValueFormat(value.type),
           };
         }
-        const format = this.config.format;
+        const format = this.config?.format;
         return {
           moment: resetUnusedMomentPart(new DateTimeDataValue(value.value, this.config).momentDate, format),
           format,

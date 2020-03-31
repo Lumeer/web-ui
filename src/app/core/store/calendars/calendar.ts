@@ -30,11 +30,13 @@ export interface Calendar {
 export interface CalendarConfig {
   date: Date;
   mode: CalendarMode;
+  list?: boolean;
   stemsConfigs: CalendarStemConfig[];
   version?: CalendarConfigVersion;
 }
 
 export enum CalendarConfigVersion {
+  V2 = '2',
   V1 = '1',
 }
 
@@ -46,18 +48,10 @@ export enum CalendarMode {
 
 export interface CalendarStemConfig {
   stem?: QueryStem;
-  barsProperties?: Record<string, CalendarBar>;
+  name?: CalendarBar;
+  start?: CalendarBar;
+  end?: CalendarBar;
+  color?: CalendarBar;
 }
 
 export interface CalendarBar extends QueryAttribute {}
-
-export type CalendarBarProperty = CalendarBarPropertyRequired | CalendarBarPropertyOptional;
-
-export enum CalendarBarPropertyRequired {
-  Name = 'name',
-  StartDate = 'start',
-}
-
-export enum CalendarBarPropertyOptional {
-  EndDate = 'end',
-}

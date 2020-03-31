@@ -868,7 +868,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>All day event</source><target state="final">All day event</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
         <source>Create</source><target state="final">Create</target>
 
 
@@ -3780,24 +3780,48 @@
           <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, month {Month} week {Week} day {Day} }</source><target state="final">{VAR_SELECT, select, month {Month} week {Week} day {Day} }</target>
+      </trans-unit><trans-unit id="@@perspective.calendar.create.event.failure" datatype="html">
+        <source>Could not create event</source><target state="final">Could not create event</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-modes-to-select.pipe.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/calendar-perspective.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
+        <source>Calendar</source><target state="final">Calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.list" datatype="html">
+        <source>List</source><target state="final">List</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.allDay" datatype="html">
+        <source>All day</source><target state="final">All day</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.empty" datatype="html">
+        <source>There are no events in current selected range</source><target state="final">There are no events in current selected range</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="calendar.property.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} startTime {Start time} endTime {End time} }</source><target state="final">{VAR_SELECT, select, name {Name} start {Start} end {End} startTime {Start time} endTime {End time} }</target>
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} color {Color} }</source><target state="final">{VAR_SELECT, select, name {Name} start {Start} end {End} color {Color} }</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-property-placeholder.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="calendar.value.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} startTime {...} endTime {...}}"/></source><target state="final">Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} startTime {...} endTime {...}}"/></target>
+        <source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...}}"/></source><target state="final">Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...}}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="ced13f0415249c52d64de1dbbe8815405e3acd09" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {start date} end {end date} startTime {start time} endTime {end time} }</source><target state="final">{VAR_SELECT, select, name {name} start {start date} end {end date} startTime {start time} endTime {end time} }</target>
+      </trans-unit><trans-unit id="ebfbff359f02cd574ee6b8aafab510fdb3f5de63" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {start date} end {end date} color {color} }</source><target state="final">{VAR_SELECT, select, name {name} start {start date} end {end date} color {color} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
           <context context-type="linenumber">1</context>

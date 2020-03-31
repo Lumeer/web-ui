@@ -856,7 +856,7 @@
       Celodenní
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit>
 
             <trans-unit id="link.new.dialog.title" datatype="html">
                 <source>Create new link</source>
@@ -3778,24 +3778,48 @@
                     <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
-            </trans-unit><trans-unit id="perspective.calendar.config.mode" datatype="html">
-        <source>{VAR_SELECT, select, month {Month} week {Week} day {Day} }</source><target>{VAR_SELECT, select, month {Měsíc} week {Týden} day {Den} }</target>
+            </trans-unit><trans-unit id="@@perspective.calendar.create.event.failure" datatype="html">
+        <source>Could not create event</source><target>Nemohu vytvořit událost</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-modes-to-select.pipe.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/calendar-perspective.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
+        <source>Calendar</source><target>Kalendář</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.list" datatype="html">
+        <source>List</source><target>Seznam</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.allDay" datatype="html">
+        <source>All day</source><target>Celý den</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.empty" datatype="html">
+        <source>There are no events in current selected range</source><target>Ve vybraném časovém rozmezí nejsou žádné události</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="calendar.property.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} startTime {Start time} endTime {End time} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} startTime {Počáteční čas} endTime {Koncový čas} }</target>
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} color {Color} }</source><target>{VAR_SELECT, select, name {Název} start {Začátek} end {Konec} startTime {Počáteční čas} endTime {Koncový čas} }</target>
 
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-property-placeholder.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="calendar.value.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} startTime {...} endTime {...}}"/></source><target>Vyberte <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} startTime {...} endTime {...}}"/></target>
+        <source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...}}"/></source><target>Vyberte <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} startTime {...} endTime {...}}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="ced13f0415249c52d64de1dbbe8815405e3acd09" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {start date} end {end date} startTime {start time} endTime {end time} }</source><target>{VAR_SELECT, select, name {název} start {počáteční datum} end {koncové datum} startTime {počáteční čas} endTime {koncový čas} }</target>
+      </trans-unit><trans-unit id="ebfbff359f02cd574ee6b8aafab510fdb3f5de63" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {start date} end {end date} color {color} }</source><target>{VAR_SELECT, select, name {název} start {začátek} end {konec} color {barva} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
           <context context-type="linenumber">1</context>

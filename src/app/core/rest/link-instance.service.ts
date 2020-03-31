@@ -56,6 +56,10 @@ export class LinkInstanceService extends BaseService {
     return this.httpClient.patch<LinkInstanceDto>(`${this.apiPrefix(linkInstanceId)}/data`, data);
   }
 
+  public updateLinkInstanceData(linkInstanceDto: LinkInstanceDto): Observable<LinkInstanceDto> {
+    return this.httpClient.put<LinkInstanceDto>(`${this.apiPrefix(linkInstanceDto.id)}/data`, linkInstanceDto.data);
+  }
+
   public deleteLinkInstance(id: string): Observable<string> {
     return this.httpClient.delete(this.apiPrefix(id)).pipe(map(() => id));
   }

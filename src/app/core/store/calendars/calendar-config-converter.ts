@@ -19,7 +19,7 @@
 
 import {AttributesResourceType} from '../../model/resource';
 import {CalendarBar, CalendarConfig, CalendarConfigVersion, CalendarStemConfig} from './calendar';
-import {CalendarCollectionConfigV0, CalendarConfigV0} from './calendar-old';
+import {CalendarCollectionConfigV0, CalendarConfigV0, CalendarConfigV1, CalendarStemConfigV1} from './calendar-old';
 import {isDateValid, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
@@ -32,13 +32,27 @@ export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
 }
 
 function convertCalendarConfigDtoToModelWithVersion(config: any): CalendarConfig {
-  const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
-  switch (version) {
-    case CalendarConfigVersion.V1:
-      return convertCalendarDtoToModelV1(config);
-    default:
-      return convertCalendarDtoToModelV0(config);
+  let version = parseVersion(config);
+  let convertedConfig = config;
+
+  while (version !== CalendarConfigVersion.V2) {
+    switch (version) {
+      case CalendarConfigVersion.V1:
+        convertedConfig = convertCalendarDtoToModelV1(convertedConfig);
+        break;
+      default:
+        convertedConfig = convertCalendarDtoToModelV0(convertedConfig);
+        break;
+    }
+
+    version = parseVersion(convertedConfig);
   }
+
+  return convertedConfig;
+}
+
+function parseVersion(config: any): string {
+  return isNotNullOrUndefined(config?.version) ? String(config.version) : '';
 }
 
 function convertConfigValues(config: CalendarConfig): CalendarConfig {
@@ -48,12 +62,24 @@ function convertConfigValues(config: CalendarConfig): CalendarConfig {
   return config;
 }
 
-function convertCalendarDtoToModelV1(config: CalendarConfig): CalendarConfig {
-  return config;
+function convertCalendarDtoToModelV1(config: CalendarConfigV1): CalendarConfig {
+  return {
+    date: config.date,
+    mode: config.mode,
+    list: false,
+    version: CalendarConfigVersion.V2,
+    stemsConfigs: (config.stemsConfigs || []).map(stemConfig => {
+      const newConfig: CalendarStemConfig = {stem: stemConfig.stem};
+      for (const [key, model] of Object.entries(stemConfig.barsProperties || {})) {
+        newConfig[key] = model;
+      }
+      return newConfig;
+    }),
+  };
 }
 
-function convertCalendarDtoToModelV0(config: CalendarConfigV0): CalendarConfig {
-  const stemConfigsMap: Record<string, CalendarStemConfig> = {};
+function convertCalendarDtoToModelV0(config: CalendarConfigV0): CalendarConfigV1 {
+  const stemConfigsMap: Record<string, CalendarStemConfigV1> = {};
   for (const [collectionId, collectionConfig] of Object.entries<CalendarCollectionConfigV0>(config.collections || {})) {
     const barsProperties: Record<string, CalendarBar> = {};
 

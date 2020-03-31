@@ -22,6 +22,10 @@ import {createDateTimeOptions} from '../date-time/date-time-options';
 import {DurationUnit} from '../../core/model/data/constraint-config';
 import {DurationInputArg2} from 'moment';
 import {sortedDurationUnits} from './constraint/duration-constraint.utils';
+import {Constraint} from '../../core/model/constraint';
+import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
+import {DateTimeConstraint} from '../../core/model/constraint/datetime.constraint';
+import {DurationConstraint} from '../../core/model/constraint/duration.constraint';
 
 export function resetUnusedDatePart(date: Date, format: string): Date {
   return resetUnusedMomentPart(moment(date), format).toDate();
@@ -162,4 +166,113 @@ export function subtractDatesToDurationCountsMap(end: Date, start: Date): Record
 
     return map;
   }, {});
+}
+
+const dateFormats = [
+  'D.M.YYYY',
+  'DD.M.YYYY',
+  'DD.MM.YYYY',
+  'D/M/YYYY',
+  'DD/M/YYYY',
+  'DD/MM/YYYY',
+  'D/M/YY',
+  'DD/M/YY',
+  'DD/MM/YY',
+  'YYYY/MM/DD',
+  'YYYY/M/DD',
+  'YYYY/M/D',
+  'YYYY-MM-DD',
+  'YYYY-M-DD',
+  'YYYY-M-D',
+  'D MMM YYYY',
+  'DD MMM YYYY',
+  'D MMMM YYYY',
+  'DD MMMM YYYY',
+  'MMM D, YYYY',
+  'MMM DD, YYYY',
+  'YYYY',
+  'DD.MM.',
+];
+
+const timeFormats = [
+  'HH:mm',
+  'H:mm',
+  'H:m',
+  'hh:mm A',
+  'hh:mmA',
+  'h:mm A',
+  'h:mmA',
+  'hh.mm A',
+  'hh.mmA',
+  'h.mm A',
+  'h.mmA',
+];
+
+export function parseDateTimeByConstraint(value: any, constraint: Constraint): Date {
+  if (!value) {
+    return value;
+  }
+
+  if (constraint && constraint.type === ConstraintType.DateTime) {
+    const format = (<DateTimeConstraint>constraint).config.format;
+    return parseDateTimeDataValue(value, format);
+  }
+
+  return parseMomentDate(value, null).toDate();
+}
+
+function parseDateTimeDataValue(value: any, expectedFormat: string): Date {
+  if (!value) {
+    return value;
+  }
+
+  const momentDate = parseMomentDate(value, expectedFormat);
+  if (!momentDate.isValid()) {
+    return null;
+  }
+
+  return resetUnusedMomentPart(momentDate, expectedFormat).toDate();
+}
+
+export function parseMomentDate(value: any, expectedFormat: string): moment.Moment {
+  const allFormats: any[] = [moment.ISO_8601];
+  if (expectedFormat) {
+    allFormats.push(expectedFormat);
+  }
+  allFormats.push(...dateFormats);
+
+  const dateAndTimeFormats = dateFormats.reduce((formats, format) => {
+    formats.push(...timeFormats.map(tf => [format, tf].join(' ')));
+    return formats;
+  }, []);
+  allFormats.push(...dateAndTimeFormats);
+  return moment(value, allFormats);
+}
+
+export function createDatesInterval(
+  start: string,
+  startConstraint: Constraint,
+  end: string,
+  endConstraint: Constraint,
+  constraintData: ConstraintData
+): {start: Date; end?: Date; swapped?: boolean} {
+  const startDate = parseDateTimeByConstraint(start, startConstraint);
+
+  let endDate: Date;
+
+  if (endConstraint?.type === ConstraintType.Duration) {
+    const dataValue = (<DurationConstraint>endConstraint).createDataValue(end, constraintData);
+    endDate = addDurationToDate(startDate, dataValue.unitsCountMap);
+  } else {
+    endDate = parseDateTimeByConstraint(end, endConstraint);
+  }
+
+  if (!endDate) {
+    return {start: startDate};
+  }
+
+  if (endDate.getTime() < startDate.getTime()) {
+    return {start: endDate, end: startDate, swapped: true};
+  }
+  return {start: startDate, end: endDate};
 }

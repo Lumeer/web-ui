@@ -128,7 +128,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
         if (preferViewConfigUpdate(previousView, view, !!ganttEntity)) {
           return this.checkGanttConfig(ganttConfig).pipe(map(config => ({ganttChartId, config})));
         }
-        return of({ganttChartId, config: (ganttEntity && ganttEntity.config) || ganttConfig});
+        return of({ganttChartId, config: ganttEntity?.config || ganttConfig});
       })
     );
   }
@@ -149,7 +149,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     return this.store$.pipe(
       select(selectQuery),
       withLatestFrom(this.store$.pipe(select(selectGanttChartById(ganttChartId)))),
-      mergeMap(([, gantt]) => this.checkGanttConfig(gantt && gantt.config)),
+      mergeMap(([, gantt]) => this.checkGanttConfig(gantt?.config)),
       map(config => ({ganttChartId, config}))
     );
   }

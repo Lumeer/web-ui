@@ -47,7 +47,6 @@ import {LogPipe} from './log.pipe';
 import {NativeDatePipe} from './native-date.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
 import {PageSlicePipe} from './page-slice.pipe';
-import {ParseDatePipe} from './parse-date.pipe';
 import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PrefixPipe} from './prefix.pipe';
@@ -86,6 +85,8 @@ import {RemoveSuffixPipe} from './remove-last-characters.pipe';
 import {SafeStylePipe} from './safe-style.pipe';
 import {ContainsDeletedQueryItemPipe} from './contains-deleted-query-item.pipe';
 import {ResourceIconsColorsPipe} from './resource-icons-colors.pipe';
+import {CleanQueryAttributePipe} from './clean-query-attribute.pipe';
+import {QueryStemSelectItemsPipe} from './query-stem-select-items.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -116,7 +117,6 @@ import {ResourceIconsColorsPipe} from './resource-icons-colors.pipe';
     RemoveHtmlCommentsPipe,
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
-    ParseDatePipe,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,
@@ -155,6 +155,8 @@ import {ResourceIconsColorsPipe} from './resource-icons-colors.pipe';
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
     ResourceIconsColorsPipe,
+    CleanQueryAttributePipe,
+    QueryStemSelectItemsPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -185,7 +187,6 @@ import {ResourceIconsColorsPipe} from './resource-icons-colors.pipe';
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
     DataPipesModule,
-    ParseDatePipe,
     CollectionAttributePipe,
     ContrastColorPipe,
     AttributesSelectItemsPipe,
@@ -224,6 +225,8 @@ import {ResourceIconsColorsPipe} from './resource-icons-colors.pipe';
     SafeStylePipe,
     ContainsDeletedQueryItemPipe,
     ResourceIconsColorsPipe,
+    CleanQueryAttributePipe,
+    QueryStemSelectItemsPipe,
   ],
 })
 export class PipesModule {}

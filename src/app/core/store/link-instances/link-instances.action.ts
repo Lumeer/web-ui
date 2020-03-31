@@ -37,6 +37,8 @@ export enum LinkInstancesActionType {
   UPDATE = '[Link Instances] Update',
   UPDATE_INTERNAL = '[Link Instances] Update :: Internal',
 
+  UPDATE_DATA = '[Documents] Update Data',
+  UPDATE_DATA_INTERNAL = '[Documents] Update Data Internal',
   PATCH_DATA = '[Link Instances] Patch Data',
   PATCH_DATA_INTERNAL = '[Link Instances] Patch Data :: Internal',
 
@@ -128,6 +130,18 @@ export namespace LinkInstancesAction {
     public readonly type = LinkInstancesActionType.PATCH_DATA_INTERNAL;
 
     public constructor(public payload: {linkInstanceId: string; data: Record<string, any>}) {}
+  }
+
+  export class UpdateData implements Action {
+    public readonly type = LinkInstancesActionType.UPDATE_DATA;
+
+    public constructor(public payload: {linkInstance: LinkInstance}) {}
+  }
+
+  export class UpdateDataInternal implements Action {
+    public readonly type = LinkInstancesActionType.UPDATE_DATA_INTERNAL;
+
+    public constructor(public payload: {linkInstance: LinkInstance; originalLinkInstance?: LinkInstance}) {}
   }
 
   export class Update implements Action {
@@ -224,6 +238,8 @@ export namespace LinkInstancesAction {
     | CreateSuccess
     | CreateMultipleSuccess
     | CreateFailure
+    | UpdateData
+    | UpdateDataInternal
     | PatchData
     | PatchDataInternal
     | Update

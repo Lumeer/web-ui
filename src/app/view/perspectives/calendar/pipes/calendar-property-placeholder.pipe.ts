@@ -19,7 +19,6 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarBarProperty} from '../../../../core/store/calendars/calendar';
 
 @Pipe({
   name: 'calendarPropertyPlaceholder',
@@ -27,11 +26,11 @@ import {CalendarBarProperty} from '../../../../core/store/calendars/calendar';
 export class CalendarPropertyPlaceholderPipe implements PipeTransform {
   public constructor(private i18n: I18n) {}
 
-  public transform(barProperty: CalendarBarProperty): string {
+  public transform(barProperty: string): string {
     return this.i18n(
       {
         id: 'calendar.property.placeholder',
-        value: '{barProperty, select, name {Name} start {Start} end {End} startTime {Start time} endTime {End time}}',
+        value: '{barProperty, select, name {Name} start {Start} end {End} color {Color}}',
       },
       {
         barProperty,

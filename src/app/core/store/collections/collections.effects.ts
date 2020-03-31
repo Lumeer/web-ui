@@ -399,7 +399,7 @@ export class CollectionsEffects {
         mergeMap(([attributes, collection]) => {
           const actions: Action[] = [new CollectionsAction.CreateAttributesSuccess({collectionId, attributes})];
           if (nextAction) {
-            actions.push(updateCreateAttributesNextAction(nextAction as DocumentsAction.All, attributes));
+            actions.push(updateCreateAttributesNextAction(nextAction, attributes));
           }
           if (!collection.defaultAttributeId) {
             const setDefaultAttributeAction = createSetDefaultAttributeAction(collection, attributes);

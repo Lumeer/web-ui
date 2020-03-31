@@ -191,6 +191,30 @@ export class LinkInstancesEffects {
   );
 
   @Effect()
+  public updateData$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.UpdateData>(LinkInstancesActionType.UPDATE_DATA),
+    withLatestFrom(this.store$.pipe(select(selectLinkInstancesDictionary))),
+    mergeMap(([action, linkInstancesMap]) => {
+      const originalLinkInstance = linkInstancesMap[action.payload.linkInstance.id];
+      return of(new LinkInstancesAction.UpdateDataInternal({...action.payload, originalLinkInstance}));
+    })
+  );
+
+  @Effect()
+  public updateDataInternal$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.UpdateDataInternal>(LinkInstancesActionType.UPDATE_DATA_INTERNAL),
+    mergeMap(action => {
+      const originalLinkInstance = action.payload.originalLinkInstance;
+      const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
+      return this.linkInstanceService.updateLinkInstanceData(linkInstanceDto).pipe(
+        map(dto => convertLinkInstanceDtoToModel(dto)),
+        map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})),
+        catchError(error => of(new LinkInstancesAction.UpdateFailure({error: error, originalLinkInstance})))
+      );
+    })
+  );
+
+  @Effect()
   public updateSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.UpdateSuccess>(LinkInstancesActionType.UPDATE_SUCCESS),
     mergeMap(action => {

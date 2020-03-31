@@ -24,10 +24,8 @@ import {GanttChartPropertyItemsPipe} from './gantt-chart-property-items.pipe';
 import {GanttChartBarPlaceholderPipe} from './gantt-chart-bar-placeholder.pipe';
 import {GanttChartBarEmptyValuePipe} from './gantt-chart-bar-empty-value.pipe';
 import {TasksInvalidRangeInfoPipe} from './tasks-invalid-range-info.pipe';
-import {GanttChartSelectItemsPipe} from './gantt-chart-select-items.pipe';
 import {GanttChartSelectedItemWithConstraintPipe} from './gantt-chart-selected-item-with-constraint.pipe';
 import {ShouldAggregateProgressPipe} from './should-aggregate-progress.pipe';
-import {CleanGanttModelPipe} from './clean-gantt-model.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -37,10 +35,8 @@ import {CleanGanttModelPipe} from './clean-gantt-model.pipe';
     GanttChartBarPlaceholderPipe,
     GanttChartBarEmptyValuePipe,
     TasksInvalidRangeInfoPipe,
-    GanttChartSelectItemsPipe,
     GanttChartSelectedItemWithConstraintPipe,
     ShouldAggregateProgressPipe,
-    CleanGanttModelPipe,
   ],
   exports: [
     GanttChartModeTextPipe,
@@ -48,10 +44,8 @@ import {CleanGanttModelPipe} from './clean-gantt-model.pipe';
     GanttChartBarPlaceholderPipe,
     GanttChartBarEmptyValuePipe,
     TasksInvalidRangeInfoPipe,
-    GanttChartSelectItemsPipe,
     GanttChartSelectedItemWithConstraintPipe,
     ShouldAggregateProgressPipe,
-    CleanGanttModelPipe,
   ],
 })
 export class GanttChartPipesModule {}

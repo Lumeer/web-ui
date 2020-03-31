@@ -48,8 +48,8 @@ export enum DocumentsActionType {
   DUPLICATE_SUCCESS = '[Documents] Duplicate :: Success',
 
   UPDATE_DATA = '[Documents] Update Data',
-  PATCH_DATA = '[Documents] Patch Data',
   UPDATE_DATA_INTERNAL = '[Documents] Update Data Internal',
+  PATCH_DATA = '[Documents] Patch Data',
   PATCH_DATA_INTERNAL = '[Documents] Patch Data Internal',
   PATCH_DATA_PENDING = '[Documents] Patch Data Pending',
 

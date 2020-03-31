@@ -40,7 +40,12 @@ export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig
     return config;
   }
 
-  let version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
+  const convertedConfig = convertGanttChartDtoConfigToModelWithVersion(config);
+  return addDefaults(convertedConfig);
+}
+
+function convertGanttChartDtoConfigToModelWithVersion(config: any): GanttChartConfig {
+  let version = parseVersion(config);
   let convertedConfig = config;
 
   while (version !== GanttChartConfigVersion.V2) {
@@ -53,10 +58,13 @@ export function convertGanttChartDtoConfigToModel(config: any): GanttChartConfig
         break;
     }
 
-    version = isNotNullOrUndefined(convertedConfig.version) ? String(convertedConfig.version) : '';
+    version = parseVersion(convertedConfig);
   }
+  return convertedConfig;
+}
 
-  return addDefaults(convertedConfig);
+function parseVersion(config: any): string {
+  return isNotNullOrUndefined(config?.version) ? String(config.version) : '';
 }
 
 function addDefaults(config: GanttChartConfig): GanttChartConfig {
