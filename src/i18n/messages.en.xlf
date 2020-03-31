@@ -868,7 +868,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>All day event</source><target state="final">All day event</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
         <source>Create</source><target state="final">Create</target>
 
 
@@ -3778,6 +3778,36 @@
         <source>Remove user?</source><target state="final">Remove user?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="@@perspective.calendar.create.event.failure" datatype="html">
+        <source>Could not create event</source><target state="final">Could not create event</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/calendar-perspective.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
+        <source>Calendar</source><target state="final">Calendar</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.list" datatype="html">
+        <source>List</source><target state="final">List</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.allDay" datatype="html">
+        <source>All day</source><target state="final">All day</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.display.empty" datatype="html">
+        <source>There are no events in current selected range</source><target state="final">There are no events in current selected range</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="calendar.property.placeholder" datatype="html">
