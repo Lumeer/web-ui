@@ -598,7 +598,7 @@
         <source>All day event</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="sequence.list.sequenceName" datatype="html">
         <source>Sequence Name</source>
@@ -2255,6 +2255,14 @@
           <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.rule.type" datatype="html">
+        <source>
+          Fire rule
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
         <source>Save Changes</source>
         <context-group purpose="location">
@@ -2854,54 +2862,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context>
           <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.previous" datatype="html">
-        <source>
-        Previous
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.today" datatype="html">
-        <source>
-        Today
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.next" datatype="html">
-        <source>
-        Next
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.month" datatype="html">
-        <source>
-        Month
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.week" datatype="html">
-        <source>
-        Week
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
-        <source>
-        Day
-      </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit><trans-unit id="search.all.views" datatype="html">
         <source>
@@ -5153,6 +5113,34 @@
         <source>Remove user?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.calendar.header.today" datatype="html">
+        <source>Today</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.calendar.header.month" datatype="html">
+        <source>Month</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.calendar.header.week" datatype="html">
+        <source>Week</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="perspective.calendar.header.day" datatype="html">
+        <source>Day</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

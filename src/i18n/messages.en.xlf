@@ -868,7 +868,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>All day event</source><target state="final">All day event</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
         <source>Create</source><target state="final">Create</target>
 
 
@@ -1954,67 +1954,19 @@
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.previous" datatype="html">
-        <source>
-        Previous
-      </source><target state="final">
-        Previous
-      </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
       </trans-unit><trans-unit id="perspective.calendar.header.today" datatype="html">
-        <source>
-        Today
-      </source><target state="final">
-        Today
-      </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.next" datatype="html">
-        <source>
-        Next
-      </source><target state="final">
-        Next
-      </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.month" datatype="html">
-        <source>
-        Month
-      </source><target state="final">
-        Month
-      </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.week" datatype="html">
-        <source>
-        Week
-      </source><target state="final">
-        Week
-      </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
-        <source>
-        Day
-      </source><target state="final">
-        Day
-      </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/calendar/events/header/calendar-header.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
+        <source>Today</source><target state="final">Today</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.month" datatype="html">
+        <source>Month</source><target state="final">Month</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.week" datatype="html">
+        <source>Week</source><target state="final">Week</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.calendar.header.day" datatype="html">
+        <source>Day</source><target state="final">Day</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
         <source>
     Main settings
   </source><target state="final">
@@ -2338,7 +2290,17 @@
           On record
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.type" datatype="html">
+        <source>
+          Fire rule
+        </source><target state="final">
+          Fire rule
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.rule.update" datatype="html">
         <source>Save Changes</source><target state="final">Save Changes</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
