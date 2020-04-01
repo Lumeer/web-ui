@@ -51,7 +51,7 @@ export class PaymentsOrderComponent implements OnInit {
 
   public subscriptionLength: string;
 
-  public numberOfUsers: number = 10;
+  public numberOfUsers: number = 5;
 
   public currency: string = 'EUR';
 
