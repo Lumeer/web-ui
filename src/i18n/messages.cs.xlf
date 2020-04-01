@@ -1893,9 +1893,9 @@
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.detail.order.users.invalidMin" datatype="html">
                 <source>
-      Minimal order is 10 users.
+      Minimal order is one user.
     </source>
-                <target>Minimální objednávka je pro 10 uživatelů.</target>
+                <target>Minimální objednávka je pro jednoho uživatele.</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit>
             <trans-unit id="organizations.tab.detail.order.users.invalidMax" datatype="html">
