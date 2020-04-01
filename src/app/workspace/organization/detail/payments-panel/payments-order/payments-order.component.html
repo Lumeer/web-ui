@@ -43,7 +43,7 @@
   <div class="form-group">
     <label for="numberOfUsers" i18n="@@organizations.tab.detail.order.users">Number of Users in your Organization</label>
     <input class="form-control" type="number" [(ngModel)]="numberOfUsers" (input)="updatePrice()"
-           min="1" max="100" required id="numberOfUsers" name="users" ngModel #users="ngModel" pattern="[0-9][0-9]"
+           min="1" max="100" required id="numberOfUsers" name="users" ngModel #users="ngModel" pattern="[1-9][0-9]?"
            />
     <small id="usersValidMin" class="invalid-message" *ngIf="numberOfUsers < 1" i18n="@@organizations.tab.detail.order.users.invalidMin">
       Minimal order is one user.
