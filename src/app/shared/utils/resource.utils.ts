@@ -94,7 +94,9 @@ export function generateCorrelationId(): string {
 }
 
 export function generateId(): string {
-  return Date.now().toString() + Math.floor((1 + Math.random()) * 1000000000000).toString(16);
+  // the trailing 'a' makes sure we never end up with a pure numeric string that could be parsed on backed as a number
+  // because it does not fit into any basic Java type
+  return Date.now().toString() + Math.floor(0x100000000000 + Math.random() * 0xefffffffff).toString(16) + 'a';
 }
 
 function rolesWithTransitionRoles(roles: string[]): string[] {
