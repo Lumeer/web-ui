@@ -1,6 +1,12 @@
 <form [formGroup]="form" class="row m-0 h-100" (ngSubmit)="onSubmit()">
 
-  <div class="col-12 p-0" [ngClass]="parentId ? 'col-lg-6 pr-lg-2 pr-0 pb-lg-0 pb-2' : ''">
+  <create-resource-dialog-templates *ngIf="parentId"
+                                    class="col-12 col-lg-6 p-0 pr-lg-2 pr-0 pb-lg-0 pb-2"
+                                    [selectedTemplate]="selectedTemplate$ | async"
+                                    (templateSelect)="onTemplateSelected($event)">
+  </create-resource-dialog-templates>
+
+  <div class="col-12 p-0" [ngClass]="parentId ? 'col-lg-6 pl-lg-2 pl-0 pt-lg-0 pt-2 mt-2' : ''">
 
     <create-resource-dialog-parent
       *ngIf="parentId"
@@ -45,12 +51,6 @@
     <div class="small text-muted"><sup>*</sup>&nbsp;<span i18n="@@resource.new.dialog.required">Required</span></div>
 
   </div>
-
-  <create-resource-dialog-templates *ngIf="parentId"
-                                    class="col-12 col-lg-6 p-0 pl-lg-2 pl-0 pt-lg-0 pt-2"
-                                    [selectedTemplate]="selectedTemplate$ | async"
-                                    (templateSelect)="onTemplateSelected($event)">
-  </create-resource-dialog-templates>
 
 </form>
 

@@ -3312,7 +3312,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/collection-attributes.component.html</context><context context-type="linenumber">97</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.title" datatype="html">
                 <source>
-  Create new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
+  Create a new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
   </source>
                 <target>Vytvořit <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
                 </target>
@@ -3327,16 +3327,19 @@
                 <source>Your organization is missing a project. To continue, please create one.</source>
                 <target>Ve vaší organizaci není žádný projekt. Vytvořte si jej!</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="89d105cb7b98e21968336b0e2d00870dd53d5781" datatype="html">
+        <source>Choose a template</source><target>Vyberte si šablonu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">templates.choose</note>
+      </trans-unit>
             <trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
                 <source>Create a new project in organization:</source>
                 <target>Vytvořit projekt v organizaci:</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
-        <source>Choose template</source><target>Vyberte si šablonu</target>
-
-        <note priority="1" from="description">templates.choose</note>
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="templates.learn.more" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="templates.learn.more" datatype="html">
         <source>Learn more</source><target>Zjistit více</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/templates/template/create-resource-dialog-template.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit>
@@ -3346,7 +3349,7 @@
           </source>
                 <target>Ikona:</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
                 <source>(click the icon to change it)</source>
                 <target>(změňte ikonu kliknutím)</target>
@@ -3362,7 +3365,7 @@
                 <source>Required</source>
                 <target>Povinné</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.code.label" datatype="html">
                 <source>
     Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup>"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup>"/>

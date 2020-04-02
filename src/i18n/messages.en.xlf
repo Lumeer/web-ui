@@ -1297,9 +1297,9 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="resource.new.dialog.title" datatype="html">
         <source>
-  Create new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
+  Create a new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
   </source><target state="final">
-  Create new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
+  Create a new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
   </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="3402fe8e8941ce8571fdfef686032d5719eb94af" datatype="html">
@@ -1308,14 +1308,17 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle.first" datatype="html">
         <source>Your organization is missing a project. To continue, please create one.</source><target state="final">Your organization is missing a project. To continue, please create one.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="89d105cb7b98e21968336b0e2d00870dd53d5781" datatype="html">
+        <source>Choose a template</source><target state="final">Choose a template</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <note priority="1" from="description">templates.choose</note>
+      </trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
         <source>Create a new project in organization:</source><target state="final">Create a new project in organization:</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="8d6a4e956e4274f7144b95229803e3f9c6ca646c" datatype="html">
-        <source>Choose template</source><target state="final">Choose template</target>
-
-        <note priority="1" from="description">templates.choose</note>
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="templates.learn.more" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="templates.learn.more" datatype="html">
         <source>Learn more</source><target state="final">Learn more</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/templates/template/create-resource-dialog-template.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="resource.new.dialog.icon.label" datatype="html">
@@ -1325,7 +1328,7 @@
             Icon:
           </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
         <source>(click the icon to change it)</source><target state="final">(click the icon to change it)</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="resource.new.dialog.invalid" datatype="html">
@@ -1336,7 +1339,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="resource.new.dialog.required" datatype="html">
         <source>Required</source><target state="final">Required</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="resource.new.dialog.code.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="resource.new.dialog.code.label" datatype="html">
         <source>
     Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup>"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup>"/>
   </source><target state="final">
