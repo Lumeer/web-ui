@@ -1,13 +1,9 @@
 @import '../../../../../../../../styles/variables';
 
 .link-cell {
-  color: $light;
+  color: $gray-600;
   min-width: var(--link-info-column-width);
   max-width: var(--link-info-column-width);
-
-  &.striped {
-    color: $white;
-  }
 
   &:hover {
     color: $primary;
