@@ -38,6 +38,11 @@ import {getTableElement, getTablePart} from '../../../../../core/store/tables/ta
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
 import {DRAG_DELAY} from '../../../../../core/constants';
 
+interface ElementHeight {
+  element: HTMLElement;
+  height: number;
+}
+
 @Component({
   selector: 'table-column-group',
   templateUrl: './table-column-group.component.html',
@@ -69,6 +74,8 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
   @Input()
   public embedded: boolean;
 
+  private elementCache: Record<string, ElementHeight> = {};
+
   public readonly dragDelay = DRAG_DELAY;
   public resizedColumnIndex: number;
 
@@ -89,9 +96,31 @@ export class TableColumnGroupComponent implements OnChanges, AfterViewChecked {
     const height = element.offsetHeight;
 
     if (height) {
-      const tableElement = getTableElement(this.cursor.tableId);
-      tableElement?.style.setProperty('--column-group-height', `${height}px`);
+      this.checkElementHeight(this.cursor.tableId, height);
     }
+  }
+
+  private checkElementHeight(id: string, height: number): ElementHeight {
+    const elementHeight = this.elementCache[id];
+
+    if (!elementHeight) {
+      const newElementHeight = {element: getTableElement(id), height};
+
+      if (newElementHeight.element) {
+        this.elementCache[id] = newElementHeight;
+        newElementHeight.element.style.setProperty('--column-group-height', `${height}px`);
+
+        return newElementHeight;
+      } else {
+        return null;
+      }
+    } else {
+      if (elementHeight.height !== height) {
+        elementHeight.element.style.setProperty('--column-group-height', `${height}px`);
+      }
+    }
+
+    return elementHeight;
   }
 
   public trackByCollectionAndAttribute(index: number, column: TableConfigColumn): string {
