@@ -223,6 +223,20 @@ export class TemplateService {
     };
   }
 
+  private createRemoteWorkTemplate(): Template {
+    return {
+      type: TemplateType.RMTW,
+      imagePath: 'assets/templates/remote.jpg',
+      title: this.i18n({id: 'template.rmtw.title', value: 'Remote Work'}),
+      description: this.i18n({
+        id: 'template.rmtw.description',
+        value:
+          'Work anywhere, anytime. Enable remote teams to stay productive. Keep everyone on your team aligned and motivated.',
+      }),
+      url: this.createUrlForType(TemplateType.RMTW),
+    };
+  }
+
   private createUrlForType(type: TemplateType): string | null {
     switch (type) {
       case TemplateType.Empty:
@@ -249,6 +263,8 @@ export class TemplateService {
         return this.getCrmUrl();
       case TemplateType.SCRUM:
         return this.getScrumUrl();
+      case TemplateType.RMTW:
+        return this.getRemoteWorkUrl();
     }
   }
 
@@ -356,7 +372,16 @@ export class TemplateService {
       case 'cs':
         return this.createUrl('cs/scrum-sablona');
       default:
-        return this.createUrl('scrum-templatee');
+        return this.createUrl('scrum-template');
+    }
+  }
+
+  public getRemoteWorkUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/prace-z-domu-sablona');
+      default:
+        return this.createUrl('remote-work-template');
     }
   }
 
