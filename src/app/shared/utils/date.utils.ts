@@ -168,45 +168,7 @@ export function subtractDatesToDurationCountsMap(end: Date, start: Date): Record
   }, {});
 }
 
-const dateFormats = [
-  'D.M.YYYY',
-  'DD.M.YYYY',
-  'DD.MM.YYYY',
-  'D/M/YYYY',
-  'DD/M/YYYY',
-  'DD/MM/YYYY',
-  'D/M/YY',
-  'DD/M/YY',
-  'DD/MM/YY',
-  'YYYY/MM/DD',
-  'YYYY/M/DD',
-  'YYYY/M/D',
-  'YYYY-MM-DD',
-  'YYYY-M-DD',
-  'YYYY-M-D',
-  'D MMM YYYY',
-  'DD MMM YYYY',
-  'D MMMM YYYY',
-  'DD MMMM YYYY',
-  'MMM D, YYYY',
-  'MMM DD, YYYY',
-  'YYYY',
-  'DD.MM.',
-];
-
-const timeFormats = [
-  'HH:mm',
-  'H:mm',
-  'H:m',
-  'hh:mm A',
-  'hh:mmA',
-  'h:mm A',
-  'h:mmA',
-  'hh.mm A',
-  'hh.mmA',
-  'h.mm A',
-  'h.mmA',
-];
+const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 
 export function parseDateTimeByConstraint(value: any, constraint: Constraint): Date {
   if (!value) {
@@ -235,18 +197,22 @@ function parseDateTimeDataValue(value: any, expectedFormat: string): Date {
 }
 
 export function parseMomentDate(value: any, expectedFormat: string): moment.Moment {
-  const allFormats: any[] = [moment.ISO_8601];
-  if (expectedFormat) {
-    allFormats.push(expectedFormat);
+  if (!value) {
+    return value;
   }
-  allFormats.push(...dateFormats);
 
-  const dateAndTimeFormats = dateFormats.reduce((formats, format) => {
-    formats.push(...timeFormats.map(tf => [format, tf].join(' ')));
-    return formats;
-  }, []);
-  allFormats.push(...dateAndTimeFormats);
-  return moment(value, allFormats);
+  const formats = [moment.ISO_8601, ...dateFormats];
+  if (expectedFormat) {
+    const result = moment(value, [expectedFormat]);
+
+    if (result.isValid()) {
+      return result;
+    }
+
+    formats.splice(1, 0, expectedFormat);
+  }
+
+  return moment(value, formats);
 }
 
 export function createDatesInterval(
