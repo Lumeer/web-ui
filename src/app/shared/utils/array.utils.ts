@@ -92,6 +92,14 @@ export function createRange(from: number, to: number): number[] {
   return range.map(r => r + from);
 }
 
+export function fullWithNulls<T>(array: T[], maximum: number): T[] {
+  const copy = [...(array || [])];
+  for (let i = array.length; i < maximum; i++) {
+    copy.push(null);
+  }
+  return copy;
+}
+
 export function reversedArray<T>(array: T[]): T[] {
   const copy = [...(array || [])];
   copy.reverse();

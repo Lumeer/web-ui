@@ -70,6 +70,7 @@ import {
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {QueryAttribute, queryAttributePermissions} from '../../../../core/model/query-attribute';
+import {fullWithNulls} from '../../../../shared/utils/array.utils';
 
 export interface GanttTaskMetadata {
   nameDataId: string;
@@ -239,6 +240,13 @@ export class GanttChartConverter {
     return [];
   }
 
+  private maximumSwimlanes(): number {
+    return (this.config?.stemsConfigs || []).reduce(
+      (max, stemConfig) => Math.max(max, stemConfig.categories?.length || 0),
+      0
+    );
+  }
+
   private convertByAggregation(stemConfig: GanttChartStemConfig, showDatesAsSwimlanes: boolean): GanttTask[] {
     const groupingAttributes = (stemConfig.categories || []).filter(category => !!category);
     const objectAttributes: DataObjectAttribute[] = [
@@ -311,6 +319,7 @@ export class GanttChartConverter {
     const dataModel = stemConfig.start || stemConfig.name;
     const canEditDependencies = dataModel && dataModel.resourceType === AttributesResourceType.Collection;
 
+    const maximumSwimlanes = this.maximumSwimlanes();
     return dataObjectsInfo.reduce<GanttTask[]>((arr, item) => {
       const nameDataResource = item.objectDataResources[DataObjectInfoKeyType.Name];
       const startDataResource = item.objectDataResources[DataObjectInfoKeyType.Start];
@@ -383,8 +392,8 @@ export class GanttChartConverter {
         arr.push({
           id: taskId,
           name: stripTextHtmlTags(nameFormatted, false),
-          start: interval[0].value,
-          end: interval[1].value,
+          start: interval.start,
+          end: interval.end,
           progress: createProgress(progress),
           dependencies: (canEditDependencies && validDataResourceIdsMap[dataResourceId]) || [],
           allowedDependencies: canEditDependencies ? validTaskIds.filter(id => id !== taskId) : [],
@@ -395,7 +404,7 @@ export class GanttChartConverter {
           progressDrag: progressEditable && metadata.progressDataIds.length === 1 && progressPermission.writeWithView,
           editable: startPermission.writeWithView && endPermission.writeWithView,
           textColor: contrastColor(shadeColor(taskColor, 0.5)),
-          swimlanes: [...(item.groupingObjects || []), ...datesSwimlanes],
+          swimlanes: [...fullWithNulls(metadata.swimlanes, maximumSwimlanes), ...datesSwimlanes],
           minProgress,
           maxProgress,
 
