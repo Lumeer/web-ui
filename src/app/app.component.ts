@@ -108,7 +108,7 @@ export class AppComponent implements AfterViewInit {
     this.angulartics2GoogleAnalytics.startTracking();
 
     if (environment.mixpanelKey) {
-      mixpanel.init(environment.mixpanelKey);
+      mixpanel.init(environment.mixpanelKey, {cross_site_cookie: true});
     }
   }
 
