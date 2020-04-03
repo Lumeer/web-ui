@@ -27,6 +27,7 @@ export interface Template {
 }
 
 export enum TemplateType {
+  RMTW = 'RMTW',
   PROJ = 'PROJ',
   WORK = 'WORK',
   SCRUM = 'SCRUM',
@@ -54,4 +55,5 @@ export const templateTypesMap: Record<string, TemplateType> = {
   [TemplateType.EDCAL]: TemplateType.EDCAL,
   [TemplateType.TASK]: TemplateType.TASK,
   [TemplateType.SCRUM]: TemplateType.SCRUM,
+  [TemplateType.RMTW]: TemplateType.RMTW,
 };
