@@ -182,14 +182,14 @@
               "buildOptimizer": false,
               "localize": ["cs"],
               "optimization": false,
-              "sourceMap": false
+              "sourceMap": true
             },
             "en": {
               "aot": true,
               "buildOptimizer": false,
               "localize": ["en"],
               "optimization": false,
-              "sourceMap": false,
+              "sourceMap": true,
               "budgets": [
                 {
                   "type": "anyComponentStyle",
