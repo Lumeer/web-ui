@@ -63,6 +63,8 @@ export class TemplateService {
         return this.createCrmTemplate();
       case TemplateType.SCRUM:
         return this.createScrumTemplate();
+      case TemplateType.RMTW:
+        return this.createRemoteWorkTemplate();
       default:
         return null;
     }
