@@ -109,6 +109,15 @@ export const selectCollectionsInQuery = createSelector(
   }
 );
 
+export const selectCollectionsByStems = createSelector(
+  selectCollectionsDictionary,
+  selectQuery,
+  (collectionsMap, query) => {
+    const collectionIds = query?.stems?.map(stem => stem.collectionId) || [];
+    return collectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
+  }
+);
+
 export const selectCollectionsByCustomQuery = (query: Query) =>
   createSelector(
     selectCollectionsByReadPermission,
