@@ -31,5 +31,9 @@ export class SelectCollectionComponent {
   public collections: Collection[];
 
   @Output()
-  public onSelect = new EventEmitter<Collection>();
+  public onSelect = new EventEmitter<{collection: Collection; index: number}>();
+
+  public select(collection: Collection, index: number) {
+    this.onSelect.emit({collection, index});
+  }
 }

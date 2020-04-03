@@ -21,17 +21,16 @@ import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {
   selectCollectionsByReadPermission,
-  selectCollectionsInQuery,
+  selectCollectionsByStems,
 } from '../../../core/store/common/permissions.selectors';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
-import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
 
 @Component({
   selector: 'invalid-query',
@@ -40,39 +39,36 @@ import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
 })
 export class InvalidQueryComponent implements OnInit {
   @Input()
-  public minCollections: number;
+  public minStems: number;
 
   @Input()
-  public maxCollections: number;
+  public maxStems: number;
 
   public collections$: Observable<Collection[]>;
-  public currentCollectionsLength$: Observable<number>;
+  public stemsLength$: Observable<number>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.currentCollectionsLength$ = this.store$.pipe(
+    this.stemsLength$ = this.store$.pipe(
+      select(selectQuery),
+      map(query => query?.stems?.length || 0)
+    );
+    this.collections$ = this.store$.pipe(
       select(selectQuery),
       mergeMap(query =>
-        queryIsEmptyExceptPagination(query) ? of([]) : this.store$.pipe(select(selectCollectionsInQuery))
-      ),
-      map(collections => (collections || []).length)
-    );
-    this.collections$ = this.currentCollectionsLength$.pipe(
-      mergeMap(length =>
-        length === 0
+        queryIsEmptyExceptPagination(query)
           ? this.store$.pipe(select(selectCollectionsByReadPermission))
-          : this.store$.pipe(select(selectCollectionsInQuery))
-      ),
-      map(collections => sortResourcesByFavoriteAndLastUsed<Collection>(collections))
+          : this.store$.pipe(select(selectCollectionsByStems))
+      )
     );
   }
 
-  public onCollectionSelect(collection: Collection) {
+  public onCollectionSelect(data: {collection: Collection; index: number}) {
     this.store$.pipe(select(selectQuery), take(1)).subscribe(query => {
-      let stem = ((query && query.stems) || []).find(s => s.collectionId === collection.id);
+      let stem = ((query && query.stems) || [])[data.index];
       if (!stem) {
-        stem = {collectionId: collection.id};
+        stem = {collectionId: data.collection.id};
       }
       const newQuery: Query = {...query, stems: [stem], fulltexts: query && query.fulltexts};
       this.store$.dispatch(new NavigationAction.SetQuery({query: newQuery}));
