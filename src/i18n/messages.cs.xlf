@@ -2705,30 +2705,6 @@
           <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="template.rmtw.title" datatype="html">
-        <source>Remote Work</source><target>Práce z domu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.rmtw.description" datatype="html">
-        <source>Work anywhere, anytime. Enable remote teams to stay productive. Keep everyone on your team aligned and motivated.</source><target>Pracujte kdekoliv, kdykoliv. Udržujte týmy pracující z domu stále produktivní, zaměřené na stejný cíl a motivované.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.rmtw.title" datatype="html">
-        <source>Remote Work</source><target>Práce z domu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.rmtw.description" datatype="html">
-        <source>Work anywhere, anytime. Enable remote teams to stay productive. Keep everyone on your team aligned and motivated.</source><target>Pracujte kdekoliv, kdykoliv. Udržujte týmy pracující z domu stále produktivní, zaměřené na stejný cíl a motivované.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit><trans-unit id="constraint.duration.unit" datatype="html">
         <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source><target>{VAR_SELECT, select, w {t} d {d} h {h} m {m} s {s} }</target>
         <context-group purpose="location">
