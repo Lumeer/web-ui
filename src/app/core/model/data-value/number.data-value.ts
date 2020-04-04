@@ -51,9 +51,10 @@ export class NumberDataValue implements NumericDataValue {
     }
 
     if (this.bigNumber) {
-      return raw
-        ? decimalStoreToUser(this.bigNumber.toFixed())
+      const value = raw
+        ? this.bigNumber.toFixed()
         : numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
+      return decimalStoreToUser(value);
     }
 
     return formatUnknownDataValue(this.value);
@@ -101,7 +102,7 @@ export class NumberDataValue implements NumericDataValue {
   }
 
   public parseInput(inputValue: string): NumberDataValue {
-    return new NumberDataValue(inputValue, this.config, inputValue);
+    return new NumberDataValue(decimalUserToStore(inputValue), this.config, inputValue);
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
