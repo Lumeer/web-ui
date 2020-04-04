@@ -58,7 +58,7 @@ export class CreateResourceDialogFormComponent implements OnInit {
   @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
-  public selectedTemplate$ = new BehaviorSubject<TemplateType>(TemplateType.PROJ);
+  public selectedTemplate$ = new BehaviorSubject<TemplateType>(TemplateType.RMTW);
 
   public form: FormGroup;
   public color = DEFAULT_COLOR;
