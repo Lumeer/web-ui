@@ -50,7 +50,7 @@ export class CreateDocumentModalComponent implements OnInit {
 
   public ngOnInit() {
     if (this.collections.length) {
-      this.onSelect(this.collections[0].id);
+      this.onSelect(this.collections[0]?.id);
     }
   }
 

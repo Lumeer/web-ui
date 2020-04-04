@@ -7,8 +7,8 @@
       <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
       <div class="mb-3">
         <span i18n="@@search.records.empty.subtitle.singleCollection">Let's add some Records into</span>
-        <span [style.color]="collections[0].color">
-        <i class="{{collections[0].icon}} fa-fw ml-2"></i>&nbsp;{{collections[0].name}}
+        <span [style.color]="collections[0]?.color">
+        <i class="{{collections[0]?.icon}} fa-fw ml-2"></i>&nbsp;{{collections[0]?.name}}
       </span>
       </div>
 

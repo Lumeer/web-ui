@@ -374,8 +374,10 @@ export class SuggestionsService {
             score += getScoreByMatch(name, text);
           }
 
-          score += collectionAdditionalScore(linkType.collections[0], sortedCollections, 2);
-          score += collectionAdditionalScore(linkType.collections[1], sortedCollections, 2);
+          if (linkType.collections?.length === 2) {
+            score += collectionAdditionalScore(linkType.collections[0], sortedCollections, 2);
+            score += collectionAdditionalScore(linkType.collections[1], sortedCollections, 2);
+          }
 
           return {linkType, suggestionType: SuggestionType.LinkType, score};
         });
@@ -401,8 +403,11 @@ export class SuggestionsService {
             if (text) {
               score += getScoreByMatch(name, text);
             }
-            score += collectionAdditionalScore(linkType.collections[0], sortedCollections, 2);
-            score += collectionAdditionalScore(linkType.collections[1], sortedCollections, 2);
+
+            if (linkType.collections?.length === 2) {
+              score += collectionAdditionalScore(linkType.collections[0], sortedCollections, 2);
+              score += collectionAdditionalScore(linkType.collections[1], sortedCollections, 2);
+            }
 
             return {attribute, linkType, suggestionType: SuggestionType.LinkAttribute, score};
           });
@@ -675,9 +680,9 @@ function viewAdditionalScore(view: View, sortedByLastUsed: View[]): number {
 
 function collectionAdditionalScore(collection: Collection, sortedByLastUsed: Collection[], divider = 1): number {
   let score = 0;
-  score += collection.favorite ? SuggestionScore.Favorite : 0;
+  score += collection?.favorite ? SuggestionScore.Favorite : 0;
 
-  const indexByLastUsed = findCollectionIndex(sortedByLastUsed, collection.id);
+  const indexByLastUsed = findCollectionIndex(sortedByLastUsed, collection?.id);
   score += indexByLastUsed < lastUsedThreshold && indexByLastUsed >= 0 ? SuggestionScore.LastUsed : 0;
   return score / divider;
 }

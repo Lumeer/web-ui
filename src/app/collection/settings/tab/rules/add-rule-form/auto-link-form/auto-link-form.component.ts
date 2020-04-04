@@ -86,10 +86,11 @@ export class AutoLinkFormComponent implements OnInit {
     this.form.get('linkType').setValue(linkTypeId);
     this.form.get('collection1').setValue(this.collection.id);
     this.linkedCollection =
-      this.selectedLinkType.collections[0].id === this.collection.id
+      this.selectedLinkType.collections?.length === 2 &&
+      (this.selectedLinkType.collections[0]?.id === this.collection.id
         ? this.selectedLinkType.collections[1]
-        : this.selectedLinkType.collections[0];
-    this.form.get('collection2').setValue(this.linkedCollection.id);
+        : this.selectedLinkType.collections[0]);
+    this.form.get('collection2').setValue(this.linkedCollection?.id);
 
     this.attribute2Empty = this.i18n(
       {
@@ -97,7 +98,7 @@ export class AutoLinkFormComponent implements OnInit {
         value: 'Select from {{collection}}',
       },
       {
-        collection: this.linkedCollection.name,
+        collection: this.linkedCollection?.name,
       }
     );
   }

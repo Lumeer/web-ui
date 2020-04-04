@@ -58,12 +58,11 @@ export class PivotAttributeSelectItemPipe implements PipeTransform {
       const attribute = findAttribute(linkType.attributes, pivotAttribute.attributeId);
       return (
         attribute &&
-        linkType.collections &&
-        linkType.collections.length === 2 && {
+        linkType.collections?.length === 2 && {
           id: cleanedAttribute,
           value: attribute.name,
-          icons: [linkType.collections[0].icon, linkType.collections[1].icon],
-          iconColors: [linkType.collections[1].color, linkType.collections[1].color],
+          icons: [linkType.collections?.[0]?.icon, linkType.collections?.[1]?.icon],
+          iconColors: [linkType.collections?.[1]?.color, linkType.collections?.[1]?.color],
         }
       );
     }

@@ -6,7 +6,7 @@
                    [class.mx-1]="!!linkType">
   </icons-presenter>
   <span data-test="table-caption-name">
-  {{ linkType?.name || collections[0]?.name }}
+  {{ linkType?.name || (collections && collections[0]?.name) }}
   </span>
 </div>
 

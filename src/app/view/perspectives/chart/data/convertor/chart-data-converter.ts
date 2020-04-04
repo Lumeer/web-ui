@@ -232,7 +232,7 @@ export class ChartDataConverter {
           continue;
         }
 
-        const id = draggable ? dataObject.id : null;
+        const id = draggable ? dataObject?.id : null;
 
         isNum = isNum && isNumeric(formattedValue);
 
@@ -551,7 +551,7 @@ export class ChartDataConverter {
   }
 
   private createEmptyData(config: ChartConfig): ChartData {
-    const color = this.collections && this.collections[0] && this.collections[0].color;
+    const color = this.collections?.[0]?.color;
     const emptySet: ChartDataSet = {
       yAxisType: ChartAxisType.Y1,
       yAxis: {

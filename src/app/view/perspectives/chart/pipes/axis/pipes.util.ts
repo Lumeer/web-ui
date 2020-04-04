@@ -52,7 +52,7 @@ export function linkTypeAttributeToItem(
   return {
     id: axis,
     value: attribute.name,
-    icons: [collections[0].icon, collections[1].icon],
-    iconColors: [collections[0].color, collections[1].color],
+    icons: [collections?.[0]?.icon, collections?.[1]?.icon],
+    iconColors: [collections?.[0]?.color, collections?.[1]?.color],
   };
 }
