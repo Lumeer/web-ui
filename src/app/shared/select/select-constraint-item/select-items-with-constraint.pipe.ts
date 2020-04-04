@@ -47,7 +47,7 @@ export class SelectItemWithConstraintPipe implements PipeTransform {
   }
 
   public collectionSelectItems(collection: Collection, index: number): SelectItemModel[] {
-    return ((collection && collection.attributes) || []).map(attribute => ({
+    return (collection?.attributes || []).map(attribute => ({
       id: {resourceIndex: index, attributeId: attribute.id},
       value: attribute.name,
       icons: [collection.icon],
@@ -59,11 +59,11 @@ export class SelectItemWithConstraintPipe implements PipeTransform {
     if (!linkType || !linkType.collections || linkType.collections.length !== 2) {
       return [];
     }
-    return ((linkType && linkType.attributes) || []).map(attribute => ({
+    return (linkType?.attributes || []).map(attribute => ({
       id: {resourceIndex: index, attributeId: attribute.id},
       value: attribute.name,
-      icons: [linkType.collections[0].icon, linkType.collections[1].icon],
-      iconColors: [linkType.collections[0].color, linkType.collections[1].color],
+      icons: [linkType.collections?.[0]?.icon, linkType.collections?.[1]?.icon],
+      iconColors: [linkType.collections?.[0]?.color, linkType.collections?.[1]?.color],
     }));
   }
 }

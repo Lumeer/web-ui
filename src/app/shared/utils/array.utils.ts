@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {deepObjectsEquals} from './common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined} from './common.utils';
 
 export function copyAndSpliceArray<T>(array: T[], index: number, deleteCount: number, ...items: T[]): T[] {
   const arrayCopy = [...array];
@@ -98,6 +98,10 @@ export function fullWithNulls<T>(array: T[], maximum: number): T[] {
     copy.push(null);
   }
   return copy;
+}
+
+export function filterNotNull<T>(values: T[]): T[] {
+  return [...(values || [])].filter(value => isNotNullOrUndefined(value));
 }
 
 export function reversedArray<T>(array: T[]): T[] {

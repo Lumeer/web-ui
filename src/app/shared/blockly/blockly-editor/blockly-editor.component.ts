@@ -346,13 +346,13 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           args0: [
             {
               type: 'field_fa',
-              icon: linkType.collections[0].icon,
-              iconColor: linkType.collections[0].color,
+              icon: linkType.collections?.[0]?.icon,
+              iconColor: linkType.collections?.[0]?.color,
             },
             {
               type: 'field_fa',
-              icon: linkType.collections[1].icon,
-              iconColor: linkType.collections[1].color,
+              icon: linkType.collections?.[1]?.icon,
+              iconColor: linkType.collections?.[1]?.color,
             },
             {
               type: 'field_label',
@@ -1369,9 +1369,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
   }
 
   private getLinkType(id: string): LinkType {
-    const currentLinkType = this.linkTypes.find(linkType => linkType.id === id);
-    const collections = this.collections.filter(c => currentLinkType.collectionIds.indexOf(c.id) >= 0);
-    if (collections.length === 2) {
+    const currentLinkType = this.linkTypes?.find(linkType => linkType.id === id);
+    const collections = this.collections?.filter(c => currentLinkType.collectionIds.indexOf(c.id) >= 0);
+    if (collections?.length === 2) {
       return {...currentLinkType, collections: [collections[0], collections[1]]};
     }
 

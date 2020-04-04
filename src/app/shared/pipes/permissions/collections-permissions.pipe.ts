@@ -34,6 +34,7 @@ import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.sta
 import {View} from '../../../core/store/views/view';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {authorRolesInView, userRolesInResource} from '../../utils/resource.utils';
+import {filterNotNull} from '../../utils/array.utils';
 
 @Pipe({
   name: 'collectionsPermissions',
@@ -49,10 +50,11 @@ export class CollectionsPermissionsPipe implements PipeTransform {
     return this.store$.pipe(
       select(selectCurrentUserIsManager),
       mergeMap(isManager => {
+        const notNullCollections = filterNotNull(collections);
         if (isManager) {
-          return of(this.managePermissionsOfCollections(collections));
+          return of(this.managePermissionsOfCollections(notNullCollections));
         }
-        return this.checkCollectionsPermissionWithView(collections);
+        return this.checkCollectionsPermissionWithView(notNullCollections);
       })
     );
   }

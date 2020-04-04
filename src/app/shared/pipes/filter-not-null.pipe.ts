@@ -18,25 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {LinkType} from '../../core/store/link-types/link.type';
-import {SelectItemModel} from '../select/select-item/select-item.model';
+import {filterNotNull} from '../utils/array.utils';
 
 @Pipe({
-  name: 'linkTypesSelectItems',
+  name: 'filterNotNull',
 })
-export class LinkTypesSelectItemsPipe implements PipeTransform {
-  public transform(linkTypes: LinkType[]): SelectItemModel[] {
-    if (linkTypes) {
-      return linkTypes.map(linkType => {
-        return {
-          id: linkType.id,
-          value: linkType.name,
-          icons: [linkType.collections?.[0].icon, linkType.collections[1].icon],
-          iconColors: [linkType.collections[0].color, linkType.collections[1].color],
-        } as SelectItemModel;
-      });
-    } else {
-      return [];
-    }
+export class FilterNotNullPipe implements PipeTransform {
+  public transform<T>(values: T[]): T[] {
+    return filterNotNull(values);
   }
 }
