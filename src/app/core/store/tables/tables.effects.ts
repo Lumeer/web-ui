@@ -120,6 +120,7 @@ import {
 import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInitialized} from './utils/table-row.utils';
 import {QueryParam} from '../navigation/query-param';
 import {selectTable} from './tables.state';
+import {AttributesResource} from '../../model/resource';
 
 @Injectable()
 export class TablesEffects {
@@ -576,8 +577,7 @@ export class TablesEffects {
         take(1),
         withLatestFrom(this.store$.pipe(select(selectTableById(cursor.tableId)))),
         mergeMap(([part, table]: [TableConfigPart, TableModel]) =>
-          this.store$.pipe(
-            select(part.collectionId ? selectCollectionById(part.collectionId) : selectLinkTypeById(part.linkTypeId)),
+          this.selectResource$(part).pipe(
             filter(entity => !!entity),
             take(1),
             withLatestFrom(this.store$.pipe(select(selectViewCode))),
@@ -604,6 +604,13 @@ export class TablesEffects {
       );
     })
   );
+
+  private selectResource$(part: TableConfigPart): Observable<AttributesResource> {
+    if (part.collectionId) {
+      return this.store$.pipe(select(selectCollectionById(part.collectionId)));
+    }
+    return this.store$.pipe(select(selectLinkTypeById(part.linkTypeId)));
+  }
 
   @Effect()
   public syncPrimaryRows$: Observable<Action> = this.actions$.pipe(

@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import Big from 'big.js';
 import {COLOR_GRAY100, COLOR_GRAY200, COLOR_GRAY300, COLOR_GRAY400, COLOR_GRAY500} from '../../../../core/constants';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
@@ -48,6 +47,7 @@ interface ValueTypeInfo {
   sum?: number;
   sumsRows?: number[];
   sumsColumns?: number[];
+  defaultConstraint?: Constraint;
 }
 
 export class PivotTableConverter {
@@ -137,7 +137,6 @@ export class PivotTableConverter {
     const rowGroups = this.fillCellsByRows(cells);
     const columnGroups = this.fillCellsByColumns(cells);
     this.fillCellsByGroupIntersection(cells, rowGroups, columnGroups);
-    this.formatCellsValues(cells);
 
     return {cells};
   }
@@ -305,7 +304,7 @@ export class PivotTableConverter {
   }
 
   private formatValueByConstraint(value: any, valueIndex: number): any {
-    const constraint = this.data.valuesConstraints && this.data.valuesConstraints[valueIndex];
+    const constraint = this.data.valuesConstraints?.[valueIndex] || this.valueTypeInfo[valueIndex]?.defaultConstraint;
     if (this.shouldFormatConstraint(constraint)) {
       return constraint.createDataValue(value, this.constraintData).preview();
     }
@@ -579,26 +578,6 @@ export class PivotTableConverter {
     }
   }
 
-  private formatCellsValues(cells: PivotTableCell[][]) {
-    const rowsCount = cells.length;
-    const columnsCount = (cells[0] && cells[0].length) || 0;
-    for (let j = this.rowLevels; j < columnsCount; j++) {
-      let columnContainsPercentage = false;
-      for (let i = this.columnLevels; i < rowsCount; i++) {
-        if (cells[i][j] && isValueDecimal(cells[i][j].value)) {
-          columnContainsPercentage = true;
-          break;
-        }
-      }
-
-      if (columnContainsPercentage) {
-        for (let i = this.columnLevels; i < rowsCount; i++) {
-          cells[i][j] && (cells[i][j].value = formatDecimalValue(cells[i][j].value));
-        }
-      }
-    }
-  }
-
   private initCells(): PivotTableCell[][] {
     const rows = this.getRowsCount() + this.columnLevels;
     const columns = this.getColumnsCount() + this.rowLevels;
@@ -702,10 +681,6 @@ function getValuesTypeInfo(values: any[][], valueTypes: PivotValueType[], numVal
 
   for (let i = 0; i < numValues; i++) {
     const valueType = valueTypes && valueTypes[i];
-    if (!valueType || valueType === PivotValueType.Default) {
-      continue;
-    }
-
     const columnsCount = (values[0] && values[0].length) || 0;
     const columnIndexes = [...Array(columnsCount).keys()].filter(key => key % numValues === i);
 
@@ -716,10 +691,16 @@ function getValuesTypeInfo(values: any[][], valueTypes: PivotValueType[], numVal
 }
 
 function getValueTypeInfo(values: any[][], type: PivotValueType, rows: number[], columns: number[]): ValueTypeInfo {
+  const containsDecimal = containsDecimalValue(values, rows, columns);
+  const valueTypeInfo: ValueTypeInfo = {
+    defaultConstraint: containsDecimal ? new NumberConstraint({decimals: 2}) : null,
+  };
+
   if (type === PivotValueType.AllPercentage) {
-    return {sum: getNumericValuesSummary(values, rows, columns)};
+    return {...valueTypeInfo, sum: getNumericValuesSummary(values, rows, columns)};
   } else if (type === PivotValueType.RowPercentage) {
     return {
+      ...valueTypeInfo,
       sumsRows: rows.reduce((arr, row) => {
         arr[row] = getNumericValuesSummary(values, [row], columns);
         return arr;
@@ -727,6 +708,7 @@ function getValueTypeInfo(values: any[][], type: PivotValueType, rows: number[],
     };
   } else if (type === PivotValueType.ColumnPercentage) {
     return {
+      ...valueTypeInfo,
       sumsColumns: columns.reduce((arr, column) => {
         arr[column] = getNumericValuesSummary(values, rows, [column]);
         return arr;
@@ -734,7 +716,18 @@ function getValueTypeInfo(values: any[][], type: PivotValueType, rows: number[],
     };
   }
 
-  return {};
+  return {...valueTypeInfo};
+}
+
+function containsDecimalValue(values: any[][], rows: number[], columns: number[]): boolean {
+  for (const row of rows) {
+    for (const column of columns) {
+      if (isValueDecimal(values[row][column])) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 function isValueDecimal(value: string): boolean {
@@ -744,25 +737,8 @@ function isValueDecimal(value: string): boolean {
 
   if (isNumeric(value)) {
     return toNumber(value) % 1 !== 0;
-  } else if (value.endsWith('%')) {
-    return toNumber(value.substring(0, value.length - 1)) % 1 !== 0;
   }
-
   return false;
-}
-
-function formatDecimalValue(value: string): string {
-  if (isNullOrUndefined(value)) {
-    return value;
-  }
-
-  if (isNumeric(value)) {
-    return new Big(toNumber(value)).toFixed(2);
-  } else if (value.endsWith('%')) {
-    return new Big(toNumber(value.substring(0, value.length - 1))).toFixed(2) + '%';
-  }
-
-  return '';
 }
 
 function createTransformationMap(
