@@ -186,7 +186,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     this.valueChange.emit(dataValue);
   }
 
-  private saveValue(activeOption: DropdownOption, enter?: boolean) {
+  private saveValue(activeOption?: DropdownOption, enter?: boolean) {
     if (this.multi) {
       const selectedOption =
         activeOption && this.value.config.options.find(option => option.value === activeOption.value);
@@ -229,9 +229,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     if (this.preventSave) {
       this.preventSave = false;
       this.blurCleanup();
-    } else {
-      const activeOption = this.multi ? null : this.dropdown && this.dropdown.getActiveOption();
-      this.saveValue(activeOption);
+    } else if (this.multi) {
+      this.saveValue();
+    } else if (this.dropdown?.getActiveOption()) {
+      this.saveValue(this.dropdown.getActiveOption());
     }
   }
 
