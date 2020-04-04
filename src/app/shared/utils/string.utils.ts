@@ -71,3 +71,7 @@ export function transformTextToSentenceCase(text: string): string {
 export function setCharAt(value: string, position: number, char: string): string {
   return value.substring(0, position) + char + value.substring(position + 1, value.length);
 }
+
+export function replaceNbsp(value: string): string {
+  return (value || '').replace(/&nbsp;/g, ' ');
+}

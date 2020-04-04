@@ -18,7 +18,7 @@
  */
 
 import {formatUnknownDataValue, stripTextHtmlTags} from '../../../shared/utils/data.utils';
-import {transformTextBasedOnCaseStyle} from '../../../shared/utils/string.utils';
+import {replaceNbsp, transformTextBasedOnCaseStyle} from '../../../shared/utils/string.utils';
 import {TextConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
@@ -95,7 +95,7 @@ export class TextDataValue implements DataValue {
   }
 
   public parseInput(inputValue: string): TextDataValue {
-    return new TextDataValue(inputValue, this.config, inputValue);
+    return new TextDataValue(inputValue, this.config, replaceNbsp(inputValue));
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {

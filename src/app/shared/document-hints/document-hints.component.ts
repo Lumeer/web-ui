@@ -56,6 +56,7 @@ import {isNotNullOrUndefined} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
 import {DataValue} from '../../core/model/data-value';
+import {stripTextHtmlTags} from '../utils/data.utils';
 
 @Component({
   selector: 'document-hints',
@@ -157,18 +158,19 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     this.documents$ = combineLatest([documents$, this.collection$]).pipe(
       mergeMap(([documents, collection]) =>
         this.filter$.pipe(
+          map(typedValue => stripTextHtmlTags(String(typedValue || ''), false).toLowerCase()),
           map(typedValue => {
             const constraint =
-              findAttributeConstraint(collection && collection.attributes, this.attributeId) || new UnknownConstraint();
+              findAttributeConstraint(collection?.attributes, this.attributeId) || new UnknownConstraint();
             return documents
               .filter(document => {
                 const value = document.data[this.attributeId];
                 const formattedValue = isNotNullOrUndefined(value)
                   ? constraint.createDataValue(value, this.constraintData).format()
                   : '';
-                return String(formattedValue)
+                return stripTextHtmlTags(String(formattedValue), false)
                   .toLowerCase()
-                  .includes(String(typedValue || '').toLowerCase());
+                  .includes(typedValue);
               })
               .slice(0, this.limit);
           }),
