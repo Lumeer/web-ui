@@ -346,7 +346,7 @@ export class GanttChartConverter {
       const progress = progressConstraint.createDataValue(progressRaw).format();
 
       const resourceColor = this.getPropertyColor(stemConfig.name || stemConfig.start);
-      const taskColor = this.parseColor(stemConfig.color, colorDataResources) || resourceColor;
+      const taskColor = this.parseColor(stemConfig.color, colorDataResources);
 
       const datesSwimlanes: {value: any; title: string}[] = [];
       if (showDatesAsSwimlanes) {
@@ -387,6 +387,11 @@ export class GanttChartConverter {
       for (let i = 0; i < names.length; i++) {
         const nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).format();
 
+        const barColor = taskColor
+          ? stemConfig.progress
+            ? shadeColor(taskColor, 0.3)
+            : taskColor
+          : shadeColor(resourceColor, 0.5);
         const taskId = helperDataId(item);
         const dataResourceId = (nameDataResource || startDataResource).id;
         arr.push({
@@ -397,13 +402,13 @@ export class GanttChartConverter {
           progress: createProgress(progress),
           dependencies: (canEditDependencies && validDataResourceIdsMap[dataResourceId]) || [],
           allowedDependencies: canEditDependencies ? validTaskIds.filter(id => id !== taskId) : [],
-          barColor: shadeColor(taskColor, 0.5),
-          progressColor: shadeColor(taskColor, 0.3),
+          barColor,
+          progressColor: taskColor || shadeColor(resourceColor, 0.3),
           startDrag: startEditable && startPermission.writeWithView,
           endDrag: endEditable && endPermission.writeWithView,
           progressDrag: progressEditable && metadata.progressDataIds.length === 1 && progressPermission.writeWithView,
           editable: startPermission.writeWithView && endPermission.writeWithView,
-          textColor: contrastColor(shadeColor(taskColor, 0.5)),
+          textColor: contrastColor(barColor),
           swimlanes: [...fullWithNulls(metadata.swimlanes, maximumSwimlanes), ...datesSwimlanes],
           minProgress,
           maxProgress,

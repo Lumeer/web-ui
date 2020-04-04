@@ -162,7 +162,7 @@ export class CalendarConverter {
 
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
       const resourceColor = this.getPropertyColor(stemConfig.name || stemConfig.start);
-      const eventColor = this.parseColor(stemConfig.color, colorDataResources) || resourceColor;
+      const eventColor = this.parseColor(stemConfig.color, colorDataResources);
 
       const interval = createDatesInterval(start, startConstraint, end, endConstraint, this.constraintData);
       const allDay = isAllDayEvent(interval.start, interval.end);
@@ -174,8 +174,7 @@ export class CalendarConverter {
           false
         );
 
-        const backgroundColor = shadeColor(eventColor, 0.5);
-
+        const backgroundColor = eventColor || shadeColor(resourceColor, 0.5);
         const event: CalendarEvent = {
           id: generateId(),
           groupId: groupId(item),
@@ -183,7 +182,7 @@ export class CalendarConverter {
           start: interval.start,
           end: interval.end,
           backgroundColor,
-          borderColor: shadeColor(eventColor, 0.4),
+          borderColor: eventColor || shadeColor(resourceColor, 0.4),
           textColor: contrastColor(backgroundColor),
           allDay,
           startEditable: startEditable && startPermission?.writeWithView,
