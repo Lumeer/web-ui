@@ -176,27 +176,13 @@ export function parseDateTimeByConstraint(value: any, constraint: Constraint): D
   }
 
   if (constraint && constraint.type === ConstraintType.DateTime) {
-    const format = (<DateTimeConstraint>constraint).config.format;
-    return parseDateTimeDataValue(value, format);
+    return (<DateTimeConstraint>constraint).createDataValue(value).toDate();
   }
 
   return parseMomentDate(value, null).toDate();
 }
 
-function parseDateTimeDataValue(value: any, expectedFormat: string): Date {
-  if (!value) {
-    return value;
-  }
-
-  const momentDate = parseMomentDate(value, expectedFormat);
-  if (!momentDate.isValid()) {
-    return null;
-  }
-
-  return resetUnusedMomentPart(momentDate, expectedFormat).toDate();
-}
-
-export function parseMomentDate(value: any, expectedFormat: string): moment.Moment {
+export function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
   if (!value) {
     return value;
   }
@@ -213,6 +199,14 @@ export function parseMomentDate(value: any, expectedFormat: string): moment.Mome
   }
 
   return moment(value, formats);
+}
+
+export function constraintContainsHoursInConfig(constraint: Constraint): boolean {
+  if (constraint?.type === ConstraintType.DateTime) {
+    const format = (<DateTimeConstraint>constraint).config?.format;
+    return createDateTimeOptions(format).hours;
+  }
+  return false;
 }
 
 export function createDatesInterval(

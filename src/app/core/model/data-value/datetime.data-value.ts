@@ -37,12 +37,18 @@ export class DateTimeDataValue implements DataValue {
     public readonly config: DateTimeConstraintConfig,
     public readonly inputValue?: string
   ) {
-    if (isDateValid(this.value)) {
+    if (inputValue) {
+      this.momentDate = parseMomentDate(this.value, this.config?.format);
+    } else if (isDateValid(this.value)) {
       this.momentDate = moment(this.value);
       this.value = this.value.getTime();
     } else if (this.value || this.value === 0) {
-      this.momentDate = parseMomentDate(this.value, this.config?.format);
+      this.momentDate = moment(this.value);
     }
+
+    this.momentDate = this.momentDate?.isValid()
+      ? resetUnusedMomentPart(this.momentDate, this.config?.format)
+      : this.momentDate;
   }
 
   public serialize(): any {

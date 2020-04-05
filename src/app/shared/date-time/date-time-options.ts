@@ -34,7 +34,7 @@ export interface DateTimeOptions {
 
 export function createDateTimeOptions(format: string): DateTimeOptions {
   return (
-    format && {
+    (format && {
       year: format.toLowerCase().includes('y'),
       quarter: format.toLowerCase().includes('q'),
       month: format.includes('M'),
@@ -45,7 +45,8 @@ export function createDateTimeOptions(format: string): DateTimeOptions {
       seconds: format.includes('s'),
       meridian: format.toLowerCase().includes('a'),
       milliseconds: format.includes('S'),
-    }
+    }) ||
+    {}
   );
 }
 

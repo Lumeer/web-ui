@@ -42,11 +42,17 @@ import {
 } from '../../../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {isAllDayEvent} from './calendar-util';
-import {createDatesInterval, parseDateTimeByConstraint} from '../../../../shared/utils/date.utils';
+import {
+  constraintContainsHoursInConfig,
+  createDatesInterval,
+  parseDateTimeByConstraint,
+} from '../../../../shared/utils/date.utils';
 import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
+import * as moment from 'moment';
+import {GANTT_DATE_FORMAT} from '../../../../core/store/gantt-charts/gantt-chart';
 
 enum DataObjectInfoKeyType {
   Name = 'name',
@@ -164,7 +170,7 @@ export class CalendarConverter {
       const resourceColor = this.getPropertyColor(stemConfig.name || stemConfig.start);
       const eventColor = this.parseColor(stemConfig.color, colorDataResources);
 
-      const interval = createDatesInterval(start, startConstraint, end, endConstraint, this.constraintData);
+      const interval = createInterval(start, startConstraint, end, endConstraint, this.constraintData);
       const allDay = isAllDayEvent(interval.start, interval.end);
 
       const titles = isArray(name) ? name : [name];
@@ -254,6 +260,35 @@ export class CalendarConverter {
 
     return null;
   }
+}
+
+function createInterval(
+  startString: string,
+  startConstraint: Constraint,
+  endString: string,
+  endConstraint: Constraint,
+  constraintData: ConstraintData
+): {start: Date; end: Date; swapped: boolean} {
+  const {start: startDate, end: endDate, swapped} = createDatesInterval(
+    startString,
+    startConstraint,
+    endString,
+    endConstraint,
+    constraintData
+  );
+
+  let startMoment = moment(startDate);
+
+  if (!constraintContainsHoursInConfig(startConstraint)) {
+    startMoment = startMoment.startOf('day');
+  }
+
+  let endMoment = moment(endDate);
+  if (!constraintContainsHoursInConfig(endConstraint)) {
+    endMoment = endMoment.startOf('day').add(1, 'days');
+  }
+
+  return {start: startMoment.toDate(), end: endMoment.toDate(), swapped};
 }
 
 function groupId(data: DataObjectInfo<any>): string {
