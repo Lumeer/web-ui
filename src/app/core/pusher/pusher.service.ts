@@ -613,6 +613,16 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId: data.id}));
       }
     });
+    this.channel.bind('FavoriteView:create', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new ViewsAction.AddFavoriteSuccess({viewId: data.id}));
+      }
+    });
+    this.channel.bind('FavoriteView:remove', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(new ViewsAction.RemoveFavoriteSuccess({viewId: data.id}));
+      }
+    });
   }
 
   private bindUserEvents() {
