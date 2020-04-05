@@ -33,7 +33,7 @@ export class CellDataInputInfoPipe implements PipeTransform {
     dataValue: DataValue,
     permissions: AllowedPermissions,
     editing: boolean
-  ): {readonly: boolean; hasValue: boolean; showDataInput: boolean} {
+  ): {readonly: boolean; hasValue: boolean; showDataInput: boolean; selectConstraint: boolean; editing: boolean} {
     const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
     const asText = constraint.isTextRepresentation;
     const hasValue = dataValue && !!dataValue.format();
@@ -45,6 +45,8 @@ export class CellDataInputInfoPipe implements PipeTransform {
       readonly,
       hasValue,
       showDataInput: forceDataInput || !readonly || (!asText && hasValue),
+      selectConstraint: constraint.type === ConstraintType.Select,
+      editing,
     };
   }
 }

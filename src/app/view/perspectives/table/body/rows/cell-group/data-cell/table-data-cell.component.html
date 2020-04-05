@@ -33,6 +33,8 @@
                 (cancel)="onCancelEditing()"
                 (enterInvalid)="onEnterInvalid()"
                 class="d-block h-100"
+                [class.mr-1]="dataInputInfo.selectConstraint && !dataInputInfo.editing"
+                [class.ml-1]="dataInputInfo.selectConstraint && dataInputInfo.editing"
                 [class.cursor-default]="!(data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)"
                 data-test="table-data-input">
     </data-input>
