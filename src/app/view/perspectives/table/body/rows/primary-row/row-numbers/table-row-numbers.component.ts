@@ -30,14 +30,17 @@ import {
   SimpleChanges,
   ViewChildren,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {select, Store} from '@ngrx/store';
+import {BehaviorSubject, Observable, pipe} from 'rxjs';
+import {distinctUntilChanged, map, mergeMap, switchMap, take} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../../core/store/tables/table.model';
 import {countLinkedRows, getTableElement} from '../../../../../../../core/store/tables/table.utils';
 import {TableRowNumberService} from '../../../../table-row-number.service';
 import {ResizeObserverEntry, ResizeObserver} from '../../../../../../../shared/resize-observer';
+import {ModalService} from '../../../../../../../shared/modal/modal.service';
+import {selectDocumentById} from '../../../../../../../core/store/documents/documents.state';
+import {selectCollectionById} from '../../../../../../../core/store/collections/collections.state';
 
 declare let ResizeObserver: ResizeObserver;
 
@@ -67,7 +70,8 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
   constructor(
     private element: ElementRef,
     private store$: Store<{}>,
-    private tableRowsService: TableRowNumberService
+    private tableRowsService: TableRowNumberService,
+    private modalService: ModalService
   ) {}
 
   public ngOnInit() {
@@ -137,6 +141,25 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
 
   public trackByIndex(index: number) {
     return index;
+  }
+
+  public onNumberClick() {
+    this.store$
+      .pipe(
+        select(selectDocumentById(this.row?.documentId)),
+        mergeMap(document =>
+          this.store$.pipe(
+            select(selectCollectionById(document?.collectionId)),
+            map(collection => ({collection, document}))
+          )
+        ),
+        take(1)
+      )
+      .subscribe(({collection, document}) => {
+        if (collection && document) {
+          this.modalService.showDataResourceDetail(document, collection);
+        }
+      });
   }
 }
 
