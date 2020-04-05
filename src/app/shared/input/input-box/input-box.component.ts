@@ -33,7 +33,7 @@ const warningStyle = ['border', 'border-danger', 'rounded'];
   styleUrls: ['./input-box.component.scss'],
 })
 export class InputBoxComponent implements OnInit {
-  @ViewChild('input', {static: true}) public input: ElementRef;
+  @ViewChild('input', {static: true}) public input: ElementRef<HTMLDivElement>;
   @ViewChild('inputParent', {static: true}) public inputParent: ElementRef;
 
   @Input() public initialValue: string;
@@ -76,6 +76,10 @@ export class InputBoxComponent implements OnInit {
 
   public ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
     this.computeProperties();
+  }
+
+  public get inputElement(): HTMLDivElement {
+    return this.input?.nativeElement;
   }
 
   private computeProperties() {
@@ -154,6 +158,7 @@ export class InputBoxComponent implements OnInit {
 
   public setValue(value: string) {
     this.mCurrentValue = this.filterValue(value);
+    setTimeout(() => this.inputElement && (this.inputElement.textContent = value));
   }
 
   public onFocus() {
@@ -162,19 +167,19 @@ export class InputBoxComponent implements OnInit {
   }
 
   public addFocusToInputParent() {
-    this.inputParent.nativeElement.classList.add('focused');
+    this.inputParent?.nativeElement?.classList.add('focused');
   }
 
   public removeFocusFromInputParent() {
-    this.inputParent.nativeElement.classList.remove('focused');
+    this.inputParent?.nativeElement?.classList.remove('focused');
   }
 
   public setWarningBorder() {
-    this.input.nativeElement.classList.add(...warningStyle);
+    this.inputElement.classList.add(...warningStyle);
   }
 
   public removeWarningBorder() {
-    this.input.nativeElement.classList.remove(...warningStyle);
+    this.inputElement.classList.remove(...warningStyle);
   }
 
   private defaultPlaceholder() {
@@ -185,20 +190,21 @@ export class InputBoxComponent implements OnInit {
   }
 
   public onInterimNewValue(textContent: string | null) {
+    let value = this.filterValue(textContent);
+
+    if (this.maxLength && value.length > this.maxLength) {
+      value = value.substring(0, this.maxLength);
+    }
+
+    const element = this.input.nativeElement;
     if (this.emitAllChanges) {
-      let value = this.filterValue(textContent);
-
-      if (this.maxLength && value.length > this.maxLength) {
-        value = value.substring(0, this.maxLength);
-      }
-
-      const element = this.input.nativeElement;
       this.newValue.emit(value);
+    }
+
+    if (textContent !== value) {
       const caret = this.getCaret(element);
       element.textContent = value;
-      if (textContent.length !== value.length) {
-        this.setCaret(element, caret - (textContent.length - value.length));
-      }
+      this.setCaret(element, caret - (textContent.length - value.length));
     }
   }
 

@@ -91,8 +91,13 @@ export class TableColumnInputComponent implements OnChanges {
   }
 
   public onInput(event: Event) {
-    const value = event.target['value'] || '';
-    this.valueChange.emit(value.trim());
+    const eventValue = String(event.target['value'] || '');
+    const value = filterOutInvalidAttributeNameCharacters(eventValue);
+    this.valueChange.emit(eventValue);
+
+    if (eventValue !== value) {
+      this.textInput.nativeElement.value = value;
+    }
   }
 
   public onPaste(event: Event) {
@@ -144,6 +149,6 @@ export class TableColumnInputComponent implements OnChanges {
 
   private saveValue() {
     const {value} = this.textInput.nativeElement;
-    this.save.emit(value);
+    this.save.emit(value?.trim());
   }
 }

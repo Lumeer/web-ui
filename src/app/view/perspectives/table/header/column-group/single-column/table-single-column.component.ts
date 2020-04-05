@@ -217,6 +217,7 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     if (!lastName) {
       return;
     }
+    this.lastName$.next(lastName);
 
     if (this.suggestions && this.suggestions.isSelected()) {
       this.suggestions.useSelection();
