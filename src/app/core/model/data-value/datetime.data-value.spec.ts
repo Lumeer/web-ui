@@ -197,22 +197,22 @@ describe('DateTimeDataValue', () => {
 
     it('equals by last week', () => {
       expect(
-        new DateTimeDataValue(lastWeek, yearConfig).meetCondition(QueryCondition.Equals, [
+        new DateTimeDataValue(lastWeek, dayConfig).meetCondition(QueryCondition.Equals, [
           {type: DateTimeConstraintConditionValue.LastWeek},
         ])
       ).toBeTruthy();
       expect(
-        new DateTimeDataValue(today, yearConfig).meetCondition(QueryCondition.Equals, [
+        new DateTimeDataValue(today, dayConfig).meetCondition(QueryCondition.Equals, [
           {type: DateTimeConstraintConditionValue.LastWeek},
         ])
       ).toBeFalsy();
       expect(
-        new DateTimeDataValue(nextMonth, yearConfig).meetCondition(QueryCondition.NotEquals, [
+        new DateTimeDataValue(nextMonth, dayConfig).meetCondition(QueryCondition.NotEquals, [
           {type: DateTimeConstraintConditionValue.LastWeek},
         ])
       ).toBeTruthy();
       expect(
-        new DateTimeDataValue(lastWeek, yearConfig).meetCondition(QueryCondition.NotEquals, [
+        new DateTimeDataValue(lastWeek, dayConfig).meetCondition(QueryCondition.NotEquals, [
           {type: DateTimeConstraintConditionValue.LastWeek},
         ])
       ).toBeFalsy();

@@ -48,9 +48,10 @@ import {GanttChartBarModel} from '../../../../core/store/gantt-charts/gantt-char
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
 import {DataValue} from '../../../../core/model/data-value';
-import {subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
+import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
 import {durationCountsMapToString} from '../../../../shared/utils/constraint/duration-constraint.utils';
 import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
+import * as moment from 'moment';
 
 interface Data {
   collections: Collection[];
@@ -254,7 +255,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
         patchData[model.attributeId] = toNumber(dataValue.serialize());
       }
     } else {
-      this.patchDate(end, model, patchData, dataResource);
+      this.patchDate(end, model, patchData, dataResource, true);
     }
   }
 
@@ -262,12 +263,21 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     date: Date,
     model: GanttChartBarModel,
     patchData: Record<string, any>,
-    dataResource: DataResource = null
+    dataResource: DataResource = null,
+    subtractDay?: boolean
   ) {
     const resource = this.getResourceById(model.resourceId, model.resourceType);
     const constraint =
       findAttributeConstraint(resource && resource.attributes, model.attributeId) || new DateTimeConstraint(null);
-    const dataValue: DataValue = constraint.createDataValue(date, this.constraintData);
+    let momentDate = moment(date);
+    if (!constraintContainsHoursInConfig(constraint)) {
+      momentDate = momentDate.startOf('day');
+      if (subtractDay) {
+        momentDate = momentDate.subtract(1, 'days');
+      }
+    }
+
+    const dataValue: DataValue = constraint.createDataValue(momentDate.toDate(), this.constraintData);
     if (!dataResource || dataValue.compareTo(constraint.createDataValue(dataResource.data[model.attributeId])) !== 0) {
       patchData[model.attributeId] = dataValue.serialize();
     }

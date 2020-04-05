@@ -37,12 +37,18 @@ export class DateTimeDataValue implements DataValue {
     public readonly config: DateTimeConstraintConfig,
     public readonly inputValue?: string
   ) {
-    if (isDateValid(this.value)) {
+    if (inputValue) {
+      this.momentDate = parseMomentDate(this.value, this.config?.format);
+    } else if (isDateValid(this.value)) {
       this.momentDate = moment(this.value);
       this.value = this.value.getTime();
-    } else if (this.value || this.value === 0) {
-      this.momentDate = parseMomentDate(this.value, this.config?.format);
+    } else if (this.value) {
+      this.momentDate = isISOFormat(this.value) ? moment(this.value) : parseMomentDate(this.value, this.config?.format);
     }
+
+    this.momentDate = this.momentDate?.isValid()
+      ? resetUnusedMomentPart(this.momentDate, this.config?.format)
+      : this.momentDate;
   }
 
   public serialize(): any {
@@ -281,6 +287,10 @@ function constraintConditionValueFormat(value: ConstraintConditionValue): string
     default:
       return '';
   }
+}
+
+function isISOFormat(value: any): boolean {
+  return String(value || '').match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}/g)?.length > 0;
 }
 
 function constraintConditionValueMoment(value: ConstraintConditionValue): moment.Moment {

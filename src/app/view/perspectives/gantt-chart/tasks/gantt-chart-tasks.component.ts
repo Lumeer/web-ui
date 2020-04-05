@@ -77,7 +77,7 @@ import {
 } from '../../../../core/store/navigation/query/query.util';
 import {generateDocumentData} from '../../../../core/store/documents/document.utils';
 import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
-import {subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
+import {constraintContainsHoursInConfig, subtractDatesToDurationCountsMap} from '../../../../shared/utils/date.utils';
 import {durationCountsMapToString} from '../../../../shared/utils/constraint/duration-constraint.utils';
 
 interface Data {
@@ -404,7 +404,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
       patchData[model.attributeId] = toNumber(dataValue.serialize());
     } else {
-      this.patchDate(task.end, model, patchData, dataResource);
+      this.patchDate(task.end, model, patchData, dataResource, true);
     }
   }
 
@@ -412,14 +412,23 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
     dateString: string,
     model: GanttChartBarModel,
     patchData: Record<string, any>,
-    dataResource: DataResource = null
+    dataResource: DataResource = null,
+    subtractDay?: boolean
   ) {
-    const date = moment(dateString, this.options && this.options.dateFormat).toDate();
+    let momentDate = moment(dateString, this.options && this.options.dateFormat);
     const resource = this.getResourceById(model.resourceId, model.resourceType);
     const constraint =
       findAttributeConstraint(resource && resource.attributes, model.attributeId) ||
       new DateTimeConstraint({format: this.options && this.options.dateFormat});
-    const dataValue: DataValue = constraint.createDataValue(date, this.constraintData);
+    if (!constraintContainsHoursInConfig(constraint)) {
+      momentDate = momentDate.startOf('day');
+      if (subtractDay) {
+        momentDate = momentDate.subtract(1, 'days');
+      }
+    }
+
+    const dataValue: DataValue = constraint.createDataValue(momentDate.toDate(), this.constraintData);
+
     if (!dataResource || dataValue.compareTo(constraint.createDataValue(dataResource.data[model.attributeId])) !== 0) {
       patchData[model.attributeId] = dataValue.serialize();
     }

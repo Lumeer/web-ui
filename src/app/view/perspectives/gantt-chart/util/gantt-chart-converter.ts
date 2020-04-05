@@ -63,7 +63,11 @@ import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils
 import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
 import {Md5} from '../../../../shared/utils/md5';
 import {canCreateTaskByStemConfig} from './gantt-chart-util';
-import {createDatesInterval, parseDateTimeByConstraint} from '../../../../shared/utils/date.utils';
+import {
+  constraintContainsHoursInConfig,
+  createDatesInterval,
+  parseDateTimeByConstraint,
+} from '../../../../shared/utils/date.utils';
 import {
   DataObjectAggregator,
   DataObjectAttribute,
@@ -71,6 +75,8 @@ import {
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {QueryAttribute, queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {fullWithNulls} from '../../../../shared/utils/array.utils';
+import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
+import {createDateTimeOptions} from '../../../../shared/date-time/date-time-options';
 
 export interface GanttTaskMetadata {
   nameDataId: string;
@@ -583,9 +589,21 @@ function createInterval(
     endConstraint,
     constraintData
   );
+
+  let startMoment = moment(startDate);
+
+  if (!constraintContainsHoursInConfig(startConstraint)) {
+    startMoment = startMoment.startOf('day');
+  }
+
+  let endMoment = moment(endDate);
+  if (!constraintContainsHoursInConfig(endConstraint)) {
+    endMoment = endMoment.startOf('day').add(1, 'days');
+  }
+
   return {
-    start: moment(startDate).format(GANTT_DATE_FORMAT),
-    end: moment(endDate).format(GANTT_DATE_FORMAT),
+    start: startMoment.format(GANTT_DATE_FORMAT),
+    end: endMoment.format(GANTT_DATE_FORMAT),
     swapped,
   };
 }
