@@ -22,6 +22,7 @@ import {Permission, PermissionType} from '../permissions/permissions';
 import {Project} from './project';
 import {Workspace} from '../navigation/workspace';
 import {TemplateType} from '../../model/template';
+import {NavigationExtras} from '@angular/router';
 
 export enum ProjectsActionType {
   GET = '[Projects] Get',
@@ -114,6 +115,7 @@ export namespace ProjectsAction {
       public payload: {
         project: Project;
         template?: TemplateType;
+        navigationExtras?: NavigationExtras;
         onSuccess?: (project: Project) => void;
         onFailure?: () => void;
       }

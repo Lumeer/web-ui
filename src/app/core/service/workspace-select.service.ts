@@ -104,9 +104,7 @@ export class WorkspaceSelectService {
     templateType?: TemplateType,
     extras?: NavigationExtras
   ): BsModalRef {
-    return this.openCreateProjectModal(organization, templateType, project =>
-      this.goToProject(organization, project, extras)
-    );
+    return this.openCreateProjectModal(organization, templateType, extras);
   }
 
   public selectProject(organization: Organization, project: Project) {
@@ -120,9 +118,14 @@ export class WorkspaceSelectService {
   private openCreateProjectModal(
     organization: Organization,
     templateType: TemplateType,
-    callback: (Project) => void
+    extras?: NavigationExtras
   ): BsModalRef {
-    const initialState = {templateType, parentId: organization.id, resourceType: ResourceType.Project, callback};
+    const initialState = {
+      templateType,
+      parentId: organization.id,
+      resourceType: ResourceType.Project,
+      navigationExtras: extras,
+    };
     const config = {initialState, keyboard: false, class: 'modal-lg'};
     config['backdrop'] = 'static';
     return this.modalService.show(CreateResourceModalComponent, config);
