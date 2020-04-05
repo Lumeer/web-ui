@@ -17,85 +17,67 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
-import {isNullOrUndefined} from 'util';
+import {Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {AppState} from '../../../../core/store/app.state';
 import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {InputBoxComponent} from '../../../../shared/input/input-box/input-box.component';
+import {CollectionAttributesTableComponent} from './table/collection-attributes-table.component';
 
 @Component({
   templateUrl: './collection-attributes.component.html',
-  styleUrls: ['./collection-attributes.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionAttributesComponent implements OnInit, OnDestroy {
-  public collection: Collection;
-  public attributes: Attribute[] = [];
-  public searchString: string;
-  public attributePlaceholder: string;
-  public newAttributeName: string;
+export class CollectionAttributesComponent implements OnInit {
+  @ViewChild(CollectionAttributesTableComponent)
+  public tableComponent: CollectionAttributesTableComponent;
 
-  private collectionSubscription = new Subscription();
+  public collection$: Observable<Collection>;
 
-  constructor(private i18n: I18n, private notificationService: NotificationService, private store: Store<AppState>) {}
+  private collection: Collection;
+
+  constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>) {}
 
   public ngOnInit(): void {
-    this.subscribeData();
-    this.translatePlaceholders();
-  }
-
-  public ngOnDestroy() {
-    this.collectionSubscription.unsubscribe();
+    this.collection$ = this.store$.pipe(
+      select(selectCollectionByWorkspace),
+      tap(collection => (this.collection = collection))
+    );
   }
 
   public setDefaultAttribute(attribute: Attribute) {
-    if (this.collection.defaultAttributeId === attribute.id) {
-      return;
+    if (this.collection?.defaultAttributeId !== attribute.id) {
+      this.store$.dispatch(
+        new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: attribute.id})
+      );
     }
-    this.store.dispatch(
-      new CollectionsAction.SetDefaultAttribute({collectionId: this.collection.id, attributeId: attribute.id})
-    );
   }
 
-  public onCreateAttribute() {
-    const name = (this.newAttributeName || '').trim();
-    if (name === '') {
-      return;
+  public onCreateAttribute(name: string) {
+    if (this.collection) {
+      const attribute = {name, usageCount: 0};
+      this.store$.dispatch(
+        new CollectionsAction.CreateAttributes({collectionId: this.collection.id, attributes: [attribute]})
+      );
     }
-    const attribute = {name, usageCount: 0};
-    this.store.dispatch(
-      new CollectionsAction.CreateAttributes({collectionId: this.collection.id, attributes: [attribute]})
-    );
-
-    this.newAttributeName = '';
   }
 
-  public isDefaultAttribute(attribute: Attribute): boolean {
-    return attribute.id === this.getDefaultAttributeId();
-  }
-
-  private getDefaultAttributeId(): string {
-    return getDefaultAttributeId(this.collection);
-  }
-
-  public onNewAttributeName(component: InputBoxComponent, attribute: Attribute, newName: string) {
-    if (newName === '') {
-      this.showAttributeDeleteDialog(attribute, () => {
-        component.setValue(attribute.name);
+  public onNewAttributeName(data: {attribute: Attribute; newName: string}) {
+    if (!data.newName) {
+      this.showAttributeDeleteDialog(data.attribute, () => {
+        this.tableComponent?.resetAttributeName(data.attribute);
       });
     } else {
-      const updatedAttribute = {...attribute, name: newName};
-      this.store.dispatch(
+      const updatedAttribute = {...data.attribute, name: data.newName};
+      this.store$.dispatch(
         new CollectionsAction.ChangeAttribute({
           collectionId: this.collection.id,
-          attributeId: attribute.id,
+          attributeId: data.attribute.id,
           attribute: updatedAttribute,
         })
       );
@@ -114,39 +96,12 @@ export class CollectionAttributesComponent implements OnInit, OnDestroy {
         name: attribute.name,
       }
     );
-    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteAttribute(attribute));
+    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteAttribute(attribute), onCancel);
   }
 
   public deleteAttribute(attribute: Attribute) {
-    this.store.dispatch(
+    this.store$.dispatch(
       new CollectionsAction.RemoveAttribute({collectionId: this.collection.id, attributeId: attribute.id})
     );
-  }
-
-  public trackByAttributeId(index: number, attribute: Attribute) {
-    return attribute.id;
-  }
-
-  private subscribeData() {
-    this.collectionSubscription.add(
-      this.store
-        .select(selectCollectionByWorkspace)
-        .pipe(filter(collection => !isNullOrUndefined(collection)))
-        .subscribe(collection => {
-          this.collection = collection;
-          this.attributes = this.collection.attributes.slice();
-        })
-    );
-  }
-
-  private translatePlaceholders() {
-    this.attributePlaceholder = this.i18n({
-      id: 'collection.tab.attributes.attribute.placeholder',
-      value: 'Enter attribute name.',
-    });
-  }
-
-  public valueChanged($event) {
-    this.newAttributeName = $event.target.value;
   }
 }

@@ -229,10 +229,15 @@ function createColumnsFromConfig(
     return columns;
   }
 
-  return columns.concat({
-    type: TableColumnType.HIDDEN,
-    attributeIds: remainingAttributeIds,
-  });
+  return [
+    ...columns,
+    ...remainingAttributeIds.map(attributeId => ({
+      type: TableColumnType.COMPOUND,
+      attributeIds: [attributeId],
+      children: [],
+      width: DEFAULT_COLUMN_WIDTH,
+    })),
+  ];
 }
 
 export function getAttributeIdFromColumn(column: TableConfigColumn) {
@@ -346,6 +351,7 @@ export function createEmptyColumn(
     attributeIds: [],
     attributeName,
     children: [],
+    width: DEFAULT_COLUMN_WIDTH,
   };
 }
 
@@ -699,6 +705,7 @@ export function addMissingTableColumns(
         type: TableColumnType.COMPOUND,
         attributeIds: [attributeId],
         children: [],
+        width: DEFAULT_COLUMN_WIDTH,
       }))
     )
     .concat(suffixColumns);

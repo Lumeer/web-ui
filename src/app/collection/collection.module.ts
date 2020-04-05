@@ -40,6 +40,8 @@ import {NoRulesComponent} from './settings/tab/rules/no-rules/no-rules.component
 import {HasCreatePipe} from './settings/tab/rules/single-rule/has-create.pipe';
 import {HasUpdatePipe} from './settings/tab/rules/single-rule/has-update.pipe';
 import {HasDeletePipe} from './settings/tab/rules/single-rule/has-delete.pipe';
+import {AddCollectionAttributeComponent} from './settings/tab/attributes/add/add-collection-attribute.component';
+import {CollectionAttributesTableComponent} from './settings/tab/attributes/table/collection-attributes-table.component';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule],
@@ -61,6 +63,8 @@ import {HasDeletePipe} from './settings/tab/rules/single-rule/has-delete.pipe';
     HasCreatePipe,
     HasUpdatePipe,
     HasDeletePipe,
+    AddCollectionAttributeComponent,
+    CollectionAttributesTableComponent,
   ],
   providers: [CollectionSettingsGuard],
 })

@@ -270,18 +270,16 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     return this.store$
       .pipe(
         select(selectTable),
-        filter(table => !!table && !!table.config && table.id === DEFAULT_TABLE_ID),
-        mergeMap(table => this.waitForDataLoaded$().pipe(map(() => table))),
+        filter(table => !!table?.config && table.id === DEFAULT_TABLE_ID),
+        switchMap(table => this.waitForDataLoaded$().pipe(map(() => table))),
         debounceTime(1000),
         withLatestFrom(this.selectCurrentDefaultViewConfig$())
       )
       .subscribe(([table, {key, defaultConfig}]) => {
         const firstPart = (table.config.parts || [])[0];
         const config: ViewConfig = {table: createTableSaveConfig({parts: [firstPart], rows: []})};
-        const defaultConfigCleaned = createTableSaveConfig(
-          defaultConfig && defaultConfig.config && defaultConfig.config.table
-        );
-        const defaultConfigFirstPart = ((defaultConfigCleaned && defaultConfigCleaned.parts) || [])[0];
+        const defaultConfigCleaned = createTableSaveConfig(defaultConfig?.config?.table);
+        const defaultConfigFirstPart = defaultConfigCleaned?.parts?.[0];
 
         if (!defaultConfigFirstPart || !deepObjectsEquals(config.table.parts[0], defaultConfigFirstPart)) {
           this.store$.dispatch(
@@ -353,20 +351,19 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
           select(selectTableById(tableId)),
           take(1),
           map(table => {
-            if (previousView && previousView.id === view.id && this.queryHasNewLink(query)) {
+            if (previousView?.id === view.id && this.queryHasNewLink(query)) {
               return {query, config: view.config.table, tableId};
             }
 
-            const tableConfig = view.config && view.config.table;
             if (preferViewConfigUpdate(previousView, view, !!table)) {
               return {
                 query,
-                config: tableConfig,
+                config: view.config?.table,
                 tableId,
                 forceRefresh: true,
               };
             }
-            return {query, config: (table && table.config) || tableConfig, tableId, forceRefresh: true};
+            return {query, config: table?.config || view.config?.table, tableId, forceRefresh: true};
           })
         );
       })
@@ -392,10 +389,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
             return {
               query,
-              config: mergeFirstTablePart(
-                tableConfig,
-                defaultConfig && defaultConfig.config && defaultConfig.config.table
-              ),
+              config: mergeFirstTablePart(tableConfig, defaultConfig?.config?.table),
               tableId,
             };
           }),
@@ -422,7 +416,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   private selectCurrentDefaultViewConfig$(): Observable<{key: string; defaultConfig: DefaultViewConfig}> {
     return this.selectTableDefaultConfigId$().pipe(
-      mergeMap(collectionId =>
+      switchMap(collectionId =>
         this.store$.pipe(
           select(selectDefaultViewConfig(Perspective.Table, collectionId)),
           map(defaultConfig => ({key: collectionId, defaultConfig}))
@@ -539,36 +533,31 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   }
 }
 
-function mergeFirstTablePart(config: TableConfig, firstPartConfig: TableConfig): TableConfig {
-  if (!config || !firstPartConfig) {
-    return config || firstPartConfig;
+function mergeFirstTablePart(config: TableConfig, defaultConfig: TableConfig): TableConfig {
+  if (!config || !defaultConfig) {
+    return config || defaultConfig;
   }
 
-  const currentRowsMap = (config.rows || []).reduce(
-    (rowsMap, row) => ({
-      ...rowsMap,
-      [row.documentId || row.linkInstanceId]: row,
-    }),
-    {}
-  );
-  const rows = (firstPartConfig.rows || []).map(row => {
-    if (currentRowsMap[row.documentId]) {
-      const currentRow = currentRowsMap[row.documentId];
-      delete currentRowsMap[row.documentId];
-      return {...row, ...currentRow};
-    }
-    return row;
-  });
-  rows.push(...Object.values(currentRowsMap));
+  const configFirstPart = config.parts?.[0];
+  const defaultConfigFirstPart = defaultConfig.parts?.[0];
 
-  const parts = [...config.parts];
   if (
-    firstPartConfig.parts &&
-    firstPartConfig.parts[0] &&
-    (!parts[0] || parts[0].collectionId === firstPartConfig.parts[0].collectionId)
+    configFirstPart &&
+    defaultConfigFirstPart &&
+    configFirstPart?.collectionId === defaultConfigFirstPart?.collectionId
   ) {
-    parts[0] = firstPartConfig.parts[0];
+    const columns = [...(configFirstPart.columns || [])];
+    for (const column of defaultConfigFirstPart.columns || []) {
+      const columnIndex = columns.findIndex(col => deepObjectsEquals(col.attributeIds, column.attributeIds));
+      if (columnIndex !== -1) {
+        columns[columnIndex] = {...columns[columnIndex], width: column.width, type: column.type};
+      }
+    }
+    const parts = [...config.parts];
+    parts[0] = {...configFirstPart, columns};
+
+    return {...config, parts};
   }
 
-  return {rows, parts};
+  return config;
 }

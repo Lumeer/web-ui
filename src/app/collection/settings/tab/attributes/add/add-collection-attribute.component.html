@@ -1,0 +1,26 @@
+<div class="card-body">
+  <h4 class="card-title" i18n="@@collections.tab.attributes.new.header">Add a new attribute</h4>
+  <form [formGroup]="form" class="form-inline d-flex">
+    <input
+      class="form-control form-control-sm flex-fill mr-sm-2"
+      type="text"
+      placeholder="Enter attribute name"
+      formControlName="attribute"
+      (input)="onInput($event.target.value)"
+      (keypress)="onKeyPress($event)"
+      placeholder-i18n="@@collection.tab.attributes.attribute.placeholder"
+    >
+    <button type="button"
+            [disabled]="form.invalid"
+            class="btn btn-sm btn-primary"
+            (click)="onCreateAttribute()">
+      <i class="fas fa-plus"></i>&nbsp;
+      <span class="font-weight-bold" i18n="@@collection.tab.attributes.attribute.add">Add attribute</span>
+    </button>
+  </form>
+  <div *ngIf="attributeControl?.errors?.notUnique"
+       class="text-danger mt-1 small"
+       i18n="@@collection.tab.attributes.create.notUnique">
+    Attribute name must be unique!
+  </div>
+</div>
