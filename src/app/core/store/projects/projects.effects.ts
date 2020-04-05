@@ -120,7 +120,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationsEntities]) => {
-      const {project, template, onSuccess, onFailure} = action.payload;
+      const {project, template, navigationExtras, onSuccess, onFailure} = action.payload;
       const organization = organizationsEntities[project.organizationId];
       const projectDto = ProjectConverter.toDto(project);
 
@@ -132,15 +132,22 @@ export class ProjectsEffects {
             ...createCallbackActions(onSuccess, newProject),
           ];
 
-          if (template && template !== TemplateType.Empty) {
-            actions.push(
-              new ApplyTemplate({
-                organizationId: project.organizationId,
-                projectId: newProject.id,
-                template,
-              })
-            );
-          }
+          const applyTemplateAction =
+            template !== TemplateType.Empty
+              ? new ApplyTemplate({
+                  organizationId: project.organizationId,
+                  projectId: newProject.id,
+                  template,
+                })
+              : null;
+
+          actions.push(
+            new RouterAction.Go({
+              path: ['w', organization.code, project.code, 'view', 'search'],
+              extras: navigationExtras,
+              nextAction: applyTemplateAction,
+            })
+          );
 
           return actions;
         }),

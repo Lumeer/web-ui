@@ -41,6 +41,7 @@ import {
 } from '../../../core/store/projects/projects.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {KeyCode} from '../../key-code';
+import {NavigationExtras} from '@angular/router';
 
 @Component({
   templateUrl: './create-resource-modal.component.html',
@@ -59,6 +60,9 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
 
   @Input()
   public callback: (resource: Project | Organization) => void;
+
+  @Input()
+  public navigationExtras: NavigationExtras;
 
   @ViewChild(CreateResourceDialogFormComponent)
   set content(content: CreateResourceDialogFormComponent) {
@@ -119,6 +123,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
       return new ProjectsAction.Create({
         project: resource,
         template: notEmptyTemplate,
+        navigationExtras: this.navigationExtras,
         onSuccess: project => this.onCreateResourceSuccess(project),
         onFailure: () => this.onCreateResourceFailure(),
       });
@@ -128,9 +133,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
   }
 
   private onCreateResourceSuccess(resource: Organization | Project) {
-    if (this.callback) {
-      this.callback(resource);
-    }
+    this.callback?.(resource);
     this.hideDialog();
   }
 
