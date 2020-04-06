@@ -138,7 +138,7 @@
     "listr": "^0.14.3",
     "ngx-i18nsupport": "^0.17.1",
     "prettier": "~1.19.1",
-    "rxjs-tslint-rules": "^4.28.3",
+    "rxjs-tslint-rules": "^4.30.1",
     "ts-node": "~8.5.4",
     "tslint": "~5.20.1",
     "typescript": "~3.7.5"
