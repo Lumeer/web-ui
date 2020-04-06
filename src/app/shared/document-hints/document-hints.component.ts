@@ -267,7 +267,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
         const documentIds: [string, string] = [this.linkedDocumentId, document.id];
         const linkInstance = {...oldLinkInstance, documentIds, correlationId: this.correlationId};
         let nextAction = null;
-        if (oldDocument && Object.keys((oldDocument && oldDocument.data) || {}).length === 0) {
+        if (oldDocument && Object.keys(oldDocument?.data || {}).length === 0) {
           nextAction = new DocumentsAction.Delete({documentId: oldDocument.id, collectionId: oldDocument.collectionId});
         }
         this.store$.dispatch(new LinkInstancesAction.Update({linkInstance, nextAction}));

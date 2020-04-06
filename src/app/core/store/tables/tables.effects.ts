@@ -724,7 +724,6 @@ export class TablesEffects {
             return [];
           }
 
-          const linkedRows = findLinkedTableRows(rows, cursor.rowPath);
           return this.store$.pipe(
             select(selectLinkInstancesByTypeAndDocuments(part.linkTypeId, rowDocumentIds)),
             take(1),
@@ -749,6 +748,7 @@ export class TablesEffects {
                   })
                 ),
                 mergeMap(documents => {
+                  const linkedRows = findLinkedTableRows(rows, cursor.rowPath);
                   const createdLinkInstances = filterNewlyCreatedLinkInstances(linkedRows, linkInstances);
                   const unknownLinkInstances = filterUnknownLinkInstances(linkedRows, linkInstances);
 
@@ -759,9 +759,10 @@ export class TablesEffects {
                   }
 
                   // documentIds on LinkInstance was updated
-                  const changedRowIndex = linkedRows.findIndex(
-                    row => !documents.find(doc => doc.id === row.documentId)
-                  );
+                  const changedRowIndex = linkedRows.findIndex(row => {
+                    const linkInstance = linkInstances.find(li => li.id === row.linkInstanceId);
+                    return linkInstance && !linkInstance.documentIds.includes(row.documentId);
+                  });
                   if (changedRowIndex >= 0) {
                     const changedRow = linkedRows[changedRowIndex];
                     const linkInstance = linkInstances.find(li => li.id === changedRow.linkInstanceId);
