@@ -597,7 +597,7 @@ function createInterval(
   }
 
   let endMoment = moment(endDate);
-  if (!constraintContainsHoursInConfig(endConstraint)) {
+  if (endConstraint?.type !== ConstraintType.Duration && !constraintContainsHoursInConfig(endConstraint)) {
     endMoment = endMoment.startOf('day').add(1, 'days');
   }
 

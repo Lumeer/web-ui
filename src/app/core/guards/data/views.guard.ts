@@ -32,6 +32,7 @@ import {selectViewsByRead} from '../../store/common/permissions.selectors';
 import {Project} from '../../store/projects/project';
 import {Organization} from '../../store/organizations/organization';
 import {WorkspaceService} from '../../../workspace/workspace.service';
+import {Perspective} from '../../../view/perspectives/perspective';
 
 @Injectable()
 export class ViewsGuard implements Resolve<View[]> {
@@ -84,7 +85,7 @@ export class ViewsGuard implements Resolve<View[]> {
   }
 
   private onViewNotFound(organizationCode: string, projectCode: string) {
-    this.router.navigate(['w', organizationCode, projectCode, 'view', 'search']);
+    this.router.navigate(['w', organizationCode, projectCode, 'view', Perspective.Search]);
     const message = this.i18n({id: 'view.not.found', value: 'View not found'});
     this.notificationService.error(message);
   }

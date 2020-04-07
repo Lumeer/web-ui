@@ -59,6 +59,9 @@ export class LinksListComponent implements OnChanges, OnInit {
   @Input()
   public document: DocumentModel;
 
+  @Input()
+  public preventEventBubble: boolean;
+
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 

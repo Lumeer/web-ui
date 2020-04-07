@@ -25,6 +25,7 @@
                           [constraintData]="constraintData"
                           [readonly]="!(data.resource | resourceAttributeEditable : row.id: permissions: query)"
                           [unusedAttributes]="unusedAttributes$ | async"
+                          [preventEventBubble]="preventEventBubble"
                           (newValue)="onNewValue($event, row, index)"
                           (newKey)="onNewKey($event, index)"
                           (deleteRow)="onRemoveRow(index)"

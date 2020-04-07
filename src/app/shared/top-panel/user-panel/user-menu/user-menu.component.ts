@@ -42,6 +42,8 @@ import {selectAllViews} from '../../../../core/store/views/views.state';
 import {UserMenuDropdownComponent} from './dropdown/user-menu-dropdown.component';
 import {UserFeedbackModalComponent} from './user-feedback-modal/user-feedback-modal.component';
 import {ModalService} from '../../../modal/modal.service';
+import {Perspective} from '../../../../view/perspectives/perspective';
+import {SearchTab} from '../../../../core/store/navigation/search-tab';
 
 @Component({
   selector: 'user-menu',
@@ -185,9 +187,11 @@ export class UserMenuComponent {
               this.workspace.projectCode || (user.defaultWorkspace && user.defaultWorkspace.projectCode);
 
             if (organizationCode && projectCode) {
-              this.router.navigate(['/', 'w', organizationCode, projectCode, 'view', 'search', 'all']).then(() => {
-                this.kickstartTour(collectionsCount, viewsCount);
-              });
+              this.router
+                .navigate(['/', 'w', organizationCode, projectCode, 'view', Perspective.Search, SearchTab.All])
+                .then(() => {
+                  this.kickstartTour(collectionsCount, viewsCount);
+                });
             } else {
               this.store$.dispatch(
                 new NotificationsAction.Error({

@@ -21,6 +21,7 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../notifications/notification.service';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Injectable()
 export class PageNotFoundGuard implements CanActivate {
@@ -30,7 +31,7 @@ export class PageNotFoundGuard implements CanActivate {
     const [, w, organizationCode, projectCode] = state.url.split('/');
 
     if (w === 'w' && organizationCode && projectCode) {
-      this.router.navigate(['/', 'w', organizationCode, projectCode, 'view', 'search']);
+      this.router.navigate(['/', 'w', organizationCode, projectCode, 'view', Perspective.Search]);
     } else {
       this.router.navigate(['/']);
     }

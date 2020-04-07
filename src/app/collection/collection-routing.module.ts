@@ -21,7 +21,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../auth/auth.guard';
 import {CurrentUserGuard} from '../core/guards/current-user.guard';
-import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {CollectionSettingsGuard} from './collection-settings.guard';
 import {CollectionSettingsComponent} from './settings/collection-settings.component';
 import {CollectionAttributesComponent} from './settings/tab/attributes/collection-attributes.component';

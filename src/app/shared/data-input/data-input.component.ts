@@ -37,6 +37,7 @@ import {DataCursor} from './data-cursor';
 import {DataSuggestion} from './data-suggestion';
 import {DataInputConfiguration} from './data-input-configuration';
 import {isNotNullOrUndefined} from '../utils/common.utils';
+import {KeyCode} from '../key-code';
 
 @Component({
   selector: 'data-input',
@@ -68,6 +69,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   @Input()
   public suggestions: DataSuggestion[];
+
+  @Input()
+  public preventEventBubble: boolean;
 
   @Output()
   public valueChange = new EventEmitter<DataValue>();
@@ -169,5 +173,12 @@ export class DataInputComponent implements OnChanges, OnDestroy {
       this.recalculateWidth(this.dataValue);
     }
     this.cancel.emit();
+  }
+
+  public onDataKeyDown(event: KeyboardEvent) {
+    if (this.preventEventBubble && event.key === KeyCode.Escape && !this.readonly) {
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+    }
   }
 }

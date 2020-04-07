@@ -33,6 +33,7 @@ import {DefaultWorkspace} from './store/users/user';
 import {selectCurrentUser} from './store/users/users.state';
 import {NotificationService} from './notifications/notification.service';
 import {WorkspaceSelectService} from './service/workspace-select.service';
+import {Perspective} from '../view/perspectives/perspective';
 
 @Component({
   template: '',
@@ -101,7 +102,7 @@ export class HomeComponent implements OnInit {
   }
 
   private navigateToProject(organization: Organization, project: Project) {
-    this.router.navigate(['/', 'w', organization.code, project.code, 'view', 'search'], {replaceUrl: true});
+    this.router.navigate(['/', 'w', organization.code, project.code, 'view', Perspective.Search], {replaceUrl: true});
   }
 
   private getDefaultWorkspace(): Observable<DefaultWorkspace> {

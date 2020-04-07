@@ -47,6 +47,7 @@ import {QueryAction} from '../../core/model/query-action';
 import {Router} from '@angular/router';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
+import {SearchTab} from '../../core/store/navigation/search-tab';
 
 @Component({
   selector: 'preview-results',
@@ -116,7 +117,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   }
 
   public switchToCollectionsTab() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'tables'], {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Collections], {
       queryParams: {action: QueryAction.CreateCollection},
     });
   }

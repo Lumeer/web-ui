@@ -77,6 +77,9 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   @Input()
   public document: DocumentModel;
 
+  @Input()
+  public preventEventBubble: boolean;
+
   @ViewChildren('tableRow')
   public tableRows: QueryList<LinksListTableRowComponent>;
 

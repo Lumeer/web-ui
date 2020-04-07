@@ -49,7 +49,7 @@ export class ViewRedirectGuard implements CanActivate {
     private workspaceService: WorkspaceService
   ) {}
 
-  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<UrlTree> {
+  public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
     const organizationCode = next.paramMap.get('organizationCode');
     const projectCode = next.paramMap.get('projectCode');
     const viewCode = next.paramMap.get('vc');
@@ -59,7 +59,7 @@ export class ViewRedirectGuard implements CanActivate {
       .pipe(mergeMap(({organization, project}) => this.canActivateView(organization, project, viewCode)));
   }
 
-  private canActivateView(organization: Organization, project: Project, viewCode: string): Observable<UrlTree> {
+  private canActivateView(organization: Organization, project: Project, viewCode: string): Observable<any> {
     return this.store$.pipe(
       select(selectViewsLoaded),
       tap(loaded => {
@@ -75,7 +75,7 @@ export class ViewRedirectGuard implements CanActivate {
         const perspective = view && view.perspective ? view.perspective : Perspective.Search;
         const query = view ? convertQueryModelToString(view.query) : null;
 
-        const viewPath: any[] = ['w', organization.code, project.code, 'view'];
+        const viewPath: any[] = ['/w', organization.code, project.code, 'view'];
         if (viewCode) {
           viewPath.push({vc: viewCode});
         }
@@ -86,21 +86,20 @@ export class ViewRedirectGuard implements CanActivate {
           return this.redirectToSearchPerspective(view, viewPath, extras);
         }
 
-        return of(this.router.createUrlTree(viewPath, extras));
+        this.router.navigate(viewPath, extras);
+        return of(false);
       })
     );
   }
 
-  private redirectToSearchPerspective(view: View, viewPath: any[], extras?: NavigationExtras): Observable<UrlTree> {
+  private redirectToSearchPerspective(view: View, viewPath: any[], extras?: NavigationExtras): Observable<any> {
     return this.store$.pipe(
-      select(selectSearchById(view.code)),
+      select(selectSearchById(view?.code)),
       take(1),
-      map(search => {
-        const viewConfig = view && view.config && view.config.search;
-        viewPath.push(
-          (search && search.config && search.config.searchTab) || (viewConfig && viewConfig.searchTab) || SearchTab.All
-        );
-        return this.router.createUrlTree(viewPath, extras);
+      map(search => [...viewPath, search?.config?.searchTab || view?.config?.search?.searchTab || SearchTab.All]),
+      map(path => {
+        this.router.navigate(path, extras);
+        return false;
       })
     );
   }

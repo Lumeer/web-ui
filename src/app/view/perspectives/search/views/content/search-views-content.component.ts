@@ -28,6 +28,7 @@ import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {Perspective} from '../../../perspective';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
 import {ViewFavoriteToggleService} from '../../../../../shared/toggle/view-favorite-toggle.service';
+import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 
 @Component({
   selector: 'search-views-wrapper',
@@ -84,7 +85,7 @@ export class SearchViewsContentComponent implements OnInit, OnDestroy {
   }
 
   public onShowAll() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'views'], {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Views], {
       queryParams: {q: convertQueryModelToString(this.query)},
     });
   }
