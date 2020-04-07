@@ -273,7 +273,7 @@ export class CollectionsEffects {
   );
 
   @Effect()
-  public deleteSuccess: Observable<Action> = this.actions$.pipe(
+  public deleteSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.DeleteSuccess>(CollectionsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
     flatMap(([action, navigation]) => {

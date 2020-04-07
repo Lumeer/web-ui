@@ -11,6 +11,7 @@
                           [resource]="data.resource"
                           [dataResource]="data.dataResource"
                           [query]="query$ | async"
+                          [preventEventBubble]="true"
                           [permissions]="collectionResourceType ? (data.resource | collectionPermissions | async) : (data.resource | linkTypePermissions | async)"
                           [toolbarRef]="toolbarRef"
                           (dataResourceChanged)="onDataResourceChanged($event)"
@@ -19,6 +20,7 @@
     <links-list class="d-block mt-5"
                 *ngIf="resourceType === collectionResourceType && data.resource && data.dataResource?.id"
                 [document]="data.dataResource"
+                [preventEventBubble]="true"
                 [collection]="data.resource"
                 (documentSelect)="selectCollectionAndDocument($event)">
     </links-list>

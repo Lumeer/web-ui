@@ -36,6 +36,7 @@ import {selectProjectByWorkspace, selectProjectsCodesForOrganization} from '../.
 import {selectAllUsers} from '../../core/store/users/users.state';
 import {Perspective} from '../../view/perspectives/perspective';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
+import {SearchTab} from '../../core/store/navigation/search-tab';
 
 @Component({
   templateUrl: './project-settings.component.html',
@@ -82,7 +83,7 @@ export class ProjectSettingsComponent implements OnInit {
     const project = this.project$.getValue();
     const projectCode = project && project.code;
     if (organizationCode && projectCode) {
-      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, 'tables']);
+      this.router.navigate(['/w', organizationCode, projectCode, 'view', Perspective.Search, SearchTab.Collections]);
     }
   }
 

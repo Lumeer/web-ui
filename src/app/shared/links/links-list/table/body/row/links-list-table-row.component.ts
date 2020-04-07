@@ -75,6 +75,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   @Input()
   public attributeEditing: {documentId?: string; attributeId?: string};
 
+  @Input()
+  public preventEventBubble: boolean;
+
   @Output()
   public onFocus = new EventEmitter<number>();
 

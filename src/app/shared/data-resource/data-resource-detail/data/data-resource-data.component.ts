@@ -84,6 +84,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public toolbarRef: TemplateRef<any>;
 
+  @Input()
+  public preventEventBubble: boolean;
+
   @Output()
   public attributeTypeClick = new EventEmitter<Attribute>();
 

@@ -6,6 +6,7 @@
                     [workspace]="workspace$ | async"
                     [query]="query"
                     [toolbarRef]="toolbarRef"
+                    [preventEventBubble]="preventEventBubble"
                     (attributeTypeClick)="onAttributeTypeClick($event)"
                     (attributeFunctionCLick)="onAttributeFunctionClick($event)"
                     (removeDocument)="onRemove()"

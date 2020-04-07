@@ -19,6 +19,7 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Workspace} from '../../core/store/navigation/workspace';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Pipe({
   name: 'workspaceDefaultUrl',
@@ -26,7 +27,7 @@ import {Workspace} from '../../core/store/navigation/workspace';
 export class WorkspaceDefaultUrlPipe implements PipeTransform {
   public transform(workspace: Workspace): any[] {
     if (workspace && workspace.organizationCode && workspace.projectCode) {
-      return ['/', 'w', workspace.organizationCode, workspace.projectCode, 'view', 'search'];
+      return ['/', 'w', workspace.organizationCode, workspace.projectCode, 'view', Perspective.Search];
     }
     return ['/'];
   }

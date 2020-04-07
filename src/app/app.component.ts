@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, Component, ViewContainerRef} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
@@ -57,7 +57,6 @@ export class AppComponent implements AfterViewInit {
   constructor(
     private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
     private authService: AuthService,
-    private changeDetector: ChangeDetectorRef,
     private i18n: I18n,
     private moduleLazyLoadingService: ModuleLazyLoadingService,
     private router: Router,

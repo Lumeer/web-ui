@@ -42,6 +42,7 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {Organization} from '../../core/store/organizations/organization';
 import {Project} from '../../core/store/projects/project';
 import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
+import {ClipboardService} from '../../core/service/clipboard.service';
 
 @Component({
   templateUrl: './collection-settings.component.html',
@@ -49,16 +50,16 @@ import {replaceWorkspacePathInUrl} from '../../shared/utils/data.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionSettingsComponent implements OnInit, OnDestroy {
-  public collection$ = new BehaviorSubject<Collection>(null);
-  public userCount$: Observable<number>;
-
   public readonly collectionType = ResourceType.Collection;
 
+  public collection$ = new BehaviorSubject<Collection>(null);
+  public userCount$: Observable<number>;
+  public organizationAndProject$: Observable<{organization: Organization; project: Project}>;
+
   private workspace: Workspace;
-  public organizationAndProject: Observable<{organization: Organization; project: Project}>;
   private previousUrl: string;
 
-  public copied = new BehaviorSubject<boolean>(false);
+  public copied$ = new BehaviorSubject<boolean>(false);
   public copiedText: string;
 
   private subscriptions = new Subscription();
@@ -70,7 +71,8 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     private i18n: I18n,
     private notificationService: NotificationService,
     private router: Router,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private clipboardService: ClipboardService
   ) {}
 
   public ngOnInit() {
@@ -118,7 +120,6 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     const collection = this.collection$.getValue();
     if (collection) {
       this.store$.dispatch(new CollectionsAction.Delete({collectionId: collection.id}));
-      this.onBack();
     }
   }
 
@@ -159,7 +160,7 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
         filter(workspace => !!workspace)
       )
       .subscribe(workspace => (this.workspace = workspace));
-    this.organizationAndProject = combineLatest([
+    this.organizationAndProject$ = combineLatest([
       this.store$.pipe(select(selectOrganizationByWorkspace)),
       this.store$.pipe(select(selectProjectByWorkspace)),
     ]).pipe(map(([organization, project]) => ({organization, project})));
@@ -177,11 +178,9 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
     this.store$.pipe(select(selectPreviousUrl), take(1)).subscribe(url => (this.previousUrl = url));
   }
 
-  public copyTableId() {
-    this.tableIdElement.nativeElement.select();
-    this.tableIdElement.nativeElement.setSelectionRange(0, 99999);
-    document.execCommand('copy');
-    this.copied.next(true);
-    setTimeout(() => this.copied.next(false), 3000);
+  public copyTableId(value: string) {
+    this.clipboardService.copy(value);
+    this.copied$.next(true);
+    setTimeout(() => this.copied$.next(false), 3000);
   }
 }

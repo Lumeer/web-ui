@@ -74,6 +74,9 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   @Input()
   public toolbarRef: TemplateRef<any>;
 
+  @Input()
+  public preventEventBubble: boolean;
+
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
 

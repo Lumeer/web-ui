@@ -84,6 +84,7 @@ export class CalendarVisualizationComponent implements OnChanges {
   public readonly calendarPlugins = [timeGridPlugin, dayGridPlugin, interactionPlugin, listPlugin];
   public readonly buttonText: ButtonTextCompoundInput = {};
   public readonly allDayText: string;
+  public readonly moreText: string;
   public readonly noEventsText: string;
   public readonly calendarText: string;
   public readonly listText: string;
@@ -106,6 +107,7 @@ export class CalendarVisualizationComponent implements OnChanges {
   constructor(private i18n: I18n) {
     this.calendarText = this.i18n({id: 'perspective.calendar.display.calendar', value: 'Calendar'});
     this.listText = this.i18n({id: 'perspective.calendar.display.list', value: 'List'});
+    this.moreText = this.i18n({id: 'perspective.calendar.display.more', value: 'more'});
     this.allDayText = this.i18n({id: 'perspective.calendar.display.allDay', value: 'All day'});
     this.noEventsText = this.i18n({
       id: 'perspective.calendar.display.empty',

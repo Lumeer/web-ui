@@ -37,6 +37,7 @@ import {ResourceType} from '../model/resource-type';
 import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
 import {TemplateType} from '../model/template';
 import {ModalService} from '../../shared/modal/modal.service';
+import {Perspective} from '../../view/perspectives/perspective';
 
 @Injectable({
   providedIn: 'root',
@@ -79,7 +80,7 @@ export class WorkspaceSelectService {
 
   private goToProject(organization: Organization, project: Project, extras?: NavigationExtras) {
     if (organization && project) {
-      this.router.navigate(['w', organization.code, project.code, 'view', 'search'], extras);
+      this.router.navigate(['w', organization.code, project.code, 'view', Perspective.Search], extras);
     }
   }
 

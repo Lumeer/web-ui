@@ -54,20 +54,19 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
       .pipe(mergeMap(({organization, project}) => this.resolveSearchTab(organization, project, viewCode)));
   }
 
-  private resolveSearchTab(organization: Organization, project: Project, viewCode: string): Observable<UrlTree> {
+  private resolveSearchTab(organization: Organization, project: Project, viewCode: string): Observable<any> {
     return this.selectDefaultViewConfig$(organization, project).pipe(
       take(1),
       map(defaultConfig => {
-        const viewPath: any[] = ['w', organization.code, project.code, 'view'];
+        const viewPath: any[] = ['/w', organization.code, project.code, 'view'];
         if (viewCode) {
           viewPath.push({vc: viewCode});
         }
         viewPath.push(Perspective.Search);
+        viewPath.push(defaultConfig?.config?.search?.searchTab || SearchTab.All);
 
-        const searchConfig = defaultConfig && defaultConfig.config && defaultConfig.config.search;
-        viewPath.push((searchConfig && searchConfig.searchTab) || SearchTab.All);
-
-        return this.router.createUrlTree(viewPath, {queryParams: {[QueryParam.Query]: ''}});
+        this.router.navigate(viewPath, {queryParams: {[QueryParam.Query]: ''}});
+        return false;
       })
     );
   }

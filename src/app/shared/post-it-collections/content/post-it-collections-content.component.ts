@@ -49,6 +49,7 @@ import {generateCorrelationId} from '../../utils/resource.utils';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {take} from 'rxjs/operators';
 import {QueryAction} from '../../../core/model/query-action';
+import {SearchTab} from '../../../core/store/navigation/search-tab';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -150,7 +151,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   }
 
   public onShowAllClicked() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'tables'], {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Collections], {
       queryParams: {[QueryParam.Query]: convertQueryModelToString(this.query)},
     });
   }

@@ -39,6 +39,7 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {Query} from '../../../../core/store/navigation/query/query';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {Project} from '../../../../core/store/projects/project';
+import {SearchTab} from '../../../../core/store/navigation/search-tab';
 
 @Component({
   templateUrl: './search-all.component.html',
@@ -67,7 +68,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   public switchToCollectionsTab() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, 'tables'], {
+    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Collections], {
       queryParams: {action: QueryAction.CreateCollection},
     });
   }

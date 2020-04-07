@@ -22,7 +22,7 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {ConstraintData} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
@@ -53,6 +53,7 @@ import {contrastColor} from '../../../../shared/utils/color.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import * as moment from 'moment';
 import {GANTT_DATE_FORMAT} from '../../../../core/store/gantt-charts/gantt-chart';
+import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
 
 enum DataObjectInfoKeyType {
   Name = 'name',
@@ -284,7 +285,7 @@ function createInterval(
   }
 
   let endMoment = moment(endDate);
-  if (!constraintContainsHoursInConfig(endConstraint)) {
+  if (endConstraint?.type !== ConstraintType.Duration && !constraintContainsHoursInConfig(endConstraint)) {
     endMoment = endMoment.startOf('day').add(1, 'days');
   }
 

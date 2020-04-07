@@ -13,6 +13,7 @@
       [collection]="otherCollection$ | async"
       [permissions]="permissions$ | async"
       [query]="query$ | async"
+      [preventEventBubble]="preventEventBubble"
       (unLink)="unLinkDocument($event)"
       (detail)="onSelectDocument($event)">
     </links-list-table>
