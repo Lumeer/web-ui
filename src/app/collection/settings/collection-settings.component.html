@@ -9,14 +9,12 @@
       (descriptionChange)="onNewDescription($event)"
       (nameChange)="onNewName($event)">
       <div class="d-flex flex-row text-primary flex-nowrap align-items-center mr-3"
-           [style.color]="collection.color"
            title="Number of users" i18n-title="@@collection.settings.users.count">
         <i class="far fa-user mr-1" aria-hidden="true"></i>
         <span>{{ userCount$ | async }}</span>
       </div>
 
-      <div class="d-flex flex-row text-success flex-nowrap align-items-center cursor-pointer"
-           [style.color]="collection.color"
+      <div class="d-flex flex-row text-success flex-nowrap align-items-center cursor-pointer color-success"
            (click)="onDocumentsClick()"
            title="Number of records" i18n-title="@@collection.settings.records.count">
         <i class="far fa-file mr-1" aria-hidden="true"></i>

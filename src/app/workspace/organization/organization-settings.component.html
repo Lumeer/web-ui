@@ -12,14 +12,12 @@
       (nameChange)="onNewName($event)"
       (codeChange)="onNewCode($event)">
       <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
-           [style.color]="organization.color"
            title="Number of users" i18n-title="@@organization.settings.users.count">
         <i class="far fa-user mr-1" aria-hidden="true"></i>&nbsp;
         <span>{{ userCount$ | async }}</span>
       </div>
 
-      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer"
-           [style.color]="organization.color"
+      <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success"
            (click)="onProjectsClick()"
            title="Number of projects" i18n-title="@@organization.settings.projects.count">
         <i class="far fa-edit mr-1" aria-hidden="true"></i>&nbsp;
