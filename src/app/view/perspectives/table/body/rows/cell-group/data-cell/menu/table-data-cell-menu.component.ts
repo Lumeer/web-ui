@@ -117,6 +117,8 @@ export class TableDataCellMenuComponent implements OnChanges {
 
     if (indexDelta > 0) {
       this.store$.dispatch(new TablesAction.MoveCursor({direction: Direction.Down}));
+    } else {
+      this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
   }
 
