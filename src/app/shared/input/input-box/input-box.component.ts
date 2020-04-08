@@ -45,10 +45,10 @@ export class InputBoxComponent implements OnInit {
   @Input() public placeholder: string;
   @Input() public title: string;
   @Input() public editable: boolean = true;
-  @Input() public emitAllChanges: boolean = false;
-  @Input() public userData: boolean = false;
-  @Input() public alwaysFrame: boolean = false;
-  @Input() public textAttribute: boolean = false;
+  @Input() public emitAllChanges: boolean;
+  @Input() public userData: boolean;
+  @Input() public alwaysFrame: boolean;
+  @Input() public textAttribute: boolean;
   @Input() public innerClass: string = '';
   @Input() public filter: RegExp;
   @Input() public maxLength = 0;

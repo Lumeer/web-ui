@@ -14,7 +14,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text" id="search-user1"><i class="fas fa-search"></i></span>
         </div>
-        <input id="attributeSearch" #searchInput class="form-control" type="search"
+        <input id="attributeSearch" class="form-control mr-1" type="search"
                placeholder="Search attribute..."
                i18n-placeholder="@@collections.tab.attributes.search.placeholder"
                title="Search for attributes" i18n-title="@@collections.tab.attributes.search.title"
@@ -62,7 +62,7 @@
           </span>
     </td>
     <td class="text-right align-middle">
-      <i class="fas fa-fw fa-trash text-danger cursor-pointer"
+      <i class="fas fa-fw fa-trash text-danger cursor-pointer mr-1"
          (click)="onDeleteAttribute(attribute)"
          title="Remove Attribute" i18n-title="@@remove.attribute"
       ></i>

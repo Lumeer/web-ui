@@ -33,6 +33,10 @@ export function linkTypesReducer(
       return addOrUpdateLinkType(state, action.payload.linkType);
     case LinkTypesActionType.UPDATE_SUCCESS:
       return addOrUpdateLinkType(state, action.payload.linkType);
+    case LinkTypesActionType.UPDATE_INTERNAL:
+      return updateLinkType(state, action.payload.linkType);
+    case LinkTypesActionType.UPDATE_FAILURE:
+      return revertLinkType(state, action.payload.linkType);
     case LinkTypesActionType.DELETE_SUCCESS:
       return linkTypesAdapter.removeOne(action.payload.linkTypeId, state);
     case LinkTypesActionType.CREATE_ATTRIBUTES_SUCCESS:
@@ -72,6 +76,20 @@ function addOrUpdateLinkType(state: LinkTypesState, linkType: LinkType): LinkTyp
     return linkTypesAdapter.upsertOne(linkType, state);
   }
   return state;
+}
+
+function updateLinkType(state: LinkTypesState, linkType: LinkType): LinkTypesState {
+  return linkTypesAdapter.upsertOne(
+    {
+      ...linkType,
+      version: linkType.version + 1,
+    },
+    state
+  );
+}
+
+function revertLinkType(state: LinkTypesState, linkType: LinkType) {
+  return linkTypesAdapter.upsertOne(linkType, state);
 }
 
 function onCreateAttributesSuccess(

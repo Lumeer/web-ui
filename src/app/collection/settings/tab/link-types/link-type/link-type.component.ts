@@ -17,63 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {AppState} from '../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {selectLinkInstancesByType} from '../../../../../core/store/link-instances/link-instances.state';
-import {BehaviorSubject, Subscription} from 'rxjs';
 
 @Component({
   selector: '[link-type]',
   templateUrl: './link-type.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinkTypeComponent implements OnInit, OnDestroy, OnChanges {
+export class LinkTypeComponent {
   @Input()
   public linkType: LinkType;
 
   @Output()
   public delete = new EventEmitter<number>();
 
-  public linksCount$ = new BehaviorSubject<number>(0);
-
-  private linksCountSubscription = new Subscription();
-
-  constructor(private store: Store<AppState>) {}
-
-  public ngOnInit() {
-    this.subscribeLinks();
-  }
-
-  private subscribeLinks() {
-    this.linksCountSubscription.unsubscribe();
-    if (this.linkType) {
-      this.linksCountSubscription = this.store
-        .select(selectLinkInstancesByType(this.linkType.id))
-        .subscribe(linkInstances => this.linksCount$.next(linkInstances.length));
-    }
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    this.subscribeLinks();
-  }
-
-  public ngOnDestroy() {
-    this.linksCountSubscription.unsubscribe();
-  }
+  @Output()
+  public newName = new EventEmitter<string>();
 
   public onDelete() {
-    this.delete.emit(this.linksCount$.getValue());
+    this.delete.emit();
+  }
+
+  public onNewName(name: string) {
+    this.newName.emit(name);
   }
 }

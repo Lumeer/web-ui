@@ -27,4 +27,5 @@ export interface LinkTypeDto {
   collectionIds?: [string, string];
 
   attributes?: AttributeDto[];
+  linksCount?: number;
 }

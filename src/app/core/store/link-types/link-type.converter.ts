@@ -36,6 +36,7 @@ export function convertLinkTypeDtoToModel(
       : attributes,
     correlationId: correlationId,
     version: dto.version,
+    linksCount: dto.linksCount,
   };
 }
 
