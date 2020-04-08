@@ -124,17 +124,7 @@ function patchData(state: LinkInstancesState, action: LinkInstancesAction.PatchD
 }
 
 function revertLinkInstance(state: LinkInstancesState, originalLinkInstance: LinkInstance): LinkInstancesState {
-  if (originalLinkInstance) {
-    const storedLinkInstance = state.entities[originalLinkInstance && originalLinkInstance.id];
-
-    if (!storedLinkInstance) {
-      return linkInstancesAdapter.addOne(originalLinkInstance, state);
-    }
-
-    return linkInstancesAdapter.upsertOne(originalLinkInstance, state);
-  }
-
-  return state;
+  return linkInstancesAdapter.upsertOne(originalLinkInstance, state);
 }
 
 function isModifiedLater(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {

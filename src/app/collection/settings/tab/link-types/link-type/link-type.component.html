@@ -1,11 +1,20 @@
-<td class="d-flex flex-row no-wrap align-items-center">
+<td class="d-flex flex-row no-wrap align-items-center pl-2">
   <icons-presenter
     [colors]="linkType.collections | colors"
     [icons]="linkType.collections | icons"
     [title]="linkType.name">
   </icons-presenter>
 
-  <span class="ml-2 flex-grow-1">{{linkType.name}}</span>
+  <input-box
+    class="ml-2 flex-grow-1"
+    innerClass="bg-transparent"
+    [title]="linkType.name"
+    [initialValue]="linkType.name"
+    (newValue)="onNewName($event)"
+    placeholder="Enter link type name"
+    placeholder-i18n="@@collection.tab.linktypes.name.placeholder">
+
+  </input-box>
 
 </td>
 
@@ -13,10 +22,10 @@
 
   <span class="mr-3" title="Number of links" i18n-title="@@links.count">
     <i class="far fa-link mr-1" aria-hidden="true"></i>
-    <span>{{ linksCount$ | async }}</span>
+    <span>{{linkType.linksCount || 0}}</span>
   </span>
 
-  <i class="fas fa-fw fa-trash mr-2 text-danger cursor-pointer delete"
+  <i class="fas fa-fw fa-trash text-danger cursor-pointer delete"
      (click)="onDelete()"
      title="Delete" i18n-title="@@delete"
      aria-hidden="true"></i>

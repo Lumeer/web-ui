@@ -34,6 +34,7 @@ export enum LinkTypesActionType {
   CREATE_FAILURE = '[Link Types] Create :: Failure',
 
   UPDATE = '[Link Types] Update',
+  UPDATE_INTERNAL = '[Link Types] Update Internal',
   UPDATE_SUCCESS = '[Link Types] Update :: Success',
   UPDATE_FAILURE = '[Link Types] Update :: Failure',
 
@@ -111,6 +112,12 @@ export namespace LinkTypesAction {
     public constructor(public payload: {linkType: LinkType}) {}
   }
 
+  export class UpdateInternal implements Action {
+    public readonly type = LinkTypesActionType.UPDATE_INTERNAL;
+
+    public constructor(public payload: {linkType: LinkType}) {}
+  }
+
   export class UpdateSuccess implements Action {
     public readonly type = LinkTypesActionType.UPDATE_SUCCESS;
 
@@ -120,7 +127,7 @@ export namespace LinkTypesAction {
   export class UpdateFailure implements Action {
     public readonly type = LinkTypesActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; linkType: LinkType}) {}
   }
 
   export class Delete implements Action {
@@ -231,6 +238,7 @@ export namespace LinkTypesAction {
     | CreateSuccess
     | CreateFailure
     | Update
+    | UpdateInternal
     | UpdateSuccess
     | UpdateFailure
     | Delete

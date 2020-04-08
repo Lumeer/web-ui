@@ -21,13 +21,12 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable, of} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeDto} from '../../dto';
 import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
-import {CommonAction} from '../common/common.action';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
 import {selectQuery} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -35,11 +34,8 @@ import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypeAttributeById, selectLinkTypesLoaded} from './link-types.state';
-import {DocumentsAction, DocumentsActionType} from '../documents/documents.action';
 import {Attribute} from '../collections/collection';
-import {DocumentModel} from '../documents/document.model';
 import {LinkInstance} from '../link-instances/link.instance';
-import {CollectionsAction} from '../collections/collections.action';
 
 @Injectable()
 export class LinkTypesEffects {
@@ -112,13 +108,13 @@ export class LinkTypesEffects {
   @Effect()
   public update$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.Update>(LinkTypesActionType.UPDATE),
+    tap(action => this.store$.dispatch(new LinkTypesAction.UpdateInternal({linkType: action.payload.linkType}))),
     mergeMap(action => {
       const linkTypeDto = convertLinkTypeModelToDto(action.payload.linkType);
 
       return this.linkTypeService.updateLinkType(action.payload.linkType.id, linkTypeDto).pipe(
-        map(dto => convertLinkTypeDtoToModel(dto)),
-        map(linkType => new LinkTypesAction.UpdateSuccess({linkType})),
-        catchError(error => of(new LinkTypesAction.UpdateFailure({error})))
+        mergeMap(() => EMPTY),
+        catchError(error => of(new LinkTypesAction.UpdateFailure({error, linkType: action.payload.linkType})))
       );
     })
   );
