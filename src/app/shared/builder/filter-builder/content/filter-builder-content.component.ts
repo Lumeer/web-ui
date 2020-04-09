@@ -175,7 +175,7 @@ export class FilterBuilderContentComponent implements OnInit {
 
   public onConditionValueSelect(item: ConstraintConditionValueItem, column: number, row: number) {
     this.selectConditionValue(item, column);
-    this.focusCell(row, column);
+    this.focusCell(row + 1, column + 1);
     this.endEditing();
   }
 
