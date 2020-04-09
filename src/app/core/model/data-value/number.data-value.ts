@@ -68,7 +68,7 @@ export class NumberDataValue implements NumericDataValue {
     if (this.bigNumber) {
       return decimalUserToStore(this.bigNumber.toFixed());
     }
-    return decimalUserToStore(String(this.value).trim());
+    return isNotNullOrUndefined(this.value) ? decimalUserToStore(String(this.value).trim()) : null;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
