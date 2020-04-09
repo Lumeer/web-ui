@@ -56,7 +56,7 @@
     "@fullcalendar/timegrid": "^4.4.0",
     "@fullcalendar/interaction": "^4.4.0",
     "@fullcalendar/list": "^4.4.0",
-    "@lumeer/lumeer-gantt": "^1.0.28",
+    "@lumeer/lumeer-gantt": "^1.0.29",
     "@ngrx/effects": "^9.0.0",
     "@ngrx/entity": "^9.0.0",
     "@ngrx/router-store": "^9.0.0",

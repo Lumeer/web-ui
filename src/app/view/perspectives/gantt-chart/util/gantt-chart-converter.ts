@@ -75,8 +75,7 @@ import {
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {QueryAttribute, queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {fullWithNulls} from '../../../../shared/utils/array.utils';
-import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
-import {createDateTimeOptions} from '../../../../shared/date-time/date-time-options';
+import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
 
 export interface GanttTaskMetadata {
   nameDataId: string;
@@ -485,7 +484,7 @@ export class GanttChartConverter {
   private formatSwimlaneValue(value: any, barModel: QueryAttribute): GanttSwimlane | null {
     const constraint = this.findConstraintForModel(barModel);
     const overrideConstraint =
-      barModel && barModel.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
+      barModel?.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
 
     const resultConstraint = overrideConstraint || constraint || new UnknownConstraint();
     const formattedValue = resultConstraint.createDataValue(value, this.constraintData).format();
@@ -500,7 +499,7 @@ export class GanttChartConverter {
       const textColor = textBackground && contrastColor(textBackground);
       return {
         value,
-        title: formattedValue,
+        title: this.swimlaneTitle(formattedValue, resultConstraint),
         textBackground,
         textColor,
         avatarUrl: this.swimlaneAvatarUrl(value, resultConstraint),
@@ -524,6 +523,13 @@ export class GanttChartConverter {
     }
 
     return null;
+  }
+
+  private swimlaneTitle(formattedValue: string, constraint: Constraint): string {
+    if (constraint.type === ConstraintType.User && (<UserConstraint>constraint).config?.onlyIcon) {
+      return '';
+    }
+    return formattedValue;
   }
 
   private formatDataAggregatorValue(
