@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Observable, of} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -37,8 +37,8 @@ export class UserNotificationsEffects {
   public getUserNotifications$: Observable<Action> = this.actions$.pipe(
     ofType<UserNotificationsAction.Get>(UserNotificationsActionType.GET),
     withLatestFrom(this.store$.pipe(select(selectUserNotificationsLoaded))),
-    filter(([action, loaded]) => !loaded),
-    mergeMap(action =>
+    filter(([, loaded]) => !loaded),
+    mergeMap(() =>
       this.userNotificationsService.getNotifications().pipe(
         map(
           userNotifications =>
@@ -99,7 +99,7 @@ export class UserNotificationsEffects {
           )
         );
       } else {
-        return of(null);
+        return EMPTY;
       }
     })
   );

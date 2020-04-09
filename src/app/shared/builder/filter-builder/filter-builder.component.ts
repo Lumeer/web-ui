@@ -79,13 +79,13 @@ export class FilterBuilderComponent implements OnInit {
   }
 
   public isOpen(): boolean {
-    return this.dropdown && this.dropdown.isOpen();
+    return this.dropdown?.isOpen();
   }
 
   public open() {
     if (this.dropdown) {
       this.dropdown.open();
-      this.contentComponent.focusFirstInput();
+      this.contentComponent.focus();
     }
   }
 
