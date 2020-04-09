@@ -21,7 +21,7 @@ import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@ang
 
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, filter, map, mergeMap, take, tap} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, mergeMap, pairwise, startWith, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
@@ -103,7 +103,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     return this.store$.pipe(
       select(selectSearchConfig),
       tap(config => (this.config = config)),
-      map(config => config && config.documents)
+      map(config => config?.documents)
     );
   }
 
@@ -182,18 +182,30 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
       .pipe(
         select(selectQuery),
         filter(query => !!query),
-        distinctUntilChanged((a, b) => deepObjectsEquals(queryWithoutFilters(a), queryWithoutFilters(b)))
+        distinctUntilChanged((a, b) => deepObjectsEquals(a, b)),
+        startWith(null as Query),
+        pairwise()
       )
-      .subscribe(query => {
-        this.clearDocumentsInfo();
+      .subscribe(([previousQuery, query]) => {
+        const queryChangedWithoutFilters = !deepObjectsEquals(
+          queryWithoutFilters(previousQuery),
+          queryWithoutFilters(query)
+        );
+        if (queryChangedWithoutFilters) {
+          this.resetDocumentsOrder();
+        }
+        this.resetPage();
         this.fetchDocuments(query);
       });
     this.subscriptions.add(navigationSubscription);
   }
 
-  private clearDocumentsInfo() {
-    this.documentsOrder = [];
+  private resetPage() {
     this.page$.next(0);
+  }
+
+  private resetDocumentsOrder() {
+    this.documentsOrder = [];
   }
 
   public ngOnDestroy() {
