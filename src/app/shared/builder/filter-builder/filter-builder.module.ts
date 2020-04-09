@@ -21,21 +21,14 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FilterBuilderComponent} from './filter-builder.component';
 import {DropdownModule} from '../../dropdown/dropdown.module';
-import {QueryConditionItemsPipe} from './pipes/query-condition-items.pipe';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
-import {QueryConstraintConditionsPipe} from './pipes/query-constraint-conditions.pipe';
 import {ConditionShouldBeItalicPipe} from './pipes/condition-should-be-italic.pipe';
+import {InputModule} from '../../input/input.module';
 
 @NgModule({
-  declarations: [
-    FilterBuilderComponent,
-    QueryConditionItemsPipe,
-    QueryConstraintConditionsPipe,
-    FilterBuilderContentComponent,
-    ConditionShouldBeItalicPipe,
-  ],
+  declarations: [FilterBuilderComponent, FilterBuilderContentComponent, ConditionShouldBeItalicPipe],
   exports: [FilterBuilderComponent, ConditionShouldBeItalicPipe],
-  imports: [CommonModule, DropdownModule, DataInputModule],
+  imports: [CommonModule, DropdownModule, DataInputModule, InputModule],
 })
 export class FilterBuilderModule {}

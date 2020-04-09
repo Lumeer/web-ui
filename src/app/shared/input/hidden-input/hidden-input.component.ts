@@ -35,11 +35,11 @@ export class HiddenInputComponent implements DataRowHiddenComponent {
   private skipCompose = false;
 
   public focus() {
-    this.hiddenInput && this.hiddenInput.nativeElement.focus();
+    this.hiddenInput?.nativeElement?.focus();
   }
 
   public blur() {
-    this.hiddenInput && this.hiddenInput.nativeElement.blur();
+    this.hiddenInput?.nativeElement?.blur();
   }
 
   public onClick(event: MouseEvent) {

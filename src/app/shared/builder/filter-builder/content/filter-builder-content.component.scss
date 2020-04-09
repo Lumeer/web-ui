@@ -23,3 +23,7 @@
   border: 1px solid $success;
   border-radius: 0.25rem;
 }
+
+.focused {
+  outline: 1px solid $success;
+}

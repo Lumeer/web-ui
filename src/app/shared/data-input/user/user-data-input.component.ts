@@ -233,9 +233,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     if (this.preventSave) {
       this.preventSave = false;
       this.blurCleanup();
-    } else {
-      const activeOption = this.multi ? null : this.dropdown && this.dropdown.getActiveOption();
-      this.saveValue(activeOption);
+    } else if (this.multi) {
+      this.saveValue();
+    } else if (this.dropdown?.getActiveOption()) {
+      this.saveValue(this.dropdown.getActiveOption());
     }
   }
 
