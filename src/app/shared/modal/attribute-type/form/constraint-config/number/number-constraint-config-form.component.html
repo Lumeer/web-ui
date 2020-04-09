@@ -1,46 +1,48 @@
 <div [formGroup]="form">
 
   <div class="d-flex flex-row flex-nowrap pt-1 align-items-center">
-    <label class="switch">
-      <input type="checkbox" formControlName="forceSign">
+    <label class="switch" [for]="formControlName.ForceSign">
+      <input type="checkbox" [formControlName]="formControlName.ForceSign" #forceSign>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="ml-2" i18n="@@constraint.number.sign.label">Force sign</span>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.sign.label"
+          (click)="forceSign.click()">Force sign</span>
   </div>
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
-    <label class="switch">
-      <input type="checkbox" formControlName="negative">
+    <label class="switch" [for]="formControlName.Negative">
+      <input type="checkbox" [formControlName]="formControlName.Negative" #negative>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="ml-2" i18n="@@constraint.number.negative.label">Accounting negative numbers</span>
-  </div>
-
-  <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
-    <label class="switch">
-      <input type="checkbox" formControlName="compact">
-      <span class="slider round" (click)="$event.stopPropagation()"></span>
-    </label>
-    <span class="ml-2" i18n="@@constraint.number.compact.label">Compact mode</span>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.negative.label"
+          (click)="negative.click()">Accounting negative numbers</span>
   </div>
 
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
-    <label class="switch">
-      <input type="checkbox" formControlName="separated">
+    <label class="switch" [for]="formControlName.Compact">
+      <input type="checkbox" [formControlName]="formControlName.Compact" #compact>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="ml-2" i18n="@@constraint.number.space.label">Thousands separated</span>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.compact.label" (click)="compact.click()">Compact mode</span>
+  </div>
+
+  <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
+    <label class="switch" [for]="formControlName.Separated">
+      <input type="checkbox" [formControlName]="formControlName.Separated" #separated>
+      <span class="slider round" (click)="$event.stopPropagation()"></span>
+    </label>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.space.label" (click)="separated.click()">Thousands separated</span>
   </div>
 
   <div class="d-flex flex-column pt-3">
-    <label for="numberDecimals">
+    <label [for]="formControlName.Decimals">
         <span class="d-inline-block"
               i18n="@@constraint.number.decimals.label">
           Round to no. of decimal digits (0-10):
         </span>
     </label>
     <input class="form-control"
-           formControlName="decimals"
-           id="numberDecimals"
+           [formControlName]="formControlName.Decimals"
+           [id]="formControlName.Decimals"
            integer
            maxValue="10"
            min="0"
@@ -60,24 +62,24 @@
 
   <div class="d-flex mt-3">
     <div class="form-group flex-grow-1">
-      <label for="numberMinValue"
+      <label [for]="formControlName.MinValue"
              i18n="@@constraint.number.minValue.label">
         Minimum value
       </label>
       <input class="form-control"
-             formControlName="minValue"
-             id="numberMinValue"
+             [formControlName]="formControlName.MinValue"
+             [id]="formControlName.MinValue"
              type="number">
     </div>
 
     <div class="form-group ml-3 flex-grow-1">
-      <label for="numberMaxValue"
+      <label [for]="formControlName.MaxValue"
              i18n="@@constraint.number.maxValue.label">
         Maximum value
       </label>
       <input class="form-control"
-             formControlName="maxValue"
-             id="numberMaxValue"
+             [formControlName]="formControlName.MaxValue"
+             [id]="formControlName.MaxValue"
              type="number">
     </div>
   </div>

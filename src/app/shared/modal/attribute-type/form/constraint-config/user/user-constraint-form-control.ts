@@ -20,4 +20,5 @@
 export enum UserConstraintFormControl {
   Multi = 'multi',
   ExternalUsers = 'externalUsers',
+  OnlyIcon = 'onlyIcon',
 }

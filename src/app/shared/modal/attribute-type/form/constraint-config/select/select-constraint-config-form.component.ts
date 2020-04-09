@@ -58,14 +58,11 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
   }
 
   private addMultiFormControl() {
-    this.form.addControl(SelectConstraintFormControl.Multi, new FormControl(this.config && this.config.multi));
+    this.form.addControl(SelectConstraintFormControl.Multi, new FormControl(this.config?.multi));
   }
 
   private addDisplayValuesFormControl() {
-    this.form.addControl(
-      SelectConstraintFormControl.DisplayValues,
-      new FormControl(this.config && this.config.displayValues)
-    );
+    this.form.addControl(SelectConstraintFormControl.DisplayValues, new FormControl(this.config?.displayValues));
   }
 
   private addOptionsFormArray() {

@@ -6,39 +6,27 @@
 
   <div class="form-group">
 
-    <div class="custom-control custom-checkbox">
-      <input [formControlName]="formControlName.Multi"
-             [id]="formControlName.Multi"
-             #multiCheckbox
-             class="custom-control-input"
-             type="checkbox">
-      <label [for]="formControlName.Multi"
-             class="custom-control-label">
+    <div class="d-flex flex-row flex-nowrap pt-1 align-items-center">
+      <label class="switch" [for]="formControlName.Multi">
+        <input type="checkbox" [formControlName]="formControlName.Multi" [id]="formControlName.Multi" #multi>
+        <span class="slider round" (click)="$event.stopPropagation()"></span>
       </label>
-      <span i18n="@@constraint.select.multi.label" class="cursor-pointer user-select-none"
-            (click)="multiCheckbox.click()">
-        Allow select multiple values
-      </span>
+      <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.select.multi.label" (click)="multi.click()">Allow select multiple values</span>
     </div>
 
-    <div class="custom-control custom-checkbox mt-2">
-      <input [formControlName]="formControlName.DisplayValues"
-             [id]="formControlName.DisplayValues"
-             #checkbox
-             class="custom-control-input"
-             type="checkbox">
-      <label [for]="formControlName.DisplayValues"
-             class="custom-control-label">
+    <div class="d-flex flex-row flex-nowrap pt-1 align-items-center">
+      <label class="switch" [for]="formControlName.DisplayValues">
+        <input type="checkbox" [formControlName]="formControlName.DisplayValues" [id]="formControlName.DisplayValues"
+               #displayValues>
+        <span class="slider round" (click)="$event.stopPropagation()"></span>
       </label>
-      <span i18n="@@constraint.select.displayValues.label" class="cursor-pointer user-select-none"
-            (click)="checkbox.click()">
-        Distinguish display values
-      </span>
+      <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.select.displayValues.label" (click)="displayValues.click()">Distinguish display values</span>
       <i class="fas fa-question-circle ml-1 cursor-help"
          title="Use different values for users and for computations in functions (e.g. High Priority = 3)."
          i18n-title="@@constraint.select.displayValues.help">
       </i>
     </div>
+
   </div>
 
   <select-constraint-options-form [displayValues]="displayValuesControl.value"

@@ -5,34 +5,32 @@
   </p>
 
   <div class="form-group">
-    <div class="custom-control custom-checkbox">
-      <input [formControlName]="formControlName.Multi"
-             [id]="formControlName.Multi"
-             #multiCheckbox
-             class="custom-control-input"
-             type="checkbox">
-      <label [for]="formControlName.Multi"
-             class="custom-control-label">
+    <div class="d-flex flex-row flex-nowrap pt-1 align-items-center">
+      <label class="switch" [for]="formControlName.Multi">
+        <input type="checkbox" [formControlName]="formControlName.Multi" [id]="formControlName.Multi" #multi>
+        <span class="slider round" (click)="$event.stopPropagation()"></span>
       </label>
-      <span i18n="@@constraint.user.multi.label" class="cursor-pointer user-select-none"
-            (click)="multiCheckbox.click()">
-        Allow select multiple users
-      </span>
+      <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.user.multi.label" (click)="multi.click()">Allow select multiple users</span>
     </div>
 
-    <div class="custom-control custom-checkbox">
-      <input [formControlName]="formControlName.ExternalUsers"
-             [id]="formControlName.ExternalUsers"
-             #checkbox
-             class="custom-control-input"
-             type="checkbox">
-      <label [for]="formControlName.ExternalUsers"
-             class="custom-control-label">
+    <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
+      <label class="switch" [for]="formControlName.ExternalUsers">
+        <input type="checkbox" [formControlName]="formControlName.ExternalUsers" [id]="formControlName.ExternalUsers"
+               #externalUsers>
+        <span class="slider round" (click)="$event.stopPropagation()"></span>
       </label>
-      <span i18n="@@constraint.user.externalUsers.label" class="cursor-pointer user-select-none"
-            (click)="checkbox.click()">
-        Allow unregistered users (any valid email)
-      </span>
+      <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.user.externalUsers.label"
+            (click)="externalUsers.click()">Allow unregistered users (any valid email)</span>
     </div>
+
+    <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
+      <label class="switch" [for]="formControlName.OnlyIcon">
+        <input type="checkbox" [formControlName]="formControlName.OnlyIcon" [id]="formControlName.OnlyIcon" #onlyIcon>
+        <span class="slider round" (click)="$event.stopPropagation()"></span>
+      </label>
+      <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.user.onlyIcon.label"
+            (click)="onlyIcon.click()">Display user name / email</span>
+    </div>
+
   </div>
 </div>

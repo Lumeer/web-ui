@@ -128,6 +128,7 @@ export interface TextConstraintConfig {
 
 export interface UserConstraintConfig {
   multi?: boolean;
+  onlyIcon?: boolean;
   externalUsers: boolean;
 }
 

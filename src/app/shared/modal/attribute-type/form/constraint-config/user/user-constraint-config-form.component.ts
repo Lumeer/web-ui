@@ -50,10 +50,8 @@ export class UserConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(
-      UserConstraintFormControl.ExternalUsers,
-      new FormControl(this.config && this.config.externalUsers)
-    );
-    this.form.addControl(UserConstraintFormControl.Multi, new FormControl(this.config && this.config.multi));
+    this.form.addControl(UserConstraintFormControl.ExternalUsers, new FormControl(this.config?.externalUsers));
+    this.form.addControl(UserConstraintFormControl.Multi, new FormControl(this.config?.multi));
+    this.form.addControl(UserConstraintFormControl.OnlyIcon, new FormControl(!this.config?.onlyIcon));
   }
 }

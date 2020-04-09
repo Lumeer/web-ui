@@ -40,6 +40,8 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   @Input()
   public form: FormGroup;
 
+  public readonly formControlName = NumberConstraintFormControl;
+
   public exampleValue$: Observable<NumberDataValue>;
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -55,19 +57,13 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   }
 
   private createForm() {
-    this.form.addControl(NumberConstraintFormControl.Decimals, new FormControl(this.config && this.config.decimals));
-    this.form.addControl(NumberConstraintFormControl.Compact, new FormControl(this.config && this.config.compact));
-    this.form.addControl(NumberConstraintFormControl.ForceSign, new FormControl(this.config && this.config.forceSign));
-    this.form.addControl(NumberConstraintFormControl.Separated, new FormControl(this.config && this.config.separated));
-    this.form.addControl(NumberConstraintFormControl.Negative, new FormControl(this.config && this.config.negative));
-    this.form.addControl(
-      NumberConstraintFormControl.MinValue,
-      new FormControl(this.config && this.config.minValue && this.config.minValue.toFixed())
-    );
-    this.form.addControl(
-      NumberConstraintFormControl.MaxValue,
-      new FormControl(this.config && this.config.maxValue && this.config.maxValue.toFixed())
-    );
+    this.form.addControl(NumberConstraintFormControl.Decimals, new FormControl(this.config?.decimals));
+    this.form.addControl(NumberConstraintFormControl.Compact, new FormControl(this.config?.compact));
+    this.form.addControl(NumberConstraintFormControl.ForceSign, new FormControl(this.config?.forceSign));
+    this.form.addControl(NumberConstraintFormControl.Separated, new FormControl(this.config?.separated));
+    this.form.addControl(NumberConstraintFormControl.Negative, new FormControl(this.config?.negative));
+    this.form.addControl(NumberConstraintFormControl.MinValue, new FormControl(this.config?.minValue?.toFixed()));
+    this.form.addControl(NumberConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue?.toFixed()));
     this.form.setValidators(
       minMaxValidator(NumberConstraintFormControl.MinValue, NumberConstraintFormControl.MaxValue)
     );
