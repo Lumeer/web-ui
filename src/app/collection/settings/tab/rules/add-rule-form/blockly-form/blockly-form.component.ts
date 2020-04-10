@@ -44,6 +44,9 @@ export class BlocklyFormComponent implements OnInit {
   public collection: Collection;
 
   @Input()
+  public linkType: LinkType;
+
+  @Input()
   public form: FormGroup;
 
   public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
@@ -95,10 +98,18 @@ export class BlocklyFormComponent implements OnInit {
   public ngOnInit(): void {
     this.collections$ = this.store$.select(selectAllCollections);
     this.linkTypes$ = this.store$.select(selectAllLinkTypes);
-    this.variables = [
-      {name: 'oldDocument', collectionId: this.collection.id},
-      {name: 'newDocument', collectionId: this.collection.id},
-    ];
+    if (this.collection) {
+      this.variables = [
+        {name: 'oldDocument', collectionId: this.collection.id},
+        {name: 'newDocument', collectionId: this.collection.id},
+      ];
+    }
+    if (this.linkType) {
+      this.variables = [
+        {name: 'oldLink', linkTypeId: this.linkType.id},
+        {name: 'newLink', linkTypeId: this.linkType.id},
+      ];
+    }
   }
 
   public onJsUpdate(jsCode: string) {
