@@ -1,0 +1,22 @@
+<select-item class="d-block w-100 mt-1"
+             [items]="aggregations | aggregationSelectItems"
+             [placeholderText]="aggregationPlaceholder"
+             placeholderTitle="Select value aggregation"
+             i18n-placeholderTitle="@@perspective.pivot.config.valueAggregation"
+             [buttonClasses]="buttonClasses"
+             [removable]="false"
+             [selectedId]="aggregation?.aggregation || aggregationType.Sum"
+             (select)="onAggregationSelect($event)">
+</select-item>
+
+<select-item class="d-block w-100 mt-2"
+             [emptyValue]="''"
+             [placeholderIcon]="'far fa-badge-percent'"
+             placeholderTitle="Select absolute or relative display"
+             i18n-placeholderTitle="@@perspective.kanban.config.valueAbsOrRel"
+             [items]="valueTypes | kanbanValueTypeSelectItems"
+             [selectedId]="aggregation?.valueType || valueType.Default"
+             [removable]="false"
+             [buttonClasses]="buttonClasses"
+             (select)="onValueTypeSelected($event)">
+</select-item>

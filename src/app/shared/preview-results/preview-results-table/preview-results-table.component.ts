@@ -72,7 +72,11 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
   @ViewChildren('tableRow')
   public rowsElements: QueryList<ElementRef>;
 
-  public readonly configuration: DataInputConfiguration = {common: {inline: true}};
+  public readonly configuration: DataInputConfiguration = {
+    common: {inline: true},
+    boolean: {center: true},
+    user: {allowCenterOnlyIcon: true},
+  };
 
   public page = 0;
 

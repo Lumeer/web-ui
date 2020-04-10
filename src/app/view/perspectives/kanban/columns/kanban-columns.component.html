@@ -1,4 +1,4 @@
-<div class="wrapper h-100" *ngIf="{permissions: permissions$ | async} as data">
+<div class="wrapper h-100" *ngIf="{permissions: permissions$ | async, summaries: config | kanbanHeaderSummaries:collections:documents:linkTypes:linkInstances:constraintData} as data">
   <div class="d-inline-flex flex-row flex-nowrap h-100 align-items-start mr-4"
        cdkDropList cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="dropColumn($event)">
@@ -6,7 +6,7 @@
                    cdkDrag #kanbanColumn
                    [cdkDragDisabled]="!canManageConfig"
                    [cdkDragStartDelay]="dragDelay"
-                   class="column ml-4"
+                   class="column ml-3"
                    [column]="column"
                    [config]="config"
                    [dragColumnsIds]="column | kanbanDragColumns:config.columns"
@@ -15,6 +15,7 @@
                    [canManageConfig]="canManageConfig"
                    [cards]="column | kanbanColumnCards:documents:collections:config"
                    [query]="query"
+                   [summary]="data.summaries && data.summaries[column.id]"
                    [permissions]="data.permissions"
                    [constraintData]="constraintData"
                    (createResource)="createObjectInResource($event, column)"
@@ -25,7 +26,7 @@
     </kanban-column>
 
     <kanban-column *ngIf="config.otherColumn?.resourcesOrder?.length > 0"
-                   class="column ml-4" #kanbanColumn
+                   class="column ml-3" #kanbanColumn
                    [column]="config.otherColumn"
                    [config]="config"
                    [dragColumnsIds]="config.otherColumn | kanbanDragColumns:config.columns"
@@ -34,6 +35,7 @@
                    [permissions]="data.permissions"
                    [cards]="config.otherColumn | kanbanColumnCards:documents:collections:config"
                    [query]="query"
+                   [summary]="data.summaries && data.summaries[config.otherColumn.id]"
                    [constraintData]="constraintData"
                    (createResource)="createObjectInResource($event, config.otherColumn)"
                    (updateDocument)="onUpdateDocument($event)"

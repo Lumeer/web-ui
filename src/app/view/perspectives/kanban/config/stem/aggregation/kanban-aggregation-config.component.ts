@@ -18,62 +18,40 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {KanbanAttribute, KanbanValueAttribute, KanbanValueType} from '../../../../../../core/store/kanbans/kanban';
+import {KanbanAggregation, KanbanValueType} from '../../../../../../core/store/kanbans/kanban';
 
 @Component({
-  selector: 'kanban-value-attribute-config',
-  templateUrl: './kanban-value-attribute-config.component.html',
+  selector: 'kanban-aggregation-config',
+  templateUrl: './kanban-aggregation-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanValueAttributeConfigComponent {
+export class KanbanAggregationConfigComponent {
   @Input()
-  public kanbanAttribute: KanbanValueAttribute;
-
-  @Input()
-  public availableAttributes: SelectItemModel[];
+  public aggregation: KanbanAggregation;
 
   @Output()
-  public attributeSelect = new EventEmitter<KanbanValueAttribute>();
-
-  @Output()
-  public attributeChange = new EventEmitter<KanbanValueAttribute>();
-
-  @Output()
-  public attributeRemove = new EventEmitter();
+  public aggregationChange = new EventEmitter<KanbanAggregation>();
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly aggregationPlaceholder: string;
   public readonly aggregations = Object.values(DataAggregationType);
   public readonly valueTypes = Object.values(KanbanValueType);
   public readonly valueType = KanbanValueType;
+  public readonly aggregationType = DataAggregationType;
 
   constructor(private i18n: I18n) {
     this.aggregationPlaceholder = i18n({id: 'aggregation', value: 'Aggregation'});
   }
 
   public onAggregationSelect(aggregation: DataAggregationType) {
-    const newAttribute = {...this.kanbanAttribute, aggregation};
-    this.attributeChange.emit(newAttribute);
-  }
-
-  public onAttributeSelected(attribute: KanbanAttribute) {
-    const valueAttribute: KanbanValueAttribute = {
-      ...attribute,
-      aggregation: DataAggregationType.Sum,
-      valueType: KanbanValueType.Default,
-    };
-    this.attributeSelect.emit(valueAttribute);
-  }
-
-  public onAttributeRemoved() {
-    this.attributeRemove.emit();
+    const newAggregation = {...(this.aggregation || {}), aggregation};
+    this.aggregationChange.emit(newAggregation);
   }
 
   public onValueTypeSelected(valueType: KanbanValueType) {
-    const valueAttribute: KanbanValueAttribute = {...this.kanbanAttribute, valueType};
-    this.attributeChange.emit(valueAttribute);
+    const newAggregation = {...(this.aggregation || {}), valueType};
+    this.aggregationChange.emit(newAggregation);
   }
 }

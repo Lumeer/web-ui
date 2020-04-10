@@ -76,6 +76,9 @@ export class KanbanColumnComponent {
   public permissions: Record<string, AllowedPermissions>;
 
   @Input()
+  public summary: any;
+
+  @Input()
   public query: Query;
 
   @Input()
@@ -167,8 +170,8 @@ export class KanbanColumnComponent {
   public onDocumentCreated(id: string) {
     setTimeout(() => {
       const postIt = document.getElementById(`${this.postItIdPrefix}#${id}`);
-      postIt && postIt.scrollIntoView();
-    });
+      postIt?.scrollIntoView();
+    }, 300);
   }
 
   public onRemoveColumn() {

@@ -17,22 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Perspective} from '../perspectives/perspective';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {SizeType} from './size-type';
+import {SliderItem} from '../values/slider-item';
 
-@Pipe({
-  name: 'undoChangesSupported',
+@Component({
+  selector: 'size-slider',
+  templateUrl: './size-slider.component.html',
 })
-export class UndoChangesSupportedPipe implements PipeTransform {
-  public transform(perspective: Perspective): any {
-    return [
-      Perspective.Table,
-      Perspective.Search,
-      Perspective.Pivot,
-      Perspective.Map,
-      Perspective.GanttChart,
-      Perspective.Calendar,
-      Perspective.Kanban,
-    ].includes(perspective);
+export class SizeSliderComponent {
+  @Input()
+  public disabled: boolean;
+
+  @Input()
+  public defaultSize: SizeType;
+
+  @Output()
+  public newSize: EventEmitter<SizeType> = new EventEmitter();
+
+  public items: SliderItem[] = [
+    {id: SizeType.S, title: 'S'},
+    {id: SizeType.M, title: 'M'},
+    {id: SizeType.L, title: 'L'},
+    {id: SizeType.XL, title: 'XL'},
+  ];
+
+  public onNewItem(item: SliderItem) {
+    this.newSize.emit(item.id);
   }
 }

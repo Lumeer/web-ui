@@ -17,21 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanAttribute, KanbanValueAttribute} from '../../../../core/store/kanbans/kanban';
-import {cleanKanbanAttribute} from '../util/kanban.util';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {SliderComponent} from './slider.component';
+import {SizeSliderComponent} from './size/size-slider.component';
+import {ValuesSliderComponent} from './values/values-slider.component';
 
-@Pipe({
-  name: 'kanbanCleanValueAttribute',
+@NgModule({
+  declarations: [SliderComponent, SizeSliderComponent, ValuesSliderComponent],
+  imports: [CommonModule],
+  exports: [SliderComponent, SizeSliderComponent, ValuesSliderComponent],
 })
-export class KanbanCleanValueAttributePipe implements PipeTransform {
-  public transform(attribute: KanbanValueAttribute): KanbanValueAttribute {
-    return (
-      attribute && {
-        ...cleanKanbanAttribute(attribute),
-        aggregation: attribute.aggregation,
-        valueType: attribute.valueType,
-      }
-    );
-  }
-}
+export class SliderModule {}

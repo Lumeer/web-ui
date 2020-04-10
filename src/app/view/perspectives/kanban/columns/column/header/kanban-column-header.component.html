@@ -26,10 +26,10 @@
   </user-data-input>
 
   <select-data-input *ngSwitchCase="constraintTypes.Select"
-                   class="px-3 py-2 flex-grow-1"
-                   [value]="column.title | dataValue : (columnConstraint || selectConstraint)"
-                   [readonly]="true"
-                   [focus]="false">
+                     class="px-3 py-2 flex-grow-1"
+                     [value]="column.title | dataValue : (columnConstraint || selectConstraint)"
+                     [readonly]="true"
+                     [focus]="false">
   </select-data-input>
 
   <div *ngSwitchCase="constraintTypes.Text" class="px-3 py-2 text-truncate flex-grow-1"
@@ -57,6 +57,7 @@
   </div>
 </ng-template>
 
-<div *ngIf="column.summary" class="align-self-center flex-fill text-right small text-muted mr-2">
-  {{column.summary}}
+<div *ngIf="!(summary | isNullOrUndefined)"
+     class="align-self-center flex-fill text-right small text-muted mr-2">
+  {{summary}}
 </div>

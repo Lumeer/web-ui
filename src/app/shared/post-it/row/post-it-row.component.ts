@@ -24,13 +24,9 @@ import {
   Output,
   EventEmitter,
   HostBinding,
-  ViewChild,
-  ElementRef,
   Renderer2,
   OnChanges,
-  AfterViewInit,
   SimpleChanges,
-  HostListener,
 } from '@angular/core';
 import {DataRowComponent} from '../../data/data-row-component';
 import {Attribute} from '../../../core/store/collections/collection';
@@ -45,6 +41,7 @@ import {DataValue} from '../../../core/model/data-value';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../core/model/constraint/boolean.constraint';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
+import {PostItLayoutType} from '../post-it-layout-type';
 
 @Component({
   selector: 'post-it-row',
@@ -70,6 +67,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   @Input()
   public unusedAttributes: Attribute[];
+
+  @Input()
+  public layoutType: PostItLayoutType;
 
   @Output()
   public newValue = new EventEmitter<any>();
@@ -107,6 +107,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   public editing$ = new BehaviorSubject(false);
   public dataValue: DataValue;
 
+  public keyFlex: string;
+  public valueFlex: string;
+
   public get constraintType(): ConstraintType {
     return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
   }
@@ -119,6 +122,30 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
     if (changes.row && this.row) {
       this.keyDataValue = this.createKeyDataValue();
       this.dataValue = this.createDataValue();
+    }
+    if (changes.layoutType) {
+      this.convertLayoutToClasses();
+    }
+  }
+
+  private convertLayoutToClasses() {
+    switch (this.layoutType) {
+      case PostItLayoutType.Quarter:
+        this.keyFlex = '1';
+        this.valueFlex = '4';
+        break;
+      case PostItLayoutType.Third:
+        this.keyFlex = '1';
+        this.valueFlex = '3';
+        break;
+      case PostItLayoutType.Half:
+        this.keyFlex = '1';
+        this.valueFlex = '2';
+        break;
+      default:
+        this.keyFlex = '1';
+        this.valueFlex = '1';
+        break;
     }
   }
 

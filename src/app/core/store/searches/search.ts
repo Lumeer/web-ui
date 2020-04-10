@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {SizeType} from '../../../shared/slider/size-type';
+import {SizeType} from '../../../shared/slider/size/size-type';
 import {SearchTab} from '../navigation/search-tab';
 
 export const DEFAULT_SEARCH_ID = 'default';

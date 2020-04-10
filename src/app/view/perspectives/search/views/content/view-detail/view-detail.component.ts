@@ -34,7 +34,7 @@ import {QueryData} from '../../../../../../shared/top-panel/search-box/util/quer
 import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemsConverter} from '../../../../../../shared/top-panel/search-box/query-item/query-items.converter';
 import {ResourceType} from '../../../../../../core/model/resource-type';
-import {SizeType} from '../../../../../../shared/slider/size-type';
+import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Role} from '../../../../../../core/model/role';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
 

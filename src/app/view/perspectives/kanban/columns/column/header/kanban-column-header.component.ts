@@ -20,15 +20,14 @@
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
 import {UserConstraint} from '../../../../../../core/model/constraint/user.constraint';
-import {KanbanAttribute, KanbanColumn} from '../../../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanColumn, KanbanConfig} from '../../../../../../core/store/kanbans/kanban';
 import {ConstraintType} from '../../../../../../core/model/data/constraint';
 import {SelectConstraint} from '../../../../../../core/model/constraint/select.constraint';
 import {Constraint} from '../../../../../../core/model/constraint';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {PivotAttribute} from '../../../../../../core/store/pivots/pivot';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../../../core/store/collections/collection.util';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'kanban-column-header',
@@ -38,6 +37,9 @@ import {findAttributeConstraint} from '../../../../../../core/store/collections/
 })
 export class KanbanColumnHeaderComponent implements OnChanges {
   @Input()
+  public config: KanbanConfig;
+
+  @Input()
   public column: KanbanColumn;
 
   @Input()
@@ -45,6 +47,9 @@ export class KanbanColumnHeaderComponent implements OnChanges {
 
   @Input()
   public linkTypes: LinkType[];
+
+  @Input()
+  public summary: any;
 
   @Output()
   public remove = new EventEmitter();

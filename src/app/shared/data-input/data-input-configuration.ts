@@ -21,6 +21,7 @@ export interface DataInputConfiguration {
   common?: CommonDataInputConfiguration;
   color?: ColorDataInputConfiguration;
   boolean?: BooleanDataInputConfiguration;
+  user?: UserDataInputConfiguration;
 }
 
 export interface CommonDataInputConfiguration {
@@ -37,4 +38,9 @@ export interface ColorDataInputConfiguration {
 
 export interface BooleanDataInputConfiguration {
   additionalLabel?: string;
+  center?: boolean;
+}
+
+export interface UserDataInputConfiguration {
+  allowCenterOnlyIcon?: boolean;
 }

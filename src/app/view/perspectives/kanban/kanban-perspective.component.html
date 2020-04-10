@@ -8,6 +8,7 @@
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <kanban-config
+        *ngIf="sidebarOpened$ | async"
         class="d-block m-3"
         [collections]="data.collections"
         [linkTypes]="data.linkTypes"
@@ -32,7 +33,7 @@
       [constraintData]="data.constraintData"
       [workspace]="workspace$ | async"
       (configChange)="onConfigChanged($event)"
-      (patchDocumentData)="onPatchDocumentData($event)">
+      (patchDocumentData)="patchDocumentData($event)">
 
     </kanban-columns>
 

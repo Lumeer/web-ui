@@ -1,15 +1,16 @@
-<div class="card" [style.width.px]="column.width" #cardWrapper>
+<div class="card column" [style.width.px]="column.width" #cardWrapper>
 
-  <div class="card-header p-0"
+  <div class="card-header p-0 mx-2"
        [class.cursor-move]="canManageConfig">
     <kanban-column-header [column]="column"
                           [collections]="collections"
                           [linkTypes]="linkTypes"
+                          [summary]="summary"
                           (remove)="onRemoveColumn()">
     </kanban-column-header>
   </div>
 
-  <div class="card-body p-3" cdkDropList id="{{column.id}}"
+  <div class="card-body py-1 px-2 my-1" cdkDropList id="{{column.id}}"
        #columnBody
        [cdkDropListData]="column"
        [cdkDropListConnectedTo]="dragColumnsIds"
@@ -22,6 +23,7 @@
              [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
              [cdkDragData]="card"
              [cdkDragStartDelay]="dragDelay"
+             [layoutType]="config?.cardLayout"
              [class.mb-2]="!last"
              [dataResource]="card.dataResource"
              [resource]="collections | collectionById:card.dataResource.collectionId"
@@ -34,7 +36,7 @@
 
   </div>
 
-  <div class="card-footer px-3 py-2"
+  <div class="card-footer px-3 py-2 mx-2"
        *ngIf="{resources: config | filterWritableResources:collections:permissions} as footerData">
     <kanban-column-footer *ngIf="footerData.resources.length > 0"
                           [resources]="footerData.resources"

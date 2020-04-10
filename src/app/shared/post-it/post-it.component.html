@@ -21,9 +21,9 @@
 <div class="card-body px-2 py-0">
 
   <post-it-row
-    *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index; let first = first"
-    class="d-block"
+    *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index;"
     [row]="row"
+    [layoutType]="layoutType"
     [permissions]="allowedPermissions"
     [cursor]="dataResource | dataCursor : row.attribute?.id"
     [constraintData]="constraintData"

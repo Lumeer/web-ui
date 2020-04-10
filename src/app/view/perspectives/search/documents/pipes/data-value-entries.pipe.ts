@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {SizeType} from '../../../../../shared/slider/size-type';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
 import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {DataValue} from '../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';

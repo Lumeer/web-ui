@@ -17,22 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Perspective} from '../perspectives/perspective';
-
-@Pipe({
-  name: 'undoChangesSupported',
-})
-export class UndoChangesSupportedPipe implements PipeTransform {
-  public transform(perspective: Perspective): any {
-    return [
-      Perspective.Table,
-      Perspective.Search,
-      Perspective.Pivot,
-      Perspective.Map,
-      Perspective.GanttChart,
-      Perspective.Calendar,
-      Perspective.Kanban,
-    ].includes(perspective);
-  }
+export interface SliderItem {
+  id: any;
+  title: string;
 }

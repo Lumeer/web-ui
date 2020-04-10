@@ -23,7 +23,7 @@ import {SearchViewsConfig} from '../../../../../core/store/searches/search';
 import {View} from '../../../../../core/store/views/view';
 import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {SizeType} from '../../../../../shared/slider/size-type';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {Perspective} from '../../../perspective';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';

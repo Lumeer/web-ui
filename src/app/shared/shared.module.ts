@@ -39,8 +39,6 @@ import {PostItCollectionsModule} from './post-it-collections/post-it-collections
 import {PreviewResultsModule} from './preview-results/preview-results.module';
 import {ResourceHeaderComponent} from './resource/header/resource-header.component';
 import {SelectModule} from './select/select.module';
-import {SizeSliderComponent} from './slider/size-slider.component';
-import {SliderComponent} from './slider/slider.component';
 import {TagModule} from './tag/tag.module';
 import {SearchBoxModule} from './top-panel/search-box/search-box.module';
 import {TopPanelModule} from './top-panel/top-panel.module';
@@ -54,6 +52,7 @@ import {SequencesModule} from './sequences/sequences.module';
 import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
 import {BookmarksModule} from './bookmarks/bookmarks.module';
 import {BuilderModule} from './builder/builder.module';
+import {SliderModule} from './slider/slider.module';
 
 @NgModule({
   imports: [
@@ -70,6 +69,7 @@ import {BuilderModule} from './builder/builder.module';
     DataResourceModule,
     PreviewResultsModule,
     LinksModule,
+    SliderModule,
     PipesModule,
     DirectivesModule,
     TopPanelModule,
@@ -87,10 +87,8 @@ import {BuilderModule} from './builder/builder.module';
     BuilderModule,
   ],
   declarations: [
-    SizeSliderComponent,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
-    SliderComponent,
     ResourceHeaderComponent,
     LoadingIndicatorComponent,
     TourComponent,
@@ -100,13 +98,12 @@ import {BuilderModule} from './builder/builder.module';
     FormsModule,
     ReactiveFormsModule,
     PostItCollectionsModule,
-    SizeSliderComponent,
+    SliderModule,
     PerspectiveDirective,
     RemovePlaceholderOnFocusDirective,
     UsersModule,
     SearchBoxModule,
     InfiniteScrollModule,
-    SliderComponent,
     TourComponent,
     PipesModule,
     TagModule,

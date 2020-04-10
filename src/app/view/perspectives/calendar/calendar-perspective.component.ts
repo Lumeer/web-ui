@@ -200,18 +200,6 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
   }
 
-  public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
-    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments(payload));
-  }
-
-  public createDocumentsChain(data: {documents: DocumentModel[]; linkInstances: LinkInstance[]}) {
-    const failureMessage = this.i18n({
-      id: '@@perspective.calendar.create.event.failure',
-      value: 'Could not create event',
-    });
-    this.store$.dispatch(new DocumentsAction.CreateChain({...data, failureMessage}));
-  }
-
   private setupSidebar() {
     this.store$
       .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))

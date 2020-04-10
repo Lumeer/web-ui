@@ -22,11 +22,14 @@ import {Constraint} from './constraint';
 import {AllowedPermissions, mergeAllowedPermissions} from './allowed-permissions';
 import {LinkType} from '../store/link-types/link.type';
 
-export interface QueryAttribute {
+export interface QueryResource {
   resourceId: string;
-  attributeId: string;
   resourceIndex?: number;
   resourceType: AttributesResourceType;
+}
+
+export interface QueryAttribute extends QueryResource {
+  attributeId: string;
   constraint?: Constraint;
 }
 

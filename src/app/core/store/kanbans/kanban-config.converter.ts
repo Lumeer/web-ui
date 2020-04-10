@@ -20,24 +20,61 @@
 import {KanbanAttribute, KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from './kanban';
 import {KanbanCollectionConfigV0, KanbanColumnV0, KanbanConfigV0} from './kanban-old';
 import {AttributesResourceType} from '../../model/resource';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {deepObjectCopy, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {SizeType} from '../../../shared/slider/size/size-type';
+import {PostItLayoutType} from '../../../shared/post-it/post-it-layout-type';
+import {cleanKanbanAttribute} from '../../../view/perspectives/kanban/util/kanban.util';
 
 export function convertKanbanConfigDtoToModel(config: any): KanbanConfig {
   if (!config) {
     return config;
   }
 
-  const version = isNotNullOrUndefined(config.version) ? String(config.version) : '';
-  switch (version) {
-    case KanbanConfigVersion.V1:
-      return convertKanbanConfigDtoToModelV1(config);
-    default:
-      return convertKanbanConfigDtoToModelV0(config);
+  const convertedConfig = convertKanbanConfigDtoToModelWithVersion(config);
+  return addDefaultValues(convertedConfig);
+}
+
+export function convertKanbanConfigDtoToModelWithVersion(config: any): KanbanConfig {
+  let version = parseVersion(config);
+  let convertedConfig = config;
+
+  while (version !== KanbanConfigVersion.V2) {
+    switch (version) {
+      case KanbanConfigVersion.V1:
+        convertedConfig = convertKanbanConfigDtoToModelV1(config);
+        break;
+      default:
+        convertedConfig = convertKanbanConfigDtoToModelV0(config);
+        break;
+    }
+
+    version = parseVersion(convertedConfig);
   }
+
+  return convertedConfig;
+}
+
+function addDefaultValues(config: KanbanConfig): KanbanConfig {
+  config.columns.forEach(column => delete column['summary']);
+  return {
+    ...config,
+    cardLayout: config?.cardLayout || PostItLayoutType.Half,
+    columnSize: config?.columnSize || SizeType.M,
+  };
+}
+
+function parseVersion(config: any): string {
+  return isNotNullOrUndefined(config?.version) ? String(config.version) : '';
 }
 
 function convertKanbanConfigDtoToModelV1(config: KanbanConfig): KanbanConfig {
-  return config;
+  const aggregation: any = config['aggregation'];
+  if (aggregation) {
+    const configCopy = deepObjectCopy(config);
+    configCopy.stemsConfigs?.forEach(stemConfig => (stemConfig.aggregation = cleanKanbanAttribute(aggregation)));
+    return {...configCopy, version: KanbanConfigVersion.V2};
+  }
+  return {...config, version: KanbanConfigVersion.V2};
 }
 
 function convertKanbanConfigDtoToModelV0(config: KanbanConfigV0): KanbanConfig {
@@ -87,6 +124,5 @@ function convertKanbanColumnConfigDtoToModelV0(column: KanbanColumnV0): KanbanCo
       resourceIndex: 0,
       resourceType: AttributesResourceType.Collection,
     })),
-    summary: null,
   };
 }

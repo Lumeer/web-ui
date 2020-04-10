@@ -109,7 +109,11 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public suggestions: DocumentHintsComponent;
 
   public readonly booleanConstraintType = ConstraintType.Boolean;
-  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
+  public readonly configuration: DataInputConfiguration = {
+    common: {allowRichText: true},
+    boolean: {center: true},
+    user: {allowCenterOnlyIcon: true},
+  };
 
   public columnEditing$ = new BehaviorSubject<number>(null);
   public columnFocused$ = new BehaviorSubject<number>(null);

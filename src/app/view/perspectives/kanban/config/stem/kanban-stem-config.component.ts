@@ -51,7 +51,7 @@ export class KanbanStemConfigComponent implements OnChanges {
   public columnTitles: any[];
 
   @Output()
-  public configChange = new EventEmitter<KanbanStemConfig>();
+  public configChange = new EventEmitter<{config: KanbanStemConfig; shouldRebuildConfig: boolean}>();
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly emptyValueString: string;
@@ -81,12 +81,25 @@ export class KanbanStemConfigComponent implements OnChanges {
     }
   }
 
+  public onAttributeSelected(selectId: SelectItemWithConstraintId) {
+    this.configElementSelected(selectId, 'attribute');
+  }
+
+  public onAttributeConstraintSelected(constraint: Constraint) {
+    const attribute = {...this.config.attribute};
+    this.onConfigChange({...this.config, attribute: {...attribute, constraint}});
+  }
+
   public onAttributeRemoved() {
-    this.configChange.emit({...this.config, attribute: null});
+    this.onConfigChange({...this.config, attribute: null});
+  }
+
+  public onDueDateSelected(attribute: KanbanAttribute) {
+    this.onConfigChange({...this.config, dueDate: attribute}, false);
   }
 
   public onDueDateRemoved() {
-    this.configChange.emit({...this.config, dueDate: null});
+    this.onConfigChange({...this.config, dueDate: null}, false);
   }
 
   public onDoneColumnRemoved(index: number) {
@@ -95,31 +108,17 @@ export class KanbanStemConfigComponent implements OnChanges {
       ...(this.config.doneColumnTitles.slice(index + 1) || []),
     ];
     const doneColumnTitles = newTitles.length ? newTitles : undefined;
-    this.configChange.emit({...this.config, doneColumnTitles});
-  }
-
-  public onConstraintSelected(constraint: Constraint) {
-    const attribute = {...this.config.attribute};
-    this.configChange.emit({...this.config, attribute: {...attribute, constraint}});
-  }
-
-  public onAttributeSelected(selectId: SelectItemWithConstraintId) {
-    this.configElementSelected(selectId, 'attribute');
-  }
-
-  public onDueDateSelected(attribute: KanbanAttribute) {
-    const config = {...this.config, dueDate: attribute};
-    this.configChange.emit(config);
+    this.onConfigChange({...this.config, doneColumnTitles}, false);
   }
 
   public onDoneColumnSelected(selectId: string, index: number) {
     if (index === -1) {
       const newTitles = [...(this.config.doneColumnTitles || []), selectId];
-      this.configChange.emit({...this.config, doneColumnTitles: newTitles});
+      this.onConfigChange({...this.config, doneColumnTitles: newTitles}, false);
     } else {
       const doneColumnTitles = [...this.config.doneColumnTitles];
       doneColumnTitles.splice(index, 1, selectId);
-      this.configChange.emit({...this.config, doneColumnTitles});
+      this.onConfigChange({...this.config, doneColumnTitles}, false);
     }
   }
 
@@ -133,7 +132,19 @@ export class KanbanStemConfigComponent implements OnChanges {
       const config = {...this.config, doneColumnTitles: []};
       config[element] = selection;
 
-      this.configChange.emit(config);
+      this.onConfigChange(config);
     }
+  }
+
+  public onAggregationSelected(aggregation: KanbanAttribute) {
+    this.onConfigChange({...this.config, aggregation}, false);
+  }
+
+  public onAggregationRemoved() {
+    this.onConfigChange({...this.config, aggregation: null}, false);
+  }
+
+  private onConfigChange(config: KanbanStemConfig, shouldRebuildConfig: boolean = true) {
+    this.configChange.emit({config, shouldRebuildConfig});
   }
 }

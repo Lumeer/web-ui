@@ -64,7 +64,7 @@ function updateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstanc
   return linkInstancesAdapter.upsertOne(
     {
       ...linkInstance,
-      dataVersion: linkInstance.dataVersion + 1,
+      dataVersion: (linkInstance.dataVersion || 0) + 1,
     },
     state
   );
@@ -117,7 +117,7 @@ function patchData(state: LinkInstancesState, action: LinkInstancesAction.PatchD
   return linkInstancesAdapter.updateOne(
     {
       id: linkInstanceId,
-      changes: {data: {...linkInstance.data, ...data}, dataVersion: linkInstance.dataVersion + 1},
+      changes: {data: {...linkInstance.data, ...data}, dataVersion: (linkInstance.dataVersion || 0) + 1},
     },
     state
   );

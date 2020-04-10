@@ -18,21 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Perspective} from '../perspectives/perspective';
+import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {isKanbanAggregationDefined} from '../util/kanban.util';
 
 @Pipe({
-  name: 'undoChangesSupported',
+  name: 'kanbanAggregationDefined',
 })
-export class UndoChangesSupportedPipe implements PipeTransform {
-  public transform(perspective: Perspective): any {
-    return [
-      Perspective.Table,
-      Perspective.Search,
-      Perspective.Pivot,
-      Perspective.Map,
-      Perspective.GanttChart,
-      Perspective.Calendar,
-      Perspective.Kanban,
-    ].includes(perspective);
+export class KanbanAggregationDefinedPipe implements PipeTransform {
+  public transform(config: KanbanConfig): boolean {
+    return isKanbanAggregationDefined(config);
   }
 }

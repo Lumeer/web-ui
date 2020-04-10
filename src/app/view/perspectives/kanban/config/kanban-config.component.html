@@ -8,13 +8,22 @@
                           (configChange)="onConfigChange($event, stem, index)">
 </kanban-collection-config>
 
-<ng-container *ngIf="config?.stemsConfigs.length > 0 && config?.stemsConfigs[0].attribute">
+<ng-container *ngIf="config | kanbanAggregationDefined">
   <h6 class="font-weight-bold mt-4" i18n="@@perspective.kanban.config.column.summary">Column Summary</h6>
-  <kanban-value-attribute-config class="d-block"
-                                 [kanbanAttribute]="config?.aggregation | kanbanCleanValueAttribute"
-                                 [availableAttributes]="config | kanbanAggregateSelectItems:collections"
-                                 (attributeSelect)="onAggregateAttributeSelect($event)"
-                                 (attributeChange)="onAggregateAttributeSelect($event)"
-                                 (attributeRemove)="onAggregateAttributeRemove()">
-  </kanban-value-attribute-config>
+  <kanban-aggregation-config class="d-block"
+                             [aggregation]="config?.aggregation"
+                             (aggregationChange)="onAggregationChanged($event)">
+  </kanban-aggregation-config>
 </ng-container>
+
+<h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.column.size">Column size</h6>
+<size-slider class="d-block w-100" [defaultSize]="config?.columnSize"
+             (newSize)="onColumnSizeChanged($event)">
+
+</size-slider>
+
+<h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.card.layout">Card layout</h6>
+<values-slider class="d-block w-100" [items]="cardLayoutSliderItems"
+               [selectedId]="config?.cardLayout"
+               (itemSelected)="onCardLayoutChanged($event)">
+</values-slider>

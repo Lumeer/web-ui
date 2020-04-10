@@ -1,6 +1,6 @@
 <div class="d-flex align-items-center h-100 p-1 text-nowrap" #wrapperElement
      [title]="selectedUsers | usersNames | join"
-     [class.justify-content-center]="value.config?.onlyIcon"
+     [class.justify-content-center]="value.config?.onlyIcon && configuration?.allowCenterOnlyIcon"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
   <ng-container *ngIf="multi || readonly">

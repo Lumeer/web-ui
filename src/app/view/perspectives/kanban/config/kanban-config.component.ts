@@ -19,17 +19,23 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanConfig, KanbanStemConfig, KanbanValueAttribute} from '../../../../core/store/kanbans/kanban';
+import {KanbanAggregation, KanbanConfig, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from '../util/kanban-converter';
-import {checkOrTransformKanbanConfig, createDefaultKanbanStemConfig} from '../util/kanban.util';
+import {
+  checkOrTransformKanbanConfig,
+  createDefaultKanbanStemConfig,
+  isKanbanAggregationDefined,
+} from '../util/kanban.util';
 import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {AttributesResourceType} from '../../../../core/model/resource';
+import {SliderItem} from '../../../../shared/slider/values/slider-item';
+import {SizeType} from '../../../../shared/slider/size/size-type';
+import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
 
 @Component({
   selector: 'kanban-config',
@@ -64,6 +70,12 @@ export class KanbanConfigComponent implements OnChanges {
   private readonly converter: KanbanConverter;
 
   public readonly defaultStemConfig = createDefaultKanbanStemConfig();
+  public readonly cardLayoutSliderItems: SliderItem[] = [
+    {id: PostItLayoutType.Quarter, title: '1:4'},
+    {id: PostItLayoutType.Third, title: '1:3'},
+    {id: PostItLayoutType.Half, title: '1:2'},
+    {id: PostItLayoutType.Even, title: '1:1'},
+  ];
 
   constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
     this.converter = new KanbanConverter(constraintItemsFormatter);
@@ -93,23 +105,23 @@ export class KanbanConfigComponent implements OnChanges {
     return stem.collectionId + index;
   }
 
-  public onConfigChange(newStemConfig: KanbanStemConfig, stem: QueryStem, index: number) {
+  public onConfigChange(
+    data: {config: KanbanStemConfig; shouldRebuildConfig: boolean},
+    stem: QueryStem,
+    index: number
+  ) {
     const newConfig = deepObjectCopy<KanbanConfig>(this.config);
-    newConfig.stemsConfigs[index] = {...newStemConfig, stem};
+    newConfig.stemsConfigs[index] = {...data.config, stem};
 
-    // remove aggregation when the cards are from different collection
-    if (newConfig && newConfig.aggregation) {
-      const existingResources = (newConfig.stemsConfigs || [])
-        .map(stemConfig => stemConfig.attribute)
-        .filter(attribute => attribute && attribute.resourceType === AttributesResourceType.Collection)
-        .map(attribute => attribute.resourceId);
-
-      if (existingResources.indexOf(this.config.aggregation.resourceId) < 0) {
-        newConfig.aggregation = null;
-      }
+    if (!isKanbanAggregationDefined(newConfig)) {
+      delete newConfig.aggregation;
     }
 
-    this.rebuildConfigChange(newConfig);
+    if (data.shouldRebuildConfig) {
+      this.rebuildConfigChange(newConfig);
+    } else {
+      this.configChange.emit(newConfig);
+    }
   }
 
   private rebuildConfigChange(newConfig: KanbanConfig) {
@@ -124,11 +136,15 @@ export class KanbanConfigComponent implements OnChanges {
     this.configChange.emit(config);
   }
 
-  public onAggregateAttributeSelect(attribute: KanbanValueAttribute) {
-    this.rebuildConfigChange({...this.config, aggregation: attribute});
+  public onColumnSizeChanged(sizeType: SizeType) {
+    this.rebuildConfigChange({...this.config, columnSize: sizeType});
   }
 
-  public onAggregateAttributeRemove() {
-    this.rebuildConfigChange({...this.config, aggregation: null});
+  public onCardLayoutChanged(item: SliderItem) {
+    this.configChange.emit({...this.config, cardLayout: item.id});
+  }
+
+  public onAggregationChanged(aggregation: KanbanAggregation) {
+    this.configChange.emit({...this.config, aggregation});
   }
 }

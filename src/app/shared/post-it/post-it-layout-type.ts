@@ -17,22 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Perspective} from '../perspectives/perspective';
-
-@Pipe({
-  name: 'undoChangesSupported',
-})
-export class UndoChangesSupportedPipe implements PipeTransform {
-  public transform(perspective: Perspective): any {
-    return [
-      Perspective.Table,
-      Perspective.Search,
-      Perspective.Pivot,
-      Perspective.Map,
-      Perspective.GanttChart,
-      Perspective.Calendar,
-      Perspective.Kanban,
-    ].includes(perspective);
-  }
+export enum PostItLayoutType {
+  Quarter = '1:4',
+  Third = '1:3',
+  Half = '1:2',
+  Even = '1:1',
 }

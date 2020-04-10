@@ -48,6 +48,7 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {ModalService} from '../modal/modal.service';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
+import {PostItLayoutType} from './post-it-layout-type';
 
 export interface PostItTag {
   title: string;
@@ -77,6 +78,9 @@ export class PostItComponent implements OnDestroy {
 
   @Input()
   public tag: PostItTag;
+
+  @Input()
+  public layoutType: PostItLayoutType;
 
   @Input()
   public query: Query;

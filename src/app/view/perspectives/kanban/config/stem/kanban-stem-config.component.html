@@ -14,21 +14,21 @@
                              [fitParent]="true"
                              [buttonClasses]="buttonClasses"
                              (select)="onAttributeSelected($event)"
-                             (selectConstraint)="onConstraintSelected($event)"
+                             (selectConstraint)="onAttributeConstraintSelected($event)"
                              (remove)="onAttributeRemoved()">
 </select-item-with-constraint>
 
 <select-item class="d-block w-100 mt-2"
              *ngIf="config?.attribute"
-                             [items]="attributesResourcesOrder | kanbanDueDateSelectItems:config?.attribute"
-                             [emptyValue]="dueDateEmptyValueString"
-                             [placeholderText]="dueDateString"
-                             [selectedId]="config?.dueDate | kanbanCleanAttribute"
-                             [removable]="true"
-                             [fitParent]="true"
-                             [buttonClasses]="buttonClasses"
-                             (select)="onDueDateSelected($event)"
-                             (remove)="onDueDateRemoved()">
+             [items]="attributesResourcesOrder | kanbanDueDateSelectItems:config?.attribute"
+             [emptyValue]="dueDateEmptyValueString"
+             [placeholderText]="dueDateString"
+             [selectedId]="config?.dueDate | kanbanCleanAttribute"
+             [removable]="true"
+             [fitParent]="true"
+             [buttonClasses]="buttonClasses"
+             (select)="onDueDateSelected($event)"
+             (remove)="onDueDateRemoved()">
 </select-item>
 <ng-container *ngFor="let columnTitle of config?.doneColumnTitles; let idx = index">
   <select-data-item class="d-block w-100 mt-2"
@@ -55,3 +55,16 @@
                   [buttonClasses]="buttonClasses"
                   (select)="onDoneColumnSelected($event, -1)">
 </select-data-item>
+
+<select-item class="d-block w-100 mt-2"
+             *ngIf="config?.attribute"
+             [items]="config | kanbanAggregateSelectItems:collections:linkTypes"
+             [emptyValue]="emptyValueString"
+             [placeholderIcon]="'far fa-sigma'"
+             [selectedId]="config?.aggregation | kanbanCleanAttribute"
+             [removable]="true"
+             [fitParent]="true"
+             [buttonClasses]="buttonClasses"
+             (select)="onAggregationSelected($event)"
+             (remove)="onAggregationRemoved()">
+</select-item>
