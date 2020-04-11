@@ -29,10 +29,14 @@ import {ProjectValidators} from '../../../../core/validators/project.validators'
 import {OrganizationValidators} from '../../../../core/validators/organization.validators';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {Project} from '../../../../core/store/projects/project';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {TemplateType} from '../../../../core/model/template';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
+import {select, Store} from '@ngrx/store';
+import {selectProjectsByOrganizationId} from '../../../../core/store/projects/projects.state';
+import {map, take} from 'rxjs/operators';
+import {AppState} from '../../../../core/store/app.state';
 
 @Component({
   selector: 'create-resource-dialog-form',
@@ -52,6 +56,8 @@ export class CreateResourceDialogFormComponent implements OnInit {
   @Input()
   public usedCodes: string[];
 
+  public readonly resourceTypeProject = ResourceType.Project;
+
   @Output()
   public submitResource = new EventEmitter<{resource: Organization | Project; template?: TemplateType}>();
 
@@ -64,6 +70,9 @@ export class CreateResourceDialogFormComponent implements OnInit {
   public color = DEFAULT_COLOR;
   public icon = DEFAULT_ICON;
 
+  public first$: Observable<boolean>;
+  public subscriptions = new Subscription();
+
   public readonly iconChooserLabel: string;
   private readonly colors = Colors.palette;
 
@@ -71,7 +80,8 @@ export class CreateResourceDialogFormComponent implements OnInit {
     private fb: FormBuilder,
     private projectValidators: ProjectValidators,
     private organizationValidators: OrganizationValidators,
-    private i18n: I18n
+    private i18n: I18n,
+    private store$: Store<AppState>
   ) {
     this.iconChooserLabel = i18n({
       id: 'resource.new.dialog.icon.label.hint',
@@ -80,6 +90,11 @@ export class CreateResourceDialogFormComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.first$ = this.store$.pipe(
+      select(selectProjectsByOrganizationId(this.parentId)),
+      map(projects => projects?.length === 0)
+    );
+
     if (this.initialTemplate) {
       this.selectedTemplate$.next(this.initialTemplate);
     }
@@ -92,13 +107,17 @@ export class CreateResourceDialogFormComponent implements OnInit {
   private createForm() {
     const initialCode =
       this.resourceType === ResourceType.Project ? this.createCodeForTemplate(this.selectedTemplate$.getValue()) : '';
-    this.form = this.fb.group({
-      code: [
-        initialCode,
-        [Validators.required, Validators.minLength(2), Validators.maxLength(5)],
-        this.createAsyncValidator(),
-      ],
-      name: [''],
+    const firstProject = this.i18n({id: 'resource.new.dialog.firstProject', value: 'My first project'});
+
+    this.first$.pipe(take(1)).subscribe(isFirst => {
+      this.form = this.fb.group({
+        code: [
+          initialCode,
+          [Validators.required, Validators.minLength(2), Validators.maxLength(5)],
+          this.createAsyncValidator(),
+        ],
+        name: [this.resourceType === ResourceType.Project && isFirst ? firstProject : ''],
+      });
     });
   }
 

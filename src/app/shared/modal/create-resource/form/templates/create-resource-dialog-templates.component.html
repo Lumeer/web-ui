@@ -1,10 +1,18 @@
-<h5 i18n="templates.choose">Choose a template</h5>
+<div class="d-flex flex-column h-100">
+  <div class="">
+    <h5 i18n="templates.choose">Choose a template</h5>
+  </div>
 
-<create-resource-dialog-template *ngFor="let template of templates; let first = first"
-                                 class="d-block"
-                                 id="{{idPrefix}}{{template.type}}"
-                                 [class.mt-2]="!first"
-                                 [template]="template"
-                                 [selected]="selectedTemplate === template.type"
-                                 (templateSelect)="onSelect(template)">
-</create-resource-dialog-template>
+  <div [style.overflow]="'scroll'">
+    <div>
+      <create-resource-dialog-template *ngFor="let template of templates; let first = first"
+                                       class="d-block"
+                                       id="{{idPrefix}}{{template.type}}"
+                                       [class.mt-2]="!first"
+                                       [template]="template"
+                                       [selected]="selectedTemplate === template.type"
+                                       (templateSelect)="onSelect(template)">
+      </create-resource-dialog-template>
+    </div>
+  </div>
+</div>
