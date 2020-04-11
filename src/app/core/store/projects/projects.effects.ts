@@ -133,7 +133,7 @@ export class ProjectsEffects {
           ];
 
           const applyTemplateAction =
-            template !== TemplateType.Empty
+            template && template !== TemplateType.Empty
               ? new ApplyTemplate({
                   organizationId: project.organizationId,
                   projectId: newProject.id,

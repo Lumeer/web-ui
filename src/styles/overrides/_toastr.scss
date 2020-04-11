@@ -15,3 +15,11 @@
 .toast-success {
   background-color: $success !important;
 }
+
+.toast-container .ngx-toastr {
+  box-shadow: $shadow-up;
+
+  &:hover {
+    box-shadow: $shadow-up;
+  }
+}
