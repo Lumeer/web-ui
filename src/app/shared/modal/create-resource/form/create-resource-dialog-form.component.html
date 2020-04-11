@@ -1,12 +1,7 @@
 <form [formGroup]="form" class="row m-0 h-100" (ngSubmit)="onSubmit()" *ngIf="{isFirst: resourceType === resourceTypeProject && (first$ | async)} as data">
 
   <create-resource-dialog-templates *ngIf="parentId"
-                                    [class.col-lg-6]="!data.isFirst"
-                                    [class.p-0]="!data.isFirst"
-                                    [class.pr-lg-2]="!data.isFirst"
-                                    [class.pr-0]="!data.isFirst"
-                                    [class.pb-lg-0]="!data.isFirst"
-                                    [class.pb-2]="!data.isFirst"
+                                    [ngClass]="data.isFirst ? '' : 'col-lg-6 p-0 pr-lg-2 pr-0 pb-lg-0 pb-2'"
                                     class="col-12"
                                     [selectedTemplate]="selectedTemplate$ | async"
                                     (templateSelect)="onTemplateSelected($event)">
