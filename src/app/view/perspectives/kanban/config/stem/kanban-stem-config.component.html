@@ -5,7 +5,7 @@
 
 <select-item-with-constraint class="d-block w-100 mt-2"
                              [attributesResources]="stem | queryStemAttributesResources:collections:linkTypes"
-                             [restrictedIds]="stem | kanbanRestrictedSelectItemIds:collections:linkTypes"
+                             [restrictedIds]="[]"
                              [emptyValue]="emptyValueString"
                              [placeholderIcon]="'far fa-fw fa-columns'"
                              [selectedConstraint]="config?.attribute?.constraint"
@@ -20,7 +20,20 @@
 
 <select-item class="d-block w-100 mt-2"
              *ngIf="config?.attribute"
-             [items]="attributesResourcesOrder | kanbanDueDateSelectItems:config?.attribute"
+             [items]="stem | queryStemResourcesSelectItems:collections:linkTypes"
+             [emptyValue]="emptyResourceString"
+             [placeholderIcon]="'far fa-fw fa-line-columns'"
+             [selectedId]="config?.resource"
+             [removable]="true"
+             [fitParent]="true"
+             [buttonClasses]="buttonClasses"
+             (select)="onResourceSelected($event)"
+             (remove)="onResourceRemoved()">
+</select-item>
+
+<select-item class="d-block w-100 mt-2"
+             *ngIf="config?.attribute"
+             [items]="attributesResourcesOrder | kanbanDueDateSelectItems:(config?.resource || config?.attribute)"
              [emptyValue]="dueDateEmptyValueString"
              [placeholderText]="dueDateString"
              [selectedId]="config?.dueDate | kanbanCleanAttribute"

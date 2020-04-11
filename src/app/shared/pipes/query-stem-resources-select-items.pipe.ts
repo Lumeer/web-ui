@@ -21,15 +21,15 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {QueryStem} from '../../core/store/navigation/query/query';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AttributesResourceType} from '../../core/model/resource';
 import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/query/query.util';
 import {SelectItemModel} from '../select/select-item/select-item.model';
-import {GanttChartBarModel} from '../../core/store/gantt-charts/gantt-chart';
+import {QueryResource} from '../../core/model/query-attribute';
+import {AttributesResourceType} from '../../core/model/resource';
 
 @Pipe({
-  name: 'queryStemSelectItems',
+  name: 'queryStemResourcesSelectItems',
 })
-export class QueryStemSelectItemsPipe implements PipeTransform {
+export class QueryStemResourcesSelectItemsPipe implements PipeTransform {
   public transform(stem: QueryStem, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
     if (!stem) {
       return [];
@@ -40,11 +40,11 @@ export class QueryStemSelectItemsPipe implements PipeTransform {
     for (let i = 0; i < resources.length; i++) {
       if (i % 2 === 0) {
         // collection
-        items.push(...this.collectionSelectItem(resources[i] as Collection, i));
+        items.push(this.collectionSelectItem(resources[i] as Collection, i));
       } else {
         // linkType
         items.push(
-          ...this.linkTypeSelectItem(
+          this.linkTypeSelectItem(
             resources[i] as LinkType,
             resources[i - 1] as Collection,
             resources[i + 1] as Collection,
@@ -57,21 +57,18 @@ export class QueryStemSelectItemsPipe implements PipeTransform {
     return items;
   }
 
-  private collectionSelectItem(collection: Collection, index: number): SelectItemModel[] {
-    return (collection.attributes || []).map(attribute => {
-      const id: GanttChartBarModel = {
-        resourceType: AttributesResourceType.Collection,
-        resourceId: collection.id,
-        resourceIndex: index,
-        attributeId: attribute.id,
-      };
-      return {
-        id,
-        value: attribute.name,
-        icons: [collection.icon] as [string],
-        iconColors: [collection.color] as [string],
-      };
-    });
+  private collectionSelectItem(collection: Collection, index: number): SelectItemModel {
+    const id: QueryResource = {
+      resourceIndex: index,
+      resourceType: AttributesResourceType.Collection,
+      resourceId: collection.id,
+    };
+    return {
+      id,
+      value: collection.name,
+      icons: [collection.icon] as [string],
+      iconColors: [collection.color] as [string],
+    };
   }
 
   private linkTypeSelectItem(
@@ -79,20 +76,17 @@ export class QueryStemSelectItemsPipe implements PipeTransform {
     previousCollection: Collection,
     nextCollection: Collection,
     index: number
-  ): SelectItemModel[] {
-    return (linkType.attributes || []).map(attribute => {
-      const id: GanttChartBarModel = {
-        resourceType: AttributesResourceType.LinkType,
-        resourceId: linkType.id,
-        resourceIndex: index,
-        attributeId: attribute.id,
-      };
-      return {
-        id,
-        value: attribute.name,
-        icons: [previousCollection.icon, nextCollection.icon] as [string, string],
-        iconColors: [previousCollection.color, nextCollection.color] as [string, string],
-      };
-    });
+  ): SelectItemModel {
+    const id: QueryResource = {
+      resourceIndex: index,
+      resourceType: AttributesResourceType.LinkType,
+      resourceId: linkType.id,
+    };
+    return {
+      id,
+      value: linkType.name,
+      icons: [previousCollection.icon, nextCollection.icon] as [string, string],
+      iconColors: [previousCollection.color, nextCollection.color] as [string, string],
+    };
   }
 }

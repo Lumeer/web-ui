@@ -37,7 +37,7 @@ import {KanbanPostItDraggablePipe} from './pipes/kanban-post-it-draggable.pipe';
 import {FilterWritableResourcesPipe} from './pipes/filter-writable-resources.pipe';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {KanbanSelectedItemPipe} from './pipes/kanban-selected-item.pipe';
-import {KanbanRestrictedSelectItemIdsPipe} from './pipes/kanban-restricted-select-item-ids.pipe';
+import {IsAnyKanbanAttributeSelectedPipe} from './pipes/is-any-kanban-attribute-selected.pipe';
 import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
 import {PresenterModule} from '../../../shared/presenter/presenter.module';
 import {KanbanDueDateSelectItemsPipe} from './pipes/kanban-due-date-select-items.pipe';
@@ -66,7 +66,7 @@ import {KanbanAggregationDefinedPipe} from './pipes/kanban-aggregation-defined.p
     KanbanPostItDraggablePipe,
     FilterWritableResourcesPipe,
     KanbanSelectedItemPipe,
-    KanbanRestrictedSelectItemIdsPipe,
+    IsAnyKanbanAttributeSelectedPipe,
     KanbanDueDateSelectItemsPipe,
     KanbanDueHoursTagPipe,
     KanbanColumnTitlesPipe,

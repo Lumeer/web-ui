@@ -27,14 +27,17 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {DataResource} from '../../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../core/model/resource';
 import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {generateId} from '../../../../../shared/utils/resource.utils';
 
 export interface KanbanCard {
   dataResource: DataResource;
+  resource: AttributesResource;
   attributeId: string;
+  resourceType: AttributesResourceType;
+  permissions: AllowedPermissions;
   dueHours?: number;
 }
 
@@ -167,7 +170,7 @@ export class KanbanColumnComponent {
     this.createResource.emit(resourceCreate);
   }
 
-  public onDocumentCreated(id: string) {
+  public onDataResourceCreated(id: string) {
     setTimeout(() => {
       const postIt = document.getElementById(`${this.postItIdPrefix}#${id}`);
       postIt?.scrollIntoView();

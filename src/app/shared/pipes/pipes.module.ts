@@ -86,8 +86,9 @@ import {SafeStylePipe} from './safe-style.pipe';
 import {ContainsDeletedQueryItemPipe} from './contains-deleted-query-item.pipe';
 import {ResourceIconsColorsPipe} from './resource-icons-colors.pipe';
 import {CleanQueryAttributePipe} from './clean-query-attribute.pipe';
-import {QueryStemSelectItemsPipe} from './query-stem-select-items.pipe';
+import {QueryStemAttributesSelectItemsPipe} from './query-stem-attributes-select-items.pipe';
 import {FilterNotNullPipe} from './filter-not-null.pipe';
+import {QueryStemResourcesSelectItemsPipe} from './query-stem-resources-select-items.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -157,7 +158,8 @@ import {FilterNotNullPipe} from './filter-not-null.pipe';
     ContainsDeletedQueryItemPipe,
     ResourceIconsColorsPipe,
     CleanQueryAttributePipe,
-    QueryStemSelectItemsPipe,
+    QueryStemAttributesSelectItemsPipe,
+    QueryStemResourcesSelectItemsPipe,
     FilterNotNullPipe,
   ],
   exports: [
@@ -228,7 +230,8 @@ import {FilterNotNullPipe} from './filter-not-null.pipe';
     ContainsDeletedQueryItemPipe,
     ResourceIconsColorsPipe,
     CleanQueryAttributePipe,
-    QueryStemSelectItemsPipe,
+    QueryStemAttributesSelectItemsPipe,
+    QueryStemResourcesSelectItemsPipe,
     FilterNotNullPipe,
   ],
 })

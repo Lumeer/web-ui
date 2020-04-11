@@ -24,7 +24,6 @@ import {
   Output,
   EventEmitter,
   HostBinding,
-  Renderer2,
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
@@ -114,7 +113,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
     return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
   }
 
-  constructor(private i18n: I18n, private renderer: Renderer2) {
+  constructor(private i18n: I18n) {
     this.placeholder = i18n({id: 'dataResource.attribute.placeholder.short', value: 'Enter name'});
   }
 

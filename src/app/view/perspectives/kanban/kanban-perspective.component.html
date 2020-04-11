@@ -8,7 +8,6 @@
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <kanban-config
-        *ngIf="sidebarOpened$ | async"
         class="d-block m-3"
         [collections]="data.collections"
         [linkTypes]="data.linkTypes"
@@ -16,6 +15,7 @@
         [linkInstances]="data.documentsAndLinks.linkInstances"
         [config]="data.config"
         [query]="data.query"
+        [visible]="sidebarOpened$ | async"
         (configChange)="onConfigChanged($event)"
         [constraintData]="data.constraintData">
       </kanban-config>

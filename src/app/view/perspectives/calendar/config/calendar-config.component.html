@@ -3,6 +3,6 @@
                       [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
                       [collection]="collections | collectionById:stem.collectionId"
                       [stem]="stem"
-                      [selectItems]="stem | queryStemSelectItems:collections:linkTypes"
+                      [selectItems]="stem | queryStemAttributesSelectItems:collections:linkTypes"
                       (configChange)="onStemConfigChange($event, stem, index)">
 </calendar-stem-config>

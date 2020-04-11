@@ -18,44 +18,48 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
-import {KanbanAttribute, KanbanResource} from '../../../../core/store/kanbans/kanban';
+import {QueryStem} from '../../core/store/navigation/query/query';
+import {Collection} from '../../core/store/collections/collection';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {AttributesResourceType} from '../../core/model/resource';
+import {queryStemAttributesResourcesOrder} from '../../core/store/navigation/query/query.util';
+import {SelectItemModel} from '../select/select-item/select-item.model';
+import {GanttChartBarModel} from '../../core/store/gantt-charts/gantt-chart';
 
 @Pipe({
-  name: 'kanbanDueDateSelectItems',
+  name: 'queryStemAttributesSelectItems',
 })
-export class KanbanDueDateSelectItemsPipe implements PipeTransform {
-  public transform(attributesResourcesOrder: AttributesResource[], attribute?: KanbanResource): SelectItemModel[] {
-    if ((attributesResourcesOrder || []).length === 0) {
+export class QueryStemAttributesSelectItemsPipe implements PipeTransform {
+  public transform(stem: QueryStem, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
+    if (!stem) {
       return [];
     }
 
-    const index = attributesResourcesOrder.findIndex(ar => ar.id === attribute.resourceId);
-
-    if (index >= 0) {
-      if (attribute.resourceType === AttributesResourceType.Collection) {
-        return this.collectionSelectItem(attributesResourcesOrder[index] as Collection, index);
-      }
-
-      if (attribute.resourceType === AttributesResourceType.LinkType) {
-        return this.linkTypeSelectItem(
-          attributesResourcesOrder[index] as LinkType,
-          attributesResourcesOrder[index - 1],
-          attributesResourcesOrder[index + 1],
-          index
+    const resources = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
+    const items = [];
+    for (let i = 0; i < resources.length; i++) {
+      if (i % 2 === 0) {
+        // collection
+        items.push(...this.collectionSelectItem(resources[i] as Collection, i));
+      } else {
+        // linkType
+        items.push(
+          ...this.linkTypeSelectItem(
+            resources[i] as LinkType,
+            resources[i - 1] as Collection,
+            resources[i + 1] as Collection,
+            i
+          )
         );
       }
     }
 
-    return [];
+    return items;
   }
 
   private collectionSelectItem(collection: Collection, index: number): SelectItemModel[] {
-    return ((collection && collection.attributes) || []).map(attribute => {
-      const id: KanbanAttribute = {
+    return (collection.attributes || []).map(attribute => {
+      const id: GanttChartBarModel = {
         resourceType: AttributesResourceType.Collection,
         resourceId: collection.id,
         resourceIndex: index,
@@ -77,7 +81,7 @@ export class KanbanDueDateSelectItemsPipe implements PipeTransform {
     index: number
   ): SelectItemModel[] {
     return (linkType.attributes || []).map(attribute => {
-      const id: KanbanAttribute = {
+      const id: GanttChartBarModel = {
         resourceType: AttributesResourceType.LinkType,
         resourceId: linkType.id,
         resourceIndex: index,

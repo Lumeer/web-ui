@@ -64,6 +64,9 @@ export class KanbanConfigComponent implements OnChanges {
   @Input()
   public query: Query;
 
+  @Input()
+  public visible: boolean;
+
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();
 

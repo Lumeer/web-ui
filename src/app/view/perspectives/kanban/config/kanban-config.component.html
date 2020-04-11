@@ -1,12 +1,12 @@
-<kanban-collection-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
-                          class="d-block mt-4"
-                          [stem]="stem"
-                          [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
-                          [collections]="collections"
-                          [columnTitles]="config | kanbanColumnTitles:config?.stemsConfigs[index]?.attribute"
-                          [linkTypes]="linkTypes"
-                          (configChange)="onConfigChange($event, stem, index)">
-</kanban-collection-config>
+<kanban-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
+                    class="d-block mt-4"
+                    [stem]="stem"
+                    [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
+                    [collections]="collections"
+                    [columnTitles]="config | kanbanColumnTitles:config?.stemsConfigs[index]?.attribute"
+                    [linkTypes]="linkTypes"
+                    (configChange)="onConfigChange($event, stem, index)">
+</kanban-stem-config>
 
 <ng-container *ngIf="config | kanbanAggregationDefined">
   <h6 class="font-weight-bold mt-4" i18n="@@perspective.kanban.config.column.summary">Column Summary</h6>
@@ -16,14 +16,16 @@
   </kanban-aggregation-config>
 </ng-container>
 
-<h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.column.size">Column size</h6>
-<size-slider class="d-block w-100" [defaultSize]="config?.columnSize"
-             (newSize)="onColumnSizeChanged($event)">
+<ng-container *ngIf="visible && config | isAnyKanbanAttributeSelected">
+  <h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.column.size">Column size</h6>
+  <size-slider class="d-block w-100" [defaultSize]="config?.columnSize"
+               (newSize)="onColumnSizeChanged($event)">
 
-</size-slider>
+  </size-slider>
 
-<h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.card.layout">Card layout</h6>
-<values-slider class="d-block w-100" [items]="cardLayoutSliderItems"
-               [selectedId]="config?.cardLayout"
-               (itemSelected)="onCardLayoutChanged($event)">
-</values-slider>
+  <h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.card.layout">Card layout</h6>
+  <values-slider class="d-block w-100" [items]="cardLayoutSliderItems"
+                 [selectedId]="config?.cardLayout"
+                 (itemSelected)="onCardLayoutChanged($event)">
+  </values-slider>
+</ng-container>

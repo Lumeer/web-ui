@@ -26,10 +26,10 @@
              [layoutType]="config?.cardLayout"
              [class.mb-2]="!last"
              [dataResource]="card.dataResource"
-             [resource]="collections | collectionById:card.dataResource.collectionId"
+             [resource]="card.resource"
              [query]="query"
              [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
-             [allowedPermissions]="permissions[card.dataResource.collectionId] || {}"
+             [allowedPermissions]="card.permissions"
              [constraintData]="constraintData"
              (toggleFavorite)="onToggleFavorite(card)">
     </post-it>
@@ -38,8 +38,7 @@
 
   <div class="card-footer px-3 py-2 mx-2"
        *ngIf="{resources: config | filterWritableResources:collections:permissions} as footerData">
-    <kanban-column-footer *ngIf="footerData.resources.length > 0"
-                          [resources]="footerData.resources"
+    <kanban-column-footer [resources]="footerData.resources"
                           [count]="cards?.length"
                           (selectResource)="createObjectInResource($event)">
     </kanban-column-footer>

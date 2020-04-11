@@ -20,21 +20,29 @@
 import {Constraint} from '../../../../core/model/constraint';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
-import {filterDocumentsAndLinksByStem} from '../../../../core/store/documents/documents.filters';
 import {KanbanAttribute, KanbanColumn, KanbanConfig, KanbanDataResource} from '../../../../core/store/kanbans/kanban';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
-import {findOriginalAttributeConstraint} from './kanban.util';
+import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
-import {groupLinkInstancesByLinkTypes} from '../../../../core/store/link-instances/link-instance.utils';
 import {SizeType} from '../../../../shared/slider/size/size-type';
+import {
+  findAttributeByQueryAttribute,
+  findConstraintByQueryAttribute,
+  findResourceByQueryResource,
+} from '../../../../core/model/query-attribute';
+import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
+import {
+  AggregatedDataValues,
+  DataAggregator,
+  DataAggregatorAttribute,
+} from '../../../../shared/utils/data/data-aggregator';
+import {cleanKanbanAttribute} from './kanban.util';
+import {DataValue} from '../../../../core/model/data-value';
 
 interface KanbanColumnData {
   resourcesOrder: KanbanDataResource[];
@@ -45,7 +53,13 @@ interface KanbanColumnData {
 const COLUMN_WIDTH = 300;
 
 export class KanbanConverter {
-  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {}
+  private dataAggregator: DataAggregator;
+
+  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
+    this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
+      this.formatKanbanValue(value, constraint, data, aggregatorAttribute)
+    );
+  }
 
   public buildKanbanConfig(
     config: KanbanConfig,
@@ -55,17 +69,16 @@ export class KanbanConverter {
     linkInstances: LinkInstance[],
     constraintData?: ConstraintData
   ): KanbanConfig {
-    const documentsByCollection = groupDocumentsByCollection(documents);
-    const {columnsMap, otherResourcesOrder} = this.groupDocumentsByColumns(
-      documentsByCollection,
+    const {columnsMap, otherResourcesOrder} = this.groupDataByColumns(
       config,
       collections,
+      documents,
       linkTypes,
       linkInstances,
       constraintData
     );
 
-    const columns = createKanbanColumns(config, columnsMap, collections);
+    const columns = createKanbanColumns(config, columnsMap, collections, linkTypes);
     const otherColumn = {
       id: getColumnIdOrGenerate(config?.otherColumn),
       width: getColumnSizeTypeWidth(config?.columnSize),
@@ -74,10 +87,10 @@ export class KanbanConverter {
     return {...config, columns, otherColumn};
   }
 
-  private groupDocumentsByColumns(
-    documentsByCollection: Record<string, DocumentModel[]>,
+  private groupDataByColumns(
     config: KanbanConfig,
     collections: Collection[],
+    documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     constraintData: ConstraintData
@@ -85,79 +98,80 @@ export class KanbanConverter {
     columnsMap: Record<string, KanbanColumnData>;
     otherResourcesOrder: KanbanDataResource[];
   } {
-    const stemsConfigs = (config && config.stemsConfigs) || [];
-    const columnsMap: Record<string, KanbanColumnData> = {};
+    const stemsConfigs = config?.stemsConfigs || [];
+    const columnsMap: Record<string, KanbanColumnData> = this.createInitialColumnsMap(config, collections, linkTypes);
     const otherResourcesOrder: KanbanDataResource[] = [];
-    let stemIndex = -1;
-    for (const stemConfig of stemsConfigs) {
-      stemIndex++;
 
-      const attribute = findAttributeByKanbanAttribute(stemConfig.attribute, collections);
+    for (let stemIndex = 0; stemIndex < stemsConfigs.length; stemIndex++) {
+      const stemConfig = stemsConfigs[stemIndex];
+      const attribute = findAttributeByQueryAttribute(stemConfig.attribute, collections, linkTypes);
       if (!attribute) {
         continue;
       }
 
-      const {pipelineDocuments} = filterDocumentsAndLinksByStem(
-        collections,
-        documentsByCollection,
-        linkTypes,
-        groupLinkInstancesByLinkTypes(linkInstances),
-        constraintData,
-        stemConfig.stem
-      );
-      const pipelineIndex = stemConfig.attribute.resourceIndex / 2; // resourceIndex counts both collection and linkType and pipeline only collection
-      const documents = pipelineDocuments[pipelineIndex] || [];
-      for (const document of documents) {
-        const value = document.data[attribute.id];
-        const formattedValues = this.formatKanbanColumnValues(
-          value,
-          attribute.constraint,
-          constraintData,
-          stemConfig.attribute,
-          collections,
-          linkTypes
-        );
+      this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, stemConfig.stem, constraintData);
+      const rowAttribute: DataAggregatorAttribute = {
+        resourceIndex: stemConfig.attribute.resourceIndex,
+        attributeId: attribute.id,
+        data: stemConfig.attribute.constraint,
+      };
 
-        for (const formattedValue of formattedValues) {
-          if (isNotNullOrUndefined(formattedValue) && String(formattedValue).trim() !== '') {
-            const createdByAttribute = {...stemConfig.attribute};
-            const stringValue = formattedValue.toString();
+      const resource = findResourceByQueryResource(stemConfig.resource, collections, linkTypes);
+      const valueAttribute: DataAggregatorAttribute = resource
+        ? {
+            resourceIndex: stemConfig.resource.resourceIndex,
+            attributeId: resource.attributes?.[0]?.id,
+          }
+        : rowAttribute;
 
-            const resourceOrder = {
-              id: document.id,
-              attributeId: attribute.id,
-              resourceType: AttributesResourceType.Collection,
-              stemIndex,
-            };
+      const resourceType = resource ? stemConfig.resource.resourceType : stemConfig.attribute.resourceType;
 
-            if (columnsMap[stringValue]) {
-              const columnData = columnsMap[stringValue];
+      const aggregatedMapData = this.dataAggregator.aggregate([rowAttribute], [], [valueAttribute]);
 
-              if (!columnData.resourcesOrder.find(order => order.id === resourceOrder.id)) {
-                columnData.resourcesOrder.push(resourceOrder);
-                if (!kanbanAttributesIncludesAttribute(columnData.attributes, createdByAttribute)) {
-                  columnData.attributes.push(createdByAttribute);
-                }
-                if (
-                  attribute &&
-                  attribute.constraint &&
-                  !columnData.constraintTypes.includes(attribute.constraint.type)
-                ) {
-                  columnData.constraintTypes.push(attribute.constraint.type);
-                }
-              }
-            } else {
-              const constraintTypes = (attribute.constraint && [attribute.constraint.type]) || [];
+      for (const formattedValue of Object.keys(aggregatedMapData.map)) {
+        const aggregatedDataValues: AggregatedDataValues[] = aggregatedMapData.map[formattedValue];
+        const dataResources = aggregatedDataValues?.[0]?.objects || [];
 
-              columnsMap[stringValue] = {
-                resourcesOrder: [resourceOrder],
-                attributes: [createdByAttribute],
-                constraintTypes,
-              };
+        if (isNotNullOrUndefined(formattedValue) && String(formattedValue).trim() !== '') {
+          const createdByAttribute = cleanKanbanAttribute(stemConfig.attribute);
+          const stringValue = formattedValue.toString();
+
+          if (columnsMap[stringValue]) {
+            const columnData = columnsMap[stringValue];
+
+            this.addDataResources(columnData, dataResources, resourceType, stemConfig.attribute.attributeId, stemIndex);
+
+            if (!kanbanAttributesIncludesAttribute(columnData.attributes, createdByAttribute)) {
+              columnData.attributes.push(createdByAttribute);
+            }
+            if (attribute?.constraint && !columnData.constraintTypes.includes(attribute.constraint.type)) {
+              columnData.constraintTypes.push(attribute.constraint.type);
             }
           } else {
-            otherResourcesOrder.push({id: document.id, resourceType: AttributesResourceType.Collection, stemIndex});
+            const constraintTypes = attribute?.constraint ? [attribute.constraint.type] : [];
+
+            columnsMap[stringValue] = {
+              resourcesOrder: [],
+              attributes: [createdByAttribute],
+              constraintTypes,
+            };
+
+            this.addDataResources(
+              columnsMap[stringValue],
+              dataResources,
+              resourceType,
+              stemConfig.attribute.attributeId,
+              stemIndex
+            );
           }
+        } else {
+          otherResourcesOrder.push(
+            ...dataResources.map(dataResource => ({
+              id: dataResource.id,
+              resourceType,
+              stemIndex,
+            }))
+          );
         }
       }
     }
@@ -165,38 +179,75 @@ export class KanbanConverter {
     return {columnsMap, otherResourcesOrder};
   }
 
-  private formatKanbanColumnValues(
-    value: any,
-    constraint: Constraint,
-    constraintData: ConstraintData,
-    kanbanAttribute: KanbanAttribute,
+  private addDataResources(
+    data: KanbanColumnData,
+    dataResources: DataResource[],
+    resourceType: AttributesResourceType,
+    attributeId: string,
+    stemIndex: number
+  ) {
+    for (const dataResource of dataResources) {
+      if (!data.resourcesOrder.some(order => order.id === dataResource.id && order.resourceType === resourceType)) {
+        data.resourcesOrder.push({id: dataResource.id, resourceType, stemIndex, attributeId});
+      }
+    }
+  }
+
+  private createInitialColumnsMap(
+    config: KanbanConfig,
     collections: Collection[],
     linkTypes: LinkType[]
-  ): any[] {
-    if (constraint) {
-      if (constraint.type === ConstraintType.User || constraint.type === ConstraintType.Select) {
-        return (isArray(value) ? value : [value]).map(val =>
-          constraint.createDataValue(val, constraintData).isValid() ? val : null
-        );
+  ): Record<string, KanbanColumnData> {
+    const columnsLength = config?.columns?.length || 0;
+    const firstAttribute = config?.stemsConfigs?.[0]?.attribute;
+    if (columnsLength === 0 && firstAttribute) {
+      const constraint = findConstraintByQueryAttribute(firstAttribute, collections, linkTypes);
+      if (constraint?.type === ConstraintType.Select) {
+        const values = (<SelectConstraint>constraint).config?.options?.map(option => option.value) || [];
+        return values
+          .filter(value => isNotNullOrUndefined(value))
+          .reduce(
+            (map, value) => ({
+              ...map,
+              [value]: {resourcesOrder: [], attributes: [firstAttribute], constraintTypes: [ConstraintType.Select]},
+            }),
+            {}
+          );
       }
     }
 
-    const kanbanAttributeConstraint = findOriginalAttributeConstraint(kanbanAttribute, collections, linkTypes);
-    const overrideConstraint =
-      kanbanAttribute &&
-      kanbanAttributeConstraint &&
-      this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanAttributeConstraint);
+    return {};
+  }
 
-    return [
-      (overrideConstraint || constraint || new UnknownConstraint()).createDataValue(value, constraintData).format(),
-    ];
+  private formatKanbanValue(
+    value: any,
+    constraint: Constraint,
+    constraintData: ConstraintData,
+    aggregatorAttribute: DataAggregatorAttribute
+  ): any {
+    const kanbanConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
+    const overrideConstraint =
+      kanbanConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanConstraint);
+    const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
+    return this.formatDataValue(finalConstraint.createDataValue(value, constraintData), finalConstraint);
+  }
+
+  private formatDataValue(dataValue: DataValue, constraint: Constraint): any {
+    switch (constraint.type) {
+      case ConstraintType.User:
+      case ConstraintType.Select:
+        return dataValue.serialize();
+      default:
+        return dataValue.format();
+    }
   }
 }
 
 function createKanbanColumns(
   currentConfig: KanbanConfig,
   columnsMap: Record<string, KanbanColumnData>,
-  collections: Collection[]
+  collections: Collection[],
+  linkTypes: LinkType[]
 ): KanbanColumn[] {
   let newColumnsTitles = Object.keys(columnsMap);
   const selectedAttributes = (currentConfig.stemsConfigs || [])
@@ -213,7 +264,7 @@ function createKanbanColumns(
       const {resourcesOrder = null, attributes = null, constraintTypes = null} = columnsMap[title] || {};
       const newResourcesOrder = sortDocumentsIdsByPreviousOrder(resourcesOrder, currentColumn.resourcesOrder);
 
-      if (isColumnValid(resourcesOrder, title, currentColumn.createdFromAttributes, collections)) {
+      if (isColumnValid(resourcesOrder, title, currentColumn.createdFromAttributes, collections, linkTypes)) {
         newColumns.push({
           id: getColumnIdOrGenerate(currentColumn),
           title,
@@ -246,13 +297,14 @@ function isColumnValid(
   resourcesOrder: KanbanDataResource[],
   title: string,
   attributes: KanbanAttribute[],
-  collections: Collection[]
+  collections: Collection[],
+  linkTypes: LinkType[]
 ): boolean {
   if ((resourcesOrder || []).length > 0) {
     return true;
   }
 
-  if ((attributes || []).every(attribute => selectedAttributeIsInvalid(title, attribute, collections))) {
+  if ((attributes || []).every(attribute => selectedAttributeIsInvalid(title, attribute, collections, linkTypes))) {
     return false;
   }
 
@@ -262,9 +314,10 @@ function isColumnValid(
 function selectedAttributeIsInvalid(
   title: string,
   kanbanAttribute: KanbanAttribute,
-  collections: Collection[]
+  collections: Collection[],
+  linkTypes: LinkType[]
 ): boolean {
-  const attribute = findAttributeByKanbanAttribute(kanbanAttribute, collections);
+  const attribute = findAttributeByQueryAttribute(kanbanAttribute, collections, linkTypes);
   if (!attribute) {
     return true;
   }
@@ -276,11 +329,6 @@ function selectedAttributeIsInvalid(
   }
 
   return false;
-}
-
-function findAttributeByKanbanAttribute(kanbanAttribute: KanbanAttribute, collections: Collection[]): Attribute {
-  const collection = kanbanAttribute && (collections || []).find(coll => coll.id === kanbanAttribute.resourceId);
-  return kanbanAttribute && findAttribute(collection && collection.attributes, kanbanAttribute.attributeId);
 }
 
 function getColumnIdOrGenerate(column: KanbanColumn): string {

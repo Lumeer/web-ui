@@ -42,7 +42,7 @@ import {Workspace} from '../workspace';
 import {MapPosition} from '../../maps/map.model';
 import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {QueryAttribute} from '../../../model/query-attribute';
+import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -410,6 +410,31 @@ export function mapPositionPathParams(position: MapPosition): Record<string, any
     ...(position.pitch ? {mp: position.pitch.toFixed(1)} : undefined),
     mz: position.zoom.toFixed(2),
   };
+}
+
+export function checkOrTransformQueryResource<T extends QueryResource>(
+  queryResource: T,
+  attributesResourcesOrder: AttributesResource[]
+): T {
+  if (!queryResource) {
+    return queryResource;
+  }
+
+  const attributesResource = attributesResourcesOrder[queryResource.resourceIndex];
+  if (
+    attributesResource?.id === queryResource.resourceId &&
+    getAttributesResourceType(attributesResource) === queryResource.resourceType
+  ) {
+    return queryResource;
+  } else {
+    const newAttributesResourceIndex = attributesResourcesOrder.findIndex(
+      ar => ar.id === queryResource.resourceId && getAttributesResourceType(ar) === queryResource.resourceType
+    );
+    if (newAttributesResourceIndex >= 0) {
+      return {...queryResource, resourceIndex: newAttributesResourceIndex};
+    }
+  }
+  return null;
 }
 
 export function checkOrTransformQueryAttribute<T extends QueryAttribute>(

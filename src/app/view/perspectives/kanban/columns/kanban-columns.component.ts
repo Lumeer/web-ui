@@ -236,7 +236,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   private onDocumentCreated(id: string, column: KanbanColumn) {
     this.modalService.showDocumentDetail(id);
     const component = this.columns.find(cmp => cmp.column.id === column.id);
-    component?.onDocumentCreated(id);
+    component?.onDataResourceCreated(id);
   }
 
   private createDocumentWithData(kanbanAttribute: KanbanAttribute, value: any): DocumentModel {

@@ -33,12 +33,13 @@ export class KanbanAggregateSelectItemsPipe implements PipeTransform {
       return [];
     }
 
+    const kanbanResource = config.resource || config.attribute;
     if (config.attribute.resourceType === AttributesResourceType.Collection) {
-      const collection = (collections || []).find(coll => coll.id === config.attribute.resourceId);
-      return this.collectionSelectItem(collection, config.attribute.resourceIndex);
+      const collection = (collections || []).find(coll => coll.id === kanbanResource.resourceId);
+      return this.collectionSelectItem(collection, kanbanResource.resourceIndex);
     } else if (config.attribute.resourceType === AttributesResourceType.LinkType) {
-      const linkType = (linkTypes || []).find(lt => lt.id === config.attribute.resourceId);
-      return this.linkTypeSelectItems(linkType, config.attribute.resourceIndex);
+      const linkType = (linkTypes || []).find(lt => lt.id === kanbanResource.resourceId);
+      return this.linkTypeSelectItems(linkType, kanbanResource.resourceIndex);
     }
   }
 

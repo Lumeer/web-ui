@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Constraint} from '../../../../../core/model/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {KanbanAttribute, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanResource, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -28,9 +28,10 @@ import {QueryStem} from '../../../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {AttributesResource} from '../../../../../core/model/resource';
+import {QueryResource} from '../../../../../core/model/query-attribute';
 
 @Component({
-  selector: 'kanban-collection-config',
+  selector: 'kanban-stem-config',
   templateUrl: './kanban-stem-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -55,6 +56,7 @@ export class KanbanStemConfigComponent implements OnChanges {
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly emptyValueString: string;
+  public readonly emptyResourceString: string;
   public readonly dueDateEmptyValueString: string;
   public readonly dueDateString: string;
   public readonly doneAttributeEmptyValueString: string;
@@ -64,6 +66,7 @@ export class KanbanStemConfigComponent implements OnChanges {
   public attributesResourcesOrder: AttributesResource[];
 
   constructor(private i18n: I18n) {
+    this.emptyResourceString = i18n({id: 'kanban.config.collection.resource.empty', value: 'Select table or link'});
     this.emptyValueString = i18n({id: 'kanban.config.collection.attribute.empty', value: 'Select attribute'});
     this.dueDateEmptyValueString = i18n({id: 'kanban.config.collection.dueDate.empty', value: 'Select due date'});
     this.dueDateString = i18n({id: 'kanban.config.collection.dueDate', value: 'Due date'});
@@ -91,7 +94,7 @@ export class KanbanStemConfigComponent implements OnChanges {
   }
 
   public onAttributeRemoved() {
-    this.onConfigChange({...this.config, attribute: null});
+    this.onConfigChange({...this.config, attribute: null, resource: null});
   }
 
   public onDueDateSelected(attribute: KanbanAttribute) {
@@ -145,6 +148,27 @@ export class KanbanStemConfigComponent implements OnChanges {
   }
 
   private onConfigChange(config: KanbanStemConfig, shouldRebuildConfig: boolean = true) {
+    const kanbanResource: KanbanResource = config.resource || config.attribute;
+    if (config.aggregation && !this.areFromSameResource(config.aggregation, kanbanResource)) {
+      config.aggregation = null;
+    }
+
+    if (config.dueDate && !this.areFromSameResource(config.dueDate, kanbanResource)) {
+      config.dueDate = null;
+    }
+
     this.configChange.emit({config, shouldRebuildConfig});
+  }
+
+  private areFromSameResource(a1: KanbanResource, a2: KanbanResource): boolean {
+    return a1 && a2 && a1.resourceIndex === a2.resourceIndex;
+  }
+
+  public onResourceSelected(resource: QueryResource) {
+    this.onConfigChange({...this.config, resource});
+  }
+
+  public onResourceRemoved() {
+    this.onConfigChange({...this.config, resource: null});
   }
 }

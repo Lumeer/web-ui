@@ -28,6 +28,7 @@ import {Collection} from '../../../../../../core/store/collections/collection';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../../../core/store/collections/collection.util';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
 
 @Component({
   selector: 'kanban-column-header',
@@ -59,6 +60,7 @@ export class KanbanColumnHeaderComponent implements OnChanges {
   public readonly booleanConstraint = new BooleanConstraint();
   public readonly userConstraint = new UserConstraint({externalUsers: true});
   public readonly selectConstraint = new SelectConstraint({options: []});
+  public readonly summaryConfiguration: DataInputConfiguration = {common: {inline: true}};
 
   public columnConstraint: Constraint;
 

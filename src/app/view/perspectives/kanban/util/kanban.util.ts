@@ -26,18 +26,16 @@ import {
 } from '../../../../core/store/kanbans/kanban';
 import {areArraysSame} from '../../../../shared/utils/array.utils';
 import {Collection} from '../../../../core/store/collections/collection';
-import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
   checkOrTransformQueryAttribute,
+  checkOrTransformQueryResource,
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
-import {AttributesResourceType} from '../../../../core/model/resource';
-import {Constraint} from '../../../../core/model/constraint';
 import {SizeType} from '../../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
@@ -140,6 +138,7 @@ function checkOrTransformKanbanStemConfig(
 
   result.attribute = checkOrTransformQueryAttribute(stemConfig.attribute, attributesResourcesOrder);
   result.aggregation = checkOrTransformQueryAttribute(stemConfig.aggregation, attributesResourcesOrder);
+  result.resource = checkOrTransformQueryResource(stemConfig.resource, attributesResourcesOrder);
 
   if (stemConfig.dueDate) {
     result.dueDate = checkOrTransformQueryAttribute(stemConfig.dueDate, attributesResourcesOrder);
@@ -177,25 +176,6 @@ export function cleanKanbanAttribute(attribute: KanbanAttribute): KanbanAttribut
       resourceType: attribute.resourceType,
     }
   );
-}
-
-export function findOriginalAttributeConstraint(
-  attribute: KanbanAttribute,
-  collections: Collection[],
-  linkTypes: LinkType[]
-): Constraint {
-  if (attribute) {
-    if (attribute.resourceType === AttributesResourceType.Collection) {
-      const collection = collections.find(c => c.id === attribute.resourceId);
-      return findAttributeConstraint((collection && collection.attributes) || [], attribute.attributeId);
-    }
-    if (attribute.resourceType === AttributesResourceType.LinkType) {
-      const linkType = linkTypes.find(l => l.id === attribute.resourceId);
-      return findAttributeConstraint((linkType && linkType.attributes) || [], attribute.attributeId);
-    }
-  }
-
-  return null;
 }
 
 export function isKanbanAggregationDefined(config: KanbanConfig): boolean {

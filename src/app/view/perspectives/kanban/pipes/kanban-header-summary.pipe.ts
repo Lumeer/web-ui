@@ -25,13 +25,15 @@ import {AttributesResourceType, DataResource} from '../../../../core/model/resou
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {findOriginalAttributeConstraint, isKanbanAggregationDefined} from '../util/kanban.util';
+import {isKanbanAggregationDefined} from '../util/kanban.util';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {Constraint} from '../../../../core/model/constraint';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import Big from 'big.js';
 import {filterNotNull} from '../../../../shared/utils/array.utils';
+import {findConstraintByQueryAttribute} from '../../../../core/model/query-attribute';
+import {convertToBig} from '../../../../shared/utils/data.utils';
 
 interface AggregatedData {
   count: number;
@@ -84,7 +86,7 @@ export class KanbanHeaderSummariesPipe implements PipeTransform {
 
 function findConstraint(config: KanbanConfig, linkTypes: LinkType[], collections: Collection[]): Constraint {
   for (const stemConfig of config.stemsConfigs) {
-    const constraint = findOriginalAttributeConstraint(stemConfig.aggregation, collections, linkTypes);
+    const constraint = findConstraintByQueryAttribute(stemConfig.aggregation, collections, linkTypes);
     if (constraint) {
       return constraint;
     }
@@ -109,8 +111,11 @@ function computeRelativeValue(
   });
 
   Object.keys(columnsMap).forEach(key => {
-    if (columnsMap[key]) {
-      values[key] = new Big((values[key] / total) * 100).toFixed(2) + '%';
+    if (columnsMap[key] && total > 0) {
+      const bigNumber = convertToBig((values[key] / total) * 100);
+      if (bigNumber) {
+        values[key] = bigNumber.toFixed(2) + '%';
+      }
     }
   });
 
