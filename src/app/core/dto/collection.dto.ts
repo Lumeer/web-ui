@@ -19,6 +19,7 @@
 
 import {AttributeDto} from './attribute.dto';
 import {ResourceDto} from './resource.dto';
+import {RuleDto} from './rule.dto';
 
 export interface CollectionDto extends ResourceDto {
   correlationId?: string;
@@ -29,9 +30,3 @@ export interface CollectionDto extends ResourceDto {
   lastTimeUsed?: number;
   rules?: Record<string, RuleDto>;
 }
-
-export type RuleDto = {
-  type: string;
-  timing: string;
-  configuration: Record<string, any>;
-};

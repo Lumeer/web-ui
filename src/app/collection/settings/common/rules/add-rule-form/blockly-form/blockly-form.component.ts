@@ -27,7 +27,7 @@ import {AppState} from '../../../../../../core/store/app.state';
 import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {RuleVariable} from '../../rule-variable-type';
+import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
 import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 
@@ -42,6 +42,9 @@ export class BlocklyFormComponent implements OnInit {
 
   @Input()
   public collection: Collection;
+
+  @Input()
+  public linkType: LinkType;
 
   @Input()
   public form: FormGroup;
@@ -95,10 +98,18 @@ export class BlocklyFormComponent implements OnInit {
   public ngOnInit(): void {
     this.collections$ = this.store$.select(selectAllCollections);
     this.linkTypes$ = this.store$.select(selectAllLinkTypes);
-    this.variables = [
-      {name: 'oldDocument', collectionId: this.collection.id},
-      {name: 'newDocument', collectionId: this.collection.id},
-    ];
+    if (this.collection) {
+      this.variables = [
+        {name: 'oldDocument', collectionId: this.collection.id},
+        {name: 'newDocument', collectionId: this.collection.id},
+      ];
+    }
+    if (this.linkType) {
+      this.variables = [
+        {name: 'oldLink', linkTypeId: this.linkType.id},
+        {name: 'newLink', linkTypeId: this.linkType.id},
+      ];
+    }
   }
 
   public onJsUpdate(jsCode: string) {

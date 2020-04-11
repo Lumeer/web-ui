@@ -18,6 +18,7 @@
  */
 
 import {AttributeDto} from './attribute.dto';
+import {RuleDto} from './rule.dto';
 
 export interface LinkTypeDto {
   id?: string; // TODO make compulsory
@@ -28,4 +29,5 @@ export interface LinkTypeDto {
 
   attributes?: AttributeDto[];
   linksCount?: number;
+  rules?: Record<string, RuleDto>;
 }

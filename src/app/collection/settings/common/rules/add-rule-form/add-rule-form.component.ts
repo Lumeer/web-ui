@@ -34,6 +34,7 @@ import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'add-rule-form',
@@ -50,6 +51,9 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public collection: Collection;
+
+  @Input()
+  public linkType: LinkType;
 
   @Input()
   public rule: Rule;

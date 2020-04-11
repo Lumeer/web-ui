@@ -46,7 +46,7 @@ import {
 } from '../../../core/constants';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {RuleVariable} from '../../../collection/settings/tab/rules/rule-variable-type';
+import {RuleVariable} from '../rule-variable-type';
 import {AppState} from '../../../core/store/app.state';
 import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
@@ -250,149 +250,199 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     const linkTypes = this.linkTypes.map(l => l.id + LINK_VAR_SUFFIX);
     const collection =
       this.masterType !== MasterBlockType.Link ? this.getCollection(this.variables[0].collectionId) : null;
-    const linkType = this.masterType === MasterBlockType.Link ? this.getLinkType(this.variables[0].linkTypeId) : null;
-    const attributeName = this.attribute ? this.attribute.name : collection.name;
+    const linkType =
+      this.masterType === MasterBlockType.Link || !collection ? this.getLinkType(this.variables[0].linkTypeId) : null;
+    const attributeName = this.attribute ? this.attribute.name : collection ? collection.name : linkType.name;
 
-    Blockly.Blocks[STATEMENT_CONTAINER] = {
-      init: function() {
-        this.jsonInit({
-          type: STATEMENT_CONTAINER,
-          message0: '%{BKY_BLOCK_STATEMENT_CONTAINER}', // With record in %1 %2 %3 do %4
-          args0: [
-            {
-              type: 'field_fa',
-              icon: collection.icon,
-              iconColor: collection.color,
-            },
-            {
-              type: 'field_label',
-              text: collection.name,
-            },
-            {
-              type: 'input_dummy',
-            },
-            {
-              type: 'input_statement',
-              name: 'COMMANDS',
-            },
-          ],
-          colour: COLOR_DARK,
-        });
-      },
-    };
     const this_ = this;
-    Blockly.JavaScript[STATEMENT_CONTAINER] = function(block) {
-      const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
-      this_.lumeerVar = lumeerVar;
-      const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
-      return code + Blockly.JavaScript.statementToCode(block, 'COMMANDS') + '\n';
-    };
-
-    Blockly.Blocks[VALUE_CONTAINER] = {
-      init: function() {
-        this.jsonInit({
-          type: VALUE_CONTAINER,
-          message0: '%{BKY_BLOCK_VALUE_CONTAINER}', // %1 %2 = %3
-          args0: [
-            {
-              type: 'field_fa',
-              icon: collection.icon,
-              iconColor: collection.color,
-            },
-            {
-              type: 'field_label',
-              text: attributeName,
-            },
-            {
-              type: 'input_value',
-              name: 'VALUE',
-              check: ['', 'Number', 'String', 'Boolean'], // only regular variables - no fields or objects
-            },
-          ],
-          colour: COLOR_DARK,
-        });
-      },
-    };
-    Blockly.JavaScript[VALUE_CONTAINER] = function(block) {
-      const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
-      this_.lumeerVar = lumeerVar;
-      const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
-      const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || null;
-
-      if (!value) {
-        return code;
+    if (this.masterType === MasterBlockType.Function) {
+      if (collection) {
+        Blockly.Blocks[STATEMENT_CONTAINER] = {
+          init: function() {
+            this.jsonInit({
+              type: STATEMENT_CONTAINER,
+              message0: '%{BKY_BLOCK_STATEMENT_CONTAINER}', // With record in %1 %2 %3 do %4
+              args0: [
+                {
+                  type: 'field_fa',
+                  icon: collection.icon,
+                  iconColor: collection.color,
+                },
+                {
+                  type: 'field_label',
+                  text: collection.name,
+                },
+                {
+                  type: 'input_dummy',
+                },
+                {
+                  type: 'input_statement',
+                  name: 'COMMANDS',
+                },
+              ],
+              colour: COLOR_DARK,
+            });
+          },
+        };
+        Blockly.JavaScript[STATEMENT_CONTAINER] = function(block) {
+          const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+          this_.lumeerVar = lumeerVar;
+          const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
+          return code + Blockly.JavaScript.statementToCode(block, 'COMMANDS') + '\n';
+        };
       }
 
-      return (
-        code +
-        '\n' +
-        lumeerVar +
-        '.setDocumentAttribute(' +
-        'thisDocument' +
-        ", '" +
-        this_.attribute.id +
-        "', " +
-        value +
-        ');' +
-        '\n'
-      );
-    };
+      if (linkType) {
+        Blockly.Blocks[STATEMENT_CONTAINER] = {
+          init: function() {
+            this.jsonInit({
+              type: STATEMENT_CONTAINER,
+              message0: '%{BKY_BLOCK_LINK_STATEMENT_CONTAINER}', // With record in %1%2 %3 %4 do %5
+              args0: [
+                {
+                  type: 'field_fa',
+                  icon: linkType.collections?.[0]?.icon,
+                  iconColor: linkType.collections?.[0]?.color,
+                },
+                {
+                  type: 'field_fa',
+                  icon: linkType.collections?.[1]?.icon,
+                  iconColor: linkType.collections?.[1]?.color,
+                },
+                {
+                  type: 'field_label',
+                  text: linkType.name,
+                },
+                {
+                  type: 'input_dummy',
+                },
+                {
+                  type: 'input_statement',
+                  name: 'COMMANDS',
+                },
+              ],
+              colour: COLOR_DARK,
+            });
+          },
+        };
+        Blockly.JavaScript[STATEMENT_CONTAINER] = function(block) {
+          const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+          this_.lumeerVar = lumeerVar;
+          const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
+          return code + Blockly.JavaScript.statementToCode(block, 'COMMANDS') + '\n';
+        };
+      }
+    } else if (this.masterType === MasterBlockType.Value) {
+      if (collection) {
+        Blockly.Blocks[VALUE_CONTAINER] = {
+          init: function() {
+            this.jsonInit({
+              type: VALUE_CONTAINER,
+              message0: '%{BKY_BLOCK_VALUE_CONTAINER}', // %1 %2 = %3
+              args0: [
+                {
+                  type: 'field_fa',
+                  icon: collection.icon,
+                  iconColor: collection.color,
+                },
+                {
+                  type: 'field_label',
+                  text: attributeName,
+                },
+                {
+                  type: 'input_value',
+                  name: 'VALUE',
+                  check: ['', 'Number', 'String', 'Boolean'], // only regular variables - no fields or objects
+                },
+              ],
+              colour: COLOR_DARK,
+            });
+          },
+        };
+        Blockly.JavaScript[VALUE_CONTAINER] = function(block) {
+          const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+          this_.lumeerVar = lumeerVar;
+          const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
+          const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || null;
 
-    Blockly.Blocks[LINK_CONTAINER] = {
-      init: function() {
-        this.jsonInit({
-          type: LINK_CONTAINER,
-          message0: '%{BKY_BLOCK_LINK_CONTAINER}', // %1%2 %3 = %4
-          args0: [
-            {
-              type: 'field_fa',
-              icon: linkType.collections?.[0]?.icon,
-              iconColor: linkType.collections?.[0]?.color,
-            },
-            {
-              type: 'field_fa',
-              icon: linkType.collections?.[1]?.icon,
-              iconColor: linkType.collections?.[1]?.color,
-            },
-            {
-              type: 'field_label',
-              text: attributeName,
-            },
-            {
-              type: 'input_value',
-              name: 'VALUE',
-              check: ['', 'Number', 'String', 'Boolean'], // only regular variables - no fields or objects
-            },
-          ],
-          colour: COLOR_DARK,
-        });
-      },
-    };
+          if (!value) {
+            return code;
+          }
 
-    Blockly.JavaScript[LINK_CONTAINER] = function(block) {
-      const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
-      this_.lumeerVar = lumeerVar;
-      const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
-      const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || null;
-
-      if (!value) {
-        return code;
+          return (
+            code +
+            '\n' +
+            lumeerVar +
+            '.setDocumentAttribute(' +
+            'thisDocument' +
+            ", '" +
+            this_.attribute.id +
+            "', " +
+            value +
+            ');' +
+            '\n'
+          );
+        };
       }
 
-      return (
-        code +
-        '\n' +
-        lumeerVar +
-        '.setLinkAttribute(' +
-        'thisLink' +
-        ", '" +
-        this_.attribute.id +
-        "', " +
-        value +
-        ');' +
-        '\n'
-      );
-    };
+      if (linkType) {
+        Blockly.Blocks[LINK_CONTAINER] = {
+          init: function() {
+            this.jsonInit({
+              type: LINK_CONTAINER,
+              message0: '%{BKY_BLOCK_LINK_CONTAINER}', // %1%2 %3 = %4
+              args0: [
+                {
+                  type: 'field_fa',
+                  icon: linkType.collections?.[0]?.icon,
+                  iconColor: linkType.collections?.[0]?.color,
+                },
+                {
+                  type: 'field_fa',
+                  icon: linkType.collections?.[1]?.icon,
+                  iconColor: linkType.collections?.[1]?.color,
+                },
+                {
+                  type: 'field_label',
+                  text: attributeName,
+                },
+                {
+                  type: 'input_value',
+                  name: 'VALUE',
+                  check: ['', 'Number', 'String', 'Boolean'], // only regular variables - no fields or objects
+                },
+              ],
+              colour: COLOR_DARK,
+            });
+          },
+        };
+
+        Blockly.JavaScript[LINK_CONTAINER] = function(block) {
+          const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
+          this_.lumeerVar = lumeerVar;
+          const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
+          const value = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_MEMBER) || null;
+
+          if (!value) {
+            return code;
+          }
+
+          return (
+            code +
+            '\n' +
+            lumeerVar +
+            '.setLinkAttribute(' +
+            'thisLink' +
+            ", '" +
+            this_.attribute.id +
+            "', " +
+            value +
+            ');' +
+            '\n'
+          );
+        };
+      }
+    }
 
     Blockly.Blocks[FOREACH_DOCUMENT_ARRAY] = {
       init: function() {

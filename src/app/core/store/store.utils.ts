@@ -20,6 +20,8 @@
 import {Action} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {CommonAction} from './common/common.action';
+import {RuleDto} from '../dto/rule.dto';
+import {Rule, RuleTimingMap, RuleTypeMap} from '../model/rule';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];
@@ -31,4 +33,33 @@ export function emitErrorActions(error: any, onFailure?: (error: any) => void): 
     actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
   }
   return from(actions);
+}
+
+export function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
+  return Object.keys(dto || {})
+    .map<Rule>(
+      name =>
+        ({
+          name: name,
+          type: RuleTypeMap[dto[name].type],
+          timing: RuleTimingMap[dto[name].timing],
+          configuration: dto[name].configuration,
+        } as Rule) // TODO avoid type casting
+    )
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
+  if (!model) {
+    return {};
+  }
+
+  return model.reduce((result, rule) => {
+    result[rule.name] = {
+      type: rule.type,
+      timing: rule.timing,
+      configuration: rule.configuration,
+    };
+    return result;
+  }, {});
 }

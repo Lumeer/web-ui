@@ -20,6 +20,7 @@
 import {LinkTypeDto} from '../../dto';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {LinkType} from './link.type';
+import {convertRulesFromDto, convertRulesToDto} from '../store.utils';
 
 export function convertLinkTypeDtoToModel(
   dto: LinkTypeDto,
@@ -37,6 +38,7 @@ export function convertLinkTypeDtoToModel(
     correlationId: correlationId,
     version: dto.version,
     linksCount: dto.linksCount,
+    rules: convertRulesFromDto(dto.rules),
   };
 }
 
@@ -47,5 +49,6 @@ export function convertLinkTypeModelToDto(model: LinkType): LinkTypeDto {
     name: model.name,
     collectionIds: model.collectionIds,
     attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
+    rules: convertRulesToDto(model.rules),
   };
 }
