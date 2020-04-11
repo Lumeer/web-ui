@@ -4309,7 +4309,7 @@
         </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
-        <source>Name</source><target state="final">Name</target>
+        <source>Link Type</source><target state="final">Link Type</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
           <context context-type="linenumber">5</context>

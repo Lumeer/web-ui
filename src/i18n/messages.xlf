@@ -2128,7 +2128,7 @@
           <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
-        <source>Name</source>
+        <source>Link Type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
           <context context-type="linenumber">5</context>

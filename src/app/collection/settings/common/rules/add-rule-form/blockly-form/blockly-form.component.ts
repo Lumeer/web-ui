@@ -27,7 +27,7 @@ import {AppState} from '../../../../../../core/store/app.state';
 import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
-import {RuleVariable} from '../../rule-variable-type';
+import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
 import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 

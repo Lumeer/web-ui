@@ -17,19 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute, Collection} from '../collections/collection';
-import {Rule} from '../../model/rule';
-
-export interface LinkType {
-  id?: string;
-  name: string;
-  version?: number;
-
-  collectionIds: [string, string];
-  collections?: [Collection, Collection];
-  attributes?: Attribute[];
-  linksCount?: number;
-
-  correlationId?: string;
-  rules?: Rule[];
+export interface RuleDto {
+  type: string;
+  timing: string;
+  configuration: Record<string, any>;
 }

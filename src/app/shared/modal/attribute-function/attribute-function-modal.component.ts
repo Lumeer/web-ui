@@ -22,7 +22,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {findAttribute} from '../../../core/store/collections/collection.util';
 import {BLOCKLY_VALUE_TOOLBOX} from '../../blockly/blockly-editor/blockly-editor-toolbox';
 import {MasterBlockType} from '../../blockly/blockly-editor/blockly-editor.component';
-import {RuleVariable} from '../../../collection/settings/tab/rules/rule-variable-type';
+import {RuleVariable} from '../../blockly/rule-variable-type';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {BlocklyDebugDisplay} from '../../blockly/blockly-debugger/blockly-debugger.component';

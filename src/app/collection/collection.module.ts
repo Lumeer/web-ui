@@ -31,17 +31,18 @@ import {AttributeFilterPipe} from './settings/tab/attributes/attribute-filter.pi
 import {LinkTypeComponent} from './settings/tab/link-types/link-type/link-type.component';
 import {LinkTypeFilterPipe} from './settings/tab/link-types/link-type-filter.pipe';
 import {CollectionRulesComponent} from './settings/tab/rules/collection-rules.component';
-import {AddRuleComponent} from './settings/tab/rules/add-rule/add-rule.component';
-import {SingleRuleComponent} from './settings/tab/rules/single-rule/single-rule.component';
-import {AddRuleFormComponent} from './settings/tab/rules/add-rule-form/add-rule-form.component';
-import {AutoLinkFormComponent} from './settings/tab/rules/add-rule-form/auto-link-form/auto-link-form.component';
-import {BlocklyFormComponent} from './settings/tab/rules/add-rule-form/blockly-form/blockly-form.component';
-import {NoRulesComponent} from './settings/tab/rules/no-rules/no-rules.component';
-import {HasCreatePipe} from './settings/tab/rules/single-rule/has-create.pipe';
-import {HasUpdatePipe} from './settings/tab/rules/single-rule/has-update.pipe';
-import {HasDeletePipe} from './settings/tab/rules/single-rule/has-delete.pipe';
+import {AddRuleComponent} from './settings/common/rules/add-rule/add-rule.component';
+import {SingleRuleComponent} from './settings/common/rules/single-rule/single-rule.component';
+import {AddRuleFormComponent} from './settings/common/rules/add-rule-form/add-rule-form.component';
+import {AutoLinkFormComponent} from './settings/common/rules/add-rule-form/auto-link-form/auto-link-form.component';
+import {BlocklyFormComponent} from './settings/common/rules/add-rule-form/blockly-form/blockly-form.component';
+import {NoRulesComponent} from './settings/common/rules/no-rules/no-rules.component';
+import {HasCreatePipe} from './settings/common/rules/single-rule/has-create.pipe';
+import {HasUpdatePipe} from './settings/common/rules/single-rule/has-update.pipe';
+import {HasDeletePipe} from './settings/common/rules/single-rule/has-delete.pipe';
 import {AddCollectionAttributeComponent} from './settings/tab/attributes/add/add-collection-attribute.component';
 import {CollectionAttributesTableComponent} from './settings/tab/attributes/table/collection-attributes-table.component';
+import {LinkTypeRulesComponent} from './settings/tab/link-types/link-type-rules/link-type-rules.component';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule],
@@ -65,6 +66,7 @@ import {CollectionAttributesTableComponent} from './settings/tab/attributes/tabl
     HasDeletePipe,
     AddCollectionAttributeComponent,
     CollectionAttributesTableComponent,
+    LinkTypeRulesComponent,
   ],
   providers: [CollectionSettingsGuard],
 })
