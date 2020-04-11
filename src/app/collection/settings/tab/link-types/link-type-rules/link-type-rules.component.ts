@@ -111,8 +111,10 @@ export class LinkTypeRulesComponent implements OnInit {
 
   private getEmptyRule(): Rule {
     const count = (this.linkType.rules?.length || 0) + 1;
+    const rulePrefix = this.i18n({id: 'collection.config.tab.rules.newRule.prefix', value: 'Rule'});
+
     const blocklyRule: BlocklyRule = {
-      name: 'Rule ' + count,
+      name: rulePrefix + ' ' + count,
       timing: RuleTiming.All,
       type: RuleType.Blockly,
       configuration: {
