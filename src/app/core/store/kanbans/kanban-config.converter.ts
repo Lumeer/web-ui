@@ -72,6 +72,16 @@ function convertKanbanConfigDtoToModelV1(config: KanbanConfig): KanbanConfig {
   if (aggregation) {
     const configCopy = deepObjectCopy(config);
     configCopy.stemsConfigs?.forEach(stemConfig => (stemConfig.aggregation = cleanKanbanAttribute(aggregation)));
+    configCopy.columns?.forEach(column => {
+      delete column['resourcesOrder'];
+      delete column['constraintType'];
+    });
+
+    if (configCopy.otherColumn) {
+      delete configCopy.otherColumn['resourcesOrder'];
+      delete configCopy.otherColumn['constraintType'];
+    }
+
     return {...configCopy, version: KanbanConfigVersion.V2};
   }
   return {...config, version: KanbanConfigVersion.V2};
@@ -108,16 +118,8 @@ function convertKanbanColumnConfigDtoToModelV0(column: KanbanColumnV0): KanbanCo
     return null;
   }
 
-  const attributeId =
-    (column.createdFromAttributes || []).length === 1 ? column.createdFromAttributes[0].attributeId : null;
   return {
     ...column,
-    resourcesOrder: (column.documentsIdsOrder || []).map(id => ({
-      id,
-      attributeId,
-      resourceType: AttributesResourceType.Collection,
-      stemIndex: 0,
-    })),
     createdFromAttributes: (column.createdFromAttributes || []).map(attribute => ({
       ...attribute,
       resourceId: attribute.collectionId,

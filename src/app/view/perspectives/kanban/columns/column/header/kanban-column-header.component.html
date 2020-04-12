@@ -1,9 +1,9 @@
-<ng-container [ngSwitch]="column.constraintType">
+<ng-container [ngSwitch]="column.constraint?.type">
 
   <ng-container *ngSwitchCase="constraintTypes.Color">
     <div [style.background]="column.title" class="px-3 py-2 color-title flex-grow-1">
-      <div *ngIf="column.resourcesOrder.length > 0">&nbsp;</div>
-      <div *ngIf="column.resourcesOrder.length === 0" class="text-end">
+      <div *ngIf="column.cards.length > 0">&nbsp;</div>
+      <div *ngIf="column.cards.length === 0" class="text-end">
         <i class="fa fa-trash cursor-pointer"
            [style.color]="column.title | contrastColor"
            (click)="onRemove()"></i>
@@ -13,21 +13,21 @@
 
   <div *ngSwitchCase="constraintTypes.Boolean" class="d-flex py-1">
     <boolean-data-input class="px-3 py-1 flex-grow-1"
-                        [value]="column.title | dataValue : booleanConstraint"
+                        [value]="column.title | dataValue : column.constraint"
                         [readonly]="true">
     </boolean-data-input>
   </div>
 
   <user-data-input *ngSwitchCase="constraintTypes.User"
                    class="px-3 py-2 flex-grow-1"
-                   [value]="column.title | dataValue : (columnConstraint || userConstraint)"
+                   [value]="column.title | dataValue : column.constraint"
                    [readonly]="true"
                    [focus]="false">
   </user-data-input>
 
   <select-data-input *ngSwitchCase="constraintTypes.Select"
                      class="px-3 py-2 flex-grow-1"
-                     [value]="column.title | dataValue : (columnConstraint || selectConstraint)"
+                     [value]="column.title | dataValue : column.constraint"
                      [readonly]="true"
                      [focus]="false">
   </select-data-input>
@@ -52,13 +52,13 @@
   </div>
 </ng-template>
 
-<data-input-preview *ngIf="!(summary | isNullOrUndefined)"
+<data-input-preview *ngIf="!(column.summary | isNullOrUndefined)"
                     class="align-self-center flex-fill text-right small text-muted mr-3 overflow-hidden"
                     [configuration]="summaryConfiguration"
-                    [dataValue]="summary | dataValue:null">
+                    [dataValue]="column.summary | dataValue:null">
 </data-input-preview>
 
 <div class="d-flex align-items-center justify-content-center pr-3"
-     *ngIf="column.resourcesOrder?.length === 0 && column.constraintType !==constraintTypes.Color && column.title">
+     *ngIf="column.cards?.length === 0 && column.constraint?.type !== constraintTypes.Color && column.title">
   <i class="fa fa-trash text-danger cursor-pointer" (click)="onRemove()"></i>
 </div>

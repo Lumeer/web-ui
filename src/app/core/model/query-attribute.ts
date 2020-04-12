@@ -45,7 +45,7 @@ export function cleanQueryAttribute(attribute: QueryAttribute): QueryAttribute {
 }
 
 export function queryAttributePermissions(
-  attribute: QueryAttribute,
+  attribute: QueryResource,
   permissions: Record<string, AllowedPermissions>,
   linkTypesMap: Record<string, LinkType>
 ): AllowedPermissions {

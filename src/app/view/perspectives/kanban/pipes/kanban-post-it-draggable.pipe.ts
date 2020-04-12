@@ -18,13 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanCard} from '../columns/column/kanban-column.component';
+import {KanbanCard} from '../util/kanban-data';
 
 @Pipe({
   name: 'kanbanPostItDraggable',
 })
 export class KanbanPostItDraggablePipe implements PipeTransform {
   public transform(card: KanbanCard): boolean {
-    return !!card.attributeId;
+    return !!card; // TODO
   }
 }

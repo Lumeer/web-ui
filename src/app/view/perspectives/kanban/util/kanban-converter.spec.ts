@@ -134,7 +134,7 @@ describe('Kanban converter', () => {
 
   it('should create empty columns', () => {
     const config: KanbanConfig = {columns: [], stemsConfigs: []};
-    const buildConfig = converter.buildKanbanConfig(config, collections, [], documents, []);
+    const buildConfig = converter.convert(config, collections, [], documents, []);
     expect(buildConfig.columns).toEqual([]);
     expect(buildConfig.stemsConfigs).toEqual([]);
     expect(buildConfig.otherColumn.resourcesOrder).toEqual([]);
@@ -156,7 +156,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.buildKanbanConfig(config, collections, [], documents, []);
+    const buildConfig = converter.convert(config, collections, [], documents, []);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass']);
     expect(buildConfig.columns[0].resourcesOrder.map(order => order.id)).toEqual(['D1', 'D4']);
     expect(buildConfig.columns[1].resourcesOrder.map(order => order.id)).toEqual(['D2']);
@@ -191,7 +191,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.buildKanbanConfig(config, collections, [], documents, []);
+    const buildConfig = converter.convert(config, collections, [], documents, []);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['Sport', 'Dance', 'Glass', 'LMR']);
     expect(buildConfig.columns[0].resourcesOrder.map(order => order.id)).toEqual(['D1', 'D4', 'D9']);
     expect(buildConfig.columns[1].resourcesOrder.map(order => order.id)).toEqual(['D2', 'D6']);
@@ -262,7 +262,7 @@ describe('Kanban converter', () => {
         },
       ],
     };
-    const buildConfig = converter.buildKanbanConfig(previousConfig, collections, [], documents, []);
+    const buildConfig = converter.convert(previousConfig, collections, [], documents, []);
     expect(buildConfig.columns.map(c => c.title)).toEqual(['LMR', 'Glass', 'Dance', 'Sport']);
     expect(buildConfig.columns[0].resourcesOrder.map(order => order.id)).toEqual(['D10', 'D7']);
     expect(buildConfig.columns[1].resourcesOrder.map(order => order.id)).toEqual(['D5', 'D3', 'D8']);

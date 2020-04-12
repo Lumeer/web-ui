@@ -72,14 +72,7 @@ function stemConfigsChanged(viewStemsConfigs: KanbanStemConfig[], currentStemsCo
 }
 
 function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {
-  return (
-    column1.title !== column2.title ||
-    column1.width !== column2.width ||
-    !areArraysSame(
-      ((column1 && column1.resourcesOrder) || []).map(order => order.id),
-      ((column2 && column2.resourcesOrder) || []).map(order => order.id)
-    )
-  );
+  return column1?.title !== column2?.title || column1?.width !== column2?.width;
 }
 
 export function checkOrTransformKanbanConfig(

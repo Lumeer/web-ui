@@ -31,7 +31,6 @@ import {KanbanStemConfigComponent} from './config/stem/kanban-stem-config.compon
 import {KanbanColumnComponent} from './columns/column/kanban-column.component';
 import {KanbanColumnHeaderComponent} from './columns/column/header/kanban-column-header.component';
 import {KanbanColumnFooterComponent} from './columns/column/footer/kanban-column-footer.component';
-import {KanbanColumnCardsPipe} from './pipes/kanban-column-cards.pipe';
 import {KanbanDragColumnsPipe} from './pipes/kanban-drag-columns.pipe';
 import {KanbanPostItDraggablePipe} from './pipes/kanban-post-it-draggable.pipe';
 import {FilterWritableResourcesPipe} from './pipes/filter-writable-resources.pipe';
@@ -49,8 +48,8 @@ import {KanbanValueTypeSelectItemsPipe} from './pipes/kanban-value-type-select-i
 import {KanbanAggregateSelectItemsPipe} from './pipes/kanban-aggregate-select-items.pipe';
 import {KanbanCleanAttributePipe} from './pipes/kanban-clean-attribute.pipe';
 import {PostItModule} from '../../../shared/post-it/post-it.module';
-import {KanbanHeaderSummariesPipe} from './pipes/kanban-header-summary.pipe';
 import {KanbanAggregationDefinedPipe} from './pipes/kanban-aggregation-defined.pipe';
+import {KanbanContentComponent} from './kanban-content/kanban-content.component';
 
 @NgModule({
   declarations: [
@@ -61,7 +60,6 @@ import {KanbanAggregationDefinedPipe} from './pipes/kanban-aggregation-defined.p
     KanbanColumnComponent,
     KanbanColumnHeaderComponent,
     KanbanColumnFooterComponent,
-    KanbanColumnCardsPipe,
     KanbanDragColumnsPipe,
     KanbanPostItDraggablePipe,
     FilterWritableResourcesPipe,
@@ -75,8 +73,8 @@ import {KanbanAggregationDefinedPipe} from './pipes/kanban-aggregation-defined.p
     KanbanValueTypeSelectItemsPipe,
     KanbanAggregateSelectItemsPipe,
     KanbanCleanAttributePipe,
-    KanbanHeaderSummariesPipe,
     KanbanAggregationDefinedPipe,
+    KanbanContentComponent,
   ],
   imports: [
     SharedModule,

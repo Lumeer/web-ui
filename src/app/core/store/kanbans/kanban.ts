@@ -17,8 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintType} from '../../model/data/constraint';
-import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute, QueryResource} from '../../model/query-attribute';
@@ -51,16 +49,7 @@ export interface KanbanColumn {
   id: string;
   title?: any;
   width: number;
-  resourcesOrder: KanbanDataResource[];
   createdFromAttributes?: KanbanAttribute[];
-  constraintType?: ConstraintType;
-}
-
-export interface KanbanDataResource {
-  id: string;
-  attributeId?: string;
-  resourceType: AttributesResourceType;
-  stemIndex?: number;
 }
 
 export interface KanbanStemConfig {

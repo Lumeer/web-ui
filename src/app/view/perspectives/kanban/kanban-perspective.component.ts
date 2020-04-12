@@ -17,23 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  OnDestroy,
-  AfterViewInit,
-  ViewChild,
-  Renderer2,
-  ElementRef,
-} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
-import {map, mergeMap, pairwise, startWith, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {
+  distinctUntilChanged,
+  map,
+  mergeMap,
+  pairwise,
+  startWith,
+  switchMap,
+  take,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/kanban.state';
 import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
 import {View} from '../../../core/store/views/view';
@@ -46,9 +47,6 @@ import {
   selectDocumentsAndLinksByQuery,
   selectLinkTypesByQuery,
 } from '../../../core/store/common/permissions.selectors';
-import {CollapsibleSidebarComponent} from '../../../shared/collapsible-sidebar/collapsible-sidebar.component';
-import {KanbanColumnsComponent} from './columns/kanban-columns.component';
-import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformKanbanConfig} from './util/kanban.util';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -58,24 +56,15 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
-  styleUrls: ['./kanban-perspective.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewInit {
-  @ViewChild(CollapsibleSidebarComponent, {read: ElementRef})
-  public sidebarComponent: ElementRef;
-
-  @ViewChild(KanbanColumnsComponent, {read: ElementRef})
-  set content(content: ElementRef) {
-    this.kanbanColumnsComponent = content;
-    this.computeKanbansWidth();
-  }
-
-  private kanbanColumnsComponent: ElementRef;
-
+export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<KanbanConfig>;
   public currentView$: Observable<View>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
@@ -84,19 +73,17 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public query$: Observable<Query>;
   public constraintData$: Observable<ConstraintData>;
   public workspace$: Observable<Workspace>;
-
-  public sidebarOpened$ = new BehaviorSubject(false);
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   private subscriptions = new Subscription();
   private kanbanId: string;
 
-  constructor(private store$: Store<AppState>, private renderer: Renderer2) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initKanban();
     this.subscribeToQuery();
     this.subscribeData();
-    this.setupSidebar();
   }
 
   private initKanban() {
@@ -174,24 +161,10 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
-  }
-
-  private setupSidebar() {
-    this.store$
-      .pipe(select(selectCurrentView), withLatestFrom(this.store$.pipe(select(selectSidebarOpened))), take(1))
-      .subscribe(([currentView, sidebarOpened]) => this.openOrCloseSidebar(currentView, sidebarOpened));
-  }
-
-  private openOrCloseSidebar(view: View, opened: boolean) {
-    if (view) {
-      this.sidebarOpened$.next(opened);
-    } else {
-      this.sidebarOpened$.next(true);
-    }
-  }
-
-  public ngAfterViewInit() {
-    this.computeKanbansWidth();
+    this.permissions$ = this.collections$.pipe(
+      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
+      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
+    );
   }
 
   public ngOnDestroy() {
@@ -201,21 +174,6 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy, AfterViewI
   public onConfigChanged(config: KanbanConfig) {
     if (this.kanbanId) {
       this.store$.dispatch(new KanbansAction.SetConfig({kanbanId: this.kanbanId, config}));
-    }
-  }
-
-  public onSidebarToggle() {
-    setTimeout(() => this.computeKanbansWidth());
-
-    const opened = !this.sidebarOpened$.getValue();
-    this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
-    this.sidebarOpened$.next(opened);
-  }
-
-  private computeKanbansWidth() {
-    if (this.kanbanColumnsComponent) {
-      const sidebarWidth = this.sidebarComponent?.nativeElement?.offsetWidth || 0;
-      this.renderer.setStyle(this.kanbanColumnsComponent.nativeElement, 'width', `calc(100% - ${sidebarWidth}px)`);
     }
   }
 

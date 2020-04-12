@@ -22,25 +22,21 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
   QueryList,
-  SimpleChanges,
   ViewChildren,
 } from '@angular/core';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanAttribute, KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanColumn} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Observable} from 'rxjs';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {distinctUntilChanged} from 'rxjs/operators';
-import {deepObjectsEquals, isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isArray, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../core/constants';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
@@ -63,6 +59,8 @@ import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {groupLinkInstancesByLinkTypes} from '../../../../core/store/link-instances/link-instance.utils';
+import {KanbanData} from '../util/kanban-data';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'kanban-columns',
@@ -71,7 +69,7 @@ import {groupLinkInstancesByLinkTypes} from '../../../../core/store/link-instanc
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
+export class KanbanColumnsComponent implements OnInit, OnDestroy {
   @ViewChildren('kanbanColumn')
   public columns: QueryList<KanbanColumnComponent>;
 
@@ -79,7 +77,7 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public collections: Collection[];
 
   @Input()
-  public config: KanbanConfig;
+  public kanbanData: KanbanData;
 
   @Input()
   public documents: DocumentModel[];
@@ -94,6 +92,9 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public canManageConfig: boolean;
 
   @Input()
+  public permissions: Record<string, AllowedPermissions>;
+
+  @Input()
   public query: Query;
 
   @Input()
@@ -103,13 +104,15 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   public workspace: Workspace;
 
   @Output()
-  public configChange = new EventEmitter<KanbanConfig>();
+  public columnsMoved = new EventEmitter<{previousIndex: number; currentIndex: number}>();
+
+  @Output()
+  public columnRemove = new EventEmitter<KanbanColumn>();
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
 
   public readonly dragDelay = DRAG_DELAY;
-  public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   private unknownConstraint: Constraint = new UnknownConstraint();
 
@@ -124,33 +127,18 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
     this.toggleService.setWorkspace(this.workspace);
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collections) {
-      this.permissions$ = this.collectionsPermissionsPipe
-        .transform(this.collections)
-        .pipe(distinctUntilChanged((x, y) => deepObjectsEquals(x, y)));
-    }
-  }
-
   public dropColumn(event: CdkDragDrop<string[]>) {
     if (event.previousIndex === event.currentIndex) {
       return;
     }
-
-    const columns = [...this.config.columns];
-    moveItemInArray(columns, event.previousIndex, event.currentIndex);
-
-    const newConfig = {...this.config, columns};
-    this.configChange.next(newConfig);
+    this.columnsMoved.emit({previousIndex: event.previousIndex, currentIndex: event.currentIndex});
+    //TODO
+    // const columns = [...this.config.columns];
+    // moveItemInArray(columns, event.previousIndex, event.currentIndex);
   }
 
   public trackByColumn(index: number, column: KanbanColumn): string {
     return column.title || '';
-  }
-
-  public onColumnsChange(data: {columns: KanbanColumn[]; otherColumn: KanbanColumn}) {
-    const config = {...this.config, columns: data.columns, otherColumn: data.otherColumn};
-    this.configChange.next(config);
   }
 
   public createObjectInResource(resourceCreate: KanbanResourceCreate, column: KanbanColumn) {
@@ -288,9 +276,10 @@ export class KanbanColumnsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onRemoveColumn(column: KanbanColumn) {
-    const filteredColumns = (this.config.columns || []).filter(col => col.id !== column.id);
-    const config = {...this.config, columns: filteredColumns};
-    this.configChange.next(config);
+    this.columnRemove.emit(column); // TODO
+    // const filteredColumns = (this.config.columns || []).filter(col => col.id !== column.id);
+    // const config = {...this.config, columns: filteredColumns};
+    // this.configChange.next(config);
   }
 
   public onToggleFavorite(document: DocumentModel) {

@@ -1,49 +1,14 @@
-<ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else notDisplayable">
-
-  <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async, linkTypes: linkTypes$ | async,
-                canManageConfig: currentView$ | async | canManageConfig | async, documentsAndLinks: documentsAndLinks$ | async, query: query$ | async,
-                constraintData: constraintData$ | async} as data">
-
-    <collapsible-sidebar *ngIf="data.canManageConfig"
-                         [collapsed]="!(sidebarOpened$ | async)"
-                         (toggle)="onSidebarToggle()">
-      <kanban-config
-        class="d-block m-3"
-        [collections]="data.collections"
-        [linkTypes]="data.linkTypes"
-        [documents]="data.documentsAndLinks.documents"
-        [linkInstances]="data.documentsAndLinks.linkInstances"
-        [config]="data.config"
-        [query]="data.query"
-        [visible]="sidebarOpened$ | async"
-        (configChange)="onConfigChanged($event)"
-        [constraintData]="data.constraintData">
-      </kanban-config>
-    </collapsible-sidebar>
-
-    <kanban-columns
-      class="flex-grow-1 h-100"
-      [collections]="data.collections"
-      [documents]="data.documentsAndLinks.documents"
-      [linkTypes]="data.linkTypes"
-      [linkInstances]="data.documentsAndLinks.linkInstances"
-      [config]="data.config"
-      [query]="data.query"
-      [canManageConfig]="data.canManageConfig"
-      [constraintData]="data.constraintData"
-      [workspace]="workspace$ | async"
-      (configChange)="onConfigChanged($event)"
-      (patchDocumentData)="patchDocumentData($event)">
-
-    </kanban-columns>
-
-  </ng-container>
-
-
+<ng-container *ngIf="{documentsAndLinks: documentsAndLinks$ | async} as data">
+  <kanban-content [config]="config$ | async"
+                  [collections]="collections$ | async"
+                  [linkTypes]="linkTypes$ | async"
+                  [documents]="data.documentsAndLinks.documents"
+                  [constraintData]="constraintData$ | async"
+                  [canManageConfig]="currentView$ | async | canManageConfig | async"
+                  [query]="query$ | async"
+                  [permissions]="permissions$ | async"
+                  [workspace]="workspace$ | async"
+                  [linkInstances]="data.documentsAndLinks.linkInstances"
+                  (configChange)="onConfigChanged($event)">
+  </kanban-content>
 </ng-container>
-
-<ng-template #notDisplayable>
-  <invalid-query class="w-100"
-                 [minStems]="1">
-  </invalid-query>
-</ng-template>

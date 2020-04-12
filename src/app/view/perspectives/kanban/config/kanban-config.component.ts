@@ -17,22 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {KanbanAggregation, KanbanConfig, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {KanbanConverter} from '../util/kanban-converter';
-import {
-  checkOrTransformKanbanConfig,
-  createDefaultKanbanStemConfig,
-  isKanbanAggregationDefined,
-} from '../util/kanban.util';
-import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {createDefaultKanbanStemConfig, isKanbanAggregationDefined} from '../util/kanban.util';
+import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {SliderItem} from '../../../../shared/slider/values/slider-item';
 import {SizeType} from '../../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
@@ -42,18 +34,12 @@ import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
   templateUrl: './kanban-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanConfigComponent implements OnChanges {
+export class KanbanConfigComponent {
   @Input()
   public collections: Collection[];
 
   @Input()
   public linkTypes: LinkType[];
-
-  @Input()
-  public documents: DocumentModel[];
-
-  @Input()
-  public linkInstances: LinkInstance[];
 
   @Input()
   public config: KanbanConfig;
@@ -70,8 +56,6 @@ export class KanbanConfigComponent implements OnChanges {
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();
 
-  private readonly converter: KanbanConverter;
-
   public readonly defaultStemConfig = createDefaultKanbanStemConfig();
   public readonly cardLayoutSliderItems: SliderItem[] = [
     {id: PostItLayoutType.Quarter, title: '1:4'},
@@ -79,30 +63,6 @@ export class KanbanConfigComponent implements OnChanges {
     {id: PostItLayoutType.Half, title: '1:2'},
     {id: PostItLayoutType.Even, title: '1:1'},
   ];
-
-  constructor(private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
-    this.converter = new KanbanConverter(constraintItemsFormatter);
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents || changes.collections || changes.linkTypes || changes.constraintData || changes.query) {
-      this.checkConfigColumns();
-    }
-  }
-
-  private checkConfigColumns() {
-    const config = this.converter.buildKanbanConfig(
-      checkOrTransformKanbanConfig(this.config, this.query, this.collections, this.linkTypes),
-      this.collections,
-      this.linkTypes,
-      this.documents,
-      this.linkInstances,
-      this.constraintData
-    );
-    if (!deepObjectsEquals(config, this.config)) {
-      setTimeout(() => this.configChange.emit(config));
-    }
-  }
 
   public trackByStem(index: number, stem: QueryStem): string {
     return stem.collectionId + index;
@@ -120,27 +80,11 @@ export class KanbanConfigComponent implements OnChanges {
       delete newConfig.aggregation;
     }
 
-    if (data.shouldRebuildConfig) {
-      this.rebuildConfigChange(newConfig);
-    } else {
-      this.configChange.emit(newConfig);
-    }
-  }
-
-  private rebuildConfigChange(newConfig: KanbanConfig) {
-    const config = this.converter.buildKanbanConfig(
-      newConfig,
-      this.collections,
-      this.linkTypes,
-      this.documents,
-      this.linkInstances,
-      this.constraintData
-    );
-    this.configChange.emit(config);
+    this.configChange.emit(newConfig);
   }
 
   public onColumnSizeChanged(sizeType: SizeType) {
-    this.rebuildConfigChange({...this.config, columnSize: sizeType});
+    this.configChange.emit({...this.config, columnSize: sizeType});
   }
 
   public onCardLayoutChanged(item: SliderItem) {
