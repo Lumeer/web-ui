@@ -1,6 +1,5 @@
 <ng-container *ngIf="linkTypes$ | async as linkTypes">
   <ng-container *ngIf="linkTypes.length > 0">
-    <h5 i18n="@@shared.links.title">Links to other records</h5>
     <links-list-tabs
       [linkTypes]="linkTypes"
       [selectedLinkType]="selectedLinkType$ | async"

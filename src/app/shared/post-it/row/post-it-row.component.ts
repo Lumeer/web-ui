@@ -52,7 +52,7 @@ import {DataInputConfiguration} from '../../data-input/data-input-configuration'
   styleUrls: ['./post-it-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItRowComponent implements DataRowComponent, OnChanges, AfterViewInit {
+export class PostItRowComponent implements DataRowComponent, OnChanges {
   @Input()
   public row: DataRow;
 
@@ -88,12 +88,6 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
 
   @Output()
   public resetFocusAndEdit = new EventEmitter<number>();
-
-  @ViewChild('wrapperElement', {read: ElementRef})
-  public wrapperElement: ElementRef;
-
-  @ViewChild('iconsElement', {read: ElementRef})
-  public iconsElement: ElementRef;
 
   @HostBinding('class.key-focused')
   public keyFocused: boolean;
@@ -316,21 +310,5 @@ export class PostItRowComponent implements DataRowComponent, OnChanges, AfterVie
 
   public onValueEdit(value: DataValue) {
     this.editedValue = value;
-  }
-
-  @HostListener('window:resize')
-  public onWindowResize() {
-    this.computeWidth();
-  }
-
-  public ngAfterViewInit() {
-    this.computeWidth();
-  }
-
-  private computeWidth() {
-    const iconsWidth = (this.iconsElement && this.iconsElement.nativeElement.clientWidth) || 0;
-    if (this.wrapperElement) {
-      this.renderer.setStyle(this.wrapperElement.nativeElement, 'width', `calc(100% - ${iconsWidth}px - 0.25rem)`);
-    }
   }
 }
