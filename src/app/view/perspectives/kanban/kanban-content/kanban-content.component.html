@@ -21,12 +21,18 @@
     [documents]="documents"
     [linkTypes]="linkTypes"
     [linkInstances]="linkInstances"
+    [config]="config"
     [kanbanData]="kanbanData"
     [permissions]="permissions"
     [query]="query"
     [canManageConfig]="canManageConfig"
     [constraintData]="constraintData"
-    [workspace]="workspace">
+    [workspace]="workspace"
+    (patchDocumentData)="patchDocumentData($event)"
+    (patchLinkInstanceData)="patchLinkInstanceData($event)"
+    (columnsMoved)="onColumnMoved($event)"
+    (columnRemove)="onColumnRemove($event)"
+    (columnsChange)="onColumnsChanged($event)">
 
   </kanban-columns>
 

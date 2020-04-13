@@ -11,36 +11,13 @@
     </div>
   </ng-container>
 
-  <div *ngSwitchCase="constraintTypes.Boolean" class="d-flex py-1">
-    <boolean-data-input class="px-3 py-1 flex-grow-1"
-                        [value]="column.title | dataValue : column.constraint"
-                        [readonly]="true">
-    </boolean-data-input>
-  </div>
-
-  <user-data-input *ngSwitchCase="constraintTypes.User"
-                   class="px-3 py-2 flex-grow-1"
-                   [value]="column.title | dataValue : column.constraint"
-                   [readonly]="true"
-                   [focus]="false">
-  </user-data-input>
-
-  <select-data-input *ngSwitchCase="constraintTypes.Select"
-                     class="px-3 py-2 flex-grow-1"
-                     [value]="column.title | dataValue : column.constraint"
-                     [readonly]="true"
-                     [focus]="false">
-  </select-data-input>
-
-  <div *ngSwitchCase="constraintTypes.Text" class="px-3 py-2 text-truncate flex-grow-1"
-       [innerHTML]="column.title | stripHtml">
-  </div>
-
   <ng-container *ngSwitchDefault>
     <ng-container *ngIf="column.title; else otherTitle">
-      <div class="px-3 py-2 text-truncate flex-grow-1" [title]="column.title">
-        <span class="font-weight-bold">{{column.title}}</span>
-      </div>
+      <data-input-preview class="px-3 py-2 text-truncate flex-grow-1 font-weight-bold"
+                          [dataValue]="column.title | dataValue:column.constraint:constraintData"
+                          [constraint]="column.constraint"
+                          [configuration]="dataInputConfiguration">
+      </data-input-preview>
     </ng-container>
   </ng-container>
 
@@ -54,7 +31,7 @@
 
 <data-input-preview *ngIf="!(column.summary | isNullOrUndefined)"
                     class="align-self-center flex-fill text-right small text-muted mr-3 overflow-hidden"
-                    [configuration]="summaryConfiguration"
+                    [configuration]="dataInputConfiguration"
                     [dataValue]="column.summary | dataValue:null">
 </data-input-preview>
 

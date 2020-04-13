@@ -8,30 +8,32 @@
                    [cdkDragStartDelay]="dragDelay"
                    class="column ml-3"
                    [column]="column"
-                   [config]="kanbanData"
+                   [postItLayout]="config?.cardLayout"
+                   [kanbanData]="kanbanData"
                    [dragColumnsIds]="column | kanbanDragColumns:kanbanData.columns"
-                   [createResources]="[]"
                    [canManageConfig]="canManageConfig"
                    [query]="query"
                    [constraintData]="constraintData"
-                   (createResource)="createObjectInResource($event, column)"
-                   (updateDocument)="onUpdateDocument($event)"
+                   (createDataResource)="onCreateDataResource($event, column)"
+                   (updateDataResource)="onUpdateDataResource($event)"
                    (removeColumn)="onRemoveColumn(column)"
-                   (toggleFavorite)="onToggleFavorite($event)">
+                   (toggleFavorite)="onToggleFavorite($event)"
+                   (columnsChange)="columnsChange.emit($event)">
     </kanban-column>
 
     <kanban-column *ngIf="kanbanData.otherColumn?.cards?.length > 0"
                    class="column ml-3" #kanbanColumn
                    [column]="kanbanData.otherColumn"
-                   [config]="kanbanData"
+                   [kanbanData]="kanbanData"
+                   [postItLayout]="config?.cardLayout"
                    [dragColumnsIds]="kanbanData.otherColumn | kanbanDragColumns:kanbanData.columns"
                    [canManageConfig]="canManageConfig"
-                   [createResources]="[]"
                    [query]="query"
                    [constraintData]="constraintData"
-                   (createResource)="createObjectInResource($event, kanbanData.otherColumn)"
-                   (updateDocument)="onUpdateDocument($event)"
-                   (toggleFavorite)="onToggleFavorite($event)">
+                   (createDataResource)="onCreateDataResource($event, kanbanData.otherColumn)"
+                   (updateDataResource)="onUpdateDataResource($event)"
+                   (toggleFavorite)="onToggleFavorite($event)"
+                   (columnsChange)="columnsChange.emit($event)">
     </kanban-column>
   </div>
 </div>

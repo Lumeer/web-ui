@@ -27,9 +27,10 @@ import {
   SimpleChanges,
   OnInit,
   SimpleChange,
+  OnDestroy,
 } from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanColumn, KanbanConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
@@ -38,16 +39,19 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {KanbanConverter} from '../util/kanban-converter';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {selectCurrentView, selectSidebarOpened} from '../../../../core/store/views/views.state';
-import {debounceTime, filter, map, take, tap, withLatestFrom} from 'rxjs/operators';
+import {debounceTime, filter, map, take, withLatestFrom} from 'rxjs/operators';
 import {View} from '../../../../core/store/views/view';
 import {checkOrTransformKanbanConfig, isKanbanConfigChanged} from '../util/kanban.util';
-import {KanbanData} from '../util/kanban-data';
+import {KanbanData, KanbanDataColumn} from '../util/kanban-data';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 
 interface Data {
   collections: Collection[];
@@ -66,7 +70,7 @@ interface Data {
   styleUrls: ['./kanban-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanContentComponent implements OnInit, OnChanges {
+export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public collections: Collection[];
 
@@ -103,9 +107,11 @@ export class KanbanContentComponent implements OnInit, OnChanges {
   private readonly converter: KanbanConverter;
 
   public sidebarOpened$ = new BehaviorSubject(false);
-  public data$: Observable<KanbanData>;
+  public data$ = new BehaviorSubject<KanbanData>(null);
 
   private dataSubject = new BehaviorSubject<Data>(null);
+  private subscriptions = new Subscription();
+  private currentConfig: KanbanConfig;
 
   constructor(private store$: Store<AppState>, private constraintItemsFormatter: SelectItemWithConstraintFormatter) {
     this.converter = new KanbanConverter(constraintItemsFormatter);
@@ -113,17 +119,23 @@ export class KanbanContentComponent implements OnInit, OnChanges {
 
   public ngOnInit() {
     this.setupSidebar();
-    this.data$ = this.subscribeData$();
+    this.subscribeData();
   }
 
-  private subscribeData$(): Observable<KanbanData> {
-    return this.dataSubject.pipe(
-      filter(data => !!data),
-      debounceTime(100),
-      map(data => this.handleData(data)),
-      tap(data => this.configChange.emit(data.config)),
-      map(data => data.data)
-    );
+  private subscribeData() {
+    const subscription = this.dataSubject
+      .pipe(
+        filter(data => !!data),
+        debounceTime(100),
+        map(data => this.handleData(data))
+      )
+      .subscribe(data => {
+        this.currentConfig = data.config;
+        this.configChange.emit(data.config);
+        this.data$.next(data.data);
+      });
+
+    this.subscriptions.add(subscription);
   }
 
   private handleData(data: Data): {config: KanbanConfig; data: KanbanData} {
@@ -161,16 +173,14 @@ export class KanbanContentComponent implements OnInit, OnChanges {
   }
 
   private configChanged(change: SimpleChange): boolean {
-    const previousConfig: KanbanConfig = change.previousValue && {...change.previousValue};
-    const currentConfig: KanbanConfig = change.currentValue && {...change.currentValue};
-
-    return isKanbanConfigChanged(previousConfig, currentConfig);
+    return change.currentValue && isKanbanConfigChanged(this.currentConfig, change.currentValue);
   }
 
   public onConfigChanged(config: KanbanConfig, rebuild = false) {
     if (rebuild) {
       this.rebuildConfig(config);
     } else {
+      this.currentConfig = config;
       this.configChange.emit(config);
     }
   }
@@ -206,5 +216,55 @@ export class KanbanContentComponent implements OnInit, OnChanges {
     const opened = !this.sidebarOpened$.getValue();
     this.store$.dispatch(new ViewsAction.SetSidebarOpened({opened}));
     this.sidebarOpened$.next(opened);
+  }
+
+  public onColumnMoved(event: {previousIndex: number; currentIndex: number}) {
+    this.handleDataColumnsMove(event);
+    this.handleConfigColumnsMove(event);
+  }
+
+  private handleDataColumnsMove(event: {previousIndex: number; currentIndex: number}) {
+    const columns = [...this.data$.value.columns];
+    moveItemInArray(columns, event.previousIndex, event.currentIndex);
+    this.data$.next({...this.data$.value, columns});
+  }
+
+  private handleConfigColumnsMove(event: {previousIndex: number; currentIndex: number}) {
+    const columns = [...this.config.columns];
+    moveItemInArray(columns, event.previousIndex, event.currentIndex);
+    this.onConfigChanged({...this.config, columns});
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
+  public onColumnRemove(column: KanbanColumn) {
+    this.handleDataColumnRemove(column);
+    this.handleConfigColumnRemove(column);
+  }
+
+  private handleDataColumnRemove(column: KanbanColumn) {
+    const filteredColumns = (this.data$.value.columns || []).filter(col => col.id !== column.id);
+    const newData = {...this.data$.value, columns: filteredColumns};
+    this.data$.next(newData);
+  }
+
+  private handleConfigColumnRemove(column: KanbanColumn) {
+    const filteredColumns = (this.config.columns || []).filter(col => col.id !== column.id);
+    const config = {...this.config, columns: filteredColumns};
+    this.onConfigChanged(config);
+  }
+
+  public onColumnsChanged(data: {columns: KanbanDataColumn[]; otherColumn: KanbanDataColumn}) {
+    this.data$.next({...this.data$.value, ...data});
+  }
+
+  public patchDocumentData(document: DocumentModel) {
+    this.store$.dispatch(new DocumentsAction.PatchData({document}));
+  }
+
+  public patchLinkInstanceData(linkInstance: LinkInstance) {
+    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
   }
 }

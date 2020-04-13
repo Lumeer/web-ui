@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {KanbanConfig} from '../../../../../../core/store/kanbans/kanban';
-import {ConstraintType} from '../../../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../../../../core/model/data/constraint';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
 import {KanbanDataColumn} from '../../../util/kanban-data';
 
@@ -36,12 +36,15 @@ export class KanbanColumnHeaderComponent {
   @Input()
   public column: KanbanDataColumn;
 
+  @Input()
+  public constraintData: ConstraintData;
+
   @Output()
   public remove = new EventEmitter();
 
   public readonly constraintTypes = ConstraintType;
 
-  public readonly summaryConfiguration: DataInputConfiguration = {common: {inline: true}};
+  public readonly dataInputConfiguration: DataInputConfiguration = {common: {inline: true}};
 
   public onRemove() {
     this.remove.emit();

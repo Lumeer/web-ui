@@ -20,7 +20,7 @@
 import {Constraint} from '../../../../core/model/constraint';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {Collection} from '../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   KanbanAggregation,
@@ -50,8 +50,7 @@ import {
   DataAggregatorAttribute,
 } from '../../../../shared/utils/data/data-aggregator';
 import {cleanKanbanAttribute, isKanbanAggregationDefined} from './kanban.util';
-import {DataValue} from '../../../../core/model/data-value';
-import {KanbanCard, KanbanData, KanbanDataColumn} from './kanban-data';
+import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from './kanban-data';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
@@ -97,6 +96,7 @@ export class KanbanConverter {
     const {columnsMap, otherColumn} = this.groupDataByColumns(config, permissions);
 
     const data = createKanbanData(config, columnsMap, otherColumn, collections, linkTypes);
+    this.fillCreateResources(config, data, permissions);
     return {data, config: pickKanbanConfigFromData(config, data)};
   }
 
@@ -127,7 +127,7 @@ export class KanbanConverter {
       this.collections,
       this.linkTypes
     );
-    const otherColumn: Partial<KanbanDataColumn> = {cards: [], createdFromAttributes: []};
+    const otherColumn: Partial<KanbanDataColumn> = {cards: [], createdFromAttributes: [], createResources: []};
     const linkTypesMap = objectsByIdMap(this.linkTypes);
     const columnsAggregated: Record<string, AggregatedColumnData> = {};
     const otherAggregated: AggregatedColumnData = {count: 0, values: []};
@@ -139,6 +139,7 @@ export class KanbanConverter {
         continue;
       }
 
+      const constraint = this.checkOverrideConstraint(attribute, stemConfig.attribute);
       const aggregationConstraint =
         stemConfig.aggregation &&
         findConstraintByQueryAttribute(stemConfig.aggregation, this.collections, this.linkTypes);
@@ -162,8 +163,9 @@ export class KanbanConverter {
         ? {
             resourceIndex: stemConfig.resource.resourceIndex,
             attributeId: null,
+            unique: true,
           }
-        : {...rowAttribute, unique: false};
+        : {...rowAttribute};
 
       const resource = createKanbanCardResource(
         stemConfig.resource || stemConfig.attribute,
@@ -177,78 +179,91 @@ export class KanbanConverter {
       );
       const resourceType = stemConfig.resource?.resourceType || stemConfig.attribute.resourceType;
 
-      const aggregatedData = this.dataAggregator.aggregateArray([rowAttribute], [valueAttribute]);
+      const aggregatedData = this.dataAggregator.aggregateArray([rowAttribute, valueAttribute], []);
 
       for (const aggregatedDataItem of aggregatedData.items) {
-        const aggregatedDataValues: AggregatedDataValues[] = aggregatedDataItem.values || [];
-        const dataResources = aggregatedDataValues[0]?.objects || [];
-        const dataResourcesChain = aggregatedDataItem.dataResourcesChains[0] || [];
+        const firstChain = aggregatedDataItem.dataResourcesChains[0] || [];
         const title = aggregatedDataItem.value;
+        for (const childItem of aggregatedDataItem.children || []) {
+          const dataResources = childItem.dataResources || [];
+          const dataResourcesChain = stemConfig.resource
+            ? [...firstChain, ...(childItem.dataResourcesChains[0] || [])]
+            : firstChain;
 
-        if (isNotNullOrUndefined(title) && String(title).trim() !== '') {
-          const createdByAttribute = cleanKanbanAttribute(stemConfig.attribute);
-          const stringValue = title.toString();
+          if (isNotNullOrUndefined(title) && String(title).trim() !== '') {
+            const createdByAttribute = cleanKanbanAttribute(stemConfig.attribute);
+            const stringValue = title.toString();
 
-          let columnData: Partial<KanbanDataColumn> = columnsMap[stringValue];
-          if (!columnData) {
-            columnData = {
-              cards: [],
-              createdFromAttributes: [],
-              constraint: attribute?.constraint,
-            };
-            columnsMap[stringValue] = columnData;
-          }
-
-          columnData.constraint = columnData.constraint || attribute.constraint;
-          if (!kanbanAttributesIncludesAttribute(columnData.createdFromAttributes, createdByAttribute)) {
-            columnData.createdFromAttributes.push(createdByAttribute);
-          }
-
-          columnData.cards.push(
-            ...dataResources.map(dataResource => ({
-              dueHours: getDueHours(dataResource, resource, stemConfig),
-              dataResource,
-              resource,
-              resourceType,
-              stemIndex,
-              permissions: resourcePermissions,
-              dataResourcesChain,
-            }))
-          );
-          if (stemConfig.aggregation) {
-            if (!columnsAggregated[stringValue]) {
-              columnsAggregated[stringValue] = {count: 0, values: [], constraint: null};
+            let columnData: Partial<KanbanDataColumn> = columnsMap[stringValue];
+            if (!columnData) {
+              columnData = {
+                cards: [],
+                createdFromAttributes: [],
+                createResources: [],
+                constraint,
+              };
+              columnsMap[stringValue] = columnData;
             }
-            this.fillAggregatedMap(columnsAggregated[stringValue], dataResources, stemConfig);
-            columnsAggregated[stringValue].constraint =
-              columnsAggregated[stringValue].constraint || aggregationConstraint;
-          }
-        } else {
-          otherColumn.cards.push(
-            ...dataResources.map(dataResource => ({
-              dueHours: getDueHours(dataResource, resource, stemConfig),
-              dataResource,
-              resource,
-              resourceType,
-              stemIndex,
-              permissions: resourcePermissions,
-              dataResourcesChain,
-            }))
-          );
-          if (stemConfig.aggregation) {
-            this.fillAggregatedMap(otherAggregated, dataResources, stemConfig);
-            otherAggregated.constraint = otherAggregated.constraint || aggregationConstraint;
+
+            columnData.constraint = columnData.constraint || constraint;
+            if (!kanbanAttributesIncludesAttribute(columnData.createdFromAttributes, createdByAttribute)) {
+              columnData.createdFromAttributes.push(createdByAttribute);
+            }
+
+            columnData.cards.push(
+              ...dataResources.map(dataResource => ({
+                dueHours: getDueHours(dataResource, resource, stemConfig),
+                dataResource,
+                resource,
+                resourceType,
+                stemIndex,
+                permissions: resourcePermissions,
+                dataResourcesChain,
+              }))
+            );
+            if (stemConfig.aggregation) {
+              if (!columnsAggregated[stringValue]) {
+                columnsAggregated[stringValue] = {count: 0, values: [], constraint: null};
+              }
+              this.fillAggregatedMap(columnsAggregated[stringValue], dataResources, stemConfig);
+              columnsAggregated[stringValue].constraint =
+                columnsAggregated[stringValue].constraint || aggregationConstraint;
+            }
+          } else {
+            otherColumn.cards.push(
+              ...dataResources.map(dataResource => ({
+                dueHours: getDueHours(dataResource, resource, stemConfig),
+                dataResource,
+                resource,
+                resourceType,
+                stemIndex,
+                permissions: resourcePermissions,
+                dataResourcesChain,
+              }))
+            );
+            if (stemConfig.aggregation) {
+              this.fillAggregatedMap(otherAggregated, dataResources, stemConfig);
+              otherAggregated.constraint = otherAggregated.constraint || aggregationConstraint;
+            }
           }
         }
       }
     }
     if (isKanbanAggregationDefined(config)) {
-      this.injectSummaries(config, columnsMap, otherColumn, columnsAggregated, otherAggregated);
+      this.fillSummaries(config, columnsMap, otherColumn, columnsAggregated, otherAggregated);
     }
     return {columnsMap, otherColumn};
   }
 
-  private injectSummaries(
+  private checkOverrideConstraint(attribute: Attribute, kanbanAttribute: KanbanAttribute): Constraint {
+    const kanbanConstraint = kanbanAttribute?.constraint;
+    const overrideConstraint =
+      kanbanConstraint &&
+      this.constraintItemsFormatter.checkValidConstraintOverride(attribute?.constraint, kanbanConstraint);
+    return overrideConstraint || attribute?.constraint || new UnknownConstraint();
+  }
+
+  private fillSummaries(
     config: KanbanConfig,
     columnsMap: Record<string, Partial<KanbanDataColumn>>,
     otherColumn: Partial<KanbanDataColumn>,
@@ -305,17 +320,71 @@ export class KanbanConverter {
     const overrideConstraint =
       kanbanConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanConstraint);
     const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
-    return this.formatDataValue(finalConstraint.createDataValue(value, constraintData), finalConstraint);
+    return finalConstraint.createDataValue(value, constraintData).serialize();
   }
 
-  private formatDataValue(dataValue: DataValue, constraint: Constraint): any {
-    switch (constraint.type) {
-      case ConstraintType.User:
-      case ConstraintType.Select:
-        return dataValue.serialize();
-      default:
-        return dataValue.format();
+  private fillCreateResources(config: KanbanConfig, data: KanbanData, permissions: Record<string, AllowedPermissions>) {
+    const createResources = this.getAllCreateResources(config, permissions);
+    data.columns.forEach(column => this.fillCreateResourcesColumn(column, createResources));
+    this.fillCreateResourcesColumn(data.otherColumn, createResources);
+  }
+
+  private fillCreateResourcesColumn(column: KanbanDataColumn, createResources: KanbanCreateResource[]) {
+    column.createResources = createResources.filter(createResource =>
+      this.columnCanCreateResource(column, createResource)
+    );
+  }
+
+  private columnCanCreateResource(column: KanbanDataColumn, createResource: KanbanCreateResource): boolean {
+    if (column.createdFromAttributes.some(attribute => deepObjectsEquals(attribute, createResource.kanbanAttribute))) {
+      return true;
     }
+    if (createResource.kanbanAttribute.resourceId !== createResource.resource.id) {
+      return false;
+    }
+    const resourceConstraint =
+      findAttributeConstraint(createResource.resource.attributes, createResource.kanbanAttribute.attributeId) ||
+      new UnknownConstraint();
+    return (
+      resourceConstraint?.type === column.constraint?.type &&
+      this.constraintCanContainValue(resourceConstraint, column.title)
+    );
+  }
+
+  private constraintCanContainValue(constraint: Constraint, value: any): boolean {
+    switch (constraint.type) {
+      case ConstraintType.Select:
+        const values = (<SelectConstraint>constraint).config?.options?.map(option => option.value) || [];
+        return values.includes(value);
+      default:
+        return true;
+    }
+  }
+
+  private getAllCreateResources(
+    config: KanbanConfig,
+    permissions: Record<string, AllowedPermissions>
+  ): KanbanCreateResource[] {
+    const linkTypesMap = objectsByIdMap(this.linkTypes);
+    return (config?.stemsConfigs || []).reduce((resources, stemConfig, stemIndex) => {
+      const kanbanAttribute = stemConfig.attribute;
+      if (kanbanAttribute) {
+        const resource = createKanbanCardResource(
+          stemConfig.resource || stemConfig.attribute,
+          this.collections,
+          this.linkTypes
+        );
+        const resourcePermissions = queryAttributePermissions(
+          stemConfig.attribute || stemConfig.attribute,
+          permissions,
+          linkTypesMap
+        );
+        if (resourcePermissions.writeWithView && resource) {
+          resources.push({resource, kanbanAttribute, stemIndex});
+        }
+      }
+      return resources;
+    }, []);
   }
 }
 
@@ -398,7 +467,7 @@ function createInitialColumnsMap(
         .reduce(
           (map, value) => ({
             ...map,
-            [value]: {cards: [], createdFromAttributes: []},
+            [value]: {cards: [], createdFromAttributes: [firstAttribute], createResources: [], constraint},
           }),
           {}
         );
@@ -450,7 +519,10 @@ function createKanbanData(
           title,
           width: getColumnSizeTypeWidth(currentConfig.columnSize),
           cards,
-          createdFromAttributes: createdFromAttributes || currentColumn.createdFromAttributes,
+          createdFromAttributes: mergeKanbanAttributes(
+            createdFromAttributes || [],
+            currentColumn.createdFromAttributes
+          ),
           constraint:
             constraint || constraintForKanbanAttributes(currentColumn.createdFromAttributes, collections, linkTypes),
           summary,
@@ -484,6 +556,13 @@ function createKanbanData(
       width: getColumnSizeTypeWidth(currentConfig?.columnSize),
     },
   };
+}
+
+function mergeKanbanAttributes(attributes: KanbanAttribute[], otherAttributes: KanbanAttribute[]): KanbanAttribute[] {
+  return [
+    ...attributes,
+    ...(otherAttributes || []).filter(attribute => !kanbanAttributesIncludesAttribute(attributes, attribute)),
+  ];
 }
 
 function constraintForKanbanAttributes(
@@ -530,11 +609,7 @@ function isColumnValid(
     return true;
   }
 
-  if ((attributes || []).every(attribute => selectedAttributeIsInvalid(title, attribute, collections, linkTypes))) {
-    return false;
-  }
-
-  return true;
+  return !(attributes || []).every(attribute => selectedAttributeIsInvalid(title, attribute, collections, linkTypes));
 }
 
 function selectedAttributeIsInvalid(

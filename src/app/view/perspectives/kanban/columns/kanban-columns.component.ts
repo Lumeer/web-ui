@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanAttribute, KanbanColumn} from '../../../../core/store/kanbans/kanban';
+import {KanbanColumn, KanbanConfig, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 import {Query} from '../../../../core/store/navigation/query/query';
@@ -42,11 +42,11 @@ import {DRAG_DELAY} from '../../../../core/constants';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {KanbanResourceCreate} from './column/footer/kanban-column-footer.component';
 import {filterDocumentsAndLinksByStem} from '../../../../core/store/documents/documents.filters';
 import {generateDocumentData, groupDocumentsByCollection} from '../../../../core/store/documents/document.utils';
 import {
   getQueryFiltersForCollection,
+  getQueryFiltersForLinkType,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
@@ -55,12 +55,13 @@ import {KanbanColumnComponent} from './column/kanban-column.component';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {DocumentFavoriteToggleService} from '../../../../shared/toggle/document-favorite-toggle.service';
 import {Constraint} from '../../../../core/model/constraint';
-import {generateCorrelationId} from '../../../../shared/utils/resource.utils';
+import {generateCorrelationId, getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {groupLinkInstancesByLinkTypes} from '../../../../core/store/link-instances/link-instance.utils';
-import {KanbanData} from '../util/kanban-data';
+import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../util/kanban-data';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {AttributesResourceType} from '../../../../core/model/resource';
 
 @Component({
   selector: 'kanban-columns',
@@ -75,6 +76,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
   @Input()
   public collections: Collection[];
+
+  @Input()
+  public config: KanbanConfig;
 
   @Input()
   public kanbanData: KanbanData;
@@ -110,7 +114,13 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public columnRemove = new EventEmitter<KanbanColumn>();
 
   @Output()
+  public columnsChange = new EventEmitter<{columns: KanbanDataColumn[]; otherColumn: KanbanDataColumn}>();
+
+  @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
+
+  @Output()
+  public patchLinkInstanceData = new EventEmitter<LinkInstance>();
 
   public readonly dragDelay = DRAG_DELAY;
 
@@ -132,124 +142,190 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       return;
     }
     this.columnsMoved.emit({previousIndex: event.previousIndex, currentIndex: event.currentIndex});
-    //TODO
-    // const columns = [...this.config.columns];
-    // moveItemInArray(columns, event.previousIndex, event.currentIndex);
   }
 
   public trackByColumn(index: number, column: KanbanColumn): string {
     return column.title || '';
   }
 
-  public createObjectInResource(resourceCreate: KanbanResourceCreate, column: KanbanColumn) {
+  public onCreateDataResource(resourceCreate: KanbanCreateResource, column: KanbanColumn) {
+    const stemConfig = this.config?.stemsConfigs?.[resourceCreate.stemIndex];
+    if (stemConfig?.resource) {
+      // TODO with link
+    } else if (stemConfig?.attribute) {
+      this.createObjectInResource(resourceCreate, column);
+    }
+  }
+
+  public createObjectInResource(resourceCreate: KanbanCreateResource, column: KanbanColumn) {
     const previousDocuments = this.getPreviousDocumentByKanbanResource(resourceCreate);
     if (previousDocuments.length > 0) {
-      const linkTypeId = this.getPreviousLinkTypeIdByKanbanResource(resourceCreate);
+      const linkTypeId = this.getPreviousLinkType(resourceCreate)?.id;
       if (previousDocuments.length === 1) {
-        this.createDocument(resourceCreate.kanbanAttribute, column, previousDocuments[0], linkTypeId);
+        this.createDataResource(resourceCreate, column, previousDocuments[0], linkTypeId);
       } else {
-        this.showChooseDocumentModal(resourceCreate.kanbanAttribute, column, previousDocuments, linkTypeId);
+        this.showChooseDocumentModal(resourceCreate, column, previousDocuments, linkTypeId);
       }
-    } else {
-      this.createDocument(resourceCreate.kanbanAttribute, column);
+    } else if (resourceCreate.kanbanAttribute.resourceType === AttributesResourceType.Collection) {
+      this.createDataResource(resourceCreate, column);
     }
   }
 
   private showChooseDocumentModal(
-    kanbanAttribute: KanbanAttribute,
+    resourceCreate: KanbanCreateResource,
     column: KanbanColumn,
     documents: DocumentModel[],
     linkTypeId: string
   ) {
-    const callback = document => this.createDocument(kanbanAttribute, column, document, linkTypeId);
+    const callback = document => this.createDataResource(resourceCreate, column, document, linkTypeId);
     const documentIds = (documents || []).map(document => document.id);
     this.modalService.showChooseLinkDocument(documentIds, callback);
   }
 
-  private getPreviousDocumentByKanbanResource(resourceCreate: KanbanResourceCreate): DocumentModel[] {
+  private createDataResource(
+    createResource: KanbanCreateResource,
+    column: KanbanColumn,
+    linkDocument?: DocumentModel,
+    linkTypeId?: string
+  ) {
+    const {document, collection} = this.createDocumentData(createResource, column.title);
+    const {linkInstance = null, linkType = null} =
+      (linkTypeId && linkDocument && this.createLinkData(createResource, column.title)) || {};
+
+    const creatingDocument = getAttributesResourceType(createResource.resource) === AttributesResourceType.Collection;
+    const modalRef = creatingDocument
+      ? this.modalService.showDataResourceDetail(document, collection, false)
+      : this.modalService.showDataResourceDetail(linkInstance, linkType, false);
+
+    modalRef.content.onSubmit$.subscribe(modifiedDataResource => {
+      if (linkDocument && linkTypeId) {
+        this.store$.dispatch(
+          new DocumentsAction.CreateWithLink({
+            document: creatingDocument ? {...document, data: modifiedDataResource.data} : document,
+            otherDocumentId: linkDocument.id,
+            linkInstance: {
+              documentIds: [linkDocument.id, ''],
+              linkTypeId,
+              data: !creatingDocument ? modifiedDataResource.data : linkInstance.data,
+              correlationId: generateCorrelationId(),
+            },
+            onSuccess: documentId => this.onObjectCreated(documentId, column),
+          })
+        );
+      } else {
+        this.store$.dispatch(
+          new DocumentsAction.Create({
+            document: creatingDocument ? {...document, data: modifiedDataResource.data} : document,
+            onSuccess: documentId => this.onObjectCreated(documentId, column),
+          })
+        );
+      }
+    });
+  }
+
+  private getPreviousDocumentByKanbanResource(resourceCreate: KanbanCreateResource): DocumentModel[] {
     const {pipelineDocuments} = filterDocumentsAndLinksByStem(
       this.collections,
       groupDocumentsByCollection(this.documents),
       this.linkTypes,
       groupLinkInstancesByLinkTypes(this.linkInstances),
       this.constraintData,
-      resourceCreate.stem,
-      (this.query && this.query.fulltexts) || []
+      this.query.stems[resourceCreate.stemIndex],
+      this.query?.fulltexts || []
     );
-    const pipelineIndex = resourceCreate.kanbanAttribute.resourceIndex / 2;
-    return pipelineDocuments[pipelineIndex - 1] || [];
+    const pipelineIndex = Math.floor((resourceCreate.kanbanAttribute.resourceIndex - 1) / 2);
+    return pipelineDocuments[pipelineIndex] || [];
   }
 
-  private getPreviousLinkTypeIdByKanbanResource(resourceCreate: KanbanResourceCreate): string {
-    const attributesResourcesOrder = queryStemAttributesResourcesOrder(
-      resourceCreate.stem,
-      this.collections,
-      this.linkTypes
-    );
-    const linkType = attributesResourcesOrder[resourceCreate.kanbanAttribute.resourceIndex - 1];
-    return linkType && linkType.id;
-  }
-
-  private createDocument(
-    kanbanAttribute: KanbanAttribute,
-    column: KanbanColumn,
-    linkDocument?: DocumentModel,
-    linkTypeId?: string
-  ) {
-    const document = this.createDocumentWithData(kanbanAttribute, column.title);
-    if (linkDocument && linkTypeId) {
-      this.store$.dispatch(
-        new DocumentsAction.CreateWithLink({
-          document,
-          otherDocumentId: linkDocument.id,
-          linkInstance: {
-            documentIds: [linkDocument.id, ''],
-            linkTypeId,
-            data: {},
-            correlationId: generateCorrelationId(),
-          },
-          onSuccess: documentId => this.onDocumentCreated(documentId, column),
-        })
-      );
-    } else {
-      this.store$.dispatch(
-        new DocumentsAction.Create({
-          document,
-          onSuccess: documentId => this.onDocumentCreated(documentId, column),
-        })
-      );
-    }
-  }
-
-  private onDocumentCreated(id: string, column: KanbanColumn) {
-    this.modalService.showDocumentDetail(id);
+  private onObjectCreated(id: string, column: KanbanColumn) {
     const component = this.columns.find(cmp => cmp.column.id === column.id);
     component?.onDataResourceCreated(id);
   }
 
-  private createDocumentWithData(kanbanAttribute: KanbanAttribute, value: any): DocumentModel {
-    const collection = (this.collections || []).find(coll => coll.id === kanbanAttribute.resourceId);
-    const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
-    const data = generateDocumentData(collection, collectionsFilters, this.constraintData, false);
-    const constraint = findAttributeConstraint(collection.attributes, kanbanAttribute.attributeId);
-    data[kanbanAttribute.attributeId] = this.createValueByConstraint(constraint, value);
-    return {collectionId: collection.id, data};
+  private createLinkData(
+    createResource: KanbanCreateResource,
+    value: any
+  ): {linkType: LinkType; linkInstance: LinkInstance} {
+    const linkType = this.getPreviousLinkType(createResource);
+    const linkFilters = getQueryFiltersForLinkType(this.query, linkType.id);
+    const linkData = generateDocumentData(linkType, linkFilters, this.constraintData, false);
+
+    if (getAttributesResourceType(createResource.resource) === AttributesResourceType.LinkType) {
+      const constraint = findAttributeConstraint(linkType.attributes, createResource.kanbanAttribute.attributeId);
+      linkData[createResource.kanbanAttribute.attributeId] = this.createValueByConstraint(constraint, value);
+    }
+
+    return {linkInstance: {linkTypeId: linkType.id, data: linkData, documentIds: [null, null]}, linkType};
   }
 
-  public onUpdateDocument(object: {
-    document: DocumentModel;
-    newValue: string;
-    previousValue: string;
-    attributeId: string;
-  }) {
-    const {document, newValue, attributeId, previousValue} = object;
-    const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
-    if (collection) {
-      const constraint = findAttributeConstraint(collection.attributes, attributeId);
-      const value = this.createValueByConstraint(constraint, newValue, previousValue, document.data[attributeId]);
-      const data = {...document.data, [attributeId]: value};
-      this.patchDocumentData.emit({...document, data});
+  private createDocumentData(
+    createResource: KanbanCreateResource,
+    value: any
+  ): {document: DocumentModel; collection: Collection} {
+    const collection = this.getNextCollection(createResource);
+    const collectionsFilters = getQueryFiltersForCollection(this.query, collection.id);
+    const documentData = generateDocumentData(collection, collectionsFilters, this.constraintData, false);
+
+    if (getAttributesResourceType(createResource.resource) === AttributesResourceType.Collection) {
+      const constraint = findAttributeConstraint(collection.attributes, createResource.kanbanAttribute.attributeId);
+      documentData[createResource.kanbanAttribute.attributeId] = this.createValueByConstraint(constraint, value);
     }
+
+    return {document: {collectionId: collection.id, data: documentData}, collection};
+  }
+
+  private getNextCollection(createResource: KanbanCreateResource): Collection {
+    if (getAttributesResourceType(createResource.resource) === AttributesResourceType.Collection) {
+      return <Collection>createResource.resource;
+    }
+    const attributesResourcesOrder = queryStemAttributesResourcesOrder(
+      this.query.stems[createResource.stemIndex],
+      this.collections,
+      this.linkTypes
+    );
+    return attributesResourcesOrder[createResource.kanbanAttribute.resourceIndex + 1];
+  }
+
+  private getPreviousLinkType(createResource: KanbanCreateResource): LinkType {
+    if (getAttributesResourceType(createResource.resource) === AttributesResourceType.LinkType) {
+      return <LinkType>createResource.resource;
+    }
+    const attributesResourcesOrder = queryStemAttributesResourcesOrder(
+      this.query.stems[createResource.stemIndex],
+      this.collections,
+      this.linkTypes
+    );
+    return <LinkType>attributesResourcesOrder[createResource.kanbanAttribute.resourceIndex - 1];
+  }
+
+  public onUpdateDataResource(object: {card: KanbanCard; newValue: string; previousValue: string}) {
+    const {card, newValue, previousValue} = object;
+    const stemConfig = this.config.stemsConfigs?.[card.stemIndex];
+    if (card.resourceType === AttributesResourceType.Collection) {
+      this.onUpdateDocument(card, newValue, previousValue, stemConfig);
+    } else if (card.resourceType === AttributesResourceType.LinkType) {
+      this.onUpdateLinkInstance(card, newValue, previousValue, stemConfig);
+    }
+  }
+
+  private onUpdateDocument(card: KanbanCard, newValue: any, previousValue: any, stemConfig: KanbanStemConfig) {
+    const document = <DocumentModel>card.dataResource;
+    const attributeId = stemConfig?.attribute?.attributeId;
+    const collection = (this.collections || []).find(coll => coll.id === document.collectionId);
+    const constraint = findAttributeConstraint(collection?.attributes, attributeId);
+    const value = this.createValueByConstraint(constraint, newValue, previousValue, document.data?.[attributeId]);
+    const data = {...document.data, [attributeId]: value};
+    this.patchDocumentData.emit({...document, data});
+  }
+
+  private onUpdateLinkInstance(card: KanbanCard, newValue: any, previousValue: any, stemConfig: KanbanStemConfig) {
+    const linkInstance = <LinkInstance>card.dataResource;
+    const attributeId = stemConfig?.attribute?.attributeId;
+    const linkType = (this.linkTypes || []).find(coll => coll.id === linkInstance.linkTypeId);
+    const constraint = findAttributeConstraint(linkType?.attributes, attributeId);
+    const value = this.createValueByConstraint(constraint, newValue, previousValue, linkInstance.data?.[attributeId]);
+    const data = {...linkInstance.data, [attributeId]: value};
+    this.patchLinkInstanceData.emit({...linkInstance, data});
   }
 
   private createValueByConstraint(
@@ -276,10 +352,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   }
 
   public onRemoveColumn(column: KanbanColumn) {
-    this.columnRemove.emit(column); // TODO
-    // const filteredColumns = (this.config.columns || []).filter(col => col.id !== column.id);
-    // const config = {...this.config, columns: filteredColumns};
-    // this.configChange.next(config);
+    this.columnRemove.emit(column);
   }
 
   public onToggleFavorite(document: DocumentModel) {

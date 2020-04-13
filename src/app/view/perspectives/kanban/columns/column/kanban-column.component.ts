@@ -21,14 +21,12 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
-
-import {KanbanColumn, KanbanConfig} from '../../../../../core/store/kanbans/kanban';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {KanbanColumn} from '../../../../../core/store/kanbans/kanban';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../core/model/resource';
-import {KanbanResourceCreate} from './footer/kanban-column-footer.component';
+import {DataResource} from '../../../../../core/model/resource';
 import {generateId} from '../../../../../shared/utils/resource.utils';
-import {KanbanCard, KanbanDataColumn} from '../../util/kanban-data';
+import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
+import {PostItLayoutType} from '../../../../../shared/post-it/post-it-layout-type';
 
 @Component({
   selector: 'kanban-column',
@@ -38,7 +36,10 @@ import {KanbanCard, KanbanDataColumn} from '../../util/kanban-data';
 })
 export class KanbanColumnComponent {
   @Input()
-  public config: KanbanConfig;
+  public postItLayout: PostItLayoutType;
+
+  @Input()
+  public kanbanData: KanbanData;
 
   @Input()
   public column: KanbanDataColumn;
@@ -53,27 +54,22 @@ export class KanbanColumnComponent {
   public query: Query;
 
   @Input()
-  public createResources: KanbanResourceCreate[];
-
-  @Input()
   public constraintData: ConstraintData;
 
   @Output()
-  public updateDocument = new EventEmitter<{
-    document: DocumentModel;
-    newValue: string;
-    previousValue: string;
-    attributeId: string;
-  }>();
+  public updateDataResource = new EventEmitter<{card: KanbanCard; previousValue: any; newValue: any}>();
 
   @Output()
-  public columnsChange = new EventEmitter<{columns: KanbanColumn[]; otherColumn: KanbanColumn}>();
+  public createDataResource = new EventEmitter<KanbanCreateResource>();
 
   @Output()
-  public createResource = new EventEmitter<KanbanResourceCreate>();
+  public cardMove = new EventEmitter<{}>();
 
   @Output()
   public removeColumn = new EventEmitter();
+
+  @Output()
+  public columnsChange = new EventEmitter<{columns: KanbanDataColumn[]; otherColumn: KanbanDataColumn}>();
 
   @Output()
   public toggleFavorite = new EventEmitter<DataResource>();
@@ -85,7 +81,7 @@ export class KanbanColumnComponent {
     return card.dataResource.id;
   }
 
-  public onDropPostIt(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
+  public onDropPostIt(event: CdkDragDrop<KanbanDataColumn, KanbanDataColumn>) {
     if (this.postItPositionChanged(event)) {
       this.updatePostItsPosition(event);
 
@@ -99,28 +95,23 @@ export class KanbanColumnComponent {
     return this.postItContainerChanged(event) || event.previousIndex !== event.currentIndex;
   }
 
-  private updatePostItsPosition(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
-    // const columns = this.config.columns.map(col => ({...col, resourcesOrder: [...col.ca]}));
-    // const otherColumn = {...this.config.otherColumn, resourcesOrder: this.config.otherColumn.resourcesOrder};
-    // const column = columns.find(col => col.id === event.container.id) || otherColumn;
-    //
-    // if (event.container.id === event.previousContainer.id) {
-    //   moveItemInArray(column.resourcesOrder, event.previousIndex, event.currentIndex);
-    // } else {
-    //   const previousColumn = columns.find(col => col.id === event.previousContainer.id);
-    //   if (previousColumn) {
-    //     transferArrayItem(
-    //       previousColumn.resourcesOrder,
-    //       column.resourcesOrder,
-    //       event.previousIndex,
-    //       event.currentIndex
-    //     );
-    //   } else {
-    //     // it's Other column
-    //     transferArrayItem(otherColumn.resourcesOrder, column.resourcesOrder, event.previousIndex, event.currentIndex);
-    //   }
-    // }
-    // this.columnsChange.emit({columns, otherColumn});
+  private updatePostItsPosition(event: CdkDragDrop<KanbanDataColumn, KanbanDataColumn>) {
+    const columns = this.kanbanData.columns.map(col => ({...col, cards: [...col.cards]}));
+    const otherColumn = {...this.kanbanData.otherColumn, cards: this.kanbanData.otherColumn.cards};
+    const column = columns.find(col => col.id === event.container.id) || otherColumn;
+
+    if (event.container.id === event.previousContainer.id) {
+      moveItemInArray(column.cards, event.previousIndex, event.currentIndex);
+    } else {
+      const previousColumn = columns.find(col => col.id === event.previousContainer.id);
+      if (previousColumn) {
+        transferArrayItem(previousColumn.cards, column.cards, event.previousIndex, event.currentIndex);
+      } else {
+        // it's Other column
+        transferArrayItem(otherColumn.cards, column.cards, event.previousIndex, event.currentIndex);
+      }
+    }
+    this.columnsChange.emit({columns, otherColumn});
   }
 
   private postItContainerChanged(event: CdkDragDrop<KanbanColumn, KanbanColumn>): boolean {
@@ -129,22 +120,21 @@ export class KanbanColumnComponent {
 
   private updatePostItValue(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
     const card = event.item.data as KanbanCard;
-    const document = card.dataResource as DocumentModel;
     const newValue = event.container.data.title;
     const previousValue = event.previousContainer.data.title;
 
-    // this.updateDocument.emit({document, newValue, previousValue, attributeId: card.attributeId});
+    this.updateDataResource.emit({card, newValue, previousValue});
   }
 
-  public createObjectInResource(resourceCreate: KanbanResourceCreate) {
-    this.createResource.emit(resourceCreate);
+  public createObjectInResource(createResource: KanbanCreateResource) {
+    this.createDataResource.emit(createResource);
   }
 
   public onDataResourceCreated(id: string) {
     setTimeout(() => {
       const postIt = document.getElementById(`${this.postItIdPrefix}#${id}`);
       postIt?.scrollIntoView();
-    }, 300);
+    }, 500);
   }
 
   public onRemoveColumn() {

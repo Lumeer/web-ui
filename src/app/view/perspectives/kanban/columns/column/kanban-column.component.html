@@ -3,6 +3,7 @@
   <div class="card-header p-0 mx-2"
        [class.cursor-move]="canManageConfig">
     <kanban-column-header [column]="column"
+                          [constraintData]="constraintData"
                           (remove)="onRemoveColumn()">
     </kanban-column-header>
   </div>
@@ -19,7 +20,7 @@
              [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
              [cdkDragData]="card"
              [cdkDragStartDelay]="dragDelay"
-             [layoutType]="config?.cardLayout"
+             [layoutType]="postItLayout"
              [class.mb-2]="!last"
              [dataResource]="card.dataResource"
              [resource]="card.resource"
@@ -33,7 +34,7 @@
   </div>
 
   <div class="card-footer px-3 py-2 mx-2">
-    <kanban-column-footer [resources]="createResources"
+    <kanban-column-footer [resources]="column.createResources"
                           [count]="column.cards?.length"
                           (selectResource)="createObjectInResource($event)">
     </kanban-column-footer>

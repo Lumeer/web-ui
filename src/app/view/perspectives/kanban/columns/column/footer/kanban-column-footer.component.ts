@@ -18,27 +18,22 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
+  Component,
   EventEmitter,
-  Output,
+  Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {AttributesResource} from '../../../../../../core/model/resource';
-import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {KanbanAttribute} from '../../../../../../core/store/kanbans/kanban';
+import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {DropdownOption} from '../../../../../../shared/dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../../../../../shared/dropdown/options/options-dropdown.component';
-
-export interface KanbanResourceCreate {
-  resource: AttributesResource;
-  stem: QueryStem;
-  kanbanAttribute: KanbanAttribute;
-}
+import {KanbanCreateResource} from '../../../util/kanban-data';
+import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'kanban-column-footer',
@@ -48,13 +43,13 @@ export interface KanbanResourceCreate {
 })
 export class KanbanColumnFooterComponent implements OnChanges {
   @Input()
-  public resources: KanbanResourceCreate[];
+  public resources: KanbanCreateResource[];
 
   @Input()
   public count: number = 0;
 
   @Output()
-  public selectResource = new EventEmitter<KanbanResourceCreate>();
+  public selectResource = new EventEmitter<KanbanCreateResource>();
 
   @ViewChild(OptionsDropdownComponent)
   public dropdown: OptionsDropdownComponent;
@@ -65,9 +60,22 @@ export class KanbanColumnFooterComponent implements OnChanges {
     this.dropdownOptions = (this.resources || []).map(resourceCreate => ({
       value: resourceCreate,
       displayValue: resourceCreate.resource.name,
-      icons: [(<Collection>resourceCreate.resource).icon],
-      iconColors: [(<Collection>resourceCreate.resource).color],
+      ...this.createIconsAndColors(resourceCreate),
     }));
+  }
+
+  private createIconsAndColors(createResource: KanbanCreateResource): {icons: string[]; iconColors: string[]} {
+    if (getAttributesResourceType(createResource.resource) === AttributesResourceType.Collection) {
+      const collection = <Collection>createResource.resource;
+      return {icons: [collection.icon], iconColors: [collection.color]};
+    } else if (getAttributesResourceType(createResource.resource) === AttributesResourceType.LinkType) {
+      const linkType = <LinkType>createResource.resource;
+      return {
+        icons: linkType.collections?.map(collection => collection?.icon) || [],
+        iconColors: linkType.collections?.map(collection => collection?.color) || [],
+      };
+    }
+    return {icons: [], iconColors: []};
   }
 
   public onButtonClick() {
@@ -75,7 +83,7 @@ export class KanbanColumnFooterComponent implements OnChanges {
   }
 
   public onOptionSelect(option: DropdownOption) {
-    const value = option.value as KanbanResourceCreate;
+    const value = option.value as KanbanCreateResource;
     this.selectResource.emit(value);
   }
 }

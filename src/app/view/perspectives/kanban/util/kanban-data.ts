@@ -17,11 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {KanbanColumn, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanColumn, KanbanResource, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 import {Constraint} from '../../../../core/model/constraint';
+import {QueryStem} from '../../../../core/store/navigation/query/query';
 
 export interface KanbanData {
   columns: KanbanDataColumn[];
@@ -33,6 +34,7 @@ export interface KanbanDataColumn extends KanbanColumn {
   cards: KanbanCard[];
   summary?: string;
   constraint?: Constraint;
+  createResources?: KanbanCreateResource[];
 }
 
 export interface KanbanCard {
@@ -42,5 +44,11 @@ export interface KanbanCard {
   resourceType: AttributesResourceType;
   permissions: AllowedPermissions;
   dataResourcesChain: DataResourceChain[];
+  stemIndex: number;
+}
+
+export interface KanbanCreateResource {
+  resource: AttributesResource;
+  kanbanAttribute: KanbanAttribute;
   stemIndex: number;
 }

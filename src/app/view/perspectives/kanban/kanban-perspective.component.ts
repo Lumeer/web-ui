@@ -176,12 +176,4 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
       this.store$.dispatch(new KanbansAction.SetConfig({kanbanId: this.kanbanId, config}));
     }
   }
-
-  public patchDocumentData(document: DocumentModel) {
-    this.store$.dispatch(new DocumentsAction.PatchData({document}));
-  }
-
-  public patchLinkInstanceData(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
-  }
 }
