@@ -25,7 +25,7 @@ beforeEach(() => {
 
     const projectCode = Math.random()
       .toString(36)
-      .substr(2);
+      .substr(2, 5);
     Cypress.env('projectCode', projectCode);
     cy.createProject(organization.id, projectCode, 'Test project').then(project => {
       // save default workspace to newly created project
