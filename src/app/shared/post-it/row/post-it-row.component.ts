@@ -106,8 +106,8 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   public editing$ = new BehaviorSubject(false);
   public dataValue: DataValue;
 
-  public keyFlex: string;
-  public valueFlex: string;
+  public keyClass: string;
+  public valueClass: string;
 
   public get constraintType(): ConstraintType {
     return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
@@ -130,20 +130,20 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   private convertLayoutToClasses() {
     switch (this.layoutType) {
       case PostItLayoutType.Quarter:
-        this.keyFlex = '1';
-        this.valueFlex = '4';
+        this.keyClass = 'col-2';
+        this.valueClass = 'col-10';
         break;
       case PostItLayoutType.Third:
-        this.keyFlex = '1';
-        this.valueFlex = '3';
+        this.keyClass = 'col-3';
+        this.valueClass = 'col-9';
         break;
       case PostItLayoutType.Half:
-        this.keyFlex = '1';
-        this.valueFlex = '2';
+        this.keyClass = 'col-4';
+        this.valueClass = 'col-8';
         break;
       default:
-        this.keyFlex = '1';
-        this.valueFlex = '1';
+        this.keyClass = 'col-6';
+        this.valueClass = 'col-6';
         break;
     }
   }
