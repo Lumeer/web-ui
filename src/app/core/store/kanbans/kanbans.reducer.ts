@@ -23,7 +23,7 @@ import {KanbansAction, KanbansActionType} from './kanbans.action';
 export function kanbansReducer(state: KanbansState = initialKanbansState, action: KanbansAction.All): KanbansState {
   switch (action.type) {
     case KanbansActionType.ADD_KANBAN:
-      return kanbansAdapter.addOne(action.payload.kanban, state);
+      return kanbansAdapter.upsertOne(action.payload.kanban, state);
     case KanbansActionType.REMOVE_KANBAN:
       return kanbansAdapter.removeOne(action.payload.kanbanId, state);
     case KanbansActionType.SET_CONFIG:

@@ -24,13 +24,8 @@ import {
   Output,
   EventEmitter,
   HostBinding,
-  ViewChild,
-  ElementRef,
-  Renderer2,
   OnChanges,
-  AfterViewInit,
   SimpleChanges,
-  HostListener,
 } from '@angular/core';
 import {DataRowComponent} from '../../data/data-row-component';
 import {Attribute} from '../../../core/store/collections/collection';
@@ -45,6 +40,7 @@ import {DataValue} from '../../../core/model/data-value';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../core/model/constraint/boolean.constraint';
 import {DataInputConfiguration} from '../../data-input/data-input-configuration';
+import {PostItLayoutType} from '../post-it-layout-type';
 
 @Component({
   selector: 'post-it-row',
@@ -70,6 +66,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   @Input()
   public unusedAttributes: Attribute[];
+
+  @Input()
+  public layoutType: PostItLayoutType;
 
   @Output()
   public newValue = new EventEmitter<any>();
@@ -107,11 +106,14 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   public editing$ = new BehaviorSubject(false);
   public dataValue: DataValue;
 
+  public keyClass: string;
+  public valueClass: string;
+
   public get constraintType(): ConstraintType {
     return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
   }
 
-  constructor(private i18n: I18n, private renderer: Renderer2) {
+  constructor(private i18n: I18n) {
     this.placeholder = i18n({id: 'dataResource.attribute.placeholder.short', value: 'Enter name'});
   }
 
@@ -119,6 +121,30 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
     if (changes.row && this.row) {
       this.keyDataValue = this.createKeyDataValue();
       this.dataValue = this.createDataValue();
+    }
+    if (changes.layoutType) {
+      this.convertLayoutToClasses();
+    }
+  }
+
+  private convertLayoutToClasses() {
+    switch (this.layoutType) {
+      case PostItLayoutType.Quarter:
+        this.keyClass = 'col-2';
+        this.valueClass = 'col-10';
+        break;
+      case PostItLayoutType.Third:
+        this.keyClass = 'col-3';
+        this.valueClass = 'col-9';
+        break;
+      case PostItLayoutType.Half:
+        this.keyClass = 'col-4';
+        this.valueClass = 'col-8';
+        break;
+      default:
+        this.keyClass = 'col-6';
+        this.valueClass = 'col-6';
+        break;
     }
   }
 

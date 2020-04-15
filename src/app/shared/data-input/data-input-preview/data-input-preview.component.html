@@ -9,7 +9,8 @@
   <ng-container [ngSwitch]="constraint.type">
     <boolean-data-input *ngSwitchCase="constraintType.Boolean"
                         [label]="configuration?.boolean?.additionalLabel"
-                        [readonly]="true" [value]="dataValue" class="w-100">
+                        [class.justify-content-center]="configuration?.boolean?.center"
+                        [readonly]="true" [value]="dataValue" class="w-100 px-1">
     </boolean-data-input>
 
     <color-data-input *ngSwitchCase="constraintType.Color"
@@ -32,6 +33,7 @@
     <user-data-input *ngSwitchCase="constraintType.User"
                      [focus]="false"
                      [readonly]="true"
+                     [configuration]="configuration?.user"
                      [skipValidation]="true"
                      [value]="dataValue"
                      class="w-100">

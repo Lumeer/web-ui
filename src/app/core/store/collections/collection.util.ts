@@ -137,14 +137,13 @@ export function createAttributesMap(attributes: Attribute[]): Record<string, Att
 }
 
 export function findAttribute(attributes: Attribute[], attributeId: string): Attribute {
-  return (attributes || []).find(attr => attr.id === attributeId);
+  return attributeId && (attributes || []).find(attr => attr.id === attributeId);
 }
 
 export function findAttributeConstraint(attributes: Attribute[], attributeId: string): Constraint {
-  const attribute = findAttribute(attributes, attributeId);
-  return attribute && attribute.constraint;
+  return findAttribute(attributes, attributeId)?.constraint;
 }
 
 export function hasAttributeType(entity: Collection | LinkType, constraintType: ConstraintType): boolean {
-  return entity && (entity.attributes || []).some(attr => attr.constraint && attr.constraint.type === constraintType);
+  return (entity?.attributes || []).some(attr => attr.constraint && attr.constraint.type === constraintType);
 }

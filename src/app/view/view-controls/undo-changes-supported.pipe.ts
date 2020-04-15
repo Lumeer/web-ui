@@ -32,6 +32,7 @@ export class UndoChangesSupportedPipe implements PipeTransform {
       Perspective.Map,
       Perspective.GanttChart,
       Perspective.Calendar,
+      Perspective.Kanban,
     ].includes(perspective);
   }
 }

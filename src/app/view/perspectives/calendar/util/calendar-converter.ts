@@ -52,8 +52,6 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import * as moment from 'moment';
-import {GANTT_DATE_FORMAT} from '../../../../core/store/gantt-charts/gantt-chart';
-import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
 
 enum DataObjectInfoKeyType {
   Name = 'name',

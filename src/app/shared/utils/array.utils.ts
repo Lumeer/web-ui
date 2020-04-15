@@ -87,6 +87,20 @@ export function flattenMatrix<T>(array: T[][]): T[] {
   }, []);
 }
 
+export function createRangeInclusive(from: number, to: number): number[] {
+  const range = [];
+  if (to > from) {
+    for (let i = from; i <= to; i++) {
+      range.push(i);
+    }
+  } else {
+    for (let i = from; i >= to; i--) {
+      range.push(i);
+    }
+  }
+  return range;
+}
+
 export function createRange(from: number, to: number): number[] {
   const range = [...Array(to - from).keys()];
   return range.map(r => r + from);

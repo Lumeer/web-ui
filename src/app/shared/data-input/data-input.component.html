@@ -15,9 +15,10 @@
   <boolean-data-input *ngSwitchCase="constraintType.Boolean"
                       [readonly]="readonly"
                       [value]="dataValue"
+                      [class.justify-content-center]="configuration?.boolean?.center"
                       (valueChange)="onValueChange($event)"
                       (save)="onSaveValue($event)"
-                      class="w-100">
+                      class="w-100 px-1">
   </boolean-data-input>
 
   <coordinates-data-input *ngSwitchCase="constraintType.Coordinates"
@@ -124,6 +125,7 @@
                    [readonly]="readonly"
                    [skipValidation]="configuration?.common?.skipValidation"
                    [value]="dataValue"
+                   [configuration]="configuration?.user"
                    (keydown)="onDataKeyDown($event)"
                    (valueChange)="onValueChange($event)"
                    (save)="onSaveValue($event)"

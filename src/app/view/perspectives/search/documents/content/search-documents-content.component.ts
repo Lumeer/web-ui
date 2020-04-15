@@ -25,7 +25,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {SizeType} from '../../../../../shared/slider/size-type';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
 import {PerspectiveService} from '../../../../../core/service/perspective.service';
 import {Router} from '@angular/router';
 import {Perspective} from '../../../perspective';

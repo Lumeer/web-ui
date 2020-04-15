@@ -1,0 +1,46 @@
+<ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
+  <collapsible-sidebar *ngIf="canManageConfig"
+                       [collapsed]="!(sidebarOpened$ | async)"
+                       (toggle)="onSidebarToggle()">
+    <kanban-config
+      class="d-block m-3"
+      [collections]="collections"
+      [linkTypes]="linkTypes"
+      [config]="config"
+      [query]="query"
+      [visible]="sidebarOpened$ | async"
+      (configChange)="onConfigChanged($event, true)"
+      [constraintData]="constraintData">
+    </kanban-config>
+  </collapsible-sidebar>
+
+  <kanban-columns
+    *ngIf="data$ | async as kanbanData"
+    class="flex-grow-1 h-100"
+    [collections]="collections"
+    [documents]="documents"
+    [linkTypes]="linkTypes"
+    [linkInstances]="linkInstances"
+    [config]="config"
+    [kanbanData]="kanbanData"
+    [permissions]="permissions"
+    [query]="query"
+    [canManageConfig]="canManageConfig"
+    [constraintData]="constraintData"
+    [workspace]="workspace"
+    (patchDocumentData)="patchDocumentData($event)"
+    (patchLinkInstanceData)="patchLinkInstanceData($event)"
+    (updateLinkDocuments)="updateLinkDocuments($event)"
+    (columnsMoved)="onColumnMoved($event)"
+    (columnRemove)="onColumnRemove($event)"
+    (columnsChange)="onColumnsChanged($event)">
+
+  </kanban-columns>
+
+</ng-container>
+
+<ng-template #notDisplayable>
+  <invalid-query class="w-100"
+                 [minStems]="1">
+  </invalid-query>
+</ng-template>

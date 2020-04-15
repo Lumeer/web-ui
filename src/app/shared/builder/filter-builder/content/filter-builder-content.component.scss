@@ -15,10 +15,6 @@
   max-height: 30px;
 }
 
-.data-input::ng-deep > boolean-data-input {
-  justify-content: flex-start;
-}
-
 .data-input.editing {
   border: 1px solid $success;
   border-radius: 0.25rem;

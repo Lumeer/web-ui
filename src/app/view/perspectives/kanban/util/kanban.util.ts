@@ -26,26 +26,22 @@ import {
 } from '../../../../core/store/kanbans/kanban';
 import {areArraysSame} from '../../../../shared/utils/array.utils';
 import {Collection} from '../../../../core/store/collections/collection';
-import {findAttribute, findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {
+  checkOrTransformQueryAttribute,
+  checkOrTransformQueryResource,
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
 } from '../../../../core/store/navigation/query/query.util';
-import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
-import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {Constraint} from '../../../../core/model/constraint';
+import {SizeType} from '../../../../shared/slider/size/size-type';
+import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
+import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
-    return true;
-  }
-
-  if (!deepObjectsEquals(viewConfig.aggregation, currentConfig.aggregation)) {
     return true;
   }
 
@@ -76,15 +72,7 @@ function stemConfigsChanged(viewStemsConfigs: KanbanStemConfig[], currentStemsCo
 }
 
 function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {
-  return (
-    column1.title !== column2.title ||
-    column1.width !== column2.width ||
-    column1.summary !== column2.summary ||
-    !areArraysSame(
-      ((column1 && column1.resourcesOrder) || []).map(order => order.id),
-      ((column2 && column2.resourcesOrder) || []).map(order => order.id)
-    )
-  );
+  return column1?.title !== column2?.title || column1?.width !== column2?.width;
 }
 
 export function checkOrTransformKanbanConfig(
@@ -132,55 +120,36 @@ function checkOrTransformKanbanStemConfig(
     return createDefaultKanbanStemConfig(stem);
   }
 
-  const result = {attribute: null, stem, dueDate: null, doneColumnTitles: stemConfig.doneColumnTitles};
+  const result: KanbanStemConfig = {
+    attribute: null,
+    stem,
+    dueDate: null,
+    doneColumnTitles: stemConfig.doneColumnTitles,
+    aggregation: null,
+  };
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
 
-  result.attribute = findKanbanAttribute(stemConfig.attribute, attributesResourcesOrder);
+  result.attribute = checkOrTransformQueryAttribute(stemConfig.attribute, attributesResourcesOrder);
+  result.aggregation = checkOrTransformQueryAttribute(stemConfig.aggregation, attributesResourcesOrder);
+  result.resource = checkOrTransformQueryResource(stemConfig.resource, attributesResourcesOrder);
 
   if (stemConfig.dueDate) {
-    result.dueDate = findKanbanAttribute(stemConfig.dueDate, attributesResourcesOrder);
+    result.dueDate = checkOrTransformQueryAttribute(stemConfig.dueDate, attributesResourcesOrder);
   }
 
   return result;
 }
 
-function findKanbanAttribute(
-  attribute: KanbanAttribute,
-  attributesResourcesOrder: AttributesResource[]
-): KanbanAttribute {
-  const attributeResource = attributesResourcesOrder[attribute.resourceIndex];
-
-  if (
-    attributeResource &&
-    attributeResource.id === attribute.resourceId &&
-    getAttributesResourceType(attributeResource) === attribute.resourceType
-  ) {
-    const existingAttribute = findAttribute(attributeResource.attributes, attribute.attributeId);
-    if (existingAttribute) {
-      return {...attribute};
-    }
-  } else {
-    const newAttributeResourceIndex = attributesResourcesOrder.findIndex(
-      ar => ar.id === attribute.resourceId && getAttributesResourceType(ar) === attribute.resourceType
-    );
-    if (newAttributeResourceIndex >= 0) {
-      const existingAttribute = findAttribute(
-        attributesResourcesOrder[newAttributeResourceIndex].attributes,
-        attribute.attributeId
-      );
-      if (existingAttribute) {
-        return {...attribute, resourceIndex: newAttributeResourceIndex};
-      }
-    }
-  }
-
-  return null;
-}
-
 function createDefaultConfig(query: Query): KanbanConfig {
   const stems = (query && query.stems) || [];
   const stemsConfigs = stems.map(stem => createDefaultKanbanStemConfig(stem));
-  return {columns: [], stemsConfigs, version: KanbanConfigVersion.V1};
+  return {
+    columns: [],
+    stemsConfigs,
+    version: KanbanConfigVersion.V2,
+    cardLayout: PostItLayoutType.Half,
+    columnSize: SizeType.M,
+  };
 }
 
 export function createDefaultKanbanStemConfig(stem?: QueryStem): KanbanStemConfig {
@@ -192,29 +161,16 @@ export function kanbanConfigIsEmpty(kanbanConfig: KanbanConfig): boolean {
 }
 
 export function cleanKanbanAttribute(attribute: KanbanAttribute): KanbanAttribute {
-  return {
-    resourceIndex: attribute.resourceIndex,
-    attributeId: attribute.attributeId,
-    resourceId: attribute.resourceId,
-    resourceType: attribute.resourceType,
-  };
+  return (
+    attribute && {
+      resourceIndex: attribute.resourceIndex,
+      attributeId: attribute.attributeId,
+      resourceId: attribute.resourceId,
+      resourceType: attribute.resourceType,
+    }
+  );
 }
 
-export function findOriginalAttributeConstraint(
-  attribute: KanbanAttribute,
-  collections: Collection[],
-  linkTypes: LinkType[]
-): Constraint {
-  if (attribute) {
-    if (attribute.resourceType === AttributesResourceType.Collection) {
-      const collection = collections.find(c => c.id === attribute.resourceId);
-      return findAttributeConstraint((collection && collection.attributes) || [], attribute.attributeId);
-    }
-    if (attribute.resourceType === AttributesResourceType.LinkType) {
-      const linkType = linkTypes.find(l => l.id === attribute.resourceId);
-      return findAttributeConstraint((linkType && linkType.attributes) || [], attribute.attributeId);
-    }
-  }
-
-  return null;
+export function isKanbanAggregationDefined(config: KanbanConfig): boolean {
+  return (config?.stemsConfigs || []).some(stemConfig => isNotNullOrUndefined(stemConfig.aggregation));
 }

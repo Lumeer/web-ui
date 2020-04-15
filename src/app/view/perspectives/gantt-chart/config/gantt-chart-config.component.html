@@ -8,7 +8,7 @@
                          [stem]="stem"
                          [collections]="collections"
                          [linkTypes]="linkTypes"
-                         [selectItems]="stem | queryStemSelectItems:collections:linkTypes"
+                         [selectItems]="stem | queryStemAttributesSelectItems:collections:linkTypes"
                          (configChange)="onStemConfigChange($event, stem, index)"
                          (categoryRemove)="onCategoryRemoved($event, index)">
 </gantt-chart-stem-config>

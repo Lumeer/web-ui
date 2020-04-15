@@ -1,0 +1,43 @@
+<div class="card column" [style.width.px]="column.width">
+
+  <div class="card-header p-0 mx-2"
+       [class.cursor-move]="canManageConfig">
+    <kanban-column-header [column]="column"
+                          [constraintData]="constraintData"
+                          (remove)="onRemoveColumn()">
+    </kanban-column-header>
+  </div>
+
+  <div class="card-body py-1 px-2 my-1" cdkDropList id="{{column.id}}"
+       [cdkDropListData]="column"
+       [cdkDropListConnectedTo]="dragColumnsIds"
+       (cdkDropListDropped)="onDropPostIt($event)">
+    <post-it *ngFor="let card of column.cards; trackBy: trackByCard; let last = last"
+             cdkDrag
+             id="{{postItIdPrefix}}#{{card.dataResource.id}}"
+             class="post-it"
+             [tag]="card.dueHours | kanbanDueHoursTag"
+             [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
+             [cdkDragData]="card"
+             [cdkDragStartDelay]="dragDelay"
+             [layoutType]="postItLayout"
+             [class.mb-2]="!last"
+             [dataResource]="card.dataResource"
+             [resource]="card.resource"
+             [query]="query"
+             [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
+             [allowedPermissions]="card.permissions"
+             [constraintData]="constraintData"
+             (toggleFavorite)="onToggleFavorite(card)">
+    </post-it>
+
+  </div>
+
+  <div class="card-footer px-3 py-2 mx-2">
+    <kanban-column-footer [resources]="column.createResources"
+                          [count]="column.cards?.length"
+                          (selectResource)="createObjectInResource($event)">
+    </kanban-column-footer>
+  </div>
+
+</div>

@@ -19,13 +19,13 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../core/store/collections/collection';
-import {combineLatest as observableCombineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions.selectors';
 import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 
 @Pipe({
   name: 'collectionLinkTypes',
@@ -35,10 +35,10 @@ export class CollectionLinkTypesPipe implements PipeTransform {
   public constructor(private store$: Store<AppState>) {}
 
   public transform(collectionId: string): Observable<LinkType[]> {
-    return observableCombineLatest(
-      this.store$.select(selectLinkTypesByCollectionId(collectionId)),
-      this.store$.select(selectCollectionsDictionary)
-    ).pipe(
+    return combineLatest([
+      this.store$.pipe(select(selectLinkTypesByCollectionId(collectionId))),
+      this.store$.pipe(select(selectCollectionsDictionary)),
+    ]).pipe(
       map(([linkTypes, collectionsMap]) =>
         linkTypes.map(linkType => {
           const collections: [Collection, Collection] = [

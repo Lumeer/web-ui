@@ -26,7 +26,7 @@ import {
   GanttChartMode,
   GanttChartStemConfig,
 } from '../../../../core/store/gantt-charts/gantt-chart';
-import {deepObjectsEquals, findLastIndex, isNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -39,11 +39,14 @@ import {
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {GanttTaskMetadata} from './gantt-chart-converter';
 import {Task as GanttChartTask} from '@lumeer/lumeer-gantt/dist/model/task';
-import {getOtherLinkedDocumentId, LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {uniqueValues} from '../../../../shared/utils/array.utils';
-import {AllowedPermissions, mergeAllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {createDefaultNameAndDateRangeConfig} from '../../common/perspective-util';
 import {queryAttributePermissions} from '../../../../core/model/query-attribute';
+import {
+  createPossibleLinkingDocuments,
+  createPossibleLinkingDocumentsByChains,
+} from '../../../../shared/utils/data/data-aggregator-util';
 
 export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig: GanttChartConfig): boolean {
   if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
@@ -192,18 +195,10 @@ export function createDefaultGanttChartStemConfig(
 }
 
 export function createLinkDocumentsDataNewTask(task: GanttChartTask, otherTasks: GanttChartTask[]): string[] {
-  const swimlaneTasks = (otherTasks || []).filter(otherTask => tasksHasSameSwimlanes(otherTask, task));
-  return uniqueValues(
-    swimlaneTasks
-      .map(swimlaneTask => {
-        const dataResourceChain =
-          (swimlaneTask.metadata && (<GanttTaskMetadata>swimlaneTask.metadata).dataResourceChain) || [];
-        const linkChainIndex = findLastIndex(dataResourceChain, chain => !!chain.linkInstanceId);
-        const documentChain = dataResourceChain[linkChainIndex - 1];
-        return documentChain && documentChain.documentId;
-      })
-      .filter(documentId => !!documentId)
-  );
+  const swimlaneChains = (otherTasks || [])
+    .filter(otherTask => tasksHasSameSwimlanes(otherTask, task))
+    .map(otherTask => (otherTask.metadata && (<GanttTaskMetadata>otherTask.metadata).dataResourceChain) || []);
+  return createPossibleLinkingDocuments(swimlaneChains);
 }
 
 function tasksHasSameSwimlanes(task1: GanttChartTask, task2: GanttChartTask): boolean {
@@ -218,28 +213,11 @@ export function createLinkDocumentsData(
   otherTasks: GanttChartTask[],
   linkInstances: LinkInstance[]
 ): {linkInstanceId?: string; documentId?: string; otherDocumentIds?: string[]} {
-  const swimlaneTasks = (otherTasks || []).filter(otherTask => tasksHasSameSwimlanes(otherTask, task));
+  const swimlaneChains = (otherTasks || [])
+    .filter(otherTask => tasksHasSameSwimlanes(otherTask, task))
+    .map(otherTask => (<GanttTaskMetadata>otherTask.metadata).dataResourceChain);
   const dataResourceChain = (task.metadata && (<GanttTaskMetadata>task.metadata).dataResourceChain) || [];
-  const linkChainIndex = findLastIndex(dataResourceChain, chain => !!chain.linkInstanceId);
-  const linkChain = dataResourceChain[linkChainIndex];
-  const linkInstance = linkChain && (linkInstances || []).find(li => li.id === linkChain.linkInstanceId);
-  const documentChain = dataResourceChain[linkChainIndex - 1];
-  const documentId = getOtherLinkedDocumentId(linkInstance, documentChain && documentChain.documentId);
-  if (!linkInstance || !documentId) {
-    return {};
-  }
-
-  const otherDocumentIds = swimlaneTasks
-    .map(swimlaneTask => {
-      const swimlaneTaskChain = (<GanttTaskMetadata>swimlaneTask.metadata).dataResourceChain;
-      const documentToLinkChain = swimlaneTaskChain[linkChainIndex - 1];
-      if (documentToLinkChain && documentToLinkChain.documentId && documentToLinkChain.documentId !== documentId) {
-        return documentToLinkChain.documentId;
-      }
-      return null;
-    })
-    .filter(doc => !!doc);
-  return {linkInstanceId: linkChain.linkInstanceId, documentId, otherDocumentIds: uniqueValues(otherDocumentIds)};
+  return createPossibleLinkingDocumentsByChains(dataResourceChain, swimlaneChains, linkInstances);
 }
 
 export function ganttTaskDataResourceId(task: GanttChartTask): string {

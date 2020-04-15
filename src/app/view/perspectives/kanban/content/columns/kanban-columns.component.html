@@ -1,0 +1,39 @@
+<div class="wrapper h-100">
+  <div class="d-inline-flex flex-row flex-nowrap h-100 align-items-start mr-4"
+       cdkDropList cdkDropListOrientation="horizontal"
+       (cdkDropListDropped)="dropColumn($event)">
+    <kanban-column *ngFor="let column of kanbanData.columns; trackBy: trackByColumn; let first = first"
+                   cdkDrag #kanbanColumn
+                   [cdkDragDisabled]="!canManageConfig"
+                   [cdkDragStartDelay]="dragDelay"
+                   class="column ml-3"
+                   [column]="column"
+                   [postItLayout]="config?.cardLayout"
+                   [kanbanData]="kanbanData"
+                   [dragColumnsIds]="column | kanbanDragColumns:kanbanData.columns"
+                   [canManageConfig]="canManageConfig"
+                   [query]="query"
+                   [constraintData]="constraintData"
+                   (createDataResource)="onCreateDataResource($event, column)"
+                   (updateDataResource)="onUpdateDataResource($event)"
+                   (removeColumn)="onRemoveColumn(column)"
+                   (toggleFavorite)="onToggleFavorite($event)"
+                   (columnsChange)="columnsChange.emit($event)">
+    </kanban-column>
+
+    <kanban-column *ngIf="kanbanData.otherColumn?.cards?.length > 0"
+                   class="column ml-3" #kanbanColumn
+                   [column]="kanbanData.otherColumn"
+                   [kanbanData]="kanbanData"
+                   [postItLayout]="config?.cardLayout"
+                   [dragColumnsIds]="kanbanData.otherColumn | kanbanDragColumns:kanbanData.columns"
+                   [canManageConfig]="canManageConfig"
+                   [query]="query"
+                   [constraintData]="constraintData"
+                   (createDataResource)="onCreateDataResource($event, kanbanData.otherColumn)"
+                   (updateDataResource)="onUpdateDataResource($event)"
+                   (toggleFavorite)="onToggleFavorite($event)"
+                   (columnsChange)="columnsChange.emit($event)">
+    </kanban-column>
+  </div>
+</div>

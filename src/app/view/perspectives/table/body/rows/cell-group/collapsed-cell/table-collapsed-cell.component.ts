@@ -34,6 +34,7 @@ import {TableConfigColumn} from '../../../../../../../core/store/tables/table.mo
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {selectEditedAttribute} from '../../../../../../../core/store/tables/tables.selector';
 import {TableCollapsedCellMenuComponent} from './menu/table-collapsed-cell-menu.component';
+import {UserDataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -69,6 +70,7 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
   public values: any[];
   public stringValues$: Observable<string[]>;
 
+  public readonly userConfiguration: UserDataInputConfiguration = {allowCenterOnlyIcon: true};
   public readonly constraintType = ConstraintType;
 
   constructor(private store$: Store<AppState>) {}

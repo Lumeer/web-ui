@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {SizeType} from '../../shared/slider/size-type';
+import {SizeType} from '../../shared/slider/size/size-type';
 
 export interface UserSettings {
   searchSize: SizeType;

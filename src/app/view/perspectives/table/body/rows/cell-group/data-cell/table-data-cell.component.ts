@@ -153,7 +153,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public editedValue: DataValue;
 
   public readonly constraintType = ConstraintType;
-  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
+  public readonly configuration: DataInputConfiguration = {
+    common: {allowRichText: true},
+    boolean: {center: true},
+    user: {allowCenterOnlyIcon: true},
+  };
 
   private selectedSubscriptions = new Subscription();
   private affectedSubscription = new Subscription();
@@ -603,7 +607,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     ) {
       this.deleteDocumentAndRemoveRow();
     } else {
-      const document = {collectionId: this.document.collectionId, id: this.document.id, data: {[attributeId]: value}};
+      const document = {
+        collectionId: this.document.collectionId,
+        id: this.document.id,
+        data: {[attributeId]: value},
+      };
       this.store$.dispatch(new DocumentsAction.PatchData({document}));
     }
   }

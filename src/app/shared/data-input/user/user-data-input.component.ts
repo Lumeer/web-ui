@@ -41,6 +41,7 @@ import {uniqueValues} from '../../utils/array.utils';
 import {isEmailValid} from '../../utils/email.utils';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {UserDataInputConfiguration} from '../data-input-configuration';
 
 @Component({
   selector: 'user-data-input',
@@ -60,6 +61,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
 
   @Input()
   public value: UserDataValue;
+
+  @Input()
+  public configuration: UserDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<UserDataValue>();

@@ -23,7 +23,7 @@ import {ResourceType} from '../../../../../../core/model/resource-type';
 
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {SizeType} from '../../../../../../shared/slider/size-type';
+import {SizeType} from '../../../../../../shared/slider/size/size-type';
 import {Role} from '../../../../../../core/model/role';
 import {findAttributeConstraint, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {Constraint} from '../../../../../../core/model/constraint';

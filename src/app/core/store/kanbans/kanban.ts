@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Constraint} from '../../model/constraint';
-import {ConstraintType} from '../../model/data/constraint';
-import {AttributesResourceType} from '../../model/resource';
 import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
 import {QueryStem} from '../navigation/query/query';
+import {QueryAttribute, QueryResource} from '../../model/query-attribute';
+import {SizeType} from '../../../shared/slider/size/size-type';
+import {PostItLayoutType} from '../../../shared/post-it/post-it-layout-type';
 
 export const DEFAULT_KANBAN_ID = 'default';
 
@@ -35,10 +35,13 @@ export interface KanbanConfig {
   otherColumn?: KanbanColumn;
   stemsConfigs: KanbanStemConfig[];
   version?: KanbanConfigVersion;
-  aggregation?: KanbanValueAttribute;
+  aggregation?: KanbanAggregation;
+  columnSize?: SizeType;
+  cardLayout?: PostItLayoutType;
 }
 
 export enum KanbanConfigVersion {
+  V2 = '2',
   V1 = '1',
 }
 
@@ -46,40 +49,28 @@ export interface KanbanColumn {
   id: string;
   title?: any;
   width: number;
-  resourcesOrder: KanbanResource[];
   createdFromAttributes?: KanbanAttribute[];
-  constraintType?: ConstraintType;
-  summary?: string;
-}
-
-export interface KanbanResource {
-  id: string;
-  attributeId?: string;
-  resourceType: AttributesResourceType;
-  stemIndex?: number;
 }
 
 export interface KanbanStemConfig {
   stem?: QueryStem;
   attribute: KanbanAttribute;
+  aggregation?: KanbanAttribute;
+  resource?: KanbanResource;
   dueDate?: KanbanAttribute;
   doneColumnTitles?: any[];
 }
 
-export interface KanbanAttribute {
-  resourceId: string;
-  attributeId: string;
-  resourceIndex?: number;
-  resourceType: AttributesResourceType;
-  constraint?: Constraint;
-}
+export interface KanbanAttribute extends QueryAttribute {}
+
+export interface KanbanResource extends QueryResource {}
 
 export enum KanbanValueType {
   Default = 'default',
   AllPercentage = 'all',
 }
 
-export interface KanbanValueAttribute extends KanbanAttribute {
-  aggregation: DataAggregationType;
+export interface KanbanAggregation {
+  aggregation?: DataAggregationType;
   valueType?: KanbanValueType;
 }

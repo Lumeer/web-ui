@@ -1,0 +1,21 @@
+<div class="box user-select-none"
+  [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'"
+  (mousedown)="onMouseDownInsideComponent()"
+  *ngIf="step$ | async as step">
+  <div class="d-flex captions position-relative align-items-center">
+    <div *ngFor="let item of items; let index = index" class="text-center position-absolute caption"
+      [class.item-active]="item.id === selectedId"
+      [style.width.px]="step"
+      [style.left.px]="index * step + circleSize / 2 - step / 2">{{item.title}}</div>
+  </div>
+  <div class="d-flex slider position-relative w-100 align-items-center" #slider>
+    <div *ngFor="let item of items; let index = index"
+      class="slider-point position-absolute"
+      [style.left.px]="index * step + circleSize / 4"></div>
+    <div class="line position-absolute"
+      [style.width.px]="(items.length - 1) * step"
+      [style.margin-left.px]="circleSize / 2"
+      [style.margin-right.px]="circleSize / 2"></div>
+    <div class="circle position-absolute" [style.left.px]="circlePosition$ | async"></div>
+  </div>
+</div>

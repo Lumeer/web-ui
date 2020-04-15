@@ -1,0 +1,41 @@
+<ng-container [ngSwitch]="column.constraint?.type">
+
+  <ng-container *ngSwitchCase="constraintTypes.Color">
+    <div [style.background]="column.title" class="px-3 py-2 color-title flex-grow-1">
+      <div *ngIf="column.cards.length > 0">&nbsp;</div>
+      <div *ngIf="column.cards.length === 0" class="text-end">
+        <i class="fa fa-trash cursor-pointer"
+           [style.color]="column.title | contrastColor"
+           (click)="onRemove()"></i>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    <ng-container *ngIf="column.title; else otherTitle">
+      <data-input-preview class="px-3 py-2 text-truncate flex-grow-1 font-weight-bold"
+                          [dataValue]="column.title | dataValue:column.constraint:constraintData"
+                          [constraint]="column.constraint"
+                          [configuration]="dataInputConfiguration">
+      </data-input-preview>
+    </ng-container>
+  </ng-container>
+
+</ng-container>
+
+<ng-template #otherTitle>
+  <div class="px-3 py-2">
+    <span class="font-italic" i18n="@@kanban.perspective.header.other">Other</span>
+  </div>
+</ng-template>
+
+<data-input-preview *ngIf="!(column.summary | isNullOrUndefined)"
+                    class="align-self-center flex-fill text-right small text-muted mr-3 overflow-hidden"
+                    [configuration]="dataInputConfiguration"
+                    [dataValue]="column.summary | dataValue:null">
+</data-input-preview>
+
+<div class="d-flex align-items-center justify-content-center pr-3"
+     *ngIf="column.cards?.length === 0 && column.constraint?.type !== constraintTypes.Color && column.title">
+  <i class="fa fa-trash text-danger cursor-pointer" (click)="onRemove()"></i>
+</div>

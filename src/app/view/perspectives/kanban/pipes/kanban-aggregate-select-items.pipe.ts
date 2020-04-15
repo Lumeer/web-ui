@@ -18,38 +18,33 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {KanbanAttribute, KanbanConfig} from '../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
 import {Collection} from '../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {AttributesResourceType} from '../../../../core/model/resource';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'kanbanAggregateSelectItems',
 })
 export class KanbanAggregateSelectItemsPipe implements PipeTransform {
-  public transform(config: KanbanConfig, collections: Collection[]): SelectItemModel[] {
-    if (!config || !collections) {
+  public transform(config: KanbanStemConfig, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
+    if (!config?.attribute) {
       return [];
     }
 
-    const result: SelectItemModel[] = [];
-
-    let index = 0;
-    (config.stemsConfigs || []).forEach(stemConfig => {
-      if (stemConfig.attribute && stemConfig.attribute.resourceType === AttributesResourceType.Collection) {
-        const collection = collections.find(c => c.id === stemConfig.attribute.resourceId);
-
-        if (collection) {
-          result.push(...this.collectionSelectItem(collection, ++index));
-        }
-      }
-    });
-
-    return result;
+    const kanbanResource = config.resource || config.attribute;
+    if (config.attribute.resourceType === AttributesResourceType.Collection) {
+      const collection = (collections || []).find(coll => coll.id === kanbanResource.resourceId);
+      return this.collectionSelectItem(collection, kanbanResource.resourceIndex);
+    } else if (config.attribute.resourceType === AttributesResourceType.LinkType) {
+      const linkType = (linkTypes || []).find(lt => lt.id === kanbanResource.resourceId);
+      return this.linkTypeSelectItems(linkType, kanbanResource.resourceIndex);
+    }
   }
 
   private collectionSelectItem(collection: Collection, index: number): SelectItemModel[] {
-    return (collection.attributes || []).map(attribute => {
+    return (collection?.attributes || []).map(attribute => {
       const id: KanbanAttribute = {
         resourceType: AttributesResourceType.Collection,
         resourceId: collection.id,
@@ -63,5 +58,14 @@ export class KanbanAggregateSelectItemsPipe implements PipeTransform {
         iconColors: [collection.color] as [string],
       };
     });
+  }
+
+  public linkTypeSelectItems(linkType: LinkType, index: number): SelectItemModel[] {
+    return (linkType?.attributes || []).map(attribute => ({
+      id: {resourceIndex: index, attributeId: attribute.id},
+      value: attribute.name,
+      icons: [linkType.collections?.[0]?.icon, linkType.collections?.[1]?.icon],
+      iconColors: [linkType.collections?.[0]?.color, linkType.collections?.[1]?.color],
+    }));
   }
 }

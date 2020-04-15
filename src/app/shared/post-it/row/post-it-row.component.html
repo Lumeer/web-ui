@@ -1,7 +1,9 @@
-<div class="d-flex flex-nowrap flex-row wrapper" *ngIf="{readonly: !permissions?.writeWithView} as data">
+<ng-container *ngIf="{readonly: !permissions?.writeWithView} as data">
 
-  <div class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center" [style.flex]="'3'">
-    <data-input [cursor]="cursor"
+  <div class="flex-grow-1 row m-0" [style.width]="'calc(100% - 40px)'">
+
+    <data-input class="{{keyClass}} p-0 pr-1 h-100 w-100 p-1 data-input key d-block"
+                [cursor]="cursor"
                 [focus]="true"
                 [readonly]="!(keyEditing$ | async)"
                 [dataValue]="keyDataValue"
@@ -10,17 +12,16 @@
                 (save)="onNewKey($event)"
                 (dblclick)="onKeyInputDblClick($event)"
                 (cancel)="onKeyInputCancel()"
+                (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
                 (click)="onKeyFocus()"
                 (clickOutside)="onKeyInputCancel()"
                 [class.editing]="keyEditing$ | async"
-                class="h-100 w-100 p-1 data-input key"
                 [class.cursor-pointer]="!data.readonly"
                 [class.read-only]="data.readonly">
     </data-input>
-  </div>
 
-  <div class="pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center" [style.flex]="'4'" [style.overflow]="'hidden'">
-    <data-input [constraint]="row.attribute?.constraint"
+    <data-input class="{{valueClass}} h-100 w-100 p-1 data-input value"
+                [constraint]="row.attribute?.constraint"
                 [cursor]="cursor"
                 [focus]="true"
                 [dataValue]="dataValue"
@@ -29,18 +30,18 @@
                 (save)="onNewValue($event)"
                 (dblclick)="onDataInputDblClick($event)"
                 (cancel)="onDataInputCancel()"
+                (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
                 (valueChange)="onValueEdit($event)"
                 (click)="onValueFocus()"
                 (clickOutside)="onDataInputCancel()"
                 [class.editing]="editing$ | async"
-                class="h-100 w-100 p-1 data-input value"
                 [class.cursor-pointer]="!data.readonly"
                 [class.read-only]="data.readonly">
     </data-input>
 
   </div>
 
-  <div class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center" #iconsElement>
+  <div class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center">
     <ng-container *ngIf="{iconName: (row.attribute?.constraint | constraintTypeIcon)} as typeData">
       <i *ngIf="typeData.iconName"
          [ngClass]="typeData.iconName"
@@ -52,4 +53,4 @@
     </ng-container>
   </div>
 
-</div>
+</ng-container>

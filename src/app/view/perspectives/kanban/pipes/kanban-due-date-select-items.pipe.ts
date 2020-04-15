@@ -22,13 +22,13 @@ import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
-import {KanbanAttribute} from '../../../../core/store/kanbans/kanban';
+import {KanbanAttribute, KanbanResource} from '../../../../core/store/kanbans/kanban';
 
 @Pipe({
   name: 'kanbanDueDateSelectItems',
 })
 export class KanbanDueDateSelectItemsPipe implements PipeTransform {
-  public transform(attributesResourcesOrder: AttributesResource[], attribute?: KanbanAttribute): SelectItemModel[] {
+  public transform(attributesResourcesOrder: AttributesResource[], attribute?: KanbanResource): SelectItemModel[] {
     if ((attributesResourcesOrder || []).length === 0) {
       return [];
     }

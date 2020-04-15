@@ -21,6 +21,7 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {DEFAULT_KANBAN_ID, Kanban} from './kanban';
+import {selectWorkspace} from '../navigation/navigation.state';
 
 export interface KanbansState extends EntityState<Kanban> {}
 
@@ -32,5 +33,10 @@ export const selectKanbansState = (state: AppState) => state.kanbans;
 export const selectKanbansDictionary = createSelector(selectKanbansState, kanbansAdapter.getSelectors().selectEntities);
 export const selectKanbanById = id => createSelector(selectKanbansDictionary, kanbans => kanbans[id]);
 
-export const selectDefaultKanban = selectKanbanById(DEFAULT_KANBAN_ID);
-export const selectKanbanConfig = createSelector(selectDefaultKanban, kanban => kanban && kanban.config);
+export const selectKanbanId = createSelector(
+  selectWorkspace,
+  workspace => (workspace && workspace.viewCode) || DEFAULT_KANBAN_ID
+);
+
+export const selectKanban = createSelector(selectKanbansDictionary, selectKanbanId, (map, id) => map[id]);
+export const selectKanbanConfig = createSelector(selectKanban, kanban => kanban?.config);

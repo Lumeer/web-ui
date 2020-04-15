@@ -23,7 +23,7 @@ import {BsModalRef, BsModalService, ModalOptions} from 'ngx-bootstrap';
 import {AttributeTypeModalComponent} from './attribute-type/attribute-type-modal.component';
 import {AppState} from '../../core/store/app.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';
-import {first, take} from 'rxjs/operators';
+import {first, map, mergeMap, take} from 'rxjs/operators';
 import {combineLatest} from 'rxjs';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {selectOrganizationByWorkspace} from '../../core/store/organizations/organizations.state';
@@ -45,6 +45,7 @@ import {DataResourceDetailModalComponent} from './data-resource-detail/data-reso
 import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {ToastrService} from 'ngx-toastr';
+import {selectDocumentById} from '../../core/store/documents/documents.state';
 
 @Injectable({
   providedIn: 'root',
@@ -70,6 +71,25 @@ export class ModalService {
     const modalRef = this.bsModalService.show(ChooseLinkDocumentModalComponent, config);
     this.modalRefs.push(modalRef);
     return modalRef;
+  }
+
+  public showDocumentDetail(id: string) {
+    this.store$
+      .pipe(
+        select(selectDocumentById(id)),
+        mergeMap(document =>
+          this.store$.pipe(
+            select(selectCollectionById(document?.collectionId)),
+            map(collection => ({collection, document}))
+          )
+        ),
+        take(1)
+      )
+      .subscribe(({document, collection}) => {
+        if (document && collection) {
+          this.showDataResourceDetail(document, collection);
+        }
+      });
   }
 
   public showDataResourceDetail(

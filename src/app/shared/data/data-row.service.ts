@@ -41,6 +41,7 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
+import {ConstraintType} from '../../core/model/data/constraint';
 
 export interface DataRow {
   id: string;
@@ -133,7 +134,11 @@ export class DataRowService {
     const rows = [];
 
     for (const attribute of attributes) {
-      if (dataKeys.includes(attribute.id) || this.setupAllAttributes) {
+      if (
+        dataKeys.includes(attribute.id) ||
+        this.setupAllAttributes ||
+        attribute.constraint?.type === ConstraintType.Boolean
+      ) {
         const row: DataRow = {
           id: attribute.id,
           attribute,

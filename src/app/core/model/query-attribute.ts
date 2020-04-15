@@ -17,16 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesResourceType} from './resource';
+import {AttributesResource, AttributesResourceType} from './resource';
 import {Constraint} from './constraint';
 import {AllowedPermissions, mergeAllowedPermissions} from './allowed-permissions';
 import {LinkType} from '../store/link-types/link.type';
+import {Attribute, Collection} from '../store/collections/collection';
+import {findAttribute} from '../store/collections/collection.util';
 
-export interface QueryAttribute {
+export interface QueryResource {
   resourceId: string;
-  attributeId: string;
   resourceIndex?: number;
   resourceType: AttributesResourceType;
+}
+
+export interface QueryAttribute extends QueryResource {
+  attributeId: string;
   constraint?: Constraint;
 }
 
@@ -40,7 +45,7 @@ export function cleanQueryAttribute(attribute: QueryAttribute): QueryAttribute {
 }
 
 export function queryAttributePermissions(
-  attribute: QueryAttribute,
+  attribute: QueryResource,
   permissions: Record<string, AllowedPermissions>,
   linkTypesMap: Record<string, LinkType>
 ): AllowedPermissions {
@@ -52,4 +57,35 @@ export function queryAttributePermissions(
     return mergeAllowedPermissions(permissions[linkType.collectionIds[0]], permissions[linkType.collectionIds[1]]);
   }
   return {};
+}
+
+export function findResourceByQueryResource(
+  attribute: QueryResource,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): AttributesResource {
+  if (attribute?.resourceType === AttributesResourceType.Collection) {
+    return (collections || []).find(coll => coll.id === attribute?.resourceId);
+  } else if (attribute?.resourceType === AttributesResourceType.LinkType) {
+    return (linkTypes || []).find(lt => lt.id === attribute?.resourceId);
+  }
+
+  return null;
+}
+
+export function findAttributeByQueryAttribute(
+  attribute: QueryAttribute,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): Attribute {
+  const resource = findResourceByQueryResource(attribute, collections, linkTypes);
+  return findAttribute(resource?.attributes, attribute?.attributeId);
+}
+
+export function findConstraintByQueryAttribute(
+  attribute: QueryAttribute,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): Constraint {
+  return findAttributeByQueryAttribute(attribute, collections, linkTypes)?.constraint;
 }

@@ -331,7 +331,7 @@ export class DataAggregator {
     chainVisitedIds: string[]
   ) {
     const stage = chain[index];
-    const constraint = findAttributeConstraint(stage.resource && stage.resource.attributes, stage.attributeId);
+    const constraint = findAttributeConstraint(stage.resource?.attributes, stage.attributeId);
 
     for (const object of objectData) {
       chainVisitedIds[index] = object.id;
@@ -445,7 +445,7 @@ export class DataAggregator {
     dataResourcesChain: DataResourceChain[]
   ) {
     const stage = chain[index];
-    const constraint = findAttributeConstraint(stage.resource && stage.resource.attributes, stage.attributeId);
+    const constraint = findAttributeConstraint(stage.resource?.attributes, stage.attributeId);
 
     for (const object of objectData) {
       chainVisitedIds[index] = object.id;

@@ -1,0 +1,54 @@
+@import 'src/styles/variables';
+
+$secondary-color: $gray-400;
+$primary-color: $success;
+
+$line-size: 2px;
+
+$circle-size: 20px;
+
+$text-size: 12px;
+$text-margin-tb: 6px;
+
+:host {
+  overflow: hidden;
+}
+
+.box {
+  height: $circle-size + $text-size + 2 * $text-margin-tb;
+
+  .captions {
+    color: $secondary-color;
+    font-size: $text-size;
+    height: $text-size + 2 * $text-margin-tb;
+  }
+
+  .slider {
+    height: $circle-size;
+
+    .line {
+      height: $line-size;
+      background: $secondary-color;
+    }
+
+    .circle {
+      height: $circle-size;
+      width: $circle-size;
+      background: $primary-color;
+      border-radius: 50%;
+      border: 1px solid $primary-color;
+    }
+
+    .slider-point {
+      height: $circle-size / 2;
+      width: $circle-size / 2;
+      background: $secondary-color;
+      border-radius: 50%;
+    }
+  }
+}
+
+.item-active {
+  color: $primary-color;
+  font-weight: bold;
+}

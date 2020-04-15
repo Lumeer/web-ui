@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
-import {SizeType} from '../../../../../shared/slider/size-type';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
 
 @Pipe({
   name: 'isDocumentOpened',
