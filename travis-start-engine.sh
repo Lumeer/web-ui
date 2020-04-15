@@ -1,9 +1,6 @@
 #!/bin/bash
 ORIG=$(pwd)
 
-export JAVA_HOME="~/jdk"
-export PATH="$JAVA_HOME/bin:$PATH"
-
 if [ -d ~/.engine -a -d ~/.engine/.git ]; then
   echo "Pulling latest engine updates..."
   cd ~/.engine
