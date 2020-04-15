@@ -7,7 +7,8 @@ wget "$url" -P ~/bin/ || {
   exit 2
 }
 chmod +x ~/bin/install-jdk.sh
-export JAVA_HOME="~/$JDK"
+mkdir ~/jdk
+export JAVA_HOME="~/jdk"
 # shellcheck disable=SC2016
 export PATH="$JAVA_HOME/bin:$PATH"
 # shellcheck disable=2088
