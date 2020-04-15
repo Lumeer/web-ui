@@ -458,7 +458,11 @@ function createInitialColumnsMap(
 ): Record<string, Partial<KanbanDataColumn>> {
   const columnsLength = config?.columns?.length || 0;
   const firstAttribute = config?.stemsConfigs?.[0]?.attribute;
-  if (columnsLength === 0 && firstAttribute) {
+  const filteredColumns =
+    (firstAttribute &&
+      config?.columns?.filter(column => isColumnValid([], column.title, [firstAttribute], collections, linkTypes))) ||
+    [];
+  if (firstAttribute && (columnsLength === 0 || filteredColumns.length === 0)) {
     const constraint = findConstraintByQueryAttribute(firstAttribute, collections, linkTypes);
     if (constraint?.type === ConstraintType.Select) {
       const values = (<SelectConstraint>constraint).config?.options?.map(option => option.value) || [];

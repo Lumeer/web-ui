@@ -18,10 +18,10 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {KanbanConfig} from '../../../../../../core/store/kanbans/kanban';
-import {ConstraintData, ConstraintType} from '../../../../../../core/model/data/constraint';
-import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
-import {KanbanDataColumn} from '../../../util/kanban-data';
+import {KanbanConfig} from '../../../../../../../core/store/kanbans/kanban';
+import {ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
+import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
+import {KanbanDataColumn} from '../../../../util/kanban-data';
 
 @Component({
   selector: 'kanban-column-header',

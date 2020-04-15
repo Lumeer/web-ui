@@ -175,3 +175,11 @@ export function findLastIndex<T>(array: Array<T>, predicate: (value: T, index: n
   }
   return -1;
 }
+
+export function findLastItem<T>(array: Array<T>, predicate: (value: T, index: number, obj: T[]) => boolean): T {
+  let l = array.length;
+  while (l--) {
+    if (predicate(array[l], l, array)) return array[l];
+  }
+  return null;
+}

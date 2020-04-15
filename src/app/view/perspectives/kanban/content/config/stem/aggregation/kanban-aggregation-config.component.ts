@@ -18,9 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {DataAggregationType} from '../../../../../../shared/utils/data/data-aggregation';
+import {DataAggregationType} from '../../../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {KanbanAggregation, KanbanValueType} from '../../../../../../core/store/kanbans/kanban';
+import {KanbanAggregation, KanbanValueType} from '../../../../../../../core/store/kanbans/kanban';
 
 @Component({
   selector: 'kanban-aggregation-config',

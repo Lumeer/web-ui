@@ -37,8 +37,8 @@ export enum LinkInstancesActionType {
   UPDATE = '[Link Instances] Update',
   UPDATE_INTERNAL = '[Link Instances] Update :: Internal',
 
-  UPDATE_DATA = '[Documents] Update Data',
-  UPDATE_DATA_INTERNAL = '[Documents] Update Data Internal',
+  UPDATE_DATA = '[Link Instances] Update Data',
+  UPDATE_DATA_INTERNAL = '[Link Instances] Update Data Internal',
   PATCH_DATA = '[Link Instances] Patch Data',
   PATCH_DATA_INTERNAL = '[Link Instances] Patch Data :: Internal',
 

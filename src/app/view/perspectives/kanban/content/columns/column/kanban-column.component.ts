@@ -19,14 +19,13 @@
 
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {DRAG_DELAY} from '../../../../../core/constants';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {KanbanColumn} from '../../../../../core/store/kanbans/kanban';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {DataResource} from '../../../../../core/model/resource';
-import {generateId} from '../../../../../shared/utils/resource.utils';
-import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
-import {PostItLayoutType} from '../../../../../shared/post-it/post-it-layout-type';
+import {DRAG_DELAY} from '../../../../../../core/constants';
+import {ConstraintData} from '../../../../../../core/model/data/constraint';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {DataResource} from '../../../../../../core/model/resource';
+import {generateId} from '../../../../../../shared/utils/resource.utils';
+import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../../util/kanban-data';
+import {PostItLayoutType} from '../../../../../../shared/post-it/post-it-layout-type';
 
 @Component({
   selector: 'kanban-column',
@@ -57,7 +56,11 @@ export class KanbanColumnComponent {
   public constraintData: ConstraintData;
 
   @Output()
-  public updateDataResource = new EventEmitter<{card: KanbanCard; previousValue: any; newValue: any}>();
+  public updateDataResource = new EventEmitter<{
+    card: KanbanCard;
+    fromColumn: KanbanDataColumn;
+    toColumn: KanbanDataColumn;
+  }>();
 
   @Output()
   public createDataResource = new EventEmitter<KanbanCreateResource>();
@@ -91,7 +94,7 @@ export class KanbanColumnComponent {
     }
   }
 
-  private postItPositionChanged(event: CdkDragDrop<KanbanColumn, KanbanColumn>): boolean {
+  private postItPositionChanged(event: CdkDragDrop<KanbanDataColumn, KanbanDataColumn>): boolean {
     return this.postItContainerChanged(event) || event.previousIndex !== event.currentIndex;
   }
 
@@ -114,16 +117,16 @@ export class KanbanColumnComponent {
     this.columnsChange.emit({columns, otherColumn});
   }
 
-  private postItContainerChanged(event: CdkDragDrop<KanbanColumn, KanbanColumn>): boolean {
+  private postItContainerChanged(event: CdkDragDrop<KanbanDataColumn, KanbanDataColumn>): boolean {
     return event.container.id !== event.previousContainer.id;
   }
 
-  private updatePostItValue(event: CdkDragDrop<KanbanColumn, KanbanColumn>) {
+  private updatePostItValue(event: CdkDragDrop<KanbanDataColumn, KanbanDataColumn>) {
     const card = event.item.data as KanbanCard;
-    const newValue = event.container.data.title;
-    const previousValue = event.previousContainer.data.title;
+    const toColumn = event.container.data;
+    const fromColumn = event.previousContainer.data;
 
-    this.updateDataResource.emit({card, newValue, previousValue});
+    this.updateDataResource.emit({card, fromColumn, toColumn});
   }
 
   public createObjectInResource(createResource: KanbanCreateResource) {

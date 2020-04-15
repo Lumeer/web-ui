@@ -18,16 +18,16 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Collection} from '../../../../core/store/collections/collection';
-import {KanbanAggregation, KanbanConfig, KanbanStemConfig} from '../../../../core/store/kanbans/kanban';
-import {ConstraintData} from '../../../../core/model/data/constraint';
-import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
-import {createDefaultKanbanStemConfig, isKanbanAggregationDefined} from '../util/kanban.util';
-import {deepObjectCopy} from '../../../../shared/utils/common.utils';
-import {LinkType} from '../../../../core/store/link-types/link.type';
-import {SliderItem} from '../../../../shared/slider/values/slider-item';
-import {SizeType} from '../../../../shared/slider/size/size-type';
-import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {KanbanAggregation, KanbanConfig, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
+import {createDefaultKanbanStemConfig, isKanbanAggregationDefined} from '../../util/kanban.util';
+import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {SliderItem} from '../../../../../shared/slider/values/slider-item';
+import {SizeType} from '../../../../../shared/slider/size/size-type';
+import {PostItLayoutType} from '../../../../../shared/post-it/post-it-layout-type';
 
 @Component({
   selector: 'kanban-config',

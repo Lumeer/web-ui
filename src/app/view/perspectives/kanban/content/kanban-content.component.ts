@@ -267,4 +267,8 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   public patchLinkInstanceData(linkInstance: LinkInstance) {
     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
   }
+
+  public updateLinkDocuments(payload: {linkInstanceId: string; documentIds: [string, string]}) {
+    this.store$.dispatch(new LinkInstancesAction.ChangeDocuments(payload));
+  }
 }

@@ -18,17 +18,17 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Constraint} from '../../../../../core/model/constraint';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {KanbanAttribute, KanbanResource, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
+import {Constraint} from '../../../../../../core/model/constraint';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {KanbanAttribute, KanbanResource, KanbanStemConfig} from '../../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {QueryStem} from '../../../../../core/store/navigation/query/query';
-import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
-import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {AttributesResource} from '../../../../../core/model/resource';
-import {QueryResource} from '../../../../../core/model/query-attribute';
+import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {QueryStem} from '../../../../../../core/store/navigation/query/query';
+import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
+import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
+import {AttributesResource} from '../../../../../../core/model/resource';
+import {QueryResource} from '../../../../../../core/model/query-attribute';
 
 @Component({
   selector: 'kanban-stem-config',

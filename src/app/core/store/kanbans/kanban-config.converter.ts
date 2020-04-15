@@ -41,10 +41,10 @@ export function convertKanbanConfigDtoToModelWithVersion(config: any): KanbanCon
   while (version !== KanbanConfigVersion.V2) {
     switch (version) {
       case KanbanConfigVersion.V1:
-        convertedConfig = convertKanbanConfigDtoToModelV1(config);
+        convertedConfig = convertKanbanConfigDtoToModelV1(convertedConfig);
         break;
       default:
-        convertedConfig = convertKanbanConfigDtoToModelV0(config);
+        convertedConfig = convertKanbanConfigDtoToModelV0(convertedConfig);
         break;
     }
 
@@ -69,22 +69,21 @@ function parseVersion(config: any): string {
 
 function convertKanbanConfigDtoToModelV1(config: KanbanConfig): KanbanConfig {
   const aggregation: any = config['aggregation'];
+  const configCopy = deepObjectCopy(config);
   if (aggregation) {
-    const configCopy = deepObjectCopy(config);
     configCopy.stemsConfigs?.forEach(stemConfig => (stemConfig.aggregation = cleanKanbanAttribute(aggregation)));
-    configCopy.columns?.forEach(column => {
-      delete column['resourcesOrder'];
-      delete column['constraintType'];
-    });
-
-    if (configCopy.otherColumn) {
-      delete configCopy.otherColumn['resourcesOrder'];
-      delete configCopy.otherColumn['constraintType'];
-    }
-
-    return {...configCopy, version: KanbanConfigVersion.V2};
   }
-  return {...config, version: KanbanConfigVersion.V2};
+  configCopy.columns?.forEach(column => {
+    delete column['resourcesOrder'];
+    delete column['constraintType'];
+  });
+
+  if (configCopy.otherColumn) {
+    delete configCopy.otherColumn['resourcesOrder'];
+    delete configCopy.otherColumn['constraintType'];
+  }
+
+  return {...configCopy, version: KanbanConfigVersion.V2};
 }
 
 function convertKanbanConfigDtoToModelV0(config: KanbanConfigV0): KanbanConfig {
@@ -119,7 +118,9 @@ function convertKanbanColumnConfigDtoToModelV0(column: KanbanColumnV0): KanbanCo
   }
 
   return {
-    ...column,
+    id: column.id,
+    title: column.title,
+    width: column.width,
     createdFromAttributes: (column.createdFromAttributes || []).map(attribute => ({
       ...attribute,
       resourceId: attribute.collectionId,

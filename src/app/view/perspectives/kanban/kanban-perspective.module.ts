@@ -25,15 +25,14 @@ import {KanbanPerspectiveComponent} from './kanban-perspective.component';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {KanbanPerspectiveRoutingModule} from './kanban-perspective-routing.module';
-import {KanbanConfigComponent} from './config/kanban-config.component';
-import {KanbanColumnsComponent} from './columns/kanban-columns.component';
-import {KanbanStemConfigComponent} from './config/stem/kanban-stem-config.component';
-import {KanbanColumnComponent} from './columns/column/kanban-column.component';
-import {KanbanColumnHeaderComponent} from './columns/column/header/kanban-column-header.component';
-import {KanbanColumnFooterComponent} from './columns/column/footer/kanban-column-footer.component';
+import {KanbanConfigComponent} from './content/config/kanban-config.component';
+import {KanbanColumnsComponent} from './content/columns/kanban-columns.component';
+import {KanbanStemConfigComponent} from './content/config/stem/kanban-stem-config.component';
+import {KanbanColumnComponent} from './content/columns/column/kanban-column.component';
+import {KanbanColumnHeaderComponent} from './content/columns/column/header/kanban-column-header.component';
+import {KanbanColumnFooterComponent} from './content/columns/column/footer/kanban-column-footer.component';
 import {KanbanDragColumnsPipe} from './pipes/kanban-drag-columns.pipe';
 import {KanbanPostItDraggablePipe} from './pipes/kanban-post-it-draggable.pipe';
-import {FilterWritableResourcesPipe} from './pipes/filter-writable-resources.pipe';
 import {PickerModule} from '../../../shared/picker/picker.module';
 import {KanbanSelectedItemPipe} from './pipes/kanban-selected-item.pipe';
 import {IsAnyKanbanAttributeSelectedPipe} from './pipes/is-any-kanban-attribute-selected.pipe';
@@ -43,13 +42,13 @@ import {KanbanDueDateSelectItemsPipe} from './pipes/kanban-due-date-select-items
 import {KanbanDueHoursTagPipe} from './pipes/kanban-due-hours-tag.pipe';
 import {KanbanColumnTitlesPipe} from './pipes/kanban-column-titles.pipe';
 import {KanbanSelectDataItemsPipe} from './pipes/kanban-select-data-items.pipe';
-import {KanbanAggregationConfigComponent} from './config/stem/aggregation/kanban-aggregation-config.component';
+import {KanbanAggregationConfigComponent} from './content/config/stem/aggregation/kanban-aggregation-config.component';
 import {KanbanValueTypeSelectItemsPipe} from './pipes/kanban-value-type-select-items.pipe';
 import {KanbanAggregateSelectItemsPipe} from './pipes/kanban-aggregate-select-items.pipe';
 import {KanbanCleanAttributePipe} from './pipes/kanban-clean-attribute.pipe';
 import {PostItModule} from '../../../shared/post-it/post-it.module';
 import {KanbanAggregationDefinedPipe} from './pipes/kanban-aggregation-defined.pipe';
-import {KanbanContentComponent} from './kanban-content/kanban-content.component';
+import {KanbanContentComponent} from './content/kanban-content.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +61,6 @@ import {KanbanContentComponent} from './kanban-content/kanban-content.component'
     KanbanColumnFooterComponent,
     KanbanDragColumnsPipe,
     KanbanPostItDraggablePipe,
-    FilterWritableResourcesPipe,
     KanbanSelectedItemPipe,
     IsAnyKanbanAttributeSelectedPipe,
     KanbanDueDateSelectItemsPipe,

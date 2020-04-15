@@ -27,13 +27,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Collection} from '../../../../../../core/store/collections/collection';
-import {AttributesResourceType} from '../../../../../../core/model/resource';
-import {DropdownOption} from '../../../../../../shared/dropdown/options/dropdown-option';
-import {OptionsDropdownComponent} from '../../../../../../shared/dropdown/options/options-dropdown.component';
-import {KanbanCreateResource} from '../../../util/kanban-data';
-import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
-import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {Collection} from '../../../../../../../core/store/collections/collection';
+import {AttributesResourceType} from '../../../../../../../core/model/resource';
+import {DropdownOption} from '../../../../../../../shared/dropdown/options/dropdown-option';
+import {OptionsDropdownComponent} from '../../../../../../../shared/dropdown/options/options-dropdown.component';
+import {KanbanCreateResource} from '../../../../util/kanban-data';
+import {getAttributesResourceType} from '../../../../../../../shared/utils/resource.utils';
+import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'kanban-column-footer',
