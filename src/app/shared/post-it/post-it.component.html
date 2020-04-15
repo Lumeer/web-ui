@@ -24,7 +24,6 @@
     *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index; let first = first"
     class="d-block"
     [row]="row"
-    [class.border-top]="!first"
     [permissions]="allowedPermissions"
     [cursor]="dataResource | dataCursor : row.attribute?.id"
     [constraintData]="constraintData"
@@ -38,7 +37,7 @@
     (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
   </post-it-row>
 
-  <div *ngIf="allowedPermissions?.writeWithView" class="py-2 border-top clickable" (click)="onCreateRow()">
+  <div *ngIf="allowedPermissions?.writeWithView" class="py-2 clickable" (click)="onCreateRow()">
     <i class="fas fa-plus mx-1"></i>
   </div>
 

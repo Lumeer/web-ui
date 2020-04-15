@@ -36,7 +36,7 @@
                           (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
   </data-resource-data-row>
 
-  <div *ngIf="permissions?.writeWithView" class="pt-2 border-top">
+  <div *ngIf="permissions?.writeWithView" class="pt-2">
     <button class="btn btn-sm btn-light btn-block" (click)="onCreateRow()">
       <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
       <span i18n="@@document.detail.attribute.add">Add Row</span>

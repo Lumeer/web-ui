@@ -53,7 +53,7 @@ import {DataInputConfiguration} from '../../../../data-input/data-input-configur
   styleUrls: ['./data-resource-data-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DataResourceDataRowComponent implements DataRowComponent, OnChanges, AfterViewInit {
+export class DataResourceDataRowComponent implements DataRowComponent, OnChanges {
   @Input()
   public row: DataRow;
 
@@ -98,9 +98,6 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   @Output()
   public resetFocusAndEdit = new EventEmitter<number>();
-
-  @ViewChild('wrapperElement', {read: ElementRef})
-  public wrapperElement: ElementRef;
 
   @ViewChild(DataResourceDataRowIconsComponent, {read: ElementRef})
   public iconsElement: ElementRef;
@@ -326,21 +323,5 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
 
   public onValueEdit(value: DataValue) {
     this.editedValue = value;
-  }
-
-  @HostListener('window:resize')
-  public onWindowResize() {
-    this.computeWidth();
-  }
-
-  public ngAfterViewInit() {
-    setTimeout(() => this.computeWidth());
-  }
-
-  private computeWidth() {
-    const iconsWidth = (this.iconsElement && this.iconsElement.nativeElement.clientWidth) || 0;
-    if (this.wrapperElement) {
-      this.renderer.setStyle(this.wrapperElement.nativeElement, 'width', `calc(100% - ${iconsWidth}px - 0.25rem)`);
-    }
   }
 }
