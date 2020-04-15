@@ -379,7 +379,7 @@ export class KanbanConverter {
           permissions,
           linkTypesMap
         );
-        if (resourcePermissions.writeWithView && resource) {
+        if (resourcePermissions?.writeWithView && resource) {
           resources.push({resource, kanbanAttribute, stemIndex});
         }
       }
