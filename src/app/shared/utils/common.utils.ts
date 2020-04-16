@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import isEqual from 'lodash/isEqual';
+import escape from 'lodash/escape';
+import unescape from 'lodash/unescape';
 import cloneDeep from 'lodash/cloneDeep';
 import {removeAccent} from './string.utils';
 
@@ -182,4 +184,12 @@ export function findLastItem<T>(array: Array<T>, predicate: (value: T, index: nu
     if (predicate(array[l], l, array)) return array[l];
   }
   return null;
+}
+
+export function escapeHtml(value: string): string {
+  return escape(value);
+}
+
+export function unescapeHtml(value: string): string {
+  return unescape(value);
 }

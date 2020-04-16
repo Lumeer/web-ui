@@ -18,9 +18,6 @@
  */
 
 export class HtmlModifier {
-  private static readonly SURROGATE_PAIR_REGEXP = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
-  private static readonly NON_ALPHANUMERIC_REGEXP = /([^\#-~| |!])/g;
-
   public static removeHtmlComments(html: HTMLElement): string {
     return html && html.innerHTML && html.innerHTML.replace(/<!--[\s\S]*?-->/g, '').trim();
   }
@@ -33,28 +30,6 @@ export class HtmlModifier {
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-  }
-
-  /**
-   * Escapes all potentially dangerous characters, so that the
-   * resulting string can be safely inserted into attribute or
-   * element text.
-   * @param value
-   * @returns {string} escaped text
-   */
-  public static encodeEntities(value) {
-    return value
-      .replace(/&/g, '&amp;')
-      .replace(this.SURROGATE_PAIR_REGEXP, function(s) {
-        const hi = s.charCodeAt(0);
-        const low = s.charCodeAt(1);
-        return '&#' + ((hi - 0xd800) * 0x400 + (low - 0xdc00) + 0x10000) + ';';
-      })
-      .replace(this.NON_ALPHANUMERIC_REGEXP, function(s) {
-        return '&#' + s.charCodeAt(0) + ';';
-      })
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;');
   }
 }
 

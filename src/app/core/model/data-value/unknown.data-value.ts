@@ -19,7 +19,7 @@
 
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {DataValue} from './index';
-import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined, isNumeric, toNumber, unescapeHtml} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueByConditionText, valueMeetFulltexts} from './data-value.utils';
 
@@ -32,15 +32,15 @@ export class UnknownDataValue implements DataValue {
     if (isNotNullOrUndefined(this.inputValue)) {
       return this.inputValue;
     }
-    return formatUnknownDataValue(this.value);
+    return formatUnknownDataValue(unescapeHtml(this.value));
   }
 
   public preview(): string {
-    return this.format();
+    return formatUnknownDataValue(this.value);
   }
 
   public serialize(): any {
-    return this.value;
+    return escapeHtml(this.value);
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
