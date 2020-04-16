@@ -12,23 +12,13 @@
     *ngIf="data.attribute | cellDataInputInfo:data.dataValue:allowedPermissions: (editing$ | async) as dataInputInfo">
 
     <ng-container *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue">
-      <div *ngIf="data.attribute?.constraint?.type !== constraintType.Text; else richText"
+      <div [innerHTML]="data.dataValue | previewDataValue | safeHtml"
            class="text-pre overflow-hidden h-100 mx-1 align-middle"
            [title]="data.dataValue | formatDataValue | stripHtml:false"
            [ngClass]="data.attribute?.constraint | constraintClass"
            [class.invalid-value]="!(data.dataValue | isDataValueValid)"
            readonly data-test="table-data-input">
-        {{data.dataValue | previewDataValue}}
       </div>
-      <ng-template #richText>
-        <div [innerHTML]="data.dataValue | previewDataValue | safeHtml"
-             class="text-pre overflow-hidden h-100 mx-1 align-middle"
-             [title]="data.dataValue | formatDataValue | stripHtml:false"
-             [ngClass]="data.attribute?.constraint | constraintClass"
-             [class.invalid-value]="!(data.dataValue | isDataValueValid)"
-             readonly data-test="table-data-input">
-        </div>
-      </ng-template>
     </ng-container>
 
     <data-input *ngIf="dataInputInfo.showDataInput"
