@@ -3,8 +3,10 @@
   align-items: center;
   position: relative;
 
-  &:not(.multiline) {
-    max-height: 200px;
+  &:not(.multiline)::ng-deep {
+    .ql-editor {
+      max-height: 200px;
+    }
   }
 }
 
