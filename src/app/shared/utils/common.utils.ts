@@ -186,10 +186,10 @@ export function findLastItem<T>(array: Array<T>, predicate: (value: T, index: nu
   return null;
 }
 
-export function escapeHtml(value: string): string {
-  return escape(value);
+export function escapeHtml(value: string | number): string | number {
+  return typeof value === 'number' ? value : escape(value);
 }
 
-export function unescapeHtml(value: string): string {
-  return unescape(value);
+export function unescapeHtml(value: string | number): string | number {
+  return typeof value === 'number' ? value : escape(value);
 }
