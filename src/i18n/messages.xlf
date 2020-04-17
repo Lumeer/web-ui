@@ -93,13 +93,13 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.required" datatype="html">
         <source>Required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.title" datatype="html">
         <source>
@@ -492,12 +492,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context>
           <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.links.title" datatype="html">
-        <source>Links to other records</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/links/links-list/links-list.component.html</context>
-          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="search.result.empty" datatype="html">
         <source>
@@ -1934,7 +1928,7 @@
         <source>Choose a template</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="linenumber">3</context>
         </context-group>
         <note priority="1" from="description">templates.choose</note>
       </trans-unit><trans-unit id="templates.learn.more" datatype="html">
@@ -2614,11 +2608,35 @@
           <context context-type="sourcefile">app/view/perspectives/table/header/link/info/table-link-info.component.html</context>
           <context context-type="linenumber">36</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.kanban.config.column.summary" datatype="html">
+        <source>Column Summary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.kanban.config.column.size" datatype="html">
+        <source>Column size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.kanban.config.card.layout" datatype="html">
+        <source>Card layout</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.perspective.header.other" datatype="html">
+        <source>Other</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/header/kanban-column-header.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
       </trans-unit><trans-unit id="create.new.document" datatype="html">
         <source>Create New Record</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context>
@@ -2631,32 +2649,14 @@
       </trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} }</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.kanban.config.column.summary" datatype="html">
-        <source>Column Summary</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/config/kanban-config.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.perspective.header.other" datatype="html">
-        <source>Other</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/columns/column/header/kanban-column-header.component.html</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.kanban.config.value" datatype="html">
-        <source>Select displayed value</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/config/stem/kanban-attribute-config/kanban-attribute-config.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
         <source>Select value aggregation</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/config/stem/kanban-value-attribute-config/kanban-value-attribute-config.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context>
@@ -2665,8 +2665,8 @@
       </trans-unit><trans-unit id="perspective.kanban.config.valueAbsOrRel" datatype="html">
         <source>Select absolute or relative display</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/config/stem/kanban-value-attribute-config/kanban-value-attribute-config.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="button.remove" datatype="html">
         <source>Delete</source>
@@ -3955,6 +3955,20 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="template.cmtry.title" datatype="html">
+        <source>Cemetery Management</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.cmtry.description" datatype="html">
+        <source>Get quick and easy access to all information about the cemetery, all contracts and payments. Schedule ceremonies and plan tasks for workers.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="constraint.duration.unit" datatype="html">
         <source>{VAR_SELECT, select, w {w} d {d} h {h} m {m} s {s} }</source>
         <context-group purpose="location">
@@ -4771,6 +4785,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="resource.new.dialog.firstProject" datatype="html">
+        <source>My first project</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="function.create.serviceLimits" datatype="html">
         <source>You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?</source>
         <context-group purpose="location">
@@ -5178,13 +5199,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="@@perspective.calendar.create.event.failure" datatype="html">
-        <source>Could not create event</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/calendar/calendar-perspective.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="perspective.calendar.display.calendar" datatype="html">
         <source>Calendar</source>
         <context-group purpose="location">
@@ -5364,49 +5378,60 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="kanban.config.attribute.empty" datatype="html">
-        <source>Select attribute</source>
+      <trans-unit id="perspective.kanban.create.card.failure" datatype="html">
+        <source>Could not create card</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-attribute-config/kanban-attribute-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="kanban.config.collection.resource.empty" datatype="html">
+        <source>Select table or link</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="kanban.config.collection.attribute.empty" datatype="html">
         <source>Select attribute</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="kanban.config.collection.dueDate.empty" datatype="html">
         <source>Select due date</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="kanban.config.collection.dueDate" datatype="html">
         <source>Due date</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="kanban.config.collection.doneAttribute.empty" datatype="html">
         <source>Select done state</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="kanban.config.collection.doneAttribute" datatype="html">
         <source>Done state</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
