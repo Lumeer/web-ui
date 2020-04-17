@@ -28,11 +28,7 @@ import {removeAccent} from '../../utils/string.utils';
 export class FilterDataSuggestionsPipe implements PipeTransform {
   public transform(suggestions: DataSuggestion[], text: string): DataDropdownOption[] {
     return (suggestions || [])
-      .filter(suggestion =>
-        removeAccent(suggestion.title)
-          .trim()
-          .includes(removeAccent(text).trim())
-      )
+      .filter(suggestion => removeAccent(suggestion.title).trim().includes(removeAccent(text).trim()))
       .map(suggestion => ({value: suggestion.title, displayValue: suggestion.title}));
   }
 }

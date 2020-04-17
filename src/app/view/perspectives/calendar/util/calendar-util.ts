@@ -158,9 +158,7 @@ function calendarDefaultConfig(query: Query, collections: Collection[], linkType
   return {
     mode: CalendarMode.Month,
     list: false,
-    date: moment()
-      .startOf('day')
-      .toDate(),
+    date: moment().startOf('day').toDate(),
     version: CalendarConfigVersion.V2,
     stemsConfigs,
   };

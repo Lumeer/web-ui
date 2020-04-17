@@ -43,8 +43,9 @@ export class UserService {
     invitationType?: InvitationType
   ): Observable<UserDto[]> {
     return this.httpClient.post<UserDto[]>(
-      `${this.organizationApiPrefix(organizationId)}projects/${projectId}/users/${invitationType ||
-        InvitationType.JoinOnly}`,
+      `${this.organizationApiPrefix(organizationId)}projects/${projectId}/users/${
+        invitationType || InvitationType.JoinOnly
+      }`,
       users
     );
   }

@@ -151,15 +151,9 @@ export function valueByConditionNumber(
       return values[0].value ? '' : exampleValue;
     case QueryCondition.LowerThan:
     case QueryCondition.NotBetween:
-      return dataValue
-        .copy(values[0].value)
-        .decrement()
-        .serialize();
+      return dataValue.copy(values[0].value).decrement().serialize();
     case QueryCondition.GreaterThan:
-      return dataValue
-        .copy(values[0].value)
-        .increment()
-        .serialize();
+      return dataValue.copy(values[0].value).increment().serialize();
     case QueryCondition.Between:
       const firstValue = (<NumericDataValue>dataValue.copy(values[0].value)).bigNumber;
       const secondValue = (<NumericDataValue>dataValue.copy(values[1].value)).bigNumber;

@@ -170,11 +170,7 @@ function isDurationValidByGlobalLetters(value: any): boolean {
 }
 
 function prepareDurationValue(value: any): string {
-  return (value || '')
-    .toString()
-    .trim()
-    .toLowerCase()
-    .replace(/\s/g, '');
+  return (value || '').toString().trim().toLowerCase().replace(/\s/g, '');
 }
 
 function isDurationValidByNativeLetters(value: any, durationUnitsMap: DurationUnitsMap): boolean {

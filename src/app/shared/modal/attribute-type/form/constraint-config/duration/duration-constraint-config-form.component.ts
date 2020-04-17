@@ -126,10 +126,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
     this.typeControl.setValue(type);
     this.units.forEach((unit, index) => {
       const conversionValue = this.getUnitConversion(type, unit);
-      this.conversionsControl
-        .at(index)
-        .get(DurationConstraintConversionFormControl.Value)
-        .setValue(conversionValue);
+      this.conversionsControl.at(index).get(DurationConstraintConversionFormControl.Value).setValue(conversionValue);
     });
   }
 

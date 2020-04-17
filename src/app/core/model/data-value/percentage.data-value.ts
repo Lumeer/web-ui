@@ -45,9 +45,7 @@ export class PercentageDataValue implements NumericDataValue {
   }
 
   private createPercentage(value: any): Big {
-    const containerPercentageSign = String(value)
-      .trim()
-      .endsWith('%');
+    const containerPercentageSign = String(value).trim().endsWith('%');
     const pureValue = containerPercentageSign || isNotNullOrUndefined(this.inputValue) ? parseInputValue(value) : value;
     return convertPercentageToBig(pureValue, this.config && this.config.decimals);
   }
@@ -102,29 +100,13 @@ export class PercentageDataValue implements NumericDataValue {
 
   public increment(): PercentageDataValue {
     return (
-      (this.bigNumber &&
-        new PercentageDataValue(
-          this.bigNumber
-            .add(1)
-            .div(100)
-            .toFixed(),
-          this.config
-        )) ||
-      this.copy()
+      (this.bigNumber && new PercentageDataValue(this.bigNumber.add(1).div(100).toFixed(), this.config)) || this.copy()
     );
   }
 
   public decrement(): PercentageDataValue {
     return (
-      (this.bigNumber &&
-        new PercentageDataValue(
-          this.bigNumber
-            .sub(1)
-            .div(100)
-            .toFixed(),
-          this.config
-        )) ||
-      this.copy()
+      (this.bigNumber && new PercentageDataValue(this.bigNumber.sub(1).div(100).toFixed(), this.config)) || this.copy()
     );
   }
 

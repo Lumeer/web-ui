@@ -57,11 +57,7 @@ export class PivotHeaderAttributeConfigComponent {
   public attributeRemove = new EventEmitter();
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
-  public readonly showSumsId =
-    'pivot-show-sums-' +
-    Math.random()
-      .toString(36)
-      .substr(2);
+  public readonly showSumsId = 'pivot-show-sums-' + Math.random().toString(36).substr(2);
   public readonly emptyValueString: string;
 
   constructor(private i18n: I18n) {

@@ -27,11 +27,7 @@ export function convertRgbColorToHex(rgb: string): string {
     rgb
       .slice(4, -1)
       .split(',')
-      .map(val =>
-        Number(val.trim())
-          .toString(16)
-          .padStart(2, '0')
-      )
+      .map(val => Number(val.trim()).toString(16).padStart(2, '0'))
       .join('');
   return /^#?[0-9a-f]{6}$/.test(value) ? value : '';
 }

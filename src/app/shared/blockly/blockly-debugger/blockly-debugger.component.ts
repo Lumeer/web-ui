@@ -83,14 +83,8 @@ export class BlocklyDebuggerComponent implements OnInit {
   public recomputeWidth(div: ElementRef) {
     if (div) {
       const parentDiv = (div.nativeElement as HTMLElement).offsetParent as HTMLElement;
-      const paddingLeft = +window
-        .getComputedStyle(parentDiv)
-        .getPropertyValue('padding-left')
-        .replace('px', '');
-      const paddingRight = +window
-        .getComputedStyle(parentDiv)
-        .getPropertyValue('padding-right')
-        .replace('px', '');
+      const paddingLeft = +window.getComputedStyle(parentDiv).getPropertyValue('padding-left').replace('px', '');
+      const paddingRight = +window.getComputedStyle(parentDiv).getPropertyValue('padding-right').replace('px', '');
       const formWidth = parentDiv.clientWidth - parentDiv.offsetLeft - paddingLeft - paddingRight;
       document.body.style.setProperty('--blockly-log-width', `${formWidth}px`);
     }

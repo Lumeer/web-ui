@@ -402,24 +402,14 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   }
 
   protected createYScaleLinear(yAxisElement: any): d3.scale.Linear<number, number> {
-    return d3.scale
-      .linear()
-      .domain([this.getGridHeight(), 0])
-      .range(yAxisElement.range);
+    return d3.scale.linear().domain([this.getGridHeight(), 0]).range(yAxisElement.range);
   }
 
   protected createYScaleTime(yAxisElement: any): d3.scale.Linear<number, number> {
-    const date1 = moment(yAxisElement.range[0])
-      .toDate()
-      .getTime();
-    const date2 = moment(yAxisElement.range[1])
-      .toDate()
-      .getTime();
+    const date1 = moment(yAxisElement.range[0]).toDate().getTime();
+    const date2 = moment(yAxisElement.range[1]).toDate().getTime();
 
-    return d3.scale
-      .linear()
-      .domain([this.getGridHeight(), 0])
-      .rangeRound([date1, date2]);
+    return d3.scale.linear().domain([this.getGridHeight(), 0]).rangeRound([date1, date2]);
   }
 
   protected createYScaleCategories(yAxisElement: any): YScaleCategories {
@@ -521,7 +511,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const plotMaker = this;
     return d3.behavior
       .drag()
-      .origin(function(datum: any) {
+      .origin(function (datum: any) {
         const traceIx = plotMaker.getTraceIndexForPoint(this);
         const setIx = plotMaker.getSetIndexForTraceIndex(traceIx);
         const yScale: any = plotMaker.createYScale(setIx);
@@ -549,7 +539,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
         return plotMaker.getPointPosition(this, datum);
       })
-      .on('drag', function(datum: any) {
+      .on('drag', function (datum: any) {
         const pointData: PointData = this.pointData;
 
         const index = datum.i;
@@ -568,7 +558,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
           plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
         }
       })
-      .on('dragend', function(datum: any) {
+      .on('dragend', function (datum: any) {
         const pointData: PointData = this.pointData;
 
         const set = plotMaker.chartData.sets[pointData.setIx];

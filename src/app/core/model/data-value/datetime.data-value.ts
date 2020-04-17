@@ -250,14 +250,10 @@ export class DateTimeDataValue implements DataValue {
         if (dates[0] && dates[1] && dates[0].getTime() === dates[1].getTime()) {
           return this.copy(dates[0]).serialize();
         }
-        return this.copy(dates[0])
-          .increment()
-          .serialize();
+        return this.copy(dates[0]).increment().serialize();
       case QueryCondition.LowerThan:
       case QueryCondition.NotBetween:
-        return this.copy(dates[0])
-          .decrement()
-          .serialize();
+        return this.copy(dates[0]).decrement().serialize();
       case QueryCondition.NotEquals:
         return values[0].value || values[0].type ? '' : this.copy(new Date()).serialize();
       case QueryCondition.IsEmpty:
@@ -296,33 +292,21 @@ function isISOFormat(value: any): boolean {
 function constraintConditionValueMoment(value: ConstraintConditionValue): moment.Moment {
   switch (value) {
     case DateTimeConstraintConditionValue.Yesterday:
-      return moment()
-        .startOf('day')
-        .subtract(1, 'day');
+      return moment().startOf('day').subtract(1, 'day');
     case DateTimeConstraintConditionValue.Tomorrow:
-      return moment()
-        .startOf('day')
-        .add(1, 'day');
+      return moment().startOf('day').add(1, 'day');
     case DateTimeConstraintConditionValue.Today:
       return moment().startOf('day');
     case DateTimeConstraintConditionValue.LastWeek:
-      return moment()
-        .startOf('week')
-        .subtract(1, 'week');
+      return moment().startOf('week').subtract(1, 'week');
     case DateTimeConstraintConditionValue.NextWeek:
-      return moment()
-        .startOf('week')
-        .add(1, 'week');
+      return moment().startOf('week').add(1, 'week');
     case DateTimeConstraintConditionValue.ThisWeek:
       return moment().startOf('week');
     case DateTimeConstraintConditionValue.LastMonth:
-      return moment()
-        .startOf('month')
-        .subtract(1, 'month');
+      return moment().startOf('month').subtract(1, 'month');
     case DateTimeConstraintConditionValue.NextMonth:
-      return moment()
-        .startOf('month')
-        .add(1, 'month');
+      return moment().startOf('month').add(1, 'month');
     case DateTimeConstraintConditionValue.ThisMonth:
       return moment().startOf('month');
     default:
