@@ -5,6 +5,21 @@
   display: block;
   line-height: var(--table-row-min-height);
   min-height: var(--table-row-min-height);
+  transition: box-shadow 0.15s ease-in-out;
+
+  &:not(.edited) {
+    display: grid;
+    align-items: center;
+    overflow: hidden;
+
+    .table-data-input {
+      min-width: 0;
+    }
+
+    &.selected {
+      grid-template-rows: 0 auto;
+    }
+  }
 }
 
 %highlighted {
