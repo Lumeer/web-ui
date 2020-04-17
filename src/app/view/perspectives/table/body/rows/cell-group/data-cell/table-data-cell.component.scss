@@ -10,6 +10,11 @@
   &:not(.edited) {
     display: grid;
     align-items: center;
+    overflow: hidden;
+
+    .table-data-input {
+      min-width: 0;
+    }
 
     &.selected {
       grid-template-rows: 0 auto;
