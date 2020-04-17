@@ -37,7 +37,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';

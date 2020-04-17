@@ -28,7 +28,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {DialogType} from '../dialog-type';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Subject} from 'rxjs';
 import {KeyCode} from '../../key-code';
 import {isMacOS} from '../../utils/system.utils';

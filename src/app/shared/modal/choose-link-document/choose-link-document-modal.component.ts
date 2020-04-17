@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DialogType} from '../dialog-type';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ConstraintData} from '../../../core/model/data/constraint';

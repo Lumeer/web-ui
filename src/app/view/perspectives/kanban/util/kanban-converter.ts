@@ -44,11 +44,7 @@ import {
   queryAttributePermissions,
 } from '../../../../core/model/query-attribute';
 import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
-import {
-  AggregatedDataValues,
-  DataAggregator,
-  DataAggregatorAttribute,
-} from '../../../../shared/utils/data/data-aggregator';
+import {DataAggregator, DataAggregatorAttribute} from '../../../../shared/utils/data/data-aggregator';
 import {cleanKanbanAttribute, isKanbanAggregationDefined} from './kanban.util';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from './kanban-data';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
@@ -184,6 +180,8 @@ export class KanbanConverter {
       for (const aggregatedDataItem of aggregatedData.items) {
         const firstChain = aggregatedDataItem.dataResourcesChains[0] || [];
         const title = aggregatedDataItem.value;
+        const showDueHours = (stemConfig?.doneColumnTitles || []).indexOf(title) < 0;
+
         for (const childItem of aggregatedDataItem.children || []) {
           const dataResources = childItem.dataResources || [];
           const dataResourcesChain = stemConfig.resource
@@ -212,7 +210,7 @@ export class KanbanConverter {
 
             columnData.cards.push(
               ...dataResources.map(dataResource => ({
-                dueHours: getDueHours(dataResource, resource, stemConfig),
+                dueHours: showDueHours ? getDueHours(dataResource, resource, stemConfig) : null,
                 dataResource,
                 resource,
                 resourceType,
@@ -232,7 +230,7 @@ export class KanbanConverter {
           } else {
             otherColumn.cards.push(
               ...dataResources.map(dataResource => ({
-                dueHours: getDueHours(dataResource, resource, stemConfig),
+                dueHours: showDueHours ? getDueHours(dataResource, resource, stemConfig) : null,
                 dataResource,
                 resource,
                 resourceType,
@@ -681,7 +679,7 @@ function getDueHours(dataResource: DataResource, resource: AttributesResource, s
     }
 
     const parsedDate = parseDateTimeByConstraint(dataResource.data[stemConfig.dueDate.attributeId], constraint);
-    const dueDate = this.checkDueDate(parsedDate, expectedFormat);
+    const dueDate = checkDueDate(parsedDate, expectedFormat);
 
     return moment(dueDate).diff(moment(), 'hours', true);
   }
@@ -699,7 +697,5 @@ function checkDueDate(dueDate: Date, format: string): Date {
     return dueDate;
   }
 
-  return moment(dueDate)
-    .endOf('day')
-    .toDate();
+  return moment(dueDate).endOf('day').toDate();
 }

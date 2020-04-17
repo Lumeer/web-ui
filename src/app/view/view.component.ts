@@ -69,14 +69,17 @@ export class ViewComponent implements OnInit {
     return this.store$.pipe(
       select(selectNavigation),
       filter(({workspace, perspective}) =>
-        Boolean(workspace && workspace.organizationCode && workspace.projectCode && perspective)
+        Boolean(workspace?.organizationCode && workspace?.projectCode && perspective)
       ),
       startWith(null as NavigationState),
       pairwise(),
-      switchMap(([previousNavigation, {workspace, query, viewName}]) => {
+      filter(
+        ([previousNavigation, {workspace}]) =>
+          !previousNavigation || previousNavigation.workspace.viewCode !== workspace.viewCode
+      ),
+      switchMap(([, {workspace, query, viewName}]) => {
         if (workspace.viewCode) {
           return this.store$.pipe(
-            filter(() => !previousNavigation || previousNavigation.workspace.viewCode !== workspace.viewCode),
             select(selectViewByCode(workspace.viewCode)),
             filter(view => !!view)
           );

@@ -36,7 +36,7 @@ import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} f
 import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';

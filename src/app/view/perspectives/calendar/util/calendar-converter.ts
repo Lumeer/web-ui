@@ -267,7 +267,7 @@ function createInterval(
   endString: string,
   endConstraint: Constraint,
   constraintData: ConstraintData
-): {start: Date; end: Date; swapped: boolean} {
+): {start: Date; end?: Date; swapped?: boolean} {
   const {start: startDate, end: endDate, swapped} = createDatesInterval(
     startString,
     startConstraint,
@@ -282,12 +282,16 @@ function createInterval(
     startMoment = startMoment.startOf('day');
   }
 
+  if (!endDate) {
+    return {start: startMoment.toDate()};
+  }
+
   let endMoment = moment(endDate);
   if (endConstraint?.type !== ConstraintType.Duration && !constraintContainsHoursInConfig(endConstraint)) {
     endMoment = endMoment.startOf('day').add(1, 'days');
   }
 
-  return {start: startMoment.toDate(), end: endMoment.toDate(), swapped};
+  return {start: startMoment.toDate(), end: endMoment?.toDate(), swapped};
 }
 
 function groupId(data: DataObjectInfo<any>): string {

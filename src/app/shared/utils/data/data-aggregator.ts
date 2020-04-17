@@ -116,8 +116,7 @@ export class DataAggregator {
 
   public getDataResources(index: number): DataResource[] {
     const resourceId = this.attributesResourceIdForIndex(index);
-    const dataResourcesMap = this.dataMap[resourceId];
-    return Object.values(dataResourcesMap || {});
+    return Object.values(this.dataMap[resourceId] || {});
   }
 
   public getNextCollectionResource(index: number): AttributesResource {
@@ -653,7 +652,7 @@ export class DataAggregator {
   private attributesResourceIdForIndex(index: number): string {
     const type = this.attributesResourceTypeForIndex(index);
     const resource = this.attributesResourcesOrder[index];
-    return attributesResourceId(type, resource.id);
+    return resource && attributesResourceId(type, resource.id);
   }
 
   private iterateThroughValues(

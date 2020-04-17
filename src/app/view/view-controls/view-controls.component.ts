@@ -278,6 +278,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private revertChangesForView(view: View, workspacePath: any[]) {
+    this.resetName(view);
     switch (view.perspective) {
       case Perspective.Search:
         const searchConfig = view.config?.search;
@@ -315,7 +316,15 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         this.revertQueryWithUrl(workspacePath, view.query);
         this.store$.dispatch(new KanbansAction.SetConfig({kanbanId: view.code, config: kanbanConfig}));
         return;
+      case Perspective.Detail:
+        this.revertQueryWithUrl(workspacePath, view.query);
+        return;
     }
+  }
+
+  private resetName(view: View) {
+    this.name = view.name;
+    this.nameChanged$.next(false);
   }
 
   private revertQueryWithUrl(path: any[], query: Query) {

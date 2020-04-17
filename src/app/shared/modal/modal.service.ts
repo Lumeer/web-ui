@@ -19,7 +19,7 @@
 
 import {Injectable, TemplateRef} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BsModalRef, BsModalService, ModalOptions} from 'ngx-bootstrap';
+import {BsModalRef, BsModalService, ModalOptions} from 'ngx-bootstrap/modal';
 import {AttributeTypeModalComponent} from './attribute-type/attribute-type-modal.component';
 import {AppState} from '../../core/store/app.state';
 import {selectServiceLimitsByWorkspace} from '../../core/store/organizations/service-limits/service-limits.state';

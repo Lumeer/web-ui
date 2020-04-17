@@ -27,7 +27,7 @@ import {Attribute, Collection} from '../../../core/store/collections/collection'
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {BlocklyDebugDisplay} from '../../blockly/blockly-debugger/blockly-debugger.component';
 import {select, Store} from '@ngrx/store';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {first, map} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
