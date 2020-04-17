@@ -39,6 +39,7 @@ export enum TemplateType {
   OKR = 'OKR',
   TIME = 'TIME',
   TASK = 'TASK',
+  CMTRY = 'CMTRY',
   Empty = 'EMPTY',
 }
 
@@ -55,5 +56,6 @@ export const templateTypesMap: Record<string, TemplateType> = {
   [TemplateType.EDCAL]: TemplateType.EDCAL,
   [TemplateType.TASK]: TemplateType.TASK,
   [TemplateType.SCRUM]: TemplateType.SCRUM,
+  [TemplateType.CMTRY]: TemplateType.CMTRY,
   [TemplateType.RMTW]: TemplateType.RMTW,
 };

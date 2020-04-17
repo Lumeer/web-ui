@@ -936,9 +936,18 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.kanban.config.column.summary" datatype="html">
         <source>Column Summary</source><target>Souhrn sloupce</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.column.size" datatype="html">
+        <source>Column size</source><target>Šířka sloupce</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/config/kanban-config.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.kanban.config.card.layout" datatype="html">
+        <source>Card layout</source><target>Formát karet</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
             <trans-unit id="table.header.show.hidden.columns" datatype="html">
@@ -2232,13 +2241,7 @@
       </trans-unit><trans-unit id="kanban.perspective.header.other" datatype="html">
         <source>Other</source><target>Ostatní</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/columns/column/header/kanban-column-header.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.value" datatype="html">
-        <source>Select displayed value</source><target>Vyberte zobrazovanou hodnotu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/config/stem/kanban-attribute-config/kanban-attribute-config.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/header/kanban-column-header.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">
         <source>
   Map settings
 </source><target>
@@ -2338,13 +2341,10 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
         <source>Select value aggregation</source><target>Zvolte způsob agregace hodnot</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/config/stem/kanban-value-attribute-config/kanban-value-attribute-config.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.valueAbsOrRel" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.valueAbsOrRel" datatype="html">
         <source>Select absolute or relative display</source><target>Zvolte absolutní nebo relativní zobrazení</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/kanban/config/stem/kanban-value-attribute-config/kanban-value-attribute-config.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit><trans-unit id="button.remove" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="button.remove" datatype="html">
         <source>Delete</source><target>Smazat</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAbsOrRel" datatype="html">
@@ -2663,6 +2663,19 @@
         </context-group>
       </trans-unit><trans-unit id="template.rmtw.description" datatype="html">
         <source>Work anywhere, anytime. Enable remote teams to stay productive. Keep everyone on your team aligned and motivated.</source><target>Pracujte kdekoliv, kdykoliv. Udržujte týmy pracující z domu stále produktivní, zaměřené na stejný cíl a motivované.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.cmtry.title" datatype="html">
+        <source>Cemetery Management</source><target>Správa hřbitova</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.cmtry.description" datatype="html">
+        <source>Get quick and easy access to all information about the cemetery, all contracts and payments. Schedule ceremonies and plan tasks for workers.</source>
+        <target>Získejte rychlý a jednoduchý přístup ke všem informacím, přehled o stavu hřbitova a celkový pořádek. Plánujte obřady a zadávejte úkoly pracovníkům.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -3305,12 +3318,9 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="89d105cb7b98e21968336b0e2d00870dd53d5781" datatype="html">
         <source>Choose a template</source><target>Vyberte si šablonu</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
+        
         <note priority="1" from="description">templates.choose</note>
-      </trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
                 <source>Create a new project in organization:</source>
                 <target>Vytvořit projekt v organizaci:</target>
@@ -3325,12 +3335,18 @@
           </source>
                 <target>Ikona:</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
                 <source>(click the icon to change it)</source>
                 <target>(změňte ikonu kliknutím)</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="resource.new.dialog.firstProject" datatype="html">
+        <source>My first project</source><target>Můj první projekt</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="resource.new.dialog.invalid" datatype="html">
                 <source>I am sorry, something went wrong.
   </source>
@@ -3341,7 +3357,7 @@
                 <source>Required</source>
                 <target>Povinné</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit>
             <trans-unit id="resource.new.dialog.code.label" datatype="html">
                 <source>
     Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup>"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup>"/>
@@ -3769,13 +3785,7 @@
                     <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
-            </trans-unit><trans-unit id="@@perspective.calendar.create.event.failure" datatype="html">
-        <source>Could not create event</source><target>Nemohu vytvořit událost</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/calendar/calendar-perspective.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
+            </trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">
         <source>Calendar</source><target>Kalendář</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context>
@@ -3869,12 +3879,6 @@
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/gantt-chart-perspective.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="kanban.config.attribute.empty" datatype="html">
-        <source>Select attribute</source><target>Vyberte atribut</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-attribute-config/kanban-attribute-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit><trans-unit id="ganttChart.empty.placeholder" datatype="html">
         <source>Select <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} progress {...} category {...} subCategory {...} color {...}}"/></source><target>Vyberte <x id="ICU" equiv-text="{emptyProperty, select, name {...} start {...} end {...} id {...} dependencies {...} progress {...} color {...}"/></target>
         <context-group purpose="location">
@@ -3905,38 +3909,39 @@
           <context context-type="sourcefile">src/app/view/perspectives/gantt-chart/tasks/gantt-chart-tasks.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.kanban.create.card.failure" datatype="html">
+        <source>Could not create card</source><target>Nemohu vytvořit kartu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/columns/kanban-columns.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.resource.empty" datatype="html">
+        <source>Select table or link</source><target>Vyberte si tabulku nebo vazbu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="kanban.config.collection.attribute.empty" datatype="html">
         <source>Select attribute</source><target>Vyberte atribut</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.dueDate.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.dueDate.empty" datatype="html">
         <source>Select due date</source><target>Vyberte termín splnění</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.config.collection.dueDate" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.dueDate" datatype="html">
         <source>Due date</source><target>Splnění</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.config.collection.doneAttribute.empty" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.doneAttribute.empty" datatype="html">
         <source>Select done state</source><target>Vyberte stav splnění</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.config.collection.doneAttribute" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.doneAttribute" datatype="html">
         <source>Done state</source><target>Stav splnění</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/config/stem/kanban-stem-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="kanban.dueHours.tag.pastDue" datatype="html">
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.dueHours.tag.pastDue" datatype="html">
         <source>Past due</source><target>Po terímu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/pipes/kanban-due-hours-tag.pipe.ts</context>
@@ -4143,10 +4148,10 @@
                 <source>Create New Record</source>
                 <target>Vytvořit nový záznam</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
         <source>{VAR_PLURAL, plural, =0 {no cards} one {1 card} few {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> cards} }</source><target>{VAR_PLURAL, plural, =0 {žádné karty} one {1 karta} few {<x id="INTERPOLATION" equiv-text="{{count}}"/> karty} other {<x id="INTERPOLATION" equiv-text="{{count}}"/> karet} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit>
             <trans-unit id="menu.logout" datatype="html">
                 <source>Logout</source>
                 <target>Odhlásit se</target>
@@ -4594,10 +4599,7 @@
           <context context-type="sourcefile">app/shared/collapsible-sidebar/toggle/collapsible-sidebar-toggle.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="shared.links.title" datatype="html">
-        <source>Links to other records</source><target>Propojení na jiné záznamy</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-list.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="topPanel.home.title" datatype="html">
+      </trans-unit><trans-unit id="topPanel.home.title" datatype="html">
         <source>Back to home screen</source><target>Zpět na domovskou obrazovku</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/lumeer-logo/lumeer-logo.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.usage" datatype="html">

@@ -65,6 +65,8 @@ export class TemplateService {
         return this.createScrumTemplate();
       case TemplateType.RMTW:
         return this.createRemoteWorkTemplate();
+      case TemplateType.CMTRY:
+        return this.createCemeteryTemplate();
       default:
         return null;
     }
@@ -239,6 +241,20 @@ export class TemplateService {
     };
   }
 
+  private createCemeteryTemplate(): Template {
+    return {
+      type: TemplateType.CMTRY,
+      imagePath: 'assets/templates/cemetery.jpg',
+      title: this.i18n({id: 'template.cmtry.title', value: 'Cemetery Management'}),
+      description: this.i18n({
+        id: 'template.cmtry.description',
+        value:
+          'Get quick and easy access to all information about the cemetery, all contracts and payments. Schedule ceremonies and plan tasks for workers.',
+      }),
+      url: this.createUrlForType(TemplateType.CMTRY),
+    };
+  }
+
   private createUrlForType(type: TemplateType): string | null {
     switch (type) {
       case TemplateType.Empty:
@@ -267,6 +283,8 @@ export class TemplateService {
         return this.getScrumUrl();
       case TemplateType.RMTW:
         return this.getRemoteWorkUrl();
+      case TemplateType.CMTRY:
+        return this.getCemeteryUrl();
     }
   }
 
@@ -384,6 +402,15 @@ export class TemplateService {
         return this.createUrl('cs/prace-z-domu-sablona');
       default:
         return this.createUrl('remote-work-template');
+    }
+  }
+
+  public getCemeteryUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/sprava-hrbitova-sablona');
+      default:
+        return this.createUrl('cemetery-management-template');
     }
   }
 
