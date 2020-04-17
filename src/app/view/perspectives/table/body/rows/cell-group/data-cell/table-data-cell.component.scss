@@ -5,10 +5,15 @@
   display: block;
   line-height: var(--table-row-min-height);
   min-height: var(--table-row-min-height);
+  transition: box-shadow 0.15s ease-in-out;
 
   &:not(.edited) {
     display: grid;
     align-items: center;
+
+    &.selected {
+      grid-template-rows: 0 auto;
+    }
   }
 }
 
