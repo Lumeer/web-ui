@@ -5,6 +5,11 @@
   display: block;
   line-height: var(--table-row-min-height);
   min-height: var(--table-row-min-height);
+
+  &:not(.edited) {
+    display: grid;
+    align-items: center;
+  }
 }
 
 %highlighted {

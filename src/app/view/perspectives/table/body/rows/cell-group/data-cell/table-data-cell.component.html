@@ -13,7 +13,7 @@
 
     <ng-container *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue">
       <div [innerHTML]="data.dataValue | previewDataValue | safeHtml"
-           class="text-pre overflow-hidden h-100 mx-1 align-middle"
+           class="text-pre overflow-hidden mx-1 align-middle"
            [title]="data.dataValue | formatDataValue | stripHtml:false"
            [ngClass]="data.attribute?.constraint | constraintClass"
            [class.invalid-value]="!(data.dataValue | isDataValueValid)"
