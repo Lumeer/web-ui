@@ -27,6 +27,8 @@
   & > div {
     min-width: 0px;
   }
+
+  border-top: dotted 1px $light;
 }
 
 :host.key-focused .data-input.key::ng-deep > *,
