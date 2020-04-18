@@ -84,7 +84,7 @@
     "moment": "^2.24.0",
     "ng-click-outside": "^6.0.0",
     "ng-snotify": "^4.3.1",
-    "ngx-bootstrap": "^5.6.1",
+    "ngx-bootstrap": "^5.6.2",
     "ngx-color-picker": "^9.1.0",
     "ngx-contextmenu": "^5.4.0",
     "ngx-device-detector": "^1.4.2",
