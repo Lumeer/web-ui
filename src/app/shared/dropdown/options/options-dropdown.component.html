@@ -5,7 +5,7 @@
           [origin]="origin"
           [pushOnScreen]="true"
           [minHeight]="(options?.length || 0) * 30"
-          [minWidth]="100"
+          [minWidth]="minWidth || 100"
           [positions]="dropdownPositions">
   <div *ngIf="options?.length > 0"
        class="card" [class.w-100]="fitParent">

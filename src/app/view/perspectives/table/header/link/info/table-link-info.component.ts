@@ -89,6 +89,10 @@ export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
 
   private setTableLinkInfoWidthCssVariable() {
     const tableElement = getTableElement(this.cursor.tableId);
+    if (!tableElement) {
+      return;
+    }
+
     const width = this.linkMenu.nativeElement.clientWidth + 1;
 
     const linkInfoColumnWidth = tableElement.style.getPropertyValue('--link-info-column-width');

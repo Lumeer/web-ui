@@ -42,6 +42,8 @@ import {isNotNullOrUndefined} from '../shared/utils/common.utils';
 import {WorkspaceSelectService} from './service/workspace-select.service';
 import {AppState} from './store/app.state';
 import {TemplateType, templateTypesMap} from './model/template';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {NotificationsAction} from './store/notifications/notifications.action';
 
 @Component({
   template: '',
@@ -52,7 +54,8 @@ export class RedirectComponent implements OnInit {
     private workspaceSelectService: WorkspaceSelectService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private i18n: I18n
   ) {}
 
   public ngOnInit() {
@@ -90,7 +93,7 @@ export class RedirectComponent implements OnInit {
                     org => org.id === user.defaultWorkspace.organizationId
                   );
                   if (organizationIndex >= 0 && canCreateArray[organizationIndex]) {
-                    return organizations[organizationIndex];
+                    return {organization: organizations[organizationIndex]};
                   }
                   checkedIds.push(user.defaultWorkspace.organizationId);
                 }
@@ -98,23 +101,23 @@ export class RedirectComponent implements OnInit {
                 for (const organization of organizations.filter(org => !checkedIds.includes(org.id))) {
                   const organizationIndex = organizations.findIndex(org => org.id === organization.id);
                   if (organizationIndex >= 0 && canCreateArray[organizationIndex]) {
-                    return organizations[organizationIndex];
+                    return {organization: organizations[organizationIndex]};
                   }
                 }
-                return null;
+                return {organization: null, hasOrganization: true};
               })
             );
           } else {
-            return of(null);
+            return of({organization: null, hasOrganization: false});
           }
         }),
         take(1)
       )
-      .subscribe(organization => {
+      .subscribe(({organization, hasOrganization}) => {
         if (organization) {
           this.createProject(organization, template);
         } else {
-          this.redirectToHome();
+          this.redirectToHome(() => this.showError(hasOrganization));
         }
       });
   }
@@ -124,8 +127,24 @@ export class RedirectComponent implements OnInit {
     modalRef.content.onClose$.subscribe(() => this.redirectToHome());
   }
 
-  private redirectToHome() {
-    this.router.navigate(['/'], {replaceUrl: true});
+  private showError(hasOrganization: boolean) {
+    let message: string;
+    if (hasOrganization) {
+      message = this.i18n({
+        id: 'template.create.limitExceeded',
+        value: 'I am sorry, you can not create any more projects in a free account.',
+      });
+    } else {
+      message = this.i18n({
+        id: 'template.create.empty',
+        value: 'I am sorry, you do not have any organization to create project in',
+      });
+    }
+    setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
+  }
+
+  private redirectToHome(then?: () => void) {
+    this.router.navigate(['/'], {replaceUrl: true}).then(() => then?.());
   }
 
   private canCreateProjectsInOrganization(

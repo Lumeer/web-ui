@@ -57,6 +57,9 @@ import {Perspective} from '../perspective';
 import {filterLocationAttributes} from '../../../core/store/maps/map-config.utils';
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {ConstraintDataService} from '../../../core/service/constraint-data.service';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'map-perspective',
@@ -73,19 +76,26 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
   public collections$: Observable<Collection[]>;
   public documents$: Observable<DocumentModel[]>;
+  public constraintData$: Observable<ConstraintData>;
   public map$: Observable<MapModel>;
   public query$: Observable<Query>;
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private store$: Store<{}>) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private constraintDataService: ConstraintDataService,
+    private store$: Store<{}>
+  ) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsInQuery));
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.map$ = this.store$.pipe(select(selectMap));
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
 
     this.subscriptions.add(this.subscribeToConfig());
     this.subscriptions.add(this.subscribeToMapConfigPosition());

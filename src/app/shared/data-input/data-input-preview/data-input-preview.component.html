@@ -15,7 +15,7 @@
     </boolean-data-input>
 
     <color-data-input *ngSwitchCase="constraintType.Color"
-                      [style.max-width.px]="configuration?.common?.inline && configuration?.color?.limitWidth ? (hasValue ?  50 : 0) : null"
+                      [style.max-width.px]="configuration?.color?.limitWidth ? (hasValue ?  50 : 0) : null"
                       [class.h-100]="configuration?.common?.inline"
                       [style.min-width.px]="configuration?.common?.minWidth"
                       [readonly]="true"

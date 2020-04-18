@@ -18,10 +18,22 @@
  */
 
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Collection} from '../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {AttributeIdsMap, MapAttributeType, MapMarkerProperties} from '../../../../core/store/maps/map.model';
+import {
+  AttributeIdsMap,
+  MapAttributeType,
+  MapCoordinates,
+  MapMarkerData,
+  MapMarkerProperties,
+} from '../../../../core/store/maps/map.model';
 import {parseCoordinates} from '../../../../shared/utils/map/coordinates.utils';
+import {DataResource} from '../../../../core/model/resource';
+import {ConstraintData} from '../../../../core/model/data/constraint';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
+import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 
 export function extractCollectionsFromDocuments(
   collectionsMap: Record<string, Collection>,
@@ -35,20 +47,20 @@ export function extractCollectionsFromDocuments(
   ].map(collectionId => collectionsMap[collectionId]);
 }
 
-export function createMarkerPropertiesList(
+export function createMarkerPropertiesData(
   documents: DocumentModel[],
   attributeIdsMap: AttributeIdsMap,
   collectionsMap: Record<string, Collection>,
   collectionPermissions: Record<string, AllowedPermissions>
-): MapMarkerProperties[] {
-  return documents.reduce((propertiesList, document) => {
+): MapMarkerData[] {
+  return documents.reduce<MapMarkerData[]>((propertiesList, document) => {
     const attributeIds = attributeIdsMap[document.collectionId] || [];
     for (const attributeId of attributeIds) {
       const collection = collectionsMap[document.collectionId];
-      const editable = collectionPermissions[document.collectionId].writeWithView;
+      const editable = collectionPermissions[document.collectionId]?.writeWithView;
 
       if (collection && !!document.data[attributeId]) {
-        propertiesList.push({collection, document, attributeId, editable});
+        propertiesList.push({resource: collection, dataResource: document, attributeId, editable});
       }
     }
     return propertiesList;
@@ -56,18 +68,20 @@ export function createMarkerPropertiesList(
 }
 
 export function populateCoordinateProperties(
-  propertiesList: MapMarkerProperties[]
-): {coordinateProperties: MapMarkerProperties[]; otherProperties: MapMarkerProperties[]} {
+  propertiesList: MapMarkerData[],
+  constraintData: ConstraintData
+): {coordinateProperties: MapMarkerProperties[]; otherProperties: MapMarkerData[]} {
   return propertiesList.reduce(
     (obj, properties) => {
-      const value = properties.document.data[properties.attributeId];
+      const value = properties.dataResource.data[properties.attributeId];
       const coordinates = parseCoordinates(value);
       if (coordinates) {
-        const coordinateProperties: MapMarkerProperties = {
-          ...properties,
+        const coordinateProperties = createMarkerPropertyFromData(
+          properties,
           coordinates,
-          attributeType: MapAttributeType.Coordinates,
-        };
+          MapAttributeType.Coordinates,
+          constraintData
+        );
         obj.coordinateProperties.push(coordinateProperties);
       } else {
         obj.otherProperties.push(properties);
@@ -76,6 +90,40 @@ export function populateCoordinateProperties(
     },
     {coordinateProperties: [], otherProperties: []}
   );
+}
+
+export function createMarkerPropertyFromData(
+  data: MapMarkerData,
+  coordinates: MapCoordinates,
+  attributeType: MapAttributeType,
+  constraintData: ConstraintData
+): MapMarkerProperties {
+  const defaultAttributeId = getDefaultAttributeId(data.resource);
+
+  const displayValue = formatValue(
+    data.dataResource,
+    findAttribute(data.resource.attributes, defaultAttributeId),
+    constraintData
+  );
+  const positionValue = formatValue(
+    data.dataResource,
+    findAttribute(data.resource.attributes, data.attributeId),
+    constraintData
+  );
+
+  return {
+    resourceId: data.resource.id,
+    resourceType: getAttributesResourceType(data.resource),
+    dataResourceId: data.dataResource.id,
+    color: (<Collection>data.resource).color,
+    icon: (<Collection>data.resource).icon,
+    attributeId: data.attributeId,
+    editable: data.editable,
+    attributeType,
+    coordinates,
+    displayValue,
+    positionValue,
+  };
 }
 
 export function areMapMarkerListsEqual(
@@ -88,12 +136,12 @@ export function areMapMarkerListsEqual(
 
   const nextMarkersMap = createMapMarkersMap(nextMarkers);
 
-  return !previousMarkers.some(marker => isMapMarkerChanged(marker, nextMarkersMap[marker.document.id]));
+  return !previousMarkers.some(marker => isMapMarkerChanged(marker, nextMarkersMap[marker.dataResourceId]));
 }
 
 function createMapMarkersMap(markers: MapMarkerProperties[]): Record<string, MapMarkerProperties> {
   return markers.reduce((markersMap, marker) => {
-    markersMap[marker.document.id] = marker;
+    markersMap[marker.dataResourceId] = marker;
     return markersMap;
   }, {});
 }
@@ -107,14 +155,13 @@ function isMapMarkerChanged(previousMarker: MapMarkerProperties, nextMarker: Map
     return true;
   }
 
-  return (
-    previousMarker.collection.color !== nextMarker.collection.color ||
-    previousMarker.collection.id !== nextMarker.collection.id ||
-    previousMarker.collection.icon !== nextMarker.collection.icon ||
-    previousMarker.coordinates.lat !== nextMarker.coordinates.lat ||
-    previousMarker.coordinates.lng !== nextMarker.coordinates.lng ||
-    previousMarker.attributeId !== nextMarker.attributeId ||
-    previousMarker.attributeType !== nextMarker.attributeType ||
-    previousMarker.editable !== previousMarker.editable
-  );
+  return !deepObjectsEquals(previousMarker, nextMarker);
+}
+
+function formatValue(dataResource: DataResource, attribute: Attribute, constraintData: ConstraintData): string {
+  if (!dataResource || !attribute) {
+    return '';
+  }
+  const value = dataResource.data[attribute.id];
+  return (attribute.constraint || new UnknownConstraint()).createDataValue(value, constraintData).preview();
 }

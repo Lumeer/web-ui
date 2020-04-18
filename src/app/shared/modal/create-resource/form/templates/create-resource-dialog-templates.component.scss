@@ -1,6 +1,6 @@
 :host {
   padding-right: 0.75rem !important;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   @media (max-width: 991.98px) {
     max-height: 300px;
