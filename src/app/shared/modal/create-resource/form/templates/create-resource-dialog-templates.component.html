@@ -3,7 +3,7 @@
     <h5 i18n="templates.choose">Choose a template</h5>
   </div>
 
-  <div [style.overflow]="'scroll'">
+  <div class="overflow-auto">
     <div>
       <create-resource-dialog-template *ngFor="let template of templates; let first = first"
                                        class="d-block"

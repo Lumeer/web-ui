@@ -10,6 +10,7 @@
 
     <map-content [collections]="data.collections"
                  [documents]="data.documents"
+                 [constraintData]="constraintData$ | async"
                  [map]="data.map"
                  class="flex-grow-1">
     </map-content>

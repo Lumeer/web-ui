@@ -17,8 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../collections/collection';
-import {DocumentModel} from '../documents/document.model';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
 
 export interface MapCoordinates {
   lat: number;
@@ -51,11 +50,23 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
 };
 
 export interface MapMarkerProperties {
-  collection: Collection;
-  document: DocumentModel;
+  resourceId: string;
+  resourceType: AttributesResourceType;
+  dataResourceId: string;
   attributeId: string;
+  icon: string;
+  color: string;
+  displayValue: string;
+  positionValue: string;
   attributeType?: MapAttributeType;
   coordinates?: MapCoordinates;
+  editable?: boolean;
+}
+
+export interface MapMarkerData {
+  resource: AttributesResource;
+  dataResource: DataResource;
+  attributeId: string;
   editable?: boolean;
 }
 

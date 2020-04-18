@@ -23,7 +23,6 @@ import {
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   SimpleChange,
   SimpleChanges,
   ViewChild,
@@ -48,6 +47,7 @@ import {selectGeocodingQueryCoordinates} from '../../../../core/store/geocoding/
 import {
   MapAttributeType,
   MapCoordinates,
+  MapMarkerData,
   MapMarkerProperties,
   MapModel,
   MapPosition,
@@ -57,7 +57,8 @@ import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
 import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {
   areMapMarkerListsEqual,
-  createMarkerPropertiesList,
+  createMarkerPropertiesData,
+  createMarkerPropertyFromData,
   extractCollectionsFromDocuments,
   populateCoordinateProperties,
 } from './map-content.utils';
@@ -65,8 +66,7 @@ import {MapRenderComponent} from './render/map-render.component';
 import {MarkerMoveEvent} from './render/marker-move.event';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {ModalService} from '../../../../shared/modal/modal.service';
-import {ConstraintDataService} from '../../../../core/service/constraint-data.service';
-import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 
 @Component({
   selector: 'map-content',
@@ -74,12 +74,15 @@ import {selectConstraintData} from '../../../../core/store/constraint-data/const
   styleUrls: ['./map-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
+export class MapContentComponent implements OnChanges, OnDestroy {
   @Input()
   public collections: Collection[] = [];
 
   @Input()
   public documents: DocumentModel[] = [];
+
+  @Input()
+  public constraintData: ConstraintData;
 
   @Input()
   public map: MapModel;
@@ -89,7 +92,6 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
 
   public loading$ = new BehaviorSubject(true);
 
-  public constraintData$: Observable<ConstraintData>;
   public markers$: Observable<MapMarkerProperties[]>;
 
   private refreshMarkers$ = new BehaviorSubject(Date.now());
@@ -100,14 +102,9 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
     private collectionsPermissions: CollectionsPermissionsPipe,
     private i18n: I18n,
     private notificationService: NotificationService,
-    private constraintDataService: ConstraintDataService,
     private store$: Store<{}>,
     private modalService: ModalService
   ) {}
-
-  public ngOnInit() {
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.mapIdChanges(changes.map)) {
@@ -116,7 +113,7 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private initProperties() {
-    const allProperties$ = this.bindAllProperties(this.map.id);
+    const allProperties$ = this.bindAllProperties$(this.map.id);
     this.markers$ = this.bindMarkers(allProperties$);
 
     this.propertiesSubscription.unsubscribe();
@@ -133,7 +130,7 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
     this.propertiesSubscription.unsubscribe();
   }
 
-  private bindAllProperties(mapId: string): Observable<MapMarkerProperties[]> {
+  private bindAllProperties$(mapId: string): Observable<MapMarkerData[]> {
     return combineLatest([
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectDocumentsByQuery)),
@@ -148,16 +145,19 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
         return this.collectionsPermissions
           .transform(collections)
           .pipe(
-            map(permissions => createMarkerPropertiesList(documents, attributeIdsMap, collectionsMap, permissions))
+            map(permissions => createMarkerPropertiesData(documents, attributeIdsMap, collectionsMap, permissions))
           );
       })
     );
   }
 
-  private bindMarkers(allProperties$: Observable<MapMarkerProperties[]>): Observable<MapMarkerProperties[]> {
+  private bindMarkers(allProperties$: Observable<MapMarkerData[]>): Observable<MapMarkerProperties[]> {
     return allProperties$.pipe(
       switchMap(allProperties => {
-        const {coordinateProperties, otherProperties} = populateCoordinateProperties(allProperties);
+        const {coordinateProperties, otherProperties} = populateCoordinateProperties(
+          allProperties,
+          this.constraintData
+        );
         return this.populateAddressProperties(otherProperties).pipe(
           map(addressProperties => coordinateProperties.concat(addressProperties))
         );
@@ -167,18 +167,19 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private populateAddressProperties(propertiesList: MapMarkerProperties[]): Observable<MapMarkerProperties[]> {
+  private populateAddressProperties(propertiesList: MapMarkerData[]): Observable<MapMarkerProperties[]> {
     return this.store$.pipe(
       select(selectGeocodingQueryCoordinates),
       map(queryCoordinates =>
         propertiesList.reduce((addressPropertiesList, properties) => {
-          const coordinates = queryCoordinates[properties.document.data[properties.attributeId]];
+          const coordinates = queryCoordinates[properties.dataResource.data[properties.attributeId]];
           if (coordinates) {
-            const addressProperties: MapMarkerProperties = {
-              ...properties,
+            const addressProperties = createMarkerPropertyFromData(
+              properties,
               coordinates,
-              attributeType: MapAttributeType.Address,
-            };
+              MapAttributeType.Address,
+              this.constraintData
+            );
             addressPropertiesList.push(addressProperties);
           }
           return addressPropertiesList;
@@ -187,14 +188,14 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  private subscribeToUninitializedProperties(allProperties$: Observable<MapMarkerProperties[]>): Subscription {
+  private subscribeToUninitializedProperties(allProperties$: Observable<MapMarkerData[]>): Subscription {
     return allProperties$
-      .pipe(map(allProperties => populateCoordinateProperties(allProperties).otherProperties))
+      .pipe(map(allProperties => populateCoordinateProperties(allProperties, this.constraintData).otherProperties))
       .subscribe(uninitializedProperties => this.getCoordinates(uninitializedProperties));
   }
 
-  private getCoordinates(propertiesList: MapMarkerProperties[]) {
-    const addresses = propertiesList.map(properties => properties.document.data[properties.attributeId]);
+  private getCoordinates(propertiesList: MapMarkerData[]) {
+    const addresses = propertiesList.map(properties => properties.dataResource.data[properties.attributeId]);
     if (addresses.length === 0) {
       this.loading$.next(false);
       return;
@@ -216,8 +217,10 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onMarkerMove(event: MarkerMoveEvent) {
-    const attribute = event.properties.collection.attributes.find(attr => attr.id === event.properties.attributeId);
-    const constraintType = attribute && attribute.constraint && attribute.constraint.type;
+    const attribute = this.findResourceByProperty(event.properties)?.attributes.find(
+      attr => attr.id === event.properties.attributeId
+    );
+    const constraintType = attribute?.constraint?.type;
 
     if (event.properties.attributeType === MapAttributeType.Address || constraintType === ConstraintType.Address) {
       this.saveAddressAttribute(event.properties, event.coordinates);
@@ -242,12 +245,18 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const attribute = properties.collection.attributes.find(attr => attr.id === properties.attributeId);
-    const value = (attribute.constraint || new AddressConstraint({fields: ADDRESS_DEFAULT_FIELDS}))
+    const attribute = this.findResourceByProperty(properties)?.attributes.find(
+      attr => attr.id === properties.attributeId
+    );
+    const value = (attribute?.constraint || new AddressConstraint({fields: ADDRESS_DEFAULT_FIELDS}))
       .createDataValue(location.address)
       .serialize();
     this.store$.dispatch(new GeocodingAction.GetCoordinatesSuccess({coordinatesMap: {[value]: location.coordinates}}));
     this.saveAttributeValue(properties, value);
+  }
+
+  private findResourceByProperty(property: MapMarkerProperties): AttributesResource {
+    return (this.collections || []).find(collection => collection.id === property.resourceId);
   }
 
   private onGetLocationFailure(error: any) {
@@ -268,8 +277,8 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
     this.store$.dispatch(
       new DocumentsAction.PatchData({
         document: {
-          collectionId: properties.collection.id,
-          id: properties.document.id,
+          collectionId: properties.resourceId,
+          id: properties.dataResourceId,
           data: {[properties.attributeId]: value},
         },
       })
@@ -283,6 +292,8 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onMarkerDetail(properties: MapMarkerProperties) {
-    this.modalService.showDataResourceDetail(properties.document, properties.collection);
+    if (properties.resourceType === AttributesResourceType.Collection) {
+      this.modalService.showDocumentDetail(properties.dataResourceId);
+    }
   }
 }

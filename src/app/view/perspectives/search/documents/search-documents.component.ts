@@ -170,11 +170,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   }
 
   private fetchDocuments(query: Query) {
-    this.store$.dispatch(new DocumentsAction.Get({query: this.getPaginationQuery(query)}));
-  }
-
-  private getPaginationQuery(query: Query): Query {
-    return {...query, page: this.page$.value, pageSize: PAGE_SIZE};
+    this.store$.dispatch(new DocumentsAction.Get({query: queryWithoutFilters(query)}));
   }
 
   private subscribeQueryChange() {

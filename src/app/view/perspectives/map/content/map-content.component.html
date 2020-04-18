@@ -3,7 +3,6 @@
     <map-render *ngIf="map"
                 [map]="map"
                 [markers]="data.markers"
-                [constraintData]="constraintData$ | async"
                 (mapMove)="onMapMove($event)"
                 (markerMove)="onMarkerMove($event)"
                 (detail)="onMarkerDetail($event)"

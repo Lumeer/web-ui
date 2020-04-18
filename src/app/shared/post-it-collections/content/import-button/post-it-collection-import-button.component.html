@@ -18,6 +18,6 @@
          type="file"
          #fileInput
          (click)="$event.stopPropagation()"
-         (change)="fileChange($event.target.files)"
+         (change)="fileChange($event.target.files); $event.target.value = null;"
          accept=".csv, text/csv">
 </button>

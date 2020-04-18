@@ -19,14 +19,9 @@
 
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {GeoJSONSourceRaw, Layer, LngLat, LngLatBounds, Map, MapboxOptions, Marker, Popup} from 'mapbox-gl';
-import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
 import {shadeColor} from '../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {findAttribute, getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
-import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 export function createMapboxMap(elementId: string, config: MapConfig, locale: Record<string, string>): Map {
   const positionOptions: Partial<MapboxOptions> = config.position
@@ -108,13 +103,9 @@ export function createMapClusterCountsLayer(id: string, source: string): Layer {
   };
 }
 
-export function createMapMarker(
-  properties: MapMarkerProperties,
-  constraintData: ConstraintData,
-  onDoubleClick: () => void
-): Marker {
-  const popup = createMapMarkerPopup(properties, constraintData);
-  const element = createMapMarkerIcon(properties.collection, properties.editable);
+export function createMapMarker(properties: MapMarkerProperties, onDoubleClick: () => void): Marker {
+  const popup = createMapMarkerPopup(properties);
+  const element = createMapMarkerIcon(properties);
 
   const marker = new Marker({element, draggable: properties.editable})
     .setLngLat(properties.coordinates)
@@ -133,23 +124,10 @@ export function createMapMarker(
   return marker;
 }
 
-function createMapMarkerPopup(properties: MapMarkerProperties, constraintData: ConstraintData): Popup {
-  const defaultAttributeId = getDefaultAttributeId(properties.collection);
-
-  const defaultAttributeValue = formatValue(
-    properties.document,
-    findAttribute(properties.collection.attributes, defaultAttributeId),
-    constraintData
-  );
-  const positionAttributeValue = formatValue(
-    properties.document,
-    findAttribute(properties.collection.attributes, properties.attributeId),
-    constraintData
-  );
-
-  const html = defaultAttributeValue
-    ? `<div style="max-height: 14rem; line-height: 1.4rem; overflow: hidden">${defaultAttributeValue}</div>${positionAttributeValue}`
-    : positionAttributeValue;
+function createMapMarkerPopup(properties: MapMarkerProperties): Popup {
+  const html = properties.displayValue
+    ? `<div style="max-height: 14rem; line-height: 1.4rem; overflow: hidden">${properties.displayValue}</div>${properties.positionValue}`
+    : properties.positionValue;
 
   return new Popup({
     anchor: 'top',
@@ -158,31 +136,23 @@ function createMapMarkerPopup(properties: MapMarkerProperties, constraintData: C
   }).setHTML(html);
 }
 
-function formatValue(document: DocumentModel, attribute: Attribute, constraintData: ConstraintData): string {
-  if (!document || !attribute) {
-    return '';
-  }
-  const value = document.data[attribute.id];
-  return (attribute.constraint || new UnknownConstraint()).createDataValue(value, constraintData).preview();
-}
-
-function createMapMarkerIcon(collection: Collection, editable?: boolean): HTMLDivElement {
+function createMapMarkerIcon(properties: MapMarkerProperties): HTMLDivElement {
   const markerElement = document.createElement('div');
   markerElement.className = 'map-marker';
-  if (editable) {
+  if (properties.editable) {
     markerElement.classList.add('map-marker-editable');
   }
 
   const shapeElement = document.createElement('div');
   shapeElement.className = 'map-marker-shape';
-  shapeElement.style.borderColor = collection.color;
+  shapeElement.style.borderColor = properties.color;
 
   const circleElement = document.createElement('div');
   circleElement.className = 'map-marker-icon';
-  circleElement.style.backgroundColor = shadeColor(collection.color, -0.3);
+  circleElement.style.backgroundColor = shadeColor(properties.color, -0.3);
 
   const iconElement = document.createElement('i');
-  iconElement.className = collection.icon;
+  iconElement.className = properties.icon;
 
   circleElement.appendChild(iconElement);
   shapeElement.appendChild(circleElement);

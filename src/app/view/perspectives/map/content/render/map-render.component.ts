@@ -66,7 +66,6 @@ import {
   createMapMarkersBounds,
 } from './map-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -91,9 +90,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   @Input()
   public markers: MapMarkerProperties[];
-
-  @Input()
-  public constraintData: ConstraintData;
 
   @Output()
   public markerMove = new EventEmitter<MarkerMoveEvent>();
@@ -287,11 +283,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   private getUnclusteredMarkers(): Marker[] {
     return [
       ...this.mapboxMap.querySourceFeatures(MAP_SOURCE_ID).reduce((markerIds, feature) => {
-        const properties: MapMarkerProperties = {
-          attributeId: feature.properties.attributeId,
-          document: JSON.parse(feature.properties.document || null),
-          collection: JSON.parse(feature.properties.collection || null),
-        };
+        const properties = <MapMarkerProperties>{...feature.properties};
         const markerId = mapMarkerId(properties);
         if (markerId) {
           markerIds.add(markerId);
@@ -320,7 +312,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private createAllMakers(markers: MapMarkerProperties[]) {
     return markers.reduce((markersMap, properties) => {
-      const marker = createMapMarker(properties, this.constraintData, () => this.onMarkerDoubleClick(properties));
+      const marker = createMapMarker(properties, () => this.onMarkerDoubleClick(properties));
       marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
       markersMap[mapMarkerId(properties)] = marker;
       return markersMap;
@@ -422,8 +414,8 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 }
 
 function mapMarkerId(properties: MapMarkerProperties): string {
-  if (!properties.document) {
+  if (!properties.dataResourceId) {
     return null;
   }
-  return `${properties.document.id}:${properties.attributeId}`;
+  return `${properties.dataResourceId}:${properties.attributeId}`;
 }
