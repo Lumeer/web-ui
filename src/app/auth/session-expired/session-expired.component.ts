@@ -54,7 +54,7 @@ export class SessionExpiredComponent implements OnInit {
 
   private disableBackButton() {
     history.pushState(null, null, location.href);
-    window.onpopstate = function() {
+    window.onpopstate = function () {
       history.go(1);
     };
   }

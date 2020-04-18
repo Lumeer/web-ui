@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {DialogType} from '../dialog-type';
 import {PlatformLocation} from '@angular/common';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'modal-wrapper',

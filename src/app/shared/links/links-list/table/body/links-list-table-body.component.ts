@@ -181,9 +181,9 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
       return row.correlationId;
     }
 
-    return `${row.document.collectionId || row.document.id}:${(row.linkInstance &&
-      (row.linkInstance.correlationId || row.linkInstance.id)) ||
-      ''}`;
+    return `${row.document.collectionId || row.document.id}:${
+      (row.linkInstance && (row.linkInstance.correlationId || row.linkInstance.id)) || ''
+    }`;
   }
 
   public onColumnEdit(row: LinkRow, columnIndex: number) {

@@ -1,8 +1,7 @@
 <ng-container *ngIf="{readonly: !permissions?.writeWithView} as data">
 
-  <div class="flex-grow-1 row m-0" [style.width]="'calc(100% - 40px)'">
-
-    <data-input class="{{keyClass}} p-0 pr-1 h-100 w-100 p-1 data-input key d-block"
+  <div class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+    <data-input class="h-100 w-100 p-1 data-input key"
                 [cursor]="cursor"
                 [focus]="true"
                 [readonly]="!(keyEditing$ | async)"
@@ -19,8 +18,10 @@
                 [class.cursor-pointer]="!data.readonly"
                 [class.read-only]="data.readonly">
     </data-input>
+  </div>
 
-    <data-input class="{{valueClass}} h-100 w-100 p-1 data-input value"
+  <div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+    <data-input class="h-100 w-100 p-1 data-input value"
                 [constraint]="row.attribute?.constraint"
                 [cursor]="cursor"
                 [focus]="true"
@@ -38,7 +39,6 @@
                 [class.cursor-pointer]="!data.readonly"
                 [class.read-only]="data.readonly">
     </data-input>
-
   </div>
 
   <div class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center">

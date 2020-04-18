@@ -33,7 +33,7 @@ export class KanbanSelectDataItemsPipe implements PipeTransform {
     attributesResources: AttributesResource[]
   ): SelectDataItemModel[] {
     const resource = attribute && (attributesResources || [])[attribute.resourceIndex];
-    const constraint = attribute && findAttributeConstraint(resource && resource.attributes, attribute.attributeId);
+    const constraint = attribute && findAttributeConstraint(resource?.attributes, attribute.attributeId);
     return items.map(item => ({id: item, value: item, constraint}));
   }
 }

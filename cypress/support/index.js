@@ -23,9 +23,7 @@ beforeEach(() => {
   cy.getOrganizationByCode(Cypress.env('organizationCode')).then(organization => {
     // create a new project for each test
 
-    const projectCode = Math.random()
-      .toString(36)
-      .substr(2, 5);
+    const projectCode = Math.random().toString(36).substr(2, 5);
     Cypress.env('projectCode', projectCode);
     cy.createProject(organization.id, projectCode, 'Test project').then(project => {
       // save default workspace to newly created project

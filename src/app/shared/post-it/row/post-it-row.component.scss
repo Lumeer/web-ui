@@ -2,10 +2,29 @@
 
 :host {
   min-height: 40px;
-  display: flex;
-  flex-wrap: nowrap;
-  flex-direction: row;
   border-top: dotted 1px $light;
+  display: grid;
+  width: auto;
+  grid-template-columns: 3fr 4fr auto;
+  & > div {
+    min-width: 0;
+  }
+}
+
+:host.quarter {
+  grid-template-columns: 1fr 4fr auto;
+}
+
+:host.third {
+  grid-template-columns: 1fr 3fr auto;
+}
+
+:host.half {
+  grid-template-columns: 1fr 2fr auto;
+}
+
+:host.event {
+  grid-template-columns: 1fr 1fr auto;
 }
 
 :host.key-focused .data-input.key::ng-deep > *,

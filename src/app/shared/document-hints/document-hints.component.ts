@@ -168,9 +168,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
                 const formattedValue = isNotNullOrUndefined(value)
                   ? constraint.createDataValue(value, this.constraintData).format()
                   : '';
-                return stripTextHtmlTags(String(formattedValue), false)
-                  .toLowerCase()
-                  .includes(typedValue);
+                return stripTextHtmlTags(String(formattedValue), false).toLowerCase().includes(typedValue);
               })
               .slice(0, this.limit);
           }),

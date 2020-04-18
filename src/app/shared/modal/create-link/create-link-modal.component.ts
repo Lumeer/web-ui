@@ -25,7 +25,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {Store} from '@ngrx/store';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {KeyCode} from '../../key-code';
 import {map, startWith} from 'rxjs/operators';
 import {DialogType} from '../dialog-type';

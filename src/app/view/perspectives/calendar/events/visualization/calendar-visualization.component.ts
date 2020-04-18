@@ -204,9 +204,7 @@ export class CalendarVisualizationComponent implements OnChanges {
   private getNewDate(view: View): Date {
     const today = new Date();
     if (view.currentStart <= today && view.currentEnd >= today) {
-      return moment(today)
-        .startOf('day')
-        .toDate();
+      return moment(today).startOf('day').toDate();
     }
     return view.currentStart;
   }

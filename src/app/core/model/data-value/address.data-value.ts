@@ -108,15 +108,8 @@ export class AddressDataValue implements DataValue {
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new AddressDataValue(value.value, this.config, this.constraintData));
-    const formattedValue = this.format()
-      .toLowerCase()
-      .trim();
-    const otherFormattedValues = dataValues.map(dataValue =>
-      dataValue
-        .format()
-        .toLowerCase()
-        .trim()
-    );
+    const formattedValue = this.format().toLowerCase().trim();
+    const otherFormattedValues = dataValues.map(dataValue => dataValue.format().toLowerCase().trim());
     return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
   }
 

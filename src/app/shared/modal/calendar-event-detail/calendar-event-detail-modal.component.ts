@@ -243,15 +243,11 @@ export class CalendarEventDetailModalComponent implements OnInit {
             data[endProperty.attributeId] = start && this.cleanDateWhenAllDay(start);
           }
         } else if (isAllDayEvent(this.start, end)) {
-          data[endProperty.attributeId] = moment(newStart)
-            .add(DEFAULT_EVENT_DURATION, 'minutes')
-            .toDate();
+          data[endProperty.attributeId] = moment(newStart).add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
         } else if (this.end) {
           data[endProperty.attributeId] = this.end;
         } else if (newStart) {
-          data[endProperty.attributeId] = moment(newStart)
-            .add(DEFAULT_EVENT_DURATION, 'minutes')
-            .toDate();
+          data[endProperty.attributeId] = moment(newStart).add(DEFAULT_EVENT_DURATION, 'minutes').toDate();
         }
       }
 
@@ -308,11 +304,6 @@ export class CalendarEventDetailModalComponent implements OnInit {
   }
 
   private cleanDateWhenAllDay(date: any): Date {
-    return moment(date)
-      .hours(0)
-      .minutes(0)
-      .seconds(0)
-      .milliseconds(0)
-      .toDate();
+    return moment(date).hours(0).minutes(0).seconds(0).milliseconds(0).toDate();
   }
 }

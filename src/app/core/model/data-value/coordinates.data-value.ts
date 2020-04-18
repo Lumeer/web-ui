@@ -88,15 +88,8 @@ export class CoordinatesDataValue implements DataValue {
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new CoordinatesDataValue(value.value, this.config));
-    const formattedValue = this.format()
-      .trim()
-      .toLowerCase();
-    const otherFormattedValues = dataValues.map(dataValue =>
-      dataValue
-        .format()
-        .trim()
-        .toLowerCase()
-    );
+    const formattedValue = this.format().trim().toLowerCase();
+    const otherFormattedValues = dataValues.map(dataValue => dataValue.format().trim().toLowerCase());
 
     return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
   }

@@ -690,10 +690,7 @@ export function addMissingTableColumns(
     };
     const previousColumn = prefixColumns[prefixColumns.length - 1];
     if (previousColumn && previousColumn.type === TableColumnType.HIDDEN) {
-      return prefixColumns
-        .slice(0, -1)
-        .concat(mergeHiddenColumns(previousColumn, hiddenColumn))
-        .concat(suffixColumns);
+      return prefixColumns.slice(0, -1).concat(mergeHiddenColumns(previousColumn, hiddenColumn)).concat(suffixColumns);
     }
     return prefixColumns.concat(hiddenColumn).concat(suffixColumns);
   }

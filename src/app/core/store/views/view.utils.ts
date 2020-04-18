@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import isEqual from 'lodash/isEqual';
 import {isCalendarConfigChanged} from '../../../view/perspectives/calendar/util/calendar-util';
 import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
@@ -58,7 +57,7 @@ export function isViewConfigChanged(
     case Perspective.Pivot:
       return isPivotConfigChanged(viewConfig, perspectiveConfig);
     default:
-      return !isEqual(viewConfig, perspectiveConfig);
+      return !deepObjectsEquals(viewConfig, perspectiveConfig);
   }
 }
 

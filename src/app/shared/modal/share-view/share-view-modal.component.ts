@@ -20,7 +20,7 @@
 import {Component, OnInit, ChangeDetectionStrategy, HostListener, ViewChild, Input} from '@angular/core';
 import {DialogType} from '../dialog-type';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {KeyCode} from '../../key-code';

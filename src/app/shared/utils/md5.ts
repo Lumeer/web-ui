@@ -20,17 +20,11 @@
 export class Md5 {
   // One time hashing functions
   public static hashStr(str: string, raw: boolean = false) {
-    return this.onePassHasher
-      .start()
-      .appendStr(str)
-      .end(raw);
+    return this.onePassHasher.start().appendStr(str).end(raw);
   }
 
   public static hashAsciiStr(str: string, raw: boolean = false) {
-    return this.onePassHasher
-      .start()
-      .appendAsciiStr(str)
-      .end(raw);
+    return this.onePassHasher.start().appendAsciiStr(str).end(raw);
   }
   // Private Static Variables
   private static stateIdentity = new Int32Array([1732584193, -271733879, -1732584194, 271733878]);

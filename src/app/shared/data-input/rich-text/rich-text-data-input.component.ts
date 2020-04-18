@@ -34,7 +34,7 @@ import {
 import {DataValue} from '../../../core/model/data-value';
 import {numberOfPTags, TextDataValue} from '../../../core/model/data-value/text.data-value';
 import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
 import {Subscription} from 'rxjs';
 import {KeyCode} from '../../key-code';

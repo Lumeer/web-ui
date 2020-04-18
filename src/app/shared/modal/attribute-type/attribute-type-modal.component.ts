@@ -22,7 +22,7 @@ import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {debounceTime, map} from 'rxjs/operators';
 import {AttributeTypeFormComponent} from './form/attribute-type-form.component';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {findAttribute} from '../../../core/store/collections/collection.util';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';

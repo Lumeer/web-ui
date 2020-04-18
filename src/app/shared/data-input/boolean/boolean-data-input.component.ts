@@ -75,11 +75,7 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
   @ViewChild('booleanInput', {static: true})
   public booleanInput: ElementRef<HTMLInputElement>;
 
-  public inputId =
-    'boolean-data-input-' +
-    Math.random()
-      .toString(36)
-      .substr(2);
+  public inputId = 'boolean-data-input-' + Math.random().toString(36).substr(2);
 
   constructor(private renderer: Renderer2) {}
 

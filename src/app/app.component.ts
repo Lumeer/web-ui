@@ -43,7 +43,7 @@ import {VideosAction} from './core/store/videos/videos.action';
 import {getAllVideos} from './core/store/videos/videos.data';
 import {SessionService} from './auth/session.service';
 import {ConstraintDataService} from './core/service/constraint-data.service';
-import {TooltipConfig} from 'ngx-bootstrap';
+import {TooltipConfig} from 'ngx-bootstrap/tooltip';
 import numbro from 'numbro';
 import csLanguage from 'numbro/languages/cs-CZ';
 

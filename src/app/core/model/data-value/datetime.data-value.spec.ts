@@ -31,24 +31,12 @@ describe('DateTimeDataValue', () => {
   const secondsConfig: DateTimeConstraintConfig = {format: 'DD.MM.YYYY HH:mm:ss'};
 
   const today = moment().toDate();
-  const yesterday = moment()
-    .subtract(1, 'day')
-    .toDate();
-  const tomorrow = moment()
-    .add(1, 'day')
-    .toDate();
-  const lastWeek = moment()
-    .subtract(1, 'week')
-    .toDate();
-  const nextWeek = moment()
-    .add(1, 'week')
-    .toDate();
-  const lastMonth = moment()
-    .subtract(1, 'month')
-    .toDate();
-  const nextMonth = moment()
-    .add(1, 'month')
-    .toDate();
+  const yesterday = moment().subtract(1, 'day').toDate();
+  const tomorrow = moment().add(1, 'day').toDate();
+  const lastWeek = moment().subtract(1, 'week').toDate();
+  const nextWeek = moment().add(1, 'week').toDate();
+  const lastMonth = moment().subtract(1, 'month').toDate();
+  const nextMonth = moment().add(1, 'month').toDate();
 
   describe('meet condition', () => {
     it('equals by specific date', () => {

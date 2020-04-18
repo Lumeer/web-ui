@@ -443,7 +443,7 @@ export class ChartDataConverter {
   private formatDateTimeValue(value: any, config: DateTimeConstraintConfig): string {
     const format = config && config.format;
     const momentDate = parseMomentDate(value, format);
-    return momentDate.format(convertChartDateFormat(format));
+    return momentDate?.format(convertChartDateFormat(format));
   }
 
   private formatPercentageValue(value: any, constraint: PercentageConstraint): string {

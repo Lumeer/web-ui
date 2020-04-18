@@ -258,7 +258,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     if (this.masterType === MasterBlockType.Function) {
       if (collection) {
         Blockly.Blocks[STATEMENT_CONTAINER] = {
-          init: function() {
+          init: function () {
             this.jsonInit({
               type: STATEMENT_CONTAINER,
               message0: '%{BKY_BLOCK_STATEMENT_CONTAINER}', // With record in %1 %2 %3 do %4
@@ -284,7 +284,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             });
           },
         };
-        Blockly.JavaScript[STATEMENT_CONTAINER] = function(block) {
+        Blockly.JavaScript[STATEMENT_CONTAINER] = function (block) {
           const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
           this_.lumeerVar = lumeerVar;
           const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
@@ -294,7 +294,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       if (linkType) {
         Blockly.Blocks[STATEMENT_CONTAINER] = {
-          init: function() {
+          init: function () {
             this.jsonInit({
               type: STATEMENT_CONTAINER,
               message0: '%{BKY_BLOCK_LINK_STATEMENT_CONTAINER}', // With record in %1%2 %3 %4 do %5
@@ -325,7 +325,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             });
           },
         };
-        Blockly.JavaScript[STATEMENT_CONTAINER] = function(block) {
+        Blockly.JavaScript[STATEMENT_CONTAINER] = function (block) {
           const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
           this_.lumeerVar = lumeerVar;
           const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
@@ -335,7 +335,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     } else if (this.masterType === MasterBlockType.Value) {
       if (collection) {
         Blockly.Blocks[VALUE_CONTAINER] = {
-          init: function() {
+          init: function () {
             this.jsonInit({
               type: VALUE_CONTAINER,
               message0: '%{BKY_BLOCK_VALUE_CONTAINER}', // %1 %2 = %3
@@ -359,7 +359,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             });
           },
         };
-        Blockly.JavaScript[VALUE_CONTAINER] = function(block) {
+        Blockly.JavaScript[VALUE_CONTAINER] = function (block) {
           const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
           this_.lumeerVar = lumeerVar;
           const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
@@ -387,7 +387,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       if (linkType) {
         Blockly.Blocks[LINK_CONTAINER] = {
-          init: function() {
+          init: function () {
             this.jsonInit({
               type: LINK_CONTAINER,
               message0: '%{BKY_BLOCK_LINK_CONTAINER}', // %1%2 %3 = %4
@@ -417,7 +417,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           },
         };
 
-        Blockly.JavaScript[LINK_CONTAINER] = function(block) {
+        Blockly.JavaScript[LINK_CONTAINER] = function (block) {
           const lumeerVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
           this_.lumeerVar = lumeerVar;
           const code = 'var ' + lumeerVar + " = Polyglot.import('lumeer');\n";
@@ -445,7 +445,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     }
 
     Blockly.Blocks[FOREACH_DOCUMENT_ARRAY] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: FOREACH_DOCUMENT_ARRAY,
           message0: '%{BKY_BLOCK_FOREACH_DOCUMENT}', // for each record %1 in %2
@@ -477,7 +477,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     Blockly.JavaScript[FOREACH_DOCUMENT_ARRAY] = Blockly.JavaScript['controls_forEach'];
 
     Blockly.Blocks[FOREACH_LINK_ARRAY] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: FOREACH_LINK_ARRAY,
           message0: '%{BKY_BLOCK_FOREACH_LINK}', // for each link %1 in %2
@@ -509,7 +509,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     Blockly.JavaScript[FOREACH_LINK_ARRAY] = Blockly.JavaScript['controls_forEach'];
 
     Blockly.Blocks[GET_ATTRIBUTE] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: GET_ATTRIBUTE,
           message0: '%{BKY_BLOCK_GET_ATTRIBUTE}', // get %1 of %2
@@ -531,7 +531,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[GET_ATTRIBUTE] = function(block) {
+    Blockly.JavaScript[GET_ATTRIBUTE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const attrId = block.getFieldValue('ATTR');
 
@@ -545,7 +545,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
 
     Blockly.Blocks[SET_ATTRIBUTE] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: SET_ATTRIBUTE,
           message0: '%{BKY_BLOCK_SET_ATTRIBUTE}', // set %1 of %2 to %3
@@ -572,7 +572,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[SET_ATTRIBUTE] = function(block) {
+    Blockly.JavaScript[SET_ATTRIBUTE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DOCUMENT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const argument1 = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const attrId = block.getFieldValue('ATTR');
@@ -587,7 +587,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
 
     Blockly.Blocks[GET_LINK_ATTRIBUTE] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: GET_LINK_ATTRIBUTE,
           message0: '%{BKY_BLOCK_GET_LINK_ATTRIBUTE}', // get %1 of link %2
@@ -609,7 +609,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[GET_LINK_ATTRIBUTE] = function(block) {
+    Blockly.JavaScript[GET_LINK_ATTRIBUTE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const attrId = block.getFieldValue('ATTR');
 
@@ -623,7 +623,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
 
     Blockly.Blocks[SET_LINK_ATTRIBUTE] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: SET_LINK_ATTRIBUTE,
           message0: '%{BKY_BLOCK_SET_LINK_ATTRIBUTE}', // set %1 of link %2 to %3
@@ -650,7 +650,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[SET_LINK_ATTRIBUTE] = function(block) {
+    Blockly.JavaScript[SET_LINK_ATTRIBUTE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const argument1 = Blockly.JavaScript.valueToCode(block, 'VALUE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const attrId = block.getFieldValue('ATTR');
@@ -665,7 +665,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
 
     Blockly.Blocks[GET_LINK_DOCUMENT] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: GET_LINK_DOCUMENT,
           message0: '%{BKY_BLOCK_GET_LINK_DOCUMENT}', // record from %1 linked via %2
@@ -686,7 +686,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[GET_LINK_DOCUMENT] = function(block) {
+    Blockly.JavaScript[GET_LINK_DOCUMENT] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'LINK', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
       const collectionId = block.getFieldValue('COLLECTION');
 
@@ -700,7 +700,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
 
     Blockly.Blocks[DATE_TO_MS] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: DATE_TO_MS,
           message0: '%{BKY_BLOCK_DATE_TO_MS}', // date to millis %1
@@ -717,7 +717,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[DATE_TO_MS] = function(block) {
+    Blockly.JavaScript[DATE_TO_MS] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {
@@ -730,7 +730,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
 
     Blockly.Blocks[MS_TO_DATE] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: MS_TO_DATE,
           message0: '%{BKY_BLOCK_MS_TO_DATE}', // millis to date %1
@@ -747,7 +747,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[MS_TO_DATE] = function(block) {
+    Blockly.JavaScript[MS_TO_DATE] = function (block) {
       const argument0 = Blockly.JavaScript.valueToCode(block, 'MS', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
 
       if (!argument0) {
@@ -760,7 +760,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
 
     Blockly.Blocks[DATE_NOW] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: DATE_NOW,
           message0: '%{BKY_BLOCK_DATE_NOW}', // ms to date %1
@@ -771,14 +771,14 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[DATE_NOW] = function(block) {
+    Blockly.JavaScript[DATE_NOW] = function (block) {
       const code = '(+(new Date()))';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
 
     Blockly.Blocks[CURRENT_USER] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: CURRENT_USER,
           message0: '%{BKY_BLOCK_CURRENT_USER}', // current user
@@ -789,14 +789,14 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[CURRENT_USER] = function(block) {
+    Blockly.JavaScript[CURRENT_USER] = function (block) {
       const code = this_.lumeerVar + '.getCurrentUser()';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
 
     Blockly.Blocks[MS_TO_UNIT] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: MS_TO_UNIT,
           message0: '%{BKY_BLOCK_DATE_MILLIS_TO_UNIT}', // milliseconds to %1 %2
@@ -824,7 +824,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[MS_TO_UNIT] = function(block) {
+    Blockly.JavaScript[MS_TO_UNIT] = function (block) {
       const dropdown_unit = block.getFieldValue('UNIT');
       const value_ms = Blockly.JavaScript.valueToCode(block, 'MS', Blockly.JavaScript.ORDER_ATOMIC);
       let code = '(' + value_ms + '/';
@@ -848,7 +848,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
 
     Blockly.Blocks[SEQUENCE_BLOCK] = {
-      init: function() {
+      init: function () {
         this.jsonInit({
           type: SEQUENCE_BLOCK,
           message0: '%{BKY_BLOCK_SEQUENCE_NEXT}', // next no. from %1 align to %2 digit(s)
@@ -873,7 +873,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
         });
       },
     };
-    Blockly.JavaScript[SEQUENCE_BLOCK] = function(block) {
+    Blockly.JavaScript[SEQUENCE_BLOCK] = function (block) {
       const sequence = block.getFieldValue('SEQUENCE');
       const digits = block.getFieldValue('DIGITS');
 
@@ -1434,7 +1434,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       const this_ = this;
       Blockly.Blocks[VARIABLES_GET_PREFIX + type] = {
-        init: function() {
+        init: function () {
           this.jsonInit({
             type: VARIABLES_GET_PREFIX + type,
             message0: '%{BKY_BLOCK_VARIABLE}', // %1 %2 %3
@@ -1473,7 +1473,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       const c2 = this.getCollection(linkType.collectionIds[1]);
 
       Blockly.Blocks[VARIABLES_GET_PREFIX + type] = {
-        init: function() {
+        init: function () {
           this.jsonInit({
             type: VARIABLES_GET_PREFIX + type,
             message0: '%{BKY_BLOCK_LINK_VARIABLE}', // %1%2 %3 %4
@@ -1577,7 +1577,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       const c2 = this.getCollection(linkType.collectionIds[1]);
 
       Blockly.Blocks[type] = {
-        init: function() {
+        init: function () {
           this.jsonInit({
             type: type,
             message0: '%{BKY_BLOCK_LINK_VARIABLE}', // %1%2 %3 %4
@@ -1615,7 +1615,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       };
 
       const this_ = this;
-      Blockly.JavaScript[type] = function(block) {
+      Blockly.JavaScript[type] = function (block) {
         const lumeerVar = this_.lumeerVar
           ? this_.lumeerVar
           : Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);
@@ -1646,7 +1646,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       const c2 = this.getCollection(linkType.collectionIds[1]);
 
       Blockly.Blocks[type] = {
-        init: function() {
+        init: function () {
           this.jsonInit({
             type: type,
             message0: '%{BKY_BLOCK_LINK_INSTANCE}', // %1 %2%3 %4 %5
@@ -1689,7 +1689,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       };
 
       const this_ = this;
-      Blockly.JavaScript[type] = function(block) {
+      Blockly.JavaScript[type] = function (block) {
         const lumeerVar = this_.lumeerVar
           ? this_.lumeerVar
           : Blockly.JavaScript.variableDB_.getDistinctName('lumeer', Blockly.Variables.NAME_TYPE);

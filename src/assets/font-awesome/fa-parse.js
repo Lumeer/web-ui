@@ -41,7 +41,7 @@ function registerVocab(iconKey, term) {
   }
 }
 
-Object.keys(loadJsonFile).forEach(function(key) {
+Object.keys(loadJsonFile).forEach(function (key) {
   var icon = loadJsonFile[key];
 
   if (icon.styles.includes('brands')) {
@@ -61,19 +61,19 @@ Object.keys(loadJsonFile).forEach(function(key) {
   registerVocab(String(key), String(key));
 
   if (icon.search && icon.search.terms) {
-    Object.keys(icon.search.terms).forEach(function(value) {
+    Object.keys(icon.search.terms).forEach(function (value) {
       registerVocab(String(key), icon.search.terms[value]);
     });
   }
 });
 
-fs.writeFile('./icons', icons, function(err) {});
-fs.writeFile('./brands', brands, function(err) {});
+fs.writeFile('./icons', icons, function (err) {});
+fs.writeFile('./brands', brands, function (err) {});
 
 var meta = '';
 first = true;
 
-vocab.forEach(function(value, key) {
+vocab.forEach(function (value, key) {
   if (key) {
     if (!first) {
       meta += ',\n';
@@ -83,7 +83,7 @@ vocab.forEach(function(value, key) {
     var line = '';
     first_brands = true;
     line += "['" + String(key).replace("'", "\\'") + "', [\n  ";
-    value.forEach(function(elem) {
+    value.forEach(function (elem) {
       if (!first_brands) {
         line += ',\n  ';
       }
@@ -96,11 +96,11 @@ vocab.forEach(function(value, key) {
   }
 });
 
-fs.writeFile('./meta', meta, function(err) {});
+fs.writeFile('./meta', meta, function (err) {});
 
 var unicodeIcons = '';
 
-Object.keys(loadJsonFile).forEach(function(key) {
+Object.keys(loadJsonFile).forEach(function (key) {
   var icon = loadJsonFile[key];
 
   if (icon.styles.includes('brands')) {
@@ -110,6 +110,6 @@ Object.keys(loadJsonFile).forEach(function(key) {
   }
 });
 
-fs.writeFile('./unicode', unicodeIcons, function(err) {});
+fs.writeFile('./unicode', unicodeIcons, function (err) {});
 
 console.log('Successfully parsed!\n');

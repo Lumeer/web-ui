@@ -19,7 +19,7 @@
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, HostListener} from '@angular/core';
 import {VideoModel} from '../../../../../core/store/videos/video.model';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 import {DialogType} from '../../../../modal/dialog-type';
 

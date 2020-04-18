@@ -18,13 +18,13 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
+  Component,
   EventEmitter,
   HostBinding,
+  Input,
   OnChanges,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import {DataRowComponent} from '../../data/data-row-component';
@@ -94,6 +94,18 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   @HostBinding('class.value-focused')
   public valueFocused: boolean;
 
+  @HostBinding('class.quarter')
+  public classQuarter: boolean;
+
+  @HostBinding('class.third')
+  public classThird: boolean;
+
+  @HostBinding('class.half')
+  public classHalf: boolean;
+
+  @HostBinding('class.even')
+  public classEven: boolean;
+
   public readonly booleanConstraintType = ConstraintType.Boolean;
   public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
@@ -105,9 +117,6 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   public editedValue: DataValue;
   public editing$ = new BehaviorSubject(false);
   public dataValue: DataValue;
-
-  public keyClass: string;
-  public valueClass: string;
 
   public get constraintType(): ConstraintType {
     return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
@@ -128,24 +137,10 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   }
 
   private convertLayoutToClasses() {
-    switch (this.layoutType) {
-      case PostItLayoutType.Quarter:
-        this.keyClass = 'col-2';
-        this.valueClass = 'col-10';
-        break;
-      case PostItLayoutType.Third:
-        this.keyClass = 'col-3';
-        this.valueClass = 'col-9';
-        break;
-      case PostItLayoutType.Half:
-        this.keyClass = 'col-4';
-        this.valueClass = 'col-8';
-        break;
-      default:
-        this.keyClass = 'col-6';
-        this.valueClass = 'col-6';
-        break;
-    }
+    this.classQuarter = this.layoutType === PostItLayoutType.Quarter;
+    this.classThird = this.layoutType === PostItLayoutType.Third;
+    this.classHalf = this.layoutType === PostItLayoutType.Half;
+    this.classEven = this.layoutType === PostItLayoutType.Even;
   }
 
   private createKeyDataValue(value?: any): DataValue {

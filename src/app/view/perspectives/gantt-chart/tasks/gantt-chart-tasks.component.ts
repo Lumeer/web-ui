@@ -67,7 +67,7 @@ import {
 } from '../util/gantt-chart-util';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {GanttChartVisualizationComponent} from './visualization/gantt-chart-visualization.component';
-import {BsModalRef} from 'ngx-bootstrap';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DateTimeConstraint} from '../../../../core/model/constraint/datetime.constraint';
 import {DataValue} from '../../../../core/model/data-value';
