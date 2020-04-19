@@ -137,7 +137,7 @@ export class RedirectComponent implements OnInit {
     } else {
       message = this.i18n({
         id: 'template.create.empty',
-        value: 'I am sorry, you do not have any organization to create project in',
+        value: 'I am sorry, you do not have any organization to create project in.',
       });
     }
     setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
