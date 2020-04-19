@@ -21,7 +21,7 @@ import Big from 'big.js';
 import {compareBigNumbers} from '../../../shared/utils/big/compare-big-numbers';
 import {convertBigToNumberSafely} from '../../../shared/utils/big/convert-big-to-number-safely';
 import {createBigWithoutTrailingZeros} from '../../../shared/utils/big/create-big-without-trailing-zeros';
-import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined, isNumeric, toNumber, unescapeHtml} from '../../../shared/utils/common.utils';
 import {
   convertToBig,
   decimalStoreToUser,
@@ -65,9 +65,17 @@ export class PercentageDataValue implements NumericDataValue {
     return this.format();
   }
 
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format(''));
+  }
+
   public serialize(): any {
     if (!this.bigNumber) {
-      return this.value ? String(this.value) : '';
+      return this.value ? escapeHtml(String(this.value)) : '';
     }
 
     const decimals = (this.config && this.config.decimals) || 0;

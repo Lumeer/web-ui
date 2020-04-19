@@ -21,7 +21,7 @@ import {formatUnknownDataValue, stripTextHtmlTags} from '../../../shared/utils/d
 import {replaceNbsp, transformTextBasedOnCaseStyle} from '../../../shared/utils/string.utils';
 import {TextConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueByConditionText} from './data-value.utils';
 
@@ -47,12 +47,20 @@ export class TextDataValue implements DataValue {
     return stripTextHtmlTags(this.format());
   }
 
+  public title(): string {
+    return unescapeHtml(stripTextHtmlTags(this.format(), false));
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
+  }
+
   public serialize(): any {
     const formattedValue = this.format();
     if (numberOfPTags(formattedValue) === 1 && numberOfTags(formattedValue) === 1) {
-      return stripTextHtmlTags(formattedValue, false);
+      return escapeHtml(stripTextHtmlTags(formattedValue, false));
     }
-    return formattedValue;
+    return escapeHtml(formattedValue);
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

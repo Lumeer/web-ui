@@ -14,7 +14,7 @@
     <ng-container *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue">
       <div [innerHTML]="data.dataValue | previewDataValue | safeHtml"
            class="text-pre overflow-hidden mx-1 align-middle"
-           [title]="data.dataValue | formatDataValue | stripHtml:false"
+           [title]="data.dataValue | formatDataValueTitle"
            [ngClass]="data.attribute?.constraint | constraintClass"
            [class.invalid-value]="!(data.dataValue | isDataValueValid)"
            readonly data-test="table-data-input">

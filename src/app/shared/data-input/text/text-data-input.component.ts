@@ -96,10 +96,10 @@ export class TextDataInputComponent implements OnChanges {
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
         input.nativeElement.focus();
       });
-      this.text = this.value.format();
+      this.text = this.value.editValue();
     }
     if (changes.value && this.value) {
-      this.text = this.value.format();
+      this.text = this.value.editValue();
     }
 
     this.refreshValid(this.value);

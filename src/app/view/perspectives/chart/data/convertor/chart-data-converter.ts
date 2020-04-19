@@ -52,8 +52,8 @@ import {getDurationSaveValue} from '../../../../../shared/utils/constraint/durat
 import {decimalUserToStore} from '../../../../../shared/utils/data.utils';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
 import {
-  AggregatedMapData,
   AggregatedDataValues,
+  AggregatedMapData,
   DataAggregator,
   DataAggregatorAttribute,
 } from '../../../../../shared/utils/data/data-aggregator';
@@ -98,7 +98,7 @@ export class ChartDataConverter {
     const overrideConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
     const chartConstraint =
       overrideConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, overrideConstraint);
-    return this.formatChartValue(value, chartConstraint || constraint, constraintData);
+    return this.formatChartValue(value, chartConstraint || constraint || new UnknownConstraint(), constraintData);
   }
 
   public updateData(
@@ -408,7 +408,10 @@ export class ChartDataConverter {
 
   private formatChartAxisValue(value: any, axis: ChartAxis): any {
     const constraint = this.constraintForAxis(axis);
-    return this.formatChartValue(value, constraint, this.constraintData);
+    const formattedValue = this.formatChartValue(value, constraint || new UnknownConstraint(), this.constraintData);
+    return constraint?.type !== ConstraintType.Percentage && isNumeric(formattedValue)
+      ? toNumber(formattedValue)
+      : formattedValue;
   }
 
   private formatChartValue(value: any, constraint: Constraint, constraintData: ConstraintData): any {
@@ -420,7 +423,10 @@ export class ChartDataConverter {
       case ConstraintType.Select:
       case ConstraintType.User:
       case ConstraintType.Text:
-        return constraint.createDataValue(value, this.constraintData).preview();
+      case ConstraintType.Address:
+      case ConstraintType.Unknown:
+      case ConstraintType.Files:
+        return constraint.createDataValue(value, this.constraintData).title();
       case ConstraintType.DateTime:
         return this.formatDateTimeValue(value, constraint.config as DateTimeConstraintConfig);
       case ConstraintType.Percentage:

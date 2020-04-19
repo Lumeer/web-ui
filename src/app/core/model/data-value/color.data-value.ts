@@ -24,7 +24,7 @@ import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {validDataColors} from '../../../shared/utils/data/valid-data-colors';
 import {ColorConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueMeetFulltexts} from './data-value.utils';
 import {saturated} from '../../../shared/picker/colors';
@@ -54,8 +54,16 @@ export class ColorDataValue implements DataValue {
     return this.format();
   }
 
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return '';
+  }
+
   public serialize(): any {
-    return this.hexCode || this.value;
+    return this.hexCode || escapeHtml(this.value);
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

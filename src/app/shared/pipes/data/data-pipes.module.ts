@@ -24,6 +24,8 @@ import {FormatDataValuePipe} from './format-data-value.pipe';
 import {IsDataValueValidPipe} from './is-data-value-valid.pipe';
 import {SerializeDataValuePipe} from './serialize-data-value.pipe';
 import {PreviewDataValuePipe} from './preview-data-value.pipe';
+import {FormatDataValueForEditPipe} from './format-data-value-for-edit.pipe';
+import {FormatDataValueTitlePipe} from './format-data-value-title.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -33,7 +35,17 @@ import {PreviewDataValuePipe} from './preview-data-value.pipe';
     IsDataValueValidPipe,
     SerializeDataValuePipe,
     PreviewDataValuePipe,
+    FormatDataValueForEditPipe,
+    FormatDataValueTitlePipe,
   ],
-  exports: [DataValuePipe, FormatDataValuePipe, IsDataValueValidPipe, SerializeDataValuePipe, PreviewDataValuePipe],
+  exports: [
+    DataValuePipe,
+    FormatDataValuePipe,
+    IsDataValueValidPipe,
+    SerializeDataValuePipe,
+    PreviewDataValuePipe,
+    FormatDataValueForEditPipe,
+    FormatDataValueTitlePipe,
+  ],
 })
 export class DataPipesModule {}

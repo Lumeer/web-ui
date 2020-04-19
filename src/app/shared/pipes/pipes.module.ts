@@ -89,6 +89,7 @@ import {CleanQueryAttributePipe} from './clean-query-attribute.pipe';
 import {QueryStemAttributesSelectItemsPipe} from './query-stem-attributes-select-items.pipe';
 import {FilterNotNullPipe} from './filter-not-null.pipe';
 import {QueryStemResourcesSelectItemsPipe} from './query-stem-resources-select-items.pipe';
+import {UnescapeHtmlPipe} from './unescape-html.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -161,6 +162,7 @@ import {QueryStemResourcesSelectItemsPipe} from './query-stem-resources-select-i
     QueryStemAttributesSelectItemsPipe,
     QueryStemResourcesSelectItemsPipe,
     FilterNotNullPipe,
+    UnescapeHtmlPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -233,6 +235,7 @@ import {QueryStemResourcesSelectItemsPipe} from './query-stem-resources-select-i
     QueryStemAttributesSelectItemsPipe,
     QueryStemResourcesSelectItemsPipe,
     FilterNotNullPipe,
+    UnescapeHtmlPipe,
   ],
 })
 export class PipesModule {}

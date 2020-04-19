@@ -56,7 +56,6 @@ import {
   objectsByIdMap,
   toNumber,
 } from '../../../../shared/utils/common.utils';
-import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 import {DataAggregatorAttribute, DataResourceChain} from '../../../../shared/utils/data/data-aggregator';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
@@ -76,6 +75,7 @@ import {
 import {QueryAttribute, queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {fullWithNulls} from '../../../../shared/utils/array.utils';
 import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
+import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 
 export interface GanttTaskMetadata {
   nameDataId: string;
@@ -390,7 +390,10 @@ export class GanttChartConverter {
 
       const names = isArray(name) ? name : [name];
       for (let i = 0; i < names.length; i++) {
-        const nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).format();
+        let nameFormatted = nameConstraint.createDataValue(names[i], this.constraintData).preview();
+        if (nameConstraint.type === ConstraintType.Text) {
+          nameFormatted = stripTextHtmlTags(nameFormatted, false);
+        }
 
         const barColor = taskColor
           ? stemConfig.progress
@@ -401,7 +404,7 @@ export class GanttChartConverter {
         const dataResourceId = (nameDataResource || startDataResource).id;
         arr.push({
           id: taskId,
-          name: stripTextHtmlTags(nameFormatted, false),
+          name: nameFormatted,
           start: interval.start,
           end: interval.end,
           progress: createProgress(progress),

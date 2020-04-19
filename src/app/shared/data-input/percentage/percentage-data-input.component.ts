@@ -72,7 +72,6 @@ export class PercentageDataInputComponent implements OnChanges {
   public readonly inputClass = constraintTypeClass(ConstraintType.Percentage);
 
   public valid = true;
-  public percentageValue: any;
 
   private preventSave: boolean;
 
@@ -84,7 +83,6 @@ export class PercentageDataInputComponent implements OnChanges {
       });
     }
     this.valid = !this.value || this.value.isValid();
-    this.percentageValue = this.value && this.value.format('');
   }
 
   @HostListener('keydown', ['$event'])

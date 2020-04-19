@@ -268,7 +268,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
     const constraint = findAttributeConstraint(attributesResource && attributesResource.attributes, attributeId);
     const value = (constraint || new UnknownConstraint())
       .createDataValue(dataResource.data[attributeId], this.constraintData)
-      .format();
+      .editValue();
     this.clipboardService.copy(value);
   }
 

@@ -23,7 +23,7 @@ import {queryIsEmptyExceptPagination, queryStemAttributesResourcesOrder} from '.
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {LinkInstance} from '../link-instances/link.instance';
-import {isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {escapeHtml, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {ConstraintData} from '../../model/data/constraint';
 import {AttributeFilter, Query, QueryStem} from '../navigation/query/query';
 import {groupLinkInstancesByLinkTypes, mergeLinkInstances} from '../link-instances/link-instance.utils';
@@ -77,7 +77,7 @@ export function filterDocumentsAndLinksByQuery(
       linkInstancesByLinkTypes,
       constraintData,
       stem,
-      query.fulltexts,
+      query.fulltexts?.map(fullText => escapeHtml(fullText)),
       includeChildren
     );
     documentsByStems = mergeDocuments(documentsByStems, allDocuments);

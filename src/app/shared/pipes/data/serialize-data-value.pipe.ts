@@ -25,6 +25,6 @@ import {DataValue} from '../../../core/model/data-value';
 })
 export class SerializeDataValuePipe implements PipeTransform {
   public transform(dataValue: DataValue): any {
-    return dataValue ? dataValue.serialize() : undefined;
+    return dataValue?.serialize();
   }
 }

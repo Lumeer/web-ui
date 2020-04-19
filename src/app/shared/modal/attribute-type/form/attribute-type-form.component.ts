@@ -40,6 +40,7 @@ import {convertToBig} from '../../../utils/data.utils';
 import {DatetimeConstraintFormControl} from './constraint-config/datetime/datetime-constraint-form-control';
 import {TextConstraintFormControl} from './constraint-config/text/text-constraint-form-control';
 import {NumberConstraintFormControl} from './constraint-config/number/number-constraint-form-control';
+import {escapeHtml} from '../../../utils/common.utils';
 
 @Component({
   selector: 'attribute-type-form',
@@ -62,8 +63,7 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute && this.attribute) {
-      const type = this.attribute.constraint && this.attribute.constraint.type;
-      this.typeControl.setValue(type || ConstraintType.Unknown);
+      this.typeControl.setValue(this.attribute.constraint?.type || ConstraintType.Unknown);
     }
   }
 
@@ -135,7 +135,8 @@ export class AttributeTypeFormComponent implements OnChanges {
         const displayValues = this.configForm.get(SelectConstraintFormControl.DisplayValues).value;
         const options = this.configForm
           .get(SelectConstraintFormControl.Options)
-          .value.filter(option => option.value || option.value === 0);
+          .value.filter(option => option.value || option.value === 0)
+          .map(option => ({...option, value: escapeHtml(option.value), displayValue: escapeHtml(option.displayValue)}));
         return {
           multi: this.configForm.get(SelectConstraintFormControl.Multi).value,
           displayValues,

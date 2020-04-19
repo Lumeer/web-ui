@@ -10,8 +10,8 @@
               [style.color]="option.background | contrastColor"
               [class.invalid-value]="!skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions.length)"
               [spellcheck]="false"
+              [innerHTML]="option.displayValue || option.value"
               [class.ml-2]="!first">
-          {{option.displayValue || option.value}}
         </span>
     </ng-container>
 

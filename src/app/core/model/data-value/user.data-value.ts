@@ -22,7 +22,7 @@ import {User} from '../../store/users/user';
 import {ConstraintData} from '../data/constraint';
 import {UserConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isArray, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {isEmailValid} from '../../../shared/utils/email.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {valueMeetFulltexts} from './data-value.utils';
@@ -71,6 +71,14 @@ export class UserDataValue implements DataValue {
 
   public preview(): string {
     return this.format();
+  }
+
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
   }
 
   public serialize(): any {

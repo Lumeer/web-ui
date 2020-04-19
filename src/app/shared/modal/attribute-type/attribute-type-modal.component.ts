@@ -57,7 +57,6 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
 
   public collection$: Observable<Collection>;
   public linkType$: Observable<LinkType>;
-  public linkCollections$: Observable<Collection[]>;
   public attribute$: Observable<Attribute>;
   public formInvalid$ = new BehaviorSubject(true);
   public performingAction$ = new BehaviorSubject(false);
@@ -71,13 +70,11 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
       this.attribute$ = this.collection$.pipe(
-        map(collection => findAttribute(collection && collection.attributes, this.attributeId))
+        map(collection => findAttribute(collection?.attributes, this.attributeId))
       );
     } else if (this.linkTypeId) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
-      this.attribute$ = this.linkType$.pipe(
-        map(linkType => findAttribute(linkType && linkType.attributes, this.attributeId))
-      );
+      this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType?.attributes, this.attributeId)));
     }
   }
 

@@ -32,7 +32,6 @@ import {Perspective} from '../../../perspective';
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
 import {DocumentFavoriteToggleService} from '../../../../../shared/toggle/document-favorite-toggle.service';
-import {ResourceType} from '../../../../../core/model/resource-type';
 import {CreateDocumentModalComponent} from '../../../../../shared/modal/create-document/create-document-modal.component';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
@@ -78,7 +77,6 @@ export class SearchDocumentsContentComponent implements OnInit {
   public configChange = new EventEmitter<SearchDocumentsConfig>();
 
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
-  public readonly projectType = ResourceType.Project;
   public readonly sizeType = SizeType;
 
   constructor(

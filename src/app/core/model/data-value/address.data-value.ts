@@ -17,7 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepObjectsEquals, isNotNullOrUndefined, isObject} from '../../../shared/utils/common.utils';
+import {
+  deepObjectsEquals,
+  escapeHtml,
+  isNotNullOrUndefined,
+  isObject,
+  unescapeHtml,
+} from '../../../shared/utils/common.utils';
 import {Address, AddressField} from '../../store/geocoding/address';
 import {ConstraintData} from '../data/constraint';
 import {AddressConstraintConfig} from '../data/constraint-config';
@@ -73,8 +79,16 @@ export class AddressDataValue implements DataValue {
     return this.format();
   }
 
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
+  }
+
   public serialize(): any {
-    return this.address ? this.format() : this.value;
+    return escapeHtml(this.address ? this.format() : this.value);
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

@@ -1,7 +1,7 @@
 <input *ngIf="readonly; else textEditing"
        [readonly]="readonly"
-       [title]="value | formatDataValue"
-       [value]="value | formatDataValue"
+       [title]="value | formatDataValueTitle"
+       [value]="value | formatDataValue | unescapeHtml"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [ngClass]="inputClass"
        spellcheck="false"
@@ -9,8 +9,8 @@
 
 <ng-template #textEditing>
   <input #addressInput
-         [title]="value | formatDataValue"
-         [value]="value | formatDataValue"
+         [title]="value | formatDataValueTitle"
+         [value]="value | formatDataValueForEdit"
          (focus)="onFocused()"
          (blur)="onBlur()"
          (input)="onInput($event)"
