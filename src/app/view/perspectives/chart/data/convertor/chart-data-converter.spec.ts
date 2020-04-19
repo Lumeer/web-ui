@@ -36,7 +36,6 @@ import {DataAggregationType} from '../../../../../shared/utils/data/data-aggrega
 import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NumberConstraint} from '../../../../../core/model/constraint/number.constraint';
 
 const documents: DocumentModel[] = [
   {
@@ -182,10 +181,10 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: 'a2',
       points: [
-        {id: 'D1', x: null, y: '3'},
-        {id: 'D2', x: null, y: '7'},
-        {id: 'D3', x: null, y: '44'},
-        {id: 'D4', x: null, y: '0'},
+        {id: 'D1', x: null, y: 3},
+        {id: 'D2', x: null, y: 7},
+        {id: 'D3', x: null, y: 44},
+        {id: 'D4', x: null, y: 0},
       ],
       color: '#ffffff',
       yAxis: {
@@ -226,9 +225,9 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: 'a2',
       points: [
-        {id: 'D2', x: 'Dance', y: '7'},
-        {id: null, x: 'Glass', y: '51'},
-        {id: null, x: 'Sport', y: '3'},
+        {id: 'D2', x: 'Dance', y: 7},
+        {id: null, x: 'Glass', y: 51},
+        {id: null, x: 'Sport', y: 3},
       ],
       color: 'rgba(255,255,255,1)',
       yAxis: {
@@ -256,9 +255,9 @@ describe('Chart data converter single collection', () => {
     const set2 = {
       ...set,
       points: [
-        {id: 'D2', x: 'Dance', y: '7'},
-        {id: null, x: 'Glass', y: '7'},
-        {id: null, x: 'Sport', y: '0'},
+        {id: 'D2', x: 'Dance', y: 7},
+        {id: null, x: 'Glass', y: 7},
+        {id: null, x: 'Sport', y: 0},
       ],
     };
     expect(converter.convert(config2)).toEqual({sets: [set2], type: ChartType.Line, constraintData: undefined});
@@ -267,9 +266,9 @@ describe('Chart data converter single collection', () => {
     const set3 = {
       ...set,
       points: [
-        {id: 'D2', x: 'Dance', y: '7'},
-        {id: null, x: 'Glass', y: '51'},
-        {id: null, x: 'Sport', y: '3'},
+        {id: 'D2', x: 'Dance', y: 7},
+        {id: null, x: 'Glass', y: 51},
+        {id: null, x: 'Sport', y: 3},
       ],
     };
     expect(converter.convert(config3)).toEqual({sets: [set3], type: ChartType.Line, constraintData: undefined});
@@ -303,9 +302,9 @@ describe('Chart data converter single collection', () => {
       },
     };
     const points1 = [
-      {id: 'D2', x: 'Dance', y: '7'},
-      {id: null, x: 'Glass', y: '51'},
-      {id: null, x: 'Sport', y: '3'},
+      {id: 'D2', x: 'Dance', y: 7},
+      {id: null, x: 'Glass', y: 51},
+      {id: null, x: 'Sport', y: 3},
     ];
     const points2 = [
       {id: 'D2', x: 'Dance', y: 'Salt'},
@@ -788,10 +787,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Dance', y: '428'},
-      {id: null, x: 'Glass', y: '1420'},
-      {id: null, x: 'Lmr', y: '680'},
-      {id: null, x: 'Sport', y: '1808'},
+      {id: null, x: 'Dance', y: 428},
+      {id: null, x: 'Glass', y: 1420},
+      {id: null, x: 'Lmr', y: 680},
+      {id: null, x: 'Sport', y: 1808},
     ]);
   });
 
@@ -827,10 +826,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Lmr', y: '680'},
-      {id: null, x: 'Glass', y: '1420'},
-      {id: null, x: 'Dance', y: '428'},
-      {id: null, x: 'Sport', y: '1808'},
+      {id: null, x: 'Lmr', y: 680},
+      {id: null, x: 'Glass', y: 1420},
+      {id: null, x: 'Dance', y: 428},
+      {id: null, x: 'Sport', y: 1808},
     ]);
   });
 
@@ -891,10 +890,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Dance', y: '8'},
-      {id: null, x: 'Glass', y: '1'},
-      {id: null, x: 'Lmr', y: '1'},
-      {id: null, x: 'Sport', y: '1'},
+      {id: null, x: 'Dance', y: 8},
+      {id: null, x: 'Glass', y: 1},
+      {id: null, x: 'Lmr', y: 1},
+      {id: null, x: 'Sport', y: 1},
     ]);
   });
 
@@ -922,10 +921,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Dance', y: '312'},
-      {id: null, x: 'Glass', y: '333'},
-      {id: null, x: 'Lmr', y: '333'},
-      {id: null, x: 'Sport', y: '333'},
+      {id: null, x: 'Dance', y: 312},
+      {id: null, x: 'Glass', y: 333},
+      {id: null, x: 'Lmr', y: 333},
+      {id: null, x: 'Sport', y: 333},
     ]);
   });
 
@@ -953,10 +952,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Dance', y: String(428 / 4)},
-      {id: null, x: 'Glass', y: String(1420 / 14)},
-      {id: null, x: 'Lmr', y: String(680 / 9)},
-      {id: null, x: 'Sport', y: String(1808 / 21)},
+      {id: null, x: 'Dance', y: 428 / 4},
+      {id: null, x: 'Glass', y: 1420 / 14},
+      {id: null, x: 'Lmr', y: 680 / 9},
+      {id: null, x: 'Sport', y: 1808 / 21},
     ]);
   });
 
@@ -992,12 +991,12 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(6);
     expect(chartData.sets.map(set => set.name)).toEqual(['Ara', 'As', 'Ant', 'Ask', 'Abc', 'And']);
-    expect(chartData.sets[0].points).toContain({id: 'D23', x: 'Sport', y: '8'});
-    expect(chartData.sets[1].points).toContain({id: 'D23', x: 'Sport', y: '8'});
-    expect(chartData.sets[2].points).toContain({id: 'D21', x: 'Sport', y: '8'});
-    expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: '9'});
-    expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: '667'});
-    expect(chartData.sets[5].points).toContain({id: null, x: 'Sport', y: '667'});
+    expect(chartData.sets[0].points).toContain({id: 'D23', x: 'Sport', y: 8});
+    expect(chartData.sets[1].points).toContain({id: 'D23', x: 'Sport', y: 8});
+    expect(chartData.sets[2].points).toContain({id: 'D21', x: 'Sport', y: 8});
+    expect(chartData.sets[3].points).toContain({id: null, x: 'Sport', y: 9});
+    expect(chartData.sets[4].points).toContain({id: null, x: 'Sport', y: 667});
+    expect(chartData.sets[5].points).toContain({id: null, x: 'Sport', y: 667});
   });
   it('should return data with from linked attributes', () => {
     const config: ChartConfig = {
@@ -1031,11 +1030,11 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(5);
     expect(chartData.sets.map(set => set.name)).toEqual(['Min', 'Max', 'Avg', 'Sum', 'Lep']);
-    expect(chartData.sets[0].points).toContain({id: null, x: 'Lmx', y: '777'});
-    expect(chartData.sets[1].points).toContain({id: null, x: 'Lmp', y: '270'});
-    expect(chartData.sets[2].points).toContain({id: null, x: 'Lpr', y: '131'});
-    expect(chartData.sets[3].points).toContain({id: null, x: 'Lxx', y: '777'});
-    expect(chartData.sets[4].points).toContain({id: null, x: 'Lop', y: '951'});
+    expect(chartData.sets[0].points).toContain({id: null, x: 'Lmx', y: 777});
+    expect(chartData.sets[1].points).toContain({id: null, x: 'Lmp', y: 270});
+    expect(chartData.sets[2].points).toContain({id: null, x: 'Lpr', y: 131});
+    expect(chartData.sets[3].points).toContain({id: null, x: 'Lxx', y: 777});
+    expect(chartData.sets[4].points).toContain({id: null, x: 'Lop', y: 951});
   });
 
   it('should return data with percentage constraint', () => {

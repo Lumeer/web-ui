@@ -52,8 +52,8 @@ import {getDurationSaveValue} from '../../../../../shared/utils/constraint/durat
 import {decimalUserToStore} from '../../../../../shared/utils/data.utils';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
 import {
-  AggregatedMapData,
   AggregatedDataValues,
+  AggregatedMapData,
   DataAggregator,
   DataAggregatorAttribute,
 } from '../../../../../shared/utils/data/data-aggregator';
@@ -408,7 +408,10 @@ export class ChartDataConverter {
 
   private formatChartAxisValue(value: any, axis: ChartAxis): any {
     const constraint = this.constraintForAxis(axis);
-    return this.formatChartValue(value, constraint || new UnknownConstraint(), this.constraintData);
+    const formattedValue = this.formatChartValue(value, constraint || new UnknownConstraint(), this.constraintData);
+    return constraint?.type !== ConstraintType.Percentage && isNumeric(formattedValue)
+      ? toNumber(formattedValue)
+      : formattedValue;
   }
 
   private formatChartValue(value: any, constraint: Constraint, constraintData: ConstraintData): any {
