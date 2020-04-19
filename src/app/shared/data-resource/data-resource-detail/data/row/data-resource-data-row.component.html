@@ -27,7 +27,7 @@
                 [dataValue]="dataValue"
                 [focus]="true"
                 [configuration]="configuration"
-                [readonly]="readonly || !((editing$ | async) || row.attribute?.constraint?.type === booleanConstraintType)"
+                [readonly]="readonly || !permissions?.writeWithView || !((editing$ | async) || row.attribute?.constraint?.type === booleanConstraintType)"
                 [preventEventBubble]="preventEventBubble"
                 (save)="onNewValue($event)"
                 (dblclick)="onDataInputDblClick($event)"
