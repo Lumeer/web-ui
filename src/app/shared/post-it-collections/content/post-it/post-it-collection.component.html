@@ -1,7 +1,8 @@
-<div class="card post-it"
+<div class="card post-it cursor-pointer"
      *ngIf="collection | collectionPermissions | async as allowedPermissions"
      [class.uninitialized]="!collection.id"
-     [class.initialized]="collection.id">
+     [class.initialized]="collection.id"
+     (click)="openCollection()">
   <div class="card-body text-center">
     <div *ngIf="!collection.id"
          class="text-center small text-muted"
