@@ -58,6 +58,20 @@ export interface DataValue {
   preview(): string;
 
   /**
+   * Generates a title string that will be shown to a user.
+   *
+   * @return stringified value or empty string if the value is `null` or `undefined`
+   */
+  title(): string;
+
+  /**
+   * Generates a string that will be edited by user.
+   *
+   * @return stringified value or empty string if the value is `null` or `undefined`
+   */
+  editValue(): string;
+
+  /**
    * Serializes the value to a format in which it is sent to backend and most probably also stored in the DB.
    */
   serialize(): any;

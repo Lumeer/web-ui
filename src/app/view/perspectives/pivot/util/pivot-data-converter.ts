@@ -273,7 +273,7 @@ export class PivotDataConverter {
       const overrideConstraint =
         pivotAttribute.constraint &&
         this.constraintItemsFormatter.checkValidConstraintOverride(constraint, pivotAttribute.constraint);
-      return {...attribute, constraint: overrideConstraint || constraint};
+      return {...attribute, constraint: overrideConstraint || constraint || new UnknownConstraint()};
     }
     return null;
   }
@@ -460,18 +460,18 @@ export class PivotDataConverter {
             title,
             targetIndex: currentIndex,
             color: colors[0],
-            constraint: attribute && attribute.constraint,
+            constraint: attribute?.constraint || new UnknownConstraint(),
             isValueHeader: false,
-            attributeName: attribute && attribute.name,
+            attributeName: attribute?.name,
           });
           data.maxIndex = Math.max(data.maxIndex, currentIndex);
         } else {
           headers.push({
             title,
             color: colors[0],
-            constraint: attribute && attribute.constraint,
+            constraint: attribute?.constraint || new UnknownConstraint(),
             isValueHeader: false,
-            attributeName: attribute.name,
+            attributeName: attribute?.name,
           });
         }
 
@@ -528,18 +528,18 @@ export class PivotDataConverter {
           title,
           targetIndex: currentIndex,
           color: colors[level],
-          constraint: attribute && attribute.constraint,
+          constraint: attribute?.constraint || new UnknownConstraint(),
           isValueHeader: false,
-          attributeName: attribute && attribute.name,
+          attributeName: attribute?.name,
         });
         additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
       } else {
         header.children.push({
           title,
           color: colors[level],
-          constraint: attribute && attribute.constraint,
+          constraint: attribute?.constraint || new UnknownConstraint(),
           isValueHeader: false,
-          attributeName: attribute && attribute.name,
+          attributeName: attribute?.name,
         });
       }
 

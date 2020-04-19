@@ -52,7 +52,7 @@ import {ConstraintData} from '../../core/model/data/constraint';
 import {getOtherLinkedDocumentId} from '../../core/store/link-instances/link.instance';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {isNotNullOrUndefined} from '../utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
 import {DataValue} from '../../core/model/data-value';
@@ -158,7 +158,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
     this.documents$ = combineLatest([documents$, this.collection$]).pipe(
       mergeMap(([documents, collection]) =>
         this.filter$.pipe(
-          map(typedValue => stripTextHtmlTags(String(typedValue || ''), false).toLowerCase()),
+          map(typedValue => escapeHtml(stripTextHtmlTags(String(typedValue || ''), false).toLowerCase())),
           map(typedValue => {
             const constraint =
               findAttributeConstraint(collection?.attributes, this.attributeId) || new UnknownConstraint();

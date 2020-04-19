@@ -181,10 +181,13 @@ export function findLastItem<T>(array: Array<T>, predicate: (value: T, index: nu
   return null;
 }
 
-export function escapeHtml(value: string | number): string | number {
-  return typeof value === 'number' ? value : escape(value);
+export function escapeHtml<T extends string | number>(value: T): T {
+  const unescaped = unescapeHtml(value);
+  return <T>(
+    (typeof unescaped === 'number' ? unescaped : isNotNullOrUndefined(unescaped) ? escape(String(unescaped)) : null)
+  );
 }
 
-export function unescapeHtml(value: string | number): string | number {
-  return typeof value === 'number' ? value : escape(value);
+export function unescapeHtml<T extends string | number>(value: T): T {
+  return <T>(typeof value === 'number' ? value : isNotNullOrUndefined(value) ? unescape(String(value)) : null);
 }

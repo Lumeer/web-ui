@@ -1,6 +1,6 @@
 <input [readonly]="readonly" #colorInput
-  [title]="value | formatDataValue"
-  [value]="!valid || !readonly ? (value | formatDataValue) : ''"
+  [title]="value | formatDataValueTitle"
+  [value]="(!valid || !readonly ? (value | formatDataValue) : '') | unescapeHtml"
   class="border-0 w-100 h-100 px-1 outline-none"
   [class.bg-transparent]="!readonly || !(value | serializeDataValue) || !valid"
   [class.bg-danger-light]="!skipValidation && readonly && !valid"

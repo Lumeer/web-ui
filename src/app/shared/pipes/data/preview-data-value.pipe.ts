@@ -25,6 +25,6 @@ import {DataValue} from '../../../core/model/data-value';
 })
 export class PreviewDataValuePipe implements PipeTransform {
   public transform(dataValue: DataValue): string {
-    return dataValue ? dataValue.preview() : '';
+    return dataValue?.preview() || '';
   }
 }

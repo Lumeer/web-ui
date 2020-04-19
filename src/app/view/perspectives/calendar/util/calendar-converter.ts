@@ -174,10 +174,7 @@ export class CalendarConverter {
 
       const titles = isArray(name) ? name : [name];
       for (let i = 0; i < titles.length; i++) {
-        const titleFormatted = stripTextHtmlTags(
-          nameConstraint.createDataValue(titles[i], this.constraintData).preview(),
-          false
-        );
+        const titleFormatted = nameConstraint.createDataValue(titles[i], this.constraintData).title();
 
         const backgroundColor = eventColor || shadeColor(resourceColor, 0.5);
         const event: CalendarEvent = {

@@ -19,7 +19,7 @@
 
 import {SelectConstraintConfig, SelectConstraintOption} from '../data/constraint-config';
 import {DataValue} from './index';
-import {isArray, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isArray, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {valueMeetFulltexts} from './data-value.utils';
@@ -51,6 +51,14 @@ export class SelectDataValue implements DataValue {
 
   public preview(): string {
     return this.format();
+  }
+
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
   }
 
   public serialize(): any {

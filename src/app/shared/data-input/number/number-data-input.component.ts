@@ -72,7 +72,6 @@ export class NumberDataInputComponent implements OnChanges {
   public readonly inputClass = constraintTypeClass(ConstraintType.Number);
 
   public valid = true;
-  public rawValue: string;
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -81,9 +80,6 @@ export class NumberDataInputComponent implements OnChanges {
         HtmlModifier.setCursorAtTextContentEnd(this.numberInput.nativeElement);
         this.numberInput.nativeElement.focus();
       });
-    }
-    if (changes.value && this.value) {
-      this.rawValue = this.value.format(true);
     }
     this.refreshValid(this.value);
   }

@@ -22,7 +22,7 @@ import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {getSmallestDateUnit, parseMomentDate, resetUnusedMomentPart} from '../../../shared/utils/date.utils';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {isDateValid, isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isDateValid, isNotNullOrUndefined, isNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {ConstraintConditionValue, DateTimeConstraintConditionValue} from '../data/constraint-condition';
 import {valueMeetFulltexts} from './data-value.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
@@ -73,6 +73,14 @@ export class DateTimeDataValue implements DataValue {
     }
 
     return this.config?.format ? this.momentDate.format(this.config.format) : formatUnknownDataValue(this.value);
+  }
+
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

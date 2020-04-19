@@ -21,10 +21,10 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
 
 @Pipe({
-  name: 'formatDataValue',
+  name: 'formatDataValueTitle',
 })
-export class FormatDataValuePipe implements PipeTransform {
+export class FormatDataValueTitlePipe implements PipeTransform {
   public transform(dataValue: DataValue): string {
-    return dataValue?.format() || '';
+    return dataValue?.title() || '';
   }
 }

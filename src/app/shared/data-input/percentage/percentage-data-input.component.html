@@ -1,6 +1,6 @@
 <input *ngIf="readonly; else percentageEditing"
-       [title]="value | formatDataValue"
-       [value]="value | formatDataValue"
+       [title]="value | formatDataValueTitle"
+       [value]="value | formatDataValue | unescapeHtml"
        type="text"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [class.invalid-value]="!valid"
@@ -10,8 +10,8 @@
 <ng-template #percentageEditing>
   <input #percentageInput
          percentage
-         [title]="value | formatDataValue"
-         [value]="percentageValue"
+         [title]="value | formatDataValueTitle"
+         [value]="value | formatDataValueForEdit"
          (blur)="onBlur()"
          (input)="onInput($event)"
          type="text"

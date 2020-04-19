@@ -1,7 +1,7 @@
 <input #dateTimeInput
        [readonly]="readonly"
-       [title]="value | formatDataValue"
-       [value]="value | formatDataValue"
+       [title]="value | formatDataValueTitle"
+       [value]="readonly ? (value | formatDataValue  | unescapeHtml) : (value | formatDataValueForEdit)"
        [class.invalid-value]="!(value | isDataValueValid)"
        (input)="onInput($event)"
        [ngClass]="inputClass"

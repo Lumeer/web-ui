@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {formatCoordinates, parseCoordinates} from '../../../shared/utils/map/coordinates.utils';
 import {MapCoordinates} from '../../store/maps/map.model';
@@ -51,6 +51,14 @@ export class CoordinatesDataValue implements DataValue {
 
   public preview(): string {
     return this.format();
+  }
+
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
   }
 
   public serialize(): any {

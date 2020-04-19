@@ -21,6 +21,7 @@ import {FilesConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {valueMeetFulltexts} from './data-value.utils';
+import {escapeHtml, unescapeHtml} from '../../../shared/utils/common.utils';
 
 export class FilesDataValue implements DataValue {
   constructor(public readonly value: any, public readonly config: FilesConstraintConfig) {}
@@ -34,7 +35,15 @@ export class FilesDataValue implements DataValue {
   }
 
   public serialize(): any {
-    return this.value;
+    return escapeHtml(this.value);
+  }
+
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

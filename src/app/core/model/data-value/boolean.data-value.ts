@@ -21,6 +21,7 @@ import {BooleanConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {valueByConditionText, valueMeetFulltexts} from './data-value.utils';
+import {unescapeHtml} from '../../../shared/utils/common.utils';
 
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
 
@@ -37,6 +38,14 @@ export class BooleanDataValue implements DataValue {
   }
 
   public preview(): string {
+    return this.format();
+  }
+
+  public title(): string {
+    return this.format();
+  }
+
+  public editValue(): string {
     return this.format();
   }
 

@@ -18,13 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DataValue} from '../../../core/model/data-value';
+import {unescapeHtml} from '../utils/common.utils';
 
 @Pipe({
-  name: 'formatDataValue',
+  name: 'unescapeHtml',
 })
-export class FormatDataValuePipe implements PipeTransform {
-  public transform(dataValue: DataValue): string {
-    return dataValue?.format() || '';
+export class UnescapeHtmlPipe implements PipeTransform {
+  public transform(value: any): string {
+    return unescapeHtml(value);
   }
 }

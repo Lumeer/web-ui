@@ -25,14 +25,11 @@
             </div>
           </ng-container>
           <ng-container *ngIf="!cell.summary">
-            <data-input-preview *ngIf="cellData.hasValue && cell.constraint"
+            <data-input-preview *ngIf="cellData.hasValue"
                                 [constraint]="cell.constraint"
                                 [configuration]="cell | pivotCellConfiguration"
                                 [dataValue]="cell.value | dataValue:cell.constraint:constraintData">
             </data-input-preview>
-            <div class="text-truncate" *ngIf="cellData.hasValue && !cell.constraint"
-                 [innerHTML]="cell.value | stripHtml"
-                 [title]="cell.value"></div>
             <ng-container *ngIf="!cellData.hasValue">&nbsp;</ng-container>
           </ng-container>
         </td>

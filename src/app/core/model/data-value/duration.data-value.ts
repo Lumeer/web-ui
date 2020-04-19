@@ -33,7 +33,7 @@ import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {ConstraintData, DurationUnitsMap} from '../data/constraint';
 import {DurationConstraintConfig, DurationUnit} from '../data/constraint-config';
 import {NumericDataValue} from './index';
-import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../shared/utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined, isNumeric, toNumber, unescapeHtml} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 
@@ -80,9 +80,17 @@ export class DurationDataValue implements NumericDataValue {
     return this.format();
   }
 
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
+  }
+
   public serialize(): any {
     if (!this.bigNumber) {
-      return formatUnknownDataValue(this.value);
+      return escapeHtml(formatUnknownDataValue(this.value));
     }
 
     return convertBigToNumberSafely(this.bigNumber);

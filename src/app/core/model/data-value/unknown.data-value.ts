@@ -30,13 +30,21 @@ export class UnknownDataValue implements DataValue {
 
   public format(): string {
     if (isNotNullOrUndefined(this.inputValue)) {
-      return this.inputValue;
+      return String(this.inputValue);
     }
-    return formatUnknownDataValue(unescapeHtml(this.value));
+    return formatUnknownDataValue(this.value);
   }
 
   public preview(): string {
-    return formatUnknownDataValue(this.value);
+    return this.format();
+  }
+
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    return unescapeHtml(this.format());
   }
 
   public serialize(): any {

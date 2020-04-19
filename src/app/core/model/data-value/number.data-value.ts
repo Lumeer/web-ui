@@ -28,7 +28,7 @@ import {
 import {NumberConstraintConfig} from '../data/constraint-config';
 import {NumericDataValue} from './index';
 import {removeNonNumberCharacters} from '../../../shared/directives/number.directive';
-import {isNotNullOrUndefined, isNumeric} from '../../../shared/utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined, isNumeric, unescapeHtml} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 import numbro from 'numbro';
@@ -45,15 +45,13 @@ export class NumberDataValue implements NumericDataValue {
     this.bigNumber = convertToBig(unformatted);
   }
 
-  public format(raw?: boolean): string {
+  public format(): string {
     if (isNotNullOrUndefined(this.inputValue)) {
       return removeNonNumberCharacters(this.inputValue);
     }
 
     if (this.bigNumber) {
-      const value = raw
-        ? this.bigNumber.toFixed()
-        : numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
+      const value = numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
       return decimalStoreToUser(value);
     }
 
@@ -64,11 +62,27 @@ export class NumberDataValue implements NumericDataValue {
     return this.format();
   }
 
+  public title(): string {
+    return unescapeHtml(this.format());
+  }
+
+  public editValue(): string {
+    if (isNotNullOrUndefined(this.inputValue)) {
+      return removeNonNumberCharacters(this.inputValue);
+    }
+
+    if (this.bigNumber) {
+      return this.bigNumber.toFixed();
+    }
+
+    return unescapeHtml(formatUnknownDataValue(this.value));
+  }
+
   public serialize(): any {
     if (this.bigNumber) {
       return decimalUserToStore(this.bigNumber.toFixed());
     }
-    return isNotNullOrUndefined(this.value) ? decimalUserToStore(String(this.value).trim()) : null;
+    return isNotNullOrUndefined(this.value) ? escapeHtml(decimalUserToStore(String(this.value).trim())) : null;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
