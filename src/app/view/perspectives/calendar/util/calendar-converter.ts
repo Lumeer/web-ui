@@ -51,6 +51,7 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import * as moment from 'moment';
+import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 
 enum DataObjectInfoKeyType {
   Name = 'name',
