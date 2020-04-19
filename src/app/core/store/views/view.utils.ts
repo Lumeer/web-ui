@@ -17,7 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isCalendarConfigChanged} from '../../../view/perspectives/calendar/util/calendar-util';
+import {
+  createCalendarSaveConfig,
+  isCalendarConfigChanged,
+} from '../../../view/perspectives/calendar/util/calendar-util';
 import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
 import {Perspective} from '../../../view/perspectives/perspective';
@@ -32,6 +35,7 @@ import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
 import {PerspectiveConfig, View} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {CalendarConfig} from '../calendars/calendar';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -66,6 +70,8 @@ export function isViewConfigChanged(
  */
 export function createPerspectiveSaveConfig(perspective: Perspective, config: PerspectiveConfig): PerspectiveConfig {
   switch (perspective) {
+    case Perspective.Calendar:
+      return createCalendarSaveConfig(config as CalendarConfig);
     case Perspective.Table:
       return createTableSaveConfig(config as TableConfig);
     default:

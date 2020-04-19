@@ -48,18 +48,22 @@ export function isAllDayEventSingle(date: Date): boolean {
 }
 
 export function isCalendarConfigChanged(viewConfig: CalendarConfig, currentConfig: CalendarConfig): boolean {
-  if (
-    viewConfig.mode !== currentConfig.mode ||
-    datesChanged(viewConfig.date, currentConfig.date) ||
-    viewConfig.list !== currentConfig.list
-  ) {
+  if (viewConfig.mode !== currentConfig.mode || viewConfig.list !== currentConfig.list) {
     return true;
+  }
+
+  if (Boolean(viewConfig.positionSaved) !== Boolean(currentConfig.positionSaved)) {
+    return true;
+  }
+
+  if (viewConfig.positionSaved || currentConfig.positionSaved) {
+    return datesChanged(viewConfig.mode, viewConfig.date, currentConfig.date);
   }
 
   return calendarStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
 }
 
-function datesChanged(date1: Date, date2: Date): boolean {
+function datesChanged(mode: CalendarMode, date1: Date, date2: Date): boolean {
   const isDate1Valid = isDateValid(date1);
   const isDate2Valid = isDateValid(date2);
   if (!isDate1Valid && !isDate2Valid) {
@@ -67,6 +71,20 @@ function datesChanged(date1: Date, date2: Date): boolean {
   }
   if (isDate1Valid !== isDate2Valid) {
     return true;
+  }
+
+  const moment1 = moment(date1);
+  const moment2 = moment(date2);
+
+  switch (mode) {
+    case CalendarMode.Month:
+      return moment1.year() !== moment2.year() || moment1.month() !== moment2.month();
+    case CalendarMode.Week:
+      return moment1.year() !== moment2.year() || moment1.weekYear() !== moment2.weekYear();
+    case CalendarMode.Day:
+      return (
+        moment1.year() !== moment2.year() || moment1.month() !== moment2.month() || moment1.date() !== moment2.date()
+      );
   }
 
   return date1.getTime() !== date2.getTime();
@@ -186,4 +204,14 @@ export function calendarStemConfigIsWritable(
     queryAttributePermissions(stemConfig.start, permissions, linkTypesMap)?.writeWithView &&
     (!stemConfig?.end || queryAttributePermissions(stemConfig.end, permissions, linkTypesMap)?.writeWithView)
   );
+}
+
+export function createCalendarSaveConfig(config: CalendarConfig): CalendarConfig {
+  const copy = {...config};
+  if (config.positionSaved) {
+    copy.date = config.date || new Date();
+  } else {
+    delete copy.date;
+  }
+  return copy;
 }
