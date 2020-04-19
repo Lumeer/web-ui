@@ -147,6 +147,14 @@ body {
   }
 }
 
+.color-danger {
+  color: $danger;
+
+  &.cursor-pointer:hover {
+    color: $danger-hover;
+  }
+}
+
 // Tables ======================================================================
 
 .table {

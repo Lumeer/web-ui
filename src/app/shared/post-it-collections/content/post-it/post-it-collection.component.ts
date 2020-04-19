@@ -23,6 +23,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'post-it-collection',
@@ -57,6 +58,8 @@ export class PostItCollectionComponent {
 
   @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
+
+  constructor(private router: Router) {}
 
   public onNameChanged(name: string) {
     if (name === '') {
@@ -95,5 +98,13 @@ export class PostItCollectionComponent {
     // we know that uncreated collection is not in store
     this.collection.icon = data.icon;
     this.collection.color = data.color;
+  }
+
+  public openCollection() {
+    if (this.collection?.id) {
+      this.router.navigate([this.workspacePath(), 'view', 'table'], {
+        queryParams: {q: this.queryForCollectionDocuments()},
+      });
+    }
   }
 }
