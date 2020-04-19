@@ -209,15 +209,17 @@ export class KanbanConverter {
             }
 
             columnData.cards.push(
-              ...dataResources.map(dataResource => ({
-                dueHours: showDueHours ? getDueHours(dataResource, resource, stemConfig) : null,
-                dataResource,
-                resource,
-                resourceType,
-                stemIndex,
-                permissions: resourcePermissions,
-                dataResourcesChain,
-              }))
+              ...dataResources
+                .filter(dataResource => !this.dataResourceIsAlreadyInColumn(dataResource, resourceType, columnData))
+                .map(dataResource => ({
+                  dueHours: showDueHours ? getDueHours(dataResource, resource, stemConfig) : null,
+                  dataResource,
+                  resource,
+                  resourceType,
+                  stemIndex,
+                  permissions: resourcePermissions,
+                  dataResourcesChain,
+                }))
             );
             if (stemConfig.aggregation) {
               if (!columnsAggregated[stringValue]) {
@@ -229,15 +231,17 @@ export class KanbanConverter {
             }
           } else {
             otherColumn.cards.push(
-              ...dataResources.map(dataResource => ({
-                dueHours: showDueHours ? getDueHours(dataResource, resource, stemConfig) : null,
-                dataResource,
-                resource,
-                resourceType,
-                stemIndex,
-                permissions: resourcePermissions,
-                dataResourcesChain,
-              }))
+              ...dataResources
+                .filter(dataResource => !this.dataResourceIsAlreadyInColumn(dataResource, resourceType, otherColumn))
+                .map(dataResource => ({
+                  dueHours: showDueHours ? getDueHours(dataResource, resource, stemConfig) : null,
+                  dataResource,
+                  resource,
+                  resourceType,
+                  stemIndex,
+                  permissions: resourcePermissions,
+                  dataResourcesChain,
+                }))
             );
             if (stemConfig.aggregation) {
               this.fillAggregatedMap(otherAggregated, dataResources, stemConfig);
@@ -251,6 +255,14 @@ export class KanbanConverter {
       this.fillSummaries(config, columnsMap, otherColumn, columnsAggregated, otherAggregated);
     }
     return {columnsMap, otherColumn};
+  }
+
+  private dataResourceIsAlreadyInColumn(
+    dataResource: DataResource,
+    resourceType: AttributesResourceType,
+    column: Partial<KanbanDataColumn>
+  ): boolean {
+    return column.cards.some(card => card.dataResource.id === dataResource.id && resourceType === card.resourceType);
   }
 
   private checkOverrideConstraint(attribute: Attribute, kanbanAttribute: KanbanAttribute): Constraint {
