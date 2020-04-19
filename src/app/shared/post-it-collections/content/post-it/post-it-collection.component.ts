@@ -101,8 +101,10 @@ export class PostItCollectionComponent {
   }
 
   public openCollection() {
-    this.router.navigate([this.workspacePath(), 'view', 'table'], {
-      queryParams: {q: this.queryForCollectionDocuments()},
-    });
+    if (this.collection?.id) {
+      this.router.navigate([this.workspacePath(), 'view', 'table'], {
+        queryParams: {q: this.queryForCollectionDocuments()},
+      });
+    }
   }
 }
