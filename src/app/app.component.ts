@@ -26,7 +26,7 @@ import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
-import {BehaviorSubject, Subscription} from 'rxjs';
+import {BehaviorSubject, of, Subscription} from 'rxjs';
 import {catchError, filter, first, timeout, withLatestFrom} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
 import {environment} from '../environments/environment';
@@ -195,7 +195,7 @@ export class AppComponent implements AfterViewInit {
           filter(user => user && !superUserEmails.includes(user.email)),
           timeout(10000),
           first(),
-          catchError(() => null)
+          catchError(() => of(null))
         )
         .subscribe(() => {
           smartlookClient.init(environment.smartlookKey);
