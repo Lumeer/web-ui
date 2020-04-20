@@ -86,6 +86,7 @@ export class UserMenuComponent {
   public ngOnInit() {
     this.driver = new Driver({
       opacity: 0.5,
+      scrollIntoViewOptions: {block: 'start'},
       closeBtnText: this.i18n({
         id: 'button.dismiss',
         value: 'Dismiss',
@@ -220,6 +221,9 @@ export class UserMenuComponent {
       // trick to allow access to all document elements
       this.driver.reset(true);
       this.defineSteps(collectionsCount, viewsCount);
+
+      document.getElementsByClassName('search-perspective')[0]?.scrollTo(0, 0);
+
       this.driver.start();
       this.starting = false;
     }, 500);
@@ -328,7 +332,7 @@ export class UserMenuComponent {
     } else {
       // views > 0, collections?
       driverSteps.push({
-        element: '[data-tour="search-views"]',
+        element: '[data-tour="search-views-label"]',
         popover: {
           title: basicTitle,
           description:
@@ -338,7 +342,7 @@ export class UserMenuComponent {
               value:
                 'Views are the central nerve of Lumeer. These are pre-configured ways to see your data. Try opening them!',
             }),
-          position: 'top',
+          position: 'bottom',
         },
       });
 
