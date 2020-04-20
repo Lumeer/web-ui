@@ -43,7 +43,6 @@ import * as moment from 'moment';
 @Component({
   selector: 'calendar-visualization',
   templateUrl: './calendar-visualization.component.html',
-  styleUrls: ['./calendar-visualization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CalendarVisualizationComponent implements OnChanges {
@@ -137,7 +136,7 @@ export class CalendarVisualizationComponent implements OnChanges {
     if (changes.currentMode && this.currentMode && !this.defaultView) {
       this.defaultView = this.getCalendarModeString(this.currentMode);
     }
-    if (changes.currentDate && this.currentDate && !this.defaultDate) {
+    if (changes.currentDate && changes.currentDate.isFirstChange() && this.currentDate && !this.defaultDate) {
       this.defaultDate = this.currentDate;
     }
     if (changes.currentMode || changes.currentDate || changes.list) {

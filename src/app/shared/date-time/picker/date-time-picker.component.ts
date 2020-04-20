@@ -151,7 +151,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   public onTimePickerKeyDown(event: KeyboardEvent) {
-    if (([KeyCode.Backspace, KeyCode.Delete] as string[]).includes(event.code)) {
+    if (([KeyCode.Tab, KeyCode.Backspace, KeyCode.Delete] as string[]).includes(event.code)) {
       event.stopPropagation();
     }
   }

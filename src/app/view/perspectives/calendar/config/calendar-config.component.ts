@@ -24,6 +24,8 @@ import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {getCalendarDefaultStemConfig} from '../util/calendar-util';
 import {LinkType} from '../../../../core/store/link-types/link.type';
+import {generateId} from '../../../../shared/utils/resource.utils';
+import {GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
 
 @Component({
   selector: 'calendar-config',
@@ -46,6 +48,7 @@ export class CalendarConfigComponent {
   @Output()
   public configChange = new EventEmitter<CalendarConfig>();
 
+  public readonly savePositionId = generateId();
   public readonly defaultStemConfig = getCalendarDefaultStemConfig();
 
   public onStemConfigChange(stemConfig: CalendarStemConfig, stem: QueryStem, index: number) {
@@ -56,5 +59,20 @@ export class CalendarConfigComponent {
 
   public trackByStem(index: number, stem: QueryStem): string {
     return stem.collectionId + index;
+  }
+
+  public onSavePositionChange(checked: boolean) {
+    this.onBooleanPropertyChange('positionSaved', checked);
+  }
+
+  private onBooleanPropertyChange(property: string, checked: boolean) {
+    const config = deepObjectCopy<CalendarConfig>(this.config);
+    if (checked) {
+      config[property] = true;
+    } else {
+      delete config[property];
+    }
+
+    this.configChange.emit(config);
   }
 }

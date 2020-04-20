@@ -32,6 +32,7 @@ export interface CalendarConfig {
   mode: CalendarMode;
   list?: boolean;
   stemsConfigs: CalendarStemConfig[];
+  positionSaved?: boolean;
   version?: CalendarConfigVersion;
 }
 

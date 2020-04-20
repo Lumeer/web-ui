@@ -1,3 +1,18 @@
+<div class="custom-control custom-checkbox mt-2">
+  <input [id]="savePositionId"
+         [attr.checked]="config?.positionSaved"
+         [checked]="config?.positionSaved"
+         (change)="onSavePositionChange($event.target.checked)"
+         type="checkbox"
+         #savePositionCheckbox
+         class="custom-control-input">
+  <label [for]="savePositionId"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.calendar.config.position.save" class="user-select-none cursor-pointer"
+        (click)="savePositionCheckbox.click()">Save position to view</span>
+</div>
+
 <calendar-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
                       class="d-block mt-4"
                       [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
