@@ -99,6 +99,8 @@ export function safeGetRandomIcon(): string {
     'fa-sed-cry',
     'fa-tired',
     'fa-poo',
+    'fa-om',
+    'fa-quran',
   ];
   let icon: string;
   do {
