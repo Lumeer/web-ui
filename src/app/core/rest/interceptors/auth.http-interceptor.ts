@@ -44,11 +44,19 @@ export class AuthHttpInterceptor implements HttpInterceptor {
     return next.handle(authRequest).pipe(
       catchError(error => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
-          this.authService.login(this.router.url);
-          return EMPTY;
+          if (this.authService.isAuthenticated() && shouldProcessLogin(request.url)) {
+            this.authService.login(this.router.url);
+          }
+          if (shouldProcessLogin(request.url)) {
+            return EMPTY;
+          }
         }
         return throwError(error);
       })
     );
   }
+}
+
+function shouldProcessLogin(url: string): boolean {
+  return !url.endsWith('/users/check');
 }

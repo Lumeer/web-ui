@@ -300,7 +300,11 @@ export class AuthService {
       this.logoutSubscription.unsubscribe();
     }
     this.logoutSubscription = timer(this.getExpiresAt() - Date.now()).subscribe(() => {
-      this.login(this.router.url);
+      if (this.tokenExpired()) {
+        this.login(this.router.url);
+      } else {
+        this.scheduleLogout();
+      }
     });
   }
 
@@ -330,7 +334,7 @@ export class AuthService {
   }
 
   private checkServerResponse(): Observable<boolean> {
-    return this.userService.getCurrentUser().pipe(
+    return this.userService.checkAuthentication().pipe(
       map(() => true),
       catchError(error => {
         if (error instanceof HttpErrorResponse && error.status === 401) {

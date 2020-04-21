@@ -22,6 +22,7 @@
 
   <post-it-row
     *ngFor="let row of (dataRowService.rows$ | async); trackBy:trackByRow; let index = index;"
+    [class.row-top-divider]="index > 0"
     [row]="row"
     [layoutType]="layoutType"
     [permissions]="allowedPermissions"
@@ -37,7 +38,7 @@
     (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
   </post-it-row>
 
-  <div *ngIf="allowedPermissions?.writeWithView" class="py-2 clickable" (click)="onCreateRow()">
+  <div *ngIf="allowedPermissions?.writeWithView" class="py-2 clickable row-top-divider" (click)="onCreateRow()">
     <i class="fas fa-plus mx-1"></i>
   </div>
 

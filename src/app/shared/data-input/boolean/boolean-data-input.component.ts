@@ -18,22 +18,15 @@
  */
 
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   EventEmitter,
   HostBinding,
   HostListener,
   Input,
-  OnChanges,
   Output,
-  Renderer2,
-  SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
-import {generateCorrelationId} from '../../utils/resource.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {ConstraintType} from '../../../core/model/data/constraint';
 
@@ -43,7 +36,7 @@ import {ConstraintType} from '../../../core/model/data/constraint';
   styleUrls: ['./boolean-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
+export class BooleanDataInputComponent {
   @Input()
   public indeterminate: boolean;
 
@@ -72,26 +65,7 @@ export class BooleanDataInputComponent implements AfterViewInit, OnChanges {
     return !this.readonly;
   }
 
-  @ViewChild('booleanInput', {static: true})
-  public booleanInput: ElementRef<HTMLInputElement>;
-
   public inputId = 'boolean-data-input-' + Math.random().toString(36).substr(2);
-
-  constructor(private renderer: Renderer2) {}
-
-  public ngAfterViewInit() {
-    this.setIntermediate();
-  }
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.indeterminate && !changes.indeterminate.firstChange) {
-      this.setIntermediate();
-    }
-  }
-
-  private setIntermediate() {
-    this.renderer.setProperty(this.booleanInput.nativeElement, 'indeterminate', this.indeterminate);
-  }
 
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {

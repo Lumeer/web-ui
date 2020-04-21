@@ -135,7 +135,7 @@ export class InputBoxComponent implements OnInit {
   }
 
   private setCaret(el: HTMLElement, caret: number) {
-    if (el.nodeType === Node.ELEMENT_NODE) {
+    if (el.childNodes.length > 0 && el.nodeType === Node.ELEMENT_NODE) {
       const range = document.createRange();
       const sel = window.getSelection();
       range.setStart(el.childNodes[0], caret);

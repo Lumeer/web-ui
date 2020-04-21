@@ -4,6 +4,7 @@
          [id]="inputId"
          [attr.checked]="(value | serializeDataValue) || null"
          [readonly]="readonly || null"
+         [indeterminate]="indeterminate"
          [style.cursor]="readonly ? 'unset' : null"
          (click)="onInputClick($event)"
          (focus)="onFocus.emit($event)"

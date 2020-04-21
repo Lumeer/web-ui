@@ -76,6 +76,10 @@ export class UserService {
     return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/current`);
   }
 
+  public checkAuthentication(): Observable<any> {
+    return this.httpClient.get(`${this.usersApiPrefix()}/check`);
+  }
+
   public getCurrentUserWithLastLogin(): Observable<UserDto> {
     return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/currentWithLastLogin`);
   }

@@ -18,14 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  NavigationExtras,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, NavigationExtras, Router, RouterStateSnapshot} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {map, mergeMap, skipWhile, switchMap, take, tap} from 'rxjs/operators';

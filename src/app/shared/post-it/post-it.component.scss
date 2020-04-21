@@ -1,5 +1,11 @@
+@import '../../../styles/variables';
+
 :host:hover {
   .card-header::ng-deep .icon {
     opacity: 1;
   }
+}
+
+.row-top-divider {
+  border-top: dotted 1px $light;
 }

@@ -41,10 +41,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
 
   private isAuthenticated(state: RouterStateSnapshot): Observable<boolean> {
     if (environment.auth && !this.authService.isAuthenticated()) {
-      if (this.authService.tokenExpired()) {
-        return this.authService.checkToken().pipe(tap(valid => !valid && this.authService.login(state.url)));
-      }
-      return of(false);
+      return this.authService.checkToken().pipe(tap(valid => !valid && this.authService.login(state.url)));
     }
     return of(true);
   }
