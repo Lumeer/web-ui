@@ -1,25 +1,21 @@
-<div class="mt-2 mb-5">
+<div *ngIf="views?.length; else noViews"
+     class="mt-2 mb-5">
   <size-slider class="d-flex justify-content-end mb-2"
-               [defaultSize]="config?.size" (newSize)="onSizeChange($event)"></size-slider>
-
-  <ng-container *ngIf="loaded">
-    <ng-container *ngIf="views?.length; else noViews">
-      <view-detail *ngFor="let view of (maxViews > 0 ? (views | slice:0:maxViews) : views); trackBy:trackByView"
-                   [view]="view"
-                   [queryData]="queryData"
-                   [viewSize]="config?.size"
-                   (delete)="onDeleteView(view)"
-                   (clicked)="showView(view)"
-                   (favoriteToggle)="onFavoriteToggle(view)">
-      </view-detail>
-      <div class="clickable d-flex justify-content-center" [style.font-size.%]="150"
-           *ngIf="maxViews > 0 && maxViews < views?.length"
-           (click)="onShowAll()">
-        <span class="see-more" i18n="@@search.result.more">See more</span>
-      </div>
-    </ng-container>
-  </ng-container>
-
+               [defaultSize]="config?.size" (newSize)="onSizeChange($event)">
+  </size-slider>
+  <view-detail *ngFor="let view of (maxViews > 0 ? (views | slice:0:maxViews) : views); trackBy:trackByView"
+               [view]="view"
+               [queryData]="queryData"
+               [viewSize]="config?.size"
+               (delete)="onDeleteView(view)"
+               (clicked)="showView(view)"
+               (favoriteToggle)="onFavoriteToggle(view)">
+  </view-detail>
+  <div class="clickable d-flex justify-content-center" [style.font-size.%]="150"
+       *ngIf="maxViews > 0 && maxViews < views?.length"
+       (click)="onShowAll()">
+    <span class="see-more" i18n="@@search.result.more">See more</span>
+  </div>
 </div>
 
 <ng-template #noViews>

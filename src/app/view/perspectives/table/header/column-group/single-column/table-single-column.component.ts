@@ -180,14 +180,16 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL))
       .subscribe(action => {
-        if (action.payload.clear) {
-          this.lastName$.next('');
+        if (this.allowedPermissions?.writeWithView) {
+          if (action.payload.clear) {
+            this.lastName$.next('');
+          }
+          if (action.payload.value) {
+            const safeValue = filterOutInvalidAttributeNameCharacters(action.payload.value);
+            this.lastName$.next(safeValue);
+          }
+          this.startEditing();
         }
-        if (action.payload.value) {
-          const safeValue = filterOutInvalidAttributeNameCharacters(action.payload.value);
-          this.lastName$.next(safeValue);
-        }
-        this.startEditing();
       });
   }
 

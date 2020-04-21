@@ -1,26 +1,37 @@
-<ng-container *ngIf="{stemsLength: stemsLength$ | async} as data">
+<ng-container *ngIf="hasCollection$ | async; else noData">
+  <ng-container *ngIf="{stemsLength: stemsLength$ | async} as data">
 
-  <ng-container *ngIf="minStems === 1 && !maxStems">
-    <h3 class="text-center mt-5" i18n="@@invalid-query.at-least-one-collection">Start by selecting any Table below.</h3>
-    <ng-container *ngTemplateOutlet="selectCollection"></ng-container>
-  </ng-container>
-
-  <ng-container *ngIf="minStems === 1 && maxStems === 1">
-
-    <ng-container *ngIf="data.stemsLength === 0">
-      <h3 class="text-center mt-5" i18n="@@invalid-query.at-least-one-collection">Start by selecting any Table below.</h3>
+    <ng-container *ngIf="minStems === 1 && !maxStems">
+      <h3 class="text-center mt-5" i18n="@@invalid-query.at-least-one-collection">Start by selecting any Table
+        below.</h3>
       <ng-container *ngTemplateOutlet="selectCollection"></ng-container>
     </ng-container>
 
-    <ng-container *ngIf="data.stemsLength > 1">
-      <h3 class="text-center mt-5" i18n="@@invalid-query.exactly-one-collection">Select only one Table to make this perspective work.</h3>
-      <ng-container *ngTemplateOutlet="selectCollection"></ng-container>
+    <ng-container *ngIf="minStems === 1 && maxStems === 1">
+
+      <ng-container *ngIf="data.stemsLength === 0">
+        <h3 class="text-center mt-5" i18n="@@invalid-query.at-least-one-collection">Start by selecting any Table
+          below.</h3>
+        <ng-container *ngTemplateOutlet="selectCollection"></ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="data.stemsLength > 1">
+        <h3 class="text-center mt-5" i18n="@@invalid-query.exactly-one-collection">Select only one Table to make this
+          perspective work.</h3>
+        <ng-container *ngTemplateOutlet="selectCollection"></ng-container>
+      </ng-container>
+
+
     </ng-container>
 
-
   </ng-container>
-
 </ng-container>
+
+<ng-template #noData>
+  <empty-data [project]="project$ | async"
+              [query]="query$ | async">
+  </empty-data>
+</ng-template>
 
 <ng-template #selectCollection>
   <select-collection [collections]="collections$ | async"

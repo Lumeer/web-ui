@@ -113,13 +113,11 @@ export function createMapMarker(properties: MapMarkerProperties, onDoubleClick: 
 
   element.addEventListener('mouseenter', () => !popup.isOpen() && marker.togglePopup());
   element.addEventListener('mouseleave', () => popup.isOpen() && marker.togglePopup());
-  if (properties.editable) {
-    element.addEventListener('dblclick', event => {
-      event.preventDefault();
-      event.stopPropagation();
-      onDoubleClick();
-    });
-  }
+  element.addEventListener('dblclick', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    onDoubleClick();
+  });
 
   return marker;
 }

@@ -30,7 +30,6 @@
 <ng-template #noData>
   <empty-data
     [project]="project$ | async"
-    [query]="query"
-    (collectionsTab)="switchToCollectionsTab()">
+    [query]="query">
   </empty-data>
 </ng-template>

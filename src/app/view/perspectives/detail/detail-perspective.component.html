@@ -5,7 +5,6 @@
       [selectedCollection]="data.selected.collection"
       [selectedDocument]="data.selected.document"
       [query]="data.query"
-      [workspace]="workspace$ | async"
       (selectCollection)="selectCollection($event)"
       (selectDocument)="selectDocument($event)">
     </preview-results>

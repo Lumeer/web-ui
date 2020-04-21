@@ -22,7 +22,6 @@ import {select, Store} from '@ngrx/store';
 
 import {AppState} from '../../../../core/store/app.state';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {View} from '../../../../core/store/views/view';
@@ -54,7 +53,6 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   public queryData$: Observable<QueryData>;
   public query$: Observable<Query>;
   public workspace$: Observable<Workspace>;
-  public loaded$: Observable<boolean>;
   public viewsConfig$: Observable<SearchViewsConfig>;
 
   private config: SearchConfig;
@@ -67,7 +65,6 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
     this.views$ = this.store$.pipe(select(selectViewsByQuery));
     this.query$ = this.store$.pipe(select(selectQuery));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
-    this.loaded$ = this.store$.pipe(select(selectViewsLoaded));
     this.queryData$ = combineLatest([
       this.store$.pipe(select(selectAllCollections)),
       this.store$.pipe(select(selectAllLinkTypes)),

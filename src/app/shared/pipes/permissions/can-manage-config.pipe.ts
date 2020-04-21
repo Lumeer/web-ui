@@ -23,7 +23,7 @@ import {Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {map, mergeMap} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap} from 'rxjs/operators';
 import {userHasManageRoleInResource} from '../../utils/resource.utils';
 import {selectCurrentUserIsManager} from '../../../core/store/common/permissions.selectors';
 
@@ -44,7 +44,8 @@ export class CanManageConfigPipe implements PipeTransform {
 
     return this.store$.pipe(
       select(selectCurrentUserIsManager),
-      mergeMap(isManager => (isManager && of(true)) || this.checkView(currentView))
+      mergeMap(isManager => (isManager && of(true)) || this.checkView(currentView)),
+      distinctUntilChanged()
     );
   }
 

@@ -31,7 +31,7 @@ import {ViewFavoriteToggleService} from '../../../../../shared/toggle/view-favor
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 
 @Component({
-  selector: 'search-views-wrapper',
+  selector: 'search-views-content',
   templateUrl: './search-views-content.component.html',
   styleUrls: ['./search-views-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -43,9 +43,6 @@ export class SearchViewsContentComponent implements OnInit, OnDestroy {
 
   @Input()
   public views: View[];
-
-  @Input()
-  public loaded: boolean;
 
   @Input()
   public queryData: QueryData;
