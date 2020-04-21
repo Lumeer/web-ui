@@ -204,7 +204,7 @@ export function createLinkDocumentsDataNewTask(task: GanttChartTask, otherTasks:
 function tasksHasSameSwimlanes(task1: GanttChartTask, task2: GanttChartTask): boolean {
   return (task1.swimlanes || []).every((swimlane, index) => {
     const otherSwimlane = (task2.swimlanes || [])[index];
-    return (isNullOrUndefined(swimlane) && isNullOrUndefined(otherSwimlane)) || swimlane.value === otherSwimlane.value;
+    return swimlane?.value === otherSwimlane?.value;
   });
 }
 
