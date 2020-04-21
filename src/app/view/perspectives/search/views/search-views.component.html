@@ -1,10 +1,9 @@
-<search-views-wrapper [workspace]="workspace$ | async"
+<search-views-content [workspace]="workspace$ | async"
                       [config]="viewsConfig$ | async"
                       [views]="views$ | async"
                       [maxViews]="maxLines"
-                      [loaded]="loaded$ | async"
                       [query]="query$ | async"
                       [queryData]="queryData$ | async"
                       (configChange)="onConfigChange($event)"
                       (deleteView)="onDeleteView($event)">
-</search-views-wrapper>
+</search-views-content>

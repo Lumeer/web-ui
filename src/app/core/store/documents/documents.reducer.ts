@@ -20,6 +20,7 @@
 import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
+import {getBaseCollectionIdsFromQuery} from '../navigation/query/query.util';
 
 export function documentsReducer(
   state: DocumentsState = initialDocumentsState,
@@ -59,12 +60,17 @@ export function documentsReducer(
     case DocumentsActionType.REMOVE_FAVORITE_FAILURE:
       return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: true}}, state);
     case DocumentsActionType.CLEAR_BY_COLLECTION:
-      return documentsAdapter.removeMany(document => document.collectionId === action.payload.collectionId, state);
+      return clearDocumentsAndQueries(action.payload.collectionId, state);
     case DocumentsActionType.CLEAR:
       return initialDocumentsState;
     default:
       return state;
   }
+}
+
+function clearDocumentsAndQueries(collectionId: string, state: DocumentsState): DocumentsState {
+  const queries = [...state.queries].filter(query => !getBaseCollectionIdsFromQuery(query).includes(collectionId));
+  return documentsAdapter.removeMany(document => document.collectionId === collectionId, {...state, queries});
 }
 
 function onCreateDocument(state: DocumentsState, action: DocumentsAction.Create): DocumentsState {

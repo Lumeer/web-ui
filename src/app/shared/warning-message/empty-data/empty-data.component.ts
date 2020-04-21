@@ -17,11 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 import {Query} from '../../../core/store/navigation/query/query';
 import {Project} from '../../../core/store/projects/project';
 import {ResourceType} from '../../../core/model/resource-type';
+import {AppState} from '../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {take} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {Workspace} from '../../../core/store/navigation/workspace';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {SearchTab} from '../../../core/store/navigation/search-tab';
+import {QueryAction} from '../../../core/model/query-action';
 
 @Component({
   selector: 'empty-data',
@@ -32,15 +41,25 @@ export class EmptyDataComponent {
   @Input()
   public query: Query;
 
-  @Output()
-  public collectionsTab = new EventEmitter();
-
   @Input()
   public project: Project;
 
   public readonly projectType = ResourceType.Project;
 
+  constructor(private store$: Store<AppState>, private router: Router) {}
+
   public onSwitchToCollectionsTab() {
-    this.collectionsTab.emit();
+    this.store$.pipe(select(selectWorkspace), take(1)).subscribe(workspace => this.switchToCollectionsTab(workspace));
+  }
+
+  private switchToCollectionsTab(workspace: Workspace) {
+    if (workspace) {
+      this.router.navigate(
+        ['w', workspace.organizationCode, workspace.projectCode, 'view', Perspective.Search, SearchTab.Collections],
+        {
+          queryParams: {action: QueryAction.CreateCollection},
+        }
+      );
+    }
   }
 }

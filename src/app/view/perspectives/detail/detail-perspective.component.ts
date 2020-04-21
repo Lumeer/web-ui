@@ -29,12 +29,7 @@ import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {
-  selectNavigation,
-  selectQuery,
-  selectViewCursor,
-  selectWorkspace,
-} from '../../../core/store/navigation/navigation.state';
+import {selectNavigation, selectQuery, selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
@@ -48,7 +43,6 @@ import {
   queryIsEmpty,
 } from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {Workspace} from '../../../core/store/navigation/workspace';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 
 @Component({
@@ -63,7 +57,6 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
   public query$: Observable<Query>;
   public collectionPermission$: Observable<AllowedPermissions>;
-  public workspace$: Observable<Workspace>;
 
   public selected$ = new BehaviorSubject<{collection?: Collection; document?: DocumentModel}>({});
 
@@ -79,7 +72,6 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
       select(selectQuery),
       tap(query => (this.query = query))
     );
-    this.workspace$ = this.store$.pipe(select(selectWorkspace));
     this.initSelection();
   }
 

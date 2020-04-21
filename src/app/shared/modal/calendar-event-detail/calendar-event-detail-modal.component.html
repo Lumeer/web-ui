@@ -10,12 +10,13 @@
   <div class="d-flex flex-row flex-nowrap align-items-center mb-3" *ngIf="{
   stemIndex: stemIndex$ | async,
   collections: collections$ | async,
-  linkTypes: linkTypes$ | async
+  linkTypes: linkTypes$ | async,
+  permissions: permissions$ | async
   } as data">
 
     <select-item *ngIf="!dataResource"
                  class="d-block mr-2"
-                 [items]="query$ | async | stemCollectionsItems:config:data.collections:data.linkTypes:(permissions$ | async)"
+                 [items]="query$ | async | stemCollectionsItems:config:data.collections:data.linkTypes:data.permissions"
                  [removable]="false"
                  [fitParent]="false"
                  [selectedId]="stemIndex$ | async"
@@ -23,7 +24,7 @@
     </select-item>
 
     <div class="custom-control custom-checkbox"
-         *ngIf="config | canToggleAllDay:data.stemIndex:data.collections:data.linkTypes">
+         *ngIf="config | canToggleAllDay:data.stemIndex:data.collections:data.linkTypes:data.permissions">
       <input id="allDayCheckbox"
              [attr.checked]="allDay$ | async"
              [checked]="allDay$ | async"

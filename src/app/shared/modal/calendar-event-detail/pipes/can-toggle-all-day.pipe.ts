@@ -25,6 +25,9 @@ import {uniqueValues} from '../../../utils/array.utils';
 import {AttributesResourceType} from '../../../../core/model/resource';
 import {findAttributeConstraint} from '../../../../core/store/collections/collection.util';
 import {ConstraintType} from '../../../../core/model/data/constraint';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {calendarStemConfigIsWritable} from '../../../../view/perspectives/calendar/util/calendar-util';
+import {objectsByIdMap} from '../../../utils/common.utils';
 
 @Pipe({
   name: 'canToggleAllDay',
@@ -34,10 +37,12 @@ export class CanToggleAllDayPipe implements PipeTransform {
     config: CalendarConfig,
     stemIndex: number,
     collections: Collection[],
-    linkTypes: LinkType[]
+    linkTypes: LinkType[],
+    permissions: Record<string, AllowedPermissions>
   ): boolean {
     const stemConfig = config.stemsConfigs?.[stemIndex];
-    if (!stemConfig) {
+    const linkTypesMap = objectsByIdMap(linkTypes);
+    if (!stemConfig || !calendarStemConfigIsWritable(stemConfig, permissions, linkTypesMap)) {
       return false;
     }
 
@@ -53,7 +58,7 @@ export class CanToggleAllDayPipe implements PipeTransform {
       const resource =
         stemConfig.end.resourceType === AttributesResourceType.Collection
           ? (collections || []).find(coll => coll.id === stemConfig.end.resourceId)
-          : (linkTypes || []).find(lt => lt.id === stemConfig.end.resourceId);
+          : linkTypesMap[stemConfig.end.resourceId];
       const constraint = findAttributeConstraint(resource?.attributes, stemConfig.end.attributeId);
       return !constraint || constraint.type !== ConstraintType.Duration;
     }

@@ -4,7 +4,7 @@
        [class.mb-2]="viewSize !== sizeType.S"
        [class.mb-1]="viewSize === sizeType.S"
        [class.pb-3]="viewSize == sizeType.XL"
-       (click)="onClicked()">
+       (click)="!$event.defaultPrevented && onClicked()">
 
     <div class="mr-3">
       <i
@@ -27,7 +27,7 @@
 
         <i class="fa-star mr-2 text-warning cursor-pointer hiding-icon"
            *ngIf="view | permissions:viewType:roleRead | async"
-           (click)="$event.stopPropagation(); onFavoriteToggle()"
+           (click)="$event.preventDefault(); onFavoriteToggle()"
            [class.always-visible]="view.favorite"
            title="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
            i18n-title="@@view.favorite"
@@ -37,12 +37,12 @@
 
         <ng-container *ngIf="view | permissions:viewType:roleManage | async">
           <i class="fas fa-fw fa-share-alt mr-2 text-success cursor-pointer"
-             (click)="$event.stopPropagation(); onShareClick()"
+             (click)="$event.preventDefault(); onShareClick()"
              title="Share" i18n-title="@@button.share"
              aria-hidden="true">
           </i>
           <i class="fas fa-fw fa-trash text-danger cursor-pointer"
-             (click)="$event.stopPropagation(); onDelete()"
+             (click)="$event.preventDefault(); onDelete()"
              title="Delete" i18n-title="@@delete"
              aria-hidden="true">
           </i>

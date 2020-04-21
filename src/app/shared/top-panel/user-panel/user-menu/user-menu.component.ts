@@ -222,7 +222,7 @@ export class UserMenuComponent {
       this.driver.reset(true);
       this.defineSteps(collectionsCount, viewsCount);
 
-      document.getElementsByClassName('search-perspective')[0]?.scrollTo(0, 0);
+      document.getElementsByClassName('search-perspective')?.[0]?.scrollTo(0, 0);
 
       this.driver.start();
       this.starting = false;

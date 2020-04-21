@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -41,7 +40,6 @@ import {
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
 import {selectQuery} from '../../../../../core/store/navigation/navigation.state';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
-import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -56,7 +54,7 @@ const ITEMS_LIMIT = 15;
   styleUrls: ['./table-header-add-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
+export class TableHeaderAddButtonComponent implements OnChanges {
   @Input()
   public cursor: TableBodyCursor;
 
@@ -83,10 +81,10 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
   }
 
   private bindCollections(cursor: TableBodyCursor) {
-    this.collections$ = combineLatest(
+    this.collections$ = combineLatest([
       this.store$.pipe(select(selectCollectionsByReadPermission)),
-      this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId)))
-    ).pipe(
+      this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
+    ]).pipe(
       map(([collections, lastCollectionId]) => {
         return collections.filter(collection => collection.id !== lastCollectionId).slice(0, ITEMS_LIMIT);
       })
@@ -94,14 +92,14 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
   }
 
   private bindLinkTypes(cursor: TableBodyCursor) {
-    this.linkTypes$ = combineLatest(
+    this.linkTypes$ = combineLatest([
       this.store$.pipe(select(selectLinkTypesByReadPermission)),
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectQuery)),
-      this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId)))
-    ).pipe(
+      this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
+    ]).pipe(
       map(([linkTypes, collectionsMap, query, lastCollectionId]) => {
-        const linkTypeIds = (query && query.stems && query.stems[0] && query.stems[0].linkTypeIds) || [];
+        const linkTypeIds = query?.stems?.[0]?.linkTypeIds || [];
         return linkTypes
           .filter(linkType => !linkTypeIds.includes(linkType.id))
           .filter(linkType => linkType.collectionIds.some(id => id === lastCollectionId))
@@ -111,16 +109,6 @@ export class TableHeaderAddButtonComponent implements OnChanges, AfterViewInit {
           });
       })
     );
-  }
-
-  public ngAfterViewInit() {
-    this.setAddButtonColumnWidth();
-  }
-
-  private setAddButtonColumnWidth() {
-    const element = this.element.nativeElement as HTMLElement;
-    const tableElement = getTableElement(this.cursor.tableId);
-    tableElement.style.setProperty('--table-add-button-column-width', `${element.clientWidth}px`);
   }
 
   public onUseCollection(collection: Collection) {

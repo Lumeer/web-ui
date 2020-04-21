@@ -2,7 +2,7 @@
      *ngIf="collection | collectionPermissions | async as allowedPermissions"
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id"
-     (click)="openCollection()">
+     (click)="!$event.defaultPrevented && openCollection()">
   <div class="card-body text-center">
     <div *ngIf="!collection.id"
          class="text-center small text-muted"
@@ -56,7 +56,7 @@
       <a *ngIf="collection.favorite"
          title="Remove from favorites"
          i18n-title="@@collection.favorite.remove"
-         (click)="toggleFavorite()">
+         (click)="$event.preventDefault(); toggleFavorite()">
         <i class="fas fa-star"
            aria-hidden="true">
         </i>
@@ -64,7 +64,7 @@
       <a *ngIf="!collection.favorite"
          title="Add to favorites"
          i18n-title="@@collection.favorite.add"
-         (click)="toggleFavorite()">
+         (click)="$event.preventDefault(); toggleFavorite()">
         <i class="far fa-star"
            aria-hidden="true">
         </i>

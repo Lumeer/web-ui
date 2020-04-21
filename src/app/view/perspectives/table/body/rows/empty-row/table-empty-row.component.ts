@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {calculateColumnsWidth} from '../../../../../../core/store/tables/table.utils';
 import {selectTableParts} from '../../../../../../core/store/tables/tables.selector';
+import {selectCollectionsByReadPermission} from '../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'table-empty-row',
@@ -31,17 +32,29 @@ import {selectTableParts} from '../../../../../../core/store/tables/tables.selec
   styleUrls: ['./table-empty-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableEmptyRowComponent implements OnChanges {
+export class TableEmptyRowComponent implements OnInit, OnChanges {
   @Input()
   public canManageConfig: boolean;
 
   @Input()
   public cursor: TableBodyCursor;
 
+  public hasCollectionToLink$: Observable<boolean>;
   public dataColumnsWidth$: Observable<number>;
   public linkInfoCells$: Observable<any[]>;
 
   constructor(private element: ElementRef<HTMLElement>, private store$: Store<{}>) {}
+
+  public ngOnInit() {
+    this.bindCollectionHasToLink();
+  }
+
+  private bindCollectionHasToLink() {
+    this.hasCollectionToLink$ = this.store$.pipe(
+      select(selectCollectionsByReadPermission),
+      map(collections => collections.length > 1)
+    );
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.canManageConfig || changes.cursor) && this.cursor) {

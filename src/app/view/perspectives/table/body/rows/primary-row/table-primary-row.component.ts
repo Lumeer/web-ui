@@ -24,6 +24,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -40,6 +41,7 @@ import {
   selectTablePart,
   selectTableRowWithHierarchyLevel,
 } from '../../../../../../core/store/tables/tables.selector';
+import {selectCollectionsByReadPermission} from '../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'table-primary-row',
@@ -51,7 +53,7 @@ import {
     '[class.bg-white]': '!striped',
   },
 })
-export class TablePrimaryRowComponent implements OnChanges {
+export class TablePrimaryRowComponent implements OnInit, OnChanges {
   @Input()
   public cursor: TableBodyCursor;
 
@@ -69,8 +71,20 @@ export class TablePrimaryRowComponent implements OnChanges {
   public hierarchyMaxLevel$: Observable<number>;
   public striped: boolean;
   public part$: Observable<TableConfigPart>;
+  public hasCollectionToLink$: Observable<boolean>;
 
   constructor(private element: ElementRef, private store$: Store<{}>) {}
+
+  public ngOnInit() {
+    this.bindCollectionHasToLink();
+  }
+
+  private bindCollectionHasToLink() {
+    this.hasCollectionToLink$ = this.store$.pipe(
+      select(selectCollectionsByReadPermission),
+      map(collections => collections.length > 1)
+    );
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {

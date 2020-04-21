@@ -31,6 +31,8 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
+import {Project} from '../../../core/store/projects/project';
+import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
 
 @Component({
   selector: 'invalid-query',
@@ -45,6 +47,9 @@ export class InvalidQueryComponent implements OnInit {
   public maxStems: number;
 
   public collections$: Observable<Collection[]>;
+  public hasCollection$: Observable<boolean>;
+  public project$: Observable<Project>;
+  public query$: Observable<Query>;
   public stemsLength$: Observable<number>;
 
   constructor(private store$: Store<AppState>) {}
@@ -61,6 +66,12 @@ export class InvalidQueryComponent implements OnInit {
           ? this.store$.pipe(select(selectCollectionsByReadPermission))
           : this.store$.pipe(select(selectCollectionsByStems))
       )
+    );
+    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.query$ = this.store$.pipe(select(selectQuery));
+    this.hasCollection$ = this.store$.pipe(
+      select(selectCollectionsByReadPermission),
+      map(collections => collections?.length > 0)
     );
   }
 

@@ -26,7 +26,7 @@
                    [striped]="striped">
 </table-linked-rows>
 
-<div (click)="unsetCursor.emit()"
+<div *ngIf="canManageConfig && (hasCollectionToLink$ | async)" (click)="unsetCursor.emit()"
      class="add-button-cell bg-white"></div>
 
 <div (click)="unsetCursor.emit()"

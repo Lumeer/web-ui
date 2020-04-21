@@ -67,6 +67,7 @@ import {MarkerMoveEvent} from './render/marker-move.event';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'map-content',
@@ -142,11 +143,10 @@ export class MapContentComponent implements OnChanges, OnDestroy {
     ]).pipe(
       switchMap(([collectionsMap, documents, attributeIdsMap]) => {
         const collections = extractCollectionsFromDocuments(collectionsMap, documents);
-        return this.collectionsPermissions
-          .transform(collections)
-          .pipe(
-            map(permissions => createMarkerPropertiesData(documents, attributeIdsMap, collectionsMap, permissions))
-          );
+        return this.collectionsPermissions.transform(collections).pipe(
+          distinctUntilChanged((a, b) => deepObjectsEquals(a, b)),
+          map(permissions => createMarkerPropertiesData(documents, attributeIdsMap, collectionsMap, permissions))
+        );
       })
     );
   }

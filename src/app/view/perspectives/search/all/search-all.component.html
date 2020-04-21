@@ -18,14 +18,15 @@
             <span i18n="@@search.views.empty.createTable1">Create and open a Table. Switch the Perspective</span>
             <span class="mx-2 badge badge-light text-gray-700" i18n="@@view.perspective.guide.select">1.&nbsp;Select View</span>
             <span i18n="@@search.views.empty.createTable2">and save the View</span>
-            <button class="mx-2 btn btn-sm btn-primary cursor-default" type="button"><i class="fas fa-save"></i></button>
+            <button class="mx-2 btn btn-sm btn-primary cursor-default" type="button"><i class="fas fa-save"></i>
+            </button>
           </div>
         </div>
-        <hr/>
       </div>
 
 
       <ng-container *ngIf="data.hasCollection">
+        <hr *ngIf="data.hasView">
         <div class="h3 ml-3 my-2" i18n="@@search.all.collections">
           Tables
         </div>
@@ -49,7 +50,6 @@
 <ng-template #noData>
   <empty-data
     [project]="project$ | async"
-    [query]="query$ | async"
-    (collectionsTab)="switchToCollectionsTab()">
+    [query]="query$ | async">
   </empty-data>
 </ng-template>

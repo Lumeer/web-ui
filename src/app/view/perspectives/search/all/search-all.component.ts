@@ -18,11 +18,9 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
-import {QueryAction} from '../../../../core/model/query-action';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {
@@ -30,16 +28,13 @@ import {
   selectDocumentsByQuery,
   selectViewsByQuery,
 } from '../../../../core/store/common/permissions.selectors';
-import {selectNavigation} from '../../../../core/store/navigation/navigation.state';
-import {Workspace} from '../../../../core/store/navigation/workspace';
+import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {selectAllViews, selectViewsLoaded} from '../../../../core/store/views/views.state';
-import {Perspective} from '../../perspective';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {Project} from '../../../../core/store/projects/project';
-import {SearchTab} from '../../../../core/store/navigation/search-tab';
 
 @Component({
   templateUrl: './search-all.component.html',
@@ -54,10 +49,9 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   public hasAnyView$: Observable<boolean>;
   public query$ = new BehaviorSubject<Query>(null);
 
-  private workspace: Workspace;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private router: Router) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeDataInfo();
@@ -65,12 +59,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
-  }
-
-  public switchToCollectionsTab() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Collections], {
-      queryParams: {action: QueryAction.CreateCollection},
-    });
   }
 
   private subscribeDataInfo() {
@@ -86,13 +74,12 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
     const navigationSubscription = this.store$
       .pipe(
-        select(selectNavigation),
-        filter(navigation => !!navigation.workspace && !!navigation.query)
+        select(selectQuery),
+        filter(query => !!query)
       )
-      .subscribe(navigation => {
-        this.workspace = navigation.workspace;
-        this.query$.next(navigation.query);
-        this.fetchDocuments();
+      .subscribe(query => {
+        this.query$.next(query);
+        this.fetchDocuments(query);
       });
     this.subscriptions.add(navigationSubscription);
 
@@ -117,12 +104,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
     );
   }
 
-  private fetchDocuments() {
-    const query = {...this.query$.getValue()};
+  private fetchDocuments(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
-  }
-
-  private workspacePath(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 }

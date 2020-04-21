@@ -42,12 +42,7 @@ import {filterStemsForCollection} from '../../core/store/navigation/query/query.
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {Project} from '../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
-import {Perspective} from '../../view/perspectives/perspective';
-import {QueryAction} from '../../core/model/query-action';
-import {Router} from '@angular/router';
-import {Workspace} from '../../core/store/navigation/workspace';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
-import {SearchTab} from '../../core/store/navigation/search-tab';
 
 @Component({
   selector: 'preview-results',
@@ -64,9 +59,6 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   @Input()
   public query: Query;
 
-  @Input()
-  public workspace: Workspace;
-
   @Output()
   public selectCollection = new EventEmitter<Collection>();
 
@@ -79,7 +71,7 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   public loaded$: Observable<boolean>;
   public project$: Observable<Project>;
 
-  constructor(private store$: Store<AppState>, private router: Router) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -114,15 +106,5 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
 
   public setActiveDocument(document: DocumentModel) {
     this.selectDocument.emit(document);
-  }
-
-  public switchToCollectionsTab() {
-    this.router.navigate([this.workspacePath(), 'view', Perspective.Search, SearchTab.Collections], {
-      queryParams: {action: QueryAction.CreateCollection},
-    });
-  }
-
-  private workspacePath(): string {
-    return `/w/${this.workspace.organizationCode}/${this.workspace.projectCode}`;
   }
 }

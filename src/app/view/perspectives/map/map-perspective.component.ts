@@ -79,6 +79,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   public constraintData$: Observable<ConstraintData>;
   public map$: Observable<MapModel>;
   public query$: Observable<Query>;
+  public currentView$: Observable<View>;
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
@@ -96,6 +97,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.map$ = this.store$.pipe(select(selectMap));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.currentView$ = this.store$.pipe(select(selectCurrentView));
 
     this.subscriptions.add(this.subscribeToConfig());
     this.subscriptions.add(this.subscribeToMapConfigPosition());
