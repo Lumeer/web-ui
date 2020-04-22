@@ -1,7 +1,9 @@
+@import '~src/styles/variables';
+
 :host {
   //cursor: pointer;
   display: block;
-  line-height: var(--table-row-min-height);
+  line-height: $table-min-row-height;
 }
 
 .text-transparent {

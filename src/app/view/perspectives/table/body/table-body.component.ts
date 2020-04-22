@@ -35,15 +35,13 @@ import {TableBodyCursor} from '../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
 import {TableRowsComponent} from './rows/table-rows.component';
 
-export const TABLE_ROW_MIN_HEIGHT = 30;
-
 @Component({
   selector: 'table-body',
   templateUrl: './table-body.component.html',
   styleUrls: ['./table-body.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableBodyComponent implements OnChanges, AfterViewInit {
+export class TableBodyComponent implements OnChanges {
   @Input()
   public tableId: string;
 
@@ -70,19 +68,11 @@ export class TableBodyComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  public ngAfterViewInit() {
-    this.setTableRowMinHeight();
-  }
-
   @HostListener('click', ['$event'])
   public onClick(event: MouseEvent) {
     const rowsClick = this.rowsComponent.element.nativeElement.contains(event.target);
     if (!rowsClick) {
       this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
-  }
-
-  private setTableRowMinHeight() {
-    this.element.nativeElement.style.setProperty('--table-row-min-height', `${TABLE_ROW_MIN_HEIGHT}px`);
   }
 }

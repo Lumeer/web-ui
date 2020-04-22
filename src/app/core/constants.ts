@@ -57,3 +57,5 @@ export const COLOR_QUERY_DEFAULT = '#ffffff';
 export const DRAG_DELAY = window.matchMedia('(max-width: 767.98px)').matches ? 150 : 0;
 
 export const USER_AVATAR_SIZE = 22;
+
+export const TABLE_ROW_MIN_HEIGHT = 34;

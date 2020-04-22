@@ -20,7 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {TableConfigRow} from '../../../../../core/store/tables/table.model';
 import {countLinkedRows} from '../../../../../core/store/tables/table.utils';
-import {TABLE_ROW_MIN_HEIGHT} from '../../body/table-body.component';
+import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
 
 @Pipe({
   name: 'rowPositionTop',

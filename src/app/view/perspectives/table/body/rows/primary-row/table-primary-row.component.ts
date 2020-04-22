@@ -49,8 +49,8 @@ import {selectCollectionsByReadPermission} from '../../../../../../core/store/co
   styleUrls: ['./table-primary-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.bg-light]': 'striped',
-    '[class.bg-white]': '!striped',
+    '[class.table-bg-light]': 'striped',
+    '[class.table-bg-white]': '!striped',
   },
 })
 export class TablePrimaryRowComponent implements OnInit, OnChanges {
