@@ -1,7 +1,9 @@
+@import '~src/styles/variables';
+
 :host {
   display: flex;
-  height: var(--table-row-min-height);
-  line-height: var(--table-row-min-height);
+  height: $table-min-row-height;
+  line-height: $table-min-row-height;
 }
 
 .row-number-cell {

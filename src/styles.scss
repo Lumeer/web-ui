@@ -103,23 +103,31 @@ ul {
 }
 
 .table-border {
-  border: 1px solid $table-border-color !important;
+  border: 1px dotted $table-border-color !important;
 }
 
 .table-border-top {
-  border-top: 1px solid $table-border-color !important;
+  border-top: 1px dotted $table-border-color !important;
 }
 
 .table-border-bottom {
-  border-bottom: 1px solid $table-border-color !important;
+  border-bottom: 1px dotted $table-border-color !important;
 }
 
 .table-border-right {
-  border-right: 1px solid $table-border-color !important;
+  border-right: 1px dotted $table-border-color !important;
 }
 
 .table-border-left {
-  border-left: 1px solid $table-border-color !important;
+  border-left: 1px dotted $table-border-color !important;
+}
+
+.table-bg-light {
+  background-color: $gray-100 !important;
+}
+
+.table-bg-white {
+  background-color: $white !important;
 }
 
 .overflow-hidden {

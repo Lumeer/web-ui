@@ -3,8 +3,8 @@
 
 :host {
   display: block;
-  line-height: var(--table-row-min-height);
-  min-height: var(--table-row-min-height);
+  line-height: $table-min-row-height;
+  min-height: $table-min-row-height;
   transition: box-shadow 0.15s ease-in-out;
 
   &:not(.edited) {

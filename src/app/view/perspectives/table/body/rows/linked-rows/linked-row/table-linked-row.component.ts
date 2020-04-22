@@ -35,8 +35,8 @@ import {filter, switchMap} from 'rxjs/operators';
   styleUrls: ['./table-linked-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {
-    '[class.bg-light]': 'striped',
-    '[class.bg-white]': '!striped',
+    '[class.table-bg-light]': 'striped',
+    '[class.table-bg-white]': '!striped',
   },
 })
 export class TableLinkedRowComponent implements OnInit, OnChanges, OnDestroy {
