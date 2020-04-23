@@ -48,19 +48,19 @@ export class TextDataValue implements DataValue {
   }
 
   public title(): string {
-    return unescapeHtml(stripTextHtmlTags(this.format(), false));
+    return stripTextHtmlTags(this.format(), false);
   }
 
   public editValue(): string {
-    return unescapeHtml(this.format());
+    return this.format();
   }
 
   public serialize(): any {
     const formattedValue = this.format();
     if (numberOfPTags(formattedValue) === 1 && numberOfTags(formattedValue) === 1) {
-      return escapeHtml(stripTextHtmlTags(formattedValue, false));
+      return stripTextHtmlTags(formattedValue, false);
     }
-    return escapeHtml(formattedValue);
+    return formattedValue;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {
