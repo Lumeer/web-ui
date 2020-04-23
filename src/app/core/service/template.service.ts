@@ -67,6 +67,10 @@ export class TemplateService {
         return this.createRemoteWorkTemplate();
       case TemplateType.CMTRY:
         return this.createCemeteryTemplate();
+      case TemplateType.ROADM:
+        return this.createProductRoadmapTemplate();
+      case TemplateType.LAUNC:
+        return this.createProductLaunchTemplate();
       default:
         return null;
     }
@@ -255,6 +259,32 @@ export class TemplateService {
     };
   }
 
+  private createProductRoadmapTemplate(): Template {
+    return {
+      type: TemplateType.ROADM,
+      imagePath: 'assets/templates/roadm.jpg',
+      title: this.i18n({id: 'template.roadm.title', value: 'Product Roadmap'}),
+      description: this.i18n({
+        id: 'template.roadm.description',
+        value: 'Plan new product or features and stay on course building amazing products.',
+      }),
+      url: this.createUrlForType(TemplateType.ROADM),
+    };
+  }
+
+  private createProductLaunchTemplate(): Template {
+    return {
+      type: TemplateType.LAUNC,
+      imagePath: 'assets/templates/launc.jpg',
+      title: this.i18n({id: 'template.launc.title', value: 'Product Launch'}),
+      description: this.i18n({
+        id: 'template.launc.description',
+        value: 'Get a complete playbook and toolset for your smooth product launching.',
+      }),
+      url: this.createUrlForType(TemplateType.LAUNC),
+    };
+  }
+
   private createUrlForType(type: TemplateType): string | null {
     switch (type) {
       case TemplateType.Empty:
@@ -285,6 +315,10 @@ export class TemplateService {
         return this.getRemoteWorkUrl();
       case TemplateType.CMTRY:
         return this.getCemeteryUrl();
+      case TemplateType.ROADM:
+        return this.getProductRoadmapUrl();
+      case TemplateType.LAUNC:
+        return this.getProductLaunchUrl();
     }
   }
 
@@ -411,6 +445,24 @@ export class TemplateService {
         return this.createUrl('cs/sprava-hrbitova-sablona');
       default:
         return this.createUrl('cemetery-management-template');
+    }
+  }
+
+  public getProductRoadmapUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/planovani-produktu');
+      default:
+        return this.createUrl('product-roadmap');
+    }
+  }
+
+  public getProductLaunchUrl(): string {
+    switch (environment.locale) {
+      case 'cs':
+        return this.createUrl('cs/uvedeni-produktu-na-trh');
+      default:
+        return this.createUrl('product-launch');
     }
   }
 
