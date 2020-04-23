@@ -88,6 +88,9 @@ export class PostItComponent implements OnDestroy {
   @Input()
   public canDrag: boolean;
 
+  @Input()
+  public editableKeys = false;
+
   @Output()
   public toggleFavorite = new EventEmitter();
 
@@ -114,6 +117,9 @@ export class PostItComponent implements OnDestroy {
       () => this.rows.toArray(),
       () => this.hiddenInputComponent
     );
+    if (this.rows?.length > 0) {
+      this.dataRowFocusService.focus(0, 1);
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -156,20 +162,20 @@ export class PostItComponent implements OnDestroy {
   }
 
   public onFocus(row: number, column: number) {
-    this.dataRowFocusService.focus(row, column);
+    this.dataRowFocusService.focus(row, this.editableKeys ? column : 1);
   }
 
   public onResetFocusAndEdit(row: number, column: number) {
-    this.dataRowFocusService.resetFocusAndEdit(row, column);
+    this.dataRowFocusService.resetFocusAndEdit(row, this.editableKeys ? column : 1);
   }
 
   public onEdit(row: number, column: number) {
-    this.dataRowFocusService.edit(row, column);
+    this.dataRowFocusService.edit(row, this.editableKeys ? column : 1);
   }
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    this.dataRowFocusService.onKeyDown(event);
+    this.dataRowFocusService.onKeyDown(event, {column: !this.editableKeys});
   }
 
   public trackByRow(index: number, row: DataRow): string {

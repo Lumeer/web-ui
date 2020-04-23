@@ -26,6 +26,7 @@
                           [readonly]="!(data.resource | resourceAttributeEditable : row.id: permissions: query)"
                           [unusedAttributes]="unusedAttributes$ | async"
                           [preventEventBubble]="preventEventBubble"
+                          [editableKey]="editableKeys"
                           (newValue)="onNewValue($event, row, index)"
                           (newKey)="onNewKey($event, index)"
                           (deleteRow)="onRemoveRow(index)"
@@ -35,12 +36,5 @@
                           (onEdit)="onEdit(index, $event)"
                           (resetFocusAndEdit)="onResetFocusAndEdit(index, $event)">
   </data-resource-data-row>
-
-  <div *ngIf="permissions?.writeWithView" class="pt-2">
-    <button class="btn btn-sm btn-light btn-block" (click)="onCreateRow()">
-      <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;
-      <span i18n="@@document.detail.attribute.add">Add Row</span>
-    </button>
-  </div>
 
 </ng-container>

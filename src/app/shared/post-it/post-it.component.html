@@ -30,6 +30,7 @@
     [constraintData]="constraintData"
     [readonly]="!(resource | resourceAttributeEditable : row.id: allowedPermissions: query)"
     [unusedAttributes]="unusedAttributes"
+    [editableKey]="editableKeys"
     (newValue)="onNewValue($event, row, index)"
     (newKey)="onNewKey($event, index)"
     (deleteRow)="onRemoveRow(index)"
