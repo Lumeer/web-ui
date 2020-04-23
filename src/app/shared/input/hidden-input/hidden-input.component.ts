@@ -19,6 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
 import {DataRowHiddenComponent} from '../../data/data-row-component';
+import {escapeHtml} from '../../utils/common.utils';
 
 @Component({
   selector: 'hidden-input',
@@ -54,7 +55,7 @@ export class HiddenInputComponent implements DataRowHiddenComponent {
     }
 
     this.skipCompose = false;
-    this.newInput.emit(element.value);
+    this.newInput.emit(escapeHtml(element.value));
     element.value = '';
   }
 

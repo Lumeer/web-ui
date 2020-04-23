@@ -126,9 +126,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
       () => this.rows.toArray(),
       () => this.hiddenInputComponent
     );
-    if (this.rows?.length > 0) {
-      this.dataRowFocusService.focus(0, 1);
-    }
   }
 
   public ngOnInit() {
