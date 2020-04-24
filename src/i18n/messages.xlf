@@ -532,22 +532,22 @@
           <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit><trans-unit id="invalid-query.at-least-one-collection" datatype="html">
-        <source>Start by selecting any collection
-      bellow.</source>
+        <source>Start by selecting any Table
+        below.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">13</context>
         </context-group>
       </trans-unit><trans-unit id="invalid-query.exactly-one-collection" datatype="html">
-        <source>Select only one table to make
-        perspective work.</source>
+        <source>Select only one Table to make this
+          perspective work.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/invalid-query/invalid-query.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="create.new.collection" datatype="html">
         <source>Create new table</source>
@@ -594,7 +594,7 @@
         <source>All day event</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit><trans-unit id="sequence.list.sequenceName" datatype="html">
         <source>Sequence Name</source>
@@ -868,7 +868,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/search-views-content.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context>
@@ -2722,7 +2722,7 @@
         <source>Cannot display anything</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
         <source>Please configure your view in the sidebar on the left
@@ -2730,7 +2730,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.config.valueAbsOrRel" datatype="html">
         <source>Select absolute or relative display</source>
@@ -2889,6 +2889,12 @@
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/config/settings/gantt-chart-config-settings.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.config.position.save" datatype="html">
+        <source>Save position to view</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/config/calendar-config.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
       </trans-unit><trans-unit id="search.all.views" datatype="html">
         <source>
           Views
@@ -2935,7 +2941,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="search.all.records" datatype="html">
         <source>
@@ -2943,7 +2949,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="search.tab.all" datatype="html">
         <source>All</source>
@@ -3978,6 +3984,34 @@
       </trans-unit>
       <trans-unit id="template.cmtry.description" datatype="html">
         <source>Get quick and easy access to all information about the cemetery, all contracts and payments. Schedule ceremonies and plan tasks for workers.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.roadm.title" datatype="html">
+        <source>Product Roadmap</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.roadm.description" datatype="html">
+        <source>Plan new product or features and stay on course building amazing products.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.launc.title" datatype="html">
+        <source>Product Launch</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="template.launc.description" datatype="html">
+        <source>Get a complete playbook and toolset for your smooth product launching.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>
