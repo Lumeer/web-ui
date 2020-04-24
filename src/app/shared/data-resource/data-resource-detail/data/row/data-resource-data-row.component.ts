@@ -75,6 +75,9 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   @Input()
   public preventEventBubble: boolean;
 
+  @Input()
+  public editableKey = false;
+
   @Output()
   public newValue = new EventEmitter<any>();
 

@@ -22,6 +22,15 @@
   }
 }
 
+::ng-deep p {
+  margin-bottom: 0;
+  line-height: 1.5rem;
+}
+
+.text-pre {
+  max-height: 200px;
+}
+
 %highlighted {
   position: relative;
   z-index: $z-index-selected;

@@ -26,6 +26,11 @@ interface DataRowPosition {
   column?: number;
 }
 
+export interface PositionLock {
+  column?: boolean;
+  row?: boolean;
+}
+
 export class DataRowFocusService {
   private focused: DataRowPosition = {};
   private edited: DataRowPosition = {};
@@ -37,22 +42,33 @@ export class DataRowFocusService {
     private hiddenComponent?: () => DataRowHiddenComponent
   ) {}
 
-  public onKeyDown(event: KeyboardEvent) {
+  public onKeyDown(event: KeyboardEvent, lockPostion: PositionLock = {column: false, row: false}) {
     switch (event.code) {
       case KeyCode.ArrowDown:
       case KeyCode.ArrowUp:
+        if (!lockPostion.row) {
+          this.onArrowKeyDown(event);
+        }
+        break;
       case KeyCode.ArrowLeft:
       case KeyCode.ArrowRight:
-        return this.onArrowKeyDown(event);
+        if (!lockPostion.column) {
+          this.onArrowKeyDown(event);
+        }
+        break;
       case KeyCode.Tab:
-        return this.onTabKeyDown(event);
+        this.onTabKeyDown(event);
+        break;
       case KeyCode.NumpadEnter:
       case KeyCode.Enter:
-        return this.onEnterKeyDown(event);
+        this.onEnterKeyDown(event);
+        break;
       case KeyCode.F2:
-        return this.onF2KeyDown(event);
+        this.onF2KeyDown(event);
+        break;
       case KeyCode.Backspace:
-        return this.onBackSpaceKeyDown(event);
+        this.onBackSpaceKeyDown(event);
+        break;
     }
   }
 

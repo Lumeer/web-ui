@@ -87,6 +87,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public preventEventBubble: boolean;
 
+  @Input()
+  public editableKeys = false;
+
   @Output()
   public attributeTypeClick = new EventEmitter<Attribute>();
 
@@ -195,10 +198,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
     this.dataRowService.deleteRow(index);
   }
 
-  public onCreateRow() {
-    this.dataRowService.addRow();
-  }
-
   public onAttributeFunction(row: DataRow) {
     if (row.attribute) {
       this.attributeFunctionCLick.emit(row.attribute);
@@ -212,20 +211,20 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onFocus(row: number, column: number) {
-    this.dataRowFocusService.focus(row, column);
+    this.dataRowFocusService.focus(row, this.editableKeys ? column : 1);
   }
 
   public onResetFocusAndEdit(row: number, column: number) {
-    this.dataRowFocusService.resetFocusAndEdit(row, column);
+    this.dataRowFocusService.resetFocusAndEdit(row, this.editableKeys ? column : 1);
   }
 
   public onEdit(row: number, column: number) {
-    this.dataRowFocusService.edit(row, column);
+    this.dataRowFocusService.edit(row, this.editableKeys ? column : 1);
   }
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    this.dataRowFocusService.onKeyDown(event);
+    this.dataRowFocusService.onKeyDown(event, {column: !this.editableKeys});
   }
 
   public trackByRow(index: number, row: DataRow): string {

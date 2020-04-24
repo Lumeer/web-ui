@@ -21,7 +21,23 @@ import Big from 'big.js';
 import {isNullOrUndefined} from './common.utils';
 import {Workspace} from '../../core/store/navigation/workspace';
 
-const formattingTags = ['strong', 'em', 'i', 'sup', 'sub', 'u', 'strike', 's', 'del', 'cite', 'code', 'b', 'span'];
+const formattingTags = [
+  'strong',
+  'em',
+  'i',
+  'sup',
+  'sub',
+  'u',
+  'strike',
+  's',
+  'del',
+  'cite',
+  'code',
+  'b',
+  'span',
+  'p',
+  'br',
+];
 
 export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = true): string {
   const htmlWithoutTags = keepFormattingTags

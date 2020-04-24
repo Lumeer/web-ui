@@ -1,24 +1,30 @@
 <ng-container *ngIf="{readonly: !permissions?.writeWithView} as data">
 
-  <div class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
-    <data-input class="h-100 w-100 p-1 data-input key"
-                [cursor]="cursor"
-                [focus]="true"
-                [readonly]="!permissions?.writeWithView || !(keyEditing$ | async)"
-                [dataValue]="keyDataValue"
-                [placeholder]="placeholder"
-                [suggestions]="unusedAttributes | attributesToDataSuggestions"
-                (save)="onNewKey($event)"
-                (dblclick)="onKeyInputDblClick($event)"
-                (cancel)="onKeyInputCancel()"
-                (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
-                (click)="onKeyFocus()"
-                (clickOutside)="onKeyInputCancel()"
-                [class.editing]="keyEditing$ | async"
-                [class.cursor-pointer]="!data.readonly"
-                [class.read-only]="data.readonly">
-    </data-input>
+  <div *ngIf="!editableKey; else editableKeyInput" class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key">
+    {{keyDataValue.value}}
   </div>
+
+  <ng-template #editableKeyInput>
+    <div class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+      <data-input class="h-100 w-100 p-1 data-input key"
+                  [cursor]="cursor"
+                  [focus]="true"
+                  [readonly]="!permissions?.writeWithView || !(keyEditing$ | async)"
+                  [dataValue]="keyDataValue"
+                  [placeholder]="placeholder"
+                  [suggestions]="unusedAttributes | attributesToDataSuggestions"
+                  (save)="onNewKey($event)"
+                  (dblclick)="onKeyInputDblClick($event)"
+                  (cancel)="onKeyInputCancel()"
+                  (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
+                  (click)="onKeyFocus()"
+                  (clickOutside)="onKeyInputCancel()"
+                  [class.editing]="keyEditing$ | async"
+                  [class.cursor-pointer]="!data.readonly"
+                  [class.read-only]="data.readonly">
+      </data-input>
+    </div>
+  </ng-template>
 
   <div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
     <data-input class="h-100 w-100 p-1 data-input value"

@@ -45,6 +45,7 @@ import {selectLinkInstanceById} from '../../../../../core/store/link-instances/l
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
 import {AttributesResource, DataResource} from '../../../../../core/model/resource';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
+import {escapeHtml} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'table-hidden-input',
@@ -201,7 +202,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
     }
 
     this.skipCompose = false;
-    this.store$.dispatch(new TablesAction.EditSelectedCell({value: element.value}));
+    this.store$.dispatch(new TablesAction.EditSelectedCell({value: escapeHtml(element.value)}));
     element.value = '';
   }
 
