@@ -30,6 +30,9 @@ import {isNotNullOrUndefined, isNullOrUndefined} from '../../shared/utils/common
 import {environment} from '../../../environments/environment';
 import {hashUserId} from '../../shared/utils/system.utils';
 import mixpanel from 'mixpanel-browser';
+import Cookies from 'js-cookie';
+import {LUMEER_REFERRAL} from '../constants';
+import {idToReference} from '../../shared/utils/string.utils';
 
 @Injectable()
 export class CurrentUserGuard implements CanActivate, CanActivateChild {
@@ -64,6 +67,14 @@ export class CurrentUserGuard implements CanActivate, CanActivateChild {
       filter(currentUser => isNotNullOrUndefined(currentUser)),
       first(),
       map(user => {
+        if (!user.referral) {
+          const referral = Cookies.get(LUMEER_REFERRAL);
+          if (referral && idToReference(user.id) !== referral) {
+            // do not refer myself
+            this.store$.dispatch(new UsersAction.PatchCurrentUser({user: {...user, referral}}));
+          }
+        }
+
         if (!user.agreement) {
           this.authService.saveLoginRedirectPath(state.url);
           this.router.navigate(['/', 'agreement']);

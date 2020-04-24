@@ -19,6 +19,7 @@
 
 import {CaseStyle} from '../../core/model/data/constraint-config';
 import * as unorm from 'unorm';
+import {convertBase} from './number.utils';
 
 export function removeAccent(value: string, lowerCase = true): string {
   return unorm.nfd(lowerCase ? (value || '').toLowerCase() : value || '').replace(/[\u0300-\u036f]/g, '');
@@ -74,4 +75,8 @@ export function setCharAt(value: string, position: number, char: string): string
 
 export function replaceNbsp(value: string): string {
   return (value || '').replace(/&nbsp;/g, ' ');
+}
+
+export function idToReference(id: string): string {
+  return convertBase(id, 16, 36);
 }

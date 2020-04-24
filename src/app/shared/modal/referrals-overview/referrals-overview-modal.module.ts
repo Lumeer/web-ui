@@ -17,30 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
-import {FilterBoxComponent} from './filter-box/filter-box.component';
-import {InputBoxComponent} from './input-box/input-box.component';
-import {InvitationTypeSelectComponent} from './invitation-type-select/invitation-type-select.component';
-import {HiddenInputComponent} from './hidden-input/hidden-input.component';
-import {CopyTextBoxComponent} from './copy-text-box/copy-text-box.component';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
+import {PresenterModule} from '../../presenter/presenter.module';
+import {PipesModule} from '../../pipes/pipes.module';
+import {ReferralsOverviewModalComponent} from './referrals-overview-modal.component';
+import {InputModule} from '../../input/input.module';
 
 @NgModule({
-  imports: [CommonModule],
-  declarations: [
-    FilterBoxComponent,
-    InputBoxComponent,
-    InvitationTypeSelectComponent,
-    HiddenInputComponent,
-    CopyTextBoxComponent,
+  declarations: [ReferralsOverviewModalComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    ModalWrapperModule,
+    PresenterModule,
+    PipesModule,
+    InputModule,
   ],
-  exports: [
-    FilterBoxComponent,
-    InputBoxComponent,
-    InvitationTypeSelectComponent,
-    HiddenInputComponent,
-    CopyTextBoxComponent,
-  ],
+  exports: [ReferralsOverviewModalComponent],
 })
-export class InputModule {}
+export class ReferralsOverviewModalModule {}

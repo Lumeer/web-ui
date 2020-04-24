@@ -31,6 +31,8 @@ import {User} from '../../../../../core/store/users/user';
 import {environment} from '../../../../../../environments/environment';
 import {DropdownComponent} from '../../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../../dropdown/dropdown-position';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../../core/store/app.state';
 
 @Component({
   selector: 'user-menu-dropdown',
@@ -63,6 +65,9 @@ export class UserMenuDropdownComponent implements OnDestroy {
   @Output()
   public feedback = new EventEmitter();
 
+  @Output()
+  public affiliate = new EventEmitter();
+
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
@@ -88,6 +93,11 @@ export class UserMenuDropdownComponent implements OnDestroy {
 
   public onStartTour() {
     this.startTour.emit();
+    this.close();
+  }
+
+  public onAffiliate() {
+    this.affiliate.emit();
     this.close();
   }
 

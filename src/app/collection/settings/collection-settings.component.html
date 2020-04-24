@@ -24,25 +24,7 @@
     </resource-header>
 
     <div class="d-flex flex-row-reverse text-right mb-3" *ngIf="(organizationAndProject$ | async) as realWorkspace">
-      <div class="input-group input-group-sm w-auto">
-        <div class="input-group-prepend">
-          <span class="input-group-text align-items-end" i18n="@@collection.settings.tableId">Table ID:</span>
-        </div>
-        <input #tableId
-               id="tableId"
-               class="form-control"
-               [class.copied]="copied$ | async"
-               type="text"
-               [readOnly]="true"
-               [value]="(copied$ | async) ? copiedText : realWorkspace.organization.id + '/' + realWorkspace.project.id + '/' + collection.id">
-        <div class="input-group-append">
-          <span class="input-group-text cursor-pointer text-secondary"
-                title="Copy to clipboard" i18n-title="@@collection.settings.clipboard.copy"
-                (click)="copyTableId(tableId.value)">
-            <i class="fas fa-copy"></i>
-          </span>
-        </div>
-      </div>
+      <copy-text-box [label]="tableIdLabel" [value]="realWorkspace.organization.id + '/' + realWorkspace.project.id + '/' + collection.id"></copy-text-box>
     </div>
 
     <ul class="nav nav-tabs px-5">

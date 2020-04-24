@@ -51,6 +51,8 @@ export function convertUserDtoToModel(dto: UserDto): User {
     newsletter: dto.newsletter,
     wizardDismissed: dto.wizardDismissed,
     lastLoggedIn: dto.lastLoggedIn ? new Date(dto.lastLoggedIn) : undefined,
+    referral: dto.referral,
+    affiliatePartner: dto.affiliatePartner,
   };
 }
 
@@ -63,5 +65,7 @@ export function convertUserModelToDto(user: Partial<User>): UserDto {
     agreement: user.agreement,
     newsletter: user.newsletter,
     wizardDismissed: user.wizardDismissed,
+    referral: user.referral,
+    affiliatePartner: user.affiliatePartner,
   };
 }

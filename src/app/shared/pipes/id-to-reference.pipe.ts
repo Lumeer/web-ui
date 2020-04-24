@@ -17,31 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Group} from '../groups/group';
-import {PaymentStats} from '../organizations/payment/payment';
+import {Pipe, PipeTransform} from '@angular/core';
+import {idToReference} from '../utils/string.utils';
 
-export interface User {
-  id?: string;
-  name?: string;
-  email: string;
-  groupsMap: Record<string, string[]>;
-  groups?: Group[];
-  defaultWorkspace?: DefaultWorkspace;
-  agreement?: boolean;
-  agreementDate?: Date;
-  newsletter?: boolean;
-  wizardDismissed?: boolean;
-  lastLoggedIn?: Date;
-  referral?: string;
-  referrals?: PaymentStats;
-  affiliatePartner?: boolean;
-
-  correlationId?: string;
-}
-
-export interface DefaultWorkspace {
-  organizationCode?: string;
-  organizationId: string;
-  projectCode?: string;
-  projectId: string;
+@Pipe({
+  name: 'idToReference',
+})
+export class IdToReferencePipe implements PipeTransform {
+  public transform(value: string): string {
+    return idToReference(value);
+  }
 }

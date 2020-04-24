@@ -33,3 +33,14 @@ export interface Payment {
   gwUrl: string;
   version?: number;
 }
+
+export interface PaymentStats {
+  registeredUsers: number;
+  commissions: PaymentAmount[];
+  paidCommissions: PaymentAmount[];
+}
+
+export interface PaymentAmount {
+  currency: string;
+  amount: number;
+}

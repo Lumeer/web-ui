@@ -44,6 +44,7 @@ import {UserFeedbackModalComponent} from './user-feedback-modal/user-feedback-mo
 import {ModalService} from '../../../modal/modal.service';
 import {Perspective} from '../../../../view/perspectives/perspective';
 import {SearchTab} from '../../../../core/store/navigation/search-tab';
+import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview/referrals-overview-modal.component';
 
 @Component({
   selector: 'user-menu',
@@ -153,6 +154,14 @@ export class UserMenuComponent {
     const config = {initialState: {}, keyboard: false};
     config['backdrop'] = 'static';
     this.modalService.show(UserFeedbackModalComponent, config);
+  }
+
+  public onAffiliateClick() {
+    this.userMenuComponent.close();
+
+    const config = {initialState: {}, keyboard: true};
+    config['backdrop'] = 'static';
+    this.modalService.show(ReferralsOverviewModalComponent, config);
   }
 
   public onLogoutClick() {

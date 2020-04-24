@@ -27,6 +27,7 @@ import {map} from 'rxjs/operators';
 import {DefaultWorkspaceDto} from '../dto/default-workspace.dto';
 import {FeedbackDto} from '../dto/feedback.dto';
 import {InvitationType} from '../model/invitation-type';
+import {PaymentStats} from '../store/organizations/payment/payment';
 
 @Injectable()
 export class UserService {
@@ -74,6 +75,10 @@ export class UserService {
 
   public getCurrentUser(): Observable<UserDto> {
     return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/current`);
+  }
+
+  public getUserReferrals(): Observable<PaymentStats> {
+    return this.httpClient.get<PaymentStats>(`${this.usersApiPrefix()}/current/referrals`);
   }
 
   public checkAuthentication(): Observable<any> {
