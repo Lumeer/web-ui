@@ -1,0 +1,58 @@
+<accordion [closeOthers]="true">
+  <ng-container *ngFor="let collection of collections; trackBy:trackById">
+    <accordion-group panelClass="lmr-accordion"
+                     *ngIf="collection.attributes | createAttributesSettingsOrder:(settings?.collections && settings?.collections[collection.id]) as settingsOrder">
+      <div class="header-wrapper" accordion-heading>
+        <icons-presenter class="d-block mr-1"
+                         [colors]="[collection.color]"
+                         [icons]="[collection.icon]">
+        </icons-presenter>
+        <div class="font-weight-bold text-truncate" [title]="collection.name">{{collection.name}}</div>
+        <div class="small text-muted">{{settingsOrder | countShowedAttributes}}/{{collection.attributes.length}}</div>
+      </div>
+
+      <div cdkDropList>
+        <attribute-settings
+          *ngFor="let attributeSettings of settingsOrder; let index = index; trackBy: trackByAttributeSettings"
+          cdkDrag
+          cdkDragLockAxis="y"
+          cdkDragBoundary=".cdk-drop-list"
+          class="px-2 py-1"
+          [attribute]="collection.attributes | findAttribute:attributeSettings.attributeId"
+          [isDefault]="attributeSettings.attributeId | isDefaultAttribute:collection"
+          (settingsChanged)="onCollectionSettingsChanged(settingsOrder, index, collection, $event)"
+          (cdkDragDropped)="onCollectionSettingsDropped(settingsOrder, collection, $event)">
+          <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
+        </attribute-settings>
+      </div>
+    </accordion-group>
+  </ng-container>
+
+  <ng-container *ngFor="let linkType of linkTypes; trackBy:trackById">
+    <accordion-group panelClass="lmr-accordion"
+                     *ngIf="linkType.attributes | createAttributesSettingsOrder:(settings?.collections && settings?.linkTypes[linkType.id]) as settingsOrder">
+      <div class="header-wrapper" accordion-heading *ngIf="{iconColors: linkType | resourceIconsColors} as data">
+        <icons-presenter class="d-block mr-1"
+                         [colors]="data.iconColors.colors"
+                         [icons]="data.iconColors.icons">
+        </icons-presenter>
+        <div class="font-weight-bold text-truncate">{{linkType.name}}</div>
+        <div class="small text-muted">{{settingsOrder | countShowedAttributes}}/{{linkType.attributes.length}}</div>
+      </div>
+
+      <div cdkDropList>
+        <attribute-settings *ngFor="let attributeSettings of settingsOrder; let index = index; trackBy: trackByAttributeSettings"
+                            cdkDrag
+                            cdkDragLockAxis="y"
+                            cdkDragBoundary=".cdk-drop-list"
+                            class="px-2 py-1"
+                            [attribute]="linkType.attributes | findAttribute:attributeSettings.attributeId"
+                            (settingsChanged)="onLinkTypeSettingsChanged(settingsOrder, index, linkType, $event)"
+                            (cdkDragDropped)="onLinkTypeSettingsDropped(settingsOrder, linkType, $event)">
+          <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
+        </attribute-settings>
+      </div>
+    </accordion-group>
+  </ng-container>
+
+</accordion>

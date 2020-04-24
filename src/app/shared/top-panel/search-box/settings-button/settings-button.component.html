@@ -1,0 +1,9 @@
+<button class="btn btn-link h-100" (click)="attributesSettings.open()">
+  <i class="far fa-line-columns"></i>
+</button>
+
+<attributes-settings-dropdown #attributesSettings
+                              [origin]="element"
+                              [settings]="(viewSettings$ | async)?.attributes"
+                              (settingsChanged)="onAttributesSettingsChanged($event)">
+</attributes-settings-dropdown>

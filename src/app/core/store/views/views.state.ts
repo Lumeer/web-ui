@@ -33,7 +33,7 @@ import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navi
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
+import {DefaultViewConfig, View, ViewGlobalConfig, ViewSettings} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 
@@ -43,6 +43,7 @@ export interface ViewsState extends EntityState<View> {
   defaultConfigs: Record<string, Record<string, DefaultViewConfig>>;
   defaultConfigsLoaded: boolean;
   defaultConfigSnapshot?: DefaultViewConfig;
+  settings?: ViewSettings;
 }
 
 export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id});
@@ -52,6 +53,7 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   globalConfig: {},
   defaultConfigs: {},
   defaultConfigsLoaded: false,
+  settings: {},
 });
 
 export const selectViewsState = (state: AppState) => state.views;
@@ -173,3 +175,5 @@ export const selectDefaultViewConfigs = (perspective: Perspective, keys: string[
   });
 
 export const selectDefaultViewConfigsLoaded = createSelector(selectViewsState, state => state.defaultConfigsLoaded);
+
+export const selectViewSettings = createSelector(selectViewsState, state => state.settings);

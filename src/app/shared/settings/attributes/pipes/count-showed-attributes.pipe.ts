@@ -17,17 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
-
-import {Collection} from '../../core/store/collections/collection';
-import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
+import {Pipe, PipeTransform} from '@angular/core';
+import {ViewResourceAttributeSettings} from '../../../../core/store/views/view';
 
 @Pipe({
-  name: 'isDefaultAttribute',
+  name: 'countShowedAttributes',
 })
-@Injectable()
-export class DefaultAttributePipe implements PipeTransform {
-  public transform(attributeId: string, collection: Collection): boolean {
-    return collection && getDefaultAttributeId(collection) === attributeId;
+export class CountShowedAttributesPipe implements PipeTransform {
+  public transform(settings: ViewResourceAttributeSettings[]): number {
+    return (settings || []).reduce((sum, item) => (sum += item.hidden ? 0 : 1), 0);
   }
 }

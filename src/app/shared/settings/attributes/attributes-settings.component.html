@@ -1,0 +1,5 @@
+<attributes-settings-content [collections]="collections$ | async"
+                             [linkTypes]="linkTypes$ | async"
+                             [settings]="settings"
+                             (settingsChanged)="settingsChanged.emit($event)">
+</attributes-settings-content>

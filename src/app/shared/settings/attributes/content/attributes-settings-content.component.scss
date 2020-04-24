@@ -1,0 +1,12 @@
+@import '~src/styles/variables';
+
+.header-wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+}
+
+.cdk-drag-placeholder {
+  background-color: $light;
+  border-radius: $border-radius-base;
+}

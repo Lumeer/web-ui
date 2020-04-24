@@ -91,6 +91,7 @@ import {FilterNotNullPipe} from './filter-not-null.pipe';
 import {QueryStemResourcesSelectItemsPipe} from './query-stem-resources-select-items.pipe';
 import {UnescapeHtmlPipe} from './unescape-html.pipe';
 import {IdToReferencePipe} from './id-to-reference.pipe';
+import {FindAttributePipe} from './find-attribute.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -165,6 +166,7 @@ import {IdToReferencePipe} from './id-to-reference.pipe';
     FilterNotNullPipe,
     UnescapeHtmlPipe,
     IdToReferencePipe,
+    FindAttributePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -239,6 +241,7 @@ import {IdToReferencePipe} from './id-to-reference.pipe';
     FilterNotNullPipe,
     UnescapeHtmlPipe,
     IdToReferencePipe,
+    FindAttributePipe,
   ],
 })
 export class PipesModule {}

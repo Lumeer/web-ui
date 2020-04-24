@@ -24,7 +24,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {
   selectCollectionsByQuery,
   selectDocumentsAndLinksByCustomQuery,
-  selectLinkTypesByQuery,
+  selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
@@ -137,7 +137,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     return combineLatest([
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesByQuery)),
+      this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformGanttConfig(config, query, collections, linkTypes))
@@ -170,7 +170,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.permissions$ = this.collections$.pipe(

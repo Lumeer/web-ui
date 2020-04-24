@@ -45,7 +45,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuery,
-  selectLinkTypesByQuery,
+  selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {checkOrTransformKanbanConfig} from './util/kanban.util';
 import {ConstraintData} from '../../../core/model/data/constraint';
@@ -124,7 +124,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
     return combineLatest([
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesByQuery)),
+      this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformKanbanConfig(config, query, collections, linkTypes))
@@ -155,7 +155,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));

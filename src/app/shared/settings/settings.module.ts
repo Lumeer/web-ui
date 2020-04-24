@@ -17,39 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, HostBinding, HostListener, Input} from '@angular/core';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {AttributesSettingsModule} from './attributes/attributes-settings.module';
 
-@Directive({
-  selector: '[remove-placeholder-on-focus]',
+@NgModule({
+  imports: [CommonModule, AttributesSettingsModule],
+  exports: [AttributesSettingsModule],
 })
-export class RemovePlaceholderOnFocusDirective {
-  @HostListener('blur')
-  public onBlur() {
-    this.focused = false;
-  }
-
-  @HostListener('focus')
-  public onFocus() {
-    this.focused = true;
-  }
-
-  @Input()
-  @HostBinding('attr.placeholder')
-  public get placeholder() {
-    if (this.focused) {
-      return '';
-    } else {
-      return this.placeholderText;
-    }
-  }
-
-  public set placeholder(value: string) {
-    if (value) {
-      this.placeholderText = value;
-    }
-  }
-
-  private focused = false;
-
-  private placeholderText = '';
-}
+export class SettingsModule {}

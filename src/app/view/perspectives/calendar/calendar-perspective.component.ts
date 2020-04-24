@@ -25,7 +25,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuery,
-  selectLinkTypesByQuery,
+  selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
 import {
@@ -132,7 +132,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     return combineLatest([
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesByQuery)),
+      this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformCalendarConfig(config, query, collections, linkTypes))
@@ -164,7 +164,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));

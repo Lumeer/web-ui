@@ -35,6 +35,8 @@ import {PresenterModule} from '../../presenter/presenter.module';
 import {DirectivesModule} from '../../directives/directives.module';
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
 import {DropdownModule} from '../../dropdown/dropdown.module';
+import {SettingsButtonComponent} from './settings-button/settings-button.component';
+import {AttributesSettingsModule} from '../../settings/attributes/attributes-settings.module';
 
 @NgModule({
   imports: [
@@ -45,6 +47,7 @@ import {DropdownModule} from '../../dropdown/dropdown.module';
     PresenterModule,
     PipesModule,
     SearchBoxPipesModule,
+    AttributesSettingsModule,
     DataInputModule,
     DirectivesModule,
     DropdownModule,
@@ -57,6 +60,7 @@ import {DropdownModule} from '../../dropdown/dropdown.module';
     SearchInputComponent,
     SearchButtonComponent,
     SuggestionItemComponent,
+    SettingsButtonComponent,
   ],
   exports: [SearchBoxComponent, QueryItemComponent, SearchBoxPipesModule],
 })

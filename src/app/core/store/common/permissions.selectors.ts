@@ -225,7 +225,7 @@ export const selectLinkTypesByReadPermission = createSelector(
   }
 );
 
-export const selectLinkTypesByQuery = createSelector(
+export const selectLinkTypesInQuery = createSelector(
   selectLinkTypesByReadPermission,
   selectQuery,
   (linkTypes, query) => {

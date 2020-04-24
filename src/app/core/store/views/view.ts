@@ -74,3 +74,17 @@ export interface DefaultViewConfig {
   config: ViewConfig;
   updatedAt?: Date;
 }
+
+export interface ViewSettings {
+  attributes?: ViewAttributesSettings;
+}
+
+export interface ViewAttributesSettings {
+  collections?: Record<string, ViewResourceAttributeSettings[]>;
+  linkTypes?: Record<string, ViewResourceAttributeSettings[]>;
+}
+
+export interface ViewResourceAttributeSettings {
+  attributeId: string;
+  hidden?: boolean;
+}
