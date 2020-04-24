@@ -31,6 +31,7 @@ import {TextEditorModalModule} from './text-editor/text-editor-modal.module';
 import {CalendarEventDetailModalModule} from './calendar-event-detail/calendar-event-detail-modal.module';
 import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-document-modal.module';
 import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
+import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
 
 @NgModule({
   declarations: [],
@@ -48,6 +49,7 @@ import {DataResourceDetailModalModule} from './data-resource-detail/data-resourc
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
+    ReferralsOverviewModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -62,6 +64,7 @@ import {DataResourceDetailModalModule} from './data-resource-detail/data-resourc
     CalendarEventDetailModalModule,
     ChooseLinkDocumentModalModule,
     DataResourceDetailModalModule,
+    ReferralsOverviewModalModule,
   ],
 })
 export class ModalModule {}

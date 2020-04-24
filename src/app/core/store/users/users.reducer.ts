@@ -53,6 +53,8 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
       return {...state, pending: action.payload.pending};
     case UsersActionType.CLEAR:
       return initialUsersState;
+    case UsersActionType.REFERRALS_SUCCESS:
+      return {...state, currentUser: {...state.currentUser, referrals: action.payload.referrals}};
     default:
       return state;
   }

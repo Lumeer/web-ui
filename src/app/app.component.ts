@@ -46,6 +46,8 @@ import {ConstraintDataService} from './core/service/constraint-data.service';
 import {TooltipConfig} from 'ngx-bootstrap/tooltip';
 import numbro from 'numbro';
 import csLanguage from 'numbro/languages/cs-CZ';
+import Cookies from 'js-cookie';
+import {LUMEER_REFERRAL} from './core/constants';
 
 @Component({
   selector: 'lmr-app',
@@ -70,6 +72,7 @@ export class AppComponent implements AfterViewInit {
   ) {
     this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer - Visual Project&Team Management'}));
 
+    this.storeReferralCookie();
     this.moduleLazyLoadingService.init();
     this.initPushNotifications();
     this.initVideos();
@@ -79,6 +82,18 @@ export class AppComponent implements AfterViewInit {
     this.initCheckUserInteraction();
     this.initTooltipConfig();
     this.initLanguage();
+  }
+
+  private storeReferralCookie() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('ref')) {
+      const referral = urlParams.get('ref');
+
+      if (!Cookies.get(LUMEER_REFERRAL)) {
+        const domain = environment.production || environment.name ? '.lumeer.io' : 'localhost';
+        Cookies.set(LUMEER_REFERRAL, referral, {sameSite: 'strict', domain, secure: true, expires: 366});
+      }
+    }
   }
 
   private initPushNotifications() {

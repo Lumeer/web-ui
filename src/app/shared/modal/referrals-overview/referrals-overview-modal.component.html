@@ -1,0 +1,66 @@
+<modal-wrapper
+  [dialogType]="dialogType.Success"
+  [showHeader]="true"
+  [showSubmit]="false"
+  (onClose)="cancelDialog()">
+
+  <span class="title" i18n="@@referralsDialog.affiliateProgram.dialogTitle">Make money with Lumeer</span>
+
+  <div *ngIf="{ref: (user | async)?.referrals, rid: (user | async)?.id | idToReference, affiliate: (user | async)?.affiliatePartner} as data" class="body m-4 text-center">
+
+    <h2 i18n="@@referralsDialog.affiliateProgram.header" class="mb-4">Affiliate Program</h2>
+    <p class="mb-4">
+      <span class="large-font" i18n="@@referralsDialog.referralNumber.label">Your referral number is: </span>
+      <strong class="large-font">{{data.rid}}</strong>
+    </p>
+    <p>
+      <span i18n="@@referralsDialog.referralLinks.label">Use the following links to refer others:</span>
+    </p>
+    <div class="mb-4">
+      <div class="mb-1">
+        <copy-text-box [value]="'https://www.lumeer.io/?ref=' + data.rid"></copy-text-box>
+      </div>
+      <div>
+        <copy-text-box [value]="'https://get.lumeer.io/?ref=' + data.rid"></copy-text-box>
+      </div>
+    </div>
+    <div class="text-left mb-5">
+      <span i18n="@@referralDialog.referrencedUsers.label" class="font-weight-bold">So far you have referenced: </span><span i18n="@@referralDialog.referrencedUsers.count">{data.ref?.registeredUsers, plural, =0 {no users} =1 {a single user} =2 {2 users} =3 {3 users} =4 {4 users} other {{{data.ref?.registeredUsers}} users}}</span>.<br/>
+      <span i18n="@@referralDialog.unpaidEarnings.label" class="font-weight-bold">Your unpaid earnings are: </span>
+      <span *ngIf="!(data.ref?.commissions && data.ref?.commissions?.length)" i18n="@@referralDialog.unpaidEarnings.none">none so far, keep working!</span>
+      <span *ngFor="let commission of data.ref?.commissions; let idx = index;">
+        {{idx === 0 ? '' : ', '}} {{commission.currency}} {{commission.amount}}
+      </span>
+      <br/>
+      <div *ngIf="data.ref?.paidCommissions && data.ref?.paidCommissions?.length">
+        <span i18n="@@referralDialog.unpaidEarnings.label" class="font-weight-bold">Your paid earnings are: </span>
+        <span *ngFor="let commission of data.ref?.paidCommissions; let idx = index;">
+          {{idx === 0 ? '' : ', '}} {{commission.currency}} {{commission.amount}}
+        </span>
+      </div>
+    </div>
+    <div class="text-pre mb-2">
+      <span i18n="@@referralDialog.profits.start">Your profits are worth</span>
+      {{data.affiliate ? '10%' : '5%'}}
+      <span i18n="@@referralDialog.profits.enf">of the first year license fee.</span>
+      <br/>
+      <div *ngIf="!data.affiliate">
+        <span i18n="@@referralDialog.affiliatePartner.become.start">Become our </span>
+        <a [href]="'https://www.lumeer.io/' + (locale === 'cs' ? 'cs/partneri' : 'affiliates/')" target="_blank" i18n="@@referralDialog.affiliatePartner">Affiliate partner</a>
+        <span i18n="@@referralDialog.affiliatePartner.become.middle"> and turn your profits to </span>
+        <strong class="text-success">10%</strong><span i18n="@@referralDialog.affiliatePartner.become.end">.</span>
+      </div>
+    </div>
+    <p class="small text-gray-700" i18n="@@referralsDialog.instructions">
+      The minimal requirement is that your referee get at least one year long license.<br/>
+      The payment must be initiated by the person that you have referred.
+    </p>
+    <!--p>You are free to use our Marketing Kit.</p-->
+
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.close">Close</span>
+  </span>
+
+</modal-wrapper>

@@ -20,6 +20,7 @@
 import {Action} from '@ngrx/store';
 import {DefaultWorkspace, User} from './user';
 import {InvitationType} from '../../model/invitation-type';
+import {PaymentStats} from '../organizations/payment/payment';
 
 export enum UsersActionType {
   GET = '[Users] Get',
@@ -55,6 +56,10 @@ export enum UsersActionType {
   SET_PENDING = '[Users] Set Pending',
 
   CLEAR = '[Users] Clear',
+
+  REFERRALS = '[Users] Referrals',
+  REFERRALS_SUCCESS = '[Users] Referrals :: Success',
+  REFERRALS_FAILURE = '[Users] Referrals :: Failure',
 }
 
 export namespace UsersAction {
@@ -198,6 +203,22 @@ export namespace UsersAction {
     public readonly type = UsersActionType.CLEAR;
   }
 
+  export class Referrals implements Action {
+    public readonly type = UsersActionType.REFERRALS;
+  }
+
+  export class ReferralsSuccess implements Action {
+    public readonly type = UsersActionType.REFERRALS_SUCCESS;
+
+    public constructor(public payload: {referrals: PaymentStats}) {}
+  }
+
+  export class ReferralsFailure implements Action {
+    public readonly type = UsersActionType.REFERRALS_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export type All =
     | Get
     | GetSuccess
@@ -222,5 +243,8 @@ export namespace UsersAction {
     | DeleteSuccess
     | DeleteFailure
     | SetPending
-    | Clear;
+    | Clear
+    | Referrals
+    | ReferralsSuccess
+    | ReferralsFailure;
 }

@@ -321,6 +321,27 @@ export class UsersEffects {
     })
   );
 
+  @Effect()
+  public referrals$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.Referrals>(UsersActionType.REFERRALS),
+    mergeMap(action => {
+      return this.userService.getUserReferrals().pipe(
+        map(paymentStats => new UsersAction.ReferralsSuccess({referrals: paymentStats})),
+        catchError(error => of(new UsersAction.ReferralsFailure({error})))
+      );
+    })
+  );
+
+  @Effect()
+  public referralsFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.ReferralsFailure>(UsersActionType.REFERRALS_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'user.referrals.fail', value: 'Could not get your referrals at the moment'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
   constructor(
     private actions$: Actions,
     private i18n: I18n,

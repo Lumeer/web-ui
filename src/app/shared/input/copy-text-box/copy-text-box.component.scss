@@ -1,7 +1,9 @@
 @import '~src/styles/variables';
 
-input#tableId {
+input.copy-input-box {
   background-color: white;
+  font-style: italic;
+  color: $gray-700 !important;
 
   &.copied {
     border-color: $success;

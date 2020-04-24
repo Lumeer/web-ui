@@ -30,4 +30,6 @@ export interface UserDto {
   newsletter?: boolean;
   wizardDismissed?: boolean;
   lastLoggedIn?: number;
+  referral?: string;
+  affiliatePartner?: boolean;
 }
