@@ -19,8 +19,8 @@
 
 const DIGITS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/';
 
-export function convertBase(str, fromBase, toBase) {
-  const digits = parseToDigitsArray(str, fromBase);
+export function convertBase(str: string, fromBase: number, toBase: number): string {
+  const digits = parseToDigitsArray(str);
   if (digits === null) return null;
 
   let outArray = [];
@@ -36,7 +36,7 @@ export function convertBase(str, fromBase, toBase) {
   return out;
 }
 
-function add(x, y, base) {
+function add(x: number[], y: number[], base: number): number[] {
   const z = [];
   const n = Math.max(x.length, y.length);
   let carry = 0;
@@ -52,7 +52,7 @@ function add(x, y, base) {
   return z;
 }
 
-function multiplyByNumber(num, x, base) {
+function multiplyByNumber(num: number, x: number[], base: number): number[] {
   if (num < 0) return null;
   if (num === 0) return [];
 
@@ -68,7 +68,7 @@ function multiplyByNumber(num, x, base) {
   return result;
 }
 
-function parseToDigitsArray(str, base) {
+function parseToDigitsArray(str: string): number[] {
   const digits = str.split('');
   const arr = [];
   for (let i = digits.length - 1; i >= 0; i--) {

@@ -5,11 +5,8 @@
 
             <trans-unit id="topPanel.controlsToggle.title" datatype="html">
         <source>Show controls</source><target>Zobrazit nástroje</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="topPanel.help.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="topPanel.help.title" datatype="html">
         <source>Help</source><target>Nápověda</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/video-menu/video-menu.component.html</context>
@@ -60,7 +57,13 @@
             Dáte novým kolegům plnou kontrolu nad projektem. Budou moci vidět a měnit údaje, přidávat a mazat tabulky a pohledy.
           </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="copyInputBox.clipboard.copy" datatype="html">
+        <source>Copy to clipboard</source><target>Kopírovat do schránky</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/copy-text-box/copy-text-box.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
         <source>
             Use the cog icon
           </source><target>
@@ -87,7 +90,7 @@
         <source>Invite a colleague</source><target>Pozvat kolegu</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.button" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.button" datatype="html">
         <source>Add</source><target>Přidat</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.user.emailDropdown.invalid" datatype="html">
@@ -173,7 +176,7 @@
                 <target>Účet</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit>
 
             <trans-unit id="search.result.empty" datatype="html">
                 <source>
@@ -218,21 +221,21 @@
         </source>
                 <target>Atributy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
         <source>
           Rules
         </source><target>
           Pravidla
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
             <trans-unit id="collection.config.tab.permissions" datatype="html">
                 <source>
           Users
         </source>
                 <target>Uživatelé</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit>
 
 
 
@@ -830,7 +833,107 @@
       Celodenní
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="referralsDialog.affiliateProgram.dialogTitle" datatype="html">
+        <source>Make money with Lumeer</source><target>Vydělávejte s Lumeerem</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralsDialog.affiliateProgram.header" datatype="html">
+        <source>Affiliate Program</source><target>Program pro partnery</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralsDialog.referralNumber.label" datatype="html">
+        <source>Your referral number is: </source><target>Vaše partnerské číslo je: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralsDialog.referralLinks.label" datatype="html">
+        <source>Use the following links to refer others:</source><target>Používejte následující odkazy pro doporučení Lumeera:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.referrencedUsers.label" datatype="html">
+        <source>So far you have referenced: </source><target>Počet uživatelů doporučených vámi: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.referrencedUsers.count" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {no users} =1 {a single user} =2 {2 users} =3 {3 users} =4 {4 users} other {<x id="INTERPOLATION" equiv-text="{{data.ref?.registeredUsers}}"/> users} }</source><target>{VAR_PLURAL, plural, =0 {zatím nikdo} =1 {pouze jeden} =2 {2 uživatelé} =3 {3 uživatelé} =4 {4 uživatelé} other {<x id="INTERPOLATION" equiv-text="{{data.ref?.registeredUsers}}"/> uživatelů} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.unpaidEarnings.label" datatype="html">
+        <source>Your unpaid earnings are: </source><target>Vaše nevyplacené odměny: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.unpaidEarnings.none" datatype="html">
+        <source>none so far, keep working!</source><target>zatím žádný, pracujte na tom!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.profits.start" datatype="html">
+        <source>Your profits are worth</source><target>Vaše výdělky jsou tvořeny</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.profits.enf" datatype="html">
+        <source>of the first year license fee.</source><target>z prvního roku licenčního poplatku.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.affiliatePartner.become.start" datatype="html">
+        <source>Become our </source><target>Staňte se naším </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.affiliatePartner" datatype="html">
+        <source>Affiliate partner</source><target>Partneremr</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.affiliatePartner.become.middle" datatype="html">
+        <source> and turn your profits to </source><target> a zvedněte svoje výdělky na </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.affiliatePartner.become.end" datatype="html">
+        <source>.</source><target>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralsDialog.instructions" datatype="html">
+        <source>
+      The minimal requirement is that your referee get at least one year long license.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
+      The payment must be initiated by the person that you have referred.
+    </source><target>
+      Uživatel doporučený vámi musí získat licenci alespoň na jeden rok.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
+      Platba musí být provedena uživatelem, kterého jste doporučili.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit>
 
             <trans-unit id="link.new.dialog.title" datatype="html">
                 <source>Create new link</source>
@@ -1502,7 +1605,13 @@
                 <target state="final">Smazat?</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="dataResource.attribute.placeholder" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="copyTextBox.clipboard.copied" datatype="html">
+        <source>Copied!</source><target>Zkopírováno!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/input/copy-text-box/copy-text-box.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="dataResource.attribute.placeholder" datatype="html">
         <source>Enter attribute name</source><target>Zadejte název atributu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.title" datatype="html">
@@ -1523,11 +1632,7 @@
 
 
 
-            <trans-unit id="document.detail.attribute.add" datatype="html">
-                <source>Add Row</source>
-                <target>Přidat řádek</target>
-
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/data-resource-data.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit>
+            
 
             <trans-unit id="resource.settings.back" datatype="html">
                 <source>Back</source>
@@ -1648,10 +1753,7 @@
             <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="collection.settings.tableId" datatype="html">
         <source>Table ID:</source><target>ID tabulky:</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="collection.settings.clipboard.copy" datatype="html">
-        <source>Copy to clipboard</source><target>Okopírovat do schránky</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="collections.tab.attributes.attribute" datatype="html">
                 <source>Attribute</source>
                 <target>Atribut</target>
@@ -2403,7 +2505,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source><target>Pomoc</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
@@ -2471,13 +2573,7 @@
                     <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
-            </trans-unit><trans-unit id="collection.settings.clipboard.copied" datatype="html">
-        <source>Copied!</source><target>Zkopírováno!</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
+            </trans-unit>
             <trans-unit id="collection.tab.attributes.delete.message" datatype="html">
                 <source>Do you really want to delete attribute "<x id="INTERPOLATION" equiv-text="{{name}}"/>"?</source>
                 <target>Chcete skutečně smazat atribut "<x id="INTERPOLATION" equiv-text="{{name}}"/>"?</target>
@@ -3286,11 +3382,23 @@
             <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="menu.applicationTour" datatype="html">
         <source>Application Tour</source><target>Prohlídka aplikace</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="menu.affiliateProgramMenuItem" datatype="html">
+        <source>Earn with Lumeer</source><target>Vydělávejte s Lumeerem</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.affiliateProgram" datatype="html">
+        <source>Affiliate Program</source><target>Partnerský program</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
         <source>Solutions and Support</source><target>Řešení a Podpora</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit>
             <trans-unit id="resource.detail.organization.invite" datatype="html">
                 <source>Invite Colleagues</source>
                 <target>Pozvat kolegy</target>
@@ -3513,7 +3621,13 @@
                     <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
-            </trans-unit><trans-unit id="video.metadata.get.fail" datatype="html">
+            </trans-unit><trans-unit id="user.referrals.fail" datatype="html">
+        <source>Could not get your referrals at the moment</source><target>Nyní se mi nedaří získat údaje o vašich doporučených uživatelích</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="video.metadata.get.fail" datatype="html">
         <source>Unable to read training videos. I am sorry, the videos will not be available now. The problem is being worked on.</source><target>Nemohu načíst výuková videa. Videa bohužel nebudou nyní dostupná. Chyba se opravuje.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/videos/videos.effects.ts</context>
@@ -4143,6 +4257,12 @@
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="topPanel.controlsToggle.tooltip" datatype="html">
+        <source>Show/hide controls</source><target>Zobrazit/skrýt ovládání</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit><trans-unit id="attribute.config.dialog.not.exists" datatype="html">
         <source>Such an attribute does not exist.</source><target>Tento atribut neexistuje.</target>
 
@@ -4198,7 +4318,7 @@
                 <source>Logout</source>
                 <target>Odhlásit se</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">85</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit>
             <trans-unit id="create.new.attribute" datatype="html">
                 <source>Create new attribute
           </source>
@@ -4654,7 +4774,7 @@
           Propojení
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
         <source>Link Type</source><target>Typ vazby</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>

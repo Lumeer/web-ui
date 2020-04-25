@@ -118,6 +118,16 @@ ul {
   border-right: 1px dotted $table-border-color !important;
 }
 
+.table-only-row {
+  .table-border-bottom {
+    border-bottom: 1px solid $border-color !important;
+  }
+
+  .table-border-right {
+    border-right: 1px solid $border-color !important;
+  }
+}
+
 .table-border-left {
   border-left: 1px dotted $table-border-color !important;
 }

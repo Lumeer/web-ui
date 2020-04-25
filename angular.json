@@ -38,6 +38,8 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "aot": true,
+            "optimization": false,
+            "sourceMap": false,
             "outputPath": "dist/lumeer",
             "index": "src/index.html",
             "main": "src/main.ts",
