@@ -33,7 +33,11 @@ import * as moment from 'moment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../../core/model/resource';
-import {parseDateTimeByConstraint, subtractDatesToDurationCountsMap} from '../../utils/date.utils';
+import {
+  constraintContainsHoursInConfig,
+  parseDateTimeByConstraint,
+  subtractDatesToDurationCountsMap,
+} from '../../utils/date.utils';
 import {selectAllLinkTypes, selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -165,13 +169,14 @@ export class CalendarEventDetailModalComponent implements OnInit {
 
         const stemConfig = this.getStemConfig(stemIndex);
         const dataModel = stemConfig?.name || stemConfig?.start;
+        const startMoment = moment(this.start);
 
         if (this.modelsAreFromSameResources(stemConfig?.name, dataModel)) {
           data[stemConfig.name.attributeId] = this.getInitialTitleName();
         }
 
         if (this.modelsAreFromSameResources(stemConfig?.start, dataModel)) {
-          data[stemConfig.start.attributeId] = moment(this.start).toISOString();
+          data[stemConfig.start.attributeId] = startMoment.toISOString();
         }
 
         if (this.modelsAreFromSameResources(stemConfig?.end, dataModel)) {
@@ -183,7 +188,17 @@ export class CalendarEventDetailModalComponent implements OnInit {
 
             data[stemConfig.end.attributeId] = toNumber(dataValue.serialize());
           } else {
-            data[stemConfig.end.attributeId] = moment(this.end).toISOString();
+            const endMoment = moment(this.end);
+            const endMomentStartOfDay = moment(this.end).startOf('day');
+            if (
+              !constraintContainsHoursInConfig(constraint) &&
+              startMoment.day() !== endMoment.day() &&
+              endMoment.isSame(endMomentStartOfDay)
+            ) {
+              data[stemConfig.end.attributeId] = endMoment.subtract(1, 'days').toISOString();
+            } else {
+              data[stemConfig.end.attributeId] = endMoment.toISOString();
+            }
           }
         }
         return {
