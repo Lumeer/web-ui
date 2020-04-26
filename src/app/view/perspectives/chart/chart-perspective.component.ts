@@ -27,7 +27,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuery,
-  selectLinkTypesByQuery,
+  selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
 import {distinctUntilChanged, mergeMap, take, withLatestFrom} from 'rxjs/operators';
@@ -133,7 +133,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     combineLatest([
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesByQuery)),
+      this.store$.pipe(select(selectLinkTypesInQuery)),
     ])
       .pipe(take(1))
       .subscribe(([query, collections, linkTypes]) => {
@@ -163,7 +163,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.permissions$ = this.collections$.pipe(
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))

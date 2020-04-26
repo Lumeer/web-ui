@@ -6,7 +6,7 @@
          tooltip="Organization menu"
          i18n-tooltip="@@topPanel.organizationMenu.title"
          placement="bottom"
-         (click)="onOrganizationClick()"
+         (click)="organizationMenu.open()"
          [style.maxWidth.rem]="8" #organizationElement>
       <i [class]="data.organization?.icon" [style.color]="data.organization?.color">
       </i>
@@ -29,7 +29,7 @@
          i18n-tooltip="@@topPanel.projectMenu.title"
          placement="bottom"
          [style.maxWidth.rem]="8"
-         (click)="onProjectClick()"
+         (click)="projectMenu.open()"
          #projectElement>
       <i [class]="data.project?.icon" [style.color]="data.project?.color"></i>
       &nbsp;{{data.project?.code}}

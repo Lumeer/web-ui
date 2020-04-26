@@ -47,12 +47,6 @@ export class WorkspacePanelComponent implements OnInit {
   @Input()
   public contentHeight: number;
 
-  @ViewChild('organizationMenu')
-  public organizationMenuComponent: ResourceMenuComponent;
-
-  @ViewChild('projectMenu')
-  public projectMenuComponent: ResourceMenuComponent;
-
   public readonly organizationResourceType = ResourceType.Organization;
   public readonly projectResourceType = ResourceType.Project;
 
@@ -89,17 +83,5 @@ export class WorkspacePanelComponent implements OnInit {
 
   public createNewProject(organization: Organization) {
     this.selectService.createNewProject(organization);
-  }
-
-  public onOrganizationClick() {
-    if (this.organizationMenuComponent) {
-      this.organizationMenuComponent.open();
-    }
-  }
-
-  public onProjectClick() {
-    if (this.projectMenuComponent) {
-      this.projectMenuComponent.open();
-    }
   }
 }

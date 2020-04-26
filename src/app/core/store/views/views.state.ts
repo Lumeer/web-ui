@@ -33,8 +33,8 @@ import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navi
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
-import {isViewConfigChanged} from './view.utils';
+import {DefaultViewConfig, View, ViewGlobalConfig, ViewSettings} from './view';
+import {createSaveViewSettings, isViewConfigChanged, viewSettingsChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 
 export interface ViewsState extends EntityState<View> {
@@ -43,6 +43,7 @@ export interface ViewsState extends EntityState<View> {
   defaultConfigs: Record<string, Record<string, DefaultViewConfig>>;
   defaultConfigsLoaded: boolean;
   defaultConfigSnapshot?: DefaultViewConfig;
+  settings?: ViewSettings;
 }
 
 export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id});
@@ -52,6 +53,7 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   globalConfig: {},
   defaultConfigs: {},
   defaultConfigsLoaded: false,
+  settings: {},
 });
 
 export const selectViewsState = (state: AppState) => state.views;
@@ -133,6 +135,26 @@ export const selectViewQueryChanged = createSelector(
   selectCurrentView,
   selectQuery,
   (view, query) => view && query && !areQueriesEqual(view.query, query)
+);
+
+export const selectViewSettings = createSelector(selectViewsState, state => state.settings);
+
+export const selectViewSettingsChanged = createSelector(
+  selectCurrentView,
+  selectViewSettings,
+  selectCollectionsDictionary,
+  selectLinkTypesDictionary,
+  (view, settings, collectionsMap, linkTypesMap) =>
+    view && viewSettingsChanged(view.settings, settings, collectionsMap, linkTypesMap)
+);
+
+export const selectSaveViewSettings = createSelector(
+  selectViewSettings,
+  selectCollectionsDictionary,
+  selectLinkTypesDictionary,
+  selectQuery,
+  (settings, collectionsMap, linkTypesMap, query) =>
+    createSaveViewSettings(settings, query, collectionsMap, linkTypesMap)
 );
 
 export const selectViewPerspectiveChanged = createSelector(

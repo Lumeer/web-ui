@@ -23,6 +23,7 @@ import {AppState} from '../app.state';
 import {LinkType} from './link.type';
 import {selectCollectionsDictionary} from '../collections/collections.state';
 import {Collection} from '../collections/collection';
+import {mapLinkTypeCollections} from '../../../shared/utils/link-type.utils';
 
 export interface LinkTypesState extends EntityState<LinkType> {
   loaded: boolean;
@@ -49,13 +50,7 @@ export const selectLinkTypeById = (linkTypeId: string) =>
 export const selectLinkTypeByIdWithCollections = (linkTypeId: string) =>
   createSelector(selectLinkTypesDictionary, selectCollectionsDictionary, (linkTypesMap, collectionsMap) => {
     const linkType = linkTypesMap[linkTypeId];
-    if (linkType) {
-      const collections = linkType.collectionIds
-        .map(collectionId => collectionsMap[collectionId])
-        .filter(collection => !!collection) as [Collection, Collection];
-      return {...linkType, collections};
-    }
-    return linkType;
+    return linkType ? mapLinkTypeCollections(linkType, collectionsMap) : linkType;
   });
 
 export const selectLinkTypeAttributeById = (linkTypeId: string, attributeId: string) =>

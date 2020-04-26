@@ -34,7 +34,6 @@ import {LoadingIndicatorComponent} from './loading-indicator/loading-indicator.c
 import {PerspectiveDirective} from './perspective.directive';
 import {PickerModule} from './picker/picker.module';
 import {PipesModule} from './pipes/pipes.module';
-import {RemovePlaceholderOnFocusDirective} from './placeholder/remove-placeholder-on-focus';
 import {PostItCollectionsModule} from './post-it-collections/post-it-collections.module';
 import {PreviewResultsModule} from './preview-results/preview-results.module';
 import {ResourceHeaderComponent} from './resource/header/resource-header.component';
@@ -53,6 +52,7 @@ import {DataDropdownModule} from './data-dropdown/data-dropdown.module';
 import {BookmarksModule} from './bookmarks/bookmarks.module';
 import {BuilderModule} from './builder/builder.module';
 import {SliderModule} from './slider/slider.module';
+import {SettingsModule} from './settings/settings.module';
 
 @NgModule({
   imports: [
@@ -85,14 +85,9 @@ import {SliderModule} from './slider/slider.module';
     DataDropdownModule,
     BookmarksModule,
     BuilderModule,
+    SettingsModule,
   ],
-  declarations: [
-    PerspectiveDirective,
-    RemovePlaceholderOnFocusDirective,
-    ResourceHeaderComponent,
-    LoadingIndicatorComponent,
-    TourComponent,
-  ],
+  declarations: [PerspectiveDirective, ResourceHeaderComponent, LoadingIndicatorComponent, TourComponent],
   exports: [
     CommonModule,
     FormsModule,
@@ -100,7 +95,6 @@ import {SliderModule} from './slider/slider.module';
     PostItCollectionsModule,
     SliderModule,
     PerspectiveDirective,
-    RemovePlaceholderOnFocusDirective,
     UsersModule,
     SearchBoxModule,
     InfiniteScrollModule,
@@ -129,6 +123,7 @@ import {SliderModule} from './slider/slider.module';
     DataDropdownModule,
     BookmarksModule,
     BuilderModule,
+    SettingsModule,
   ],
 })
 export class SharedModule {}

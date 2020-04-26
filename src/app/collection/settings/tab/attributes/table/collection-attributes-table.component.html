@@ -28,8 +28,8 @@
   <tr *ngFor="let attribute of collection.attributes | attributeFilter:searchString; trackBy:trackByAttributeId">
     <th scope="row"
         class="icon-hover text-center align-items-center align-middle"
-        [class.visible]="attribute | isDefaultAttribute:collection">
-      <i *ngIf="attribute | isDefaultAttribute:collection; else notDefaultIcon"
+        [class.visible]="attribute.id | isDefaultAttribute:collection">
+      <i *ngIf="attribute.id | isDefaultAttribute:collection; else notDefaultIcon"
          class="fas fa-fw fa-check-circle cursor-pointer"
          title="Displayed attribute"
          i18n-title="@@collection.tab.attributes.attribute.default"
@@ -44,7 +44,7 @@
     <td class="align-middle">
       <input-box
         innerClass="bg-transparent"
-        [class.font-weight-bold]="attribute | isDefaultAttribute:collection"
+        [class.font-weight-bold]="attribute.id | isDefaultAttribute:collection"
         [canStayEmpty]="true"
         [userData]="false"
         [title]="attribute.name"
@@ -57,7 +57,7 @@
       </input-box>
     </td>
     <td class="align-middle">
-          <span [class.font-weight-bold]="attribute | isDefaultAttribute:collection">
+          <span [class.font-weight-bold]="attribute.id | isDefaultAttribute:collection">
             {{attribute.usageCount}}
           </span>
     </td>

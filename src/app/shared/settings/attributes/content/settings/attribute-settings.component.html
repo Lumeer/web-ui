@@ -1,0 +1,9 @@
+<ng-content></ng-content>
+<span class="pr-2 cursor-pointer user-select-none text-truncate"
+      [class.font-weight-bold]="isDefault"
+      [title]="attribute.name"
+      (click)="checkbox.click()">{{attribute.name}}</span>
+<label class="switch">
+  <input type="checkbox" [checked]="!settings?.hidden" #checkbox (change)="onHiddenChanged($event.target.checked)">
+  <span class="slider round" (click)="$event.stopPropagation()"></span>
+</label>

@@ -24,7 +24,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
 import {
   selectCollectionsByReadPermission,
-  selectCollectionsByStems,
+  selectCollectionsInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -64,7 +64,7 @@ export class InvalidQueryComponent implements OnInit {
       mergeMap(query =>
         queryIsEmptyExceptPagination(query)
           ? this.store$.pipe(select(selectCollectionsByReadPermission))
-          : this.store$.pipe(select(selectCollectionsByStems))
+          : this.store$.pipe(select(selectCollectionsInQuery))
       )
     );
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));

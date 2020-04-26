@@ -1,17 +1,17 @@
-<div *ngIf="constraintData$ | async as constraintData"
-     class="form-control w-100 h-auto p-0"
+<div class="form-control w-100 h-auto p-0"
      data-tour="search-box">
   <form *ngIf="form$ | async as form"
         [formGroup]="form"
         class="d-flex">
-    <div *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async} as data"
-         class="d-flex flex-wrap  flex-grow-1 pb-1 pr-1"
-         [style.width.px]="1"
-         formArrayName="queryItems">
+    <div
+      *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async, constraintData: constraintData$ | async} as data"
+      class="d-flex flex-wrap  flex-grow-1 pb-1 pr-1"
+      [style.width.px]="1"
+      formArrayName="queryItems">
       <query-item *ngFor="let queryItem of queryItems$ | async; trackBy:trackByTypeAndText; let itemIndex = index;"
                   [queryItemForm]="queryItemsControl.at(itemIndex)"
                   [queryItem]="queryItem"
-                  [constraintData]="constraintData"
+                  [constraintData]="data.constraintData"
                   [readonly]="!data.canManageConfig"
                   (change)="onQueryItemsChanged()"
                   (remove)="onRemoveQueryItem(itemIndex)"
@@ -28,6 +28,10 @@
                     class="flex-grow-1 mt-1 ml-1 mw-100">
       </search-input>
     </div>
+
+    <settings-button *ngIf="perspective$ | async | shouldShowSettings:(query$ | async)"
+                     class="flex-grow-0">
+    </settings-button>
 
     <search-button class="py-0 flex-grow-0"
                    (search)="onSearch($event)"

@@ -90,9 +90,7 @@ export class FilterBuilderComponent implements OnInit {
   }
 
   public close() {
-    if (this.dropdown) {
-      this.dropdown.close();
-    }
+    this.dropdown?.close();
   }
 
   public onValueChange(data: {condition: QueryCondition; values: QueryConditionValue[]}) {

@@ -51,7 +51,6 @@ import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {contrastColor} from '../../../../shared/utils/color.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import * as moment from 'moment';
-import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 
 enum DataObjectInfoKeyType {
   Name = 'name',
@@ -265,18 +264,22 @@ function createInterval(
   endConstraint: Constraint,
   constraintData: ConstraintData
 ): {start: Date; end?: Date; swapped?: boolean} {
-  const {start: startDate, end: endDate, swapped} = createDatesInterval(
+  const {start: startDate, end: endDateInterval, swapped} = createDatesInterval(
     startString,
     startConstraint,
     endString,
     endConstraint,
     constraintData
   );
+  let endDate = endDateInterval;
 
   let startMoment = moment(startDate);
 
   if (!constraintContainsHoursInConfig(startConstraint)) {
     startMoment = startMoment.startOf('day');
+    if (!endDate) {
+      endDate = startMoment.toDate();
+    }
   }
 
   if (!endDate) {

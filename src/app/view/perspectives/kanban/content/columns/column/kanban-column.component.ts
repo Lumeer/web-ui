@@ -26,6 +26,7 @@ import {DataResource} from '../../../../../../core/model/resource';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../../util/kanban-data';
 import {PostItLayoutType} from '../../../../../../shared/post-it/post-it-layout-type';
+import {ViewSettings} from '../../../../../../core/store/views/view';
 
 @Component({
   selector: 'kanban-column',
@@ -54,6 +55,9 @@ export class KanbanColumnComponent {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public viewSettings: ViewSettings;
 
   @Output()
   public updateDataResource = new EventEmitter<{

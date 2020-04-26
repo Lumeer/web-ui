@@ -17,39 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, HostBinding, HostListener, Input} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {ResourceAttributeSettings} from '../../../../core/store/views/view';
+import {createAttributesSettingsOrder} from '../../settings.util';
 
-@Directive({
-  selector: '[remove-placeholder-on-focus]',
+@Pipe({
+  name: 'createAttributesSettingsOrder',
 })
-export class RemovePlaceholderOnFocusDirective {
-  @HostListener('blur')
-  public onBlur() {
-    this.focused = false;
+export class CreateAttributesSettingsOrderPipe implements PipeTransform {
+  public transform(attributes: Attribute[], settings: ResourceAttributeSettings[]): ResourceAttributeSettings[] {
+    return createAttributesSettingsOrder(attributes, settings);
   }
-
-  @HostListener('focus')
-  public onFocus() {
-    this.focused = true;
-  }
-
-  @Input()
-  @HostBinding('attr.placeholder')
-  public get placeholder() {
-    if (this.focused) {
-      return '';
-    } else {
-      return this.placeholderText;
-    }
-  }
-
-  public set placeholder(value: string) {
-    if (value) {
-      this.placeholderText = value;
-    }
-  }
-
-  private focused = false;
-
-  private placeholderText = '';
 }

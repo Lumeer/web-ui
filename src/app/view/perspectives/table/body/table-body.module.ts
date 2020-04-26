@@ -18,6 +18,8 @@
  */
 
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {ScrollingModule as ExperimentalScrollingModule} from '@angular/cdk-experimental/scrolling';
+
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ContextMenuModule} from 'ngx-contextmenu';
@@ -64,6 +66,7 @@ import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user
     DataInputModule,
     ScrollingModule,
     GravatarModule,
+    ExperimentalScrollingModule,
   ],
   declarations: [
     TableBodyComponent,

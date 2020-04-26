@@ -34,7 +34,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuery,
-  selectLinkTypesByQuery,
+  selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -111,7 +111,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
     return combineLatest([
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesByQuery)),
+      this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformPivotConfig(config, query, collections, linkTypes))
@@ -147,7 +147,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
   }
 
   public onConfigChange(config: PivotConfig) {

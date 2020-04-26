@@ -49,6 +49,7 @@ import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component
 import {ModalService} from '../modal/modal.service';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {PostItLayoutType} from './post-it-layout-type';
+import {ResourceAttributeSettings} from '../../core/store/views/view';
 
 export interface PostItTag {
   title: string;
@@ -91,6 +92,9 @@ export class PostItComponent implements OnDestroy {
   @Input()
   public editableKeys = false;
 
+  @Input()
+  public attributesSettings: ResourceAttributeSettings[];
+
   @Output()
   public toggleFavorite = new EventEmitter();
 
@@ -123,8 +127,10 @@ export class PostItComponent implements OnDestroy {
     this.resourceType = getAttributesResourceType(this.resource);
     if (this.objectChanged(changes.resource) || this.objectChanged(changes.dataResource)) {
       if (this.resource && this.dataResource) {
-        this.dataRowService.init(this.resource, this.dataResource);
+        this.dataRowService.init(this.resource, this.dataResource, this.attributesSettings);
       }
+    } else if (changes.attributesSettings) {
+      this.dataRowService.setSettings(this.attributesSettings);
     }
     if (changes.resource || changes.dataResource) {
       this.unusedAttributes = filterUnusedAttributes(

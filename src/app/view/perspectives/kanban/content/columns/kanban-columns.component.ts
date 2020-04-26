@@ -35,7 +35,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 
 import {Query, QueryCondition, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {findLastIndex, findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../../core/constants';
@@ -68,6 +68,9 @@ import {
 } from '../../../../../shared/utils/data/data-aggregator-util';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
+import {ViewSettings} from '../../../../../core/store/views/view';
+import {Observable} from 'rxjs';
+import {selectViewSettings} from '../../../../../core/store/views/views.state';
 
 @Component({
   selector: 'kanban-columns',
@@ -131,6 +134,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   @Output()
   public updateLinkDocuments = new EventEmitter<{linkInstanceId: string; documentIds: [string, string]}>();
 
+  public viewSettings$: Observable<ViewSettings>;
+
   public readonly dragDelay = DRAG_DELAY;
 
   private unknownConstraint: Constraint = new UnknownConstraint();
@@ -144,6 +149,7 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
+    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.toggleService.setWorkspace(this.workspace);
   }
 

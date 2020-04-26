@@ -1,6 +1,6 @@
 <ng-container *ngIf="{readonly: !permissions?.writeWithView} as data">
 
-  <div *ngIf="!editableKey; else editableKeyInput" class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key">
+  <div *ngIf="!editableKey; else editableKeyInput" class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key text-truncate">
     {{keyDataValue.value}}
   </div>
 

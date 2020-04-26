@@ -33,6 +33,7 @@ export interface View extends Resource {
   perspective: Perspective;
   query: Query;
   config: ViewConfig;
+  settings?: ViewSettings;
   authorRights?: Record<string, string[]>;
   lastTimeUsed?: Date;
   favorite?: boolean;
@@ -73,4 +74,18 @@ export interface DefaultViewConfig {
   perspective: string;
   config: ViewConfig;
   updatedAt?: Date;
+}
+
+export interface ViewSettings {
+  attributes?: AttributesSettings;
+}
+
+export interface AttributesSettings {
+  collections?: Record<string, ResourceAttributeSettings[]>;
+  linkTypes?: Record<string, ResourceAttributeSettings[]>;
+}
+
+export interface ResourceAttributeSettings {
+  attributeId: string;
+  hidden?: boolean;
 }

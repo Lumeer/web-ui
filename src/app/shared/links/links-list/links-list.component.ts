@@ -46,6 +46,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-permissions.pipe';
 import {deepObjectsEquals} from '../../utils/common.utils';
+import {ViewSettings} from '../../../core/store/views/view';
 
 @Component({
   selector: 'links-list',
@@ -61,6 +62,9 @@ export class LinksListComponent implements OnChanges, OnInit {
 
   @Input()
   public preventEventBubble: boolean;
+
+  @Input()
+  public viewSettings: ViewSettings;
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();

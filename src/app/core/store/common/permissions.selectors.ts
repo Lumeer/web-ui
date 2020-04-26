@@ -111,9 +111,10 @@ export const selectCollectionsInQuery = createSelector(
 
 export const selectCollectionsByStems = createSelector(
   selectCollectionsDictionary,
+  selectAllLinkTypes,
   selectQuery,
-  (collectionsMap, query) => {
-    const collectionIds = query?.stems?.map(stem => stem.collectionId) || [];
+  (collectionsMap, linkTypes, query) => {
+    const collectionIds = getAllCollectionIdsFromQuery(query, linkTypes);
     return collectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
   }
 );
@@ -225,7 +226,7 @@ export const selectLinkTypesByReadPermission = createSelector(
   }
 );
 
-export const selectLinkTypesByQuery = createSelector(
+export const selectLinkTypesInQuery = createSelector(
   selectLinkTypesByReadPermission,
   selectQuery,
   (linkTypes, query) => {

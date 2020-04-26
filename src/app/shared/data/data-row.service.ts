@@ -28,20 +28,21 @@ import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {generateCorrelationId, getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
+import {findAttribute, getDefaultAttributeId} from '../../core/store/collections/collection.util';
 import {isNotNullOrUndefined} from '../utils/common.utils';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {deepArrayEquals} from '../utils/array.utils';
 import {findAttributeByName} from '../utils/attribute.utils';
 import {skip} from 'rxjs/operators';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
+import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../core/model/resource';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
-import {ConstraintType} from '../../core/model/data/constraint';
+import {ResourceAttributeSettings} from '../../core/store/views/view';
+import {createAttributesSettingsOrder} from '../settings/settings.util';
 
 export interface DataRow {
   id: string;
@@ -59,16 +60,11 @@ export class DataRowService {
   private resourceType: AttributesResourceType;
   private resource: AttributesResource;
   private dataResource: DataResource;
+  private settingsOrder: ResourceAttributeSettings[];
 
   private subscriptions = new Subscription();
 
-  private setupAllAttributes = false;
-
   constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
-
-  public shouldSetupAllAttributes(value: boolean) {
-    this.setupAllAttributes = value;
-  }
 
   public get isCollectionResource(): boolean {
     return this.resourceType === AttributesResourceType.Collection;
@@ -78,12 +74,18 @@ export class DataRowService {
     return !this.dataResource.id;
   }
 
-  public init(resource: AttributesResource, dataResource: DataResource) {
+  public init(resource: AttributesResource, dataResource: DataResource, settingsOrder?: ResourceAttributeSettings[]) {
     this.resource = resource;
     this.resourceType = getAttributesResourceType(resource);
     this.dataResource = dataResource;
+    this.settingsOrder = settingsOrder;
     this.rows$.next(this.createDataRows());
     this.refreshSubscription();
+  }
+
+  public setSettings(settingsOrder: ResourceAttributeSettings[]) {
+    this.settingsOrder = settingsOrder;
+    this.rows$.next(this.createDataRows());
   }
 
   private refreshSubscription() {
@@ -128,27 +130,21 @@ export class DataRowService {
 
   public createDataRows(): DataRow[] {
     const defaultAttributeId = this.isCollectionResource ? getDefaultAttributeId(this.resource) : null;
-    const attributes = this.resource?.attributes || [];
     const data = this.dataResource?.data || {};
-    const dataKeys = Object.keys(data);
-    const rows = [];
 
-    for (const attribute of attributes) {
-      if (
-        dataKeys.includes(attribute.id) ||
-        this.setupAllAttributes ||
-        attribute.constraint?.type === ConstraintType.Boolean
-      ) {
-        const row: DataRow = {
-          id: attribute.id,
-          attribute,
-          isDefault: attribute.id === defaultAttributeId,
-          value: data[attribute.id],
-        };
-        rows.push(row);
-      }
-    }
-    return rows;
+    return createAttributesSettingsOrder(this.resource?.attributes, this.settingsOrder)
+      .filter(setting => !setting.hidden)
+      .map(setting => findAttribute(this.resource?.attributes, setting.attributeId))
+      .map(attribute => this.createDataRow(attribute, data, defaultAttributeId));
+  }
+
+  private createDataRow(attribute: Attribute, data: DataResourceData, defaultAttributeId: string): DataRow {
+    return {
+      id: attribute.id,
+      attribute,
+      isDefault: attribute.id === defaultAttributeId,
+      value: data[attribute.id],
+    };
   }
 
   private refreshRows() {

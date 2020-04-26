@@ -28,6 +28,7 @@
              [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
              [allowedPermissions]="card.permissions"
              [constraintData]="constraintData"
+             [attributesSettings]="viewSettings | resourceAttributesSettings:card.resourceType:card.resource.id"
              (toggleFavorite)="onToggleFavorite(card)">
     </post-it>
 

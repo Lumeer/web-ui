@@ -52,6 +52,7 @@ import {selectDocumentById} from '../../../../core/store/documents/documents.sta
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
+import {ResourceAttributeSettings} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'data-resource-data',
@@ -90,6 +91,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public editableKeys = false;
 
+  @Input()
+  public attributeSettings: ResourceAttributeSettings[];
+
   @Output()
   public attributeTypeClick = new EventEmitter<Attribute>();
 
@@ -119,7 +123,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
-    this.dataRowService.shouldSetupAllAttributes(true);
     this.dataRowFocusService = new DataRowFocusService(
       () => 2,
       () => this.dataRowService.rows$.value.length,
@@ -143,9 +146,11 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldRefreshObservables(changes)) {
-      this.dataRowService.init(this.resource, this.dataResource);
+      this.dataRowService.init(this.resource, this.dataResource, this.attributeSettings);
       this.resource$ = this.selectResource$();
       this.dataResource$ = this.selectDataResource$();
+    } else if (changes.attributesSettings) {
+      this.dataRowService.setSettings(this.attributeSettings);
     }
   }
 

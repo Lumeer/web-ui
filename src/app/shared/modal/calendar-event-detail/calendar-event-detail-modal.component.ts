@@ -19,10 +19,10 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {Query} from '../../../core/store/navigation/query/query';
+import {AttributeFilter, Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {distinctUntilChanged, map, mergeMap, take, tap} from 'rxjs/operators';
@@ -33,7 +33,11 @@ import * as moment from 'moment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../../core/model/resource';
-import {parseDateTimeByConstraint, subtractDatesToDurationCountsMap} from '../../utils/date.utils';
+import {
+  constraintContainsHoursInConfig,
+  parseDateTimeByConstraint,
+  subtractDatesToDurationCountsMap,
+} from '../../utils/date.utils';
 import {selectAllLinkTypes, selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -45,6 +49,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {durationCountsMapToString} from '../../utils/constraint/duration-constraint.utils';
 import {DurationConstraint} from '../../../core/model/constraint/duration.constraint';
+import {generateDocumentData} from '../../../core/store/documents/document.utils';
 
 const DEFAULT_EVENT_DURATION = 60;
 
@@ -158,20 +163,25 @@ export class CalendarEventDetailModalComponent implements OnInit {
   }
 
   private selectNewDataResource$(stemIndex: number): Observable<DataResource> {
-    return this.selectResourceByStemIndex$(stemIndex).pipe(
-      tap(resource => (this.currentResource = resource)),
-      map(resource => {
-        const data = {};
-
+    return combineLatest([this.selectResourceByStemIndex$(stemIndex), this.store$.pipe(select(selectQuery))]).pipe(
+      tap(([resource]) => (this.currentResource = resource)),
+      map(([resource, query]) => {
         const stemConfig = this.getStemConfig(stemIndex);
         const dataModel = stemConfig?.name || stemConfig?.start;
+        const startMoment = moment(this.start);
+
+        const data = generateDocumentData(
+          resource,
+          this.queryStemFilters(query, stemIndex, dataModel),
+          this.constraintData
+        );
 
         if (this.modelsAreFromSameResources(stemConfig?.name, dataModel)) {
           data[stemConfig.name.attributeId] = this.getInitialTitleName();
         }
 
         if (this.modelsAreFromSameResources(stemConfig?.start, dataModel)) {
-          data[stemConfig.start.attributeId] = moment(this.start).toISOString();
+          data[stemConfig.start.attributeId] = startMoment.toISOString();
         }
 
         if (this.modelsAreFromSameResources(stemConfig?.end, dataModel)) {
@@ -183,7 +193,17 @@ export class CalendarEventDetailModalComponent implements OnInit {
 
             data[stemConfig.end.attributeId] = toNumber(dataValue.serialize());
           } else {
-            data[stemConfig.end.attributeId] = moment(this.end).toISOString();
+            const endMoment = moment(this.end);
+            const endMomentStartOfDay = moment(this.end).startOf('day');
+            if (
+              !constraintContainsHoursInConfig(constraint) &&
+              startMoment.day() !== endMoment.day() &&
+              endMoment.isSame(endMomentStartOfDay)
+            ) {
+              data[stemConfig.end.attributeId] = endMoment.subtract(1, 'days').toISOString();
+            } else {
+              data[stemConfig.end.attributeId] = endMoment.toISOString();
+            }
           }
         }
         return {
@@ -195,6 +215,14 @@ export class CalendarEventDetailModalComponent implements OnInit {
       take(1),
       tap(dataResource => (this.currentDataResource = dataResource))
     );
+  }
+
+  private queryStemFilters(query: Query, stemIndex: number, model: CalendarBar): AttributeFilter[] {
+    const queryStem = query?.stems?.[stemIndex];
+    if (model.resourceType === AttributesResourceType.Collection) {
+      return queryStem?.filters?.filter(attributeFilter => attributeFilter.collectionId === model.resourceId) || [];
+    }
+    return queryStem?.linkFilters?.filter(attributeFilter => attributeFilter.linkTypeId === model.resourceId) || [];
   }
 
   private modelsAreFromSameResources(model1: CalendarBar, model2: CalendarBar): boolean {

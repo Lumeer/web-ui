@@ -1,4 +1,4 @@
-<div class="wrapper h-100">
+<div class="wrapper h-100" *ngIf="{viewSettings: viewSettings$ | async} as data">
   <div class="d-inline-flex flex-row flex-nowrap h-100 align-items-start mr-4"
        cdkDropList cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="dropColumn($event)">
@@ -14,6 +14,7 @@
                    [canManageConfig]="canManageConfig"
                    [query]="query"
                    [constraintData]="constraintData"
+                   [viewSettings]="data.viewSettings"
                    (createDataResource)="onCreateDataResource($event, column)"
                    (updateDataResource)="onUpdateDataResource($event)"
                    (removeColumn)="onRemoveColumn(column)"
@@ -30,6 +31,7 @@
                    [canManageConfig]="canManageConfig"
                    [query]="query"
                    [constraintData]="constraintData"
+                   [viewSettings]="data.viewSettings"
                    (createDataResource)="onCreateDataResource($event, kanbanData.otherColumn)"
                    (updateDataResource)="onUpdateDataResource($event)"
                    (toggleFavorite)="onToggleFavorite($event)"

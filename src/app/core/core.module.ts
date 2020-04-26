@@ -63,6 +63,7 @@ import {AppStoreModule} from './store/app-store.module';
 import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
 import {SequenceService} from './rest/sequence.service';
+import {AccordionModule} from 'ngx-bootstrap/accordion';
 
 if (environment.locale === 'cs') {
   defineLocale('cs', csLocale);
@@ -80,6 +81,7 @@ if (environment.locale === 'cs') {
     GuardsModule,
     BrowserAnimationsModule,
     NotificationsModule,
+    AccordionModule.forRoot(),
     AlertModule.forRoot(),
     BsDatepickerModule.forRoot(),
     BsDropdownModule.forRoot(),
