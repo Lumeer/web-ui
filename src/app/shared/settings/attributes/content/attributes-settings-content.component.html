@@ -19,6 +19,7 @@
           cdkDragLockAxis="y"
           cdkDragBoundary=".cdk-drop-list"
           class="px-2 py-1"
+          [settings]="attributeSettings"
           [attribute]="collection.attributes | findAttribute:attributeSettings.attributeId"
           [isDefault]="attributeSettings.attributeId | isDefaultAttribute:collection"
           (settingsChanged)="onCollectionSettingsChanged(settingsOrder, index, collection, $event)"
@@ -49,6 +50,7 @@
           cdkDragLockAxis="y"
           cdkDragBoundary=".cdk-drop-list"
           class="px-2 py-1"
+          [settings]="attributeSettings"
           [attribute]="linkType.attributes | findAttribute:attributeSettings.attributeId"
           (settingsChanged)="onLinkTypeSettingsChanged(settingsOrder, index, linkType, $event)"
           (cdkDragDropped)="onLinkTypeSettingsDropped(settingsOrder, linkType, $event)">

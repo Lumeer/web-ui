@@ -37,6 +37,7 @@ export function convertViewDtoToModel(dto: ViewDto): View {
     query: convertQueryDtoToModel(dto.query),
     perspective: perspectivesMap[dto.perspective],
     config: convertViewConfigDtoToModel(perspectivesMap[dto.perspective], dto.config),
+    settings: dto.settings,
     permissions: PermissionsConverter.fromDto(dto.permissions),
     authorRights: dto.authorRights,
     version: dto.version,
@@ -50,6 +51,7 @@ export function convertViewModelToDto(model: View): ViewDto {
     code: model.code,
     name: model.name,
     query: convertQueryModelToDto(model.query),
+    settings: model.settings,
     perspective: model.perspective,
     config: model.config,
     description: model.description,
@@ -59,13 +61,13 @@ export function convertViewModelToDto(model: View): ViewDto {
 function convertViewConfigDtoToModel(perspective: Perspective, config: any): ViewConfig {
   switch (perspective) {
     case Perspective.Pivot:
-      return {...config, pivot: convertPivotConfigDtoToModel(config && config.pivot)};
+      return {...config, pivot: convertPivotConfigDtoToModel(config?.pivot)};
     case Perspective.GanttChart:
-      return {...config, ganttChart: convertGanttChartDtoConfigToModel(config && config.ganttChart)};
+      return {...config, ganttChart: convertGanttChartDtoConfigToModel(config?.ganttChart)};
     case Perspective.Calendar:
-      return {...config, calendar: convertCalendarDtoConfigToModel(config && config.calendar)};
+      return {...config, calendar: convertCalendarDtoConfigToModel(config?.calendar)};
     case Perspective.Kanban:
-      return {...config, kanban: convertKanbanConfigDtoToModel(config && config.kanban)};
+      return {...config, kanban: convertKanbanConfigDtoToModel(config?.kanban)};
     default:
       return config;
   }

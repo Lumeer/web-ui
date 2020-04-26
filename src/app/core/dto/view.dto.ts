@@ -24,6 +24,7 @@ export interface ViewDto extends ResourceDto {
   perspective: string;
   query: QueryDto;
   config: any;
+  settings: any;
   authorRights?: Record<string, string[]>;
   favorite?: boolean;
   lastTimeUsed?: number;

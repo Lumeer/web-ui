@@ -32,10 +32,11 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {PerspectiveConfig, View} from './view';
+import {PerspectiveConfig, View, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
+import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -83,5 +84,32 @@ export function preferViewConfigUpdate(previousView: View, view: View, hasStoreC
   if (!previousView) {
     return !hasStoreConfig;
   }
-  return !deepObjectsEquals(previousView.config && previousView.config.search, view.config && view.config.search);
+  return !deepObjectsEquals(previousView.config?.search, view.config?.search);
+}
+
+export function viewSettingsChanged(
+  previousSettings: ViewSettings,
+  currentSettings: ViewSettings,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
+): boolean {
+  return viewAttributeSettingsChanged(
+    previousSettings?.attributes,
+    currentSettings?.attributes,
+    collectionsMap,
+    linkTypesMap
+  );
+}
+
+export function createSaveViewSettings(
+  settings: ViewSettings,
+  collectionsMap: Record<string, Collection>,
+  linkTypesMap: Record<string, LinkType>
+): ViewSettings {
+  return (
+    settings && {
+      ...settings,
+      attributes: createSaveAttributesSettings(settings.attributes, collectionsMap, linkTypesMap),
+    }
+  );
 }

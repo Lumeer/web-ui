@@ -127,7 +127,7 @@ export class PostItComponent implements OnDestroy {
     this.resourceType = getAttributesResourceType(this.resource);
     if (this.objectChanged(changes.resource) || this.objectChanged(changes.dataResource)) {
       if (this.resource && this.dataResource) {
-        this.dataRowService.init(this.resource, this.dataResource);
+        this.dataRowService.init(this.resource, this.dataResource, this.settings);
       }
     } else if (changes.settings) {
       this.dataRowService.setSettings(this.settings);

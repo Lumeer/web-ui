@@ -46,6 +46,7 @@ import {
   selectViewConfigChanged,
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
+  selectViewSettingsChanged,
 } from '../../core/store/views/views.state';
 import {Perspective} from '../perspectives/perspective';
 import {Query} from '../../core/store/navigation/query/query';
@@ -62,6 +63,7 @@ import {MapsAction} from '../../core/store/maps/maps.action';
 import {GanttChartAction} from '../../core/store/gantt-charts/gantt-charts.action';
 import {CalendarsAction} from '../../core/store/calendars/calendars.action';
 import {KanbansAction} from '../../core/store/kanbans/kanbans.action';
+import {ViewsAction} from '../../core/store/views/views.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -148,16 +150,14 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       this.store$.pipe(select(selectViewConfigChanged)),
       this.store$.pipe(select(selectViewQueryChanged)),
       this.store$.pipe(select(selectViewPerspectiveChanged)),
+      this.store$.pipe(select(selectViewSettingsChanged)),
     ]).pipe(
       debounceTime(100),
       tap(([, configChanged, queryChanged]) => {
         this.configChanged = configChanged;
         this.queryChanged = queryChanged;
       }),
-      map(
-        ([nameChanged, configChanged, queryChanged, perspectiveChanged]) =>
-          nameChanged || configChanged || queryChanged || perspectiveChanged
-      )
+      map(changedItems => changedItems.some(changed => changed))
     );
   }
 
@@ -279,6 +279,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   private revertChangesForView(view: View, workspacePath: any[]) {
     this.resetName(view);
+    this.resetViewSettings(view);
     switch (view.perspective) {
       case Perspective.Search:
         const searchConfig = view.config?.search;
@@ -325,6 +326,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private resetName(view: View) {
     this.name = view.name;
     this.nameChanged$.next(false);
+  }
+
+  private resetViewSettings(view: View) {
+    this.store$.dispatch(new ViewsAction.SetViewSettings({settings: view.settings}));
   }
 
   private revertQueryWithUrl(path: any[], query: Query) {

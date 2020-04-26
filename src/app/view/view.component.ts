@@ -35,14 +35,21 @@ import {
 import {View} from '../core/store/views/view';
 import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectCurrentView, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
+import {
+  selectCurrentView,
+  selectPerspectiveConfig,
+  selectSaveViewSettings,
+  selectViewByCode,
+  selectViewSettings,
+} from '../core/store/views/views.state';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
+import {ViewSettingsService} from '../core/service/view-settings.service';
 
 @Component({
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [FileAttachmentsService],
+  providers: [FileAttachmentsService, ViewSettingsService],
 })
 export class ViewComponent implements OnInit {
   @ViewChild(ViewControlsComponent)
@@ -53,6 +60,7 @@ export class ViewComponent implements OnInit {
 
   constructor(
     private fileAttachmentsService: FileAttachmentsService,
+    private viewSettingsService: ViewSettingsService,
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<AppState>
@@ -63,6 +71,7 @@ export class ViewComponent implements OnInit {
     this.viewsExist$ = this.bindViewsExist();
 
     this.fileAttachmentsService.init();
+    this.viewSettingsService.init();
   }
 
   private bindView(): Observable<View> {
@@ -108,14 +117,16 @@ export class ViewComponent implements OnInit {
       this.getViewByName(name),
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectCurrentView)),
+      this.store$.pipe(select(selectSaveViewSettings)),
     ])
       .pipe(take(1))
-      .subscribe(([config, perspective, viewByName, query, currentView]) => {
+      .subscribe(([config, perspective, viewByName, query, currentView, settings]) => {
         const view: View = {
           ...currentView,
           query,
           name,
           config: {[perspective]: createPerspectiveSaveConfig(perspective, config)},
+          settings,
           perspective,
         };
 
