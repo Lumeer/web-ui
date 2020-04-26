@@ -43,6 +43,8 @@ import {selectCollectionById} from '../../../core/store/collections/collections.
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
+import {ViewSettings} from '../../../core/store/views/view';
+import {selectViewSettings} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'document-detail-modal',
@@ -70,6 +72,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public query$: Observable<Query>;
   public collection$: Observable<Collection>;
   public document$: Observable<DocumentModel>;
+  public viewSettings$: Observable<ViewSettings>;
 
   public performingAction$ = new BehaviorSubject(false);
 
@@ -81,6 +84,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectQuery));
+    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

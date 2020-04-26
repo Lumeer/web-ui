@@ -37,6 +37,7 @@ import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
 import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
+import {Query} from '../navigation/query/query';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -103,13 +104,14 @@ export function viewSettingsChanged(
 
 export function createSaveViewSettings(
   settings: ViewSettings,
+  query: Query,
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): ViewSettings {
   return (
     settings && {
       ...settings,
-      attributes: createSaveAttributesSettings(settings.attributes, collectionsMap, linkTypesMap),
+      attributes: createSaveAttributesSettings(settings.attributes, query, collectionsMap, linkTypesMap),
     }
   );
 }

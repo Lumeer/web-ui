@@ -101,7 +101,7 @@ export class AttributesSettingsContentComponent {
   private emitLinkTypeChange(settingsOrder: ResourceAttributeSettings[], linkType: LinkType) {
     const settingsCopy: AttributesSettings = {
       ...this.settings,
-      collections: {...this.settings?.linkTypes, [linkType.id]: settingsOrder},
+      linkTypes: {...this.settings?.linkTypes, [linkType.id]: settingsOrder},
     };
     this.settingsChanged.next(settingsCopy);
   }

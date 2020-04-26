@@ -93,7 +93,7 @@ export class PostItComponent implements OnDestroy {
   public editableKeys = false;
 
   @Input()
-  public settings: ResourceAttributeSettings[];
+  public attributesSettings: ResourceAttributeSettings[];
 
   @Output()
   public toggleFavorite = new EventEmitter();
@@ -127,10 +127,10 @@ export class PostItComponent implements OnDestroy {
     this.resourceType = getAttributesResourceType(this.resource);
     if (this.objectChanged(changes.resource) || this.objectChanged(changes.dataResource)) {
       if (this.resource && this.dataResource) {
-        this.dataRowService.init(this.resource, this.dataResource, this.settings);
+        this.dataRowService.init(this.resource, this.dataResource, this.attributesSettings);
       }
-    } else if (changes.settings) {
-      this.dataRowService.setSettings(this.settings);
+    } else if (changes.attributesSettings) {
+      this.dataRowService.setSettings(this.attributesSettings);
     }
     if (changes.resource || changes.dataResource) {
       this.unusedAttributes = filterUnusedAttributes(

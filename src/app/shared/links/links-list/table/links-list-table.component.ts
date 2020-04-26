@@ -36,6 +36,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkColumn} from '../model/link-column';
 import {
+  findAttribute,
   getDefaultAttributeId,
   isCollectionAttributeEditable,
   isLinkTypeAttributeEditable,
@@ -59,6 +60,8 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {generateCorrelationId} from '../../../utils/resource.utils';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {ViewSettings} from '../../../../core/store/views/view';
+import {createAttributesSettingsOrder} from '../../../settings/settings.util';
 
 const columnWidth = 100;
 
@@ -87,6 +90,9 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   @Input()
   public preventEventBubble: boolean;
 
+  @Input()
+  public viewSettings: ViewSettings;
+
   @ViewChild('tableWrapper')
   public tableWrapperComponent: ElementRef;
 
@@ -108,7 +114,14 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.document || changes.linkType || changes.collection || changes.query || changes.permissions) {
+    if (
+      changes.document ||
+      changes.linkType ||
+      changes.collection ||
+      changes.query ||
+      changes.permissions ||
+      changes.viewSettings
+    ) {
       this.mergeColumns();
     }
 
@@ -130,33 +143,41 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   private createLinkTypeColumns(): LinkColumn[] {
-    return ((this.linkType && this.linkType.attributes) || []).reduce((columns, attribute) => {
-      const editable = isLinkTypeAttributeEditable(attribute.id, this.linkType, this.permissions, this.query);
-      const column: LinkColumn = (this.columns$.value || []).find(
-        c => c.linkTypeId === this.linkType.id && c.attribute.id === attribute.id
-      ) || {attribute, width: columnWidth, linkTypeId: this.linkType.id, editable};
-      columns.push({...column, attribute, editable});
-      return columns;
-    }, []);
+    const settings = this.viewSettings?.attributes?.linkTypes?.[this.linkType?.id];
+    return createAttributesSettingsOrder(this.linkType?.attributes, settings)
+      .filter(setting => !setting.hidden)
+      .reduce((columns, setting) => {
+        const attribute = findAttribute(this.linkType?.attributes, setting.attributeId);
+        const editable = isLinkTypeAttributeEditable(attribute.id, this.linkType, this.permissions, this.query);
+        const column: LinkColumn = (this.columns$.value || []).find(
+          c => c.linkTypeId === this.linkType.id && c.attribute.id === attribute.id
+        ) || {attribute, width: columnWidth, linkTypeId: this.linkType.id, editable};
+        columns.push({...column, attribute, editable});
+        return columns;
+      }, []);
   }
 
   private createCollectionColumns(): LinkColumn[] {
     const defaultAttributeId = getDefaultAttributeId(this.collection);
-    return ((this.collection && this.collection.attributes) || []).reduce((columns, attribute) => {
-      const editable = isCollectionAttributeEditable(attribute.id, this.collection, this.permissions, this.query);
-      const column: LinkColumn = (this.columns$.value || []).find(
-        c => c.collectionId === this.collection.id && c.attribute.id === attribute.id
-      ) || {
-        attribute,
-        width: columnWidth,
-        collectionId: this.collection.id,
-        color: this.collection.color,
-        bold: attribute.id === defaultAttributeId,
-        editable,
-      };
-      columns.push({...column, attribute, editable});
-      return columns;
-    }, []);
+    const settings = this.viewSettings?.attributes?.collections?.[this.collection?.id];
+    return createAttributesSettingsOrder(this.collection?.attributes, settings)
+      .filter(setting => !setting.hidden)
+      .reduce((columns, setting) => {
+        const attribute = findAttribute(this.collection?.attributes, setting.attributeId);
+        const editable = isCollectionAttributeEditable(attribute.id, this.collection, this.permissions, this.query);
+        const column: LinkColumn = (this.columns$.value || []).find(
+          c => c.collectionId === this.collection.id && c.attribute.id === attribute.id
+        ) || {
+          attribute,
+          width: columnWidth,
+          collectionId: this.collection.id,
+          color: this.collection.color,
+          bold: attribute.id === defaultAttributeId,
+          editable,
+        };
+        columns.push({...column, attribute, editable});
+        return columns;
+      }, []);
   }
 
   private selectLinkRows$(): Observable<LinkRow[]> {

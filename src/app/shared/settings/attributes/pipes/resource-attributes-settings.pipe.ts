@@ -22,9 +22,9 @@ import {ResourceAttributeSettings, ViewSettings} from '../../../../core/store/vi
 import {AttributesResourceType} from '../../../../core/model/resource';
 
 @Pipe({
-  name: 'postItSettings',
+  name: 'resourceAttributesSettings',
 })
-export class PostItSettingsPipe implements PipeTransform {
+export class ResourceAttributesSettingsPipe implements PipeTransform {
   public transform(
     settings: ViewSettings,
     resourceType: AttributesResourceType,

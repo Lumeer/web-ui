@@ -51,6 +51,7 @@ import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
+import {ResourceAttributeSettings} from '../../../core/store/views/view';
 
 @Component({
   selector: 'data-resource-detail',
@@ -76,6 +77,9 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
 
   @Input()
   public preventEventBubble: boolean;
+
+  @Input()
+  public attributeSettings: ResourceAttributeSettings[];
 
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();

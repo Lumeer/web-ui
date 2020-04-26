@@ -28,7 +28,7 @@ import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {generateCorrelationId, getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {getDefaultAttributeId} from '../../core/store/collections/collection.util';
+import {findAttribute, getDefaultAttributeId} from '../../core/store/collections/collection.util';
 import {isNotNullOrUndefined} from '../utils/common.utils';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {deepArrayEquals} from '../utils/array.utils';
@@ -42,6 +42,7 @@ import {LinkInstancesAction} from '../../core/store/link-instances/link-instance
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
+import {createAttributesSettingsOrder} from '../settings/settings.util';
 
 export interface DataRow {
   id: string;
@@ -129,25 +130,12 @@ export class DataRowService {
 
   public createDataRows(): DataRow[] {
     const defaultAttributeId = this.isCollectionResource ? getDefaultAttributeId(this.resource) : null;
-    const attributes = [...(this.resource?.attributes || [])];
     const data = this.dataResource?.data || {};
-    const rows = [];
 
-    this.settingsOrder?.forEach(setting => {
-      const index = attributes.findIndex(attribute => attribute.id === setting.attributeId);
-      if (index >= 0) {
-        if (!setting.hidden) {
-          rows.push(this.createDataRow(attributes[index], data, defaultAttributeId));
-        }
-        attributes.splice(index, 1);
-      }
-    });
-
-    for (const attribute of attributes) {
-      rows.push(this.createDataRow(attribute, data, defaultAttributeId));
-    }
-
-    return rows;
+    return createAttributesSettingsOrder(this.resource?.attributes, this.settingsOrder)
+      .filter(setting => !setting.hidden)
+      .map(setting => findAttribute(this.resource?.attributes, setting.attributeId))
+      .map(attribute => this.createDataRow(attribute, data, defaultAttributeId));
   }
 
   private createDataRow(attribute: Attribute, data: DataResourceData, defaultAttributeId: string): DataRow {

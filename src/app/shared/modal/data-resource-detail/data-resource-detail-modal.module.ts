@@ -24,10 +24,11 @@ import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {DataResourceModule} from '../../data-resource/data-resource.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {LinksModule} from '../../links/links.module';
+import {AttributesSettingsModule} from '../../settings/attributes/attributes-settings.module';
 
 @NgModule({
   declarations: [DataResourceDetailModalComponent],
-  imports: [CommonModule, DataResourceModule, ModalWrapperModule, PipesModule, LinksModule],
+  imports: [CommonModule, DataResourceModule, ModalWrapperModule, PipesModule, LinksModule, AttributesSettingsModule],
   exports: [DataResourceDetailModalComponent],
 })
 export class DataResourceDetailModalModule {}

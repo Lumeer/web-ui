@@ -152,7 +152,9 @@ export const selectSaveViewSettings = createSelector(
   selectViewSettings,
   selectCollectionsDictionary,
   selectLinkTypesDictionary,
-  (settings, collectionsMap, linkTypesMap) => createSaveViewSettings(settings, collectionsMap, linkTypesMap)
+  selectQuery,
+  (settings, collectionsMap, linkTypesMap, query) =>
+    createSaveViewSettings(settings, query, collectionsMap, linkTypesMap)
 );
 
 export const selectViewPerspectiveChanged = createSelector(

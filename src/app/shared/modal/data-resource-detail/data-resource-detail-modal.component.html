@@ -6,14 +6,16 @@
   [showHeader]="false"
   (onSubmit)="onSubmit()">
 
-  <div class="body p-3" *ngIf="{resource: resource$ | async, dataResource: dataResource$ | async} as data">
+  <div class="body p-3"
+       *ngIf="{resource: resource$ | async, dataResource: dataResource$ | async, viewSettings: viewSettings$ | async} as data">
     <data-resource-detail *ngIf="data.resource && data.dataResource"
                           [resource]="data.resource"
                           [dataResource]="data.dataResource"
                           [query]="query$ | async"
                           [preventEventBubble]="true"
-                          [permissions]="collectionResourceType ? (data.resource | collectionPermissions | async) : (data.resource | linkTypePermissions | async)"
+                          [permissions]="resourceType === collectionResourceType ? (data.resource | collectionPermissions | async) : (data.resource | linkTypePermissions | async)"
                           [toolbarRef]="toolbarRef"
+                          [attributeSettings]="data.viewSettings | resourceAttributesSettings:resourceType:data.resource.id"
                           (dataResourceChanged)="onDataResourceChanged($event)"
                           (routingPerformed)="onClose()">
     </data-resource-detail>
@@ -22,6 +24,7 @@
                 [document]="data.dataResource"
                 [preventEventBubble]="true"
                 [collection]="data.resource"
+                [viewSettings]="data.viewSettings"
                 (documentSelect)="selectCollectionAndDocument($event)">
     </links-list>
   </div>

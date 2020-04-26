@@ -48,6 +48,8 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Collection} from '../../../core/store/collections/collection';
+import {ViewSettings} from '../../../core/store/views/view';
+import {selectViewSettings} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -83,6 +85,7 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public query$: Observable<Query>;
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
+  public viewSettings$: Observable<ViewSettings>;
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
@@ -92,6 +95,7 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectQuery));
+    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

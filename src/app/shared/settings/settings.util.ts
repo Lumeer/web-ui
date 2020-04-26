@@ -22,6 +22,8 @@ import {AttributesSettings, ResourceAttributeSettings} from '../../core/store/vi
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource} from '../../core/model/resource';
 import {deepArrayEquals} from '../utils/array.utils';
+import {Query} from '../../core/store/navigation/query/query';
+import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
 
 export function createAttributesSettingsOrder(
   attributes: Attribute[],
@@ -62,32 +64,47 @@ function viewResourceAttributesSettingsChanged(
   currentSettings: Record<string, ResourceAttributeSettings[]>,
   resourcesMap: Record<string, AttributesResource>
 ): boolean {
-  if (Object.keys(previousSettings || {}).length !== Object.keys(currentSettings || {}).length) {
-    return true;
-  }
-
-  return Object.keys(previousSettings || {}).some(resourceId => {
+  return Object.keys(currentSettings || {}).some(resourceId => {
     const attributes = resourcesMap[resourceId]?.attributes || [];
-    const settings = createAttributesSettingsOrder(attributes, previousSettings[resourceId]);
-    return (
-      !currentSettings[resourceId] ||
-      !deepArrayEquals(settings, createAttributesSettingsOrder(attributes, currentSettings[resourceId]))
-    );
+    const previousOrder = createAttributesSettingsOrder(attributes, previousSettings?.[resourceId]);
+    const currentOrder = createAttributesSettingsOrder(attributes, currentSettings?.[resourceId]);
+
+    return !deepArrayEquals(previousOrder, currentOrder);
   });
 }
 
 export function createSaveAttributesSettings(
   settings: AttributesSettings,
+  query: Query,
   collectionsMap: Record<string, Collection>,
   linkTypesMap: Record<string, LinkType>
 ): AttributesSettings {
   if (!settings) {
     return settings;
   }
+
+  const collectionIds = getAllCollectionIdsFromQuery(query, Object.values(linkTypesMap));
+  const linkTypeIds = getAllLinkTypeIdsFromQuery(query);
+
   return {
-    collections: createSaveResourceAttributesSettings(settings.collections, collectionsMap),
-    linkTypes: createSaveResourceAttributesSettings(settings.linkTypes, linkTypesMap),
+    collections: createSaveResourceAttributesSettings(
+      settings.collections,
+      filterResourcesMap(collectionIds, collectionsMap)
+    ),
+    linkTypes: createSaveResourceAttributesSettings(settings.linkTypes, filterResourcesMap(linkTypeIds, linkTypesMap)),
   };
+}
+
+function filterResourcesMap(
+  allowedIds: string[],
+  resourcesMap: Record<string, AttributesResource>
+): Record<string, AttributesResource> {
+  return Object.entries(resourcesMap).reduce((map, [resourceId, resource]) => {
+    if (allowedIds.includes(resourceId)) {
+      map[resourceId] = resource;
+    }
+    return map;
+  }, {});
 }
 
 function createSaveResourceAttributesSettings(
@@ -99,7 +116,10 @@ function createSaveResourceAttributesSettings(
   }
 
   return Object.keys(settings || {}).reduce((map, resourceId) => {
-    const attributes = resourcesMap[resourceId]?.attributes || [];
-    return {...map, [resourceId]: createAttributesSettingsOrder(attributes, settings[resourceId])};
+    const resource = resourcesMap[resourceId];
+    if (resource) {
+      return {...map, [resourceId]: createAttributesSettingsOrder(resource.attributes, settings[resourceId])};
+    }
+    return map;
   }, {});
 }

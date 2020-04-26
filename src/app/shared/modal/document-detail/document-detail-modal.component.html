@@ -6,7 +6,7 @@
   [showHeader]="false"
   (onSubmit)="onSubmit()">
 
-  <div class="body p-3" *ngIf="{collection: collection$ | async, document: document$ | async} as data">
+  <div class="body p-3" *ngIf="{collection: collection$ | async, document: document$ | async, viewSettings: viewSettings$ | async} as data">
     <data-resource-detail *ngIf="data.collection && data.document"
                           [resource]="data.collection"
                           [dataResource]="data.document"
@@ -21,6 +21,7 @@
                 [document]="data.document"
                 [preventEventBubble]="true"
                 [collection]="data.collection"
+                [viewSettings]="data.viewSettings"
                 (documentSelect)="selectCollectionAndDocument($event)">
     </links-list>
   </div>

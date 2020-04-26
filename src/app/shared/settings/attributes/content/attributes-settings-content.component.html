@@ -32,7 +32,7 @@
 
   <ng-container *ngFor="let linkType of linkTypes; let first = first; trackBy:trackById">
     <accordion-group panelClass="lmr-accordion"
-                     *ngIf="linkType.attributes | createAttributesSettingsOrder:(settings?.collections && settings?.linkTypes[linkType.id]) as settingsOrder"
+                     *ngIf="linkType.attributes | createAttributesSettingsOrder:(settings?.linkTypes && settings?.linkTypes[linkType.id]) as settingsOrder"
                      [isOpen]="first && collections.length === 0">
       <div class="header-wrapper" accordion-heading *ngIf="{iconColors: linkType | resourceIconsColors} as data">
         <icons-presenter class="d-block mr-1"

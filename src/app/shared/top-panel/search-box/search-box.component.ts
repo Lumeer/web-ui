@@ -27,7 +27,7 @@ import {debounceTime, filter, map, startWith, tap, withLatestFrom} from 'rxjs/op
 import {AppState} from '../../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
-import {selectNavigation, selectQuery} from '../../../core/store/navigation/navigation.state';
+import {selectNavigation, selectPerspective, selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {View} from '../../../core/store/views/view';
 import {Perspective} from '../../../view/perspectives/perspective';
@@ -54,6 +54,7 @@ import {addQueryItemWithRelatedItems, removeQueryItemWithRelatedItems} from './u
 import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {Query} from '../../../core/store/navigation/query/query';
 
 const allowAutomaticSubmission = true;
 
@@ -69,6 +70,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
 
   public users$: Observable<User[]>;
   public constraintData$: Observable<ConstraintData>;
+  public perspective$: Observable<Perspective>;
+  public query$: Observable<Query>;
 
   public queryItemsControl: FormArray;
 
@@ -90,6 +93,8 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscribeToNavigation();
     this.users$ = this.store$.pipe(select(selectAllUsers));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.query$ = this.store$.pipe(select(selectQuery));
+    this.perspective$ = this.store$.pipe(select(selectPerspective));
   }
 
   private subscribeViewData() {

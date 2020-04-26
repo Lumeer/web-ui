@@ -33,7 +33,10 @@
 
 .quill-editor.single-line::ng-deep .ql-editor {
   white-space: nowrap;
-  overflow-x: hidden;
+  overflow: hidden;
+}
+
+.quill-editor.edit::ng-deep .ql-editor {
   overflow-y: auto;
 }
 

@@ -23,7 +23,7 @@ import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
 import {combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {selectCollectionsInQuery, selectLinkTypesInQuery} from '../../../core/store/common/permissions.selectors';
+import {selectCollectionsByStems, selectLinkTypesInQuery} from '../../../core/store/common/permissions.selectors';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {map} from 'rxjs/operators';
@@ -47,7 +47,7 @@ export class AttributesSettingsComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsInQuery));
+    this.collections$ = this.store$.pipe(select(selectCollectionsByStems));
     this.linkTypes$ = combineLatest([
       this.store$.pipe(select(selectLinkTypesInQuery)),
       this.store$.pipe(select(selectCollectionsDictionary)),

@@ -30,6 +30,7 @@ import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {PresenterModule} from '../../presenter/presenter.module';
 import {CreateAttributesSettingsOrderPipe} from './pipes/create-attributes-settings-order.pipe';
 import {CountShowedAttributesPipe} from './pipes/count-showed-attributes.pipe';
+import {ResourceAttributesSettingsPipe} from './pipes/resource-attributes-settings.pipe';
 
 @NgModule({
   declarations: [
@@ -39,8 +40,9 @@ import {CountShowedAttributesPipe} from './pipes/count-showed-attributes.pipe';
     AttributeSettingsComponent,
     CreateAttributesSettingsOrderPipe,
     CountShowedAttributesPipe,
+    ResourceAttributesSettingsPipe,
   ],
   imports: [CommonModule, DropdownModule, PipesModule, DragDropModule, AccordionModule, PresenterModule],
-  exports: [AttributesSettingsDropdownComponent, AttributesSettingsComponent],
+  exports: [AttributesSettingsDropdownComponent, AttributesSettingsComponent, ResourceAttributesSettingsPipe],
 })
 export class AttributesSettingsModule {}

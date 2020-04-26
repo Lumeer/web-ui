@@ -49,7 +49,6 @@ import {KanbanCleanAttributePipe} from './pipes/kanban-clean-attribute.pipe';
 import {PostItModule} from '../../../shared/post-it/post-it.module';
 import {KanbanAggregationDefinedPipe} from './pipes/kanban-aggregation-defined.pipe';
 import {KanbanContentComponent} from './content/kanban-content.component';
-import {PostItSettingsPipe} from './pipes/post-it-settings.pipe';
 
 @NgModule({
   declarations: [
@@ -74,7 +73,6 @@ import {PostItSettingsPipe} from './pipes/post-it-settings.pipe';
     KanbanCleanAttributePipe,
     KanbanAggregationDefinedPipe,
     KanbanContentComponent,
-    PostItSettingsPipe,
   ],
   imports: [
     SharedModule,
