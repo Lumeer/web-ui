@@ -1,17 +1,21 @@
 <ng-container *ngIf="{rows: rows$ | async, loaded: loaded$ | async} as table">
   <cdk-virtual-scroll-viewport [itemSize]="31"
                                class="flex-grow-1 min-h-100">
-    <table-primary-row *cdkVirtualFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex;"
+    <table-primary-row *cdkVirtualFor="let row of table.rows; trackBy: trackByDocumentId; index as rowIndex; last as isLast; first as isFirst"
                        [cursor]="cursor | nextRowCursor : rowIndex"
                        [row]="row"
                        [canManageConfig]="canManageConfig"
-                       (unsetCursor)="unsetCursor()">
+                       (unsetCursor)="unsetCursor()"
+                       [class.table-last-row]="isLast"
+                       [class.table-first-row]="isFirst"
+                       [class.table-only-row]="isFirst && isLast">
     </table-primary-row>
 
     <table-empty-row *ngIf="table.loaded && table.rows?.length === 0"
                      [canManageConfig]="canManageConfig"
                      [cursor]="cursor"
-                     (click)="unsetCursor()">
+                     (click)="unsetCursor()"
+                     class="table-first-row table-last-row table-only-row">
     </table-empty-row>
 
     <div>&nbsp;</div>

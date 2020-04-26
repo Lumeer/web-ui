@@ -6,7 +6,7 @@
         <source>Close</source><target state="final">Close</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source><target state="final">Help</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
@@ -115,10 +115,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="document.detail.switch.table" datatype="html">
         <source>Switch to Table perspective</source><target state="final">Switch to Table perspective</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="document.detail.attribute.add" datatype="html">
-        <source>Add Row</source><target state="final">Add Row</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/data-resource-data.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="create.new.document" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="create.new.document" datatype="html">
         <source>Create New Record</source><target state="final">Create New Record</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/columns/column/footer/kanban-column-footer.component.html</context><context context-type="linenumber">5</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/search-documents-content.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="kanban.perspective.footer.cards" datatype="html">
@@ -500,11 +497,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="topPanel.controlsToggle.title" datatype="html">
         <source>Show controls</source><target state="final">Show controls</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="topPanel.help.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="topPanel.help.title" datatype="html">
         <source>Help</source><target state="final">Help</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/video-menu/video-menu.component.html</context>
@@ -556,7 +550,13 @@
               You give your newly invited colleagues full control over the project. They can read, write and manage everything.
             </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="copyInputBox.clipboard.copy" datatype="html">
+        <source>Copy to clipboard</source><target state="final">Copy to clipboard</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/input/copy-text-box/copy-text-box.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
         <source>
             Use the cog icon
           </source><target state="final">
@@ -584,7 +584,7 @@
         <source>Invite a colleague</source><target state="final">Invite a colleague</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.button" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.button" datatype="html">
         <source>Add</source><target state="final">Add</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.user.emailDropdown.invalid" datatype="html">
@@ -677,19 +677,31 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="menu.applicationTour" datatype="html">
         <source>Application Tour</source><target state="final">Application Tour</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="menu.affiliateProgramMenuItem" datatype="html">
+        <source>Earn with Lumeer</source><target state="final">Earn with Lumeer</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
+          <context context-type="linenumber">57</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.affiliateProgram" datatype="html">
+        <source>Affiliate Program</source><target state="final">Affiliate Program</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
         <source>Solutions and Support</source><target state="final">Solutions and Support</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">58</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="menu.account" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="menu.account" datatype="html">
         <source>Account</source><target state="final">Account</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="menu.logout" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="menu.logout" datatype="html">
         <source>Logout</source><target state="final">Logout</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">76</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">71</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">85</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="resource.detail.type" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source><target state="final">{VAR_SELECT, select, organization {Organization} project {Project} other {} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="resource.detail.organization.invite" datatype="html">
@@ -770,31 +782,28 @@
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="collection.settings.tableId" datatype="html">
         <source>Table ID:</source><target state="final">Table ID:</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="collection.settings.clipboard.copy" datatype="html">
-        <source>Copy to clipboard</source><target state="final">Copy to clipboard</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="collection.config.tab.attributes" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.attributes" datatype="html">
         <source>
           Attributes
         </source><target state="final">
           Attributes
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">35</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
         <source>
           Rules
         </source><target state="final">
           Rules
         </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
         <source>
           Users
         </source><target state="final">
           Users
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
         <source>Add a new attribute</source><target state="final">Add a new attribute</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="collection.tab.attributes.attribute.add" datatype="html">
@@ -850,7 +859,107 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/attribute-type-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.allDay" datatype="html">
         <source>All day event</source><target state="final">All day event</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="referralsDialog.affiliateProgram.dialogTitle" datatype="html">
+        <source>Make money with Lumeer</source><target state="final">Make money with Lumeer</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralsDialog.affiliateProgram.header" datatype="html">
+        <source>Affiliate Program</source><target state="final">Affiliate Program</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralsDialog.referralNumber.label" datatype="html">
+        <source>Your referral number is: </source><target state="final">Your referral number is: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralsDialog.referralLinks.label" datatype="html">
+        <source>Use the following links to refer others:</source><target state="final">Use the following links to refer others:</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.referrencedUsers.label" datatype="html">
+        <source>So far you have referenced: </source><target state="final">So far you have referenced: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.referrencedUsers.count" datatype="html">
+        <source>{VAR_PLURAL, plural, =0 {no users} =1 {a single user} =2 {2 users} =3 {3 users} =4 {4 users} other {<x id="INTERPOLATION" equiv-text="{{data.ref?.registeredUsers}}"/> users} }</source><target state="final">{VAR_PLURAL, plural, =0 {no users} =1 {a single user} =2 {2 users} =3 {3 users} =4 {4 users} other {<x id="INTERPOLATION" equiv-text="{{data.ref?.registeredUsers}}"/> users} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.unpaidEarnings.label" datatype="html">
+        <source>Your unpaid earnings are: </source><target state="final">Your unpaid earnings are: </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.unpaidEarnings.none" datatype="html">
+        <source>none so far, keep working!</source><target state="final">none so far, keep working!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.profits.start" datatype="html">
+        <source>Your profits are worth</source><target state="final">Your profits are worth</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.profits.enf" datatype="html">
+        <source>of the first year license fee.</source><target state="final">of the first year license fee.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.affiliatePartner.become.start" datatype="html">
+        <source>Become our </source><target state="final">Become our </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.affiliatePartner" datatype="html">
+        <source>Affiliate partner</source><target state="final">Affiliate partner</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.affiliatePartner.become.middle" datatype="html">
+        <source> and turn your profits to </source><target state="final"> and turn your profits to </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralDialog.affiliatePartner.become.end" datatype="html">
+        <source>.</source><target state="final">.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="referralsDialog.instructions" datatype="html">
+        <source>
+      The minimal requirement is that your referee get at least one year long license.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
+      The payment must be initiated by the person that you have referred.
+    </source><target state="final">
+      The minimal requirement is that your referee get at least one year long license.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
+      The payment must be initiated by the person that you have referred.
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.create" datatype="html">
         <source>Create</source><target state="final">Create</target>
 
 
@@ -1363,6 +1472,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-menu.component.html</context>
           <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="topPanel.controlsToggle.tooltip" datatype="html">
+        <source>Show/hide controls</source><target state="final">Show/hide controls</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="attribute.config.dialog.not.exists" datatype="html">
         <source>Such an attribute does not exist.</source><target state="final">Such an attribute does not exist.</target>
@@ -2453,12 +2568,6 @@
           <context context-type="sourcefile">src/app/collection/collection-settings.guard.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-      </trans-unit><trans-unit id="collection.settings.clipboard.copied" datatype="html">
-        <source>Copied!</source><target state="final">Copied!</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="collection.delete.dialog.message" datatype="html">
         <source>Do you really want to delete this table?</source><target state="final">Do you really want to delete this table?</target>
@@ -3331,6 +3440,12 @@
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="user.referrals.fail" datatype="html">
+        <source>Could not get your referrals at the moment</source><target state="final">Could not get your referrals at the moment</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="video.metadata.get.fail" datatype="html">
         <source>Unable to read training videos. I am sorry, the videos will not be available now. The problem is being worked on.</source><target state="final">Unable to read training videos. I am sorry, the videos will not be available now. The problem is being worked on.</target>
         <context-group purpose="location">
@@ -3394,7 +3509,13 @@
         <source>Delete?</source><target state="final">Delete?</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="dataResource.attribute.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data/data-row.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="copyTextBox.clipboard.copied" datatype="html">
+        <source>Copied!</source><target state="final">Copied!</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/input/copy-text-box/copy-text-box.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="dataResource.attribute.placeholder" datatype="html">
         <source>Enter attribute name</source><target state="final">Enter attribute name</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.title" datatype="html">
@@ -4254,7 +4375,7 @@
           Link Types
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">69</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
         <source>Link Type</source><target state="final">Link Type</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
