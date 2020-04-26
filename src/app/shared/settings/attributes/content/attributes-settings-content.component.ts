@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {ViewAttributesSettings, ViewResourceAttributeSettings} from '../../../../core/store/views/view';
+import {AttributesSettings, ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
@@ -37,16 +37,16 @@ export class AttributesSettingsContentComponent {
   public linkTypes: LinkType[];
 
   @Input()
-  public settings: ViewAttributesSettings;
+  public settings: AttributesSettings;
 
   @Output()
-  public settingsChanged = new EventEmitter<ViewAttributesSettings>();
+  public settingsChanged = new EventEmitter<AttributesSettings>();
 
   public onCollectionSettingsChanged(
-    settingsOrder: ViewResourceAttributeSettings[],
+    settingsOrder: ResourceAttributeSettings[],
     index: number,
     collection: Collection,
-    attributeSettings: ViewResourceAttributeSettings
+    attributeSettings: ResourceAttributeSettings
   ) {
     const settingsOrderCopy = [...settingsOrder];
     settingsOrderCopy[index] = attributeSettings;
@@ -55,7 +55,7 @@ export class AttributesSettingsContentComponent {
   }
 
   public onCollectionSettingsDropped(
-    settingsOrder: ViewResourceAttributeSettings[],
+    settingsOrder: ResourceAttributeSettings[],
     collection: Collection,
     event: CdkDragDrop<any>
   ) {
@@ -66,8 +66,8 @@ export class AttributesSettingsContentComponent {
     }
   }
 
-  private emitCollectionChange(settingsOrder: ViewResourceAttributeSettings[], collection: Collection) {
-    const settingsCopy: ViewAttributesSettings = {
+  private emitCollectionChange(settingsOrder: ResourceAttributeSettings[], collection: Collection) {
+    const settingsCopy: AttributesSettings = {
       ...this.settings,
       collections: {...this.settings?.collections, [collection.id]: settingsOrder},
     };
@@ -75,10 +75,10 @@ export class AttributesSettingsContentComponent {
   }
 
   public onLinkTypeSettingsChanged(
-    settingsOrder: ViewResourceAttributeSettings[],
+    settingsOrder: ResourceAttributeSettings[],
     index: number,
     linkType: LinkType,
-    attributeSettings: ViewResourceAttributeSettings
+    attributeSettings: ResourceAttributeSettings
   ) {
     const settingsOrderCopy = [...settingsOrder];
     settingsOrderCopy[index] = attributeSettings;
@@ -87,7 +87,7 @@ export class AttributesSettingsContentComponent {
   }
 
   public onLinkTypeSettingsDropped(
-    settingsOrder: ViewResourceAttributeSettings[],
+    settingsOrder: ResourceAttributeSettings[],
     linkType: LinkType,
     event: CdkDragDrop<any>
   ) {
@@ -98,15 +98,15 @@ export class AttributesSettingsContentComponent {
     }
   }
 
-  private emitLinkTypeChange(settingsOrder: ViewResourceAttributeSettings[], linkType: LinkType) {
-    const settingsCopy: ViewAttributesSettings = {
+  private emitLinkTypeChange(settingsOrder: ResourceAttributeSettings[], linkType: LinkType) {
+    const settingsCopy: AttributesSettings = {
       ...this.settings,
       collections: {...this.settings?.linkTypes, [linkType.id]: settingsOrder},
     };
     this.settingsChanged.next(settingsCopy);
   }
 
-  public trackByAttributeSettings(index: number, settings: ViewResourceAttributeSettings): string {
+  public trackByAttributeSettings(index: number, settings: ResourceAttributeSettings): string {
     return settings.attributeId;
   }
 

@@ -19,16 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
-import {ViewResourceAttributeSettings} from '../../../../core/store/views/view';
+import {ResourceAttributeSettings} from '../../../../core/store/views/view';
 
 @Pipe({
   name: 'createAttributesSettingsOrder',
 })
 export class CreateAttributesSettingsOrderPipe implements PipeTransform {
-  public transform(
-    attributes: Attribute[],
-    settings: ViewResourceAttributeSettings[]
-  ): ViewResourceAttributeSettings[] {
+  public transform(attributes: Attribute[], settings: ResourceAttributeSettings[]): ResourceAttributeSettings[] {
     const attributesCopy = [...(attributes || [])];
     const modifiedSettings = [];
     settings?.forEach(setting => {

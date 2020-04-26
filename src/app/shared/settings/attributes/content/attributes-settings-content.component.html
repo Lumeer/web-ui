@@ -1,7 +1,8 @@
 <accordion [closeOthers]="true">
-  <ng-container *ngFor="let collection of collections; trackBy:trackById">
+  <ng-container *ngFor="let collection of collections; let first = first; trackBy:trackById">
     <accordion-group panelClass="lmr-accordion"
-                     *ngIf="collection.attributes | createAttributesSettingsOrder:(settings?.collections && settings?.collections[collection.id]) as settingsOrder">
+                     *ngIf="collection.attributes | createAttributesSettingsOrder:(settings?.collections && settings?.collections[collection.id]) as settingsOrder"
+                     [isOpen]="first">
       <div class="header-wrapper" accordion-heading>
         <icons-presenter class="d-block mr-1"
                          [colors]="[collection.color]"
@@ -28,9 +29,10 @@
     </accordion-group>
   </ng-container>
 
-  <ng-container *ngFor="let linkType of linkTypes; trackBy:trackById">
+  <ng-container *ngFor="let linkType of linkTypes; let first = first; trackBy:trackById">
     <accordion-group panelClass="lmr-accordion"
-                     *ngIf="linkType.attributes | createAttributesSettingsOrder:(settings?.collections && settings?.linkTypes[linkType.id]) as settingsOrder">
+                     *ngIf="linkType.attributes | createAttributesSettingsOrder:(settings?.collections && settings?.linkTypes[linkType.id]) as settingsOrder"
+                     [isOpen]="first && collections.length === 0">
       <div class="header-wrapper" accordion-heading *ngIf="{iconColors: linkType | resourceIconsColors} as data">
         <icons-presenter class="d-block mr-1"
                          [colors]="data.iconColors.colors"
@@ -41,14 +43,15 @@
       </div>
 
       <div cdkDropList>
-        <attribute-settings *ngFor="let attributeSettings of settingsOrder; let index = index; trackBy: trackByAttributeSettings"
-                            cdkDrag
-                            cdkDragLockAxis="y"
-                            cdkDragBoundary=".cdk-drop-list"
-                            class="px-2 py-1"
-                            [attribute]="linkType.attributes | findAttribute:attributeSettings.attributeId"
-                            (settingsChanged)="onLinkTypeSettingsChanged(settingsOrder, index, linkType, $event)"
-                            (cdkDragDropped)="onLinkTypeSettingsDropped(settingsOrder, linkType, $event)">
+        <attribute-settings
+          *ngFor="let attributeSettings of settingsOrder; let index = index; trackBy: trackByAttributeSettings"
+          cdkDrag
+          cdkDragLockAxis="y"
+          cdkDragBoundary=".cdk-drop-list"
+          class="px-2 py-1"
+          [attribute]="linkType.attributes | findAttribute:attributeSettings.attributeId"
+          (settingsChanged)="onLinkTypeSettingsChanged(settingsOrder, index, linkType, $event)"
+          (cdkDragDropped)="onLinkTypeSettingsDropped(settingsOrder, linkType, $event)">
           <i class="fa-fw fa fa-grip-vertical cursor-move mr-1 text-black-50" cdkDragHandle></i>
         </attribute-settings>
       </div>

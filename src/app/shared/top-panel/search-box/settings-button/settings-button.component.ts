@@ -20,7 +20,7 @@
 import {Component, OnInit, ChangeDetectionStrategy, ElementRef} from '@angular/core';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {ViewAttributesSettings, ViewSettings} from '../../../../core/store/views/view';
+import {AttributesSettings, ViewSettings} from '../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {selectViewSettings} from '../../../../core/store/views/views.state';
 import {tap} from 'rxjs/operators';
@@ -45,7 +45,7 @@ export class SettingsButtonComponent implements OnInit {
     );
   }
 
-  public onAttributesSettingsChanged(attributesSettings: ViewAttributesSettings) {
+  public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
     const changedSettings: ViewSettings = {...this.viewSettings, attributes: attributesSettings};
     this.store$.dispatch(new ViewsAction.SetViewSettings({settings: changedSettings}));
   }

@@ -119,7 +119,6 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
 
   constructor(public dataRowService: DataRowService, private store$: Store<AppState>) {
-    this.dataRowService.shouldSetupAllAttributes(true);
     this.dataRowFocusService = new DataRowFocusService(
       () => 2,
       () => this.dataRowService.rows$.value.length,

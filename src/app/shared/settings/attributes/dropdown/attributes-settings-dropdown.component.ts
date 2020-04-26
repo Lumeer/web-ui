@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, Output, EventEmitter} from '@angular/core';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
-import {ViewAttributesSettings} from '../../../../core/store/views/view';
+import {AttributesSettings} from '../../../../core/store/views/view';
 
 @Component({
   selector: 'attributes-settings-dropdown',
@@ -32,10 +32,10 @@ export class AttributesSettingsDropdownComponent {
   public origin: ElementRef | HTMLElement;
 
   @Input()
-  public settings: ViewAttributesSettings;
+  public settings: AttributesSettings;
 
   @Output()
-  public settingsChanged = new EventEmitter<ViewAttributesSettings>();
+  public settingsChanged = new EventEmitter<AttributesSettings>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;

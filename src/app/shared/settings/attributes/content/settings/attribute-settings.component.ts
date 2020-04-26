@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {ViewResourceAttributeSettings} from '../../../../../core/store/views/view';
+import {ResourceAttributeSettings} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'attribute-settings',
@@ -35,13 +35,13 @@ export class AttributeSettingsComponent {
   public isDefault: boolean;
 
   @Input()
-  public settings: ViewResourceAttributeSettings;
+  public settings: ResourceAttributeSettings;
 
   @Output()
-  public settingsChanged = new EventEmitter<ViewResourceAttributeSettings>();
+  public settingsChanged = new EventEmitter<ResourceAttributeSettings>();
 
   public onHiddenChanged(checked: boolean) {
-    const settings: ViewResourceAttributeSettings = {...this.settings, attributeId: this.attribute.id};
+    const settings: ResourceAttributeSettings = {...this.settings, attributeId: this.attribute.id};
     if (checked) {
       delete settings.hidden;
     } else {

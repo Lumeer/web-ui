@@ -76,15 +76,15 @@ export interface DefaultViewConfig {
 }
 
 export interface ViewSettings {
-  attributes?: ViewAttributesSettings;
+  attributes?: AttributesSettings;
 }
 
-export interface ViewAttributesSettings {
-  collections?: Record<string, ViewResourceAttributeSettings[]>;
-  linkTypes?: Record<string, ViewResourceAttributeSettings[]>;
+export interface AttributesSettings {
+  collections?: Record<string, ResourceAttributeSettings[]>;
+  linkTypes?: Record<string, ResourceAttributeSettings[]>;
 }
 
-export interface ViewResourceAttributeSettings {
+export interface ResourceAttributeSettings {
   attributeId: string;
   hidden?: boolean;
 }

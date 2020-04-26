@@ -27,7 +27,7 @@ import {selectCollectionsInQuery, selectLinkTypesInQuery} from '../../../core/st
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {map} from 'rxjs/operators';
-import {ViewAttributesSettings} from '../../../core/store/views/view';
+import {AttributesSettings} from '../../../core/store/views/view';
 
 @Component({
   selector: 'attributes-settings',
@@ -36,10 +36,10 @@ import {ViewAttributesSettings} from '../../../core/store/views/view';
 })
 export class AttributesSettingsComponent implements OnInit {
   @Input()
-  public settings: ViewAttributesSettings;
+  public settings: AttributesSettings;
 
   @Output()
-  public settingsChanged = new EventEmitter<ViewAttributesSettings>();
+  public settingsChanged = new EventEmitter<AttributesSettings>();
 
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;

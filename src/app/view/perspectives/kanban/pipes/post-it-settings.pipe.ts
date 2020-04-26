@@ -18,13 +18,24 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ResourceAttributeSettings} from '../../../../core/store/views/view';
+import {ResourceAttributeSettings, ViewSettings} from '../../../../core/store/views/view';
+import {AttributesResourceType} from '../../../../core/model/resource';
 
 @Pipe({
-  name: 'countShowedAttributes',
+  name: 'postItSettings',
 })
-export class CountShowedAttributesPipe implements PipeTransform {
-  public transform(settings: ResourceAttributeSettings[]): number {
-    return (settings || []).reduce((sum, item) => (sum += item.hidden ? 0 : 1), 0);
+export class PostItSettingsPipe implements PipeTransform {
+  public transform(
+    settings: ViewSettings,
+    resourceType: AttributesResourceType,
+    resourceId: string
+  ): ResourceAttributeSettings[] {
+    if (resourceType === AttributesResourceType.Collection) {
+      return settings?.attributes?.collections?.[resourceId];
+    } else if (resourceType === AttributesResourceType.LinkType) {
+      return settings?.attributes?.linkTypes?.[resourceId];
+    }
+
+    return [];
   }
 }
