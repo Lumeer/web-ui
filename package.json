@@ -140,7 +140,7 @@
     "prettier": "~2.0.4",
     "rxjs-tslint-rules": "^4.30.1",
     "ts-node": "~8.8.2",
-    "tslint": "~6.1.1",
+    "tslint": "~6.1.2",
     "typescript": "~3.8.3"
   },
   "bundlesize": [
