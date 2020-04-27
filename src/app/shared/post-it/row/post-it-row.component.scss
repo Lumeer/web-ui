@@ -5,9 +5,14 @@
   display: grid;
   width: auto;
   grid-template-columns: 3fr 4fr auto;
+
   & > div {
     min-width: 0;
   }
+}
+
+:host.zero {
+  grid-template-columns: 1fr auto;
 }
 
 :host.quarter {
@@ -27,7 +32,8 @@
 }
 
 :host.key-focused .data-input.key::ng-deep > *,
-:host.value-focused .data-input.value::ng-deep > * {
+:host.value-focused .data-input.value::ng-deep > *,
+:host.value-focused .data-input-readonly {
   border: 1px solid $gray-400;
   border-radius: 0.25rem;
 }
@@ -39,4 +45,8 @@
 
 .data-input.key::ng-deep > * > * {
   font-style: italic !important;
+}
+
+.data-input-readonly {
+  max-height: 200px;
 }

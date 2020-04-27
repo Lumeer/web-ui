@@ -32,6 +32,6 @@ export class UsersAreValidPipe implements PipeTransform {
     if (config && config.externalUsers) {
       return true;
     }
-    return selectedUsers.every(selectedUser => definedUsers.some(user => selectedUser.email === user.email));
+    return (selectedUsers || []).every(selectedUser => definedUsers.some(user => selectedUser.email === user.email));
   }
 }

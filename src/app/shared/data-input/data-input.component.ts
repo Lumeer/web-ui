@@ -87,6 +87,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   private tempElement: HTMLElement;
   public readonly constraintType = ConstraintType;
+  public notNullConstraintType: ConstraintType;
 
   constructor(private renderer: Renderer2, private elementRef: ElementRef) {}
 
@@ -94,6 +95,23 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     if (changes.dataValue && this.resizeToContent) {
       this.recalculateWidth(this.dataValue);
     }
+    if (changes.constraint || changes.configuration) {
+      this.notNullConstraintType = this.createConstraintType();
+    }
+  }
+
+  private createConstraintType(): ConstraintType {
+    if (!this.constraint) {
+      return ConstraintType.Unknown;
+    }
+    if (this.constraint.type === ConstraintType.Text) {
+      if (this.configuration?.common?.allowRichText) {
+        return ConstraintType.Text;
+      }
+      return ConstraintType.Unknown;
+    }
+
+    return this.constraint.type;
   }
 
   public get resizeToContent(): boolean {

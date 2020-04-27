@@ -26,6 +26,7 @@ import {SerializeDataValuePipe} from './serialize-data-value.pipe';
 import {PreviewDataValuePipe} from './preview-data-value.pipe';
 import {FormatDataValueForEditPipe} from './format-data-value-for-edit.pipe';
 import {FormatDataValueTitlePipe} from './format-data-value-title.pipe';
+import {DataInputEditInfoPipe} from './data-input-edit-info.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -37,6 +38,7 @@ import {FormatDataValueTitlePipe} from './format-data-value-title.pipe';
     PreviewDataValuePipe,
     FormatDataValueForEditPipe,
     FormatDataValueTitlePipe,
+    DataInputEditInfoPipe,
   ],
   exports: [
     DataValuePipe,
@@ -46,6 +48,7 @@ import {FormatDataValueTitlePipe} from './format-data-value-title.pipe';
     PreviewDataValuePipe,
     FormatDataValueForEditPipe,
     FormatDataValueTitlePipe,
+    DataInputEditInfoPipe,
   ],
 })
 export class DataPipesModule {}

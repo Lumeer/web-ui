@@ -79,13 +79,19 @@ export class DataRowService {
     this.resourceType = getAttributesResourceType(resource);
     this.dataResource = dataResource;
     this.settingsOrder = settingsOrder;
-    this.rows$.next(this.createDataRows());
+    this.emitRows(this.createDataRows());
     this.refreshSubscription();
   }
 
   public setSettings(settingsOrder: ResourceAttributeSettings[]) {
     this.settingsOrder = settingsOrder;
-    this.rows$.next(this.createDataRows());
+    this.emitRows(this.createDataRows());
+  }
+
+  private emitRows(rows: DataRow[]) {
+    if (!deepArrayEquals(rows, this.rows$.value)) {
+      this.rows$.next(rows);
+    }
   }
 
   private refreshSubscription() {
@@ -163,13 +169,13 @@ export class DataRowService {
     }
 
     if (!deepArrayEquals(rows, this.rows$.value)) {
-      this.rows$.next(rows);
+      this.emitRows(rows);
     }
   }
 
   public addRow() {
     const newRow: DataRow = {id: generateCorrelationId(), key: '', value: ''};
-    this.rows$.next([...this.rows$.value, newRow]);
+    this.emitRows([...this.rows$.value, newRow]);
   }
 
   public deleteRow(index: number) {
@@ -204,7 +210,7 @@ export class DataRowService {
   private deleteNewRow(index: number) {
     const rows = [...this.rows$.value];
     rows.splice(index, 1);
-    this.rows$.next(rows);
+    this.emitRows(rows);
   }
 
   public updateRow(index: number, key?: string, value?: any) {
@@ -237,7 +243,7 @@ export class DataRowService {
     const defaultAttributeId = this.isCollectionResource ? getDefaultAttributeId(this.resource) : null;
     const newRow = {attribute, id: attribute.id, value: null, isDefault: attribute.id === defaultAttributeId};
     rows.splice(index, 1, newRow);
-    this.rows$.next(rows);
+    this.emitRows(rows);
 
     if (!this.isNewDataResource) {
       rows.splice(index, 1);
@@ -268,7 +274,7 @@ export class DataRowService {
       creating: true,
     };
     rows.splice(index, 1, newRow);
-    this.rows$.next(rows);
+    this.emitRows(rows);
 
     if (!this.isNewDataResource) {
       const newData = {[name]: {value}};
@@ -318,7 +324,7 @@ export class DataRowService {
     const newRow = {...row, value};
     const rows = [...this.rows$.value];
     rows[index] = newRow;
-    this.rows$.next(rows);
+    this.emitRows(rows);
   }
 
   public destroy() {

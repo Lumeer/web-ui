@@ -1,4 +1,4 @@
-<input *ngIf="readonly; else textEditing"
+<input *ngIf="readonly"
        [attr.maxlength]="value?.config?.maxLength"
        [readonly]="readonly"
        [title]="value | formatDataValueTitle"
@@ -9,7 +9,7 @@
        [ngClass]="inputClass"
        type="text">
 
-<ng-template #textEditing>
+<ng-container *ngIf="!readonly">
   <input #textInput
          [(ngModel)]="text"
          [attr.maxlength]="skipValidation ? null : value?.config?.maxLength"
@@ -28,5 +28,5 @@
                     (selectOption)="onSelectOption($event)">
   </options-dropdown>
 
-</ng-template>
+</ng-container>
 

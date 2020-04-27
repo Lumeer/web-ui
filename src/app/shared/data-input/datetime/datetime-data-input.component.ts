@@ -105,8 +105,8 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       }
     }
     if (changes.value && this.value) {
-      this.date = this.value.toDate();
-      this.options = createDateTimeOptions(this.value.config && this.value.config.format);
+      this.date = this.value.toDate?.();
+      this.options = createDateTimeOptions(this.value.config?.format);
       this.dateTimeInput.nativeElement.value = this.value.format();
     }
   }

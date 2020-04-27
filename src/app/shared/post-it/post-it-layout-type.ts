@@ -22,4 +22,5 @@ export enum PostItLayoutType {
   Third = '1:3',
   Half = '1:2',
   Even = '1:1',
+  Zero = '0:1',
 }

@@ -1,5 +1,4 @@
-<ng-container *ngIf="constraint; else textDataInput"
-              [ngSwitch]="constraint.type">
+<ng-container [ngSwitch]="notNullConstraintType">
   <address-data-input *ngSwitchCase="constraintType.Address"
                       [focus]="focus"
                       [readonly]="readonly"
@@ -134,27 +133,20 @@
                    class="w-100">
   </user-data-input>
 
-  <ng-container *ngSwitchCase="constraintType.Text">
-    <rich-text-data-input *ngIf="configuration?.common?.allowRichText; else textDataInput"
-                          [focus]="focus"
-                          [readonly]="readonly"
-                          [skipValidation]="configuration?.common?.skipValidation"
-                          [value]="dataValue"
-                          (keydown)="onDataKeyDown($event)"
-                          (valueChange)="onValueChange($event)"
-                          (save)="onSaveValue($event)"
-                          (cancel)="onCancel()"
-                          class="w-100">
-    </rich-text-data-input>
-  </ng-container>
+  <rich-text-data-input *ngSwitchCase="constraintType.Text"
+                        [focus]="focus"
+                        [readonly]="readonly"
+                        [skipValidation]="configuration?.common?.skipValidation"
+                        [value]="dataValue"
+                        (keydown)="onDataKeyDown($event)"
+                        (valueChange)="onValueChange($event)"
+                        (save)="onSaveValue($event)"
+                        (cancel)="onCancel()"
+                        class="w-100">
+  </rich-text-data-input>
 
-  <ng-container *ngSwitchDefault
-                [ngTemplateOutlet]="textDataInput">
-  </ng-container>
-</ng-container>
-
-<ng-template #textDataInput>
-  <text-data-input [focus]="focus"
+  <text-data-input *ngSwitchDefault
+                   [focus]="focus"
                    [readonly]="readonly"
                    [skipValidation]="configuration?.common?.skipValidation"
                    [value]="dataValue"
@@ -167,4 +159,4 @@
                    (enterInvalid)="enterInvalid.emit()"
                    class="d-block w-100">
   </text-data-input>
-</ng-template>
+</ng-container>

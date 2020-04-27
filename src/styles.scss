@@ -260,6 +260,17 @@ typeahead-container {
   }
 }
 
+.btn-lmr-primary {
+  background: transparent;
+  border: 0;
+  color: $primary;
+
+  &:not([disabled]):hover {
+    background-color: $primary;
+    color: $white;
+  }
+}
+
 modal-container {
   overflow-y: unset !important;
 

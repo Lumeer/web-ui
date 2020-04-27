@@ -97,6 +97,9 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   @HostBinding('class.value-focused')
   public valueFocused: boolean;
 
+  @HostBinding('class.zero')
+  public classZero: boolean;
+
   @HostBinding('class.quarter')
   public classQuarter: boolean;
 
@@ -109,7 +112,6 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   @HostBinding('class.even')
   public classEven: boolean;
 
-  public readonly booleanConstraintType = ConstraintType.Boolean;
   public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
   public placeholder: string;
@@ -122,7 +124,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   public dataValue: DataValue;
 
   public get constraintType(): ConstraintType {
-    return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
+    return this.row?.attribute?.constraint?.type;
   }
 
   constructor(private i18n: I18n) {
@@ -140,6 +142,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   }
 
   private convertLayoutToClasses() {
+    this.classZero = this.layoutType === PostItLayoutType.Zero;
     this.classQuarter = this.layoutType === PostItLayoutType.Quarter;
     this.classThird = this.layoutType === PostItLayoutType.Third;
     this.classHalf = this.layoutType === PostItLayoutType.Half;
@@ -154,7 +157,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   }
 
   private createDataValue(value?: any, typed?: boolean): DataValue {
-    const constraint = (this.row.attribute && this.row.attribute.constraint) || new UnknownConstraint();
+    const constraint = this.row?.attribute?.constraint || new UnknownConstraint();
     if (typed) {
       return constraint.createInputDataValue(value, this.row.value, this.constraintData);
     }

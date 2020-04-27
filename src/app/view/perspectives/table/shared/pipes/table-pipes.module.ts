@@ -58,7 +58,6 @@ import {RowPositionTopPipe} from './row-position-top.pipe';
 import {DataCellLinkInstancePipe} from './data-cell-link-instance.pipe';
 import {CellCollapsedPipe} from './cell-collapsed.pipe';
 import {DocumentHintsOffsetPipe} from './document-hints-offset.pipe';
-import {CellDataInputInfoPipe} from './cell-data-input-info.pipe';
 
 @NgModule({
   imports: [CommonModule],
@@ -102,7 +101,6 @@ import {CellDataInputInfoPipe} from './cell-data-input-info.pipe';
     DataCellLinkInstancePipe,
     CellCollapsedPipe,
     DocumentHintsOffsetPipe,
-    CellDataInputInfoPipe,
   ],
   exports: [
     DataPipe,
@@ -144,7 +142,6 @@ import {CellDataInputInfoPipe} from './cell-data-input-info.pipe';
     DataCellLinkInstancePipe,
     CellCollapsedPipe,
     DocumentHintsOffsetPipe,
-    CellDataInputInfoPipe,
   ],
   providers: [AttributeNameChangedPipe, ColumnBackgroundPipe],
 })

@@ -1,4 +1,4 @@
-<input *ngIf="readonly; else textEditing"
+<input *ngIf="readonly"
        [readonly]="readonly"
        [title]="value | formatDataValueTitle"
        [value]="value | formatDataValue | unescapeHtml"
@@ -7,13 +7,12 @@
        class="border-0 w-100 h-100 px-1 bg-transparent"
        type="text">
 
-<ng-template #textEditing>
-  <input #coordinatesInput
-         [title]="value | formatDataValueTitle"
-         [value]="value | formatDataValueForEdit"
-         (blur)="onBlur()"
-         (input)="onInput($event)"
-         [ngClass]="inputClass"
-         class="border-0 w-100 h-100 px-1 bg-transparent"
-         type="text">
-</ng-template>
+<input *ngIf="!readonly"
+       #coordinatesInput
+       [title]="value | formatDataValueTitle"
+       [value]="value | formatDataValueForEdit"
+       (blur)="onBlur()"
+       (input)="onInput($event)"
+       [ngClass]="inputClass"
+       class="border-0 w-100 h-100 px-1 bg-transparent"
+       type="text">
