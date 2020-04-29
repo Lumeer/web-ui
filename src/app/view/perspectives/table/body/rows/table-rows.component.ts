@@ -45,6 +45,8 @@ import {LinkInstancesAction} from '../../../../../core/store/link-instances/link
 import {selectQueryLinkInstancesLoaded} from '../../../../../core/store/link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../../../../../core/store/link-types/link-types.state';
 import {getAllCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
+import * as Constants from 'constants';
+import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
 
 @Component({
   selector: 'table-rows',
@@ -67,6 +69,8 @@ export class TableRowsComponent implements OnChanges {
 
   public loaded$: Observable<boolean>;
   public rows$: Observable<TableConfigRow[]>;
+
+  public readonly tableRowHeight = TABLE_ROW_MIN_HEIGHT;
 
   public constructor(public element: ElementRef, private store$: Store<AppState>) {}
 

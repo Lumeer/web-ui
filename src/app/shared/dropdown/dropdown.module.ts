@@ -24,12 +24,25 @@ import {DropdownComponent} from './dropdown.component';
 import {OptionsDropdownComponent} from './options/options-dropdown.component';
 import {PresenterModule} from '../presenter/presenter.module';
 import {GravatarModule} from 'ngx-gravatar';
-import {FilterDropdownOptionsPipe} from './options/filter-dropdown-options.pipe';
+import {FilterDropdownOptionsPipe} from './pipes/filter-dropdown-options.pipe';
 import {PipesModule} from '../pipes/pipes.module';
+import {ReverseArrayByDropdownPositionPipe} from './pipes/reverse-array-by-dropdown-position.pipe';
 
 @NgModule({
   imports: [CommonModule, PresenterModule, GravatarModule, PipesModule],
-  declarations: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent, FilterDropdownOptionsPipe],
-  exports: [DropdownComponent, DropdownOptionDirective, OptionsDropdownComponent, FilterDropdownOptionsPipe],
+  declarations: [
+    DropdownComponent,
+    DropdownOptionDirective,
+    OptionsDropdownComponent,
+    FilterDropdownOptionsPipe,
+    ReverseArrayByDropdownPositionPipe,
+  ],
+  exports: [
+    DropdownComponent,
+    DropdownOptionDirective,
+    OptionsDropdownComponent,
+    FilterDropdownOptionsPipe,
+    ReverseArrayByDropdownPositionPipe,
+  ],
 })
 export class DropdownModule {}

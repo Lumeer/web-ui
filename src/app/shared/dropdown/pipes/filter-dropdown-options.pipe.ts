@@ -17,12 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DropdownOption {
-  gravatar?: string;
-  imageUrl?: string;
-  value: any;
-  background?: string;
-  displayValue?: string;
-  icons?: string[];
-  iconColors?: string[];
+import {Pipe, PipeTransform} from '@angular/core';
+import {DropdownOption} from '../options/dropdown-option';
+import {removeAccent} from '../../utils/string.utils';
+import {sortObjectsByScore, unescapeHtml} from '../../utils/common.utils';
+
+@Pipe({
+  name: 'filterDropdownOptions',
+})
+export class FilterDropdownOptionsPipe implements PipeTransform {
+  public transform(options: DropdownOption[], text: string): DropdownOption[] {
+    const filterText = removeAccent(text).trim();
+    const filteredOptionsMap = (options || []).filter(option =>
+      unescapeHtml(removeAccent(option.displayValue || option.value)).includes(filterText)
+    );
+    return sortObjectsByScore<DropdownOption>(filteredOptionsMap, text, ['displayValue', 'value']);
+  }
 }

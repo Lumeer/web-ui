@@ -551,7 +551,7 @@ export class PusherService implements OnDestroy {
   }
 
   private bindOtherEvents() {
-    this.channel.bind('Chain:create', data => {
+    this.channel.bind('DocumentsAndLinks:create', data => {
       if (this.isCurrentWorkspace(data)) {
         const documentsIds: string[] = data.object.documentsIds || [];
         const linkInstancesIds: string[] = data.object.linkInstancesIds || [];

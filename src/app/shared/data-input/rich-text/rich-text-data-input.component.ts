@@ -33,15 +33,15 @@ import {
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
 import {numberOfPTags, TextDataValue} from '../../../core/model/data-value/text.data-value';
-import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
 import {Subscription} from 'rxjs';
 import {KeyCode} from '../../key-code';
 import {ModalService} from '../../modal/modal.service';
-import {QuillEditorComponent} from 'ngx-quill';
+import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {isNotNullOrUndefined, unescapeHtml} from '../../utils/common.utils';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -64,7 +64,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public multilineMode: boolean;
 
   @Input()
-  public value: TextDataValue | UnknownDataValue;
+  public value: TextDataValue;
 
   @Input()
   public placeholder: string;
@@ -114,7 +114,15 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private initValue() {
-    this.text = this.value.format();
+    const text = this.value.format();
+    if (isNotNullOrUndefined(this.value.inputValue)) {
+      setTimeout(() => {
+        const textToPaste = unescapeHtml(text);
+        this.textEditor?.quillEditor?.clipboard.dangerouslyPasteHTML(textToPaste);
+      });
+    } else {
+      this.text = text;
+    }
     this.valid = this.value.isValid();
     this.isMultiline = numberOfPTags(this.text) > 1;
   }
@@ -144,8 +152,8 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
       class: 'modal-xxl modal-xxl-height',
       initialState: {
         content,
-        minLength: this.value && this.value.config && this.value.config.minLength,
-        maxLength: this.value && this.value.config && this.value.config.maxLength,
+        minLength: this.value?.config?.minLength,
+        maxLength: this.value?.config?.maxLength,
       },
     });
 
@@ -157,7 +165,8 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     this.modalSubscription.unsubscribe();
   }
 
-  public contentChanged() {
+  public contentChanged(event: ContentChange) {
+    this.text = event.html;
     const newValue = this.value.parseInput(this.text);
     this.valueChange.emit(newValue);
     this.refreshBackgroundClass(newValue);

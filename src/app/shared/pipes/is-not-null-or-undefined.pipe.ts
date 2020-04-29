@@ -17,12 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DropdownOption {
-  gravatar?: string;
-  imageUrl?: string;
-  value: any;
-  background?: string;
-  displayValue?: string;
-  icons?: string[];
-  iconColors?: string[];
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
+
+import {isNotNullOrUndefined} from '../utils/common.utils';
+
+@Pipe({
+  name: 'isNotNullOrUndefined',
+})
+@Injectable({
+  providedIn: 'root',
+})
+export class IsNotNullOrUndefinedPipe implements PipeTransform {
+  public transform(value: any): boolean {
+    return isNotNullOrUndefined(value);
+  }
 }

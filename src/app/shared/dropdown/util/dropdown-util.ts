@@ -17,12 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface DropdownOption {
-  gravatar?: string;
-  imageUrl?: string;
-  value: any;
-  background?: string;
-  displayValue?: string;
-  icons?: string[];
-  iconColors?: string[];
+import {DropdownPosition} from '../dropdown-position';
+
+export function isTopPositionDropdown(position: DropdownPosition): boolean {
+  return position === DropdownPosition.TopEnd || position === DropdownPosition.TopStart;
 }

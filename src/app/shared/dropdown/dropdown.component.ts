@@ -35,7 +35,9 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import {convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-position';
+import {connectedPositionsMap, convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-position';
+import {Subscription} from 'rxjs';
+import {deepObjectsEquals} from '../utils/common.utils';
 
 @Component({
   selector: 'dropdown',
@@ -77,6 +79,9 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Output()
   public onCloseByClickOutside = new EventEmitter();
 
+  @Output()
+  public positionChange = new EventEmitter<DropdownPosition>();
+
   @ViewChild('dropdown')
   public dropdown: TemplateRef<any>;
 
@@ -85,7 +90,14 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   private overlayRef: OverlayRef;
   private portal: Portal<any>;
 
+  private currentPosition: DropdownPosition;
+  private positionSubscription: Subscription;
+
   constructor(private overlay: Overlay, private viewContainer: ViewContainerRef) {}
+
+  public get dropdownPosition(): DropdownPosition {
+    return this.currentPosition;
+  }
 
   public ngAfterViewInit() {
     this.portal = new TemplatePortal(this.dropdown, this.viewContainer);
@@ -102,6 +114,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   public ngOnDestroy() {
     this.close();
+    this.positionSubscription?.unsubscribe();
   }
 
   public open(offsetX?: number) {
@@ -155,6 +168,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   private createOverlayConfig(offsetX?: number): OverlayConfig {
     let positionStrategy = this.createPositionStrategy();
 
+    this.subscribePositionChange(positionStrategy);
+
     if (offsetX || offsetX === 0) {
       positionStrategy = positionStrategy.withDefaultOffsetX(offsetX);
     }
@@ -169,6 +184,19 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
       minHeight: this.minHeight,
       positionStrategy,
     };
+  }
+
+  private subscribePositionChange(positionStrategy: FlexibleConnectedPositionStrategy) {
+    this.positionSubscription?.unsubscribe();
+    this.positionSubscription = positionStrategy.positionChanges.subscribe(positionChange => {
+      const position = Object.entries(connectedPositionsMap).find(([, pair]) =>
+        deepObjectsEquals(positionChange.connectionPair, pair)
+      )?.[0];
+      if (position) {
+        this.currentPosition = <DropdownPosition>position;
+        this.positionChange.next(this.currentPosition);
+      }
+    });
   }
 
   public close() {
