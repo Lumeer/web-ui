@@ -924,10 +924,12 @@
       </trans-unit><trans-unit id="referralsDialog.instructions" datatype="html">
         <source>
       The minimal requirement is that your referee get at least one year long license.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
-      The payment must be initiated by the person that you have referred.
+      The payment must be initiated by the person that you have referred.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
+      You are free to use our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>Marketing Kit<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.
     </source><target>
       Uživatel doporučený vámi musí získat licenci alespoň na jeden rok.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
-      Platba musí být provedena uživatelem, kterého jste doporučili.
+      Platba musí být provedena uživatelem, kterého jste doporučili.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>
+      Můžete taky využít naši <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>sadu marketingových materiálů<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
@@ -2505,7 +2507,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source><target>Pomoc</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
@@ -4246,7 +4248,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit>
             <trans-unit id="button.send" datatype="html">
                 <source>Send</source>
                 <target>Odeslat</target>
