@@ -20,9 +20,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   HostBinding,
-  HostListener,
   Input,
   OnChanges,
   OnDestroy,
@@ -96,21 +96,37 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private modalRef: BsModalRef;
   private modalSubscription = new Subscription();
   private preventSave: boolean;
+  private keyDownListener: (event: KeyboardEvent) => void;
 
   public readonly modules = {
     toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
   };
 
-  constructor(private modalService: ModalService, private renderer: Renderer2) {}
+  constructor(private modalService: ModalService, private renderer: Renderer2, private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.addKeyDownListener();
       this.initValue();
     }
     if (changes.value && this.value) {
       this.initValue();
     }
     this.refreshBackgroundClass(this.value);
+  }
+
+  private addKeyDownListener() {
+    this.removeKeyDownListener();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+  }
+
+  private removeKeyDownListener() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
   }
 
   private initValue() {
@@ -194,29 +210,24 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     });
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.readonly) {
-          event.preventDefault();
-        } else {
-          const dataValue = this.value.parseInput(this.text);
+        const dataValue = this.value.parseInput(this.text);
 
-          event.preventDefault();
+        event.preventDefault();
 
-          if (!this.skipValidation && !dataValue.isValid()) {
-            event.stopImmediatePropagation();
-            this.enterInvalid.emit();
-            return;
-          }
-
-          this.preventSaveAndBlur();
-          // needs to be executed after parent event handlers
-          setTimeout(() => this.save.emit(dataValue));
+        if (!this.skipValidation && !dataValue.isValid()) {
+          event.stopImmediatePropagation();
+          this.enterInvalid.emit();
+          return;
         }
+
+        this.preventSaveAndBlur();
+        // needs to be executed after parent event handlers
+        setTimeout(() => this.save.emit(dataValue));
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
@@ -233,6 +244,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onBlur(data: {editor: any; source: string}) {
+    this.removeKeyDownListener();
     if (this.preventSave) {
       this.preventSave = false;
     } else {

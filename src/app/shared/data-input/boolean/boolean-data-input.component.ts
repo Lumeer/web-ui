@@ -20,11 +20,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
-  HostBinding,
-  HostListener,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
@@ -36,7 +37,7 @@ import {ConstraintType} from '../../../core/model/data/constraint';
   styleUrls: ['./boolean-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooleanDataInputComponent {
+export class BooleanDataInputComponent implements OnChanges {
   @Input()
   public indeterminate: boolean;
 
@@ -60,24 +61,39 @@ export class BooleanDataInputComponent {
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Boolean);
 
-  @HostBinding('class.cursor-pointer')
-  public get cursorPointer(): boolean {
-    return !this.readonly;
-  }
-
   public inputId = 'boolean-data-input-' + Math.random().toString(36).substr(2);
 
-  @HostListener('click', ['$event'])
-  public onClick(event: MouseEvent) {
-    if (!this.readonly) {
-      const dataValue = this.value.copy(!this.value.serialize());
-      this.save.emit(dataValue);
+  private clickListener: (MouseEvent) => void;
+
+  constructor(private element: ElementRef) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.readonly) {
+      if (this.readonly) {
+        this.removeClickListener();
+      } else {
+        this.addClickListener();
+      }
     }
   }
 
-  @HostListener('dblclick', ['$event'])
-  public onDoubleClick(event: MouseEvent) {
-    event.stopPropagation();
+  private addClickListener() {
+    this.removeClickListener();
+
+    this.clickListener = event => this.onClick(event);
+    this.element.nativeElement.addEventListener('click', this.clickListener);
+  }
+
+  private removeClickListener() {
+    if (this.clickListener) {
+      this.element.nativeElement.removeEventListener('click', this.clickListener);
+    }
+    this.clickListener = null;
+  }
+
+  private onClick(event: MouseEvent) {
+    const dataValue = this.value.copy(!this.value.serialize());
+    this.save.emit(dataValue);
   }
 
   public onDivClick(event: MouseEvent) {

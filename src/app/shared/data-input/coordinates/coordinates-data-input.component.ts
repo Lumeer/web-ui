@@ -22,7 +22,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   Output,
   SimpleChanges,
@@ -37,7 +36,6 @@ import {ConstraintType} from '../../../core/model/data/constraint';
 @Component({
   selector: 'coordinates-data-input',
   templateUrl: './coordinates-data-input.component.html',
-  styleUrls: ['./coordinates-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CoordinatesDataInputComponent {
@@ -68,15 +66,33 @@ export class CoordinatesDataInputComponent {
   public readonly inputClass = constraintTypeClass(ConstraintType.Coordinates);
 
   private preventSave: boolean;
+  private keyDownListener: (event: KeyboardEvent) => void;
+
+  constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.addKeyDownListener();
       setTimeout(() => {
         const input = this.coordinatesInput;
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
         input.nativeElement.focus();
       });
     }
+  }
+
+  private addKeyDownListener() {
+    this.removeKeyDownListener();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+  }
+
+  private removeKeyDownListener() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
   }
 
   public onInput(event: Event) {
@@ -86,6 +102,8 @@ export class CoordinatesDataInputComponent {
   }
 
   public onBlur() {
+    this.removeKeyDownListener();
+
     if (this.preventSave) {
       this.preventSave = false;
     } else {
@@ -93,8 +111,7 @@ export class CoordinatesDataInputComponent {
     }
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:

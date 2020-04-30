@@ -22,7 +22,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   Output,
@@ -88,9 +87,13 @@ export class TextDataInputComponent implements OnChanges {
   public valid = true;
 
   private preventSave: boolean;
+  private keyDownListener: (event: KeyboardEvent) => void;
+
+  constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.addKeyDownListener();
       setTimeout(() => {
         const input = this.textInput;
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
@@ -105,6 +108,20 @@ export class TextDataInputComponent implements OnChanges {
     this.refreshValid(this.value);
   }
 
+  private addKeyDownListener() {
+    this.removeKeyDownListener();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+  }
+
+  private removeKeyDownListener() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
+  }
+
   public onInput() {
     const dataValue = this.value.parseInput(this.text);
     this.refreshValid(dataValue);
@@ -112,6 +129,8 @@ export class TextDataInputComponent implements OnChanges {
   }
 
   public onBlur() {
+    this.removeKeyDownListener();
+
     if (this.preventSave) {
       this.preventSave = false;
       this.blurCleanup();
@@ -140,15 +159,11 @@ export class TextDataInputComponent implements OnChanges {
     this.valid = !value || value.isValid();
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.readonly) {
-          return;
-        }
         const input = this.textInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
         const selectedOption = this.dropdown.getActiveOption();

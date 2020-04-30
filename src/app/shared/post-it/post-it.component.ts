@@ -21,10 +21,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   QueryList,
   SimpleChange,
@@ -51,6 +51,7 @@ import {ModalService} from '../modal/modal.service';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {PostItLayoutType} from './post-it-layout-type';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
+import {fromEvent, Subscription} from 'rxjs';
 
 export interface PostItTag {
   title: string;
@@ -65,7 +66,7 @@ export interface PostItTag {
   providers: [DataRowService],
   host: {class: 'card'},
 })
-export class PostItComponent implements OnDestroy, OnChanges {
+export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   @Input()
   public resource: AttributesResource;
 
@@ -106,10 +107,10 @@ export class PostItComponent implements OnDestroy, OnChanges {
   public hiddenInputComponent: HiddenInputComponent;
 
   public unusedAttributes: Attribute[] = [];
+  public resourceType: AttributesResourceType;
 
   private dataRowFocusService: DataRowFocusService;
-
-  public resourceType: AttributesResourceType;
+  private subscriptions = new Subscription();
 
   constructor(
     public dataRowService: DataRowService,
@@ -122,6 +123,13 @@ export class PostItComponent implements OnDestroy, OnChanges {
       () => this.rows.toArray(),
       () => this.hiddenInputComponent
     );
+  }
+
+  public ngOnInit() {
+    const subscription = fromEvent(document, 'keydown').subscribe(event => {
+      this.dataRowFocusService.onKeyDown(event as KeyboardEvent, {column: !this.editableKeys});
+    });
+    this.subscriptions.add(subscription);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -154,6 +162,7 @@ export class PostItComponent implements OnDestroy, OnChanges {
 
   public ngOnDestroy() {
     this.dataRowService.destroy();
+    this.subscriptions.unsubscribe();
   }
 
   public onRemoveRow(index: number) {
@@ -174,11 +183,6 @@ export class PostItComponent implements OnDestroy, OnChanges {
 
   public onEdit(row: number, column: number) {
     this.dataRowFocusService.edit(row, this.editableKeys ? column : 1);
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
-    this.dataRowFocusService.onKeyDown(event, {column: !this.editableKeys});
   }
 
   public trackByRow(index: number, row: DataRow): string {

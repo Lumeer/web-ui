@@ -23,7 +23,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -79,6 +78,8 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   private cursor$ = new BehaviorSubject<DataCursor>(null);
 
   private preparedFile: File;
+  private keyDownListener: (event: KeyboardEvent) => void;
+  private clickListener: (event: KeyboardEvent) => void;
 
   constructor(
     public element: ElementRef,
@@ -114,11 +115,35 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
     }
     if (changes.readonly) {
       if (this.readonly) {
+        this.removeListeners();
         setTimeout(() => this.hiddenInput.nativeElement.blur());
       } else {
+        this.addListeners();
         setTimeout(() => this.hiddenInput.nativeElement.focus());
       }
     }
+  }
+
+  private addListeners() {
+    this.removeListeners();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+
+    this.clickListener = event => this.onClick(event);
+    this.element.nativeElement.addEventListener('click', this.clickListener);
+  }
+
+  private removeListeners() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
+
+    if (this.clickListener) {
+      this.element.nativeElement.removeEventListener('click', this.clickListener);
+    }
+    this.clickListener = null;
   }
 
   public onAdd(file: File) {
@@ -235,21 +260,18 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   }
 
   public onCancel() {
+    this.removeListeners();
     this.cancel.emit();
   }
 
-  @HostListener('click', ['$event'])
-  public onClick(event: KeyboardEvent) {
-    if (!this.readonly) {
-      event.stopPropagation();
-      event.stopImmediatePropagation();
-      event.preventDefault();
-      this.hiddenInput.nativeElement.focus();
-    }
+  private onClick(event: KeyboardEvent) {
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+    event.preventDefault();
+    this.hiddenInput.nativeElement.focus();
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Escape:
         this.cancel.emit();

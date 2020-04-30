@@ -11,29 +11,29 @@
   }
 }
 
-:host.zero {
+:host.layout-zero {
   grid-template-columns: 1fr auto;
 }
 
-:host.quarter {
+:host.layout-quarter {
   grid-template-columns: 1fr 4fr auto;
 }
 
-:host.third {
+:host.layout-third {
   grid-template-columns: 1fr 3fr auto;
 }
 
-:host.half {
+:host.layout-half {
   grid-template-columns: 1fr 2fr auto;
 }
 
-:host.event {
+:host.layout-event {
   grid-template-columns: 1fr 1fr auto;
 }
 
-:host.key-focused .data-input.key::ng-deep > *,
-:host.value-focused .data-input.value::ng-deep > *,
-:host.value-focused .data-input-readonly {
+.data-input.key-focused.key::ng-deep > *,
+.data-input.value-focused.value::ng-deep > *,
+.data-input-readonly.value-focused {
   border: 1px solid $gray-400;
   border-radius: 0.25rem;
 }

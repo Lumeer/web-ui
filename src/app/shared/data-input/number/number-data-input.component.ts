@@ -22,7 +22,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   Output,
@@ -38,7 +37,6 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 @Component({
   selector: 'number-data-input',
   templateUrl: './number-data-input.component.html',
-  styleUrls: ['./number-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NumberDataInputComponent implements OnChanges {
@@ -74,8 +72,13 @@ export class NumberDataInputComponent implements OnChanges {
   public valid = true;
   private preventSave: boolean;
 
+  private keyDownListener: (event: KeyboardEvent) => void;
+
+  constructor(private element: ElementRef) {}
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.addKeyDownListener();
       setTimeout(() => {
         HtmlModifier.setCursorAtTextContentEnd(this.numberInput.nativeElement);
         this.numberInput.nativeElement.focus();
@@ -84,19 +87,29 @@ export class NumberDataInputComponent implements OnChanges {
     this.refreshValid(this.value);
   }
 
+  private addKeyDownListener() {
+    this.removeKeyDownListener();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+  }
+
+  private removeKeyDownListener() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
+  }
+
   private refreshValid(value: NumberDataValue) {
     this.valid = !value || value.isValid();
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.readonly) {
-          return;
-        }
         const input = this.numberInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 
@@ -135,6 +148,8 @@ export class NumberDataInputComponent implements OnChanges {
   }
 
   public onBlur() {
+    this.removeKeyDownListener();
+
     if (this.preventSave) {
       this.preventSave = false;
     } else {

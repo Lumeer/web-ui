@@ -1,9 +1,11 @@
-<div *ngIf="!editableKey && !classZero"
-     class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key text-truncate">
+<div *ngIf="!editableKey && postItLayoutType.Zero !== layoutType"
+     class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key text-truncate"
+     [class.key-focused]="keyFocused$ | async"
+     (mousedown)="$event.stopPropagation()">
   {{keyDataValue?.value}}
 </div>
 
-<div *ngIf="editableKey && !classZero"
+<div *ngIf="editableKey && postItLayoutType.Zero !== layoutType"
      class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
   <data-input class="h-100 w-100 p-1 data-input key"
               [cursor]="cursor"
@@ -19,6 +21,7 @@
               (click)="onKeyFocus()"
               (clickOutside)="onKeyInputCancel()"
               [class.editing]="keyEditing$ | async"
+              [class.key-focused]="keyFocused$ | async"
               [class.cursor-pointer]="!permissions?.writeWithView"
               [class.read-only]="!permissions?.writeWithView">
   </data-input>
@@ -29,12 +32,14 @@
      (click)="onValueFocus()"
      (clickOutside)="onDataInputCancel()"
      (dblclick)="onDataInputDblClick($event)"
-     [ngClass]="!dataInputInfo.showDataInput && !dataInputInfo.hasValue ? 'data-input-readonly m-1 ml-2' : ''">
+     [ngClass]="!dataInputInfo.showDataInput && !dataInputInfo.hasValue ? 'data-input-readonly m-1 ml-2' : ''"
+     [class.value-focused]="valueFocused$ | async">
   <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
        [innerHTML]="dataValue | previewDataValue | safeHtml"
        class="text-pre overflow-hidden p-1 align-middle data-input-readonly w-100"
        [title]="dataValue | formatDataValueTitle"
-       [class.invalid-value]="!(dataValue | isDataValueValid)">
+       [class.invalid-value]="!(dataValue | isDataValueValid)"
+       [class.value-focused]="valueFocused$ | async">
   </div>
   <data-input class="h-100 w-100 p-1 data-input value"
               *ngIf="dataInputInfo.showDataInput"
@@ -49,6 +54,7 @@
               (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
               (valueChange)="onValueEdit($event)"
               [class.editing]="editing$ | async"
+              [class.value-focused]="valueFocused$ | async"
               [class.cursor-pointer]="!dataInputInfo.readonly"
               [class.read-only]="dataInputInfo.readonly">
   </data-input>

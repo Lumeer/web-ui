@@ -42,17 +42,17 @@ export class DataRowFocusService {
     private hiddenComponent?: () => DataRowHiddenComponent
   ) {}
 
-  public onKeyDown(event: KeyboardEvent, lockPostion: PositionLock = {column: false, row: false}) {
+  public onKeyDown(event: KeyboardEvent, lockPosition: PositionLock = {column: false, row: false}) {
     switch (event.code) {
       case KeyCode.ArrowDown:
       case KeyCode.ArrowUp:
-        if (!lockPostion.row) {
+        if (!lockPosition.row) {
           this.onArrowKeyDown(event);
         }
         break;
       case KeyCode.ArrowLeft:
       case KeyCode.ArrowRight:
-        if (!lockPostion.column) {
+        if (!lockPosition.column) {
           this.onArrowKeyDown(event);
         }
         break;
