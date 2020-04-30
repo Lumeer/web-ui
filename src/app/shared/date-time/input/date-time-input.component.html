@@ -8,6 +8,7 @@
        (input)="onInput()"
        (keydown)="onKeyDown($event)"
        (clickOutside)="onClickOutside($event)"
+       [clickOutsideEnabled]="!readonly"
        autocomplete="off"
        class="form-control"
        data-test="date-time-input"
