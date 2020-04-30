@@ -25,7 +25,6 @@ import {DataCursor} from '../../data-input/data-cursor';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {DataValue} from '../../../core/model/data-value';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
@@ -84,7 +83,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
-  public placeholder: string;
+  public placeholder: string = 'kuk';
 
   public keyFocused$ = new BehaviorSubject(false);
   public keyEditing$ = new BehaviorSubject(false);
@@ -99,10 +98,6 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   public get constraintType(): ConstraintType {
     return this.row?.attribute?.constraint?.type;
-  }
-
-  constructor(private i18n: I18n) {
-    this.placeholder = i18n({id: 'dataResource.attribute.placeholder.short', value: 'Enter name'});
   }
 
   public ngOnChanges(changes: SimpleChanges) {
