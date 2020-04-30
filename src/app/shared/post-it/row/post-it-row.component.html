@@ -21,7 +21,7 @@
               (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
               (click)="onKeyFocus()"
               (clickOutside)="onKeyInputCancel()"
-              [clickOutsideEnabled]="(valueFocused$ | async) || (editing$ | async)"
+              [clickOutsideEnabled]="(keyFocused$ | async) || (keyEditing$ | async)"
               [class.editing]="keyEditing$ | async"
               [class.key-focused]="keyFocused$ | async"
               [class.cursor-pointer]="!permissions?.writeWithView"

@@ -83,8 +83,6 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
 
   public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
-  public placeholder: string = 'kuk';
-
   public keyFocused$ = new BehaviorSubject(false);
   public keyEditing$ = new BehaviorSubject(false);
   public keyDataValue: DataValue;
