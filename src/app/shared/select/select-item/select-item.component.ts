@@ -21,7 +21,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   OnDestroy,

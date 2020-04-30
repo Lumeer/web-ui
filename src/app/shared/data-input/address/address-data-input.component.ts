@@ -22,7 +22,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -82,8 +81,9 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   public addressOptions$: Observable<DropdownOption[]>;
 
   private preventSave: boolean;
+  private keyDownListener: (event: KeyboardEvent) => void;
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<{}>, private element: ElementRef) {}
 
   public ngOnInit() {
     this.addressOptions$ = this.bindAddressOptions();
@@ -113,6 +113,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.addKeyDownListener();
       setTimeout(() => {
         if (this.addressInput) {
           HtmlModifier.setCursorAtTextContentEnd(this.addressInput.nativeElement);
@@ -123,6 +124,20 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     if (changes.value) {
       this.value$.next(this.value.format());
     }
+  }
+
+  private addKeyDownListener() {
+    this.removeKeyDownListener();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+  }
+
+  private removeKeyDownListener() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
   }
 
   public onInput(event: Event) {
@@ -140,6 +155,8 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   }
 
   public onBlur() {
+    this.removeKeyDownListener();
+
     if (this.preventSave) {
       this.preventSave = false;
       this.blurCleanup();
@@ -167,16 +184,11 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     this.save.emit(dataValue);
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.readonly) {
-          return;
-        }
-
         const input = this.addressInput;
         const selectedOption = this.dropdown.getActiveOption();
 

@@ -4,6 +4,7 @@
        [value]="readonly ? (value | formatDataValue  | unescapeHtml) : (value | formatDataValueForEdit)"
        [class.invalid-value]="!(value | isDataValueValid)"
        (input)="onInput($event)"
+       (blur)="onBlur()"
        [ngClass]="inputClass"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        autocomplete="off"

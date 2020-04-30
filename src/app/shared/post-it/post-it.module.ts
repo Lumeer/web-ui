@@ -29,9 +29,16 @@ import {PresenterModule} from '../presenter/presenter.module';
 import {DataResourceFavoritePipe} from './pipes/data-resource-favorite.pipe';
 import {InputModule} from '../input/input.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {PostItLayoutTypeClassPipe} from './pipes/post-it-layout-type-class.pipe';
 
 @NgModule({
-  declarations: [PostItComponent, PostItRowComponent, PostItHeaderComponent, DataResourceFavoritePipe],
+  declarations: [
+    PostItComponent,
+    PostItRowComponent,
+    PostItHeaderComponent,
+    DataResourceFavoritePipe,
+    PostItLayoutTypeClassPipe,
+  ],
   imports: [
     CommonModule,
     DataInputModule,

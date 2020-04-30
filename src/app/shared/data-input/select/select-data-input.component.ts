@@ -23,7 +23,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   Output,
@@ -90,9 +89,14 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
 
   private setFocus: boolean;
   private preventSave: boolean;
+  private keyDownListener: (event: KeyboardEvent) => void;
+  private mouseDownListener: (event: MouseEvent) => void;
+
+  constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.addListeners();
       this.resetSearchInput();
       this.setFocus = true;
     }
@@ -102,6 +106,28 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.text = this.value.inputValue || '';
       this.multi = this.value.config && this.value.config.multi;
     }
+  }
+
+  private addListeners() {
+    this.removeListeners();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+
+    this.mouseDownListener = event => this.onMouseDown(event);
+    this.element.nativeElement.addEventListener('mousedown', this.mouseDownListener);
+  }
+
+  private removeListeners() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
+
+    if (this.mouseDownListener) {
+      this.element.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
+    }
+    this.mouseDownListener = null;
   }
 
   private createDropdownOptions(config: SelectConstraintConfig): DropdownOption[] {
@@ -127,15 +153,11 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     }
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.readonly) {
-          return;
-        }
         const selectedOption = this.dropdown.getActiveOption();
 
         event.preventDefault();
@@ -225,6 +247,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   public onBlur() {
+    this.removeListeners();
     this.resetScroll();
     if (this.preventSave) {
       this.preventSave = false;
@@ -259,10 +282,9 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     }
   }
 
-  @HostListener('mousedown', ['$event'])
-  public onMouseDown(event: MouseEvent) {
+  private onMouseDown(event: MouseEvent) {
     // prevent hide dropdown on mouse down (instead input)
-    if (!this.readonly && this.textInput && !this.textInput.nativeElement.contains(event.target as any)) {
+    if (this.textInput && !this.textInput.nativeElement.contains(event.target as any)) {
       event.stopImmediatePropagation();
       event.preventDefault();
     }

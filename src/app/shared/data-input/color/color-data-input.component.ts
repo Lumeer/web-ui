@@ -22,7 +22,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   Output,
@@ -39,7 +38,6 @@ import {ConstraintType} from '../../../core/model/data/constraint';
 @Component({
   selector: 'color-data-input',
   templateUrl: './color-data-input.component.html',
-  styleUrls: ['./color-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ColorDataInputComponent implements OnChanges {
@@ -78,12 +76,14 @@ export class ColorDataInputComponent implements OnChanges {
   public valid = true;
 
   private pendingUpdate: string;
+  private keyDownListener: (event: KeyboardEvent) => void;
 
   constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    const value = (this.value && this.value.format()) || '';
+    const value = this.value?.format() || '';
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
+      this.addKeyDownListener();
       setTimeout(() => {
         this.colorInput.nativeElement.setSelectionRange(value.length, value.length);
         this.colorInput.nativeElement.focus();
@@ -100,6 +100,20 @@ export class ColorDataInputComponent implements OnChanges {
       this.closeColorPicker();
     }
     this.refreshValid(this.value);
+  }
+
+  private addKeyDownListener() {
+    this.removeKeyDownListener();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+  }
+
+  private removeKeyDownListener() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
   }
 
   private changedFromEditableToReadonly(changes: SimpleChanges): boolean {
@@ -126,16 +140,11 @@ export class ColorDataInputComponent implements OnChanges {
     }
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.readonly) {
-          return;
-        }
-
         const input = this.colorInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
         this.pendingUpdate = null;
@@ -149,7 +158,7 @@ export class ColorDataInputComponent implements OnChanges {
         }
 
         // needs to be executed after parent event handlers
-        setTimeout(() => this.save.emit(dataValue));
+        setTimeout(() => this.saveDataValue(dataValue));
         return;
       case KeyCode.Escape:
         this.onCancel();
@@ -171,10 +180,14 @@ export class ColorDataInputComponent implements OnChanges {
       return;
     }
 
+    this.saveDataValue(value);
+  }
+
+  private saveDataValue(dataValue: ColorDataValue) {
     this.pendingUpdate = null;
-    this.value = value;
+    this.value = dataValue;
     this.colorInput && (this.colorInput.nativeElement.value = '');
-    this.save.emit(value);
+    this.save.emit(dataValue);
   }
 
   public onSaveOnClose(color: string) {
@@ -188,5 +201,9 @@ export class ColorDataInputComponent implements OnChanges {
 
   public onInput(value: string) {
     this.onValueChange(value);
+  }
+
+  public onBlur() {
+    this.removeKeyDownListener();
   }
 }

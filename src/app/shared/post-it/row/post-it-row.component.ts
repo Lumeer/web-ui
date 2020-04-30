@@ -17,16 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {DataRowComponent} from '../../data/data-row-component';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DataRow} from '../../data/data-row.service';
@@ -91,37 +82,20 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   @Output()
   public resetFocusAndEdit = new EventEmitter<number>();
 
-  @HostBinding('class.key-focused')
-  public keyFocused: boolean;
-
-  @HostBinding('class.value-focused')
-  public valueFocused: boolean;
-
-  @HostBinding('class.zero')
-  public classZero: boolean;
-
-  @HostBinding('class.quarter')
-  public classQuarter: boolean;
-
-  @HostBinding('class.third')
-  public classThird: boolean;
-
-  @HostBinding('class.half')
-  public classHalf: boolean;
-
-  @HostBinding('class.even')
-  public classEven: boolean;
-
   public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
 
   public placeholder: string;
 
+  public keyFocused$ = new BehaviorSubject(false);
   public keyEditing$ = new BehaviorSubject(false);
   public keyDataValue: DataValue;
 
-  public editedValue: DataValue;
   public editing$ = new BehaviorSubject(false);
+  public valueFocused$ = new BehaviorSubject(false);
+  public editedValue: DataValue;
   public dataValue: DataValue;
+
+  public postItLayoutType = PostItLayoutType;
 
   public get constraintType(): ConstraintType {
     return this.row?.attribute?.constraint?.type;
@@ -136,17 +110,6 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
       this.keyDataValue = this.createKeyDataValue();
       this.dataValue = this.createDataValue();
     }
-    if (changes.layoutType) {
-      this.convertLayoutToClasses();
-    }
-  }
-
-  private convertLayoutToClasses() {
-    this.classZero = this.layoutType === PostItLayoutType.Zero;
-    this.classQuarter = this.layoutType === PostItLayoutType.Quarter;
-    this.classThird = this.layoutType === PostItLayoutType.Third;
-    this.classHalf = this.layoutType === PostItLayoutType.Half;
-    this.classEven = this.layoutType === PostItLayoutType.Even;
   }
 
   private createKeyDataValue(value?: any): DataValue {
@@ -304,25 +267,25 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   public focusColumn(column: number) {
     if (column === 0) {
       this.focusKey();
-      this.valueFocused = false;
+      this.valueFocused$.next(false);
     } else if (column === 1) {
       this.focusValue();
-      this.keyFocused = false;
+      this.keyFocused$.next(false);
     }
   }
 
   private focusKey() {
-    if (this.keyEditing$.value) {
+    if (this.keyEditing$.value || this.keyFocused$.value) {
       return;
     }
-    this.keyFocused = true;
+    this.keyFocused$.next(true);
   }
 
   private focusValue() {
-    if (this.editing$.value) {
+    if (this.editing$.value || this.valueFocused$.value) {
       return;
     }
-    this.valueFocused = true;
+    this.valueFocused$.next(true);
   }
 
   public endRowEditing() {
@@ -331,8 +294,8 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   }
 
   public unFocusRow() {
-    this.keyFocused = false;
-    this.valueFocused = false;
+    this.keyFocused$.next(false);
+    this.valueFocused$.next(false);
   }
 
   public onValueEdit(value: DataValue) {

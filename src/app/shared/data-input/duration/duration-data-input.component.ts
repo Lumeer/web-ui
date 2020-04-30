@@ -22,7 +22,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   Output,
@@ -38,7 +37,6 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 @Component({
   selector: 'duration-data-input',
   templateUrl: './duration-data-input.component.html',
-  styleUrls: ['./duration-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DurationDataInputComponent implements OnChanges {
@@ -74,9 +72,13 @@ export class DurationDataInputComponent implements OnChanges {
   public valid = true;
 
   private preventSave: boolean;
+  private keyDownListener: (event: KeyboardEvent) => void;
+
+  constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
+      this.addKeyDownListener();
       setTimeout(() => {
         HtmlModifier.setCursorAtTextContentEnd(this.durationInput.nativeElement);
         this.durationInput.nativeElement.focus();
@@ -87,16 +89,25 @@ export class DurationDataInputComponent implements OnChanges {
     }
   }
 
-  @HostListener('keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
+  private addKeyDownListener() {
+    this.removeKeyDownListener();
+
+    this.keyDownListener = event => this.onKeyDown(event);
+    this.element.nativeElement.addEventListener('keydown', this.keyDownListener);
+  }
+
+  private removeKeyDownListener() {
+    if (this.keyDownListener) {
+      this.element.nativeElement.removeEventListener('keydown', this.keyDownListener);
+    }
+    this.keyDownListener = null;
+  }
+
+  private onKeyDown(event: KeyboardEvent) {
     switch (event.code) {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        if (this.readonly) {
-          return;
-        }
-
         const input = this.durationInput;
         const dataValue = this.value.parseInput(input.nativeElement.value);
 
@@ -135,6 +146,8 @@ export class DurationDataInputComponent implements OnChanges {
   }
 
   public onBlur() {
+    this.removeKeyDownListener();
+
     if (this.preventSave) {
       this.preventSave = false;
     } else {
