@@ -18,23 +18,23 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../../../../core/store/collections/collection';
-import {DataValue} from '../../../../../core/model/data-value';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
+import {Attribute} from '../../../core/store/collections/collection';
+import {DataValue} from '../../../core/model/data-value';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
 @Pipe({
-  name: 'cellDataInputInfo',
+  name: 'dataInputEditInfo',
 })
-export class CellDataInputInfoPipe implements PipeTransform {
+export class DataInputEditInfoPipe implements PipeTransform {
   public transform(
     attribute: Attribute,
     dataValue: DataValue,
     permissions: AllowedPermissions,
     editing: boolean
   ): {readonly: boolean; hasValue: boolean; showDataInput: boolean; selectConstraint: boolean; editing: boolean} {
-    const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+    const constraint = attribute?.constraint || new UnknownConstraint();
     const asText = constraint.isTextRepresentation;
     const hasValue = dataValue && !!dataValue.format();
     const readonly =

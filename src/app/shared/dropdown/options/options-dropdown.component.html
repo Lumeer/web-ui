@@ -6,10 +6,11 @@
           [pushOnScreen]="true"
           [minHeight]="(options?.length || 0) * 30"
           [minWidth]="minWidth || 100"
-          [positions]="dropdownPositions">
+          [positions]="dropdownPositions"
+          (positionChange)="onPositionChange($event)">
   <div *ngIf="options?.length > 0"
        class="card" [class.w-100]="fitParent">
-    <a *ngFor="let option of options; let index = index"
+    <a *ngFor="let option of options | reverseArrayByDropdownPosition:(dropdownPosition$ | async); let index = index"
        [class.active]="(activeValue$ | async) === option.value"
        (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
        (click)="onOptionSelect($event, option)"
@@ -31,16 +32,21 @@
              *ngIf="option.gravatar"
              [email]="option.gravatar"
              [size]="avatarSize"
-             class="mr-2">
+             [class.mr-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
+
+        <img *ngIf="option.imageUrl"
+             [src]="option.imageUrl"
+             [class.mr-2]="(option.displayValue || option.value) | isNotNullOrUndefined">
 
         <icons-presenter *ngIf="option.icons && option.iconColors"
-                         class="mr-1"
+                         [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined"
                          [colors]="option.iconColors"
                          [icons]="option.icons">
         </icons-presenter>
 
         <i *ngIf="option.icons && !option.iconColors && option.icons.length === 1"
-           class="fa-fw {{option.icons[0]}} mr-1">
+           class="fa-fw {{option.icons[0]}}"
+           [class.mr-1]="(option.displayValue || option.value) | isNotNullOrUndefined">
         </i>
         <span class="text-nowrap" [innerHTML]="(option.displayValue || option.value) | highlightText:highlightedText">
         </span>

@@ -1,4 +1,4 @@
-<input *ngIf="readonly; else textEditing"
+<input *ngIf="readonly"
        [readonly]="readonly"
        [title]="value | formatDataValueTitle"
        [value]="value | formatDataValue | unescapeHtml"
@@ -7,7 +7,7 @@
        spellcheck="false"
        type="text">
 
-<ng-template #textEditing>
+<ng-container *ngIf="!readonly">
   <input #addressInput
          [title]="value | formatDataValueTitle"
          [value]="value | formatDataValueForEdit"
@@ -26,4 +26,4 @@
                     [minWidth]="250"
                     (selectOption)="onSelectOption($event)">
   </options-dropdown>
-</ng-template>
+</ng-container>

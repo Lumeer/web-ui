@@ -17,21 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {DropdownOption} from '../options/dropdown-option';
+import {removeAccent} from '../../utils/string.utils';
+import {sortObjectsByScore, unescapeHtml} from '../../utils/common.utils';
 
-@Component({
-  selector: 'search-button',
-  templateUrl: './search-button.component.html',
+@Pipe({
+  name: 'filterDropdownOptions',
 })
-export class SearchButtonComponent {
-  @Input()
-  public disabled: boolean;
-
-  @Output()
-  public search = new EventEmitter<boolean>();
-
-  public onButtonClick(event: MouseEvent) {
-    const redirect = event.altKey || event.ctrlKey || event.shiftKey;
-    this.search.emit(redirect);
+export class FilterDropdownOptionsPipe implements PipeTransform {
+  public transform(options: DropdownOption[], text: string): DropdownOption[] {
+    const filterText = removeAccent(text).trim();
+    const filteredOptionsMap = (options || []).filter(option =>
+      unescapeHtml(removeAccent(option.displayValue || option.value)).includes(filterText)
+    );
+    return sortObjectsByScore<DropdownOption>(filteredOptionsMap, text, ['displayValue', 'value']);
   }
 }

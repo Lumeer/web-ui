@@ -23,6 +23,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
   Output,
   QueryList,
@@ -64,7 +65,7 @@ export interface PostItTag {
   providers: [DataRowService],
   host: {class: 'card'},
 })
-export class PostItComponent implements OnDestroy {
+export class PostItComponent implements OnDestroy, OnChanges {
   @Input()
   public resource: AttributesResource;
 
@@ -124,7 +125,6 @@ export class PostItComponent implements OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.resourceType = getAttributesResourceType(this.resource);
     if (this.objectChanged(changes.resource) || this.objectChanged(changes.dataResource)) {
       if (this.resource && this.dataResource) {
         this.dataRowService.init(this.resource, this.dataResource, this.attributesSettings);
@@ -132,11 +132,11 @@ export class PostItComponent implements OnDestroy {
     } else if (changes.attributesSettings) {
       this.dataRowService.setSettings(this.attributesSettings);
     }
+    if (changes.resource) {
+      this.resourceType = getAttributesResourceType(this.resource);
+    }
     if (changes.resource || changes.dataResource) {
-      this.unusedAttributes = filterUnusedAttributes(
-        this.resource && this.resource.attributes,
-        this.dataResource && this.dataResource.data
-      );
+      this.unusedAttributes = filterUnusedAttributes(this.resource?.attributes, this.dataResource?.data);
     }
   }
 

@@ -58,6 +58,7 @@ export class KanbanConfigComponent {
 
   public readonly defaultStemConfig = createDefaultKanbanStemConfig();
   public readonly cardLayoutSliderItems: SliderItem[] = [
+    {id: PostItLayoutType.Zero, title: '0:1'},
     {id: PostItLayoutType.Quarter, title: '1:4'},
     {id: PostItLayoutType.Third, title: '1:3'},
     {id: PostItLayoutType.Half, title: '1:2'},

@@ -57,6 +57,7 @@ import {findAttributeConstraint} from '../../core/store/collections/collection.u
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
 import {DataValue} from '../../core/model/data-value';
 import {stripTextHtmlTags} from '../utils/data.utils';
+import {isTopPositionDropdown} from '../dropdown/util/dropdown-util';
 
 @Component({
   selector: 'document-hints',
@@ -119,6 +120,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public minWidth: number;
   public selectedIndex$ = new BehaviorSubject<number>(-1);
   public filter$ = new BehaviorSubject<string>('');
+  public dropdownPosition$ = new BehaviorSubject<DropdownPosition>(null);
 
   private hintsCount = 0;
 
@@ -213,17 +215,48 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   public moveSelection(direction: Direction) {
     const index = this.selectedIndex$.getValue();
+    const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
 
-    if (direction === Direction.Up && index > -1) {
-      this.selectedIndex$.next(index - 1);
-    }
-    if (direction === Direction.Down && index < this.hintsCount - 1) {
-      this.selectedIndex$.next(index + 1);
+    if (isTopPosition) {
+      if (direction === Direction.Up && (index > 0 || index === -1)) {
+        this.selectedIndex$.next(index === -1 ? this.hintsCount - 1 : index - 1);
+      }
+      if (direction === Direction.Down && index < this.hintsCount) {
+        this.selectedIndex$.next(index === this.hintsCount - 1 ? -1 : index + 1);
+      }
+    } else {
+      if (direction === Direction.Up && index > -1) {
+        this.selectedIndex$.next(index - 1);
+      }
+      if (direction === Direction.Down && index < this.hintsCount - 1) {
+        this.selectedIndex$.next(index + 1);
+      }
     }
   }
 
+  public onDropdownPositionChange(position: DropdownPosition) {
+    const wasTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
+    const isTopPosition = isTopPositionDropdown(position);
+
+    if (wasTopPosition !== isTopPosition && this.isSelected()) {
+      const newSelection = this.hintsCount - this.selectedIndex$.value - 1;
+      if (newSelection >= 0) {
+        this.selectedIndex$.next(newSelection);
+      }
+    }
+    this.dropdownPosition$.next(position);
+  }
+
+  private getReversedSelection(): number {
+    const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
+    if (this.selectedIndex$.value >= 0 && isTopPosition) {
+      return this.hintsCount - this.selectedIndex$.value - 1;
+    }
+    return this.selectedIndex$.value;
+  }
+
   public useSelection() {
-    const index = this.selectedIndex$.getValue();
+    const index = this.getReversedSelection();
     if (index < 0) {
       return;
     }

@@ -21,7 +21,7 @@ import {formatUnknownDataValue, stripTextHtmlTags} from '../../../shared/utils/d
 import {replaceNbsp, transformTextBasedOnCaseStyle} from '../../../shared/utils/string.utils';
 import {TextConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {escapeHtml, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueByConditionText} from './data-value.utils';
 
@@ -40,7 +40,7 @@ export class TextDataValue implements DataValue {
     if (typeof this.value !== 'string') {
       return formatUnknownDataValue(this.value, true);
     }
-    return transformTextBasedOnCaseStyle(this.value, this.config && this.config.caseStyle);
+    return transformTextBasedOnCaseStyle(this.value, this.config?.caseStyle);
   }
 
   public preview(): string {
@@ -48,7 +48,7 @@ export class TextDataValue implements DataValue {
   }
 
   public title(): string {
-    return stripTextHtmlTags(this.format(), false);
+    return unescapeHtml(stripTextHtmlTags(this.format(), false));
   }
 
   public editValue(): string {

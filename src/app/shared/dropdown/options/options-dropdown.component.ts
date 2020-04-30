@@ -38,6 +38,7 @@ import {DropdownOptionDirective} from './dropdown-option.directive';
 import {deepObjectsEquals, isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
 import {BehaviorSubject} from 'rxjs';
 import {USER_AVATAR_SIZE} from '../../../core/constants';
+import {isTopPositionDropdown} from '../util/dropdown-util';
 
 @Component({
   selector: 'options-dropdown',
@@ -94,6 +95,7 @@ export class OptionsDropdownComponent implements OnChanges {
   public readonly avatarSize = USER_AVATAR_SIZE;
 
   public activeValue$ = new BehaviorSubject<any>(null);
+  public dropdownPosition$ = new BehaviorSubject<DropdownPosition>(null);
 
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
@@ -104,17 +106,21 @@ export class OptionsDropdownComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.shouldResetActiveItem(changes)) {
-      this.activeValue$.next(this.firstItemActive ? this.optionValue(0) : null);
+      this.activeValue$.next(this.firstItemActive ? this.firstOptionValue() : null);
     }
+  }
+
+  private firstOptionValue(): any {
+    const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
+    if (isTopPosition && this.options) {
+      return this.optionValue(this.options.length - 1);
+    }
+    return this.optionValue(0);
   }
 
   private optionValue(index: number): any {
     const option = (this.options || [])[index];
     return option && option.value;
-  }
-
-  private indexByValue(value: any): number {
-    return (this.options || []).findIndex(option => option.value === value);
   }
 
   private shouldResetActiveItem(changes: SimpleChanges): boolean {
@@ -123,7 +129,11 @@ export class OptionsDropdownComponent implements OnChanges {
 
   private activeValueNotFound(changes: SimpleChanges): boolean {
     const value = this.activeValue$.value;
-    return changes.options && (isNullOrUndefined(value) || this.indexByValue(value) === -1);
+    return changes.options && (isNullOrUndefined(value) || !this.valueExist(value));
+  }
+
+  private valueExist(value: any): boolean {
+    return (this.options || []).some(option => option.value === value);
   }
 
   private highlightedValueWasDeleted(changes: SimpleChanges) {
@@ -153,7 +163,7 @@ export class OptionsDropdownComponent implements OnChanges {
   private highlightSelectedValue() {
     if (isNotNullOrUndefined(this.highlightedValue)) {
       const activeOption = (this.options || []).find(option => deepObjectsEquals(option.value, this.highlightedValue));
-      setTimeout(() => this.activeValue$.next(activeOption && activeOption.value));
+      setTimeout(() => this.activeValue$.next(activeOption?.value));
     }
   }
 
@@ -168,13 +178,12 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    const index = this.indexByValue(this.activeValue$.value);
     switch (event.code) {
       case KeyCode.ArrowUp:
-        this.activeValue$.next(this.optionValue(Math.max(0, index - 1)));
+        this.moveSelectionUp();
         break;
       case KeyCode.ArrowDown:
-        this.activeValue$.next(this.optionValue(Math.min(this.options.length - 1, index + 1)));
+        this.moveSelectionDown();
         break;
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
@@ -187,6 +196,45 @@ export class OptionsDropdownComponent implements OnChanges {
     }
   }
 
+  private moveSelectionDown() {
+    const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
+    const selectedIndex = this.selectedIndex(this.activeValue$.value);
+
+    let newIndex = -1;
+    if (isTopPosition && selectedIndex > 0) {
+      newIndex = selectedIndex - 1;
+    }
+    if (!isTopPosition) {
+      newIndex = Math.min(this.options.length - 1, selectedIndex + 1);
+    }
+
+    if (newIndex >= 0) {
+      this.activeValue$.next(this.optionValue(newIndex));
+    }
+  }
+
+  private selectedIndex(value: any): number {
+    return (this.options || []).findIndex(option => option.value === value);
+  }
+
+  private moveSelectionUp() {
+    const isTopPosition = isTopPositionDropdown(this.dropdownPosition$.value);
+    const selectedIndex = this.selectedIndex(this.activeValue$.value);
+
+    let newIndex: number;
+    if (isTopPosition && selectedIndex < this.options.length - 1) {
+      newIndex = selectedIndex + 1;
+    }
+
+    if (!isTopPosition) {
+      newIndex = Math.max(0, selectedIndex - 1);
+    }
+
+    if (newIndex >= 0) {
+      this.activeValue$.next(this.optionValue(newIndex));
+    }
+  }
+
   public getActiveOption(): DropdownOption {
     const value = this.activeValue$.value;
     return value && (this.options || []).find(option => option.value === value);
@@ -194,5 +242,9 @@ export class OptionsDropdownComponent implements OnChanges {
 
   public resetActiveOption() {
     this.activeValue$.next(null);
+  }
+
+  public onPositionChange(position: DropdownPosition) {
+    this.dropdownPosition$.next(position);
   }
 }

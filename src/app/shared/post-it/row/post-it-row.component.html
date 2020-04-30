@@ -1,62 +1,67 @@
-<ng-container *ngIf="{readonly: !permissions?.writeWithView} as data">
+<div *ngIf="!editableKey && !classZero"
+     class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key text-truncate">
+  {{keyDataValue?.value}}
+</div>
 
-  <div *ngIf="!editableKey; else editableKeyInput" class="p-0 px-1 d-flex flex-row flex-nowrap align-items-center font-italic data-input key text-truncate">
-    {{keyDataValue.value}}
+<div *ngIf="editableKey && !classZero"
+     class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
+  <data-input class="h-100 w-100 p-1 data-input key"
+              [cursor]="cursor"
+              [focus]="true"
+              [readonly]="!permissions?.writeWithView || !(keyEditing$ | async)"
+              [dataValue]="keyDataValue"
+              [placeholder]="placeholder"
+              [suggestions]="unusedAttributes | attributesToDataSuggestions"
+              (save)="onNewKey($event)"
+              (dblclick)="onKeyInputDblClick($event)"
+              (cancel)="onKeyInputCancel()"
+              (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
+              (click)="onKeyFocus()"
+              (clickOutside)="onKeyInputCancel()"
+              [class.editing]="keyEditing$ | async"
+              [class.cursor-pointer]="!permissions?.writeWithView"
+              [class.read-only]="!permissions?.writeWithView">
+  </data-input>
+</div>
+
+<div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center"
+     *ngIf="row.attribute | dataInputEditInfo:dataValue:permissions: (editing$ | async) as dataInputInfo"
+     (click)="onValueFocus()"
+     (clickOutside)="onDataInputCancel()"
+     (dblclick)="onDataInputDblClick($event)"
+     [ngClass]="!dataInputInfo.showDataInput && !dataInputInfo.hasValue ? 'data-input-readonly m-1 ml-2' : ''">
+  <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
+       [innerHTML]="dataValue | previewDataValue | safeHtml"
+       class="text-pre overflow-hidden p-1 align-middle data-input-readonly w-100"
+       [title]="dataValue | formatDataValueTitle"
+       [class.invalid-value]="!(dataValue | isDataValueValid)">
   </div>
+  <data-input class="h-100 w-100 p-1 data-input value"
+              *ngIf="dataInputInfo.showDataInput"
+              [constraint]="row.attribute?.constraint"
+              [cursor]="cursor"
+              [focus]="true"
+              [dataValue]="dataValue"
+              [configuration]="configuration"
+              [readonly]="dataInputInfo.readonly"
+              (save)="onNewValue($event)"
+              (cancel)="onDataInputCancel()"
+              (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
+              (valueChange)="onValueEdit($event)"
+              [class.editing]="editing$ | async"
+              [class.cursor-pointer]="!dataInputInfo.readonly"
+              [class.read-only]="dataInputInfo.readonly">
+  </data-input>
+</div>
 
-  <ng-template #editableKeyInput>
-    <div class="p-0 pr-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
-      <data-input class="h-100 w-100 p-1 data-input key"
-                  [cursor]="cursor"
-                  [focus]="true"
-                  [readonly]="!permissions?.writeWithView || !(keyEditing$ | async)"
-                  [dataValue]="keyDataValue"
-                  [placeholder]="placeholder"
-                  [suggestions]="unusedAttributes | attributesToDataSuggestions"
-                  (save)="onNewKey($event)"
-                  (dblclick)="onKeyInputDblClick($event)"
-                  (cancel)="onKeyInputCancel()"
-                  (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
-                  (click)="onKeyFocus()"
-                  (clickOutside)="onKeyInputCancel()"
-                  [class.editing]="keyEditing$ | async"
-                  [class.cursor-pointer]="!data.readonly"
-                  [class.read-only]="data.readonly">
-      </data-input>
-    </div>
-  </ng-template>
-
-  <div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center">
-    <data-input class="h-100 w-100 p-1 data-input value"
-                [constraint]="row.attribute?.constraint"
-                [cursor]="cursor"
-                [focus]="true"
-                [dataValue]="dataValue"
-                [configuration]="configuration"
-                [readonly]="readonly || !permissions?.writeWithView || !((editing$ | async) || row.attribute?.constraint?.type === booleanConstraintType)"
-                (save)="onNewValue($event)"
-                (dblclick)="onDataInputDblClick($event)"
-                (cancel)="onDataInputCancel()"
-                (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
-                (valueChange)="onValueEdit($event)"
-                (click)="onValueFocus()"
-                (clickOutside)="onDataInputCancel()"
-                [class.editing]="editing$ | async"
-                [class.cursor-pointer]="!data.readonly"
-                [class.read-only]="data.readonly">
-    </data-input>
-  </div>
-
-  <div class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center">
-    <ng-container *ngIf="{iconName: (row.attribute?.constraint | constraintTypeIcon)} as typeData">
-      <i *ngIf="typeData.iconName"
-         [ngClass]="typeData.iconName"
-         [title]="row.attribute?.constraint | constraintTypeIconTitle"
-         class="text-muted small fa-fw"></i>
-      <i *ngIf="!typeData.iconName" class="fa-fw fa fa-icon-none small"
-         aria-hidden="true">
-      </i>
-    </ng-container>
-  </div>
-
-</ng-container>
+<div class="d-flex flex-row flex-nowrap align-items-center ml-1 justify-content-center">
+  <ng-container *ngIf="{iconName: (row.attribute?.constraint | constraintTypeIcon)} as typeData">
+    <i *ngIf="typeData.iconName"
+       [ngClass]="typeData.iconName"
+       [title]="row.attribute?.constraint | constraintTypeIconTitle"
+       class="text-muted small fa-fw"></i>
+    <i *ngIf="!typeData.iconName" class="fa-fw fa fa-icon-none small"
+       aria-hidden="true">
+    </i>
+  </ng-container>
+</div>

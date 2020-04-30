@@ -17,21 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Injectable, Pipe, PipeTransform} from '@angular/core';
 
-@Component({
-  selector: 'search-button',
-  templateUrl: './search-button.component.html',
+import {isNotNullOrUndefined} from '../utils/common.utils';
+
+@Pipe({
+  name: 'isNotNullOrUndefined',
 })
-export class SearchButtonComponent {
-  @Input()
-  public disabled: boolean;
-
-  @Output()
-  public search = new EventEmitter<boolean>();
-
-  public onButtonClick(event: MouseEvent) {
-    const redirect = event.altKey || event.ctrlKey || event.shiftKey;
-    this.search.emit(redirect);
+@Injectable({
+  providedIn: 'root',
+})
+export class IsNotNullOrUndefinedPipe implements PipeTransform {
+  public transform(value: any): boolean {
+    return isNotNullOrUndefined(value);
   }
 }

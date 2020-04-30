@@ -17,21 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {DropdownPosition} from '../dropdown-position';
 
-@Component({
-  selector: 'search-button',
-  templateUrl: './search-button.component.html',
-})
-export class SearchButtonComponent {
-  @Input()
-  public disabled: boolean;
-
-  @Output()
-  public search = new EventEmitter<boolean>();
-
-  public onButtonClick(event: MouseEvent) {
-    const redirect = event.altKey || event.ctrlKey || event.shiftKey;
-    this.search.emit(redirect);
-  }
+export function isTopPositionDropdown(position: DropdownPosition): boolean {
+  return position === DropdownPosition.TopEnd || position === DropdownPosition.TopStart;
 }

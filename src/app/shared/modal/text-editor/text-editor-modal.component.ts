@@ -34,7 +34,7 @@ import {KeyCode} from '../../key-code';
 import {isMacOS} from '../../utils/system.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {defaultTextEditorOptions} from './text-editor.utils';
-import {QuillEditorComponent} from 'ngx-quill';
+import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {stripTextHtmlTags} from '../../utils/data.utils';
 
 export interface TextEditorChanged {
@@ -85,8 +85,27 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   }
 
   public submitDialog() {
-    this.onSave$.next(this.content);
+    this.onSave$.next(this.getSaveContent());
     this.hideDialog();
+  }
+
+  private getSaveContent(): string {
+    if (this.containsOnlyBrTags()) {
+      return null;
+    }
+    return this.content;
+  }
+
+  private containsOnlyBrTags(): boolean {
+    if (!this.content) {
+      return false;
+    }
+
+    const content = this.content
+      .replace(/<br>/g, '')
+      .replace(/<p>\s*?<\/p>/g, '')
+      .trim();
+    return !content;
   }
 
   public cancelDialog() {
@@ -94,17 +113,9 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
     this.hideDialog();
   }
 
-  public contentChanged($event: {
-    content: any;
-    delta: any;
-    editor: any;
-    html: string | null;
-    oldDelta: any;
-    source: string;
-    text: string;
-  }) {
-    this.checkValid($event.text);
-    this.onContentChanged$.next({html: $event.html, text: $event.text});
+  public contentChanged(event: ContentChange) {
+    this.checkValid(event.text);
+    this.onContentChanged$.next({html: event.html, text: event.text});
   }
 
   private checkValid(text: string) {
@@ -178,7 +189,7 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
 
   public focusEditor(editor: any) {
     setTimeout(() => {
-      editor.setSelection(Number.MAX_SAFE_INTEGER);
+      editor.setSelection({index: Number.MAX_SAFE_INTEGER, length: 1});
       editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
     }, 200);
   }

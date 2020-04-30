@@ -29,7 +29,6 @@ import {ViewsAction} from '../../../../core/store/views/views.action';
 @Component({
   selector: 'settings-button',
   templateUrl: './settings-button.component.html',
-  styleUrls: ['./settings-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsButtonComponent implements OnInit {
