@@ -18,7 +18,16 @@
  */
 
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {DRAG_DELAY} from '../../../../../../core/constants';
 import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {Query} from '../../../../../../core/store/navigation/query/query';
@@ -27,6 +36,8 @@ import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../../util/kanban-data';
 import {PostItLayoutType} from '../../../../../../shared/post-it/post-it-layout-type';
 import {ViewSettings} from '../../../../../../core/store/views/view';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {distinctUntilChanged, throttleTime} from 'rxjs/operators';
 
 @Component({
   selector: 'kanban-column',
@@ -34,7 +45,7 @@ import {ViewSettings} from '../../../../../../core/store/views/view';
   styleUrls: ['./kanban-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class KanbanColumnComponent {
+export class KanbanColumnComponent implements OnInit {
   @Input()
   public postItLayout: PostItLayoutType;
 
@@ -84,8 +95,28 @@ export class KanbanColumnComponent {
   public readonly dragDelay = DRAG_DELAY;
   public readonly postItIdPrefix = generateId();
 
+  public currentPage$ = new BehaviorSubject(0);
+  public elementHeight$: Observable<number>;
+  public elementHeightSubject$ = new BehaviorSubject<number>(0);
+
+  constructor(public element: ElementRef) {}
+
   public trackByCard(index: number, card: KanbanCard) {
     return card.dataResource.id;
+  }
+
+  public ngOnInit() {
+    this.elementHeight$ = this.elementHeightSubject$.pipe(throttleTime(100), distinctUntilChanged());
+    this.checkElementHeight();
+  }
+
+  private checkElementHeight() {
+    this.elementHeightSubject$.next(this.element.nativeElement.offsetHeight);
+  }
+
+  @HostListener('window:resize')
+  public onWindowResize() {
+    this.checkElementHeight();
   }
 
   public onDropPostIt(event: CdkDragDrop<KanbanDataColumn, KanbanDataColumn>) {
@@ -150,5 +181,9 @@ export class KanbanColumnComponent {
 
   public onToggleFavorite(card: KanbanCard) {
     this.toggleFavorite.emit(card.dataResource);
+  }
+
+  public onScrolled() {
+    this.currentPage$.next(this.currentPage$.value + 1);
   }
 }

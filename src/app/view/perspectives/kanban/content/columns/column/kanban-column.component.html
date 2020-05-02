@@ -8,28 +8,33 @@
     </kanban-column-header>
   </div>
 
-  <div class="card-body py-1 px-2 my-1" cdkDropList id="{{column.id}}"
+  <div class="card-body py-1 px-2 my-1" id="{{column.id}}"
+       cdkDropList
+       infiniteScroll
+       [scrollWindow]="false"
+       (scrolled)="onScrolled()"
        [cdkDropListData]="column"
        [cdkDropListConnectedTo]="dragColumnsIds"
        (cdkDropListDropped)="onDropPostIt($event)">
-    <post-it *ngFor="let card of column.cards; trackBy: trackByCard; let last = last"
-             cdkDrag
-             id="{{postItIdPrefix}}#{{card.dataResource.id}}"
-             class="post-it"
-             [tag]="card.dueHours | kanbanDueHoursTag"
-             [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
-             [cdkDragData]="card"
-             [cdkDragStartDelay]="dragDelay"
-             [layoutType]="postItLayout"
-             [class.mb-2]="!last"
-             [dataResource]="card.dataResource"
-             [resource]="card.resource"
-             [query]="query"
-             [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
-             [allowedPermissions]="card.permissions"
-             [constraintData]="constraintData"
-             [attributesSettings]="viewSettings | resourceAttributesSettings:card.resourceType:card.resource.id"
-             (toggleFavorite)="onToggleFavorite(card)">
+    <post-it
+      *ngFor="let card of column.cards | filterKanbanCardsByPage:viewSettings: (currentPage$ | async):(elementHeight$ | async); trackBy: trackByCard; let last = last"
+      cdkDrag
+      id="{{postItIdPrefix}}#{{card.dataResource.id}}"
+      class="post-it"
+      [tag]="card.dueHours | kanbanDueHoursTag"
+      [cdkDragDisabled]="!canManageConfig || !(card | kanbanPostItDraggable)"
+      [cdkDragData]="card"
+      [cdkDragStartDelay]="dragDelay"
+      [layoutType]="postItLayout"
+      [class.mb-2]="!last"
+      [dataResource]="card.dataResource"
+      [resource]="card.resource"
+      [query]="query"
+      [canDrag]="canManageConfig && (card | kanbanPostItDraggable)"
+      [allowedPermissions]="card.permissions"
+      [constraintData]="constraintData"
+      [attributesSettings]="viewSettings | resourceAttributesSettings:card.resourceType:card.resource.id"
+      (toggleFavorite)="onToggleFavorite(card)">
     </post-it>
 
   </div>
