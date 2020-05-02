@@ -18,20 +18,18 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
+  Component,
   ElementRef,
-  ViewChild,
+  EventEmitter,
+  Input,
   OnDestroy,
+  Output,
+  ViewChild,
 } from '@angular/core';
 import {UserNotification, UserNotificationType} from '../../../../../../core/model/user-notification';
 import {Dictionary} from '@ngrx/entity';
 import {Organization} from '../../../../../../core/store/organizations/organization';
-import {Workspace} from '../../../../../../core/store/navigation/workspace';
-import {Project} from '../../../../../../core/store/projects/project';
 import {DropdownPosition} from '../../../../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../../../../dropdown/dropdown.component';
 
@@ -53,12 +51,6 @@ export class NotificationsMenuDropdownComponent implements OnDestroy {
 
   @Input()
   public organizations: Dictionary<Organization>;
-
-  @Input()
-  public workspace: Workspace;
-
-  @Input()
-  public currentProject: Project;
 
   @Input()
   public origin: ElementRef | HTMLElement;
@@ -86,14 +78,12 @@ export class NotificationsMenuDropdownComponent implements OnDestroy {
     this.toggleUnread.emit();
   }
 
-  public deleteNotificationEvent(event: MouseEvent, notification: UserNotification) {
-    event.stopPropagation();
+  public deleteNotificationEvent(notification: UserNotification) {
     this.deleteNotification.next(notification);
   }
 
-  public setNotificationReadEvent(event: MouseEvent, notification: UserNotification, read: boolean): void {
-    event.stopPropagation();
-    this.readNotification.next({notification, read});
+  public setNotificationReadEvent($event: {notification: UserNotification; read: boolean}): void {
+    this.readNotification.next($event);
   }
 
   public navigateToTarget(notification: UserNotification) {

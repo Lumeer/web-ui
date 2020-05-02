@@ -1,0 +1,22 @@
+<ng-container [ngSwitch]="notification.type">
+  <ng-container *ngSwitchCase="notificationType.OrganizationShared">
+    <ng-container *ngIf="organizations[notification.organizationId] as organization; else organizationNoData">
+      <i [class]="organization.icon" [title]="organization.name" [style.color]="organization.color"></i>
+    </ng-container>
+    <ng-template #organizationNoData>
+      <i class="fa-question fas color-success"></i>
+    </ng-template>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.ProjectShared">
+    <i [class]="projectSharedNotification.projectIcon" [title]="projectSharedNotification.projectName" [style.color]="projectSharedNotification.projectColor"></i>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.CollectionShared">
+    <i [class]="collectionSharedNotification.collectionIcon" [title]="collectionSharedNotification.collectionName" [style.color]="collectionSharedNotification.collectionColor"></i>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.ViewShared">
+    <i [class]="perspectiveIcons[viewSharedNotification.viewPerspective]" [title]="viewSharedNotification.viewName"></i>
+  </ng-container>
+</ng-container>

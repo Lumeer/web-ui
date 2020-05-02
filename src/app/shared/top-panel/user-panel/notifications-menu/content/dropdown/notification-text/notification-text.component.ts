@@ -17,29 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {CollectionSharedUserNotification} from '../../../../../../../core/model/user-notification';
-import {Organization} from '../../../../../../../core/store/organizations/organization';
-import {Workspace} from '../../../../../../../core/store/navigation/workspace';
-import {Project} from '../../../../../../../core/store/projects/project';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {UserNotification, UserNotificationType} from '../../../../../../../core/model/user-notification';
 import {Dictionary} from '@ngrx/entity';
+import {Organization} from '../../../../../../../core/store/organizations/organization';
 
 @Component({
-  selector: 'notification-collection',
-  templateUrl: './notification-collection.component.html',
-  styleUrls: ['../notification-resource.scss'],
+  selector: '[notification-text]',
+  templateUrl: './notification-text.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationCollectionComponent {
+export class NotificationTextComponent {
   @Input()
-  public notification: CollectionSharedUserNotification;
+  public notification: UserNotification;
 
   @Input()
   public organizations: Dictionary<Organization>;
 
-  @Input()
-  public workspace: Workspace;
-
-  @Input()
-  public currentProject: Project;
+  public readonly notificationType = UserNotificationType;
 }

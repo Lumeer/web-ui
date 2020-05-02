@@ -24,13 +24,13 @@ import {PipesModule} from '../../../pipes/pipes.module';
 import {NotificationsMenuComponent} from './notifications-menu.component';
 import {NotificationsMenuContentComponent} from './content/notifications-menu-content.component';
 import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
-import {NotificationOrganizationComponent} from './content/dropdown/organization/notification-organization.component';
-import {NotificationProjectComponent} from './content/dropdown/project/notification-project.component';
-import {NotificationCollectionComponent} from './content/dropdown/collection/notification-collection.component';
-import {NotificationViewComponent} from './content/dropdown/view/notification-view.component';
 import {NotificationsMenuDropdownComponent} from './content/dropdown/notifications-menu-dropdown.component';
 import {DropdownModule} from '../../../dropdown/dropdown.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {NotificationItemComponent} from './content/dropdown/notification-item/notification-item.component';
+import {NotificationTextComponent} from './content/dropdown/notification-text/notification-text.component';
+import {NotificationIconComponent} from './content/dropdown/notification-icon/notification-icon.component';
+import {NotificationPathComponent} from './content/dropdown/notification-path/notification-path.component';
 
 @NgModule({
   imports: [CommonModule, PipesModule, RouterModule, DropdownModule, TooltipModule.forRoot()],
@@ -38,11 +38,12 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     NotificationsMenuComponent,
     NotificationsMenuContentComponent,
     ValidNotificationFilterPipe,
-    NotificationOrganizationComponent,
-    NotificationProjectComponent,
-    NotificationCollectionComponent,
-    NotificationViewComponent,
     NotificationsMenuDropdownComponent,
+    NotificationItemComponent,
+    NotificationTextComponent,
+    NotificationIconComponent,
+    NotificationIconComponent,
+    NotificationPathComponent,
   ],
   exports: [NotificationsMenuComponent],
 })

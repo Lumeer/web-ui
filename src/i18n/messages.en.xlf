@@ -608,63 +608,42 @@
         A colleague with this email is already invited. Try another one!
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="userNotifications.new" datatype="html">
-        <source>new</source><target state="final">new</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="userNotifications.readOn" datatype="html">
-        <source>read on</source><target state="final">read on</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="userNotifications.originallyReadOn" datatype="html">
-        <source>originally read on</source><target state="final">originally read on</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="userNotifications.mark.unread" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="userNotifications.mark.unread" datatype="html">
         <source>Mark as unread</source><target state="final">Mark as unread</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="userNotifications.mark.read" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-item/notification-item.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="userNotifications.mark.read" datatype="html">
         <source>Mark as read</source><target state="final">Mark as read</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="userNotifications.delete" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-item/notification-item.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="userNotifications.delete" datatype="html">
         <source>Delete notification</source><target state="final">Delete notification</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="userNotifications.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-item/notification-item.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="userNotifications.empty" datatype="html">
         <source>There are no notifications.
     </source><target state="final">There are no notifications.
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="userNotifications.organizationShared" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="userNotifications.organizationShared" datatype="html">
         <source>A new organization has been shared with you.</source><target state="final">A new organization has been shared with you.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/organization/notification-organization.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="userNotifications.clickHere" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="userNotifications.clickHere" datatype="html">
         <source>Click here to open it!</source><target state="final">Click here to open it!</target>
 
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/organization/notification-organization.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/project/notification-project.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/collection/notification-collection.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/view/notification-view.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="userNotifications.projectShared" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">14</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="userNotifications.projectShared" datatype="html">
         <source>A new project has been shared with you.</source><target state="final">A new project has been shared with you.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/project/notification-project.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="userNotifications.inOrganization" datatype="html">
-        <source>in organization:</source><target state="final">in organization:</target>
-
-
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/project/notification-project.component.html</context><context context-type="linenumber">12</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/collection/notification-collection.component.html</context><context context-type="linenumber">20</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/view/notification-view.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="userNotifications.collectionShared" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="userNotifications.collectionShared" datatype="html">
         <source>A new table has been shared with you.</source><target state="final">A new table has been shared with you.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/collection/notification-collection.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="userNotifications.inProject" datatype="html">
-        <source>in project:</source><target state="final">in project:</target>
-
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/collection/notification-collection.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/view/notification-view.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="userNotifications.viewShared" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="userNotifications.viewShared" datatype="html">
         <source>A new view has been shared with you.</source><target state="final">A new view has been shared with you.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/view/notification-view.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="userNotifications.showUnread" datatype="html">
         <source>Show only unread</source><target state="final">Show only unread</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit><trans-unit id="language.czech" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notifications-menu-dropdown.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="language.czech" datatype="html">
         <source>Czech</source><target state="final">Czech</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="language.english" datatype="html">
@@ -3631,13 +3610,7 @@
       <trans-unit id="collections.postit.empty.info" datatype="html">
         <source>Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.</source><target state="final">Looks like you have lot of empty tables. Is it okay? I would suggest to fill in their names or delete them.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it-collections-content.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="dataResource.attribute.placeholder.short" datatype="html">
-        <source>Enter name</source><target state="final">Enter name</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/post-it/row/post-it-row.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it-collections-content.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
       <trans-unit id="resource.postit.code" datatype="html">
         <source>Set code</source><target state="final">Set code</target>
 

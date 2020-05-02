@@ -1,9 +1,7 @@
 <notifications-menu-content
   [organizations]="organizations$ | async"
-  [currentProject]="currentProject$ | async"
   [unreadNotifications]="unreadNotifications$ | async"
   [unreadOnly]="unreadOnly$ | async"
-  [workspace]="currentWorkspace$ | async"
   [allNotifications]="notifications$ | async"
   (deleteNotification)="deleteNotification($event)"
   (readNotification)="setNotificationReadEvent($event)"
