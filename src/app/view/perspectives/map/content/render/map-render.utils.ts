@@ -146,13 +146,25 @@ function createMapMarkerIcon(properties: MapMarkerProperties): HTMLDivElement {
   shapeElement.style.borderColor = properties.color;
 
   const circleElement = document.createElement('div');
-  circleElement.className = 'map-marker-icon';
   circleElement.style.backgroundColor = shadeColor(properties.color, -0.3);
+  if (properties.icons.length === 1) {
+    circleElement.className = 'map-marker-icon';
 
-  const iconElement = document.createElement('i');
-  iconElement.className = properties.icon;
+    const iconElement = document.createElement('i');
+    iconElement.className = properties.icons[0];
+    circleElement.appendChild(iconElement);
+  } else {
+    circleElement.className = 'map-marker-icons';
 
-  circleElement.appendChild(iconElement);
+    const icon1Element = document.createElement('i');
+    icon1Element.className = properties.icons[0];
+    circleElement.appendChild(icon1Element);
+
+    const icon2Element = document.createElement('i');
+    icon2Element.className = properties.icons[1];
+    circleElement.appendChild(icon2Element);
+  }
+
   shapeElement.appendChild(circleElement);
   markerElement.appendChild(shapeElement);
 

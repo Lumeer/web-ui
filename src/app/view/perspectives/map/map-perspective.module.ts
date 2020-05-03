@@ -26,11 +26,12 @@ import {MapPerspectiveComponent} from './map-perspective.component';
 import {MapAttributeSelectComponent} from './panel/attribute-select/map-attribute-select.component';
 import {MapPanelComponent} from './panel/map-panel.component';
 import {MapRenderComponent} from './content/render/map-render.component';
-import {MapAttributeGroupComponent} from './panel/attribute-group/map-attribute-group.component';
-import {MapAttributeIdsPipe} from './panel/map-attribute-ids.pipe';
+import {MapStemConfigComponent} from './panel/stem-config/map-stem-config.component';
 import {MapPositionCheckboxComponent} from './panel/position-checkbox/map-position-checkbox.component';
 import {MapLoadingComponent} from './content/loading/map-loading.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
+import {ColorSelectItemsPipe} from './pipes/color-select-items.pipe';
+import {AttributeSelectItemsPipe} from './pipes/attribute-select-items.pipe';
 
 @NgModule({
   imports: [SharedModule, ModalModule, MapPerspectiveRoutingModule],
@@ -41,10 +42,11 @@ import {ModalModule} from '../../../shared/modal/modal.module';
     MapAttributeSelectComponent,
     EmptyMapComponent,
     MapRenderComponent,
-    MapAttributeGroupComponent,
-    MapAttributeIdsPipe,
+    MapStemConfigComponent,
     MapPositionCheckboxComponent,
     MapLoadingComponent,
+    ColorSelectItemsPipe,
+    AttributeSelectItemsPipe,
   ],
   exports: [MapPerspectiveComponent],
 })

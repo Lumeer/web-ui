@@ -36,12 +36,14 @@ export interface QueryAttribute extends QueryResource {
 }
 
 export function cleanQueryAttribute(attribute: QueryAttribute): QueryAttribute {
-  return {
-    resourceIndex: attribute.resourceIndex,
-    attributeId: attribute.attributeId,
-    resourceId: attribute.resourceId,
-    resourceType: attribute.resourceType,
-  };
+  return (
+    attribute && {
+      resourceIndex: attribute.resourceIndex,
+      attributeId: attribute.attributeId,
+      resourceId: attribute.resourceId,
+      resourceType: attribute.resourceType,
+    }
+  );
 }
 
 export function queryAttributePermissions(

@@ -103,7 +103,7 @@ function checkOrTransformKanbanStemsConfig(
 
   const stemsConfigsCopy = [...stemsConfigs];
   return ((query && query.stems) || []).map(stem => {
-    const stemCollectionIds = collectionIdsChainForStem(stem, []);
+    const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
     return checkOrTransformKanbanStemConfig(stemConfig[0], stem, collections, linkTypes);

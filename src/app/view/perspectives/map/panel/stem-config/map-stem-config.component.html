@@ -1,0 +1,22 @@
+<div class="text-nowrap" *ngIf="collections | collectionById:stem.collectionId as collection">
+  <i [style.color]="collection.color" aria-hidden="true" class="{{collection.icon}} fa-fw"></i>&nbsp;
+  <b>{{collection.name}}</b>
+</div>
+
+<map-attribute-select [attributes]="config?.attributes"
+                      [selectItems]="selectItems"
+                      (attributesChanged)="onAttributesChanged($event)">
+</map-attribute-select>
+
+<select-item class="d-block w-100 mt-2"
+             [items]="selectItems | colorSelectItems:config"
+             [selectedId]="config.color | cleanQueryAttribute"
+             placeholderText="Color"
+             i18n-placeholderText="@@map.config.color.placeholder"
+             emptyValue="Select color"
+             i18n-emptyValue="@@map.config.color.empty"
+             buttonClasses="flex-grow-1 text-truncate"
+             [removable]="true"
+             (select)="onColorSelect($event)"
+             (remove)="onColorRemoved()">
+</select-item>

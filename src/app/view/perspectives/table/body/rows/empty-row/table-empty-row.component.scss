@@ -17,3 +17,7 @@
     width: var(--link-info-column-width, 0px);
   }
 }
+
+.add-button-cell {
+  width: calc(var(--column-group-height, 30px) - 2px);
+}

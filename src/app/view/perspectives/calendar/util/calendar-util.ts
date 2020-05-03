@@ -56,11 +56,15 @@ export function isCalendarConfigChanged(viewConfig: CalendarConfig, currentConfi
     return true;
   }
 
+  if (calendarStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
+    return true;
+  }
+
   if (viewConfig.positionSaved || currentConfig.positionSaved) {
     return datesChanged(viewConfig.mode, viewConfig.date, currentConfig.date);
   }
 
-  return calendarStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
+  return false;
 }
 
 function datesChanged(mode: CalendarMode, date1: Date, date2: Date): boolean {
@@ -143,7 +147,7 @@ function checkOrTransformCalendarStemsConfig(
 ): CalendarStemConfig[] {
   const stemsConfigsCopy = [...(stemsConfigs || [])];
   return (query?.stems || []).map(stem => {
-    const stemCollectionIds = collectionIdsChainForStem(stem, []);
+    const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
     return checkOrTransformCalendarStemConfig(stemConfig[0], stem, collections, linkTypes);
@@ -191,7 +195,7 @@ export function getCalendarDefaultStemConfig(
     const config = createDefaultNameAndDateRangeConfig(stem, collections, linkTypes);
     return {stem, ...config};
   }
-  return {};
+  return {stem};
 }
 
 export function calendarStemConfigIsWritable(

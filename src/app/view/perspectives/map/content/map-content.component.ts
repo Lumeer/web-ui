@@ -23,22 +23,21 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   SimpleChange,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {debounceTime, distinctUntilChanged, filter, map, switchMap} from 'rxjs/operators';
 import {AddressConstraint} from '../../../../core/model/constraint/address.constraint';
 import {CoordinatesConstraint} from '../../../../core/model/constraint/coordinates.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {CoordinatesConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Collection} from '../../../../core/store/collections/collection';
-import {selectCollectionsDictionary} from '../../../../core/store/collections/collections.state';
-import {selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {GeoLocation} from '../../../../core/store/geocoding/geo-location';
@@ -46,6 +45,7 @@ import {GeocodingAction} from '../../../../core/store/geocoding/geocoding.action
 import {selectGeocodingQueryCoordinates} from '../../../../core/store/geocoding/geocoding.state';
 import {
   MapAttributeType,
+  MapConfig,
   MapCoordinates,
   MapMarkerData,
   MapMarkerProperties,
@@ -53,21 +53,32 @@ import {
   MapPosition,
 } from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
-import {selectMapConfigById} from '../../../../core/store/maps/maps.state';
-import {CollectionsPermissionsPipe} from '../../../../shared/pipes/permissions/collections-permissions.pipe';
-import {
-  areMapMarkerListsEqual,
-  createMarkerPropertiesData,
-  createMarkerPropertyFromData,
-  extractCollectionsFromDocuments,
-  populateCoordinateProperties,
-} from './map-content.utils';
+import {areMapMarkerListsEqual, createMarkerPropertyFromData, populateCoordinateProperties} from './map-content.utils';
 import {MapRenderComponent} from './render/map-render.component';
 import {MarkerMoveEvent} from './render/marker-move.event';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {MapDataConverter} from './map-data-converter';
+import {checkOrTransformMapConfig} from '../../../../core/store/maps/map-config.utils';
+import {deepArrayEquals} from '../../../../shared/utils/array.utils';
+
+interface Data {
+  collections: Collection[];
+  documents: DocumentModel[];
+  linkTypes: LinkType[];
+  linkInstances: LinkInstance[];
+  config: MapConfig;
+  permissions: Record<string, AllowedPermissions>;
+  query: Query;
+  constraintData: ConstraintData;
+}
 
 @Component({
   selector: 'map-content',
@@ -75,15 +86,27 @@ import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
   styleUrls: ['./map-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapContentComponent implements OnChanges, OnDestroy {
+export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
-  public collections: Collection[] = [];
+  public collections: Collection[];
 
   @Input()
-  public documents: DocumentModel[] = [];
+  public linkTypes: LinkType[];
+
+  @Input()
+  public documents: DocumentModel[];
+
+  @Input()
+  public linkInstances: LinkInstance[];
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public permissions: Record<string, AllowedPermissions>;
+
+  @Input()
+  public query: Query;
 
   @Input()
   public map: MapModel;
@@ -96,59 +119,92 @@ export class MapContentComponent implements OnChanges, OnDestroy {
   public markers$: Observable<MapMarkerProperties[]>;
 
   private refreshMarkers$ = new BehaviorSubject(Date.now());
+  private dataSubject$ = new BehaviorSubject<Data>(null);
 
   private propertiesSubscription = new Subscription();
+  private readonly converter = new MapDataConverter();
 
   constructor(
-    private collectionsPermissions: CollectionsPermissionsPipe,
     private i18n: I18n,
     private notificationService: NotificationService,
     private store$: Store<{}>,
     private modalService: ModalService
   ) {}
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (this.mapIdChanges(changes.map)) {
-      this.initProperties();
-    }
-  }
-
-  private initProperties() {
-    const allProperties$ = this.bindAllProperties$(this.map.id);
+  public ngOnInit() {
+    const allProperties$ = this.subscribeToData$();
     this.markers$ = this.bindMarkers(allProperties$);
 
-    this.propertiesSubscription.unsubscribe();
     this.propertiesSubscription = this.subscribeToUninitializedProperties(allProperties$);
   }
 
-  private mapIdChanges(change: SimpleChange) {
-    return (
-      change && change.currentValue && (!change.previousValue || change.previousValue.id !== change.currentValue.id)
+  private subscribeToData$(): Observable<MapMarkerData[]> {
+    return this.dataSubject$.pipe(
+      filter(data => !!data),
+      debounceTime(100),
+      map(data => this.handleData(data))
     );
+  }
+
+  private handleData(data: Data): MapMarkerData[] {
+    const config = checkOrTransformMapConfig(data.config, data.query, data.collections, data.linkTypes);
+    if (!deepObjectsEquals(config, data.config)) {
+      this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
+    }
+
+    return this.converter.convert(
+      config,
+      data.collections,
+      data.documents,
+      data.linkTypes,
+      data.linkInstances,
+      data.permissions,
+      data.constraintData,
+      data.query
+    );
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (
+      (changes.documents ||
+        changes.collections ||
+        changes.linkTypes ||
+        changes.linkInstances ||
+        changes.permissions ||
+        changes.query ||
+        changes.constraintData ||
+        this.mapConfigChanged(changes.map)) &&
+      this.map?.config
+    ) {
+      this.dataSubject$.next({
+        documents: this.documents,
+        linkInstances: this.linkInstances,
+        linkTypes: this.linkTypes,
+        collections: this.collections,
+        permissions: this.permissions,
+        config: this.map.config,
+        query: this.query,
+        constraintData: this.constraintData,
+      });
+    }
+  }
+
+  private mapConfigChanged(change: SimpleChange): boolean {
+    if (!change) {
+      return false;
+    }
+    if (!change.previousValue) {
+      return true;
+    }
+
+    const previousStems = change.previousValue.config?.stemsConfigs;
+    const currentStems = change.currentValue?.config?.stemsConfigs;
+
+    return !deepArrayEquals(previousStems, currentStems);
   }
 
   public ngOnDestroy() {
     this.propertiesSubscription.unsubscribe();
-  }
-
-  private bindAllProperties$(mapId: string): Observable<MapMarkerData[]> {
-    return combineLatest([
-      this.store$.pipe(select(selectCollectionsDictionary)),
-      this.store$.pipe(select(selectDocumentsByQuery)),
-      this.store$.pipe(
-        select(selectMapConfigById(mapId)),
-        map(config => config.attributeIdsMap),
-        distinctUntilChanged()
-      ),
-    ]).pipe(
-      switchMap(([collectionsMap, documents, attributeIdsMap]) => {
-        const collections = extractCollectionsFromDocuments(collectionsMap, documents);
-        return this.collectionsPermissions.transform(collections).pipe(
-          distinctUntilChanged((a, b) => deepObjectsEquals(a, b)),
-          map(permissions => createMarkerPropertiesData(documents, attributeIdsMap, collectionsMap, permissions))
-        );
-      })
-    );
   }
 
   private bindMarkers(allProperties$: Observable<MapMarkerData[]>): Observable<MapMarkerProperties[]> {
@@ -256,7 +312,12 @@ export class MapContentComponent implements OnChanges, OnDestroy {
   }
 
   private findResourceByProperty(property: MapMarkerProperties): AttributesResource {
-    return (this.collections || []).find(collection => collection.id === property.resourceId);
+    if (property.resourceType === AttributesResourceType.Collection) {
+      return (this.collections || []).find(collection => collection.id === property.resourceId);
+    } else if (property.resourceType === AttributesResourceType.LinkType) {
+      return (this.linkTypes || []).find(linkType => linkType.id === property.resourceId);
+    }
+    return null;
   }
 
   private onGetLocationFailure(error: any) {
@@ -274,15 +335,28 @@ export class MapContentComponent implements OnChanges, OnDestroy {
   }
 
   private saveAttributeValue(properties: MapMarkerProperties, value: string) {
-    this.store$.dispatch(
-      new DocumentsAction.PatchData({
-        document: {
-          collectionId: properties.resourceId,
-          id: properties.dataResourceId,
-          data: {[properties.attributeId]: value},
-        },
-      })
-    );
+    if (properties.resourceType === AttributesResourceType.Collection) {
+      this.store$.dispatch(
+        new DocumentsAction.PatchData({
+          document: {
+            collectionId: properties.resourceId,
+            id: properties.dataResourceId,
+            data: {[properties.attributeId]: value},
+          },
+        })
+      );
+    } else if (properties.resourceType === AttributesResourceType.LinkType) {
+      this.store$.dispatch(
+        new LinkInstancesAction.PatchData({
+          linkInstance: {
+            linkTypeId: properties.resourceId,
+            id: properties.dataResourceId,
+            documentIds: [null, null],
+            data: {[properties.attributeId]: value},
+          },
+        })
+      );
+    }
   }
 
   public refreshMapSize() {
@@ -294,6 +368,8 @@ export class MapContentComponent implements OnChanges, OnDestroy {
   public onMarkerDetail(properties: MapMarkerProperties) {
     if (properties.resourceType === AttributesResourceType.Collection) {
       this.modalService.showDocumentDetail(properties.dataResourceId);
+    } else if (properties.resourceType === AttributesResourceType.LinkType) {
+      this.modalService.showLinkInstanceDetail(properties.dataResourceId);
     }
   }
 }

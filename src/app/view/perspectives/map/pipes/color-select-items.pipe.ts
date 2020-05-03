@@ -18,14 +18,22 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {MapConfig} from '../../../../core/store/maps/map.model';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {MapAttributeModel, MapStemConfig} from '../../../../core/store/maps/map.model';
+import {mapAttributesAreInAllowedRange} from '../../../../core/store/maps/map-config.utils';
 
 @Pipe({
-  name: 'mapAttributeIds',
+  name: 'colorSelectItems',
 })
-export class MapAttributeIdsPipe implements PipeTransform {
-  public transform(config: MapConfig, collectionId: string): string[] {
-    const attributeIds = config && config.attributeIdsMap[collectionId];
-    return attributeIds ? attributeIds.concat(null) : [null];
+export class ColorSelectItemsPipe implements PipeTransform {
+  public transform(selectItems: SelectItemModel[], stemConfig: MapStemConfig): SelectItemModel[] {
+    if (stemConfig.attributes?.length) {
+      const someAttribute = stemConfig.attributes[0];
+      return selectItems.filter(selectItem => {
+        const model = selectItem.id as MapAttributeModel;
+        return mapAttributesAreInAllowedRange(someAttribute, model);
+      });
+    }
+    return selectItems;
   }
 }

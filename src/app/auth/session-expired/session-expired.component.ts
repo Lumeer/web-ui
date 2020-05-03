@@ -27,6 +27,7 @@ import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {ModalService} from '../../shared/modal/modal.service';
+import {AuthService} from '../auth.service';
 
 @Component({
   selector: 'session-expired',
@@ -42,7 +43,8 @@ export class SessionExpiredComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private store$: Store<AppState>,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private authService: AuthService
   ) {}
 
   public ngOnInit() {

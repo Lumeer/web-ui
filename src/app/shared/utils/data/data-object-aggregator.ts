@@ -30,12 +30,19 @@ import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {QueryStem} from '../../../core/store/navigation/query/query';
-import {AttributesResource, DataResource} from '../../../core/model/resource';
-import {QueryAttribute} from '../../../core/model/query-attribute';
-import {deepObjectCopy} from '../common.utils';
+import {Query, QueryStem} from '../../../core/store/navigation/query/query';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../core/model/resource';
+import {QueryAttribute, queryAttributePermissions} from '../../../core/model/query-attribute';
+import {deepObjectCopy, objectsByIdMap} from '../common.utils';
 import {SelectConstraint} from '../../../core/model/constraint/select.constraint';
 import {ColorConstraint} from '../../../core/model/constraint/color.constraint';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {
+  findAttributeConstraint,
+  isCollectionAttributeEditable,
+  isLinkTypeAttributeEditable,
+} from '../../../core/store/collections/collection.util';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 
 export interface DataObjectInfo<T> {
   objectDataResources: Record<DataObjectInfoKey, DataResource>;
@@ -59,6 +66,11 @@ export interface DataObjectInput<T> {
 }
 
 export class DataObjectAggregator<T> {
+  private collectionsMap: Record<string, Collection>;
+  private linkTypesMap: Record<string, LinkType>;
+  private permissions: Record<string, AllowedPermissions>;
+  private query: Query;
+
   private dataAggregator: DataAggregator;
 
   constructor(
@@ -78,9 +90,14 @@ export class DataObjectAggregator<T> {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     queryStem: QueryStem,
+    permissions: Record<string, AllowedPermissions>,
     constraintData?: ConstraintData
   ) {
     this.dataAggregator.updateData(collections, documents, linkTypes, linkInstances, queryStem, constraintData);
+    this.collectionsMap = objectsByIdMap(collections);
+    this.linkTypesMap = objectsByIdMap(linkTypes);
+    this.permissions = permissions;
+    this.query = {stems: [queryStem]};
   }
 
   public convert(input: DataObjectInput<T>): DataObjectInfo<T>[] {
@@ -190,7 +207,70 @@ export class DataObjectAggregator<T> {
     return this.dataAggregator.getNextCollectionResource(index);
   }
 
-  public parseColor(constraint: Constraint, values: any[]): string {
+  public getPreviousCollectionResource(index: number): AttributesResource {
+    return this.dataAggregator.getPreviousCollectionResource(index);
+  }
+
+  public getResource(model: QueryAttribute): AttributesResource {
+    if (model.resourceType === AttributesResourceType.Collection) {
+      return this.collectionsMap[model.resourceId];
+    } else if (model.resourceType === AttributesResourceType.LinkType) {
+      return this.linkTypesMap[model.resourceId];
+    }
+
+    return null;
+  }
+
+  public isAttributeEditable(model: QueryAttribute): boolean {
+    if (model && model.resourceType === AttributesResourceType.Collection) {
+      const collection = this.collectionsMap[model.resourceId];
+      return (
+        collection &&
+        isCollectionAttributeEditable(model.attributeId, collection, this.attributePermissions(model), this.query)
+      );
+    } else if (model && model.resourceType === AttributesResourceType.LinkType) {
+      const linkType = this.linkTypesMap[model.resourceId];
+      return (
+        linkType &&
+        isLinkTypeAttributeEditable(model.attributeId, linkType, this.attributePermissions(model), this.query)
+      );
+    }
+
+    return false;
+  }
+
+  public attributePermissions(model: QueryAttribute): AllowedPermissions {
+    if (!model) {
+      return {};
+    }
+
+    return queryAttributePermissions(model, this.permissions, this.linkTypesMap);
+  }
+
+  public getAttributeResourceColor(model: QueryAttribute): string {
+    const resource = this.getNextCollectionResource(model.resourceIndex);
+    return resource && (<Collection>resource).color;
+  }
+
+  public getAttributeColor(model: QueryAttribute, dataResources: DataResource[]): string {
+    const constraint = this.findAttributeConstraint(model);
+    const values = (model && (dataResources || []).map(dataResource => dataResource.data[model.attributeId])) || [];
+    return this.parseColor(constraint, values);
+  }
+
+  public getAttributeIcons(model: QueryAttribute): string[] {
+    if (model.resourceType === AttributesResourceType.Collection) {
+      return [(<Collection>this.getResource(model))?.icon].filter(icon => !!icon);
+    } else if (model.resourceType === AttributesResourceType.LinkType) {
+      const previousCollection = <Collection>this.getPreviousCollectionResource(model.resourceIndex);
+      const nextCollection = <Collection>this.getNextCollectionResource(model.resourceIndex);
+      return [previousCollection?.icon, nextCollection?.icon].filter(icon => !!icon);
+    }
+
+    return [];
+  }
+
+  private parseColor(constraint: Constraint, values: any[]): string {
     if (constraint?.type === ConstraintType.Select) {
       for (let i = 0; i < values.length; i++) {
         const options = (<SelectConstraint>constraint).createDataValue(values[i]).options;
@@ -205,6 +285,11 @@ export class DataObjectAggregator<T> {
       .map(color => colorConstraint.createDataValue(color))
       .find(dataValue => dataValue.isValid());
     return colorDataValue?.format();
+  }
+
+  public findAttributeConstraint(model: QueryAttribute): Constraint {
+    const resource = model && this.getResource(model);
+    return (resource && findAttributeConstraint(resource.attributes, model.attributeId)) || new UnknownConstraint();
   }
 
   private convertQueryAttribute(attribute: QueryAttribute, unique: boolean = true): DataAggregatorAttribute {
