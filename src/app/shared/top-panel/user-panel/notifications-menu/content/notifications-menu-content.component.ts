@@ -43,12 +43,6 @@ export class NotificationsMenuContentComponent {
   @Input()
   public organizations: Dictionary<Organization>;
 
-  @Input()
-  public workspace: Workspace;
-
-  @Input()
-  public currentProject: Project;
-
   @Output()
   public toggleUnread = new EventEmitter();
 

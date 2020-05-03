@@ -1,6 +1,11 @@
 @import '../../../../../../../styles/variables';
 
 .panel-item.notifications {
+  max-height: 90vh;
+  width: 28rem;
+  min-width: 18rem;
+  max-width: 90vw;
+
   height: var(--top-panel-line-height);
   line-height: var(--top-panel-line-height);
   white-space: nowrap;

@@ -1,0 +1,52 @@
+@import '../variables';
+
+.notification-grid-container {
+  border-top: 1px dotted $gray-200;
+  padding: 0.25rem 1rem 0.25rem 0;
+  display: grid;
+  grid-template-columns: 1.5fr 3fr 3fr 3fr;
+  grid-template-rows: min-content auto min-content;
+  gap: 1px 1px;
+  grid-template-areas: 'icon date controls controls' 'icon notification notification notification' 'icon path path path';
+
+  .separator {
+    color: $gray-500;
+  }
+
+  .icon {
+    grid-area: icon;
+    font-size: 2rem;
+  }
+
+  .date {
+    align-self: end;
+    grid-area: date;
+  }
+
+  .notification {
+    white-space: initial;
+    grid-area: notification;
+    font-weight: bold;
+
+    &.read,
+    &.read:hover,
+    &.read:focus {
+      font-weight: lighter;
+      color: $gray-500;
+    }
+  }
+
+  .path {
+    white-space: initial;
+    grid-area: path;
+  }
+
+  .controls {
+    justify-self: end;
+    grid-area: controls;
+
+    span {
+      vertical-align: text-bottom;
+    }
+  }
+}

@@ -1,0 +1,38 @@
+<div class="notification-grid-container dropdown-item cursor-pointer" (click)="emitOpen()">
+  <div class="date small text-muted">{{notification.createdAt | date:'shortDate' }}</div>
+  <div class="controls">
+    <i *ngIf="notification.read"
+       (click)="emitRead($event, false)"
+       class="fa fa-eye text-success ml-2 cursor-pointer"
+       title="Mark as unread"
+       i18n-title="@@userNotifications.mark.unread"></i>
+    <i *ngIf="!notification.read"
+       (click)="emitRead($event, true)"
+       class="fa fa-eye-slash text-success ml-2 cursor-pointer"
+       title="Mark as read"
+       i18n-title="@@userNotifications.mark.read"></i>
+    <i (click)="emitDelete($event)"
+       class="fa fa-trash text-danger ml-2 cursor-pointer"
+       [class.disabled]="notification.deleting"
+       title="Delete notification"
+       i18n-title="@@userNotifications.delete"></i>
+  </div>
+
+  <div notification-text
+       class="notification pb-2"
+       [class.read]="notification.read"
+       [notification]="notification"
+       [organizations]="organizations">
+  </div>
+  <div notification-icon
+       class="icon d-flex align-self-center justify-content-center"
+       [notification]="notification"
+       [organizations]="organizations">
+  </div>
+  <div notification-path
+       class="path small text-muted"
+       [notification]="notification"
+       [organizations]="organizations">
+  </div>
+
+</div>

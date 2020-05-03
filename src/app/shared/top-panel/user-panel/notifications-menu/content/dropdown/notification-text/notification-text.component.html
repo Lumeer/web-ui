@@ -1,0 +1,21 @@
+<ng-container [ngSwitch]="notification.type">
+  <ng-container *ngSwitchCase="notificationType.OrganizationShared">
+    <span i18n="@@userNotifications.organizationShared">A new organization has been shared with you.</span><br/>
+    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.ProjectShared">
+    <span class="trail" i18n="@@userNotifications.projectShared">A new project has been shared with you.</span><br/>
+    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.CollectionShared">
+    <span class="trail" i18n="@@userNotifications.collectionShared">A new table has been shared with you.</span><br/>
+    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.ViewShared">
+    <span class="trail" i18n="@@userNotifications.viewShared">A new view has been shared with you.</span><br/>
+    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+  </ng-container>
+</ng-container>
