@@ -24,7 +24,7 @@ export enum MapsActionType {
   CREATE_MAP = '[Maps] Create Map',
   DESTROY_MAP = '[Maps] Destroy Map',
 
-  SELECT_ATTRIBUTE = '[Maps] Select Attribute',
+  SET_CONFIG = '[Maps] Set Attribute',
 
   CHANGE_POSITION = '[Maps] Change Position',
   CHANGE_POSITION_SAVED = '[Maps] Change Position Saved',
@@ -45,10 +45,10 @@ export namespace MapsAction {
     constructor(public payload: {mapId: string}) {}
   }
 
-  export class SelectAttribute implements Action {
-    public readonly type = MapsActionType.SELECT_ATTRIBUTE;
+  export class SetConfig implements Action {
+    public readonly type = MapsActionType.SET_CONFIG;
 
-    constructor(public payload: {mapId: string; collectionId: string; index: number; attributeId: string}) {}
+    constructor(public payload: {mapId: string; config: MapConfig}) {}
   }
 
   export class ChangePosition implements Action {
@@ -67,5 +67,5 @@ export namespace MapsAction {
     public readonly type = MapsActionType.CLEAR;
   }
 
-  export type All = CreateMap | DestroyMap | SelectAttribute | ChangePosition | ChangePositionSaved | Clear;
+  export type All = CreateMap | DestroyMap | SetConfig | ChangePosition | ChangePositionSaved | Clear;
 }

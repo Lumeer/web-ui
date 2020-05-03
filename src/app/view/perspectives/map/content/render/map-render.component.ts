@@ -66,6 +66,7 @@ import {
   createMapMarkersBounds,
 } from './map-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
+import {areMapMarkerListsEqual, mapMarkerId} from '../map-content.utils';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -106,6 +107,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private allMarkers: Record<string, Marker>;
   private drawnMarkers: Marker[] = [];
+  private pendingUpdate: MarkerMoveEvent;
 
   private mapLoaded$ = new BehaviorSubject(false);
   private markers$ = new BehaviorSubject<MapMarkerProperties[]>([]);
@@ -143,13 +145,17 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       this.refreshMapPosition();
     }
 
-    if ((changes.markers || changes.constraintData) && this.markers) {
-      this.markers$.next(this.markers);
+    if (changes.markers && this.markers) {
+      if (areMapMarkerListsEqual(changes.markers.previousValue, this.markers, this.pendingUpdate)) {
+        this.pendingUpdate = undefined;
+      } else {
+        this.markers$.next(this.markers);
+      }
     }
   }
 
   private mapPositionChanged() {
-    const position = this.map && this.map.config && this.map.config.position;
+    const position = this.map?.config?.position;
     return (
       this.mapboxMap &&
       !this.mapIsMoving() &&
@@ -173,7 +179,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private refreshMapPosition() {
-    const position = this.map.config.position;
+    const position = this.map?.config?.position;
     if (position && this.mapboxMap) {
       this.mapboxMap.setZoom(position.zoom);
       this.mapboxMap.setCenter({...position.center});
@@ -348,10 +354,12 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private onMarkerDragEnd(event: {target: Marker}, properties: MapMarkerProperties) {
-    event.target.setDraggable(false); // disable dragging until map refresh
-
     const coordinates: MapCoordinates = event.target.getLngLat();
-    this.markerMove.emit({coordinates, properties});
+    const markerId = mapMarkerId(properties);
+    const freshProperties = this.markers.find(marker => mapMarkerId(marker) === markerId) || properties;
+    const moveEvent = {coordinates, properties: freshProperties};
+    this.pendingUpdate = moveEvent;
+    this.markerMove.emit(moveEvent);
   }
 
   public ngOnDestroy() {
@@ -411,11 +419,4 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
       'ScaleControl.NauticalMiles': this.i18n({id: 'distance.nauticalMiles', value: 'nm'}),
     };
   }
-}
-
-function mapMarkerId(properties: MapMarkerProperties): string {
-  if (!properties.dataResourceId) {
-    return null;
-  }
-  return `${properties.dataResourceId}:${properties.attributeId}`;
 }

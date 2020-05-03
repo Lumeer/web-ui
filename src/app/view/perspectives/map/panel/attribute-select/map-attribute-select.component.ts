@@ -21,6 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Outp
 import {Collection} from '../../../../../core/store/collections/collection';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {MapAttributeModel} from '../../../../../core/store/maps/map.model';
 
 @Component({
   selector: 'map-attribute-select',
@@ -30,37 +31,35 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 })
 export class MapAttributeSelectComponent implements OnChanges {
   @Input()
-  public attributeId: string;
+  public attributes: MapAttributeModel[];
 
   @Input()
-  public collection: Collection;
+  public selectItems: SelectItemModel[];
 
   @Output()
-  public select = new EventEmitter<string>();
+  public attributesChanged = new EventEmitter<MapAttributeModel[]>();
 
-  public items: SelectItemModel[];
-
-  public readonly emptyValueString: string;
-
-  constructor(private i18n: I18n) {
-    this.emptyValueString = i18n({id: 'map.config.attribute.empty', value: 'Select attribute'});
-  }
+  public selectAttributes: MapAttributeModel[];
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.collection && this.collection) {
-      this.items = this.createSelectItems();
+    if (changes.attributes) {
+      this.selectAttributes = [...(this.attributes || []), null];
     }
   }
 
-  private createSelectItems(): SelectItemModel[] {
-    return this.collection.attributes.map(attribute => ({id: attribute.id, value: attribute.name}));
+  public trackByIndex(index: number, model: MapAttributeModel): number {
+    return index;
   }
 
-  public onSelect(attributeId: string) {
-    this.select.emit(attributeId);
+  public onAttributeSelect(index: number, model: MapAttributeModel) {
+    const attributes = [...(this.attributes || [])];
+    attributes[index] = model;
+    this.attributesChanged.emit(attributes);
   }
 
-  public onRemove() {
-    this.select.emit(null);
+  public onAttributeRemoved(index: number) {
+    const attributes = [...this.attributes];
+    attributes.splice(index, 1);
+    this.attributesChanged.emit(attributes);
   }
 }

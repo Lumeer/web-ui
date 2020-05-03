@@ -61,8 +61,8 @@ export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig
     return true;
   }
 
-  if (viewConfig.positionSaved || currentConfig.positionSaved) {
-    return !deepObjectsEquals(viewConfig.position, currentConfig.position);
+  if (ganttStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
+    return true;
   }
 
   if (
@@ -78,7 +78,7 @@ export function isGanttConfigChanged(viewConfig: GanttChartConfig, currentConfig
     return true;
   }
 
-  return ganttStemsConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || []);
+  return false;
 }
 
 function ganttStemsConfigsChanged(c1: GanttChartStemConfig[], c2: GanttChartStemConfig[]): boolean {
@@ -134,7 +134,7 @@ function checkOrTransformGanttStemsConfig(
 ): GanttChartStemConfig[] {
   const stemsConfigsCopy = [...(stemsConfigs || [])];
   return (query?.stems || []).map(stem => {
-    const stemCollectionIds = collectionIdsChainForStem(stem, []);
+    const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
     return checkOrTransformGanttStemConfig(stemConfig[0], stem, collections, linkTypes);
@@ -191,7 +191,7 @@ export function createDefaultGanttChartStemConfig(
     const config = createDefaultNameAndDateRangeConfig(stem, collections, linkTypes);
     return {stem, ...config};
   }
-  return {};
+  return {stem};
 }
 
 export function createLinkDocumentsDataNewTask(task: GanttChartTask, otherTasks: GanttChartTask[]): string[] {

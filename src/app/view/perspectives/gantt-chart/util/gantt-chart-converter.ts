@@ -27,14 +27,9 @@ import {Constraint} from '../../../../core/model/constraint';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {PercentageConstraintConfig} from '../../../../core/model/data/constraint-config';
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
+import {AttributesResourceType} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
-import {
-  findAttribute,
-  findAttributeConstraint,
-  isCollectionAttributeEditable,
-  isLinkTypeAttributeEditable,
-} from '../../../../core/store/collections/collection.util';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {
   GANTT_DATE_FORMAT,
@@ -72,8 +67,7 @@ import {
   DataObjectAttribute,
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
-import {QueryAttribute, queryAttributePermissions} from '../../../../core/model/query-attribute';
-import {fullWithNulls} from '../../../../shared/utils/array.utils';
+import {fillWithNulls} from '../../../../shared/utils/array.utils';
 import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
 import {stripTextHtmlTags} from '../../../../shared/utils/data.utils';
 
@@ -97,12 +91,8 @@ enum DataObjectInfoKeyType {
 }
 
 export class GanttChartConverter {
-  private collectionsMap: Record<string, Collection>;
-  private linkTypesMap: Record<string, LinkType>;
   private config: GanttChartConfig;
   private constraintData?: ConstraintData;
-  private permissions: Record<string, AllowedPermissions>;
-  private query: Query;
 
   private convertCount = 0;
 
@@ -123,17 +113,26 @@ export class GanttChartConverter {
     constraintData: ConstraintData,
     query: Query
   ): {options: GanttOptions; tasks: GanttTask[]} {
-    this.updateData(config, collections, linkTypes, permissions, constraintData, query);
+    this.config = config;
+    this.constraintData = constraintData;
 
     const tasks = (query?.stems || [])
       .reduce((allTasks, stem, index) => {
-        this.dataObjectAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, constraintData);
+        this.dataObjectAggregator.updateData(
+          collections,
+          documents,
+          linkTypes,
+          linkInstances,
+          stem,
+          permissions,
+          constraintData
+        );
         allTasks.push(...this.convertByStem(index));
         return allTasks;
       }, [])
       .sort((t1, t2) => this.compareTasks(t1, t2));
 
-    const options = this.createGanttOptions(config);
+    const options = this.createGanttOptions(config, permissions, linkTypes);
 
     this.convertCount++;
     return {options, tasks};
@@ -145,25 +144,14 @@ export class GanttChartConverter {
     return t1Start.isAfter(t2Start) ? 1 : t1Start.isBefore(t2Start) ? -1 : 0;
   }
 
-  private updateData(
+  private createGanttOptions(
     config: GanttChartConfig,
-    collections: Collection[],
-    linkTypes: LinkType[],
     permissions: Record<string, AllowedPermissions>,
-    constraintData: ConstraintData,
-    query: Query
-  ) {
-    this.config = config;
-    this.collectionsMap = objectsByIdMap(collections);
-    this.linkTypesMap = objectsByIdMap(linkTypes);
-    this.permissions = permissions;
-    this.constraintData = constraintData;
-    this.query = query;
-  }
-
-  private createGanttOptions(config: GanttChartConfig): GanttOptions {
+    linkTypes: LinkType[]
+  ): GanttOptions {
+    const linkTypesMap = objectsByIdMap(linkTypes);
     const createTasks = (config.stemsConfigs || []).some(stemConfig =>
-      canCreateTaskByStemConfig(stemConfig, this.permissions, this.linkTypesMap)
+      canCreateTaskByStemConfig(stemConfig, permissions, linkTypesMap)
     );
     return {
       swimlaneInfo: this.convertSwimlaneInfo(config),
@@ -223,7 +211,7 @@ export class GanttChartConverter {
     let title = '';
     let background = null;
     if (model) {
-      const resource = this.getResource(model);
+      const resource = this.dataObjectAggregator.getResource(model);
       background = shadeColor((<Collection>resource).color, 0.5);
       const attribute = resource && findAttribute(resource.attributes, model.attributeId);
       title = attribute && attribute.name;
@@ -282,8 +270,8 @@ export class GanttChartConverter {
     dataObjectsInfo: DataObjectInfo<GanttSwimlane>[],
     showDatesAsSwimlanes: boolean
   ): GanttTask[] {
-    const endEditable = this.isPropertyEditable(stemConfig.end);
-    const endConstraint = stemConfig.end && this.findConstraintForModel(stemConfig.end);
+    const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
+    const endConstraint = stemConfig.end && this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
 
     const validTaskIds = [];
     const validDataResourceIdsMap: Record<string, string[]> = dataObjectsInfo.reduce((map, item) => {
@@ -309,17 +297,17 @@ export class GanttChartConverter {
       return map;
     }, {});
 
-    const nameConstraint = this.findConstraintForModel(stemConfig.name);
+    const nameConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.name);
 
-    const startEditable = this.isPropertyEditable(stemConfig.start);
-    const startConstraint = this.findConstraintForModel(stemConfig.start);
+    const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start);
+    const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
 
-    const progressEditable = this.isPropertyEditable(stemConfig.progress);
-    const progressConstraint = this.findConstraintForModel(stemConfig.progress);
+    const progressEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.progress);
+    const progressConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.progress);
 
-    const progressPermission = this.modelPermissions(stemConfig.progress);
-    const startPermission = this.modelPermissions(stemConfig.start);
-    const endPermission = this.modelPermissions(stemConfig.end);
+    const progressPermission = this.dataObjectAggregator.attributePermissions(stemConfig.progress);
+    const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
+    const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
 
     const dataModel = stemConfig.start || stemConfig.name;
     const canEditDependencies = dataModel && dataModel.resourceType === AttributesResourceType.Collection;
@@ -350,17 +338,15 @@ export class GanttChartConverter {
       const progressRaw = aggregateDataValues(dataAggregationType, progresses, progressConstraint, true);
       const progress = progressConstraint.createDataValue(progressRaw).format();
 
-      const resourceColor = this.getPropertyColor(stemConfig.name || stemConfig.start);
-      const taskColor = this.parseColor(stemConfig.color, colorDataResources);
+      const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(stemConfig.name || stemConfig.start);
+      const taskColor = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources);
 
       const datesSwimlanes: {value: any; title: string}[] = [];
       if (showDatesAsSwimlanes) {
-        const startString = (this.findConstraintForModel(stemConfig.start) || new UnknownConstraint())
+        const startString = (startConstraint || new UnknownConstraint())
           .createDataValue(start, this.constraintData)
           .format();
-        const endString = (this.findConstraintForModel(stemConfig.end) || new UnknownConstraint())
-          .createDataValue(end, this.constraintData)
-          .format();
+        const endString = (endConstraint || new UnknownConstraint()).createDataValue(end, this.constraintData).format();
         datesSwimlanes.push(
           ...[
             {value: startString, title: startString},
@@ -417,7 +403,7 @@ export class GanttChartConverter {
           progressDrag: progressEditable && metadata.progressDataIds.length === 1 && progressPermission.writeWithView,
           editable: startPermission.writeWithView && endPermission.writeWithView,
           textColor: contrastColor(barColor),
-          swimlanes: [...fullWithNulls(metadata.swimlanes, maximumSwimlanes), ...datesSwimlanes],
+          swimlanes: [...fillWithNulls(metadata.swimlanes, maximumSwimlanes), ...datesSwimlanes],
           minProgress,
           maxProgress,
 
@@ -429,63 +415,12 @@ export class GanttChartConverter {
     }, []);
   }
 
-  private parseColor(model: GanttChartBarModel, dataResources: DataResource[]): string {
-    const constraint = this.findConstraintForModel(model);
-    const values = (model && (dataResources || []).map(dataResource => dataResource.data[model.attributeId])) || [];
-    return this.dataObjectAggregator.parseColor(constraint, values);
-  }
-
-  private isPropertyEditable(model: GanttChartBarModel): boolean {
-    if (model && model.resourceType === AttributesResourceType.Collection) {
-      const collection = this.collectionsMap[model.resourceId];
-      return (
-        collection &&
-        isCollectionAttributeEditable(model.attributeId, collection, this.modelPermissions(model), this.query)
-      );
-    } else if (model && model.resourceType === AttributesResourceType.LinkType) {
-      const linkType = this.linkTypesMap[model.resourceId];
-      return (
-        linkType && isLinkTypeAttributeEditable(model.attributeId, linkType, this.modelPermissions(model), this.query)
-      );
-    }
-
-    return false;
-  }
-
-  private modelPermissions(model: GanttChartBarModel): AllowedPermissions {
-    if (!model) {
-      return {};
-    }
-
-    return queryAttributePermissions(model, this.permissions, this.linkTypesMap);
-  }
-
-  private getResource(model: GanttChartBarModel): AttributesResource {
-    if (model.resourceType === AttributesResourceType.Collection) {
-      return this.collectionsMap[model.resourceId];
-    } else if (model.resourceType === AttributesResourceType.LinkType) {
-      return this.linkTypesMap[model.resourceId];
-    }
-
-    return null;
-  }
-
-  private findConstraintForModel(model: QueryAttribute): Constraint {
-    const resource = model && this.getResource(model);
-    return (resource && findAttributeConstraint(resource.attributes, model.attributeId)) || new UnknownConstraint();
-  }
-
-  private getPropertyColor(model: QueryAttribute): string {
-    const resource = this.dataObjectAggregator.getNextCollectionResource(model.resourceIndex);
-    return resource && (<Collection>resource).color;
-  }
-
   private requiredPropertiesAreSet(stemConfig: GanttChartStemConfig): boolean {
     return !!stemConfig.start && !!stemConfig.end;
   }
 
-  private formatSwimlaneValue(value: any, barModel: QueryAttribute): GanttSwimlane | null {
-    const constraint = this.findConstraintForModel(barModel);
+  private formatSwimlaneValue(value: any, barModel: GanttChartBarModel): GanttSwimlane | null {
+    const constraint = this.dataObjectAggregator.findAttributeConstraint(barModel);
     const overrideConstraint =
       barModel?.constraint && this.formatter.checkValidConstraintOverride(constraint, barModel.constraint);
 

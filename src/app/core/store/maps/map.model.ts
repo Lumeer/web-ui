@@ -18,6 +18,8 @@
  */
 
 import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
+import {QueryAttribute} from '../../model/query-attribute';
+import {QueryStem} from '../navigation/query/query';
 
 export interface MapCoordinates {
   lat: number;
@@ -37,15 +39,26 @@ export interface MapPosition {
 }
 
 export interface MapConfig {
-  attributeIdsMap?: AttributeIdsMap;
+  stemsConfigs?: MapStemConfig[];
   position?: MapPosition;
   positionSaved?: boolean;
+  version?: MapConfigVersion;
 }
 
-export type AttributeIdsMap = Record<string, string[]>;
+export interface MapStemConfig {
+  stem?: QueryStem;
+  attributes?: MapAttributeModel[];
+  color?: MapAttributeModel;
+}
+
+export interface MapAttributeModel extends QueryAttribute {}
+
+export enum MapConfigVersion {
+  V1 = '1',
+}
 
 export const DEFAULT_MAP_CONFIG: MapConfig = {
-  attributeIdsMap: {},
+  stemsConfigs: [],
   positionSaved: false,
 };
 
@@ -54,7 +67,7 @@ export interface MapMarkerProperties {
   resourceType: AttributesResourceType;
   dataResourceId: string;
   attributeId: string;
-  icon: string;
+  icons: string[];
   color: string;
   displayValue: string;
   positionValue: string;
@@ -66,6 +79,8 @@ export interface MapMarkerProperties {
 export interface MapMarkerData {
   resource: AttributesResource;
   dataResource: DataResource;
+  color: string;
+  icons: string[];
   attributeId: string;
   editable?: boolean;
 }

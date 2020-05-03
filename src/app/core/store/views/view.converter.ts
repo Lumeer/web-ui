@@ -27,6 +27,7 @@ import {convertGanttChartDtoConfigToModel} from '../gantt-charts/gantt-chart-con
 import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-converter';
 import {convertKanbanConfigDtoToModel} from '../kanbans/kanban-config.converter';
 import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
+import {convertMapDtoConfigToModel} from '../maps/map-config-converter';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {
@@ -68,6 +69,8 @@ function convertViewConfigDtoToModel(perspective: Perspective, config: any): Vie
       return {...config, calendar: convertCalendarDtoConfigToModel(config?.calendar)};
     case Perspective.Kanban:
       return {...config, kanban: convertKanbanConfigDtoToModel(config?.kanban)};
+    case Perspective.Map:
+      return {...config, map: convertMapDtoConfigToModel(config?.map)};
     default:
       return config;
   }

@@ -106,7 +106,7 @@ export function createRange(from: number, to: number): number[] {
   return range.map(r => r + from);
 }
 
-export function fullWithNulls<T>(array: T[], maximum: number): T[] {
+export function fillWithNulls<T>(array: T[], maximum: number): T[] {
   const copy = [...(array || [])];
   for (let i = array.length; i < maximum; i++) {
     copy.push(null);

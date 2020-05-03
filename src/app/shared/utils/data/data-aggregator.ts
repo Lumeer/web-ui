@@ -126,6 +126,13 @@ export class DataAggregator {
     return this.attributesResourcesOrder[index];
   }
 
+  public getPreviousCollectionResource(index: number): AttributesResource {
+    if (this.attributesResourceTypeForIndex(index) === AttributesResourceType.LinkType) {
+      return this.attributesResourcesOrder[index - 1];
+    }
+    return this.attributesResourcesOrder[index];
+  }
+
   public aggregate(
     rowAttributes: DataAggregatorAttribute[],
     columnAttributes: DataAggregatorAttribute[],

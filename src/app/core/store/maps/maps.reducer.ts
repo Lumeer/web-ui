@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeIdsMap, DEFAULT_MAP_CONFIG, MapModel} from './map.model';
+import {DEFAULT_MAP_CONFIG, MapModel} from './map.model';
 import {MapsAction, MapsActionType} from './maps.action';
 import {initialMapsState, mapsAdapter, MapsState} from './maps.state';
 
@@ -27,8 +27,8 @@ export function mapsReducer(state: MapsState = initialMapsState, action: MapsAct
       return createMap(state, action);
     case MapsActionType.DESTROY_MAP:
       return mapsAdapter.removeOne(action.payload.mapId, state);
-    case MapsActionType.SELECT_ATTRIBUTE:
-      return selectAttribute(state, action);
+    case MapsActionType.SET_CONFIG:
+      return mapsAdapter.updateOne({id: action.payload.mapId, changes: {config: action.payload.config}}, state);
     case MapsActionType.CHANGE_POSITION:
       return changePosition(state, action);
     case MapsActionType.CHANGE_POSITION_SAVED:
@@ -48,29 +48,6 @@ function createMap(state: MapsState, action: MapsAction.CreateMap): MapsState {
     config: {...DEFAULT_MAP_CONFIG, ...config},
   };
   return mapsAdapter.upsertOne(map, state);
-}
-
-function selectAttribute(state: MapsState, action: MapsAction.SelectAttribute): MapsState {
-  const {mapId, collectionId, index, attributeId} = action.payload;
-
-  const map = state.entities[mapId];
-  if (!map) {
-    return state;
-  }
-
-  const oldAttributeIdsMap: AttributeIdsMap = (map.config && map.config.attributeIdsMap) || {};
-
-  const attributeIds = [...(oldAttributeIdsMap[collectionId] || [])];
-  if (attributeId) {
-    attributeIds.splice(index, 1, attributeId);
-  } else {
-    attributeIds.splice(index, 1);
-  }
-
-  const attributeIdsMap: AttributeIdsMap = {...oldAttributeIdsMap, [collectionId]: attributeIds};
-  const config = {...map.config, attributeIdsMap};
-
-  return mapsAdapter.updateOne({id: mapId, changes: {config}}, state);
 }
 
 function changePosition(state: MapsState, action: MapsAction.ChangePosition): MapsState {

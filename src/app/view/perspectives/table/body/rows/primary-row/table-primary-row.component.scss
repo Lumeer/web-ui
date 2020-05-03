@@ -1,3 +1,7 @@
 :host {
   display: flex;
 }
+
+.add-button-cell {
+  width: calc(var(--column-group-height, 30px) - 2px);
+}

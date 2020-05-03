@@ -1,6 +1,0 @@
-<map-attribute-select *ngFor="let attributeId of attributeIds; trackBy: trackByIndex; index as attributeIndex"
-                      [collection]="collection"
-                      [attributeId]="attributeId"
-                      (select)="select.emit([attributeIndex, $event])"
-                      class="my-2">
-</map-attribute-select>

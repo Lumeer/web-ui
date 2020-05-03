@@ -39,18 +39,36 @@
       border-top-width: 18px;
     }
 
-    & > .map-marker-icon {
+    & > .map-marker-icon,
+    & > .map-marker-icons {
       background: #000000;
       border-radius: 50%;
       color: #fff;
-      font-size: 14px;
       height: 24px;
       width: 24px;
+      z-index: 1;
+      position: relative;
+    }
+
+    & > .map-marker-icon {
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 1;
-      position: relative;
+    }
+
+    & > .map-marker-icons {
+      font-size: 9px;
+      display: flex;
+      padding: 2px;
+
+      & > :first-child {
+        align-self: flex-start;
+      }
+
+      & > :last-child {
+        align-self: flex-end;
+      }
     }
   }
 }

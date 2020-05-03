@@ -48,9 +48,9 @@ export class GanttChartConfigComponent {
 
   public readonly defaultStemConfig = createDefaultGanttChartStemConfig();
 
-  public onStemConfigChange(collectionConfig: GanttChartStemConfig, stem: QueryStem, index: number) {
+  public onStemConfigChange(stemConfig: GanttChartStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<GanttChartConfig>(this.config);
-    config.stemsConfigs[index] = {...collectionConfig, stem};
+    config.stemsConfigs[index] = {...stemConfig, stem};
     this.configChange.emit(config);
   }
 

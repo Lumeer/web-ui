@@ -17,11 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Attribute} from '../../../../core/store/collections/collection';
 import {
-  AttributeIdsMap,
   MapAttributeType,
   MapCoordinates,
   MapMarkerData,
@@ -34,38 +31,7 @@ import {UnknownConstraint} from '../../../../core/model/constraint/unknown.const
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
-
-export function extractCollectionsFromDocuments(
-  collectionsMap: Record<string, Collection>,
-  documents: DocumentModel[]
-): Collection[] {
-  return [
-    ...documents.reduce((collectionIds, document) => {
-      collectionIds.add(document.collectionId);
-      return collectionIds;
-    }, new Set<string>()),
-  ].map(collectionId => collectionsMap[collectionId]);
-}
-
-export function createMarkerPropertiesData(
-  documents: DocumentModel[],
-  attributeIdsMap: AttributeIdsMap,
-  collectionsMap: Record<string, Collection>,
-  collectionPermissions: Record<string, AllowedPermissions>
-): MapMarkerData[] {
-  return documents.reduce<MapMarkerData[]>((propertiesList, document) => {
-    const attributeIds = attributeIdsMap[document.collectionId] || [];
-    for (const attributeId of attributeIds) {
-      const collection = collectionsMap[document.collectionId];
-      const editable = collectionPermissions[document.collectionId]?.writeWithView;
-
-      if (collection && !!document.data[attributeId]) {
-        propertiesList.push({resource: collection, dataResource: document, attributeId, editable});
-      }
-    }
-    return propertiesList;
-  }, []);
-}
+import {MarkerMoveEvent} from './render/marker-move.event';
 
 export function populateCoordinateProperties(
   propertiesList: MapMarkerData[],
@@ -115,8 +81,8 @@ export function createMarkerPropertyFromData(
     resourceId: data.resource.id,
     resourceType: getAttributesResourceType(data.resource),
     dataResourceId: data.dataResource.id,
-    color: (<Collection>data.resource).color,
-    icon: (<Collection>data.resource).icon,
+    color: data.color,
+    icons: data.icons,
     attributeId: data.attributeId,
     editable: data.editable,
     attributeType,
@@ -128,7 +94,8 @@ export function createMarkerPropertyFromData(
 
 export function areMapMarkerListsEqual(
   previousMarkers: MapMarkerProperties[],
-  nextMarkers: MapMarkerProperties[]
+  nextMarkers: MapMarkerProperties[],
+  pendingUpdate?: MarkerMoveEvent
 ): boolean {
   if (!previousMarkers || previousMarkers.length !== nextMarkers.length) {
     return false;
@@ -136,14 +103,44 @@ export function areMapMarkerListsEqual(
 
   const nextMarkersMap = createMapMarkersMap(nextMarkers);
 
-  return !previousMarkers.some(marker => isMapMarkerChanged(marker, nextMarkersMap[marker.dataResourceId]));
+  return !previousMarkers.some(marker => {
+    const nextMarker = nextMarkersMap[mapMarkerId(marker)];
+    if (isMapMarkerChanged(marker, nextMarker)) {
+      return !(
+        pendingUpdate &&
+        nextMarker &&
+        deepObjectsEquals(pendingUpdate.properties, marker) &&
+        coordinatesAreSame(nextMarker.coordinates, pendingUpdate.coordinates)
+      );
+    }
+    return false;
+  });
+}
+
+function coordinatesAreSame(first: MapCoordinates, second: MapCoordinates): boolean {
+  if (!first || !second) {
+    return false;
+  }
+
+  const numDecimals = String(first.lat).split('.')?.[1]?.length || 0;
+  return (
+    first.lat.toFixed(numDecimals) === second.lat.toFixed(numDecimals) &&
+    first.lng.toFixed(numDecimals) === second.lng.toFixed(numDecimals)
+  );
 }
 
 function createMapMarkersMap(markers: MapMarkerProperties[]): Record<string, MapMarkerProperties> {
   return markers.reduce((markersMap, marker) => {
-    markersMap[marker.dataResourceId] = marker;
+    markersMap[mapMarkerId(marker)] = marker;
     return markersMap;
   }, {});
+}
+
+export function mapMarkerId(properties: MapMarkerProperties): string {
+  if (!properties.dataResourceId) {
+    return null;
+  }
+  return `${properties.dataResourceId}:${properties.attributeId}`;
 }
 
 function isMapMarkerChanged(previousMarker: MapMarkerProperties, nextMarker: MapMarkerProperties): boolean {

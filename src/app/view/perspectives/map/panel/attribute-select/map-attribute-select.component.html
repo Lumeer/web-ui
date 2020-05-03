@@ -1,11 +1,13 @@
-<select-item [items]="items"
-             [selectedId]="attributeId"
+<select-item *ngFor="let attribute of selectAttributes; trackBy: trackByIndex, let index = index"
+             class="d-block w-100 mt-2"
+             [items]="selectItems | attributeSelectItems:selectAttributes:index"
+             [selectedId]="attribute | cleanQueryAttribute"
+             placeholderText="Attribute"
+             i18n-placeholderText="@@map.config.attribute.placeholder"
+             emptyValue="Select attribute"
+             i18n-emptyValue="@@map.config.attribute.empty"
+             buttonClasses="flex-grow-1 text-truncate"
              [removable]="true"
-             [fitParent]="true"
-             [placeholderIcon]="collection.icon"
-             [placeholderColor]="collection.color"
-             [placeholderTitle]="collection.name"
-             [emptyValue]="emptyValueString"
-             (select)="onSelect($event)"
-             (remove)="onRemove()">
+             (select)="onAttributeSelect(index,$event)"
+             (remove)="onAttributeRemoved(index)">
 </select-item>

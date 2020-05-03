@@ -7,12 +7,16 @@
   Select attributes with addresses or Earth coordinates to position records on the map.
 </p>
 
-<map-attribute-group *ngFor="let collection of collections"
-                     [collection]="collection"
-                     [attributeIds]="map?.config | mapAttributeIds : collection.id"
-                     (select)="onSelect(collection, $event)">
-</map-attribute-group>
-
-<map-position-checkbox [value]="map?.config?.positionSaved"
+<map-position-checkbox class="d-block mt-3"
+                       [value]="map?.config?.positionSaved"
                        (valueChange)="onPositionSavedChange($event)">
 </map-position-checkbox>
+
+<map-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
+                 class="d-block mt-4"
+                 [config]="map?.config?.stemsConfigs && map?.config?.stemsConfigs[index] || defaultStemConfig"
+                 [stem]="stem"
+                 [collections]="collections"
+                 [selectItems]="stem | queryStemAttributesSelectItems:collections:linkTypes"
+                 (configChange)="onStemConfigChange($event, stem, index)">
+</map-stem-config>

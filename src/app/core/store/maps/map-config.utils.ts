@@ -20,7 +20,27 @@
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ConstraintType} from '../../model/data/constraint';
 import {Attribute, Collection} from '../collections/collection';
-import {AttributeIdsMap, MapConfig} from './map.model';
+import {MapAttributeModel, MapConfig, MapConfigVersion, MapStemConfig} from './map.model';
+import {Query, QueryStem} from '../navigation/query/query';
+import {LinkType} from '../link-types/link.type';
+import {
+  checkOrTransformQueryAttribute,
+  collectionIdsChainForStem,
+  findBestStemConfigIndex,
+  queryStemAttributesResourcesOrder,
+} from '../navigation/query/query.util';
+import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
+
+export function mapAttributesAreInAllowedRange(model: MapAttributeModel, otherModel: MapAttributeModel): boolean {
+  if (!model || !otherModel) {
+    return true;
+  }
+
+  const resourceIndex = model.resourceIndex;
+  const allowedResourceIndexes =
+    resourceIndex % 2 === 0 ? [resourceIndex, resourceIndex - 1] : [resourceIndex, resourceIndex + 1];
+  return allowedResourceIndexes.includes(otherModel.resourceIndex);
+}
 
 export function filterLocationAttributes(attributes: Attribute[]): Attribute[] {
   return (attributes || []).filter(
@@ -30,7 +50,7 @@ export function filterLocationAttributes(attributes: Attribute[]): Attribute[] {
 }
 
 export function isMapConfigChanged(viewConfig: MapConfig, perspectiveConfig: MapConfig): boolean {
-  if (!deepObjectsEquals(viewConfig.attributeIdsMap, perspectiveConfig.attributeIdsMap)) {
+  if (mapStemConfigsChanged(viewConfig.stemsConfigs, perspectiveConfig.stemsConfigs)) {
     return true;
   }
 
@@ -43,4 +63,101 @@ export function isMapConfigChanged(viewConfig: MapConfig, perspectiveConfig: Map
   }
 
   return false;
+}
+
+function mapStemConfigsChanged(c1: MapStemConfig[], c2: MapStemConfig[]): boolean {
+  if (c1.length !== c2.length) {
+    return true;
+  }
+
+  return c1.some((config, index) => mapStemConfigChanged(config, c2[index]));
+}
+
+function mapStemConfigChanged(config: MapStemConfig, mapStemConfig: MapStemConfig) {
+  return !deepObjectsEquals(config, mapStemConfig);
+}
+
+export function checkOrTransformMapConfig(
+  config: MapConfig,
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): MapConfig {
+  if (!config) {
+    return createMapDefaultConfig(query, collections, linkTypes);
+  }
+
+  return {
+    ...config,
+    stemsConfigs: checkOrTransformMapStemsConfig(config.stemsConfigs || [], query, collections, linkTypes),
+  };
+}
+
+function checkOrTransformMapStemsConfig(
+  stemsConfigs: MapStemConfig[],
+  query: Query,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): MapStemConfig[] {
+  const stemsConfigsCopy = [...(stemsConfigs || [])];
+  return (query?.stems || []).map(stem => {
+    const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
+    const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
+    const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
+    return checkOrTransformMapStemConfig(stemConfig[0], stem, collections, linkTypes);
+  });
+}
+
+function checkOrTransformMapStemConfig(
+  stemConfig: MapStemConfig,
+  stem: QueryStem,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): MapStemConfig {
+  if (!stemConfig) {
+    return createMapDefaultStemConfig(stem, collections, linkTypes);
+  }
+
+  const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
+  return {
+    stem,
+    attributes: stemConfig.attributes?.map(attribute =>
+      checkOrTransformQueryAttribute(attribute, attributesResourcesOrder)
+    ),
+    color: checkOrTransformQueryAttribute(stemConfig.color, attributesResourcesOrder),
+  };
+}
+
+function createMapDefaultConfig(query: Query, collections: Collection[], linkTypes: LinkType[]): MapConfig {
+  const stems = query?.stems || [];
+  const stemsConfigs = stems.map(stem => createMapDefaultStemConfig(stem, collections, linkTypes));
+  return {
+    version: MapConfigVersion.V1,
+    stemsConfigs,
+  };
+}
+
+export function createMapDefaultStemConfig(
+  stem?: QueryStem,
+  collections?: Collection[],
+  linkTypes?: LinkType[]
+): MapStemConfig {
+  if (stem && collections) {
+    const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
+    for (let i = 0; i < attributesResourcesOrder.length; i++) {
+      const resource = attributesResourcesOrder[i];
+      const locationAttributes = filterLocationAttributes(resource.attributes);
+      if (locationAttributes.length) {
+        const mapAttributes = locationAttributes.map(attribute => ({
+          attributeId: attribute.id,
+          resourceId: resource.id,
+          resourceType: getAttributesResourceType(resource),
+          resourceIndex: i,
+        }));
+        return {stem, attributes: mapAttributes};
+      }
+    }
+    return {stem, attributes: []};
+  }
+  return {stem};
 }

@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -25,22 +24,15 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
+import {CalendarConfig, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {CalendarEvent} from './calendar-event';
-import {isArray, isDateValid, isNotNullOrUndefined, objectsByIdMap} from '../../../../shared/utils/common.utils';
+import {isArray, isDateValid, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {
   DataObjectAggregator,
   DataObjectAttribute,
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
-import {QueryAttribute, queryAttributePermissions} from '../../../../core/model/query-attribute';
 import {Constraint} from '../../../../core/model/constraint';
-import {
-  findAttributeConstraint,
-  isCollectionAttributeEditable,
-  isLinkTypeAttributeEditable,
-} from '../../../../core/store/collections/collection.util';
-import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {isAllDayEvent} from './calendar-util';
 import {
   constraintContainsHoursInConfig,
@@ -60,12 +52,8 @@ enum DataObjectInfoKeyType {
 }
 
 export class CalendarConverter {
-  private collectionsMap: Record<string, Collection>;
-  private linkTypesMap: Record<string, LinkType>;
   private config: CalendarConfig;
   private constraintData?: ConstraintData;
-  private permissions: Record<string, AllowedPermissions>;
-  private query: Query;
 
   private dataObjectAggregator = new DataObjectAggregator<any>();
 
@@ -79,29 +67,22 @@ export class CalendarConverter {
     constraintData: ConstraintData,
     query: Query
   ): CalendarEvent[] {
-    this.updateData(config, collections, linkTypes, permissions, constraintData, query);
+    this.config = config;
+    this.constraintData = constraintData;
 
     return (query?.stems || []).reduce((allEvents, stem, index) => {
-      this.dataObjectAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, constraintData);
+      this.dataObjectAggregator.updateData(
+        collections,
+        documents,
+        linkTypes,
+        linkInstances,
+        stem,
+        permissions,
+        constraintData
+      );
       allEvents.push(...this.convertByStem(index));
       return allEvents;
     }, []);
-  }
-
-  private updateData(
-    config: CalendarConfig,
-    collections: Collection[],
-    linkTypes: LinkType[],
-    permissions: Record<string, AllowedPermissions>,
-    constraintData: ConstraintData,
-    query: Query
-  ) {
-    this.config = config;
-    this.collectionsMap = objectsByIdMap(collections);
-    this.linkTypesMap = objectsByIdMap(linkTypes);
-    this.permissions = permissions;
-    this.constraintData = constraintData;
-    this.query = query;
   }
 
   private convertByStem(index: number): CalendarEvent[] {
@@ -140,15 +121,17 @@ export class CalendarConverter {
     dataObjectsInfo: DataObjectInfo<any>[],
     stemIndex: number
   ): CalendarEvent[] {
-    const nameConstraint = this.findConstraintForModel(stemConfig.name);
+    const nameConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.name);
 
-    const startEditable = this.isPropertyEditable(stemConfig.start);
-    const startConstraint = this.findConstraintForModel(stemConfig.start);
-    const startPermission = this.modelPermissions(stemConfig.start);
+    const startEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.start);
+    const startConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.start);
+    const startPermission = this.dataObjectAggregator.attributePermissions(stemConfig.start);
 
-    const endEditable = this.isPropertyEditable(stemConfig.end);
-    const endConstraint = this.findConstraintForModel(stemConfig.end);
-    const endPermission = this.modelPermissions(stemConfig.end);
+    const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
+    const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
+    const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
+
+    const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(stemConfig.name || stemConfig.start);
 
     return dataObjectsInfo.reduce<CalendarEvent[]>((events, item) => {
       const startDataResource = item.objectDataResources[DataObjectInfoKeyType.Start];
@@ -165,8 +148,8 @@ export class CalendarConverter {
       const end = stemConfig.end && endDataResource?.data[stemConfig.end.attributeId];
 
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
-      const resourceColor = this.getPropertyColor(stemConfig.name || stemConfig.start);
-      const eventColor = this.parseColor(stemConfig.color, colorDataResources);
+
+      const eventColor = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources);
 
       const interval = createInterval(start, startConstraint, end, endConstraint, this.constraintData);
       const allDay = isAllDayEvent(interval.start, interval.end);
@@ -203,57 +186,6 @@ export class CalendarConverter {
 
       return events;
     }, []);
-  }
-
-  private parseColor(model: CalendarBar, dataResources: DataResource[]): string {
-    const constraint = this.findConstraintForModel(model);
-    const values = (model && (dataResources || []).map(dataResource => dataResource.data[model.attributeId])) || [];
-    return this.dataObjectAggregator.parseColor(constraint, values);
-  }
-
-  private getPropertyColor(model: QueryAttribute): string {
-    const resource = this.dataObjectAggregator.getNextCollectionResource(model.resourceIndex);
-    return resource && (<Collection>resource).color;
-  }
-
-  private findConstraintForModel(model: QueryAttribute): Constraint {
-    const resource = model && this.getResource(model);
-    return (resource && findAttributeConstraint(resource.attributes, model.attributeId)) || new UnknownConstraint();
-  }
-
-  private isPropertyEditable(model: CalendarBar): boolean {
-    if (model && model.resourceType === AttributesResourceType.Collection) {
-      const collection = this.collectionsMap[model.resourceId];
-      return (
-        collection &&
-        isCollectionAttributeEditable(model.attributeId, collection, this.modelPermissions(model), this.query)
-      );
-    } else if (model && model.resourceType === AttributesResourceType.LinkType) {
-      const linkType = this.linkTypesMap[model.resourceId];
-      return (
-        linkType && isLinkTypeAttributeEditable(model.attributeId, linkType, this.modelPermissions(model), this.query)
-      );
-    }
-
-    return false;
-  }
-
-  private modelPermissions(model: CalendarBar): AllowedPermissions {
-    if (!model) {
-      return {};
-    }
-
-    return queryAttributePermissions(model, this.permissions, this.linkTypesMap);
-  }
-
-  private getResource(model: CalendarBar): AttributesResource {
-    if (model.resourceType === AttributesResourceType.Collection) {
-      return this.collectionsMap[model.resourceId];
-    } else if (model.resourceType === AttributesResourceType.LinkType) {
-      return this.linkTypesMap[model.resourceId];
-    }
-
-    return null;
   }
 }
 

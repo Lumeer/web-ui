@@ -46,6 +46,7 @@ import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-li
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {ToastrService} from 'ngx-toastr';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
+import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 
 @Injectable({
   providedIn: 'root',
@@ -88,6 +89,25 @@ export class ModalService {
       .subscribe(({document, collection}) => {
         if (document && collection) {
           this.showDataResourceDetail(document, collection);
+        }
+      });
+  }
+
+  public showLinkInstanceDetail(id: string) {
+    this.store$
+      .pipe(
+        select(selectLinkInstanceById(id)),
+        mergeMap(linkInstance =>
+          this.store$.pipe(
+            select(selectLinkTypeById(linkInstance?.linkTypeId)),
+            map(linkType => ({linkType, linkInstance: linkInstance}))
+          )
+        ),
+        take(1)
+      )
+      .subscribe(({linkType, linkInstance}) => {
+        if (linkInstance && linkType) {
+          this.showDataResourceDetail(linkInstance, linkType);
         }
       });
   }

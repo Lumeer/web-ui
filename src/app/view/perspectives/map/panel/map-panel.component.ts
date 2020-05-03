@@ -20,8 +20,12 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Collection} from '../../../../core/store/collections/collection';
-import {MapModel} from '../../../../core/store/maps/map.model';
+import {MapConfig, MapModel, MapStemConfig} from '../../../../core/store/maps/map.model';
 import {MapsAction} from '../../../../core/store/maps/maps.action';
+import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
+import {deepObjectCopy} from '../../../../shared/utils/common.utils';
+import {createMapDefaultStemConfig} from '../../../../core/store/maps/map-config.utils';
+import {LinkType} from '../../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'map-panel',
@@ -36,15 +40,27 @@ export class MapPanelComponent {
   @Input()
   public collections: Collection[];
 
+  @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
+  public query: Query;
+
   constructor(private store$: Store<{}>) {}
 
-  public onSelect(collection: Collection, [index, attributeId]: [number, string]) {
-    this.store$.dispatch(
-      new MapsAction.SelectAttribute({mapId: this.map.id, collectionId: collection.id, index, attributeId})
-    );
+  public readonly defaultStemConfig = createMapDefaultStemConfig();
+
+  public onStemConfigChange(stemConfig: MapStemConfig, stem: QueryStem, index: number) {
+    const config = deepObjectCopy<MapConfig>(this.map.config);
+    config.stemsConfigs[index] = {...stemConfig, stem};
+    this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
   }
 
   public onPositionSavedChange(positionSaved: boolean) {
     this.store$.dispatch(new MapsAction.ChangePositionSaved({mapId: this.map.id, positionSaved}));
+  }
+
+  public trackByStem(index: number, stem: QueryStem): string {
+    return stem.collectionId + index;
   }
 }

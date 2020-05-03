@@ -67,9 +67,7 @@ export interface GanttChartStemConfig {
   categories?: GanttChartBarModel[];
 }
 
-export interface GanttChartBarModel extends QueryAttribute {
-  constraint?: Constraint;
-}
+export interface GanttChartBarModel extends QueryAttribute {}
 
 export interface GanttChartProgressBarModel extends GanttChartBarModel {
   aggregation?: DataAggregationType;

@@ -17,26 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
+import {MapPosition} from './map.model';
 
-@Component({
-  selector: 'map-attribute-group',
-  templateUrl: './map-attribute-group.component.html',
-  styleUrls: ['./map-attribute-group.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class MapAttributeGroupComponent {
-  @Input()
-  public collection: Collection;
-
-  @Input()
-  public attributeIds: string[];
-
-  @Output()
-  public select = new EventEmitter<[number, string]>();
-
-  public trackByIndex(index: number, attributeId: string): number {
-    return index;
-  }
+export interface MapConfigV0 {
+  attributeIdsMap?: AttributeIdsMap;
+  position?: MapPosition;
+  positionSaved?: boolean;
 }
+
+export type AttributeIdsMap = Record<string, string[]>;
