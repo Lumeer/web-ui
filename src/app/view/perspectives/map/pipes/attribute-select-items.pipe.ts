@@ -19,8 +19,10 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
-import {MapAttributeModel, MapStemConfig} from '../../../../core/store/maps/map.model';
+import {MapAttributeModel} from '../../../../core/store/maps/map.model';
 import {mapAttributesAreInAllowedRange} from '../../../../core/store/maps/map-config.utils';
+import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
 @Pipe({
   name: 'attributeSelectItems',
@@ -28,10 +30,17 @@ import {mapAttributesAreInAllowedRange} from '../../../../core/store/maps/map-co
 export class AttributeSelectItemsPipe implements PipeTransform {
   public transform(selectItems: SelectItemModel[], attributes: MapAttributeModel[], index: number): SelectItemModel[] {
     if (attributes?.length) {
-      const someAttribute = attributes.find((attribute, i) => index !== i && !!attribute);
+      const otherAttribute = attributes.find((attribute, i) => index !== i && !!attribute);
+      const restrictedAttributes = [...attributes]
+        .filter(attribute => !!attribute)
+        .map(attribute => cleanQueryAttribute(attribute));
+      restrictedAttributes.splice(index, 1);
       return selectItems.filter(selectItem => {
         const model = selectItem.id as MapAttributeModel;
-        return mapAttributesAreInAllowedRange(someAttribute, model);
+        return (
+          mapAttributesAreInAllowedRange(otherAttribute, model) &&
+          !restrictedAttributes.some(restrictedAttribute => deepObjectsEquals(restrictedAttribute, model))
+        );
       });
     }
     return selectItems;

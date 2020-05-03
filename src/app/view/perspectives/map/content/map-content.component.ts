@@ -135,7 +135,6 @@ export class MapContentComponent implements OnInit, OnChanges, OnDestroy {
     const allProperties$ = this.subscribeToData$();
     this.markers$ = this.bindMarkers(allProperties$);
 
-    this.propertiesSubscription.unsubscribe();
     this.propertiesSubscription = this.subscribeToUninitializedProperties(allProperties$);
   }
 

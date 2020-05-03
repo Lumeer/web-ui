@@ -305,7 +305,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       case Perspective.Map:
         const mapConfig = view.config?.map;
         this.revertQueryWithUrl(workspacePath, view.query);
-        this.store$.dispatch(new MapsAction.CreateMap({mapId: view.code, config: mapConfig}));
+        this.store$.dispatch(new MapsAction.SetConfig({mapId: view.code, config: mapConfig}));
         return;
       case Perspective.Calendar:
         const calendarConfig = view.config?.calendar;

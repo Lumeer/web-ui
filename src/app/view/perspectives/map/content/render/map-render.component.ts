@@ -66,7 +66,7 @@ import {
   createMapMarkersBounds,
 } from './map-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
-import {areMapMarkerListsEqual, mapMarkerId} from '../map-content.utils';
+import {areMapMarkerListsEqual, createMapMarkersMap} from '../map-content.utils';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -107,10 +107,10 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private allMarkers: Record<string, Marker>;
   private drawnMarkers: Marker[] = [];
-  private pendingUpdate: MarkerMoveEvent;
 
   private mapLoaded$ = new BehaviorSubject(false);
   private markers$ = new BehaviorSubject<MapMarkerProperties[]>([]);
+  private currentMarkerProperties: Record<string, MapMarkerProperties> = {};
 
   private subscriptions = new Subscription();
 
@@ -146,9 +146,9 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     }
 
     if (changes.markers && this.markers) {
-      if (areMapMarkerListsEqual(changes.markers.previousValue, this.markers, this.pendingUpdate)) {
-        this.pendingUpdate = undefined;
-      } else {
+      const markersChanged = !areMapMarkerListsEqual(this.markers, Object.values(this.currentMarkerProperties));
+      this.currentMarkerProperties = createMapMarkersMap(this.markers);
+      if (markersChanged) {
         this.markers$.next(this.markers);
       }
     }
@@ -223,8 +223,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     this.mapLoaded$.next(true);
 
     this.loadOpenMapTilesLanguage();
-
-    this.mapboxMap.resize();
+    this.refreshMapSize();
   }
 
   private onMapMoveEnd(event: MapboxEvent) {
@@ -290,9 +289,8 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     return [
       ...this.mapboxMap.querySourceFeatures(MAP_SOURCE_ID).reduce((markerIds, feature) => {
         const properties = <MapMarkerProperties>{...feature.properties};
-        const markerId = mapMarkerId(properties);
-        if (markerId) {
-          markerIds.add(markerId);
+        if (properties?.id) {
+          markerIds.add(properties.id);
         }
         return markerIds;
       }, new Set<string>()),
@@ -316,11 +314,11 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
     });
   }
 
-  private createAllMakers(markers: MapMarkerProperties[]) {
+  private createAllMakers(markers: MapMarkerProperties[]): Record<string, Marker> {
     return markers.reduce((markersMap, properties) => {
       const marker = createMapMarker(properties, () => this.onMarkerDoubleClick(properties));
       marker.on('dragend', event => this.onMarkerDragEnd(event, properties));
-      markersMap[mapMarkerId(properties)] = marker;
+      markersMap[properties.id] = marker;
       return markersMap;
     }, {});
   }
@@ -355,11 +353,10 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
 
   private onMarkerDragEnd(event: {target: Marker}, properties: MapMarkerProperties) {
     const coordinates: MapCoordinates = event.target.getLngLat();
-    const markerId = mapMarkerId(properties);
-    const freshProperties = this.markers.find(marker => mapMarkerId(marker) === markerId) || properties;
-    const moveEvent = {coordinates, properties: freshProperties};
-    this.pendingUpdate = moveEvent;
-    this.markerMove.emit(moveEvent);
+    const freshProperties = this.currentMarkerProperties[properties.id] || properties;
+    freshProperties.coordinates = coordinates;
+
+    this.markerMove.emit({coordinates, properties: freshProperties});
   }
 
   public ngOnDestroy() {
@@ -369,14 +366,12 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private destroyMap() {
-    if (this.mapboxMap) {
-      this.mapboxMap.remove();
-      this.mapboxMap = null;
-    }
+    this.mapboxMap?.remove();
+    this.mapboxMap = null;
   }
 
   public refreshMapSize() {
-    this.mapboxMap.resize();
+    this.mapboxMap?.resize();
   }
 
   public loadOpenMapTilesLanguage() {

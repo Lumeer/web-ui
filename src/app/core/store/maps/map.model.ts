@@ -63,6 +63,7 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
 };
 
 export interface MapMarkerProperties {
+  id: string;
   resourceId: string;
   resourceType: AttributesResourceType;
   dataResourceId: string;
@@ -79,6 +80,7 @@ export interface MapMarkerProperties {
 export interface MapMarkerData {
   resource: AttributesResource;
   dataResource: DataResource;
+  resourceType: AttributesResourceType;
   color: string;
   icons: string[];
   attributeId: string;

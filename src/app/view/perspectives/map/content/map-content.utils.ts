@@ -29,9 +29,7 @@ import {DataResource} from '../../../../core/model/resource';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
-import {MarkerMoveEvent} from './render/marker-move.event';
 
 export function populateCoordinateProperties(
   propertiesList: MapMarkerData[],
@@ -78,8 +76,9 @@ export function createMarkerPropertyFromData(
   );
 
   return {
+    id: mapMarkerDataId(data),
     resourceId: data.resource.id,
-    resourceType: getAttributesResourceType(data.resource),
+    resourceType: data.resourceType,
     dataResourceId: data.dataResource.id,
     color: data.color,
     icons: data.icons,
@@ -94,8 +93,7 @@ export function createMarkerPropertyFromData(
 
 export function areMapMarkerListsEqual(
   previousMarkers: MapMarkerProperties[],
-  nextMarkers: MapMarkerProperties[],
-  pendingUpdate?: MarkerMoveEvent
+  nextMarkers: MapMarkerProperties[]
 ): boolean {
   if (!previousMarkers || previousMarkers.length !== nextMarkers.length) {
     return false;
@@ -104,13 +102,12 @@ export function areMapMarkerListsEqual(
   const nextMarkersMap = createMapMarkersMap(nextMarkers);
 
   return !previousMarkers.some(marker => {
-    const nextMarker = nextMarkersMap[mapMarkerId(marker)];
+    const nextMarker = nextMarkersMap[marker.id];
     if (isMapMarkerChanged(marker, nextMarker)) {
       return !(
-        pendingUpdate &&
         nextMarker &&
-        deepObjectsEquals(pendingUpdate.properties, marker) &&
-        coordinatesAreSame(nextMarker.coordinates, pendingUpdate.coordinates)
+        coordinatesAreSame(marker.coordinates, nextMarker.coordinates) &&
+        marker.displayValue === nextMarker.displayValue
       );
     }
     return false;
@@ -129,18 +126,18 @@ function coordinatesAreSame(first: MapCoordinates, second: MapCoordinates): bool
   );
 }
 
-function createMapMarkersMap(markers: MapMarkerProperties[]): Record<string, MapMarkerProperties> {
+export function createMapMarkersMap(markers: MapMarkerProperties[]): Record<string, MapMarkerProperties> {
   return markers.reduce((markersMap, marker) => {
-    markersMap[mapMarkerId(marker)] = marker;
+    markersMap[marker.id] = {...marker};
     return markersMap;
   }, {});
 }
 
-export function mapMarkerId(properties: MapMarkerProperties): string {
-  if (!properties.dataResourceId) {
+export function mapMarkerDataId(data: MapMarkerData): string {
+  if (!data.dataResource) {
     return null;
   }
-  return `${properties.dataResourceId}:${properties.attributeId}`;
+  return `${data.resourceType}:${data.dataResource.id}:${data.attributeId}`;
 }
 
 function isMapMarkerChanged(previousMarker: MapMarkerProperties, nextMarker: MapMarkerProperties): boolean {

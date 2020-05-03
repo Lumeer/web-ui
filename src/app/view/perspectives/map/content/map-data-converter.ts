@@ -30,6 +30,7 @@ import {
   DataObjectInfo,
 } from '../../../../shared/utils/data/data-object-aggregator';
 import {MapAttributeModel, MapConfig, MapMarkerData, MapStemConfig} from '../../../../core/store/maps/map.model';
+import {mapMarkerDataId} from './map-content.utils';
 
 enum DataObjectInfoKeyType {
   Color = 'color',
@@ -53,7 +54,7 @@ export class MapDataConverter {
   ): MapMarkerData[] {
     this.config = config;
 
-    return (query?.stems || []).reduce((allData, stem, index) => {
+    const data = (query?.stems || []).reduce((allData, stem, index) => {
       this.dataObjectAggregator.updateData(
         collections,
         documents,
@@ -66,6 +67,7 @@ export class MapDataConverter {
       allData.push(...this.convertByStem(index));
       return allData;
     }, []);
+    return filterUniqueData(data);
   }
 
   private convertByStem(index: number): MapMarkerData[] {
@@ -107,6 +109,7 @@ export class MapDataConverter {
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(attribute);
     const resourceIcons = this.dataObjectAggregator.getAttributeIcons(attribute);
     const editable = this.dataObjectAggregator.isAttributeEditable(attribute);
+    const resourceType = attribute.resourceType;
 
     return dataObjectsInfo.reduce<MapMarkerData[]>((data, item) => {
       const dataResource = item.objectDataResources[DataObjectInfoKeyType.Attribute];
@@ -114,8 +117,31 @@ export class MapDataConverter {
       const colorDataResources = item.metaDataResources[DataObjectInfoKeyType.Color] || [];
       const color = this.dataObjectAggregator.getAttributeColor(stemConfig.color, colorDataResources) || resourceColor;
 
-      data.push({resource, dataResource, color, editable, attributeId: attribute.attributeId, icons: resourceIcons});
+      data.push({
+        resource,
+        dataResource,
+        resourceType,
+        color,
+        editable,
+        attributeId: attribute.attributeId,
+        icons: resourceIcons,
+      });
       return data;
     }, []);
   }
+}
+
+function filterUniqueData(allData: MapMarkerData[]): MapMarkerData[] {
+  const usedIds = new Set();
+  const filteredData = [];
+  for (const data of allData) {
+    const id = mapMarkerDataId(data);
+    if (usedIds.has(id)) {
+      continue;
+    }
+    usedIds.add(id);
+    filteredData.push(data);
+  }
+
+  return filteredData;
 }
