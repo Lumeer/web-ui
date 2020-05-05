@@ -2356,6 +2356,12 @@
           <context context-type="sourcefile">app/view/perspectives/map/panel/map-panel.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
+      </trans-unit><trans-unit id="map.config.attribute.placeholder" datatype="html">
+        <source>Attribute</source><target>Atribut</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
       </trans-unit>
             <trans-unit id="map.placeholder.title" datatype="html">
         <source>No places found!</source><target>Žádná místa nebyla nalezena!</target>
@@ -2368,6 +2374,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.config.color.placeholder" datatype="html">
+        <source>Color</source><target>Barva</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/map-stem-config.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.config.color.empty" datatype="html">
+        <source>Select color</source><target>Zvolte barvu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/map-stem-config.component.html</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.map.config.position.saved" datatype="html">
         <source>
@@ -2491,6 +2509,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
           <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="help.functionsAndRules" datatype="html">
+        <source>https://www.lumeer.io/functions-and-rules</source><target>https://www.lumeer.io/funkce-a-pravidla</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="4be44482feb952b217f702aaf0bad3536a4d03ad" datatype="html">
         <source>Minimal text length must be <x id="INTERPOLATION" equiv-text="{{minLength}}"/> characters. </source><target>Minimální délka textu musí být alespoň <x id="INTERPOLATION" equiv-text="{{minLength}}"/> znaků. </target>
@@ -4158,11 +4182,8 @@
         </context-group>
       </trans-unit><trans-unit id="map.config.attribute.empty" datatype="html">
         <source>Select attribute</source><target>Vyberte atribut</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="pivot.config.attribute.empty" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="pivot.config.attribute.empty" datatype="html">
         <source>Select attribute</source><target>Vyberte atribut</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.summary" datatype="html">
