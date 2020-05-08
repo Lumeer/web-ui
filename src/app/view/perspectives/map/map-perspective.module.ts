@@ -20,18 +20,23 @@
 import {NgModule} from '@angular/core';
 import {SharedModule} from '../../../shared/shared.module';
 import {MapContentComponent} from './content/map-content.component';
-import {EmptyMapComponent} from './content/empty/empty-map.component';
+import {EmptyMapComponent} from './content/globe-content/empty/empty-map.component';
 import {MapPerspectiveRoutingModule} from './map-perspective-routing.module';
 import {MapPerspectiveComponent} from './map-perspective.component';
-import {MapAttributeSelectComponent} from './panel/attribute-select/map-attribute-select.component';
+import {MapAttributeSelectComponent} from './panel/stem-config/attribute-select/map-attribute-select.component';
 import {MapPanelComponent} from './panel/map-panel.component';
-import {MapRenderComponent} from './content/render/map-render.component';
+import {MapGlobeRenderComponent} from './content/globe-content/render/map-globe-render.component';
 import {MapStemConfigComponent} from './panel/stem-config/map-stem-config.component';
 import {MapPositionCheckboxComponent} from './panel/position-checkbox/map-position-checkbox.component';
 import {MapLoadingComponent} from './content/loading/map-loading.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
 import {ColorSelectItemsPipe} from './pipes/color-select-items.pipe';
 import {AttributeSelectItemsPipe} from './pipes/attribute-select-items.pipe';
+import {MapGlobeContentComponent} from './content/globe-content/map-globe-content.component';
+import {MapImageContentComponent} from './content/image-content/map-image-content.component';
+import {MapImageRenderComponent} from './content/image-content/render/map-image-render.component';
+import {ImageInputComponent} from './panel/image-input/image-input.component';
+import {InvalidImageMapComponent} from './content/image-content/invalid-image/invalid-image-map.component';
 
 @NgModule({
   imports: [SharedModule, ModalModule, MapPerspectiveRoutingModule],
@@ -41,12 +46,17 @@ import {AttributeSelectItemsPipe} from './pipes/attribute-select-items.pipe';
     MapPanelComponent,
     MapAttributeSelectComponent,
     EmptyMapComponent,
-    MapRenderComponent,
+    MapGlobeRenderComponent,
     MapStemConfigComponent,
     MapPositionCheckboxComponent,
     MapLoadingComponent,
     ColorSelectItemsPipe,
     AttributeSelectItemsPipe,
+    MapGlobeContentComponent,
+    MapImageContentComponent,
+    MapImageRenderComponent,
+    ImageInputComponent,
+    InvalidImageMapComponent,
   ],
   exports: [MapPerspectiveComponent],
 })

@@ -22,7 +22,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
@@ -70,7 +70,8 @@ export class SessionExpiredComponent implements OnInit {
       map(params => {
         const redirectUrl = params.get('redirectUrl') || '';
         return window.location.origin + this.location.prepareExternalUrl(redirectUrl);
-      })
+      }),
+      tap(redirectUrl => this.authService.saveLoginRedirectPath(redirectUrl))
     );
   }
 }

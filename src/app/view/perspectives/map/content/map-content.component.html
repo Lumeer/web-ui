@@ -1,22 +1,13 @@
-<ng-container *ngIf="{loading: loading$ | async, markers: markers$ | async} as data">
-  <ng-container *ngIf="data.markers?.length > 0; else empty">
-    <map-render *ngIf="map"
-                [map]="map"
-                [markers]="data.markers"
-                (mapMove)="onMapMove($event)"
-                (markerMove)="onMarkerMove($event)"
-                (detail)="onMarkerDetail($event)"
-                class="flex-grow-1">
-    </map-render>
-  </ng-container>
-
-  <ng-template #empty>
-    <map-loading *ngIf="data.loading; else placeholder"
-                 class="flex-grow-1">
-    </map-loading>
-
-    <ng-template #placeholder>
-      <empty-map class="flex-grow-1"></empty-map>
-    </ng-template>
-  </ng-template>
+<ng-container *ngIf="{data: data$ | async} as data">
+  <map-image-content *ngIf="map?.config?.imageUrl"
+                     [map]="map"
+                     [markerData]="data.data">
+  </map-image-content>
+  <map-globe-content *ngIf="!map?.config?.imageUrl"
+                     [map]="map"
+                     [constraintData]="constraintData"
+                     [markerData]="data.data"
+                     (detail)="onMarkerDetail($event)"
+                     (mapMove)="onMapMove($event)">
+  </map-globe-content>
 </ng-container>

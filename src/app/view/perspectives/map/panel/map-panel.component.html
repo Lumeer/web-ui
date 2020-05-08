@@ -12,6 +12,11 @@
                        (valueChange)="onPositionSavedChange($event)">
 </map-position-checkbox>
 
+<image-input class="d-block mt-3"
+             [imageUrl]="map?.config?.imageUrl"
+             (valueChange)="onImageUrlChange($event)">
+</image-input>
+
 <map-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
                  class="d-block mt-4"
                  [config]="map?.config?.stemsConfigs && map?.config?.stemsConfigs[index] || defaultStemConfig"

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {environment} from '../../../../../../environments/environment';
+import {environment} from '../../../../../../../environments/environment';
 
 export enum MapStyle {
   MapboxStreets = 'MapboxStreets',

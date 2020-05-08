@@ -1,0 +1,24 @@
+<ng-container *ngIf="{loading: loading$ | async, loaded: loaded$ | async, imageData: imageData$ | async} as data">
+<!--  <div *ngIf="data.imageData; else empty"-->
+<!--       [innerHTML]="data.imageData.data | safeHtml">-->
+<!--  </div>-->
+
+  <img *ngIf="data.imageData; else empty"
+       [src]="data.imageData.data"/>
+
+  <ng-template #empty>
+
+    <map-loading *ngIf="data.loading; else error"
+                 class="w-100">
+    </map-loading>
+
+    <ng-template #error>
+      <invalid-image-map *ngIf="data.loaded"
+                         [result]="data.loaded">
+      </invalid-image-map>
+    </ng-template>
+
+  </ng-template>
+
+</ng-container>
+

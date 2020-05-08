@@ -54,7 +54,10 @@ export function isMapConfigChanged(viewConfig: MapConfig, perspectiveConfig: Map
     return true;
   }
 
-  if (Boolean(viewConfig.positionSaved) !== Boolean(perspectiveConfig.positionSaved)) {
+  if (
+    Boolean(viewConfig.positionSaved) !== Boolean(perspectiveConfig.positionSaved) ||
+    viewConfig.imageUrl !== perspectiveConfig.imageUrl
+  ) {
     return true;
   }
 

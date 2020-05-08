@@ -19,8 +19,8 @@
 
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {GeoJSONSourceRaw, Layer, LngLat, LngLatBounds, Map, MapboxOptions, Marker, Popup} from 'mapbox-gl';
-import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
-import {shadeColor} from '../../../../../shared/utils/html-modifier';
+import {MapConfig, MapMarkerProperties} from '../../../../../../core/store/maps/map.model';
+import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
 
 export function createMapboxMap(elementId: string, config: MapConfig, locale: Record<string, string>): Map {

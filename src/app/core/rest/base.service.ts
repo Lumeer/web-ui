@@ -32,13 +32,13 @@ export class BaseService {
     this.store$
       .pipe(
         select(selectWorkspaceWithIds),
-        filter(workspace => !!workspace && !!workspace.organizationCode)
+        filter(workspace => !!workspace?.organizationCode)
       )
       .subscribe(workspace => (this.workspace = workspace));
   }
 
   protected getOrCurrentOrganizationId(workspace?: Workspace): string {
-    if (workspace && workspace.organizationId) {
+    if (workspace?.organizationId) {
       return workspace.organizationId;
     }
 
@@ -46,7 +46,7 @@ export class BaseService {
   }
 
   protected getOrCurrentProjectId(workspace?: Workspace): string {
-    if (workspace && workspace.projectId) {
+    if (workspace?.projectId) {
       return workspace.projectId;
     }
 
@@ -54,7 +54,7 @@ export class BaseService {
   }
 
   protected getOrCurrentCollectionId(workspace?: Workspace): string {
-    if (workspace && workspace.collectionId) {
+    if (workspace?.collectionId) {
       return workspace.collectionId;
     }
 
@@ -62,7 +62,7 @@ export class BaseService {
   }
 
   protected getOrCurrentViewId(workspace?: Workspace): string {
-    if (workspace && workspace.viewId) {
+    if (workspace?.viewId) {
       return workspace.viewId;
     }
 

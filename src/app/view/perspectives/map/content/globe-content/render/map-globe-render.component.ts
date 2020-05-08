@@ -49,14 +49,14 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {DeviceDetectorService, OS} from 'ngx-device-detector';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
-import {environment} from '../../../../../../environments/environment';
+import {environment} from '../../../../../../../environments/environment';
 import {
   MapConfig,
   MapCoordinates,
   MapMarkerProperties,
   MapModel,
   MapPosition,
-} from '../../../../../core/store/maps/map.model';
+} from '../../../../../../core/store/maps/map.model';
 import {
   createMapboxMap,
   createMapClusterCountsLayer,
@@ -64,9 +64,9 @@ import {
   createMapClustersLayer,
   createMapMarker,
   createMapMarkersBounds,
-} from './map-render.utils';
+} from './map-globe-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
-import {areMapMarkerListsEqual, createMapMarkersMap} from '../map-content.utils';
+import {areMapMarkerListsEqual, createMapMarkersMap} from '../../map-content.utils';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -79,13 +79,13 @@ const MAP_CLUSTER_SYMBOL_LAYER = 'cluster-symbols';
 const OPENMAPTILES_LANGUAGE_URL = 'https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js';
 
 @Component({
-  selector: 'map-render',
-  templateUrl: './map-render.component.html',
-  styleUrls: ['./map-render.component.scss', '../../../../../../../node_modules/mapbox-gl/dist/mapbox-gl.css'],
+  selector: 'map-globe-render',
+  templateUrl: './map-globe-render.component.html',
+  styleUrls: ['./map-globe-render.component.scss', '../../../../../../../../node_modules/mapbox-gl/dist/mapbox-gl.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
   public map: MapModel;
 

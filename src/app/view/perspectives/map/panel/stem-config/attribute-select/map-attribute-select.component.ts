@@ -18,15 +18,14 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {MapAttributeModel} from '../../../../../core/store/maps/map.model';
+import {MapAttributeModel} from '../../../../../../core/store/maps/map.model';
 
 @Component({
   selector: 'map-attribute-select',
   templateUrl: './map-attribute-select.component.html',
-  styleUrls: ['./map-attribute-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MapAttributeSelectComponent implements OnChanges {

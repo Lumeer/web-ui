@@ -1,0 +1,19 @@
+<empty-state icon="far fa-map-marker-slash">
+  <ng-container [ngSwitch]="result">
+    <ng-container *ngSwitchDefault>
+      <h3 i18n="@@map.image.fetch.failure.title">No image found!</h3>
+      <div i18n="@@map.image.fetch.failure.description">Make sure you have provided correct image url.</div>
+    </ng-container>
+    <ng-container *ngSwitchCase="loadResult.SizeExceeded">
+      <h3 i18n="@@map.image.fetch.sizeExceeded.title">Image is too big!</h3>
+      <div i18n="@@map.image.fetch.failure.description">Maximum allowed image size is 20MB. Please select smaller
+        image.
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="loadResult.NotSupported">
+      <h3 i18n="@@map.image.fetch.notSupported.title">Image type is not supported!</h3>
+      <div i18n="@@map.image.fetch.failure.description">Please select valid image type (one of svg, jpg or png).</div>
+    </ng-container>
+  </ng-container>
+
+</empty-state>

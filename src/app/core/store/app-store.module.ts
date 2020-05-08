@@ -73,6 +73,7 @@ import {searchesReducer} from './searches/searches.reducer';
 import {SequencesEffects} from './sequences/sequences.effects';
 import {sequencesReducer} from './sequences/sequences.reducer';
 import {constraintDataReducer} from './constraint-data/constraint-data.reducer';
+import {MapsEffects} from './maps/maps.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -128,6 +129,7 @@ const effects = [
   VideosEffects,
   UserNotificationsEffects,
   SequencesEffects,
+  MapsEffects,
 ];
 
 @NgModule({

@@ -17,12 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+export enum MimeType {
+  Svg = 'image/svg+xml',
+  Jpg = 'image/jpeg',
+  Png = 'image/png',
+}
 
-@Component({
-  selector: 'empty-map',
-  templateUrl: './empty-map.component.html',
-  styleUrls: ['./empty-map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class EmptyMapComponent {}
+export const mimeTypesMap: Record<string, MimeType> = {
+  [MimeType.Svg]: MimeType.Svg,
+  [MimeType.Jpg]: MimeType.Jpg,
+  [MimeType.Png]: MimeType.Png,
+};
