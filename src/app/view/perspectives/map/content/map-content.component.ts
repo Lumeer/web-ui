@@ -52,6 +52,7 @@ import {MapDataConverter} from './map-data-converter';
 import {checkOrTransformMapConfig} from '../../../../core/store/maps/map-config.utils';
 import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {MapGlobeContentComponent} from './globe-content/map-globe-content.component';
+import {MapImageContentComponent} from './image-content/map-image-content.component';
 
 interface Data {
   collections: Collection[];
@@ -67,7 +68,7 @@ interface Data {
   selector: 'map-content',
   templateUrl: './map-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-flex flex-grow-1'},
+  host: {class: 'd-flex flex-grow-1 overflow-hidden'},
 })
 export class MapContentComponent implements OnInit, OnChanges {
   @Input()
@@ -97,13 +98,17 @@ export class MapContentComponent implements OnInit, OnChanges {
   @ViewChild(MapGlobeContentComponent)
   public mapGlobeContentComponent: MapGlobeContentComponent;
 
+  @ViewChild(MapImageContentComponent)
+  public mapImageContentComponent: MapImageContentComponent;
+
   public data$: Observable<MapMarkerData[]>;
 
   private dataSubject$ = new BehaviorSubject<Data>(null);
 
   private readonly converter = new MapDataConverter();
 
-  constructor(private store$: Store<{}>, private modalService: ModalService) {}
+  constructor(private store$: Store<{}>, private modalService: ModalService) {
+  }
 
   public ngOnInit() {
     this.data$ = this.subscribeToData$();
@@ -176,7 +181,8 @@ export class MapContentComponent implements OnInit, OnChanges {
   }
 
   public refreshMapSize() {
-    this.mapGlobeContentComponent?.refreshMapSize();
+    this.mapGlobeContentComponent?.refreshContent();
+    this.mapImageContentComponent?.refreshContent();
   }
 
   public onMarkerDetail(properties: MapMarkerProperties) {

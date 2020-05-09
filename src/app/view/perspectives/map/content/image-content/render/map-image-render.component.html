@@ -1,1 +1,6 @@
-<p>map-image-render works!</p>
+<svg xmlns="http://www.w3.org/2000/svg"
+     *ngIf="size$ | async as size"
+     [attr.viewBox]="'0 0 ' + size.width + ' ' + size.height"
+     [attr.preserveAspectRatio]="'none'"
+     #svgContent>
+</svg>

@@ -29,6 +29,7 @@ import {selectMapsState} from './maps.state';
 import {DomSanitizer} from '@angular/platform-browser';
 import {MapImageLoadResult, supportedImageMimeTypes, supportedImageSize} from './map.model';
 import {MimeType, mimeTypesMap} from '../../model/mime-type';
+import DOMPurify from 'dompurify';
 
 @Injectable()
 export class MapsEffects {
@@ -56,6 +57,7 @@ export class MapsEffects {
 
           if (mimeType === MimeType.Svg) {
             return this.contentService.downloadData(url).pipe(
+              map(data => DOMPurify.sanitize(data)),
               map(data => ({mimeType, data})),
               flatMap(data => [
                 new MapsAction.DownloadImageDataSuccess({
@@ -68,7 +70,7 @@ export class MapsEffects {
           }
 
           return this.contentService.downloadBlob(url).pipe(
-            map(blob => this.domSanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob))),
+            map(blob => URL.createObjectURL(blob)),
             map(data => ({mimeType, data})),
             flatMap(data => [
               new MapsAction.DownloadImageDataSuccess({

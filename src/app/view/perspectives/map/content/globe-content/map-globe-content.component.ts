@@ -244,7 +244,7 @@ export class MapGlobeContentComponent implements OnChanges {
     }
   }
 
-  public refreshMapSize() {
+  public refreshContent() {
     this.mapGlobeRenderComponent?.refreshMapSize();
   }
 }

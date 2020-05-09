@@ -1,10 +1,7 @@
 <ng-container *ngIf="{loading: loading$ | async, loaded: loaded$ | async, imageData: imageData$ | async} as data">
-<!--  <div *ngIf="data.imageData; else empty"-->
-<!--       [innerHTML]="data.imageData.data | safeHtml">-->
-<!--  </div>-->
-
-  <img *ngIf="data.imageData; else empty"
-       [src]="data.imageData.data"/>
+  <map-image-render *ngIf="data.imageData; else empty"
+                    [data]="data.imageData">
+  </map-image-render>
 
   <ng-template #empty>
 

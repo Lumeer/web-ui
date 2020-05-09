@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {MapImageData, MapImageLoadResult, MapMarkerData, MapModel} from '../../../../../core/store/maps/map.model';
 import {AppState} from '../../../../../core/store/app.state';
 import {MapsAction} from '../../../../../core/store/maps/maps.action';
@@ -28,6 +28,7 @@ import {
   selectMapImageDataLoaded,
   selectMapImageDataLoading,
 } from '../../../../../core/store/maps/maps.state';
+import {MapImageRenderComponent} from './render/map-image-render.component';
 
 @Component({
   selector: 'map-image-content',
@@ -41,6 +42,9 @@ export class MapImageContentComponent implements OnChanges {
 
   @Input()
   public markerData: MapMarkerData[];
+
+  @ViewChild(MapImageRenderComponent)
+  public mapImageRenderComponent: MapImageRenderComponent;
 
   public loading$: Observable<boolean>;
   public loaded$: Observable<MapImageLoadResult>;
@@ -60,5 +64,9 @@ export class MapImageContentComponent implements OnChanges {
     this.loading$ = this.store$.pipe(select(selectMapImageDataLoading(imageUrl)));
     this.loaded$ = this.store$.pipe(select(selectMapImageDataLoaded(imageUrl)));
     this.imageData$ = this.store$.pipe(select(selectMapImageData(imageUrl)));
+  }
+
+  public refreshContent() {
+    this.mapImageRenderComponent?.refreshMap();
   }
 }
