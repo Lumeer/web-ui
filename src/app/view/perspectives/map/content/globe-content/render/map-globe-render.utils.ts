@@ -37,7 +37,7 @@ export function createMapboxMap(elementId: string, config: MapConfig, locale: Re
     container: elementId,
     style: mapStyleUrls[MapStyle.MapTilerStreets],
     minZoom: 1,
-    maxZoom: 17,
+    maxZoom: 20,
     locale,
     ...positionOptions,
   });

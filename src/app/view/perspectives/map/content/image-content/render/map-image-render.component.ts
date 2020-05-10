@@ -24,31 +24,28 @@ import {
   HostListener,
   Input,
   OnChanges,
-  OnInit, Renderer2,
+  OnInit,
   SimpleChanges,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {MapImageData} from '../../../../../../core/store/maps/map.model';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, startWith} from 'rxjs/operators';
 import {MimeType} from '../../../../../../core/model/mime-type';
 import * as d3Select from 'd3-selection';
 import * as d3Zoom from 'd3-zoom';
-
 
 @Component({
   selector: 'map-image-render',
   templateUrl: './map-image-render.component.html',
   styleUrls: ['./map-image-render.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {class: 'd-block w-100 h-100'},
+  host: {class: 'd-block w-100 h-100 position-relative'},
 })
 export class MapImageRenderComponent implements OnInit, OnChanges {
-
   @Input()
   public data: MapImageData;
 
-  @ViewChild('svgContent')
+  @ViewChild('svgWrapper')
   set content(content: ElementRef<SVGElement>) {
     if (content) {
       this.svgWrapper = content.nativeElement;
@@ -58,14 +55,13 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
 
   private svgWrapper: SVGElement;
   private svgImage: SVGElement;
-  private elementImage: SVGImageElement;
   private currentMimeType: MimeType = null;
+  private zoom: d3Zoom.ZoomBehavior<Element, any>;
 
-  public size$: Observable<{ width: number, height: number }>
-  private sizeSubject$: BehaviorSubject<{ width: number, height: number }>;
+  public size$: Observable<{width: number; height: number}>;
+  private sizeSubject$: BehaviorSubject<{width: number; height: number}>;
 
-  constructor(private element: ElementRef) {
-  }
+  constructor(private element: ElementRef) {}
 
   public ngOnInit() {
     this.sizeSubject$ = new BehaviorSubject(this.getElementSize());
@@ -93,45 +89,80 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
   }
 
   private initSvgImage() {
-    if (this.elementImage) {
-      d3Select.select(this.elementImage).on('.zoom', null);
-      this.svgWrapper.removeChild(this.elementImage);
-      this.elementImage = null;
-    }
+    this.removeSvgImage();
 
     const document = new DOMParser().parseFromString(this.data.data, 'image/svg+xml');
     this.svgImage = document.childNodes.item(0) as SVGElement;
     this.svgImage.setAttribute('width', this.element.nativeElement.offsetWidth);
     this.svgImage.setAttribute('height', this.element.nativeElement.offsetHeight);
-    this.svgWrapper.appendChild(this.svgImage);
 
-    this.initZoom(d3Select.select(this.svgWrapper));
+    this.addSvgImage(this.svgImage);
+  }
+
+  private removeSvgImage() {
+    if (this.svgImage) {
+      this.svgWrapper.removeChild(this.svgImage.parentNode);
+      this.svgImage = null;
+    }
+  }
+
+  private addSvgImage(element: SVGElement) {
+    const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    group.appendChild(element);
+    this.svgWrapper.appendChild(group);
+
+    this.initZoom(d3Select.select(this.svgWrapper), d3Select.select(group));
   }
 
   private initOtherImage() {
-    if (this.svgImage) {
-      d3Select.select(this.svgImage).on('.zoom', null);
-      this.svgWrapper.removeChild(this.svgImage);
-      this.svgImage = null;
-    }
+    this.removeSvgImage();
 
-    this.elementImage = document.createElementNS('http://www.w3.org/2000/svg', 'image');
-    this.elementImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', this.data.data);
-    this.elementImage.setAttribute('style', 'width: 100%; height: 100%');
-    this.svgWrapper.appendChild(this.elementImage);
+    this.svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+    this.svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', this.data.data);
+    this.svgImage.setAttribute('style', 'width: 100%; height: 100%');
 
-    this.initZoom(d3Select.select(this.elementImage));
+    this.addSvgImage(this.svgImage);
   }
 
-  private initZoom(selection: any) {
-    console.log('init zoom', selection);
-    selection.call(d3Zoom.zoom()
-      .extent([[0, 0], [this.getElementSize().width, this.getElementSize().height]])
+  private initZoom(selection: any, element: any) {
+    selection.on('.zoom', null);
+
+    this.zoom = d3Zoom
+      .zoom()
+      .filter(() => true)
+      .extent([
+        [0, 0],
+        [this.getElementSize().width, this.getElementSize().height],
+      ])
       .scaleExtent([1, 20])
-      .on("zoom", () => {
-        console.log(d3Select.event.transform);
-        selection.attr("transform", d3Select.event.transform)
-      }));
+      .on('zoom', () => element.attr('transform', d3Select.event.transform));
+
+    selection.call(this.zoom);
+  }
+
+  public zoomIn() {
+    if (this.zoom) {
+      this.svgTransition(500)?.call(this.zoom.scaleBy, 2);
+    }
+  }
+
+  public zoomOut() {
+    if (this.zoom) {
+      this.svgTransition(500)?.call(this.zoom.scaleBy, 0.5);
+    }
+  }
+
+  public resetZoom() {
+    if (this.zoom) {
+      this.svgTransition(750)?.call(this.zoom.transform, d3Zoom.zoomIdentity);
+    }
+  }
+
+  private svgTransition(duration: number): any {
+    if (this.svgWrapper) {
+      return d3Select.select(this.svgWrapper)['transition']().duration(duration);
+    }
+    return null;
   }
 
   @HostListener('window:resize')
@@ -148,7 +179,7 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
     }
   }
 
-  private getElementSize(): { width: number, height: number } {
+  private getElementSize(): {width: number; height: number} {
     const {offsetWidth, offsetHeight} = this.element.nativeElement;
     return {width: offsetWidth, height: offsetHeight};
   }

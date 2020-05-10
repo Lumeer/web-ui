@@ -1,0 +1,11 @@
+.controls {
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: white;
+  top: 30px;
+  right: 20px;
+
+  button:not(:first-child) {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}

@@ -17,11 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Data, Layout} from 'plotly.js';
+import {Data, Layout, d3} from 'plotly.js';
 import {ChartDataSet} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {AxisDraggablePlotMaker} from './axis-draggable-plot-maker';
-import * as d3 from 'd3';
 
 export class LinePlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
