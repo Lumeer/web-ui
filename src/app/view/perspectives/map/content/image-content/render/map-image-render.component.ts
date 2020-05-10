@@ -31,6 +31,7 @@ import {
 import {MapImageData} from '../../../../../../core/store/maps/map.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MimeType} from '../../../../../../core/model/mime-type';
+import {addMarkerToSvgContainer, SVGContainer} from './map-image-render-utils';
 import * as d3Select from 'd3-selection';
 import * as d3Zoom from 'd3-zoom';
 
@@ -79,16 +80,26 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
       return;
     }
 
+    let svgImageWrapper: SVGElement;
     if (this.data.mimeType === MimeType.Svg) {
-      this.initSvgImage();
+      svgImageWrapper = this.initSvgImage();
     } else {
-      this.initOtherImage();
+      svgImageWrapper = this.initOtherImage();
     }
+
+    const svgMarkersWrapper = this.createSvgWrapper();
+    const svgMarkersContainer = d3Select.select(svgMarkersWrapper);
+    this.initZoom(d3Select.select(this.svgWrapper), d3Select.select(svgImageWrapper), svgMarkersContainer);
+
+    addMarkerToSvgContainer(svgMarkersContainer, '#f0c333', 420, 185);
+    addMarkerToSvgContainer(svgMarkersContainer, '#f0c333', 500, 300);
+    addMarkerToSvgContainer(svgMarkersContainer, '#f0c333', 450, 400);
+    addMarkerToSvgContainer(svgMarkersContainer, '#f0c333', 600, 500);
 
     this.currentMimeType = this.data.mimeType;
   }
 
-  private initSvgImage() {
+  private initSvgImage(): SVGElement {
     this.removeSvgImage();
 
     const document = new DOMParser().parseFromString(this.data.data, 'image/svg+xml');
@@ -96,7 +107,7 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
     this.svgImage.setAttribute('width', this.element.nativeElement.offsetWidth);
     this.svgImage.setAttribute('height', this.element.nativeElement.offsetHeight);
 
-    this.addSvgImage(this.svgImage);
+    return this.createSvgWrapper(this.svgImage);
   }
 
   private removeSvgImage() {
@@ -106,25 +117,26 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
     }
   }
 
-  private addSvgImage(element: SVGElement) {
+  private createSvgWrapper(element?: SVGElement): SVGElement {
     const group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    group.appendChild(element);
+    if (element) {
+      group.appendChild(element);
+    }
     this.svgWrapper.appendChild(group);
-
-    this.initZoom(d3Select.select(this.svgWrapper), d3Select.select(group));
+    return group;
   }
 
-  private initOtherImage() {
+  private initOtherImage(): SVGElement {
     this.removeSvgImage();
 
     this.svgImage = document.createElementNS('http://www.w3.org/2000/svg', 'image');
     this.svgImage.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', this.data.data);
     this.svgImage.setAttribute('style', 'width: 100%; height: 100%');
 
-    this.addSvgImage(this.svgImage);
+    return this.createSvgWrapper(this.svgImage);
   }
 
-  private initZoom(selection: any, element: any) {
+  private initZoom(selection: SVGContainer, svgImageWrapper: SVGContainer, svgMarkersWrapper: SVGContainer) {
     selection.on('.zoom', null);
 
     this.zoom = d3Zoom
@@ -135,7 +147,21 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
         [this.getElementSize().width, this.getElementSize().height],
       ])
       .scaleExtent([1, 20])
-      .on('zoom', () => element.attr('transform', d3Select.event.transform));
+      .on('zoom', () => {
+        const transform = d3Select.event.transform;
+        svgImageWrapper.attr('transform', transform);
+        svgMarkersWrapper.attr('transform', `translate(${transform.x},${transform.y})`);
+        svgMarkersWrapper
+          .selectAll('svg')
+          .attr('x', function () {
+            const element = d3Select.select(this);
+            return +element.attr('initial-x') * transform.k + (+element.attr('width') * (transform.k - 1)) / 2;
+          })
+          .attr('y', function () {
+            const element = d3Select.select(this);
+            return +element.attr('initial-y') * transform.k + +element.attr('height') * (transform.k - 1);
+          });
+      });
 
     selection.call(this.zoom);
   }
@@ -158,9 +184,9 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
     }
   }
 
-  private svgTransition(duration: number): any {
+  private svgTransition(duration: number): SVGContainer {
     if (this.svgWrapper) {
-      return d3Select.select(this.svgWrapper)['transition']().duration(duration);
+      return d3Select.select(this.svgWrapper)?.['transition']()?.duration(duration);
     }
     return null;
   }
