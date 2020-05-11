@@ -3,7 +3,7 @@
   <div class="d-flex flex-row flex-nowrap pt-1 align-items-center">
     <label class="switch" [for]="formControlName.ForceSign">
       <input type="checkbox" [formControlName]="formControlName.ForceSign" #forceSign>
-      <span class="slider round" (click)="$event.stopPropagation()"></span>
+      <span class="slider round" (click)="forceSign.click()"></span>
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.sign.label"
           (click)="forceSign.click()">Force sign</span>
@@ -11,7 +11,7 @@
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
     <label class="switch" [for]="formControlName.Negative">
       <input type="checkbox" [formControlName]="formControlName.Negative" #negative>
-      <span class="slider round" (click)="$event.stopPropagation()"></span>
+      <span class="slider round" (click)="negative.click()"></span>
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.negative.label"
           (click)="negative.click()">Accounting negative numbers</span>
@@ -20,7 +20,7 @@
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
     <label class="switch" [for]="formControlName.Compact">
       <input type="checkbox" [formControlName]="formControlName.Compact" #compact>
-      <span class="slider round" (click)="$event.stopPropagation()"></span>
+      <span class="slider round" (click)="compact.click()"></span>
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.compact.label" (click)="compact.click()">Compact mode</span>
   </div>
@@ -28,7 +28,7 @@
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
     <label class="switch" [for]="formControlName.Separated">
       <input type="checkbox" [formControlName]="formControlName.Separated" #separated>
-      <span class="slider round" (click)="$event.stopPropagation()"></span>
+      <span class="slider round" (click)="separated.click()"></span>
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.space.label" (click)="separated.click()">Thousands separated</span>
   </div>
