@@ -17,8 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {MapImageData, MapImageLoadResult, MapMarkerData, MapModel} from '../../../../../core/store/maps/map.model';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+  Output,
+  EventEmitter,
+} from '@angular/core';
+import {
+  MapImageData,
+  MapImageLoadResult,
+  MapMarkerData,
+  MapMarkerProperties,
+  MapModel,
+} from '../../../../../core/store/maps/map.model';
 import {AppState} from '../../../../../core/store/app.state';
 import {MapsAction} from '../../../../../core/store/maps/maps.action';
 import {select, Store} from '@ngrx/store';
@@ -29,6 +44,8 @@ import {
   selectMapImageDataLoading,
 } from '../../../../../core/store/maps/maps.state';
 import {MapImageRenderComponent} from './render/map-image-render.component';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {populateCoordinateProperties} from '../map-content.utils';
 
 @Component({
   selector: 'map-image-content',
@@ -43,12 +60,20 @@ export class MapImageContentComponent implements OnChanges {
   @Input()
   public markerData: MapMarkerData[];
 
+  @Input()
+  public constraintData: ConstraintData;
+
+  @Output()
+  public detail = new EventEmitter<MapMarkerProperties>();
+
   @ViewChild(MapImageRenderComponent)
   public mapImageRenderComponent: MapImageRenderComponent;
 
   public loading$: Observable<boolean>;
   public loaded$: Observable<MapImageLoadResult>;
   public imageData$: Observable<MapImageData>;
+
+  public markers: MapMarkerProperties[];
 
   constructor(private store$: Store<AppState>) {}
 
@@ -57,6 +82,13 @@ export class MapImageContentComponent implements OnChanges {
       this.store$.dispatch(new MapsAction.DownloadImageData({url: this.map.config.imageUrl}));
       this.refreshObservables();
     }
+    if (changes.markerData || changes.constraintData) {
+      this.markers = this.bindMarkers(this.markerData || []);
+    }
+  }
+
+  private bindMarkers(data: MapMarkerData[]): MapMarkerProperties[] {
+    return populateCoordinateProperties(data, this.constraintData).coordinateProperties;
   }
 
   private refreshObservables() {

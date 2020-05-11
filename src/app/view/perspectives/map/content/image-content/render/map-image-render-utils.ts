@@ -19,17 +19,19 @@
 
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import * as d3Select from 'd3-selection';
+import {MapMarkerProperties} from '../../../../../../core/store/maps/map.model';
 
 export type SVGContainer = d3Select.Selection<SVGElement, any, any, any>;
 
 export function addMarkerToSvgContainer(
   container: SVGContainer,
-  background: string,
-  x: number,
-  y: number,
+  properties: MapMarkerProperties,
   width: number = 30,
   height: number = 40
 ): SVGContainer {
+  const x = properties.coordinates.lat;
+  const y = properties.coordinates.lng;
+
   const marker = container
     .append('svg')
     .attr('width', width)
@@ -38,12 +40,13 @@ export function addMarkerToSvgContainer(
     .attr('initial-x', x)
     .attr('y', y)
     .attr('initial-y', y)
-    .attr('viewBox', `${-width / 2} ${-height} ${width} ${height}`);
+    .attr('viewBox', `${-width / 2} ${-height} ${width} ${height}`)
+    .style('cursor', 'pointer');
 
   marker
     .append('path')
     .attr('d', markerPath(height, width / 2))
-    .style('fill', background);
+    .style('fill', properties.color);
 
   const circleCenterY = -height + width / 2;
   marker
@@ -51,7 +54,7 @@ export function addMarkerToSvgContainer(
     .attr('cx', 0)
     .attr('cy', circleCenterY)
     .attr('r', width / 2 - 4)
-    .attr('fill', shadeColor(background, -0.3));
+    .attr('fill', shadeColor(properties.color, -0.3));
 
   const fontSize = 12;
 
@@ -62,7 +65,8 @@ export function addMarkerToSvgContainer(
     .attr('text-anchor', 'middle')
     .attr('dominant-baseline', 'middle')
     .attr('fill', '#ffffff')
-    .attr('style', `font-family: "Font Awesome 5 Pro"; font-size: ${fontSize}px`)
+    .style('font-family', '"Font Awesome 5 Pro"')
+    .style('font-size', `${fontSize}px`)
     .text(() => '\uf6bb');
 
   return marker;

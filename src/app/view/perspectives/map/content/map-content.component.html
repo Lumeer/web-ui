@@ -1,7 +1,8 @@
 <ng-container *ngIf="{data: data$ | async} as data">
   <map-image-content *ngIf="map?.config?.imageUrl"
                      [map]="map"
-                     [markerData]="data.data">
+                     [markerData]="data.data"
+                     (detail)="onMarkerDetail($event)">
   </map-image-content>
   <map-globe-content *ngIf="!map?.config?.imageUrl"
                      [map]="map"
