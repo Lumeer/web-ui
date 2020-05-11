@@ -1,7 +1,6 @@
 <div class="d-flex justify-content-end align-items-center"
      [style.height.px]="contentHeight">
   <invite-user [mobile]="mobile"></invite-user>
-  <video-menu *ngIf="showVideos$ | async"></video-menu>
   <notifications-menu></notifications-menu>
   <user-menu
     [workspace]="workspace"

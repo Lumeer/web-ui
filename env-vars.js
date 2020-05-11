@@ -25,7 +25,6 @@ config.PUSHER_KEY = env.PUSHER_KEY;
 config.SENTRY_DSN = env.SENTRY_DSN;
 config.SESSION_TIMEOUT = env.SESSION_TIMEOUT;
 config.SMARTLOOK_KEY = env.SMARTLOOK_KEY;
-config.VIDEO_KEY = env.VIDEO_KEY;
 
 writeFileSync('./src/environments/.env.json', JSON.stringify(config));
 

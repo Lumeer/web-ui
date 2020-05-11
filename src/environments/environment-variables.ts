@@ -40,7 +40,6 @@ export interface EnvironmentVariables {
   sessionTimeout: number;
   pusherCluster: string;
   pusherKey: string;
-  videoKey: string;
   blocklyCdn: string;
   logzioKey: string;
   smartlookKey: string;
@@ -62,7 +61,6 @@ const sentryDsn: string = env['SENTRY_DSN'];
 const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
-const videoKey = env['VIDEO_KEY'] || '';
 const blocklyCdn = env['BLOCKLY_CDN'] || `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v9/blockly.${locale}.min.js`;
 const logzioKey = env['LOGZIO_KEY'] || '';
 const smartlookKey = env['SMARTLOOK_KEY'] || '';
@@ -84,7 +82,6 @@ export const environmentVariables: EnvironmentVariables = {
   sessionTimeout,
   pusherCluster,
   pusherKey,
-  videoKey,
   blocklyCdn,
   logzioKey,
   smartlookKey,
