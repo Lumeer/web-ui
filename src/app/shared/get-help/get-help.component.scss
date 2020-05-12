@@ -10,7 +10,7 @@ a {
 
   button {
     transition: $transition-base;
-    box-shadow: $shadow-up;
+    box-shadow: $shadow-up !important;
 
     &:hover {
       box-shadow: $shadow-up-up;

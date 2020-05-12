@@ -31,9 +31,9 @@ export class GetHelpComponent implements OnInit {
 
   public ngOnInit(): void {
     if (environment.locale === 'cs') {
-      this.link = 'https://www.lumeer.io/category/napoveda';
+      this.link = 'https://www.lumeer.io/cs/pomoc';
     } else {
-      this.link = 'https://www.lumeer.io/category/help';
+      this.link = 'https://www.lumeer.io/get-help';
     }
   }
 }
