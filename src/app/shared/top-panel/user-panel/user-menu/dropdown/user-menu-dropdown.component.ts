@@ -26,6 +26,7 @@ import {
   ElementRef,
   ViewChild,
   OnDestroy,
+  OnInit,
 } from '@angular/core';
 import {User} from '../../../../../core/store/users/user';
 import {environment} from '../../../../../../environments/environment';
@@ -40,7 +41,7 @@ import {AppState} from '../../../../../core/store/app.state';
   styleUrls: ['./user-menu-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserMenuDropdownComponent implements OnDestroy {
+export class UserMenuDropdownComponent implements OnInit, OnDestroy {
   @Input()
   public currentUser: User;
 
@@ -75,6 +76,12 @@ export class UserMenuDropdownComponent implements OnDestroy {
 
   public readonly buildNumber = environment.buildNumber;
   public readonly locale = environment.locale;
+
+  public helpLink: string;
+
+  public ngOnInit() {
+    this.helpLink = this.locale === 'cs' ? 'https://www.lumeer.io/cs/pomoc' : 'https://www.lumeer.io/get-help';
+  }
 
   public onLogout() {
     this.logout.emit();

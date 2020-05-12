@@ -65,8 +65,6 @@ import {UserNotificationsEffects} from './user-notifications/user-notifications.
 import {userNotificationsReducer} from './user-notifications/user-notifications.reducer';
 import {UsersEffects} from './users/users.effects';
 import {usersReducer} from './users/users.reducer';
-import {VideosEffects} from './videos/videos.effects';
-import {videosReducer} from './videos/videos.reducer';
 import {ViewsEffects} from './views/views.effects';
 import {viewsReducer} from './views/views.reducer';
 import {searchesReducer} from './searches/searches.reducer';
@@ -96,7 +94,6 @@ const reducers: ActionReducerMap<AppState> = {
   pivots: pivotsReducer,
   charts: chartsReducer,
   calendars: calendarsReducer,
-  videos: videosReducer,
   userNotifications: userNotificationsReducer,
   ganttCharts: ganttChartsReducer,
   kanbans: kanbansReducer,
@@ -125,7 +122,6 @@ const effects = [
   TablesEffects,
   UsersEffects,
   ViewsEffects,
-  VideosEffects,
   UserNotificationsEffects,
   SequencesEffects,
 ];

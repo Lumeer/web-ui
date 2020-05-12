@@ -17,39 +17,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface VideoModel {
-  id?: string;
-  summary: string;
-  description: string;
-  priority: number;
-  thumbnail: string;
-}
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {environment} from '../../../environments/environment';
 
-export interface VideoMetaData {
-  items: VideoItem[];
-}
+@Component({
+  selector: 'get-help',
+  templateUrl: './get-help.component.html',
+  styleUrls: ['./get-help.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class GetHelpComponent implements OnInit {
+  public link: string;
 
-export interface VideoItem {
-  id: string;
-  snippet: VideoSnippet;
-}
-
-export interface VideoSnippet {
-  title: string;
-  description: string;
-  thumbnails: VideoThumbnails;
-}
-
-export interface VideoThumbnails {
-  default: VideoThumbnail;
-  medium: VideoThumbnail;
-  standard: VideoThumbnail;
-  high: VideoThumbnail;
-  maxres: VideoThumbnail;
-}
-
-export interface VideoThumbnail {
-  url: string;
-  width: number;
-  height: number;
+  public ngOnInit(): void {
+    if (environment.locale === 'cs') {
+      this.link = 'https://www.lumeer.io/category/napoveda';
+    } else {
+      this.link = 'https://www.lumeer.io/category/help';
+    }
+  }
 }

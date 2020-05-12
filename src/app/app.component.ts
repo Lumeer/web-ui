@@ -39,8 +39,6 @@ import {AppState} from './core/store/app.state';
 import {selectServiceLimitsByWorkspace} from './core/store/organizations/service-limits/service-limits.state';
 import {selectCurrentUser} from './core/store/users/users.state';
 import {hashUserId} from './shared/utils/system.utils';
-import {VideosAction} from './core/store/videos/videos.action';
-import {getAllVideos} from './core/store/videos/videos.data';
 import {SessionService} from './auth/session.service';
 import {ConstraintDataService} from './core/service/constraint-data.service';
 import {TooltipConfig} from 'ngx-bootstrap/tooltip';
@@ -75,7 +73,6 @@ export class AppComponent implements AfterViewInit {
     this.storeReferralCookie();
     this.moduleLazyLoadingService.init();
     this.initPushNotifications();
-    this.initVideos();
     this.handleAuthentication();
     this.startAnalyticsTracking();
     this.setUpExternalServicesUserContext();
@@ -99,12 +96,6 @@ export class AppComponent implements AfterViewInit {
   private initPushNotifications() {
     if (environment.pusherKey) {
       this.pusherService.init();
-    }
-  }
-
-  private initVideos() {
-    if (environment.videoKey) {
-      this.store$.dispatch(new VideosAction.LoadVideos({videos: getAllVideos(), apiKey: environment.videoKey}));
     }
   }
 

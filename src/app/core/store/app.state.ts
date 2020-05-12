@@ -38,7 +38,6 @@ import {initialServiceLimitsState, ServiceLimitsState} from './organizations/ser
 import {initialPaymentsState, PaymentsState} from './organizations/payment/payments.state';
 import {ChartsState, initialChartsState} from './charts/charts.state';
 import {CalendarsState, initialCalendarsState} from './calendars/calendars.state';
-import {initialVideosState, VideosState} from './videos/videos.state';
 import {initialUserNotificationsState, UserNotificationsState} from './user-notifications/user-notifications.state';
 import {GanttChartsState, initialGanttChartsState} from './gantt-charts/gantt-charts.state';
 import {initialKanbansState, KanbansState} from './kanbans/kanban.state';
@@ -69,7 +68,6 @@ export interface AppState {
   pivots: PivotsState;
   charts: ChartsState;
   calendars: CalendarsState;
-  videos: VideosState;
   userNotifications: UserNotificationsState;
   ganttCharts: GanttChartsState;
   kanbans: KanbansState;
@@ -101,7 +99,6 @@ export function initialAppState(): AppState {
     pivots: initialPivotsState,
     charts: initialChartsState,
     calendars: initialCalendarsState,
-    videos: initialVideosState,
     userNotifications: initialUserNotificationsState,
     ganttCharts: initialGanttChartsState,
     kanbans: initialKanbansState,

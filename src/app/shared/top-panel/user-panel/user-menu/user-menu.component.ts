@@ -428,19 +428,19 @@ export class UserMenuComponent {
     });
 
     driverSteps.push({
-      element: '[data-tour="video-menu"]',
+      element: '[data-tour="get-help-button"]',
       popover: {
         title: this.i18n({
-          id: 'appTour.title.videos',
+          id: 'appTour.title.getHelp',
           value: 'Help with Lumeer',
         }),
         description:
           this.getStepCounter(stepNo++, totalSteps) +
           this.i18n({
-            id: 'appTour.description.videos',
-            value: 'Here you can find a list of one-minute videos that explain controls on each page.',
+            id: 'appTour.description.getHelp',
+            value: 'Here you can always get help in case you got lost.',
           }),
-        position: 'left',
+        position: 'top-right',
       },
     });
 

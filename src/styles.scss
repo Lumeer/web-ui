@@ -265,10 +265,10 @@ typeahead-container {
   background: transparent;
   border: 0;
   color: $primary;
+  transition: $transition-base;
 
   &:not([disabled]):hover {
-    background-color: $primary;
-    color: $white;
+    transform: scale(1.3);
   }
 }
 

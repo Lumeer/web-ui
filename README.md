@@ -67,7 +67,6 @@ $ AUTH_CLIENT_ID=<auth0 client id> \
 > SENTRY_AUTH_TOKEN=<secret token> \
 > SESSION_TIMEOUT=30 \
 > SMARTLOOK_KEY=<api key> \
-> VIDEO_KEY=<youtube api key> \
 > mvn clean package -Dcontext.root=en
 ```
 
@@ -90,7 +89,6 @@ $ AUTH_CLIENT_ID=<auth0 client id> \
 - `SENTRY_AUTH_TOKEN`: Sentry authentication token
 - `SESSION_TIMEOUT`: user inactivity time before session expiration (in minutes)
 - `SMARTLOOK_KEY`: Smartlook API key
-- `VIDEO_KEY`: YouTube Google v3 API key
 - `context.root`: front-end deployment context root (`/ui/` by default)
 
 If you are adding a new environment variable, make sure it is used in both `env-vars.js` and `src/environments/environment-variables.ts` files.

@@ -17,8 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {VideoModel} from './video.model';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {GetHelpComponent} from './get-help.component';
 
-export function filterVideosByIds(videos: VideoModel[], ids: string[]) {
-  return videos.filter(video => ids.indexOf(video.id) >= 0);
-}
+@NgModule({
+  declarations: [GetHelpComponent],
+  imports: [CommonModule],
+  exports: [GetHelpComponent],
+})
+export class GetHelpModule {}

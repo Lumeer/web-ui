@@ -36,7 +36,6 @@ import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 import {DeviceDetectorModule} from 'ngx-device-detector';
 import {environment} from '../../environments/environment';
 import {SharedModule} from '../shared/shared.module';
-import {VideoService} from './api/video/video.service';
 import {SentryErrorHandler} from './error/sentry.error-handler';
 import {GuardsModule} from './guards/guards.module';
 import {HomeComponent} from './home.component';
@@ -113,7 +112,6 @@ if (environment.locale === 'cs') {
     OrganizationValidators,
     ProjectValidators,
     PusherService,
-    VideoService,
     UserNotificationsService,
     SequenceService,
   ],

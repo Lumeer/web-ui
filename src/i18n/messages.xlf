@@ -68,10 +68,6 @@
           <context context-type="linenumber">33</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/video-menu/play-video-modal/play-video-modal.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
@@ -1547,6 +1543,12 @@
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
+      </trans-unit><trans-unit id="get.help.button" datatype="html">
+        <source>Get Help</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/get-help/get-help.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
       </trans-unit><trans-unit id="topPanel.organizationMenu.title" datatype="html">
         <source>Organization menu</source>
         <context-group purpose="location">
@@ -1609,12 +1611,14 @@
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-      </trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
-        <source>Solutions and Support</source>
+      </trans-unit><trans-unit id="menu.getHelp" datatype="html">
+        <source>Get Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
           <context context-type="linenumber">67</context>
         </context-group>
+      </trans-unit><trans-unit id="menu.solutionsSupport" datatype="html">
+        <source>Solutions and Support</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
           <context context-type="linenumber">62</context>
@@ -1690,12 +1694,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context>
           <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit><trans-unit id="topPanel.help.title" datatype="html">
-        <source>Help</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/video-menu/video-menu.component.html</context>
-          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="inviteUser.dialog.title" datatype="html">
         <source>Invite colleagues</source>
@@ -4730,13 +4728,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="video.metadata.get.fail" datatype="html">
-        <source>Unable to read training videos. I am sorry, the videos will not be available now. The problem is being worked on.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/videos/videos.effects.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="views.get.fail" datatype="html">
         <source>Could not get views</source>
         <context-group purpose="location">
@@ -5298,15 +5289,15 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="appTour.title.videos" datatype="html">
+      <trans-unit id="appTour.title.getHelp" datatype="html">
         <source>Help with Lumeer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="appTour.description.videos" datatype="html">
-        <source>Here you can find a list of one-minute videos that explain controls on each page.</source>
+      <trans-unit id="appTour.description.getHelp" datatype="html">
+        <source>Here you can always get help in case you got lost.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>

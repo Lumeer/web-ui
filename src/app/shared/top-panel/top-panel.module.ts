@@ -31,7 +31,6 @@ import {UserMenuComponent} from './user-panel/user-menu/user-menu.component';
 import {UserPanelComponent} from './user-panel/user-panel.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
 import {TopPanelWrapperComponent} from './wrapper/top-panel-wrapper.component';
-import {VideoMenuComponent} from './user-panel/video-menu/video-menu.component';
 import {NotificationsMenuModule} from './user-panel/notifications-menu/notifications-menu.module';
 import {InviteUserComponent} from './user-panel/invite-user/invite-user.component';
 import {InviteUserModalComponent} from './user-panel/invite-user/modal/invite-user-modal.component';
@@ -42,12 +41,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputModule} from '../input/input.module';
 import {DropdownModule} from '../dropdown/dropdown.module';
 import {UserMenuDropdownComponent} from './user-panel/user-menu/dropdown/user-menu-dropdown.component';
-import {VideoMenuDropdownComponent} from './user-panel/video-menu/dropdown/video-menu-dropdown.component';
 import {UserFeedbackModalComponent} from './user-panel/user-menu/user-feedback-modal/user-feedback-modal.component';
-import {PlayVideoModalComponent} from './user-panel/video-menu/play-video-modal/play-video-modal.component';
 import {BookmarksModule} from '../bookmarks/bookmarks.module';
 import {GravatarModule} from 'ngx-gravatar';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {GetHelpModule} from '../get-help/get-help.module';
 
 @NgModule({
   imports: [
@@ -64,6 +62,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     InputModule,
     DropdownModule,
     BookmarksModule,
+    GetHelpModule,
     GravatarModule,
     TooltipModule.forRoot(),
   ],
@@ -76,14 +75,11 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     WorkspacePanelComponent,
     UserPanelComponent,
     ControlsToggleComponent,
-    VideoMenuComponent,
     InviteUserComponent,
     InviteUserModalComponent,
     NewUserComponent,
     UserMenuDropdownComponent,
-    VideoMenuDropdownComponent,
     UserFeedbackModalComponent,
-    PlayVideoModalComponent,
   ],
   exports: [TopPanelWrapperComponent, LumeerLogoComponent],
 })
