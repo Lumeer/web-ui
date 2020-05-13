@@ -58,7 +58,8 @@ export class MapsEffects {
           if (mimeType === MimeType.Svg) {
             return this.contentService.downloadData(url).pipe(
               map(data => DOMPurify.sanitize(data)),
-              map(data => ({mimeType, data})),
+              mergeMap(data => checkSvgSize(data)),
+              map(data => ({...data, mimeType})),
               flatMap(data => [
                 new MapsAction.DownloadImageDataSuccess({
                   url,
@@ -71,7 +72,8 @@ export class MapsEffects {
 
           return this.contentService.downloadBlob(url).pipe(
             map(blob => URL.createObjectURL(blob)),
-            map(data => ({mimeType, data})),
+            mergeMap(data => checkBlobUrlSize(data)),
+            map(data => ({...data, mimeType})),
             flatMap(data => [
               new MapsAction.DownloadImageDataSuccess({
                 url,
@@ -92,6 +94,42 @@ export class MapsEffects {
     private domSanitizer: DomSanitizer,
     private contentService: ContentService
   ) {}
+}
+
+function checkBlobUrlSize(data: string): Observable<{data: string; width: number; height: number}> {
+  return new Observable(subscriber => {
+    const image = new Image();
+    image.src = data;
+    image.onload = function () {
+      subscriber.next({data, width: image.width, height: image.height});
+      subscriber.complete();
+    };
+    image.onerror = function (error) {
+      subscriber.error(error);
+    };
+  });
+}
+
+function checkSvgSize(data: string): Observable<{data: string; width: number; height: number}> {
+  return new Observable(subscriber => {
+    const onlySvgString = data.match(/<svg.*?>/)?.[0];
+    let foundSize = false;
+    if (onlySvgString) {
+      const document = new DOMParser().parseFromString(onlySvgString + '</svg>', 'image/svg+xml');
+      const svgImage = document.childNodes.item(0) as SVGElement;
+      const width = +svgImage.getAttribute('width');
+      const height = +svgImage.getAttribute('height');
+      if (width > 0 && height > 0) {
+        foundSize = true;
+        subscriber.next({data, width, height});
+        subscriber.complete();
+      }
+    }
+
+    if (!foundSize) {
+      subscriber.error(new Error());
+    }
+  });
 }
 
 function imageLoadedActions(url: string, result: MapImageLoadResult): Action[] {

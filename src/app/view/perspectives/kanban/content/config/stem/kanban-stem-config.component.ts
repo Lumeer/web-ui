@@ -58,10 +58,8 @@ export class KanbanStemConfigComponent implements OnChanges {
   public readonly emptyValueString: string;
   public readonly emptyResourceString: string;
   public readonly dueDateEmptyValueString: string;
-  public readonly dueDateString: string;
   public readonly doneAttributeEmptyValueString: string;
   public readonly doneAttributeString: string;
-  public readonly doneValueString: string;
 
   public attributesResourcesOrder: AttributesResource[];
 
@@ -69,13 +67,11 @@ export class KanbanStemConfigComponent implements OnChanges {
     this.emptyResourceString = i18n({id: 'kanban.config.collection.resource.empty', value: 'Select table or link'});
     this.emptyValueString = i18n({id: 'kanban.config.collection.attribute.empty', value: 'Select attribute'});
     this.dueDateEmptyValueString = i18n({id: 'kanban.config.collection.dueDate.empty', value: 'Select due date'});
-    this.dueDateString = i18n({id: 'kanban.config.collection.dueDate', value: 'Due date'});
     this.doneAttributeEmptyValueString = i18n({
       id: 'kanban.config.collection.doneAttribute.empty',
       value: 'Select done state',
     });
     this.doneAttributeString = i18n({id: 'kanban.config.collection.doneAttribute', value: 'Done state'});
-    this.doneValueString = i18n({id: 'kanban.config.collection.doneAttribute', value: 'Done value'});
   }
 
   public ngOnChanges(changes: SimpleChanges) {

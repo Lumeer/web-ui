@@ -3,10 +3,10 @@
   <div *ngIf="placeholderIcon || placeholderText"
        class="input-group-prepend">
     <span [style.color]="placeholderColor"
-          [title]="placeholderTitle"
+          [title]="placeholderTitle || ''"
           class="input-group-text">
       <i *ngIf="placeholderIcon"
-         [title]="placeholderTitle"
+         [title]="placeholderTitle || ''"
          class="fa-fw {{placeholderIcon}}"></i>
       {{placeholderText}}
     </span>

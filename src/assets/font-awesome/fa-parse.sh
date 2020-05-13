@@ -26,27 +26,31 @@ cat > icons.ts <<EOF
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const icons: string[] = [
+export const iconsMap: Record<string, string> = {
 EOF
 
 cat icons >> icons.ts
 
 cat >> icons.ts <<EOF
-];
+};
 
-export const solid: string[] = icons.map(color => \`fas \${color}\`);
+export const icons: string[] = Object.keys(iconsMap);
 
-export const regular: string[] = icons.map(color => \`far \${color}\`);
+export const solid: string[] = icons.map(icon => \`fas \${icon}\`);
 
-export const light: string[] = icons.map(color => \`fal \${color}\`);
+export const regular: string[] = icons.map(icon => \`far \${icon}\`);
 
-export const brand: string[] = [
+export const light: string[] = icons.map(icon => \`fal \${icon}\`);
+
+export const brandMap: Record<string, string> = {
 EOF
 
 cat brands >> icons.ts
 
 cat >> icons.ts <<EOF
-];
+};
+
+export const brand = Object.keys(brandMap).map(icon => \`fab \${icon}\`);;
 
 export const iconsMeta = new Map<string, string[]>([
 EOF

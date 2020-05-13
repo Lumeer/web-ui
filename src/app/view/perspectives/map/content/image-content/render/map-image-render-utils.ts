@@ -20,26 +20,41 @@
 import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import * as d3Select from 'd3-selection';
 import {MapMarkerProperties} from '../../../../../../core/store/maps/map.model';
+import {iconsMap} from '../../../../../../shared/picker/icons';
+import {of} from 'rxjs';
 
 export type SVGContainer = d3Select.Selection<SVGElement, any, any, any>;
+
+export interface Rectangle {
+  width: number;
+  height: number;
+}
+
+export interface Position {
+  x: number;
+  y: number;
+}
+
+const defaultMarkerSize: Rectangle = {height: 40, width: 30};
 
 export function addMarkerToSvgContainer(
   container: SVGContainer,
   properties: MapMarkerProperties,
-  width: number = 30,
-  height: number = 40
+  scale: number,
+  x: number,
+  y: number,
+  width: number = defaultMarkerSize.width,
+  height: number = defaultMarkerSize.height
 ): SVGContainer {
-  const x = properties.coordinates.lat;
-  const y = properties.coordinates.lng;
-
   const marker = container
     .append('svg')
+    .attr('id', properties.id)
     .attr('width', width)
     .attr('height', height)
     .attr('x', x)
-    .attr('initial-x', x)
+    .attr('initial-x', x / scale)
     .attr('y', y)
-    .attr('initial-y', y)
+    .attr('initial-y', y / scale)
     .attr('viewBox', `${-width / 2} ${-height} ${width} ${height}`)
     .style('cursor', 'pointer');
 
@@ -49,25 +64,51 @@ export function addMarkerToSvgContainer(
     .style('fill', properties.color);
 
   const circleCenterY = -height + width / 2;
+  const innerCircleRadius = width / 2 - 4;
+
   marker
     .append('circle')
     .attr('cx', 0)
     .attr('cy', circleCenterY)
-    .attr('r', width / 2 - 4)
+    .attr('r', innerCircleRadius)
     .attr('fill', shadeColor(properties.color, -0.3));
 
-  const fontSize = 12;
+  if (properties.icons?.length === 1) {
+    marker
+      .append('text')
+      .attr('x', 0)
+      .attr('y', circleCenterY)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('fill', '#ffffff')
+      .style('font-family', '"Font Awesome 5 Pro"')
+      .style('font-size', '12px')
+      .text(() => '\uf6bb');
+  } else if (properties.icons?.length === 2) {
+    const radius = innerCircleRadius / 2 - 1;
+    const icons = properties.icons.map(icon => icon.split(' ').slice(-1)[0]).map(icon => iconsMap[icon]);
+    marker
+      .append('text')
+      .attr('x', -radius)
+      .attr('y', circleCenterY - radius)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('fill', '#ffffff')
+      .style('font-family', '"Font Awesome 5 Pro"')
+      .style('font-size', '7px')
+      .text(() => icons[0]);
 
-  marker
-    .append('text')
-    .attr('x', 0)
-    .attr('y', circleCenterY)
-    .attr('text-anchor', 'middle')
-    .attr('dominant-baseline', 'middle')
-    .attr('fill', '#ffffff')
-    .style('font-family', '"Font Awesome 5 Pro"')
-    .style('font-size', `${fontSize}px`)
-    .text(() => '\uf6bb');
+    marker
+      .append('text')
+      .attr('x', radius)
+      .attr('y', circleCenterY + radius)
+      .attr('text-anchor', 'middle')
+      .attr('dominant-baseline', 'middle')
+      .attr('fill', '#ffffff')
+      .style('font-family', '"Font Awesome 5 Pro"')
+      .style('font-size', '7px')
+      .text(() => icons[1]);
+  }
 
   return marker;
 }
@@ -81,4 +122,54 @@ function markerPath(height: number, radius: number): string {
     L ${-deltaX},${-deltaY}
     A ${radius} ${radius} 1 1 1 ${deltaX},${-deltaY}
     L 0,0 z`;
+}
+
+const pointScale = 10000; // 0.0001 is 1 pixel
+
+export function computeMarkerPosition(
+  position: Position,
+  scale: number,
+  center: Rectangle,
+  bounds: Rectangle,
+  markerSize: Rectangle = defaultMarkerSize
+): {x: number; y: number} {
+  let x = position.x * pointScale + center.width / 2;
+  x = checkXBounds(x, center, bounds);
+  x = x * scale - (markerSize.width * scale) / 2; // TODO add translation x
+
+  let y = position.y * pointScale + center.height / 2;
+  y = checkYBounds(y, center, bounds);
+  y = y * scale - markerSize.height * scale; // TODO add translation y
+
+  return {x, y};
+}
+
+export function checkXBounds(x: number, center: Rectangle, bounds: Rectangle, offset = 0): number {
+  const lowerX = center.width / 2 - bounds.width / 2 - offset;
+  const upperX = center.width / 2 + bounds.width / 2 - offset;
+  return Math.max(Math.min(upperX, x), lowerX);
+}
+
+export function checkYBounds(y: number, center: Rectangle, bounds: Rectangle, offset = 0): number {
+  const lowerY = center.height / 2 - bounds.height / 2 - offset;
+  const upperY = center.height / 2 + bounds.height / 2 - offset;
+  return Math.max(Math.min(upperY, y), lowerY);
+}
+
+export function scaleRectangle(rectangle: Rectangle, scale: number): Rectangle {
+  return {width: rectangle.width * scale, height: rectangle.height * scale};
+}
+
+export function checkDragBounds(
+  position: Position,
+  scale: number,
+  center: Rectangle,
+  bounds: Rectangle,
+  markerSize: Rectangle = defaultMarkerSize
+): Position {
+  const centerScaled = scaleRectangle(center, scale);
+  const boundsScaled = scaleRectangle(bounds, scale);
+  const x = checkXBounds(position.x, centerScaled, boundsScaled, markerSize.width / 2);
+  const y = checkYBounds(position.y, centerScaled, boundsScaled, markerSize.height);
+  return {x, y};
 }

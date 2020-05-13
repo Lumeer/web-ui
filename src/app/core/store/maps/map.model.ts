@@ -97,6 +97,8 @@ export enum MapAttributeType {
 export interface MapImageData {
   data: any;
   mimeType: MimeType;
+  width: number;
+  height: number;
 }
 
 export enum MapImageLoadResult {

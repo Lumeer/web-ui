@@ -49,13 +49,13 @@ Object.keys(loadJsonFile).forEach(function (key) {
       brands += ',\n';
     }
     first_brands = false;
-    brands += "'fab fa-" + key + "'";
+    brands += "'fa-" + key + "':" + "'\\u" + icon.unicode + "'";
   } else {
     if (!first) {
       icons += ',\n';
     }
     first = false;
-    icons += "'fa-" + key + "'";
+    icons += "'fa-" + key + "':" + "'\\u" + icon.unicode + "'";
   }
 
   registerVocab(String(key), String(key));

@@ -33,7 +33,14 @@ import {
 import {MapImageData, MapMarkerProperties} from '../../../../../../core/store/maps/map.model';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MimeType} from '../../../../../../core/model/mime-type';
-import {addMarkerToSvgContainer, SVGContainer} from './map-image-render-utils';
+import {
+  addMarkerToSvgContainer,
+  computeMarkerPosition,
+  Rectangle,
+  SVGContainer,
+  Position,
+  checkDragBounds,
+} from './map-image-render-utils';
 import * as d3Select from 'd3-selection';
 import * as d3Zoom from 'd3-zoom';
 import * as d3Drag from 'd3-drag';
@@ -90,11 +97,11 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
   }
 
   private drawMarkers() {
-    this.clearMarkers();
-
     let deltaX, deltaY;
 
     const svgImageContainer = d3Select.select(this.svgImageWrapper);
+    const center = this.getElementSize();
+    const bounds = this.getElementBounds();
     const drag = d3Drag
       .drag()
       .on('start', function () {
@@ -105,8 +112,15 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
       .on('drag', function () {
         const scale = +(svgImageContainer.attr('scale') || 1);
 
-        const x = d3Select.event.x + deltaX;
-        const y = d3Select.event.y + deltaY;
+        const {x, y} = checkDragBounds(
+          {
+            x: d3Select.event.x + deltaX,
+            y: d3Select.event.y + deltaY,
+          },
+          scale,
+          center,
+          bounds
+        );
 
         const element = d3Select.select(this);
         const width = +element.attr('width');
@@ -120,14 +134,34 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
       });
 
     const svgMarkersContainer = d3Select.select(this.svgMarkersWrapper);
+    const imageScale = +(svgImageContainer.attr('scale') || 1);
+    const drawnIds = new Set();
     for (const marker of this.markers || []) {
-      addMarkerToSvgContainer(svgMarkersContainer, marker)
-        .call(drag)
-        .on('dblclick', () => {
-          d3Select.event.stopPropagation();
-          this.detail.emit(marker);
-        });
+      const {x, y} = computeMarkerPosition(markerPosition(marker), imageScale, center, bounds);
+      const selectedMarker = svgMarkersContainer.select(`svg[id='${marker.id}']`);
+      if (selectedMarker.empty()) {
+        addMarkerToSvgContainer(svgMarkersContainer, marker, imageScale, x, y)
+          .call(drag)
+          .on('dblclick', () => {
+            d3Select.event.stopPropagation();
+            this.detail.emit(marker);
+          });
+      } else if (+selectedMarker.attr('x') !== x || +selectedMarker.attr('y') !== y) {
+        selectedMarker
+          .attr('x', x)
+          .attr('initial-x', x / imageScale)
+          .attr('y', y)
+          .attr('initial-y', y / imageScale);
+      }
+      drawnIds.add(marker.id);
     }
+
+    svgMarkersContainer
+      .selectAll<SVGElement, any>('svg')
+      .filter(function () {
+        return !drawnIds.has(this.getAttribute('id'));
+      })
+      .remove();
   }
 
   public checkMimeTypeImage() {
@@ -216,7 +250,7 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
         [0, 0],
         [this.getElementSize().width, this.getElementSize().height],
       ])
-      .scaleExtent([1, 20])
+      .scaleExtent([0.5, 20])
       .on('zoom', () => {
         const transform = d3Select.event.transform;
         svgImageWrapper.attr('transform', transform).attr('scale', transform.k);
@@ -272,15 +306,38 @@ export class MapImageRenderComponent implements OnInit, OnChanges {
     if (this.svgImage) {
       this.svgImage.setAttribute('width', String(elementSize.width));
       this.svgImage.setAttribute('height', String(elementSize.height));
+
+      const bounds = this.getElementBounds();
+      const svgImageContainer = d3Select.select(this.svgImageWrapper);
+      const scale = +(svgImageContainer.attr('scale') || 1);
+      for (const marker of this.markers || []) {
+        const {x, y} = computeMarkerPosition(markerPosition(marker), scale, elementSize, bounds);
+        d3Select
+          .select(`svg[id='${marker.id}']`)
+          .attr('x', x)
+          .attr('initial-x', x / scale)
+          .attr('y', y)
+          .attr('initial-y', y / scale);
+      }
     }
   }
 
-  private getElementSize(): {width: number; height: number} {
+  private getElementSize(): Rectangle {
     const {offsetWidth, offsetHeight} = this.element.nativeElement;
     return {width: offsetWidth, height: offsetHeight};
+  }
+
+  private getElementBounds(): Rectangle {
+    const {width, height} = this.getElementSize();
+    const scale = Math.max(this.data.width / width, this.data.height / height);
+    return {width: this.data.width / scale, height: this.data.height / scale};
   }
 
   public refreshMap() {
     this.refreshSize();
   }
+}
+
+function markerPosition(marker: MapMarkerProperties): Position {
+  return {x: marker.coordinates.lng, y: marker.coordinates.lat};
 }
