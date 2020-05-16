@@ -41,7 +41,7 @@ import {selectProjectByWorkspace} from '../../core/store/projects/projects.state
 import {LumeerLogoComponent} from './lumeer-logo/lumeer-logo.component';
 import {UserPanelComponent} from './user-panel/user-panel.component';
 import {WorkspacePanelComponent} from './workspace-panel/workspace-panel.component';
-import {ResizeObserverEntry, ResizeObserver} from '../resize-observer';
+import {ResizeObserver} from '../resize-observer';
 
 declare let ResizeObserver: ResizeObserver;
 
@@ -85,17 +85,17 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     this.store$.dispatch(new OrganizationsAction.GetCodes());
 
     if (window['ResizeObserver']) {
-      this.resizeObserver = new ResizeObserver(entries => this.onSideElementResize(entries));
+      this.resizeObserver = new ResizeObserver(() => this.onSideElementResize());
     } else {
       this.subscriptions.add(this.subscribeToWorkspaceChanges());
     }
   }
 
   private subscribeToWorkspaceChanges(): Subscription {
-    return combineLatest(
+    return combineLatest([
       this.store$.pipe(select(selectOrganizationByWorkspace)),
-      this.store$.pipe(select(selectProjectByWorkspace))
-    ).subscribe(() => {
+      this.store$.pipe(select(selectProjectByWorkspace)),
+    ]).subscribe(() => {
       setTimeout(() => this.setTopPanelSideWidth(), 100);
     });
   }
@@ -113,15 +113,11 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
         this.resizeObserver.observe(this.workspacePanel.element.nativeElement);
       }
       this.resizeObserver.observe(this.userPanel.element.nativeElement);
-    } else {
-      setTimeout(() => this.setTopPanelLineHeight(), 100);
     }
   }
 
   public ngOnDestroy() {
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-    }
+    this.resizeObserver?.disconnect();
     this.subscriptions.unsubscribe();
   }
 
@@ -132,13 +128,8 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     }
   }
 
-  private onSideElementResize(entries: ResizeObserverEntry[]) {
+  private onSideElementResize() {
     this.setTopPanelSideWidth();
-  }
-
-  private setTopPanelLineHeight() {
-    // const element = this.element.nativeElement;
-    // element.style.setProperty('--top-panel-line-height', `${this.lineHeight}px`);
   }
 
   private setTopPanelSideWidth() {

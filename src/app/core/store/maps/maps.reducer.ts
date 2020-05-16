@@ -33,6 +33,12 @@ export function mapsReducer(state: MapsState = initialMapsState, action: MapsAct
       return changePosition(state, action);
     case MapsActionType.CHANGE_POSITION_SAVED:
       return changePositionSaved(state, action);
+    case MapsActionType.DOWNLOAD_IMAGE_DATA_SUCCESS:
+      return {...state, imagesCache: {...state.imagesCache, [action.payload.url]: action.payload.data}};
+    case MapsActionType.SET_IMAGE_DATA_LOADING:
+      return setImageDataLoading(state, action);
+    case MapsActionType.SET_IMAGE_DATA_LOADED:
+      return {...state, imagesLoaded: {...state.imagesLoaded, [action.payload.url]: action.payload.result}};
     case MapsActionType.CLEAR:
       return initialMapsState;
     default:
@@ -72,4 +78,14 @@ function changePositionSaved(state: MapsState, action: MapsAction.ChangePosition
 
   const config = {...map.config, positionSaved};
   return mapsAdapter.updateOne({id: mapId, changes: {config}}, state);
+}
+
+function setImageDataLoading(state: MapsState, action: MapsAction.SetImageDataLoading): MapsState {
+  let imagesLoading = [...state.imagesLoading];
+  if (action.payload.loading) {
+    imagesLoading.push(action.payload.url);
+  } else {
+    imagesLoading = imagesLoading.filter(url => url !== action.payload.url);
+  }
+  return {...state, imagesLoading};
 }

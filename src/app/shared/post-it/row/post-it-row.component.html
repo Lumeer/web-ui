@@ -13,7 +13,7 @@
               [readonly]="!permissions?.writeWithView || !(keyEditing$ | async)"
               [dataValue]="keyDataValue"
               placeholder="Enter name"
-              placeholder-i18n="@@dataResource.attribute.placeholder.short"
+              i18n-placeholde="@@dataResource.attribute.placeholder.short"
               [suggestions]="unusedAttributes | attributesToDataSuggestions"
               (save)="onNewKey($event)"
               (dblclick)="onKeyInputDblClick($event)"

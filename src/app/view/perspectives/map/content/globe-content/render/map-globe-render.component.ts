@@ -49,14 +49,8 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import {DeviceDetectorService, OS} from 'ngx-device-detector';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {filter, switchMap, take} from 'rxjs/operators';
-import {environment} from '../../../../../../environments/environment';
-import {
-  MapConfig,
-  MapCoordinates,
-  MapMarkerProperties,
-  MapModel,
-  MapPosition,
-} from '../../../../../core/store/maps/map.model';
+import {environment} from '../../../../../../../environments/environment';
+import {MapCoordinates, MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
 import {
   createMapboxMap,
   createMapClusterCountsLayer,
@@ -64,9 +58,10 @@ import {
   createMapClustersLayer,
   createMapMarker,
   createMapMarkersBounds,
-} from './map-render.utils';
+} from './map-globe-render.utils';
 import {MarkerMoveEvent} from './marker-move.event';
-import {areMapMarkerListsEqual, createMapMarkersMap} from '../map-content.utils';
+import {areMapMarkerListsEqual, createMapMarkersMap} from '../../map-content.utils';
+import {generateId} from '../../../../../../shared/utils/resource.utils';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -79,15 +74,15 @@ const MAP_CLUSTER_SYMBOL_LAYER = 'cluster-symbols';
 const OPENMAPTILES_LANGUAGE_URL = 'https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js';
 
 @Component({
-  selector: 'map-render',
-  templateUrl: './map-render.component.html',
-  styleUrls: ['./map-render.component.scss', '../../../../../../../node_modules/mapbox-gl/dist/mapbox-gl.css'],
+  selector: 'map-globe-render',
+  templateUrl: './map-globe-render.component.html',
+  styleUrls: ['./map-globe-render.component.scss', '../../../../../../../../node_modules/mapbox-gl/dist/mapbox-gl.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
+export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input()
-  public map: MapModel;
+  public position: MapPosition;
 
   @Input()
   public markers: MapMarkerProperties[];
@@ -101,7 +96,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   @Output()
   public detail = new EventEmitter<MapMarkerProperties>();
 
-  public mapElementId: string;
+  public readonly mapElementId = generateId();
 
   private mapboxMap: Map;
 
@@ -123,8 +118,6 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   ) {}
 
   public ngOnInit() {
-    this.mapElementId = `map-${this.map.id}`;
-
     this.subscriptions.add(this.subscribeToMapMarkers());
   }
 
@@ -141,7 +134,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.map && this.mapPositionChanged()) {
+    if (changes.position && this.mapPositionChanged()) {
       this.refreshMapPosition();
     }
 
@@ -155,16 +148,15 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private mapPositionChanged() {
-    const position = this.map?.config?.position;
     return (
       this.mapboxMap &&
       !this.mapIsMoving() &&
-      position &&
-      (this.mapboxMap.getCenter().lat !== position.center.lat ||
-        this.mapboxMap.getCenter().lng !== position.center.lng ||
-        this.mapboxMap.getBearing() !== position.bearing ||
-        this.mapboxMap.getPitch() !== position.pitch ||
-        this.mapboxMap.getZoom() !== position.zoom)
+      this.position &&
+      (this.mapboxMap.getCenter().lat !== this.position.center.lat ||
+        this.mapboxMap.getCenter().lng !== this.position.center.lng ||
+        this.mapboxMap.getBearing() !== this.position.bearing ||
+        this.mapboxMap.getPitch() !== this.position.pitch ||
+        this.mapboxMap.getZoom() !== this.position.zoom)
     );
   }
 
@@ -179,22 +171,21 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private refreshMapPosition() {
-    const position = this.map?.config?.position;
-    if (position && this.mapboxMap) {
-      this.mapboxMap.setZoom(position.zoom);
-      this.mapboxMap.setCenter({...position.center});
-      this.mapboxMap.setBearing(position.bearing);
-      this.mapboxMap.setPitch(position.pitch);
+    if (this.position && this.mapboxMap) {
+      this.mapboxMap.setZoom(this.position.zoom);
+      this.mapboxMap.setCenter({...this.position.center});
+      this.mapboxMap.setBearing(this.position.bearing);
+      this.mapboxMap.setPitch(this.position.pitch);
     }
   }
 
   public ngAfterViewInit() {
     // needs to run outside Angular, otherwise change detection in AppComponent gets triggered on every mouse move
-    this.ngZone.runOutsideAngular(() => this.initMap(this.map.config));
+    this.ngZone.runOutsideAngular(() => this.initMap(this.position));
   }
 
-  private initMap(config: MapConfig) {
-    this.mapboxMap = createMapboxMap(this.mapElementId, config, this.translateMap());
+  private initMap(position: MapPosition) {
+    this.mapboxMap = createMapboxMap(this.mapElementId, position, this.translateMap());
     this.mapboxMap.addControl(new NavigationControl(), 'top-right');
     this.mapboxMap.addControl(new ScaleControl(), 'bottom-right');
     // GeolocateControl needs to be added after ScaleControl to be shown above it
@@ -344,7 +335,7 @@ export class MapRenderComponent implements OnInit, OnChanges, AfterViewInit, OnD
   }
 
   private fitMarkersBounds(markers: MapMarkerProperties[]) {
-    if (!this.map.config.position || !this.map.config.position.center) {
+    if (!this.position || !this.position.center) {
       const bounds = createMapMarkersBounds(markers);
       this.mapboxMap.fitBounds(bounds, {padding: 100});
       this.mapboxMap.once('idle', () => this.redrawMarkers());

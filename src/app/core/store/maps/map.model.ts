@@ -20,6 +20,7 @@
 import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
 import {QueryAttribute} from '../../model/query-attribute';
 import {QueryStem} from '../navigation/query/query';
+import {MimeType} from '../../model/mime-type';
 
 export interface MapCoordinates {
   lat: number;
@@ -34,6 +35,7 @@ export interface MapModel {
 export interface MapPosition {
   bearing?: number;
   center?: MapCoordinates;
+  translate?: MapCoordinates;
   pitch?: number;
   zoom?: number;
 }
@@ -41,6 +43,7 @@ export interface MapPosition {
 export interface MapConfig {
   stemsConfigs?: MapStemConfig[];
   position?: MapPosition;
+  imageUrl?: string;
   positionSaved?: boolean;
   version?: MapConfigVersion;
 }
@@ -91,3 +94,20 @@ export enum MapAttributeType {
   Address = 'Address',
   Coordinates = 'Coordinates',
 }
+
+export interface MapImageData {
+  data: any;
+  mimeType: MimeType;
+  width: number;
+  height: number;
+}
+
+export enum MapImageLoadResult {
+  Success = 'success',
+  SizeExceeded = 'sizeExceeded',
+  FetchFailure = 'fetchFailure',
+  NotSupported = 'notSupported',
+}
+
+export const supportedImageMimeTypes = [MimeType.Svg, MimeType.Jpg, MimeType.Png];
+export const supportedImageSize = 20000000;

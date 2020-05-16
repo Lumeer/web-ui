@@ -28,8 +28,8 @@ import {mapAttributesAreInAllowedRange} from '../../../../../core/store/maps/map
 @Component({
   selector: 'map-stem-config',
   templateUrl: './map-stem-config.component.html',
-  styleUrls: ['./map-stem-config.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-flex flex-column'},
 })
 export class MapStemConfigComponent {
   @Input()

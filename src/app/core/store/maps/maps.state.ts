@@ -20,22 +20,29 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {MapModel} from './map.model';
+import {MapImageData, MapImageLoadResult, MapModel} from './map.model';
 import {selectWorkspace} from '../navigation/navigation.state';
 
 export const DEFAULT_MAP_ID = 'default';
 
-export interface MapsState extends EntityState<MapModel> {}
+export interface MapsState extends EntityState<MapModel> {
+  imagesCache: Record<string, MapImageData>;
+  imagesLoading: string[];
+  imagesLoaded: Record<string, MapImageLoadResult>;
+}
 
 export const mapsAdapter = createEntityAdapter<MapModel>({selectId: map => map.id});
 
-export const initialMapsState = mapsAdapter.getInitialState();
+export const initialMapsState: MapsState = mapsAdapter.getInitialState({
+  imagesCache: {},
+  imagesLoading: [],
+  imagesLoaded: {},
+});
 
 export const selectMapsState = (state: AppState) => state.maps;
 
 export const selectMapsDictionary = createSelector(selectMapsState, mapsAdapter.getSelectors().selectEntities);
 export const selectMapById = (mapId: string) => createSelector(selectMapsDictionary, maps => maps[mapId]);
-export const selectMapConfigById = (mapId: string) => createSelector(selectMapById(mapId), map => map && map.config);
 
 export const selectMapId = createSelector(
   selectWorkspace,
@@ -44,4 +51,12 @@ export const selectMapId = createSelector(
 
 export const selectMap = createSelector(selectMapsDictionary, selectMapId, (maps, mapId) => maps[mapId]);
 
-export const selectMapConfig = createSelector(selectMap, map => map && map.config);
+export const selectMapConfig = createSelector(selectMap, map => map?.config);
+
+export const selectMapImageData = (url: string) => createSelector(selectMapsState, state => state.imagesCache[url]);
+
+export const selectMapImageDataLoading = (url: string) =>
+  createSelector(selectMapsState, state => state.imagesLoading.includes(url));
+
+export const selectMapImageDataLoaded = (url: string) =>
+  createSelector(selectMapsState, state => state.imagesLoaded[url]);

@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as d3 from 'd3';
 import * as moment from 'moment';
-import {Layout} from 'plotly.js';
+import {d3, Layout} from 'plotly.js';
 import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
 import {
   ConstraintConfig,

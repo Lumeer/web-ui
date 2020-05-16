@@ -19,17 +19,17 @@
 
 import {Feature, FeatureCollection, Point} from 'geojson';
 import {GeoJSONSourceRaw, Layer, LngLat, LngLatBounds, Map, MapboxOptions, Marker, Popup} from 'mapbox-gl';
-import {MapConfig, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
-import {shadeColor} from '../../../../../shared/utils/html-modifier';
+import {MapMarkerProperties, MapPosition} from '../../../../../../core/store/maps/map.model';
+import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
 
-export function createMapboxMap(elementId: string, config: MapConfig, locale: Record<string, string>): Map {
-  const positionOptions: Partial<MapboxOptions> = config.position
+export function createMapboxMap(elementId: string, position: MapPosition, locale: Record<string, string>): Map {
+  const positionOptions: Partial<MapboxOptions> = position
     ? {
-        bearing: config.position.bearing,
-        center: config.position.center,
-        pitch: config.position.pitch,
-        zoom: config.position.zoom,
+        bearing: position.bearing,
+        center: position.center,
+        pitch: position.pitch,
+        zoom: position.zoom,
       }
     : {};
 
@@ -37,7 +37,7 @@ export function createMapboxMap(elementId: string, config: MapConfig, locale: Re
     container: elementId,
     style: mapStyleUrls[MapStyle.MapTilerStreets],
     minZoom: 1,
-    maxZoom: 17,
+    maxZoom: 20,
     locale,
     ...positionOptions,
   });

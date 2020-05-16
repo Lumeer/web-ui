@@ -1,0 +1,13 @@
+<div [formGroup]="form">
+  <input [formControlName]="formControlName"
+         [id]="formControlName"
+         placeholder="Enter image url"
+         class="form-control"
+         spellcheck="false"
+         (keydown.enter)="inputElement.blur(); inputElement.value = inputElement.value.trim()"
+         (keydown.tab)="inputElement.blur(); inputElement.value = inputElement.value.trim()"
+         (keydown.escape)="resetInput(); inputElement.blur()"
+         type="text"
+         #inputElement>
+</div>
+

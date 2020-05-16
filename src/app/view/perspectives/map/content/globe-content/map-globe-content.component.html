@@ -1,0 +1,22 @@
+<ng-container *ngIf="{loading: loading$ | async, markers: markers$ | async} as data">
+  <ng-container *ngIf="data.markers?.length > 0; else empty">
+    <map-globe-render *ngIf="map"
+                      [position]="map.config?.position"
+                      [markers]="data.markers"
+                      (mapMove)="mapMove.emit($event)"
+                      (markerMove)="onMarkerMove($event)"
+                      (detail)="detail.emit($event)"
+                      class="w-100">
+    </map-globe-render>
+  </ng-container>
+
+  <ng-template #empty>
+    <map-loading *ngIf="data.loading; else placeholder"
+                 class="w-100">
+    </map-loading>
+
+    <ng-template #placeholder>
+      <empty-map class="w-100"></empty-map>
+    </ng-template>
+  </ng-template>
+</ng-container>

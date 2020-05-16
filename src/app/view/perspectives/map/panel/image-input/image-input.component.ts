@@ -19,38 +19,38 @@
 
 import {
   Component,
-  OnInit,
   ChangeDetectionStrategy,
   Input,
   Output,
   EventEmitter,
-  OnChanges,
   SimpleChanges,
+  OnChanges,
+  OnInit,
   OnDestroy,
 } from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 
 @Component({
-  selector: 'map-position-checkbox',
-  templateUrl: './map-position-checkbox.component.html',
-  styleUrls: ['./map-position-checkbox.component.scss'],
+  selector: 'image-input',
+  templateUrl: './image-input.component.html',
+  styleUrls: ['./image-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MapPositionCheckboxComponent implements OnInit, OnChanges, OnDestroy {
+export class ImageInputComponent implements OnChanges, OnInit, OnDestroy {
   @Input()
-  public value: boolean;
+  public imageUrl: string;
 
   @Output()
-  public valueChange = new EventEmitter<boolean>();
+  public valueChange = new EventEmitter<string>();
 
-  public readonly formControlName = 'positionSaved';
+  public readonly formControlName = 'imageUrl';
   public readonly form: FormGroup;
 
   private subscriptions = new Subscription();
 
   constructor(private fb: FormBuilder) {
-    this.form = this.fb.group({[this.formControlName]: false});
+    this.form = this.fb.group({[this.formControlName]: null}, {updateOn: 'blur'});
   }
 
   public ngOnInit(): void {
@@ -58,16 +58,17 @@ export class MapPositionCheckboxComponent implements OnInit, OnChanges, OnDestro
   }
 
   private subscribeToValueChanges(): Subscription {
-    return this.valueControl.valueChanges.subscribe(value => {
-      if (value !== this.value) {
-        this.valueChange.emit(value);
+    return this.imageUrlControl.valueChanges.subscribe(value => {
+      const trimmed = value?.trim();
+      if (trimmed !== this.imageUrl) {
+        this.valueChange.emit(trimmed);
       }
     });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.value) {
-      this.valueControl.setValue(this.value);
+    if (changes.imageUrl) {
+      this.imageUrlControl.setValue(this.imageUrl);
     }
   }
 
@@ -75,7 +76,11 @@ export class MapPositionCheckboxComponent implements OnInit, OnChanges, OnDestro
     this.subscriptions.unsubscribe();
   }
 
-  public get valueControl(): AbstractControl {
+  public get imageUrlControl(): AbstractControl {
     return this.form.get(this.formControlName);
+  }
+
+  public resetInput() {
+    this.imageUrlControl.setValue(this.imageUrl);
   }
 }

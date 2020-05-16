@@ -406,9 +406,10 @@ export function isNavigatingToOtherWorkspace(workspace: Workspace, navigatingWor
 export function mapPositionPathParams(position: MapPosition): Record<string, any> {
   return {
     ...(position.bearing ? {mb: position.bearing.toFixed(1)} : undefined),
-    mc: formatMapCoordinates(position.center),
+    ...(position.center ? {mc: formatMapCoordinates(position.center)} : undefined),
+    ...(position.translate ? {mt: formatMapCoordinates(position.translate)} : undefined),
     ...(position.pitch ? {mp: position.pitch.toFixed(1)} : undefined),
-    mz: position.zoom.toFixed(2),
+    mz: position.zoom.toFixed(4),
   };
 }
 

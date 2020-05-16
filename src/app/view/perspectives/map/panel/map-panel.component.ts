@@ -30,8 +30,8 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 @Component({
   selector: 'map-panel',
   templateUrl: './map-panel.component.html',
-  styleUrls: ['./map-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-flex flex-column'},
 })
 export class MapPanelComponent {
   @Input()
@@ -62,5 +62,10 @@ export class MapPanelComponent {
 
   public trackByStem(index: number, stem: QueryStem): string {
     return stem.collectionId + index;
+  }
+
+  public onImageUrlChange(imageUrl: string) {
+    const config = {...this.map.config, imageUrl};
+    this.store$.dispatch(new MapsAction.SetConfig({mapId: this.map.id, config}));
   }
 }

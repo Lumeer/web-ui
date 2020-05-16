@@ -54,10 +54,11 @@ function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction
   const {data, params, queryParams, url} = action.payload.routerState;
 
   const mapPosition: MapPosition =
-    params['mz'] && params['mc']
+    params['mz'] && (params['mc'] || params['mt'])
       ? {
           bearing: Number(params['mb']) || 0,
           center: parseMapCoordinates(params['mc']),
+          translate: parseMapCoordinates(params['mt']),
           pitch: Number(params['mp']) || 0,
           zoom: Number(params['mz']),
         }

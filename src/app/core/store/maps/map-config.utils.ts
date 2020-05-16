@@ -42,10 +42,12 @@ export function mapAttributesAreInAllowedRange(model: MapAttributeModel, otherMo
   return allowedResourceIndexes.includes(otherModel.resourceIndex);
 }
 
-export function filterLocationAttributes(attributes: Attribute[]): Attribute[] {
+export function filterLocationAttributes(attributes: Attribute[], includeAddress = true): Attribute[] {
+  const constraintTypes = includeAddress
+    ? [ConstraintType.Address, ConstraintType.Coordinates]
+    : [ConstraintType.Coordinates];
   return (attributes || []).filter(
-    attribute =>
-      attribute.constraint && [ConstraintType.Address, ConstraintType.Coordinates].includes(attribute.constraint.type)
+    attribute => attribute.constraint && constraintTypes.includes(attribute.constraint.type)
   );
 }
 
@@ -54,7 +56,10 @@ export function isMapConfigChanged(viewConfig: MapConfig, perspectiveConfig: Map
     return true;
   }
 
-  if (Boolean(viewConfig.positionSaved) !== Boolean(perspectiveConfig.positionSaved)) {
+  if (
+    Boolean(viewConfig.positionSaved) !== Boolean(perspectiveConfig.positionSaved) ||
+    viewConfig.imageUrl !== perspectiveConfig.imageUrl
+  ) {
     return true;
   }
 
@@ -89,7 +94,13 @@ export function checkOrTransformMapConfig(
 
   return {
     ...config,
-    stemsConfigs: checkOrTransformMapStemsConfig(config.stemsConfigs || [], query, collections, linkTypes),
+    stemsConfigs: checkOrTransformMapStemsConfig(
+      config.stemsConfigs || [],
+      query,
+      collections,
+      linkTypes,
+      !config.imageUrl
+    ),
   };
 }
 
@@ -97,14 +108,15 @@ function checkOrTransformMapStemsConfig(
   stemsConfigs: MapStemConfig[],
   query: Query,
   collections: Collection[],
-  linkTypes: LinkType[]
+  linkTypes: LinkType[],
+  allowAddressAttributes: boolean
 ): MapStemConfig[] {
   const stemsConfigsCopy = [...(stemsConfigs || [])];
   return (query?.stems || []).map(stem => {
     const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
-    return checkOrTransformMapStemConfig(stemConfig[0], stem, collections, linkTypes);
+    return checkOrTransformMapStemConfig(stemConfig[0], stem, collections, linkTypes, allowAddressAttributes);
   });
 }
 
@@ -112,10 +124,11 @@ function checkOrTransformMapStemConfig(
   stemConfig: MapStemConfig,
   stem: QueryStem,
   collections: Collection[],
-  linkTypes: LinkType[]
+  linkTypes: LinkType[],
+  allowAddressAttributes: boolean
 ): MapStemConfig {
   if (!stemConfig) {
-    return createMapDefaultStemConfig(stem, collections, linkTypes);
+    return createMapDefaultStemConfig(stem, collections, linkTypes, allowAddressAttributes);
   }
 
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
@@ -140,13 +153,14 @@ function createMapDefaultConfig(query: Query, collections: Collection[], linkTyp
 export function createMapDefaultStemConfig(
   stem?: QueryStem,
   collections?: Collection[],
-  linkTypes?: LinkType[]
+  linkTypes?: LinkType[],
+  allowAddressAttributes?: boolean
 ): MapStemConfig {
   if (stem && collections) {
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
     for (let i = 0; i < attributesResourcesOrder.length; i++) {
       const resource = attributesResourcesOrder[i];
-      const locationAttributes = filterLocationAttributes(resource.attributes);
+      const locationAttributes = filterLocationAttributes(resource.attributes, allowAddressAttributes);
       if (locationAttributes.length) {
         const mapAttributes = locationAttributes.map(attribute => ({
           attributeId: attribute.id,

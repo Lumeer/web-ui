@@ -1,0 +1,26 @@
+<ng-container *ngIf="{loading: loading$ | async, loaded: loaded$ | async, imageData: imageData$ | async} as data">
+  <map-image-render *ngIf="data.imageData; else empty"
+                    [position]="map.config?.position"
+                    [data]="data.imageData"
+                    [markers]="markers"
+                    (detail)="detail.emit($event)"
+                    (mapMove)="mapMove.emit($event)"
+                    (markerMove)="onMarkerMove($event)">
+  </map-image-render>
+
+  <ng-template #empty>
+
+    <map-loading *ngIf="data.loading; else error"
+                 class="w-100">
+    </map-loading>
+
+    <ng-template #error>
+      <invalid-image-map *ngIf="data.loaded"
+                         [result]="data.loaded">
+      </invalid-image-map>
+    </ng-template>
+
+  </ng-template>
+
+</ng-container>
+

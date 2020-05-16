@@ -17,9 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {MapCoordinates, MapMarkerProperties} from '../../../../../core/store/maps/map.model';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {MapImageLoadResult} from '../../../../../../core/store/maps/map.model';
 
-export interface MarkerMoveEvent {
-  coordinates: MapCoordinates;
-  properties: MapMarkerProperties;
+@Component({
+  selector: 'invalid-image-map',
+  templateUrl: './invalid-image-map.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class InvalidImageMapComponent {
+  @Input()
+  public result: MapImageLoadResult;
+
+  public readonly loadResult = MapImageLoadResult;
 }

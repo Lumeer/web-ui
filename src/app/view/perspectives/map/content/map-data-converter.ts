@@ -22,7 +22,6 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {ConstraintData} from '../../../../core/model/data/constraint';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {
   DataObjectAggregator,
@@ -49,21 +48,12 @@ export class MapDataConverter {
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
     permissions: Record<string, AllowedPermissions>,
-    constraintData: ConstraintData,
     query: Query
   ): MapMarkerData[] {
     this.config = config;
 
     const data = (query?.stems || []).reduce((allData, stem, index) => {
-      this.dataObjectAggregator.updateData(
-        collections,
-        documents,
-        linkTypes,
-        linkInstances,
-        stem,
-        permissions,
-        constraintData
-      );
+      this.dataObjectAggregator.updateData(collections, documents, linkTypes, linkInstances, stem, permissions);
       allData.push(...this.convertByStem(index));
       return allData;
     }, []);

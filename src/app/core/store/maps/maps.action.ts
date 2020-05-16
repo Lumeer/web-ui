@@ -18,13 +18,19 @@
  */
 
 import {Action} from '@ngrx/store';
-import {MapConfig, MapPosition} from './map.model';
+import {MapConfig, MapImageData, MapImageLoadResult, MapPosition} from './map.model';
 
 export enum MapsActionType {
   CREATE_MAP = '[Maps] Create Map',
   DESTROY_MAP = '[Maps] Destroy Map',
 
-  SET_CONFIG = '[Maps] Set Attribute',
+  SET_CONFIG = '[Maps] Set Config',
+
+  DOWNLOAD_IMAGE_DATA = '[Maps] Download Image',
+  DOWNLOAD_IMAGE_DATA_SUCCESS = '[Maps] Download Image :: Success',
+
+  SET_IMAGE_DATA_LOADING = '[Maps] Set Image Data Loading',
+  SET_IMAGE_DATA_LOADED = '[Maps] Set Image Data Loaded',
 
   CHANGE_POSITION = '[Maps] Change Position',
   CHANGE_POSITION_SAVED = '[Maps] Change Position Saved',
@@ -63,9 +69,42 @@ export namespace MapsAction {
     constructor(public payload: {mapId: string; positionSaved: boolean}) {}
   }
 
+  export class DownloadImageData implements Action {
+    public readonly type = MapsActionType.DOWNLOAD_IMAGE_DATA;
+
+    constructor(public payload: {url: string}) {}
+  }
+
+  export class DownloadImageDataSuccess implements Action {
+    public readonly type = MapsActionType.DOWNLOAD_IMAGE_DATA_SUCCESS;
+
+    constructor(public payload: {url: string; data: MapImageData}) {}
+  }
+
+  export class SetImageDataLoading implements Action {
+    public readonly type = MapsActionType.SET_IMAGE_DATA_LOADING;
+
+    constructor(public payload: {url: string; loading: boolean}) {}
+  }
+
+  export class SetImageDataLoaded implements Action {
+    public readonly type = MapsActionType.SET_IMAGE_DATA_LOADED;
+
+    constructor(public payload: {url: string; result: MapImageLoadResult}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = MapsActionType.CLEAR;
   }
 
-  export type All = CreateMap | DestroyMap | SetConfig | ChangePosition | ChangePositionSaved | Clear;
+  export type All =
+    | CreateMap
+    | DestroyMap
+    | SetConfig
+    | DownloadImageDataSuccess
+    | SetImageDataLoading
+    | SetImageDataLoaded
+    | ChangePosition
+    | ChangePositionSaved
+    | Clear;
 }
