@@ -52,7 +52,8 @@ import {MapDataConverter} from './map-data-converter';
 import {checkOrTransformMapConfig} from '../../../../core/store/maps/map-config.utils';
 import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 import {MapGlobeContentComponent} from './globe-content/map-globe-content.component';
-import {MapImageContentComponent} from './image-content/map-image-content.component';
+import {DocumentsAction} from '../../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../../core/store/link-instances/link-instances.action';
 
 interface Data {
   collections: Collection[];
@@ -98,17 +99,13 @@ export class MapContentComponent implements OnInit, OnChanges {
   @ViewChild(MapGlobeContentComponent)
   public mapGlobeContentComponent: MapGlobeContentComponent;
 
-  @ViewChild(MapImageContentComponent)
-  public mapImageContentComponent: MapImageContentComponent;
-
   public data$: Observable<MapMarkerData[]>;
 
   private dataSubject$ = new BehaviorSubject<Data>(null);
 
   private readonly converter = new MapDataConverter();
 
-  constructor(private store$: Store<{}>, private modalService: ModalService) {
-  }
+  constructor(private store$: Store<{}>, private modalService: ModalService) {}
 
   public ngOnInit() {
     this.data$ = this.subscribeToData$();
@@ -182,7 +179,6 @@ export class MapContentComponent implements OnInit, OnChanges {
 
   public refreshMapSize() {
     this.mapGlobeContentComponent?.refreshContent();
-    this.mapImageContentComponent?.refreshContent();
   }
 
   public onMarkerDetail(properties: MapMarkerProperties) {
@@ -190,6 +186,32 @@ export class MapContentComponent implements OnInit, OnChanges {
       this.modalService.showDocumentDetail(properties.dataResourceId);
     } else if (properties.resourceType === AttributesResourceType.LinkType) {
       this.modalService.showLinkInstanceDetail(properties.dataResourceId);
+    }
+  }
+
+  public onSaveValue(data: {properties: MapMarkerProperties; value: string}) {
+    const {properties, value} = data;
+    if (properties.resourceType === AttributesResourceType.Collection) {
+      this.store$.dispatch(
+        new DocumentsAction.PatchData({
+          document: {
+            collectionId: properties.resourceId,
+            id: properties.dataResourceId,
+            data: {[properties.attributeId]: value},
+          },
+        })
+      );
+    } else if (properties.resourceType === AttributesResourceType.LinkType) {
+      this.store$.dispatch(
+        new LinkInstancesAction.PatchData({
+          linkInstance: {
+            linkTypeId: properties.resourceId,
+            id: properties.dataResourceId,
+            documentIds: [null, null],
+            data: {[properties.attributeId]: value},
+          },
+        })
+      );
     }
   }
 }

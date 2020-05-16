@@ -42,17 +42,14 @@ import {selectGeocodingQueryCoordinates} from '../../../../../core/store/geocodi
 import {areMapMarkerListsEqual, createMarkerPropertyFromData, populateCoordinateProperties} from '../map-content.utils';
 import {GeocodingAction} from '../../../../../core/store/geocoding/geocoding.action';
 import {distinctUntilChanged, map, switchMap} from 'rxjs/operators';
-import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {GeoLocation} from '../../../../../core/store/geocoding/geo-location';
 import {AddressConstraint} from '../../../../../core/model/constraint/address.constraint';
 import {ADDRESS_DEFAULT_FIELDS} from '../../../../../shared/modal/attribute-type/form/constraint-config/address/address-constraint.constants';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
 import {CoordinatesConstraint} from '../../../../../core/model/constraint/coordinates.constraint';
 import {CoordinatesConstraintConfig} from '../../../../../core/model/data/constraint-config';
-import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
-import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
@@ -85,6 +82,9 @@ export class MapGlobeContentComponent implements OnChanges {
 
   @Output()
   public detail = new EventEmitter<MapMarkerProperties>();
+
+  @Output()
+  public valueSave = new EventEmitter<{properties: MapMarkerProperties; value: string}>();
 
   @ViewChild(MapGlobeRenderComponent)
   public mapGlobeRenderComponent: MapGlobeRenderComponent;
@@ -158,12 +158,7 @@ export class MapGlobeContentComponent implements OnChanges {
   }
 
   public onMarkerMove(event: MarkerMoveEvent) {
-    const attribute = this.findResourceByProperty(event.properties)?.attributes.find(
-      attr => attr.id === event.properties.attributeId
-    );
-    const constraintType = attribute?.constraint?.type;
-
-    if (event.properties.attributeType === MapAttributeType.Address || constraintType === ConstraintType.Address) {
+    if (event.properties.attributeType === MapAttributeType.Address) {
       this.saveAddressAttribute(event.properties, event.coordinates);
     } else {
       this.saveCoordinatesAttribute(event.properties, event.coordinates);
@@ -220,28 +215,7 @@ export class MapGlobeContentComponent implements OnChanges {
   }
 
   private saveAttributeValue(properties: MapMarkerProperties, value: string) {
-    if (properties.resourceType === AttributesResourceType.Collection) {
-      this.store$.dispatch(
-        new DocumentsAction.PatchData({
-          document: {
-            collectionId: properties.resourceId,
-            id: properties.dataResourceId,
-            data: {[properties.attributeId]: value},
-          },
-        })
-      );
-    } else if (properties.resourceType === AttributesResourceType.LinkType) {
-      this.store$.dispatch(
-        new LinkInstancesAction.PatchData({
-          linkInstance: {
-            linkTypeId: properties.resourceId,
-            id: properties.dataResourceId,
-            documentIds: [null, null],
-            data: {[properties.attributeId]: value},
-          },
-        })
-      );
-    }
+    this.valueSave.emit({properties, value});
   }
 
   public refreshContent() {

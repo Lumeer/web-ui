@@ -35,6 +35,7 @@ export interface MapModel {
 export interface MapPosition {
   bearing?: number;
   center?: MapCoordinates;
+  translate?: MapCoordinates;
   pitch?: number;
   zoom?: number;
 }

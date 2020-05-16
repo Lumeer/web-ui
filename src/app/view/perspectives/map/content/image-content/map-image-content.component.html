@@ -1,8 +1,11 @@
 <ng-container *ngIf="{loading: loading$ | async, loaded: loaded$ | async, imageData: imageData$ | async} as data">
   <map-image-render *ngIf="data.imageData; else empty"
+                    [position]="map.config?.position"
                     [data]="data.imageData"
                     [markers]="markers"
-                    (detail)="detail.emit($event)">
+                    (detail)="detail.emit($event)"
+                    (mapMove)="mapMove.emit($event)"
+                    (markerMove)="onMarkerMove($event)">
   </map-image-render>
 
   <ng-template #empty>

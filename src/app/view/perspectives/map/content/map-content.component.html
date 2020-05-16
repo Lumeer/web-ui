@@ -2,13 +2,18 @@
   <map-image-content *ngIf="map?.config?.imageUrl"
                      [map]="map"
                      [markerData]="data.data"
-                     (detail)="onMarkerDetail($event)">
+                     (detail)="onMarkerDetail($event)"
+                     (mapMove)="onMapMove($event)"
+                     (valueSave)="onSaveValue($event)">
   </map-image-content>
   <map-globe-content *ngIf="!map?.config?.imageUrl"
                      [map]="map"
                      [constraintData]="constraintData"
+                     [collections]="collections"
+                     [linkTypes]="linkTypes"
                      [markerData]="data.data"
                      (detail)="onMarkerDetail($event)"
-                     (mapMove)="onMapMove($event)">
+                     (mapMove)="onMapMove($event)"
+                     (valueSave)="onSaveValue($event)">
   </map-globe-content>
 </ng-container>

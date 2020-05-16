@@ -21,7 +21,6 @@ import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import * as d3Select from 'd3-selection';
 import {MapMarkerProperties} from '../../../../../../core/store/maps/map.model';
 import {iconsMap} from '../../../../../../shared/picker/icons';
-import {of} from 'rxjs';
 
 export type SVGContainer = d3Select.Selection<SVGElement, any, any, any>;
 
@@ -51,10 +50,10 @@ export function addMarkerToSvgContainer(
     .attr('id', properties.id)
     .attr('width', width)
     .attr('height', height)
-    .attr('x', x)
-    .attr('initial-x', x / scale)
-    .attr('y', y)
-    .attr('initial-y', y / scale)
+    .attr('x', scaleImagePoint(x))
+    .attr('initial-x', scaleImagePoint(computeMarkerInitialX(x, scale, width)))
+    .attr('y', scaleImagePoint(y))
+    .attr('initial-y', scaleImagePoint(computeMarkerInitialY(y, scale, height)))
     .attr('viewBox', `${-width / 2} ${-height} ${width} ${height}`)
     .style('cursor', 'pointer');
 
@@ -126,20 +125,49 @@ function markerPath(height: number, radius: number): string {
 
 const pointScale = 10000; // 0.0001 is 1 pixel
 
+export function scaleImagePoint(point: number): number {
+  return Math.round(point * pointScale) / pointScale;
+}
+
+export function computeMarkerInitialX(x: number, scale: number, width: number): number {
+  return x / scale - (width * (scale - 1)) / (2 * scale);
+}
+
+export function computeMarkerInitialY(y: number, scale: number, height: number): number {
+  return y / scale - (height * (scale - 1)) / scale;
+}
+
+export function computeMarkerCoordinates(
+  position: Position,
+  scale: number,
+  pixelScale: number,
+  center: Rectangle,
+  markerSize: Rectangle = defaultMarkerSize
+): {x: number; y: number} {
+  const distanceScale = pointScale * pixelScale;
+  const x = (center.width * scale - markerSize.width - 2 * scaleImagePoint(position.x)) / -(2 * distanceScale * scale);
+  const y =
+    (center.height * scale - 2 * markerSize.height - 2 * scaleImagePoint(position.y)) / -(2 * distanceScale * scale);
+
+  return {x: scaleImagePoint(x), y: scaleImagePoint(y)};
+}
+
 export function computeMarkerPosition(
   position: Position,
   scale: number,
+  pixelScale: number,
   center: Rectangle,
   bounds: Rectangle,
   markerSize: Rectangle = defaultMarkerSize
 ): {x: number; y: number} {
-  let x = position.x * pointScale + center.width / 2;
+  const distanceScale = pointScale * pixelScale;
+  let x = scaleImagePoint(position.x) * distanceScale + center.width / 2;
   x = checkXBounds(x, center, bounds);
-  x = x * scale - (markerSize.width * scale) / 2; // TODO add translation x
+  x = x * scale - markerSize.width / 2;
 
-  let y = position.y * pointScale + center.height / 2;
+  let y = scaleImagePoint(position.y) * distanceScale + center.height / 2;
   y = checkYBounds(y, center, bounds);
-  y = y * scale - markerSize.height * scale; // TODO add translation y
+  y = y * scale - markerSize.height;
 
   return {x, y};
 }
@@ -169,7 +197,7 @@ export function checkDragBounds(
 ): Position {
   const centerScaled = scaleRectangle(center, scale);
   const boundsScaled = scaleRectangle(bounds, scale);
-  const x = checkXBounds(position.x, centerScaled, boundsScaled, markerSize.width / 2);
-  const y = checkYBounds(position.y, centerScaled, boundsScaled, markerSize.height);
+  const x = checkXBounds(scaleImagePoint(position.x), centerScaled, boundsScaled, markerSize.width / 2);
+  const y = checkYBounds(scaleImagePoint(position.y), centerScaled, boundsScaled, markerSize.height);
   return {x, y};
 }

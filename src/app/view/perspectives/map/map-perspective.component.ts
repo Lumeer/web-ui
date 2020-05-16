@@ -236,14 +236,14 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
         filter(([, collections]) => collections.length > 0)
       )
       .subscribe(([mapEntity, collections, currentViewConfig]) => {
-        if (mapEntity.id === DEFAULT_MAP_ID && mapEntity.config && mapEntity.config.position) {
+        if (mapEntity.id === DEFAULT_MAP_ID && mapEntity.config?.position) {
           const savedPosition = defaultViewMapPosition(currentViewConfig);
           if (!deepObjectsEquals(mapEntity.config.position, savedPosition)) {
             this.saveMapDefaultViewConfig(collections, mapEntity.config);
           }
         }
 
-        if (mapEntity.config && mapEntity.config.position) {
+        if (mapEntity.config?.position) {
           this.redirectToMapPosition(mapEntity.config.position);
         }
       });

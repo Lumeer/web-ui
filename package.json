@@ -124,6 +124,7 @@
     "@types/mapbox-gl": "^1.9.0",
     "@types/node": "^13.13.0",
     "@types/d3-zoom": "^1.7.4",
+    "@types/d3-drag": "^1.2.3",
     "@types/plotly.js": "^1.44.21",
     "angular-http-server": "^1.9.0",
     "bundlesize": "^0.18.0",

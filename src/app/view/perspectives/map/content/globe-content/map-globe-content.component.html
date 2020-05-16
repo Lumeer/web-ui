@@ -1,7 +1,7 @@
 <ng-container *ngIf="{loading: loading$ | async, markers: markers$ | async} as data">
   <ng-container *ngIf="data.markers?.length > 0; else empty">
     <map-globe-render *ngIf="map"
-                      [map]="map"
+                      [position]="map.config?.position"
                       [markers]="data.markers"
                       (mapMove)="mapMove.emit($event)"
                       (markerMove)="onMarkerMove($event)"

@@ -17,22 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, Output, EventEmitter} from '@angular/core';
 import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  ViewChild,
-  Output,
-  EventEmitter,
-} from '@angular/core';
-import {
+  MapCoordinates,
   MapImageData,
   MapImageLoadResult,
   MapMarkerData,
   MapMarkerProperties,
   MapModel,
+  MapPosition,
 } from '../../../../../core/store/maps/map.model';
 import {AppState} from '../../../../../core/store/app.state';
 import {MapsAction} from '../../../../../core/store/maps/maps.action';
@@ -43,9 +36,10 @@ import {
   selectMapImageDataLoaded,
   selectMapImageDataLoading,
 } from '../../../../../core/store/maps/maps.state';
-import {MapImageRenderComponent} from './render/map-image-render.component';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {populateCoordinateProperties} from '../map-content.utils';
+import {CoordinatesConstraint} from '../../../../../core/model/constraint/coordinates.constraint';
+import {CoordinatesConstraintConfig} from '../../../../../core/model/data/constraint-config';
 
 @Component({
   selector: 'map-image-content',
@@ -66,8 +60,11 @@ export class MapImageContentComponent implements OnChanges {
   @Output()
   public detail = new EventEmitter<MapMarkerProperties>();
 
-  @ViewChild(MapImageRenderComponent)
-  public mapImageRenderComponent: MapImageRenderComponent;
+  @Output()
+  public valueSave = new EventEmitter<{properties: MapMarkerProperties; value: string}>();
+
+  @Output()
+  public mapMove = new EventEmitter<MapPosition>();
 
   public loading$: Observable<boolean>;
   public loaded$: Observable<MapImageLoadResult>;
@@ -98,7 +95,13 @@ export class MapImageContentComponent implements OnChanges {
     this.imageData$ = this.store$.pipe(select(selectMapImageData(imageUrl)));
   }
 
-  public refreshContent() {
-    this.mapImageRenderComponent?.refreshMap();
+  public onMarkerMove(event: {marker: MapMarkerProperties; x: number; y: number}) {
+    const coordinates: MapCoordinates = {lng: event.x, lat: event.y};
+    const value = new CoordinatesConstraint({} as CoordinatesConstraintConfig).createDataValue(coordinates).serialize();
+    this.saveAttributeValue(event.marker, value);
+  }
+
+  private saveAttributeValue(properties: MapMarkerProperties, value: string) {
+    this.valueSave.emit({properties, value});
   }
 }

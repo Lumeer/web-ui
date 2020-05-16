@@ -37,7 +37,6 @@ export function parseCoordinates(value: any): MapCoordinates {
   } catch (error) {
     return null;
   }
-  return null;
 }
 
 export function formatCoordinates(coordinates: MapCoordinates, format: CoordinatesFormat, precision: number): string {
