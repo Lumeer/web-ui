@@ -222,6 +222,10 @@ export class SvgImageMap {
     this.svgImage.setAttribute('height', String(bounds.height));
     this.svgImage.setAttribute('x', String(bounds.x));
     this.svgImage.setAttribute('y', String(bounds.y));
+
+    if (this.currentData?.mimeType === MimeType.Svg) {
+      this.svgImage.setAttribute('viewBox', `0 0 ${this.currentData.width} ${this.currentData.height}`);
+    }
   }
 
   private removeSvgImage() {
@@ -383,8 +387,9 @@ export class SvgImageMap {
     const {width: imageWidth, height: imageHeight} = this.currentData;
 
     const scale = Math.max(imageWidth / elementWidth, imageHeight / elementHeight);
-    const width = imageWidth / Math.max(scale, 1);
-    const height = imageHeight / Math.max(scale, 1);
+    const maxScale = Math.max(scale, 1);
+    const width = imageWidth / maxScale;
+    const height = imageHeight / maxScale;
 
     const x = (elementWidth - width) / 2;
     const y = (elementHeight - height) / 2;
@@ -392,8 +397,10 @@ export class SvgImageMap {
   }
 
   private getPixelScale(): number {
-    const {width, height} = this.getElementSize();
-    return 1 / Math.max(this.currentData.width / width, this.currentData.height / height);
+    const {width: elementWidth, height: elementHeight} = this.getElementSize();
+    const {width: imageWidth, height: imageHeight} = this.currentData;
+    const scale = Math.max(imageWidth / elementWidth, imageHeight / elementHeight);
+    return 1 / Math.max(scale, 1);
   }
 
   private getElementSize(): Rectangle {

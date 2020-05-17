@@ -34,6 +34,7 @@ import {DropdownComponent} from '../../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../../dropdown/dropdown-position';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../core/store/app.state';
+import {LanguageCode} from '../language';
 
 @Component({
   selector: 'user-menu-dropdown',
@@ -76,11 +77,13 @@ export class UserMenuDropdownComponent implements OnInit, OnDestroy {
 
   public readonly buildNumber = environment.buildNumber;
   public readonly locale = environment.locale;
+  public readonly languageCode = LanguageCode;
 
   public helpLink: string;
 
   public ngOnInit() {
-    this.helpLink = this.locale === 'cs' ? 'https://www.lumeer.io/cs/pomoc' : 'https://www.lumeer.io/get-help';
+    this.helpLink =
+      this.locale === LanguageCode.CZ ? 'https://www.lumeer.io/cs/pomoc' : 'https://www.lumeer.io/get-help';
   }
 
   public onLogout() {

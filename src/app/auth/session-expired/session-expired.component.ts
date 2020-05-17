@@ -67,11 +67,9 @@ export class SessionExpiredComponent implements OnInit {
 
   private bindRedirectUrl() {
     this.redirectUrl$ = this.route.queryParamMap.pipe(
-      map(params => {
-        const redirectUrl = params.get('redirectUrl') || '';
-        return window.location.origin + this.location.prepareExternalUrl(redirectUrl);
-      }),
-      tap(redirectUrl => this.authService.saveLoginRedirectPath(redirectUrl))
+      map(params => params.get('redirectUrl') || ''),
+      tap(redirectUrl => this.authService.saveLoginRedirectPath(redirectUrl)),
+      map(redirectUrl => window.location.origin + this.location.prepareExternalUrl(redirectUrl))
     );
   }
 }

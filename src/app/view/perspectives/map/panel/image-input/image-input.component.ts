@@ -30,6 +30,8 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
+import {environment} from '../../../../../../environments/environment';
+import {LanguageCode} from '../../../../../shared/top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'image-input',
@@ -46,6 +48,7 @@ export class ImageInputComponent implements OnChanges, OnInit, OnDestroy {
 
   public readonly formControlName = 'imageUrl';
   public readonly form: FormGroup;
+  public helpLink: string;
 
   private subscriptions = new Subscription();
 
@@ -55,6 +58,8 @@ export class ImageInputComponent implements OnChanges, OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.subscriptions.add(this.subscribeToValueChanges());
+    this.helpLink =
+      environment.locale === LanguageCode.CZ ? 'https://www.lumeer.io/cs/mapa-cors' : 'https://www.lumeer.io/map-cors';
   }
 
   private subscribeToValueChanges(): Subscription {

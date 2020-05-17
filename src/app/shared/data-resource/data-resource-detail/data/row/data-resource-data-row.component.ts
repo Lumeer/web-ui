@@ -124,10 +124,10 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   public dataValue: DataValue;
 
   public get constraintType(): ConstraintType {
-    return this.row && this.row.attribute && this.row.attribute.constraint && this.row.attribute.constraint.type;
+    return this.row?.attribute?.constraint?.type;
   }
 
-  constructor(private i18n: I18n, private renderer: Renderer2) {
+  constructor(private i18n: I18n) {
     this.placeholder = i18n({id: 'dataResource.attribute.placeholder', value: 'Enter attribute name'});
   }
 

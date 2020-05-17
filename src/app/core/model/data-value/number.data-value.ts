@@ -51,8 +51,7 @@ export class NumberDataValue implements NumericDataValue {
     }
 
     if (this.bigNumber) {
-      const value = numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
-      return decimalStoreToUser(value);
+      return numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
     }
 
     return formatUnknownDataValue(this.value);
@@ -72,7 +71,7 @@ export class NumberDataValue implements NumericDataValue {
     }
 
     if (this.bigNumber) {
-      return this.bigNumber.toFixed();
+      return decimalStoreToUser(this.bigNumber.toFixed());
     }
 
     return unescapeHtml(formatUnknownDataValue(this.value));
@@ -80,7 +79,7 @@ export class NumberDataValue implements NumericDataValue {
 
   public serialize(): any {
     if (this.bigNumber) {
-      return decimalUserToStore(this.bigNumber.toFixed());
+      return this.bigNumber.toFixed();
     }
     return isNotNullOrUndefined(this.value) ? escapeHtml(decimalUserToStore(String(this.value).trim())) : null;
   }

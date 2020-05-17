@@ -18,13 +18,18 @@
  */
 
 export interface Language {
-  code: string;
+  code: LanguageCode;
   name: string;
   englishName: string;
   icon: string;
 }
 
+export enum LanguageCode {
+  CZ = 'cs',
+  EN = 'en',
+}
+
 export const availableLanguages: Language[] = [
-  {code: 'cs', name: 'Čeština', englishName: 'Czech', icon: 'flag-icon-cz'},
-  {code: 'en', name: 'English', englishName: 'English', icon: 'flag-icon-gb'},
+  {code: LanguageCode.CZ, name: 'Čeština', englishName: 'Czech', icon: 'flag-icon-cz'},
+  {code: LanguageCode.EN, name: 'English', englishName: 'English', icon: 'flag-icon-gb'},
 ];

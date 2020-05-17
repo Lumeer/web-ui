@@ -46,6 +46,8 @@ import numbro from 'numbro';
 import csLanguage from 'numbro/languages/cs-CZ';
 import Cookies from 'js-cookie';
 import {LUMEER_REFERRAL} from './core/constants';
+import {UserActivityService} from './auth/user-activity.service';
+import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'lmr-app',
@@ -63,6 +65,7 @@ export class AppComponent implements AfterViewInit {
     private store$: Store<AppState>,
     private title: Title,
     private pusherService: PusherService,
+    private activityService: UserActivityService,
     private sessionService: SessionService,
     private tooltipConfig: TooltipConfig,
     private constraintDataService: ConstraintDataService, // for init constraint data
@@ -210,8 +213,10 @@ export class AppComponent implements AfterViewInit {
   }
 
   private initCheckUserInteraction() {
+    this.activityService.resetUserInteraction();
+    this.sessionService.init();
     ['mousedown', 'keypress', 'onscroll', 'wheel'].forEach(type =>
-      document.body.addEventListener(type, () => this.userInteracted())
+      document.body.addEventListener(type, () => this.activityService.onUserInteraction())
     );
   }
 
@@ -223,14 +228,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   private initLanguage() {
-    if (environment.locale === 'cs') {
+    if (environment.locale === LanguageCode.CZ) {
       numbro.registerLanguage(csLanguage, true);
     }
-  }
-
-  private userInteracted() {
-    this.sessionService.onUserInteraction();
-    this.authService.onUserInteraction();
   }
 }
 

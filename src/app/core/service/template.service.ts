@@ -22,6 +22,7 @@ import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Template, TemplateType} from '../model/template';
 import {environment} from '../../../environments/environment';
+import {LanguageCode} from '../../shared/top-panel/user-panel/user-menu/language';
 
 @Injectable({
   providedIn: 'root',
@@ -324,7 +325,7 @@ export class TemplateService {
 
   private getOKRUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/cile-s-okr');
       default:
         return this.createUrl('okr');
@@ -333,7 +334,7 @@ export class TemplateService {
 
   private getHRUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/sablona-koordinacia-kandidatov');
       default:
         return this.createUrl('template-candidates-coordination');
@@ -342,7 +343,7 @@ export class TemplateService {
 
   private getPROJUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/rizeni-projektu');
       default:
         return this.createUrl('project-tracker');
@@ -351,7 +352,7 @@ export class TemplateService {
 
   private getWORKUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/sablona-vykazy-prace');
       default:
         return this.createUrl('template-work-tracker');
@@ -360,7 +361,7 @@ export class TemplateService {
 
   private getTIMEUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/sablona-riadenie-energie');
       default:
         return this.createUrl('template-energy-management');
@@ -369,7 +370,7 @@ export class TemplateService {
 
   private getBUGUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/system-hlaseni-chyb');
       default:
         return this.createUrl('issue-tracker');
@@ -378,7 +379,7 @@ export class TemplateService {
 
   private getSupplyUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/sablona-manazment-skladovych-zasob');
       default:
         return this.createUrl('template-supply-chain-management');
@@ -387,7 +388,7 @@ export class TemplateService {
 
   private getEdcalUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/editoruv-vyber');
       default:
         return this.createUrl('editorial-calendar');
@@ -396,7 +397,7 @@ export class TemplateService {
 
   private getTaskUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/rizeni-ukolu');
       default:
         return this.createUrl('task-tracker');
@@ -405,7 +406,7 @@ export class TemplateService {
 
   private getCrmUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/prodejni-crm');
       default:
         return this.createUrl('sales-crm');
@@ -414,7 +415,7 @@ export class TemplateService {
 
   public getDateTimeConstraintHelpUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/typ-sloupce-datum');
       default:
         return this.createUrl('date-column-type');
@@ -423,7 +424,7 @@ export class TemplateService {
 
   public getScrumUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/scrum-sablona');
       default:
         return this.createUrl('scrum-template');
@@ -432,7 +433,7 @@ export class TemplateService {
 
   public getRemoteWorkUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/prace-z-domu-sablona');
       default:
         return this.createUrl('remote-work-template');
@@ -441,7 +442,7 @@ export class TemplateService {
 
   public getCemeteryUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/sprava-hrbitova-sablona');
       default:
         return this.createUrl('cemetery-management-template');
@@ -450,7 +451,7 @@ export class TemplateService {
 
   public getProductRoadmapUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/planovani-produktu');
       default:
         return this.createUrl('product-roadmap');
@@ -459,7 +460,7 @@ export class TemplateService {
 
   public getProductLaunchUrl(): string {
     switch (environment.locale) {
-      case 'cs':
+      case LanguageCode.CZ:
         return this.createUrl('cs/uvedeni-produktu-na-trh');
       default:
         return this.createUrl('product-launch');

@@ -1,13 +1,24 @@
-<div [formGroup]="form">
+<div class="font-weight-bold" i18n="@@perspective.map.config.sidebar.image.title">
+  Image layer
+</div>
+
+<div [formGroup]="form" class="mt-1">
   <input [formControlName]="formControlName"
          [id]="formControlName"
          placeholder="Enter image url"
+         i18n-placeholder="@@perspective.map.config.sidebar.image.placeholder"
          class="form-control"
          spellcheck="false"
+         [title]="imageUrlControl?.value || ''"
          (keydown.enter)="inputElement.blur(); inputElement.value = inputElement.value.trim()"
          (keydown.tab)="inputElement.blur(); inputElement.value = inputElement.value.trim()"
          (keydown.escape)="resetInput(); inputElement.blur()"
          type="text"
          #inputElement>
+</div>
+
+<div class="text-muted small mt-1">
+  <span i18n="@@perspective.map.config.sidebar.image.cors">In order to work properly it is necessary to set CORS policy on the server</span>&nbsp;<a
+  [href]="helpLink" target="_blank"><i class="fas fa-question-circle"></i></a>
 </div>
 

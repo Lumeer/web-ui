@@ -19,6 +19,7 @@
 
 import {Address, AddressField} from '../../../../../../core/store/geocoding/address';
 import {environment} from '../../../../../../../environments/environment';
+import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
 
 const CZECH_DEFAULT_FIELDS = [AddressField.Street, AddressField.HouseNumber, AddressField.City, AddressField.Country];
 const ENGLISH_DEFAULT_FIELDS = [
@@ -29,7 +30,8 @@ const ENGLISH_DEFAULT_FIELDS = [
   AddressField.Country,
 ];
 
-export const ADDRESS_DEFAULT_FIELDS = environment.locale === 'cs' ? CZECH_DEFAULT_FIELDS : ENGLISH_DEFAULT_FIELDS;
+export const ADDRESS_DEFAULT_FIELDS =
+  environment.locale === LanguageCode.CZ ? CZECH_DEFAULT_FIELDS : ENGLISH_DEFAULT_FIELDS;
 
 const CZECH_EXAMPLE_ADDRESS: Address = {
   houseNumber: '452/9',
@@ -50,4 +52,4 @@ const ENGLISH_EXAMPLE_ADDRESS: Address = {
   continent: 'North America',
 };
 
-export const EXAMPLE_ADDRESS = environment.locale === 'cs' ? CZECH_EXAMPLE_ADDRESS : ENGLISH_EXAMPLE_ADDRESS;
+export const EXAMPLE_ADDRESS = environment.locale === LanguageCode.CZ ? CZECH_EXAMPLE_ADDRESS : ENGLISH_EXAMPLE_ADDRESS;

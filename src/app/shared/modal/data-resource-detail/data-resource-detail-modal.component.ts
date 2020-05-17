@@ -50,6 +50,11 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {Collection} from '../../../core/store/collections/collection';
 import {ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettings} from '../../../core/store/views/views.state';
+import {LinkTypePermissionsPipe} from '../../pipes/permissions/link-type-permissions.pipe';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-permissions.pipe';
+import {distinctUntilChanged} from 'rxjs/operators';
+import {LinkType} from '../../../core/store/link-types/link.type';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -85,12 +90,18 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   public query$: Observable<Query>;
   public resource$: Observable<AttributesResource>;
   public dataResource$: Observable<DataResource>;
+  public permissions$: Observable<AllowedPermissions>;
   public viewSettings$: Observable<ViewSettings>;
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
 
-  constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
+  constructor(
+    private store$: Store<AppState>,
+    private bsModalRef: BsModalRef,
+    private collectionPermissionsPipe: CollectionPermissionsPipe,
+    private linkTypePermissionsPipe: LinkTypePermissionsPipe
+  ) {}
 
   public ngOnInit() {
     this.initData();
@@ -99,15 +110,23 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.initData();
+    if (changes.resource || changes.dataResource) {
+      this.initData();
+    }
   }
 
   private initData() {
-    this.resourceType = getAttributesResourceType(this.resource);
-    this.resource$ = of(this.resource);
-    this.dataResource$ = of(this.dataResource);
+    this.setData(this.resource, this.dataResource);
+  }
 
-    this.subscribeExist(this.resource, this.dataResource);
+  private setData(resource: AttributesResource, dataResource: DataResource) {
+    this.resourceType = getAttributesResourceType(resource);
+    this.resource$ = of(resource);
+    this.dataResource$ = of(dataResource);
+    this.permissions$ = this.selectPermissions$(resource);
+
+    this.subscribeExist(resource, dataResource);
+    this.currentDataResource = dataResource;
   }
 
   private subscribeExist(resource: AttributesResource, dataResource: DataResource) {
@@ -134,6 +153,13 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
       return this.store$.pipe(select(selectDocumentById(id)));
     }
     return this.store$.pipe(select(selectLinkInstanceById(id)));
+  }
+
+  private selectPermissions$(resource: AttributesResource): Observable<AllowedPermissions> {
+    if (this.resourceType === AttributesResourceType.Collection) {
+      return this.collectionPermissionsPipe.transform(resource).pipe(distinctUntilChanged());
+    }
+    return this.linkTypePermissionsPipe.transform(<LinkType>resource).pipe(distinctUntilChanged());
   }
 
   public onSubmit() {
@@ -194,10 +220,6 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   }
 
   public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {
-    this.resourceType = AttributesResourceType.Collection;
-    this.resource$ = of(data.collection);
-    this.dataResource$ = of(data.document);
-    this.subscribeExist(data.collection, data.document);
-    this.currentDataResource = data.document;
+    this.setData(data.collection, data.document);
   }
 }

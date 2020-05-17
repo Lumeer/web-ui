@@ -45,6 +45,8 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
 import {ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettings} from '../../../core/store/views/views.state';
+import {ResourceType} from '../../../core/model/resource-type';
+import {AttributesResourceType} from '../../../core/model/resource';
 
 @Component({
   selector: 'document-detail-modal',
@@ -66,6 +68,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   public documentChanged = new EventEmitter<DocumentModel>();
 
   public readonly dialogType = DialogType;
+  public readonly resourceType = AttributesResourceType.Collection;
 
   public onCancel$ = new Subject();
 
