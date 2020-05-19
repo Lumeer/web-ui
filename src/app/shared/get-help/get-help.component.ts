@@ -19,6 +19,7 @@
 
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {environment} from '../../../environments/environment';
+import {LanguageCode} from '../top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'get-help',
@@ -30,7 +31,7 @@ export class GetHelpComponent implements OnInit {
   public link: string;
 
   public ngOnInit(): void {
-    if (environment.locale === 'cs') {
+    if (environment.locale === LanguageCode.CZ) {
       this.link = 'https://www.lumeer.io/cs/pomoc';
     } else {
       this.link = 'https://www.lumeer.io/get-help';

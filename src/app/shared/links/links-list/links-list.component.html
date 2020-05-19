@@ -13,6 +13,7 @@
       [permissions]="permissions$ | async"
       [query]="query$ | async"
       [preventEventBubble]="preventEventBubble"
+      [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
       [viewSettings]="viewSettings"
       (unLink)="unLinkDocument($event)"
       (detail)="onSelectDocument($event)">

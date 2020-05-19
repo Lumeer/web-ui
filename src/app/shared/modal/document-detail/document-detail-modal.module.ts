@@ -25,10 +25,11 @@ import {PipesModule} from '../../pipes/pipes.module';
 import {DocumentDetailModalComponent} from './document-detail-modal.component';
 import {LinksModule} from '../../links/links.module';
 import {DataResourceModule} from '../../data-resource/data-resource.module';
+import {AttributesSettingsModule} from '../../settings/attributes/attributes-settings.module';
 
 @NgModule({
   declarations: [DocumentDetailModalComponent],
-  imports: [CommonModule, ModalWrapperModule, LinksModule, DataResourceModule, PipesModule],
+  imports: [CommonModule, ModalWrapperModule, LinksModule, DataResourceModule, PipesModule, AttributesSettingsModule],
   exports: [DocumentDetailModalComponent],
 })
 export class DocumentDetailModalModule {}

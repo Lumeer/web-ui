@@ -18,10 +18,10 @@
  */
 
 import {Location} from '@angular/common';
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
 import {Auth0DecodedHash, Auth0UserProfile, WebAuth} from 'auth0-js';
-import {Observable, of, Subject, Subscription, timer} from 'rxjs';
+import {Observable, of, Subject} from 'rxjs';
 import {catchError, filter, map, mergeMap, tap} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
 import {Angulartics2} from 'angulartics2';
@@ -34,11 +34,16 @@ import {AppState} from '../core/store/app.state';
 import {UsersAction} from '../core/store/users/users.action';
 import {selectCurrentUser} from '../core/store/users/users.state';
 import {select, Store} from '@ngrx/store';
+import {UserActivityService} from './user-activity.service';
+import {isNullOrUndefined} from '../shared/utils/common.utils';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
 const ID_TOKEN_KEY = 'auth_id_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';
+const CHECK_INTERVAL = 3000; // millis
+const RENEW_TOKEN_EXPIRATION = 10;
+const RENEW_TOKEN_MINUTES = 4;
 
 @Injectable({
   providedIn: 'root',
@@ -50,25 +55,26 @@ export class AuthService {
   private accessToken: string;
   private idToken: string;
   private expiresAt: number;
-  private userInteracted: boolean;
 
-  private refreshSubscription: Subscription;
-  private logoutSubscription: Subscription;
+  private lastRenewedAt: number;
+  private checkingToken: boolean;
+  private intervalId: number;
 
   public constructor(
     private location: Location,
     private router: Router,
     private userService: UserService,
+    private activityService: UserActivityService,
     private store$: Store<AppState>,
-    private angulartics2: Angulartics2
+    private angulartics2: Angulartics2,
+    private ngZone: NgZone
   ) {
     if (environment.auth) {
       const redirectUri = document.location.origin + location.prepareExternalUrl('auth');
       this.initAuth(redirectUri);
 
       // in case the application was refreshed and user has already been authenticated
-      this.scheduleRenewal();
-      this.scheduleLogout();
+      this.initInterval();
     }
   }
 
@@ -164,9 +170,6 @@ export class AuthService {
       localStorage.setItem(ID_TOKEN_KEY, this.idToken);
       localStorage.setItem(EXPIRES_AT_KEY, String(this.expiresAt));
     }
-
-    this.scheduleRenewal();
-    this.scheduleLogout();
   }
 
   public logout(): void {
@@ -192,7 +195,7 @@ export class AuthService {
       localStorage.removeItem(EXPIRES_AT_KEY);
     }
 
-    this.unscheduleRenewal();
+    window.clearInterval(this.intervalId);
   }
 
   public getLogoutUrl(): string {
@@ -219,7 +222,10 @@ export class AuthService {
   }
 
   public getExpiresAt(): number {
-    return this.expiresAt || Number(localStorage.getItem(EXPIRES_AT_KEY));
+    if (localStorage.getItem(EXPIRES_AT_KEY)) {
+      return Number(localStorage.getItem(EXPIRES_AT_KEY));
+    }
+    return this.expiresAt;
   }
 
   public getUserProfile(): Promise<Auth0UserProfile> {
@@ -249,63 +255,46 @@ export class AuthService {
     });
   }
 
-  public onUserInteraction() {
-    this.userInteracted = true;
-  }
-
   private tryRenewToken(): Observable<Auth0DecodedHash> {
     const subject = new Subject<Auth0DecodedHash>();
     this.auth0.checkSession({}, (error, result) => subject.next(error ? null : result));
     return subject.asObservable();
   }
 
-  public scheduleRenewal() {
-    if (!this.isAuthenticated()) {
-      return;
-    }
-
-    this.unscheduleRenewal();
-    this.userInteracted = false;
-
-    const source = of(this.getExpiresAt()).pipe(
-      mergeMap(expiresAt => {
-        // Use the delay in a timer to run the refresh at the proper time
-        const timerTime = (expiresAt - Date.now()) / 5;
-        return timer(timerTime > 10000 ? timerTime : 20000);
-      })
-    );
-
-    // Once the delay time from above is reached, get a new JWT and schedule additional refreshes
-    this.refreshSubscription = source.subscribe(() => {
-      if (this.userInteracted) {
-        this.renewToken();
-      } else {
-        this.scheduleRenewal();
-      }
+  private initInterval() {
+    this.ngZone.runOutsideAngular(() => {
+      this.intervalId = window.setInterval(() => {
+        this.check();
+      }, CHECK_INTERVAL);
     });
   }
 
-  public unscheduleRenewal() {
-    if (this.refreshSubscription) {
-      this.refreshSubscription.unsubscribe();
-    }
-  }
-
-  public scheduleLogout() {
-    if (!this.isAuthenticated()) {
-      return;
-    }
-
-    if (this.logoutSubscription) {
-      this.logoutSubscription.unsubscribe();
-    }
-    this.logoutSubscription = timer(this.getExpiresAt() - Date.now()).subscribe(() => {
-      if (this.tokenExpired()) {
-        this.login(this.router.url);
-      } else {
-        this.scheduleLogout();
+  private check() {
+    if (this.isAuthenticated()) {
+      const expiresAt = this.getExpiresAt();
+      const expiresInMinutes = (expiresAt - Date.now()) / 1000 / 60;
+      if (expiresInMinutes > RENEW_TOKEN_EXPIRATION || this.activityService.getLastActivityBeforeMinutes() > 15) {
+        return;
       }
-    });
+
+      const lastRenewedInMinutes = this.lastRenewedAt ? (Date.now() - this.lastRenewedAt) / 1000 / 60 : null;
+      if (isNullOrUndefined(lastRenewedInMinutes) || lastRenewedInMinutes > RENEW_TOKEN_MINUTES) {
+        this.lastRenewedAt = Date.now();
+        this.ngZone.runOutsideAngular(() => {
+          this.renewToken();
+        });
+      }
+    } else if (!this.checkingToken) {
+      this.checkingToken = true;
+      this.ngZone.runOutsideAngular(() => {
+        this.checkToken().subscribe(valid => {
+          this.checkingToken = false;
+          if (!valid) {
+            this.login(this.router.url);
+          }
+        });
+      });
+    }
   }
 
   public getLoginRedirectPath(): string {
@@ -313,10 +302,17 @@ export class AuthService {
   }
 
   public saveLoginRedirectPath(redirectPath: string) {
-    const restrictedPaths = ['/agreement', '/logout', '/auth'];
-    if (!restrictedPaths.some(path => redirectPath.startsWith(path))) {
+    if (!this.isRestrictedPath(redirectPath)) {
       localStorage.setItem(REDIRECT_KEY, redirectPath);
     }
+  }
+
+  private isRestrictedPath(redirectPath: string): boolean {
+    const restrictedPaths = ['/agreement', '/logout', '/auth', '/session-expired'];
+    return restrictedPaths.some(path => {
+      const pathWithOrigin = window.location.origin + this.location.prepareExternalUrl(path);
+      return redirectPath.startsWith(path) || redirectPath.startsWith(pathWithOrigin);
+    });
   }
 
   public checkToken(): Observable<boolean> {

@@ -19,7 +19,7 @@
 
 import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {Observable, of, combineLatest as observableCombineLatest} from 'rxjs';
+import {Observable, of, combineLatest} from 'rxjs';
 import {map, mergeMap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -50,10 +50,10 @@ export class LinkTypePermissionsPipe implements PipeTransform {
           return of({});
         }
 
-        return observableCombineLatest(
+        return combineLatest([
           this.collectionsPermissionsPipe.transform(collections[0]),
-          this.collectionsPermissionsPipe.transform(collections[1])
-        ).pipe(map(([ap1, ap2]) => mergePermissions(ap1, ap2)));
+          this.collectionsPermissionsPipe.transform(collections[1]),
+        ]).pipe(map(([ap1, ap2]) => mergePermissions(ap1, ap2)));
       })
     );
   }

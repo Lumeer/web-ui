@@ -37,6 +37,7 @@ import {KeyCode} from '../../key-code';
 import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'datetime-data-input',
@@ -194,7 +195,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    document.body.style.setProperty('--first-day-of-week', environment.locale === 'cs' ? '8' : '2');
+    document.body.style.setProperty('--first-day-of-week', environment.locale === LanguageCode.CZ ? '8' : '2');
   }
 
   public onValueChange(date: Date) {

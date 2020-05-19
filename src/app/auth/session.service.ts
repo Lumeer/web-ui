@@ -17,41 +17,53 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {Router} from '@angular/router';
-import {BehaviorSubject, Subscription} from 'rxjs';
-import {throttleTime} from 'rxjs/operators';
 import {environment} from '../../environments/environment';
+import {AuthService} from './auth.service';
+import {UserActivityService} from './user-activity.service';
 
-const CHECK_INTERVAL = 5 * 1000; // millis
+const CHECK_INTERVAL = 3000; // millis
+const TIMEOUT_MINUTES = environment.sessionTimeout;
 
 @Injectable({
   providedIn: 'root',
 })
 export class SessionService {
-  private subject$ = new BehaviorSubject({});
-  private subscriptions = new Subscription();
-  private timeoutId: number;
+  private timerId: number;
 
-  public constructor(private router: Router) {
-    this.subscribeToSubject();
+  public constructor(
+    private router: Router,
+    private ngZone: NgZone,
+    private authService: AuthService,
+    private activityService: UserActivityService
+  ) {}
+
+  public init() {
+    this.initInterval();
   }
 
-  public onUserInteraction() {
-    this.subject$.next({});
+  private initInterval() {
+    this.ngZone.runOutsideAngular(() => {
+      this.timerId = window.setInterval(() => {
+        this.check();
+      }, CHECK_INTERVAL);
+    });
   }
 
-  private subscribeToSubject() {
-    const subscription = this.subject$.pipe(throttleTime(CHECK_INTERVAL)).subscribe(() => this.resetSession());
-    this.subscriptions.add(subscription);
-  }
+  private check() {
+    const now = Date.now();
+    const timeLeft = this.activityService.getLastActivity() + TIMEOUT_MINUTES * 60 * 1000;
+    const isTimeout = timeLeft - now < 0;
 
-  private resetSession() {
-    window.clearTimeout(this.timeoutId);
-    this.timeoutId = window.setTimeout(
-      () => this.navigateToSessionExpiredPage(),
-      environment.sessionTimeout * 60 * 1000
-    );
+    this.ngZone.run(() => {
+      if (isTimeout) {
+        window.clearInterval(this.timerId);
+        if (this.authService.isAuthenticated()) {
+          this.navigateToSessionExpiredPage();
+        }
+      }
+    });
   }
 
   private navigateToSessionExpiredPage() {
@@ -60,9 +72,5 @@ export class SessionService {
         redirectUrl: this.router.url,
       },
     });
-  }
-
-  public destroy() {
-    this.subscriptions.unsubscribe();
   }
 }

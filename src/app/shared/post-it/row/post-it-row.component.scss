@@ -11,6 +11,11 @@
   }
 }
 
+::ng-deep p {
+  margin-bottom: 0;
+  line-height: 1.5rem;
+}
+
 :host.layout-zero {
   grid-template-columns: 1fr auto;
 }

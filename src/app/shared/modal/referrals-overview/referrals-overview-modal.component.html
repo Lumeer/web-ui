@@ -46,7 +46,7 @@
       <br/>
       <div *ngIf="!data.affiliate">
         <span i18n="@@referralDialog.affiliatePartner.become.start">Become our </span>
-        <a [href]="'https://www.lumeer.io/' + (locale === 'cs' ? 'cs/partneri' : 'affiliates/')" target="_blank" i18n="@@referralDialog.affiliatePartner">Affiliate partner</a>
+        <a [href]="'https://www.lumeer.io/' + (locale === languageCode.CZ ? 'cs/partneri' : 'affiliates/')" target="_blank" i18n="@@referralDialog.affiliatePartner">Affiliate partner</a>
         <span i18n="@@referralDialog.affiliatePartner.become.middle"> and turn your profits to </span>
         <strong class="text-success">10%</strong><span i18n="@@referralDialog.affiliatePartner.become.end">.</span>
       </div>

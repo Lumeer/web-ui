@@ -29,6 +29,7 @@ import {PaymentStats} from '../../../core/store/organizations/payment/payment';
 import {Observable} from 'rxjs';
 import {User} from '../../../core/store/users/user';
 import {environment} from '../../../../environments/environment';
+import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'referrals-overview',
@@ -40,6 +41,7 @@ export class ReferralsOverviewModalComponent implements OnInit {
   public readonly dialogType = DialogType;
 
   public readonly locale = environment.locale;
+  public readonly languageCode = LanguageCode;
 
   public user: Observable<User>;
 

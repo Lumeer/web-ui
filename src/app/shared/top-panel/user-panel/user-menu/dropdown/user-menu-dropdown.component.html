@@ -14,15 +14,15 @@
             class="dropdown-item-text text-secondary">
       {{ currentUser.email }}
     </span>
-      <a *ngIf="locale !== 'cs'"
-         [href]="url | languageLink:'cs'"
+      <a *ngIf="locale !== languageCode.CZ"
+         [href]="url | languageLink:languageCode.CZ"
          class="dropdown-item"
          title="Čeština">
         <span class="flag-icon flag-icon-cz"></span>&nbsp;
         <span>Čeština</span>&nbsp;(<span i18n="@@language.czech">Czech</span>)
       </a>
-      <a *ngIf="locale !== 'en'"
-         [href]="url| languageLink:'en'"
+      <a *ngIf="locale !== languageCode.EN"
+         [href]="url| languageLink:languageCode.EN"
          class="dropdown-item"
          title="English">
         <span class="flag-icon flag-icon-gb"></span>&nbsp;

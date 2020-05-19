@@ -91,6 +91,9 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   public preventEventBubble: boolean;
 
   @Input()
+  public ignoreSettingsOnReadPermission: boolean;
+
+  @Input()
   public viewSettings: ViewSettings;
 
   @ViewChild('tableWrapper')
@@ -120,7 +123,8 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       changes.collection ||
       changes.query ||
       changes.permissions ||
-      changes.viewSettings
+      changes.viewSettings ||
+      changes.ignoreSettingsOnReadPermission
     ) {
       this.mergeColumns();
     }
@@ -143,7 +147,10 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   }
 
   private createLinkTypeColumns(): LinkColumn[] {
-    const settings = this.viewSettings?.attributes?.linkTypes?.[this.linkType?.id];
+    const settings =
+      this.ignoreSettingsOnReadPermission && this.permissions?.read
+        ? []
+        : this.viewSettings?.attributes?.linkTypes?.[this.linkType?.id];
     return createAttributesSettingsOrder(this.linkType?.attributes, settings)
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {

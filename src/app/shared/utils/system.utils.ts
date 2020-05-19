@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import * as jsSHA from 'jssha';
+import jsSHA from 'jssha';
 
 export function isMacOS(): boolean {
   return navigator.platform.toLowerCase().startsWith('mac');

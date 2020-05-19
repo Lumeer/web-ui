@@ -63,8 +63,9 @@ import {OrganizationValidators} from './validators/organization.validators';
 import {ProjectValidators} from './validators/project.validators';
 import {SequenceService} from './rest/sequence.service';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
+import {LanguageCode} from '../shared/top-panel/user-panel/user-menu/language';
 
-if (environment.locale === 'cs') {
+if (environment.locale === LanguageCode.CZ) {
   defineLocale('cs', csLocale);
 }
 

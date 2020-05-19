@@ -13,16 +13,18 @@
                           [dataResource]="data.dataResource"
                           [query]="query$ | async"
                           [preventEventBubble]="true"
-                          [permissions]="resourceType === collectionResourceType ? (data.resource | collectionPermissions | async) : (data.resource | linkTypePermissions | async)"
+                          [ignoreSettingsOnReadPermission]="true"
+                          [permissions]="permissions$ | async"
                           [toolbarRef]="toolbarRef"
                           [attributeSettings]="data.viewSettings | resourceAttributesSettings:resourceType:data.resource.id"
                           (dataResourceChanged)="onDataResourceChanged($event)"
                           (routingPerformed)="onClose()">
     </data-resource-detail>
     <links-list class="d-block mt-5"
-                *ngIf="resourceType === collectionResourceType && data.resource && data.dataResource?.id"
+                *ngIf="resourceType === collectionResourceType && data.dataResource?.id"
                 [document]="data.dataResource"
                 [preventEventBubble]="true"
+                [ignoreSettingsOnReadPermission]="true"
                 [collection]="data.resource"
                 [viewSettings]="data.viewSettings"
                 (documentSelect)="selectCollectionAndDocument($event)">
