@@ -123,11 +123,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.invalid" datatype="html">
         <source>I am sorry, something went wrong.
@@ -254,11 +254,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
@@ -1515,6 +1515,16 @@
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
+      </trans-unit><trans-unit id="table.header.column.settings" datatype="html">
+        <source>Column settings...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/header/links-list-table-header.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
       </trans-unit><trans-unit id="show.detail" datatype="html">
         <source>Show detail</source>
         <context-group purpose="location">
@@ -1793,29 +1803,29 @@
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="resource.detail.organization.invite" datatype="html">
         <source>Invite Colleagues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="resource.detail.organization.configure" datatype="html">
         <source>Configure</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit><trans-unit id="resource.detail.organization.upgrade" datatype="html">
         <source>Upgrade Plan</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit><trans-unit id="collection" datatype="html">
         <source>Table</source>
@@ -2171,6 +2181,16 @@
           <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
+      </trans-unit><trans-unit id="collection.tab.attributes.attribute.placeholder" datatype="html">
+        <source>Enter attribute name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
       </trans-unit><trans-unit id="remove.attribute" datatype="html">
         <source>Remove Attribute</source>
         <context-group purpose="location">
@@ -2210,6 +2230,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
           <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.tab.linktypes.name.placeholder" datatype="html">
+        <source>Enter link type name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="links.count" datatype="html">
         <source>Number of links</source>
@@ -2700,6 +2726,24 @@
           <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.cards" datatype="html">
+        <source>Cards</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.dueDate" datatype="html">
+        <source>Due date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.summary" datatype="html">
+        <source>Summary</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
       </trans-unit><trans-unit id="kanban.perspective.header.other" datatype="html">
         <source>Other</source>
         <context-group purpose="location">
@@ -2889,25 +2933,25 @@
       </trans-unit><trans-unit id="map.config.attribute.placeholder" datatype="html">
         <source>Attribute</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="map.config.attribute.empty" datatype="html">
         <source>Select attribute</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="map.placeholder.title" datatype="html">
         <source>No places found!</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/map/content/globe-content/empty/empty-map.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="map.placeholder.description" datatype="html">
         <source>Make sure you have selected an attribute with addresses or Earth coordinates.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/map/content/globe-content/empty/empty-map.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit><trans-unit id="map.config.color.placeholder" datatype="html">
@@ -2935,6 +2979,63 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/map/content/loading/map-loading.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.sidebar.image.title" datatype="html">
+        <source>
+  Image layer
+</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/image-input/image-input.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.sidebar.image.placeholder" datatype="html">
+        <source>Enter image address</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/image-input/image-input.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.sidebar.image.cors" datatype="html">
+        <source>Read about <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>CORS settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> to host map files.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/image-input/image-input.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.failure.title" datatype="html">
+        <source>Image was not found</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.failure.description" datatype="html">
+        <source>Make sure you have provided correct image address. Try opening the address in a browser.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.sizeExceeded.title" datatype="html">
+        <source>Image is too large</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.sizeExceeded.description" datatype="html">
+        <source>Maximum allowed image size is 20MB. Try scaling it to a smaller resolution.
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.notSupported.title" datatype="html">
+        <source>This type of image is not supported</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.notSupported.description" datatype="html">
+        <source>Please select one of the following image types: svg, jpg, or png.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="aggregation" datatype="html">
         <source>Aggregation</source>
@@ -5556,13 +5657,6 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="kanban.config.collection.dueDate" datatype="html">
-        <source>Due date</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="kanban.config.collection.doneAttribute.empty" datatype="html">
         <source>Select done state</source>
         <context-group purpose="location">
@@ -5572,10 +5666,6 @@
       </trans-unit>
       <trans-unit id="kanban.config.collection.doneAttribute" datatype="html">
         <source>Done state</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5605,77 +5695,77 @@
       <trans-unit id="map.content.location.error" datatype="html">
         <source>I could not save the new location.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/map-globe-content.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="map.location.find" datatype="html">
         <source>Find my location</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="map.location.notAvailable" datatype="html">
         <source>Location not available</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="map.control.compass" datatype="html">
         <source>Reset bearing to north</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="map.control.zoom.in" datatype="html">
         <source>Zoom in</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="map.control.zoom.out" datatype="html">
         <source>Zoom out</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="distance.feat" datatype="html">
         <source>ft</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="distance.meters" datatype="html">
         <source>m</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="distance.kilometers" datatype="html">
         <source>km</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="distance.miles" datatype="html">
         <source>mi</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="distance.nauticalMiles" datatype="html">
         <source>nm</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

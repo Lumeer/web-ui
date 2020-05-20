@@ -730,7 +730,17 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">9</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="table.header.menu.editFunction" datatype="html">
         <source>Edit function...</source><target>Upravit vzorec...</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="show.detail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="table.header.column.settings" datatype="html">
+        <source>Column settings...</source><target>Nastavení sloupce...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/header/links-list-table-header.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="show.detail" datatype="html">
         <source>Show detail</source><target>Zobrazit detail</target>
 
 
@@ -1025,6 +1035,12 @@
         <source>Card layout</source><target>Formát karet</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/kanban/content/config/kanban-config.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.cards" datatype="html">
+        <source>Cards</source><target>Karty</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit>
@@ -1770,7 +1786,17 @@
                 <source>Set displayed attribute</source>
                 <target>Nastavit hlavní atribut</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="collection.tab.attributes.attribute.placeholder" datatype="html">
+        <source>Enter attribute name</source><target>Zadejte název atributu</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit>
 
 
 
@@ -2352,24 +2378,15 @@
         </context-group>
       </trans-unit><trans-unit id="map.config.attribute.placeholder" datatype="html">
         <source>Attribute</source><target>Atribut</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit>
             <trans-unit id="map.placeholder.title" datatype="html">
         <source>No places found!</source><target>Žádná místa nebyla nalezena!</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.placeholder.description" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/content/globe-content/empty/empty-map.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="map.placeholder.description" datatype="html">
         <source>Make sure you have selected an attribute with addresses or Earth coordinates.</source><target>Ujistěte se, že máte vybraný atribut s adresou nebo zemskými souřadnicemi.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/map/content/empty/empty-map.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.config.color.placeholder" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/content/globe-content/empty/empty-map.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="map.config.color.placeholder" datatype="html">
         <source>Color</source><target>Barva</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/map-stem-config.component.html</context>
@@ -2396,6 +2413,62 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/map/content/loading/map-loading.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.sidebar.image.title" datatype="html">
+        <source>
+  Image layer
+</source><target>
+  Obrazová vrstva
+</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/image-input/image-input.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.sidebar.image.placeholder" datatype="html">
+        <source>Enter image address</source><target>Zadejte adresu obrázku</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/image-input/image-input.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.map.config.sidebar.image.cors" datatype="html">
+        <source>Read about <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>CORS settings<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> to host map files.</source><target>Server s podklady musí mít správné <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>nastavení CORS<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/panel/image-input/image-input.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.failure.title" datatype="html">
+        <source>Image was not found</source><target>Obrázek nenalezen</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.failure.description" datatype="html">
+        <source>Make sure you have provided correct image address. Try opening the address in a browser.</source><target>Ujistěte se, že máte spravnou adresu obrázku. Zkuste ho otevřít v prohlížeči.</target>
+        
+        
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context><context context-type="linenumber">5</context></context-group></trans-unit><trans-unit id="map.image.fetch.sizeExceeded.title" datatype="html">
+        <source>Image is too large</source><target>Obrázek je příliš velký</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.sizeExceeded.description" datatype="html">
+        <source>Maximum allowed image size is 20MB. Try scaling it to a smaller resolution.
+      </source><target>Maximální velikost obrázku je 20MB. Zkuste zmenšit jeho rozlišení (velikost).
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.fetch.notSupported.title" datatype="html">
+        <source>This type of image is not supported</source><target>Formát obrázku není podporovaný</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="map.image.fetch.notSupported.description" datatype="html">
+        <source>Please select one of the following image types: svg, jpg, or png.</source><target>Zvolte prosím jeden z následujících formátů: svg, jpg, nebo png.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/invalid-image/invalid-image-map.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.config.dates.show" datatype="html">
         <source>Show task dates</source><target>Zobrazit datum úkolů</target>
@@ -2498,7 +2571,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source><target>Pomoc</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger-remote/blockly-debugger-remote.component.html</context>
@@ -3414,18 +3487,18 @@
                 <source>Invite Colleagues</source>
                 <target>Pozvat kolegy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">16</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit>
             <trans-unit id="resource.detail.organization.configure" datatype="html">
                 <source>Configure</source>
                 <target>Nastavení</target>
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
             <trans-unit id="resource.detail.organization.upgrade" datatype="html">
                 <source>Upgrade Plan</source>
                 <target>Koupit Business</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="collection" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="collection" datatype="html">
         <source>Table</source><target>Tabulka</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-status-line/resource-status-line.component.html</context>
@@ -4088,7 +4161,13 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.dueDate" datatype="html">
         <source>Due date</source><target>Splnění</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.doneAttribute.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="kanban.config.collection.summary" datatype="html">
+        <source>Summary</source><target>Souhrn</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.html</context>
+          <context context-type="linenumber">80</context>
+        </context-group>
+      </trans-unit><trans-unit id="kanban.config.collection.doneAttribute.empty" datatype="html">
         <source>Select done state</source><target>Vyberte stav splnění</target>
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/kanban/content/config/stem/kanban-stem-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="kanban.config.collection.doneAttribute" datatype="html">
@@ -4115,74 +4194,41 @@
         </context-group>
       </trans-unit><trans-unit id="map.content.location.error" datatype="html">
         <source>I could not save the new location.</source><target>Nepodařilo se mi uložit novou polohu.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/map-content.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.location.find" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/map-globe-content.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.location.find" datatype="html">
         <source>Find my location</source><target>Najdi mě</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.location.notAvailable" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.location.notAvailable" datatype="html">
         <source>Location not available</source><target>Místo není dostupné</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.control.zoom.in" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.control.zoom.in" datatype="html">
         <source>Zoom in</source><target>Přiblížit</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.control.zoom.out" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.control.zoom.out" datatype="html">
         <source>Zoom out</source><target>Oddálit</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="distance.feat" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="distance.feat" datatype="html">
         <source>ft</source><target>ft</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="distance.meters" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="distance.meters" datatype="html">
         <source>m</source><target>m</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="distance.kilometers" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="distance.kilometers" datatype="html">
         <source>km</source><target>km</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="distance.miles" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="distance.miles" datatype="html">
         <source>mi</source><target>mi</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="distance.nauticalMiles" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="distance.nauticalMiles" datatype="html">
         <source>nm</source><target>nm</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.control.compass" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.control.compass" datatype="html">
         <source>Reset bearing to north</source><target>Otočit zpět na sever</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/map/content/render/map-render.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="map.config.attribute.empty" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.config.attribute.empty" datatype="html">
         <source>Select attribute</source><target>Vyberte atribut</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/panel/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="pivot.config.attribute.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="pivot.config.attribute.empty" datatype="html">
         <source>Select attribute</source><target>Vyberte atribut</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/header/pivot-header-attribute-config.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.summary" datatype="html">
@@ -4241,7 +4287,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit>
             <trans-unit id="button.send" datatype="html">
                 <source>Send</source>
                 <target>Odeslat</target>
@@ -4442,7 +4488,7 @@
       </trans-unit><trans-unit id="resource.detail.type" datatype="html">
         <source>{VAR_SELECT, select, organization {Organization} project {Project} other {} }</source><target>{VAR_SELECT, select, organization {Organizace} project {Projekt} other {} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="search.records.empty.subtitle.singleCollection" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-detail/resource-detail.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="search.records.empty.subtitle.singleCollection" datatype="html">
         <source>Let's add some Records into</source><target>Přidejte nějaké záznamy do</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/warning-message/empty-records/empty-records.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="search.records.empty.button" datatype="html">
@@ -4796,6 +4842,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
           <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.tab.linktypes.name.placeholder" datatype="html">
+        <source>Enter link type name</source><target>Zadejte název vazby</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/link-types/link-type/link-type.component.html</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit><trans-unit id="links.count" datatype="html">
         <source>Number of links</source><target>Počet použití tohoto propojení</target>
