@@ -110,4 +110,4 @@ export enum MapImageLoadResult {
 }
 
 export const supportedImageMimeTypes = [MimeType.Svg, MimeType.Jpg, MimeType.Png];
-export const supportedImageSize = 20000000;
+export const supportedImageSize = 20 * 1024 * 1024;
