@@ -151,7 +151,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
     return (
       this.mapboxMap &&
       !this.mapIsMoving() &&
-      this.position &&
+      this.position?.center &&
       (this.mapboxMap.getCenter().lat !== this.position.center.lat ||
         this.mapboxMap.getCenter().lng !== this.position.center.lng ||
         this.mapboxMap.getBearing() !== this.position.bearing ||
@@ -171,7 +171,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
   }
 
   private refreshMapPosition() {
-    if (this.position && this.mapboxMap) {
+    if (this.position?.center && this.mapboxMap) {
       this.mapboxMap.setZoom(this.position.zoom);
       this.mapboxMap.setCenter({...this.position.center});
       this.mapboxMap.setBearing(this.position.bearing);

@@ -24,7 +24,7 @@ import {shadeColor} from '../../../../../../shared/utils/html-modifier';
 import {MapStyle, mapStyleUrls} from './map-style';
 
 export function createMapboxMap(elementId: string, position: MapPosition, locale: Record<string, string>): Map {
-  const positionOptions: Partial<MapboxOptions> = position
+  const positionOptions: Partial<MapboxOptions> = position?.center
     ? {
         bearing: position.bearing,
         center: position.center,

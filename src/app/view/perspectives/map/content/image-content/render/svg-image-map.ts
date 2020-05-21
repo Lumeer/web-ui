@@ -35,6 +35,7 @@ import {
 import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../../../shared/utils/common.utils';
 import {MimeType} from '../../../../../../core/model/mime-type';
 import {ElementRef, EventEmitter} from '@angular/core';
+import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
 
 export class SvgImageMap {
   public detail$ = new EventEmitter<MapMarkerProperties>();
@@ -46,10 +47,11 @@ export class SvgImageMap {
   private svgMarkersWrapper: SVGElement;
   private zoom: d3Zoom.ZoomBehavior<Element, any>;
   private mapDragging: boolean;
+  private popupWrapper: HTMLElement;
 
   private currentPosition: MapPosition;
   private currentData: MapImageData;
-  private markers: MapMarkerProperties[];
+  private markers: Record<string, MapMarkerProperties> = {};
 
   constructor(
     private element: ElementRef,
@@ -60,8 +62,7 @@ export class SvgImageMap {
   ) {
     this.currentData = data;
     this.currentPosition = position;
-    this.markers = markers;
-    this.initImage();
+    this.initImage(markers);
   }
 
   public setData(data: MapImageData) {
@@ -69,10 +70,10 @@ export class SvgImageMap {
       return;
     }
     this.currentData = data;
-    this.initImage();
+    this.initImage(Object.values(this.markers));
   }
 
-  private initImage() {
+  private initImage(markers: MapMarkerProperties[]) {
     if (this.currentData.mimeType === MimeType.Svg) {
       this.svgImageWrapper = this.initSvgImage();
     } else {
@@ -87,15 +88,14 @@ export class SvgImageMap {
       d3Select.select(this.svgImageWrapper),
       d3Select.select(this.svgMarkersWrapper)
     );
-    this.drawMarkers();
+    this.drawMarkers(markers);
   }
 
   public setMarkers(markers: MapMarkerProperties[]) {
-    this.markers = markers;
-    this.drawMarkers();
+    this.drawMarkers(markers);
   }
 
-  private drawMarkers() {
+  private drawMarkers(markers: MapMarkerProperties[]) {
     let deltaX, deltaY;
 
     const _this = this;
@@ -107,6 +107,7 @@ export class SvgImageMap {
         deltaY = +current.attr('y') - d3Select.event.y;
       })
       .on('drag', function () {
+        _this.hideMarkerPopup();
         const elementCenter = _this.getElementSize();
         const imageBounds = _this.computeImageRectangle();
         const {scale: dragScale, pixelScale: dragPixelScale} = _this.getCurrentTranslate();
@@ -153,21 +154,29 @@ export class SvgImageMap {
     const bounds = this.computeImageRectangle();
     const {scale, pixelScale} = this.getCurrentTranslate();
     const drawnIds = new Set();
-    for (const marker of this.markers || []) {
+    const markersMap = {};
+    for (const marker of markers) {
       const {x, y} = computeMarkerPosition(markerPosition(marker), scale, pixelScale, center, bounds);
-      let selectedMarker = svgMarkersContainer.select(`svg[id='${marker.id}']`);
-      if (selectedMarker.empty()) {
-        selectedMarker = addMarkerToSvgContainer(svgMarkersContainer, marker, scale, x, y).on('dblclick', () => {
-          d3Select.event.stopPropagation();
-          this.detail$.emit(marker);
-        });
-      } else if (+selectedMarker.attr('x') !== scaleImagePoint(x) || +selectedMarker.attr('y') !== scaleImagePoint(y)) {
+      let selectedMarker = this.findMarkerContainer(marker);
+      if (selectedMarker.empty() || this.mapMarkerPropertiesChanged(marker)) {
+        if (!selectedMarker.empty()) {
+          selectedMarker.remove();
+        }
+        selectedMarker = addMarkerToSvgContainer(svgMarkersContainer, marker, scale, x, y)
+          .on('dblclick', () => {
+            d3Select.event.stopPropagation();
+            this.detail$.emit(marker);
+          })
+          .on('mouseenter', () => this.showMarkerPopup(marker))
+          .on('mouseleave', () => this.hideMarkerPopup());
+      } else if (this.mapMarkerPositionChanged(selectedMarker, x, y)) {
         selectedMarker
           .attr('x', scaleImagePoint(x))
           .attr('initial-x', scaleImagePoint(computeMarkerInitialX(x, scale, +selectedMarker.attr('width'))))
           .attr('y', scaleImagePoint(y))
           .attr('initial-y', scaleImagePoint(computeMarkerInitialY(y, scale, +selectedMarker.attr('height'))));
       }
+      markersMap[marker.id] = marker;
 
       if (marker.editable) {
         selectedMarker.call(drag);
@@ -176,6 +185,7 @@ export class SvgImageMap {
       }
       drawnIds.add(marker.id);
     }
+    this.markers = markersMap;
 
     svgMarkersContainer
       .selectAll<SVGElement, any>('svg')
@@ -185,8 +195,45 @@ export class SvgImageMap {
       .remove();
   }
 
+  private showMarkerPopup(marker: MapMarkerProperties) {
+    this.hideMarkerPopup();
+
+    const html = marker.displayValue
+      ? `<div>${marker.displayValue}</div>${marker.positionValue}`
+      : marker.positionValue;
+
+    const markerContainer = this.findMarkerContainer(marker);
+    const translate = this.getCurrentTranslate();
+
+    const popupWrapper = document.createElement('div');
+    popupWrapper.classList.add('popup-wrapper');
+    popupWrapper.innerHTML = html;
+    popupWrapper.style.top = `${+markerContainer.attr('y') + translate.y + +markerContainer.attr('height')}px`;
+    popupWrapper.style.left = `${+markerContainer.attr('x') + translate.x + +markerContainer.attr('width') / 2}px`;
+    this.element.nativeElement.appendChild(popupWrapper);
+
+    this.popupWrapper = popupWrapper;
+  }
+
+  private hideMarkerPopup() {
+    this.popupWrapper?.parentNode?.removeChild(this.popupWrapper);
+  }
+
+  private mapMarkerPositionChanged(container: SVGContainer, newX: number, newY: number): boolean {
+    return +container.attr('x') !== scaleImagePoint(newX) || +container.attr('y') !== scaleImagePoint(newY);
+  }
+
+  private mapMarkerPropertiesChanged(marker: MapMarkerProperties): boolean {
+    const currentMarker = this.markers[marker.id];
+    return (
+      currentMarker?.color !== marker.color ||
+      !deepArrayEquals(currentMarker?.icons, marker.icons) ||
+      currentMarker?.displayValue !== marker.displayValue
+    );
+  }
+
   private onMarkerMove(id: string, x: number, y: number) {
-    const marker = this.markers?.find(m => m.id === id);
+    const marker = this.markers?.[id];
     if (marker) {
       this.markerMove$.emit({marker, x, y});
     }
@@ -418,9 +465,9 @@ export class SvgImageMap {
     this.setSvgImageRectangle();
 
     const {scale, pixelScale} = this.getCurrentTranslate();
-    for (const marker of this.markers || []) {
+    for (const marker of Object.values(this.markers)) {
       const {x, y} = computeMarkerPosition(markerPosition(marker), scale, pixelScale, elementSize, bounds);
-      const selection = d3Select.select(`svg[id='${marker.id}']`);
+      const selection = this.findMarkerContainer(marker);
       if (!selection.empty()) {
         selection
           .attr('x', scaleImagePoint(x))
@@ -429,6 +476,10 @@ export class SvgImageMap {
           .attr('initial-y', scaleImagePoint(computeMarkerInitialY(y, scale, +selection.attr('height'))));
       }
     }
+  }
+
+  private findMarkerContainer(marker: MapMarkerProperties): SVGContainer {
+    return d3Select.select(`svg[id='${marker.id}']`);
   }
 
   public destroy() {
