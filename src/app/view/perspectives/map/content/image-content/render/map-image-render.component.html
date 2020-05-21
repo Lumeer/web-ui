@@ -7,5 +7,9 @@
 <div class="position-absolute controls btn-group-vertical">
   <button type="button" class="btn px-2 py-1" (click)="zoomIn()"><i class="fas fa-plus"></i></button>
   <button type="button" class="btn px-2 py-1" (click)="zoomOut()"><i class="fas fa-minus"></i></button>
-  <button type="button" class="btn px-2 py-1" (click)="resetZoom()"><i class="fas fa-undo"></i></button>
+  <button type="button" class="btn px-2 py-1" (click)="resetZoom()"
+          title="Reset zoom"
+          i18n-title="@@map.image.controls.home">
+    <i class="fas fa-home-alt"></i>
+  </button>
 </div>
