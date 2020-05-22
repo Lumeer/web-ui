@@ -14,7 +14,7 @@ else
 fi
 
 echo "Building engine..."
-mvn install -DskipTests -B --quiet
+mvn install -DskipTests -DskipITs -B --quiet
 cd war
 
 echo "Starting engine..."
