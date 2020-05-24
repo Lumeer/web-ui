@@ -22,6 +22,8 @@ import {ElementRef} from '@angular/core';
 import {Data, Layout} from 'plotly.js';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
+import {ChartAxisType} from '../../../../../core/store/charts/chart';
 
 export abstract class PlotMaker {
   protected chartData: ChartData;
@@ -32,7 +34,8 @@ export abstract class PlotMaker {
 
   protected onDoubleClick?: (ClickEvent) => void;
 
-  constructor(protected element: ElementRef) {}
+  constructor(protected element: ElementRef) {
+  }
 
   public updateData(chartData: ChartData) {
     this.chartData = chartData;
@@ -56,6 +59,28 @@ export abstract class PlotMaker {
 
   protected getAxisDataSets(type: ChartYAxisType): ChartDataSet[] {
     return this.chartData.sets.filter(set => set.yAxisType === type);
+  }
+
+  protected isNumericType(type: ConstraintType) {
+    return [ConstraintType.Percentage, ConstraintType.Number, ConstraintType.Duration].includes(type); // TODO else?
+  }
+
+  protected isCategoryType(type: ConstraintType): boolean {
+    return type === ConstraintType.Text; // TODO ??
+  }
+
+  protected axisConstraintType(type: ChartAxisType): ConstraintType {
+    if (type === ChartAxisType.X) {
+      return this.chartData.xAxisData?.constraintType || ConstraintType.Unknown;
+    }
+    if (type === ChartAxisType.Y1) {
+      return this.chartData.y1AxisData?.constraintType || ConstraintType.Unknown;
+    }
+    if (type === ChartAxisType.Y2) {
+      return this.chartData.y2AxisData?.constraintType || ConstraintType.Unknown;
+    }
+
+    return ConstraintType.Unknown;
   }
 }
 

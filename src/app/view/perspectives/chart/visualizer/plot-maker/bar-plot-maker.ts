@@ -21,14 +21,14 @@ import {Data, Layout, d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
-import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartAxisData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 
 export class BarPlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
     const y1Sets = this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y1);
     const y2Sets = this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y2);
 
-    const helperData: { y1: Data[]; y2: Data[] } = this.createHelperData(y1Sets, y2Sets);
+    const helperData: { y1: Data[]; y2: Data[] } = this.createHelperData(this.chartData.y1AxisData, y1Sets, this.chartData.y2AxisData, y2Sets);
 
     const y1Data = y1Sets.map(set => this.createAxisData(set));
     const y2Data = y2Sets.map(set => this.createAxisData(set));
@@ -82,9 +82,9 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     }
   }
 
-  private createHelperData(y1Sets: ChartDataSet[], y2Sets: ChartDataSet[]): { y1: Data[]; y2: Data[] } {
-    const y1Point = this.firstNonNullValue(y1Sets);
-    const y2Point = this.firstNonNullValue(y2Sets);
+  private createHelperData(y1Axis: ChartAxisData, y1Sets: ChartDataSet[], y2Axis: ChartAxisData, y2Sets: ChartDataSet[]): { y1: Data[]; y2: Data[] } {
+    const y1Point = this.firstNonNullValue(y1Axis, y1Sets);
+    const y2Point = this.firstNonNullValue(y2Axis, y2Sets);
     if (!y1Point || !y2Point) {
       return {y1: [], y2: []};
     }
@@ -95,14 +95,13 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return {y1: y1HelperData, y2: y2HelperData};
   }
 
-  private firstNonNullValue(sets: ChartDataSet[]): { x: any; y: any } {
+  private firstNonNullValue(axis: ChartAxisData, sets: ChartDataSet[]): { x: any; y: any } {
     for (const set of sets) {
       const point = set.points.find(p => isNotNullOrUndefined(p.x) && isNotNullOrUndefined(p.y));
       if (point) {
-        // TODO
-        // if (this.isNumericCategory(set.yAxis && set.yAxis.category)) {
-        //   return {x: point.x, y: 0};
-        // }
+        if (this.isNumericType(axis?.constraintType)) {
+          return {x: point.x, y: 0};
+        }
         return {x: point.x, y: point.y};
       }
     }

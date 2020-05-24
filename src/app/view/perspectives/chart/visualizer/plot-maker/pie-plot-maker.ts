@@ -20,9 +20,9 @@
 import {Data, Layout, PlotType} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {shadeColor} from '../../../../../shared/utils/html-modifier';
 import {ChartDataSet} from '../../data/convertor/chart-data';
 import {PlotMaker} from './plot-maker';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 const MAX_COLUMNS = 3;
 
@@ -46,10 +46,12 @@ export class PiePlotMaker extends PlotMaker {
   }
 
   private getSets(): ChartDataSet[] {
+    if (this.chartData.y1AxisData?.constraintType !== ConstraintType.Number) {
+      return [];
+    }
     return this.chartData.sets.filter(
       set =>
         set.yAxisType === ChartAxisType.Y1 &&
-        // TODO this.isNumericCategory(set.yAxis && set.yAxis.category) &&
         set.points.some(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
     );
   }
@@ -59,10 +61,7 @@ export class PiePlotMaker extends PlotMaker {
   }
 
   private createEmptyPie(): Data {
-    // const setWithColor = this.chartData.sets.find(set => isNotNullOrUndefined(set.color));
-    // const color = setWithColor && setWithColor.color;
-
-    const dataStyle = {
+    return {
       ...this.getDataStyle(),
       showlegend: false,
       hoverinfo: 'none' as const,
@@ -70,10 +69,6 @@ export class PiePlotMaker extends PlotMaker {
       labels: [''],
       values: [20]
     };
-    // if (color) {
-    //   dataStyle.marker = {colors: [shadeColor(color, 0.7)]};
-    // }
-    return dataStyle;
   }
 
   private createAxesData(dataStyle: Data, set: ChartDataSet, row?: number, column?: number): Data {
@@ -101,19 +96,18 @@ export class PiePlotMaker extends PlotMaker {
       return value;
     }
 
-
     // TODO
-    // const category = this.axisCategory(ChartAxisType.X);
-    // const config = this.axisConfig(ChartAxisType.X);
-
     // if (category === ChartAxisCategory.Date) {
     //   const dateConfig = config as DateTimeConstraintConfig;
     //   const format = convertChartDateFormat(dateConfig && dateConfig.format);
     //   const constraint = new DateTimeConstraint({format} as DateTimeConstraintConfig);
     //   return constraint.createDataValue(value).preview();
-    // } else if (category === ChartAxisCategory.Percentage) {
-    //   return value + '%';
-    // }
+    //}
+
+    const constraintType = this.axisConstraintType(ChartAxisType.X);
+    if (constraintType === ConstraintType.Percentage) {
+      return value + '%';
+    }
 
     return value;
   }

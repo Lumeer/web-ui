@@ -45,24 +45,24 @@ export class NumberDataValue implements NumericDataValue {
     this.bigNumber = convertToBig(unformatted);
   }
 
-  public format(): string {
+  public format(minDecimalPlaces?: number): string {
     if (isNotNullOrUndefined(this.inputValue)) {
       return removeNonNumberCharacters(this.inputValue);
     }
 
     if (this.bigNumber) {
-      return numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
+      return numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config, minDecimalPlaces));
     }
 
     return formatUnknownDataValue(this.value);
   }
 
-  public preview(): string {
-    return this.format();
+  public preview(minDecimalPlaces?: number): string {
+    return this.format(minDecimalPlaces);
   }
 
-  public title(): string {
-    return unescapeHtml(this.format());
+  public title(minDecimalPlaces?: number): string {
+    return unescapeHtml(this.format(minDecimalPlaces));
   }
 
   public editValue(): string {
@@ -135,7 +135,7 @@ export class NumberDataValue implements NumericDataValue {
   }
 }
 
-function parseNumbroConfig(config: NumberConstraintConfig): any {
+function parseNumbroConfig(config: NumberConstraintConfig, minDecimalPlaces?: number): any {
   if (!config) {
     return {};
   }
@@ -154,8 +154,9 @@ function parseNumbroConfig(config: NumberConstraintConfig): any {
   if (config.negative) {
     numbroConfig['negative'] = 'parenthesis';
   }
-  if (isNumeric(config.decimals)) {
-    numbroConfig['mantissa'] = config.decimals;
+  if (isNumeric(config.decimals || minDecimalPlaces)) {
+    numbroConfig['mantissa'] = config.decimals || minDecimalPlaces;
+    numbroConfig['trimMantissa'] = !isNumeric(config.decimals);
   }
   return numbroConfig;
 }

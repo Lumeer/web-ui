@@ -19,13 +19,11 @@
 
 import * as moment from 'moment';
 import {d3, Layout} from 'plotly.js';
-import {
-  ConstraintConfig,
-} from '../../../../../core/model/data/constraint-config';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
 import {DraggablePlotMaker} from './draggable-plot-maker';
-import {ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartAxisData, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -34,26 +32,53 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
   public abstract getSetIndexForTraceIndex(traceIx: number): number;
 
-  public abstract getPointPosition(point: any, datum: any): {x: number; y: number};
+  public abstract getPointPosition(point: any, datum: any): { x: number; y: number };
 
   public abstract getPointNewY(point: any, datum: any, event: any): number;
 
   protected xAxisLayout(): Partial<Layout> {
-    // TODO
-    return {};
+    const layout: Partial<Layout> = {};
+    const data = this.chartData.xAxisData;
+    if (data) {
+      layout.xaxis = {};
+      layout.xaxis.rangeslider = {visible: data.rangeSlider || false}
+      if (data.formatter) {
+        layout.xaxis.tickformat = 'xFormatter';
+      }
+    }
+
+    return layout;
   }
 
   protected yAxis1Layout(): Partial<Layout> {
-    // TODO
-    return {};
+    const data = this.chartData.y1AxisData;
+    const layout: Partial<Layout> = {};
+    if (data) {
+      layout.yaxis = {};
+      if (data.range) {
+        layout.yaxis.range = data.range;
+      }
+      if (data.formatter) {
+        layout.yaxis.tickformat = 'y1Formatter';
+      }
+    }
+
+    return layout;
   }
 
   protected yAxis2Layout(): Partial<Layout> {
-    if (!this.isY2AxisPresented()) {
-      return {};
+    const data = this.chartData.y2AxisData;
+    const layout: Partial<Layout> = {};
+    if (data) {
+      layout.yaxis2 = {overlaying: 'y', side: 'right',};
+      if (data.range) {
+        layout.yaxis2.range = data.range;
+      }
+      if (data.formatter) {
+        layout.yaxis2.tickformat = 'y2Formatter';
+      }
     }
-
-    return {}
+    return layout;
   }
 
   protected getYAxisCategories(type: ChartYAxisType): string[] {
@@ -199,11 +224,10 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         initialValue = isNumeric(initialValue) ? toNumber(initialValue) : initialValue;
         const lastValue = initialValue;
 
-        // const traceSetAxis = plotMaker.traceSet(setIx);
-        const axisCategory = null; // TODO
-        const config = null;
+        const traceSet = plotMaker.traceData(setIx);
+        const constraintType = traceSet?.constraintType;
 
-        let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, axisCategory, config};
+        let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, constraintType};
 
         if (isNotNullOrUndefined(datum.y)) {
           const initialY = yScale.invert(initialValue);
@@ -235,7 +259,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
           this.newValue = newValue;
           pointData.lastValue = this.newValue;
           const dataChange = {trace: pointData.traceIx, axis: 'y', index, value: this.newValue};
-          plotMaker.onDataChanged && plotMaker.onDataChanged(dataChange);
+          plotMaker.onDataChanged?.(dataChange);
         }
       })
       .on('dragend', function (datum: any) {
@@ -249,12 +273,20 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         const valueChanged = value !== pointData.initialValue;
 
         valueChanged &&
-          pointId &&
-          setId &&
-          isNotNullOrUndefined(value) &&
-          plotMaker.onValueChanged &&
-          plotMaker.onValueChanged({pointId, setId, value, resourceType: resourceType});
+        pointId &&
+        setId &&
+        isNotNullOrUndefined(value) &&
+        plotMaker.onValueChanged?.({pointId, setId, value, resourceType: resourceType});
       });
+  }
+
+  private traceData(setIx: number): ChartAxisData {
+    const set = this.chartData.sets[setIx];
+    if (set?.yAxisType === ChartAxisType.Y2) {
+      return this.chartData.y2AxisData;
+    }
+
+    return this.chartData.y1AxisData;
   }
 
   private getInitialValue(setIx: number, index: number): string | number {
@@ -277,18 +309,18 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const newY = this.getPointNewY(point, datum, event);
     const newValue = pointData.yScale(newY);
 
-    // if (pointData.axisCategory === ChartAxisCategory.Duration) {
-    //   return Math.max(toNumber(newValue), 0);
-    // }
-    //
+    if (pointData.constraintType === ConstraintType.Duration) {
+      return Math.max(toNumber(newValue), 0);
+    }
+
     // if (pointData.axisCategory === ChartAxisCategory.Date) {
     //   const config = pointData.config && (pointData.config as DateTimeConstraintConfig);
     //   return moment(new Date(newValue)).format(convertChartDateFormat(config && config.format));
     // }
-    //
-    // if (!this.isNumericCategory(pointData.axisCategory)) {
-    //   return newValue.toString();
-    // }
+
+    if (!this.isNumericType(pointData.constraintType)) {
+      return newValue.toString();
+    }
 
     const initialValue = pointData.initialValue;
     if (this.isDecimal(+initialValue)) {
@@ -313,10 +345,9 @@ export interface PointData {
   yScale: (val: number) => string | number;
   initialValue: string | number;
   lastValue: string | number;
-  // axisCategory: ChartAxisCategory;
-  config: ConstraintConfig;
+  constraintType: ConstraintType;
   initialY?: number;
-  offset?: {top: number; left: number};
+  offset?: { top: number; left: number };
   clickedY?: number;
 }
 

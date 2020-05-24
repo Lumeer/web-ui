@@ -29,7 +29,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {Constraint} from '../../../../core/model/constraint';
-import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -39,18 +38,16 @@ import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {ClickEvent, ValueChange} from '../visualizer/plot-maker-old/plot-maker-old';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import * as moment from 'moment';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AttributesResourceType, DataResource, Resource} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
-import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
 import {ModalService} from '../../../../shared/modal/modal.service';
 import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {ChartData} from './convertor/chart-data';
 import {ChartDataConverter} from './convertor/chart-data-converter';
+import {ClickEvent, ValueChange} from '../visualizer/plot-maker/plot-maker';
 
 interface Data {
   collections: Collection[];
@@ -297,11 +294,6 @@ export class ChartDataComponent implements OnInit, OnChanges {
     //   if (constraint.type === ConstraintType.DateTime) {
     //     const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
     //     return moment(value, convertChartDateFormat(config?.format)).toISOString();
-    //   } else if (constraint.type === ConstraintType.Percentage) {
-    //     return (<PercentageConstraint>constraint)
-    //       .createDataValue(value)
-    //       .parseInput(String(value || 0))
-    //       .serialize();
     //   }
     // }
 

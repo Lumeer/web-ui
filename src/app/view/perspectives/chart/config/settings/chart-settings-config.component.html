@@ -1,0 +1,29 @@
+<div class="custom-control custom-checkbox mt-2">
+  <input [id]="lockAxesId"
+         [attr.checked]="config.lockAxes"
+         [checked]="config.lockAxes"
+         (change)="onLockAxesChange($event.target.checked)"
+         type="checkbox"
+         #lockAxes
+         class="custom-control-input">
+  <label [for]="lockAxesId"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.chart.config.lockAxes" class="user-select-none cursor-pointer"
+        (click)="lockAxes.click()">Lock axes</span>
+</div>
+
+<div class="custom-control custom-checkbox mt-2">
+  <input [id]="rangeSliderId"
+         [attr.checked]="config.rangeSlider"
+         [checked]="config.rangeSlider"
+         (change)="onRangeSliderChange($event.target.checked)"
+         type="checkbox"
+         #rangeSlider
+         class="custom-control-input">
+  <label [for]="rangeSliderId"
+         class="custom-control-label">
+  </label>
+  <span i18n="@@perspective.chart.config.rangeSlider" class="user-select-none cursor-pointer"
+        (click)="rangeSlider.click()">Show range slider</span>
+</div>

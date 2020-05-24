@@ -19,13 +19,14 @@
 
 import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {AttributesResourceType} from '../../../../../core/model/resource';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 export interface ChartData {
   sets: ChartDataSet[];
   type: ChartType;
-  xAxis?: ChartAxisData;
-  y1Axis?: ChartAxisData;
-  y2Axis?: ChartAxisData;
+  xAxisData?: ChartAxisData;
+  y1AxisData?: ChartAxisData;
+  y2AxisData?: ChartAxisData;
 }
 
 export interface ChartDataSet {
@@ -50,6 +51,7 @@ export interface ChartAxisData {
   formatter?: (x: number) => string;
   range?: [number, number];
   rangeSlider?: boolean;
+  constraintType: ConstraintType;
 }
 
 export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;

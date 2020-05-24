@@ -57,7 +57,7 @@ export class DurationDataValue implements NumericDataValue {
   }
 
   public format(maxUnits?: number): string {
-    return this.formatWithUnitsMap(this.constraintData && this.constraintData.durationUnitsMap, maxUnits);
+    return this.formatWithUnitsMap(this.constraintData?.durationUnitsMap, maxUnits);
   }
 
   private formatToNativeLocale(): string {
@@ -76,12 +76,12 @@ export class DurationDataValue implements NumericDataValue {
     return formatDurationDataValue(this.value, this.config, durationUnitsMap, maxUnits);
   }
 
-  public preview(): string {
-    return this.format();
+  public preview(maxUnits?: number): string {
+    return this.format(maxUnits);
   }
 
-  public title(): string {
-    return unescapeHtml(this.format());
+  public title(maxUnits?: number): string {
+    return unescapeHtml(this.format(maxUnits));
   }
 
   public editValue(): string {

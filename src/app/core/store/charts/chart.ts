@@ -35,6 +35,8 @@ export interface ChartConfig {
   colors?: Record<string, ChartAxis>;
   aggregations?: Record<string, DataAggregationType>;
   prediction?: boolean;
+  lockAxes?: boolean;
+  rangeSlider?: boolean;
   sort?: ChartSort;
 }
 
