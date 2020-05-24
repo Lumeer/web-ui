@@ -962,7 +962,43 @@
           <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
-      </trans-unit><trans-unit id="button.create" datatype="html">
+      </trans-unit><trans-unit id="verifyEmail.title" datatype="html">
+        <source>Please Verify Your Email</source><target state="final">Please Verify Your Email</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="verifyEmail.info" datatype="html">
+        <source>Please verify your email by clicking on the link that we have sent you. Then hit Reload.</source><target state="final">Please verify your email by clicking on the link that we have sent you. Then hit Reload.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">14</context></context-group></trans-unit><trans-unit id="verifyEmail.thankYou" datatype="html">
+        <source>Thank you.</source><target state="final">Thank you.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="verifyEmail.button.resendEmail" datatype="html">
+        <source>Resend Verification Email</source><target state="final">Resend Verification Email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.button.sending" datatype="html">
+        <source>Sending...</source><target state="final">Sending...</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.button.emailFailure" datatype="html">
+        <source>Could Not Send Email</source><target state="final">Could Not Send Email</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.button.emailSent" datatype="html">
+        <source>Email Sent</source><target state="final">Email Sent</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.reload" datatype="html">
+        <source>Reload</source><target state="final">Reload</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="button.create" datatype="html">
         <source>Create</source><target state="final">Create</target>
 
 
@@ -2130,6 +2166,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/map/content/loading/map-loading.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="map.image.controls.home" datatype="html">
+        <source>Reset zoom</source><target state="final">Reset zoom</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/render/map-image-render.component.html</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.map.config.sidebar.image.title" datatype="html">
         <source>
@@ -3478,6 +3520,12 @@
       </trans-unit>
       <trans-unit id="currentUser.get.fail" datatype="html">
         <source>Could not get user details</source><target state="final">Could not get user details</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="currentUser.resendVerificationEmail.fail" datatype="html">
+        <source>Could not request another verification email</source><target state="final">Could not request another verification email</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>

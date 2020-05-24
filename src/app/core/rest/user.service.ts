@@ -77,6 +77,10 @@ export class UserService {
     return this.httpClient.get<UserDto>(`${this.usersApiPrefix()}/current`);
   }
 
+  public resendVerificationEmail(): Observable<any> {
+    return this.httpClient.get(`${this.usersApiPrefix()}/current/resend`);
+  }
+
   public getUserReferrals(): Observable<PaymentStats> {
     return this.httpClient.get<PaymentStats>(`${this.usersApiPrefix()}/current/referrals`);
   }

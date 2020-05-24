@@ -32,4 +32,5 @@ export interface UserDto {
   lastLoggedIn?: number;
   referral?: string;
   affiliatePartner?: boolean;
+  emailVerified?: boolean;
 }

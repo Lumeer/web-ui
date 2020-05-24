@@ -17,32 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Group} from '../groups/group';
-import {PaymentStats} from '../organizations/payment/payment';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {VerifyEmailModalComponent} from './verify-email-modal.component';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 
-export interface User {
-  id?: string;
-  name?: string;
-  email: string;
-  groupsMap: Record<string, string[]>;
-  groups?: Group[];
-  defaultWorkspace?: DefaultWorkspace;
-  agreement?: boolean;
-  agreementDate?: Date;
-  newsletter?: boolean;
-  wizardDismissed?: boolean;
-  lastLoggedIn?: Date;
-  referral?: string;
-  referrals?: PaymentStats;
-  affiliatePartner?: boolean;
-  emailVerified?: boolean;
-
-  correlationId?: string;
-}
-
-export interface DefaultWorkspace {
-  organizationCode?: string;
-  organizationId: string;
-  projectCode?: string;
-  projectId: string;
-}
+@NgModule({
+  declarations: [VerifyEmailModalComponent],
+  imports: [CommonModule, ModalWrapperModule],
+  exports: [VerifyEmailModalComponent],
+})
+export class VerifyEmailModalModule {}

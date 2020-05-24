@@ -470,6 +470,19 @@ div[contenteditable='true'].form-control {
   }
 }
 
+.modal-backdrop {
+  background-color: $gray-500;
+}
+
+.modal-backdrop.fade {
+  opacity: 0;
+}
+
+.modal-backdrop.show {
+  opacity: 0.5;
+  backdrop-filter: blur(5px);
+}
+
 .card-template {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

@@ -706,6 +706,54 @@
           <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
+      </trans-unit><trans-unit id="verifyEmail.title" datatype="html">
+        <source>Please Verify Your Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.info" datatype="html">
+        <source>Please verify your email by clicking on the link that we have sent you. Then hit Reload.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.thankYou" datatype="html">
+        <source>Thank you.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.button.resendEmail" datatype="html">
+        <source>Resend Verification Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.button.sending" datatype="html">
+        <source>Sending...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.button.emailFailure" datatype="html">
+        <source>Could Not Send Email</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit><trans-unit id="verifyEmail.button.emailSent" datatype="html">
+        <source>Email Sent</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.reload" datatype="html">
+        <source>Reload</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
       </trans-unit><trans-unit id="sequence.list.sequenceName" datatype="html">
         <source>Sequence Name</source>
         <context-group purpose="location">
@@ -2980,6 +3028,12 @@
           <context context-type="sourcefile">app/view/perspectives/map/content/loading/map-loading.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
+      </trans-unit><trans-unit id="map.image.controls.home" datatype="html">
+        <source>Reset zoom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/map/content/image-content/render/map-image-render.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.map.config.sidebar.image.title" datatype="html">
         <source>
   Image layer
@@ -4775,6 +4829,13 @@
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="currentUser.resendVerificationEmail.fail" datatype="html">
+        <source>Could not request another verification email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
           <context context-type="linenumber">1</context>
