@@ -19,7 +19,7 @@
 
 import {isNullOrUndefined, toNumber} from '../../../../../shared/utils/common.utils';
 
-export function createRange(values: number[]): any[] {
+export function createRange(values: number[]): [number, number] {
   let min = null;
   let max = null;
 

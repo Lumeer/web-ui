@@ -19,30 +19,13 @@
 
 import * as moment from 'moment';
 import {d3, Layout} from 'plotly.js';
-import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
 import {
   ConstraintConfig,
-  DateTimeConstraintConfig,
-  DurationConstraintConfig,
 } from '../../../../../core/model/data/constraint-config';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {createDateTimeOptions} from '../../../../../shared/date-time/date-time-options';
-import {uniqueValues} from '../../../../../shared/utils/array.utils';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
-import {
-  formatDurationDataValue,
-  getDurationSaveValue,
-} from '../../../../../shared/utils/constraint/duration-constraint.utils';
-import {
-  ChartAxisCategory,
-  ChartDataSetAxis,
-  ChartYAxisType,
-  checkKnownOverrideFormatEntry,
-  convertChartDateFormat,
-} from '../../data/convertor/chart-data';
-import {convertChartDateTickFormat} from '../chart-util';
 import {DraggablePlotMaker} from './draggable-plot-maker';
-import {createRange} from './plot-util';
+import {ChartYAxisType} from '../../data/convertor/chart-data';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPoints(): any;
@@ -56,214 +39,13 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPointNewY(point: any, datum: any, event: any): number;
 
   protected xAxisLayout(): Partial<Layout> {
-    const category = this.axisCategory(ChartAxisType.X);
-    const config = this.axisConfig(ChartAxisType.X);
-    if (category === ChartAxisCategory.Date) {
-      const dateConfig = config as DateTimeConstraintConfig;
-      const {values, titles} = this.createXDateTicks(dateConfig);
-      if (this.shouldShowDateAsArrayTicks(values.length, dateConfig.format)) {
-        return {
-          xaxis: {
-            tickmode: 'array',
-            tickvals: values,
-            ticktext: titles,
-          },
-        };
-      }
-
-      const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
-      return {
-        xaxis: {
-          type: 'date',
-          tickformat: tickFormat,
-          hoverformat: tickFormat,
-        },
-      };
-    } else if (category === ChartAxisCategory.Percentage) {
-      return {
-        xaxis: {
-          ticksuffix: '%',
-        },
-      };
-    } else if (category === ChartAxisCategory.Duration) {
-      const {values, titles} = this.createXDurationTicks(config as DurationConstraintConfig);
-      return {
-        xaxis: {
-          tickmode: 'array',
-          tickvals: values,
-          ticktext: titles,
-        },
-      };
-    }
+    // TODO
     return {};
   }
 
-  private shouldShowDateAsArrayTicks(numValues: number, format: string): boolean {
-    if (numValues < 1) {
-      return false;
-    }
-
-    const knowFormatEntry = checkKnownOverrideFormatEntry(format);
-    const options = createDateTimeOptions(format);
-    if (knowFormatEntry || !options.year) {
-      // plotly needs year in format in order to show correctly as interval
-      return true;
-    }
-
-    return false;
-  }
-
-  private createXDateTicks(config: DateTimeConstraintConfig): {values: number[]; titles: string[]} {
-    return this.createDateTicks(config, 'x');
-  }
-
-  private createYDateTicks(config: DateTimeConstraintConfig, yAxisType: ChartYAxisType) {
-    return this.createDateTicks(config, 'y', yAxisType);
-  }
-
-  private createDateTicks(
-    config: DateTimeConstraintConfig,
-    param: string,
-    yAxisType?: ChartYAxisType
-  ): {values: number[]; titles: string[]} {
-    const chartFormat = convertChartDateFormat(config.format);
-    const values = this.chartData.sets
-      .reduce((allValues, set) => {
-        if (yAxisType && set.yAxisType !== yAxisType) {
-          return allValues;
-        }
-
-        const setValues = set.points
-          .map(point => this.createDateValue(point[param], chartFormat))
-          .filter(value => isNotNullOrUndefined(value));
-        allValues.push(...setValues);
-        return uniqueValues<number>(allValues);
-      }, [])
-      .sort();
-
-    const constraint = new DateTimeConstraint(config);
-    const titles = values.map(value => constraint.createDataValue(value).preview());
-    return {values, titles};
-  }
-
-  protected createDateValue(value: any, format: string): number {
-    const momentDate = isNotNullOrUndefined(value) ? moment(value, format) : null;
-    return momentDate && momentDate.isValid() ? momentDate.toDate().getTime() : null;
-  }
-
-  private createXDurationTicks(config: DurationConstraintConfig): {values: number[]; titles: string[]} {
-    const values = this.chartData.sets
-      .reduce((allValues, set) => {
-        const setValues = set.points
-          .filter(point => isNotNullOrUndefined(point.x) && isNumeric(point.x))
-          .map(point => point.x);
-        allValues.push(...setValues);
-        return uniqueValues<number>(allValues);
-      }, [])
-      .sort();
-
-    const durationUnitsMap = this.chartData.constraintData && this.chartData.constraintData.durationUnitsMap;
-    const titles = values.map(value => formatDurationDataValue(value, config, durationUnitsMap));
-    return {values, titles};
-  }
-
   protected yAxis1Layout(): Partial<Layout> {
-    const category = this.axisCategory(ChartAxisType.Y1);
-    const config = this.axisConfig(ChartAxisType.Y1);
-    if (category === ChartAxisCategory.Number) {
-      return {
-        yaxis: {
-          range: this.createRange(),
-        },
-      };
-    } else if (category === ChartAxisCategory.Duration) {
-      const durationConfig = config as DurationConstraintConfig;
-      const range = this.createRange(true);
-      const {values, titles} = this.createYDurationTicks(range, durationConfig);
-      return {
-        yaxis: {
-          range: this.areBothYAxisPresented() ? range : null,
-          tickmode: 'array',
-          tickvals: values,
-          ticktext: titles,
-        },
-      };
-    } else if (category === ChartAxisCategory.Date) {
-      const dateConfig = config as DateTimeConstraintConfig;
-      const {values, titles} = this.createYDateTicks(dateConfig, ChartAxisType.Y1);
-      if (this.shouldShowDateAsArrayTicks(values.length, dateConfig.format)) {
-        return {
-          yaxis: {
-            range: [values[0], values[values.length - 1]],
-            tickmode: 'array',
-            tickvals: values,
-            ticktext: titles,
-          },
-        };
-      }
-
-      const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
-      return {
-        yaxis: {
-          type: 'date',
-          tickformat: tickFormat,
-          hoverformat: tickFormat,
-        },
-      };
-    } else if (category === ChartAxisCategory.Percentage) {
-      return {
-        yaxis: {
-          ticksuffix: '%',
-        },
-      };
-    }
-
-    return {
-      yaxis: {
-        type: 'category',
-        categoryarray: this.getYAxisCategories(ChartAxisType.Y1),
-      },
-    };
-  }
-
-  private createYDurationTicks(
-    range: number[],
-    config: DurationConstraintConfig
-  ): {values: number[]; titles: string[]} {
-    const durationUnitsMap = this.chartData.constraintData && this.chartData.constraintData.durationUnitsMap;
-    const optimalTickApproxValue = Math.floor((range[1] - range[0]) / 6);
-    const optimalTickApproxValueString = formatDurationDataValue(optimalTickApproxValue, config, durationUnitsMap, 1);
-    const optimalTick = getDurationSaveValue(optimalTickApproxValueString, config, durationUnitsMap);
-    const numTicks = Math.floor((range[1] * 2) / optimalTick);
-    const values = [0];
-    const titles = ['0'];
-    for (let i = 1; i < numTicks; i++) {
-      const value = i * optimalTick;
-      values.push(value);
-      titles.push(formatDurationDataValue(value, config, durationUnitsMap));
-    }
-    return {values, titles};
-  }
-
-  private createRange(force?: boolean): any[] {
-    if (
-      !force &&
-      (!this.areBothYAxisPresented() ||
-        !this.isNumericCategory(this.axisCategory(ChartAxisType.Y1)) ||
-        !this.isNumericCategory(this.axisCategory(ChartAxisType.Y2)))
-    ) {
-      return null;
-    }
-
-    const values = this.chartData.sets.reduce((allValues, set) => {
-      const setValues = set.points
-        .filter(point => isNotNullOrUndefined(point.y) && isNumeric(point.y))
-        .map(point => point.y);
-      allValues.push(...setValues);
-      return allValues;
-    }, []);
-
-    return createRange(values);
+    // TODO
+    return {};
   }
 
   protected yAxis2Layout(): Partial<Layout> {
@@ -271,108 +53,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       return {};
     }
 
-    const category = this.axisCategory(ChartAxisType.Y2);
-    const config = this.axisConfig(ChartAxisType.Y2);
-    if (category === ChartAxisCategory.Number) {
-      return {
-        yaxis2: {
-          overlaying: 'y',
-          side: 'right',
-          range: this.createRange(),
-        },
-      };
-    } else if (category === ChartAxisCategory.Duration) {
-      const durationConfig = config as DurationConstraintConfig;
-      const range = this.createRange(true);
-      const {values, titles} = this.createYDurationTicks(range, durationConfig);
-      return {
-        yaxis2: {
-          overlaying: 'y',
-          side: 'right',
-          range: this.areBothYAxisPresented() ? range : null,
-          tickmode: 'array',
-          tickvals: values,
-          ticktext: titles,
-        },
-      };
-    } else if (category === ChartAxisCategory.Date) {
-      const dateConfig = config as DateTimeConstraintConfig;
-      const {values, titles} = this.createYDateTicks(dateConfig, ChartAxisType.Y2);
-      if (this.shouldShowDateAsArrayTicks(values.length, dateConfig.format)) {
-        return {
-          yaxis2: {
-            overlaying: 'y',
-            side: 'right',
-            range: [values[0], values[values.length - 1]],
-            tickmode: 'array',
-            tickvals: values,
-            ticktext: titles,
-          },
-        };
-      }
-
-      const tickFormat = convertChartDateTickFormat(dateConfig && dateConfig.format);
-      return {
-        yaxis2: {
-          overlaying: 'y',
-          side: 'right',
-          type: 'date',
-          tickformat: tickFormat,
-          hoverformat: tickFormat,
-        },
-      };
-    } else if (category === ChartAxisCategory.Percentage) {
-      return {
-        yaxis2: {
-          overlaying: 'y',
-          side: 'right',
-          ticksuffix: '%',
-        },
-      };
-    }
-
-    return {
-      yaxis2: {
-        overlaying: 'y',
-        side: 'right',
-        type: 'category',
-        categoryarray: this.getYAxisCategories(ChartAxisType.Y2),
-      },
-    };
-  }
-
-  protected formatXTrace(trace: any[], axis: ChartDataSetAxis): any[] {
-    if (!axis) {
-      return trace;
-    }
-
-    if (axis.category === ChartAxisCategory.Date) {
-      const layout = this.xAxisLayout();
-      if (layout && layout.xaxis && layout.xaxis.tickmode === 'array') {
-        const config = axis.config as DateTimeConstraintConfig;
-        const chartFormat = convertChartDateFormat(config.format);
-        return trace.map(value => this.createDateValue(value, chartFormat));
-      }
-    }
-
-    return trace;
-  }
-
-  protected getYTraceTexts(trace: any[], axis: ChartDataSetAxis): any[] {
-    if (!axis || !axis.config) {
-      return trace;
-    }
-
-    if (axis.category === ChartAxisCategory.Duration) {
-      const config = axis.config as DurationConstraintConfig;
-      const durationUnitsMap =
-        this.chartData && this.chartData.constraintData && this.chartData.constraintData.durationUnitsMap;
-      return trace.map(value =>
-        isNotNullOrUndefined(value) ? formatDurationDataValue(value, config, durationUnitsMap) : value
-      );
-    }
-
-    return trace;
+    return {}
   }
 
   protected getYAxisCategories(type: ChartYAxisType): string[] {
@@ -518,9 +199,9 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         initialValue = isNumeric(initialValue) ? toNumber(initialValue) : initialValue;
         const lastValue = initialValue;
 
-        const traceSetAxis = plotMaker.traceSet(setIx);
-        const axisCategory = traceSetAxis && traceSetAxis.category;
-        const config = traceSetAxis && traceSetAxis.config;
+        // const traceSetAxis = plotMaker.traceSet(setIx);
+        const axisCategory = null; // TODO
+        const config = null;
 
         let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, axisCategory, config};
 
@@ -580,10 +261,6 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     return this.chartData.sets[setIx].points[index].y;
   }
 
-  private traceSet(setIx: number): ChartDataSetAxis {
-    return this.chartData.sets[setIx].yAxis;
-  }
-
   private getElementOffset(element: Element) {
     const bound = element.getBoundingClientRect();
     const html = document.documentElement;
@@ -600,18 +277,18 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const newY = this.getPointNewY(point, datum, event);
     const newValue = pointData.yScale(newY);
 
-    if (pointData.axisCategory === ChartAxisCategory.Duration) {
-      return Math.max(toNumber(newValue), 0);
-    }
-
-    if (pointData.axisCategory === ChartAxisCategory.Date) {
-      const config = pointData.config && (pointData.config as DateTimeConstraintConfig);
-      return moment(new Date(newValue)).format(convertChartDateFormat(config && config.format));
-    }
-
-    if (!this.isNumericCategory(pointData.axisCategory)) {
-      return newValue.toString();
-    }
+    // if (pointData.axisCategory === ChartAxisCategory.Duration) {
+    //   return Math.max(toNumber(newValue), 0);
+    // }
+    //
+    // if (pointData.axisCategory === ChartAxisCategory.Date) {
+    //   const config = pointData.config && (pointData.config as DateTimeConstraintConfig);
+    //   return moment(new Date(newValue)).format(convertChartDateFormat(config && config.format));
+    // }
+    //
+    // if (!this.isNumericCategory(pointData.axisCategory)) {
+    //   return newValue.toString();
+    // }
 
     const initialValue = pointData.initialValue;
     if (this.isDecimal(+initialValue)) {
@@ -636,7 +313,7 @@ export interface PointData {
   yScale: (val: number) => string | number;
   initialValue: string | number;
   lastValue: string | number;
-  axisCategory: ChartAxisCategory;
+  // axisCategory: ChartAxisCategory;
   config: ConstraintConfig;
   initialY?: number;
   offset?: {top: number; left: number};

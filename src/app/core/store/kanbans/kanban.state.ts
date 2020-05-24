@@ -35,7 +35,7 @@ export const selectKanbanById = id => createSelector(selectKanbansDictionary, ka
 
 export const selectKanbanId = createSelector(
   selectWorkspace,
-  workspace => (workspace && workspace.viewCode) || DEFAULT_KANBAN_ID
+  workspace => workspace?.viewCode || DEFAULT_KANBAN_ID
 );
 
 export const selectKanban = createSelector(selectKanbansDictionary, selectKanbanId, (map, id) => map[id]);

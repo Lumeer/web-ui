@@ -21,7 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {Constraint} from '../../../../../core/model/constraint';
 import {AttributesResource} from '../../../../../core/model/resource';
 import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
-import {ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartYAxisType} from '../../data/convertor-old/chart-data-old';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';

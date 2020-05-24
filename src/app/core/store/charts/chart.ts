@@ -32,6 +32,7 @@ export interface ChartConfig {
   type: ChartType;
   axes: Record<string, ChartAxis>;
   names?: Record<string, ChartAxis>;
+  colors?: Record<string, ChartAxis>;
   aggregations?: Record<string, DataAggregationType>;
   prediction?: boolean;
   sort?: ChartSort;

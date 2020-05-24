@@ -57,7 +57,6 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'calendar',
@@ -77,14 +76,13 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   public sidebarOpened$ = new BehaviorSubject(false);
   public query$ = new BehaviorSubject<Query>(null);
-  private calendarId: string;
 
+  private calendarId: string;
   private subscriptions = new Subscription();
 
   constructor(
     private store$: Store<AppState>,
     private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private i18n: I18n
   ) {}
 
   public ngOnInit() {
@@ -144,7 +142,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     return this.store$.pipe(
       select(selectQuery),
       withLatestFrom(this.store$.pipe(select(selectCalendarById(calendarId)))),
-      mergeMap(([, gantt]) => this.checkCalendarConfig(gantt?.config)),
+      mergeMap(([, calendar]) => this.checkCalendarConfig(calendar?.config)),
       map(config => ({calendarId, config}))
     );
   }

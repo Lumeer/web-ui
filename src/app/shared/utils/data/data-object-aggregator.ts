@@ -203,6 +203,10 @@ export class DataObjectAggregator<T> {
     dataObjectsInfo.push(dataObjectInfoCopy);
   }
 
+  public getDataResources(attribute: QueryAttribute): DataResource[] {
+    return this.dataAggregator.getDataResources(attribute?.resourceIndex);
+  }
+
   public getNextCollectionResource(index: number): AttributesResource {
     return this.dataAggregator.getNextCollectionResource(index);
   }

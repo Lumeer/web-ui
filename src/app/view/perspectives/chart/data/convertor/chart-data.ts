@@ -17,122 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
-import {createDateTimeOptions, hasTimeOption} from '../../../../../shared/date-time/date-time-options';
 import {AttributesResourceType} from '../../../../../core/model/resource';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {
-  dateReadableFormatsMap,
-  DateReadableFormatType,
-} from '../../../../../shared/select/select-constraint-item/constraint/date-time';
 
 export interface ChartData {
   sets: ChartDataSet[];
   type: ChartType;
-  constraintData?: ConstraintData;
+  xAxis?: ChartAxisData;
+  y1Axis?: ChartAxisData;
+  y2Axis?: ChartAxisData;
 }
 
 export interface ChartDataSet {
   id: string;
   points: ChartPoint[];
-  color: string;
+  draggable: boolean;
   yAxisType: ChartYAxisType;
   name: string;
-  draggable: boolean;
   resourceType: AttributesResourceType;
-  xAxis?: ChartDataSetAxis;
-  yAxis?: ChartDataSetAxis;
-}
-
-export interface ChartDataSetAxis {
-  category: ChartAxisCategory;
-  config?: ConstraintConfig;
 }
 
 export interface ChartPoint {
   id?: string;
   x?: any;
   y?: any;
+  title?: string;
+  color?: string;
   isPrediction?: boolean;
 }
 
-export enum ChartAxisCategory {
-  Date = 'date',
-  Percentage = 'percentage',
-  Duration = 'duration',
-  Number = 'number',
-  Text = 'text',
+export interface ChartAxisData {
+  formatter?: (x: number) => string;
+  range?: [number, number];
+  rangeSlider?: boolean;
 }
 
 export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;
-
-export function convertChartDateFormat(format: string): string {
-  if (!format) {
-    return 'YYYY-MM-DD';
-  }
-
-  const knowFormatEntry = checkKnownOverrideFormatEntry(format);
-  if (knowFormatEntry) {
-    return knowFormatEntry[1];
-  }
-
-  const options = createDateTimeOptions(format);
-  let chartFormat = '';
-
-  if (options.year) {
-    chartFormat += 'YYYY';
-    if (options.month || options.day) {
-      chartFormat += '-';
-    }
-  }
-
-  if (options.month) {
-    chartFormat += 'MM';
-    if (options.day) {
-      chartFormat += '-';
-    }
-  }
-
-  if (options.day) {
-    chartFormat += 'DD';
-  }
-
-  if (hasTimeOption(options)) {
-    chartFormat += ' ';
-  }
-
-  if (options.hours) {
-    chartFormat += 'HH';
-    if (options.minutes || options.seconds) {
-      chartFormat += ':';
-    }
-  }
-
-  if (options.minutes) {
-    chartFormat += 'mm';
-    if (options.seconds) {
-      chartFormat += ':';
-    }
-  }
-
-  if (options.seconds) {
-    chartFormat += 'ss';
-  }
-
-  return chartFormat;
-}
-
-export function checkKnownOverrideFormatEntry(format: string): [string, string] {
-  return Object.entries(dateReadableFormatsMap).find(([type, knownFormat]) => {
-    if (knownFormat === format) {
-      const notSafeTypes = [
-        DateReadableFormatType.MonthYear,
-        DateReadableFormatType.DayMonth,
-        DateReadableFormatType.DayMonthYear,
-      ];
-      return !notSafeTypes.map(t => t.toString()).includes(type);
-    }
-    return false;
-  });
-}

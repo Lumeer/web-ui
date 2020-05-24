@@ -170,7 +170,7 @@ export function subtractDatesToDurationCountsMap(end: Date, start: Date): Record
 
 const dateFormats = ['DD.MM.YYYY', 'YYYY-MM-DD', 'DD/MM/YYYY', 'MM/DD/YYYY', 'YYYY', 'DD.MM.'];
 
-export function parseDateTimeByConstraint(value: any, constraint: Constraint): Date {
+export function parseDateTimeByConstraint(value: any, constraint: Constraint): Date | null {
   if (!value) {
     return value;
   }
@@ -179,12 +179,12 @@ export function parseDateTimeByConstraint(value: any, constraint: Constraint): D
     return (<DateTimeConstraint>constraint).createDataValue(value).toDate();
   }
 
-  return parseMomentDate(value, null).toDate();
+  return parseMomentDate(value, null)?.toDate();
 }
 
-export function parseMomentDate(value: any, expectedFormat?: string): moment.Moment {
+export function parseMomentDate(value: any, expectedFormat?: string): moment.Moment | null {
   if (!value) {
-    return value;
+    return null;
   }
 
   const formats = [moment.ISO_8601, ...dateFormats];

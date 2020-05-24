@@ -20,7 +20,6 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
   Input,
   OnChanges,
   SimpleChanges,
@@ -28,20 +27,21 @@ import {
   ElementRef,
   Output,
   EventEmitter,
-  OnDestroy,
+  OnDestroy, OnInit,
 } from '@angular/core';
-import {ChartData} from '../convertor/chart-data';
 import {ChartVisualizer} from '../../visualizer/chart-visualizer';
+import * as PlotlyJS from 'plotly.js';
+import * as CSLocale from 'plotly.js/lib/locales/cs.js';
 import {ClickEvent, ValueChange} from '../../visualizer/plot-maker/plot-maker';
+import {ChartData} from '../convertor/chart-data';
 
 @Component({
   selector: 'chart-visualizer',
   templateUrl: './chart-visualizer.component.html',
   styleUrls: ['./chart-visualizer.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartVisualizerComponent implements OnChanges, OnDestroy {
+export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public chartData: ChartData;
 
@@ -55,6 +55,10 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
   private chartElement: ElementRef;
 
   private chartVisualizer: ChartVisualizer;
+
+  public ngOnInit() {
+    (PlotlyJS as any).register(CSLocale);
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.chartData && this.chartData) {
@@ -88,10 +92,10 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.chartVisualizer && this.chartVisualizer.destroyChart();
+    this.chartVisualizer?.destroyChart();
   }
 
   public resize() {
-    this.chartVisualizer && this.chartVisualizer.resize();
+    this.chartVisualizer?.resize();
   }
 }

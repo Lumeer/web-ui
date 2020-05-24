@@ -18,16 +18,19 @@
  */
 
 import {ElementRef} from '@angular/core';
-import {Config, Data, Layout, newPlot, Plots, purge, react} from 'plotly.js';
+import {Config, d3, Data, Layout, newPlot, Plots, purge, react} from 'plotly.js';
 import {environment} from '../../../../../environments/environment';
 import {ChartType} from '../../../../core/store/charts/chart';
 import {isNumeric} from '../../../../shared/utils/common.utils';
+import {formatDurationDataValue} from '../../../../shared/utils/constraint/duration-constraint.utils';
+import {DurationConstraintConfig} from '../../../../core/model/data/constraint-config';
+import {DurationUnitsMap} from '../../../../core/model/data/constraint';
+import {DataChange, PlotMaker} from './plot-maker/plot-maker';
 import {ChartData} from '../data/convertor/chart-data';
-import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 import {LinePlotMaker} from './plot-maker/line-plot-maker';
+import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {PiePlotMaker} from './plot-maker/pie-plot-maker';
-import {ClickEvent, DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
 import {createRange} from './plot-maker/plot-util';
 
 export class ChartVisualizer {
@@ -49,7 +52,24 @@ export class ChartVisualizer {
     private chartElement: ElementRef,
     private onValueChanged: (ValueChange) => void,
     private onDoubleClick: (ClickEvent) => void
-  ) {}
+  ) {
+
+    let currentLocale = d3.locale;
+    d3.locale = (locale) => {
+      let result = currentLocale(locale);
+      let numberFormat = result.numberFormat;
+      result.numberFormat = (format) => {
+        if (format === 'duration') {
+          return (x) => {
+            return formatDurationDataValue(x, {} as DurationConstraintConfig, {} as DurationUnitsMap, 2);
+          }
+        }
+        return numberFormat(format);
+      }
+      return result;
+    }
+
+  }
 
   public createChart(data: ChartData) {
     this.createOrRefreshData(data);
@@ -57,7 +77,7 @@ export class ChartVisualizer {
     newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshListeners());
     this.chartElement.nativeElement.on(
       'plotly_relayout',
-      () => this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).onRelayout()
+      () => (<DraggablePlotMaker>this.plotMaker)?.onRelayout()
     );
   }
 
@@ -93,7 +113,6 @@ export class ChartVisualizer {
 
   public onDataChanged(change: DataChange) {
     this.data[change.trace][change.axis][change.index] = change.value;
-    this.checkLayoutRange();
     this.incRevisionNumber();
     react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
   }

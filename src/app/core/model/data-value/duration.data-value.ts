@@ -89,11 +89,11 @@ export class DurationDataValue implements NumericDataValue {
   }
 
   public serialize(): any {
-    if (!this.bigNumber) {
-      return escapeHtml(formatUnknownDataValue(this.value));
+    if (this.bigNumber) {
+      return convertBigToNumberSafely(this.bigNumber);
     }
 
-    return convertBigToNumberSafely(this.bigNumber);
+    return escapeHtml(formatUnknownDataValue(this.value));
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

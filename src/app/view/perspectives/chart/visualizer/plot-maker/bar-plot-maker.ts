@@ -18,17 +18,17 @@
  */
 
 import {Data, Layout, d3} from 'plotly.js';
-import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
+import {ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 
 export class BarPlotMaker extends AxisDraggablePlotMaker {
   public createData(): Data[] {
     const y1Sets = this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y1);
     const y2Sets = this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y2);
 
-    const helperData: {y1: Data[]; y2: Data[]} = this.createHelperData(y1Sets, y2Sets);
+    const helperData: { y1: Data[]; y2: Data[] } = this.createHelperData(y1Sets, y2Sets);
 
     const y1Data = y1Sets.map(set => this.createAxisData(set));
     const y2Data = y2Sets.map(set => this.createAxisData(set));
@@ -46,60 +46,43 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
 
     const traceX = [];
     const traceY = [];
-
-    const isYCategory = this.isAxisCategoryText(set.yAxisType);
-    const additionalYValues = [];
-    const addedYValues = new Set();
+    const colors = [];
+    const texts = [];
 
     set.points.forEach(point => {
       traceX.push(point.x);
       traceY.push(point.y);
-
-      // we need to add first and last category value to the values in order to keep them on y axis while drag
-      if (point.y && isYCategory && !addedYValues.has(point.y)) {
-        const insertIndex = additionalYValues.length === 0 ? 0 : 1;
-        additionalYValues[insertIndex] = point.y;
-        addedYValues.add(point.y);
-      }
-    });
-
-    for (let i = 0; i < additionalYValues.length; i++) {
-      traceX.push(null);
-      traceY.push(additionalYValues[i]);
-    }
-
+      colors.push(point.color);
+      texts.push(point.title);
+    })
     set.name && (data['name'] = set.name);
-    data['x'] = this.formatXTrace(traceX, set.xAxis);
-    data['y'] = traceY;
-    data['text'] = this.getYTraceTexts(traceY, set.yAxis);
-    data['textinfo'] = 'text';
-    data['hoverinfo'] = 'x+text';
+    data.x = traceX
+    data.y = traceY;
+    data.text = texts
+    data['marker.color'] = colors;
+    data.textinfo = 'text';
+    data.hoverinfo = 'x+text';
 
     return data;
   }
 
   private axis1DataStyle(set: ChartDataSet): Data {
-    return this.getDefaultDataStyle(set.color, ChartAxisType.Y1);
+    return this.getDefaultDataStyle(ChartAxisType.Y1);
   }
 
   private axis2DataStyle(set: ChartDataSet): Data {
-    return {...this.getDefaultDataStyle(set.color, ChartAxisType.Y2), yaxis: 'y2'};
+    return {...this.getDefaultDataStyle(ChartAxisType.Y2), yaxis: 'y2'};
   }
 
-  private getDefaultDataStyle(color: string, type: ChartYAxisType): Data {
-    let trace = {};
+  private getDefaultDataStyle(type: ChartYAxisType): Data {
     if (type === ChartAxisType.Y1) {
-      trace = {marker: {color}};
+      return {type: 'bar' as const};
     } else {
-      trace = {marker: {color: '#00000000', line: {color, width: 2}}};
+      return {marker: {line: {width: 2}}, type: 'bar' as const};
     }
-
-    trace['type'] = 'bar';
-
-    return trace;
   }
 
-  private createHelperData(y1Sets: ChartDataSet[], y2Sets: ChartDataSet[]): {y1: Data[]; y2: Data[]} {
+  private createHelperData(y1Sets: ChartDataSet[], y2Sets: ChartDataSet[]): { y1: Data[]; y2: Data[] } {
     const y1Point = this.firstNonNullValue(y1Sets);
     const y2Point = this.firstNonNullValue(y2Sets);
     if (!y1Point || !y2Point) {
@@ -112,13 +95,14 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return {y1: y1HelperData, y2: y2HelperData};
   }
 
-  private firstNonNullValue(sets: ChartDataSet[]): {x: any; y: any} {
+  private firstNonNullValue(sets: ChartDataSet[]): { x: any; y: any } {
     for (const set of sets) {
       const point = set.points.find(p => isNotNullOrUndefined(p.x) && isNotNullOrUndefined(p.y));
       if (point) {
-        if (this.isNumericCategory(set.yAxis && set.yAxis.category)) {
-          return {x: point.x, y: 0};
-        }
+        // TODO
+        // if (this.isNumericCategory(set.yAxis && set.yAxis.category)) {
+        //   return {x: point.x, y: 0};
+        // }
         return {x: point.x, y: point.y};
       }
     }
@@ -126,12 +110,15 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
   }
 
   private createHelperDataForPoint(x: any, y: any, yaxis?: string): Data {
-    const data = {x: [x], y: [y], marker: {color: '#00000000'}};
-    data['hoverinfo'] = 'none';
-    data['type'] = 'bar';
-    data['showlegend'] = false;
-
-    return {...data, yaxis};
+    return {
+      x: [x],
+      y: [y],
+      marker: {color: '#00000000'},
+      hoverinfo: 'none' as const,
+      type: 'bar' as const,
+      showlegend: false,
+      yaxis
+    };
   }
 
   public createLayout(): Partial<Layout> {
@@ -148,7 +135,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     };
   }
 
-  public getPointPosition(point: any, datum: any): {x: number; y: number} {
+  public getPointPosition(point: any, datum: any): { x: number; y: number } {
     return {x: datum.x, y: point.clickedY};
   }
 

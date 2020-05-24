@@ -19,13 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
-import {ChartData} from '../data/convertor/chart-data';
+import {ChartDataOld} from '../data/convertor-old/chart-data-old';
 
 @Pipe({
   name: 'chartDraggable',
 })
 export class ChartDraggable implements PipeTransform {
-  public transform(data: ChartData): boolean {
+  public transform(data: ChartDataOld): boolean {
     return data && data.sets && !!data.sets.find(set => set.draggable);
   }
 }

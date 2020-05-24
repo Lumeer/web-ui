@@ -37,11 +37,9 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {ChartData, convertChartDateFormat} from './convertor/chart-data';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {ChartDataConverter} from './convertor/chart-data-converter';
-import {ClickEvent, ValueChange} from '../visualizer/plot-maker/plot-maker';
+import {ClickEvent, ValueChange} from '../visualizer/plot-maker-old/plot-maker-old';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
@@ -50,6 +48,9 @@ import {AttributesResourceType, DataResource, Resource} from '../../../../core/m
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
 import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {ChartData} from './convertor/chart-data';
+import {ChartDataConverter} from './convertor/chart-data-converter';
 
 interface Data {
   collections: Collection[];
@@ -255,19 +256,10 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const previousConfig = changes.config.previousValue as ChartConfig;
     const currentConfig = changes.config.currentValue as ChartConfig;
 
-    const yAxisPrevious = previousConfig.axes && previousConfig.axes[type];
-    const yAxisCurrent = currentConfig.axes && currentConfig.axes[type];
-
-    const yDataSetPrevious = previousConfig.names && previousConfig.names[type];
-    const yDataSetCurrent = currentConfig.names && currentConfig.names[type];
-
-    const yAggregationPrevious = previousConfig.aggregations && previousConfig.aggregations[type];
-    const yAggregationCurrent = currentConfig.aggregations && currentConfig.aggregations[type];
-
     return (
-      !deepObjectsEquals(yAxisPrevious, yAxisCurrent) ||
-      !deepObjectsEquals(yDataSetPrevious, yDataSetCurrent) ||
-      !deepObjectsEquals(yAggregationPrevious, yAggregationCurrent)
+      !deepObjectsEquals(previousConfig.axes?.[type], currentConfig.axes?.[type]) ||
+      !deepObjectsEquals(previousConfig.names?.[type], currentConfig.names?.[type]) ||
+      !deepObjectsEquals(previousConfig.aggregations?.[type], currentConfig.aggregations?.[type])
     );
   }
 
@@ -289,7 +281,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       return;
     }
     const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
-    const attribute = ((collection && collection.attributes) || []).find(a => a.id === attributeId);
+    const attribute = findAttribute(collection?.attributes, attributeId);
     const saveValue = this.convertSaveValue(value, attribute && attribute.constraint);
 
     const patchDocument = {...changedDocument, data: {[attributeId]: saveValue}};
@@ -300,18 +292,18 @@ export class ChartDataComponent implements OnInit, OnChanges {
     if (!constraint) {
       return value;
     }
-
-    if (value) {
-      if (constraint.type === ConstraintType.DateTime) {
-        const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
-        return moment(value, convertChartDateFormat(config && config.format)).toISOString();
-      } else if (constraint.type === ConstraintType.Percentage) {
-        return (<PercentageConstraint>constraint)
-          .createDataValue(value)
-          .parseInput(String(value || 0))
-          .serialize();
-      }
-    }
+// TODO
+    // if (value) {
+    //   if (constraint.type === ConstraintType.DateTime) {
+    //     const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
+    //     return moment(value, convertChartDateFormat(config?.format)).toISOString();
+    //   } else if (constraint.type === ConstraintType.Percentage) {
+    //     return (<PercentageConstraint>constraint)
+    //       .createDataValue(value)
+    //       .parseInput(String(value || 0))
+    //       .serialize();
+    //   }
+    // }
 
     return constraint.createDataValue(value, this.constraintData).serialize();
   }
@@ -326,8 +318,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
       return;
     }
     const linkType = (this.linkTypes || []).find(lt => lt.id === changedLinkInstance.linkTypeId);
-    const attribute = ((linkType && linkType.attributes) || []).find(a => a.id === attributeId);
-    const saveValue = this.convertSaveValue(value, attribute && attribute.constraint);
+    const attribute = findAttribute(linkType?.attributes, attributeId);
+    const saveValue = this.convertSaveValue(value, attribute?.constraint);
 
     const patchLinkInstance = {...changedLinkInstance, data: {[attributeId]: saveValue}};
     this.patchLinkData.emit(patchLinkInstance);
@@ -350,7 +342,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
       const collection = document && (this.collections || []).find(coll => coll.id === document.collectionId);
       return {resource: collection, dataResource: document};
     }
-    const linkInstance = (this.linkInstances || []).find(linkIstance => linkIstance.id === event.pointId);
+    const linkInstance = (this.linkInstances || []).find(linkInstance => linkInstance.id === event.pointId);
     const linkType = linkInstance && (this.linkTypes || []).find(lt => lt.id === linkInstance.linkTypeId);
     return {resource: linkType, dataResource: linkInstance};
   }

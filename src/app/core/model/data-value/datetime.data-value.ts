@@ -216,7 +216,7 @@ export class DateTimeDataValue implements DataValue {
     }
   }
 
-  private mapConditionValues(values: QueryConditionValue[]): {moment: moment.Moment; format: string}[] {
+  private mapConditionValues(values: QueryConditionValue[]): { moment: moment.Moment; format: string }[] {
     return (values || [])
       .map(value => {
         if (value.type) {
