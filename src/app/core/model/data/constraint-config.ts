@@ -50,6 +50,8 @@ export interface DurationConstraintConfig {
   type: DurationType;
   conversions: Record<DurationUnit, number>;
   maxUnit?: DurationUnit;
+  maxUnits?: number;
+  decimalPlaces?: number;
 }
 
 export enum DurationUnit {

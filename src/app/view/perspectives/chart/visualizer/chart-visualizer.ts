@@ -47,8 +47,7 @@ export class ChartVisualizer {
     private chartElement: ElementRef,
     private onValueChanged: (ValueChange) => void,
     private onDoubleClick: (ClickEvent) => void
-  ) {
-  }
+  ) {}
 
   public createChart(data: ChartData) {
     this.createOrRefreshData(data);
@@ -56,7 +55,7 @@ export class ChartVisualizer {
     newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshListeners());
     this.chartElement.nativeElement.on(
       'plotly_relayout',
-      () => (<DraggablePlotMaker>this.plotMaker)?.onRelayout()
+      () => this.plotMaker instanceof DraggablePlotMaker && (<DraggablePlotMaker>this.plotMaker).onRelayout()
     );
   }
 
@@ -88,24 +87,24 @@ export class ChartVisualizer {
   }
 
   private setFormatters(data: ChartData) {
-    let currentLocale = d3.locale;
-    d3.locale = (locale) => {
-      let result = currentLocale(locale);
-      let numberFormat = result.numberFormat;
-      result.numberFormat = (format) => {
+    const currentLocale = d3.locale;
+    d3.locale = locale => {
+      const result = currentLocale(locale);
+      const numberFormat = result.numberFormat;
+      result.numberFormat = format => {
         if (format === 'xFormatter' && data.xAxisData?.formatter) {
-          return (x) => data.xAxisData.formatter(x);
+          return x => data.xAxisData.formatter(x);
         }
         if (format === 'y1Formatter' && data.y1AxisData?.formatter) {
-          return (x) => data.y1AxisData.formatter(x);
+          return x => data.y1AxisData.formatter(x);
         }
         if (format === 'y2Formatter' && data.y2AxisData?.formatter) {
-          return (x) => data.y2AxisData.formatter(x);
+          return x => data.y2AxisData.formatter(x);
         }
         return numberFormat(format);
-      }
+      };
       return result;
-    }
+    };
   }
 
   private shouldRefreshPlotMaker(data: ChartData): boolean {

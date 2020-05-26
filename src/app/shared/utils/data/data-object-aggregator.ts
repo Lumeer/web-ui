@@ -282,6 +282,12 @@ export class DataObjectAggregator<T> {
           return options[0].background;
         }
       }
+    } else if (constraint?.type === ConstraintType.Boolean) {
+      if (values?.[0]) {
+        return '#b6d7a8';
+      } else {
+        return '#ea9999';
+      }
     }
 
     const colorConstraint = new ColorConstraint({});

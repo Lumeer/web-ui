@@ -57,7 +57,7 @@ export class PiePlotMaker extends PlotMaker {
   }
 
   private getDataStyle(): Data {
-    return {type: <PlotType>'pie'};
+    return {type: <PlotType>'pie', marker: {}};
   }
 
   private createEmptyPie(): Data {
@@ -67,22 +67,25 @@ export class PiePlotMaker extends PlotMaker {
       hoverinfo: 'none' as const,
       textinfo: 'none' as const,
       labels: [''],
-      values: [20]
+      values: [20],
     };
   }
 
   private createAxesData(dataStyle: Data, set: ChartDataSet, row?: number, column?: number): Data {
     const labels = [];
     const values = [];
+    const colors = [];
 
     set.points
       .filter(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
       .forEach(point => {
         labels.push(this.mapPointXValue(point.x));
         values.push(point.y);
+        colors.push(point.color);
       });
 
     const data = {...dataStyle, labels, values};
+    data.marker.colors = colors;
 
     if (isNotNullOrUndefined(row) && isNotNullOrUndefined(column)) {
       data.domain = {rows: row, columns: column};

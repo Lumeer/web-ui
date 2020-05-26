@@ -28,7 +28,12 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     const y1Sets = this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y1);
     const y2Sets = this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y2);
 
-    const helperData: { y1: Data[]; y2: Data[] } = this.createHelperData(this.chartData.y1AxisData, y1Sets, this.chartData.y2AxisData, y2Sets);
+    const helperData: {y1: Data[]; y2: Data[]} = this.createHelperData(
+      this.chartData.y1AxisData,
+      y1Sets,
+      this.chartData.y2AxisData,
+      y2Sets
+    );
 
     const y1Data = y1Sets.map(set => this.createAxisData(set));
     const y2Data = y2Sets.map(set => this.createAxisData(set));
@@ -37,29 +42,32 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
   }
 
   private createAxisData(set: ChartDataSet): Data {
-    let data: Data = {};
-    if (set.yAxisType === ChartAxisType.Y1) {
-      data = this.axis1DataStyle(set);
-    } else {
-      data = this.axis2DataStyle(set);
-    }
-
     const traceX = [];
     const traceY = [];
     const colors = [];
     const texts = [];
 
+    let data: Data;
     set.points.forEach(point => {
       traceX.push(point.x);
       traceY.push(point.y);
       colors.push(point.color);
       texts.push(point.title);
-    })
+    });
+
+    if (set.yAxisType === ChartAxisType.Y1) {
+      data = this.axis1DataStyle(set);
+      data.marker.color = colors;
+    } else {
+      data = this.axis2DataStyle(set);
+      data.marker.line.color = colors;
+    }
+
     set.name && (data['name'] = set.name);
-    data.x = traceX
+    data.x = traceX;
     data.y = traceY;
-    data.text = texts
-    data['marker.color'] = colors;
+    data.text = texts;
+
     data.textinfo = 'text';
     data.hoverinfo = 'x+text';
 
@@ -67,22 +75,27 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
   }
 
   private axis1DataStyle(set: ChartDataSet): Data {
-    return this.getDefaultDataStyle(ChartAxisType.Y1);
+    return this.getDefaultDataStyle(set.color, ChartAxisType.Y1);
   }
 
   private axis2DataStyle(set: ChartDataSet): Data {
-    return {...this.getDefaultDataStyle(ChartAxisType.Y2), yaxis: 'y2'};
+    return {...this.getDefaultDataStyle(set.color, ChartAxisType.Y2), yaxis: 'y2'};
   }
 
-  private getDefaultDataStyle(type: ChartYAxisType): Data {
+  private getDefaultDataStyle(color: string, type: ChartYAxisType): Data {
     if (type === ChartAxisType.Y1) {
-      return {type: 'bar' as const};
+      return {type: 'bar' as const, marker: {color}};
     } else {
-      return {marker: {line: {width: 2}}, type: 'bar' as const};
+      return {marker: {color: '#00000000', line: {width: 2, color}}, type: 'bar' as const};
     }
   }
 
-  private createHelperData(y1Axis: ChartAxisData, y1Sets: ChartDataSet[], y2Axis: ChartAxisData, y2Sets: ChartDataSet[]): { y1: Data[]; y2: Data[] } {
+  private createHelperData(
+    y1Axis: ChartAxisData,
+    y1Sets: ChartDataSet[],
+    y2Axis: ChartAxisData,
+    y2Sets: ChartDataSet[]
+  ): {y1: Data[]; y2: Data[]} {
     const y1Point = this.firstNonNullValue(y1Axis, y1Sets);
     const y2Point = this.firstNonNullValue(y2Axis, y2Sets);
     if (!y1Point || !y2Point) {
@@ -95,7 +108,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return {y1: y1HelperData, y2: y2HelperData};
   }
 
-  private firstNonNullValue(axis: ChartAxisData, sets: ChartDataSet[]): { x: any; y: any } {
+  private firstNonNullValue(axis: ChartAxisData, sets: ChartDataSet[]): {x: any; y: any} {
     for (const set of sets) {
       const point = set.points.find(p => isNotNullOrUndefined(p.x) && isNotNullOrUndefined(p.y));
       if (point) {
@@ -116,7 +129,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
       hoverinfo: 'none' as const,
       type: 'bar' as const,
       showlegend: false,
-      yaxis
+      yaxis,
     };
   }
 
@@ -134,7 +147,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     };
   }
 
-  public getPointPosition(point: any, datum: any): { x: number; y: number } {
+  public getPointPosition(point: any, datum: any): {x: number; y: number} {
     return {x: datum.x, y: point.clickedY};
   }
 

@@ -36,6 +36,7 @@ export interface ChartDataSet {
   yAxisType: ChartYAxisType;
   name: string;
   resourceType: AttributesResourceType;
+  color?: string;
 }
 
 export interface ChartPoint {
@@ -51,7 +52,13 @@ export interface ChartAxisData {
   formatter?: (x: number) => string;
   range?: [number, number];
   rangeSlider?: boolean;
+  ticks?: ChartAxisTick[];
   constraintType: ConstraintType;
+}
+
+export interface ChartAxisTick {
+  value: any;
+  title: string;
 }
 
 export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;

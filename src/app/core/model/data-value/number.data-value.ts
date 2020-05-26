@@ -45,24 +45,24 @@ export class NumberDataValue implements NumericDataValue {
     this.bigNumber = convertToBig(unformatted);
   }
 
-  public format(minDecimalPlaces?: number): string {
+  public format(overrideConfig?: Partial<NumberConstraintConfig>): string {
     if (isNotNullOrUndefined(this.inputValue)) {
       return removeNonNumberCharacters(this.inputValue);
     }
 
     if (this.bigNumber) {
-      return numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config, minDecimalPlaces));
+      return numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config, overrideConfig));
     }
 
     return formatUnknownDataValue(this.value);
   }
 
-  public preview(minDecimalPlaces?: number): string {
-    return this.format(minDecimalPlaces);
+  public preview(overrideConfig?: Partial<NumberConstraintConfig>): string {
+    return this.format(overrideConfig);
   }
 
-  public title(minDecimalPlaces?: number): string {
-    return unescapeHtml(this.format(minDecimalPlaces));
+  public title(overrideConfig?: Partial<NumberConstraintConfig>): string {
+    return unescapeHtml(this.format(overrideConfig));
   }
 
   public editValue(): string {
@@ -135,28 +135,31 @@ export class NumberDataValue implements NumericDataValue {
   }
 }
 
-function parseNumbroConfig(config: NumberConstraintConfig, minDecimalPlaces?: number): any {
-  if (!config) {
+function parseNumbroConfig(
+  config: NumberConstraintConfig,
+  overrideConfig?: Partial<NumberConstraintConfig>
+): numbro.Format {
+  if (!config && !overrideConfig) {
     return {};
   }
 
-  const numbroConfig = {};
-  if (config.forceSign) {
-    numbroConfig['forceSign'] = true;
+  const numbroConfig: numbro.Format = {};
+  if (overrideConfig?.forceSign || config.forceSign) {
+    numbroConfig.forceSign = true;
   }
-  if (config.separated) {
-    numbroConfig['thousandSeparated'] = true;
-    numbroConfig['spaceSeparated'] = true;
+  if (overrideConfig?.separated || config.separated) {
+    numbroConfig.thousandSeparated = true;
+    numbroConfig.spaceSeparated = true;
   }
-  if (config.compact) {
-    numbroConfig['average'] = true;
+  if (overrideConfig?.compact || config.compact) {
+    numbroConfig.average = true;
   }
-  if (config.negative) {
-    numbroConfig['negative'] = 'parenthesis';
+  if (overrideConfig?.negative || config.negative) {
+    numbroConfig.negative = 'parenthesis';
   }
-  if (isNumeric(config.decimals || minDecimalPlaces)) {
-    numbroConfig['mantissa'] = config.decimals || minDecimalPlaces;
-    numbroConfig['trimMantissa'] = !isNumeric(config.decimals);
+  if (isNumeric(overrideConfig?.decimals || config.decimals)) {
+    numbroConfig.mantissa = overrideConfig?.decimals || config.decimals;
+    numbroConfig.trimMantissa = isNumeric(overrideConfig?.decimals);
   }
   return numbroConfig;
 }

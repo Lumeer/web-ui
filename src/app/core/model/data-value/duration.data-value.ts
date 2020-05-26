@@ -56,15 +56,15 @@ export class DurationDataValue implements NumericDataValue {
     }
   }
 
-  public format(maxUnits?: number): string {
-    return this.formatWithUnitsMap(this.constraintData?.durationUnitsMap, maxUnits);
+  public format(overrideConfig?: Partial<DurationConstraintConfig>): string {
+    return this.formatWithUnitsMap(this.constraintData?.durationUnitsMap, overrideConfig);
   }
 
   private formatToNativeLocale(): string {
     return this.formatWithUnitsMap();
   }
 
-  private formatWithUnitsMap(durationUnitsMap?: DurationUnitsMap, maxUnits?: number) {
+  private formatWithUnitsMap(durationUnitsMap?: DurationUnitsMap, overrideConfig?: Partial<DurationConstraintConfig>) {
     if (isNotNullOrUndefined(this.inputValue)) {
       return this.inputValue;
     }
@@ -73,15 +73,15 @@ export class DurationDataValue implements NumericDataValue {
       return formatUnknownDataValue(this.value);
     }
 
-    return formatDurationDataValue(this.value, this.config, durationUnitsMap, maxUnits);
+    return formatDurationDataValue(this.value, this.config, durationUnitsMap, overrideConfig);
   }
 
-  public preview(maxUnits?: number): string {
-    return this.format(maxUnits);
+  public preview(overrideConfig?: Partial<DurationConstraintConfig>): string {
+    return this.format(overrideConfig);
   }
 
-  public title(maxUnits?: number): string {
-    return unescapeHtml(this.format(maxUnits));
+  public title(overrideConfig?: Partial<DurationConstraintConfig>): string {
+    return unescapeHtml(this.format(overrideConfig));
   }
 
   public editValue(): string {

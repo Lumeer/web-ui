@@ -117,4 +117,12 @@ export class ChartYAxisConfigComponent {
     const newConfig = {...this.config, aggregations};
     this.configChange.emit(newConfig);
   }
+
+  public onColorSelect(id: SelectItemWithConstraintId) {
+    this.onSelect(id, 'colors');
+  }
+
+  public onColorRemoved() {
+    this.onRemoved('colors');
+  }
 }

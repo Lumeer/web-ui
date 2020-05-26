@@ -21,6 +21,7 @@ import {DurationConstraintConfig, DurationType, DurationUnit} from '../../../cor
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../common.utils';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import Big, {Comparison, RoundingMode} from 'big.js';
+import numbro from 'numbro';
 
 export const sortedDurationUnits = [
   DurationUnit.Weeks,
@@ -188,12 +189,13 @@ export function formatDurationDataValue(
   value: any,
   config: DurationConstraintConfig,
   durationUnitsMap: DurationUnitsMap,
-  maxUnits?: number
+  overrideConfig?: Partial<DurationConstraintConfig>
 ): string {
   const saveValue = getDurationSaveValue(value, config, durationUnitsMap);
   if (isNumeric(saveValue) && toNumber(saveValue) >= 0) {
-    const unitsCountMap = createDurationUnitsCountsMap(saveValue, config, maxUnits);
-    const resultValue = durationCountsMapToString(unitsCountMap, durationUnitsMap);
+    const unitsCountMap = createDurationUnitsCountsMap(saveValue, config, overrideConfig);
+    const decimalPlaces = overrideConfig?.decimalPlaces || config.decimalPlaces || 0;
+    const resultValue = durationCountsMapToString(unitsCountMap, decimalPlaces, durationUnitsMap);
     return resultValue || (toNumber(saveValue) > 0 ? '0' : '');
   }
 
@@ -203,28 +205,34 @@ export function formatDurationDataValue(
 export function createDurationUnitsCountsMap(
   saveValue: any,
   config: DurationConstraintConfig,
-  maxUnits?: number
+  overrideConfig?: Partial<DurationConstraintConfig>
 ): Record<DurationUnit | string, number> {
   if (isNumeric(saveValue) && toNumber(saveValue) >= 0) {
     const durationToMillisMap = getDurationUnitToMillisMap(config);
     let currentDuration = convertToBig(saveValue, 0);
 
     let usedNumUnits = 0;
-    const maximumUnits = maxUnits || Number.MAX_SAFE_INTEGER;
+    const maximumUnits = overrideConfig?.maxUnits || config.maxUnits || Number.MAX_SAFE_INTEGER;
 
     let durationUnits = [...sortedDurationUnits];
     if (config.maxUnit) {
       const index = durationUnits.indexOf(config.maxUnit);
       durationUnits = durationUnits.slice(index, index + 2);
     }
+    const decimalPlaces = overrideConfig?.decimalPlaces || config.decimalPlaces || 0;
 
     return durationUnits.reduce((result, unit) => {
       const unitToMillis = durationToMillisMap[unit];
       if (unitToMillis) {
-        const unitToMillisBig = new Big(unitToMillis);
-        let numUnits = currentDuration.div(unitToMillisBig).round(0, RoundingMode.RoundDown);
-
         if (usedNumUnits >= maximumUnits) {
+          return result;
+        }
+
+        const unitToMillisBig = new Big(unitToMillis);
+        let numUnits = currentDuration.div(unitToMillisBig).round(decimalPlaces, RoundingMode.RoundDown);
+
+        if (numUnits.lt(new Big(1))) {
+          result[unit] = 0;
           return result;
         }
 
@@ -233,11 +241,8 @@ export function createDurationUnitsCountsMap(
         if (usedNumUnits + 1 === maximumUnits && currentDuration.cmp(unitToMillisBig.div(2)) === Comparison.GT) {
           numUnits = numUnits.add(1);
         }
-
-        result[unit] = toNumber(numUnits.toFixed(0));
-        if (numUnits.cmp(new Big(0)) === Comparison.GT) {
-          usedNumUnits++;
-        }
+        result[unit] = toNumber(numUnits.toFixed(decimalPlaces));
+        usedNumUnits++;
       }
 
       return result;
@@ -249,14 +254,22 @@ export function createDurationUnitsCountsMap(
 
 export function durationCountsMapToString(
   durationCountsMap: Record<DurationUnit, number>,
+  decimalPlaces = 0,
   durationUnitsMap?: DurationUnitsMap
 ): string {
   return [...sortedDurationUnits].reduce((result, unit) => {
     const numUnits = new Big(durationCountsMap[unit] || 0);
     if (numUnits.cmp(new Big(0)) === Comparison.GT) {
-      const unitString = (durationUnitsMap && durationUnitsMap[unit]) || unit;
-      return result + numUnits.toFixed(0) + unitString;
+      const unitString = durationUnitsMap?.[unit] || unit;
+      return result + parseResultUnitsString(numUnits, decimalPlaces) + unitString;
     }
     return result;
   }, '');
+}
+
+function parseResultUnitsString(numUnits: Big, decimalPlaces: number): string {
+  if (decimalPlaces === 0) {
+    return numUnits.toFixed(0);
+  }
+  return numbro(numUnits.toFixed(decimalPlaces)).format({trimMantissa: true, mantissa: decimalPlaces});
 }

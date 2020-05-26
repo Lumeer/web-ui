@@ -34,8 +34,7 @@ export abstract class PlotMaker {
 
   protected onDoubleClick?: (ClickEvent) => void;
 
-  constructor(protected element: ElementRef) {
-  }
+  constructor(protected element: ElementRef) {}
 
   public updateData(chartData: ChartData) {
     this.chartData = chartData;
@@ -66,7 +65,7 @@ export abstract class PlotMaker {
   }
 
   protected isCategoryType(type: ConstraintType): boolean {
-    return type === ConstraintType.Text; // TODO ??
+    return !this.isNumericType(type); // TODO ??
   }
 
   protected axisConstraintType(type: ChartAxisType): ConstraintType {

@@ -32,7 +32,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
   public abstract getSetIndexForTraceIndex(traceIx: number): number;
 
-  public abstract getPointPosition(point: any, datum: any): { x: number; y: number };
+  public abstract getPointPosition(point: any, datum: any): {x: number; y: number};
 
   public abstract getPointNewY(point: any, datum: any, event: any): number;
 
@@ -41,9 +41,15 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const data = this.chartData.xAxisData;
     if (data) {
       layout.xaxis = {};
-      layout.xaxis.rangeslider = {visible: data.rangeSlider || false}
+      layout.xaxis.rangeslider = {visible: data.rangeSlider || false};
       if (data.formatter) {
         layout.xaxis.tickformat = 'xFormatter';
+      }
+      if (data.ticks?.length) {
+        layout.xaxis.type = 'category';
+        layout.xaxis.tickmode = 'array';
+        layout.xaxis.tickvals = data.ticks.map(t => t.value);
+        layout.xaxis.ticktext = data.ticks.map(t => t.title);
       }
     }
 
@@ -61,6 +67,12 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       if (data.formatter) {
         layout.yaxis.tickformat = 'y1Formatter';
       }
+      if (data.ticks?.length) {
+        layout.yaxis.type = 'category';
+        layout.yaxis.tickmode = 'array';
+        layout.yaxis.tickvals = data.ticks.map(t => t.value);
+        layout.yaxis.ticktext = data.ticks.map(t => t.title);
+      }
     }
 
     return layout;
@@ -70,12 +82,18 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const data = this.chartData.y2AxisData;
     const layout: Partial<Layout> = {};
     if (data) {
-      layout.yaxis2 = {overlaying: 'y', side: 'right',};
+      layout.yaxis2 = {overlaying: 'y', side: 'right'};
       if (data.range) {
         layout.yaxis2.range = data.range;
       }
       if (data.formatter) {
         layout.yaxis2.tickformat = 'y2Formatter';
+      }
+      if (data.ticks?.length) {
+        layout.yaxis2.type = 'category';
+        layout.yaxis2.tickmode = 'array';
+        layout.yaxis2.tickvals = data.ticks.map(t => t.value);
+        layout.yaxis2.ticktext = data.ticks.map(t => t.title);
       }
     }
     return layout;
@@ -273,10 +291,10 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         const valueChanged = value !== pointData.initialValue;
 
         valueChanged &&
-        pointId &&
-        setId &&
-        isNotNullOrUndefined(value) &&
-        plotMaker.onValueChanged?.({pointId, setId, value, resourceType: resourceType});
+          pointId &&
+          setId &&
+          isNotNullOrUndefined(value) &&
+          plotMaker.onValueChanged?.({pointId, setId, value, resourceType: resourceType});
       });
   }
 
@@ -347,7 +365,7 @@ export interface PointData {
   lastValue: string | number;
   constraintType: ConstraintType;
   initialY?: number;
-  offset?: { top: number; left: number };
+  offset?: {top: number; left: number};
   clickedY?: number;
 }
 

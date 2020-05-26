@@ -28,7 +28,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import * as colors from '../../colors';
-import {BehaviorSubject} from 'rxjs';
 import {shadeColor} from '../../../utils/html-modifier';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 

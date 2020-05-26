@@ -24,7 +24,12 @@ import {LinkType} from '../link-types/link.type';
 import {AttributesResourceType} from '../../model/resource';
 
 export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: ChartConfig): boolean {
-  if (viewConfig.type !== currentConfig.type || viewConfig.prediction !== currentConfig.prediction || viewConfig.rangeSlider !== currentConfig.rangeSlider || viewConfig.lockAxes !== currentConfig.lockAxes) {
+  if (
+    viewConfig.type !== currentConfig.type ||
+    viewConfig.prediction !== currentConfig.prediction ||
+    viewConfig.rangeSlider !== currentConfig.rangeSlider ||
+    viewConfig.lockAxes !== currentConfig.lockAxes
+  ) {
     return true;
   }
 
@@ -35,7 +40,8 @@ export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: Cha
   return (
     mapsChanged(viewConfig.axes || {}, currentConfig.axes || {}) ||
     mapsChanged(viewConfig.names || {}, currentConfig.names || {}) ||
-    mapsChanged(viewConfig.aggregations || {}, currentConfig.aggregations || {})
+    mapsChanged(viewConfig.aggregations || {}, currentConfig.aggregations || {}) ||
+    mapsChanged(viewConfig.colors || {}, currentConfig.colors || {})
   );
 }
 

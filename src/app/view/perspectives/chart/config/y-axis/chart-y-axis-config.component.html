@@ -33,6 +33,17 @@
 </select-item-with-constraint>
 
 <select-item class="d-block w-100 mt-2"
+             [items]="attributesResources | selectItemWithConstraint:[]"
+             [selectedId]="config.colors && (config.colors[yAxisType] | chartAxisSelectItemId)"
+             placeholderText="Color"
+             emptyValue="Select attribute"
+             [removable]="true"
+             [buttonClasses]="buttonClasses"
+             (select)="onColorSelect($event)"
+             (remove)="onColorRemoved()">
+</select-item>
+
+<select-item class="d-block w-100 mt-2"
              [items]="chartAggregations | aggregationSelectItems"
              [placeholderText]="yAxisType | aggregationSelectPlaceholder"
              [buttonClasses]="buttonClasses"

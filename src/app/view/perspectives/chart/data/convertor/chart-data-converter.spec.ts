@@ -123,7 +123,7 @@ describe('Chart data converter single collection', () => {
     };
 
     const data = converter.convert(config);
-    expect(data.sets).toEqual([set])
+    expect(data.sets).toEqual([set]);
     expect(data.type).toEqual(ChartType.Line);
   });
 
@@ -147,13 +147,14 @@ describe('Chart data converter single collection', () => {
         {id: null, x: 'Sport', y: null, color: '#ffffff', title: 'Sport'},
       ],
       draggable: false,
+      color: '#ffffff',
       name: undefined,
       yAxisType: ChartAxisType.Y1,
       resourceType: AttributesResourceType.Collection,
     };
     converter.updateData(collections, documents, permissions, query, config);
     const data = converter.convert(config);
-    expect(data.sets).toEqual([set])
+    expect(data.sets).toEqual([set]);
     expect(data.type).toEqual(ChartType.Line);
   });
 
@@ -179,12 +180,13 @@ describe('Chart data converter single collection', () => {
       ],
       name: 'Kala',
       draggable: true,
+      color: '#ffffff',
       yAxisType: ChartAxisType.Y1,
       resourceType: AttributesResourceType.Collection,
     };
     converter.updateData(collections, documents, permissions, query, config);
     const data = converter.convert(config);
-    expect(data.sets).toEqual([set])
+    expect(data.sets).toEqual([set]);
     expect(data.type).toEqual(ChartType.Line);
   });
 
@@ -218,12 +220,13 @@ describe('Chart data converter single collection', () => {
       ],
       name: 'Kala',
       draggable: true,
+      color: '#ffffff',
       yAxisType: ChartAxisType.Y1,
       resourceType: AttributesResourceType.Collection,
     };
     converter.updateData(collections, documents, permissions, query, config);
     let data = converter.convert(config);
-    expect(data.sets).toEqual([set])
+    expect(data.sets).toEqual([set]);
     expect(data.type).toEqual(ChartType.Line);
 
     const config2 = {
@@ -241,7 +244,7 @@ describe('Chart data converter single collection', () => {
       ],
     };
     data = converter.convert(config2);
-    expect(data.sets).toEqual([set2])
+    expect(data.sets).toEqual([set2]);
     expect(data.type).toEqual(ChartType.Line);
 
     const config3 = {...config, aggregations: null};
@@ -254,7 +257,7 @@ describe('Chart data converter single collection', () => {
       ],
     };
     data = converter.convert(config3);
-    expect(data.sets).toEqual([set3])
+    expect(data.sets).toEqual([set3]);
     expect(data.type).toEqual(ChartType.Line);
   });
 
@@ -736,7 +739,7 @@ describe('Chart data converter linked collections', () => {
     };
 
     const data = converter.convert(config);
-    expect(data.sets).toEqual([set])
+    expect(data.sets).toEqual([set]);
     expect(data.type).toEqual(ChartType.Line);
   });
 
@@ -975,42 +978,42 @@ describe('Chart data converter linked collections', () => {
       x: 'Sport',
       y: 667,
       title: '667',
-      color: 'rgba(188,188,188,1)'
+      color: 'rgba(188,188,188,1)',
     });
     expect(chartData.sets[1].points).toContain({
       id: 'D21',
       x: 'Sport',
       y: 8,
       title: '8',
-      color: 'rgba(188,188,188,0.86)'
+      color: 'rgba(188,188,188,0.86)',
     });
     expect(chartData.sets[2].points).toContain({
       id: null,
       x: 'Sport',
       y: 9,
       title: '9',
-      color: 'rgba(188,188,188,0.72)'
+      color: 'rgba(188,188,188,0.72)',
     });
     expect(chartData.sets[3].points).toContain({
       id: 'D23',
       x: 'Sport',
       y: 8,
       title: '8',
-      color: 'rgba(188,188,188,0.58)'
+      color: 'rgba(188,188,188,0.58)',
     });
     expect(chartData.sets[4].points).toContain({
       id: null,
       x: 'Sport',
       y: 667,
       title: '667',
-      color: 'rgba(188,188,188,0.44)'
+      color: 'rgba(188,188,188,0.44)',
     });
     expect(chartData.sets[5].points).toContain({
       id: 'D23',
       x: 'Sport',
       y: 8,
       title: '8',
-      color: 'rgba(188,188,188,0.3)'
+      color: 'rgba(188,188,188,0.3)',
     });
   });
   it('should return data with from linked attributes', () => {
@@ -1051,21 +1054,21 @@ describe('Chart data converter linked collections', () => {
       x: 'Lmp',
       y: 270,
       title: '270',
-      color: 'rgba(18,52,86,0.825)'
+      color: 'rgba(18,52,86,0.825)',
     });
     expect(chartData.sets[2].points).toContain({
       id: null,
       x: 'Lpr',
       y: 131,
       title: '131',
-      color: 'rgba(18,52,86,0.65)'
+      color: 'rgba(18,52,86,0.65)',
     });
     expect(chartData.sets[3].points).toContain({
       id: null,
       x: 'Lxx',
       y: 777,
       title: '777',
-      color: 'rgba(18,52,86,0.475)'
+      color: 'rgba(18,52,86,0.475)',
     });
     expect(chartData.sets[4].points).toContain({id: null, x: 'Lop', y: 951, title: '951', color: 'rgba(18,52,86,0.3)'});
   });
