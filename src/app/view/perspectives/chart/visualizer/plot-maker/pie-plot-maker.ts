@@ -71,6 +71,10 @@ export class PiePlotMaker extends PlotMaker {
     };
   }
 
+  public initDoubleClick() {
+    // nothing to do
+  }
+
   private createAxesData(dataStyle: Data, set: ChartDataSet, row?: number, column?: number): Data {
     const labels = [];
     const values = [];

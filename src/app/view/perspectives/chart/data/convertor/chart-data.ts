@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
+import {ChartAxisSettings, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 
@@ -51,7 +51,6 @@ export interface ChartPoint {
 export interface ChartAxisData {
   formatter?: (x: number) => string;
   range?: [number, number];
-  rangeSlider?: boolean;
   ticks?: ChartAxisTick[];
   constraintType: ConstraintType;
 }
@@ -62,3 +61,8 @@ export interface ChartAxisTick {
 }
 
 export type ChartYAxisType = ChartAxisType.Y1 | ChartAxisType.Y2;
+
+export interface ChartSettings {
+  rangeSlider?: boolean;
+  settings?: Partial<Record<ChartAxisType, ChartAxisSettings>>;
+}

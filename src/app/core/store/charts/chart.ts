@@ -30,10 +30,11 @@ export interface Chart {
 
 export interface ChartConfig {
   type: ChartType;
-  axes: Record<string, ChartAxis>;
-  names?: Record<string, ChartAxis>;
-  colors?: Record<string, ChartAxis>;
-  aggregations?: Record<string, DataAggregationType>;
+  settings?: Partial<Record<ChartAxisType, ChartAxisSettings>>;
+  axes: Partial<Record<ChartAxisType, ChartAxis>>;
+  names?: Partial<Record<ChartAxisType, ChartAxis>>;
+  colors?: Partial<Record<ChartAxisType, ChartAxis>>;
+  aggregations?: Partial<Record<ChartAxisType, DataAggregationType>>;
   prediction?: boolean;
   lockAxes?: boolean;
   rangeSlider?: boolean;
@@ -44,15 +45,21 @@ export interface ChartAxis extends QueryAttribute {
   constraint?: Constraint;
 }
 
+export interface ChartAxisSettings {
+  range?: [number, number];
+}
+
 export enum ChartType {
   Line = 'line',
   Bar = 'bar',
+  Bubble = 'bubble',
   Pie = 'pie',
 }
 
 export const chartTypesIconsMap: Record<string, string> = {
   [ChartType.Line]: 'far fa-chart-line',
   [ChartType.Bar]: 'far fa-chart-bar',
+  [ChartType.Bubble]: 'far fa-chart-scatter',
   [ChartType.Pie]: 'far fa-chart-pie',
 };
 

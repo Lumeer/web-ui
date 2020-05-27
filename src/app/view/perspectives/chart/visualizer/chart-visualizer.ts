@@ -18,15 +18,18 @@
  */
 
 import {ElementRef} from '@angular/core';
-import {Config, d3, Data, Layout, newPlot, Plots, purge, react} from 'plotly.js';
+import {Config, d3, Data, Layout, newPlot, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
 import {environment} from '../../../../../environments/environment';
-import {ChartType} from '../../../../core/store/charts/chart';
+import {ChartAxisType, ChartType} from '../../../../core/store/charts/chart';
 import {DataChange, PlotMaker} from './plot-maker/plot-maker';
-import {ChartData} from '../data/convertor/chart-data';
+import {ChartData, ChartSettings} from '../data/convertor/chart-data';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 import {LinePlotMaker} from './plot-maker/line-plot-maker';
 import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {PiePlotMaker} from './plot-maker/pie-plot-maker';
+import {BubblePlotMaker} from './plot-maker/bubble-plot-maker';
+import {AttributesResourceType} from '../../../../core/model/resource';
+import {deepArrayEquals} from '../../../../shared/utils/array.utils';
 
 export class ChartVisualizer {
   private currentType: ChartType;
@@ -43,26 +46,116 @@ export class ChartVisualizer {
 
   private writable: boolean;
 
-  constructor(
-    private chartElement: ElementRef,
-    private onValueChanged: (ValueChange) => void,
-    private onDoubleClick: (ClickEvent) => void
-  ) {}
+  private onValueChanged: (ValueChange) => void;
+  private onDoubleClick: (ClickEvent) => void;
+  private onAxisSettingsChange: (AxisSettingsChange) => void;
 
-  public createChart(data: ChartData) {
+  constructor(private chartElement: ElementRef) {
+  }
+
+  public setOnValueChanged(onValueChanged: (ValueChange) => void) {
+    this.onValueChanged = onValueChanged;
+  }
+
+  public setOnDoubleClick(onDoubleClick: (ClickEvent) => void) {
+    this.onDoubleClick = onDoubleClick;
+  }
+
+  public setOnAxisSettingsChange(onAxisSettingsChange: (AxisSettingsChange) => void) {
+    this.onAxisSettingsChange = onAxisSettingsChange;
+  }
+
+  public createChart(data: ChartData, settings: ChartSettings) {
     this.createOrRefreshData(data);
+    this.setLayoutSettings(settings);
     this.currentType = data.type;
     newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshListeners());
     this.chartElement.nativeElement.on(
       'plotly_relayout',
-      () => this.plotMaker instanceof DraggablePlotMaker && (<DraggablePlotMaker>this.plotMaker).onRelayout()
+      (event: PlotRelayoutEvent) => {
+        this.onRelayout(event);
+        this.plotMaker instanceof DraggablePlotMaker && (<DraggablePlotMaker>this.plotMaker).onRelayout();
+      }
     );
   }
 
-  public refreshChart(data: ChartData) {
+  private onRelayout(event: PlotRelayoutEvent) {
+    const axisSettingsChange: AxisSettingsChange = {range: {}};
+
+    const xAxisChange = this.parseRangeChangeForAxis(event, 'xaxis');
+    if (xAxisChange !== undefined) {
+      axisSettingsChange.range.x = xAxisChange;
+    }
+
+    const y1AxisChange = this.parseRangeChangeForAxis(event, 'yaxis');
+    if (y1AxisChange !== undefined) {
+      axisSettingsChange.range.y1 = y1AxisChange;
+    }
+
+    const y2AxisChange = this.parseRangeChangeForAxis(event, 'yaxis2');
+    if (y2AxisChange !== undefined) {
+      axisSettingsChange.range.y2 = y2AxisChange;
+    }
+
+    if (Object.keys(axisSettingsChange.range).length > 0) {
+      this.onAxisSettingsChange(axisSettingsChange);
+    }
+  }
+
+  private parseRangeChangeForAxis(event: PlotRelayoutEvent, axis: string): [number, number] | null | undefined {
+    if (event[`${axis}.autorange`]) {
+      return null;
+    } else if (event[`${axis}.range[0]`] && event[`${axis}.range[1]`]) {
+      return [+event[`${axis}.range[0]`], +event[`${axis}.range[1]`]];
+    }
+    return undefined;
+  }
+
+  public refreshChart(data: ChartData, settings: ChartSettings) {
     this.createOrRefreshData(data);
+    this.setLayoutSettings(settings);
     this.currentType = data.type;
+    console.log({...this.layout});
     react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
+  }
+
+  public refreshSettings(settings: ChartSettings) {
+    this.setLayoutSettings(settings); // TODO check?
+    this.incRevisionNumber();
+    console.log({...this.layout});
+    react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
+  }
+
+  private setLayoutSettings(chartSettings: ChartSettings) {
+    if (!chartSettings || !this.layout) {
+      return;
+    }
+
+    if (chartSettings.rangeSlider) {
+      this.layout.xaxis && (this.layout.xaxis.rangeslider = {});
+    } else {
+      delete this.layout.xaxis?.rangeslider;
+    }
+
+    this.setLayoutAxisRange('xaxis', chartSettings, ChartAxisType.X);
+    this.setLayoutAxisRange('yaxis', chartSettings, ChartAxisType.Y1);
+    this.setLayoutAxisRange('yaxis2', chartSettings, ChartAxisType.Y2);
+  }
+
+  private setLayoutAxisRange(axisParam: string, chartSettings: ChartSettings, axisType: ChartAxisType) {
+    const axis = this.layout[axisParam];
+    if (!axis) {
+      return;
+    }
+
+    const range = chartSettings.settings?.[axisType]?.range;
+    if (range && !deepArrayEquals(axis.range, range)) {
+      axis.autorange = false;
+      axis.range = range;
+    } else {
+      axis.autorange = true;
+      delete axis.range;
+    }
   }
 
   public destroyChart() {
@@ -123,6 +216,8 @@ export class ChartVisualizer {
         return new LinePlotMaker(element);
       case ChartType.Bar:
         return new BarPlotMaker(element);
+      case ChartType.Bubble:
+        return new BubblePlotMaker(element);
       case ChartType.Pie:
         return new PiePlotMaker(element);
     }
@@ -133,9 +228,10 @@ export class ChartVisualizer {
   }
 
   private refreshListeners() {
+    this.plotMaker.initDoubleClick();
+
     if (this.plotMaker instanceof DraggablePlotMaker) {
       const draggablePlotMaker = this.plotMaker as DraggablePlotMaker;
-      draggablePlotMaker.initDoubleClick();
       draggablePlotMaker.setDragEnabled(this.writable);
 
       if (this.writable) {
@@ -157,4 +253,22 @@ export class ChartVisualizer {
   public resize() {
     Plots.resize(this.chartElement.nativeElement);
   }
+}
+
+
+export interface AxisSettingsChange {
+  range?: Partial<Record<ChartAxisType, [number, number] | null>>;
+}
+
+export interface ClickEvent {
+  setId: string;
+  pointId: string;
+  resourceType: AttributesResourceType;
+}
+
+export interface ValueChange {
+  setId: string;
+  pointId: string;
+  value: string;
+  resourceType: AttributesResourceType;
 }

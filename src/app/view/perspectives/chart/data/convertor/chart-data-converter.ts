@@ -169,7 +169,7 @@ export class ChartDataConverter {
 
     this.currentConfig = {...this.currentConfig, type};
 
-    const xAxis = this.createAxisData(this.xAxisHelperData1, this.xAxisHelperData2);
+    const xAxisData = this.createAxisData(this.xAxisHelperData1, this.xAxisHelperData2);
     const ranges = this.currentConfig.lockAxes
       ? this.createAxesRanges(this.y1AxisHelperData, this.y2AxisHelperData)
       : null;
@@ -179,7 +179,7 @@ export class ChartDataConverter {
     return {
       type,
       sets: [...(this.y1Sets || []), ...(this.y2Sets || [])],
-      xAxisData: {...xAxis, rangeSlider: this.currentConfig.rangeSlider},
+      xAxisData,
       y1AxisData,
       y2AxisData,
     };

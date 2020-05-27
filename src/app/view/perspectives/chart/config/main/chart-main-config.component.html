@@ -6,6 +6,8 @@
              (select)="onTypeSelect($event)">
 </select-item>
 
+<h6 class="font-weight-bold mt-4" i18n="@@perspective.chart.config.axis.x.header">X Axis settings</h6>
+
 <select-item-with-constraint class="d-block w-100 mt-2"
                              [attributesResources]="attributesResources"
                              [restrictedIds]="xAxisType | axisRestrictedIds:config"

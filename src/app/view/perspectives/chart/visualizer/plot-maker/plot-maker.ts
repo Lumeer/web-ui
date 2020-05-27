@@ -20,10 +20,10 @@
 import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
-import {AttributesResourceType} from '../../../../../core/model/resource';
 import {ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {ValueChange} from '../chart-visualizer';
 
 export abstract class PlotMaker {
   protected chartData: ChartData;
@@ -56,16 +56,18 @@ export abstract class PlotMaker {
 
   public abstract createLayout(): Partial<Layout>;
 
+  public abstract initDoubleClick();
+
   protected getAxisDataSets(type: ChartYAxisType): ChartDataSet[] {
     return this.chartData.sets.filter(set => set.yAxisType === type);
   }
 
   protected isNumericType(type: ConstraintType) {
-    return [ConstraintType.Percentage, ConstraintType.Number, ConstraintType.Duration].includes(type); // TODO else?
+    return [ConstraintType.Percentage, ConstraintType.Number, ConstraintType.Duration].includes(type);
   }
 
   protected isCategoryType(type: ConstraintType): boolean {
-    return !this.isNumericType(type); // TODO ??
+    return !this.isNumericType(type);
   }
 
   protected axisConstraintType(type: ChartAxisType): ConstraintType {
@@ -81,19 +83,6 @@ export abstract class PlotMaker {
 
     return ConstraintType.Unknown;
   }
-}
-
-export interface ClickEvent {
-  setId: string;
-  pointId: string;
-  resourceType: AttributesResourceType;
-}
-
-export interface ValueChange {
-  setId: string;
-  pointId: string;
-  value: string;
-  resourceType: AttributesResourceType;
 }
 
 export interface DataChange {

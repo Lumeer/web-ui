@@ -41,7 +41,8 @@ export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: Cha
     mapsChanged(viewConfig.axes || {}, currentConfig.axes || {}) ||
     mapsChanged(viewConfig.names || {}, currentConfig.names || {}) ||
     mapsChanged(viewConfig.aggregations || {}, currentConfig.aggregations || {}) ||
-    mapsChanged(viewConfig.colors || {}, currentConfig.colors || {})
+    mapsChanged(viewConfig.colors || {}, currentConfig.colors || {}) ||
+    mapsChanged(viewConfig.settings || {}, currentConfig.settings || {})
   );
 }
 

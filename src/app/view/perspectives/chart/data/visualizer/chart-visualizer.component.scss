@@ -1,3 +1,7 @@
+.chart-wrapper {
+  min-height: 550px;
+}
+
 .draggable::ng-deep {
   .scatterlayer .trace .points path {
     pointer-events: all;

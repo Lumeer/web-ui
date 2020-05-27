@@ -1,4 +1,6 @@
 <chart-visualizer [chartData]="chartData$ | async"
+                  [chartSettings]="chartSettings$ | async"
                   (change)="onValueChange($event)"
-                  (doubleClick)="onDetail($event)">
+                  (doubleClick)="onDetail($event)"
+                  (axisSettingsChange)="onAxisSettingsChange($event)">
 </chart-visualizer>

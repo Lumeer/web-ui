@@ -18,15 +18,14 @@
  */
 
 import * as moment from 'moment';
-import {d3, Layout} from 'plotly.js';
+import {d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/utils/common.utils';
 import {DraggablePlotMaker} from './draggable-plot-maker';
-import {ChartAxisData, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartAxisData} from '../../data/convertor/chart-data';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
-  public abstract getPoints(): any;
 
   public abstract getTraceIndexForPoint(point: any): number;
 
@@ -35,84 +34,6 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getPointPosition(point: any, datum: any): {x: number; y: number};
 
   public abstract getPointNewY(point: any, datum: any, event: any): number;
-
-  protected xAxisLayout(): Partial<Layout> {
-    const layout: Partial<Layout> = {};
-    const data = this.chartData.xAxisData;
-    if (data) {
-      layout.xaxis = {};
-      layout.xaxis.rangeslider = {visible: data.rangeSlider || false};
-      if (data.formatter) {
-        layout.xaxis.tickformat = 'xFormatter';
-      }
-      if (data.ticks?.length) {
-        layout.xaxis.type = 'category';
-        layout.xaxis.tickmode = 'array';
-        layout.xaxis.tickvals = data.ticks.map(t => t.value);
-        layout.xaxis.ticktext = data.ticks.map(t => t.title);
-      }
-    }
-
-    return layout;
-  }
-
-  protected yAxis1Layout(): Partial<Layout> {
-    const data = this.chartData.y1AxisData;
-    const layout: Partial<Layout> = {};
-    if (data) {
-      layout.yaxis = {};
-      if (data.range) {
-        layout.yaxis.range = data.range;
-      }
-      if (data.formatter) {
-        layout.yaxis.tickformat = 'y1Formatter';
-      }
-      if (data.ticks?.length) {
-        layout.yaxis.type = 'category';
-        layout.yaxis.tickmode = 'array';
-        layout.yaxis.tickvals = data.ticks.map(t => t.value);
-        layout.yaxis.ticktext = data.ticks.map(t => t.title);
-      }
-    }
-
-    return layout;
-  }
-
-  protected yAxis2Layout(): Partial<Layout> {
-    const data = this.chartData.y2AxisData;
-    const layout: Partial<Layout> = {};
-    if (data) {
-      layout.yaxis2 = {overlaying: 'y', side: 'right'};
-      if (data.range) {
-        layout.yaxis2.range = data.range;
-      }
-      if (data.formatter) {
-        layout.yaxis2.tickformat = 'y2Formatter';
-      }
-      if (data.ticks?.length) {
-        layout.yaxis2.type = 'category';
-        layout.yaxis2.tickmode = 'array';
-        layout.yaxis2.tickvals = data.ticks.map(t => t.value);
-        layout.yaxis2.ticktext = data.ticks.map(t => t.title);
-      }
-    }
-    return layout;
-  }
-
-  protected getYAxisCategories(type: ChartYAxisType): string[] {
-    const sets = this.getAxisDataSets(type);
-    if (sets.length !== 1) {
-      return [];
-    }
-
-    return sets[0].points.reduce((values, point) => {
-      const value = point.y;
-      if (value && !values.includes(value)) {
-        values.push(value);
-      }
-      return values;
-    }, []);
-  }
 
   protected createYScale(setIx: number): d3.scale.Linear<number, number> | YScaleCategories {
     const yAxisElement = this.getYAxisElementForTrace(setIx);
@@ -198,28 +119,6 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
   protected canDragPoints(): boolean {
     return this.chartData && !!this.chartData.sets.find(set => set.draggable);
-  }
-
-  public initDoubleClick() {
-    this.getPoints().on('dblclick', (event, index) => {
-      const dataSetIndex = this.getDataSetByGlobalIndex(index);
-      const dataSet = this.chartData.sets[dataSetIndex];
-      const point = dataSet.points[event.i];
-      this.onDoubleClick({setId: dataSet.id, pointId: point.id, resourceType: dataSet.resourceType});
-    });
-  }
-
-  private getDataSetByGlobalIndex(index: number): number {
-    let upperIndex = 0;
-    for (let i = 0; i < this.chartData.sets.length; i++) {
-      const pointsLength = (this.chartData.sets[i].points || []).length;
-      upperIndex += pointsLength;
-      if (index < upperIndex) {
-        return i;
-      }
-    }
-
-    return 0;
   }
 
   public initDrag() {
