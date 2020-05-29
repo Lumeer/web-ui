@@ -202,8 +202,8 @@ export class DataRowFocusService {
     const maxRowIndex = this.numRows() - 1;
     const maxColumnIndex = this.numColumns() - 1;
 
-    const newRow = Math.maximum(0, Math.min(row + y, maxRowIndex));
-    const newColumn = Math.maximum(0, Math.min(column + x, maxColumnIndex));
+    const newRow = Math.max(0, Math.min(row + y, maxRowIndex));
+    const newColumn = Math.max(0, Math.min(column + x, maxColumnIndex));
     return {newRow, newColumn};
   }
 

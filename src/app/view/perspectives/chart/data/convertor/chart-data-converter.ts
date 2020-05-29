@@ -499,7 +499,7 @@ export class ChartDataConverter {
     const canDragAxis = this.canDragAxis(yAxis);
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(yAxis);
     const numSets = uniqueValues(dataObjectsInfo.map(dataObject => dataObject.groupingObjects?.[0] || '')).length;
-    const colorAlphaStep = 70 / Math.maximum(1, numSets - 1); // min alpha is 30
+    const colorAlphaStep = 70 / Math.max(1, numSets - 1); // min alpha is 30
     const xValues = new Set();
     const xTicks: ChartAxisTick[] = [];
     const yValues = new Set();

@@ -226,7 +226,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const newValue = pointData.yScale(newY);
 
     if (pointData.constraintType === ConstraintType.Duration) {
-      return Math.maximum(toNumber(newValue), 0);
+      return Math.max(toNumber(newValue), 0);
     }
 
     // if (pointData.axisCategory === ChartAxisCategory.Date) {

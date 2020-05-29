@@ -90,7 +90,7 @@ export class IntegerDirective extends DefaultValueAccessor {
       const absolute = Math.abs(+value);
       let rangeAbsolute = absolute;
       if (isNotNullOrUndefined(this.minValue)) {
-        rangeAbsolute = Math.maximum(this.minValue, rangeAbsolute);
+        rangeAbsolute = Math.max(this.minValue, rangeAbsolute);
       }
       if (isNotNullOrUndefined(this.maxValue)) {
         rangeAbsolute = Math.min(this.maxValue, rangeAbsolute);

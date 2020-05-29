@@ -145,7 +145,7 @@ export class ValuesSliderComponent implements OnChanges, AfterViewInit {
     }
     const position = event.clientX - this.offsetLeft() - step / 2 - this.circleSize / 2;
     const computedIndex = Math.floor(position / step) + 1;
-    const index = Math.min(Math.maximum(0, computedIndex), this.items.length - 1);
+    const index = Math.min(Math.max(0, computedIndex), this.items.length - 1);
     const newCirclePosition = this.calculateSliderLeft(index);
     if (newCirclePosition !== this.circlePosition$.value) {
       this.circlePosition$.next(newCirclePosition);

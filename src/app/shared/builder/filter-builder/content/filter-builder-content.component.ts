@@ -370,6 +370,6 @@ export class FilterBuilderContentComponent implements OnInit {
 
   private initFocusedItem() {
     const index = this.conditionItems.findIndex(item => item.value === this.selectedCondition);
-    this.focusCell(Math.maximum(index, 0), 0);
+    this.focusCell(Math.max(index, 0), 0);
   }
 }

@@ -89,7 +89,7 @@ export const selectTableRowWithHierarchyLevel = (cursor: TableBodyCursor) =>
 
 export const selectTableHierarchyMaxLevel = (tableId: string) =>
   createSelector(selectTableRowsWithHierarchyLevels(tableId), rowsWithLevels =>
-    Math.maximum(0, ...rowsWithLevels.map(row => row.level))
+    Math.max(0, ...rowsWithLevels.map(row => row.level))
   );
 
 export const selectTableRowIndentable = (cursor: TableBodyCursor) =>

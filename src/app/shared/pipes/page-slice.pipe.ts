@@ -25,7 +25,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 export class PageSlicePipe implements PipeTransform {
   public transform(array: any[], page: number, pageSize: number): any[] {
     const pages = Math.ceil(array.length / pageSize);
-    const realPage = Math.min(Math.maximum(page, 0), pages);
+    const realPage = Math.min(Math.max(page, 0), pages);
     const start = realPage * pageSize;
     const end = Math.min((realPage + 1) * pageSize, array.length);
 

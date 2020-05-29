@@ -433,8 +433,8 @@ export class SvgImageMap {
     const {width: elementWidth, height: elementHeight} = this.getElementSize();
     const {width: imageWidth, height: imageHeight} = this.currentData;
 
-    const scale = Math.maximum(imageWidth / elementWidth, imageHeight / elementHeight);
-    const maxScale = Math.maximum(scale, 1);
+    const scale = Math.max(imageWidth / elementWidth, imageHeight / elementHeight);
+    const maxScale = Math.max(scale, 1);
     const width = imageWidth / maxScale;
     const height = imageHeight / maxScale;
 
@@ -446,8 +446,8 @@ export class SvgImageMap {
   private getPixelScale(): number {
     const {width: elementWidth, height: elementHeight} = this.getElementSize();
     const {width: imageWidth, height: imageHeight} = this.currentData;
-    const scale = Math.maximum(imageWidth / elementWidth, imageHeight / elementHeight);
-    return 1 / Math.maximum(scale, 1);
+    const scale = Math.max(imageWidth / elementWidth, imageHeight / elementHeight);
+    return 1 / Math.max(scale, 1);
   }
 
   private getElementSize(): Rectangle {

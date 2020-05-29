@@ -143,7 +143,7 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     // when resizing from mobile view to the larger one, rightWidth is very wide since search box is on another row
     const correctedRightWidth = rightWidth > 400 ? 0 : rightWidth;
 
-    const width = Math.maximum(leftWidth, correctedRightWidth);
+    const width = Math.max(leftWidth, correctedRightWidth);
 
     document.body.style.setProperty('--top-panel-side-width', `${width}px`);
   }

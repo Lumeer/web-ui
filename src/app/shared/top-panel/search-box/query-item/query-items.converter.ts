@@ -160,7 +160,7 @@ export class QueryItemsConverter {
     const collectionIdsChain = collectionIdsChainForStem(stem, this.data.linkTypes);
     const linkTypeIdsChain = stem.linkTypeIds || [];
 
-    for (let i = 0; i < Math.maximum(collectionIdsChain.length, linkTypeIdsChain.length); i++) {
+    for (let i = 0; i < Math.max(collectionIdsChain.length, linkTypeIdsChain.length); i++) {
       const collectionId = collectionIdsChain[i];
       const linkTypeId = linkTypeIdsChain[i];
 

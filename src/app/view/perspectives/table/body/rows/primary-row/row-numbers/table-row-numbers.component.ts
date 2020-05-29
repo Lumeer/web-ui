@@ -115,7 +115,7 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
 
   private detectAndSetRowNumberColumnWidth() {
     const widths = this.rowNumberElements.map(element => element.nativeElement.clientWidth);
-    const width = Math.maximum(...widths);
+    const width = Math.max(...widths);
 
     this.setRowNumberColumnWidth(width);
   }
