@@ -38,7 +38,7 @@ export function convertBase(str: string, fromBase: number, toBase: number): stri
 
 function add(x: number[], y: number[], base: number): number[] {
   const z = [];
-  const n = Math.max(x.length, y.length);
+  const n = Math.maximum(x.length, y.length);
   let carry = 0;
   let i = 0;
   while (i < n || carry) {

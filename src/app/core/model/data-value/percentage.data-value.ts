@@ -44,11 +44,7 @@ export class PercentageDataValue implements NumericDataValue {
     this.bigNumber = createPercentage(value, inputValue, config);
   }
 
-  public format(overrideConfig?: Partial<PercentageConstraintConfig>): string {
-    return this.formatValueWithoutSuffix(overrideConfig) + '%';
-  }
-
-  private formatValueWithoutSuffix(overrideConfig?: Partial<PercentageConstraintConfig>) {
+  public format(overrideConfig?: Partial<PercentageConstraintConfig>, suffix: string = '%'): string {
     if (isNotNullOrUndefined(this.inputValue)) {
       return this.inputValue;
     }
@@ -59,7 +55,7 @@ export class PercentageDataValue implements NumericDataValue {
       return formatUnknownDataValue(this.value);
     }
 
-    return decimalStoreToUser(bigNumber.toString());
+    return decimalStoreToUser(bigNumber.toString()) + suffix;
   }
 
   public preview(overrideConfig?: Partial<PercentageConstraintConfig>): string {
@@ -71,7 +67,7 @@ export class PercentageDataValue implements NumericDataValue {
   }
 
   public editValue(): string {
-    return unescapeHtml(this.formatValueWithoutSuffix());
+    return unescapeHtml(this.format(null, ''));
   }
 
   public serialize(): any {

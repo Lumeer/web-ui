@@ -23,6 +23,7 @@ import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {ChartDataSet} from '../../data/convertor/chart-data';
 import {PlotMaker} from './plot-maker';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
+import {uniqueValues} from '../../../../../shared/utils/array.utils';
 
 const MAX_COLUMNS = 3;
 
@@ -89,13 +90,19 @@ export class PiePlotMaker extends PlotMaker {
       });
 
     const data = {...dataStyle, labels, values};
-    data.marker.colors = colors;
+    if (this.shouldSetColors(colors)) {
+      data.marker.colors = colors;
+    }
 
     if (isNotNullOrUndefined(row) && isNotNullOrUndefined(column)) {
       data.domain = {rows: row, columns: column};
     }
 
     return data;
+  }
+
+  private shouldSetColors(colors: string[]): boolean {
+    return uniqueValues(colors).length > 1;
   }
 
   private mapPointXValue(value: any): any {

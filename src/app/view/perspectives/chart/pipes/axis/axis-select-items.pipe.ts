@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
+import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 
 @Pipe({
@@ -26,19 +26,31 @@ import {SelectItemWithConstraintId} from '../../../../../shared/select/select-co
 })
 export class AxisRestrictedIdsPipe implements PipeTransform {
   public transform(axisType: ChartAxisType, config: ChartConfig, isDataSet?: boolean): SelectItemWithConstraintId[] {
+    const namesEntries: Record<ChartAxisType, ChartAxis> = {
+      [ChartAxisType.X]: config.axes?.x?.name,
+      [ChartAxisType.Y1]: config.axes?.y1?.name,
+      [ChartAxisType.Y2]: config.axes?.y2?.name,
+    };
+
+    const axisEntries: Record<ChartAxisType, ChartAxis> = {
+      [ChartAxisType.X]: config.axes?.x?.axis,
+      [ChartAxisType.Y1]: config.axes?.y1?.axis,
+      [ChartAxisType.Y2]: config.axes?.y2?.axis,
+    };
+
     if (isDataSet) {
       return [
-        ...Object.entries(config.names || {})
-          .filter(entry => entry[0] !== axisType)
+        ...Object.entries(namesEntries)
+          .filter(entry => entry[0] !== axisType && entry[1])
           .map(entry => entry[1]),
-        ...Object.values(config.axes || {}),
+        ...Object.values(axisEntries).filter(axis => !!axis),
       ].map(axis => ({attributeId: axis.attributeId, resourceIndex: axis.resourceIndex}));
     } else {
       return [
-        ...Object.entries(config.axes || {})
-          .filter(entry => entry[0] !== axisType)
+        ...Object.entries(axisEntries)
+          .filter(entry => entry[0] !== axisType && entry[1])
           .map(entry => entry[1]),
-        ...Object.values(config.names || {}),
+        ...Object.values(namesEntries).filter(axis => !!axis),
       ].map(axis => ({attributeId: axis.attributeId, resourceIndex: axis.resourceIndex}));
     }
   }

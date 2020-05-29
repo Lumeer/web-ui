@@ -28,6 +28,7 @@ import {convertCalendarDtoConfigToModel} from '../calendars/calendar-config-conv
 import {convertKanbanConfigDtoToModel} from '../kanbans/kanban-config.converter';
 import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
 import {convertMapDtoConfigToModel} from '../maps/map-config-converter';
+import {convertChartDtoConfigToModel} from '../charts/chart-config-converter';
 
 export function convertViewDtoToModel(dto: ViewDto): View {
   return {
@@ -71,6 +72,8 @@ function convertViewConfigDtoToModel(perspective: Perspective, config: any): Vie
       return {...config, kanban: convertKanbanConfigDtoToModel(config?.kanban)};
     case Perspective.Map:
       return {...config, map: convertMapDtoConfigToModel(config?.map)};
+    case Perspective.Chart:
+      return {...config, chart: convertChartDtoConfigToModel(config?.chart)};
     default:
       return config;
   }

@@ -43,6 +43,7 @@ export interface ChartPoint {
   id?: string;
   x?: any;
   y?: any;
+  size?: number;
   title?: string;
   color?: string;
   isPrediction?: boolean;

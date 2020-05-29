@@ -63,7 +63,7 @@ export class GanttChartConfigComponent {
     config.stemsConfigs[stemIndex].categories.splice(index, 1);
 
     const maxCategories = config.stemsConfigs.reduce(
-      (max, stemConfig) => Math.max(max, (stemConfig.categories || []).length),
+      (max, stemConfig) => Math.maximum(max, (stemConfig.categories || []).length),
       0
     );
     if ((config.swimlaneWidths || []).length > maxCategories) {

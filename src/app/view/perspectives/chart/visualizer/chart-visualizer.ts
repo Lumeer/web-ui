@@ -50,8 +50,7 @@ export class ChartVisualizer {
   private onDoubleClick: (ClickEvent) => void;
   private onAxisSettingsChange: (AxisSettingsChange) => void;
 
-  constructor(private chartElement: ElementRef) {
-  }
+  constructor(private chartElement: ElementRef) {}
 
   public setOnValueChanged(onValueChanged: (ValueChange) => void) {
     this.onValueChanged = onValueChanged;
@@ -70,13 +69,10 @@ export class ChartVisualizer {
     this.setLayoutSettings(settings);
     this.currentType = data.type;
     newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshListeners());
-    this.chartElement.nativeElement.on(
-      'plotly_relayout',
-      (event: PlotRelayoutEvent) => {
-        this.onRelayout(event);
-        this.plotMaker instanceof DraggablePlotMaker && (<DraggablePlotMaker>this.plotMaker).onRelayout();
-      }
-    );
+    this.chartElement.nativeElement.on('plotly_relayout', (event: PlotRelayoutEvent) => {
+      this.onRelayout(event);
+      this.plotMaker instanceof DraggablePlotMaker && (<DraggablePlotMaker>this.plotMaker).onRelayout();
+    });
   }
 
   private onRelayout(event: PlotRelayoutEvent) {
@@ -107,6 +103,8 @@ export class ChartVisualizer {
       return null;
     } else if (event[`${axis}.range[0]`] && event[`${axis}.range[1]`]) {
       return [+event[`${axis}.range[0]`], +event[`${axis}.range[1]`]];
+    } else if (event[`${axis}.range`]) {
+      return event[`${axis}.range`];
     }
     return undefined;
   }
@@ -115,14 +113,13 @@ export class ChartVisualizer {
     this.createOrRefreshData(data);
     this.setLayoutSettings(settings);
     this.currentType = data.type;
-    console.log({...this.layout});
     react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
   }
 
   public refreshSettings(settings: ChartSettings) {
-    this.setLayoutSettings(settings); // TODO check?
+    this.layout = this.plotMaker?.createLayout();
+    this.setLayoutSettings(settings);
     this.incRevisionNumber();
-    console.log({...this.layout});
     react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
   }
 
@@ -152,9 +149,6 @@ export class ChartVisualizer {
     if (range && !deepArrayEquals(axis.range, range)) {
       axis.autorange = false;
       axis.range = range;
-    } else {
-      axis.autorange = true;
-      delete axis.range;
     }
   }
 
@@ -254,7 +248,6 @@ export class ChartVisualizer {
     Plots.resize(this.chartElement.nativeElement);
   }
 }
-
 
 export interface AxisSettingsChange {
   range?: Partial<Record<ChartAxisType, [number, number] | null>>;

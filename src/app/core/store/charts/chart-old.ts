@@ -17,14 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {ChartAxis, ChartAxisType, ChartSort, ChartType} from './chart';
 
-@Pipe({
-  name: 'configAxisByType',
-})
-export class ConfigAxisByTypePipe implements PipeTransform {
-  public transform(type: ChartAxisType, config: ChartConfig): ChartAxis {
-    return config.axes?.[type]?.axis;
-  }
+export interface ChartConfigV0 {
+  type: ChartType;
+
+  axes: Partial<Record<ChartAxisType, ChartAxis>>;
+  names?: Partial<Record<ChartAxisType, ChartAxis>>;
+  colors?: Partial<Record<ChartAxisType, ChartAxis>>;
+  aggregations?: Partial<Record<ChartAxisType, DataAggregationType>>;
+
+  prediction?: boolean;
+  sort?: ChartSort;
 }

@@ -25,7 +25,13 @@ import {PercentageConstraintConfig} from '../../../../../core/model/data/constra
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
+import {
+  ChartAxisType,
+  ChartConfig,
+  ChartConfigVersion,
+  ChartSortType,
+  ChartType,
+} from '../../../../../core/store/charts/chart';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
@@ -110,7 +116,7 @@ describe('Chart data converter single collection', () => {
   });
 
   it('should return empty data', () => {
-    const config: ChartConfig = {type: ChartType.Line, axes: {}};
+    const config: ChartConfig = {type: ChartType.Line, axes: {}, version: ChartConfigVersion.V1};
     converter.updateData(collections, documents, permissions, query, config);
 
     const set: ChartDataSet = {
@@ -132,12 +138,15 @@ describe('Chart data converter single collection', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
       },
+      version: ChartConfigVersion.V1,
     };
     const set: ChartDataSet = {
       id: undefined,
@@ -163,12 +172,15 @@ describe('Chart data converter single collection', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.Y1]: {
-          resourceId: 'C1',
-          attributeId: 'a2',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a2',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
       },
+      version: ChartConfigVersion.V1,
     };
     const set: ChartDataSet = {
       id: 'a2',
@@ -195,21 +207,24 @@ describe('Chart data converter single collection', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C1',
-          attributeId: 'a2',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a2',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Sum,
         },
       },
-      aggregations: {
-        [ChartAxisType.Y1]: DataAggregationType.Sum,
-      },
+      version: ChartConfigVersion.V1,
     };
     const set: ChartDataSet = {
       id: 'a2',
@@ -229,11 +244,9 @@ describe('Chart data converter single collection', () => {
     expect(data.sets).toEqual([set]);
     expect(data.type).toEqual(ChartType.Line);
 
-    const config2 = {
+    const config2: ChartConfig = {
       ...config,
-      aggregations: {
-        [ChartAxisType.Y1]: DataAggregationType.Min,
-      },
+      axes: {...config.axes, [ChartAxisType.Y1]: {...config.axes.y1, aggregation: DataAggregationType.Min}},
     };
     const set2 = {
       ...set,
@@ -247,7 +260,10 @@ describe('Chart data converter single collection', () => {
     expect(data.sets).toEqual([set2]);
     expect(data.type).toEqual(ChartType.Line);
 
-    const config3 = {...config, aggregations: null};
+    const config3: ChartConfig = {
+      ...config,
+      axes: {...config.axes, [ChartAxisType.Y1]: {...config.axes.y1, aggregation: null}},
+    };
     const set3 = {
       ...set,
       points: [
@@ -266,27 +282,32 @@ describe('Chart data converter single collection', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C1',
-          attributeId: 'a2',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a2',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Sum,
         },
         [ChartAxisType.Y2]: {
-          resourceId: 'C1',
-          attributeId: 'a3',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a3',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
       },
-      aggregations: {
-        [ChartAxisType.Y1]: DataAggregationType.Sum,
-      },
+      version: ChartConfigVersion.V1,
     };
     const points1: ChartPoint[] = [
       {id: 'D2', x: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7'},
@@ -726,7 +747,7 @@ describe('Chart data converter linked collections', () => {
   });
 
   it('should return empty data', () => {
-    const config: ChartConfig = {type: ChartType.Line, axes: {}};
+    const config: ChartConfig = {type: ChartType.Line, axes: {}, version: ChartConfigVersion.V1};
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
 
     const set: ChartDataSet = {
@@ -748,21 +769,24 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C4',
-          attributeId: 'a2',
-          resourceIndex: 6,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C4',
+            attributeId: 'a2',
+            resourceIndex: 6,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Sum,
         },
       },
-      aggregations: {
-        [ChartAxisType.Y1]: DataAggregationType.Sum,
-      },
+      version: ChartConfigVersion.V1,
     };
 
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
@@ -781,16 +805,21 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C4',
-          attributeId: 'a2',
-          resourceIndex: 6,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C4',
+            attributeId: 'a2',
+            resourceIndex: 6,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Sum,
         },
       },
       sort: {
@@ -801,7 +830,7 @@ describe('Chart data converter linked collections', () => {
           resourceType: AttributesResourceType.Collection,
         },
       },
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum},
+      version: ChartConfigVersion.V1,
     };
 
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
@@ -820,19 +849,24 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C4',
-          attributeId: 'a1',
-          resourceIndex: 6,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C4',
+            attributeId: 'a1',
+            resourceIndex: 6,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Sum,
         },
       },
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum},
+      version: ChartConfigVersion.V1,
     };
 
     const points = [
@@ -853,19 +887,24 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C4',
-          attributeId: 'a2',
-          resourceIndex: 6,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C4',
+            attributeId: 'a2',
+            resourceIndex: 6,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Min,
         },
       },
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Min},
+      version: ChartConfigVersion.V1,
     };
 
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
@@ -884,19 +923,24 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C4',
-          attributeId: 'a2',
-          resourceIndex: 6,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C4',
+            attributeId: 'a2',
+            resourceIndex: 6,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Max,
         },
       },
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Max},
+      version: ChartConfigVersion.V1,
     };
 
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
@@ -915,19 +959,24 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C4',
-          attributeId: 'a2',
-          resourceIndex: 6,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C4',
+            attributeId: 'a2',
+            resourceIndex: 6,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Avg,
         },
       },
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Avg},
+      version: ChartConfigVersion.V1,
     };
 
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
@@ -946,27 +995,30 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C2',
-          attributeId: 'a2',
-          resourceIndex: 2,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C2',
+            attributeId: 'a2',
+            resourceIndex: 2,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Sum,
+          name: {
+            resourceId: 'C3',
+            attributeId: 'a1',
+            resourceIndex: 4,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
       },
-      names: {
-        [ChartAxisType.Y1]: {
-          resourceId: 'C3',
-          attributeId: 'a1',
-          resourceIndex: 4,
-          resourceType: AttributesResourceType.Collection,
-        },
-      },
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum},
+      version: ChartConfigVersion.V1,
     };
 
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
@@ -1021,27 +1073,30 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'LT1',
-          attributeId: 'a1',
-          resourceIndex: 1,
-          resourceType: AttributesResourceType.LinkType,
+          axis: {
+            resourceId: 'LT1',
+            attributeId: 'a1',
+            resourceIndex: 1,
+            resourceType: AttributesResourceType.LinkType,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'LT3',
-          attributeId: 'a2',
-          resourceIndex: 5,
-          resourceType: AttributesResourceType.LinkType,
+          axis: {
+            resourceId: 'LT3',
+            attributeId: 'a2',
+            resourceIndex: 5,
+            resourceType: AttributesResourceType.LinkType,
+          },
+          aggregation: DataAggregationType.Sum,
+          name: {
+            resourceId: 'C2',
+            attributeId: 'a1',
+            resourceIndex: 2,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
       },
-      names: {
-        [ChartAxisType.Y1]: {
-          resourceId: 'C2',
-          attributeId: 'a1',
-          resourceIndex: 2,
-          resourceType: AttributesResourceType.Collection,
-        },
-      },
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum},
+      version: ChartConfigVersion.V1,
     };
 
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
@@ -1118,19 +1173,24 @@ describe('Chart data converter linked collections', () => {
       type: ChartType.Line,
       axes: {
         [ChartAxisType.X]: {
-          resourceId: 'C1',
-          attributeId: 'a1',
-          resourceIndex: 0,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C1',
+            attributeId: 'a1',
+            resourceIndex: 0,
+            resourceType: AttributesResourceType.Collection,
+          },
         },
         [ChartAxisType.Y1]: {
-          resourceId: 'C2',
-          attributeId: 'a1',
-          resourceIndex: 2,
-          resourceType: AttributesResourceType.Collection,
+          axis: {
+            resourceId: 'C2',
+            attributeId: 'a1',
+            resourceIndex: 2,
+            resourceType: AttributesResourceType.Collection,
+          },
+          aggregation: DataAggregationType.Avg,
         },
       },
-      aggregations: {[ChartAxisType.Y1]: DataAggregationType.Avg},
+      version: ChartConfigVersion.V1,
     };
 
     const pointsAvg = [
@@ -1151,7 +1211,10 @@ describe('Chart data converter linked collections', () => {
     expect(chartDataAvg.sets.length).toEqual(1);
     expect(chartDataAvg.sets[0].points).toEqual(pointsAvg);
 
-    const configSum = {...configAvg, aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum}};
+    const configSum: ChartConfig = {
+      ...configAvg,
+      axes: {...configAvg.axes, [ChartAxisType.Y1]: {...configAvg.axes.y1, aggregation: DataAggregationType.Sum}},
+    };
     const pointsSum = [
       {id: null, x: 'Kubo', y: 1.2, title: '120%', color: 'rgba(255,255,255,1)'},
       {id: null, x: 'Martin', y: 0.9, title: '90%', color: 'rgba(255,255,255,1)'},
@@ -1161,7 +1224,10 @@ describe('Chart data converter linked collections', () => {
     expect(chartDataSum.sets.length).toEqual(1);
     expect(chartDataSum.sets[0].points).toEqual(pointsSum);
 
-    const configMax = {...configAvg, aggregations: {[ChartAxisType.Y1]: DataAggregationType.Max}};
+    const configMax: ChartConfig = {
+      ...configAvg,
+      axes: {...configAvg.axes, [ChartAxisType.Y1]: {...configAvg.axes.y1, aggregation: DataAggregationType.Max}},
+    };
     const pointsMax = [
       {id: null, x: 'Kubo', y: 0.8, title: '80%', color: 'rgba(255,255,255,1)'},
       {id: null, x: 'Martin', y: 0.5, title: '50%', color: 'rgba(255,255,255,1)'},
@@ -1171,7 +1237,10 @@ describe('Chart data converter linked collections', () => {
     expect(chartDataMax.sets.length).toEqual(1);
     expect(chartDataMax.sets[0].points).toEqual(pointsMax);
 
-    const configMin = {...configAvg, aggregations: {[ChartAxisType.Y1]: DataAggregationType.Min}};
+    const configMin: ChartConfig = {
+      ...configAvg,
+      axes: {...configAvg.axes, [ChartAxisType.Y1]: {...configAvg.axes.y1, aggregation: DataAggregationType.Min}},
+    };
     const pointsMin = [
       {id: null, x: 'Kubo', y: 0.4, title: '40%', color: 'rgba(255,255,255,1)'},
       {id: null, x: 'Martin', y: 0.1, title: '10%', color: 'rgba(255,255,255,1)'},
@@ -1181,7 +1250,10 @@ describe('Chart data converter linked collections', () => {
     expect(chartDataMin.sets.length).toEqual(1);
     expect(chartDataMin.sets[0].points).toEqual(pointsMin);
 
-    const configCount = {...configAvg, aggregations: {[ChartAxisType.Y1]: DataAggregationType.Count}};
+    const configCount: ChartConfig = {
+      ...configAvg,
+      axes: {...configAvg.axes, [ChartAxisType.Y1]: {...configAvg.axes.y1, aggregation: DataAggregationType.Count}},
+    };
     const pointsCount = [
       {id: null, x: 'Kubo', y: 2, title: '2', color: 'rgba(255,255,255,1)'},
       {id: null, x: 'Martin', y: 3, title: '3', color: 'rgba(255,255,255,1)'},

@@ -175,13 +175,13 @@ export function computeMarkerPosition(
 export function checkXBounds(x: number, center: Rectangle, bounds: Rectangle, offset = 0): number {
   const lowerX = center.width / 2 - bounds.width / 2 - offset;
   const upperX = center.width / 2 + bounds.width / 2 - offset;
-  return Math.max(Math.min(upperX, x), lowerX);
+  return Math.maximum(Math.min(upperX, x), lowerX);
 }
 
 export function checkYBounds(y: number, center: Rectangle, bounds: Rectangle, offset = 0): number {
   const lowerY = center.height / 2 - bounds.height / 2 - offset;
   const upperY = center.height / 2 + bounds.height / 2 - offset;
-  return Math.max(Math.min(upperY, y), lowerY);
+  return Math.maximum(Math.min(upperY, y), lowerY);
 }
 
 export function scaleRectangle(rectangle: Rectangle, scale: number): Rectangle {

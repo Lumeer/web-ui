@@ -19,11 +19,14 @@
 
 import {Data, Layout, d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {ChartDataSet} from '../../data/convertor/chart-data';
+import {ChartDataSet, ChartPoint} from '../../data/convertor/chart-data';
 import {TwoDAxisPlotMaker} from './two-d-axis-plot-maker';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+
+const MIN_POINT_SIZE = 20;
+const MAX_POINT_SIZE = 60;
 
 export class BubblePlotMaker extends TwoDAxisPlotMaker {
-
   public createData(): Data[] {
     return this.chartData.sets.map(set => this.createAxisData(set));
   }
@@ -33,12 +36,16 @@ export class BubblePlotMaker extends TwoDAxisPlotMaker {
     const traceY = [];
     const colors = [];
     const texts = [];
+    const sizes = [];
+
+    const sizeScale = this.pointSizeScale(set.points);
 
     set.points.forEach(point => {
       traceX.push(point.x);
       traceY.push(point.y);
       colors.push(point.color);
       texts.push(point.title);
+      sizes.push(sizeScale(point.size));
     });
 
     let data: Data;
@@ -55,8 +62,27 @@ export class BubblePlotMaker extends TwoDAxisPlotMaker {
     data.text = texts;
     data.textinfo = 'text';
     data.hoverinfo = 'x+text';
+    data.marker.size = sizes;
 
     return data;
+  }
+
+  private pointSizeScale(points: ChartPoint[]): (value: number) => number {
+    const {minimum, maximum} = points.reduce(
+      (val, p) => ({
+        maximum: Math.max(val.maximum, p.size || 0),
+        minimum: Math.min(val.minimum, isNotNullOrUndefined(p.size) ? p.size : Number.MAX_SAFE_INTEGER),
+      }),
+      {minimum: Number.MAX_SAFE_INTEGER, maximum: 0}
+    );
+
+    const range = MAX_POINT_SIZE - MIN_POINT_SIZE;
+
+    if (minimum >= maximum) {
+      return () => range / 2 + MIN_POINT_SIZE;
+    }
+
+    return d3.scale.linear().domain([minimum, maximum]).range([MIN_POINT_SIZE, MAX_POINT_SIZE]);
   }
 
   private axis1DataStyle(set: ChartDataSet): Data {
@@ -67,7 +93,7 @@ export class BubblePlotMaker extends TwoDAxisPlotMaker {
     return {
       ...this.getDefaultDataStyle(set),
       yaxis: 'y2',
-      marker: {size: 26, color: '#00000000', line: {color: set.color, width: 4}},
+      marker: {color: '#00000000', line: {color: set.color, width: 4}},
     };
   }
 
@@ -75,7 +101,7 @@ export class BubblePlotMaker extends TwoDAxisPlotMaker {
     return {
       mode: 'markers' as const,
       type: 'scatter' as const,
-      marker: {size: 30, color: set.color},
+      marker: {color: set.color},
     };
   }
 

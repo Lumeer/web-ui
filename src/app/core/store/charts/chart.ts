@@ -30,15 +30,25 @@ export interface Chart {
 
 export interface ChartConfig {
   type: ChartType;
-  settings?: Partial<Record<ChartAxisType, ChartAxisSettings>>;
-  axes: Partial<Record<ChartAxisType, ChartAxis>>;
-  names?: Partial<Record<ChartAxisType, ChartAxis>>;
-  colors?: Partial<Record<ChartAxisType, ChartAxis>>;
-  aggregations?: Partial<Record<ChartAxisType, DataAggregationType>>;
+  axes?: Partial<Record<ChartAxisType, ChartAxisConfig>>;
   prediction?: boolean;
   lockAxes?: boolean;
   rangeSlider?: boolean;
   sort?: ChartSort;
+  version: ChartConfigVersion;
+}
+
+export enum ChartConfigVersion {
+  V1 = '1',
+}
+
+export interface ChartAxisConfig {
+  axis?: ChartAxis;
+  name?: ChartAxis;
+  color?: ChartAxis;
+  size?: ChartAxis;
+  aggregation?: DataAggregationType;
+  settings?: ChartAxisSettings;
 }
 
 export interface ChartAxis extends QueryAttribute {

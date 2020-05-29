@@ -58,6 +58,7 @@ enum DataObjectInfoKeyType {
   Y = 'y',
   Name = 'name',
   Color = 'color',
+  Size = 'size',
 }
 
 interface ChartConvertData {
@@ -136,7 +137,7 @@ export class ChartDataConverter {
     constraintData: ConstraintData
   ): DocumentModel[] {
     const sort = config.sort;
-    const sortAxis = sort?.axis || config.axes?.[ChartAxisType.X];
+    const sortAxis = sort?.axis || config.axes?.x?.axis;
     if (!sortAxis) {
       return [...documents];
     }
@@ -190,9 +191,9 @@ export class ChartDataConverter {
   }
 
   public convert(config: ChartConfig): ChartData {
-    const xAxis = config.axes[ChartAxisType.X];
-    const y1Axis = config.axes[ChartAxisType.Y1];
-    const y2Axis = config.axes[ChartAxisType.Y2];
+    const xAxis = config.axes?.x?.axis;
+    const y1Axis = config.axes?.y1?.axis;
+    const y2Axis = config.axes?.y2?.axis;
 
     if (!xAxis && !y1Axis && !y2Axis) {
       return this.createEmptyData(config);
@@ -345,22 +346,17 @@ export class ChartDataConverter {
   }
 
   private convertAxis(config: ChartConfig, yAxisType: ChartYAxisType): ChartConvertData {
-    const xAxis = config.axes[ChartAxisType.X];
-    const yAxis = config.axes?.[yAxisType];
+    const xAxis = config.axes?.x?.axis;
+    const yAxis = config.axes?.[yAxisType]?.axis;
 
     if (!xAxis || !yAxis) {
-      return this.convertAxisSimple(yAxisType, xAxis, yAxis, config.type);
+      return this.convertAxisSimple(yAxisType, xAxis, yAxis);
     }
 
     return this.convertAxisWithAggregation(config, yAxisType);
   }
 
-  private convertAxisSimple(
-    yAxisType: ChartYAxisType,
-    xAxis: ChartAxis,
-    yAxis: ChartAxis,
-    type: ChartType
-  ): ChartConvertData {
+  private convertAxisSimple(yAxisType: ChartYAxisType, xAxis: ChartAxis, yAxis: ChartAxis): ChartConvertData {
     const definedAxis = yAxis || xAxis;
     if (!definedAxis) {
       return {sets: []};
@@ -373,12 +369,7 @@ export class ChartDataConverter {
     let isNum = true;
 
     const dataResources = this.dataObjectAggregator.getDataResources(definedAxis);
-    const color = this.dataObjectAggregator.getAttributeResourceColor(definedAxis);
-
-    let pointColor: string = null;
-    if (type !== ChartType.Pie) {
-      pointColor = color;
-    }
+    const pointColor = this.dataObjectAggregator.getAttributeResourceColor(definedAxis);
 
     const ticks: ChartAxisTick[] = [];
 
@@ -423,7 +414,7 @@ export class ChartDataConverter {
       name,
       draggable,
       resourceType: definedAxis.resourceType,
-      color,
+      color: pointColor,
     };
     return {
       sets: [dataSet],
@@ -445,7 +436,7 @@ export class ChartDataConverter {
   }
 
   private constraintForAxis(axis: ChartAxis): Constraint {
-    const attribute = this.attributeForAxis(axis);
+    const attribute = axis && this.attributeForAxis(axis);
     return this.constraintForAttribute(attribute, axis?.constraint);
   }
 
@@ -458,21 +449,28 @@ export class ChartDataConverter {
   }
 
   private convertAxisWithAggregation(config: ChartConfig, yAxisType: ChartYAxisType): ChartConvertData {
-    const xAxis = config.axes[ChartAxisType.X];
-    const yAxis = config.axes[yAxisType];
-    const yName = config.names?.[yAxisType];
-    const color = config.colors?.[yAxisType];
+    const xAxis = config.axes?.x?.axis;
+    const yAxisConfig = config.axes?.[yAxisType];
+    const yAxis = yAxisConfig?.axis;
+    const yName = yAxisConfig?.name;
+
+    const colorAttribute: DataObjectAttribute = yAxisConfig?.color
+      ? {
+          ...yAxisConfig.color,
+          key: DataObjectInfoKeyType.Color,
+        }
+      : null;
+    const sizeAttribute: DataObjectAttribute = yAxisConfig?.size
+      ? {
+          ...yAxisConfig.size,
+          key: DataObjectInfoKeyType.Size,
+        }
+      : null;
 
     const valueAttribute = {...yAxis, key: DataObjectInfoKeyType.Y};
-    const metaAttributes: DataObjectAttribute[] = color
-      ? [
-          valueAttribute,
-          {
-            ...color,
-            key: DataObjectInfoKeyType.Color,
-          },
-        ]
-      : [valueAttribute];
+    const metaAttributes: DataObjectAttribute[] = [valueAttribute, colorAttribute, sizeAttribute].filter(
+      attribute => !!attribute
+    );
 
     const dataObjectsInfo = this.dataObjectAggregator.convert({
       groupingAttributes: yName ? [{...yName, key: DataObjectInfoKeyType.Name}] : [],
@@ -489,18 +487,19 @@ export class ChartDataConverter {
     config: ChartConfig,
     yAxisType: ChartYAxisType
   ): ChartConvertData {
-    const xAxis = config.axes[ChartAxisType.X];
-    const yAxis = config.axes[yAxisType];
+    const xAxis = config.axes?.x?.axis;
+    const yAxisConfig = config.axes?.[yAxisType];
+    const yAxis = yAxisConfig?.axis;
     const yAxisName = this.attributeNameForAxis(yAxis);
     const yConstraint = this.constraintForAxis(yAxis);
+    const sizeConstraint = this.constraintForAxis(yAxisConfig?.size);
     const setId = this.yAxisSetId(config, yAxisType);
-    const isDataSetDefined = !!config.names?.[yAxisType];
-    const colorAxis = config.colors?.[yAxisType];
-    const isColorDefined = !!colorAxis;
+    const isDataSetDefined = !!yAxisConfig?.name;
+    const colorAxis = yAxisConfig?.color;
     const canDragAxis = this.canDragAxis(yAxis);
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(yAxis);
     const numSets = uniqueValues(dataObjectsInfo.map(dataObject => dataObject.groupingObjects?.[0] || '')).length;
-    const colorAlphaStep = 70 / Math.max(1, numSets - 1); // min alpha is 30
+    const colorAlphaStep = 70 / Math.maximum(1, numSets - 1); // min alpha is 30
     const xValues = new Set();
     const xTicks: ChartAxisTick[] = [];
     const yValues = new Set();
@@ -535,13 +534,11 @@ export class ChartDataConverter {
         };
       }
 
-      let pointColor: string = null;
-      if (isColorDefined || config.type !== ChartType.Pie) {
-        if (isDataSetDefined) {
-          pointColor = axisColor;
-        } else {
-          pointColor = hex2rgba(attributeColor || resourceColor, (100 - setIndex * colorAlphaStep) / 100);
-        }
+      let pointColor: string;
+      if (isDataSetDefined) {
+        pointColor = axisColor;
+      } else {
+        pointColor = hex2rgba(attributeColor || resourceColor, (100 - setIndex * colorAlphaStep) / 100);
       }
 
       const set = setsMap[setName];
@@ -556,7 +553,7 @@ export class ChartDataConverter {
         );
 
       const values = valueObjects.map(obj => obj.value);
-      const aggregation = config.aggregations && config.aggregations[yAxisType];
+      const aggregation = yAxisConfig?.aggregation;
       let yValue = aggregateDataValues(aggregation, values, yConstraint);
       const title = isValueAggregation(aggregation)
         ? this.formatPointTitleValue(yValue, yAxis)
@@ -565,10 +562,21 @@ export class ChartDataConverter {
         : yValue;
       yValue = isValueAggregation(aggregation) ? this.formatChartAxisValue(yValue, yAxis) : yValue;
       if (isNotNullOrUndefined(yValue)) {
+        const sizeDataResources = dataObject.metaDataResources[DataObjectInfoKeyType.Size] || [];
+        const sizes = sizeDataResources.map(dataResource => dataResource?.data[yAxisConfig?.size?.attributeId]);
+        const size = aggregateDataValues(aggregation, sizes, sizeConstraint, true);
+
         const id =
           canDragAxis && valueObjects.length === 1 && isValueAggregation(aggregation) ? valueObjects[0].id : null;
 
-        set.points.push({id, x: xValue, y: yValue, color: pointColor, title});
+        set.points.push({
+          id,
+          x: xValue,
+          y: yValue,
+          color: pointColor,
+          title: isNotNullOrUndefined(size) ? String(size) : title,
+          size,
+        });
         set.draggable = set.draggable || isNotNullOrUndefined(id);
 
         isXNum = isXNum && isNumeric(xValue);
@@ -645,12 +653,13 @@ export class ChartDataConverter {
   }
 
   private yAxisSetId(config: ChartConfig, yAxisType: ChartYAxisType): string {
-    return config.axes?.[yAxisType]?.attributeId;
+    return config.axes?.[yAxisType]?.axis?.attributeId;
   }
 
   public convertAxisType(config: ChartConfig, type: ChartYAxisType): ChartData {
-    const xAxis = config.axes[ChartAxisType.X];
-    const yAxis = config.axes[type];
+    const xAxis = config.axes?.x?.axis;
+    const yAxisConfig = config.axes?.[type];
+    const yAxis = yAxisConfig?.axis;
 
     const otherSets = type === ChartAxisType.Y1 ? this.y2Sets : this.y1Sets;
     const otherSetsAreEmpty = !otherSets || otherSets.length === 0;
@@ -667,7 +676,7 @@ export class ChartDataConverter {
       this.y2AxisHelperData = yAxisHelperData;
     }
 
-    const otherYAxis = config.axes[type === ChartAxisType.Y1 ? ChartAxisType.Y2 : ChartAxisType.Y1];
+    const otherYAxis = config.axes?.[type === ChartAxisType.Y1 ? ChartAxisType.Y2 : ChartAxisType.Y1]?.axis;
     if (sets.length > 0 && !otherYAxis) {
       this.clearOtherSetsByType(type);
     }

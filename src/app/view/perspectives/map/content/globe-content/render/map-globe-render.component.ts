@@ -247,7 +247,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
       }
 
       this.mapboxMap.easeTo({
-        duration: Math.max((zoom / this.mapboxMap.getZoom()) * 200, 300),
+        duration: Math.maximum((zoom / this.mapboxMap.getZoom()) * 200, 300),
         center: (features[0].geometry as Point).coordinates as [number, number],
         zoom: zoom,
       });

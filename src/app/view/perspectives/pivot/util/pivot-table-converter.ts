@@ -94,7 +94,7 @@ export class PivotTableConverter {
   }
 
   private updateData(data: PivotStemData) {
-    const numberOfSums = Math.max(1, (data.valueTitles || []).length);
+    const numberOfSums = Math.maximum(1, (data.valueTitles || []).length);
     this.valueTypeInfo = getValuesTypeInfo(data.values, data.valueTypes, numberOfSums);
     this.data = preparePivotData(data, this.constraintData, this.valueTypeInfo);
     this.values = data.values || [];
@@ -190,7 +190,7 @@ export class PivotTableConverter {
     if (showSums[level]) {
       const background = this.getSummaryBackground(level);
       const summary = level === 0 ? this.summaryString : this.headerSummaryString;
-      const columnIndex = Math.max(level - 1, 0);
+      const columnIndex = Math.maximum(level - 1, 0);
       cells[currentIndex][columnIndex] = {
         value: parentHeader && parentHeader.title,
         constraint: parentHeader && parentHeader.constraint,
@@ -372,7 +372,7 @@ export class PivotTableConverter {
     parentHeader?: PivotDataHeader
   ) {
     let currentIndex = startIndex;
-    const numberOfSums = Math.max(1, this.data.valueTitles.length);
+    const numberOfSums = Math.maximum(1, this.data.valueTitles.length);
     for (const header of headers) {
       const colSpan = getDirectHeaderChildCount(header, level, showSums, numberOfSums);
       cells[level][currentIndex] = {
@@ -407,7 +407,7 @@ export class PivotTableConverter {
       const background = this.getSummaryBackground(level);
       const summary = level === 0 ? this.summaryString : this.headerSummaryString;
       const numberOfValues = this.data.valueTitles.length;
-      const rowIndex = Math.max(level - 1, 0);
+      const rowIndex = Math.maximum(level - 1, 0);
       const shouldAddValueHeaders = numberOfValues > 1;
 
       cells[rowIndex][currentIndex] = {
@@ -625,7 +625,7 @@ export class PivotTableConverter {
     if (this.data.columnHeaders.length === 0 && (this.data.valueTitles || []).length > 0) {
       return 1;
     }
-    const numberOfSums = Math.max(1, (this.data.valueTitles || []).length);
+    const numberOfSums = Math.maximum(1, (this.data.valueTitles || []).length);
     return getHeadersChildCount(this.data.columnHeaders, this.columnShowSums, numberOfSums);
   }
 }
@@ -635,7 +635,7 @@ function preparePivotData(
   constraintData: ConstraintData,
   valueTypeInfo: ValueTypeInfo[]
 ): PivotStemData {
-  const numberOfSums = Math.max(1, (data.valueTitles || []).length);
+  const numberOfSums = Math.maximum(1, (data.valueTitles || []).length);
   const values = computeValuesByValueType(data.values, data.valueTypes, numberOfSums, valueTypeInfo);
   return sortPivotData({...data, values}, constraintData);
 }

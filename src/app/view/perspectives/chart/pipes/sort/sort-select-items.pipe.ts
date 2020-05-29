@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
+import {ChartConfig} from '../../../../../core/store/charts/chart';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {collectionAttributeToItem, linkTypeAttributeToItem} from '../axis/pipes.util';
 import {AttributesResource, AttributesResourceType} from '../../../../../core/model/resource';
@@ -31,7 +31,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 })
 export class SortSelectItemsPipe implements PipeTransform {
   public transform(config: ChartConfig, attributesResources: AttributesResource[]): SelectItemModel[] {
-    const xAxis = config.axes && config.axes[ChartAxisType.X];
+    const xAxis = config.axes?.x?.axis;
     if (!xAxis) {
       return [];
     }

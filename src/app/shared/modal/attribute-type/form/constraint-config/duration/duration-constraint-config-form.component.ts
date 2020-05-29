@@ -109,7 +109,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
       [DurationConstraintConversionFormControl.Unit]: new FormControl(unit),
       [DurationConstraintConversionFormControl.Value]: new FormControl(this.getUnitConversion(type, unit), [
         Validators.min(1),
-        Validators.max(unitMaxValue),
+        Validators.maximum(unitMaxValue),
       ]),
     });
   }

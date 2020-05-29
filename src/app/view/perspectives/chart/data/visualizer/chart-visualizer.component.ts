@@ -27,12 +27,15 @@ import {
   ElementRef,
   Output,
   EventEmitter,
-  OnDestroy, OnInit,
+  OnDestroy,
+  OnInit,
 } from '@angular/core';
 import {AxisSettingsChange, ChartVisualizer, ClickEvent, ValueChange} from '../../visualizer/chart-visualizer';
 import * as PlotlyJS from 'plotly.js';
 import * as CSLocale from 'plotly.js/lib/locales/cs.js';
 import {ChartData, ChartSettings} from '../convertor/chart-data';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'chart-visualizer',
@@ -61,8 +64,12 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
 
   private chartVisualizer: ChartVisualizer;
 
+  private subscriptions = new Subscription();
+  private axisSettingsChangeSubject$ = new Subject<AxisSettingsChange>();
+
   public ngOnInit() {
     (PlotlyJS as any).register(CSLocale);
+    this.subscribeConfigChange();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -90,7 +97,7 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
     this.chartVisualizer = new ChartVisualizer(this.chartElement);
     this.chartVisualizer.setOnValueChanged(event => this.change.emit(event));
     this.chartVisualizer.setOnDoubleClick(event => this.doubleClick.emit(event));
-    this.chartVisualizer.setOnAxisSettingsChange(event => this.axisSettingsChange.emit(event));
+    this.chartVisualizer.setOnAxisSettingsChange(event => this.axisSettingsChangeSubject$.next(event));
     this.chartVisualizer.setWriteEnabled(this.isWritable());
     this.chartVisualizer.createChart(this.chartData, this.chartSettings);
   }
@@ -101,9 +108,16 @@ export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnDestroy() {
     this.chartVisualizer?.destroyChart();
+    this.subscriptions.unsubscribe();
   }
 
   public resize() {
     this.chartVisualizer?.resize();
+  }
+
+  private subscribeConfigChange() {
+    this.subscriptions.add(
+      this.axisSettingsChangeSubject$.pipe(debounceTime(100)).subscribe(event => this.axisSettingsChange.emit(event))
+    );
   }
 }

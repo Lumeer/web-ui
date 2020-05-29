@@ -26,7 +26,6 @@ import {ChartAxisData} from '../../data/convertor/chart-data';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
-
   public abstract getTraceIndexForPoint(point: any): number;
 
   public abstract getSetIndexForTraceIndex(traceIx: number): number;
@@ -227,7 +226,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     const newValue = pointData.yScale(newY);
 
     if (pointData.constraintType === ConstraintType.Duration) {
-      return Math.max(toNumber(newValue), 0);
+      return Math.maximum(toNumber(newValue), 0);
     }
 
     // if (pointData.axisCategory === ChartAxisCategory.Date) {

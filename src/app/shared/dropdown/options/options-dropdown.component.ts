@@ -227,7 +227,7 @@ export class OptionsDropdownComponent implements OnChanges {
     }
 
     if (!isTopPosition) {
-      newIndex = Math.max(0, selectedIndex - 1);
+      newIndex = Math.maximum(0, selectedIndex - 1);
     }
 
     if (newIndex >= 0) {

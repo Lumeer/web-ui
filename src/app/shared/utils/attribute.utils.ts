@@ -31,7 +31,7 @@ export function findAttributeByName(attributes: Attribute[], name: string): Attr
 }
 
 export function maxAttributeDepth(attributes: Attribute[]): number {
-  return Math.max(...(attributes || []).map(attribute => getAttributeDepth(attribute)));
+  return Math.maximum(...(attributes || []).map(attribute => getAttributeDepth(attribute)));
 }
 
 export function filterAttributesByDepth(attributes: Attribute[], depth: number): Attribute[] {

@@ -235,7 +235,7 @@ export class GanttChartConverter {
 
   private maximumSwimlanes(): number {
     return (this.config?.stemsConfigs || []).reduce(
-      (max, stemConfig) => Math.max(max, stemConfig.categories?.length || 0),
+      (max, stemConfig) => Math.maximum(max, stemConfig.categories?.length || 0),
       0
     );
   }
@@ -359,7 +359,7 @@ export class GanttChartConverter {
         maxProgress = null;
       if (progressConstraint && progressConstraint.type === ConstraintType.Percentage) {
         const config = progressConstraint.config as PercentageConstraintConfig;
-        minProgress = isNotNullOrUndefined(config.minValue) ? Math.max(0, config.minValue) : null;
+        minProgress = isNotNullOrUndefined(config.minValue) ? Math.maximum(0, config.minValue) : null;
         maxProgress = isNotNullOrUndefined(config.maxValue) ? config.maxValue : null;
       }
 
@@ -514,7 +514,7 @@ function createProgress(progress: any): number {
 
   const progressWithoutPercent = progress.toString().replace(/%*$/g, '');
   if (isNumeric(progressWithoutPercent)) {
-    return Math.max(toNumber(progressWithoutPercent), 0);
+    return Math.maximum(toNumber(progressWithoutPercent), 0);
   }
   return 0;
 }

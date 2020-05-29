@@ -288,8 +288,8 @@ export class PivotDataConverter {
     return {
       map: a1.map,
       columnsMap: a1.columnsMap,
-      rowLevels: Math.max(a1.rowLevels, a2.rowLevels),
-      columnLevels: Math.max(a1.columnLevels, a2.columnLevels),
+      rowLevels: Math.maximum(a1.rowLevels, a2.rowLevels),
+      columnLevels: Math.maximum(a1.columnLevels, a2.columnLevels),
     };
   }
 
@@ -464,7 +464,7 @@ export class PivotDataConverter {
             isValueHeader: false,
             attributeName: attribute?.name,
           });
-          data.maxIndex = Math.max(data.maxIndex, currentIndex);
+          data.maxIndex = Math.maximum(data.maxIndex, currentIndex);
         } else {
           headers.push({
             title,
@@ -514,7 +514,7 @@ export class PivotDataConverter {
           color: valueColors[index],
           isValueHeader: true,
         }));
-        additionalData.maxIndex = Math.max(additionalData.maxIndex, headerIndex + valueTitles.length - 1);
+        additionalData.maxIndex = Math.maximum(additionalData.maxIndex, headerIndex + valueTitles.length - 1);
       }
       return;
     }
@@ -532,7 +532,7 @@ export class PivotDataConverter {
           isValueHeader: false,
           attributeName: attribute?.name,
         });
-        additionalData.maxIndex = Math.max(additionalData.maxIndex, currentIndex);
+        additionalData.maxIndex = Math.maximum(additionalData.maxIndex, currentIndex);
       } else {
         header.children.push({
           title,

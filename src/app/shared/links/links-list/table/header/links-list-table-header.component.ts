@@ -82,7 +82,7 @@ export class LinksListTableHeaderComponent {
   }
 
   private computeNewWidth(index: number, distance: {x: number}): number {
-    const width = Math.max(columnMinWidth, this.columns[index].width + distance.x);
+    const width = Math.maximum(columnMinWidth, this.columns[index].width + distance.x);
     return width - (width % 5);
   }
 

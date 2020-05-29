@@ -2,52 +2,71 @@
   {yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}
 </h6>
 
-<select-item-with-constraint class="d-block w-100 mt-2"
-                             [attributesResources]="attributesResources"
-                             [restrictedIds]="yAxisType | axisRestrictedIds:config"
-                             [placeholderText]="yAxisType.toString().toUpperCase()"
-                             [buttonClasses]="buttonClasses"
-                             [selectedId]="config.axes && (config.axes[yAxisType] | chartAxisSelectItemId)"
-                             [selectedConstraint]="config.axes && (config.axes[yAxisType]?.constraint)"
-                             [emptyValue]="axisEmptyValue"
-                             [removable]="true"
-                             [fitParent]="true"
-                             (select)="onAxisSelect($event)"
-                             (selectConstraint)="onAxisConstraintSelect($event)"
-                             (remove)="onAxisRemoved()">
-</select-item-with-constraint>
+<ng-container *ngVar="config.axes && config.axes[yAxisType] as yAxis">
 
-<select-item-with-constraint class="d-block w-100 mt-2"
-                             [attributesResources]="attributesResources"
-                             [restrictedIds]="yAxisType | axisRestrictedIds:config:true"
-                             [placeholderText]="yAxisType | dataSetSelectPlaceholder"
-                             [buttonClasses]="buttonClasses"
-                             [selectedId]="config.names && (config.names[yAxisType] | chartAxisSelectItemId)"
-                             [selectedConstraint]="config.names && (config.names[yAxisType]?.constraint)"
-                             [emptyValue]="axisEmptyValue"
-                             [removable]="true"
-                             [fitParent]="true"
-                             (select)="onDataNameSelect($event)"
-                             (selectConstraint)="onDataNameConstraintSelect($event)"
-                             (remove)="onDataNameRemoved()">
-</select-item-with-constraint>
+  <select-item-with-constraint class="d-block w-100 mt-2"
+                               [attributesResources]="attributesResources"
+                               [restrictedIds]="yAxisType | axisRestrictedIds:config"
+                               [placeholderText]="yAxisType.toString().toUpperCase()"
+                               [buttonClasses]="buttonClasses"
+                               [selectedId]="yAxis?.axis | chartAxisSelectItemId"
+                               [selectedConstraint]="yAxis?.axis?.constraint"
+                               [emptyValue]="axisEmptyValue"
+                               [removable]="true"
+                               [fitParent]="true"
+                               (select)="onAxisSelect($event)"
+                               (selectConstraint)="onAxisConstraintSelect($event)"
+                               (remove)="onAxisRemoved()">
+  </select-item-with-constraint>
 
-<select-item class="d-block w-100 mt-2"
-             [items]="attributesResources | selectItemWithConstraint:[]"
-             [selectedId]="config.colors && (config.colors[yAxisType] | chartAxisSelectItemId)"
-             placeholderText="Color"
-             emptyValue="Select attribute"
-             [removable]="true"
-             [buttonClasses]="buttonClasses"
-             (select)="onColorSelect($event)"
-             (remove)="onColorRemoved()">
-</select-item>
+  <select-item-with-constraint class="d-block w-100 mt-2"
+                               [attributesResources]="attributesResources"
+                               [restrictedIds]="yAxisType | axisRestrictedIds:config:true"
+                               [placeholderText]="yAxisType | dataSetSelectPlaceholder"
+                               [buttonClasses]="buttonClasses"
+                               [selectedId]="yAxis?.name | chartAxisSelectItemId"
+                               [selectedConstraint]="yAxis?.name?.constraint"
+                               [emptyValue]="axisEmptyValue"
+                               [removable]="true"
+                               [fitParent]="true"
+                               (select)="onDataNameSelect($event)"
+                               (selectConstraint)="onDataNameConstraintSelect($event)"
+                               (remove)="onDataNameRemoved()">
+  </select-item-with-constraint>
 
-<select-item class="d-block w-100 mt-2"
-             [items]="chartAggregations | aggregationSelectItems"
-             [placeholderText]="yAxisType | aggregationSelectPlaceholder"
-             [buttonClasses]="buttonClasses"
-             [removable]="false"
-             [selectedId]="config.aggregations && config.aggregations[yAxisType]"
-             (select)="onAggregationSelect(yAxisType, $event)">
-</select-item>
+  <select-item class="d-block w-100 mt-2"
+               [items]="attributesResources | selectItemWithConstraint:[]"
+               [selectedId]="yAxis?.size | chartAxisSelectItemId"
+               placeholderText="Size"
+               i18n-placeholderText="@@perspective.chart.config.axis.size"
+               emptyValue="Select attribute"
+               i18n-emptyValue="@@perspective.chart.config.axis.empty"
+               [removable]="true"
+               [buttonClasses]="buttonClasses"
+               (select)="onSizeSelect($event)"
+               (remove)="onSizeRemoved()">
+  </select-item>
+
+  <select-item class="d-block w-100 mt-2"
+               [items]="attributesResources | selectItemWithConstraint:[]"
+               [selectedId]="yAxis?.color | chartAxisSelectItemId"
+               placeholderText="Color"
+               i18n-placeholderText="@@perspective.chart.config.axis.color"
+               emptyValue="Select attribute"
+               i18n-emptyValue="@@perspective.chart.config.axis.empty"
+               [removable]="true"
+               [buttonClasses]="buttonClasses"
+               (select)="onColorSelect($event)"
+               (remove)="onColorRemoved()">
+  </select-item>
+
+  <select-item class="d-block w-100 mt-2"
+               [items]="chartAggregations | aggregationSelectItems"
+               [placeholderText]="yAxisType | aggregationSelectPlaceholder"
+               [buttonClasses]="buttonClasses"
+               [removable]="false"
+               [selectedId]="yAxis?.aggregation"
+               (select)="onAggregationSelect($event)">
+  </select-item>
+
+</ng-container>

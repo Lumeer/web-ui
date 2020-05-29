@@ -48,6 +48,7 @@ import {findAttribute} from '../../../../core/store/collections/collection.util'
 import {ChartData, ChartSettings} from './convertor/chart-data';
 import {ChartDataConverter} from './convertor/chart-data-converter';
 import {AxisSettingsChange, ClickEvent, ValueChange} from '../visualizer/chart-visualizer';
+import {chartAxisChanged, chartSettingsChanged} from '../../../../core/store/charts/chart.util';
 
 interface Data {
   collections: Collection[];
@@ -115,8 +116,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
   public chartData$: Observable<ChartData>;
   public chartSettings$ = new BehaviorSubject<ChartSettings>(null);
 
-  constructor(private chartDataConverter: ChartDataConverter, private modalService: ModalService) {
-  }
+  constructor(private chartDataConverter: ChartDataConverter, private modalService: ModalService) {}
 
   public ngOnInit() {
     const closingNotifier = this.dataSubject.pipe(debounceTime(100));
@@ -203,25 +203,20 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const previousConfig = changes.config.previousValue as ChartConfig;
     const currentConfig = changes.config.currentValue as ChartConfig;
 
-    const previousCleaned = this.cleanConfigWithSettings(previousConfig);
-    const currentCleaned = this.cleanConfigWithSettings(currentConfig);
-
-    const previousWithoutSettings = this.cleanConfigWithoutSettings(previousConfig);
-    const currentWithoutSettings = this.cleanConfigWithoutSettings(currentConfig);
-
-    return deepObjectsEquals(previousWithoutSettings, currentWithoutSettings) && !deepObjectsEquals(previousCleaned, currentCleaned);
-  }
-
-  private cleanConfigWithoutSettings(chartConfig: ChartConfig): ChartConfig {
-    return {...chartConfig, settings: null, rangeSlider: null};
-  }
-
-  private cleanConfigWithSettings(chartConfig: ChartConfig): ChartConfig {
-    return {...chartConfig, settings: chartConfig.settings || {}, rangeSlider: chartConfig.rangeSlider || false};
+    return chartSettingsChanged(previousConfig, currentConfig);
   }
 
   private handleSettingsChanged() {
-    this.chartSettings$.next({settings: this.config.settings, rangeSlider: this.config.rangeSlider});
+    const settings: ChartSettings = {
+      settings: {
+        [ChartAxisType.X]: this.config.axes?.x?.settings,
+        [ChartAxisType.Y1]: this.config.axes?.y1?.settings,
+        [ChartAxisType.Y2]: this.config.axes?.y2?.settings,
+      },
+      rangeSlider: this.config.rangeSlider,
+    };
+
+    this.chartSettings$.next(deepObjectCopy(settings));
   }
 
   private onlyTypeChanged(changes: SimpleChanges): boolean {
@@ -267,8 +262,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const sortPrevious = previousConfig.sort;
     const sortCurrent = currentConfig.sort;
 
-    const xAxisPrevious = previousConfig.axes?.[ChartAxisType.X];
-    const xAxisCurrent = currentConfig.axes?.[ChartAxisType.X];
+    const xAxisPrevious = previousConfig.axes?.x?.axis;
+    const xAxisCurrent = currentConfig.axes?.x?.axis;
 
     return !deepObjectsEquals(xAxisPrevious, xAxisCurrent) || !deepObjectsEquals(sortPrevious, sortCurrent);
   }
@@ -289,12 +284,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const previousConfig = changes.config.previousValue as ChartConfig;
     const currentConfig = changes.config.currentValue as ChartConfig;
 
-    return (
-      !deepObjectsEquals(previousConfig.axes?.[type], currentConfig.axes?.[type]) ||
-      !deepObjectsEquals(previousConfig.names?.[type], currentConfig.names?.[type]) ||
-      !deepObjectsEquals(previousConfig.colors?.[type], currentConfig.colors?.[type]) ||
-      !deepObjectsEquals(previousConfig.aggregations?.[type], currentConfig.aggregations?.[type])
-    );
+    return chartAxisChanged(previousConfig, currentConfig, type);
   }
 
   public onValueChange(valueChange: ValueChange) {
@@ -326,7 +316,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
     if (!constraint) {
       return value;
     }
-// TODO
+    // TODO
     // if (value) {
     //   if (constraint.type === ConstraintType.DateTime) {
     //     const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
@@ -365,21 +355,22 @@ export class ChartDataComponent implements OnInit, OnChanges {
     }
   }
 
-  private findResourceAndDataResource(event: ClickEvent): { resource: Resource; dataResource: DataResource } {
+  private findResourceAndDataResource(event: ClickEvent): {resource: Resource; dataResource: DataResource} {
     if (event.resourceType === AttributesResourceType.Collection) {
       const document = (this.documents || []).find(doc => doc.id === event.pointId);
       const collection = document && (this.collections || []).find(coll => coll.id === document.collectionId);
       return {resource: collection, dataResource: document};
     }
-    const linkInstance = (this.linkInstances || []).find(linkInstance => linkInstance.id === event.pointId);
+    const linkInstance = (this.linkInstances || []).find(li => li.id === event.pointId);
     const linkType = linkInstance && (this.linkTypes || []).find(lt => lt.id === linkInstance.linkTypeId);
     return {resource: linkType, dataResource: linkInstance};
   }
 
   public onAxisSettingsChange(event: AxisSettingsChange) {
     const configCopy = deepObjectCopy(this.config);
-    [ChartAxisType.X, ChartAxisType.Y1, ChartAxisType.Y2]
-      .forEach(axisType => this.modifySettingsRange(axisType, event, configCopy))
+    [ChartAxisType.X, ChartAxisType.Y1, ChartAxisType.Y2].forEach(axisType =>
+      this.modifySettingsRange(axisType, event, configCopy)
+    );
 
     if (!deepObjectsEquals(configCopy, this.config)) {
       this.configChange.emit(configCopy);
@@ -392,11 +383,12 @@ export class ChartDataComponent implements OnInit, OnChanges {
     }
 
     if (event.range[type] === null) {
-      delete config.settings?.[type]?.range;
+      delete config.axes?.[type]?.settings?.range;
     } else if (event.range[type]) {
-      config.settings = config.settings || {};
-      config.settings[type] = config.settings[type] || {};
-      config.settings[type].range = event.range[type];
+      config.axes = config.axes || {};
+      config.axes[type] = config.axes[type] || {};
+      config.axes[type].settings = config.axes[type].settings || {};
+      config.axes[type].settings.range = event.range[type];
     }
   }
 }

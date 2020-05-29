@@ -250,7 +250,7 @@ export function getAttributeIdFromColumn(column: TableConfigColumn) {
 }
 
 export function maxColumnDepth(columns: TableConfigColumn[]): number {
-  return Math.max(
+  return Math.maximum(
     ...columns.map(column => {
       if (column.type === TableColumnType.COMPOUND) {
         return column.children.length ? maxColumnDepth(column.children) + 1 : 1;
@@ -372,7 +372,7 @@ function getConfigPart(config: TableConfig, index: number): TableConfigPart {
 }
 
 export function maxTableColumnDepth(parts: TableConfigPart[]): number {
-  return Math.max(...parts.map(part => maxColumnDepth(part.columns)));
+  return Math.maximum(...parts.map(part => maxColumnDepth(part.columns)));
 }
 
 export function calculateColumnRowspan(table: TableModel, partIndex: number, columnPath: number[]): number {

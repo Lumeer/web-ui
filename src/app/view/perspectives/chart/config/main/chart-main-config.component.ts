@@ -25,6 +25,7 @@ import {Perspective} from '../../../perspective';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'chart-main-config',
@@ -92,20 +93,22 @@ export class ChartMainConfigComponent {
   }
 
   private emitNewAxis(axis: ChartAxis) {
-    const axes = {...this.config.axes, [this.xAxisType]: axis};
-    const newConfig = {...this.config, axes};
-    this.configChange.emit(newConfig);
+    const configCopy = deepObjectCopy(this.config);
+    configCopy.axes = configCopy.axes || {};
+    configCopy.axes.x = configCopy.axes.x || {};
+    configCopy.axes.x.axis = axis;
+    this.configChange.emit(configCopy);
   }
 
   public onAxisRemoved() {
-    const axes = {...this.config.axes};
-    delete axes[this.xAxisType];
-    const newConfig = {...this.config, axes};
-    this.configChange.emit(newConfig);
+    const configCopy = deepObjectCopy(this.config);
+    delete configCopy.axes?.x?.axis;
+
+    this.configChange.emit(configCopy);
   }
 
   public onSelectedConstraint(constraint: Constraint) {
-    const axis = this.config.axes && this.config.axes[this.xAxisType];
+    const axis = this.config.axes?.x?.axis;
     if (axis) {
       const newAxis = {...axis, constraint};
       this.emitNewAxis(newAxis);

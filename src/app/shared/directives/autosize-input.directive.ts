@@ -66,7 +66,7 @@ export class AutoSizeInputDirective implements AfterViewInit, AfterViewChecked {
     const placeholder = this.element.nativeElement.placeholder || '';
     const computingValue = value.length > placeholder.length ? value : placeholder;
 
-    const width = Math.max(Math.ceil(this.getContext().measureText(computingValue).width), this.minWidth || 0);
+    const width = Math.maximum(Math.ceil(this.getContext().measureText(computingValue).width), this.minWidth || 0);
     return width + this.borderWidth + this.paddingWidth + 1; // for cursor
   }
 
