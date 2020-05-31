@@ -52,6 +52,7 @@ import {DurationConstraint} from '../../../../../core/model/constraint/duration.
 import {createRange} from '../../visualizer/plot-maker/plot-util';
 import {NumberConstraint} from '../../../../../core/model/constraint/number.constraint';
 import {PercentageConstraint} from '../../../../../core/model/constraint/percentage.constraint';
+import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
 
 enum DataObjectInfoKeyType {
   X = 'x',
@@ -302,14 +303,14 @@ export class ChartDataConverter {
 
   private createAxisData(helperData: ChartAxisHelperData, helperData2?: ChartAxisHelperData): ChartAxisData {
     if (!helperData && !helperData2) {
-      return {constraintType: ConstraintType.Unknown};
+      return {constraintType: ConstraintType.Unknown, constraint: new UnknownConstraint()};
     }
 
     const constraint = helperData?.constraint || helperData2?.constraint;
     const isNum = (!helperData || helperData.valuesAreNumeric) && (!helperData2 || helperData2.valuesAreNumeric);
     const constraintType = this.getAxisConstraintType(isNum, constraint);
 
-    let formatter: (x: number) => string;
+    let formatter: (value: any) => string;
     if (constraintType === ConstraintType.Percentage) {
       const percentageConstraint = <PercentageConstraint>constraint;
       formatter = x => percentageConstraint.createDataValue(x).title({decimals: 8});
@@ -320,6 +321,9 @@ export class ChartDataConverter {
       const durationConstraint = <DurationConstraint>constraint;
       formatter = x =>
         durationConstraint.createDataValue(x, this.constraintData).title({maxUnits: 2, decimalPlaces: 8});
+    } else if (constraintType === ConstraintType.DateTime) {
+      const dateConstraint = <DateTimeConstraint>constraint;
+      formatter = date => dateConstraint.createDataValue(date).title();
     }
 
     let ticks: ChartAxisTick[] = null;
@@ -333,7 +337,14 @@ export class ChartDataConverter {
       ticks = Object.values(ticksMap);
     }
 
-    return {constraintType, formatter, ticks};
+    let numberOfTicks: number = null;
+    if (constraintType === ConstraintType.DateTime) {
+      if (helperData.values?.length <= 5) {
+        numberOfTicks = helperData.values.length;
+      }
+    }
+
+    return {constraintType, constraint, formatter, ticks, numberOfTicks};
   }
 
   private shouldCreateTicks(constraintType: ConstraintType): boolean {
@@ -392,6 +403,7 @@ export class ChartDataConverter {
           y: yAxis ? formattedValue : null,
           color: pointColor,
           title,
+          size: null,
         };
         points.push(point);
         actualValues.add(formattedValue);
@@ -564,7 +576,7 @@ export class ChartDataConverter {
       if (isNotNullOrUndefined(yValue)) {
         const sizeDataResources = dataObject.metaDataResources[DataObjectInfoKeyType.Size] || [];
         const sizes = sizeDataResources.map(dataResource => dataResource?.data[yAxisConfig?.size?.attributeId]);
-        const size = aggregateDataValues(aggregation, sizes, sizeConstraint, true);
+        const size = yAxisConfig?.size ? aggregateDataValues(aggregation, sizes, sizeConstraint, true) : null;
 
         const id =
           canDragAxis && valueObjects.length === 1 && isValueAggregation(aggregation) ? valueObjects[0].id : null;
@@ -631,6 +643,8 @@ export class ChartDataConverter {
       case ConstraintType.Unknown:
       case ConstraintType.Files:
         return constraint.createDataValue(value, this.constraintData).title();
+      case ConstraintType.DateTime:
+        return this.formatDateTimeValue(value, constraint as DateTimeConstraint);
       default:
         return (constraint || new UnknownConstraint())
           .createDataValue(value, constraintData || this.constraintData)
@@ -638,11 +652,10 @@ export class ChartDataConverter {
     }
   }
 
-  // private formatDateTimeValue(value: any, config: DateTimeConstraintConfig): string {
-  //   const format = config?.format;
-  //   const momentDate = parseMomentDate(value, format);
-  //   return momentDate?.format(convertChartDateFormat(format));
-  // }
+  private formatDateTimeValue(value: any, constraint: DateTimeConstraint): string {
+    const dataValue = constraint.createDataValue(value);
+    return dataValue.momentDate?.format('YYYY-MM-DD HH:mm:SS.ss');
+  }
 
   private canDragAxis(yAxis: ChartAxis): boolean {
     return this.dataObjectAggregator.isAttributeEditable(yAxis);

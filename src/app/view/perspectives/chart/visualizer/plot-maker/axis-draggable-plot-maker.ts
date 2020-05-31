@@ -24,6 +24,8 @@ import {isNotNullOrUndefined, isNumeric, toNumber} from '../../../../../shared/u
 import {DraggablePlotMaker} from './draggable-plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
+import {Constraint} from '../../../../../core/model/constraint';
+import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
 
 export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
   public abstract getTraceIndexForPoint(point: any): number;
@@ -100,18 +102,6 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     return this.getLayoutElement().yaxis2;
   }
 
-  protected isY1AxisPresented(): boolean {
-    return this.getAxisDataSets(ChartAxisType.Y1).length > 0;
-  }
-
-  protected isY2AxisPresented(): boolean {
-    return this.getAxisDataSets(ChartAxisType.Y2).length > 0;
-  }
-
-  protected areBothYAxisPresented(): boolean {
-    return this.isY1AxisPresented() && this.isY2AxisPresented();
-  }
-
   protected getLayoutElement(): any {
     return this.element.nativeElement._fullLayout;
   }
@@ -142,8 +132,9 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
 
         const traceSet = plotMaker.traceData(setIx);
         const constraintType = traceSet?.constraintType;
+        const constraint = traceSet?.constraint;
 
-        let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, constraintType};
+        let pointData: PointData = {traceIx, setIx, yScale, initialValue, lastValue, constraintType, constraint};
 
         if (isNotNullOrUndefined(datum.y)) {
           const initialY = yScale.invert(initialValue);
@@ -163,7 +154,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
         const pointData: PointData = this.pointData;
 
         const index = datum.i;
-        const newValue = plotMaker.getNewValue(this, datum, d3.event);
+        const newValue = plotMaker.getNewValue(this, datum, d3.event, pointData.constraint);
 
         const set = plotMaker.chartData.sets[pointData.setIx];
         const setId = set.id;
@@ -219,7 +210,7 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
     };
   }
 
-  private getNewValue(point: any, datum: any, event: any): string | number {
+  private getNewValue(point: any, datum: any, event: any, constraint: Constraint): any {
     const pointData: PointData = point.pointData;
 
     const newY = this.getPointNewY(point, datum, event);
@@ -229,10 +220,10 @@ export abstract class AxisDraggablePlotMaker extends DraggablePlotMaker {
       return Math.max(toNumber(newValue), 0);
     }
 
-    // if (pointData.axisCategory === ChartAxisCategory.Date) {
-    //   const config = pointData.config && (pointData.config as DateTimeConstraintConfig);
-    //   return moment(new Date(newValue)).format(convertChartDateFormat(config && config.format));
-    // }
+    if (pointData.constraintType === ConstraintType.DateTime) {
+      const date = isNumeric(newValue) ? new Date(toNumber(newValue)) : newValue;
+      return (<DateTimeConstraint>constraint).createDataValue(date).momentDate.toDate();
+    }
 
     if (!this.isNumericType(pointData.constraintType)) {
       return newValue.toString();
@@ -262,6 +253,7 @@ export interface PointData {
   initialValue: string | number;
   lastValue: string | number;
   constraintType: ConstraintType;
+  constraint: Constraint;
   initialY?: number;
   offset?: {top: number; left: number};
   clickedY?: number;

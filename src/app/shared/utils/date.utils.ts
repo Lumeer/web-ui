@@ -40,15 +40,23 @@ export function resetUnusedMomentPart(date: moment.Moment, format: string): mome
 
   let dateCopy = date;
   if (!dateTimeOptions.year) {
-    dateCopy = resetYear(dateCopy);
+    dateCopy = resetYear(dateCopy, dateTimeOptions.dayOfWeek);
   }
 
-  if (!dateTimeOptions.month && !dateTimeOptions.week && !dateTimeOptions.quarter) {
+  if (!dateTimeOptions.month && !dateTimeOptions.week && !dateTimeOptions.quarter && !dateTimeOptions.dayOfWeek) {
     dateCopy = resetMonth(dateCopy);
   }
 
-  if (!dateTimeOptions.day && !dateTimeOptions.week) {
+  if (!dateTimeOptions.day && !dateTimeOptions.week && !dateTimeOptions.dayOfWeek) {
     dateCopy = resetDay(dateCopy);
+  }
+
+  if (dateTimeOptions.dayOfWeek && !dateTimeOptions.month) {
+    dateCopy = resetDayOfWeek(dateCopy);
+  }
+
+  if (dateTimeOptions.quarter && !dateTimeOptions.month && !dateTimeOptions.day) {
+    dateCopy = resetQuarter(dateCopy);
   }
 
   if (dateTimeOptions.week) {
@@ -74,7 +82,19 @@ export function resetUnusedMomentPart(date: moment.Moment, format: string): mome
   return dateCopy;
 }
 
-function resetYear(date: moment.Moment): moment.Moment {
+function resetYear(date: moment.Moment, keepDayOfWeek = false): moment.Moment {
+  if (keepDayOfWeek) {
+    const diffYears = date.year() - 1970;
+    const cloned = date.clone().subtract(diffYears * 52, 'week');
+
+    if (cloned.year() === 1971) {
+      return cloned.subtract(52, 'week');
+    } else if (cloned.year() === 1969) {
+      return cloned.add(52, 'week');
+    }
+
+    return cloned;
+  }
   return date.clone().year(1970);
 }
 
@@ -84,6 +104,14 @@ function resetMonth(date: moment.Moment): moment.Moment {
 
 function resetWeek(date: moment.Moment): moment.Moment {
   return date.clone().weekday(0);
+}
+
+function resetDayOfWeek(date: moment.Moment): moment.Moment {
+  return date.clone().week(2);
+}
+
+function resetQuarter(date: moment.Moment): moment.Moment {
+  return date.clone().startOf('quarter');
 }
 
 function resetDay(date: moment.Moment): moment.Moment {

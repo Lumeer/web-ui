@@ -28,7 +28,7 @@ describe('minMaxValidator', () => {
   beforeEach(() => {
     form = new FormGroup({
       min: new FormControl(),
-      maximum: new FormControl(),
+      max: new FormControl(),
     });
     min = form.get('min');
     max = form.get('max');

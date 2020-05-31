@@ -1,7 +1,7 @@
-<ng-container *ngIf="{mode: currentMode$ | async, tasksData: data$ | async} as data">
+<ng-container *ngIf="{tasksData: data$ | async} as data">
   <ng-container *ngIf="{range: data.tasksData?.tasks | tasksInvalidRangeInfo} as invalidInfo">
     <ng-container *ngIf="!invalidInfo.range">
-      <gantt-chart-header [currentMode]="data.mode"
+      <gantt-chart-header [currentMode]="config.mode"
                           [canManageConfig]="canManageConfig"
                           (scrollToToday)="visualizationComponent.scrollToToday()"
                           (modeChange)="onModeChanged($event)">
@@ -9,7 +9,7 @@
       <gantt-chart-visualization
         [canManageConfig]="canManageConfig"
         [ganttChartId]="ganttChartId"
-        [currentMode]="data.mode"
+        [currentMode]="config.mode"
         [tasks]="data.tasksData?.tasks"
         [options]="data.tasksData?.options"
         (taskChange)="onTaskChanged($event)"

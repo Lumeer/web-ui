@@ -30,7 +30,7 @@ import {createRange} from '../../../shared/utils/array.utils';
 import {queryConditionNumInputs} from '../../store/navigation/query/query.util';
 
 export class DateTimeDataValue implements DataValue {
-  private readonly momentDate: moment.Moment;
+  public readonly momentDate: moment.Moment;
 
   constructor(
     public readonly value: any,
@@ -216,7 +216,7 @@ export class DateTimeDataValue implements DataValue {
     }
   }
 
-  private mapConditionValues(values: QueryConditionValue[]): { moment: moment.Moment; format: string }[] {
+  private mapConditionValues(values: QueryConditionValue[]): {moment: moment.Moment; format: string}[] {
     return (values || [])
       .map(value => {
         if (value.type) {

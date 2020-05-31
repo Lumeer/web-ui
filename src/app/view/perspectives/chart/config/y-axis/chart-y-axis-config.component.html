@@ -35,6 +35,7 @@
   </select-item-with-constraint>
 
   <select-item class="d-block w-100 mt-2"
+               *ngIf="config.type === chartType.Bubble"
                [items]="attributesResources | selectItemWithConstraint:[]"
                [selectedId]="yAxis?.size | chartAxisSelectItemId"
                placeholderText="Size"

@@ -17,8 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxisConfig, ChartAxisType, ChartConfig, ChartSort} from './chart';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {ChartAxisConfig, ChartAxisType, ChartConfig, ChartSort, ChartType} from './chart';
+import {deepObjectCopy, deepObjectsEquals} from '../../../shared/utils/common.utils';
+
+export function createChartSaveConfig(config: ChartConfig): ChartConfig {
+  const configCopy = deepObjectCopy(config);
+  if (config.type === ChartType.Pie) {
+    delete configCopy.axes?.y2;
+  }
+  if (config.type !== ChartType.Bubble) {
+    delete configCopy.axes?.x?.size;
+    delete configCopy.axes?.y1?.size;
+    delete configCopy.axes?.y2?.size;
+  }
+
+  return configCopy;
+}
 
 export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: ChartConfig): boolean {
   if (
@@ -34,7 +48,10 @@ export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: Cha
     return true;
   }
 
-  return chartAxesChanged(viewConfig.axes || {}, currentConfig.axes || {});
+  const viewCleanedConfig = createChartSaveConfig(viewConfig);
+  const currentCleanedConfig = createChartSaveConfig(currentConfig);
+
+  return chartAxesChanged(viewCleanedConfig.axes || {}, currentCleanedConfig.axes || {});
 }
 
 function sortChanged(sort1: ChartSort, sort2: ChartSort): boolean {

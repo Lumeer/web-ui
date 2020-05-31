@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Constraint} from '../../../../../core/model/constraint';
 import {AttributesResource} from '../../../../../core/model/resource';
-import {ChartAxis, ChartConfig} from '../../../../../core/store/charts/chart';
+import {ChartAxis, ChartConfig, ChartType} from '../../../../../core/store/charts/chart';
 import {DataAggregationType} from '../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
@@ -47,6 +47,7 @@ export class ChartYAxisConfigComponent {
   public configChange = new EventEmitter<ChartConfig>();
 
   public readonly chartAggregations = Object.values(DataAggregationType);
+  public readonly chartType = ChartType;
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly axisEmptyValue: string;
 

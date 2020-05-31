@@ -306,7 +306,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
     }
     const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
     const attribute = findAttribute(collection?.attributes, attributeId);
-    const saveValue = this.convertSaveValue(value, attribute && attribute.constraint);
+    const saveValue = this.convertSaveValue(value, attribute?.constraint);
 
     const patchDocument = {...changedDocument, data: {[attributeId]: saveValue}};
     this.patchData.emit(patchDocument);
@@ -316,13 +316,6 @@ export class ChartDataComponent implements OnInit, OnChanges {
     if (!constraint) {
       return value;
     }
-    // TODO
-    // if (value) {
-    //   if (constraint.type === ConstraintType.DateTime) {
-    //     const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
-    //     return moment(value, convertChartDateFormat(config?.format)).toISOString();
-    //   }
-    // }
 
     return constraint.createDataValue(value, this.constraintData).serialize();
   }

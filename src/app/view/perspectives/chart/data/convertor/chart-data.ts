@@ -20,6 +20,7 @@
 import {ChartAxisSettings, ChartAxisType, ChartType} from '../../../../../core/store/charts/chart';
 import {AttributesResourceType} from '../../../../../core/model/resource';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
+import {Constraint} from '../../../../../core/model/constraint';
 
 export interface ChartData {
   sets: ChartDataSet[];
@@ -50,9 +51,12 @@ export interface ChartPoint {
 }
 
 export interface ChartAxisData {
-  formatter?: (x: number) => string;
-  range?: [number, number];
+  formatter?: (value: any) => string;
+  range?: [any, any];
   ticks?: ChartAxisTick[];
+  tickFormat?: string;
+  numberOfTicks?: number;
+  constraint: Constraint;
   constraintType: ConstraintType;
 }
 

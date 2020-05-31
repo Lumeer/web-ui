@@ -44,6 +44,7 @@ export function convertChartDateTickFormat(format: string): string {
 
   tickFormat = tickFormat.replace(/(YY+)/g, '%Y');
   tickFormat = tickFormat.replace(/(D+)/g, '%d');
+  tickFormat = tickFormat.replace(/(ddd)/g, '%a');
   tickFormat = tickFormat.replace(/(M+)|(m+)/g, (str, reg1, reg2) => (!!reg1 ? '%m' : !!reg2 ? '%M' : ''));
   tickFormat = tickFormat.replace(/(H+)/g, '%H');
   tickFormat = tickFormat.replace(/(SS+)/g, '%L');

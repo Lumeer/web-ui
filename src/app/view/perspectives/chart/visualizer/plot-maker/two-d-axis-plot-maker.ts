@@ -17,72 +17,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Layout} from 'plotly.js';
+import {Layout, LayoutAxis} from 'plotly.js';
 import {PlotMaker} from './plot-maker';
+import {ChartAxisData} from '../../data/convertor/chart-data';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 export abstract class TwoDAxisPlotMaker extends PlotMaker {
-
   public abstract getPoints(): any;
 
   protected xAxisLayout(): Partial<Layout> {
     const layout: Partial<Layout> = {};
-    const data = this.chartData.xAxisData;
-    if (data) {
-      layout.xaxis = {};
-      if (data.formatter) {
-        layout.xaxis.tickformat = 'xFormatter';
-      }
-      if (data.ticks?.length) {
-        layout.xaxis.type = 'category';
-        layout.xaxis.tickmode = 'array';
-        layout.xaxis.tickvals = data.ticks.map(t => t.value);
-        layout.xaxis.ticktext = data.ticks.map(t => t.title);
-      }
+    const axis = createAxisLayout(this.chartData.xAxisData, 'xFormatter');
+    if (axis) {
+      axis.domain = [0.1];
+      axis.constrain = 'domain';
+      layout.xaxis = axis;
     }
 
     return layout;
   }
 
   protected yAxis1Layout(): Partial<Layout> {
-    const data = this.chartData.y1AxisData;
     const layout: Partial<Layout> = {};
-    if (data) {
-      layout.yaxis = {};
-      if (data.range) {
-        layout.yaxis.range = data.range;
-      }
-      if (data.formatter) {
-        layout.yaxis.tickformat = 'y1Formatter';
-      }
-      if (data.ticks?.length) {
-        layout.yaxis.type = 'category';
-        layout.yaxis.tickmode = 'array';
-        layout.yaxis.tickvals = data.ticks.map(t => t.value);
-        layout.yaxis.ticktext = data.ticks.map(t => t.title);
-      }
+
+    const axis = createAxisLayout(this.chartData.y1AxisData, 'y1Formatter');
+    if (axis) {
+      layout.yaxis = axis;
     }
 
     return layout;
   }
 
   protected yAxis2Layout(): Partial<Layout> {
-    const data = this.chartData.y2AxisData;
     const layout: Partial<Layout> = {};
-    if (data) {
-      layout.yaxis2 = {overlaying: 'y', side: 'right'};
-      if (data.range) {
-        layout.yaxis2.range = data.range;
-      }
-      if (data.formatter) {
-        layout.yaxis2.tickformat = 'y2Formatter';
-      }
-      if (data.ticks?.length) {
-        layout.yaxis2.type = 'category';
-        layout.yaxis2.tickmode = 'array';
-        layout.yaxis2.tickvals = data.ticks.map(t => t.value);
-        layout.yaxis2.ticktext = data.ticks.map(t => t.title);
-      }
+
+    const axis = createAxisLayout(this.chartData.y2AxisData, 'y2Formatter');
+    if (axis) {
+      layout.yaxis2 = {...axis, overlaying: 'y', side: 'right'};
     }
+
     return layout;
   }
 
@@ -107,5 +81,25 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
 
     return 0;
   }
+}
 
+function createAxisLayout(data: ChartAxisData, formatter: string): Partial<LayoutAxis> {
+  if (data) {
+    const axis: Partial<LayoutAxis> = {};
+    if (data.formatter) {
+      axis.tickformat = formatter;
+    }
+    if (data.ticks?.length) {
+      axis.type = 'category';
+      axis.tickmode = 'array';
+      axis.tickvals = data.ticks.map(t => t.value);
+      axis.ticktext = data.ticks.map(t => t.title);
+    }
+    if (isNotNullOrUndefined(data.numberOfTicks)) {
+      axis.nticks = data.numberOfTicks;
+    }
+    return axis;
+  }
+
+  return null;
 }

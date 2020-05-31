@@ -116,7 +116,6 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   public events$: Observable<CalendarEvent[]>;
   public dataSubject = new BehaviorSubject<Data>(null);
-  public list$ = new BehaviorSubject<boolean>(false);
 
   public canCreateEvents: boolean;
 
@@ -178,9 +177,6 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
       });
     }
     this.canCreateEvents = this.isSomeStemConfigWritable();
-    if (changes.config && this.config) {
-      this.list$.next(this.config.list);
-    }
   }
 
   private isSomeStemConfigWritable(): boolean {
@@ -198,12 +194,8 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   }
 
   public onListToggle(displayList: boolean) {
-    if (this.canManageConfig) {
-      const config = {...this.config, list: displayList};
-      this.configChange.next(config);
-    } else {
-      this.list$.next(displayList);
-    }
+    const config = {...this.config, list: displayList};
+    this.configChange.next(config);
   }
 
   public onEventRangeChanged(data: {metadata: CalendarMetaData; start: Date; end: Date; moved?: boolean}) {
