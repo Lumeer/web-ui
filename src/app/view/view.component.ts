@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {combineLatest, Observable, of} from 'rxjs';
+import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {filter, first, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
 import {NotificationService} from '../core/notifications/notification.service';
 import {FileAttachmentsService} from '../core/service/file-attachments.service';
@@ -44,6 +44,11 @@ import {
 } from '../core/store/views/views.state';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewSettingsService} from '../core/service/view-settings.service';
+import {User} from '../core/store/users/user';
+import {selectCurrentUser} from '../core/store/users/users.state';
+import {ModalService} from '../shared/modal/modal.service';
+import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
+import {BsModalRef} from 'ngx-bootstrap/modal';
 
 @Component({
   templateUrl: './view.component.html',
@@ -57,13 +62,15 @@ export class ViewComponent implements OnInit {
 
   public view$: Observable<View>;
   public viewsExist$: Observable<boolean>;
+  public user: Subscription;
 
   constructor(
     private fileAttachmentsService: FileAttachmentsService,
     private viewSettingsService: ViewSettingsService,
     private i18n: I18n,
     private notificationService: NotificationService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private modalService: ModalService
   ) {}
 
   public ngOnInit() {
@@ -72,6 +79,20 @@ export class ViewComponent implements OnInit {
 
     this.fileAttachmentsService.init();
     this.viewSettingsService.init();
+    this.user = this.store$
+      .pipe(
+        select(selectCurrentUser),
+        filter(user => !!user),
+        first()
+      )
+      .subscribe(user => {
+        if (!user?.emailVerified) {
+          this.modalService.show(VerifyEmailModalComponent, {
+            keyboard: false,
+            backdrop: 'static',
+          });
+        }
+      });
   }
 
   private bindView(): Observable<View> {

@@ -19,7 +19,8 @@
      *ngIf="showFooter">
   <div class="d-block w-100">
     <button *ngIf="showClose"
-            [disabled]="performingAction"
+            [attr.aria-disabled]="closeDisabled || performingAction"
+            [disabled]="closeDisabled || performingAction"
             type="button"
             class="btn btn-outline-primary text-nowrap float-left" (click)="onCloseClick()">
       <ng-content select=".button-cancel"></ng-content>

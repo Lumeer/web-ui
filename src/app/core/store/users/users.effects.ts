@@ -72,13 +72,53 @@ export class UsersEffects {
   public getCurrentUser$: Observable<Action> = this.actions$.pipe(
     ofType<UsersAction.GetCurrentUser>(UsersActionType.GET_CURRENT_USER),
     tap(() => this.store$.dispatch(new UsersAction.SetPending({pending: true}))),
-    mergeMap(() =>
+    mergeMap(action =>
       this.userService.getCurrentUser().pipe(
         map(user => convertUserDtoToModel(user)),
-        mergeMap(user => [new UsersAction.GetCurrentUserSuccess({user}), new UsersAction.SetPending({pending: false})]),
+        mergeMap(user => {
+          const actions: Action[] = [
+            new UsersAction.GetCurrentUserSuccess({user}),
+            new UsersAction.SetPending({pending: false}),
+          ];
+          if (action.payload?.onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: action.payload.onSuccess}));
+          }
+          return actions;
+        }),
         catchError(() => {
+          if (action.payload?.onFailure) {
+            action.payload.onFailure();
+          }
+
           const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
           return from([new UsersAction.SetPending({pending: false}), new NotificationsAction.Error({message})]);
+        })
+      )
+    )
+  );
+
+  @Effect()
+  public resendVerificationEmail$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.ResendVerificationEmail>(UsersActionType.RESEND_VERIFICATION_EMAIL),
+    mergeMap(action =>
+      this.userService.resendVerificationEmail().pipe(
+        mergeMap(() => {
+          const actions: Action[] = [];
+          if (action.payload?.onSuccess) {
+            actions.push(new CommonAction.ExecuteCallback({callback: action.payload.onSuccess}));
+          }
+          return actions;
+        }),
+        catchError(() => {
+          if (action.payload?.onFailure) {
+            action.payload.onFailure();
+          }
+
+          const message = this.i18n({
+            id: 'currentUser.resendVerificationEmail.fail',
+            value: 'Could not request another verification email',
+          });
+          return from([new NotificationsAction.Error({message})]);
         })
       )
     )

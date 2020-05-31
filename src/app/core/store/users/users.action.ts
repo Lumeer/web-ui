@@ -31,6 +31,8 @@ export enum UsersActionType {
   GET_CURRENT_USER_WITH_LAST_LOGIN = '[Users] Get current user with last login',
   GET_CURRENT_USER_SUCCESS = '[Users] Get current user:: Success',
 
+  RESEND_VERIFICATION_EMAIL = '[Users] Resend verification email',
+
   PATCH_CURRENT_USER = '[Users] Patch Current',
 
   SAVE_DEFAULT_WORKSPACE = '[Users] Save default workspace',
@@ -77,6 +79,14 @@ export namespace UsersAction {
 
   export class GetCurrentUser implements Action {
     public readonly type = UsersActionType.GET_CURRENT_USER;
+
+    public constructor(public payload: {onSuccess?: () => void; onFailure?: () => void} = {}) {}
+  }
+
+  export class ResendVerificationEmail implements Action {
+    public readonly type = UsersActionType.RESEND_VERIFICATION_EMAIL;
+
+    public constructor(public payload: {onSuccess?: () => void; onFailure?: () => void} = {}) {}
   }
 
   export class GetCurrentUserWithLastLogin implements Action {
@@ -224,6 +234,7 @@ export namespace UsersAction {
     | GetSuccess
     | GetFailure
     | GetCurrentUser
+    | ResendVerificationEmail
     | GetCurrentUserWithLastLogin
     | GetCurrentUserSuccess
     | PatchCurrentUser

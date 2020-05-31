@@ -51,6 +51,9 @@ export class ModalWrapperComponent {
   public submitDisabled = false;
 
   @Input()
+  public closeDisabled = false;
+
+  @Input()
   public performingAction = false;
 
   @Input()
