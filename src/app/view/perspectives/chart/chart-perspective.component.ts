@@ -38,7 +38,7 @@ import {
   startWith,
   switchMap,
   take,
-  withLatestFrom
+  withLatestFrom,
 } from 'rxjs/operators';
 import {ChartConfig, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
@@ -74,7 +74,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<ChartConfig>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
-  public documentsAndLinks$: Observable<{ documents: DocumentModel[]; linkInstances: LinkInstance[] }>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public constraintData$: Observable<ConstraintData>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
@@ -83,11 +83,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private chartId: string;
   private subscriptions = new Subscription();
 
-  constructor(
-    private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-  ) {
-  }
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initChart();
@@ -119,7 +115,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
           view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
         )
       )
-      .subscribe(({chartId, config}: { chartId?: string; config?: ChartConfig }) => {
+      .subscribe(({chartId, config}: {chartId?: string; config?: ChartConfig}) => {
         if (chartId) {
           this.chartId = chartId;
           this.store$.dispatch(new ChartAction.AddChart({chart: {id: chartId, config}}));
@@ -128,7 +124,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private subscribeToView(previousView: View, view: View): Observable<{ chartId?: string; config?: ChartConfig }> {
+  private subscribeToView(previousView: View, view: View): Observable<{chartId?: string; config?: ChartConfig}> {
     const chartId = view.code;
     return this.store$.pipe(
       select(selectChartById(chartId)),

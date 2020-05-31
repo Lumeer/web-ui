@@ -26,8 +26,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
   name: 'chartTypesToSelect',
 })
 export class ChartTypesToSelectPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {
-  }
+  public constructor(private i18n: I18n) {}
 
   public transform(types: ChartType[]): SelectItemModel[] {
     return types.map(type => ({id: type, value: this.getTypeValue(type), icons: [chartTypesIconsMap[type]]}));

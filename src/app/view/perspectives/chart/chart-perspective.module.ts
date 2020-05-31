@@ -29,7 +29,7 @@ import {ChartVisualizerComponent} from './data/visualizer/chart-visualizer.compo
 import {ChartMainConfigComponent} from './config/main/chart-main-config.component';
 import {ChartYAxisConfigComponent} from './config/y-axis/chart-y-axis-config.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
-import { ChartSettingsConfigComponent } from './config/settings/chart-settings-config.component';
+import {ChartSettingsConfigComponent} from './config/settings/chart-settings-config.component';
 
 @NgModule({
   imports: [SharedModule, RouterModule, ChartPerspectiveRoutingModule, ChartPipesModule, ModalModule],

@@ -80,10 +80,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private calendarId: string;
   private subscriptions = new Subscription();
 
-  constructor(
-    private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-  ) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initCalendar();

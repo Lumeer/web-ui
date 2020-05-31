@@ -33,10 +33,7 @@ export const selectKanbansState = (state: AppState) => state.kanbans;
 export const selectKanbansDictionary = createSelector(selectKanbansState, kanbansAdapter.getSelectors().selectEntities);
 export const selectKanbanById = id => createSelector(selectKanbansDictionary, kanbans => kanbans[id]);
 
-export const selectKanbanId = createSelector(
-  selectWorkspace,
-  workspace => workspace?.viewCode || DEFAULT_KANBAN_ID
-);
+export const selectKanbanId = createSelector(selectWorkspace, workspace => workspace?.viewCode || DEFAULT_KANBAN_ID);
 
 export const selectKanban = createSelector(selectKanbansDictionary, selectKanbanId, (map, id) => map[id]);
 export const selectKanbanConfig = createSelector(selectKanban, kanban => kanban?.config);

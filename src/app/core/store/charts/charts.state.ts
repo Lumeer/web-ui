@@ -33,10 +33,7 @@ export const selectChartState = (state: AppState) => state.charts;
 export const selectChartsDictionary = createSelector(selectChartState, chartsAdapter.getSelectors().selectEntities);
 export const selectChartById = id => createSelector(selectChartsDictionary, charts => charts[id]);
 
-export const selectChartId = createSelector(
-  selectWorkspace,
-  workspace => workspace?.viewCode || DEFAULT_CHART_ID
-);
+export const selectChartId = createSelector(selectWorkspace, workspace => workspace?.viewCode || DEFAULT_CHART_ID);
 
 export const selectChart = createSelector(selectChartsDictionary, selectChartId, (chartsMap, id) => chartsMap[id]);
 export const selectChartConfig = createSelector(selectChart, chart => chart?.config);
