@@ -65,7 +65,7 @@
     "@ngrx/store-devtools": "^9.1.2",
     "@ngx-translate/i18n-polyfill": "^1.0.0",
     "@sentry/browser": "^5.15.5",
-    "angular-resizable-element": "^3.3.0",
+    "angular-resizable-element": "^3.3.2",
     "angulartics2": "^9.0.1",
     "auth0-js": "^9.13.2",
     "big.js": "^5.2.2",
