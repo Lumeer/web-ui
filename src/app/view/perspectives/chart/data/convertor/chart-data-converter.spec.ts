@@ -151,9 +151,9 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: undefined,
       points: [
-        {id: null, x: 'Dance', y: null, color: '#ffffff', title: 'Dance', size: null},
-        {id: null, x: 'Glass', y: null, color: '#ffffff', title: 'Glass', size: null},
-        {id: null, x: 'Sport', y: null, color: '#ffffff', title: 'Sport', size: null},
+        {id: null, x: 'Dance', y: null, color: '#ffffff', title: null, xTitle: 'Dance', size: null},
+        {id: null, x: 'Glass', y: null, color: '#ffffff', title: null, xTitle: 'Glass', size: null},
+        {id: null, x: 'Sport', y: null, color: '#ffffff', title: null, xTitle: 'Sport', size: null},
       ],
       draggable: false,
       color: '#ffffff',
@@ -185,10 +185,10 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: 'a2',
       points: [
-        {id: 'D1', x: null, y: 3, color: '#ffffff', title: '3', size: null},
-        {id: 'D2', x: null, y: 7, color: '#ffffff', title: '7', size: null},
-        {id: 'D3', x: null, y: 44, color: '#ffffff', title: '44', size: null},
-        {id: 'D4', x: null, y: 0, color: '#ffffff', title: '0', size: null},
+        {id: 'D1', x: null, y: 3, color: '#ffffff', title: '3', xTitle: null, size: null},
+        {id: 'D2', x: null, y: 7, color: '#ffffff', title: '7', xTitle: null, size: null},
+        {id: 'D3', x: null, y: 44, color: '#ffffff', title: '44', xTitle: null, size: null},
+        {id: 'D4', x: null, y: 0, color: '#ffffff', title: '0', xTitle: null, size: null},
       ],
       name: 'Kala',
       draggable: true,
@@ -229,9 +229,9 @@ describe('Chart data converter single collection', () => {
     const set: ChartDataSet = {
       id: 'a2',
       points: [
-        {id: 'D2', x: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
-        {id: null, x: 'Glass', y: 51, color: 'rgba(255,255,255,1)', title: '51', size: null},
-        {id: null, x: 'Sport', y: 3, color: 'rgba(255,255,255,1)', title: '3', size: null},
+        {id: 'D2', x: 'Dance', xTitle: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
+        {id: null, x: 'Glass', xTitle: 'Glass', y: 51, color: 'rgba(255,255,255,1)', title: '51', size: null},
+        {id: null, x: 'Sport', xTitle: 'Sport', y: 3, color: 'rgba(255,255,255,1)', title: '3', size: null},
       ],
       name: 'Kala',
       draggable: true,
@@ -251,9 +251,9 @@ describe('Chart data converter single collection', () => {
     const set2 = {
       ...set,
       points: [
-        {id: 'D2', x: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
-        {id: null, x: 'Glass', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
-        {id: null, x: 'Sport', y: 0, color: 'rgba(255,255,255,1)', title: '0', size: null},
+        {id: 'D2', x: 'Dance', xTitle: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
+        {id: null, x: 'Glass', xTitle: 'Glass', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
+        {id: null, x: 'Sport', xTitle: 'Sport', y: 0, color: 'rgba(255,255,255,1)', title: '0', size: null},
       ],
     };
     data = converter.convert(config2);
@@ -267,9 +267,9 @@ describe('Chart data converter single collection', () => {
     const set3 = {
       ...set,
       points: [
-        {id: 'D2', x: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
-        {id: null, x: 'Glass', y: 51, color: 'rgba(255,255,255,1)', title: '51', size: null},
-        {id: null, x: 'Sport', y: 3, color: 'rgba(255,255,255,1)', title: '3', size: null},
+        {id: 'D2', x: 'Dance', xTitle: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
+        {id: null, x: 'Glass', xTitle: 'Glass', y: 51, color: 'rgba(255,255,255,1)', title: '51', size: null},
+        {id: null, x: 'Sport', xTitle: 'Sport', y: 3, color: 'rgba(255,255,255,1)', title: '3', size: null},
       ],
     };
     data = converter.convert(config3);
@@ -310,14 +310,14 @@ describe('Chart data converter single collection', () => {
       version: ChartConfigVersion.V1,
     };
     const points1: ChartPoint[] = [
-      {id: 'D2', x: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
-      {id: null, x: 'Glass', y: 51, color: 'rgba(255,255,255,1)', title: '51', size: null},
-      {id: null, x: 'Sport', y: 3, color: 'rgba(255,255,255,1)', title: '3', size: null},
+      {id: 'D2', x: 'Dance', xTitle: 'Dance', y: 7, color: 'rgba(255,255,255,1)', title: '7', size: null},
+      {id: null, x: 'Glass', xTitle: 'Glass', y: 51, color: 'rgba(255,255,255,1)', title: '51', size: null},
+      {id: null, x: 'Sport', xTitle: 'Sport', y: 3, color: 'rgba(255,255,255,1)', title: '3', size: null},
     ];
     const points2: ChartPoint[] = [
-      {id: 'D2', x: 'Dance', y: 'Salt', color: 'rgba(255,255,255,1)', title: 'Salt', size: null},
-      {id: 'D5', x: 'Glass', y: 'Vibes', color: 'rgba(255,255,255,1)', title: 'Vibes', size: null},
-      {id: null, x: 'Sport', y: 'Mama', color: 'rgba(255,255,255,1)', title: 'Mama', size: null},
+      {id: 'D2', x: 'Dance', xTitle: 'Dance', y: 'Salt', color: 'rgba(255,255,255,1)', title: 'Salt', size: null},
+      {id: 'D5', x: 'Glass', xTitle: 'Glass', y: 'Vibes', color: 'rgba(255,255,255,1)', title: 'Vibes', size: null},
+      {id: null, x: 'Sport', xTitle: 'Sport', y: 'Mama', color: 'rgba(255,255,255,1)', title: 'Mama', size: null},
     ];
 
     converter.updateData(collections, documents, permissions, query, config);
@@ -793,10 +793,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Dance', y: 428, title: '428', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Glass', y: 1420, title: '1420', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Lmr', y: 680, title: '680', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Sport', y: 1808, title: '1808', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Dance', xTitle: 'Dance', y: 428, title: '428', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Glass', xTitle: 'Glass', y: 1420, title: '1420', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Lmr', xTitle: 'Lmr', y: 680, title: '680', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Sport', xTitle: 'Sport', y: 1808, title: '1808', color: 'rgba(18,52,86,1)', size: null},
     ]);
   });
 
@@ -837,10 +837,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Lmr', y: 680, title: '680', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Glass', y: 1420, title: '1420', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Dance', y: 428, title: '428', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Sport', y: 1808, title: '1808', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Lmr', xTitle: 'Lmr', y: 680, title: '680', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Glass', xTitle: 'Glass', y: 1420, title: '1420', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Dance', xTitle: 'Dance', y: 428, title: '428', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Sport', xTitle: 'Sport', y: 1808, title: '1808', color: 'rgba(18,52,86,1)', size: null},
     ]);
   });
 
@@ -870,10 +870,10 @@ describe('Chart data converter linked collections', () => {
     };
 
     const points = [
-      {id: null, x: 'Dance', y: 'Zas', title: 'Zas', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Glass', y: 'Zlom', title: 'Zlom', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Lmr', y: 'Zet', title: 'Zet', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Sport', y: 'Zet', title: 'Zet', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Dance', xTitle: 'Dance', y: 'Zas', title: 'Zas', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Glass', xTitle: 'Glass', y: 'Zlom', title: 'Zlom', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Lmr', xTitle: 'Lmr', y: 'Zet', title: 'Zet', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Sport', xTitle: 'Sport', y: 'Zet', title: 'Zet', color: 'rgba(18,52,86,1)', size: null},
     ];
 
     converter.updateData(collections2, documents2, permissions2, query2, config, linkTypes2, linkInstances2);
@@ -911,10 +911,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Dance', y: 8, title: '8', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Glass', y: 1, title: '1', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Lmr', y: 1, title: '1', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Sport', y: 1, title: '1', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Dance', xTitle: 'Dance', y: 8, title: '8', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Glass', xTitle: 'Glass', y: 1, title: '1', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Lmr', xTitle: 'Lmr', y: 1, title: '1', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Sport', xTitle: 'Sport', y: 1, title: '1', color: 'rgba(18,52,86,1)', size: null},
     ]);
   });
 
@@ -947,10 +947,10 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Dance', y: 312, title: '312', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Glass', y: 333, title: '333', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Lmr', y: 333, title: '333', color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Sport', y: 333, title: '333', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Dance', xTitle: 'Dance', y: 312, title: '312', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Glass', xTitle: 'Glass', y: 333, title: '333', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Lmr', xTitle: 'Lmr', y: 333, title: '333', color: 'rgba(18,52,86,1)', size: null},
+      {id: null, x: 'Sport', xTitle: 'Sport', y: 333, title: '333', color: 'rgba(18,52,86,1)', size: null},
     ]);
   });
 
@@ -983,10 +983,34 @@ describe('Chart data converter linked collections', () => {
     const chartData = converter.convert(config);
     expect(chartData.sets.length).toEqual(1);
     expect(chartData.sets[0].points).toEqual([
-      {id: null, x: 'Dance', y: 428 / 4, title: String(428 / 4), color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Glass', y: 1420 / 14, title: String(1420 / 14), color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Lmr', y: 680 / 9, title: String(680 / 9), color: 'rgba(18,52,86,1)', size: null},
-      {id: null, x: 'Sport', y: 1808 / 21, title: String(1808 / 21), color: 'rgba(18,52,86,1)', size: null},
+      {
+        id: null,
+        x: 'Dance',
+        xTitle: 'Dance',
+        y: 428 / 4,
+        title: String(428 / 4),
+        color: 'rgba(18,52,86,1)',
+        size: null,
+      },
+      {
+        id: null,
+        x: 'Glass',
+        xTitle: 'Glass',
+        y: 1420 / 14,
+        title: String(1420 / 14),
+        color: 'rgba(18,52,86,1)',
+        size: null,
+      },
+      {id: null, x: 'Lmr', xTitle: 'Lmr', y: 680 / 9, title: String(680 / 9), color: 'rgba(18,52,86,1)', size: null},
+      {
+        id: null,
+        x: 'Sport',
+        xTitle: 'Sport',
+        y: 1808 / 21,
+        title: String(1808 / 21),
+        color: 'rgba(18,52,86,1)',
+        size: null,
+      },
     ]);
   });
 
@@ -1028,6 +1052,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[0].points).toContain({
       id: null,
       x: 'Sport',
+      xTitle: 'Sport',
       y: 667,
       title: '667',
       color: 'rgba(188,188,188,1)',
@@ -1036,6 +1061,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[1].points).toContain({
       id: 'D21',
       x: 'Sport',
+      xTitle: 'Sport',
       y: 8,
       title: '8',
       color: 'rgba(188,188,188,0.86)',
@@ -1044,6 +1070,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[2].points).toContain({
       id: null,
       x: 'Sport',
+      xTitle: 'Sport',
       y: 9,
       title: '9',
       color: 'rgba(188,188,188,0.72)',
@@ -1052,6 +1079,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[3].points).toContain({
       id: 'D23',
       x: 'Sport',
+      xTitle: 'Sport',
       y: 8,
       title: '8',
       color: 'rgba(188,188,188,0.58)',
@@ -1060,6 +1088,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[4].points).toContain({
       id: null,
       x: 'Sport',
+      xTitle: 'Sport',
       y: 667,
       title: '667',
       color: 'rgba(188,188,188,0.44)',
@@ -1068,6 +1097,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[5].points).toContain({
       id: 'D23',
       x: 'Sport',
+      xTitle: 'Sport',
       y: 8,
       title: '8',
       color: 'rgba(188,188,188,0.3)',
@@ -1112,6 +1142,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[0].points).toContain({
       id: null,
       x: 'Lmx',
+      xTitle: 'Lmx',
       y: 777,
       title: '777',
       color: 'rgba(18,52,86,1)',
@@ -1120,6 +1151,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[1].points).toContain({
       id: null,
       x: 'Lmp',
+      xTitle: 'Lmp',
       y: 270,
       title: '270',
       color: 'rgba(18,52,86,0.825)',
@@ -1128,6 +1160,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[2].points).toContain({
       id: null,
       x: 'Lpr',
+      xTitle: 'Lpr',
       y: 131,
       title: '131',
       color: 'rgba(18,52,86,0.65)',
@@ -1136,6 +1169,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[3].points).toContain({
       id: null,
       x: 'Lxx',
+      xTitle: 'Lxx',
       y: 777,
       title: '777',
       color: 'rgba(18,52,86,0.475)',
@@ -1144,6 +1178,7 @@ describe('Chart data converter linked collections', () => {
     expect(chartData.sets[4].points).toContain({
       id: null,
       x: 'Lop',
+      xTitle: 'Lop',
       y: 951,
       title: '951',
       color: 'rgba(18,52,86,0.3)',
@@ -1217,9 +1252,9 @@ describe('Chart data converter linked collections', () => {
     };
 
     const pointsAvg = [
-      {id: null, x: 'Kubo', y: 0.6, title: '60%', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Martin', y: 0.3, title: '30%', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Tomas', y: 0.25, title: '25%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Kubo', xTitle: 'Kubo', y: 0.6, title: '60%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Martin', xTitle: 'Martin', y: 0.3, title: '30%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Tomas', xTitle: 'Tomas', y: 0.25, title: '25%', color: 'rgba(255,255,255,1)', size: null},
     ];
     converter.updateData(
       collections3,
@@ -1239,9 +1274,9 @@ describe('Chart data converter linked collections', () => {
       axes: {...configAvg.axes, [ChartAxisType.Y1]: {...configAvg.axes.y1, aggregation: DataAggregationType.Sum}},
     };
     const pointsSum = [
-      {id: null, x: 'Kubo', y: 1.2, title: '120%', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Martin', y: 0.9, title: '90%', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Tomas', y: 1, title: '100%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Kubo', xTitle: 'Kubo', y: 1.2, title: '120%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Martin', xTitle: 'Martin', y: 0.9, title: '90%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Tomas', xTitle: 'Tomas', y: 1, title: '100%', color: 'rgba(255,255,255,1)', size: null},
     ];
     const chartDataSum = converter.convert(configSum);
     expect(chartDataSum.sets.length).toEqual(1);
@@ -1252,9 +1287,9 @@ describe('Chart data converter linked collections', () => {
       axes: {...configAvg.axes, [ChartAxisType.Y1]: {...configAvg.axes.y1, aggregation: DataAggregationType.Max}},
     };
     const pointsMax = [
-      {id: null, x: 'Kubo', y: 0.8, title: '80%', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Martin', y: 0.5, title: '50%', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Tomas', y: 0.4, title: '40%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Kubo', xTitle: 'Kubo', y: 0.8, title: '80%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Martin', xTitle: 'Martin', y: 0.5, title: '50%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Tomas', xTitle: 'Tomas', y: 0.4, title: '40%', color: 'rgba(255,255,255,1)', size: null},
     ];
     const chartDataMax = converter.convert(configMax);
     expect(chartDataMax.sets.length).toEqual(1);
@@ -1265,9 +1300,9 @@ describe('Chart data converter linked collections', () => {
       axes: {...configAvg.axes, [ChartAxisType.Y1]: {...configAvg.axes.y1, aggregation: DataAggregationType.Min}},
     };
     const pointsMin = [
-      {id: null, x: 'Kubo', y: 0.4, title: '40%', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Martin', y: 0.1, title: '10%', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Tomas', y: 0.1, title: '10%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Kubo', xTitle: 'Kubo', y: 0.4, title: '40%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Martin', xTitle: 'Martin', y: 0.1, title: '10%', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Tomas', xTitle: 'Tomas', y: 0.1, title: '10%', color: 'rgba(255,255,255,1)', size: null},
     ];
     const chartDataMin = converter.convert(configMin);
     expect(chartDataMin.sets.length).toEqual(1);
@@ -1278,9 +1313,9 @@ describe('Chart data converter linked collections', () => {
       axes: {...configAvg.axes, [ChartAxisType.Y1]: {...configAvg.axes.y1, aggregation: DataAggregationType.Count}},
     };
     const pointsCount = [
-      {id: null, x: 'Kubo', y: 2, title: '2', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Martin', y: 3, title: '3', color: 'rgba(255,255,255,1)', size: null},
-      {id: null, x: 'Tomas', y: 4, title: '4', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Kubo', xTitle: 'Kubo', y: 2, title: '2', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Martin', xTitle: 'Martin', y: 3, title: '3', color: 'rgba(255,255,255,1)', size: null},
+      {id: null, x: 'Tomas', xTitle: 'Tomas', y: 4, title: '4', color: 'rgba(255,255,255,1)', size: null},
     ];
     const chartDataCount = converter.convert(configCount);
     expect(chartDataCount.sets.length).toEqual(1);

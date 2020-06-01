@@ -30,8 +30,6 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
     const layout: Partial<Layout> = {};
     const axis = createAxisLayout(this.chartData.xAxisData, 'xFormatter');
     if (axis) {
-      axis.domain = [0.1];
-      axis.constrain = 'domain';
       layout.xaxis = axis;
     }
 
@@ -86,6 +84,9 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
 function createAxisLayout(data: ChartAxisData, formatter: string): Partial<LayoutAxis> {
   if (data) {
     const axis: Partial<LayoutAxis> = {};
+    if (data.range) {
+      axis.range = data.range;
+    }
     if (data.formatter) {
       axis.tickformat = formatter;
     }

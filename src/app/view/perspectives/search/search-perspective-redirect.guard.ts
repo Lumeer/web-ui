@@ -64,8 +64,7 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
         }
         viewPath.push(Perspective.Search);
         viewPath.push(defaultConfig?.config?.search?.searchTab || SearchTab.All);
-
-        this.router.navigate(viewPath, {queryParams: {[QueryParam.Query]: ''}});
+        this.router.navigate(viewPath, {queryParamsHandling: 'merge'});
         return false;
       })
     );

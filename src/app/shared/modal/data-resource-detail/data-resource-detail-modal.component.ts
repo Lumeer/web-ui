@@ -216,7 +216,7 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
 
   public onDataResourceChanged(dataResource: DataResource) {
     this.dataResourceChanged.emit(dataResource);
-    this.dataResource = dataResource;
+    this.currentDataResource = dataResource;
   }
 
   public selectCollectionAndDocument(data: {collection: Collection; document: DocumentModel}) {

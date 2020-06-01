@@ -84,7 +84,7 @@ export class PiePlotMaker extends PlotMaker {
     set.points
       .filter(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
       .forEach(point => {
-        labels.push(this.mapPointXValue(point.x));
+        labels.push(point.xTitle);
         values.push(point.y);
         colors.push(point.color);
       });
@@ -109,14 +109,6 @@ export class PiePlotMaker extends PlotMaker {
     if (!value) {
       return value;
     }
-
-    // TODO
-    // if (category === ChartAxisCategory.Date) {
-    //   const dateConfig = config as DateTimeConstraintConfig;
-    //   const format = convertChartDateFormat(dateConfig && dateConfig.format);
-    //   const constraint = new DateTimeConstraint({format} as DateTimeConstraintConfig);
-    //   return constraint.createDataValue(value).preview();
-    //}
 
     const constraintType = this.axisConstraintType(ChartAxisType.X);
     if (constraintType === ConstraintType.Percentage) {

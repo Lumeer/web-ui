@@ -34,7 +34,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
+import {ChartAxisSettings, ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
@@ -136,20 +136,22 @@ export class ChartDataComponent implements OnInit, OnChanges {
       this.configChange.emit(newConfig);
     }
 
-    this.handleSettingsChanged();
-
     const updates = data.map(d => d.updateType);
+    let chartData: ChartData;
     if (updates.includes(UpdateType.Whole) || (updates.includes(UpdateType.Y1) && updates.includes(UpdateType.Y2))) {
-      return this.chartDataConverter.convert(newConfig);
+      chartData = this.chartDataConverter.convert(newConfig);
     } else if (updates.includes(UpdateType.Y1)) {
-      return this.chartDataConverter.convertAxisType(newConfig, ChartAxisType.Y1);
+      chartData = this.chartDataConverter.convertAxisType(newConfig, ChartAxisType.Y1);
     } else if (updates.includes(UpdateType.Y2)) {
-      return this.chartDataConverter.convertAxisType(newConfig, ChartAxisType.Y2);
+      chartData = this.chartDataConverter.convertAxisType(newConfig, ChartAxisType.Y2);
     } else if (updates.includes(UpdateType.Type)) {
-      return this.chartDataConverter.convertType(newConfig.type);
+      chartData = this.chartDataConverter.convertType(newConfig.type);
     } else {
-      return this.chartDataConverter.convert(newConfig);
+      chartData = this.chartDataConverter.convert(newConfig);
     }
+
+    this.handleSettingsChanged(chartData);
+    return chartData;
   }
 
   private updateDataForConverter(latestData: Data) {
@@ -206,17 +208,25 @@ export class ChartDataComponent implements OnInit, OnChanges {
     return chartSettingsChanged(previousConfig, currentConfig);
   }
 
-  private handleSettingsChanged() {
+  private handleSettingsChanged(data?: ChartData) {
     const settings: ChartSettings = {
       settings: {
-        [ChartAxisType.X]: this.config.axes?.x?.settings,
-        [ChartAxisType.Y1]: this.config.axes?.y1?.settings,
-        [ChartAxisType.Y2]: this.config.axes?.y2?.settings,
+        [ChartAxisType.X]: this.checkOverrideRange(this.config.axes?.x?.settings, data?.xAxisData?.range),
+        [ChartAxisType.Y1]: this.checkOverrideRange(this.config.axes?.y1?.settings, data?.y1AxisData?.range),
+        [ChartAxisType.Y2]: this.checkOverrideRange(this.config.axes?.y2?.settings, data?.y2AxisData?.range),
       },
       rangeSlider: this.config.rangeSlider,
     };
 
     this.chartSettings$.next(deepObjectCopy(settings));
+  }
+
+  private checkOverrideRange(settings: ChartAxisSettings, range: [any, any]): ChartAxisSettings {
+    if (!settings || !range) {
+      return settings;
+    }
+
+    return {...settings, range};
   }
 
   private onlyTypeChanged(changes: SimpleChanges): boolean {
