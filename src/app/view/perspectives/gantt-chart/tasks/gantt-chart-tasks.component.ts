@@ -165,7 +165,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   private options: GanttOptions;
   private tasks: GanttTask[];
 
-  public currentMode$ = new BehaviorSubject<GanttChartMode>(GanttChartMode.Month);
   public data$: Observable<{options: GanttOptions; tasks: GanttTask[]}>;
 
   private dataSubject = new BehaviorSubject<Data>(null);
@@ -181,9 +180,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   public ngOnInit() {
     this.data$ = this.subscribeTasks$();
-    if (this.config) {
-      this.currentMode$.next(this.config.mode);
-    }
   }
 
   private subscribeTasks$(): Observable<{options: GanttOptions; tasks: GanttTask[]}> {
@@ -229,9 +225,6 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         constraintData: this.constraintData,
       });
     }
-    if (changes.config && this.config) {
-      this.currentMode$.next(this.config.mode);
-    }
   }
 
   private shouldConvertData(changes: SimpleChanges): boolean {
@@ -266,12 +259,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   }
 
   public onModeChanged(mode: GanttChartMode) {
-    if (this.canManageConfig) {
-      const config = {...this.config, mode};
-      this.configChange.next(config);
-    } else {
-      this.currentMode$.next(mode);
-    }
+    const config = {...this.config, mode};
+    this.configChange.next(config);
   }
 
   public onTaskChanged(task: GanttTask) {

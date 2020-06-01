@@ -928,7 +928,7 @@
         <source>Thank you.</source><target>Děkujeme.</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="verifyEmail.button.resendEmail" datatype="html">
-        <source>Resend Verification Email</source><target>Znovu odeslat email</target>
+        <source>Resend verification email</source><target>Znovu odeslat email</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
           <context context-type="linenumber">20</context>
@@ -940,13 +940,13 @@
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit><trans-unit id="verifyEmail.button.emailFailure" datatype="html">
-        <source>Could Not Send Email</source><target>Email se neodeslal</target>
+        <source>Could not send email</source><target>Email se neodeslal</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="verifyEmail.button.emailSent" datatype="html">
-        <source>Email Sent</source><target>Email odeslán</target>
+        <source>Email sent</source><target>Email odeslán</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
           <context context-type="linenumber">29</context>
@@ -2349,13 +2349,16 @@
         
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/calendar/events/visualization/calendar-visualization.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
         <source>
-    Main settings
-  </source><target>
+  Main settings
+</source><target>
     Hlavní nastavení
   </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.x.header" datatype="html">
+        <source>X Axis settings</source><target state="new">X Axis settings</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source>
@@ -2364,10 +2367,16 @@
         <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/chart-y-axis-config/chart-y-axis-config.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
         <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source><target>{VAR_SELECT, select, y1 {Nastavení osy Y1} y2 {Nastavení osy Y2} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/chart-y-axis-config/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
+        <source>Size</source><target state="new">Size</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
         <source>Tasks have long timespan</source><target>Úkoly jsou naplánované na dlouhou dobu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context>
@@ -4103,13 +4112,31 @@
       </trans-unit><trans-unit id="perspective.chart.config.sort.placeholder" datatype="html">
         <source>Sort</source><target>Třídění</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-main-config/chart-main-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.sortType.placeholder" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/main/chart-main-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.sortType.placeholder" datatype="html">
         <source>Sort order</source><target>Pořadí</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-main-config/chart-main-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.empty" datatype="html">
-        <source>Select axis</source><target>Vyberte osu</target>
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/main/chart-main-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.empty" datatype="html">
+        <source>Select attribute</source><target>Vyberte osu</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-main-config/chart-main-config.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-y-axis-config/chart-y-axis-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.color" datatype="html">
+        <source>Color</source><target state="new">Color</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.lockAxes" datatype="html">
+        <source>Lock axes</source><target state="new">Lock axes</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.rangeSlider" datatype="html">
+        <source>Show range slider</source><target state="new">Show range slider</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
         <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/permissions/aggregation-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="user.permission.humanName" datatype="html">
@@ -4131,7 +4158,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="chart.type" datatype="html">
-        <source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} }</source><target>{VAR_SELECT, select, line {Čárový} bar {Sloupcový} pie {Koláčový} }</target>
+        <source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</source><target>{VAR_SELECT, select, line {Čárový} bar {Sloupcový} pie {Koláčový} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/chart-types-to-select.pipe.ts</context>
           <context context-type="linenumber">1</context>

@@ -64,6 +64,7 @@ import {GanttChartAction} from '../../core/store/gantt-charts/gantt-charts.actio
 import {CalendarsAction} from '../../core/store/calendars/calendars.action';
 import {KanbansAction} from '../../core/store/kanbans/kanbans.action';
 import {ViewsAction} from '../../core/store/views/views.action';
+import {ChartAction} from '../../core/store/charts/charts.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -316,6 +317,11 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         const kanbanConfig = view.config?.kanban;
         this.revertQueryWithUrl(workspacePath, view.query);
         this.store$.dispatch(new KanbansAction.SetConfig({kanbanId: view.code, config: kanbanConfig}));
+        return;
+      case Perspective.Chart:
+        const chartConfig = view.config?.chart;
+        this.revertQueryWithUrl(workspacePath, view.query);
+        this.store$.dispatch(new ChartAction.SetConfig({chartId: view.code, config: chartConfig}));
         return;
       case Perspective.Detail:
         this.revertQueryWithUrl(workspacePath, view.query);

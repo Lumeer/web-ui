@@ -25,6 +25,6 @@ import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/c
 })
 export class ConfigAxisByTypePipe implements PipeTransform {
   public transform(type: ChartAxisType, config: ChartConfig): ChartAxis {
-    return config.axes[type];
+    return config.axes?.[type]?.axis;
   }
 }

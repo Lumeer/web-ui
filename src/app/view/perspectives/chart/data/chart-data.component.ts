@@ -29,7 +29,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {Constraint} from '../../../../core/model/constraint';
-import {DateTimeConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {LinkType} from '../../../../core/store/link-types/link.type';
@@ -37,19 +36,19 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ChartAxisType, ChartConfig} from '../../../../core/store/charts/chart';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {ChartData, convertChartDateFormat} from './convertor/chart-data';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {ChartDataConverter} from './convertor/chart-data-converter';
-import {ClickEvent, ValueChange} from '../visualizer/plot-maker/plot-maker';
+import {deepObjectCopy, deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {ChartVisualizerComponent} from './visualizer/chart-visualizer.component';
 import {buffer, debounceTime, filter, map} from 'rxjs/operators';
-import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import * as moment from 'moment';
+import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AttributesResourceType, DataResource, Resource} from '../../../../core/model/resource';
 import {checkOrTransformChartConfig} from '../visualizer/chart-util';
-import {PercentageConstraint} from '../../../../core/model/constraint/percentage.constraint';
 import {ModalService} from '../../../../shared/modal/modal.service';
+import {findAttribute} from '../../../../core/store/collections/collection.util';
+import {ChartData, ChartSettings} from './convertor/chart-data';
+import {ChartDataConverter} from './convertor/chart-data-converter';
+import {AxisSettingsChange, ClickEvent, ValueChange} from '../visualizer/chart-visualizer';
+import {chartAxisChanged, chartSettingsChanged} from '../../../../core/store/charts/chart.util';
 
 interface Data {
   collections: Collection[];
@@ -115,6 +114,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
 
   private dataSubject = new BehaviorSubject<Data>(null);
   public chartData$: Observable<ChartData>;
+  public chartSettings$ = new BehaviorSubject<ChartSettings>(null);
 
   constructor(private chartDataConverter: ChartDataConverter, private modalService: ModalService) {}
 
@@ -135,6 +135,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
     if (!deepObjectsEquals(newConfig, latestData.config)) {
       this.configChange.emit(newConfig);
     }
+
+    this.handleSettingsChanged();
 
     const updates = data.map(d => d.updateType);
     if (updates.includes(UpdateType.Whole) || (updates.includes(UpdateType.Y1) && updates.includes(UpdateType.Y2))) {
@@ -173,6 +175,9 @@ export class ChartDataComponent implements OnInit, OnChanges {
       updateType = UpdateType.Y1;
     } else if (this.shouldRefreshY2Axis(changes)) {
       updateType = UpdateType.Y2;
+    } else if (this.onlySettingsChanged(changes)) {
+      this.handleSettingsChanged();
+      return;
     } else {
       updateType = UpdateType.Whole;
     }
@@ -188,6 +193,30 @@ export class ChartDataComponent implements OnInit, OnChanges {
       updateType,
       constraintData: this.constraintData,
     });
+  }
+
+  private onlySettingsChanged(changes: SimpleChanges): boolean {
+    if (!changes.config || !changes.config.previousValue) {
+      return false;
+    }
+
+    const previousConfig = changes.config.previousValue as ChartConfig;
+    const currentConfig = changes.config.currentValue as ChartConfig;
+
+    return chartSettingsChanged(previousConfig, currentConfig);
+  }
+
+  private handleSettingsChanged() {
+    const settings: ChartSettings = {
+      settings: {
+        [ChartAxisType.X]: this.config.axes?.x?.settings,
+        [ChartAxisType.Y1]: this.config.axes?.y1?.settings,
+        [ChartAxisType.Y2]: this.config.axes?.y2?.settings,
+      },
+      rangeSlider: this.config.rangeSlider,
+    };
+
+    this.chartSettings$.next(deepObjectCopy(settings));
   }
 
   private onlyTypeChanged(changes: SimpleChanges): boolean {
@@ -233,8 +262,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const sortPrevious = previousConfig.sort;
     const sortCurrent = currentConfig.sort;
 
-    const xAxisPrevious = previousConfig.axes && previousConfig.axes[ChartAxisType.X];
-    const xAxisCurrent = currentConfig.axes && currentConfig.axes[ChartAxisType.X];
+    const xAxisPrevious = previousConfig.axes?.x?.axis;
+    const xAxisCurrent = currentConfig.axes?.x?.axis;
 
     return !deepObjectsEquals(xAxisPrevious, xAxisCurrent) || !deepObjectsEquals(sortPrevious, sortCurrent);
   }
@@ -255,20 +284,7 @@ export class ChartDataComponent implements OnInit, OnChanges {
     const previousConfig = changes.config.previousValue as ChartConfig;
     const currentConfig = changes.config.currentValue as ChartConfig;
 
-    const yAxisPrevious = previousConfig.axes && previousConfig.axes[type];
-    const yAxisCurrent = currentConfig.axes && currentConfig.axes[type];
-
-    const yDataSetPrevious = previousConfig.names && previousConfig.names[type];
-    const yDataSetCurrent = currentConfig.names && currentConfig.names[type];
-
-    const yAggregationPrevious = previousConfig.aggregations && previousConfig.aggregations[type];
-    const yAggregationCurrent = currentConfig.aggregations && currentConfig.aggregations[type];
-
-    return (
-      !deepObjectsEquals(yAxisPrevious, yAxisCurrent) ||
-      !deepObjectsEquals(yDataSetPrevious, yDataSetCurrent) ||
-      !deepObjectsEquals(yAggregationPrevious, yAggregationCurrent)
-    );
+    return chartAxisChanged(previousConfig, currentConfig, type);
   }
 
   public onValueChange(valueChange: ValueChange) {
@@ -289,8 +305,8 @@ export class ChartDataComponent implements OnInit, OnChanges {
       return;
     }
     const collection = (this.collections || []).find(c => c.id === changedDocument.collectionId);
-    const attribute = ((collection && collection.attributes) || []).find(a => a.id === attributeId);
-    const saveValue = this.convertSaveValue(value, attribute && attribute.constraint);
+    const attribute = findAttribute(collection?.attributes, attributeId);
+    const saveValue = this.convertSaveValue(value, attribute?.constraint);
 
     const patchDocument = {...changedDocument, data: {[attributeId]: saveValue}};
     this.patchData.emit(patchDocument);
@@ -299,18 +315,6 @@ export class ChartDataComponent implements OnInit, OnChanges {
   private convertSaveValue(value: any, constraint: Constraint): any {
     if (!constraint) {
       return value;
-    }
-
-    if (value) {
-      if (constraint.type === ConstraintType.DateTime) {
-        const config = constraint.config && (constraint.config as DateTimeConstraintConfig);
-        return moment(value, convertChartDateFormat(config && config.format)).toISOString();
-      } else if (constraint.type === ConstraintType.Percentage) {
-        return (<PercentageConstraint>constraint)
-          .createDataValue(value)
-          .parseInput(String(value || 0))
-          .serialize();
-      }
     }
 
     return constraint.createDataValue(value, this.constraintData).serialize();
@@ -326,15 +330,15 @@ export class ChartDataComponent implements OnInit, OnChanges {
       return;
     }
     const linkType = (this.linkTypes || []).find(lt => lt.id === changedLinkInstance.linkTypeId);
-    const attribute = ((linkType && linkType.attributes) || []).find(a => a.id === attributeId);
-    const saveValue = this.convertSaveValue(value, attribute && attribute.constraint);
+    const attribute = findAttribute(linkType?.attributes, attributeId);
+    const saveValue = this.convertSaveValue(value, attribute?.constraint);
 
     const patchLinkInstance = {...changedLinkInstance, data: {[attributeId]: saveValue}};
     this.patchLinkData.emit(patchLinkInstance);
   }
 
   public resize() {
-    this.chartVisualizerComponent && this.chartVisualizerComponent.resize();
+    this.chartVisualizerComponent?.resize();
   }
 
   public onDetail(event: ClickEvent) {
@@ -350,8 +354,34 @@ export class ChartDataComponent implements OnInit, OnChanges {
       const collection = document && (this.collections || []).find(coll => coll.id === document.collectionId);
       return {resource: collection, dataResource: document};
     }
-    const linkInstance = (this.linkInstances || []).find(linkIstance => linkIstance.id === event.pointId);
+    const linkInstance = (this.linkInstances || []).find(li => li.id === event.pointId);
     const linkType = linkInstance && (this.linkTypes || []).find(lt => lt.id === linkInstance.linkTypeId);
     return {resource: linkType, dataResource: linkInstance};
+  }
+
+  public onAxisSettingsChange(event: AxisSettingsChange) {
+    const configCopy = deepObjectCopy(this.config);
+    [ChartAxisType.X, ChartAxisType.Y1, ChartAxisType.Y2].forEach(axisType =>
+      this.modifySettingsRange(axisType, event, configCopy)
+    );
+
+    if (!deepObjectsEquals(configCopy, this.config)) {
+      this.configChange.emit(configCopy);
+    }
+  }
+
+  private modifySettingsRange(type: ChartAxisType, event: AxisSettingsChange, config: ChartConfig) {
+    if (!event.range || !Object.keys(event.range).includes(type)) {
+      return;
+    }
+
+    if (event.range[type] === null) {
+      delete config.axes?.[type]?.settings?.range;
+    } else if (event.range[type]) {
+      config.axes = config.axes || {};
+      config.axes[type] = config.axes[type] || {};
+      config.axes[type].settings = config.axes[type].settings || {};
+      config.axes[type].settings.range = event.range[type];
+    }
   }
 }

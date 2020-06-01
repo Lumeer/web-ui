@@ -20,10 +20,10 @@
 import {ElementRef} from '@angular/core';
 
 import {Data, Layout} from 'plotly.js';
-import {ConstraintConfig} from '../../../../../core/model/data/constraint-config';
-import {ChartAxisCategory, ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
-import {AttributesResourceType} from '../../../../../core/model/resource';
+import {ValueChange} from '../chart-visualizer';
 
 export abstract class PlotMaker {
   protected chartData: ChartData;
@@ -56,50 +56,33 @@ export abstract class PlotMaker {
 
   public abstract createLayout(): Partial<Layout>;
 
-  protected isNumericCategory(category: ChartAxisCategory) {
-    return [ChartAxisCategory.Percentage, ChartAxisCategory.Number, ChartAxisCategory.Duration].includes(category);
-  }
-
-  protected isAxisCategoryText(type: ChartYAxisType): boolean {
-    return this.axisCategory(type) === ChartAxisCategory.Text;
-  }
-
-  protected axisCategory(type: ChartAxisType): ChartAxisCategory {
-    if (type === ChartAxisType.X) {
-      const setWithXAxis = this.chartData.sets.find(set => !!set.xAxis);
-      return (setWithXAxis && setWithXAxis.xAxis.category) || ChartAxisCategory.Text;
-    }
-
-    const sets = this.getAxisDataSets(type);
-    return (sets.length >= 1 && sets[0].yAxis && sets[0].yAxis.category) || ChartAxisCategory.Text;
-  }
-
-  protected axisConfig(type: ChartAxisType): ConstraintConfig {
-    if (type === ChartAxisType.X) {
-      const setWithXAxis = this.chartData.sets.find(set => !!set.xAxis);
-      return (setWithXAxis && setWithXAxis.xAxis.config) || {};
-    }
-
-    const sets = this.getAxisDataSets(type);
-    return (sets.length >= 1 && sets[0].yAxis && sets[0].yAxis.config) || {};
-  }
+  public abstract initDoubleClick();
 
   protected getAxisDataSets(type: ChartYAxisType): ChartDataSet[] {
     return this.chartData.sets.filter(set => set.yAxisType === type);
   }
-}
 
-export interface ClickEvent {
-  setId: string;
-  pointId: string;
-  resourceType: AttributesResourceType;
-}
+  protected isNumericType(type: ConstraintType) {
+    return [ConstraintType.Percentage, ConstraintType.Number, ConstraintType.Duration].includes(type);
+  }
 
-export interface ValueChange {
-  setId: string;
-  pointId: string;
-  value: string;
-  resourceType: AttributesResourceType;
+  protected isCategoryType(type: ConstraintType): boolean {
+    return !this.isNumericType(type);
+  }
+
+  protected axisConstraintType(type: ChartAxisType): ConstraintType {
+    if (type === ChartAxisType.X) {
+      return this.chartData.xAxisData?.constraintType || ConstraintType.Unknown;
+    }
+    if (type === ChartAxisType.Y1) {
+      return this.chartData.y1AxisData?.constraintType || ConstraintType.Unknown;
+    }
+    if (type === ChartAxisType.Y2) {
+      return this.chartData.y2AxisData?.constraintType || ConstraintType.Unknown;
+    }
+
+    return ConstraintType.Unknown;
+  }
 }
 
 export interface DataChange {

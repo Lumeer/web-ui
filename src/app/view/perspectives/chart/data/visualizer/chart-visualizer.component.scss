@@ -1,4 +1,8 @@
-.draggable {
+.chart-wrapper {
+  min-height: 550px;
+}
+
+.draggable::ng-deep {
   .scatterlayer .trace .points path {
     pointer-events: all;
     cursor: ns-resize;
@@ -10,6 +14,6 @@
   }
 }
 
-.js-plotly-plot .plotly .modebar {
+::ng-deep .js-plotly-plot .plotly .modebar {
   z-index: 999;
 }

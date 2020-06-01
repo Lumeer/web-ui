@@ -25,6 +25,7 @@ export interface DateTimeOptions {
   quarter?: boolean;
   week?: boolean;
   day?: boolean;
+  dayOfWeek?: boolean;
   hours?: boolean;
   minutes?: boolean;
   seconds?: boolean;
@@ -40,6 +41,7 @@ export function createDateTimeOptions(format: string): DateTimeOptions {
       month: format.includes('M'),
       week: format.toLowerCase().includes('w'),
       day: format.toLowerCase().includes('d'),
+      dayOfWeek: format.toLowerCase().includes('ddd'),
       hours: format.toLowerCase().includes('h') || format.includes('k'),
       minutes: format.includes('m'),
       seconds: format.includes('s'),

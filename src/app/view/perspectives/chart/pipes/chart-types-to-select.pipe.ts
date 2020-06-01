@@ -29,14 +29,14 @@ export class ChartTypesToSelectPipe implements PipeTransform {
   public constructor(private i18n: I18n) {}
 
   public transform(types: ChartType[]): SelectItemModel[] {
-    return types.map(type => ({id: type, value: this.getTypeValue(type), icon: chartTypesIconsMap[type]}));
+    return types.map(type => ({id: type, value: this.getTypeValue(type), icons: [chartTypesIconsMap[type]]}));
   }
 
   private getTypeValue(type: ChartType): string {
     return this.i18n(
       {
         id: 'chart.type',
-        value: '{chartType, select, line {Line} bar {Bar} pie {Pie}}',
+        value: '{chartType, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble}}',
       },
       {
         chartType: type,

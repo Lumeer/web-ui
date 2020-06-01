@@ -17,14 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Data, Layout} from 'plotly.js';
-import {DateTimeConstraint} from '../../../../../core/model/constraint/datetime.constraint';
-import {DateTimeConstraintConfig} from '../../../../../core/model/data/constraint-config';
+import {Data, Layout, PlotType} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {shadeColor} from '../../../../../shared/utils/html-modifier';
-import {ChartAxisCategory, ChartDataSet, convertChartDateFormat} from '../../data/convertor/chart-data';
+import {ChartDataSet} from '../../data/convertor/chart-data';
 import {PlotMaker} from './plot-maker';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
+import {uniqueValues} from '../../../../../shared/utils/array.utils';
 
 const MAX_COLUMNS = 3;
 
@@ -48,57 +47,62 @@ export class PiePlotMaker extends PlotMaker {
   }
 
   private getSets(): ChartDataSet[] {
+    if (this.chartData.y1AxisData?.constraintType !== ConstraintType.Number) {
+      return [];
+    }
     return this.chartData.sets.filter(
       set =>
         set.yAxisType === ChartAxisType.Y1 &&
-        this.isNumericCategory(set.yAxis && set.yAxis.category) &&
         set.points.some(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
     );
   }
 
   private getDataStyle(): Data {
-    const trace = {};
-    trace['type'] = 'pie';
-
-    return trace;
+    return {type: <PlotType>'pie', marker: {}};
   }
 
   private createEmptyPie(): Data {
-    const setWithColor = this.chartData.sets.find(set => isNotNullOrUndefined(set.color));
-    const color = setWithColor && setWithColor.color;
+    return {
+      ...this.getDataStyle(),
+      showlegend: false,
+      hoverinfo: 'none' as const,
+      textinfo: 'none' as const,
+      labels: [''],
+      values: [20],
+    };
+  }
 
-    const dataStyle = this.getDataStyle();
-    dataStyle['showlegend'] = false;
-    dataStyle['hoverinfo'] = 'none';
-    dataStyle['textinfo'] = 'none';
-    if (color) {
-      dataStyle['marker'] = {colors: [shadeColor(color, 0.7)]};
-    }
-    return {...dataStyle, labels: [''], values: [20]};
+  public initDoubleClick() {
+    // nothing to do
   }
 
   private createAxesData(dataStyle: Data, set: ChartDataSet, row?: number, column?: number): Data {
-    const data = {...dataStyle};
-
-    const traceX = [];
-    const traceY = [];
+    const labels = [];
+    const values = [];
+    const colors = [];
 
     set.points
       .filter(point => isNotNullOrUndefined(point.x) && isNotNullOrUndefined(point.y))
       .forEach(point => {
-        traceX.push(this.mapPointXValue(point.x));
-        traceY.push(point.y);
+        labels.push(this.mapPointXValue(point.x));
+        values.push(point.y);
+        colors.push(point.color);
       });
 
-    set.name && (data['name'] = set.name);
-    data['labels'] = traceX;
-    data['values'] = traceY;
+    const data = {...dataStyle, labels, values};
+    if (this.shouldSetColors(colors)) {
+      data.marker.colors = colors;
+    }
 
     if (isNotNullOrUndefined(row) && isNotNullOrUndefined(column)) {
-      data['domain'] = {row, column};
+      data.domain = {rows: row, columns: column};
     }
 
     return data;
+  }
+
+  private shouldSetColors(colors: string[]): boolean {
+    return uniqueValues(colors).length > 1;
   }
 
   private mapPointXValue(value: any): any {
@@ -106,15 +110,16 @@ export class PiePlotMaker extends PlotMaker {
       return value;
     }
 
-    const category = this.axisCategory(ChartAxisType.X);
-    const config = this.axisConfig(ChartAxisType.X);
+    // TODO
+    // if (category === ChartAxisCategory.Date) {
+    //   const dateConfig = config as DateTimeConstraintConfig;
+    //   const format = convertChartDateFormat(dateConfig && dateConfig.format);
+    //   const constraint = new DateTimeConstraint({format} as DateTimeConstraintConfig);
+    //   return constraint.createDataValue(value).preview();
+    //}
 
-    if (category === ChartAxisCategory.Date) {
-      const dateConfig = config as DateTimeConstraintConfig;
-      const format = convertChartDateFormat(dateConfig && dateConfig.format);
-      const constraint = new DateTimeConstraint({format} as DateTimeConstraintConfig);
-      return constraint.createDataValue(value).preview();
-    } else if (category === ChartAxisCategory.Percentage) {
+    const constraintType = this.axisConstraintType(ChartAxisType.X);
+    if (constraintType === ConstraintType.Percentage) {
       return value + '%';
     }
 
@@ -126,9 +131,7 @@ export class PiePlotMaker extends PlotMaker {
     if (sets.length > 1) {
       const rows = Math.floor((sets.length - 1) / MAX_COLUMNS) + 1;
       const columns = Math.min(sets.length, MAX_COLUMNS);
-      const layout = {};
-      layout['grid'] = {rows, columns};
-      return layout;
+      return {grid: {rows, columns}};
     }
     return {};
   }

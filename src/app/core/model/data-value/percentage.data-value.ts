@@ -41,36 +41,33 @@ export class PercentageDataValue implements NumericDataValue {
     public readonly config: PercentageConstraintConfig,
     public readonly inputValue?: string
   ) {
-    this.bigNumber = this.createPercentage(value);
+    this.bigNumber = createPercentage(value, inputValue, config);
   }
 
-  private createPercentage(value: any): Big {
-    const containerPercentageSign = String(value).trim().endsWith('%');
-    const pureValue = containerPercentageSign || isNotNullOrUndefined(this.inputValue) ? parseInputValue(value) : value;
-    return convertPercentageToBig(pureValue, this.config && this.config.decimals);
-  }
-
-  public format(suffix = '%'): string {
+  public format(overrideConfig?: Partial<PercentageConstraintConfig>, suffix: string = '%'): string {
     if (isNotNullOrUndefined(this.inputValue)) {
       return this.inputValue;
     }
-    if (!this.bigNumber) {
+    const bigNumber = overrideConfig
+      ? createPercentage(this.value, this.inputValue, this.config, overrideConfig)
+      : this.bigNumber;
+    if (!bigNumber) {
       return formatUnknownDataValue(this.value);
     }
 
-    return decimalStoreToUser(this.bigNumber.toString()) + suffix;
+    return decimalStoreToUser(bigNumber.toString()) + suffix;
   }
 
-  public preview(): string {
-    return this.format();
+  public preview(overrideConfig?: Partial<PercentageConstraintConfig>): string {
+    return this.format(overrideConfig);
   }
 
-  public title(): string {
-    return unescapeHtml(this.format());
+  public title(overrideConfig?: Partial<PercentageConstraintConfig>): string {
+    return unescapeHtml(this.format(overrideConfig));
   }
 
   public editValue(): string {
-    return unescapeHtml(this.format(''));
+    return unescapeHtml(this.format(null, ''));
   }
 
   public serialize(): any {
@@ -78,7 +75,7 @@ export class PercentageDataValue implements NumericDataValue {
       return this.value ? escapeHtml(String(this.value)) : '';
     }
 
-    const decimals = (this.config && this.config.decimals) || 0;
+    const decimals = this.config?.decimals || 0;
     return convertBigToNumberSafely(this.bigNumber.div(100), decimals + 2);
   }
 
@@ -197,4 +194,15 @@ function convertPercentageToBig(value: any, decimals?: number): Big {
   big = big.round(decimals || 0);
 
   return createBigWithoutTrailingZeros(big);
+}
+
+function createPercentage(
+  value: any,
+  inputValue: string,
+  config: PercentageConstraintConfig,
+  overrideConfig?: Partial<PercentageConstraintConfig>
+): Big {
+  const containerPercentageSign = String(value).trim().endsWith('%');
+  const pureValue = containerPercentageSign || isNotNullOrUndefined(inputValue) ? parseInputValue(value) : value;
+  return convertPercentageToBig(pureValue, overrideConfig?.decimals || config.decimals);
 }

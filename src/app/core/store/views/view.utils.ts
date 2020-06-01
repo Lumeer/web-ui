@@ -24,7 +24,7 @@ import {
 import {isGanttConfigChanged} from '../../../view/perspectives/gantt-chart/util/gantt-chart-util';
 import {isKanbanConfigChanged} from '../../../view/perspectives/kanban/util/kanban.util';
 import {Perspective} from '../../../view/perspectives/perspective';
-import {isChartConfigChanged} from '../charts/chart.util';
+import {createChartSaveConfig, isChartConfigChanged} from '../charts/chart.util';
 import {Collection} from '../collections/collection';
 import {DocumentModel} from '../documents/document.model';
 import {LinkType} from '../link-types/link.type';
@@ -38,6 +38,7 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
 import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
 import {Query} from '../navigation/query/query';
+import {ChartConfig} from '../charts/chart';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -76,6 +77,8 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
       return createCalendarSaveConfig(config as CalendarConfig);
     case Perspective.Table:
       return createTableSaveConfig(config as TableConfig);
+    case Perspective.Chart:
+      return createChartSaveConfig(config as ChartConfig);
     default:
       return config;
   }

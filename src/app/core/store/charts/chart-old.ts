@@ -17,23 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Perspective} from '../perspectives/perspective';
+import {DataAggregationType} from '../../../shared/utils/data/data-aggregation';
+import {ChartAxis, ChartAxisType, ChartSort, ChartType} from './chart';
 
-@Pipe({
-  name: 'undoChangesSupported',
-})
-export class UndoChangesSupportedPipe implements PipeTransform {
-  public transform(perspective: Perspective): any {
-    return [
-      Perspective.Table,
-      Perspective.Search,
-      Perspective.Pivot,
-      Perspective.Map,
-      Perspective.GanttChart,
-      Perspective.Calendar,
-      Perspective.Kanban,
-      Perspective.Detail,
-    ].includes(perspective);
-  }
+export interface ChartConfigV0 {
+  type: ChartType;
+
+  axes: Partial<Record<ChartAxisType, ChartAxis>>;
+  names?: Partial<Record<ChartAxisType, ChartAxis>>;
+  colors?: Partial<Record<ChartAxisType, ChartAxis>>;
+  aggregations?: Partial<Record<ChartAxisType, DataAggregationType>>;
+
+  prediction?: boolean;
+  sort?: ChartSort;
 }

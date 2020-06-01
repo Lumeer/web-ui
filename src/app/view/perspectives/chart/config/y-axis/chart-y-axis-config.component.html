@@ -1,0 +1,73 @@
+<h6 class="font-weight-bold mt-4" i18n="@@perspective.chart.config.axis.header">
+  {yAxisType, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings}}
+</h6>
+
+<ng-container *ngVar="config.axes && config.axes[yAxisType] as yAxis">
+
+  <select-item-with-constraint class="d-block w-100 mt-2"
+                               [attributesResources]="attributesResources"
+                               [restrictedIds]="yAxisType | axisRestrictedIds:config"
+                               [placeholderText]="yAxisType.toString().toUpperCase()"
+                               [buttonClasses]="buttonClasses"
+                               [selectedId]="yAxis?.axis | chartAxisSelectItemId"
+                               [selectedConstraint]="yAxis?.axis?.constraint"
+                               [emptyValue]="axisEmptyValue"
+                               [removable]="true"
+                               [fitParent]="true"
+                               (select)="onAxisSelect($event)"
+                               (selectConstraint)="onAxisConstraintSelect($event)"
+                               (remove)="onAxisRemoved()">
+  </select-item-with-constraint>
+
+  <select-item-with-constraint class="d-block w-100 mt-2"
+                               [attributesResources]="attributesResources"
+                               [restrictedIds]="yAxisType | axisRestrictedIds:config:true"
+                               [placeholderText]="yAxisType | dataSetSelectPlaceholder"
+                               [buttonClasses]="buttonClasses"
+                               [selectedId]="yAxis?.name | chartAxisSelectItemId"
+                               [selectedConstraint]="yAxis?.name?.constraint"
+                               [emptyValue]="axisEmptyValue"
+                               [removable]="true"
+                               [fitParent]="true"
+                               (select)="onDataNameSelect($event)"
+                               (selectConstraint)="onDataNameConstraintSelect($event)"
+                               (remove)="onDataNameRemoved()">
+  </select-item-with-constraint>
+
+  <select-item class="d-block w-100 mt-2"
+               *ngIf="config.type === chartType.Bubble"
+               [items]="attributesResources | selectItemWithConstraint:[]"
+               [selectedId]="yAxis?.size | chartAxisSelectItemId"
+               placeholderText="Size"
+               i18n-placeholderText="@@perspective.chart.config.axis.size"
+               emptyValue="Select attribute"
+               i18n-emptyValue="@@perspective.chart.config.axis.empty"
+               [removable]="true"
+               [buttonClasses]="buttonClasses"
+               (select)="onSizeSelect($event)"
+               (remove)="onSizeRemoved()">
+  </select-item>
+
+  <select-item class="d-block w-100 mt-2"
+               [items]="attributesResources | selectItemWithConstraint:[]"
+               [selectedId]="yAxis?.color | chartAxisSelectItemId"
+               placeholderText="Color"
+               i18n-placeholderText="@@perspective.chart.config.axis.color"
+               emptyValue="Select attribute"
+               i18n-emptyValue="@@perspective.chart.config.axis.empty"
+               [removable]="true"
+               [buttonClasses]="buttonClasses"
+               (select)="onColorSelect($event)"
+               (remove)="onColorRemoved()">
+  </select-item>
+
+  <select-item class="d-block w-100 mt-2"
+               [items]="chartAggregations | aggregationSelectItems"
+               [placeholderText]="yAxisType | aggregationSelectPlaceholder"
+               [buttonClasses]="buttonClasses"
+               [removable]="false"
+               [selectedId]="yAxis?.aggregation"
+               (select)="onAggregationSelect($event)">
+  </select-item>
+
+</ng-container>

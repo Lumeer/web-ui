@@ -60,6 +60,12 @@ import {SelectCollectionComponent} from './select-collection/select-collection.c
     SelectCollectionComponent,
   ],
   providers: [AreIdsEqualPipe],
-  exports: [SelectItemComponent, SelectItemWithConstraint, SelectDataItemComponent, SelectCollectionComponent],
+  exports: [
+    SelectItemComponent,
+    SelectItemWithConstraint,
+    SelectDataItemComponent,
+    SelectCollectionComponent,
+    SelectItemWithConstraintPipe,
+  ],
 })
 export class SelectModule {}

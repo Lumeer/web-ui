@@ -17,14 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../core/store/charts/chart';
+import {
+  ChartAxisConfig,
+  ChartAxisType,
+  ChartConfig,
+  ChartConfigVersion,
+  ChartSortType,
+  ChartType,
+} from '../../../../core/store/charts/chart';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 import {AttributesResource} from '../../../../core/model/resource';
-import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
-import {findAttribute} from '../../../../core/store/collections/collection.util';
 import {
   checkOrTransformQueryAttribute,
   queryStemAttributesResourcesOrder,
@@ -39,6 +44,7 @@ export function convertChartDateTickFormat(format: string): string {
 
   tickFormat = tickFormat.replace(/(YY+)/g, '%Y');
   tickFormat = tickFormat.replace(/(D+)/g, '%d');
+  tickFormat = tickFormat.replace(/(ddd)/g, '%a');
   tickFormat = tickFormat.replace(/(M+)|(m+)/g, (str, reg1, reg2) => (!!reg1 ? '%m' : !!reg2 ? '%M' : ''));
   tickFormat = tickFormat.replace(/(H+)/g, '%H');
   tickFormat = tickFormat.replace(/(SS+)/g, '%L');
@@ -62,48 +68,45 @@ export function checkOrTransformChartConfig(
     collections,
     linkTypes
   );
-  const axes = checkOrTransformChartAxisMap(config.axes, attributesResourcesOrder);
-  const names = checkOrTransformChartAxisMap(config.names, attributesResourcesOrder);
+  const axis: Partial<Record<ChartAxisType, ChartAxisConfig>> = {
+    [ChartAxisType.X]: checkOrTransformChartAxisConfig(config.axes?.x, attributesResourcesOrder),
+    [ChartAxisType.Y1]: checkOrTransformChartAxisConfig(config.axes?.y1, attributesResourcesOrder),
+    [ChartAxisType.Y2]: checkOrTransformChartAxisConfig(config.axes?.y2, attributesResourcesOrder),
+  };
   const sort = config.sort && {
     ...config.sort,
     axis: checkOrTransformQueryAttribute(config.sort.axis, attributesResourcesOrder),
   };
 
-  return {...config, axes, names, sort};
+  return {...config, axes: axis, sort};
 }
 
-function checkOrTransformChartAxisMap(
-  axisMap: Record<string, ChartAxis>,
+function checkOrTransformChartAxisConfig(
+  axisConfig: ChartAxisConfig,
   attributesResourcesOrder: AttributesResource[]
-): Record<string, ChartAxis> {
-  if (!axisMap) {
-    return axisMap;
+): ChartAxisConfig {
+  if (!axisConfig) {
+    return axisConfig;
   }
 
-  return Object.entries(axisMap)
-    .filter(([, axis]) => !!axis)
-    .reduce((map, [type, axis]) => {
-      const newAxis = checkOrTransformQueryAttribute(axis, attributesResourcesOrder);
-      if (newAxis) {
-        map[type] = axis;
-      }
-
-      return map;
-    }, {});
+  return {
+    ...axisConfig,
+    axis: checkOrTransformQueryAttribute(axisConfig.axis, attributesResourcesOrder),
+    name: checkOrTransformQueryAttribute(axisConfig.name, attributesResourcesOrder),
+    color: checkOrTransformQueryAttribute(axisConfig.color, attributesResourcesOrder),
+    size: checkOrTransformQueryAttribute(axisConfig.size, attributesResourcesOrder),
+  };
 }
 
 function createDefaultConfig(): ChartConfig {
   return {
     type: ChartType.Line,
-    axes: {},
-    aggregations: {[ChartAxisType.Y1]: DataAggregationType.Sum, [ChartAxisType.Y2]: DataAggregationType.Sum},
+    axes: {
+      [ChartAxisType.X]: {},
+      [ChartAxisType.Y1]: {aggregation: DataAggregationType.Sum},
+      [ChartAxisType.Y2]: {aggregation: DataAggregationType.Sum},
+    },
     sort: {type: ChartSortType.Ascending},
+    version: ChartConfigVersion.V1,
   };
-}
-
-export function chartConfigIsEmpty(config: ChartConfig): boolean {
-  return (
-    Object.values((config && config.axes) || {}).filter(value => !!value).length === 0 &&
-    Object.values((config && config.names) || {}).filter(value => !!value).length === 0
-  );
 }

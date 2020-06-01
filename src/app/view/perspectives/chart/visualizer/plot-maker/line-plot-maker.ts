@@ -18,8 +18,8 @@
  */
 
 import {Data, Layout, d3} from 'plotly.js';
-import {ChartDataSet} from '../../data/convertor/chart-data';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
+import {ChartDataSet} from '../../data/convertor/chart-data';
 import {AxisDraggablePlotMaker} from './axis-draggable-plot-maker';
 
 export class LinePlotMaker extends AxisDraggablePlotMaker {
@@ -28,23 +28,29 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
   }
 
   private createAxisData(set: ChartDataSet): Data {
-    let data: Data = {};
+    let data: Data;
+    let isYCategory: boolean;
     if (set.yAxisType === ChartAxisType.Y1) {
       data = this.axis1DataStyle(set);
+      isYCategory = this.isCategoryType(this.chartData.y1AxisData?.constraintType);
     } else {
       data = this.axis2DataStyle(set);
+      isYCategory = this.isCategoryType(this.chartData.y2AxisData?.constraintType);
     }
 
     const traceX = [];
     const traceY = [];
+    const colors = [];
+    const texts = [];
 
-    const isYCategory = this.isAxisCategoryText(set.yAxisType);
     const additionalYValues = [];
     const addedYValues = new Set();
 
     set.points.forEach(point => {
       traceX.push(point.x);
       traceY.push(point.y);
+      colors.push(point.color);
+      texts.push(point.title);
 
       // we need to add first and last category value to the values in order to keep them on y axis while drag
       if (point.y && isYCategory && !addedYValues.has(point.y)) {
@@ -59,12 +65,13 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
       traceY.push(additionalYValues[i]);
     }
 
-    set.name && (data['name'] = set.name);
-    data['x'] = this.formatXTrace(traceX, set.xAxis);
-    data['y'] = traceY;
-    data['text'] = this.getYTraceTexts(traceY, set.yAxis);
-    data['textinfo'] = 'text';
-    data['hoverinfo'] = 'x+text';
+    set.name && (data.name = set.name);
+    data.x = traceX;
+    data.y = traceY;
+    data.text = texts;
+    data.marker.color = colors;
+    data.textinfo = 'text';
+    data.hoverinfo = 'x+text';
 
     return data;
   }
@@ -78,6 +85,7 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
       ...this.getDefaultDataStyle(set),
       yaxis: 'y2',
       line: {
+        color: set.color,
         dash: 'dot',
         width: 4,
       },
@@ -85,14 +93,12 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
   }
 
   private getDefaultDataStyle(set: ChartDataSet): Data {
-    const trace = {
-      marker: {color: set.color, size: 10},
+    return {
+      marker: {size: 10},
       line: {color: set.color},
+      mode: 'lines+markers' as const,
+      type: 'scatter' as const,
     };
-    trace['mode'] = 'lines+markers';
-    trace['type'] = 'scatter';
-
-    return trace;
   }
 
   public createLayout(): Partial<Layout> {
@@ -113,9 +119,8 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
   }
 
   public getPointPosition(point: any, datum: any): {x: number; y: number} {
-    const transform = d3.select(point).attr('transform');
-    const translate = transform.substring(10, transform.length - 1).split(/[, ]/);
-    return {x: +translate[0], y: +translate[1]};
+    const transform = d3.transform(d3.select(point).attr('transform'));
+    return {x: transform.translate[0], y: transform.translate[1]};
   }
 
   public getPoints(): any {

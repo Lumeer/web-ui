@@ -18,17 +18,19 @@
  */
 
 import {ElementRef} from '@angular/core';
-import {Config, Data, Layout, newPlot, Plots, purge, react} from 'plotly.js';
+import {Config, d3, Data, Layout, newPlot, PlotData, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
 import {environment} from '../../../../../environments/environment';
-import {ChartType} from '../../../../core/store/charts/chart';
-import {isNumeric} from '../../../../shared/utils/common.utils';
-import {ChartData} from '../data/convertor/chart-data';
-import {BarPlotMaker} from './plot-maker/bar-plot-maker';
+import {ChartAxisType, ChartType} from '../../../../core/store/charts/chart';
+import {DataChange, PlotMaker} from './plot-maker/plot-maker';
+import {ChartData, ChartSettings} from '../data/convertor/chart-data';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 import {LinePlotMaker} from './plot-maker/line-plot-maker';
+import {BarPlotMaker} from './plot-maker/bar-plot-maker';
 import {PiePlotMaker} from './plot-maker/pie-plot-maker';
-import {ClickEvent, DataChange, PlotMaker, ValueChange} from './plot-maker/plot-maker';
-import {createRange} from './plot-maker/plot-util';
+import {BubblePlotMaker} from './plot-maker/bubble-plot-maker';
+import {AttributesResourceType} from '../../../../core/model/resource';
+import {deepArrayEquals} from '../../../../shared/utils/array.utils';
+import {COLOR_PRIMARY} from '../../../../core/constants';
 
 export class ChartVisualizer {
   private currentType: ChartType;
@@ -45,26 +47,110 @@ export class ChartVisualizer {
 
   private writable: boolean;
 
-  constructor(
-    private chartElement: ElementRef,
-    private onValueChanged: (ValueChange) => void,
-    private onDoubleClick: (ClickEvent) => void
-  ) {}
+  private onValueChanged: (ValueChange) => void;
+  private onDoubleClick: (ClickEvent) => void;
+  private onAxisSettingsChange: (AxisSettingsChange) => void;
 
-  public createChart(data: ChartData) {
-    this.createOrRefreshData(data);
-    this.currentType = data.type;
-    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshListeners());
-    this.chartElement.nativeElement.on(
-      'plotly_relayout',
-      () => this.plotMaker instanceof DraggablePlotMaker && (this.plotMaker as DraggablePlotMaker).onRelayout()
-    );
+  constructor(private chartElement: ElementRef) {}
+
+  public setOnValueChanged(onValueChanged: (ValueChange) => void) {
+    this.onValueChanged = onValueChanged;
   }
 
-  public refreshChart(data: ChartData) {
+  public setOnDoubleClick(onDoubleClick: (ClickEvent) => void) {
+    this.onDoubleClick = onDoubleClick;
+  }
+
+  public setOnAxisSettingsChange(onAxisSettingsChange: (AxisSettingsChange) => void) {
+    this.onAxisSettingsChange = onAxisSettingsChange;
+  }
+
+  public createChart(data: ChartData, settings: ChartSettings) {
     this.createOrRefreshData(data);
+    this.setLayoutSettings(settings);
+    this.currentType = data.type;
+    newPlot(this.chartElement.nativeElement, this.data, this.layout, this.config).then(() => this.refreshListeners());
+    this.chartElement.nativeElement.on('plotly_relayout', (event: PlotRelayoutEvent) => {
+      this.onRelayout(event);
+      this.plotMaker instanceof DraggablePlotMaker && (<DraggablePlotMaker>this.plotMaker).onRelayout();
+    });
+  }
+
+  private onRelayout(event: PlotRelayoutEvent) {
+    const axisSettingsChange: AxisSettingsChange = {range: {}};
+
+    const xAxisChange = this.parseRangeChangeForAxis(event, 'xaxis');
+    if (xAxisChange !== undefined) {
+      axisSettingsChange.range.x = xAxisChange;
+    }
+
+    const y1AxisChange = this.parseRangeChangeForAxis(event, 'yaxis');
+    if (y1AxisChange !== undefined) {
+      axisSettingsChange.range.y1 = y1AxisChange;
+    }
+
+    const y2AxisChange = this.parseRangeChangeForAxis(event, 'yaxis2');
+    if (y2AxisChange !== undefined) {
+      axisSettingsChange.range.y2 = y2AxisChange;
+    }
+
+    if (Object.keys(axisSettingsChange.range).length > 0) {
+      this.onAxisSettingsChange(axisSettingsChange);
+    }
+  }
+
+  private parseRangeChangeForAxis(event: PlotRelayoutEvent, axis: string): [any, any] | null | undefined {
+    if (event[`${axis}.autorange`]) {
+      return null;
+    } else if (event[`${axis}.range[0]`] && event[`${axis}.range[1]`]) {
+      return [event[`${axis}.range[0]`], event[`${axis}.range[1]`]];
+    } else if (event[`${axis}.range`]) {
+      return event[`${axis}.range`];
+    }
+    return undefined;
+  }
+
+  public refreshChart(data: ChartData, settings: ChartSettings) {
+    this.createOrRefreshData(data);
+    this.setLayoutSettings(settings);
     this.currentType = data.type;
     react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
+  }
+
+  public refreshSettings(settings: ChartSettings) {
+    this.layout = this.plotMaker?.createLayout();
+    this.setLayoutSettings(settings);
+    this.incRevisionNumber();
+    react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
+  }
+
+  private setLayoutSettings(chartSettings: ChartSettings) {
+    if (!chartSettings || !this.layout) {
+      return;
+    }
+
+    if (chartSettings.rangeSlider) {
+      this.layout.xaxis && (this.layout.xaxis.rangeslider = {});
+    } else {
+      delete this.layout.xaxis?.rangeslider;
+    }
+
+    this.setLayoutAxisRange('xaxis', chartSettings, ChartAxisType.X);
+    this.setLayoutAxisRange('yaxis', chartSettings, ChartAxisType.Y1);
+    this.setLayoutAxisRange('yaxis2', chartSettings, ChartAxisType.Y2);
+  }
+
+  private setLayoutAxisRange(axisParam: string, chartSettings: ChartSettings, axisType: ChartAxisType) {
+    const axis = this.layout[axisParam];
+    if (!axis) {
+      return;
+    }
+
+    const range = chartSettings.settings?.[axisType]?.range;
+    if (range && !deepArrayEquals(axis.range, range)) {
+      axis.autorange = false;
+      axis.range = range;
+    }
   }
 
   public destroyChart() {
@@ -80,11 +166,59 @@ export class ChartVisualizer {
       this.plotMaker.setOnDoubleClick(this.onDoubleClick);
     }
 
+    this.setFormatters(data);
     this.plotMaker.updateData(data);
-    this.layout = this.plotMaker.createLayout();
-    this.data = this.plotMaker.createData();
+    this.layout = this.createLayout();
+    this.data = this.createData();
 
     this.incRevisionNumber();
+  }
+
+  private createData(): Partial<PlotData>[] {
+    return this.plotMaker.createData();
+  }
+
+  private createLayout(): Partial<Layout> {
+    const layout = this.plotMaker.createLayout();
+    layout.font = {family: 'LatoWeb, sans-serif', color: COLOR_PRIMARY};
+    return layout;
+  }
+
+  private setFormatters(data: ChartData) {
+    const currentLocale = d3.locale;
+    d3.locale = locale => {
+      const result = currentLocale(locale);
+      const numberFormat = result.numberFormat;
+      result.numberFormat = format => {
+        return formatLocaleValue(format, data, numberFormat(format));
+      };
+      const timeFormat = result.timeFormat;
+
+      const customTimeFormat = specifier => {
+        const customFormatter: d3.time.Format = formatLocaleValue(specifier, data, timeFormat(specifier));
+
+        customFormatter.parse = value => {
+          return timeFormat(specifier).parse(value);
+        };
+        return customFormatter;
+      };
+
+      customTimeFormat.utc = specifier => {
+        const customFormatter: d3.time.Format = formatLocaleValue(specifier, data, timeFormat(specifier));
+
+        customFormatter.parse = value => {
+          return timeFormat.utc(specifier).parse(value);
+        };
+        return customFormatter;
+      };
+
+      customTimeFormat.multi = formats => {
+        return timeFormat.multi(formats);
+      };
+
+      result.timeFormat = customTimeFormat;
+      return result;
+    };
   }
 
   private shouldRefreshPlotMaker(data: ChartData): boolean {
@@ -93,40 +227,8 @@ export class ChartVisualizer {
 
   public onDataChanged(change: DataChange) {
     this.data[change.trace][change.axis][change.index] = change.value;
-    this.checkLayoutRange();
     this.incRevisionNumber();
     react(this.chartElement.nativeElement, this.data, this.layout).then(() => this.refreshListeners());
-  }
-
-  private checkLayoutRange() {
-    const {yaxis, yaxis2} = this.layout;
-    if (
-      !yaxis ||
-      !yaxis.range ||
-      !yaxis2 ||
-      !yaxis2.range ||
-      !this.isNumericRange(yaxis.range) ||
-      !this.isNumericRange(yaxis2.range)
-    ) {
-      return;
-    }
-
-    const values = this.data.reduce((allValues, data) => {
-      allValues.push(...this.dataValues(data));
-      return allValues;
-    }, []);
-    const range = createRange(values);
-
-    this.layout.yaxis.range = range;
-    this.layout.yaxis2.range = range;
-  }
-
-  private isNumericRange(range: any[]): boolean {
-    return (range || []).every(val => isNumeric(val));
-  }
-
-  private dataValues(data: Data): any[] {
-    return data.y as any[];
   }
 
   private createPlotMakerByType(type: ChartType, element: ElementRef): PlotMaker {
@@ -135,6 +237,8 @@ export class ChartVisualizer {
         return new LinePlotMaker(element);
       case ChartType.Bar:
         return new BarPlotMaker(element);
+      case ChartType.Bubble:
+        return new BubblePlotMaker(element);
       case ChartType.Pie:
         return new PiePlotMaker(element);
     }
@@ -145,9 +249,10 @@ export class ChartVisualizer {
   }
 
   private refreshListeners() {
+    this.plotMaker.initDoubleClick();
+
     if (this.plotMaker instanceof DraggablePlotMaker) {
       const draggablePlotMaker = this.plotMaker as DraggablePlotMaker;
-      draggablePlotMaker.initDoubleClick();
       draggablePlotMaker.setDragEnabled(this.writable);
 
       if (this.writable) {
@@ -169,4 +274,35 @@ export class ChartVisualizer {
   public resize() {
     Plots.resize(this.chartElement.nativeElement);
   }
+}
+
+function formatLocaleValue(format: string, data: ChartData, defaultFormat: (value) => string): any {
+  if (format === 'xFormatter' && data.xAxisData?.formatter) {
+    return x => data.xAxisData.formatter(x);
+  }
+  if (format === 'y1Formatter' && data.y1AxisData?.formatter) {
+    return x => data.y1AxisData.formatter(x);
+  }
+  if (format === 'y2Formatter' && data.y2AxisData?.formatter) {
+    return x => data.y2AxisData.formatter(x);
+  }
+
+  return defaultFormat;
+}
+
+export interface AxisSettingsChange {
+  range?: Partial<Record<ChartAxisType, [any, any] | null>>;
+}
+
+export interface ClickEvent {
+  setId: string;
+  pointId: string;
+  resourceType: AttributesResourceType;
+}
+
+export interface ValueChange {
+  setId: string;
+  pointId: string;
+  value: any;
+  resourceType: AttributesResourceType;
 }

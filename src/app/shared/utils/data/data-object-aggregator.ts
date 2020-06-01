@@ -203,6 +203,10 @@ export class DataObjectAggregator<T> {
     dataObjectsInfo.push(dataObjectInfoCopy);
   }
 
+  public getDataResources(attribute: QueryAttribute): DataResource[] {
+    return this.dataAggregator.getDataResources(attribute?.resourceIndex);
+  }
+
   public getNextCollectionResource(index: number): AttributesResource {
     return this.dataAggregator.getNextCollectionResource(index);
   }
@@ -277,6 +281,12 @@ export class DataObjectAggregator<T> {
         if (options.length > 0 && options[0].background) {
           return options[0].background;
         }
+      }
+    } else if (constraint?.type === ConstraintType.Boolean) {
+      if (values?.[0]) {
+        return '#b6d7a8';
+      } else {
+        return '#ea9999';
       }
     }
 

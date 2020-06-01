@@ -20,7 +20,6 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  ViewEncapsulation,
   Input,
   OnChanges,
   SimpleChanges,
@@ -29,21 +28,27 @@ import {
   Output,
   EventEmitter,
   OnDestroy,
+  OnInit,
 } from '@angular/core';
-import {ChartData} from '../convertor/chart-data';
-import {ChartVisualizer} from '../../visualizer/chart-visualizer';
-import {ClickEvent, ValueChange} from '../../visualizer/plot-maker/plot-maker';
+import {AxisSettingsChange, ChartVisualizer, ClickEvent, ValueChange} from '../../visualizer/chart-visualizer';
+import * as PlotlyJS from 'plotly.js';
+import * as CSLocale from 'plotly.js/lib/locales/cs.js';
+import {ChartData, ChartSettings} from '../convertor/chart-data';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {debounceTime} from 'rxjs/operators';
 
 @Component({
   selector: 'chart-visualizer',
   templateUrl: './chart-visualizer.component.html',
   styleUrls: ['./chart-visualizer.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ChartVisualizerComponent implements OnChanges, OnDestroy {
+export class ChartVisualizerComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public chartData: ChartData;
+
+  @Input()
+  public chartSettings: ChartSettings;
 
   @Output()
   public change = new EventEmitter<ValueChange>();
@@ -51,14 +56,27 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
   @Output()
   public doubleClick = new EventEmitter<ClickEvent>();
 
+  @Output()
+  public axisSettingsChange = new EventEmitter<AxisSettingsChange>();
+
   @ViewChild('chart', {static: true})
   private chartElement: ElementRef;
 
   private chartVisualizer: ChartVisualizer;
 
+  private subscriptions = new Subscription();
+  private axisSettingsChangeSubject$ = new Subject<AxisSettingsChange>();
+
+  public ngOnInit() {
+    (PlotlyJS as any).register(CSLocale);
+    this.subscribeConfigChange();
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.chartData && this.chartData) {
       this.visualize();
+    } else if (changes.chartSettings && this.chartSettings) {
+      this.chartVisualizer?.refreshSettings(this.chartSettings);
     }
   }
 
@@ -72,15 +90,16 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
 
   private refreshChart() {
     this.chartVisualizer.setWriteEnabled(this.isWritable());
-    this.chartVisualizer.refreshChart(this.chartData);
+    this.chartVisualizer.refreshChart(this.chartData, this.chartSettings);
   }
 
   private createChart() {
-    const onValueChange = valueChange => this.change.emit(valueChange);
-    const onDoubleClick = event => this.doubleClick.emit(event);
-    this.chartVisualizer = new ChartVisualizer(this.chartElement, onValueChange, onDoubleClick);
+    this.chartVisualizer = new ChartVisualizer(this.chartElement);
+    this.chartVisualizer.setOnValueChanged(event => this.change.emit(event));
+    this.chartVisualizer.setOnDoubleClick(event => this.doubleClick.emit(event));
+    this.chartVisualizer.setOnAxisSettingsChange(event => this.axisSettingsChangeSubject$.next(event));
     this.chartVisualizer.setWriteEnabled(this.isWritable());
-    this.chartVisualizer.createChart(this.chartData);
+    this.chartVisualizer.createChart(this.chartData, this.chartSettings);
   }
 
   private isWritable(): boolean {
@@ -88,10 +107,17 @@ export class ChartVisualizerComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnDestroy() {
-    this.chartVisualizer && this.chartVisualizer.destroyChart();
+    this.chartVisualizer?.destroyChart();
+    this.subscriptions.unsubscribe();
   }
 
   public resize() {
-    this.chartVisualizer && this.chartVisualizer.resize();
+    this.chartVisualizer?.resize();
+  }
+
+  private subscribeConfigChange() {
+    this.subscriptions.add(
+      this.axisSettingsChangeSubject$.pipe(debounceTime(100)).subscribe(event => this.axisSettingsChange.emit(event))
+    );
   }
 }

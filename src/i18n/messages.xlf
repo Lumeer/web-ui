@@ -725,7 +725,7 @@
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="verifyEmail.button.resendEmail" datatype="html">
-        <source>Resend Verification Email</source>
+        <source>Resend verification email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
           <context context-type="linenumber">20</context>
@@ -737,13 +737,13 @@
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit><trans-unit id="verifyEmail.button.emailFailure" datatype="html">
-        <source>Could Not Send Email</source>
+        <source>Could not send email</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="verifyEmail.button.emailSent" datatype="html">
-        <source>Email Sent</source>
+        <source>Email sent</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context>
           <context context-type="linenumber">29</context>
@@ -2942,25 +2942,65 @@
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.main.header" datatype="html">
         <source>
-    Main settings
-  </source>
+  Main settings
+</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/chart-config.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.axis.x.header" datatype="html">
+        <source>X Axis settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source>
   <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
 </source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-y-axis-config/chart-y-axis-config.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
         <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/chart/config/chart-y-axis-config/chart-y-axis-config.component.html</context>
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
+        <source>Size</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.axis.empty" datatype="html">
+        <source>Select attribute</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.axis.color" datatype="html">
+        <source>Color</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">54</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.lockAxes" datatype="html">
+        <source>Lock axes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.chart.config.rangeSlider" datatype="html">
+        <source>Show range slider</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/settings/chart-settings-config.component.html</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.map.config.sidebar.header" datatype="html">
         <source>
@@ -5594,25 +5634,14 @@
       <trans-unit id="perspective.chart.config.sort.placeholder" datatype="html">
         <source>Sort</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-main-config/chart-main-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/chart/config/main/chart-main-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.chart.config.sortType.placeholder" datatype="html">
         <source>Sort order</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-main-config/chart-main-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="perspective.chart.config.axis.empty" datatype="html">
-        <source>Select axis</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-main-config/chart-main-config.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/config/chart-y-axis-config/chart-y-axis-config.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/chart/config/main/chart-main-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5631,7 +5660,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="chart.type" datatype="html">
-        <source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} }</source>
+        <source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/chart-types-to-select.pipe.ts</context>
           <context context-type="linenumber">1</context>

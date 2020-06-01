@@ -6,13 +6,15 @@
              (select)="onTypeSelect($event)">
 </select-item>
 
+<h6 class="font-weight-bold mt-4" i18n="@@perspective.chart.config.axis.x.header">X Axis settings</h6>
+
 <select-item-with-constraint class="d-block w-100 mt-2"
                              [attributesResources]="attributesResources"
                              [restrictedIds]="xAxisType | axisRestrictedIds:config"
                              [placeholderText]="xAxisType.toString().toUpperCase()"
                              [buttonClasses]="buttonClasses"
-                             [selectedId]="config.axes[xAxisType] | chartAxisSelectItemId"
-                             [selectedConstraint]="config.axes[xAxisType]?.constraint"
+                             [selectedId]="config.axes?.x?.axis | chartAxisSelectItemId"
+                             [selectedConstraint]="config.axes?.x?.axis?.constraint"
                              [emptyValue]="axisEmptyValue"
                              [removable]="true"
                              [fitParent]="true"

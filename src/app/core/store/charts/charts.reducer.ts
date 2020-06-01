@@ -23,7 +23,7 @@ import {ChartAction, ChartActionType} from './charts.action';
 export function chartsReducer(state: ChartsState = initialChartsState, action: ChartAction.All): ChartsState {
   switch (action.type) {
     case ChartActionType.ADD_CHART:
-      return chartsAdapter.addOne(action.payload.chart, state);
+      return chartsAdapter.upsertOne(action.payload.chart, state);
     case ChartActionType.REMOVE_CHART:
       return chartsAdapter.removeOne(action.payload.chartId, state);
     case ChartActionType.SET_CONFIG:

@@ -863,7 +863,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
               name: 'DIGITS',
               value: 1,
               min: 1,
-              max: 99,
+              maximum: 99,
             },
           ],
           output: 'String',

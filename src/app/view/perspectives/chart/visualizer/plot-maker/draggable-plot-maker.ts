@@ -17,16 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {PlotMaker} from './plot-maker';
+import {TwoDAxisPlotMaker} from './two-d-axis-plot-maker';
 
-export abstract class DraggablePlotMaker extends PlotMaker {
+export abstract class DraggablePlotMaker extends TwoDAxisPlotMaker {
   protected dragEnabled: boolean = false;
 
   public setDragEnabled(enabled: boolean) {
     this.dragEnabled = enabled;
   }
-
-  public abstract initDoubleClick();
 
   public abstract initDrag();
 

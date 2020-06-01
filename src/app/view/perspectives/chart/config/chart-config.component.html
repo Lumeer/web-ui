@@ -1,30 +1,30 @@
-<ng-container *ngIf="config">
+<chart-settings-config [config]="config"
+                       (configChange)="onConfigChange($event)">
 
-  <h6 class="font-weight-bold" i18n="@@perspective.chart.config.main.header">
-    Main settings
-  </h6>
+</chart-settings-config>
 
-  <ng-container
-    *ngIf="{attributesResources: query?.stems && query?.stems[0] | queryStemAttributesResources:collections:linkTypes} as data">
+<h6 class="font-weight-bold mt-4" i18n="@@perspective.chart.config.main.header">
+  Main settings
+</h6>
 
-    <chart-main-config
-      [attributesResources]="data.attributesResources"
-      [config]="config"
-      (configChange)="onConfigChange($event)">
-    </chart-main-config>
+<ng-container
+  *ngIf="{attributesResources: query?.stems && query?.stems[0] | queryStemAttributesResources:collections:linkTypes} as data">
 
-    <ng-container *ngFor="let yAxisType of yAxisTypes">
+  <chart-main-config
+    [attributesResources]="data.attributesResources"
+    [config]="config"
+    (configChange)="onConfigChange($event)">
+  </chart-main-config>
 
-      <chart-y-axis-config *ngIf="yAxisType | showAxisSelect:config"
-                           [attributesResources]="data.attributesResources"
-                           [yAxisType]="yAxisType"
-                           [config]="config"
-                           (configChange)="onConfigChange($event)">
-      </chart-y-axis-config>
+  <ng-container *ngFor="let yAxisType of yAxisTypes">
 
-    </ng-container>
+    <chart-y-axis-config *ngIf="yAxisType | showAxisSelect:config"
+                         [attributesResources]="data.attributesResources"
+                         [yAxisType]="yAxisType"
+                         [config]="config"
+                         (configChange)="onConfigChange($event)">
+    </chart-y-axis-config>
 
   </ng-container>
-
 
 </ng-container>

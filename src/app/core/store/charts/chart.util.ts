@@ -17,14 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChartAxis, ChartConfig, ChartSort} from './chart';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
-import {uniqueValues} from '../../../shared/utils/array.utils';
-import {LinkType} from '../link-types/link.type';
-import {AttributesResourceType} from '../../model/resource';
+import {ChartAxisConfig, ChartAxisType, ChartConfig, ChartSort, ChartType} from './chart';
+import {deepObjectCopy, deepObjectsEquals} from '../../../shared/utils/common.utils';
+
+export function createChartSaveConfig(config: ChartConfig): ChartConfig {
+  const configCopy = deepObjectCopy(config);
+  if (config.type === ChartType.Pie) {
+    delete configCopy.axes?.y2;
+  }
+  if (config.type !== ChartType.Bubble) {
+    delete configCopy.axes?.x?.size;
+    delete configCopy.axes?.y1?.size;
+    delete configCopy.axes?.y2?.size;
+  }
+
+  return configCopy;
+}
 
 export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: ChartConfig): boolean {
-  if (viewConfig.type !== currentConfig.type || viewConfig.prediction !== currentConfig.prediction) {
+  if (
+    viewConfig.type !== currentConfig.type ||
+    viewConfig.prediction !== currentConfig.prediction ||
+    viewConfig.rangeSlider !== currentConfig.rangeSlider ||
+    viewConfig.lockAxes !== currentConfig.lockAxes
+  ) {
     return true;
   }
 
@@ -32,11 +48,10 @@ export function isChartConfigChanged(viewConfig: ChartConfig, currentConfig: Cha
     return true;
   }
 
-  return (
-    mapsChanged(viewConfig.axes || {}, currentConfig.axes || {}) ||
-    mapsChanged(viewConfig.names || {}, currentConfig.names || {}) ||
-    mapsChanged(viewConfig.aggregations || {}, currentConfig.aggregations || {})
-  );
+  const viewCleanedConfig = createChartSaveConfig(viewConfig);
+  const currentCleanedConfig = createChartSaveConfig(currentConfig);
+
+  return chartAxesChanged(viewCleanedConfig.axes || {}, currentCleanedConfig.axes || {});
 }
 
 function sortChanged(sort1: ChartSort, sort2: ChartSort): boolean {
@@ -51,35 +66,79 @@ function sortChanged(sort1: ChartSort, sort2: ChartSort): boolean {
   return sort1.type !== sort2.type || !deepObjectsEquals(sort1.axis || {}, sort2.axis || {});
 }
 
-function mapsChanged(map1: Record<string, any>, map2: Record<string, any>): boolean {
-  if (Object.keys(map1).length !== Object.keys(map2).length) {
-    return true;
-  }
-
-  return Object.entries(map1).some(([key, value]) => {
-    return !map2[key] || !deepObjectsEquals(value, map2[key]);
-  });
+function chartAxesChanged(
+  previousAxes: Partial<Record<ChartAxisType, ChartAxisConfig>>,
+  currentAxes: Partial<Record<ChartAxisType, ChartAxisConfig>>
+): boolean {
+  return (
+    chartAxisConfigChanged(previousAxes?.x, currentAxes?.x) ||
+    chartAxisConfigChanged(previousAxes?.y1, currentAxes?.y1) ||
+    chartAxisConfigChanged(previousAxes?.y2, currentAxes?.y2)
+  );
 }
 
-export function chartConfigCollectionIds(config: ChartConfig, linkTypes: LinkType[]): string[] {
-  const ids: string[] = [];
-
-  config.sort && config.sort.axis && ids.push(...axisCollectionIds(config.sort.axis, linkTypes));
-  Object.values(config.axes || {}).forEach(axis => ids.push(...axisCollectionIds(axis, linkTypes)));
-  Object.values(config.names || {}).forEach(axis => ids.push(...axisCollectionIds(axis, linkTypes)));
-
-  return uniqueValues<string>(ids.filter(id => isNotNullOrUndefined(id)));
+function chartAxisConfigChanged(previousAxis: ChartAxisConfig, currentAxis: ChartAxisConfig): boolean {
+  return !deepObjectsEquals(previousAxis || {}, currentAxis || {});
 }
 
-function axisCollectionIds(axis: ChartAxis, linkTypes: LinkType[]): string[] {
-  if (axis.resourceType === AttributesResourceType.Collection) {
-    return [axis.resourceId];
-  } else if (axis.resourceType === AttributesResourceType.LinkType) {
-    const linkType = linkTypes && linkTypes.find(lt => lt.id === axis.resourceId);
-    if (linkType) {
-      return linkType.collectionIds;
-    }
-  }
+export function chartAxisChanged(
+  previousConfig: ChartConfig,
+  currentConfig: ChartConfig,
+  type: ChartAxisType
+): boolean {
+  return !deepObjectsEquals(
+    cleanAxisWithoutSettings(previousConfig.axes?.[type]),
+    cleanAxisWithoutSettings(currentConfig.axes?.[type])
+  );
+}
 
-  return [];
+export function chartSettingsChanged(previousConfig: ChartConfig, currentConfig: ChartConfig): boolean {
+  const previousCleaned = cleanConfigWithSettings(previousConfig);
+  const currentCleaned = cleanConfigWithSettings(currentConfig);
+
+  const previousWithoutSettings = cleanConfigWithoutSettings(previousConfig);
+  const currentWithoutSettings = cleanConfigWithoutSettings(currentConfig);
+
+  return (
+    deepObjectsEquals(previousWithoutSettings, currentWithoutSettings) &&
+    !deepObjectsEquals(previousCleaned, currentCleaned)
+  );
+}
+
+function cleanConfigWithoutSettings(chartConfig: ChartConfig): ChartConfig {
+  return {
+    ...chartConfig,
+    axes: {
+      [ChartAxisType.X]: cleanAxisWithoutSettings(chartConfig.axes?.x),
+      [ChartAxisType.Y1]: cleanAxisWithoutSettings(chartConfig.axes?.x),
+      [ChartAxisType.Y2]: cleanAxisWithoutSettings(chartConfig.axes?.x),
+    },
+    rangeSlider: null,
+  };
+}
+
+function cleanAxisWithoutSettings(axis: ChartAxisConfig): ChartAxisConfig {
+  if (!axis) {
+    return axis;
+  }
+  return {...axis, settings: null};
+}
+
+function cleanConfigWithSettings(chartConfig: ChartConfig): ChartConfig {
+  return {
+    ...chartConfig,
+    axes: {
+      [ChartAxisType.X]: cleanAxisWithSettings(chartConfig.axes?.x),
+      [ChartAxisType.Y1]: cleanAxisWithSettings(chartConfig.axes?.x),
+      [ChartAxisType.Y2]: cleanAxisWithSettings(chartConfig.axes?.x),
+    },
+    rangeSlider: chartConfig.rangeSlider || false,
+  };
+}
+
+function cleanAxisWithSettings(axis: ChartAxisConfig): ChartAxisConfig {
+  if (!axis) {
+    return axis;
+  }
+  return {...axis, settings: axis.settings || {}};
 }

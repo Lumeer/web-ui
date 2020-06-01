@@ -28,7 +28,6 @@ import {ViewLoadingComponent} from './view-loading.component';
 import {ViewRoutingModule} from './view-routing.module';
 import {ViewComponent} from './view.component';
 import {PerspectivesOptionsPipe} from './view-controls/perspectives-options.pipe';
-import {UndoChangesSupportedPipe} from './view-controls/undo-changes-supported.pipe';
 
 @NgModule({
   imports: [BrowserModule, FormsModule, RouterModule, SharedModule, TablePerspectiveModule, ViewRoutingModule],
@@ -38,7 +37,6 @@ import {UndoChangesSupportedPipe} from './view-controls/undo-changes-supported.p
     ViewLoadingComponent,
     ViewControlsInfoPipe,
     PerspectivesOptionsPipe,
-    UndoChangesSupportedPipe,
   ],
 })
 export class ViewModule {}

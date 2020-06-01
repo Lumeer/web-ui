@@ -19,7 +19,7 @@
 
 import {isNullOrUndefined, toNumber} from '../../../../../shared/utils/common.utils';
 
-export function createRange(values: number[]): any[] {
+export function createRange(values: number[]): [number, number] {
   let min = null;
   let max = null;
 
@@ -37,8 +37,11 @@ export function createRange(values: number[]): any[] {
     return null;
   }
 
-  const bottomRange = min < 0 ? Math.min(min * 1.1, min - 10) : Math.min(min * 0.9, min - 10);
-  const upperRange = max < 0 ? Math.max(max * 0.9, max + 10) : Math.max(max * 1.1, max + 10);
+  const range = Math.abs(max - min);
+  const step = Math.log10(range) * 10;
+
+  const bottomRange = min < 0 ? Math.min(min * 1.1, min - step) : Math.min(min * 0.9, min - step);
+  const upperRange = max < 0 ? Math.max(max * 0.9, max + step) : Math.max(max * 1.1, max + step);
 
   return [bottomRange, upperRange];
 }

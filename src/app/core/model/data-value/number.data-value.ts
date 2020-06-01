@@ -45,24 +45,24 @@ export class NumberDataValue implements NumericDataValue {
     this.bigNumber = convertToBig(unformatted);
   }
 
-  public format(): string {
+  public format(overrideConfig?: Partial<NumberConstraintConfig>): string {
     if (isNotNullOrUndefined(this.inputValue)) {
       return removeNonNumberCharacters(this.inputValue);
     }
 
     if (this.bigNumber) {
-      return numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config));
+      return numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config, overrideConfig));
     }
 
     return formatUnknownDataValue(this.value);
   }
 
-  public preview(): string {
-    return this.format();
+  public preview(overrideConfig?: Partial<NumberConstraintConfig>): string {
+    return this.format(overrideConfig);
   }
 
-  public title(): string {
-    return unescapeHtml(this.format());
+  public title(overrideConfig?: Partial<NumberConstraintConfig>): string {
+    return unescapeHtml(this.format(overrideConfig));
   }
 
   public editValue(): string {
@@ -135,27 +135,31 @@ export class NumberDataValue implements NumericDataValue {
   }
 }
 
-function parseNumbroConfig(config: NumberConstraintConfig): any {
-  if (!config) {
+function parseNumbroConfig(
+  config: NumberConstraintConfig,
+  overrideConfig?: Partial<NumberConstraintConfig>
+): numbro.Format {
+  if (!config && !overrideConfig) {
     return {};
   }
 
-  const numbroConfig = {};
-  if (config.forceSign) {
-    numbroConfig['forceSign'] = true;
+  const numbroConfig: numbro.Format = {};
+  if (overrideConfig?.forceSign || config.forceSign) {
+    numbroConfig.forceSign = true;
   }
-  if (config.separated) {
-    numbroConfig['thousandSeparated'] = true;
-    numbroConfig['spaceSeparated'] = true;
+  if (overrideConfig?.separated || config.separated) {
+    numbroConfig.thousandSeparated = true;
+    numbroConfig.spaceSeparated = true;
   }
-  if (config.compact) {
-    numbroConfig['average'] = true;
+  if (overrideConfig?.compact || config.compact) {
+    numbroConfig.average = true;
   }
-  if (config.negative) {
-    numbroConfig['negative'] = 'parenthesis';
+  if (overrideConfig?.negative || config.negative) {
+    numbroConfig.negative = 'parenthesis';
   }
-  if (isNumeric(config.decimals)) {
-    numbroConfig['mantissa'] = config.decimals;
+  if (isNumeric(overrideConfig?.decimals || config.decimals)) {
+    numbroConfig.mantissa = overrideConfig?.decimals || config.decimals;
+    numbroConfig.trimMantissa = isNumeric(overrideConfig?.decimals);
   }
   return numbroConfig;
 }
