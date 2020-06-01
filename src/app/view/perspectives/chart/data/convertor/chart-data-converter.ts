@@ -175,8 +175,14 @@ export class ChartDataConverter {
     const ranges = this.currentConfig.lockAxes
       ? this.createAxesRanges(this.y1AxisHelperData, this.y2AxisHelperData)
       : null;
-    const y1AxisData = this.y1AxisHelperData && {...this.createAxisData(this.y1AxisHelperData), range: ranges?.y1};
-    const y2AxisData = this.y2AxisHelperData && {...this.createAxisData(this.y2AxisHelperData), range: ranges?.y2};
+    const y1AxisData: ChartAxisData = this.y1AxisHelperData && {
+      ...this.createAxisData(this.y1AxisHelperData),
+      range: ranges?.y1,
+    };
+    const y2AxisData: ChartAxisData = this.y2AxisHelperData && {
+      ...this.createAxisData(this.y2AxisHelperData),
+      range: ranges?.y2,
+    };
 
     return {
       type,
@@ -402,7 +408,8 @@ export class ChartDataConverter {
           x: xAxis ? formattedValue : null,
           y: yAxis ? formattedValue : null,
           color: pointColor,
-          title,
+          title: yAxis ? this.formatPointTitleValue(values[i], definedAxis) : null,
+          xTitle: xAxis ? this.formatPointTitleValue(values[i], definedAxis) : null,
           size: null,
         };
         points.push(point);
@@ -557,6 +564,7 @@ export class ChartDataConverter {
 
       const xDataResource = dataObject.objectDataResources[DataObjectInfoKeyType.X];
       const xValue = this.formatChartAxisValue(xDataResource.data?.[xAxis.attributeId], xAxis);
+      const xTitle = this.formatPointTitleValue(xDataResource.data?.[xAxis.attributeId], xAxis);
 
       const valueObjects = (dataObject.metaDataResources[DataObjectInfoKeyType.Y] || [])
         .map(object => ({id: object.id, value: object.data[yAxis.attributeId]}))
@@ -587,6 +595,7 @@ export class ChartDataConverter {
           y: yValue,
           color: pointColor,
           title: isNotNullOrUndefined(size) ? String(size) : title,
+          xTitle,
           size,
         });
         set.draggable = set.draggable || isNotNullOrUndefined(id);

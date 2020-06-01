@@ -24,6 +24,7 @@ import {ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/char
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ValueChange} from '../chart-visualizer';
+import {Constraint} from '../../../../../core/model/constraint';
 
 export abstract class PlotMaker {
   protected chartData: ChartData;

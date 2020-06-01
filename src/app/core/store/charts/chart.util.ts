@@ -110,8 +110,8 @@ function cleanConfigWithoutSettings(chartConfig: ChartConfig): ChartConfig {
     ...chartConfig,
     axes: {
       [ChartAxisType.X]: cleanAxisWithoutSettings(chartConfig.axes?.x),
-      [ChartAxisType.Y1]: cleanAxisWithoutSettings(chartConfig.axes?.x),
-      [ChartAxisType.Y2]: cleanAxisWithoutSettings(chartConfig.axes?.x),
+      [ChartAxisType.Y1]: cleanAxisWithoutSettings(chartConfig.axes?.y1),
+      [ChartAxisType.Y2]: cleanAxisWithoutSettings(chartConfig.axes?.y2),
     },
     rangeSlider: null,
   };
@@ -129,8 +129,8 @@ function cleanConfigWithSettings(chartConfig: ChartConfig): ChartConfig {
     ...chartConfig,
     axes: {
       [ChartAxisType.X]: cleanAxisWithSettings(chartConfig.axes?.x),
-      [ChartAxisType.Y1]: cleanAxisWithSettings(chartConfig.axes?.x),
-      [ChartAxisType.Y2]: cleanAxisWithSettings(chartConfig.axes?.x),
+      [ChartAxisType.Y1]: cleanAxisWithSettings(chartConfig.axes?.y1),
+      [ChartAxisType.Y2]: cleanAxisWithSettings(chartConfig.axes?.y2),
     },
     rangeSlider: chartConfig.rangeSlider || false,
   };
