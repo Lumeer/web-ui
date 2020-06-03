@@ -56,7 +56,7 @@ export interface ChartAxisData {
   range?: [any, any];
   ticks?: ChartAxisTick[];
   tickFormat?: string;
-  numberOfTicks?: number;
+  showTicksAsLinear?: boolean;
   constraint: Constraint;
   constraintType: ConstraintType;
 }

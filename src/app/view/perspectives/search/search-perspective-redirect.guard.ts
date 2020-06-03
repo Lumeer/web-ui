@@ -18,7 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
+import {ActivatedRouteSnapshot, CanActivate, Params, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -51,10 +51,17 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
 
     return this.workspaceService
       .selectOrGetWorkspace(organizationCode, projectCode)
-      .pipe(mergeMap(({organization, project}) => this.resolveSearchTab(organization, project, viewCode)));
+      .pipe(
+        mergeMap(({organization, project}) => this.resolveSearchTab(organization, project, viewCode, next.queryParams))
+      );
   }
 
-  private resolveSearchTab(organization: Organization, project: Project, viewCode: string): Observable<any> {
+  private resolveSearchTab(
+    organization: Organization,
+    project: Project,
+    viewCode: string,
+    queryParams: Params
+  ): Observable<any> {
     return this.selectDefaultViewConfig$(organization, project).pipe(
       take(1),
       map(defaultConfig => {
@@ -64,7 +71,7 @@ export class SearchPerspectiveRedirectGuard implements CanActivate {
         }
         viewPath.push(Perspective.Search);
         viewPath.push(defaultConfig?.config?.search?.searchTab || SearchTab.All);
-        this.router.navigate(viewPath, {queryParamsHandling: 'merge'});
+        this.router.navigate(viewPath, {queryParams});
         return false;
       })
     );

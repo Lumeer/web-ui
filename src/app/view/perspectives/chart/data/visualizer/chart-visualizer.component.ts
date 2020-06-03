@@ -34,7 +34,7 @@ import {AxisSettingsChange, ChartVisualizer, ClickEvent, ValueChange} from '../.
 import * as PlotlyJS from 'plotly.js';
 import * as CSLocale from 'plotly.js/lib/locales/cs.js';
 import {ChartData, ChartSettings} from '../convertor/chart-data';
-import {BehaviorSubject, Subject, Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 
 @Component({

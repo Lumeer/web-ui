@@ -23,7 +23,14 @@ import {Constraint} from '../../../../../core/model/constraint';
 import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {AttributesResourceType} from '../../../../../core/model/resource';
-import {ChartAxis, ChartAxisType, ChartConfig, ChartSortType, ChartType} from '../../../../../core/store/charts/chart';
+import {
+  ChartAxis,
+  ChartAxisConfig,
+  ChartAxisType,
+  ChartConfig,
+  ChartSortType,
+  ChartType,
+} from '../../../../../core/store/charts/chart';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {findAttribute} from '../../../../../core/store/collections/collection.util';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
@@ -72,8 +79,11 @@ interface ChartAxisHelperData {
   constraint: Constraint;
   values: any[];
   valuesAreNumeric: boolean;
+  preventScaleAxis?: boolean;
   ticks: ChartAxisTick[];
 }
+
+const MAX_TICKS = 5;
 
 @Injectable()
 export class ChartDataConverter {
@@ -315,25 +325,28 @@ export class ChartDataConverter {
     const constraint = helperData?.constraint || helperData2?.constraint;
     const isNum = (!helperData || helperData.valuesAreNumeric) && (!helperData2 || helperData2.valuesAreNumeric);
     const constraintType = this.getAxisConstraintType(isNum, constraint);
+    const preventScaleAxis = helperData?.preventScaleAxis || helperData2?.preventScaleAxis;
+    const decimals = preventScaleAxis ? 0 : 8;
 
     let formatter: (value: any) => string;
     if (constraintType === ConstraintType.Percentage) {
       const percentageConstraint = <PercentageConstraint>constraint;
-      formatter = x => percentageConstraint.createDataValue(x).title({decimals: 8});
+      formatter = x => percentageConstraint.createDataValue(x).title({decimals});
     } else if (constraintType === ConstraintType.Number) {
       const numberConstraint = <NumberConstraint>constraint;
-      formatter = x => numberConstraint.createDataValue(x).title({decimals: 8});
+      formatter = x => numberConstraint.createDataValue(x).title({decimals});
     } else if (constraintType === ConstraintType.Duration) {
       const durationConstraint = <DurationConstraint>constraint;
       formatter = x =>
-        durationConstraint.createDataValue(x, this.constraintData).title({maxUnits: 2, decimalPlaces: 8});
+        durationConstraint.createDataValue(x, this.constraintData).title({maxUnits: 2, decimalPlaces: decimals});
     } else if (constraintType === ConstraintType.DateTime) {
       const dateConstraint = <DateTimeConstraint>constraint;
       formatter = date => dateConstraint.createDataValue(date).title();
     }
 
+    const allValues = uniqueValues([...(helperData?.values || []), ...(helperData2?.values || [])]);
     let ticks: ChartAxisTick[] = null;
-    if (this.shouldCreateTicks(constraintType)) {
+    if (this.shouldCreateTicks(constraintType, allValues, preventScaleAxis)) {
       const ticksMap = (helperData?.ticks || []).reduce((map, tick) => ({...map, [tick.value]: tick}), {});
       helperData2?.ticks.forEach(tick => {
         if (!ticksMap[tick.value]) {
@@ -343,17 +356,18 @@ export class ChartDataConverter {
       ticks = Object.values(ticksMap);
     }
 
-    let numberOfTicks: number = null;
-    if (constraintType === ConstraintType.DateTime) {
-      if (helperData.values?.length <= 5) {
-        numberOfTicks = helperData.values.length;
-      }
+    let showTicksAsLinear = false;
+    if ((constraintType === ConstraintType.DateTime || preventScaleAxis) && allValues.length <= MAX_TICKS) {
+      showTicksAsLinear = true;
     }
 
-    return {constraintType, constraint, formatter, ticks, numberOfTicks};
+    return {constraintType, constraint, formatter, ticks, showTicksAsLinear};
   }
 
-  private shouldCreateTicks(constraintType: ConstraintType): boolean {
+  private shouldCreateTicks(constraintType: ConstraintType, values: any[], preventScaleAxis: boolean): boolean {
+    if ((constraintType === ConstraintType.DateTime || preventScaleAxis) && values.length <= MAX_TICKS) {
+      return true;
+    }
     return ![
       ConstraintType.DateTime,
       ConstraintType.Number,
@@ -454,6 +468,14 @@ export class ChartDataConverter {
     return findAttribute(attributesResource?.attributes, axis.attributeId);
   }
 
+  private constraintAxisConfig(axisConfig: ChartAxisConfig): Constraint {
+    if (!isValueAggregation(axisConfig.aggregation)) {
+      return new NumberConstraint({});
+    }
+
+    return this.constraintForAxis(axisConfig.axis);
+  }
+
   private constraintForAxis(axis: ChartAxis): Constraint {
     const attribute = axis && this.attributeForAxis(axis);
     return this.constraintForAttribute(attribute, axis?.constraint);
@@ -506,11 +528,13 @@ export class ChartDataConverter {
     config: ChartConfig,
     yAxisType: ChartYAxisType
   ): ChartConvertData {
-    const xAxis = config.axes?.x?.axis;
+    const xAxisConfig = config.axes?.x;
+    const xAxis = xAxisConfig?.axis;
     const yAxisConfig = config.axes?.[yAxisType];
     const yAxis = yAxisConfig?.axis;
     const yAxisName = this.attributeNameForAxis(yAxis);
-    const yConstraint = this.constraintForAxis(yAxis);
+    const yConstraint = this.constraintAxisConfig(yAxisConfig);
+    const xConstraint = this.constraintAxisConfig(xAxisConfig);
     const sizeConstraint = this.constraintForAxis(yAxisConfig?.size);
     const setId = this.yAxisSetId(config, yAxisType);
     const isDataSetDefined = !!yAxisConfig?.name;
@@ -581,7 +605,7 @@ export class ChartDataConverter {
         ? String(yValue)
         : yValue;
       yValue = isValueAggregation(aggregation) ? this.formatChartAxisValue(yValue, yAxis) : yValue;
-      if (isNotNullOrUndefined(yValue)) {
+      if (isNotNullOrUndefined(xValue) && isNotNullOrUndefined(yValue)) {
         const sizeDataResources = dataObject.metaDataResources[DataObjectInfoKeyType.Size] || [];
         const sizes = sizeDataResources.map(dataResource => dataResource?.data[yAxisConfig?.size?.attributeId]);
         const size = yAxisConfig?.size ? aggregateDataValues(aggregation, sizes, sizeConstraint, true) : null;
@@ -602,15 +626,14 @@ export class ChartDataConverter {
 
         isXNum = isXNum && isNumeric(xValue);
         xValues.add(xValue);
-        xTicks.push({value: xValue, title: this.formatPointTitleValue(xValue, xAxis)});
+        xTicks.push({value: xValue, title: xConstraint.createDataValue(xValue, this.constraintData).title()});
 
         isYNum = isYNum && isNumeric(yValue);
         yValues.add(yValue);
-        yTicks.push({value: yValue, title: this.formatPointTitleValue(yValue, yAxis)});
+        yTicks.push({value: yValue, title: yConstraint.createDataValue(yValue, this.constraintData).title()});
       }
     }
     const sets = Object.values(setsMap);
-    const xConstraint = this.constraintForAxis(xAxis);
     const xAxisHelperData: ChartAxisHelperData = {
       constraint: xConstraint,
       values: Array.from(xValues),
@@ -621,6 +644,7 @@ export class ChartDataConverter {
       constraint: yConstraint,
       values: Array.from(yValues),
       valuesAreNumeric: isYNum,
+      preventScaleAxis: !isValueAggregation(yAxisConfig.aggregation),
       ticks: yTicks,
     };
 
