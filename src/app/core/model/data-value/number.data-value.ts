@@ -157,8 +157,9 @@ function parseNumbroConfig(
   if (overrideConfig?.negative || config.negative) {
     numbroConfig.negative = 'parenthesis';
   }
-  if (isNumeric(overrideConfig?.decimals || config.decimals)) {
-    numbroConfig.mantissa = overrideConfig?.decimals || config.decimals;
+  const decimals = isNotNullOrUndefined(overrideConfig?.decimals) ? overrideConfig?.decimals : config.decimals;
+  if (isNumeric(decimals)) {
+    numbroConfig.mantissa = decimals;
     numbroConfig.trimMantissa = isNumeric(overrideConfig?.decimals);
   }
   return numbroConfig;

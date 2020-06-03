@@ -21,7 +21,6 @@ import {Layout, LayoutAxis} from 'plotly.js';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 export abstract class TwoDAxisPlotMaker extends PlotMaker {
   public abstract getPoints(): any;
@@ -91,13 +90,12 @@ function createAxisLayout(data: ChartAxisData, formatter: string): Partial<Layou
       axis.tickformat = formatter;
     }
     if (data.ticks?.length) {
-      axis.type = 'category';
-      axis.tickmode = 'array';
+      if (!data.showTicksAsLinear) {
+        axis.type = 'category';
+        axis.tickmode = 'array';
+      }
       axis.tickvals = data.ticks.map(t => t.value);
       axis.ticktext = data.ticks.map(t => t.title);
-    }
-    if (isNotNullOrUndefined(data.numberOfTicks)) {
-      axis.nticks = data.numberOfTicks;
     }
     return axis;
   }
