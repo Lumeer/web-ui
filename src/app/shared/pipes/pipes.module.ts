@@ -93,6 +93,7 @@ import {UnescapeHtmlPipe} from './unescape-html.pipe';
 import {IdToReferencePipe} from './id-to-reference.pipe';
 import {FindAttributePipe} from './find-attribute.pipe';
 import {IsNotNullOrUndefinedPipe} from './is-not-null-or-undefined.pipe';
+import {ViewsSelectItemsPipe} from './views-select-items.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -169,6 +170,7 @@ import {IsNotNullOrUndefinedPipe} from './is-not-null-or-undefined.pipe';
     IdToReferencePipe,
     FindAttributePipe,
     IsNotNullOrUndefinedPipe,
+    ViewsSelectItemsPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -245,6 +247,7 @@ import {IsNotNullOrUndefinedPipe} from './is-not-null-or-undefined.pipe';
     IdToReferencePipe,
     FindAttributePipe,
     IsNotNullOrUndefinedPipe,
+    ViewsSelectItemsPipe,
   ],
 })
 export class PipesModule {}

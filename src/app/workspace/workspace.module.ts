@@ -39,7 +39,10 @@ import {OrganizationUsersComponent} from './organization/users/organization-user
 import {UsersModule} from '../shared/users/users.module';
 import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {OrganizationGroupsComponent} from './organization/groups/organization-groups.component';
-import {ProjectSequencesComponent} from './project/project-sequences/project-sequences.component';
+import {ProjectSequencesComponent} from './project/sequences/project-sequences.component';
+import {ProjectTemplateComponent} from './project/template/project-template.component';
+import {ProjectTemplateMetadataComponent} from './project/template/metadata/project-template-metadata.component';
+import {ProjectTemplateTagsComponent} from './project/template/metadata/tags/project-template-tags.component';
 
 @NgModule({
   imports: [SharedModule, WorkspaceRoutingModule, UsersModule, ClickOutsideModule],
@@ -58,6 +61,9 @@ import {ProjectSequencesComponent} from './project/project-sequences/project-seq
     PaymentsListComponent,
     PaymentsStateComponent,
     ProjectSequencesComponent,
+    ProjectTemplateComponent,
+    ProjectTemplateMetadataComponent,
+    ProjectTemplateTagsComponent,
   ],
   exports: [],
   providers: [WorkspaceService, OrganizationSettingsGuard, ProjectSettingsGuard, DatePipe],

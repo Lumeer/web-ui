@@ -21,4 +21,15 @@ import {ResourceDto} from './resource.dto';
 
 export interface ProjectDto extends ResourceDto {
   collectionsCount?: number;
+  templateMetadata?: TemplateMetadataDto;
+  public?: boolean;
+}
+
+export interface TemplateMetadataDto {
+  imageUrl?: string;
+  defaultView?: string;
+  allowedDomains?: string;
+  editable?: boolean;
+  tags?: string[];
+  showTopPanel?: boolean;
 }

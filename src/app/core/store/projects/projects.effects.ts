@@ -207,15 +207,16 @@ export class ProjectsEffects {
     ofType<ProjectsAction.Update>(ProjectsActionType.UPDATE),
     withLatestFrom(this.store$.pipe(select(selectProjectsDictionary))),
     mergeMap(([action, projectsMap]) => {
-      const oldProject = projectsMap[action.payload.project.id];
-      const projectDto = ProjectConverter.toDto(action.payload.project);
+      const {workspace, project} = action.payload;
+      const oldProject = projectsMap[project.id];
+      const projectDto = ProjectConverter.toDto(project);
       return this.projectService
-        .updateProject(action.payload.project.organizationId, action.payload.project.id, projectDto)
+        .updateProject(workspace?.organizationId || project.organizationId, project.id, projectDto)
         .pipe(
           map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId)),
           map(
-            project =>
-              new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}, oldCode: oldProject.code})
+            newProject =>
+              new ProjectsAction.UpdateSuccess({project: {...newProject, id: newProject.id}, oldCode: oldProject.code})
           ),
           catchError(error => of(new ProjectsAction.UpdateFailure({error: error})))
         );

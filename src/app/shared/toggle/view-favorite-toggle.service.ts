@@ -21,25 +21,29 @@ import {Injectable} from '@angular/core';
 import {View} from '../../core/store/views/view';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {ToggleService} from './toggle.service';
 import {ViewsAction} from '../../core/store/views/views.action';
+import {UpdateValueService} from '../../core/service/update-value.service';
 
 @Injectable()
-export class ViewFavoriteToggleService extends ToggleService<View> {
+export class ViewFavoriteToggleService extends UpdateValueService<boolean, View> {
   constructor(private store$: Store<AppState>) {
     super();
   }
 
-  public processToggle(id: string, active: boolean, data?: View) {
-    if (active) {
+  public shouldUnsubscribePendingUpdate(previousValue: boolean, currentValue: boolean): boolean {
+    return previousValue !== currentValue;
+  }
+
+  public processUpdate(id: string, value: boolean, data?: View) {
+    if (value) {
       this.store$.dispatch(new ViewsAction.AddFavorite({viewId: id, workspace: this.workspace}));
     } else {
       this.store$.dispatch(new ViewsAction.RemoveFavorite({viewId: id, workspace: this.workspace}));
     }
   }
 
-  public processToggleToStore(id: string, active: boolean, data?: View) {
-    if (active) {
+  public processUpdateToStore(id: string, value: boolean, data?: View) {
+    if (value) {
       this.store$.dispatch(new ViewsAction.AddFavoriteSuccess({viewId: id}));
     } else {
       this.store$.dispatch(new ViewsAction.RemoveFavoriteSuccess({viewId: id}));

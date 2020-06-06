@@ -36,6 +36,8 @@ export class ProjectConverter {
       nonRemovable: dto.nonRemovable,
       permissions: PermissionsConverter.fromDto(dto.permissions),
       version: dto.version,
+      templateMetadata: dto.templateMetadata && {...dto.templateMetadata},
+      isPublic: dto.public,
     };
   }
 
@@ -46,6 +48,8 @@ export class ProjectConverter {
       icon: project.icon,
       color: project.color,
       description: project.description,
+      templateMetadata: project.templateMetadata,
+      public: project.isPublic,
     };
   }
 }

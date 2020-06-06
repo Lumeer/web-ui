@@ -22,4 +22,15 @@ import {Resource} from '../../model/resource';
 export interface Project extends Resource {
   organizationId?: string;
   collectionsCount?: number;
+  templateMetadata?: TemplateMetadata;
+  isPublic?: boolean;
+}
+
+export interface TemplateMetadata {
+  imageUrl?: string;
+  defaultView?: string;
+  allowedDomains?: string;
+  editable?: boolean;
+  tags?: string[];
+  showTopPanel?: boolean;
 }

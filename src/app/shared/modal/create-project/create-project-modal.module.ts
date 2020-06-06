@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {QueryItem} from '../top-panel/search-box/query-item/model/query-item';
-import {queryItemsColor} from '../../core/store/navigation/query/query.util';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {CreateProjectModalComponent} from './create-project-modal.component';
+import {PipesModule} from '../../pipes/pipes.module';
+import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 
-@Pipe({
-  name: 'queryColor',
+@NgModule({
+  declarations: [CreateProjectModalComponent],
+  imports: [CommonModule, PipesModule, ModalWrapperModule],
+  exports: [CreateProjectModalComponent],
 })
-export class QueryColorPipe implements PipeTransform {
-  public transform(queryItems: QueryItem[]): string {
-    return queryItemsColor(queryItems);
-  }
-}
+export class CreateProjectModalModule {}

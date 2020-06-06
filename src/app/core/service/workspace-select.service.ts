@@ -38,6 +38,7 @@ import {CreateResourceModalComponent} from '../../shared/modal/create-resource/c
 import {TemplateType} from '../model/template';
 import {ModalService} from '../../shared/modal/modal.service';
 import {Perspective} from '../../view/perspectives/perspective';
+import {CreateProjectModalComponent} from '../../shared/modal/create-project/create-project-modal.component';
 
 @Injectable({
   providedIn: 'root',
@@ -129,7 +130,7 @@ export class WorkspaceSelectService {
     };
     const config = {initialState, keyboard: false, class: 'modal-lg'};
     config['backdrop'] = 'static';
-    return this.modalService.show(CreateResourceModalComponent, config);
+    return this.modalService.show(CreateProjectModalComponent, config);
   }
 
   private openCreateOrganizationModal(callback: (Organization) => void): BsModalRef {

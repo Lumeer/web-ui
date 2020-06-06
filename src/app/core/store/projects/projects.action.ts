@@ -137,7 +137,7 @@ export namespace ProjectsAction {
   export class Update implements Action {
     public readonly type = ProjectsActionType.UPDATE;
 
-    public constructor(public payload: {project: Project}) {}
+    public constructor(public payload: {project: Project; workspace?: Workspace}) {}
   }
 
   export class UpdateSuccess implements Action {

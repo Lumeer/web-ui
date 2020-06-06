@@ -25,7 +25,6 @@ import {ActionsSubject, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AppState} from '../../../../core/store/app.state';
-import {isNullOrUndefined} from 'util';
 import {filter} from 'rxjs/operators';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {PaymentsAction, PaymentsActionType} from '../../../../core/store/organizations/payment/payments.action';
@@ -38,6 +37,7 @@ import {ServiceLevelType} from '../../../../core/dto/service-level-type';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {environment} from '../../../../../environments/environment';
 import CreatePaymentSuccess = PaymentsAction.CreatePaymentSuccess;
+import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'payments-panel',
@@ -51,7 +51,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   private serviceLimits: ServiceLimits;
   private serviceLimitsSubscription: Subscription;
 
-  private readonly languageCode: string = 'en';
+  private readonly languageCode: string;
 
   public lastPayment: Payment;
   private paymentCreatedSubscription: Subscription;
@@ -78,17 +78,17 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
   public subscribeToStore() {
     this.organizationSubscription = this.store
       .select(selectOrganizationByWorkspace)
-      .pipe(filter(organization => !isNullOrUndefined(organization)))
+      .pipe(filter(organization => isNotNullOrUndefined(organization)))
       .subscribe(organization => (this.organization = organization));
 
     this.serviceLimitsSubscription = this.store
       .select(selectServiceLimitsByWorkspace)
-      .pipe(filter(serviceLimits => !isNullOrUndefined(serviceLimits)))
+      .pipe(filter(serviceLimits => isNotNullOrUndefined(serviceLimits)))
       .subscribe(serviceLimits => (this.serviceLimits = serviceLimits));
 
     this.lastCreatedPayment = this.store
       .select(selectLastCreatedPayment)
-      .pipe(filter(payment => !isNullOrUndefined(payment)))
+      .pipe(filter(payment => isNotNullOrUndefined(payment)))
       .subscribe(payment => (this.lastPayment = payment));
   }
 
@@ -202,7 +202,7 @@ export class PaymentsPanelComponent implements OnInit, OnDestroy, AfterViewInit 
       {text: okButtonText, bold: true},
     ]);*/
 
-    if (!isNullOrUndefined($event) && $event !== '') {
+    if (isNotNullOrUndefined($event) && $event !== '') {
       (window as any)._gopay.checkout({gatewayUrl: $event, inline: true});
     }
   }

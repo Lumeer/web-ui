@@ -17,15 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {QueryItem} from '../top-panel/search-box/query-item/model/query-item';
-import {queryItemsColor} from '../../core/store/navigation/query/query.util';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
+import {BsModalRef} from 'ngx-bootstrap/modal';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
 
-@Pipe({
-  name: 'queryColor',
+@Component({
+  selector: 'create-project',
+  templateUrl: './create-project-modal.component.html',
+  styleUrls: ['./create-project-modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class QueryColorPipe implements PipeTransform {
-  public transform(queryItems: QueryItem[]): string {
-    return queryItemsColor(queryItems);
+export class CreateProjectModalComponent implements OnInit {
+  public performingAction$ = new BehaviorSubject(false);
+
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    // TODO
+  }
+
+  public onSubmit() {
+    // TODO
+  }
+
+  public hideDialog() {
+    this.bsModalRef.hide();
   }
 }

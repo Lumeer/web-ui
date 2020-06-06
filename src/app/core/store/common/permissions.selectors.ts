@@ -247,6 +247,10 @@ export const selectViewsByRead = createSelector(
   (views, user, isManager) => (isManager && views) || views.filter(view => userHasRoleInResource(user, view, Role.Read))
 );
 
+export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views): View[] =>
+  sortResourcesByFavoriteAndLastUsed<View>(views)
+);
+
 export const selectViewsByQuery = createSelector(selectViewsByRead, selectQuery, (views, query): View[] =>
   sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
 );

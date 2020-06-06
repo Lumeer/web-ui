@@ -22,16 +22,16 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {ToggleService} from './toggle.service';
+import {UpdateValueService} from '../../core/service/update-value.service';
 
 @Injectable()
-export class DocumentFavoriteToggleService extends ToggleService<DocumentModel> {
+export class DocumentFavoriteToggleService extends UpdateValueService<boolean, DocumentModel> {
   constructor(private store$: Store<AppState>) {
     super();
   }
 
-  public processToggle(id: string, active: boolean, data?: DocumentModel) {
-    if (active) {
+  public processUpdate(id: string, value: boolean, data?: DocumentModel) {
+    if (value) {
       this.store$.dispatch(
         new DocumentsAction.AddFavorite({
           documentId: id,
@@ -50,8 +50,12 @@ export class DocumentFavoriteToggleService extends ToggleService<DocumentModel> 
     }
   }
 
-  public processToggleToStore(id: string, active: boolean, data?: DocumentModel) {
-    if (active) {
+  public shouldUnsubscribePendingUpdate(previousValue: boolean, currentValue: boolean): boolean {
+    return previousValue !== currentValue;
+  }
+
+  public processUpdateToStore(id: string, value: boolean, data?: DocumentModel) {
+    if (value) {
       this.store$.dispatch(new DocumentsAction.AddFavoriteSuccess({documentId: id}));
     } else {
       this.store$.dispatch(new DocumentsAction.RemoveFavoriteSuccess({documentId: id}));

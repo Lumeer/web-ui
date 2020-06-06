@@ -1,14 +1,6 @@
-<form [formGroup]="form" class="row m-0 h-100" (ngSubmit)="onSubmit()" *ngIf="{isFirst: resourceType === resourceTypeProject && (first$ | async)} as data">
+<form [formGroup]="form" class="row m-0 h-100" (ngSubmit)="onSubmit()">
 
-  <create-resource-dialog-templates *ngIf="parentId"
-                                    [ngClass]="data.isFirst ? '' : 'col-lg-6 p-0 pr-lg-2 pr-0 pb-lg-0 pb-2'"
-                                    class="col-12"
-                                    [selectedTemplate]="selectedTemplate$ | async"
-                                    (templateSelect)="onTemplateSelected($event)">
-  </create-resource-dialog-templates>
-
-  <div *ngIf="!data.isFirst" class="col-12 p-0" [ngClass]="parentId ? 'col-lg-6 pl-lg-2 pl-0 pt-lg-0 pt-2 mt-2' : ''">
-
+  <div class="col-12">
     <create-resource-dialog-parent
       *ngIf="parentId"
       [parentId]="parentId"

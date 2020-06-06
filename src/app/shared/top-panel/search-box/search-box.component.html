@@ -5,7 +5,7 @@
         class="d-flex">
     <div
       *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async, constraintData: constraintData$ | async} as data"
-      class="d-flex flex-wrap  flex-grow-1 pb-1 pr-1"
+      class="d-flex flex-wrap flex-grow-1 pb-1 pr-1"
       [style.width.px]="1"
       formArrayName="queryItems">
       <query-item *ngFor="let queryItem of queryItems$ | async; trackBy:trackByTypeAndText; let itemIndex = index;"
