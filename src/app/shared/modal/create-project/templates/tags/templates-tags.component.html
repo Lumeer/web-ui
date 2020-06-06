@@ -1,0 +1,51 @@
+<div class="pt-3 px-3">
+  <div class="input-group input-group-sm ">
+    <div class="input-group-prepend">
+      <span class="input-group-text" id="searchTemplateIcon"><i class="fas fa-search"></i></span>
+    </div>
+    <input id="searchTemplate" class="form-control" type="search"
+           placeholder="Search templates"
+           i18n-placeholder="@@templates.tags.search.placeholder"
+           aria-describedby="searchTemplateIcon"
+           [(ngModel)]="search">
+  </div>
+</div>
+
+<div class="tags p-3">
+
+  <ul class="list-group list-group-flush" role="tablist" *ngIf="!search">
+    <li *ngFor="let tag of tags"
+        (click)="selectTag.emit(tag)"
+        class="list-group-item list-group-item-action d-flex justify-content-between align-items-center cursor-pointer"
+        [class.active]="tag === selectedTag">
+      <div class="text-truncate">{{tag}}</div>
+      <i class="fas fa-chevron-right small"></i>
+    </li>
+  </ul>
+  <ng-container *ngIf="search">
+    <ng-container *ngIf="templates | filterTemplates:search as filteredTemplates">
+      <ul class="list-group list-group-flush" role="tablist" *ngIf="filteredTemplates.length; else emptySearch">
+        <li *ngFor="let template of filteredTemplates"
+            (click)="selectTemplate.emit(template)"
+            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center cursor-pointer"
+            [class.active]="template.id === selectedTemplate?.id">
+          <div class="text-truncate">{{template.name}}</div>
+          <i class="fas fa-chevron-right small"></i>
+        </li>
+      </ul>
+
+    </ng-container>
+
+  </ng-container>
+
+
+</div>
+
+<ng-template #emptySearch>
+  <div class="d-flex flex-column align-items-center justify-content-center text-center text-muted"
+       [style.min-height.rem]="10">
+    <i class="fa-3x far fa-file-search mb-2" aria-hidden="true"></i>
+    <div i18n="@@templates.tags.search.empty">Nothing found</div>
+  </div>
+</ng-template>
+

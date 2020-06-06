@@ -23,10 +23,13 @@ import {AppState} from '../app.state';
 import {selectWorkspace} from '../navigation/navigation.state';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {Project} from './project';
+import {LoadingState} from '../../model/loading-state';
 
 export interface ProjectsState extends EntityState<Project> {
-  projectCodes: {[organizationId: string]: string[]};
-  loaded: {[organizationId: string]: boolean};
+  projectCodes: { [organizationId: string]: string[] };
+  loaded: { [organizationId: string]: boolean };
+  templates: Project[];
+  templatesState: LoadingState;
 }
 
 export const projectsAdapter = createEntityAdapter<Project>({selectId: project => project.id});
@@ -34,6 +37,8 @@ export const projectsAdapter = createEntityAdapter<Project>({selectId: project =
 export const initialProjectsState: ProjectsState = projectsAdapter.getInitialState({
   projectCodes: {},
   loaded: {},
+  templates: [],
+  templatesState: LoadingState.NotLoaded,
 });
 
 export const selectProjectsState = (state: AppState) => state.projects;
@@ -81,3 +86,7 @@ export const selectProjectByOrganizationAndCode = (organizationId: string, proje
   createSelector(selectAllProjects, projects =>
     projects.find(project => project.organizationId === organizationId && project.code === projectCode)
   );
+
+export const selectProjectTemplates = createSelector(selectProjectsState, state => state.templates);
+
+export const selectProjectTemplatesLoadingState = createSelector(selectProjectsState, state => state.templatesState);

@@ -64,6 +64,7 @@ import {ProjectValidators} from './validators/project.validators';
 import {SequenceService} from './rest/sequence.service';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {LanguageCode} from '../shared/top-panel/user-panel/user-menu/language';
+import {TemplateService} from './rest/template.service';
 
 if (environment.locale === LanguageCode.CZ) {
   defineLocale('cs', csLocale);
@@ -103,6 +104,7 @@ if (environment.locale === LanguageCode.CZ) {
     OrganizationService,
     ProjectService,
     SearchService,
+    TemplateService,
     BaseService,
     ImportService,
     UserService,

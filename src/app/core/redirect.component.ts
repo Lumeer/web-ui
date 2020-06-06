@@ -82,7 +82,7 @@ export class RedirectComponent implements OnInit {
         ),
         mergeMap(({user, organizations, limits}) => {
           if (organizations && organizations.length) {
-            const observables = (organizations || []).map(organization =>
+            const observables: Observable<boolean>[] = (organizations || []).map(organization =>
               this.canCreateProjectsInOrganization(organization, user, limits)
             );
             return forkJoin(observables).pipe(

@@ -55,6 +55,10 @@ export enum ProjectsActionType {
   APPLY_TEMPLATE = '[Projects] Apply Template',
   APPLY_TEMPLATE_FAILURE = '[Projects] Apply Template :: Failure',
 
+  GET_TEMPLATES = '[Projects] Get Templates',
+  GET_TEMPLATES_SUCCESS = '[Projects] Get Templates :: Success',
+  GET_TEMPLATES_FAILURE = '[Projects] Get Templates :: Failure',
+
   SWITCH_WORKSPACE = '[Projects] Switch Workspace',
   CLEAR_WORKSPACE_DATA = '[Projects] Clear Workspace Data',
 }
@@ -63,49 +67,57 @@ export namespace ProjectsAction {
   export class Get implements Action {
     public readonly type = ProjectsActionType.GET;
 
-    public constructor(public payload: {organizationId: string; force?: boolean}) {}
+    public constructor(public payload: { organizationId: string; force?: boolean }) {
+    }
   }
 
   export class GetSingle implements Action {
     public readonly type = ProjectsActionType.GET_SINGLE;
 
-    public constructor(public payload: {organizationId: string; projectId: string}) {}
+    public constructor(public payload: { organizationId: string; projectId: string }) {
+    }
   }
 
   export class GetSuccess implements Action {
     public readonly type = ProjectsActionType.GET_SUCCESS;
 
-    public constructor(public payload: {organizationId: string; projects: Project[]}) {}
+    public constructor(public payload: { organizationId: string; projects: Project[] }) {
+    }
   }
 
   export class GetFailure implements Action {
     public readonly type = ProjectsActionType.GET_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class GetOneSuccess implements Action {
     public readonly type = ProjectsActionType.GET_ONE_SUCCESS;
 
-    public constructor(public payload: {project: Project}) {}
+    public constructor(public payload: { project: Project }) {
+    }
   }
 
   export class GetCodes implements Action {
     public readonly type = ProjectsActionType.GET_CODES;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: { organizationId: string }) {
+    }
   }
 
   export class GetCodesSuccess implements Action {
     public readonly type = ProjectsActionType.GET_CODES_SUCCESS;
 
-    public constructor(public payload: {organizationId: string; projectCodes: string[]}) {}
+    public constructor(public payload: { organizationId: string; projectCodes: string[] }) {
+    }
   }
 
   export class GetCodesFailure implements Action {
     public readonly type = ProjectsActionType.GET_CODES_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class Create implements Action {
@@ -119,68 +131,98 @@ export namespace ProjectsAction {
         onSuccess?: (project: Project) => void;
         onFailure?: () => void;
       }
-    ) {}
+    ) {
+    }
   }
 
   export class CreateSuccess implements Action {
     public readonly type = ProjectsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {project: Project}) {}
+    public constructor(public payload: { project: Project }) {
+    }
   }
 
   export class CreateFailure implements Action {
     public readonly type = ProjectsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: {organizationCode: string; error: any}) {}
+    public constructor(public payload: { organizationCode: string; error: any }) {
+    }
   }
 
   export class Update implements Action {
     public readonly type = ProjectsActionType.UPDATE;
 
-    public constructor(public payload: {project: Project; workspace?: Workspace}) {}
+    public constructor(public payload: { project: Project; workspace?: Workspace }) {
+    }
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = ProjectsActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {project: Project; oldCode?: string}) {}
+    public constructor(public payload: { project: Project; oldCode?: string }) {
+    }
   }
 
   export class UpdateFailure implements Action {
     public readonly type = ProjectsActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class ApplyTemplate implements Action {
     public readonly type = ProjectsActionType.APPLY_TEMPLATE;
 
-    public constructor(public payload: {organizationId: string; projectId: string; template: TemplateType}) {}
+    public constructor(public payload: { organizationId: string; projectId: string; template: TemplateType }) {
+    }
   }
 
   export class ApplyTemplateFailure implements Action {
     public readonly type = ProjectsActionType.APPLY_TEMPLATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class Delete implements Action {
     public readonly type = ProjectsActionType.DELETE;
 
-    public constructor(public payload: {organizationId: string; projectId: string}) {}
+    public constructor(public payload: { organizationId: string; projectId: string }) {
+    }
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = ProjectsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {projectId: string; organizationId?: string; projectCode?: string}) {}
+    public constructor(public payload: { projectId: string; organizationId?: string; projectCode?: string }) {
+    }
   }
 
   export class DeleteFailure implements Action {
     public readonly type = ProjectsActionType.DELETE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
+
+  export class GetTemplates implements Action {
+    public readonly type = ProjectsActionType.GET_TEMPLATES;
+  }
+
+  export class GetTemplatesSuccess implements Action {
+    public readonly type = ProjectsActionType.GET_TEMPLATES_SUCCESS;
+
+    public constructor(public payload: { templates: Project[];}) {
+    }
+  }
+
+  export class GetTemplatesFailure implements Action {
+    public readonly type = ProjectsActionType.GET_TEMPLATES_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
 
   export class ChangePermission implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION;
@@ -193,33 +235,38 @@ export namespace ProjectsAction {
         currentPermissions: Permission[];
         workspace?: Workspace;
       }
-    ) {}
+    ) {
+    }
   }
 
   export class ChangePermissionSuccess implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION_SUCCESS;
 
-    public constructor(public payload: {projectId: string; type: PermissionType; permissions: Permission[]}) {}
+    public constructor(public payload: { projectId: string; type: PermissionType; permissions: Permission[] }) {
+    }
   }
 
   export class ChangePermissionFailure implements Action {
     public readonly type = ProjectsActionType.CHANGE_PERMISSION_FAILURE;
 
     public constructor(
-      public payload: {projectId: string; type: PermissionType; permissions: Permission[]; error: any}
-    ) {}
+      public payload: { projectId: string; type: PermissionType; permissions: Permission[]; error: any }
+    ) {
+    }
   }
 
   export class SwitchWorkspace implements Action {
     public readonly type = ProjectsActionType.SWITCH_WORKSPACE;
 
-    public constructor(public payload: {organizationId: string; projectId: string; nextAction?: Action}) {}
+    public constructor(public payload: { organizationId: string; projectId: string; nextAction?: Action }) {
+    }
   }
 
   export class ClearWorkspaceData implements Action {
     public readonly type = ProjectsActionType.CLEAR_WORKSPACE_DATA;
 
-    public constructor(public payload: {nextAction?: Action}) {}
+    public constructor(public payload: { nextAction?: Action }) {
+    }
   }
 
   export type All =
@@ -245,6 +292,9 @@ export namespace ProjectsAction {
     | ChangePermissionFailure
     | ApplyTemplate
     | ApplyTemplateFailure
+    | GetTemplates
+    | GetTemplatesSuccess
+    | GetTemplatesFailure
     | SwitchWorkspace
     | ClearWorkspaceData;
 }

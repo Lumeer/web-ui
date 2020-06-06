@@ -18,24 +18,30 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
+import {Project} from '../../../core/store/projects/project';
+import {LoadingState} from '../../../core/model/loading-state';
+import {selectProjectTemplates, selectProjectTemplatesLoadingState} from '../../../core/store/projects/projects.state';
 
 @Component({
-  selector: 'create-project',
   templateUrl: './create-project-modal.component.html',
-  styleUrls: ['./create-project-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreateProjectModalComponent implements OnInit {
+
+  public templates$: Observable<Project[]>;
+  public templatesState$: Observable<LoadingState>;
+
   public performingAction$ = new BehaviorSubject(false);
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    // TODO
+    this.templates$ = this.store$.pipe(select(selectProjectTemplates));
+    this.templatesState$ = this.store$.pipe(select(selectProjectTemplatesLoadingState));
   }
 
   public onSubmit() {

@@ -21,6 +21,7 @@ import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {initialProjectsState, projectsAdapter, ProjectsState} from './projects.state';
 import {PermissionsHelper} from '../permissions/permissions.helper';
 import {Project} from './project';
+import {LoadingState} from '../../model/loading-state';
 
 export function projectsReducer(
   state: ProjectsState = initialProjectsState,
@@ -32,8 +33,7 @@ export function projectsReducer(
     case ProjectsActionType.GET_ONE_SUCCESS:
       return addOrUpdateProject(state, action.payload.project);
     case ProjectsActionType.GET_CODES_SUCCESS:
-      const projectCodes = {...state.projectCodes};
-      projectCodes[action.payload.organizationId] = action.payload.projectCodes;
+      const projectCodes = {...state.projectCodes, [action.payload.organizationId]: action.payload.projectCodes};
       return {...state, projectCodes};
     case ProjectsActionType.CREATE_SUCCESS:
       return addOrUpdateProject(state, action.payload.project);
@@ -45,6 +45,12 @@ export function projectsReducer(
       return onChangePermission(state, action);
     case ProjectsActionType.CHANGE_PERMISSION_FAILURE:
       return onChangePermission(state, action);
+    case ProjectsActionType.GET_TEMPLATES:
+      return {...state, templatesState: LoadingState.Loading};
+    case ProjectsActionType.GET_TEMPLATES_SUCCESS:
+      return {...state, templates: action.payload.templates, templatesState: LoadingState.Loaded};
+    case ProjectsActionType.GET_TEMPLATES_FAILURE:
+      return {...state, templatesState: LoadingState.Loaded};
     default:
       return state;
   }

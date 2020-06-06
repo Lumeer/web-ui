@@ -22,7 +22,7 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {Project} from './project';
 
 export class ProjectConverter {
-  public static fromDto(dto: ProjectDto, organizationId: string, correlationId?: string): Project {
+  public static fromDto(dto: ProjectDto, organizationId?: string, correlationId?: string): Project {
     return {
       id: dto.id,
       organizationId: organizationId,

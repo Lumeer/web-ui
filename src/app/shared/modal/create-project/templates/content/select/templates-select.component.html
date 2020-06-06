@@ -1,0 +1,13 @@
+<div class="p-3">
+  <img src="https://www.lumeer.io/wp-content/uploads/2019/04/felipe-lopez-311216-unsplash.jpg" alt=""
+       class="main-image"/>
+</div>
+
+<h3 *ngIf="selectedTag" class="mt-4 mb-0 text-center">{{selectedTag}}</h3>
+
+<div class="d-flex justify-content-around flex-wrap mt-4">
+  <template-item *ngFor="let template of templates"
+                 class="d-block mb-3"
+                 [template]="template">
+  </template-item>
+</div>

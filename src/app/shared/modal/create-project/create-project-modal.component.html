@@ -1,18 +1,19 @@
-<modal-wrapper class="d-block" [dialogType]="'primary'"
+<modal-wrapper class="d-block"
+               dialogType="primary"
                [performingAction]="performingAction$ | async"
                [customHeader]="true"
                (onSubmit)="onSubmit()"
                (onClose)="hideDialog()">
 
-  <div class="custom-header p-3">
+  <div class="body w-100 h-100">
 
-  </div>
-
-  <div class="body">
+    <create-project-templates [templates]="templates$ | async"
+                              [loadingState]="templatesState$ | async">
+    </create-project-templates>
 
   </div>
 
   <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
-  <span class="button-submit" i18n="@@button.create">Create</span>
+  <span class="button-submit" i18n="@@button.template">Use template</span>
 
 </modal-wrapper>

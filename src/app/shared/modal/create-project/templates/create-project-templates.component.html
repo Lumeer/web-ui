@@ -1,0 +1,19 @@
+<div class="layout h-100" *ngIf="templates.length; else empty">
+
+  <templates-tags [templates]="templates"
+                  [selectedTag]="selectedTag$ | async"
+                  [selectedTemplate]="selectedTemplate$ | async"
+                  (selectTag)="onSelectTagThroughSearch($event)"
+                  (selectTemplate)="onSelectTemplateThroughSearch($event)">
+  </templates-tags>
+  <templates-content [templates]="templates"
+                    [selectedTag]="selectedTag$ | async"
+                    [selectedTemplate]="selectedTemplate$ | async">
+  </templates-content>
+
+</div>
+
+
+<ng-template #empty>
+  <empty-templates [loadingState]="loadingState"></empty-templates>
+</ng-template>

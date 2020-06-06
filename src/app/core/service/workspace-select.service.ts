@@ -122,14 +122,14 @@ export class WorkspaceSelectService {
     templateType: TemplateType,
     extras?: NavigationExtras
   ): BsModalRef {
+    this.store$.dispatch(new ProjectsAction.GetTemplates());
     const initialState = {
       templateType,
       parentId: organization.id,
       resourceType: ResourceType.Project,
       navigationExtras: extras,
     };
-    const config = {initialState, keyboard: false, class: 'modal-lg'};
-    config['backdrop'] = 'static';
+    const config = {initialState, keyboard: false, class: 'modal-xxl modal-xxl-height', backdrop: 'static' as const};
     return this.modalService.show(CreateProjectModalComponent, config);
   }
 

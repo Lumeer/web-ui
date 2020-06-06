@@ -51,6 +51,14 @@ import {NotificationService} from '../../notifications/notification.service';
 import ApplyTemplate = ProjectsAction.ApplyTemplate;
 import {TemplateType} from '../../model/template';
 import {createCallbackActions} from '../store.utils';
+import {KanbansAction} from '../kanbans/kanbans.action';
+import {MapsAction} from '../maps/maps.action';
+import {PivotsAction} from '../pivots/pivots.action';
+import {CalendarsAction} from '../calendars/calendars.action';
+import {GanttChartAction} from '../gantt-charts/gantt-charts.action';
+import {SearchesAction} from '../searches/searches.action';
+import {ChartAction} from '../charts/charts.action';
+import {TemplateService} from '../../rest/template.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -415,6 +423,13 @@ export class ProjectsEffects {
         new LinkInstancesAction.Clear(),
         new LinkTypesAction.Clear(),
         new ViewsAction.Clear(),
+        new KanbansAction.Clear(),
+        new MapsAction.Clear(),
+        new PivotsAction.Clear(),
+        new CalendarsAction.Clear(),
+        new GanttChartAction.Clear(),
+        new SearchesAction.Clear(),
+        new ChartAction.Clear(),
       ];
 
       if (nextAction) {
@@ -425,12 +440,25 @@ export class ProjectsEffects {
     })
   );
 
+  @Effect()
+  public getTemplates$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.GetTemplates>(ProjectsActionType.GET_TEMPLATES),
+    mergeMap(() => {
+      return this.templateService.getTemplates().pipe(
+        map(dtos => dtos.map(dto => ProjectConverter.fromDto(dto))),
+        map(templates => new ProjectsAction.GetTemplatesSuccess({templates})),
+        catchError(error => of(new ProjectsAction.GetTemplatesFailure({error})))
+      );
+    })
+  );
+
   constructor(
     private actions$: Actions,
     private i18n: I18n,
     private router: Router,
     private notificationService: NotificationService,
     private projectService: ProjectService,
+    private templateService: TemplateService,
     private store$: Store<AppState>
   ) {}
 }

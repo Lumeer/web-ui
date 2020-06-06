@@ -1,0 +1,13 @@
+<templates-toolbar [selectedTemplate]="selectedTemplate"
+                   [selectedTag]="selectedTag">
+</templates-toolbar>
+
+<templates-select *ngIf="!selectedTemplate"
+                  [selectedTag]="selectedTag"
+                  [selectedTemplate]="selectedTemplate"
+                  [templates]="templates">
+</templates-select>
+
+<template-detail *ngIf="selectedTemplate"
+                 [template]="selectedTemplate">
+</template-detail>
