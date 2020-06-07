@@ -115,7 +115,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   }
 
   public get resizeToContent(): boolean {
-    return this.configuration && this.configuration.common && this.configuration.common.resizeToContent;
+    return this.configuration?.common?.resizeToContent;
   }
 
   private recalculateWidth(value: DataValue) {
