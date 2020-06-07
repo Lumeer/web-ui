@@ -27,8 +27,6 @@ import {CreateResourceModalComponent} from './create-resource-modal.component';
 import {PickerModule} from '../../picker/picker.module';
 import {CreateResourceDialogFormComponent} from './form/create-resource-dialog-form.component';
 import {CreateResourceDialogParentComponent} from './form/parent/create-resource-dialog-parent.component';
-import {CreateResourceDialogTemplatesComponent} from './form/templates/create-resource-dialog-templates.component';
-import {CreateResourceDialogTemplateComponent} from './form/templates/template/create-resource-dialog-template.component';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {PresenterModule} from '../../presenter/presenter.module';
@@ -40,8 +38,6 @@ import {PresenterModule} from '../../presenter/presenter.module';
     CreateResourceModalComponent,
     CreateResourceDialogFormComponent,
     CreateResourceDialogParentComponent,
-    CreateResourceDialogTemplatesComponent,
-    CreateResourceDialogTemplateComponent,
   ],
   imports: [
     CommonModule,

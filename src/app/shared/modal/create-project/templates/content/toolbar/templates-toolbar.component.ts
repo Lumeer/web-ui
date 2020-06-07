@@ -17,26 +17,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {Project} from '../../../../../../core/store/projects/project';
 
 @Component({
   selector: 'templates-toolbar',
   templateUrl: './templates-toolbar.component.html',
-  styleUrls: ['./templates-toolbar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TemplatesToolbarComponent implements OnInit {
-
+export class TemplatesToolbarComponent {
   @Input()
   public selectedTag: string;
 
   @Input()
   public selectedTemplate: Project;
 
-  constructor() { }
+  @Input()
+  public mobile: boolean;
 
-  ngOnInit(): void {
+  @Output()
+  public selectTag = new EventEmitter<string>();
+
+  @Output()
+  public backToTemplates = new EventEmitter();
+
+  public back() {
+    if (this.selectedTag && this.selectedTemplate) {
+      this.selectTag.emit(this.selectedTag);
+    } else {
+      this.backToTemplates.emit();
+    }
   }
-
 }

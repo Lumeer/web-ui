@@ -26,8 +26,8 @@ import {Project} from './project';
 import {LoadingState} from '../../model/loading-state';
 
 export interface ProjectsState extends EntityState<Project> {
-  projectCodes: { [organizationId: string]: string[] };
-  loaded: { [organizationId: string]: boolean };
+  projectCodes: {[organizationId: string]: string[]};
+  loaded: {[organizationId: string]: boolean};
   templates: Project[];
   templatesState: LoadingState;
 }

@@ -49,7 +49,6 @@ import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationService} from '../../notifications/notification.service';
 import ApplyTemplate = ProjectsAction.ApplyTemplate;
-import {TemplateType} from '../../model/template';
 import {createCallbackActions} from '../store.utils';
 import {KanbansAction} from '../kanbans/kanbans.action';
 import {MapsAction} from '../maps/maps.action';
@@ -128,7 +127,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationsEntities]) => {
-      const {project, template, navigationExtras, onSuccess, onFailure} = action.payload;
+      const {project, templateId, navigationExtras, onSuccess, onFailure} = action.payload;
       const organization = organizationsEntities[project.organizationId];
       const projectDto = ProjectConverter.toDto(project);
 
@@ -140,14 +139,13 @@ export class ProjectsEffects {
             ...createCallbackActions(onSuccess, newProject),
           ];
 
-          const applyTemplateAction =
-            template && template !== TemplateType.Empty
-              ? new ApplyTemplate({
-                  organizationId: project.organizationId,
-                  projectId: newProject.id,
-                  template,
-                })
-              : null;
+          const applyTemplateAction = templateId
+            ? new ApplyTemplate({
+                organizationId: project.organizationId,
+                projectId: newProject.id,
+                templateId,
+              })
+            : null;
 
           actions.push(
             new RouterAction.Go({
@@ -370,8 +368,8 @@ export class ProjectsEffects {
   public applyTemplate$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.ApplyTemplate>(ProjectsActionType.APPLY_TEMPLATE),
     mergeMap(action => {
-      const {organizationId, projectId, template} = action.payload;
-      return this.projectService.applyTemplate(organizationId, projectId, template).pipe(
+      const {organizationId, projectId, templateId} = action.payload;
+      return this.projectService.applyTemplate(organizationId, projectId, templateId).pipe(
         mergeMap(() => EMPTY),
         catchError(error => of(new ProjectsAction.ApplyTemplateFailure({error})))
       );

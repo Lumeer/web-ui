@@ -17,26 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {Template} from '../../../../../../core/model/template';
+import {Pipe, PipeTransform} from '@angular/core';
+import {Project} from '../../../../core/store/projects/project';
 
-@Component({
-  selector: 'create-resource-dialog-template',
-  templateUrl: './create-resource-dialog-template.component.html',
-  styleUrls: ['./create-resource-dialog-template.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'filterTemplatesByTag',
 })
-export class CreateResourceDialogTemplateComponent {
-  @Input()
-  public template: Template;
-
-  @Input()
-  public selected: boolean;
-
-  @Output()
-  public templateSelect = new EventEmitter();
-
-  public onSelect() {
-    this.templateSelect.emit();
+export class FilterTemplatesByTagPipe implements PipeTransform {
+  public transform(templates: Project[], tag: string): Project[] {
+    return (tag && templates.filter(template => template.templateMetadata?.tags?.includes(tag))) || [];
   }
 }

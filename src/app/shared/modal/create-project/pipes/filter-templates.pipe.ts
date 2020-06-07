@@ -22,13 +22,11 @@ import {Project} from '../../../../core/store/projects/project';
 import {removeAccent} from '../../../utils/string.utils';
 
 @Pipe({
-  name: 'filterTemplates'
+  name: 'filterTemplates',
 })
 export class FilterTemplatesPipe implements PipeTransform {
-
   public transform(templates: Project[], term: string): Project[] {
     const termWithoutAccent = removeAccent(term, true).trim();
     return templates.filter(template => removeAccent(template.name, true).trim().includes(termWithoutAccent));
   }
-
 }

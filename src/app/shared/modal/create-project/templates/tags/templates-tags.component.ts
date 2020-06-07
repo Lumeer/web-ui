@@ -25,10 +25,10 @@ import {createTagsFromTemplates} from '../../model/templates-util';
   selector: 'templates-tags',
   templateUrl: './templates-tags.component.html',
   styleUrls: ['./templates-tags.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-flex flex-column'},
 })
 export class TemplatesTagsComponent implements OnChanges {
-
   @Input()
   public templates: Project[];
 
@@ -56,5 +56,4 @@ export class TemplatesTagsComponent implements OnChanges {
   private createTags() {
     this.tags = createTagsFromTemplates(this.templates);
   }
-
 }

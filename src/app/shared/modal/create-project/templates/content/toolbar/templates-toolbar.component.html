@@ -1,10 +1,15 @@
-<div class="toolbar pt-3 px-3 d-flex flex-nowrap">
+<div class="toolbar pt-3 px-3 pb-1 d-flex flex-nowrap align-items-center">
 
   <div class="flex-1">
-
+    <div *ngIf="mobile || (selectedTag && selectedTemplate)"
+         class="small btn-link text-success cursor-pointer text-nowrap mr-2"
+         (click)="back()">
+      <i class="far fa-chevron-left"></i>&nbsp;<ng-container *ngIf="selectedTag && selectedTemplate">{{selectedTag}}</ng-container>
+      <span *ngIf="!selectedTag || !selectedTemplate" i18n="@@templates.tags.title">Templates</span>
+    </div>
   </div>
 
-  <div class="flex-1">
+  <div class="d-flex text-truncate">
     <div [style.max-width.%]="100">
       <div class="text-center text-truncate" *ngIf="selectedTag && !selectedTemplate">{{selectedTag}}</div>
       <div class="text-center text-truncate" *ngIf="selectedTemplate">{{selectedTemplate.name}}</div>

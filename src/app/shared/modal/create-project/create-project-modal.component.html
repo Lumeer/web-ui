@@ -2,13 +2,16 @@
                dialogType="primary"
                [performingAction]="performingAction$ | async"
                [customHeader]="true"
+               [submitDisabled]="formDisabled$ | async"
                (onSubmit)="onSubmit()"
-               (onClose)="hideDialog()">
+               (onClose)="onClose()">
 
   <div class="body w-100 h-100">
 
     <create-project-templates [templates]="templates$ | async"
-                              [loadingState]="templatesState$ | async">
+                              [loadingState]="templatesState$ | async"
+                              [initialTemplateCode]="templateCode"
+                              [form]="form">
     </create-project-templates>
 
   </div>

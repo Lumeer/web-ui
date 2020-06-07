@@ -1,6 +1,16 @@
-<div class="p-3">
+<div class="px-3 pt-2 pb-3">
   <img [src]="template.templateMetadata?.imageUrl" alt=""
        class="main-image"/>
 </div>
 
-<h3 class="mt-4 mb-0 text-center">{{template.name}}</h3>
+<div class="pt-2 px-3 pb-3">
+
+  <h3 class="mb-0 text-center">{{template.name}}</h3>
+
+  <div class="tags d-flex justify-content-center mt-1" *ngIf="template.templateMetadata?.tags?.length">
+    <div *ngFor="let tag of template.templateMetadata.tags" class="tag py-1 px-2 m-1 cursor-pointer"
+         (click)="selectTag.emit(tag)">{{tag}}</div>
+  </div>
+
+  <div class="mt-3 text-center">{{template.description}}</div>
+</div>

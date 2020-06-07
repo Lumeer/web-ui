@@ -17,27 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {Project} from '../../../../../../core/store/projects/project';
 
 @Component({
   selector: 'template-detail',
   templateUrl: './template-detail.component.html',
   styleUrls: ['./template-detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TemplateDetailComponent implements OnInit {
-
+export class TemplateDetailComponent {
   @Input()
   public template: Project;
 
   @Output()
-  public selectedTag = new EventEmitter<string>();
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
-
+  public selectTag = new EventEmitter<string>();
 }

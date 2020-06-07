@@ -1,4 +1,8 @@
-<div class="pt-3 px-3">
+<div class="pt-3 px-3 pb-1 text-center" i18n="@@templates.tags.title">
+  Templates
+</div>
+
+<div class="pt-2 px-3 pb-1">
   <div class="input-group input-group-sm ">
     <div class="input-group-prepend">
       <span class="input-group-text" id="searchTemplateIcon"><i class="fas fa-search"></i></span>
@@ -11,7 +15,7 @@
   </div>
 </div>
 
-<div class="tags p-3">
+<div class="tags pt-2 px-3 pb-3">
 
   <ul class="list-group list-group-flush" role="tablist" *ngIf="!search">
     <li *ngFor="let tag of tags"

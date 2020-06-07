@@ -27,10 +27,8 @@ import {LoadingState} from '../../../../../core/model/loading-state';
   host: {class: 'd-block w-100 h-100'},
 })
 export class EmptyTemplatesComponent {
-
   @Input()
   public loadingState: LoadingState;
 
   public readonly state = LoadingState;
-
 }

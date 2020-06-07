@@ -17,17 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
 import {Project} from '../../../../../../core/store/projects/project';
 
 @Component({
   selector: 'templates-select',
   templateUrl: './templates-select.component.html',
   styleUrls: ['./templates-select.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TemplatesSelectComponent implements OnInit {
-
+export class TemplatesSelectComponent {
   @Input()
   public templates: Project[];
 
@@ -37,9 +36,6 @@ export class TemplatesSelectComponent implements OnInit {
   @Input()
   public selectedTemplate: Project;
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  @Output()
+  public selectTemplate = new EventEmitter<Project>();
 }

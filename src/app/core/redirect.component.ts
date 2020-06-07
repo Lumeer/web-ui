@@ -41,7 +41,6 @@ import {selectCurrentUser} from './store/users/users.state';
 import {isNotNullOrUndefined} from '../shared/utils/common.utils';
 import {WorkspaceSelectService} from './service/workspace-select.service';
 import {AppState} from './store/app.state';
-import {TemplateType, templateTypesMap} from './model/template';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationsAction} from './store/notifications/notifications.action';
 
@@ -61,15 +60,14 @@ export class RedirectComponent implements OnInit {
   public ngOnInit() {
     this.activatedRoute.paramMap
       .pipe(
-        map(params => params.get('templateId')),
+        map(params => params.get('templateCode')),
         take(1)
       )
-      .subscribe(templateId => this.redirectToTemplate(templateId));
+      .subscribe(templateCode => this.redirectToTemplate(templateCode));
   }
 
-  public redirectToTemplate(templateId: string) {
-    const template = templateTypesMap[templateId];
-    if (!template) {
+  public redirectToTemplate(templateCode: string) {
+    if (!templateCode) {
       return this.redirectToHome();
     }
 
@@ -115,15 +113,15 @@ export class RedirectComponent implements OnInit {
       )
       .subscribe(({organization, hasOrganization}) => {
         if (organization) {
-          this.createProject(organization, template);
+          this.createProject(organization, templateCode);
         } else {
           this.redirectToHome(() => this.showError(hasOrganization));
         }
       });
   }
 
-  private createProject(organization: Organization, template: TemplateType) {
-    const modalRef = this.workspaceSelectService.createNewProject(organization, template, {replaceUrl: true});
+  private createProject(organization: Organization, templateCode: string) {
+    const modalRef = this.workspaceSelectService.createNewProject(organization, templateCode, {replaceUrl: true});
     modalRef.content.onClose$.subscribe(() => this.redirectToHome());
   }
 

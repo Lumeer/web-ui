@@ -44,12 +44,12 @@ export class ProjectConverter {
   public static toDto(project: Project): ProjectDto {
     return {
       code: project.code,
-      name: project.name,
+      name: project.name || '',
       icon: project.icon,
       color: project.color,
-      description: project.description,
-      templateMetadata: project.templateMetadata,
-      public: project.isPublic,
+      description: project.description || '',
+      templateMetadata: project.templateMetadata || {},
+      public: project.isPublic || false,
     };
   }
 }

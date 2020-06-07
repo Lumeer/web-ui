@@ -14,7 +14,6 @@
       *ngIf="contentValid$ | async; else contentInvalid"
       [parentId]="parentId"
       [resourceType]="resourceType"
-      [initialTemplate]="templateType"
       [usedCodes]="usedCodes$ | async"
       (submitResource)="submitResource($event)">
     </create-resource-dialog-form>
