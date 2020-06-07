@@ -33,10 +33,9 @@ import {
 } from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
-import {BsDatepickerInlineConfig, BsLocaleService} from 'ngx-bootstrap/datepicker';
+import {BsDatepickerInlineConfig} from 'ngx-bootstrap/datepicker';
 import {Subscription} from 'rxjs';
 import {filter} from 'rxjs/operators';
-import {environment} from '../../../../environments/environment';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
@@ -99,10 +98,6 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   private selectedValue: Date;
-
-  constructor(localeService: BsLocaleService) {
-    localeService.use(environment.locale);
-  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value && this.value) {
