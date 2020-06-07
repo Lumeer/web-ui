@@ -38,6 +38,6 @@ export class TemplateService extends BaseService {
   }
 
   private apiPrefix(): string {
-    return `${environment.apiUrl}/rest/templates`;
+    return `${environment.apiProdUrl}/rest/templates`;
   }
 }
