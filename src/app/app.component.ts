@@ -48,6 +48,7 @@ import Cookies from 'js-cookie';
 import {LUMEER_REFERRAL} from './core/constants';
 import {UserActivityService} from './auth/user-activity.service';
 import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
+import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'lmr-app',
@@ -68,6 +69,7 @@ export class AppComponent implements AfterViewInit {
     private activityService: UserActivityService,
     private sessionService: SessionService,
     private tooltipConfig: TooltipConfig,
+    private localeService: BsLocaleService,
     private constraintDataService: ConstraintDataService, // for init constraint data
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
@@ -231,6 +233,7 @@ export class AppComponent implements AfterViewInit {
     if (environment.locale === LanguageCode.CZ) {
       numbro.registerLanguage(csLanguage, true);
     }
+    this.localeService.use(environment.locale);
   }
 }
 

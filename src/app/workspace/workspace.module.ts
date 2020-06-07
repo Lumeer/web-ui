@@ -43,9 +43,10 @@ import {ProjectSequencesComponent} from './project/sequences/project-sequences.c
 import {ProjectTemplateComponent} from './project/template/project-template.component';
 import {ProjectTemplateMetadataComponent} from './project/template/metadata/project-template-metadata.component';
 import {ProjectTemplateTagsComponent} from './project/template/metadata/tags/project-template-tags.component';
+import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 
 @NgModule({
-  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, ClickOutsideModule],
+  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, ClickOutsideModule, BsDatepickerModule],
   declarations: [
     OrganizationDetailComponent,
     ProjectUsersComponent,

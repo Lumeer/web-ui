@@ -37,6 +37,14 @@
     </div>
 
     <div class="row m-0 mt-2">
+      <label class="col-sm-3 px-0 col-lg-2 col-form-label" for="relativeDate"
+             i18n="@@projects.tab.template.metadata.relativeDate">Relative Date</label>
+      <input class="col-sm-9 col-lg-10 form-control" type="text" formControlName="relativeDate" id="relativeDate"
+             bsDatepicker
+             [bsConfig]="datePickerConfig"/>
+    </div>
+
+    <div class="row m-0 mt-2">
       <label class="col-sm-3 px-0 col-lg-2 col-form-label" i18n="@@projects.tab.template.metadata.defaultView">Default
         view</label>
 

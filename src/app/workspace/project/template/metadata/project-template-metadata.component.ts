@@ -25,6 +25,7 @@ import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data
 import {Subscription} from 'rxjs';
 import {UpdateProjectService} from '../update-project.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
+import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
 
 @Component({
   selector: 'project-template-metadata',
@@ -45,6 +46,12 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
 
   @Input()
   public workspace: Workspace;
+
+  public readonly datePickerConfig: Partial<BsDatepickerConfig> = {
+    containerClass: 'theme-default',
+    customTodayClass: 'date-time-today',
+    adaptivePosition: true,
+  };
 
   public formGroup: FormGroup;
 
@@ -79,6 +86,7 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
           imageUrl: this.project?.templateMetadata?.imageUrl,
           allowedDomains: this.project?.templateMetadata?.allowedDomains || '*',
           defaultView: this.project?.templateMetadata?.defaultView,
+          relativeDate: this.project?.templateMetadata?.relativeDate,
           editable: this.fb.control(this.project?.templateMetadata?.editable, {updateOn: 'change'}),
           showTopPanel: this.fb.control(this.project?.templateMetadata?.showTopPanel, {updateOn: 'change'}),
           tags: this.fb.array(this.project?.templateMetadata?.tags || []),

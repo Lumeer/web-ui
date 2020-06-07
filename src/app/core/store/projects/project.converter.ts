@@ -36,7 +36,10 @@ export class ProjectConverter {
       nonRemovable: dto.nonRemovable,
       permissions: PermissionsConverter.fromDto(dto.permissions),
       version: dto.version,
-      templateMetadata: dto.templateMetadata && {...dto.templateMetadata},
+      templateMetadata: dto.templateMetadata && {
+        ...dto.templateMetadata,
+        relativeDate: dto.templateMetadata.relativeDate && new Date(dto.templateMetadata.relativeDate),
+      },
       isPublic: dto.public,
     };
   }
@@ -48,7 +51,12 @@ export class ProjectConverter {
       icon: project.icon,
       color: project.color,
       description: project.description || '',
-      templateMetadata: project.templateMetadata || {},
+      templateMetadata:
+        (project.templateMetadata && {
+          ...project.templateMetadata,
+          relativeDate: project.templateMetadata.relativeDate?.getTime(),
+        }) ||
+        {},
       public: project.isPublic || false,
     };
   }
