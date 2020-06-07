@@ -17,36 +17,44 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Workspace} from '../../core/store/navigation/workspace';
+import {Workspace} from '../store/navigation/workspace';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
 
-export abstract class ToggleService<T> {
-  private pendingUpdates: Record<string, boolean> = {};
+export abstract class UpdateValueService<V, T> {
+  private pendingUpdates: Record<string, V> = {};
   private pendingUpdatesData: Record<string, T> = {};
   private pendingSubscriptions: Record<string, Subscription> = {};
+  private pendingSubjects: Record<string, Subject<any>> = {};
   protected workspace: Workspace;
+
+  constructor(private dueTime: number = 2000) {}
 
   public setWorkspace(workspace: Workspace) {
     this.workspace = workspace;
   }
 
-  public set(id: string, active: boolean, data?: T) {
-    this.processToggleToStore(id, active, data);
+  public set(id: string, value: V, data?: T) {
+    this.processUpdateToStore(id, value, data);
 
     if (this.pendingUpdates[id]) {
-      if (this.pendingUpdates[id] !== active) {
+      if (this.shouldUnsubscribePendingUpdate(this.pendingUpdates[id], value)) {
         this.unsubscribePendingUpdate(id);
+      } else {
+        this.pendingUpdates[id] = value;
+        this.pendingUpdatesData[id] = data;
+        this.pendingSubjects[id]?.next('');
       }
     } else {
-      const subject = new Subject<string>();
-      const subscription = subject.pipe(debounceTime(2000)).subscribe(() => {
-        this.processToggle(id, active, data);
+      const subject = new Subject<any>();
+      const subscription = subject.pipe(debounceTime(this.dueTime)).subscribe(() => {
+        this.processUpdate(id, this.pendingUpdates[id], this.pendingUpdatesData[id]);
         this.unsubscribePendingUpdate(id);
       });
-      this.pendingUpdates[id] = active;
+      this.pendingUpdates[id] = value;
       this.pendingUpdatesData[id] = data;
       this.pendingSubscriptions[id] = subscription;
+      this.pendingSubjects[id] = subject;
       subject.next('');
     }
   }
@@ -54,22 +62,26 @@ export abstract class ToggleService<T> {
   private unsubscribePendingUpdate(id: string) {
     delete this.pendingUpdates[id];
     delete this.pendingUpdatesData[id];
-    this.pendingSubscriptions[id] && this.pendingSubscriptions[id].unsubscribe();
+    this.pendingSubscriptions[id]?.unsubscribe();
     delete this.pendingSubscriptions[id];
+    delete this.pendingSubjects[id];
   }
 
   public onDestroy() {
     Object.keys(this.pendingUpdates).forEach(id =>
-      this.processToggle(id, this.pendingUpdates[id], this.pendingUpdatesData[id])
+      this.processUpdate(id, this.pendingUpdates[id], this.pendingUpdatesData[id])
     );
     Object.values(this.pendingSubscriptions).forEach(subject => subject.unsubscribe());
     this.pendingUpdates = {};
     this.pendingUpdatesData = {};
     this.pendingSubscriptions = {};
+    this.pendingSubjects = {};
     this.workspace = null;
   }
 
-  public abstract processToggle(id: string, active: boolean, data?: T);
+  public abstract shouldUnsubscribePendingUpdate(previousValue: V, currentValue: V): boolean;
 
-  public abstract processToggleToStore(id: string, active: boolean, data?: T);
+  public abstract processUpdate(id: string, value: V, data?: T);
+
+  public abstract processUpdateToStore(id: string, value: V, data?: T);
 }

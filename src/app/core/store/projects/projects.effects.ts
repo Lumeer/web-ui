@@ -49,8 +49,15 @@ import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationService} from '../../notifications/notification.service';
 import ApplyTemplate = ProjectsAction.ApplyTemplate;
-import {TemplateType} from '../../model/template';
 import {createCallbackActions} from '../store.utils';
+import {KanbansAction} from '../kanbans/kanbans.action';
+import {MapsAction} from '../maps/maps.action';
+import {PivotsAction} from '../pivots/pivots.action';
+import {CalendarsAction} from '../calendars/calendars.action';
+import {GanttChartAction} from '../gantt-charts/gantt-charts.action';
+import {SearchesAction} from '../searches/searches.action';
+import {ChartAction} from '../charts/charts.action';
+import {TemplateService} from '../../rest/template.service';
 
 @Injectable()
 export class ProjectsEffects {
@@ -120,7 +127,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationsEntities]) => {
-      const {project, template, navigationExtras, onSuccess, onFailure} = action.payload;
+      const {project, templateId, navigationExtras, onSuccess, onFailure} = action.payload;
       const organization = organizationsEntities[project.organizationId];
       const projectDto = ProjectConverter.toDto(project);
 
@@ -132,14 +139,13 @@ export class ProjectsEffects {
             ...createCallbackActions(onSuccess, newProject),
           ];
 
-          const applyTemplateAction =
-            template && template !== TemplateType.Empty
-              ? new ApplyTemplate({
-                  organizationId: project.organizationId,
-                  projectId: newProject.id,
-                  template,
-                })
-              : null;
+          const applyTemplateAction = templateId
+            ? new ApplyTemplate({
+                organizationId: project.organizationId,
+                projectId: newProject.id,
+                templateId,
+              })
+            : null;
 
           actions.push(
             new RouterAction.Go({
@@ -207,15 +213,16 @@ export class ProjectsEffects {
     ofType<ProjectsAction.Update>(ProjectsActionType.UPDATE),
     withLatestFrom(this.store$.pipe(select(selectProjectsDictionary))),
     mergeMap(([action, projectsMap]) => {
-      const oldProject = projectsMap[action.payload.project.id];
-      const projectDto = ProjectConverter.toDto(action.payload.project);
+      const {workspace, project} = action.payload;
+      const oldProject = projectsMap[project.id];
+      const projectDto = ProjectConverter.toDto(project);
       return this.projectService
-        .updateProject(action.payload.project.organizationId, action.payload.project.id, projectDto)
+        .updateProject(workspace?.organizationId || project.organizationId, project.id, projectDto)
         .pipe(
           map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId)),
           map(
-            project =>
-              new ProjectsAction.UpdateSuccess({project: {...project, id: project.id}, oldCode: oldProject.code})
+            newProject =>
+              new ProjectsAction.UpdateSuccess({project: {...newProject, id: newProject.id}, oldCode: oldProject.code})
           ),
           catchError(error => of(new ProjectsAction.UpdateFailure({error: error})))
         );
@@ -361,8 +368,8 @@ export class ProjectsEffects {
   public applyTemplate$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.ApplyTemplate>(ProjectsActionType.APPLY_TEMPLATE),
     mergeMap(action => {
-      const {organizationId, projectId, template} = action.payload;
-      return this.projectService.applyTemplate(organizationId, projectId, template).pipe(
+      const {organizationId, projectId, templateId} = action.payload;
+      return this.projectService.applyTemplate(organizationId, projectId, templateId).pipe(
         mergeMap(() => EMPTY),
         catchError(error => of(new ProjectsAction.ApplyTemplateFailure({error})))
       );
@@ -414,6 +421,13 @@ export class ProjectsEffects {
         new LinkInstancesAction.Clear(),
         new LinkTypesAction.Clear(),
         new ViewsAction.Clear(),
+        new KanbansAction.Clear(),
+        new MapsAction.Clear(),
+        new PivotsAction.Clear(),
+        new CalendarsAction.Clear(),
+        new GanttChartAction.Clear(),
+        new SearchesAction.Clear(),
+        new ChartAction.Clear(),
       ];
 
       if (nextAction) {
@@ -424,12 +438,25 @@ export class ProjectsEffects {
     })
   );
 
+  @Effect()
+  public getTemplates$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.GetTemplates>(ProjectsActionType.GET_TEMPLATES),
+    mergeMap(() => {
+      return this.templateService.getTemplates().pipe(
+        map(dtos => dtos.map(dto => ProjectConverter.fromDto(dto))),
+        map(templates => new ProjectsAction.GetTemplatesSuccess({templates})),
+        catchError(error => of(new ProjectsAction.GetTemplatesFailure({error})))
+      );
+    })
+  );
+
   constructor(
     private actions$: Actions,
     private i18n: I18n,
     private router: Router,
     private notificationService: NotificationService,
     private projectService: ProjectService,
+    private templateService: TemplateService,
     private store$: Store<AppState>
   ) {}
 }

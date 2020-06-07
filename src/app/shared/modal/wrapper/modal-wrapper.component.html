@@ -34,5 +34,15 @@
       <span *ngIf="performingAction" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
       <ng-content select=".button-submit"></ng-content>
     </button>
+    <button *ngIf="showSecondarySubmit"
+            [attr.aria-disabled]="secondarySubmitDisabled || performingAction || performingSecondaryAction"
+            [disabled]="secondarySubmitDisabled || performingAction || performingSecondaryAction"
+            (click)="onSecondarySubmitClick()"
+            type="button"
+            [class.mr-2]="showSubmit"
+            class="btn btn-outline-{{secondarySubmitClass || dialogType}} text-nowrap float-right">
+      <span *ngIf="performingSecondaryAction" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+      <ng-content select=".button-secondary-submit"></ng-content>
+    </button>
   </div>
 </div>

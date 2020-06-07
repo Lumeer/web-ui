@@ -29,7 +29,11 @@ import {ProjectSettingsComponent} from './project/project-settings.component';
 import {ProjectSettingsGuard} from './project/project-settings.guard';
 import {ProjectUsersComponent} from './project/users/project-users.component';
 import {UsersGuard} from '../core/guards/data/users.guard';
-import {ProjectSequencesComponent} from './project/project-sequences/project-sequences.component';
+import {ProjectSequencesComponent} from './project/sequences/project-sequences.component';
+import {ProjectTemplateComponent} from './project/template/project-template.component';
+import {ViewsGuard} from '../core/guards/data/views.guard';
+import {CollectionsGuard} from '../core/guards/data/collections.guard';
+import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 
 const workspaceRoutes: Routes = [
   {
@@ -38,6 +42,9 @@ const workspaceRoutes: Routes = [
     canActivate: [AuthGuard, CurrentUserGuard, ProjectSettingsGuard],
     resolve: {
       users: UsersGuard,
+      collections: CollectionsGuard,
+      views: ViewsGuard,
+      linkTypes: LinkTypesGuard,
     },
     children: [
       {
@@ -47,6 +54,10 @@ const workspaceRoutes: Routes = [
       {
         path: 'sequences',
         component: ProjectSequencesComponent,
+      },
+      {
+        path: 'template',
+        component: ProjectTemplateComponent,
       },
       {
         path: '',

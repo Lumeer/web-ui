@@ -19,17 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {QueryItem} from '../top-panel/search-box/query-item/model/query-item';
-import {COLOR_PRIMARY} from '../../core/constants';
+import {queryItemsColor} from '../../core/store/navigation/query/query.util';
 
 @Pipe({
   name: 'queryColor',
 })
 export class QueryColorPipe implements PipeTransform {
   public transform(queryItems: QueryItem[]): string {
-    if (!queryItems || !queryItems.length || !queryItems[0].colors || !queryItems[0].colors.length) {
-      return COLOR_PRIMARY;
-    }
-
-    return queryItems[0].colors[0];
+    return queryItemsColor(queryItems);
   }
 }

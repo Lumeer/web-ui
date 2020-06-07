@@ -1,4 +1,4 @@
-<modal-wrapper [dialogType]="'primary'"
+<modal-wrapper dialogType="primary"
                [performingAction]="performingAction$ | async"
                [submitDisabled]="formInvalid$ | async"
                [showClose]="!(preventClose$ | async)"
@@ -14,7 +14,6 @@
       *ngIf="contentValid$ | async; else contentInvalid"
       [parentId]="parentId"
       [resourceType]="resourceType"
-      [initialTemplate]="templateType"
       [usedCodes]="usedCodes$ | async"
       (submitResource)="submitResource($event)">
     </create-resource-dialog-form>

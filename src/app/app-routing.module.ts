@@ -35,7 +35,7 @@ const appRoutes: Routes = [
     component: HomeComponent,
   },
   {
-    path: 'template/:templateId',
+    path: 'template/:templateCode',
     canActivate: [AuthGuard, CurrentUserGuard],
     component: RedirectComponent,
   },

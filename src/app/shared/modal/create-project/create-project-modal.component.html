@@ -1,0 +1,26 @@
+<modal-wrapper class="d-block"
+               dialogType="primary"
+               [performingAction]="performingAction$ | async"
+               [performingSecondaryAction]="performingSecondaryAction$ | async"
+               [customHeader]="true"
+               [submitDisabled]="formDisabled$ | async"
+               [showSecondarySubmit]="true"
+               secondarySubmitClass="secondary"
+               [secondarySubmitDisabled]="false"
+               (onSubmit)="onSubmit()"
+               (onSecondarySubmit)="onSecondarySubmit()"
+               (onClose)="onClose()">
+
+  <div class="body w-100 h-100">
+    <create-project-templates [templates]="templates$ | async"
+                              [loadingState]="templatesState$ | async"
+                              [initialTemplateCode]="templateCode"
+                              [form]="form">
+    </create-project-templates>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-secondary-submit" i18n="@@templates.button.empty">Create empty project</span>
+  <span class="button-submit" i18n="@@templates.button.use">Use template</span>
+
+</modal-wrapper>

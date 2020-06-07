@@ -22,7 +22,7 @@ import {PermissionsConverter} from '../permissions/permissions.converter';
 import {Project} from './project';
 
 export class ProjectConverter {
-  public static fromDto(dto: ProjectDto, organizationId: string, correlationId?: string): Project {
+  public static fromDto(dto: ProjectDto, organizationId?: string, correlationId?: string): Project {
     return {
       id: dto.id,
       organizationId: organizationId,
@@ -36,16 +36,20 @@ export class ProjectConverter {
       nonRemovable: dto.nonRemovable,
       permissions: PermissionsConverter.fromDto(dto.permissions),
       version: dto.version,
+      templateMetadata: dto.templateMetadata && {...dto.templateMetadata},
+      isPublic: dto.public,
     };
   }
 
   public static toDto(project: Project): ProjectDto {
     return {
       code: project.code,
-      name: project.name,
+      name: project.name || '',
       icon: project.icon,
       color: project.color,
-      description: project.description,
+      description: project.description || '',
+      templateMetadata: project.templateMetadata || {},
+      public: project.isPublic || false,
     };
   }
 }

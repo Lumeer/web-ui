@@ -1,0 +1,16 @@
+<ng-container [ngSwitch]="loadingState">
+
+  <div *ngSwitchCase="state.Loading" class="h-100 d-flex align-items-center justify-content-center flex-column">
+    <div class="spinner-border mb-2"
+         role="status">
+      <span class="sr-only" i18n="@@message.loading">Loading...</span>
+    </div>
+    <h5 i18n="@@templates.loading">Loading templates</h5>
+  </div>
+
+  <empty-state *ngSwitchDefault icon="far fa-sad-tear">
+    <h5 i18n="@@templates.empty">I am sorry, but I could find any templates</h5>
+    <h5 i18n="@@templates.empty.subtitle">You can still <b>create empty project</b> by clicking on the button below</h5>
+  </empty-state>
+
+</ng-container>

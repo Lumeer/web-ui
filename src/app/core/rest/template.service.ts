@@ -17,26 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {Template} from '../../../../../../core/model/template';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Store} from '@ngrx/store';
 
-@Component({
-  selector: 'create-resource-dialog-template',
-  templateUrl: './create-resource-dialog-template.component.html',
-  styleUrls: ['./create-resource-dialog-template.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class CreateResourceDialogTemplateComponent {
-  @Input()
-  public template: Template;
+import {Observable} from 'rxjs';
+import {environment} from '../../../environments/environment';
+import {ProjectDto} from '../dto';
+import {AppState} from '../store/app.state';
+import {BaseService} from './base.service';
 
-  @Input()
-  public selected: boolean;
+@Injectable()
+export class TemplateService extends BaseService {
+  constructor(private http: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
+  }
 
-  @Output()
-  public templateSelect = new EventEmitter();
+  public getTemplates(): Observable<ProjectDto[]> {
+    return this.http.get<ProjectDto[]>(this.apiPrefix(), {params: {l: environment.locale}});
+  }
 
-  public onSelect() {
-    this.templateSelect.emit();
+  private apiPrefix(): string {
+    return `${environment.apiProdUrl}/rest/templates`;
   }
 }

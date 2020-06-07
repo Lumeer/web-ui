@@ -1,0 +1,33 @@
+<div class="layout h-100 d-flex flex-row overflow-hidden" *ngIf="templates.length; else empty"
+     [@.disabled]="!(mobile$ | async)">
+
+  <ng-container
+    *ngIf="{selectedTag: selectedTag$ | async, selectedTemplate: selectedTemplate$ | async, mobile: mobile$ | async, column: column$ | async} as data">
+
+    <templates-tags *ngIf="data.column === 0 || !data.mobile"
+                    class="tags"
+                    @enterRightAnimation
+                    [templates]="templates"
+                    [selectedTag]="data.selectedTag"
+                    [selectedTemplate]="data.selectedTemplate"
+                    (selectTag)="onSelectTagThroughSearch($event)"
+                    (selectTemplate)="onSelectTemplateThroughSearch($event)">
+    </templates-tags>
+    <templates-content *ngIf="data.column === 1 || !data.mobile"
+                       class="flex-1"
+                       @enterLeftAnimation
+                       [templates]="templates | filterTemplatesByTag:data.selectedTag"
+                       [selectedTag]="data.selectedTag"
+                       [mobile]="data.mobile"
+                       [selectedTemplate]="data.selectedTemplate"
+                       (selectTemplate)="onSelectTemplate($event)"
+                       (selectTag)="onSelectTag($event)"
+                       (backToTemplates)="backToTemplates()">
+    </templates-content>
+  </ng-container>
+
+</div>
+
+<ng-template #empty>
+  <empty-templates [loadingState]="loadingState"></empty-templates>
+</ng-template>

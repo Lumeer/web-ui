@@ -20,26 +20,30 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
-import {ToggleService} from './toggle.service';
 import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {UpdateValueService} from '../../core/service/update-value.service';
 
 @Injectable()
-export class CollectionFavoriteToggleService extends ToggleService<Collection> {
+export class CollectionFavoriteToggleService extends UpdateValueService<boolean, Collection> {
   constructor(private store$: Store<AppState>) {
     super();
   }
 
-  public processToggle(id: string, active: boolean, data?: Collection) {
-    if (active) {
+  public shouldUnsubscribePendingUpdate(previousValue: boolean, currentValue: boolean): boolean {
+    return previousValue !== currentValue;
+  }
+
+  public processUpdate(id: string, value: boolean, data?: Collection) {
+    if (value) {
       this.store$.dispatch(new CollectionsAction.AddFavorite({collectionId: id, workspace: this.workspace}));
     } else {
       this.store$.dispatch(new CollectionsAction.RemoveFavorite({collectionId: id, workspace: this.workspace}));
     }
   }
 
-  public processToggleToStore(id: string, active: boolean, data?: Collection) {
-    if (active) {
+  public processUpdateToStore(id: string, value: boolean, data?: Collection) {
+    if (value) {
       this.store$.dispatch(new CollectionsAction.AddFavoriteSuccess({collectionId: id}));
     } else {
       this.store$.dispatch(new CollectionsAction.RemoveFavoriteSuccess({collectionId: id}));

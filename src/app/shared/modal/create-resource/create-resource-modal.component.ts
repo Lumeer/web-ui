@@ -34,7 +34,6 @@ import {
   selectOrganizationById,
   selectOrganizationsLoaded,
 } from '../../../core/store/organizations/organizations.state';
-import {TemplateType} from '../../../core/model/template';
 import {
   selectProjectsByOrganizationId,
   selectProjectsLoadedForOrganization,
@@ -54,9 +53,6 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
 
   @Input()
   public parentId: string;
-
-  @Input()
-  public templateType: TemplateType;
 
   @Input()
   public callback: (resource: Project | Organization) => void;
@@ -99,10 +95,8 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
     this.resourceFormComponent.onSubmit();
   }
 
-  public submitResource(data: {resource: Organization | Project; template?: TemplateType}) {
-    const {resource, template} = data;
-
-    const action = this.createResourceAction(resource, template);
+  public submitResource(resource: Organization | Project) {
+    const action = this.createResourceAction(resource);
     if (action) {
       this.performingAction$.next(true);
       this.store$.dispatch(action);
@@ -111,7 +105,7 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
     }
   }
 
-  private createResourceAction(resource: Organization | Project, template?: TemplateType): Action {
+  private createResourceAction(resource: Organization | Project): Action {
     if (this.resourceType === ResourceType.Organization) {
       return new OrganizationsAction.Create({
         organization: resource,
@@ -119,10 +113,8 @@ export class CreateResourceModalComponent implements OnInit, OnDestroy {
         onFailure: () => this.onCreateResourceFailure(),
       });
     } else if (this.resourceType === ResourceType.Project) {
-      const notEmptyTemplate = template !== TemplateType.Empty ? template : null;
       return new ProjectsAction.Create({
         project: resource,
-        template: notEmptyTemplate,
         navigationExtras: this.navigationExtras,
         onSuccess: project => this.onCreateResourceSuccess(project),
         onFailure: () => this.onCreateResourceFailure(),

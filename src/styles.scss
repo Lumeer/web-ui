@@ -211,6 +211,10 @@ typeahead-container {
   color: $gray-700;
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 .min-height-1 {
   min-height: 1px; // typically used as flex height fix (e.g. Firefox)
 }
@@ -279,6 +283,10 @@ modal-container {
     max-height: calc(100% - 1rem);
     display: flex;
 
+    &.modal-xxl-height {
+      height: calc(100% - 1rem);
+    }
+
     .modal-content > * {
       display: flex;
       height: 100%;
@@ -309,7 +317,7 @@ modal-container {
     max-width: 1000px;
   }
   .modal-dialog.modal-xxl-height {
-    height: 90vh;
+    height: calc(100% - 3.5rem);
   }
 }
 
@@ -318,15 +326,15 @@ modal-container {
     max-width: 900px;
   }
   .modal-dialog.modal-xxl-height {
-    height: 90vh;
+    height: calc(100% - 3.5rem);
   }
 }
 
-@media (min-width: 778px) and (max-width: 991.98px) {
+@media (min-width: 768px) and (max-width: 991.98px) {
   .modal-dialog.modal-xxl {
     max-width: 700px;
   }
   .modal-dialog.modal-xxl-height {
-    height: 90vh;
+    height: calc(100% - 3.5rem);
   }
 }

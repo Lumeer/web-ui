@@ -21,7 +21,6 @@ import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {Project} from './project';
 import {Workspace} from '../navigation/workspace';
-import {TemplateType} from '../../model/template';
 import {NavigationExtras} from '@angular/router';
 
 export enum ProjectsActionType {
@@ -54,6 +53,10 @@ export enum ProjectsActionType {
 
   APPLY_TEMPLATE = '[Projects] Apply Template',
   APPLY_TEMPLATE_FAILURE = '[Projects] Apply Template :: Failure',
+
+  GET_TEMPLATES = '[Projects] Get Templates',
+  GET_TEMPLATES_SUCCESS = '[Projects] Get Templates :: Success',
+  GET_TEMPLATES_FAILURE = '[Projects] Get Templates :: Failure',
 
   SWITCH_WORKSPACE = '[Projects] Switch Workspace',
   CLEAR_WORKSPACE_DATA = '[Projects] Clear Workspace Data',
@@ -114,7 +117,7 @@ export namespace ProjectsAction {
     public constructor(
       public payload: {
         project: Project;
-        template?: TemplateType;
+        templateId?: string;
         navigationExtras?: NavigationExtras;
         onSuccess?: (project: Project) => void;
         onFailure?: () => void;
@@ -137,7 +140,7 @@ export namespace ProjectsAction {
   export class Update implements Action {
     public readonly type = ProjectsActionType.UPDATE;
 
-    public constructor(public payload: {project: Project}) {}
+    public constructor(public payload: {project: Project; workspace?: Workspace}) {}
   }
 
   export class UpdateSuccess implements Action {
@@ -155,7 +158,7 @@ export namespace ProjectsAction {
   export class ApplyTemplate implements Action {
     public readonly type = ProjectsActionType.APPLY_TEMPLATE;
 
-    public constructor(public payload: {organizationId: string; projectId: string; template: TemplateType}) {}
+    public constructor(public payload: {organizationId: string; projectId: string; templateId: string}) {}
   }
 
   export class ApplyTemplateFailure implements Action {
@@ -178,6 +181,22 @@ export namespace ProjectsAction {
 
   export class DeleteFailure implements Action {
     public readonly type = ProjectsActionType.DELETE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class GetTemplates implements Action {
+    public readonly type = ProjectsActionType.GET_TEMPLATES;
+  }
+
+  export class GetTemplatesSuccess implements Action {
+    public readonly type = ProjectsActionType.GET_TEMPLATES_SUCCESS;
+
+    public constructor(public payload: {templates: Project[]}) {}
+  }
+
+  export class GetTemplatesFailure implements Action {
+    public readonly type = ProjectsActionType.GET_TEMPLATES_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
@@ -245,6 +264,9 @@ export namespace ProjectsAction {
     | ChangePermissionFailure
     | ApplyTemplate
     | ApplyTemplateFailure
+    | GetTemplates
+    | GetTemplatesSuccess
+    | GetTemplatesFailure
     | SwitchWorkspace
     | ClearWorkspaceData;
 }

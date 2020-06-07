@@ -35,9 +35,9 @@ import {selectCurrentUser} from '../store/users/users.state';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {ResourceType} from '../model/resource-type';
 import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
-import {TemplateType} from '../model/template';
 import {ModalService} from '../../shared/modal/modal.service';
 import {Perspective} from '../../view/perspectives/perspective';
+import {CreateProjectModalComponent} from '../../shared/modal/create-project/create-project-modal.component';
 
 @Injectable({
   providedIn: 'root',
@@ -100,12 +100,8 @@ export class WorkspaceSelectService {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  public createNewProject(
-    organization: Organization,
-    templateType?: TemplateType,
-    extras?: NavigationExtras
-  ): BsModalRef {
-    return this.openCreateProjectModal(organization, templateType, extras);
+  public createNewProject(organization: Organization, templateCode?: string, extras?: NavigationExtras): BsModalRef {
+    return this.openCreateProjectModal(organization, templateCode, extras);
   }
 
   public selectProject(organization: Organization, project: Project) {
@@ -118,18 +114,17 @@ export class WorkspaceSelectService {
 
   private openCreateProjectModal(
     organization: Organization,
-    templateType: TemplateType,
+    templateCode: string,
     extras?: NavigationExtras
   ): BsModalRef {
+    this.store$.dispatch(new ProjectsAction.GetTemplates());
     const initialState = {
-      templateType,
-      parentId: organization.id,
-      resourceType: ResourceType.Project,
+      templateCode,
+      organizationId: organization.id,
       navigationExtras: extras,
     };
-    const config = {initialState, keyboard: false, class: 'modal-lg'};
-    config['backdrop'] = 'static';
-    return this.modalService.show(CreateResourceModalComponent, config);
+    const config = {initialState, keyboard: false, class: 'modal-xxl modal-xxl-height', backdrop: 'static' as const};
+    return this.modalService.show(CreateProjectModalComponent, config);
   }
 
   private openCreateOrganizationModal(callback: (Organization) => void): BsModalRef {

@@ -532,7 +532,6 @@ export class ChartDataConverter {
     const xAxis = xAxisConfig?.axis;
     const yAxisConfig = config.axes?.[yAxisType];
     const yAxis = yAxisConfig?.axis;
-    const yAxisName = this.attributeNameForAxis(yAxis);
     const yConstraint = this.constraintAxisConfig(yAxisConfig);
     const xConstraint = this.constraintAxisConfig(xAxisConfig);
     const sizeConstraint = this.constraintForAxis(yAxisConfig?.size);
@@ -555,7 +554,7 @@ export class ChartDataConverter {
       const colorDataResources = dataObject.metaDataResources[DataObjectInfoKeyType.Color] || [];
       const attributeColor = this.dataObjectAggregator.getAttributeColor(colorAxis, colorDataResources);
 
-      const setName = dataObject.groupingObjects?.[0] || yAxisName;
+      const setName = dataObject.groupingObjects?.[0] || ' ';
       let setIndex: number;
       let axisColor: string;
       if (setsMap[setName]) {

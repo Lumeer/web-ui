@@ -233,7 +233,7 @@ describe('Chart data converter single collection', () => {
         {id: null, x: 'Glass', xTitle: 'Glass', y: 51, color: 'rgba(255,255,255,1)', title: '51', size: null},
         {id: null, x: 'Sport', xTitle: 'Sport', y: 3, color: 'rgba(255,255,255,1)', title: '3', size: null},
       ],
-      name: 'Kala',
+      name: ' ',
       draggable: true,
       color: '#ffffff',
       yAxisType: ChartAxisType.Y1,

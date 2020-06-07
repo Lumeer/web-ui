@@ -22,7 +22,6 @@ import {AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn} 
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {DateTimeConstraintConfig} from '../../../../../../core/model/data/constraint-config';
-import {TemplateService} from '../../../../../../core/service/template.service';
 import {DateTimeDataValue} from '../../../../../../core/model/data-value/datetime.data-value';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -30,6 +29,8 @@ import {SelectItemModel} from '../../../../../select/select-item/select-item.mod
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {DatetimeConstraintFormControl} from './datetime-constraint-form-control';
 import {createDateTimeOptions, hasDateOption, hasTimeOption} from '../../../../../date-time/date-time-options';
+import {environment} from '../../../../../../../environments/environment';
+import {LanguageCode} from '../../../../../top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'datetime-constraint-config-form',
@@ -65,13 +66,26 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
 
   public exampleValue$: Observable<DateTimeDataValue>;
 
-  constructor(private templateService: TemplateService, private i18n: I18n) {
+  constructor(private i18n: I18n) {
     this.formatItems = this.createFormatItems();
   }
 
   public ngOnInit() {
     this.exampleValue$ = this.bindExampleValue();
-    this.helpUrl = this.templateService.getDateTimeConstraintHelpUrl();
+    this.helpUrl = this.getDateTimeConstraintHelpUrl();
+  }
+
+  public getDateTimeConstraintHelpUrl(): string {
+    switch (environment.locale) {
+      case LanguageCode.CZ:
+        return this.createUrl('cs/typ-sloupce-datum');
+      default:
+        return this.createUrl('date-column-type');
+    }
+  }
+
+  private createUrl(suffix: string): string {
+    return `${environment.pageUrl}/${suffix}`;
   }
 
   private bindExampleValue(): Observable<DateTimeDataValue> {

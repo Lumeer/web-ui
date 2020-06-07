@@ -43,6 +43,7 @@ import {MapPosition} from '../../maps/map.model';
 import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
+import {COLOR_PRIMARY} from '../../../constants';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -150,6 +151,14 @@ export function isSingleCollectionQuery(query: Query): boolean {
 
 export function isAnyCollectionQuery(query: Query): boolean {
   return query && query.stems && query.stems.length > 0;
+}
+
+export function queryItemsColor(queryItems: QueryItem[]): string {
+  if (!queryItems || !queryItems.length || !queryItems[0].colors || !queryItems[0].colors.length) {
+    return COLOR_PRIMARY;
+  }
+
+  return queryItems[0].colors[0];
 }
 
 export function getQueryStemFiltersForResource(

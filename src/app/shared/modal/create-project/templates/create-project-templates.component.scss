@@ -1,0 +1,13 @@
+.layout {
+  @media (min-width: 768px) {
+    .tags {
+      width: 250px;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .tags {
+      flex: 1;
+    }
+  }
+}

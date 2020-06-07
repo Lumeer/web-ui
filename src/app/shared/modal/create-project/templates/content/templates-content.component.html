@@ -1,0 +1,18 @@
+<templates-toolbar [selectedTemplate]="selectedTemplate"
+                   [selectedTag]="selectedTag"
+                   [mobile]="mobile"
+                   (selectTag)="selectTag.emit($event)"
+                   (backToTemplates)="backToTemplates.emit()">
+</templates-toolbar>
+
+<templates-select *ngIf="!selectedTemplate"
+                  [selectedTag]="selectedTag"
+                  [selectedTemplate]="selectedTemplate"
+                  [templates]="templates"
+                  (selectTemplate)="selectTemplate.emit($event)">
+</templates-select>
+
+<template-detail *ngIf="selectedTemplate"
+                 [template]="selectedTemplate"
+                 (selectTag)="selectTag.emit($event)">
+</template-detail>

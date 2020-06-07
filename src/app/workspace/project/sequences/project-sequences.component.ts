@@ -28,7 +28,6 @@ import {selectAllSequencesSorted} from '../../../core/store/sequences/sequences.
 @Component({
   selector: 'project-sequences',
   templateUrl: './project-sequences.component.html',
-  styleUrls: ['./project-sequences.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectSequencesComponent implements OnInit {

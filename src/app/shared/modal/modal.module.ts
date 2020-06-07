@@ -33,6 +33,7 @@ import {ChooseLinkDocumentModalModule} from './choose-link-document/choose-link-
 import {DataResourceDetailModalModule} from './data-resource-detail/data-resource-detail-modal.module';
 import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
 import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
+import {CreateProjectModalModule} from './create-project/create-project-modal.module';
 
 @NgModule({
   declarations: [],
@@ -52,6 +53,7 @@ import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
     VerifyEmailModalModule,
+    CreateProjectModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -68,6 +70,7 @@ import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
     DataResourceDetailModalModule,
     ReferralsOverviewModalModule,
     VerifyEmailModalModule,
+    CreateProjectModalModule,
   ],
 })
 export class ModalModule {}
