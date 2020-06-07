@@ -60,6 +60,7 @@ export class CreateProjectModalComponent implements OnInit {
   public templatesState$: Observable<LoadingState>;
 
   public performingAction$ = new BehaviorSubject(false);
+  public performingSecondaryAction$ = new BehaviorSubject(false);
 
   public form = this.fb.group({
     templateSelected: [false, Validators.requiredTrue],
@@ -90,7 +91,22 @@ export class CreateProjectModalComponent implements OnInit {
     const code = this.createCodeForTemplate(template.code);
 
     this.performingAction$.next(true);
+    this.createProject(code, template);
+  }
 
+  public onSecondarySubmit() {
+    const code = this.createCodeForTemplate('EMPTY');
+
+    this.performingSecondaryAction$.next(true);
+    this.createProject(code);
+  }
+
+  private onFailure() {
+    this.performingAction$.next(false);
+    this.performingSecondaryAction$.next(false);
+  }
+
+  private createProject(code: string, template?: Project) {
     const colors = Colors.palette;
     const color = colors[Math.round(Math.random() * colors.length)];
     const icon = safeGetRandomIcon();
@@ -99,10 +115,10 @@ export class CreateProjectModalComponent implements OnInit {
     this.store$.dispatch(
       new ProjectsAction.Create({
         project,
-        templateId: template.id,
+        templateId: template?.id,
         navigationExtras: this.navigationExtras,
         onSuccess: () => this.hideDialog(),
-        onFailure: () => this.performingAction$.next(false),
+        onFailure: () => this.onFailure(),
       })
     );
   }

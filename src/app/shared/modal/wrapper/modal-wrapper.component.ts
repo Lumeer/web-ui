@@ -39,6 +39,9 @@ export class ModalWrapperComponent {
   public showSubmit = true;
 
   @Input()
+  public showSecondarySubmit = true;
+
+  @Input()
   public showClose = true;
 
   @Input()
@@ -51,10 +54,19 @@ export class ModalWrapperComponent {
   public submitDisabled = false;
 
   @Input()
+  public secondarySubmitDisabled = false;
+
+  @Input()
+  public secondarySubmitClass: string;
+
+  @Input()
   public closeDisabled = false;
 
   @Input()
   public performingAction = false;
+
+  @Input()
+  public performingSecondaryAction = false;
 
   @Input()
   public customHeader: boolean;
@@ -64,6 +76,9 @@ export class ModalWrapperComponent {
 
   @Output()
   public onSubmit = new EventEmitter();
+
+  @Output()
+  public onSecondarySubmit = new EventEmitter();
 
   constructor(private location: PlatformLocation, private ref: BsModalRef) {
     location.onPopState(() => {
@@ -78,6 +93,12 @@ export class ModalWrapperComponent {
   public onSubmitClick() {
     if (!this.submitDisabled) {
       this.onSubmit.emit();
+    }
+  }
+
+  public onSecondarySubmitClick() {
+    if (!this.secondarySubmitDisabled) {
+      this.onSecondarySubmit.emit();
     }
   }
 }
