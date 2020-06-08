@@ -20,5 +20,5 @@
 import {environment} from '../../../environments/environment';
 
 export function isBackendUrl(url: string): boolean {
-  return url.startsWith(environment.apiUrl);
+  return url.startsWith(environment.apiUrl) || url.startsWith(environment.apiProdUrl);
 }
