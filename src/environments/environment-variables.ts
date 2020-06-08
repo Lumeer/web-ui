@@ -49,7 +49,7 @@ export interface EnvironmentVariables {
 }
 
 const apiUrl = env['LUMEER_ENGINE'] || 'http://localhost:8080/lumeer-engine';
-const apiProdUrl = env['LUMEER_ENGINE_PROD'] || 'https://get.lumeer.io';
+const apiProdUrl = env['LUMEER_ENGINE_PROD'] || 'https://get.lumeer.io/lumeer-engine';
 const pageUrl = env['LUMEER_PAGE'] || 'https://www.lumeer.io';
 const authClientId = env['AUTH_CLIENT_ID'] || 'Hjee0La2DjlYjIH5ClCx3Xnfaj02n2On';
 const authDomain = env['AUTH_DOMAIN'] || 'lumeer.eu.auth0.com';
