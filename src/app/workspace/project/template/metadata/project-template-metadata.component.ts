@@ -98,13 +98,20 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
 
   private subscribeValueChanges() {
     this.subscriptions.add(
-      this.isPublicControl.valueChanges.subscribe(isPublic => this.updateProject({...this.project, isPublic}))
+      this.isPublicControl.valueChanges.subscribe(isPublic =>
+        this.updateProject({
+          ...this.project,
+          isPublic,
+          templateMetadata: this.metadataFormGroup.value,
+        })
+      )
     );
     this.subscriptions.add(
       this.metadataFormGroup.valueChanges.subscribe(templateMetadata =>
         this.updateProject({
           ...this.project,
           templateMetadata,
+          isPublic: this.isPublicControl.value,
         })
       )
     );

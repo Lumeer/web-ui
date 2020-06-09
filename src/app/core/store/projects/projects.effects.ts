@@ -151,7 +151,7 @@ export class ProjectsEffects {
             new RouterAction.Go({
               path: ['w', organization.code, project.code, 'view', 'search'],
               extras: navigationExtras,
-              nextAction: applyTemplateAction,
+              nextActions: [applyTemplateAction],
             })
           );
 
@@ -220,10 +220,7 @@ export class ProjectsEffects {
         .updateProject(workspace?.organizationId || project.organizationId, project.id, projectDto)
         .pipe(
           map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId)),
-          map(
-            newProject =>
-              new ProjectsAction.UpdateSuccess({project: {...newProject, id: newProject.id}, oldCode: oldProject.code})
-          ),
+          map(newProject => new ProjectsAction.UpdateSuccess({project: newProject, oldCode: oldProject.code})),
           catchError(error => of(new ProjectsAction.UpdateFailure({error: error})))
         );
     })

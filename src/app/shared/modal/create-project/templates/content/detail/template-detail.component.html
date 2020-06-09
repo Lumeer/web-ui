@@ -7,8 +7,8 @@
 
   <h3 class="mb-0 text-center">{{template.name}}</h3>
 
-  <div class="tags d-flex justify-content-center mt-1" *ngIf="template.templateMetadata?.tags?.length">
-    <div *ngFor="let tag of template.templateMetadata.tags" class="tag py-1 px-2 m-1 cursor-pointer"
+  <div class="tags d-flex justify-content-center mt-1 flex-wrap" *ngIf="template.templateMetadata?.tags?.length">
+    <div *ngFor="let tag of template.templateMetadata.tags" class="tag py-1 px-2 m-1 cursor-pointer text-nowrap"
          (click)="selectTag.emit(tag)">{{tag}}</div>
   </div>
 

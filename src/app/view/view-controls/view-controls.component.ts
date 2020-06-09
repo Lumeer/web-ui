@@ -57,14 +57,7 @@ import {SearchesAction} from '../../core/store/searches/searches.action';
 import {SearchTab} from '../../core/store/navigation/search-tab';
 import {QueryParam} from '../../core/store/navigation/query-param';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
-import {TablesAction} from '../../core/store/tables/tables.action';
-import {PivotsAction} from '../../core/store/pivots/pivots.action';
-import {MapsAction} from '../../core/store/maps/maps.action';
-import {GanttChartAction} from '../../core/store/gantt-charts/gantt-charts.action';
-import {CalendarsAction} from '../../core/store/calendars/calendars.action';
-import {KanbansAction} from '../../core/store/kanbans/kanbans.action';
 import {ViewsAction} from '../../core/store/views/views.action';
-import {ChartAction} from '../../core/store/charts/charts.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -281,6 +274,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private revertChangesForView(view: View, workspacePath: any[]) {
     this.resetName(view);
     this.resetViewSettings(view);
+    this.resetViewConfig(view);
     switch (view.perspective) {
       case Perspective.Search:
         const searchConfig = view.config?.search;
@@ -288,42 +282,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
         this.revertQueryWithUrl(searchPath, view.query);
         this.store$.dispatch(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
         return;
-      case Perspective.Table:
-        const tableConfig = view.config?.table;
-        this.revertQueryWithUrl(workspacePath, view.query);
-        this.store$.dispatch(new TablesAction.SetConfig({tableId: view.code, config: tableConfig}));
-        return;
-      case Perspective.Pivot:
-        const pivotConfig = view.config?.pivot;
-        this.revertQueryWithUrl(workspacePath, view.query);
-        this.store$.dispatch(new PivotsAction.SetConfig({pivotId: view.code, config: pivotConfig}));
-        return;
-      case Perspective.GanttChart:
-        const ganttConfig = view.config?.ganttChart;
-        this.revertQueryWithUrl(workspacePath, view.query);
-        this.store$.dispatch(new GanttChartAction.SetConfig({ganttChartId: view.code, config: ganttConfig}));
-        return;
-      case Perspective.Map:
-        const mapConfig = view.config?.map;
-        this.revertQueryWithUrl(workspacePath, view.query);
-        this.store$.dispatch(new MapsAction.SetConfig({mapId: view.code, config: mapConfig}));
-        return;
-      case Perspective.Calendar:
-        const calendarConfig = view.config?.calendar;
-        this.revertQueryWithUrl(workspacePath, view.query);
-        this.store$.dispatch(new CalendarsAction.SetConfig({calendarId: view.code, config: calendarConfig}));
-        return;
-      case Perspective.Kanban:
-        const kanbanConfig = view.config?.kanban;
-        this.revertQueryWithUrl(workspacePath, view.query);
-        this.store$.dispatch(new KanbansAction.SetConfig({kanbanId: view.code, config: kanbanConfig}));
-        return;
-      case Perspective.Chart:
-        const chartConfig = view.config?.chart;
-        this.revertQueryWithUrl(workspacePath, view.query);
-        this.store$.dispatch(new ChartAction.SetConfig({chartId: view.code, config: chartConfig}));
-        return;
-      case Perspective.Detail:
+      default:
         this.revertQueryWithUrl(workspacePath, view.query);
         return;
     }
@@ -336,6 +295,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
 
   private resetViewSettings(view: View) {
     this.store$.dispatch(new ViewsAction.SetViewSettings({settings: view.settings}));
+  }
+
+  private resetViewConfig(view: View) {
+    this.store$.dispatch(new ViewsAction.ResetViewConfig({viewId: view.id}));
   }
 
   private revertQueryWithUrl(path: any[], query: Query) {
