@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {filter, first, map, pairwise, startWith, switchMap, take} from 'rxjs/operators';
@@ -40,15 +40,12 @@ import {
   selectPerspectiveConfig,
   selectSaveViewSettings,
   selectViewByCode,
-  selectViewSettings,
 } from '../core/store/views/views.state';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewSettingsService} from '../core/service/view-settings.service';
-import {User} from '../core/store/users/user';
 import {selectCurrentUser} from '../core/store/users/users.state';
 import {ModalService} from '../shared/modal/modal.service';
 import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
-import {BsModalRef} from 'ngx-bootstrap/modal';
 
 @Component({
   templateUrl: './view.component.html',
@@ -208,20 +205,25 @@ export class ViewComponent implements OnInit {
       message,
       title,
       [
-        {text: cloneButtonText, action: () => this.createView({...view, code: null}), bold: false},
+        {text: cloneButtonText, action: () => this.createView({...view, code: null}, view.id), bold: false},
         {text: renameButtonText, action: () => this.updateView(view), bold: false},
       ],
       'info'
     );
   }
 
-  private createView(view: View) {
+  private createView(view: View, resetViewConfigId?: string) {
     this.startSaveLoading();
+
+    const nextActions: Action[] = [new ViewsAction.ResetDefaultConfigBySnapshot({perspective: view.perspective})];
+    if (resetViewConfigId) {
+      nextActions.push(new ViewsAction.ResetViewConfig({viewId: resetViewConfigId}));
+    }
 
     this.store$.dispatch(
       new ViewsAction.Create({
         view,
-        nextAction: new ViewsAction.ResetDefaultConfigBySnapshot({perspective: view.perspective}),
+        nextActions,
         onSuccess: () => this.endSaveLoading(),
         onFailure: () => this.endSaveLoading(),
       })

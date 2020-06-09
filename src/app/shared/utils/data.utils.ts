@@ -46,7 +46,7 @@ export function stripTextHtmlTags(text: string, keepFormattingTags: boolean = tr
         .replace(/<(?:.|\s)*?>/g, ' ')
         .trim();
 
-  return htmlWithoutTags.replace(/class=".*"/g, '');
+  return htmlWithoutTags.replace(/class=".*?"/g, '');
 }
 
 function stripFormattingHtmlTags(text: string, negative?: boolean): string {

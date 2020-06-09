@@ -54,6 +54,14 @@ import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {convertUserModelToDto} from '../users/user.converter';
 import {createCallbackActions} from '../store.utils';
 import {mapPositionPathParams} from '../navigation/query/query.util';
+import {SearchesAction} from '../searches/searches.action';
+import {TablesAction} from '../tables/tables.action';
+import {PivotsAction} from '../pivots/pivots.action';
+import {GanttChartAction} from '../gantt-charts/gantt-charts.action';
+import {MapsAction} from '../maps/maps.action';
+import {CalendarsAction} from '../calendars/calendars.action';
+import {KanbansAction} from '../kanbans/kanbans.action';
+import {ChartAction} from '../charts/charts.action';
 
 @Injectable()
 export class ViewsEffects {
@@ -99,14 +107,12 @@ export class ViewsEffects {
     ofType<ViewsAction.Create>(ViewsActionType.CREATE),
     mergeMap(action => {
       const viewDto = convertViewModelToDto(action.payload.view);
-      const {onSuccess, onFailure} = action.payload;
+      const {onSuccess, onFailure, nextActions} = action.payload;
 
       return this.viewService.createView(viewDto).pipe(
         map(dto => convertViewDtoToModel(dto)),
         flatMap(view => {
-          const actions: Action[] = [
-            new ViewsAction.CreateSuccess({view: view, nextAction: action.payload.nextAction}),
-          ];
+          const actions: Action[] = [new ViewsAction.CreateSuccess({view, nextActions})];
           if (onSuccess) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(view)}));
           }
@@ -159,7 +165,7 @@ export class ViewsEffects {
       return new RouterAction.Go({
         path: paths,
         extras: {queryParamsHandling: 'merge'},
-        nextAction: action.payload.nextAction,
+        nextActions: action.payload.nextActions,
       });
     })
   );
@@ -222,6 +228,45 @@ export class ViewsEffects {
     map(() => {
       const message = this.i18n({id: 'view.update.fail', value: 'Could not update the view'});
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public resetViewConfig$: Observable<Action> = this.actions$.pipe(
+    ofType<ViewsAction.ResetViewConfig>(ViewsActionType.RESET_VIEW_CONFIG),
+    withLatestFrom(this.store$.pipe(select(selectViewsDictionary))),
+    filter(([action, viewsMap]) => !!viewsMap[action.payload.viewId]),
+    mergeMap(([action, viewsMap]) => {
+      const view = viewsMap[action.payload.viewId];
+
+      switch (view.perspective) {
+        case Perspective.Search:
+          const searchConfig = view.config?.search;
+          return of(new SearchesAction.SetConfig({searchId: view.code, config: searchConfig}));
+        case Perspective.Table:
+          const tableConfig = view.config?.table;
+          return of(new TablesAction.SetConfig({tableId: view.code, config: tableConfig}));
+        case Perspective.Pivot:
+          const pivotConfig = view.config?.pivot;
+          return of(new PivotsAction.SetConfig({pivotId: view.code, config: pivotConfig}));
+        case Perspective.GanttChart:
+          const ganttConfig = view.config?.ganttChart;
+          return of(new GanttChartAction.SetConfig({ganttChartId: view.code, config: ganttConfig}));
+        case Perspective.Map:
+          const mapConfig = view.config?.map;
+          return of(new MapsAction.SetConfig({mapId: view.code, config: mapConfig}));
+        case Perspective.Calendar:
+          const calendarConfig = view.config?.calendar;
+          return of(new CalendarsAction.SetConfig({calendarId: view.code, config: calendarConfig}));
+        case Perspective.Kanban:
+          const kanbanConfig = view.config?.kanban;
+          return of(new KanbansAction.SetConfig({kanbanId: view.code, config: kanbanConfig}));
+        case Perspective.Chart:
+          const chartConfig = view.config?.chart;
+          return of(new ChartAction.SetConfig({chartId: view.code, config: chartConfig}));
+        default:
+          return EMPTY;
+      }
     })
   );
 

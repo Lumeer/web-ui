@@ -35,7 +35,7 @@ export namespace RouterAction {
         path: any[];
         queryParams?: Params;
         extras?: NavigationExtras;
-        nextAction?: Action;
+        nextActions?: Action[];
       }
     ) {}
   }

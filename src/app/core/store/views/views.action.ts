@@ -67,6 +67,8 @@ export enum ViewsActionType {
   SET_VIEW_SETTINGS = '[Views] Set View Settings',
   RESET_VIEW_SETTINGS = '[Views] Reset View Settings',
 
+  RESET_VIEW_CONFIG = '[Views] Reset View Config',
+
   RESET_VIEW_GLOBAL_CONFIG = '[Views] Reset View Global Config',
   SET_SIDEBAR_OPENED = '[Views] Set Sidebar Opened',
 
@@ -102,14 +104,14 @@ export namespace ViewsAction {
     public readonly type = ViewsActionType.CREATE;
 
     public constructor(
-      public payload: {view: View; nextAction?: Action; onSuccess?: (View) => void; onFailure?: () => void}
+      public payload: {view: View; nextActions?: Action[]; onSuccess?: (View) => void; onFailure?: () => void}
     ) {}
   }
 
   export class CreateSuccess implements Action {
     public readonly type = ViewsActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {view: View; nextAction?: Action}) {}
+    public constructor(public payload: {view: View; nextActions?: Action[]}) {}
   }
 
   export class CreateFailure implements Action {
@@ -252,6 +254,12 @@ export namespace ViewsAction {
     public constructor(public payload: {model: DefaultViewConfig}) {}
   }
 
+  export class ResetViewConfig implements Action {
+    public readonly type = ViewsActionType.RESET_VIEW_CONFIG;
+
+    public constructor(public payload: {viewId: string}) {}
+  }
+
   export class SetDefaultConfigSuccess implements Action {
     public readonly type = ViewsActionType.SET_DEFAULT_CONFIG_SUCCESS;
 
@@ -310,6 +318,7 @@ export namespace ViewsAction {
     | SetSidebarOpened
     | SetDefaultConfig
     | ResetDefaultConfigBySnapshot
+    | ResetViewConfig
     | SetDefaultConfigSuccess
     | SetDefaultConfigSnapshot
     | GetDefaultConfigs
