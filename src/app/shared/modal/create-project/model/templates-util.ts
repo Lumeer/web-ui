@@ -25,5 +25,5 @@ export function createTagsFromTemplates(templates: Project[]): string[] {
     arr.push(...(template.templateMetadata?.tags || []));
     return arr;
   }, []);
-  return uniqueValues(tags);
+  return uniqueValues(tags.sort());
 }
