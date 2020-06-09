@@ -48,7 +48,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
         <source>
         Select
       </source><target state="final">
@@ -187,7 +187,7 @@
         <source>Loading...</source><target state="final">Loading...</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
         <source>Blockly Source Code</source><target state="final">Blockly Source Code</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
@@ -1003,7 +1003,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">25</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="collection.new.dialog.link.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="collection.new.dialog.link.label" datatype="html">
         <source>Link</source><target state="final">Link</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/link-name-input/link-name-input.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="collection.new.dialog.link.name.placeholder" datatype="html">
@@ -1051,7 +1051,51 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/body/input/share-view-input.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="view.share.dialog.link.title" datatype="html">
         <source>Only team members in the list below can open this link</source><target state="final">Only team members in the list below can open this link</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/body/copy/share-view-copy.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="form.errors.minMaxInvalid" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/body/copy/share-view-copy.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="templates.tags.title" datatype="html">
+        <source>
+  Templates
+</source><target state="final">
+  Templates
+</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/templates/tags/templates-tags.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/templates/content/toolbar/templates-toolbar.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="templates.tags.search.placeholder" datatype="html">
+        <source>Search templates</source><target state="final">Search templates</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/templates/tags/templates-tags.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="templates.tags.search.empty" datatype="html">
+        <source>There are no matching templates</source><target state="final">There are no matching templates</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/templates/tags/templates-tags.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit><trans-unit id="templates.loading" datatype="html">
+        <source>Loading templates</source><target state="final">Loading templates</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="templates.empty" datatype="html">
+        <source>I am sorry, but I could find any templates.</source><target state="final">I am sorry, but I could find any templates.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="templates.empty.subtitle" datatype="html">
+        <source>You can still <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>create an empty project<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> by clicking on the button below.</source><target state="final">You can still <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b>"/>create an empty project<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b>"/> by clicking on the button below.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="form.errors.minMaxInvalid" datatype="html">
         <source>
     Minimum must be less or equal than maximum.
   </source><target state="final">
@@ -1398,41 +1442,28 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle.first" datatype="html">
         <source>Your organization is missing a project. To continue, please create one.</source><target state="final">Your organization is missing a project. To continue, please create one.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="89d105cb7b98e21968336b0e2d00870dd53d5781" datatype="html">
-        <source>Choose a template</source><target state="final">Choose a template</target>
-        
-        <note priority="1" from="description">templates.choose</note>
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/templates/create-resource-dialog-templates.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="resource.new.dialog.project.subtitle" datatype="html">
         <source>Create a new project in organization:</source><target state="final">Create a new project in organization:</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="templates.learn.more" datatype="html">
-        <source>Learn more</source><target state="final">Learn more</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/templates/template/create-resource-dialog-template.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="resource.new.dialog.icon.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/parent/create-resource-dialog-parent.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="resource.new.dialog.icon.label" datatype="html">
         <source>
             Icon:
           </source><target state="final">
             Icon:
           </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="resource.new.dialog.icon.label.hint" datatype="html">
         <source>(click the icon to change it)</source><target state="final">(click the icon to change it)</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="resource.new.dialog.firstProject" datatype="html">
-        <source>My first project</source><target state="final">My first project</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="resource.new.dialog.invalid" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/create-resource/form/create-resource-dialog-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="resource.new.dialog.invalid" datatype="html">
         <source>I am sorry, something went wrong.
   </source><target state="final">I am sorry, something went wrong.
   </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="resource.new.dialog.required" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="resource.new.dialog.required" datatype="html">
         <source>Required</source><target state="final">Required</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="resource.new.dialog.code.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/form/create-resource-dialog-form.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="resource.new.dialog.code.label" datatype="html">
         <source>
     Code:<x id="START_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;sup>"/>*<x id="CLOSE_SUPERSCRIPT" ctype="x-sup" equiv-text="&lt;/sup>"/>
   </source><target state="final">
@@ -1718,7 +1749,13 @@
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/project-settings.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="project.settings.tab.sequences" datatype="html">
         <source>Sequences</source><target state="final">Sequences</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/project-settings.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="organizations.tab.detail.order.prolong" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/project-settings.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="project.settings.tab.template" datatype="html">
+        <source>Template</source><target state="final">Template</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit><trans-unit id="organizations.tab.detail.order.prolong" datatype="html">
         <source>Keep your Lumeer for Business active!</source><target state="final">Keep your Lumeer for Business active!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/detail/payments-panel/payments-order/payments-order.component.html</context>
@@ -2037,15 +2074,70 @@
         </context-group>
       </trans-unit><trans-unit id="project.settings.sequence.info1" datatype="html">
         <source>The sequences listed here can be used in Table rules and Attribute functions.</source><target state="final">The sequences listed here can be used in Table rules and Attribute functions.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/project-sequences/project-sequences.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="project.settings.sequence.info2" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/sequences/project-sequences.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="project.settings.sequence.info2" datatype="html">
         <source>Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/rule editor.</source><target state="final">Use the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>sequence<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> block from the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Utils<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> palette in the function/rule editor.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/sequences/project-sequences.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="projects.tab.template.isPublic" datatype="html">
+        <source>Public access to the project</source><target state="final">Public access to the project</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/project-sequences/project-sequences.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.metadata.imageUrl" datatype="html">
+        <source>
+        Image address
+      </source><target state="final">
+        Image address
+      </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
+        <source>
+        Allowed Domains
+      </source><target state="final">
+        Allowed Domains
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains.placeholder" datatype="html">
+        <source>Enter * to allow embedding this template into any web page</source><target state="final">Enter * to allow embedding this template into any web page</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
+        <source>Relative Date</source><target state="final">Relative Date</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
+        <source>
+        Open with view
+      </source><target state="final">
+        Open with view
+      </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
+        <source>Select view</source><target state="final">Select view</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
+        <source>Tags</source><target state="final">Tags</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.editable" datatype="html">
+        <source>Editable in the page (does not change the original project)</source><target state="final">Editable in the page (does not change the original project)</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">83</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.showTopPanel" datatype="html">
+        <source>Show appliaction controls (the upper panel)</source><target state="final">Show appliaction controls (the upper panel)</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="0f6ae2b3123ad5e28ac81cd30a8504ffdbf802a7" datatype="html">
+        <source>Remove tag</source><target state="final">Remove tag</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/tags/project-template-tags.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <note priority="1" from="description">projects.tab.template.metadata.tags.remove</note>
+      </trans-unit><trans-unit id="projects.tab.template.metadata.tags.placeholder" datatype="html">
+        <source>Type tag name and press Enter</source><target state="final">Type tag name and press Enter</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/tags/project-template-tags.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="page.title" datatype="html">
         <source>Lumeer - Visual Project&amp;Team Management</source><target state="final">Lumeer - Visual Project&amp;Team Management</target>
@@ -2592,6 +2684,18 @@
           <context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
+      </trans-unit><trans-unit id="templates.button.empty" datatype="html">
+        <source>Start with empty project</source><target state="final">Start with empty project</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="templates.button.use" datatype="html">
+        <source>Use this template</source><target state="final">Use this template</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
       </trans-unit><trans-unit id="perspective.kanban.config.column.summary" datatype="html">
         <source>Column Summary</source><target state="final">Column Summary</target>
         
@@ -2822,198 +2926,6 @@
         <source>Error</source><target state="final">Error</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.empty.title" datatype="html">
-        <source>Empty</source><target state="final">Empty</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.empty.description" datatype="html">
-        <source>Build your project from scratch</source><target state="final">Build your project from scratch</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.okr.title" datatype="html">
-        <source>OKR Tracking</source><target state="final">OKR Tracking</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.okr.description" datatype="html">
-        <source>Set your objectives, their measurements, and initiatives moving you in the right direction. You can track your progress and see how things are getting done.</source><target state="final">Set your objectives, their measurements, and initiatives moving you in the right direction. You can track your progress and see how things are getting done.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.proj.title" datatype="html">
-        <source>Project Tracker</source><target state="final">Project Tracker</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.proj.description" datatype="html">
-        <source>Manage all your projects like a pro in no time.</source><target state="final">Manage all your projects like a pro in no time.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.work.title" datatype="html">
-        <source>Work Tracker</source><target state="final">Work Tracker</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.work.description" datatype="html">
-        <source>Do you have too many balls in the air at the same time? Make their management an easy task.</source><target state="final">Do you have too many balls in the air at the same time? Make their management an easy task.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.time.title" datatype="html">
-        <source>Time Management</source><target state="final">Time Management</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.time.description" datatype="html">
-        <source>Getting Things Done. Avoid distractions by urgent things and manage your time efficiently.</source><target state="final">Getting Things Done. Avoid distractions by urgent things and manage your time efficiently.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.bug.title" datatype="html">
-        <source>Issue Tracker</source><target state="final">Issue Tracker</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.bug.description" datatype="html">
-        <source>No more bugs will ever escape when tracked and organized in this tracker.</source><target state="final">No more bugs will ever escape when tracked and organized in this tracker.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.hr.title" datatype="html">
-        <source>Candidates Coordination</source><target state="final">Candidates Coordination</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.hr.description" datatype="html">
-        <source>Ensure your candidates have the best experience interviewing with your team.</source><target state="final">Ensure your candidates have the best experience interviewing with your team.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.supply.title" datatype="html">
-        <source>Supply Chain Management</source><target state="final">Supply Chain Management</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.supply.description" datatype="html">
-        <source>Be ready to move goods to the right location in time to satisfy your customers.</source><target state="final">Be ready to move goods to the right location in time to satisfy your customers.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.edcal.title" datatype="html">
-        <source>Editorial Calendar</source><target state="final">Editorial Calendar</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.edcal.description" datatype="html">
-        <source>Any editor picks are now easily planned and visualized.</source><target state="final">Any editor picks are now easily planned and visualized.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.task.title" datatype="html">
-        <source>Task Tracker</source><target state="final">Task Tracker</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.task.description" datatype="html">
-        <source>No more tasks will be ever missed when tracked and organized in Lumeer.</source><target state="final">No more tasks will be ever missed when tracked and organized in Lumeer.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.crm.title" datatype="html">
-        <source>Sales CRM</source><target state="final">Sales CRM</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.crm.description" datatype="html">
-        <source>Win deals your way with a visual CRM to manage accounts, contacts, activities, sales teams, deals, and pipelines.</source><target state="final">Win deals your way with a visual CRM to manage accounts, contacts, activities, sales teams, deals, and pipelines.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.scrum.title" datatype="html">
-        <source>Scrum</source><target state="final">Scrum</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.scrum.description" datatype="html">
-        <source>Turn your projects into agile ones with Scrum. Plan sprints, assign tasks and manage your backlog.</source><target state="final">Turn your projects into agile ones with Scrum. Plan sprints, assign tasks and manage your backlog.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.rmtw.title" datatype="html">
-        <source>Remote Work</source><target state="final">Remote Work</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.rmtw.description" datatype="html">
-        <source>Work anywhere, anytime. Enable remote teams to stay productive. Keep everyone on your team aligned and motivated.</source><target state="final">Work anywhere, anytime. Enable remote teams to stay productive. Keep everyone on your team aligned and motivated.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.cmtry.title" datatype="html">
-        <source>Cemetery Management</source><target state="final">Cemetery Management</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.cmtry.description" datatype="html">
-        <source>Get quick and easy access to all information about the cemetery, all contracts and payments. Schedule ceremonies and plan tasks for workers.</source><target state="final">Get quick and easy access to all information about the cemetery, all contracts and payments. Schedule ceremonies and plan tasks for workers.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.roadm.title" datatype="html">
-        <source>Product Roadmap</source><target state="final">Product Roadmap</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.roadm.description" datatype="html">
-        <source>Plan new product or features and stay on course building amazing products.</source><target state="final">Plan new product or features and stay on course building amazing products.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.launc.title" datatype="html">
-        <source>Product Launch</source><target state="final">Product Launch</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="template.launc.description" datatype="html">
-        <source>Get a complete playbook and toolset for your smooth product launching.</source><target state="final">Get a complete playbook and toolset for your smooth product launching.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/service/template.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.unit" datatype="html">

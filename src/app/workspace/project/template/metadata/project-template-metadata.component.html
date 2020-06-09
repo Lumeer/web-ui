@@ -6,22 +6,22 @@
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.isPublic"
-          (click)="isPublicCheckbox.click()">Public access</span>
+          (click)="isPublicCheckbox.click()">Public access to the project</span>
   </div>
 
   <div class="mt-4" formGroupName="metadata" *ngIf="isPublicControl.value">
 
     <div class="alert alert-danger" role="alert">
-      Danger zone: All the data available in this project will be publicly visible. Anyone can get access to them and
-      copy the data.<br/>
-      Only project users will keep the write access. Nobody outside of your Lumeer organization and project can modify
-      anything.
+      Danger zone: All the data available in this project are now publicly visible. Anyone can get access to this project and
+      copy all the data.<br/>
+      Only project users will have the write access. Nobody outside of your organization and project can modify anything.
     </div>
 
     <div class="form-group row m-0 mt-4">
       <label class="col-sm-3 px-0 col-lg-2 col-form-label" for="imageUrl"
-             i18n="@@projects.tab.template.metadata.imageUrl">Image
-        address</label>
+             i18n="@@projects.tab.template.metadata.imageUrl">
+        Image address
+      </label>
       <input class="col-sm-9 col-lg-10 form-control" type="text" formControlName="imageUrl" id="imageUrl"
              (keydown.enter)="$event.target.blur()"
              placeholder="https://..."/>
@@ -29,10 +29,11 @@
 
     <div class="row m-0 mt-2">
       <label class="col-sm-3 px-0 col-lg-2 col-form-label" for="allowedDomains"
-             i18n="@@projects.tab.template.metadata.allowedDomains">Allowed
-        Domains</label>
+             i18n="@@projects.tab.template.metadata.allowedDomains">
+        Allowed Domains
+      </label>
       <input class="col-sm-9 col-lg-10 form-control" type="text" formControlName="allowedDomains" id="allowedDomains"
-             placeholder="Enter * to allow any public domain"
+             placeholder="Enter * to allow embedding this template into any web page"
              i18n-placeholder="@@projects.tab.template.metadata.allowedDomains.placeholder"/>
     </div>
 
@@ -45,8 +46,9 @@
     </div>
 
     <div class="row m-0 mt-2">
-      <label class="col-sm-3 px-0 col-lg-2 col-form-label" i18n="@@projects.tab.template.metadata.defaultView">Default
-        view</label>
+      <label class="col-sm-3 px-0 col-lg-2 col-form-label" i18n="@@projects.tab.template.metadata.defaultView">
+        Open with view
+      </label>
 
       <select-item class="col-sm-9 col-lg-10 p-0"
                    [items]="views | viewsSelectItems:queryData"
@@ -78,7 +80,7 @@
           <span class="slider round" (click)="$event.stopPropagation()"></span>
         </label>
         <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.editable"
-              (click)="editableCheckbox.click()">Editable</span>
+              (click)="editableCheckbox.click()">Editable in the page (does not change the original project)</span>
       </div>
 
     </div>
@@ -91,7 +93,7 @@
           <span class="slider round" (click)="$event.stopPropagation()"></span>
         </label>
         <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.showTopPanel"
-              (click)="showTopPanelCheckbox.click()">Show top panel</span>
+              (click)="showTopPanelCheckbox.click()">Show appliaction controls (the upper panel)</span>
       </div>
 
     </div>
