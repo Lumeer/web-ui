@@ -25,6 +25,7 @@ import {AppState} from '../../../core/store/app.state';
 import {Project} from '../../../core/store/projects/project';
 import {LoadingState} from '../../../core/model/loading-state';
 import {
+  selectAllProjects,
   selectProjectsCodesForOrganization,
   selectProjectTemplates,
   selectProjectTemplatesLoadingState,
@@ -58,6 +59,7 @@ export class CreateProjectModalComponent implements OnInit {
 
   public templates$: Observable<Project[]>;
   public templatesState$: Observable<LoadingState>;
+  public projectsCount$: Observable<number>;
 
   public performingAction$ = new BehaviorSubject(false);
   public performingSecondaryAction$ = new BehaviorSubject(false);
@@ -78,6 +80,10 @@ export class CreateProjectModalComponent implements OnInit {
   public ngOnInit() {
     this.templates$ = this.store$.pipe(select(selectProjectTemplates));
     this.templatesState$ = this.store$.pipe(select(selectProjectTemplatesLoadingState));
+    this.projectsCount$ = this.store$.pipe(
+      select(selectAllProjects),
+      map(projects => (projects ? projects.length : 0))
+    );
 
     this.subscription.add(
       this.store$

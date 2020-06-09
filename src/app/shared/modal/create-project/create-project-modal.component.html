@@ -4,8 +4,8 @@
                [performingSecondaryAction]="performingSecondaryAction$ | async"
                [customHeader]="true"
                [submitDisabled]="formDisabled$ | async"
-               [showSecondarySubmit]="true"
-               secondarySubmitClass="secondary"
+               [showSecondarySubmit]="!((templates$ | async)?.length > 0) || ((projectsCount$ | async) > 0)"
+               secondarySubmitClass="primary"
                [secondarySubmitDisabled]="false"
                (onSubmit)="onSubmit()"
                (onSecondarySubmit)="onSecondarySubmit()"
@@ -20,7 +20,7 @@
   </div>
 
   <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
-  <span class="button-secondary-submit" i18n="@@templates.button.empty">Create empty project</span>
-  <span class="button-submit" i18n="@@templates.button.use">Use template</span>
+  <span class="button-secondary-submit" i18n="@@templates.button.empty">Start with empty project</span>
+  <span class="button-submit" i18n="@@templates.button.use">Use this template</span>
 
 </modal-wrapper>

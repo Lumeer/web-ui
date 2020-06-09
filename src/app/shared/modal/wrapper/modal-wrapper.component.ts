@@ -39,7 +39,7 @@ export class ModalWrapperComponent {
   public showSubmit = true;
 
   @Input()
-  public showSecondarySubmit = true;
+  public showSecondarySubmit = false;
 
   @Input()
   public showClose = true;
