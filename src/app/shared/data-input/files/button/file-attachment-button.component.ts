@@ -25,7 +25,7 @@ import {saveAs} from 'file-saver';
 import {BehaviorSubject, EMPTY, Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {environment} from '../../../../../environments/environment';
-import {FileApiService} from '../../../../core/api/file-api.service';
+import {FileApiService} from '../../../../core/service/file-api.service';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {FileAttachment} from '../../../../core/store/file-attachments/file-attachment.model';
 import {FileAttachmentsAction} from '../../../../core/store/file-attachments/file-attachments.action';

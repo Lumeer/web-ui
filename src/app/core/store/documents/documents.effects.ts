@@ -27,7 +27,7 @@ import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} f
 import {UserHintService} from '../../../shared/user-hint/user-hint.service';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {ConstraintType} from '../../model/data/constraint';
-import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../rest';
+import {SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
 import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
@@ -51,6 +51,7 @@ import {
   selectPendingDocumentDataUpdatesByCorrelationId,
 } from './documents.state';
 import {queryWithoutFilters} from '../navigation/query/query.util';
+import {CollectionService, DocumentService, LinkInstanceService} from '../../data-service';
 
 @Injectable()
 export class DocumentsEffects {

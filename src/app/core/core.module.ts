@@ -43,17 +43,12 @@ import {NotificationsModule} from './notifications/notifications.module';
 import {PusherService} from './pusher/pusher.service';
 import {RedirectComponent} from './redirect.component';
 import {
-  CollectionService,
-  DocumentService,
   GroupService,
   ImportService,
-  LinkInstanceService,
-  LinkTypeService,
   OrganizationService,
   ProjectService,
   SearchService,
   UserService,
-  ViewService,
 } from './rest';
 import {BaseService} from './rest/base.service';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
@@ -65,6 +60,7 @@ import {SequenceService} from './rest/sequence.service';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {LanguageCode} from '../shared/top-panel/user-panel/user-menu/language';
 import {TemplateService} from './rest/template.service';
+import {DataServiceModule} from './data-service/data-service.module';
 
 if (environment.locale === LanguageCode.CZ) {
   defineLocale('cs', csLocale);
@@ -91,6 +87,7 @@ if (environment.locale === LanguageCode.CZ) {
     TimepickerModule.forRoot(),
     TypeaheadModule.forRoot(),
     DeviceDetectorModule.forRoot(),
+    DataServiceModule,
   ],
   declarations: [HomeComponent, RedirectComponent],
   providers: [
@@ -99,8 +96,6 @@ if (environment.locale === LanguageCode.CZ) {
       useClass: SentryErrorHandler,
     },
     httpInterceptorProviders,
-    CollectionService,
-    DocumentService,
     OrganizationService,
     ProjectService,
     SearchService,
@@ -109,9 +104,6 @@ if (environment.locale === LanguageCode.CZ) {
     ImportService,
     UserService,
     GroupService,
-    ViewService,
-    LinkInstanceService,
-    LinkTypeService,
     OrganizationValidators,
     ProjectValidators,
     PusherService,

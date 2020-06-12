@@ -17,16 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {EnvironmentVariables} from './environment-variables';
-
-export interface Environment extends EnvironmentVariables {
-  analytics: boolean;
-  auth: boolean;
-  authPersistence?: boolean; // keep auth token in local storage
-  production: boolean;
-  publicView: boolean;
-  pusherLogDisabled?: boolean;
-  storeDevtools: boolean;
-  name?: string;
-  paymentGw?: string;
-}
+export {CollectionService} from './collection/collection.service';
+export {LinkTypeService} from './link-type/link-type.service';
+export {ViewService} from './view/view.service';
+export {DocumentService} from './document/document.service';
+export {LinkInstanceService} from './link-instance/link-instance.service';

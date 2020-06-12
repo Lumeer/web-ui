@@ -20,24 +20,28 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {LinkInstanceDto} from '../dto';
-import {LinkInstanceDuplicateDto} from '../dto/link-instance.dto';
-import {AppState} from '../store/app.state';
-import {BaseService} from './base.service';
-import {Workspace} from '../store/navigation/workspace';
+import {select, Store} from '@ngrx/store';
+import {Observable, of} from 'rxjs';
+import {map, take} from 'rxjs/operators';
+import {LinkInstanceService} from './link-instance.service';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {LinkInstanceDto} from '../../dto';
+import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
+import {Workspace} from '../../store/navigation/workspace';
+import {environment} from '../../../../environments/environment';
+import {generateId} from '../../../shared/utils/resource.utils';
+import {selectLinkInstanceById, selectLinkInstancesByIds} from '../../store/link-instances/link-instances.state';
+import {convertLinkInstanceModelToDto} from '../../store/link-instances/link-instance.converter';
 
 @Injectable()
-export class LinkInstanceService extends BaseService {
+export class MockLinkInstanceService extends BaseService implements LinkInstanceService {
   constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
 
   public getLinkInstance(linkTypeId: string, linkInstanceId: string): Observable<LinkInstanceDto> {
-    return this.httpClient.get<LinkInstanceDto>(this.apiPrefix(linkTypeId, linkInstanceId));
+    return of(null);
   }
 
   public getLinkInstances(linkInstanceIds: string[]): Observable<LinkInstanceDto[]> {
@@ -45,27 +49,52 @@ export class LinkInstanceService extends BaseService {
   }
 
   public updateLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.httpClient.put<LinkInstanceDto>(this.apiPrefix(linkInstance.id), linkInstance);
+    return of(linkInstance);
   }
 
   public createLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.httpClient.post<LinkInstanceDto>(this.apiPrefix(), linkInstance);
+    return of({...linkInstance, id: generateId()});
   }
 
   public patchLinkInstanceData(linkInstanceId: string, data: Record<string, any>): Observable<LinkInstanceDto> {
-    return this.httpClient.patch<LinkInstanceDto>(`${this.apiPrefix(linkInstanceId)}/data`, data);
+    return this.getLinkInstanceFromStore$(linkInstanceId).pipe(map(linkInstance => ({
+      ...linkInstance,
+      data: {...linkInstance.data, ...data}
+    })));
   }
 
   public updateLinkInstanceData(linkInstanceDto: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.httpClient.put<LinkInstanceDto>(`${this.apiPrefix(linkInstanceDto.id)}/data`, linkInstanceDto.data);
+    return this.getLinkInstanceFromStore$(linkInstanceDto.id).pipe(map(linkInstance => ({
+      ...linkInstance,
+      data: linkInstanceDto.data
+    })));
+  }
+
+  private getLinkInstanceFromStore$(id: string): Observable<LinkInstanceDto> {
+    return this.store$.pipe(
+      select(selectLinkInstanceById(id)),
+      take(1),
+      map(model => model && convertLinkInstanceModelToDto(model))
+    )
   }
 
   public deleteLinkInstance(id: string): Observable<string> {
-    return this.httpClient.delete(this.apiPrefix(id)).pipe(map(() => id));
+    return of(id);
   }
 
   public duplicateLinkInstances(linkInstanceDuplicate: LinkInstanceDuplicateDto): Observable<LinkInstanceDto[]> {
-    return this.httpClient.post<LinkInstanceDto[]>(`${this.apiPrefix()}/duplicate`, linkInstanceDuplicate);
+    return this.store$.pipe(
+      select(selectLinkInstancesByIds(linkInstanceDuplicate.linkInstanceIds)),
+      take(1),
+      map(linkInstances => linkInstances.map(linkInstance => {
+        const documentIds = [...linkInstance.documentIds].map(documentId =>
+          documentId === linkInstanceDuplicate.originalDocumentId ?
+            linkInstanceDuplicate.newDocumentId : linkInstanceDuplicate[documentId] || documentId) as [string, string]
+
+        const newLinkInstance = {...linkInstance, id: generateId(), documentIds};
+        return convertLinkInstanceModelToDto(newLinkInstance);
+      }))
+    )
   }
 
   private apiPrefix(linkTypeId?: string, linkInstanceId?: string): string {

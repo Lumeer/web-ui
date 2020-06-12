@@ -110,10 +110,10 @@ export class WorkspaceService {
     projectCode: string
   ): Observable<{user?: User; project?: Project}> {
     if (organization) {
-      return combineLatest(
+      return combineLatest([
         this.selectUser(organization),
         this.getProjectFromStoreOrApi(organization.id, projectCode)
-      ).pipe(map(([user, project]) => ({user, project})));
+      ]).pipe(map(([user, project]) => ({user, project})));
     }
     return of({});
   }

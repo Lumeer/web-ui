@@ -22,15 +22,16 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {DocumentDto, LinkInstanceDto} from '../dto';
-import {DocumentMetaDataDto} from '../dto/document.dto';
-import {AppState} from '../store/app.state';
-import {Workspace} from '../store/navigation/workspace';
-import {BaseService} from './base.service';
+import {DocumentService} from './document.service';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {DocumentDto, LinkInstanceDto} from '../../dto';
+import {DocumentMetaDataDto} from '../../dto/document.dto';
+import {Workspace} from '../../store/navigation/workspace';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
-export class DocumentService extends BaseService {
+export class ApiDocumentService extends BaseService implements DocumentService {
   constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
@@ -114,8 +115,8 @@ export class DocumentService extends BaseService {
   public createChain(
     documents: DocumentDto[],
     linkInstances: LinkInstanceDto[]
-  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
-    return this.httpClient.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
+  ): Observable<{ documents: DocumentDto[]; linkInstances: LinkInstanceDto[] }> {
+    return this.httpClient.post<{ documents: DocumentDto[]; linkInstances: LinkInstanceDto[] }>(
       `${this.workspaceApiPrefix()}/data/documentsChain`,
       {
         documents,

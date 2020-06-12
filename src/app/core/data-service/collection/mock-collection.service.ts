@@ -17,48 +17,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {AttributeDto, CollectionDto} from '../dto';
-import {AppState} from '../store/app.state';
-import {PermissionService} from './permission.service';
-import {Workspace} from '../store/navigation/workspace';
+import {Observable, of} from 'rxjs';
+import {CollectionService} from './collection.service';
+import {AppState} from '../../store/app.state';
+import {AttributeDto, CollectionDto} from '../../dto';
+import {Workspace} from '../../store/navigation/workspace';
+import {MockPermissionService} from '../common/mock-permission.service';
+import {generateId} from '../../../shared/utils/resource.utils';
+import {HttpClient, HttpParams} from '@angular/common/http';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
-export class CollectionService extends PermissionService {
-  constructor(protected httpClient: HttpClient, protected store: Store<AppState>) {
-    super(httpClient, store);
+export class MockCollectionService extends MockPermissionService implements CollectionService {
+  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
   }
 
   public createCollection(collection: CollectionDto): Observable<CollectionDto> {
-    return this.httpClient.post<CollectionDto>(this.apiPrefix(), collection);
+    return of({...collection, id: generateId(), documentsCount: 0});
   }
 
   public updateCollection(collection: CollectionDto): Observable<CollectionDto> {
-    return this.httpClient.put<CollectionDto>(`${this.apiPrefix()}/${collection.id}`, collection);
+    return of(collection);
   }
 
   public removeCollection(collectionId: string): Observable<string> {
-    return this.httpClient
-      .delete(`${this.apiPrefix()}/${collectionId}`, {observe: 'response', responseType: 'text'})
-      .pipe(map(() => collectionId));
+    return of(collectionId);
   }
 
   public addFavorite(collectionId: string, workspace?: Workspace): Observable<any> {
-    return this.httpClient.post(`${this.apiPrefix(workspace)}/${collectionId}/favorite`, {});
+    return of(true);
   }
 
   public removeFavorite(collectionId: string, workspace?: Workspace): Observable<any> {
-    return this.httpClient.delete(`${this.apiPrefix(workspace)}/${collectionId}/favorite`);
+    return of(true);
   }
 
   public getCollection(collectionId: string): Observable<CollectionDto> {
-    return this.httpClient.get<CollectionDto>(`${this.apiPrefix()}/${collectionId}`);
+    return of(null);
   }
 
   public getCollections(workspace?: Workspace): Observable<CollectionDto[]> {
@@ -67,35 +66,23 @@ export class CollectionService extends PermissionService {
   }
 
   public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {
-    return this.httpClient.put(`${this.apiPrefix()}/${collectionId}/attributes/${attributeId}/default`, {});
+    return of(true);
   }
 
   public createAttribute(collectionId: string, attribute: AttributeDto): Observable<AttributeDto> {
-    return this.httpClient
-      .post<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`, [attribute])
-      .pipe(map(attributes => attributes[0]));
+    return of({...attribute, id: generateId()});
   }
 
   public createAttributes(collectionId: string, attributes: AttributeDto[]): Observable<AttributeDto[]> {
-    return this.httpClient.post<AttributeDto[]>(`${this.apiPrefix()}/${collectionId}/attributes`, attributes);
+    return of(attributes.map(attribute => ({...attribute, id: generateId()})));
   }
 
   public updateAttribute(collectionId: string, id: string, attribute: AttributeDto): Observable<AttributeDto> {
-    return this.httpClient.put<AttributeDto>(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, attribute);
+    return of(attribute);
   }
 
-  public removeAttribute(collectionId: string, id: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(`${this.apiPrefix()}/${collectionId}/attributes/${id}`, {
-      observe: 'response',
-      responseType: 'text',
-    });
-  }
-
-  protected actualApiPrefix(workspace?: Workspace): string {
-    const actualWorkspace = workspace || this.workspace;
-    const collectionId = actualWorkspace.collectionId;
-
-    return `${this.apiPrefix(workspace)}/${collectionId}`;
+  public removeAttribute(collectionId: string, id: string): Observable<any> {
+    return of(true);
   }
 
   private apiPrefix(workspace?: Workspace): string {

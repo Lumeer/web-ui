@@ -17,16 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {EnvironmentVariables} from './environment-variables';
+import {PermissionDto, PermissionsDto} from '../../dto';
+import {Observable} from 'rxjs';
+import {Workspace} from '../../store/navigation/workspace';
 
-export interface Environment extends EnvironmentVariables {
-  analytics: boolean;
-  auth: boolean;
-  authPersistence?: boolean; // keep auth token in local storage
-  production: boolean;
-  publicView: boolean;
-  pusherLogDisabled?: boolean;
-  storeDevtools: boolean;
-  name?: string;
-  paymentGw?: string;
+export abstract class PermissionService {
+
+  abstract getPermissions(): Observable<PermissionsDto>;
+
+  abstract updateUserPermission(userPermissions: PermissionDto[], workspace?: Workspace): Observable<PermissionDto>;
+
+  abstract updateGroupPermission(userPermissions: PermissionDto[], workspace?: Workspace): Observable<PermissionDto>;
+
+  abstract removeUserPermission(user: string): Observable<any>;
+
+  abstract removeGroupPermission(group: string): Observable<any>;
 }
