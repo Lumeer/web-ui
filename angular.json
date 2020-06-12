@@ -91,6 +91,30 @@
               "sourceMap": true,
               "vendorChunk": false
             },
+            "public": {
+              "aot": true,
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "buildOptimizer": true,
+              "extractCss": true,
+              "extractLicenses": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.public.ts"
+                }
+              ],
+              "namedChunks": true,
+              "optimization": true,
+              "outputHashing": "all",
+              "showCircularDependencies": false,
+              "sourceMap": true,
+              "vendorChunk": false
+            },
             "staging": {
               "aot": true,
               "budgets": [
