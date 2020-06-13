@@ -21,12 +21,14 @@ import {Environment} from './environment-type';
 import {environmentVariables} from './environment-variables';
 
 export const environment: Environment = {
-  analytics: false,
+  analytics: true,
   auth: true,
   authPersistence: true,
-  production: false,
-  publicView: false,
-  storeDevtools: true,
-  paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',
+  production: true,
+  publicView: true,
+  pusherLogDisabled: true,
+  storeDevtools: false,
+  name: 'public',
+  paymentGw: 'https://gate.gopay.com/gp-gw/js/embed.js',
   ...environmentVariables,
 };

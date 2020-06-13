@@ -25,6 +25,7 @@ export const environment: Environment = {
   auth: true,
   authPersistence: true,
   production: false,
+  publicView: false,
   storeDevtools: true,
   name: 'testing',
   paymentGw: 'https://gw.sandbox.gopay.com/gp-gw/js/embed.js',

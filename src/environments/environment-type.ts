@@ -24,6 +24,7 @@ export interface Environment extends EnvironmentVariables {
   auth: boolean;
   authPersistence?: boolean; // keep auth token in local storage
   production: boolean;
+  publicView: boolean;
   pusherLogDisabled?: boolean;
   storeDevtools: boolean;
   name?: string;

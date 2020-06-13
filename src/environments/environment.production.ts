@@ -25,6 +25,7 @@ export const environment: Environment = {
   auth: true,
   authPersistence: true,
   production: true,
+  publicView: false,
   pusherLogDisabled: true,
   storeDevtools: false,
   name: 'production',
