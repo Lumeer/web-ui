@@ -10,6 +10,7 @@ config.BUILD_NUMBER = env.BUILD_NUMBER;
 config.I18N_FORMAT = env.I18N_FORMAT || 'xlf';
 config.I18N_LOCALE = env.I18N_LOCALE || 'en';
 config.I18N_PATH = env.I18N_PATH || `src/i18n/messages.${config.I18N_LOCALE}.${config.I18N_FORMAT}`;
+config.SKIP_MULTI_LOCALIZE = env.SKIP_MULTI_LOCALIZE || false;
 config.LOGZIO_KEY = env.LOGZIO_KEY;
 config.LUMEER_ENGINE = env.LUMEER_ENGINE;
 config.LUMEER_ENGINE_PROD = env.LUMEER_ENGINE_PROD;
@@ -31,7 +32,11 @@ writeFileSync('./src/environments/.env.json', JSON.stringify(config));
 
 const buildSwitches = `--base-href=${config.PUBLIC_PATH}
     ${config.LUMEER_ENV ? '--configuration=' + config.LUMEER_ENV : ''}
-    ${config.LUMEER_ENV === 'production' || config.LUMEER_ENV === 'staging' ? '--localize' : ''}`;
+    ${
+      (config.LUMEER_ENV === 'production' || config.LUMEER_ENV === 'staging') && !config.SKIP_MULTI_LOCALIZE
+        ? '--localize'
+        : ''
+    }`;
 
 // keep only this single output here because it is consumed by 'ng build' command
 console.log(buildSwitches);
