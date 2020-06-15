@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
@@ -34,8 +33,8 @@ import {selectDocumentById, selectDocumentsByIds} from '../../store/documents/do
 import {convertDocumentModelToDto} from '../../store/documents/document.converter';
 
 @Injectable()
-export class MockDocumentService extends BaseService implements DocumentService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+export class PublicDocumentService extends BaseService implements DocumentService {
+  constructor(protected store$: Store<AppState>) {
     super(store$);
   }
 
@@ -109,8 +108,12 @@ export class MockDocumentService extends BaseService implements DocumentService 
     return of(null);
   }
 
-  public getDocuments(documentsId: string[]): Observable<DocumentDto[]> {
-    return this.httpClient.post<DocumentDto[]>(`${this.workspaceApiPrefix()}/data/documents`, documentsId);
+  public getDocuments(documentsIds: string[]): Observable<DocumentDto[]> {
+    return this.store$.pipe(
+      select(selectDocumentsByIds(documentsIds)),
+      map(documents => documents.map(document => convertDocumentModelToDto(document))),
+      take(1),
+    );
   }
 
   public duplicateDocuments(
@@ -136,12 +139,5 @@ export class MockDocumentService extends BaseService implements DocumentService 
       documentIds: [chainDocuments[index]?.id, chainDocuments[index + 1]?.id]
     }))
     return of({documents: chainDocuments, linkInstances: chainLinks});
-  }
-
-  private workspaceApiPrefix(workspace?: Workspace): string {
-    const organizationId = this.getOrCurrentOrganizationId(workspace);
-    const projectId = this.getOrCurrentProjectId(workspace);
-
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}`;
   }
 }

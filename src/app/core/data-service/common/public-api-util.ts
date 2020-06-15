@@ -17,12 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {CollectionService} from './collection/collection.service';
-export {LinkTypeService} from './link-type/link-type.service';
-export {ViewService} from './view/view.service';
-export {DocumentService} from './document/document.service';
-export {LinkInstanceService} from './link-instance/link-instance.service';
-export {SearchService} from './search/search.service';
-export {UserService} from './user/user.service';
-export {OrganizationService} from './organization/organization.service';
-export {ProjectService} from './project/project.service';
+import {ResourceDto} from '../../dto';
+
+export function setDefaultUserPermissions<T extends ResourceDto>(dto: T, userId: string, roles: string[]): T {
+  return {...dto, permissions: {groups: [], users: [{id: userId, roles}]}};
+}

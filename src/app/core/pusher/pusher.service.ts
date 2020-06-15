@@ -27,7 +27,6 @@ import {AuthService} from '../../auth/auth.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {OrganizationDto, ProjectDto} from '../dto';
 import {ResourceType} from '../model/resource-type';
-import {OrganizationService, ProjectService} from '../rest';
 import {AppState} from '../store/app.state';
 import {convertCollectionDtoToModel} from '../store/collections/collection.converter';
 import {CollectionsAction} from '../store/collections/collections.action';
@@ -69,6 +68,7 @@ import {ViewsAction} from '../store/views/views.action';
 import {selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
 import {SequenceConverter} from '../store/sequences/sequence.converter';
+import {OrganizationService, ProjectService} from '../data-service';
 
 @Injectable({
   providedIn: 'root',
@@ -85,10 +85,13 @@ export class PusherService implements OnDestroy {
     private authService: AuthService,
     private organizationService: OrganizationService,
     private projectService: ProjectService
-  ) {}
+  ) {
+  }
 
   public init(): void {
-    this.subscribeToUser();
+    if (environment.auth) {
+      this.subscribeToUser();
+    }
     this.subscribeToWorkspace();
   }
 

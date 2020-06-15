@@ -37,10 +37,13 @@ export class SessionService {
     private ngZone: NgZone,
     private authService: AuthService,
     private activityService: UserActivityService
-  ) {}
+  ) {
+  }
 
   public init() {
-    this.initInterval();
+    if (environment.auth) {
+      this.initInterval();
+    }
   }
 
   private initInterval() {

@@ -21,7 +21,6 @@ import {Component, OnInit, ChangeDetectionStrategy, HostListener} from '@angular
 import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../../../core/notifications/notification.service';
-import {UserService} from '../../../../../core/rest';
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../../../environments/environment';
 import {BsModalRef} from 'ngx-bootstrap/modal';
@@ -30,6 +29,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {KeyCode} from '../../../../key-code';
 import {DialogType} from '../../../../modal/dialog-type';
+import {UserService} from '../../../../../core/data-service';
 
 @Component({
   selector: 'user-feedback-modal',

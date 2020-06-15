@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {select, Store} from '@ngrx/store';
@@ -28,15 +27,13 @@ import {BaseService} from '../../rest/base.service';
 import {AppState} from '../../store/app.state';
 import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
-import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {selectLinkInstanceById, selectLinkInstancesByIds} from '../../store/link-instances/link-instances.state';
 import {convertLinkInstanceModelToDto} from '../../store/link-instances/link-instance.converter';
 
 @Injectable()
-export class MockLinkInstanceService extends BaseService implements LinkInstanceService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+export class PublicLinkInstanceService extends BaseService implements LinkInstanceService {
+  constructor(protected store$: Store<AppState>) {
     super(store$);
   }
 
@@ -45,7 +42,11 @@ export class MockLinkInstanceService extends BaseService implements LinkInstance
   }
 
   public getLinkInstances(linkInstanceIds: string[]): Observable<LinkInstanceDto[]> {
-    return this.httpClient.post<LinkInstanceDto[]>(`${this.workspaceApiPrefix()}/data/linkInstances`, linkInstanceIds);
+    return this.store$.pipe(
+      select(selectLinkInstancesByIds(linkInstanceIds)),
+      take(1),
+      map(linkInstances => linkInstances.map(linkInstance => convertLinkInstanceModelToDto(linkInstance)))
+    )
   }
 
   public updateLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
@@ -95,18 +96,5 @@ export class MockLinkInstanceService extends BaseService implements LinkInstance
         return convertLinkInstanceModelToDto(newLinkInstance);
       }))
     )
-  }
-
-  private apiPrefix(linkTypeId?: string, linkInstanceId?: string): string {
-    const suffix = (linkTypeId ? `/${linkTypeId}` : '') + (linkInstanceId ? `/${linkInstanceId}` : '');
-
-    return `${this.workspaceApiPrefix()}/link-instances${suffix}`;
-  }
-
-  private workspaceApiPrefix(workspace?: Workspace): string {
-    const organizationId = this.getOrCurrentOrganizationId(workspace);
-    const projectId = this.getOrCurrentProjectId(workspace);
-
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}`;
   }
 }

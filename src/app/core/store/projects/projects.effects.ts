@@ -27,7 +27,6 @@ import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {ProjectDto} from '../../dto';
-import {ProjectService} from '../../rest';
 import {AppState} from '../app.state';
 import {CollectionsAction} from '../collections/collections.action';
 import {CommonAction} from '../common/common.action';
@@ -58,6 +57,7 @@ import {GanttChartAction} from '../gantt-charts/gantt-charts.action';
 import {SearchesAction} from '../searches/searches.action';
 import {ChartAction} from '../charts/charts.action';
 import {TemplateService} from '../../rest/template.service';
+import {ProjectService} from '../../data-service';
 
 @Injectable()
 export class ProjectsEffects {

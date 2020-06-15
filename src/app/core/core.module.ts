@@ -45,10 +45,6 @@ import {RedirectComponent} from './redirect.component';
 import {
   GroupService,
   ImportService,
-  OrganizationService,
-  ProjectService,
-  SearchService,
-  UserService,
 } from './rest';
 import {BaseService} from './rest/base.service';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
@@ -96,13 +92,9 @@ if (environment.locale === LanguageCode.CZ) {
       useClass: SentryErrorHandler,
     },
     httpInterceptorProviders,
-    OrganizationService,
-    ProjectService,
-    SearchService,
     TemplateService,
     BaseService,
     ImportService,
-    UserService,
     GroupService,
     OrganizationValidators,
     ProjectValidators,

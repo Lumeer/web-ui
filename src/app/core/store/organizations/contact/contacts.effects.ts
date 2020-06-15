@@ -25,10 +25,10 @@ import {Action, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {ContactConverter} from './contact.converter';
 import {AppState} from '../../app.state';
-import {OrganizationService} from '../../../rest';
 import {NotificationsAction} from '../../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ContactsAction, ContactsActionType} from './contacts.action';
+import {OrganizationService} from '../../../data-service';
 
 @Injectable()
 export class ContactsEffects {

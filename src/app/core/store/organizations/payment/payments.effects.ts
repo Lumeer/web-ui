@@ -26,13 +26,13 @@ import {Angulartics2} from 'angulartics2';
 import {Observable, of} from 'rxjs';
 import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
 import {environment} from '../../../../../environments/environment';
-import {OrganizationService} from '../../../rest';
 import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
 import {PaymentConverter} from './payment.converter';
 import {PaymentsAction, PaymentsActionType} from './payments.action';
 import mixpanel from 'mixpanel-browser';
 import {Payment} from './payment';
+import {OrganizationService} from '../../../data-service';
 
 @Injectable()
 export class PaymentsEffects {

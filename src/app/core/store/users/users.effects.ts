@@ -25,7 +25,7 @@ import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {from, Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
-import {UserService} from '../../rest';
+import {UserService} from '../../data-service';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';

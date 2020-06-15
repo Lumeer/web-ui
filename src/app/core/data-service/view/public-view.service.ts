@@ -17,91 +17,91 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
+import {ViewService} from './view.service';
+import {PermissionDto, PermissionsDto, ViewDto} from '../../dto';
+import {AppState} from '../../store/app.state';
+import {BaseService} from '../../rest/base.service';
+import {Workspace} from '../../store/navigation/workspace';
+import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
+import {environment} from '../../../../environments/environment';
+import {generateId} from '../../../shared/utils/resource.utils';
+import {setDefaultUserPermissions} from '../common/public-api-util';
+import {DEFAULT_USER} from '../../constants';
 import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {PermissionDto, PermissionsDto, ViewDto} from '../dto';
-import {AppState} from '../store/app.state';
-import {Workspace} from '../store/navigation/workspace';
-import {BaseService} from './base.service';
-import {DefaultViewConfigDto} from '../dto/default-view-config.dto';
+import {Role} from '../../model/role';
 
 @Injectable()
-export class ViewService extends BaseService {
+export class PublicViewService extends BaseService implements ViewService {
   constructor(private http: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
 
   public createView(view: ViewDto): Observable<ViewDto> {
-    return this.http.post<ViewDto>(this.apiPrefix(), view);
+    return of({...view, id: generateId()});
   }
 
   public updateView(id: string, view: ViewDto): Observable<ViewDto> {
-    return this.http.put<ViewDto>(this.apiPrefix(id), view);
+    return of(view);
   }
 
   public getView(id: string): Observable<ViewDto> {
-    return this.http.get<ViewDto>(this.apiPrefix(id));
+    return of(null);
   }
 
   public deleteView(id: string): Observable<string> {
-    return this.http.delete(this.apiPrefix(id)).pipe(map(() => id));
+    return of(id);
   }
 
   public getViews(workspace?: Workspace): Observable<ViewDto[]> {
-    return this.http.get<ViewDto[]>(this.apiPrefix(null, workspace));
+    return this.http.get<ViewDto[]>(this.apiPrefix(workspace)).pipe(
+      map(views => views.map(view => setDefaultUserPermissions(view, DEFAULT_USER, [Role.Read, Role.Write, Role.Manage]))) // TODO check if project is writable
+    );
   }
 
   public addFavorite(id: string, workspace?: Workspace): Observable<any> {
-    return this.http.post(`${this.apiPrefix(id, workspace)}/favorite`, {});
+    return of(true);
   }
 
   public removeFavorite(id: string, workspace?: Workspace): Observable<any> {
-    return this.http.delete(`${this.apiPrefix(id, workspace)}/favorite`);
+    return of(true);
   }
 
   public getPermissions(viewId: string): Observable<PermissionsDto> {
-    return this.http.get<PermissionsDto>(`${this.apiPrefix(viewId)}/permissions`);
+    return of({users: [], groups: []});
   }
 
   public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto> {
-    return this.http.put<PermissionDto>(`${this.apiPrefix(viewId)}/permissions/users`, userPermissions);
+    return of({id: '', roles: []});
   }
 
   public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto> {
-    return this.http.put<PermissionDto>(`${this.apiPrefix(viewId)}/permissions/groups`, userPermissions);
+    return of({id: '', roles: []});
   }
 
-  public removeUserPermission(viewId: string, user: string): Observable<HttpResponse<any>> {
-    return this.http.delete(`${this.apiPrefix(viewId)}/permissions/users/${user}`, {
-      observe: 'response',
-      responseType: 'text',
-    });
+  public removeUserPermission(viewId: string, user: string): Observable<any> {
+    return of(true);
   }
 
-  public removeGroupPermission(viewId: string, group: string): Observable<HttpResponse<any>> {
-    return this.http.delete(`${this.apiPrefix(viewId)}/permissions/groups/${group}`, {
-      observe: 'response',
-      responseType: 'text',
-    });
+  public removeGroupPermission(viewId: string, group: string): Observable<any> {
+    return of(true);
   }
 
   public updateDefaultConfig(dto: DefaultViewConfigDto): Observable<DefaultViewConfigDto> {
-    return this.http.put<DefaultViewConfigDto>(`${this.apiPrefix()}/defaultConfigs/config`, dto);
+    return of(dto);
   }
 
   public getDefaultConfigs(workspace?: Workspace): Observable<DefaultViewConfigDto[]> {
-    return this.http.get<DefaultViewConfigDto[]>(`${this.apiPrefix(null, workspace)}/defaultConfigs/all`);
+    return of([]);
   }
 
-  private apiPrefix(id?: string, workspace?: Workspace): string {
+  private apiPrefix(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace || this.workspace);
     const projectId = this.getOrCurrentProjectId(workspace || this.workspace);
 
-    const viewsPath = `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/views`;
-    return id ? viewsPath.concat('/', id) : viewsPath;
+    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/views`;
   }
 }

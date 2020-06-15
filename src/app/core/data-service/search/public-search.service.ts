@@ -21,35 +21,36 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {SuggestionsDto, DocumentDto, QueryDto, LinkInstanceDto} from '../dto';
-import {AppState} from '../store/app.state';
-import {Workspace} from '../store/navigation/workspace';
-import {SuggestionQueryDto} from '../dto/suggestion-query.dto';
-import {BaseService} from './base.service';
+import {Observable, of} from 'rxjs';
+import {environment} from '../../../../environments/environment';
+import {Workspace} from '../../store/navigation/workspace';
+import {DocumentDto, LinkInstanceDto, QueryDto, SuggestionsDto} from '../../dto';
+import {SuggestionQueryDto} from '../../dto/suggestion-query.dto';
+import {AppState} from '../../store/app.state';
+import {BaseService} from '../../rest/base.service';
+import {SearchService} from './search.service';
 
 @Injectable()
-export class SearchService extends BaseService {
+export class PublicSearchService extends BaseService implements SearchService {
   constructor(private http: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
 
   public suggest(dto: SuggestionQueryDto): Observable<SuggestionsDto> {
-    return this.http.post<SuggestionsDto>(`${this.searchPath()}/suggestions`, dto);
+    return of({attributes: [], collections: [], linkAttributes: [], linkTypes: [], views: []});
   }
 
   public searchLinkInstances(query: QueryDto, workspace?: Workspace): Observable<LinkInstanceDto[]> {
-    return this.http.post<LinkInstanceDto[]>(`${this.searchPath(workspace)}/linkInstances`, query);
+    return this.http.get<LinkInstanceDto[]>(`${this.searchPath(workspace)}/link-instances`);
   }
 
   public searchDocuments(query: QueryDto, workspace?: Workspace): Observable<DocumentDto[]> {
-    return this.http.post<DocumentDto[]>(`${this.searchPath(workspace)}/documents`, query);
+    return this.http.get<DocumentDto[]>(`${this.searchPath(workspace)}/documents`);
   }
 
   private searchPath(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/search`;
+    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}`;
   }
 }

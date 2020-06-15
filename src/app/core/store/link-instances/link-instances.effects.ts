@@ -26,7 +26,6 @@ import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} f
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {ConstraintType} from '../../model/data/constraint';
-import {SearchService} from '../../rest';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
@@ -43,7 +42,7 @@ import {
   selectLinkInstancesQueries,
 } from './link-instances.state';
 import {queryWithoutFilters} from '../navigation/query/query.util';
-import {LinkInstanceService} from '../../data-service';
+import {LinkInstanceService, SearchService} from '../../data-service';
 
 @Injectable()
 export class LinkInstancesEffects {

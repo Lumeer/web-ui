@@ -20,21 +20,33 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {environment} from '../../../environments/environment';
-import {MockCollectionService} from './collection/mock-collection.service';
+import {PublicCollectionService} from './collection/public-collection.service';
 import {ApiCollectionService} from './collection/api-collection.service';
 import {CollectionService} from './collection/collection.service';
 import {LinkTypeService} from './link-type/link-type.service';
-import {MockLinkTypeService} from './link-type/mock-link-type.service';
+import {PublicLinkTypeService} from './link-type/public-link-type.service';
 import {ApiLinkTypeService} from './link-type/api-link-type.service';
 import {ViewService} from './view/view.service';
-import {MockViewService} from './view/mock-view.service';
+import {PublicViewService} from './view/public-view.service';
 import {ApiViewService} from './view/api-view.service';
 import {DocumentService} from './document/document.service';
-import {MockDocumentService} from './document/mock-document.service';
+import {PublicDocumentService} from './document/public-document.service';
 import {ApiDocumentService} from './document/api-document.service';
 import {LinkInstanceService} from './link-instance/link-instance.service';
-import {MockLinkInstanceService} from './link-instance/mock-link-instance.service';
+import {PublicLinkInstanceService} from './link-instance/public-link-instance.service';
 import {ApiLinkInstanceService} from './link-instance/api-link-instance.service';
+import {SearchService} from './search/search.service';
+import {PublicSearchService} from './search/public-search.service';
+import {ApiSearchService} from './search/api-search.service';
+import {UserService} from './user/user.service';
+import {PublicUserService} from './user/public-user.service';
+import {ApiUserService} from './user/api-user.service';
+import {OrganizationService} from './organization/organization.service';
+import {PublicOrganizationService} from './organization/public-organization.service';
+import {ApiOrganizationService} from './organization/api-organization.service';
+import {ProjectService} from './project/project.service';
+import {PublicProjectService} from './project/public-project.service';
+import {ApiProjectService} from './project/api-project.service';
 
 @NgModule({
   declarations: [],
@@ -44,23 +56,39 @@ import {ApiLinkInstanceService} from './link-instance/api-link-instance.service'
   providers: [
     {
       provide: CollectionService,
-      useClass: environment.publicView ? MockCollectionService : ApiCollectionService
+      useClass: environment.publicView ? PublicCollectionService : ApiCollectionService
     },
     {
       provide: LinkTypeService,
-      useClass: environment.publicView ? MockLinkTypeService : ApiLinkTypeService
+      useClass: environment.publicView ? PublicLinkTypeService : ApiLinkTypeService
     },
     {
       provide: ViewService,
-      useClass: environment.publicView ? MockViewService : ApiViewService
+      useClass: environment.publicView ? PublicViewService : ApiViewService
     },
     {
       provide: DocumentService,
-      useClass: environment.publicView ? MockDocumentService : ApiDocumentService
+      useClass: environment.publicView ? PublicDocumentService : ApiDocumentService
     },
     {
       provide: LinkInstanceService,
-      useClass: environment.publicView ? MockLinkInstanceService : ApiLinkInstanceService
+      useClass: environment.publicView ? PublicLinkInstanceService : ApiLinkInstanceService
+    },
+    {
+      provide: SearchService,
+      useClass: environment.publicView ? PublicSearchService : ApiSearchService
+    },
+    {
+      provide: UserService,
+      useClass: environment.publicView ? PublicUserService : ApiUserService
+    },
+    {
+      provide: OrganizationService,
+      useClass: environment.publicView ? PublicOrganizationService : ApiOrganizationService
+    },
+    {
+      provide: ProjectService,
+      useClass: environment.publicView ? PublicProjectService : ApiProjectService
     },
   ]
 })

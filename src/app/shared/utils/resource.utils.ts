@@ -20,7 +20,6 @@
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, Resource} from '../../core/model/resource';
 import {Role} from '../../core/model/role';
-import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {Organization} from '../../core/store/organizations/organization';
 import {Permission} from '../../core/store/permissions/permissions';

@@ -30,7 +30,7 @@ import {environment} from '../../../../environments/environment';
 import {generateId} from '../../../shared/utils/resource.utils';
 
 @Injectable()
-export class MockLinkTypeService extends BaseService implements LinkTypeService {
+export class PublicLinkTypeService extends BaseService implements LinkTypeService {
   constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
@@ -52,8 +52,7 @@ export class MockLinkTypeService extends BaseService implements LinkTypeService 
   }
 
   public getLinkTypes(workspace?: Workspace): Observable<LinkTypeDto[]> {
-    const queryParams = new HttpParams().set('fromViews', 'true');
-    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(null, workspace), {params: queryParams});
+    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(workspace));
   }
 
   public createAttributes(linkTypeId: string, attributes: AttributeDto[]): Observable<AttributeDto[]> {
@@ -68,11 +67,10 @@ export class MockLinkTypeService extends BaseService implements LinkTypeService 
     return of(true);
   }
 
-  private restApiPrefix(id?: string, workspace?: Workspace): string {
+  private restApiPrefix(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
-    const suffix = id ? `/${id}` : '';
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/link-types${suffix}`;
+    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/link-types`;
   }
 }

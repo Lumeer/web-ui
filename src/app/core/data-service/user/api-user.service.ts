@@ -20,17 +20,18 @@
 import {Injectable} from '@angular/core';
 
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {UserDto} from '../dto';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {DefaultWorkspaceDto} from '../dto/default-workspace.dto';
-import {FeedbackDto} from '../dto/feedback.dto';
-import {InvitationType} from '../model/invitation-type';
-import {PaymentStats} from '../store/organizations/payment/payment';
+import {UserService} from './user.service';
+import {UserDto} from '../../dto';
+import {InvitationType} from '../../model/invitation-type';
+import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
+import {PaymentStats} from '../../store/organizations/payment/payment';
+import {FeedbackDto} from '../../dto/feedback.dto';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
-export class UserService {
+export class ApiUserService implements UserService{
   constructor(private httpClient: HttpClient) {}
 
   public createUser(organizationId: string, user: UserDto): Observable<UserDto> {

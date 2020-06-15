@@ -22,7 +22,6 @@ import {Injectable} from '@angular/core';
 import {of, Observable, combineLatest} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {catchError, filter, map, mergeMap, take, tap} from 'rxjs/operators';
-import {OrganizationService, ProjectService} from '../core/rest';
 import {AppState} from '../core/store/app.state';
 import {OrganizationConverter} from '../core/store/organizations/organization.converter';
 import {Organization} from '../core/store/organizations/organization';
@@ -36,6 +35,7 @@ import {isNotNullOrUndefined, isNullOrUndefined} from '../shared/utils/common.ut
 import {User} from '../core/store/users/user';
 import {selectCurrentUserForOrganization} from '../core/store/users/users.state';
 import {CommonAction} from '../core/store/common/common.action';
+import {OrganizationService, ProjectService} from '../core/data-service';
 
 @Injectable()
 export class WorkspaceService {

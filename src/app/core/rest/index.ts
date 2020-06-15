@@ -19,8 +19,3 @@
 
 export {GroupService} from './group.service';
 export {ImportService} from './import.service';
-export {OrganizationService} from './organization.service';
-export {PermissionService} from './permission.service';
-export {ProjectService} from './project.service';
-export {SearchService} from './search.service';
-export {UserService} from './user.service';

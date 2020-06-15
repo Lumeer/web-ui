@@ -17,16 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {ProjectDto} from '../dto';
-import {PermissionService} from './permission.service';
-import {Workspace} from '../store/navigation/workspace';
+import {ApiPermissionService} from '../common/api-permission.service';
+import {ProjectService} from './project.service';
+import {ProjectDto} from '../../dto';
+import {Workspace} from '../../store/navigation/workspace';
+import {environment} from '../../../../environments/environment';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store/app.state';
 
 @Injectable()
-export class ProjectService extends PermissionService {
+export class ApiProjectService extends ApiPermissionService implements ProjectService {
+
+  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(httpClient, store$);
+  }
+
   public getProjects(organizationId: string): Observable<ProjectDto[]> {
     return this.httpClient.get<ProjectDto[]>(this.apiPrefix(organizationId));
   }

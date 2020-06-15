@@ -26,7 +26,6 @@ import {EMPTY, Observable, of, pipe} from 'rxjs';
 import {catchError, concatMap, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionDto, ViewDto} from '../../dto';
-import {UserService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {NavigationAction} from '../navigation/navigation.action';
@@ -62,7 +61,7 @@ import {MapsAction} from '../maps/maps.action';
 import {CalendarsAction} from '../calendars/calendars.action';
 import {KanbansAction} from '../kanbans/kanbans.action';
 import {ChartAction} from '../charts/charts.action';
-import {ViewService} from '../../data-service';
+import {ViewService, UserService} from '../../data-service';
 
 @Injectable()
 export class ViewsEffects {

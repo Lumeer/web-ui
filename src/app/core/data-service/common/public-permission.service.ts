@@ -17,19 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Store} from '@ngrx/store';
-
 import {Observable, of} from 'rxjs';
 import {PermissionService} from './permission.service';
-import {AppState} from '../../store/app.state';
 import {PermissionDto, PermissionsDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {BaseService} from '../../rest/base.service';
 
-export abstract class MockPermissionService extends BaseService implements PermissionService {
-  protected constructor(protected store$: Store<AppState>) {
-    super(store$);
-  }
+export abstract class PublicPermissionService extends BaseService implements PermissionService {
 
   public getPermissions(): Observable<PermissionsDto> {
     return of({users: [], groups: []});

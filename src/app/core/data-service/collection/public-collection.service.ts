@@ -25,13 +25,17 @@ import {CollectionService} from './collection.service';
 import {AppState} from '../../store/app.state';
 import {AttributeDto, CollectionDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {MockPermissionService} from '../common/mock-permission.service';
+import {PublicPermissionService} from '../common/public-permission.service';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
+import {map} from 'rxjs/operators';
+import {DEFAULT_USER} from '../../constants';
+import {setDefaultUserPermissions} from '../common/public-api-util';
+import {Role} from '../../model/role';
 
 @Injectable()
-export class MockCollectionService extends MockPermissionService implements CollectionService {
+export class PublicCollectionService extends PublicPermissionService implements CollectionService {
   constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
@@ -61,8 +65,10 @@ export class MockCollectionService extends MockPermissionService implements Coll
   }
 
   public getCollections(workspace?: Workspace): Observable<CollectionDto[]> {
-    const queryParams = new HttpParams().append('fromViews', 'true');
-    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace), {params: queryParams});
+    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace)).pipe(
+      map(collections => collections.map(collection =>
+        setDefaultUserPermissions(collection, DEFAULT_USER, [Role.Read, Role.Write]))) // TODO check if project is writable
+    );
   }
 
   public setDefaultAttribute(collectionId: string, attributeId: string): Observable<any> {
@@ -89,6 +95,6 @@ export class MockCollectionService extends MockPermissionService implements Coll
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/collections`;
+    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/collections`;
   }
 }
