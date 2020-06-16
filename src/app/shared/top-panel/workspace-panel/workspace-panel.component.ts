@@ -33,6 +33,7 @@ import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace, selectProjectsForWorkspace} from '../../../core/store/projects/projects.state';
 import {WorkspaceSelectService} from '../../../core/service/workspace-select.service';
 import {ResourceMenuComponent} from './resource-menu/resource-menu.component';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'workspace-panel',
@@ -47,6 +48,7 @@ export class WorkspacePanelComponent implements OnInit {
   @Input()
   public contentHeight: number;
 
+  public readonly showDropdowns = !environment.publicView;
   public readonly organizationResourceType = ResourceType.Organization;
   public readonly projectResourceType = ResourceType.Project;
 

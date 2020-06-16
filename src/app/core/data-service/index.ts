@@ -26,3 +26,5 @@ export {SearchService} from './search/search.service';
 export {UserService} from './user/user.service';
 export {OrganizationService} from './organization/organization.service';
 export {ProjectService} from './project/project.service';
+export {AttachmentsService} from './attachments/attachments.service';
+export {GeocodingService} from './geocoding/geocoding.service';

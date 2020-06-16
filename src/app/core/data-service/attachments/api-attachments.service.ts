@@ -20,18 +20,16 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {DataCursor} from '../../shared/data-input/data-cursor';
-import {FileAttachmentDto} from '../dto/file-attachment.dto';
-import {Workspace} from '../store/navigation/workspace';
-
-const API_URL = `${environment.apiUrl}/rest`;
+import {FileApiPath, AttachmentsService} from './attachments.service';
+import {FileAttachmentDto} from '../../dto/file-attachment.dto';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FileAttachmentApiService {
-  constructor(private http: HttpClient) {}
+export class ApiAttachmentsService implements AttachmentsService {
+  constructor(private http: HttpClient) {
+  }
 
   public createFile(path: FileApiPath, file: FileAttachmentDto): Observable<FileAttachmentDto> {
     return this.http.post<FileAttachmentDto>(this.filesUrl(path), file);
@@ -84,16 +82,6 @@ export class FileAttachmentApiService {
   }
 
   private filesUrl(workspace: Partial<FileApiPath>): string {
-    return `${API_URL}/organizations/${workspace.organizationId}/projects/${workspace.projectId}/files`;
+    return `${environment.apiUrl}/rest/organizations/${workspace.organizationId}/projects/${workspace.projectId}/files`;
   }
-}
-
-export type FileApiPath = Pick<Workspace, 'organizationId' | 'projectId'> & DataCursor;
-
-export function createFileApiPath(
-  workspace: Pick<Workspace, 'organizationId' | 'projectId'>,
-  dataCursor: DataCursor
-): FileApiPath {
-  const {organizationId, projectId} = workspace;
-  return {...dataCursor, organizationId, projectId};
 }

@@ -23,7 +23,6 @@ import {Action, select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {catchError, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
-import {createFileApiPath, FileApiPath, FileAttachmentApiService} from '../../rest/file-attachment-api.service';
 import {CommonAction} from '../common/common.action';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
 import {selectCollectionsByCustomQuery} from '../common/permissions.selectors';
@@ -31,6 +30,8 @@ import {getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertFileAttachmentDtoToModel, convertFileAttachmentModelToDto} from './file-attachment.converter';
 import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
+import {AttachmentsService} from '../../data-service';
+import {createFileApiPath, FileApiPath} from '../../data-service/attachments/attachments.service';
 
 @Injectable()
 export class FileAttachmentsEffects {
@@ -42,7 +43,7 @@ export class FileAttachmentsEffects {
       const path = createFileApiPath(workspace, action.payload.fileAttachment);
       const dto = convertFileAttachmentModelToDto(action.payload.fileAttachment, workspace);
 
-      return this.fileAttachmentApiService.createFile(path, dto).pipe(
+      return this.attachmentsService.createFile(path, dto).pipe(
         map(file => convertFileAttachmentDtoToModel(file, true)),
         mergeMap(fileAttachment => [
           new FileAttachmentsAction.CreateSuccess({fileAttachment}),
@@ -59,7 +60,7 @@ export class FileAttachmentsEffects {
     withLatestFrom(this.store$.pipe(select(selectWorkspaceWithIds))),
     mergeMap(([action, workspace]) => {
       const {fileId, onSuccess, onFailure} = action.payload;
-      return this.fileAttachmentApiService.removeFile(workspace, fileId).pipe(
+      return this.attachmentsService.removeFile(workspace, fileId).pipe(
         mergeMap(() => [new FileAttachmentsAction.RemoveSuccess({fileId}), ...createCallbackActions(onSuccess)]),
         catchError(error => emitErrorActions(error, onFailure))
       );
@@ -113,7 +114,7 @@ export class FileAttachmentsEffects {
     mergeMap(([action, workspace]) => {
       const path = createFileApiPath(workspace, action.payload);
 
-      return this.fileAttachmentApiService.getFilesWithDetailsByDocumentAttribute(path).pipe(
+      return this.attachmentsService.getFilesWithDetailsByDocumentAttribute(path).pipe(
         map(files => files.map(file => convertFileAttachmentDtoToModel(file))),
         map(fileAttachments => new FileAttachmentsAction.GetSuccess({fileAttachments})),
         catchError(error => of(new CommonAction.HandleError({error})))
@@ -123,31 +124,31 @@ export class FileAttachmentsEffects {
 
   private getDocumentFiles(path: FileApiPath): Observable<FileAttachmentDto[]> {
     if (path.collectionId && path.documentId && path.attributeId) {
-      return this.fileAttachmentApiService.getFilesByDocumentAttribute(path);
+      return this.attachmentsService.getFilesByDocumentAttribute(path);
     }
 
     if (path.collectionId && path.documentId) {
-      return this.fileAttachmentApiService.getFilesByDocument(path);
+      return this.attachmentsService.getFilesByDocument(path);
     }
 
-    return this.fileAttachmentApiService.getFilesByCollection(path);
+    return this.attachmentsService.getFilesByCollection(path);
   }
 
   private getLinkFiles(path: FileApiPath): Observable<FileAttachmentDto[]> {
     if (path.linkTypeId && path.linkInstanceId && path.attributeId) {
-      return this.fileAttachmentApiService.getFilesByLinkInstanceAttribute(path);
+      return this.attachmentsService.getFilesByLinkInstanceAttribute(path);
     }
 
     if (path.linkTypeId && path.linkInstanceId) {
-      return this.fileAttachmentApiService.getFilesByLinkInstance(path);
+      return this.attachmentsService.getFilesByLinkInstance(path);
     }
 
-    return this.fileAttachmentApiService.getFilesByLinkType(path);
+    return this.attachmentsService.getFilesByLinkType(path);
   }
 
   constructor(
     private actions$: Actions,
-    private fileAttachmentApiService: FileAttachmentApiService,
+    private attachmentsService: AttachmentsService,
     private store$: Store<{}>
   ) {}
 }

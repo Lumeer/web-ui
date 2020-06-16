@@ -58,6 +58,7 @@ import {SearchTab} from '../../core/store/navigation/search-tab';
 import {QueryParam} from '../../core/store/navigation/query-param';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 import {ViewsAction} from '../../core/store/views/views.action';
+import {environment} from '../../../environments/environment';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -96,6 +97,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   private currentPerspective: Perspective;
   private workspace: Workspace;
 
+  public readonly canShareView = !environment.publicView;
   public readonly perspectives = Object.values(Perspective);
 
   private subscriptions = new Subscription();

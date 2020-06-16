@@ -17,19 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Environment} from './environment-type';
-import {environmentVariables} from './environment-variables';
+import {Injectable} from '@angular/core';
+import {Observable, of} from 'rxjs';
+import {GeocodingService} from './geocoding.service';
+import {CoordinatesDto, LocationDto} from '../../dto/location.dto';
 
-export const environment: Environment = {
-  analytics: true,
-  auth: false,
-  authPersistence: true,
-  production: true,
-  publicView: true,
-  pusherLogDisabled: true,
-  notificationsDisabled: true,
-  storeDevtools: false,
-  name: 'public',
-  paymentGw: 'https://gate.gopay.com/gp-gw/js/embed.js',
-  ...environmentVariables,
-};
+@Injectable({
+  providedIn: 'root',
+})
+export class PublicGeocodingService implements GeocodingService {
+  public findCoordinates(queries: string[]): Observable<Record<string, CoordinatesDto>> {
+    return of({});
+  }
+
+  public findLocations(query: string, limit = 10): Observable<LocationDto[]> {
+    return of([]);
+  }
+
+  public findLocationByCoordinates(coordinates: CoordinatesDto): Observable<LocationDto> {
+    return of(null);
+  }
+}

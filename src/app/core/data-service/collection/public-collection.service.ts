@@ -67,7 +67,7 @@ export class PublicCollectionService extends PublicPermissionService implements 
   public getCollections(workspace?: Workspace): Observable<CollectionDto[]> {
     return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace)).pipe(
       map(collections => collections.map(collection =>
-        setDefaultUserPermissions(collection, DEFAULT_USER, [Role.Read, Role.Write]))) // TODO check if project is writable
+        setDefaultUserPermissions(collection, DEFAULT_USER, [Role.Read, Role.Write, Role.Manage]))) // TODO check if project is writable
     );
   }
 

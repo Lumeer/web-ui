@@ -22,12 +22,11 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {catchError, map, mergeMap, take} from 'rxjs/operators';
-import {GeoCodingApiService} from '../../rest/geocoding-api.service';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {GeocodingAction, GeocodingActionType} from './geocoding.action';
 import {selectGeocodingQueryCoordinates, selectLocationByCoordinates, selectLocationsByQuery} from './geocoding.state';
 import {GeocodingConverter} from './geocoding.converter';
-import fromDto = GeocodingConverter.fromDto;
+import {GeocodingService} from '../../data-service';
 
 @Injectable()
 export class GeocodingEffects {
@@ -111,5 +110,5 @@ export class GeocodingEffects {
     })
   );
 
-  constructor(private actions$: Actions, private geocodingApiService: GeoCodingApiService, private store$: Store<{}>) {}
+  constructor(private actions$: Actions, private geocodingApiService: GeocodingService, private store$: Store<{}>) {}
 }
