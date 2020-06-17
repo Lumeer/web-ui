@@ -35,7 +35,7 @@ import {map, mergeMap, take} from 'rxjs/operators';
 import {Role} from '../../model/role';
 import {selectViewByCode} from '../../store/views/views.state';
 import {convertViewModelToDto} from '../../store/views/view.converter';
-import {selectAllProjects, selectPublicProject} from '../../store/projects/projects.state';
+import {selectPublicProject} from '../../store/projects/projects.state';
 
 @Injectable()
 export class PublicViewService extends BaseService implements ViewService {

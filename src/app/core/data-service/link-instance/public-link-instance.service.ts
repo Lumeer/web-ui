@@ -46,7 +46,7 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
       select(selectLinkInstancesByIds(linkInstanceIds)),
       take(1),
       map(linkInstances => linkInstances.map(linkInstance => convertLinkInstanceModelToDto(linkInstance)))
-    )
+    );
   }
 
   public updateLinkInstance(linkInstance: LinkInstanceDto): Observable<LinkInstanceDto> {
@@ -58,17 +58,21 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
   }
 
   public patchLinkInstanceData(linkInstanceId: string, data: Record<string, any>): Observable<LinkInstanceDto> {
-    return this.getLinkInstanceFromStore$(linkInstanceId).pipe(map(linkInstance => ({
-      ...linkInstance,
-      data: {...linkInstance.data, ...data}
-    })));
+    return this.getLinkInstanceFromStore$(linkInstanceId).pipe(
+      map(linkInstance => ({
+        ...linkInstance,
+        data: {...linkInstance.data, ...data},
+      }))
+    );
   }
 
   public updateLinkInstanceData(linkInstanceDto: LinkInstanceDto): Observable<LinkInstanceDto> {
-    return this.getLinkInstanceFromStore$(linkInstanceDto.id).pipe(map(linkInstance => ({
-      ...linkInstance,
-      data: linkInstanceDto.data
-    })));
+    return this.getLinkInstanceFromStore$(linkInstanceDto.id).pipe(
+      map(linkInstance => ({
+        ...linkInstance,
+        data: linkInstanceDto.data,
+      }))
+    );
   }
 
   private getLinkInstanceFromStore$(id: string): Observable<LinkInstanceDto> {
@@ -76,7 +80,7 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
       select(selectLinkInstanceById(id)),
       take(1),
       map(model => model && convertLinkInstanceModelToDto(model))
-    )
+    );
   }
 
   public deleteLinkInstance(id: string): Observable<string> {
@@ -87,14 +91,18 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
     return this.store$.pipe(
       select(selectLinkInstancesByIds(linkInstanceDuplicate.linkInstanceIds)),
       take(1),
-      map(linkInstances => linkInstances.map(linkInstance => {
-        const documentIds = [...linkInstance.documentIds].map(documentId =>
-          documentId === linkInstanceDuplicate.originalDocumentId ?
-            linkInstanceDuplicate.newDocumentId : linkInstanceDuplicate[documentId] || documentId) as [string, string]
+      map(linkInstances =>
+        linkInstances.map(linkInstance => {
+          const documentIds = [...linkInstance.documentIds].map(documentId =>
+            documentId === linkInstanceDuplicate.originalDocumentId
+              ? linkInstanceDuplicate.newDocumentId
+              : linkInstanceDuplicate[documentId] || documentId
+          ) as [string, string];
 
-        const newLinkInstance = {...linkInstance, id: generateId(), documentIds};
-        return convertLinkInstanceModelToDto(newLinkInstance);
-      }))
-    )
+          const newLinkInstance = {...linkInstance, id: generateId(), documentIds};
+          return convertLinkInstanceModelToDto(newLinkInstance);
+        })
+      )
+    );
   }
 }

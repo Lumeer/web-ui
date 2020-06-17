@@ -23,27 +23,27 @@ import {Workspace} from '../../store/navigation/workspace';
 import {PermissionService} from '../common/permission.service';
 
 export abstract class CollectionService extends PermissionService {
-  abstract createCollection(collection: CollectionDto): Observable<CollectionDto>;
+  public abstract createCollection(collection: CollectionDto): Observable<CollectionDto>;
 
-  abstract updateCollection(collection: CollectionDto): Observable<CollectionDto>;
+  public abstract updateCollection(collection: CollectionDto): Observable<CollectionDto>;
 
-  abstract removeCollection(collectionId: string): Observable<string>;
+  public abstract removeCollection(collectionId: string): Observable<string>;
 
-  abstract addFavorite(collectionId: string, workspace?: Workspace): Observable<any>;
+  public abstract addFavorite(collectionId: string, workspace?: Workspace): Observable<any>;
 
-  abstract removeFavorite(collectionId: string, workspace?: Workspace): Observable<any>;
+  public abstract removeFavorite(collectionId: string, workspace?: Workspace): Observable<any>;
 
-  abstract getCollection(collectionId: string): Observable<CollectionDto>;
+  public abstract getCollection(collectionId: string): Observable<CollectionDto>;
 
-  abstract getCollections(workspace?: Workspace): Observable<CollectionDto[]>;
+  public abstract getCollections(workspace?: Workspace): Observable<CollectionDto[]>;
 
-  abstract setDefaultAttribute(collectionId: string, attributeId: string): Observable<any>;
+  public abstract setDefaultAttribute(collectionId: string, attributeId: string): Observable<any>;
 
-  abstract createAttribute(collectionId: string, attribute: AttributeDto): Observable<AttributeDto>;
+  public abstract createAttribute(collectionId: string, attribute: AttributeDto): Observable<AttributeDto>;
 
-  abstract createAttributes(collectionId: string, attributes: AttributeDto[]): Observable<AttributeDto[]>;
+  public abstract createAttributes(collectionId: string, attributes: AttributeDto[]): Observable<AttributeDto[]>;
 
-  abstract updateAttribute(collectionId: string, id: string, attribute: AttributeDto): Observable<AttributeDto>;
+  public abstract updateAttribute(collectionId: string, id: string, attribute: AttributeDto): Observable<AttributeDto>;
 
-  abstract removeAttribute(collectionId: string, id: string): Observable<any>;
+  public abstract removeAttribute(collectionId: string, id: string): Observable<any>;
 }

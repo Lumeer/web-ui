@@ -93,6 +93,5 @@ export class ServiceLimitsEffects {
     private router: Router,
     private actions$: Actions,
     private organizationService: OrganizationService
-  ) {
-  }
+  ) {}
 }

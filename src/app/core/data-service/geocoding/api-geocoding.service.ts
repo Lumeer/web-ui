@@ -30,8 +30,7 @@ const GEOCODING_URL = `${environment.apiUrl}/rest/geocoding`;
   providedIn: 'root',
 })
 export class ApiGeocodingService implements GeocodingService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   public findCoordinates(queries: string[]): Observable<Record<string, CoordinatesDto>> {
     return this.http.get<Record<string, CoordinatesDto>>(`${GEOCODING_URL}/coordinates`, {

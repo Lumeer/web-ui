@@ -85,8 +85,7 @@ export class PusherService implements OnDestroy {
     private authService: AuthService,
     private organizationService: OrganizationService,
     private projectService: ProjectService
-  ) {
-  }
+  ) {}
 
   public init(): void {
     if (environment.auth) {

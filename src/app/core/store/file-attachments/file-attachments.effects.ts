@@ -146,9 +146,5 @@ export class FileAttachmentsEffects {
     return this.attachmentsService.getFilesByLinkType(path);
   }
 
-  constructor(
-    private actions$: Actions,
-    private attachmentsService: AttachmentsService,
-    private store$: Store<{}>
-  ) {}
+  constructor(private actions$: Actions, private attachmentsService: AttachmentsService, private store$: Store<{}>) {}
 }

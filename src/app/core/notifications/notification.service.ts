@@ -26,8 +26,7 @@ import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class NotificationService {
-  constructor(private notifications: ToastrService, private i18n: I18n) {
-  }
+  constructor(private notifications: ToastrService, private i18n: I18n) {}
 
   public success(message: string, config?: Partial<IndividualConfig>) {
     if (!environment.notificationsDisabled) {

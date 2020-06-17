@@ -30,7 +30,6 @@ import {DEFAULT_USER} from '../../constants';
 
 @Injectable()
 export class PublicUserService implements UserService {
-
   public createUser(organizationId: string, user: UserDto): Observable<UserDto> {
     return of({...user, id: generateId()});
   }
@@ -67,7 +66,7 @@ export class PublicUserService implements UserService {
       wizardDismissed: true,
       affiliatePartner: false,
       groups: {},
-      lastLoggedIn: new Date().getTime()
+      lastLoggedIn: new Date().getTime(),
     });
   }
 

@@ -115,8 +115,8 @@ export class ApiDocumentService extends BaseService implements DocumentService {
   public createChain(
     documents: DocumentDto[],
     linkInstances: LinkInstanceDto[]
-  ): Observable<{ documents: DocumentDto[]; linkInstances: LinkInstanceDto[] }> {
-    return this.httpClient.post<{ documents: DocumentDto[]; linkInstances: LinkInstanceDto[] }>(
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
+    return this.httpClient.post<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}>(
       `${this.workspaceApiPrefix()}/data/documentsChain`,
       {
         documents,

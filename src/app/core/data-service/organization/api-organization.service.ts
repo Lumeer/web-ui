@@ -76,8 +76,8 @@ export class ApiOrganizationService extends ApiPermissionService implements Orga
     return this.httpClient.get<ServiceLimitsDto>(`${this.apiPrefix(id)}/serviceLimit`);
   }
 
-  public getAllServiceLimits(): Observable<{ [organizationId: string]: ServiceLimitsDto }> {
-    return this.httpClient.get<{ [organizationId: string]: ServiceLimitsDto }>(`${this.apiPrefix()}/info/serviceLimits`);
+  public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}> {
+    return this.httpClient.get<{[organizationId: string]: ServiceLimitsDto}>(`${this.apiPrefix()}/info/serviceLimits`);
   }
 
   public getPayments(): Observable<PaymentDto[]> {

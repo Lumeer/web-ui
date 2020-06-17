@@ -112,7 +112,7 @@ export class WorkspaceService {
     if (organization) {
       return combineLatest([
         this.selectUser(organization),
-        this.getProjectFromStoreOrApi(organization.id, projectCode)
+        this.getProjectFromStoreOrApi(organization.id, projectCode),
       ]).pipe(map(([user, project]) => ({user, project})));
     }
     return of({});

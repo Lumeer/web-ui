@@ -30,8 +30,7 @@ import {catchError} from 'rxjs/operators';
   providedIn: 'root',
 })
 export class PublicAttachmentsService implements AttachmentsService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   public createFile(path: FileApiPath, file: FileAttachmentDto): Observable<FileAttachmentDto> {
     return of({...file, id: generateId()});
@@ -42,9 +41,9 @@ export class PublicAttachmentsService implements AttachmentsService {
   }
 
   public getFilesByCollection(path: FileApiPath): Observable<FileAttachmentDto[]> {
-    return this.http.get<FileAttachmentDto[]>(`${this.filesUrl(path)}/collection/${path.collectionId}`).pipe(
-      catchError(() => of([]))
-    );
+    return this.http
+      .get<FileAttachmentDto[]>(`${this.filesUrl(path)}/collection/${path.collectionId}`)
+      .pipe(catchError(() => of([])));
   }
 
   public getFilesByDocument(path: FileApiPath): Observable<FileAttachmentDto[]> {
@@ -60,9 +59,9 @@ export class PublicAttachmentsService implements AttachmentsService {
   }
 
   public getFilesByLinkType(path: FileApiPath): Observable<FileAttachmentDto[]> {
-    return this.http.get<FileAttachmentDto[]>(`${this.filesUrl(path)}/link/${path.linkTypeId}`).pipe(
-      catchError(() => of([]))
-    );
+    return this.http
+      .get<FileAttachmentDto[]>(`${this.filesUrl(path)}/link/${path.linkTypeId}`)
+      .pipe(catchError(() => of([])));
   }
 
   public getFilesByLinkInstance(path: FileApiPath): Observable<FileAttachmentDto[]> {

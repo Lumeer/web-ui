@@ -22,14 +22,19 @@ import {Observable} from 'rxjs';
 import {Workspace} from '../../store/navigation/workspace';
 
 export abstract class PermissionService {
+  public abstract getPermissions(): Observable<PermissionsDto>;
 
-  abstract getPermissions(): Observable<PermissionsDto>;
+  public abstract updateUserPermission(
+    userPermissions: PermissionDto[],
+    workspace?: Workspace
+  ): Observable<PermissionDto>;
 
-  abstract updateUserPermission(userPermissions: PermissionDto[], workspace?: Workspace): Observable<PermissionDto>;
+  public abstract updateGroupPermission(
+    userPermissions: PermissionDto[],
+    workspace?: Workspace
+  ): Observable<PermissionDto>;
 
-  abstract updateGroupPermission(userPermissions: PermissionDto[], workspace?: Workspace): Observable<PermissionDto>;
+  public abstract removeUserPermission(user: string): Observable<any>;
 
-  abstract removeUserPermission(user: string): Observable<any>;
-
-  abstract removeGroupPermission(group: string): Observable<any>;
+  public abstract removeGroupPermission(group: string): Observable<any>;
 }

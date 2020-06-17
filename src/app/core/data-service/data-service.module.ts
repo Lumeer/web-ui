@@ -56,55 +56,52 @@ import {ApiGeocodingService} from './geocoding/api-geocoding.service';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   providers: [
     {
       provide: CollectionService,
-      useClass: environment.publicView ? PublicCollectionService : ApiCollectionService
+      useClass: environment.publicView ? PublicCollectionService : ApiCollectionService,
     },
     {
       provide: LinkTypeService,
-      useClass: environment.publicView ? PublicLinkTypeService : ApiLinkTypeService
+      useClass: environment.publicView ? PublicLinkTypeService : ApiLinkTypeService,
     },
     {
       provide: ViewService,
-      useClass: environment.publicView ? PublicViewService : ApiViewService
+      useClass: environment.publicView ? PublicViewService : ApiViewService,
     },
     {
       provide: DocumentService,
-      useClass: environment.publicView ? PublicDocumentService : ApiDocumentService
+      useClass: environment.publicView ? PublicDocumentService : ApiDocumentService,
     },
     {
       provide: LinkInstanceService,
-      useClass: environment.publicView ? PublicLinkInstanceService : ApiLinkInstanceService
+      useClass: environment.publicView ? PublicLinkInstanceService : ApiLinkInstanceService,
     },
     {
       provide: SearchService,
-      useClass: environment.publicView ? PublicSearchService : ApiSearchService
+      useClass: environment.publicView ? PublicSearchService : ApiSearchService,
     },
     {
       provide: UserService,
-      useClass: environment.publicView ? PublicUserService : ApiUserService
+      useClass: environment.publicView ? PublicUserService : ApiUserService,
     },
     {
       provide: OrganizationService,
-      useClass: environment.publicView ? PublicOrganizationService : ApiOrganizationService
+      useClass: environment.publicView ? PublicOrganizationService : ApiOrganizationService,
     },
     {
       provide: ProjectService,
-      useClass: environment.publicView ? PublicProjectService : ApiProjectService
+      useClass: environment.publicView ? PublicProjectService : ApiProjectService,
     },
     {
       provide: AttachmentsService,
-      useClass: environment.publicView ? PublicAttachmentsService : ApiAttachmentsService
+      useClass: environment.publicView ? PublicAttachmentsService : ApiAttachmentsService,
     },
     {
       provide: GeocodingService,
-      useClass: environment.publicView ? PublicGeocodingService : ApiGeocodingService
+      useClass: environment.publicView ? PublicGeocodingService : ApiGeocodingService,
     },
-  ]
+  ],
 })
-export class DataServiceModule {
-}
+export class DataServiceModule {}

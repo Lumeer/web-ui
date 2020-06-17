@@ -31,7 +31,7 @@ import {FeedbackDto} from '../../dto/feedback.dto';
 import {environment} from '../../../../environments/environment';
 
 @Injectable()
-export class ApiUserService implements UserService{
+export class ApiUserService implements UserService {
   constructor(private httpClient: HttpClient) {}
 
   public createUser(organizationId: string, user: UserDto): Observable<UserDto> {

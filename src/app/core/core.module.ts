@@ -42,10 +42,7 @@ import {HomeComponent} from './home.component';
 import {NotificationsModule} from './notifications/notifications.module';
 import {PusherService} from './pusher/pusher.service';
 import {RedirectComponent} from './redirect.component';
-import {
-  GroupService,
-  ImportService,
-} from './rest';
+import {GroupService, ImportService} from './rest';
 import {BaseService} from './rest/base.service';
 import {httpInterceptorProviders} from './rest/interceptors/http-interceptors';
 import {UserNotificationsService} from './rest/user-notifications.service';

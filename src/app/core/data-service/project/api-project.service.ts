@@ -30,7 +30,6 @@ import {AppState} from '../../store/app.state';
 
 @Injectable()
 export class ApiProjectService extends ApiPermissionService implements ProjectService {
-
   constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
     super(httpClient, store$);
   }

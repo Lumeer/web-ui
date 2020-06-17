@@ -28,8 +28,7 @@ import {environment} from '../../../../environments/environment';
   providedIn: 'root',
 })
 export class ApiAttachmentsService implements AttachmentsService {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   public createFile(path: FileApiPath, file: FileAttachmentDto): Observable<FileAttachmentDto> {
     return this.http.post<FileAttachmentDto>(this.filesUrl(path), file);

@@ -24,7 +24,6 @@ import {Workspace} from '../../store/navigation/workspace';
 import {BaseService} from '../../rest/base.service';
 
 export abstract class PublicPermissionService extends BaseService implements PermissionService {
-
   public getPermissions(): Observable<PermissionsDto> {
     return of({users: [], groups: []});
   }
