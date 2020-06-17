@@ -22,7 +22,7 @@ import {environmentVariables} from './environment-variables';
 
 export const environment: Environment = {
   analytics: true,
-  auth: true,
+  auth: false,
   authPersistence: true,
   production: true,
   publicView: true,
