@@ -38,7 +38,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
   }
 
   public createDocument(document: DocumentDto): Observable<DocumentDto> {
-    return of({...document, id: generateId()});
+    return of({...document, id: generateId(), dataVersion: 0});
   }
 
   public patchDocument(
@@ -53,6 +53,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     return this.getDocumentFromStore$(document.id).pipe(
       map(documentFromStore => ({
         ...documentFromStore,
+        dataVersion: (documentFromStore.dataVersion || 0) + 1,
         data: document.data,
       }))
     );
@@ -62,6 +63,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     return this.getDocumentFromStore$(document.id).pipe(
       map(documentFromStore => ({
         ...documentFromStore,
+        dataVersion: (documentFromStore.dataVersion || 0) + 1,
         data: {...documentFromStore.data, ...document.data},
       }))
     );
@@ -71,6 +73,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     return this.getDocumentFromStore$(document.id).pipe(
       map(documentFromStore => ({
         ...documentFromStore,
+        dataVersion: (documentFromStore.dataVersion || 0) + 1,
         metaData: document.metaData,
       }))
     );
@@ -84,6 +87,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     return this.getDocumentFromStore$(documentId).pipe(
       map(documentFromStore => ({
         ...documentFromStore,
+        dataVersion: (documentFromStore.dataVersion || 0) + 1,
         metaData: {...documentFromStore.metaData, ...metaData},
       }))
     );

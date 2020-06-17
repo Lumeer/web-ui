@@ -54,7 +54,7 @@ export class PublicProjectService extends PublicPermissionService implements Pro
           setDefaultUserPermissions(
             project,
             DEFAULT_USER,
-            project.templateMetadata.editable ? [Role.Read, Role.Write] : [Role.Read]
+            project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
           )
         )
       );
