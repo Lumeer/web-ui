@@ -33,7 +33,8 @@ writeFileSync('./src/environments/.env.json', JSON.stringify(config));
 const buildSwitches = `--base-href=${config.PUBLIC_PATH}
     ${config.LUMEER_ENV ? '--configuration=' + config.LUMEER_ENV : ''}
     ${
-      (config.LUMEER_ENV === 'production' || config.LUMEER_ENV === 'staging') && !config.SKIP_MULTI_LOCALIZE
+      (config.LUMEER_ENV === 'production' || config.LUMEER_ENV === 'staging' || config.LUMEER_ENV === 'public') &&
+      !config.SKIP_MULTI_LOCALIZE
         ? '--localize'
         : ''
     }`;
