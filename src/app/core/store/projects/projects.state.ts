@@ -89,4 +89,6 @@ export const selectProjectByOrganizationAndCode = (organizationId: string, proje
 
 export const selectProjectTemplates = createSelector(selectProjectsState, state => state.templates);
 
+export const selectPublicProject = createSelector(selectAllProjects, projects => projects[0]);
+
 export const selectProjectTemplatesLoadingState = createSelector(selectProjectsState, state => state.templatesState);

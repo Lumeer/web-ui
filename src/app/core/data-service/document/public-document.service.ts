@@ -27,7 +27,6 @@ import {AppState} from '../../store/app.state';
 import {DocumentDto, LinkInstanceDto} from '../../dto';
 import {DocumentMetaDataDto} from '../../dto/document.dto';
 import {Workspace} from '../../store/navigation/workspace';
-import {environment} from '../../../../environments/environment';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {selectDocumentById, selectDocumentsByIds} from '../../store/documents/documents.state';
 import {convertDocumentModelToDto} from '../../store/documents/document.converter';
@@ -47,30 +46,34 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     documentId: string,
     document: Partial<DocumentDto>
   ): Observable<DocumentDto> {
-    return this.getDocumentFromStore$(documentId).pipe(
-      map(documentFromStore => ({...documentFromStore, ...document}))
-    );
+    return this.getDocumentFromStore$(documentId).pipe(map(documentFromStore => ({...documentFromStore, ...document})));
   }
 
   public updateDocumentData(document: DocumentDto): Observable<DocumentDto> {
-    return this.getDocumentFromStore$(document.id).pipe(map(documentFromStore => ({
-      ...documentFromStore,
-      data: document.data
-    })));
+    return this.getDocumentFromStore$(document.id).pipe(
+      map(documentFromStore => ({
+        ...documentFromStore,
+        data: document.data,
+      }))
+    );
   }
 
   public patchDocumentData(document: DocumentDto): Observable<DocumentDto> {
-    return this.getDocumentFromStore$(document.id).pipe(map(documentFromStore => ({
-      ...documentFromStore,
-      data: {...documentFromStore.data, ...document.data}
-    })));
+    return this.getDocumentFromStore$(document.id).pipe(
+      map(documentFromStore => ({
+        ...documentFromStore,
+        data: {...documentFromStore.data, ...document.data},
+      }))
+    );
   }
 
   public updateDocumentMetaData(document: DocumentDto): Observable<DocumentDto> {
-    return this.getDocumentFromStore$(document.id).pipe(map(documentFromStore => ({
-      ...documentFromStore,
-      metaData: document.metaData
-    })));
+    return this.getDocumentFromStore$(document.id).pipe(
+      map(documentFromStore => ({
+        ...documentFromStore,
+        metaData: document.metaData,
+      }))
+    );
   }
 
   public patchDocumentMetaData(
@@ -78,10 +81,12 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     documentId: string,
     metaData: DocumentMetaDataDto
   ): Observable<DocumentDto> {
-    return this.getDocumentFromStore$(documentId).pipe(map(documentFromStore => ({
-      ...documentFromStore,
-      metaData: {...documentFromStore.metaData, ...metaData}
-    })));
+    return this.getDocumentFromStore$(documentId).pipe(
+      map(documentFromStore => ({
+        ...documentFromStore,
+        metaData: {...documentFromStore.metaData, ...metaData},
+      }))
+    );
   }
 
   private getDocumentFromStore$(id: string): Observable<DocumentDto> {
@@ -89,7 +94,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
       select(selectDocumentById(id)),
       take(1),
       map(model => model && convertDocumentModelToDto(model))
-    )
+    );
   }
 
   public removeDocument(collectionId: string, documentId: string): Observable<any> {
@@ -112,7 +117,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     return this.store$.pipe(
       select(selectDocumentsByIds(documentsIds)),
       map(documents => documents.map(document => convertDocumentModelToDto(document))),
-      take(1),
+      take(1)
     );
   }
 
@@ -125,19 +130,19 @@ export class PublicDocumentService extends BaseService implements DocumentServic
       select(selectDocumentsByIds(documentIds)),
       take(1),
       map(documents => documents.map(document => ({...convertDocumentModelToDto(document), id: generateId()})))
-    )
+    );
   }
 
   public createChain(
     documents: DocumentDto[],
     linkInstances: LinkInstanceDto[]
-  ): Observable<{ documents: DocumentDto[]; linkInstances: LinkInstanceDto[] }> {
+  ): Observable<{documents: DocumentDto[]; linkInstances: LinkInstanceDto[]}> {
     const chainDocuments: DocumentDto[] = documents.map(doc => ({...doc, id: doc.id || generateId()}));
     const chainLinks: LinkInstanceDto[] = linkInstances.map((linkInstance, index) => ({
       ...linkInstance,
       id: linkInstance.id || generateId(),
-      documentIds: [chainDocuments[index]?.id, chainDocuments[index + 1]?.id]
-    }))
+      documentIds: [chainDocuments[index]?.id, chainDocuments[index + 1]?.id],
+    }));
     return of({documents: chainDocuments, linkInstances: chainLinks});
   }
 }

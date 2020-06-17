@@ -7,7 +7,7 @@
          i18n-tooltip="@@topPanel.organizationMenu.title"
          placement="bottom"
          [class.cursor-pointer]="showDropdowns"
-         [tooltipEnable]="showDropdowns"
+         [isDisabled]="!showDropdowns"
          (click)="showDropdowns && organizationMenu.open()"
          [style.maxWidth.rem]="8" #organizationElement>
       <i [class]="data.organization?.icon" [style.color]="data.organization?.color">
@@ -31,7 +31,7 @@
          i18n-tooltip="@@topPanel.projectMenu.title"
          placement="bottom"
          [class.cursor-pointer]="showDropdowns"
-         [tooltipEnable]="showDropdowns"
+         [isDisabled]="!showDropdowns"
          [style.maxWidth.rem]="8"
          (click)="showDropdowns && projectMenu.open()"
          #projectElement>

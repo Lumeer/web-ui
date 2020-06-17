@@ -50,6 +50,7 @@ export function convertViewDtoToModel(dto: ViewDto): View {
 
 export function convertViewModelToDto(model: View): ViewDto {
   return {
+    id: model.id,
     code: model.code,
     name: model.name,
     query: convertQueryModelToDto(model.query),

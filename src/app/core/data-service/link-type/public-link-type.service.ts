@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {LinkTypeService} from './link-type.service';
 import {BaseService} from '../../rest/base.service';
@@ -28,6 +28,9 @@ import {AttributeDto, LinkTypeDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {environment} from '../../../../environments/environment';
 import {generateId} from '../../../shared/utils/resource.utils';
+import {selectLinkTypeById} from '../../store/link-types/link-types.state';
+import {map} from 'rxjs/operators';
+import {convertLinkTypeModelToDto} from '../../store/link-types/link-type.converter';
 
 @Injectable()
 export class PublicLinkTypeService extends BaseService implements LinkTypeService {
@@ -36,15 +39,18 @@ export class PublicLinkTypeService extends BaseService implements LinkTypeServic
   }
 
   public createLinkType(linkType: LinkTypeDto): Observable<LinkTypeDto> {
-    return of({...linkType, id: generateId()});
+    return of({...linkType, id: generateId(), version: 0, linksCount: 0});
   }
 
   public getLinkType(id: string): Observable<LinkTypeDto> {
     return of(null);
   }
 
-  public updateLinkType(id: string, linkType: LinkTypeDto): Observable<LinkTypeDto> {
-    return of(linkType);
+  public updateLinkType(id: string, dto: LinkTypeDto): Observable<LinkTypeDto> {
+    return this.store$.pipe(
+      select(selectLinkTypeById(id)),
+      map(linkType => ({...convertLinkTypeModelToDto(linkType), ...dto}))
+    );
   }
 
   public deleteLinkType(id: string): Observable<string> {

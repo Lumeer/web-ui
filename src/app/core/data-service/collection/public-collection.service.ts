@@ -19,7 +19,7 @@
 
 import {Injectable} from '@angular/core';
 
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {CollectionService} from './collection.service';
 import {AppState} from '../../store/app.state';
@@ -27,12 +27,15 @@ import {AttributeDto, CollectionDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {PublicPermissionService} from '../common/public-permission.service';
 import {generateId} from '../../../shared/utils/resource.utils';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
-import {map} from 'rxjs/operators';
+import {map, mergeMap, take} from 'rxjs/operators';
 import {DEFAULT_USER} from '../../constants';
 import {setDefaultUserPermissions} from '../common/public-api-util';
 import {Role} from '../../model/role';
+import {selectCollectionById} from '../../store/collections/collections.state';
+import {convertCollectionModelToDto} from '../../store/collections/collection.converter';
+import {selectPublicProject} from '../../store/projects/projects.state';
 
 @Injectable()
 export class PublicCollectionService extends PublicPermissionService implements CollectionService {
@@ -41,11 +44,23 @@ export class PublicCollectionService extends PublicPermissionService implements 
   }
 
   public createCollection(collection: CollectionDto): Observable<CollectionDto> {
-    return of({...collection, id: generateId(), documentsCount: 0});
+    return this.isProjectWritable$().pipe(
+      map(writable =>
+        setCollectionPermissions({...collection, id: generateId(), documentsCount: 0, version: 0}, writable)
+      )
+    );
   }
 
-  public updateCollection(collection: CollectionDto): Observable<CollectionDto> {
-    return of(collection);
+  public updateCollection(dto: CollectionDto): Observable<CollectionDto> {
+    return this.store$.pipe(
+      select(selectCollectionById(dto.id)),
+      map(collection => ({...convertCollectionModelToDto(collection), ...dto})),
+      map(collection => ({...collection, version: (collection.version || 0) + 1})),
+      take(1),
+      mergeMap(collection =>
+        this.isProjectWritable$().pipe(map(editable => setCollectionPermissions(collection, editable)))
+      )
+    );
   }
 
   public removeCollection(collectionId: string): Observable<string> {
@@ -65,9 +80,22 @@ export class PublicCollectionService extends PublicPermissionService implements 
   }
 
   public getCollections(workspace?: Workspace): Observable<CollectionDto[]> {
-    return this.httpClient.get<CollectionDto[]>(this.apiPrefix(workspace)).pipe(
-      map(collections => collections.map(collection =>
-        setDefaultUserPermissions(collection, DEFAULT_USER, [Role.Read, Role.Write, Role.Manage]))) // TODO check if project is writable
+    return this.httpClient
+      .get<CollectionDto[]>(this.apiPrefix(workspace))
+      .pipe(
+        mergeMap(collections =>
+          this.isProjectWritable$().pipe(
+            map(editable => collections.map(collection => setCollectionPermissions(collection, editable)))
+          )
+        )
+      );
+  }
+
+  private isProjectWritable$(): Observable<boolean> {
+    return this.store$.pipe(
+      select(selectPublicProject),
+      map(project => project?.templateMetadata?.editable),
+      take(1)
     );
   }
 
@@ -97,4 +125,8 @@ export class PublicCollectionService extends PublicPermissionService implements 
 
     return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/collections`;
   }
+}
+
+function setCollectionPermissions(dto: CollectionDto, editable?: boolean): CollectionDto {
+  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? [Role.Read, Role.Write, Role.Manage] : [Role.Read]);
 }

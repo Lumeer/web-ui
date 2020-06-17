@@ -28,12 +28,11 @@ import {AppState} from '../../store/app.state';
 import {environment} from '../../../../environments/environment';
 import {map} from 'rxjs/operators';
 import {setDefaultUserPermissions} from '../common/public-api-util';
-import {DEFAULT_USER} from '../../constants';
+import {DEFAULT_USER, STORAGE_PUBLIC_PROJECT} from '../../constants';
 import {Role} from '../../model/role';
 
 @Injectable()
 export class PublicProjectService extends PublicPermissionService implements ProjectService {
-
   constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
@@ -47,9 +46,18 @@ export class PublicProjectService extends PublicPermissionService implements Pro
   }
 
   public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {
-    return this.httpClient.get<ProjectDto>(this.apiPrefix(organizationId, '5edceaf836f79a7556118e9d')).pipe(
-      map(project => setDefaultUserPermissions(project, DEFAULT_USER, project.templateMetadata.editable ? [Role.Read, Role.Write] : [Role.Read]))
-    );
+    const id = localStorage.getItem(STORAGE_PUBLIC_PROJECT);
+    return this.httpClient
+      .get<ProjectDto>(this.apiPrefix(organizationId, id))
+      .pipe(
+        map(project =>
+          setDefaultUserPermissions(
+            project,
+            DEFAULT_USER,
+            project.templateMetadata.editable ? [Role.Read, Role.Write] : [Role.Read]
+          )
+        )
+      );
   }
 
   public getProjectByCode(organizationId: string, projectCode: string): Observable<ProjectDto> {

@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy} from '@angular/core';
-import {Project} from '../../../../core/store/projects/project';
+import {Project, TemplateMetadata} from '../../../../core/store/projects/project';
 import {View} from '../../../../core/store/views/view';
 import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
 import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
@@ -26,6 +26,7 @@ import {Subscription} from 'rxjs';
 import {UpdateProjectService} from '../update-project.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
+import * as moment from 'moment';
 
 @Component({
   selector: 'project-template-metadata',
@@ -110,7 +111,7 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
       this.metadataFormGroup.valueChanges.subscribe(templateMetadata =>
         this.updateProject({
           ...this.project,
-          templateMetadata,
+          templateMetadata: templateMetadataCleanUp(templateMetadata),
           isPublic: this.isPublicControl.value,
         })
       )
@@ -129,4 +130,12 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
   public onViewSelected(viewId: string) {
     this.defaultViewControl.patchValue(viewId);
   }
+}
+
+function templateMetadataCleanUp(metadata: TemplateMetadata): TemplateMetadata {
+  return metadata && {...metadata, relativeDate: relativeDateCleanUp(metadata.relativeDate)};
+}
+
+function relativeDateCleanUp(date: Date): Date {
+  return date && moment(date).hours(0).minutes(0).milliseconds(0).toDate();
 }

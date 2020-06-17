@@ -50,6 +50,7 @@ import {animate, style, transition, trigger} from '@angular/animations';
 import {take} from 'rxjs/operators';
 import {QueryAction} from '../../../core/model/query-action';
 import {SearchTab} from '../../../core/store/navigation/search-tab';
+import {environment} from '../../../../environments/environment';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -104,6 +105,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   public selectedCollections$ = new BehaviorSubject<string[]>([]);
   public correlationIdsOrder = [];
 
+  public readonly canImportCollection = !environment.publicView;
   public readonly projectType = ResourceType.Project;
 
   private readonly colors = Colors.palette;

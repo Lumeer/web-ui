@@ -27,10 +27,10 @@ import {PaymentDto} from '../../dto/payment.dto';
 import {OrganizationService} from './organization.service';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
+import {STORAGE_PUBLIC_ORGANIZATION} from '../../constants';
 
 @Injectable()
 export class PublicOrganizationService extends PublicPermissionService implements OrganizationService {
-
   constructor(protected store$: Store<AppState>) {
     super(store$);
   }
@@ -44,7 +44,8 @@ export class PublicOrganizationService extends PublicPermissionService implement
   }
 
   public getOrganization(id: string): Observable<OrganizationDto> {
-    return of({code: 'LUMEER', id: '5edce56b36f79a7556118e99', permissions: {groups: [], users: []}, name: 'XXX'});
+    const organizationId = localStorage.getItem(STORAGE_PUBLIC_ORGANIZATION);
+    return of({code: 'LUMEER', id: organizationId, permissions: {groups: [], users: []}, name: 'XXX'});
   }
 
   public getOrganizationByCode(code: string): Observable<OrganizationDto> {
@@ -75,7 +76,7 @@ export class PublicOrganizationService extends PublicPermissionService implement
     return of(null);
   }
 
-  public getAllServiceLimits(): Observable<{ [organizationId: string]: ServiceLimitsDto }> {
+  public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}> {
     return of({});
   }
 

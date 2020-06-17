@@ -19,7 +19,7 @@
 
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {ViewService} from './view.service';
 import {PermissionDto, PermissionsDto, ViewDto} from '../../dto';
@@ -31,8 +31,11 @@ import {environment} from '../../../../environments/environment';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {setDefaultUserPermissions} from '../common/public-api-util';
 import {DEFAULT_USER} from '../../constants';
-import {map} from 'rxjs/operators';
+import {map, mergeMap, take} from 'rxjs/operators';
 import {Role} from '../../model/role';
+import {selectViewByCode} from '../../store/views/views.state';
+import {convertViewModelToDto} from '../../store/views/view.converter';
+import {selectAllProjects, selectPublicProject} from '../../store/projects/projects.state';
 
 @Injectable()
 export class PublicViewService extends BaseService implements ViewService {
@@ -41,11 +44,19 @@ export class PublicViewService extends BaseService implements ViewService {
   }
 
   public createView(view: ViewDto): Observable<ViewDto> {
-    return of({...view, id: generateId()});
+    return this.isProjectWritable$().pipe(
+      map(writable => setViewPermission({...view, id: generateId(), code: generateId(), version: 0}, writable))
+    );
   }
 
-  public updateView(id: string, view: ViewDto): Observable<ViewDto> {
-    return of(view);
+  public updateView(id: string, dto: ViewDto): Observable<ViewDto> {
+    return this.store$.pipe(
+      select(selectViewByCode(dto.code)),
+      map(view => ({...convertViewModelToDto(view), ...dto})),
+      map(view => ({...view, version: (view.version || 0) + 1})),
+      take(1),
+      mergeMap(view => this.isProjectWritable$().pipe(map(editable => setViewPermission(view, editable))))
+    );
   }
 
   public getView(id: string): Observable<ViewDto> {
@@ -57,8 +68,20 @@ export class PublicViewService extends BaseService implements ViewService {
   }
 
   public getViews(workspace?: Workspace): Observable<ViewDto[]> {
-    return this.http.get<ViewDto[]>(this.apiPrefix(workspace)).pipe(
-      map(views => views.map(view => setDefaultUserPermissions(view, DEFAULT_USER, [Role.Read, Role.Write, Role.Manage]))) // TODO check if project is writable
+    return this.http
+      .get<ViewDto[]>(this.apiPrefix(workspace))
+      .pipe(
+        mergeMap(views =>
+          this.isProjectWritable$().pipe(map(editable => views.map(view => setViewPermission(view, editable))))
+        )
+      );
+  }
+
+  private isProjectWritable$(): Observable<boolean> {
+    return this.store$.pipe(
+      select(selectPublicProject),
+      map(project => project?.templateMetadata?.editable),
+      take(1)
     );
   }
 
@@ -104,4 +127,8 @@ export class PublicViewService extends BaseService implements ViewService {
 
     return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/views`;
   }
+}
+
+function setViewPermission(dto: ViewDto, editable?: boolean): ViewDto {
+  return setDefaultUserPermissions(dto, DEFAULT_USER, editable ? [Role.Read, Role.Write, Role.Manage] : [Role.Read]);
 }
