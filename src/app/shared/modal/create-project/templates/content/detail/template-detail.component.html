@@ -12,5 +12,8 @@
          (click)="selectTag.emit(tag)">{{tag}}</div>
   </div>
 
-  <div class="mt-3 text-center">{{template.description}}</div>
+  <div class="my-3 text-center">{{template.description}}</div>
+  <iframe [src]="publicViewUrl" width="100%"
+          height="300px" style="border:1px solid black;">
+  </iframe>
 </div>

@@ -33,4 +33,5 @@ export interface TemplateMetadataDto {
   editable?: boolean;
   tags?: string[];
   showTopPanel?: boolean;
+  organizationId?: string;
 }
