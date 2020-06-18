@@ -38,6 +38,6 @@ export class ViewsSelectItemsPipe implements PipeTransform {
     const icon = perspectiveIconsMap[view.perspective] || '';
     const queryItems = converter.fromQuery(view.query);
     const color = queryItemsColor(queryItems);
-    return {id: view.id, value: view.name, icons: [icon], iconColors: [color]};
+    return {id: view.code, value: view.name, icons: [icon], iconColors: [color]};
   }
 }

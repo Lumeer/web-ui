@@ -37,6 +37,8 @@ export class TopPanelWrapperComponent implements OnInit {
   @Input()
   public searchBoxShown: boolean;
 
+  public readonly showHelp = !environment.publicView;
+
   public mobile$ = new BehaviorSubject(true);
 
   public workspace$: Observable<Workspace>;

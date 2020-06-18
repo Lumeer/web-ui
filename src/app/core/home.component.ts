@@ -36,6 +36,7 @@ import {WorkspaceSelectService} from './service/workspace-select.service';
 import {Perspective} from '../view/perspectives/perspective';
 import {environment} from '../../environments/environment';
 import {STORAGE_PUBLIC_VIEW} from './constants';
+import {isNullOrUndefined} from '../shared/utils/common.utils';
 
 @Component({
   template: '',
@@ -62,7 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.getOrganizationsAndProjects().subscribe(({organizations, projects}) => {
       const organization = organizations[0];
       const project = projects[0];
-      const viewCode = localStorage.getItem(STORAGE_PUBLIC_VIEW);
+      const viewCode = JSON.parse(localStorage.getItem(STORAGE_PUBLIC_VIEW)) || project?.templateMetadata?.defaultView;
 
       if (organization && project) {
         this.navigateToProject(organization, project, viewCode);

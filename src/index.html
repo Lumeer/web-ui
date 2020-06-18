@@ -21,7 +21,9 @@
       const params = new URLSearchParams(window.location.search);
       localStorage.setItem('public_organization', params.get('o'));
       localStorage.setItem('public_project', params.get('p'));
-      localStorage.setItem('public_view', params.get('v'));
+      if (params.has('v')) {
+        localStorage.setItem('public_view', params.get('v'));
+      }
     </script>
     <script>
       window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
