@@ -26,7 +26,8 @@ export interface Environment extends EnvironmentVariables {
   production: boolean;
   publicView: boolean;
   pusherLogDisabled?: boolean;
+  notificationsDisabled?: boolean;
   storeDevtools: boolean;
   name?: string;
-  paymentGw: string;
+  paymentGw?: string;
 }

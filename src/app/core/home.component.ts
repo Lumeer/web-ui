@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
@@ -34,11 +34,16 @@ import {selectCurrentUser} from './store/users/users.state';
 import {NotificationService} from './notifications/notification.service';
 import {WorkspaceSelectService} from './service/workspace-select.service';
 import {Perspective} from '../view/perspectives/perspective';
+import {environment} from '../../environments/environment';
+import {STORAGE_PUBLIC_VIEW} from './constants';
+import {isNullOrUndefined} from '../shared/utils/common.utils';
 
 @Component({
   template: '',
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  private subscriptions = new Subscription();
+
   public constructor(
     private router: Router,
     private notificationService: NotificationService,
@@ -47,7 +52,25 @@ export class HomeComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.redirectToWorkspace();
+    if (environment.publicView) {
+      this.subscriptions.add(this.redirectToPublicWorkspace());
+    } else {
+      this.subscriptions.add(this.redirectToWorkspace());
+    }
+  }
+
+  private redirectToPublicWorkspace(): Subscription {
+    return this.getOrganizationsAndProjects().subscribe(({organizations, projects}) => {
+      const organization = organizations[0];
+      const project = projects[0];
+      const viewCode = JSON.parse(localStorage.getItem(STORAGE_PUBLIC_VIEW)) || project?.templateMetadata?.defaultView;
+
+      if (organization && project) {
+        this.navigateToProject(organization, project, viewCode);
+      } else {
+        // TODO show some error page
+      }
+    });
   }
 
   private redirectToWorkspace(): Subscription {
@@ -101,8 +124,14 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  private navigateToProject(organization: Organization, project: Project) {
-    this.router.navigate(['/', 'w', organization.code, project.code, 'view', Perspective.Search], {replaceUrl: true});
+  private navigateToProject(organization: Organization, project: Project, viewCode?: string) {
+    const path: any[] = ['/', 'w', organization.code, project.code, 'view'];
+    if (viewCode) {
+      path.push({vc: viewCode});
+    } else {
+      path.push(Perspective.Search);
+    }
+    this.router.navigate(path, {replaceUrl: true});
   }
 
   private getDefaultWorkspace(): Observable<DefaultWorkspace> {
@@ -138,5 +167,9 @@ export class HomeComponent implements OnInit {
         this.store$.select(selectAllProjects).pipe(map((projects: Project[]) => ({organizations, projects})))
       )
     );
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

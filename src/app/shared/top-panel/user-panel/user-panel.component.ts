@@ -26,6 +26,7 @@ import {selectUrl} from '../../../core/store/navigation/navigation.state';
 import {map, mergeMap} from 'rxjs/operators';
 import {User} from '../../../core/store/users/user';
 import {selectCurrentUser} from '../../../core/store/users/users.state';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'user-panel',
@@ -48,6 +49,8 @@ export class UserPanelComponent implements OnInit {
 
   @Output()
   public toggleControls = new EventEmitter();
+
+  public readonly showControls = !environment.publicView;
 
   public user$: Observable<User>;
 

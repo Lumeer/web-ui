@@ -23,15 +23,16 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {LinkInstanceDto} from '../dto';
-import {LinkInstanceDuplicateDto} from '../dto/link-instance.dto';
-import {AppState} from '../store/app.state';
-import {BaseService} from './base.service';
-import {Workspace} from '../store/navigation/workspace';
+import {LinkInstanceService} from './link-instance.service';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {LinkInstanceDto} from '../../dto';
+import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
+import {Workspace} from '../../store/navigation/workspace';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
-export class LinkInstanceService extends BaseService {
+export class ApiLinkInstanceService extends BaseService implements LinkInstanceService {
   constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }

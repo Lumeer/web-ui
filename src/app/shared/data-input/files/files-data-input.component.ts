@@ -34,7 +34,7 @@ import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
-import {FileApiService} from '../../../core/api/file-api.service';
+import {FileApiService} from '../../../core/service/file-api.service';
 import {FilesDataValue} from '../../../core/model/data-value/files.data-value';
 import {NotificationService} from '../../../core/notifications/notification.service';
 import {FileAttachment, FileAttachmentType} from '../../../core/store/file-attachments/file-attachment.model';

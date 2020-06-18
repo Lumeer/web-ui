@@ -2,11 +2,13 @@
     [style.height.px]="contentHeight"
     class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
   <li class="nav-item dropdown">
-    <div class="nav-link text-truncate cursor-pointer" role="button"
+    <div class="nav-link text-truncate" role="button"
          tooltip="Organization menu"
          i18n-tooltip="@@topPanel.organizationMenu.title"
          placement="bottom"
-         (click)="organizationMenu.open()"
+         [class.cursor-pointer]="showDropdowns"
+         [isDisabled]="!showDropdowns"
+         (click)="showDropdowns && organizationMenu.open()"
          [style.maxWidth.rem]="8" #organizationElement>
       <i [class]="data.organization?.icon" [style.color]="data.organization?.color">
       </i>
@@ -24,12 +26,14 @@
   </li>
   <li class="nav-separator"><i class="fas fa-chevron-right"></i></li>
   <li class="nav-item dropdown">
-    <div class="nav-link text-truncate cursor-pointer" role="button"
+    <div class="nav-link text-truncate" role="button"
          tooltip="Project menu"
          i18n-tooltip="@@topPanel.projectMenu.title"
          placement="bottom"
+         [class.cursor-pointer]="showDropdowns"
+         [isDisabled]="!showDropdowns"
          [style.maxWidth.rem]="8"
-         (click)="projectMenu.open()"
+         (click)="showDropdowns && projectMenu.open()"
          #projectElement>
       <i [class]="data.project?.icon" [style.color]="data.project?.color"></i>
       &nbsp;{{data.project?.code}}

@@ -17,53 +17,67 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpResponse} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {ProjectDto} from '../dto';
-import {PermissionService} from './permission.service';
-import {Workspace} from '../store/navigation/workspace';
+import {Observable, of} from 'rxjs';
+import {PublicPermissionService} from '../common/public-permission.service';
+import {ProjectService} from './project.service';
+import {ProjectDto} from '../../dto';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store/app.state';
+import {environment} from '../../../../environments/environment';
+import {map} from 'rxjs/operators';
+import {setDefaultUserPermissions} from '../common/public-api-util';
+import {DEFAULT_USER, STORAGE_PUBLIC_PROJECT} from '../../constants';
+import {Role} from '../../model/role';
 
 @Injectable()
-export class ProjectService extends PermissionService {
+export class PublicProjectService extends PublicPermissionService implements ProjectService {
+  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(store$);
+  }
+
   public getProjects(organizationId: string): Observable<ProjectDto[]> {
-    return this.httpClient.get<ProjectDto[]>(this.apiPrefix(organizationId));
+    return this.getProject(organizationId, '').pipe(map(project => [project]));
   }
 
   public getProjectCodes(organizationId: string): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseApiPrefix(organizationId)}/info/codes`).pipe();
+    return of([]);
   }
 
   public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {
-    return this.httpClient.get<ProjectDto>(this.apiPrefix(organizationId, projectId));
+    const id = localStorage.getItem(STORAGE_PUBLIC_PROJECT);
+    return this.httpClient
+      .get<ProjectDto>(this.apiPrefix(organizationId, id))
+      .pipe(
+        map(project =>
+          setDefaultUserPermissions(
+            project,
+            DEFAULT_USER,
+            project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
+          )
+        )
+      );
   }
 
   public getProjectByCode(organizationId: string, projectCode: string): Observable<ProjectDto> {
-    return this.httpClient.get<ProjectDto>(`${this.baseApiPrefix(organizationId)}/code/${projectCode}`);
+    return this.getProject(organizationId, '');
   }
 
-  public deleteProject(organizationId: string, projectId: string): Observable<HttpResponse<any>> {
-    return this.httpClient.delete(this.apiPrefix(organizationId, projectId), {
-      observe: 'response',
-      responseType: 'text',
-    });
+  public deleteProject(organizationId: string, projectId: string): Observable<any> {
+    return of(projectId);
   }
 
   public createProject(organizationId: string, project: ProjectDto): Observable<ProjectDto> {
-    return this.httpClient.post<ProjectDto>(this.apiPrefix(organizationId), project);
+    return of(project);
   }
 
   public applyTemplate(organizationId: string, projectId: string, template: string): Observable<any> {
-    return this.httpClient.post(
-      `${this.baseApiPrefix(organizationId)}/${projectId}/templates/${template}`,
-      {},
-      {params: {l: environment.locale}}
-    );
+    return of(template);
   }
 
   public updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto> {
-    return this.httpClient.put<ProjectDto>(this.apiPrefix(organizationId, projectId), project);
+    return of(project);
   }
 
   private apiPrefix(organizationId: string, projectId?: string): string {
@@ -71,13 +85,6 @@ export class ProjectService extends PermissionService {
   }
 
   private baseApiPrefix(organizationId: string): string {
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects`;
-  }
-
-  protected actualApiPrefix(workspace?: Workspace): string {
-    const organizationId = this.getOrCurrentOrganizationId(workspace);
-    const projectId = this.getOrCurrentProjectId(workspace);
-
-    return this.apiPrefix(organizationId, projectId);
+    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects`;
   }
 }

@@ -193,9 +193,9 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
           defaultConfig?.config?.search && search?.id === DEFAULT_SEARCH_ID
             ? defaultConfig.config.search
             : search?.config;
-        return config?.searchTab !== searchTab;
+        return search && config?.searchTab !== searchTab;
       }),
-      map(([[searchTab, search]]) => ({searchTab, search}))
+      map(([[searchTab, search]]) => ({searchTab: searchTab, search}))
     );
   }
 

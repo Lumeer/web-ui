@@ -22,15 +22,16 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {PermissionDto, PermissionsDto, ViewDto} from '../dto';
-import {AppState} from '../store/app.state';
-import {Workspace} from '../store/navigation/workspace';
-import {BaseService} from './base.service';
-import {DefaultViewConfigDto} from '../dto/default-view-config.dto';
+import {ViewService} from './view.service';
+import {PermissionDto, PermissionsDto, ViewDto} from '../../dto';
+import {AppState} from '../../store/app.state';
+import {BaseService} from '../../rest/base.service';
+import {Workspace} from '../../store/navigation/workspace';
+import {DefaultViewConfigDto} from '../../dto/default-view-config.dto';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
-export class ViewService extends BaseService {
+export class ApiViewService extends BaseService implements ViewService {
   constructor(private http: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }

@@ -1,11 +1,11 @@
 <div class="d-flex justify-content-end align-items-center"
      [style.height.px]="contentHeight">
-  <invite-user [mobile]="mobile"></invite-user>
-  <notifications-menu></notifications-menu>
-  <user-menu
-    [workspace]="workspace"
-    [userEmail]="(user$ | async)?.email"
-    [controlsVisible]="controlsVisible"
-    (toggleControls)="toggleControls.emit()">
+  <invite-user *ngIf="showControls" [mobile]="mobile"></invite-user>
+  <notifications-menu *ngIf="showControls"></notifications-menu>
+  <user-menu *ngIf="showControls"
+             [workspace]="workspace"
+             [userEmail]="(user$ | async)?.email"
+             [controlsVisible]="controlsVisible"
+             (toggleControls)="toggleControls.emit()">
   </user-menu>
 </div>

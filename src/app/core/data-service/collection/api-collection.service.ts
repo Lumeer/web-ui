@@ -23,16 +23,17 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {AttributeDto, CollectionDto} from '../dto';
-import {AppState} from '../store/app.state';
-import {PermissionService} from './permission.service';
-import {Workspace} from '../store/navigation/workspace';
+import {CollectionService} from './collection.service';
+import {AppState} from '../../store/app.state';
+import {AttributeDto, CollectionDto} from '../../dto';
+import {ApiPermissionService} from '../common/api-permission.service';
+import {Workspace} from '../../store/navigation/workspace';
+import {environment} from '../../../../environments/environment';
 
 @Injectable()
-export class CollectionService extends PermissionService {
-  constructor(protected httpClient: HttpClient, protected store: Store<AppState>) {
-    super(httpClient, store);
+export class ApiCollectionService extends ApiPermissionService implements CollectionService {
+  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(httpClient, store$);
   }
 
   public createCollection(collection: CollectionDto): Observable<CollectionDto> {

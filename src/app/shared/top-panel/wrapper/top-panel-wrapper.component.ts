@@ -18,11 +18,14 @@
  */
 
 import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
+import {environment} from '../../../../environments/environment';
+import {selectPublicProject} from '../../../core/store/projects/projects.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'top-panel-wrapper',
@@ -34,15 +37,29 @@ export class TopPanelWrapperComponent implements OnInit {
   @Input()
   public searchBoxShown: boolean;
 
+  public readonly showHelp = !environment.publicView;
+
   public mobile$ = new BehaviorSubject(true);
 
   public workspace$: Observable<Workspace>;
+  public showTopPanel$: Observable<boolean>;
 
   constructor(private element: ElementRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.detectMobileResolution();
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
+    this.showTopPanel$ = this.bindShowTopPanel$();
+  }
+
+  private bindShowTopPanel$(): Observable<boolean> {
+    if (environment.publicView) {
+      return this.store$.pipe(
+        select(selectPublicProject),
+        map(project => project?.templateMetadata?.showTopPanel)
+      );
+    }
+    return of(true);
   }
 
   @HostListener('window:resize')

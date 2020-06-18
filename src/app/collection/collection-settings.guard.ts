@@ -20,7 +20,6 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 
-import {CollectionService} from '../core/rest';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, mergeMap, take, tap} from 'rxjs/operators';
 import {selectCollectionById, selectCollectionsLoaded} from '../core/store/collections/collections.state';
@@ -35,6 +34,7 @@ import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../shared/u
 import {WorkspaceService} from '../workspace/workspace.service';
 import {User} from '../core/store/users/user';
 import {Project} from '../core/store/projects/project';
+import {CollectionService} from '../core/data-service';
 
 @Injectable()
 export class CollectionSettingsGuard implements CanActivate {

@@ -40,7 +40,9 @@ export class SessionService {
   ) {}
 
   public init() {
-    this.initInterval();
+    if (environment.auth) {
+      this.initInterval();
+    }
   }
 
   private initInterval() {

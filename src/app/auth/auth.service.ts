@@ -28,7 +28,6 @@ import {Angulartics2} from 'angulartics2';
 import {User} from '../core/store/users/user';
 import mixpanel from 'mixpanel-browser';
 import {hashUserId} from '../shared/utils/system.utils';
-import {UserService} from '../core/rest';
 import {HttpErrorResponse} from '@angular/common/http';
 import {AppState} from '../core/store/app.state';
 import {UsersAction} from '../core/store/users/users.action';
@@ -36,6 +35,7 @@ import {selectCurrentUser} from '../core/store/users/users.state';
 import {select, Store} from '@ngrx/store';
 import {UserActivityService} from './user-activity.service';
 import {isNullOrUndefined} from '../shared/utils/common.utils';
+import {UserService} from '../core/data-service';
 
 const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';

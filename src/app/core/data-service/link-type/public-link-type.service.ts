@@ -17,61 +17,66 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {Observable, of} from 'rxjs';
+import {LinkTypeService} from './link-type.service';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {AttributeDto, LinkTypeDto} from '../../dto';
+import {Workspace} from '../../store/navigation/workspace';
+import {environment} from '../../../../environments/environment';
+import {generateId} from '../../../shared/utils/resource.utils';
+import {selectLinkTypeById} from '../../store/link-types/link-types.state';
 import {map} from 'rxjs/operators';
-import {environment} from '../../../environments/environment';
-import {AttributeDto, LinkTypeDto} from '../dto';
-import {AppState} from '../store/app.state';
-import {BaseService} from './base.service';
-import {Workspace} from '../store/navigation/workspace';
+import {convertLinkTypeModelToDto} from '../../store/link-types/link-type.converter';
 
 @Injectable()
-export class LinkTypeService extends BaseService {
+export class PublicLinkTypeService extends BaseService implements LinkTypeService {
   constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
 
   public createLinkType(linkType: LinkTypeDto): Observable<LinkTypeDto> {
-    return this.httpClient.post<LinkTypeDto>(this.restApiPrefix(), linkType);
+    return of({...linkType, id: generateId(), version: 0, linksCount: 0});
   }
 
   public getLinkType(id: string): Observable<LinkTypeDto> {
-    return this.httpClient.get<LinkTypeDto>(this.restApiPrefix(id));
+    return of(null);
   }
 
-  public updateLinkType(id: string, linkType: LinkTypeDto): Observable<LinkTypeDto> {
-    return this.httpClient.put<LinkTypeDto>(this.restApiPrefix(id), linkType);
+  public updateLinkType(id: string, dto: LinkTypeDto): Observable<LinkTypeDto> {
+    return this.store$.pipe(
+      select(selectLinkTypeById(id)),
+      map(linkType => ({...convertLinkTypeModelToDto(linkType), ...dto}))
+    );
   }
 
   public deleteLinkType(id: string): Observable<string> {
-    return this.httpClient.delete(this.restApiPrefix(id)).pipe(map(() => id));
+    return of(id);
   }
 
   public getLinkTypes(workspace?: Workspace): Observable<LinkTypeDto[]> {
-    const queryParams = new HttpParams().set('fromViews', 'true');
-    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(null, workspace), {params: queryParams});
+    return this.httpClient.get<LinkTypeDto[]>(this.restApiPrefix(workspace));
   }
 
   public createAttributes(linkTypeId: string, attributes: AttributeDto[]): Observable<AttributeDto[]> {
-    return this.httpClient.post<AttributeDto[]>(`${this.restApiPrefix()}/${linkTypeId}/attributes`, attributes);
+    return of(attributes.map(attribute => ({...attribute, id: generateId()})));
   }
 
   public updateAttribute(linkTypeId: string, id: string, attribute: AttributeDto): Observable<AttributeDto> {
-    return this.httpClient.put<AttributeDto>(`${this.restApiPrefix()}/${linkTypeId}/attributes/${id}`, attribute);
+    return of(attribute);
   }
 
-  public deleteAttribute(linkTypeId: string, id: string): Observable<void> {
-    return this.httpClient.delete<void>(`${this.restApiPrefix()}/${linkTypeId}/attributes/${id}`);
+  public deleteAttribute(linkTypeId: string, id: string): Observable<any> {
+    return of(true);
   }
 
-  private restApiPrefix(id?: string, workspace?: Workspace): string {
+  private restApiPrefix(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);
-    const suffix = id ? `/${id}` : '';
 
-    return `${environment.apiUrl}/rest/organizations/${organizationId}/projects/${projectId}/link-types${suffix}`;
+    return `${environment.apiUrl}/rest/p/organizations/${organizationId}/projects/${projectId}/link-types`;
   }
 }

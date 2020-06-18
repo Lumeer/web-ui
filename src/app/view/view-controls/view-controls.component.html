@@ -76,7 +76,8 @@
                   (click)="onSave(state.permissions.canClone)">
             <i class="fas fa-save"></i>
           </button>
-          <button [disabled]="!(view.code && state.permissions.canShare)"
+          <button *ngIf="canShareView"
+                  [disabled]="!(view.code && state.permissions.canShare)"
                   (click)="onShareClick()"
                   class="btn btn-primary"
                   type="button"

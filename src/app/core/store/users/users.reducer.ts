@@ -24,7 +24,7 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
   switch (action.type) {
     case UsersActionType.GET_SUCCESS:
       return {
-        ...usersAdapter.addAll(action.payload.users, state),
+        ...usersAdapter.setAll(action.payload.users, state),
         loadedForOrganizationId: action.payload.organizationId,
       };
     case UsersActionType.GET_CURRENT_USER_SUCCESS:

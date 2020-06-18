@@ -24,11 +24,11 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {Router} from '@angular/router';
 import {AppState} from '../../app.state';
-import {OrganizationService} from '../../../rest';
 import {NotificationsAction} from '../../notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ServiceLimitsAction, ServiceLimitsActionType} from './service-limits.action';
 import {ServiceLimitsConverter} from './service-limits.converter';
+import {OrganizationService} from '../../../data-service';
 
 @Injectable()
 export class ServiceLimitsEffects {

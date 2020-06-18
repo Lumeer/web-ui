@@ -22,25 +22,34 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {IndividualConfig, ToastrService} from 'ngx-toastr';
 import {NotificationButton} from './notification-button';
 import {NotificationComponent} from './notification/notification.component';
+import {environment} from '../../../environments/environment';
 
 @Injectable()
 export class NotificationService {
   constructor(private notifications: ToastrService, private i18n: I18n) {}
 
   public success(message: string, config?: Partial<IndividualConfig>) {
-    this.notifications.success(message, this.i18n({id: 'notification.service.Success', value: 'Success'}), config);
+    if (!environment.notificationsDisabled) {
+      this.notifications.success(message, this.i18n({id: 'notification.service.Success', value: 'Success'}), config);
+    }
   }
 
   public info(message: string, config?: Partial<IndividualConfig>) {
-    this.notifications.info(message, this.i18n({id: 'notification.service.Info', value: 'Info'}), config);
+    if (!environment.notificationsDisabled) {
+      this.notifications.info(message, this.i18n({id: 'notification.service.Info', value: 'Info'}), config);
+    }
   }
 
   public warning(message: string, config?: Partial<IndividualConfig>) {
-    this.notifications.warning(message, this.i18n({id: 'notification.service.Warning', value: 'Warning'}), config);
+    if (!environment.notificationsDisabled) {
+      this.notifications.warning(message, this.i18n({id: 'notification.service.Warning', value: 'Warning'}), config);
+    }
   }
 
   public error(message: string, config?: Partial<IndividualConfig>) {
-    this.notifications.error(message, this.i18n({id: 'notification.service.Error', value: 'Error'}), config);
+    if (!environment.notificationsDisabled) {
+      this.notifications.error(message, this.i18n({id: 'notification.service.Error', value: 'Error'}), config);
+    }
   }
 
   public confirm(

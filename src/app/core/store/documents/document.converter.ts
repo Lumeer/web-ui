@@ -47,5 +47,6 @@ export function convertDocumentModelToDto(model: DocumentModel | Partial<Documen
     data: model.data,
     metaData: model.metaData,
     favorite: model.favorite,
+    dataVersion: model.dataVersion,
   };
 }

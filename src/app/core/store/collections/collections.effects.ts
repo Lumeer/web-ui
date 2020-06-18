@@ -28,7 +28,7 @@ import {EMPTY, from, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {CollectionDto} from '../../dto';
-import {CollectionService, ImportService} from '../../rest';
+import {ImportService} from '../../rest';
 import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {DocumentModel} from '../documents/document.model';
@@ -54,6 +54,7 @@ import {
   selectCollectionsLoaded,
 } from './collections.state';
 import mixpanel from 'mixpanel-browser';
+import {CollectionService} from '../../data-service';
 
 @Injectable()
 export class CollectionsEffects {

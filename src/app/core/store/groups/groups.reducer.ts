@@ -23,7 +23,7 @@ import {groupsAdapter, GroupsState, initialGroupsState} from './groups.state';
 export function groupsReducer(state: GroupsState = initialGroupsState, action: GroupsAction.All): GroupsState {
   switch (action.type) {
     case GroupsActionType.GET_SUCCESS:
-      return groupsAdapter.addAll(action.payload.groups, state);
+      return groupsAdapter.setAll(action.payload.groups, state);
     case GroupsActionType.CREATE_SUCCESS:
       return groupsAdapter.addOne(action.payload.group, state);
     case GroupsActionType.UPDATE_SUCCESS:

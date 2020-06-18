@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export const DEFAULT_USER = 'aturing@lumeer.io';
+
 export const DEFAULT_ICON = 'fas fa-question-circle';
 
 export const DEFAULT_COLOR = '#cccccc';
@@ -61,3 +63,7 @@ export const USER_AVATAR_SIZE = 22;
 export const TABLE_ROW_MIN_HEIGHT = 34;
 
 export const LUMEER_REFERRAL = 'lumeer_referral';
+
+export const STORAGE_PUBLIC_ORGANIZATION = 'public_organization';
+export const STORAGE_PUBLIC_PROJECT = 'public_project';
+export const STORAGE_PUBLIC_VIEW = 'public_view';

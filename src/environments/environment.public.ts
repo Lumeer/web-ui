@@ -27,6 +27,7 @@ export const environment: Environment = {
   production: true,
   publicView: true,
   pusherLogDisabled: true,
+  notificationsDisabled: true,
   storeDevtools: false,
   name: 'public',
   paymentGw: 'https://gate.gopay.com/gp-gw/js/embed.js',

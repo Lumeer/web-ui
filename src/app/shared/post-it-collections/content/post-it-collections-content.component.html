@@ -7,7 +7,8 @@
                                      (clicked)="createNewCollection()">
       </post-it-collection-add-button>
 
-      <post-it-collection-import-button class="ml-2"
+      <post-it-collection-import-button *ngIf="canImportCollection"
+                                        class="ml-2"
                                         [disabled]="!projectPermissions.write"
                                         (error)="notifyOfError($event)"
                                         (import)="onImportCollection($event)">

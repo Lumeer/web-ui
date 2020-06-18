@@ -17,19 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 
-import {PermissionsDto, PermissionDto} from '../dto';
 import {Observable} from 'rxjs';
-import {AppState} from '../store/app.state';
-import {BaseService} from './base.service';
-import {Workspace} from '../store/navigation/workspace';
+import {PermissionService} from './permission.service';
+import {BaseService} from '../../rest/base.service';
+import {AppState} from '../../store/app.state';
+import {PermissionDto, PermissionsDto} from '../../dto';
+import {Workspace} from '../../store/navigation/workspace';
 
-@Injectable()
-export abstract class PermissionService extends BaseService {
-  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+export abstract class ApiPermissionService extends BaseService implements PermissionService {
+  protected constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
     super(store$);
   }
 

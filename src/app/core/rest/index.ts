@@ -17,15 +17,5 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export {CollectionService} from './collection.service';
-export {DocumentService} from './document.service';
 export {GroupService} from './group.service';
 export {ImportService} from './import.service';
-export {LinkInstanceService} from './link-instance.service';
-export {LinkTypeService} from './link-type.service';
-export {OrganizationService} from './organization.service';
-export {PermissionService} from './permission.service';
-export {ProjectService} from './project.service';
-export {SearchService} from './search.service';
-export {UserService} from './user.service';
-export {ViewService} from './view.service';

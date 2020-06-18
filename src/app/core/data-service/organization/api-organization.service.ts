@@ -17,18 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {HttpResponse} from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {ContactDto, OrganizationDto} from '../dto';
-import {PermissionService} from './permission.service';
-import {ServiceLimitsDto} from '../dto/service-limits.dto';
-import {PaymentDto} from '../dto/payment.dto';
-import {Workspace} from '../store/navigation/workspace';
+import {ApiPermissionService} from '../common/api-permission.service';
+import {OrganizationService} from './organization.service';
+import {ContactDto, OrganizationDto} from '../../dto';
+import {ServiceLimitsDto} from '../../dto/service-limits.dto';
+import {Workspace} from '../../store/navigation/workspace';
+import {PaymentDto} from '../../dto/payment.dto';
+import {environment} from '../../../../environments/environment';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store/app.state';
 
 @Injectable()
-export class OrganizationService extends PermissionService {
+export class ApiOrganizationService extends ApiPermissionService implements OrganizationService {
+  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
+    super(httpClient, store$);
+  }
+
   public getOrganizations(): Observable<OrganizationDto[]> {
     return this.httpClient.get<OrganizationDto[]>(this.apiPrefix());
   }

@@ -26,7 +26,6 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
-import {OrganizationService} from '../../rest';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {RouterAction} from '../router/router.action';
@@ -40,6 +39,7 @@ import {CommonAction} from '../common/common.action';
 import {ServiceLimitsAction} from './service-limits/service-limits.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
+import {OrganizationService} from '../../data-service';
 
 @Injectable()
 export class OrganizationsEffects {

@@ -24,7 +24,6 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeDto} from '../../dto';
-import {LinkTypeService} from '../../rest';
 import {AppState} from '../app.state';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
@@ -36,6 +35,7 @@ import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
 import {selectLinkTypeAttributeById, selectLinkTypesLoaded} from './link-types.state';
 import {Attribute} from '../collections/collection';
 import {LinkInstance} from '../link-instances/link.instance';
+import {LinkTypeService} from '../../data-service';
 
 @Injectable()
 export class LinkTypesEffects {
