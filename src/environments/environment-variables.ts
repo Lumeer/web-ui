@@ -43,6 +43,7 @@ export interface EnvironmentVariables {
   pusherCluster: string;
   pusherKey: string;
   blocklyCdn: string;
+  publicViewCdn: string;
   logzioKey: string;
   smartlookKey: string;
   mixpanelKey: string;
@@ -66,6 +67,7 @@ const sessionTimeout = Number(env['SESSION_TIMEOUT']) || 30; // minutes
 const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
 const blocklyCdn = env['BLOCKLY_CDN'] || `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v9/blockly.${locale}.min.js`;
+const publicViewCdn = env['PUBLIC_VIEW_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/index.html`;
 const logzioKey = env['LOGZIO_KEY'] || '';
 const smartlookKey = env['SMARTLOOK_KEY'] || '';
 const mixpanelKey = env['MIXPANEL_KEY'] || '';
@@ -89,6 +91,7 @@ export const environmentVariables: EnvironmentVariables = {
   pusherCluster,
   pusherKey,
   blocklyCdn,
+  publicViewCdn,
   logzioKey,
   smartlookKey,
   mixpanelKey,

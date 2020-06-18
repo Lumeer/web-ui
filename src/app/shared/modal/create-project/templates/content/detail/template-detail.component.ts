@@ -17,8 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {Project} from '../../../../../../core/store/projects/project';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {environment} from '../../../../../../../environments/environment';
 
 @Component({
   selector: 'template-detail',
@@ -26,10 +28,25 @@ import {Project} from '../../../../../../core/store/projects/project';
   styleUrls: ['./template-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TemplateDetailComponent {
+export class TemplateDetailComponent implements OnChanges {
   @Input()
   public template: Project;
 
   @Output()
   public selectTag = new EventEmitter<string>();
+
+  public publicViewUrl: SafeUrl;
+
+  constructor(private domSanitizer: DomSanitizer) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.template && this.template) {
+      this.publicViewUrl = this.createPublicViewUrl();
+    }
+  }
+
+  private createPublicViewUrl(): SafeUrl {
+    const url = `${environment.publicViewCdn}?o=${this.template.templateMetadata?.organizationId}&p=${this.template.id}`;
+    return this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+  }
 }
