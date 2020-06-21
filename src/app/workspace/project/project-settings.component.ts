@@ -28,7 +28,7 @@ import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectPreviousWorkspaceUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {Project} from '../../core/store/projects/project';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
@@ -149,7 +149,7 @@ export class ProjectSettingsComponent implements OnInit {
     );
 
     this.subscriptions.add(
-      this.store$.pipe(select(selectPreviousUrl), take(1)).subscribe(url => (this.previousUrl = url))
+      this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url))
     );
   }
 

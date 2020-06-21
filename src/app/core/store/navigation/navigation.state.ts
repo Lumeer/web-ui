@@ -38,6 +38,7 @@ export interface NavigationState {
   viewCursor?: ViewCursor;
   url: string;
   previousUrl?: string;
+  previousWorkspaceUrl?: string;
 }
 
 export const initialNavigationState: NavigationState = {
@@ -59,6 +60,7 @@ export const selectWorkspace = createSelector(selectNavigation, (state: Navigati
 export const selectSearchTab = createSelector(selectNavigation, (state: NavigationState) => state.searchTab);
 export const selectUrl = createSelector(selectNavigation, state => state.url);
 export const selectPreviousUrl = createSelector(selectNavigation, state => state.previousUrl);
+export const selectPreviousWorkspaceUrl = createSelector(selectNavigation, state => state.previousWorkspaceUrl);
 
 export const selectViewCode = createSelector(selectWorkspace, workspace => workspace?.viewCode);
 export const selectViewCursor = createSelector(selectNavigation, state => state?.viewCursor);

@@ -29,27 +29,26 @@ import {Resource} from '../../../../../core/model/resource';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ResourceDetailComponent {
-  @Input() public type: ResourceType;
-  @Input() public resource: Resource;
-  @Input() public workspace: Workspace;
+  @Input()
+  public type: ResourceType;
+
+  @Input()
+  public resource: Resource;
+
+  @Input()
+  public workspace: Workspace;
 
   constructor(private router: Router) {}
 
   public goToOrganizationSettings(page: string) {
-    if (this.workspace && this.workspace.organizationCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, page]);
+    if (this.workspace?.organizationCode) {
+      this.router.navigate(['o', this.workspace.organizationCode, page]);
     }
   }
 
   public goToProjectSettings(page: string) {
-    if (this.workspace && this.workspace.organizationCode && this.workspace.projectCode) {
-      this.router.navigate([
-        'organization',
-        this.workspace.organizationCode,
-        'project',
-        this.workspace.projectCode,
-        page,
-      ]);
+    if (this.workspace?.organizationCode && this.workspace?.projectCode) {
+      this.router.navigate(['o', this.workspace.organizationCode, 'p', this.workspace.projectCode, page]);
     }
   }
 }

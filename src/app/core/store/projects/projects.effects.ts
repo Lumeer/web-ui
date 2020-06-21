@@ -196,7 +196,7 @@ export class ProjectsEffects {
           title,
           message,
           action: new RouterAction.Go({
-            path: ['/organization', action.payload.organizationCode, 'detail'],
+            path: ['/o', action.payload.organizationCode, 'detail'],
             extras: {fragment: 'orderService'},
           }),
           type: 'warning',
@@ -323,8 +323,8 @@ export class ProjectsEffects {
   public changePermission$ = this.actions$.pipe(
     ofType<ProjectsAction.ChangePermission>(ProjectsActionType.CHANGE_PERMISSION),
     mergeMap(action => {
-      const workspace = action.payload.workspace;
-      const dtos = action.payload.permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
+      const {workspace, projectId, permissions, type, currentPermissions} = action.payload;
+      const dtos = permissions.map(permission => PermissionsConverter.toPermissionDto(permission));
 
       let observable;
       if (action.payload.type === PermissionType.Users) {
@@ -337,10 +337,10 @@ export class ProjectsEffects {
         mergeMap(() => EMPTY),
         catchError(error => {
           const payload = {
-            projectId: workspace.projectId || action.payload.projectId,
-            type: action.payload.type,
-            permissions: action.payload.currentPermissions,
+            projectId: workspace?.projectId || projectId,
+            type,
             error,
+            permissions: currentPermissions,
           };
           return of(new ProjectsAction.ChangePermissionFailure(payload));
         })

@@ -27,7 +27,7 @@ import {ResourceType} from '../../core/model/resource-type';
 import {NotificationService} from '../../core/notifications/notification.service';
 import {AppState} from '../../core/store/app.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectPreviousWorkspaceUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Organization} from '../../core/store/organizations/organization';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {
@@ -111,7 +111,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
       new NavigationAction.NavigateToPreviousUrl({
         previousUrl: replaceWorkspacePathInUrl(this.previousUrl, this.workspace),
         organizationCode: this.organization$.getValue().code,
-        projectCode: this.firstProject ? this.firstProject.code : null,
+        projectCode: this.firstProject?.code,
       })
     );
   }
@@ -142,7 +142,7 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.add(
-      this.store$.pipe(select(selectPreviousUrl), take(1)).subscribe(url => (this.previousUrl = url))
+      this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url))
     );
 
     this.subscriptions.add(

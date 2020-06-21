@@ -39,9 +39,9 @@ export abstract class ViewService {
 
   public abstract getPermissions(viewId: string): Observable<PermissionsDto>;
 
-  public abstract updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto>;
+  public abstract updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]>;
 
-  public abstract updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto>;
+  public abstract updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]>;
 
   public abstract removeUserPermission(viewId: string, user: string): Observable<any>;
 

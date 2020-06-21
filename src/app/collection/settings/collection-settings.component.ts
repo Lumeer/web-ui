@@ -31,7 +31,7 @@ import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionByWorkspace} from '../../core/store/collections/collections.state';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
-import {selectPreviousUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectPreviousWorkspaceUrl, selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {selectAllUsers} from '../../core/store/users/users.state';
@@ -168,6 +168,6 @@ export class CollectionSettingsComponent implements OnInit, OnDestroy {
       .subscribe(collection => this.collection$.next({...collection}));
     this.subscriptions.add(sub2);
 
-    this.store$.pipe(select(selectPreviousUrl), take(1)).subscribe(url => (this.previousUrl = url));
+    this.store$.pipe(select(selectPreviousWorkspaceUrl), take(1)).subscribe(url => (this.previousUrl = url));
   }
 }

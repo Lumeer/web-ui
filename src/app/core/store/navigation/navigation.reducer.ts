@@ -83,6 +83,7 @@ function onRouterNavigated(state: NavigationState, action: RouterNavigatedAction
     viewCursor: deepObjectsEquals(viewCursor, state.viewCursor) ? state.viewCursor : viewCursor,
     searchTab: parseSearchTabFromUrl(url),
     previousUrl: state.url,
+    previousWorkspaceUrl: checkPreviousWorkspaceUrl(state.url) || state.previousWorkspaceUrl,
     url,
   };
 }
@@ -116,4 +117,11 @@ export function navigationReducer(
     default:
       return state;
   }
+}
+
+function checkPreviousWorkspaceUrl(url: string): string {
+  if (url.startsWith('/w')) {
+    return url;
+  }
+  return null;
 }
