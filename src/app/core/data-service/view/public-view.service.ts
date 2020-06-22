@@ -97,12 +97,12 @@ export class PublicViewService extends BaseService implements ViewService {
     return of({users: [], groups: []});
   }
 
-  public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto> {
-    return of({id: '', roles: []});
+  public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
+    return of(userPermissions);
   }
 
-  public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto> {
-    return of({id: '', roles: []});
+  public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
+    return of(userPermissions);
   }
 
   public removeUserPermission(viewId: string, user: string): Observable<any> {

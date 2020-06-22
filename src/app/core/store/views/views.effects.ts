@@ -320,9 +320,10 @@ export class ViewsEffects {
           );
           return this.viewService.updateUserPermission(viewId, permissionsDto);
         }),
-        concatMap(() =>
+        map(dtos => dtos.map(dto => PermissionsConverter.fromPermissionDto(dto))),
+        concatMap(newPermissions =>
           of(
-            new ViewsAction.SetPermissionsSuccess({...action.payload, type: PermissionType.Users}),
+            new ViewsAction.SetPermissionsSuccess({viewId, permissions: newPermissions, type: PermissionType.Users}),
             ...createCallbackActions(action.payload.onSuccess)
           )
         ),

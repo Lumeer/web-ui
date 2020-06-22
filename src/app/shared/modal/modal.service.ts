@@ -209,7 +209,7 @@ export class ModalService {
         title,
         message,
         action: new RouterAction.Go({
-          path: ['/organization', organization.code, 'detail'],
+          path: ['/o', organization.code, 'detail'],
           extras: {fragment: 'orderService'},
         }),
         type: 'warning',

@@ -68,12 +68,12 @@ export class ApiViewService extends BaseService implements ViewService {
     return this.http.get<PermissionsDto>(`${this.apiPrefix(viewId)}/permissions`);
   }
 
-  public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto> {
-    return this.http.put<PermissionDto>(`${this.apiPrefix(viewId)}/permissions/users`, userPermissions);
+  public updateUserPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
+    return this.http.put<PermissionDto[]>(`${this.apiPrefix(viewId)}/permissions/users`, userPermissions);
   }
 
-  public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto> {
-    return this.http.put<PermissionDto>(`${this.apiPrefix(viewId)}/permissions/groups`, userPermissions);
+  public updateGroupPermission(viewId: string, userPermissions: PermissionDto[]): Observable<PermissionDto[]> {
+    return this.http.put<PermissionDto[]>(`${this.apiPrefix(viewId)}/permissions/groups`, userPermissions);
   }
 
   public removeUserPermission(viewId: string, user: string): Observable<HttpResponse<any>> {

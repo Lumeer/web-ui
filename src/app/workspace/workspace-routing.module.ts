@@ -37,7 +37,7 @@ import {LinkTypesGuard} from '../core/guards/data/link-types.guard';
 
 const workspaceRoutes: Routes = [
   {
-    path: 'organization/:organizationCode/project/:projectCode',
+    path: 'o/:organizationCode/p/:projectCode',
     component: ProjectSettingsComponent,
     canActivate: [AuthGuard, CurrentUserGuard, ProjectSettingsGuard],
     resolve: {
@@ -67,7 +67,7 @@ const workspaceRoutes: Routes = [
     ],
   },
   {
-    path: 'organization/:organizationCode',
+    path: 'o/:organizationCode',
     component: OrganizationSettingsComponent,
     canActivate: [AuthGuard, CurrentUserGuard, OrganizationSettingsGuard],
     resolve: {

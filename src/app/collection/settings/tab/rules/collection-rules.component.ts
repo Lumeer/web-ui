@@ -156,7 +156,7 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
       .subscribe(code => {
         this.store$.dispatch(
           new RouterAction.Go({
-            path: ['/organization', code, 'detail'],
+            path: ['/o', code, 'detail'],
             extras: {fragment: 'orderService'},
           })
         );

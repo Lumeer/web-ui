@@ -144,7 +144,7 @@ export class UserMenuComponent {
 
   public goToOrganizationDetail() {
     if (this.workspace && this.workspace.organizationCode) {
-      this.router.navigate(['organization', this.workspace.organizationCode, 'detail']);
+      this.router.navigate(['o', this.workspace.organizationCode, 'detail']);
     }
   }
 
