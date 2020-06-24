@@ -40,6 +40,11 @@ const appRoutes: Routes = [
     component: RedirectComponent,
   },
   {
+    path: 'open/:organizationId/:projectId',
+    canActivate: [AuthGuard, CurrentUserGuard],
+    component: RedirectComponent,
+  },
+  {
     path: '**',
     canActivate: [AuthGuard, CurrentUserGuard, PageNotFoundGuard],
     component: HomeComponent,

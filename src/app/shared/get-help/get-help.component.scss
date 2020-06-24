@@ -13,7 +13,7 @@ a {
     box-shadow: $shadow-up !important;
 
     &:hover {
-      box-shadow: $shadow-up-up;
+      box-shadow: $shadow-up-up !important;
       transform: translate(-2px, -2px);
     }
   }

@@ -24,6 +24,7 @@ import {selectWorkspace} from '../navigation/navigation.state';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
 import {Project} from './project';
 import {LoadingState} from '../../model/loading-state';
+import {selectPublicProjectId} from '../public-data/public-data.state';
 
 export interface ProjectsState extends EntityState<Project> {
   projectCodes: {[organizationId: string]: string[]};
@@ -89,6 +90,6 @@ export const selectProjectByOrganizationAndCode = (organizationId: string, proje
 
 export const selectProjectTemplates = createSelector(selectProjectsState, state => state.templates);
 
-export const selectPublicProject = createSelector(selectAllProjects, projects => projects[0]);
+export const selectPublicProject = createSelector(selectProjectsDictionary,  selectPublicProjectId,(projects, id) => projects[id]);
 
 export const selectProjectTemplatesLoadingState = createSelector(selectProjectsState, state => state.templatesState);

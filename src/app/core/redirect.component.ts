@@ -55,22 +55,35 @@ export class RedirectComponent implements OnInit {
     private router: Router,
     private store$: Store<AppState>,
     private i18n: I18n
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     this.activatedRoute.paramMap
-      .pipe(
-        map(params => params.get('templateCode')),
-        take(1)
-      )
-      .subscribe(templateCode => this.redirectToTemplate(templateCode));
+      .pipe(take(1))
+      .subscribe(params => {
+        const templateCode = params.get('templateCode');
+        const organizationId = params.get('organizationId');
+        const projectId = params.get('projectId');
+        if (templateCode) {
+          this.redirectToTemplate(templateCode);
+        } else if (organizationId && projectId) {
+
+        } else {
+          return this.redirectToHome();
+        }
+      });
   }
 
   public redirectToTemplate(templateCode: string) {
-    if (!templateCode) {
-      return this.redirectToHome();
-    }
+    this.selectWritableOrganization((organization) => this.createProjectByTemplate(organization, templateCode));
+  }
 
+  public redirectToCopyProject(organizationId: string, projectId: string) {
+    this.selectWritableOrganization((organization) => this.createProjectByCopy(organization, organizationId, projectId));
+  }
+
+  public selectWritableOrganization(callback: (Organization) => void) {
     this.selectUser()
       .pipe(
         mergeMap(user =>
@@ -113,14 +126,18 @@ export class RedirectComponent implements OnInit {
       )
       .subscribe(({organization, hasOrganization}) => {
         if (organization) {
-          this.createProject(organization, templateCode);
+          callback(organization);
         } else {
           this.redirectToHome(() => this.showError(hasOrganization));
         }
       });
   }
 
-  private createProject(organization: Organization, templateCode: string) {
+  private createProjectByCopy(organization: Organization, organizationId: string, projectId: string) {
+    console.log(organization, organizationId, projectId);
+  }
+
+  private createProjectByTemplate(organization: Organization, templateCode: string) {
     const modalRef = this.workspaceSelectService.createNewProject(organization, templateCode, {replaceUrl: true});
     modalRef.content.onClose$.subscribe(() => this.redirectToHome());
   }

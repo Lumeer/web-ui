@@ -25,7 +25,12 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
 import {environment} from '../../../../environments/environment';
 import {selectPublicProject} from '../../../core/store/projects/projects.state';
-import {map} from 'rxjs/operators';
+import {map, mergeMap, switchMap, take} from 'rxjs/operators';
+import {selectPerspective, selectWorkspace} from '../../../core/store/navigation/navigation.state';
+import {Perspective} from '../../../view/perspectives/perspective';
+import {Router} from '@angular/router';
+import {isNotNullOrUndefined} from '../../utils/common.utils';
+import {selectPublicShowTopPanel} from '../../../core/store/public-data/public-data.state';
 
 @Component({
   selector: 'top-panel-wrapper',
@@ -43,23 +48,48 @@ export class TopPanelWrapperComponent implements OnInit {
 
   public workspace$: Observable<Workspace>;
   public showTopPanel$: Observable<boolean>;
+  public showBackArrow$: Observable<boolean>;
 
-  constructor(private element: ElementRef, private store$: Store<AppState>) {}
+  constructor(private element: ElementRef, private store$: Store<AppState>, private router: Router) {
+  }
 
   public ngOnInit() {
     this.detectMobileResolution();
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.showTopPanel$ = this.bindShowTopPanel$();
+    this.showBackArrow$ = this.bindShowBackArrow$();
   }
 
   private bindShowTopPanel$(): Observable<boolean> {
     if (environment.publicView) {
       return this.store$.pipe(
-        select(selectPublicProject),
-        map(project => project?.templateMetadata?.showTopPanel)
+        select(selectPublicShowTopPanel),
+        switchMap(showTopPanel => {
+          if (isNotNullOrUndefined(showTopPanel)) {
+            return of(showTopPanel);
+          }
+          return this.store$.pipe(
+            select(selectPublicProject),
+            map(project => project?.templateMetadata?.showTopPanel)
+          );
+        })
       );
     }
     return of(true);
+  }
+
+  private bindShowBackArrow$(): Observable<boolean> {
+    return this.showTopPanel$.pipe(
+      mergeMap(showTopPanel => {
+        if (showTopPanel) {
+          return of(false);
+        }
+        return this.store$.pipe(
+          select(selectPerspective),
+          map(perspective => !!perspective && perspective !== Perspective.Search)
+        )
+      })
+    );
   }
 
   @HostListener('window:resize')
@@ -69,5 +99,14 @@ export class TopPanelWrapperComponent implements OnInit {
 
   private detectMobileResolution() {
     this.mobile$.next(window.matchMedia('(max-width: 767.98px)').matches);
+  }
+
+  public onBack() {
+    this.store$.pipe(
+      select(selectWorkspace),
+      take(1)
+    ).subscribe(workspace => {
+      this.router.navigate(['/', 'w', workspace?.organizationCode, workspace?.projectCode, 'view', Perspective.Search]);
+    })
   }
 }

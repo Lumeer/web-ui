@@ -72,6 +72,7 @@ import {SequencesEffects} from './sequences/sequences.effects';
 import {sequencesReducer} from './sequences/sequences.reducer';
 import {constraintDataReducer} from './constraint-data/constraint-data.reducer';
 import {MapsEffects} from './maps/maps.effects';
+import {publicDataReducer} from './public-data/public-data.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -101,6 +102,7 @@ const reducers: ActionReducerMap<AppState> = {
   searches: searchesReducer,
   sequences: sequencesReducer,
   constraintData: constraintDataReducer,
+  publicData: publicDataReducer,
 };
 
 const effects = [

@@ -23,13 +23,14 @@ import {Observable, of} from 'rxjs';
 import {PublicPermissionService} from '../common/public-permission.service';
 import {ProjectService} from './project.service';
 import {ProjectDto} from '../../dto';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
 import {environment} from '../../../../environments/environment';
-import {map} from 'rxjs/operators';
+import {map, mergeMap, take} from 'rxjs/operators';
 import {setDefaultUserPermissions} from '../common/public-api-util';
-import {DEFAULT_USER, STORAGE_PUBLIC_PROJECT} from '../../constants';
+import {DEFAULT_USER} from '../../constants';
 import {Role} from '../../model/role';
+import {selectPublicProjectId} from '../../store/public-data/public-data.state';
 
 @Injectable()
 export class PublicProjectService extends PublicPermissionService implements ProjectService {
@@ -46,18 +47,21 @@ export class PublicProjectService extends PublicPermissionService implements Pro
   }
 
   public getProject(organizationId: string, projectId: string): Observable<ProjectDto> {
-    const id = localStorage.getItem(STORAGE_PUBLIC_PROJECT);
-    return this.httpClient
-      .get<ProjectDto>(this.apiPrefix(organizationId, id))
-      .pipe(
-        map(project =>
-          setDefaultUserPermissions(
-            project,
-            DEFAULT_USER,
-            project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
+    return this.store$.pipe(
+      select(selectPublicProjectId),
+      take(1),
+      mergeMap(publicProjectId => this.httpClient
+        .get<ProjectDto>(this.apiPrefix(organizationId, publicProjectId))
+        .pipe(
+          map(project =>
+            setDefaultUserPermissions(
+              project,
+              DEFAULT_USER,
+              project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
+            )
           )
-        )
-      );
+        ))
+    );
   }
 
   public getProjectByCode(organizationId: string, projectCode: string): Observable<ProjectDto> {

@@ -19,9 +19,9 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, first, map, switchMap, tap} from 'rxjs/operators';
+import {filter, first, map, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from './store/app.state';
 import {Organization} from './store/organizations/organization';
 import {OrganizationsAction} from './store/organizations/organizations.action';
@@ -35,8 +35,7 @@ import {NotificationService} from './notifications/notification.service';
 import {WorkspaceSelectService} from './service/workspace-select.service';
 import {Perspective} from '../view/perspectives/perspective';
 import {environment} from '../../environments/environment';
-import {STORAGE_PUBLIC_VIEW} from './constants';
-import {isNullOrUndefined} from '../shared/utils/common.utils';
+import {selectPublicViewCode} from './store/public-data/public-data.state';
 
 @Component({
   template: '',
@@ -49,7 +48,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private selectService: WorkspaceSelectService,
     private store$: Store<AppState>
-  ) {}
+  ) {
+  }
 
   public ngOnInit() {
     if (environment.publicView) {
@@ -63,13 +63,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.getOrganizationsAndProjects().subscribe(({organizations, projects}) => {
       const organization = organizations[0];
       const project = projects[0];
-      const viewCode = JSON.parse(localStorage.getItem(STORAGE_PUBLIC_VIEW)) || project?.templateMetadata?.defaultView;
 
-      if (organization && project) {
-        this.navigateToProject(organization, project, viewCode);
-      } else {
-        // TODO show some error page
-      }
+      this.store$.pipe(select(selectPublicViewCode), take(1)).subscribe(viewCode => {
+        if (organization && project) {
+          this.navigateToProject(organization, project, viewCode || project?.templateMetadata?.defaultView);
+        } else {
+          // TODO show some error page
+        }
+      })
+
     });
   }
 
@@ -153,7 +155,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getOrganizationsAndProjects(): Observable<{organizations: Organization[]; projects: Project[]}> {
+  private getOrganizationsAndProjects(): Observable<{ organizations: Organization[]; projects: Project[] }> {
     return combineLatest([
       this.getOrganizations().pipe(
         tap(organizations =>

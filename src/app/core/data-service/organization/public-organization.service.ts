@@ -21,13 +21,13 @@ import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {ContactDto, OrganizationDto} from '../../dto';
 import {PublicPermissionService} from '../common/public-permission.service';
-import {map} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 import {ServiceLimitsDto} from '../../dto/service-limits.dto';
 import {PaymentDto} from '../../dto/payment.dto';
 import {OrganizationService} from './organization.service';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {AppState} from '../../store/app.state';
-import {STORAGE_PUBLIC_ORGANIZATION} from '../../constants';
+import {selectPublicOrganizationId} from '../../store/public-data/public-data.state';
 
 @Injectable()
 export class PublicOrganizationService extends PublicPermissionService implements OrganizationService {
@@ -44,8 +44,8 @@ export class PublicOrganizationService extends PublicPermissionService implement
   }
 
   public getOrganization(id: string): Observable<OrganizationDto> {
-    const organizationId = localStorage.getItem(STORAGE_PUBLIC_ORGANIZATION);
-    return of({code: 'LUMEER', id: organizationId, permissions: {groups: [], users: []}, name: 'XXX'});
+    return this.store$.pipe(select(selectPublicOrganizationId), take(1), map(organizationId =>
+      ({code: 'LUMEER', id: organizationId, permissions: {groups: [], users: []}, name: 'XXX'})))
   }
 
   public getOrganizationByCode(code: string): Observable<OrganizationDto> {
@@ -76,7 +76,7 @@ export class PublicOrganizationService extends PublicPermissionService implement
     return of(null);
   }
 
-  public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}> {
+  public getAllServiceLimits(): Observable<{ [organizationId: string]: ServiceLimitsDto }> {
     return of({});
   }
 

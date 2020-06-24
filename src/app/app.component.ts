@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Title} from '@angular/platform-browser';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import * as Sentry from '@sentry/browser';
@@ -27,7 +27,7 @@ import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
 import {BehaviorSubject, of, Subscription} from 'rxjs';
-import {catchError, filter, first, timeout, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, first, timeout, withLatestFrom, take} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
@@ -49,12 +49,13 @@ import {LUMEER_REFERRAL} from './core/constants';
 import {UserActivityService} from './auth/user-activity.service';
 import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
 import {BsLocaleService} from 'ngx-bootstrap/datepicker';
+import {PublicDataAction} from './core/store/public-data/public-data.action';
 
 @Component({
   selector: 'lmr-app',
   templateUrl: './app.component.html',
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
   public lazyLoading$ = new BehaviorSubject(false);
 
   constructor(
@@ -64,6 +65,7 @@ export class AppComponent implements AfterViewInit {
     private moduleLazyLoadingService: ModuleLazyLoadingService,
     private router: Router,
     private store$: Store<AppState>,
+    private route: ActivatedRoute,
     private title: Title,
     private pusherService: PusherService,
     private activityService: UserActivityService,
@@ -84,6 +86,24 @@ export class AppComponent implements AfterViewInit {
     this.initCheckUserInteraction();
     this.initTooltipConfig();
     this.initLanguage();
+  }
+
+  public ngOnInit() {
+    this.initPublicData();
+  }
+
+  private initPublicData() {
+    this.route.queryParams.pipe(
+      filter(params => params['o'] && params['p']),
+      take(1)
+    ).subscribe((params: Params) => {
+      this.store$.dispatch(new PublicDataAction.InitData({
+        organizationId: params['o'],
+        projectId: params['p'],
+        viewCode: params['v'],
+        showTopPanel: params['tp'] && JSON.parse(params['tp']),
+      }))
+    });
   }
 
   private storeReferralCookie() {
@@ -159,7 +179,7 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
-    const dimensions: {dimension1?: string; dimension2: string} = {dimension2: serviceLevel};
+    const dimensions: { dimension1?: string; dimension2: string } = {dimension2: serviceLevel};
     if (monthYear) {
       dimensions.dimension1 = monthYear;
     }

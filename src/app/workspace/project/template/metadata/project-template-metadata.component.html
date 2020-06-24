@@ -75,19 +75,6 @@
     <div class="row m-0 mt-3">
 
       <div class="d-flex flex-row flex-nowrap align-items-center">
-        <label class="switch" for="editable">
-          <input type="checkbox" formControlName="editable" id="editable" #editableCheckbox>
-          <span class="slider round" (click)="$event.stopPropagation()"></span>
-        </label>
-        <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.metadata.editable"
-              (click)="editableCheckbox.click()">Editable in the page (does not change the original project)</span>
-      </div>
-
-    </div>
-
-    <div class="row m-0 mt-3">
-
-      <div class="d-flex flex-row flex-nowrap align-items-center">
         <label class="switch" for="showTopPanel">
           <input type="checkbox" formControlName="showTopPanel" id="showTopPanel" #showTopPanelCheckbox>
           <span class="slider round" (click)="$event.stopPropagation()"></span>

@@ -45,6 +45,7 @@ import {initialPivotsState, PivotsState} from './pivots/pivots.state';
 import {initialSearchesState, SearchesState} from './searches/searches.state';
 import {initialSequencesState, SequencesState} from './sequences/sequences.state';
 import {ConstraintDataState, initialConstraintDataState} from './constraint-data/constraint-data.state';
+import {initialPublicDataState, PublicDataState} from './public-data/public-data.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -74,6 +75,7 @@ export interface AppState {
   searches: SearchesState;
   sequences: SequencesState;
   constraintData: ConstraintDataState;
+  publicData: PublicDataState;
 }
 
 export function initialAppState(): AppState {
@@ -105,5 +107,6 @@ export function initialAppState(): AppState {
     searches: initialSearchesState,
     sequences: initialSequencesState,
     constraintData: initialConstraintDataState,
+    publicData: initialPublicDataState,
   };
 }
