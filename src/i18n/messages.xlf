@@ -52,6 +52,10 @@
           <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
@@ -139,6 +143,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context>
           <context context-type="linenumber">30</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit><trans-unit id="attribute.type.label" datatype="html">
         <source>
@@ -316,11 +324,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context>
@@ -363,6 +371,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context>
           <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.project.copy.title" datatype="html">
+        <source>
+      Copy and open project
+  </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.project.copy.confirm" datatype="html">
+        <source>Copy and open</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit><trans-unit id="collection.post.it.import" datatype="html">
         <source>Import Table
@@ -801,7 +823,7 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit><trans-unit id="resource.settings.back" datatype="html">
-        <source>Back</source>
+        <source>Back to App</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource/header/resource-header.component.html</context>
           <context context-type="linenumber">3</context>
@@ -1042,7 +1064,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/post-it-collections/content/post-it-collections-content.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/search-views-content.component.html</context>
@@ -1637,7 +1659,7 @@
         <source>Project menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/workspace-panel/workspace-panel.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="panel.plan.free" datatype="html">
         <source>Free Plan: Upgrade now!</source>
@@ -2576,17 +2598,17 @@
         <source>Changes are not saved yet</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">92</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit><trans-unit id="view.changes.not.saved.undo" datatype="html">
         <source>Undo changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit><trans-unit id="view.not.exist" datatype="html">
         <source>View does not exist!
@@ -3893,7 +3915,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">24</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
         <source>
@@ -3901,19 +3923,19 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains.placeholder" datatype="html">
         <source>Enter * to allow embedding this template into any web page</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
         <source>Relative Date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">44</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
         <source>
@@ -3921,31 +3943,31 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
         <source>Select view</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
         <source>Tags</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">70</context>
         </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.editable" datatype="html">
-        <source>Editable in the page (does not change the original project)</source>
+      </trans-unit><trans-unit id="projects.tab.template.metadata.topPanel" datatype="html">
+        <source>Top panel</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.metadata.showTopPanel" datatype="html">
-        <source>Show appliaction controls (the upper panel)</source>
+        <source>Show application controls (the upper panel)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit><trans-unit id="0f6ae2b3123ad5e28ac81cd30a8504ffdbf802a7" datatype="html">
         <source>Remove tag</source>
@@ -3959,6 +3981,30 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/tags/project-template-tags.component.html</context>
           <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.copy" datatype="html">
+        <source>Copy script</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.copied" datatype="html">
+        <source>Copied!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.showTopPanel" datatype="html">
+        <source>Show application controls</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.defaultView.empty" datatype="html">
+        <source>Select starting view</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit id="page.title" datatype="html">
@@ -4719,6 +4765,13 @@
       </trans-unit>
       <trans-unit id="project.template.apply.fail" datatype="html">
         <source>Could not add template to project</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="project.copy.fail" datatype="html">
+        <source>Could not copy project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
           <context context-type="linenumber">1</context>
