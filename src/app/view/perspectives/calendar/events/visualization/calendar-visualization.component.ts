@@ -31,14 +31,14 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import View from '@fullcalendar/core/View';
 import {FullCalendarComponent} from '@fullcalendar/angular';
-import {ButtonTextCompoundInput, CustomButtonInput, ToolbarInput} from '@fullcalendar/core/types/input-types';
 import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
 import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {CalendarMode} from '../../../../../core/store/calendars/calendar';
 import * as moment from 'moment';
+import {ButtonTextCompoundInput, CustomButtonInput, ToolbarInput, CalendarOptions} from '@fullcalendar/core';
+import {ViewApi} from '@fullcalendar/common';
 
 @Component({
   selector: 'calendar-visualization',
@@ -102,6 +102,7 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   public defaultView: string;
   public defaultDate: Date;
+  public calendarOptions: CalendarOptions;
 
   constructor(private i18n: I18n) {
     this.calendarText = this.i18n({id: 'perspective.calendar.display.calendar', value: 'Calendar'});
@@ -142,6 +143,35 @@ export class CalendarVisualizationComponent implements OnChanges {
     if (changes.currentMode || changes.currentDate || changes.list) {
       this.checkCalendarModeChanged(!!changes.list);
     }
+    this.createCalendarOptions();
+  }
+
+  private createCalendarOptions() {
+    this.calendarOptions = {
+      initialView: this.defaultView,
+      initialDate: this.defaultDate,
+      events: this.events,
+      plugins: this.calendarPlugins,
+      navLinks: true,
+      selectable: this.canCreateEvents,
+      customButtons: this.list ? this.listCustomButtons : this.calendarCustomButtons,
+      locale: this.locale,
+      firstDay: moment.localeData(this.locale).firstDayOfWeek(),
+      buttonText: this.buttonText,
+      allDayText: this.allDayText,
+      noEventsText: this.noEventsText,
+      dayMaxEventRows: 10,
+      moreLinkContent: this.moreText,
+      headerToolbar: this.list ? this.listHeader : this.calendarHeader,
+      nowIndicator: true,
+      eventClick: this.onEventClick.bind(this),
+      eventChange: this.onEventResize.bind(this),
+      select: this.onRangeSelected.bind(this),
+      datesSet: this.datesRender.bind(this),
+      navLinkDayClick: this.onNavLinkDayClick.bind(this),
+    };
+
+    // TODO timeGridEventMinHeight
   }
 
   private getCalendarModeString(mode: CalendarMode): string {
@@ -191,7 +221,7 @@ export class CalendarVisualizationComponent implements OnChanges {
     return modes.find(mode => this.getCalendarModeString(mode) === newView);
   }
 
-  public datesRender(event: {view: View; el: HTMLElement}) {
+  public datesRender(event: {view: ViewApi; el: HTMLElement}) {
     const newView = event.view?.type;
     const newMode = this.calendarModeByDefaultView(newView);
     const newDate = this.getNewDate(event.view);
@@ -200,7 +230,7 @@ export class CalendarVisualizationComponent implements OnChanges {
     }
   }
 
-  private getNewDate(view: View): Date {
+  private getNewDate(view: ViewApi): Date {
     const today = new Date();
     if (view.currentStart <= today && view.currentEnd >= today) {
       return moment(today).startOf('day').toDate();
