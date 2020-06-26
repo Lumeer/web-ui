@@ -1,3 +1,5 @@
+@import 'src/styles/variables';
+
 input {
   border: 1px solid transparent !important;
   outline: none !important;
@@ -5,7 +7,7 @@ input {
 }
 
 .tag {
-  background: #d9ead3;
+  background: $success-light;
   border-radius: 0.5rem;
   line-height: 1rem;
 }

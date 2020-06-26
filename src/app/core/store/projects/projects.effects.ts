@@ -58,6 +58,7 @@ import {SearchesAction} from '../searches/searches.action';
 import {ChartAction} from '../charts/charts.action';
 import {TemplateService} from '../../rest/template.service';
 import {ProjectService} from '../../data-service';
+import Copy = ProjectsAction.Copy;
 
 @Injectable()
 export class ProjectsEffects {
@@ -127,7 +128,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.Create>(ProjectsActionType.CREATE),
     withLatestFrom(this.store$.pipe(select(selectOrganizationsDictionary))),
     mergeMap(([action, organizationsEntities]) => {
-      const {project, templateId, navigationExtras, onSuccess, onFailure} = action.payload;
+      const {project, templateId, copyProject, navigationExtras, onSuccess, onFailure} = action.payload;
       const organization = organizationsEntities[project.organizationId];
       const projectDto = ProjectConverter.toDto(project);
 
@@ -139,19 +140,33 @@ export class ProjectsEffects {
             ...createCallbackActions(onSuccess, newProject),
           ];
 
-          const applyTemplateAction = templateId
-            ? new ApplyTemplate({
+          const nextActions: Action[] = [];
+
+          if (templateId) {
+            nextActions.push(
+              new ApplyTemplate({
                 organizationId: project.organizationId,
                 projectId: newProject.id,
                 templateId,
               })
-            : null;
+            );
+          }
+
+          if (copyProject) {
+            nextActions.push(
+              new Copy({
+                organizationId: project.organizationId,
+                projectId: newProject.id,
+                copyProject,
+              })
+            );
+          }
 
           actions.push(
             new RouterAction.Go({
               path: ['w', organization.code, project.code, 'view', 'search'],
               extras: navigationExtras,
-              nextActions: [applyTemplateAction],
+              nextActions,
             })
           );
 
@@ -381,6 +396,33 @@ export class ProjectsEffects {
       const message = this.i18n({
         id: 'project.template.apply.fail',
         value: 'Could not add template to project',
+      });
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public copy$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.Copy>(ProjectsActionType.COPY),
+    mergeMap(action => {
+      const {organizationId, projectId, copyProject} = action.payload;
+      return this.projectService
+        .copyProject(organizationId, projectId, copyProject.organizationId, copyProject.id)
+        .pipe(
+          mergeMap(() => EMPTY),
+          catchError(error => of(new ProjectsAction.CopyFailure({error})))
+        );
+    })
+  );
+
+  @Effect()
+  public copyFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<ProjectsAction.CopyFailure>(ProjectsActionType.COPY_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({
+        id: 'project.copy.fail',
+        value: 'Could not copy project',
       });
       return new NotificationsAction.Error({message});
     })

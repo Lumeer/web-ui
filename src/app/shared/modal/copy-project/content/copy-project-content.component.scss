@@ -1,0 +1,6 @@
+@import '~src/styles/variables';
+
+iframe {
+  border: solid 1px $gray-200;
+  border-radius: $border-radius-small;
+}

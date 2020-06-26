@@ -1,0 +1,26 @@
+<modal-wrapper dialogType="primary"
+               *ngIf="{project: project$ | async} as data"
+               [performingAction]="performingAction$ | async"
+               [showSubmit]="!!data.project"
+               (onSubmit)="onSubmit(data.project)"
+               (onClose)="onClose()">
+  <span class="title" i18n="@@resource.new.dialog.title">
+      Copy and open project
+  </span>
+
+  <div class="body p-3">
+    <copy-project-content *ngIf="data.project; else contentInvalid"
+                          [project]="data.project">
+    </copy-project-content>
+  </div>
+
+  <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
+  <span class="button-submit" i18n="@@dialog.project.copy.confirm">Copy and open</span>
+
+</modal-wrapper>
+
+<ng-template #contentInvalid>
+  <h4 class="text-danger text-center my-5"
+      i18n="@@resource.new.dialog.invalid">I am sorry, something went wrong.
+  </h4>
+</ng-template>

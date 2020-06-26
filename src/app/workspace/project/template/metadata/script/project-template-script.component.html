@@ -1,0 +1,47 @@
+<h5 class="m-0">Generate script</h5>
+
+<div class="script-content mt-3" *ngIf="{script: scriptText$ | async, copied: copied$ | async} as data">
+  <div class="custom-file form-control h-auto p-3">
+    <code>{{data.script}}</code>
+  </div>
+  <div class="ml-0 ml-md-2 mt-2 mt-md-0 d-flex flex-column" [formGroup]="formGroup">
+
+    <div class="row m-0">
+      <button *ngIf="!data.copied" class="btn btn-outline-primary"
+              (click)="copyValue(data.script)">
+        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copy">Copy script</span>
+      </button>
+      <button *ngIf="data.copied" class="btn btn-outline-primary"
+              [disabled]="true">
+        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copied">Copied!</span>
+      </button>
+    </div>
+
+    <div class="row m-0 mt-4">
+
+      <div class="d-flex flex-row flex-nowrap align-items-center">
+        <label class="switch" for="showTopPanelScript">
+          <input type="checkbox" formControlName="showTopPanel" id="showTopPanelScript" #showTopPanelCheckbox>
+          <span class="slider round" (click)="$event.stopPropagation()"></span>
+        </label>
+        <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.script.showTopPanel"
+              (click)="showTopPanelCheckbox.click()">Show application controls</span>
+      </div>
+
+    </div>
+
+    <div class="row m-0 mt-2">
+      <select-item class="w-100"
+                   [items]="views | viewsSelectItems:queryData"
+                   emptyValue="Select starting view"
+                   i18n-emptyValue="@@projects.tab.template.script.defaultView.empty"
+                   [removable]="true"
+                   [selectedId]="defaultViewControl.value"
+                   [fitParent]="true"
+                   (select)="onViewSelected($event)"
+                   (remove)="onViewSelected(null)">
+      </select-item>
+    </div>
+
+  </div>
+</div>

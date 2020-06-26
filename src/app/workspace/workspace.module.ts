@@ -44,6 +44,7 @@ import {ProjectTemplateComponent} from './project/template/project-template.comp
 import {ProjectTemplateMetadataComponent} from './project/template/metadata/project-template-metadata.component';
 import {ProjectTemplateTagsComponent} from './project/template/metadata/tags/project-template-tags.component';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
+import {ProjectTemplateScriptComponent} from './project/template/metadata/script/project-template-script.component';
 
 @NgModule({
   imports: [SharedModule, WorkspaceRoutingModule, UsersModule, ClickOutsideModule, BsDatepickerModule],
@@ -65,6 +66,7 @@ import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
     ProjectTemplateComponent,
     ProjectTemplateMetadataComponent,
     ProjectTemplateTagsComponent,
+    ProjectTemplateScriptComponent,
   ],
   exports: [],
   providers: [WorkspaceService, OrganizationSettingsGuard, ProjectSettingsGuard, DatePipe],

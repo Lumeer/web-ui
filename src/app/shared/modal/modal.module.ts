@@ -34,6 +34,7 @@ import {DataResourceDetailModalModule} from './data-resource-detail/data-resourc
 import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overview-modal.module';
 import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
 import {CreateProjectModalModule} from './create-project/create-project-modal.module';
+import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 
 @NgModule({
   declarations: [],
@@ -54,6 +55,7 @@ import {CreateProjectModalModule} from './create-project/create-project-modal.mo
     ReferralsOverviewModalModule,
     VerifyEmailModalModule,
     CreateProjectModalModule,
+    CopyProjectModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -71,6 +73,7 @@ import {CreateProjectModalModule} from './create-project/create-project-modal.mo
     ReferralsOverviewModalModule,
     VerifyEmailModalModule,
     CreateProjectModalModule,
+    CopyProjectModalModule,
   ],
 })
 export class ModalModule {}

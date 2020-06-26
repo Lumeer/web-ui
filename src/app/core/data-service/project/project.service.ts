@@ -36,5 +36,12 @@ export abstract class ProjectService extends PermissionService {
 
   public abstract applyTemplate(organizationId: string, projectId: string, template: string): Observable<any>;
 
+  public abstract copyProject(
+    organizationId: string,
+    projectId: string,
+    copyOrganizationId: string,
+    copyProjectId: string
+  ): Observable<any>;
+
   public abstract updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto>;
 }

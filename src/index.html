@@ -18,14 +18,6 @@
   <body>
     <!-- Google Analytics -->
     <script>
-      const params = new URLSearchParams(window.location.search);
-      localStorage.setItem('public_organization', params.get('o'));
-      localStorage.setItem('public_project', params.get('p'));
-      if (params.has('v')) {
-        localStorage.setItem('public_view', params.get('v'));
-      }
-    </script>
-    <script>
       window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
       ga('create', 'UA-89546440-5', 'none');
       ga('require', 'ecommerce');
