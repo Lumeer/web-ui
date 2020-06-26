@@ -93,17 +93,21 @@ export class AppComponent implements AfterViewInit, OnInit {
   }
 
   private initPublicData() {
-    this.route.queryParams.pipe(
-      filter(params => params['o'] && params['p']),
-      take(1)
-    ).subscribe((params: Params) => {
-      this.store$.dispatch(new PublicDataAction.InitData({
-        organizationId: params['o'],
-        projectId: params['p'],
-        viewCode: params['v'],
-        showTopPanel: params['tp'] && JSON.parse(params['tp']),
-      }))
-    });
+    this.route.queryParams
+      .pipe(
+        filter(params => params['o'] && params['p']),
+        take(1)
+      )
+      .subscribe((params: Params) => {
+        this.store$.dispatch(
+          new PublicDataAction.InitData({
+            organizationId: params['o'],
+            projectId: params['p'],
+            viewCode: params['v'],
+            showTopPanel: params['tp'] && JSON.parse(params['tp']),
+          })
+        );
+      });
   }
 
   private storeReferralCookie() {
@@ -179,7 +183,7 @@ export class AppComponent implements AfterViewInit, OnInit {
       return;
     }
 
-    const dimensions: { dimension1?: string; dimension2: string } = {dimension2: serviceLevel};
+    const dimensions: {dimension1?: string; dimension2: string} = {dimension2: serviceLevel};
     if (monthYear) {
       dimensions.dimension1 = monthYear;
     }

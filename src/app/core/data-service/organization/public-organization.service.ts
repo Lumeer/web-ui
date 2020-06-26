@@ -44,8 +44,11 @@ export class PublicOrganizationService extends PublicPermissionService implement
   }
 
   public getOrganization(id: string): Observable<OrganizationDto> {
-    return this.store$.pipe(select(selectPublicOrganizationId), take(1), map(organizationId =>
-      ({code: 'LUMEER', id: organizationId, permissions: {groups: [], users: []}, name: 'XXX'})))
+    return this.store$.pipe(
+      select(selectPublicOrganizationId),
+      take(1),
+      map(organizationId => ({code: 'LUMEER', id: organizationId, permissions: {groups: [], users: []}, name: 'XXX'}))
+    );
   }
 
   public getOrganizationByCode(code: string): Observable<OrganizationDto> {
@@ -76,7 +79,7 @@ export class PublicOrganizationService extends PublicPermissionService implement
     return of(null);
   }
 
-  public getAllServiceLimits(): Observable<{ [organizationId: string]: ServiceLimitsDto }> {
+  public getAllServiceLimits(): Observable<{[organizationId: string]: ServiceLimitsDto}> {
     return of({});
   }
 

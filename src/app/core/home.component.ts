@@ -48,8 +48,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private notificationService: NotificationService,
     private selectService: WorkspaceSelectService,
     private store$: Store<AppState>
-  ) {
-  }
+  ) {}
 
   public ngOnInit() {
     if (environment.publicView) {
@@ -70,8 +69,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         } else {
           // TODO show some error page
         }
-      })
-
+      });
     });
   }
 
@@ -155,7 +153,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getOrganizationsAndProjects(): Observable<{ organizations: Organization[]; projects: Project[] }> {
+  private getOrganizationsAndProjects(): Observable<{organizations: Organization[]; projects: Project[]}> {
     return combineLatest([
       this.getOrganizations().pipe(
         tap(organizations =>

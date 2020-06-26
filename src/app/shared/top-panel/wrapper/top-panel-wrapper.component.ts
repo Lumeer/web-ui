@@ -50,8 +50,7 @@ export class TopPanelWrapperComponent implements OnInit {
   public showTopPanel$: Observable<boolean>;
   public showBackArrow$: Observable<boolean>;
 
-  constructor(private element: ElementRef, private store$: Store<AppState>, private router: Router) {
-  }
+  constructor(private element: ElementRef, private store$: Store<AppState>, private router: Router) {}
 
   public ngOnInit() {
     this.detectMobileResolution();
@@ -87,7 +86,7 @@ export class TopPanelWrapperComponent implements OnInit {
         return this.store$.pipe(
           select(selectPerspective),
           map(perspective => !!perspective && perspective !== Perspective.Search)
-        )
+        );
       })
     );
   }
@@ -102,11 +101,8 @@ export class TopPanelWrapperComponent implements OnInit {
   }
 
   public onBack() {
-    this.store$.pipe(
-      select(selectWorkspace),
-      take(1)
-    ).subscribe(workspace => {
+    this.store$.pipe(select(selectWorkspace), take(1)).subscribe(workspace => {
       this.router.navigate(['/', 'w', workspace?.organizationCode, workspace?.projectCode, 'view', Perspective.Search]);
-    })
+    });
   }
 }

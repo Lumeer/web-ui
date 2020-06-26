@@ -27,7 +27,9 @@ export namespace PublicDataAction {
   export class InitData implements Action {
     public readonly type = PublicDataActionType.INIT_DATA;
 
-    public constructor(public payload: {organizationId: string, projectId: string, viewCode: string; showTopPanel: boolean}) {}
+    public constructor(
+      public payload: {organizationId: string; projectId: string; viewCode: string; showTopPanel: boolean}
+    ) {}
   }
 
   export type All = InitData;
