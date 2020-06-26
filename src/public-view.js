@@ -45,7 +45,7 @@ div.innerHTML = `
     border-radius: 3px;">
 </iframe>
 <div style="display: flex; flex-direction: row-reverse;">
-     <a href="https://www.lumeer.io">
+     <a href="https://www.lumeer.io/">
         <img style="cursor: pointer; height: 25px; margin: 0.5rem 0 0.25rem 0" src="${poweredByImageUrl}"/>
      </a>
 </div>
