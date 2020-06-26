@@ -2,7 +2,7 @@
 
 .fc-toolbar {
   .fc-button-primary {
-    background: $primary;
+    background: $primary !important;
   }
 
   .fc-button br {
@@ -19,7 +19,7 @@
 }
 
 .fc th {
-  text-align: right;
+  text-align: right !important;
   margin-right: 0.2rem;
   border-bottom-width: 1px;
   font-size: 0.875rem;
@@ -29,37 +29,28 @@
   padding-bottom: 3px;
 }
 
-.fc td:first-child {
-  border-left: 0;
+.fc .fc-scrollgrid {
+  border: 0 !important;
 }
 
 .fc td:last-child {
   border-right: 0;
 }
 
-.fc-toolbar .fc-center {
-  text-align: center;
-  min-width: 260px;
+.fc .fc-day-today {
+  background: transparent !important;
 }
 
-.fc-dayGrid-view td.fc-day.fc-today {
-  background: transparent;
+.fc .fc-scrollgrid td:first-child {
+  border-bottom: 0 !important;
 }
 
-.fc .fc-row:last-child td {
-  border-bottom: 0;
-}
-
-.fc .fc-body .fc-widget-content {
-  border-bottom: 0;
-}
-
-.fc-dayGrid-view .fc-day-top .fc-day-number {
+.fc .fc-daygrid-day-top .fc-daygrid-day-number {
   margin-top: 0.2rem;
   margin-right: 0.2rem;
 }
 
-.fc-dayGrid-view .fc-day-top.fc-today .fc-day-number {
+.fc .fc-day-today .fc-daygrid-day-top .fc-daygrid-day-number {
   border: 2px solid $danger;
   background-color: $danger;
   color: white;

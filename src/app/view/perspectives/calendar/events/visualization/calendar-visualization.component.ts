@@ -27,18 +27,23 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import {
+  FullCalendarComponent,
+  ButtonTextCompoundInput,
+  CustomButtonInput,
+  ToolbarInput,
+  CalendarOptions,
+} from '@fullcalendar/angular';
+import {ViewApi} from '@fullcalendar/common';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import {FullCalendarComponent} from '@fullcalendar/angular';
 import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
 import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {CalendarMode} from '../../../../../core/store/calendars/calendar';
 import * as moment from 'moment';
-import {ButtonTextCompoundInput, CustomButtonInput, ToolbarInput, CalendarOptions} from '@fullcalendar/core';
-import {ViewApi} from '@fullcalendar/common';
 
 @Component({
   selector: 'calendar-visualization',
@@ -164,6 +169,7 @@ export class CalendarVisualizationComponent implements OnChanges {
       moreLinkContent: this.moreText,
       headerToolbar: this.list ? this.listHeader : this.calendarHeader,
       nowIndicator: true,
+      stickyHeaderDates: true,
       eventClick: this.onEventClick.bind(this),
       eventChange: this.onEventResize.bind(this),
       select: this.onRangeSelected.bind(this),
