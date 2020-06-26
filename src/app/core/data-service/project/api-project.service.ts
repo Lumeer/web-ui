@@ -69,6 +69,19 @@ export class ApiProjectService extends ApiPermissionService implements ProjectSe
     );
   }
 
+  public copyProject(
+    organizationId: string,
+    projectId: string,
+    copyOrganizationId: string,
+    copyProjectId: string
+  ): Observable<any> {
+    return this.httpClient.post(
+      `${this.baseApiPrefix(organizationId)}/${projectId}/copy`,
+      {},
+      {params: {organizationId: copyOrganizationId, projectId: copyProjectId}}
+    );
+  }
+
   public updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto> {
     return this.httpClient.put<ProjectDto>(this.apiPrefix(organizationId, projectId), project);
   }

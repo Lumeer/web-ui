@@ -54,6 +54,9 @@ export enum ProjectsActionType {
   APPLY_TEMPLATE = '[Projects] Apply Template',
   APPLY_TEMPLATE_FAILURE = '[Projects] Apply Template :: Failure',
 
+  COPY = '[Projects] Copy',
+  COPY_FAILURE = '[Projects] Copy :: Failure',
+
   GET_TEMPLATES = '[Projects] Get Templates',
   GET_TEMPLATES_SUCCESS = '[Projects] Get Templates :: Success',
   GET_TEMPLATES_FAILURE = '[Projects] Get Templates :: Failure',
@@ -118,6 +121,7 @@ export namespace ProjectsAction {
       public payload: {
         project: Project;
         templateId?: string;
+        copyProject?: Project;
         navigationExtras?: NavigationExtras;
         onSuccess?: (project: Project) => void;
         onFailure?: () => void;
@@ -163,6 +167,18 @@ export namespace ProjectsAction {
 
   export class ApplyTemplateFailure implements Action {
     public readonly type = ProjectsActionType.APPLY_TEMPLATE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class Copy implements Action {
+    public readonly type = ProjectsActionType.COPY;
+
+    public constructor(public payload: {organizationId: string; projectId: string; copyProject: Project}) {}
+  }
+
+  export class CopyFailure implements Action {
+    public readonly type = ProjectsActionType.COPY_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }

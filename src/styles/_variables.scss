@@ -38,6 +38,8 @@ $light: $gray-200 !default;
 $text-light: $gray-400 !default;
 $dark: $gray-700 !default;
 
+$success-light: lighten($success, 50%);
+
 $body-color: $primary !default;
 
 $primary-hover: lighten($primary, 15%);

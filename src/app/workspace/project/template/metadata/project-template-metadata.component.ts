@@ -68,6 +68,10 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
     return <FormGroup>this.formGroup.controls.metadata;
   }
 
+  public get scriptFormGroup(): FormGroup {
+    return <FormGroup>this.formGroup.controls.script;
+  }
+
   public get defaultViewControl(): AbstractControl {
     return this.metadataFormGroup.controls.defaultView;
   }
@@ -94,6 +98,10 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
         },
         {updateOn: 'blur'}
       ),
+      script: this.fb.group({
+        showTopPanel: this.fb.control(this.project?.templateMetadata?.showTopPanel, {updateOn: 'change'}),
+        defaultView: this.project?.templateMetadata?.defaultView,
+      }),
     });
   }
 
@@ -127,8 +135,8 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
     this.updateProjectService.onDestroy();
   }
 
-  public onViewSelected(viewId: string) {
-    this.defaultViewControl.patchValue(viewId);
+  public onViewSelected(viewCode: string) {
+    this.defaultViewControl.patchValue(viewCode);
   }
 }
 

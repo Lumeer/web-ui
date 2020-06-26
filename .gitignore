@@ -17,3 +17,5 @@ environment.ts
 .classpath
 .project
 .settings/
+
+**/.DS_Store

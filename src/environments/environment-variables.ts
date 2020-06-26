@@ -44,6 +44,7 @@ export interface EnvironmentVariables {
   pusherKey: string;
   blocklyCdn: string;
   publicViewCdn: string;
+  publicScriptCdn: string;
   logzioKey: string;
   smartlookKey: string;
   mixpanelKey: string;
@@ -68,6 +69,7 @@ const pusherCluster = env['PUSHER_CLUSTER'] || 'eu';
 const pusherKey = env['PUSHER_KEY'] || '';
 const blocklyCdn = env['BLOCKLY_CDN'] || `https://d1p6nuvm5rqwq0.cloudfront.net/blockly/v9/blockly.${locale}.min.js`;
 const publicViewCdn = env['PUBLIC_VIEW_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/index.html`;
+const publicScriptCdn = env['PUBLIC_SCRIPT_CDN'] || `/Users/jakubrodak/Documents/Lumeer/web-ui/public-view.js`;
 const logzioKey = env['LOGZIO_KEY'] || '';
 const smartlookKey = env['SMARTLOOK_KEY'] || '';
 const mixpanelKey = env['MIXPANEL_KEY'] || '';
@@ -92,6 +94,7 @@ export const environmentVariables: EnvironmentVariables = {
   pusherKey,
   blocklyCdn,
   publicViewCdn,
+  publicScriptCdn,
   logzioKey,
   smartlookKey,
   mixpanelKey,

@@ -50,17 +50,19 @@ export class PublicProjectService extends PublicPermissionService implements Pro
     return this.store$.pipe(
       select(selectPublicProjectId),
       take(1),
-      mergeMap(publicProjectId => this.httpClient
-        .get<ProjectDto>(this.apiPrefix(organizationId, publicProjectId))
-        .pipe(
-          map(project =>
-            setDefaultUserPermissions(
-              project,
-              DEFAULT_USER,
-              project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
+      mergeMap(publicProjectId =>
+        this.httpClient
+          .get<ProjectDto>(this.apiPrefix(organizationId, publicProjectId))
+          .pipe(
+            map(project =>
+              setDefaultUserPermissions(
+                project,
+                DEFAULT_USER,
+                project?.templateMetadata?.editable ? [Role.Read, Role.Write] : [Role.Read]
+              )
             )
           )
-        ))
+      )
     );
   }
 
@@ -78,6 +80,15 @@ export class PublicProjectService extends PublicPermissionService implements Pro
 
   public applyTemplate(organizationId: string, projectId: string, template: string): Observable<any> {
     return of(template);
+  }
+
+  public copyProject(
+    organizationId: string,
+    projectId: string,
+    copyOrganizationId: string,
+    copyProjectId: string
+  ): Observable<any> {
+    return of(copyProjectId);
   }
 
   public updateProject(organizationId: string, projectId: string, project: ProjectDto): Observable<ProjectDto> {

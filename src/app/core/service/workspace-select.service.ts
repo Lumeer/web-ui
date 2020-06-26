@@ -38,6 +38,7 @@ import {CreateResourceModalComponent} from '../../shared/modal/create-resource/c
 import {ModalService} from '../../shared/modal/modal.service';
 import {Perspective} from '../../view/perspectives/perspective';
 import {CreateProjectModalComponent} from '../../shared/modal/create-project/create-project-modal.component';
+import {CopyProjectModalComponent} from '../../shared/modal/copy-project/copy-project-modal.component';
 
 @Injectable({
   providedIn: 'root',
@@ -67,7 +68,7 @@ export class WorkspaceSelectService {
         filter(loaded => loaded),
         mergeMap(() => this.store$.pipe(select(selectProjectsByOrganizationId(organization.id)))),
         take(1),
-        map(projects => projects.length > 0 && projects[0])
+        map(projects => projects?.[0])
       )
       .subscribe(project => {
         if (project) {
@@ -102,6 +103,22 @@ export class WorkspaceSelectService {
 
   public createNewProject(organization: Organization, templateCode?: string, extras?: NavigationExtras): BsModalRef {
     return this.openCreateProjectModal(organization, templateCode, extras);
+  }
+
+  public copyProject(
+    organization: Organization,
+    organizationId: string,
+    projectId: string,
+    extras?: NavigationExtras
+  ): BsModalRef {
+    const initialState = {
+      organization,
+      organizationId,
+      projectId,
+      navigationExtras: extras,
+    };
+    const config = {initialState, keyboard: false, class: 'modal-lg', backdrop: 'static' as const};
+    return this.modalService.show(CopyProjectModalComponent, config);
   }
 
   public selectProject(organization: Organization, project: Project) {
