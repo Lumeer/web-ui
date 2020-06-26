@@ -41,7 +41,7 @@ div.innerHTML = `
         <img style="cursor: pointer; height: 37px; margin: 0.25rem 0 0.5rem 0; transition: all .2s ease-in-out;" src="${useInLumeerImageUrl}" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''"/>
     </a>
  </div>
-<iframe src="http://localhost:7000/ui?o=${organization}&p=${project}&tp=${topPanel}" width="100%" height="100%" style="border:1px solid black; box-sizing: border-box; border: solid 1px #e9ecef;
+<iframe src="${publicViewCdn}?o=${organization}&p=${project}&tp=${topPanel}" width="100%" height="100%" style="border:1px solid black; box-sizing: border-box; border: solid 1px #e9ecef;
     border-radius: 3px;">
 </iframe>
 <div style="display: flex; flex-direction: row-reverse;">
