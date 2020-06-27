@@ -2722,16 +2722,16 @@
         </context-group>
       </trans-unit><trans-unit id="dialog.project.copy.title" datatype="html">
         <source>
-      Copy and open project
+      Copy and Open Project
   </source><target state="final">
-      Copy and open project
+      Copy and Open Project
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.project.copy.confirm" datatype="html">
-        <source>Copy and open</source><target state="final">Copy and open</target>
+        <source>Copy and Open</source><target state="final">Copy and Open</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
           <context context-type="linenumber">18</context>
