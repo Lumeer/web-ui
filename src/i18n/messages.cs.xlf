@@ -1116,16 +1116,16 @@
         </context-group>
       </trans-unit><trans-unit id="dialog.project.copy.title" datatype="html">
         <source>
-      Copy and open project
-  </source><target state="new">
-      Copy and open project
+      Copy and Open Project
+  </source><target>
+      Zkopírovat a otevřít projekt
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.project.copy.confirm" datatype="html">
-        <source>Copy and open</source><target state="new">Copy and open</target>
+        <source>Copy and Open</source><target>Zkopírovat a otevřít</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
           <context context-type="linenumber">18</context>
@@ -2427,7 +2427,7 @@
         <source>Tags</source><target>Značky</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.topPanel" datatype="html">
-        <source>Top panel</source><target state="new">Top panel</target>
+        <source>Top panel</source><target>Horní panel s nabídkou</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
           <context context-type="linenumber">80</context>
@@ -2449,25 +2449,25 @@
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.copy" datatype="html">
-        <source>Copy script</source><target state="new">Copy script</target>
+        <source>Copy script</source><target>Zkopírovat skript</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.copied" datatype="html">
-        <source>Copied!</source><target state="new">Copied!</target>
+        <source>Copied!</source><target>Zkopírováno!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.showTopPanel" datatype="html">
-        <source>Show application controls</source><target state="new">Show application controls</target>
+        <source>Show application controls</source><target>Zobrazit ovládací prvky aplikace</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.defaultView.empty" datatype="html">
-        <source>Select starting view</source><target state="new">Select starting view</target>
+        <source>Select starting view</source><target>Vyberte počáteční pohled</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
           <context context-type="linenumber">36</context>
@@ -3136,7 +3136,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="project.copy.fail" datatype="html">
-        <source>Could not copy project</source><target state="new">Could not copy project</target>
+        <source>Could not copy project</source><target>Nepodařilo se mi okopírovat projekt</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -4108,7 +4108,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="chart.type" datatype="html">
-        <source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</source><target>{VAR_SELECT, select, line {Čárový} bar {Sloupcový} pie {Koláčový} }</target>
+        <source>{VAR_SELECT, select, line {Line} bar {Bar} pie {Pie} bubble {Bubble} }</source><target>{VAR_SELECT, select, line {Čárový} bar {Sloupcový} pie {Koláčový} bubble {Bublinový} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/chart-types-to-select.pipe.ts</context>
           <context context-type="linenumber">1</context>
