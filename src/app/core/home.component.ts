@@ -64,8 +64,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   private initPublicData() {
     this.route.queryParams
       .pipe(
-        // tslint:disable-next-line
-        tap(params => console.log('Params from app component III', params)),
         filter(params => params['o'] && params['p']),
         take(1)
       )
