@@ -18,7 +18,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Params, Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, Subscription} from 'rxjs';
 import {filter, first, map, switchMap, take, tap} from 'rxjs/operators';
@@ -36,6 +36,7 @@ import {WorkspaceSelectService} from './service/workspace-select.service';
 import {Perspective} from '../view/perspectives/perspective';
 import {environment} from '../../environments/environment';
 import {selectPublicViewCode} from './store/public-data/public-data.state';
+import {PublicDataAction} from './store/public-data/public-data.action';
 
 @Component({
   template: '',
@@ -47,15 +48,37 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private notificationService: NotificationService,
     private selectService: WorkspaceSelectService,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private route: ActivatedRoute
   ) {}
 
   public ngOnInit() {
+    this.initPublicData();
     if (environment.publicView) {
       this.subscriptions.add(this.redirectToPublicWorkspace());
     } else {
       this.subscriptions.add(this.redirectToWorkspace());
     }
+  }
+
+  private initPublicData() {
+    this.route.queryParams
+      .pipe(
+        // tslint:disable-next-line
+        tap(params => console.log('Params from app component II', params)),
+        filter(params => params['o'] && params['p']),
+        take(1)
+      )
+      .subscribe((params: Params) => {
+        this.store$.dispatch(
+          new PublicDataAction.InitData({
+            organizationId: params['o'],
+            projectId: params['p'],
+            viewCode: params['v'] && JSON.parse(params['v']),
+            showTopPanel: params['tp'] && JSON.parse(params['tp']),
+          })
+        );
+      });
   }
 
   private redirectToPublicWorkspace(): Subscription {
