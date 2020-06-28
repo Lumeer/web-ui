@@ -76,11 +76,11 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
     this.scriptText$ = combineLatest([this.workspace$, formObservable$]).pipe(
       startWith([this.workspace, this.formGroup.value]),
       map(([workspace, value]) => {
-        const showTopPanel = value.showTopPanel;
+        const showTopPanel = value.showTopPanel || false;
         const scriptSrc = environment.publicScriptCdn;
         const language = environment.locale;
         const view = value.defaultView ? `data-v=${value.defaultView}` : '';
-        return `<script type="text/javascript" id="container" src="${scriptSrc}"
+        return `<script type="text/javascript" src="${scriptSrc}"
             data-o="${workspace?.organizationId}" data-p="${workspace?.projectId}" ${view}
             data-tp="${showTopPanel}" data-l="${language}"></script>`;
       })

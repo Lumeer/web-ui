@@ -115,7 +115,7 @@
                 }
               ],
               "namedChunks": true,
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "all",
               "showCircularDependencies": false,
               "sourceMap": true,

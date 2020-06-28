@@ -27,7 +27,7 @@ import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
 import {BehaviorSubject, of, Subscription} from 'rxjs';
-import {catchError, filter, first, timeout, withLatestFrom, take} from 'rxjs/operators';
+import {catchError, filter, first, timeout, withLatestFrom, take, tap} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
@@ -95,6 +95,8 @@ export class AppComponent implements AfterViewInit, OnInit {
   private initPublicData() {
     this.route.queryParams
       .pipe(
+        // tslint:disable-next-line
+        tap(params => console.log('Params from app component', params)),
         filter(params => params['o'] && params['p']),
         take(1)
       )

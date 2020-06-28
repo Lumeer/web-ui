@@ -18,6 +18,7 @@
  */
 
 import {Injectable} from '@angular/core';
+import {environment} from '../../environments/environment';
 
 const STORE_KEY = 'last_activity';
 
@@ -36,6 +37,9 @@ export class UserActivityService {
   }
 
   public getLastActivity(): number {
+    if (environment.publicView) {
+      return Date.now();
+    }
     if (localStorage.getItem(STORE_KEY)) {
       return parseInt(localStorage.getItem(STORE_KEY), 10);
     }
@@ -48,7 +52,10 @@ export class UserActivityService {
   }
 
   private setLastActivity(lastActivity: number) {
-    localStorage.setItem(STORE_KEY, lastActivity.toString());
+    if (!environment.publicView) {
+      // some browsers doesn't support access to localStorage in iframe
+      localStorage.setItem(STORE_KEY, lastActivity.toString());
+    }
     this.lastActivity = lastActivity;
   }
 }
