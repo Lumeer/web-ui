@@ -1,8 +1,8 @@
-const element = document.getElementById('container');
-const organization = element.getAttribute('data-o');
-const project = element.getAttribute('data-p');
-const topPanel = element.getAttribute('data-tp');
-const language = element.getAttribute('data-l');
+const organization = document.currentScript.getAttribute('data-o');
+const project = document.currentScript.getAttribute('data-p');
+const topPanel = document.currentScript.getAttribute('data-tp');
+const view = document.currentScript.getAttribute('data-v');
+const language = document.currentScript.getAttribute('data-l');
 
 let useInLumeerUrl;
 let useInLumeerImageUrl;
@@ -41,7 +41,7 @@ div.innerHTML = `
         <img style="cursor: pointer; height: 37px; margin: 0.25rem 0 0.5rem 0; transition: all .2s ease-in-out;" src="${useInLumeerImageUrl}" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''"/>
     </a>
  </div>
-<iframe src="${publicViewCdn}?o=${organization}&p=${project}&tp=${topPanel}" width="100%" height="100%" style="border:1px solid black; box-sizing: border-box; border: solid 1px #e9ecef;
+<iframe src="${publicViewCdn}?o=${organization}&p=${project}&tp=${topPanel}&v=${view}" width="100%" height="100%" style="border:1px solid black; box-sizing: border-box; border: solid 1px #e9ecef;
     border-radius: 3px;">
 </iframe>
 <div style="display: flex; flex-direction: row-reverse;">
@@ -51,7 +51,7 @@ div.innerHTML = `
 </div>
 `;
 
-element.parentElement.appendChild(div);
+document.currentScript.parentElement.appendChild(div);
 
 function poweredBySvg() {
   return `<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="powered_by_en.svg" inkscape:version="1.0 (4035a4f, 2020-05-01)" id="svg8" version="1.1" viewBox="0 0 163 23" height="46" width="326">
