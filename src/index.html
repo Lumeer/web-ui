@@ -19,7 +19,9 @@
     <!-- Google Analytics -->
     <script>
       window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
-      ga('create', 'UA-89546440-5', 'none');
+      ga('create', 'UA-89546440-5', {
+        cookieFlags: 'max-age=31536000;secure;samesite=none'
+      });
       ga('require', 'ecommerce');
     </script>
     <script async src='https://www.google-analytics.com/analytics.js'></script>
