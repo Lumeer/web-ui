@@ -65,7 +65,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.route.queryParams
       .pipe(
         // tslint:disable-next-line
-        tap(params => console.log('Params from app component II', params)),
+        tap(params => console.log('Params from app component III', params)),
         filter(params => params['o'] && params['p']),
         take(1)
       )
@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           new PublicDataAction.InitData({
             organizationId: params['o'],
             projectId: params['p'],
-            viewCode: params['v'] && JSON.parse(params['v']),
+            viewCode: params['v'],
             showTopPanel: params['tp'] && JSON.parse(params['tp']),
           })
         );

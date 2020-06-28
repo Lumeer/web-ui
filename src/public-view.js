@@ -32,6 +32,8 @@ const poweredByImageUrl = URL.createObjectURL(
   })
 );
 
+const viewParam = view ? `&v=${view}` : '';
+
 const div = document.createElement('div');
 div.style =
   'display: grid; height: 100%; grid-template-rows: auto 1fr auto; border-radius: 0.25rem; padding: 0 5px; background: white;';
@@ -41,7 +43,7 @@ div.innerHTML = `
         <img style="cursor: pointer; height: 37px; margin: 0.25rem 0 0.5rem 0; transition: all .2s ease-in-out;" src="${useInLumeerImageUrl}" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''"/>
     </a>
  </div>
-<iframe src="${publicViewCdn}?o=${organization}&p=${project}&tp=${topPanel}&v=${view}" width="100%" height="100%" style="border:1px solid black; box-sizing: border-box; border: solid 1px #e9ecef;
+<iframe src="${publicViewCdn}?o=${organization}&p=${project}&tp=${topPanel}${viewParam}" width="100%" height="100%" style="border:1px solid black; box-sizing: border-box; border: solid 1px #e9ecef;
     border-radius: 3px;">
 </iframe>
 <div style="display: flex; flex-direction: row-reverse;">

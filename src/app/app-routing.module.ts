@@ -35,6 +35,10 @@ const appRoutes: Routes = [
     component: HomeComponent,
   },
   {
+    path: 'index.html',
+    redirectTo: '',
+  },
+  {
     path: 'template/:templateCode',
     canActivate: [AuthGuard, CurrentUserGuard],
     component: RedirectComponent,
