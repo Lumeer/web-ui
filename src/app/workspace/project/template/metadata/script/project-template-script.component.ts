@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
@@ -26,6 +26,7 @@ import {environment} from '../../../../../../environments/environment';
 import {View} from '../../../../../core/store/views/view';
 import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
 import {ClipboardService} from '../../../../../core/service/clipboard.service';
+import {PublicScriptType} from './public-script-type';
 
 @Component({
   selector: 'project-template-script',
@@ -46,12 +47,11 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
   @Input()
   public queryData: QueryData;
 
-  public scriptText$: Observable<string>;
-  public shortcode$ = new BehaviorSubject<string>('');
-  private workspace$ = new Subject<Workspace>();
+  public readonly scriptType = PublicScriptType;
 
+  public scriptText$: Observable<string>;
+  private workspace$ = new Subject<Workspace>();
   public copied$ = new BehaviorSubject<boolean>(false);
-  public shortcodeCopied$ = new BehaviorSubject<boolean>(false);
 
   public get defaultViewControl(): AbstractControl {
     return this.formGroup.controls.defaultView;
@@ -63,6 +63,10 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
     if (changes.workspace) {
       this.workspace$.next(this.workspace);
     }
+  }
+
+  public get scriptTypeControl(): AbstractControl {
+    return this.formGroup?.controls.scriptType;
   }
 
   public onViewSelected(viewId: string) {
@@ -83,14 +87,18 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
         const language = environment.locale;
         const view = value.defaultView ? `data-v=${value.defaultView}` : '';
         const shortcodeView = value.defaultView ? `/${value.defaultView}` : '';
+        const scriptType = <PublicScriptType>value.scriptType || PublicScriptType.Html;
 
-        this.shortcode$.next(
-          `[lumeer_embed code="${workspace?.organizationId}/${workspace?.projectId}${shortcodeView}" lang="${language}" show_panel="${showTopPanel}"]`
-        );
-
-        return `<script type="text/javascript" src="${scriptSrc}"
+        switch (scriptType) {
+          case PublicScriptType.Html:
+            return `<script type="text/javascript" src="${scriptSrc}"
             data-o="${workspace?.organizationId}" data-p="${workspace?.projectId}" ${view}
             data-tp="${showTopPanel}" data-l="${language}"></script>`;
+          case PublicScriptType.WordPress:
+            return `[lumeer_embed code="${workspace?.organizationId}/${workspace?.projectId}${shortcodeView}" lang="${language}" show_panel="${showTopPanel}"]`;
+          default:
+            return '';
+        }
       })
     );
   }
@@ -101,9 +109,7 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
     setTimeout(() => this.copied$.next(false), 3000);
   }
 
-  public copyShortcodeValue(text: string) {
-    this.clipboardService.copy(text);
-    this.shortcodeCopied$.next(true);
-    setTimeout(() => this.shortcodeCopied$.next(false), 3000);
+  public onScriptTypeSelected(publicScriptType: PublicScriptType) {
+    this.scriptTypeControl?.patchValue(publicScriptType);
   }
 }

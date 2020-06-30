@@ -4,51 +4,20 @@
   You can also use a WordPress shortcode (requires the Lumeer Embed Plugin in your WordPress installation).
 </p>
 
-<div class="script-content mt-3" *ngIf="{script: scriptText$ | async, copied: copied$ | async, shortcode: shortcode$ | async, shortcodeCopied: shortcodeCopied$ | async} as data">
-  <div>
-    <div class="custom-file form-control h-auto p-3">
-      <code>{{data.script}}</code>
-    </div>
-    <div class="custom-file form-control h-auto p-3 mt-3">
-      <code>{{data.shortcode}}</code>
-    </div>
-    <div class="text-muted small" i18n="@@projects.tab.template.script.shortcode.note">WordPress shortcode, requires the Lumeer Embed Plugin installed in your WordPress.</div>
-  </div>
-  <div class="ml-md-4 mt-2 mt-md-0 d-flex flex-column" [formGroup]="formGroup">
+<div class="script-content mt-3"
+     *ngIf="{script: scriptText$ | async, copied: copied$ | async} as data">
+  <div class="mr-md-4 mt-2 mt-md-0 d-flex flex-column justify-content-center" [formGroup]="formGroup">
 
-    <div class="row m-0">
-      <button *ngIf="!data.copied" class="btn btn-outline-primary"
-              (click)="copyValue(data.script)">
-        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copy">Copy script</span>
-      </button>
-      <button *ngIf="data.copied" class="btn btn-outline-primary"
-              [disabled]="true">
-        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copied">Copied!</span>
-      </button>
-      <button *ngIf="!data.shortcodeCopied" class="btn btn-outline-primary ml-2"
-              (click)="copyShortcodeValue(data.shortcode)">
-        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copyShortcode">Copy shortcode</span>
-      </button>
-      <button *ngIf="data.shortcodeCopied" class="btn btn-outline-primary ml-2"
-              [disabled]="true">
-        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copied">Copied!</span>
-      </button>
+    <div class="d-flex flex-row flex-nowrap align-items-center">
+      <label class="switch" for="showTopPanelScript">
+        <input type="checkbox" formControlName="showTopPanel" id="showTopPanelScript" #showTopPanelCheckbox>
+        <span class="slider round" (click)="$event.stopPropagation()"></span>
+      </label>
+      <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.script.showTopPanel"
+            (click)="showTopPanelCheckbox.click()">Show application controls</span>
     </div>
 
-    <div class="row m-0 mt-4">
-
-      <div class="d-flex flex-row flex-nowrap align-items-center">
-        <label class="switch" for="showTopPanelScript">
-          <input type="checkbox" formControlName="showTopPanel" id="showTopPanelScript" #showTopPanelCheckbox>
-          <span class="slider round" (click)="$event.stopPropagation()"></span>
-        </label>
-        <span class="pl-2 cursor-pointer user-select-none" i18n="@@projects.tab.template.script.showTopPanel"
-              (click)="showTopPanelCheckbox.click()">Show application controls</span>
-      </div>
-
-    </div>
-
-    <div class="row m-0 mt-2">
+    <div class="mt-3">
       <select-item class="w-100"
                    [items]="views | viewsSelectItems:queryData"
                    emptyValue="Select starting view"
@@ -61,5 +30,33 @@
       </select-item>
     </div>
 
+  </div>
+  <div>
+
+    <div class="d-flex">
+
+      <div class="btn-group mr-4" role="group">
+        <button type="button" class="btn btn-outline-primary" (click)="onScriptTypeSelected(scriptType.Html)"><i
+          class="fab fa-html5"></i></button>
+        <button type="button" class="btn btn-outline-primary" (click)="onScriptTypeSelected(scriptType.WordPress)"><i
+          class="fab fa-wordpress"></i></button>
+      </div>
+
+      <button *ngIf="!data.copied" class="btn btn-outline-primary"
+              (click)="copyValue(data.script)">
+        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copy">Copy script</span>
+      </button>
+      <button *ngIf="data.copied" class="btn btn-outline-primary"
+              [disabled]="true">
+        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copied">Copied!</span>
+      </button>
+    </div>
+    <div class="custom-file form-control h-auto p-3 mt-3">
+      <code class="break-all">{{data.script}}</code>
+    </div>
+    <div *ngIf="scriptTypeControl.value === scriptType.WordPress" class="text-muted small mt-1"
+         i18n="@@projects.tab.template.script.shortcode.note">WordPress shortcode, requires the Lumeer Embed Plugin
+      installed in your WordPress.
+    </div>
   </div>
 </div>
