@@ -27,6 +27,7 @@ import {UpdateProjectService} from '../update-project.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
 import * as moment from 'moment';
+import {PublicScriptType} from './script/public-script-type';
 
 @Component({
   selector: 'project-template-metadata',
@@ -101,6 +102,7 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
       script: this.fb.group({
         showTopPanel: this.fb.control(this.project?.templateMetadata?.showTopPanel, {updateOn: 'change'}),
         defaultView: this.project?.templateMetadata?.defaultView,
+        scriptType: PublicScriptType.Html,
       }),
     });
   }

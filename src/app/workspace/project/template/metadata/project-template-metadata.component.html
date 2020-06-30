@@ -28,7 +28,7 @@
         <input class="form-control" type="text" formControlName="imageUrl" id="imageUrl"
                (keydown.enter)="$event.target.blur()"
                placeholder="https://..."/>
-        <div class="text-muted small px-1" i18n="@@projects.tab.template.metadata.imageUrl.help">
+        <div class="text-muted small px-1 mt-1" i18n="@@projects.tab.template.metadata.imageUrl.help">
           An image used to represent the project in the project creation dialog.
         </div>
       </div>
@@ -41,7 +41,7 @@
       </label>
       <div class="col-sm-9 col-lg-10 px-0 mb-2">
         <input class="form-control" type="text" formControlName="allowedDomains" id="allowedDomains"/>
-        <div class="text-muted small px-1" i18n="@@projects.tab.template.metadata.allowedDomains.help">
+        <div class="text-muted small px-1 mt-1" i18n="@@projects.tab.template.metadata.allowedDomains.help">
           Domains allowed to embed this project. E.g. www.lumeer.io, acme.com.
           Enter * to allow embedding into any web page.
         </div>
@@ -55,7 +55,7 @@
         <input class="form-control" type="text" formControlName="relativeDate" id="relativeDate"
                bsDatepicker
                [bsConfig]="datePickerConfig"/>
-        <div class="text-muted small px-1" i18n="@@projects.tab.template.metadata.relativeDate.help">
+        <div class="text-muted small px-1 mt-1" i18n="@@projects.tab.template.metadata.relativeDate.help">
           When anyone creates a copy of this project, all date values will be shifted.
           The shift is determined as a difference between today and the date specified here.
           No shift is made when left empty.
@@ -79,7 +79,7 @@
                      (select)="onViewSelected($event)"
                      (remove)="onViewSelected(null)">
         </select-item>
-        <div class="text-muted small px-1" i18n="@@projects.tab.template.metadata.defaultView.help">
+        <div class="text-muted small px-1 mt-1" i18n="@@projects.tab.template.metadata.defaultView.help">
           The view that opens when the template is first loaded either in the project creation dialog.
           Leave empty for the default home page.
         </div>
