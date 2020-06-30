@@ -50,7 +50,7 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
   public readonly scriptType = PublicScriptType;
 
   public scriptText$: Observable<string>;
-  private workspace$ = new Subject<Workspace>();
+  private workspace$ = new BehaviorSubject<Workspace>(null);
   public copied$ = new BehaviorSubject<boolean>(false);
 
   public get defaultViewControl(): AbstractControl {
@@ -78,8 +78,7 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
   }
 
   private initScriptText() {
-    const formObservable$ = this.formGroup.valueChanges.pipe(startWith(this.formGroup.value));
-    this.scriptText$ = combineLatest([this.workspace$, formObservable$]).pipe(
+    this.scriptText$ = combineLatest([this.workspace$, this.formGroup.valueChanges]).pipe(
       startWith([this.workspace, this.formGroup.value]),
       map(([workspace, value]) => {
         const showTopPanel = value.showTopPanel || false;
