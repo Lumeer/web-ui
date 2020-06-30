@@ -486,7 +486,13 @@
         <source>You can scroll the table...</source><target state="final">You can scroll the table...</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="home" datatype="html">
+        <source>Home</source><target state="final">Home</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/wrapper/top-panel-wrapper.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="resource.menu.createNew" datatype="html">
         <source>Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></source><target state="final">Create New <x id="ICU" equiv-text="{type, select, organization {...} project {...} other {...}}"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/workspace-panel/resource-menu/resource-menu.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="741fc2503ff25b365c7610d0f5f5f112f3dcb7c5" datatype="html">
@@ -2091,42 +2097,84 @@
         Image address
       </target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.imageUrl.help" datatype="html">
         <source>
-        Allowed Domains
-      </source><target state="final">
-        Allowed Domains
-      </target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains.placeholder" datatype="html">
-        <source>Enter * to allow embedding this template into any web page</source><target state="final">Enter * to allow embedding this template into any web page</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
-        <source>Relative Date</source><target state="final">Relative Date</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
-        <source>
-        Open with view
-      </source><target state="final">
-        Open with view
-      </target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
-        <source>Select view</source><target state="final">Select view</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
-        <source>Tags</source><target state="final">Tags</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.topPanel" datatype="html">
-        <source>Top panel</source><target state="final">Top panel</target>
+          An image used to represent the project in the project creation dialog.
+        </source><target state="final">
+          An image used to represent the project in the project creation dialog.
+        </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">31</context>
         </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.showTopPanel" datatype="html">
+      </trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
+        <source>
+        Allowed Domains
+      </source><target state="final">
+        Allowed Domains
+      </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains.help" datatype="html">
+        <source>
+          Domains allowed to embed this project. E.g. www.lumeer.io, acme.com.
+          Enter * to allow embedding into any web page.
+        </source><target state="final">
+          Domains allowed to embed this project. E.g. www.lumeer.io, acme.com.
+          Enter * to allow embedding into any web page.
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
+        <source>Relative Date</source><target state="final">Relative Date</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate.help" datatype="html">
+        <source>
+          When anyone creates a copy of this project, all date values will be shifted.
+          The shift is determined as a difference between today and the date specified here.
+          No shift is made when left empty.
+        </source><target state="final">
+          When anyone creates a copy of this project, all date values will be shifted.
+          The shift is determined as a difference between today and the date specified here.
+          No shift is made when left empty.
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
+          <context context-type="linenumber">58</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
+        <source>
+        Open with view
+      </source><target state="final">
+        Open with view
+      </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
+        <source>Select view</source><target state="final">Select view</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.help" datatype="html">
+        <source>
+          The view that opens when the template is first loaded either in the project creation dialog.
+          Leave empty for the default home page.
+        </source><target state="final">
+          The view that opens when the template is first loaded either in the project creation dialog.
+          Leave empty for the default home page.
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
+        <source>Tags</source><target state="final">Tags</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.topPanel" datatype="html">
+        <source>Top panel</source><target state="final">Top panel</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.showTopPanel" datatype="html">
         <source>Show application controls (the upper panel)</source><target state="final">Show application controls (the upper panel)</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">89</context></context-group></trans-unit><trans-unit id="0f6ae2b3123ad5e28ac81cd30a8504ffdbf802a7" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="0f6ae2b3123ad5e28ac81cd30a8504ffdbf802a7" datatype="html">
         <source>Remove tag</source><target state="final">Remove tag</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/tags/project-template-tags.component.html</context>
@@ -2139,31 +2187,49 @@
           <context context-type="sourcefile">app/workspace/project/template/metadata/tags/project-template-tags.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.title" datatype="html">
+        <source>Embeddable Lumeer</source><target state="final">Embeddable Lumeer</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.description" datatype="html">
+        <source>
+  Embed this Lumeer project in any web page using the following script.
+  You can also use a WordPress shortcode (requires the Lumeer Embed Plugin in your WordPress installation).
+</source><target state="final">
+  Embed this Lumeer project in any web page using the following script.
+  You can also use a WordPress shortcode (requires the Lumeer Embed Plugin in your WordPress installation).
+</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.shortcode.note" datatype="html">
+        <source>WordPress shortcode, requires the Lumeer Embed Plugin installed in your WordPress.</source><target state="final">WordPress shortcode, requires the Lumeer Embed Plugin installed in your WordPress.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.copy" datatype="html">
         <source>Copy script</source><target state="final">Copy script</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.script.copied" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.copied" datatype="html">
         <source>Copied!</source><target state="final">Copied!</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.copyShortcode" datatype="html">
+        <source>Copy shortcode</source><target state="final">Copy shortcode</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.showTopPanel" datatype="html">
         <source>Show application controls</source><target state="final">Show application controls</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.script.defaultView.empty" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.defaultView.empty" datatype="html">
         <source>Select starting view</source><target state="final">Select starting view</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit><trans-unit id="page.title" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="page.title" datatype="html">
         <source>Lumeer - Visual Project&amp;Team Management</source><target state="final">Lumeer - Visual Project&amp;Team Management</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>

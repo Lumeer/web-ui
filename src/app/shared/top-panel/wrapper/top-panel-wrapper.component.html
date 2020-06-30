@@ -7,7 +7,7 @@
   </top-panel>
   <div *ngIf="showBackArrow$ | async" class="cursor-pointer clickable"
        (click)="onBack()">
-    <i class="fas fa-chevron-left"></i>&nbsp;<span>Home</span>
+    <i class="fas fa-chevron-left"></i>&nbsp;<span i18n="@@home">Home</span>
   </div>
 </div>
 <views-bookmarks [workspace]="workspace$ | async"></views-bookmarks>
