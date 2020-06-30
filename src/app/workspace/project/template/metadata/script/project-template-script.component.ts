@@ -47,9 +47,11 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
   public queryData: QueryData;
 
   public scriptText$: Observable<string>;
+  public shortcode$ = new BehaviorSubject<string>('');
   private workspace$ = new Subject<Workspace>();
 
   public copied$ = new BehaviorSubject<boolean>(false);
+  public shortcodeCopied$ = new BehaviorSubject<boolean>(false);
 
   public get defaultViewControl(): AbstractControl {
     return this.formGroup.controls.defaultView;
@@ -80,6 +82,12 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
         const scriptSrc = environment.publicScriptCdn;
         const language = environment.locale;
         const view = value.defaultView ? `data-v=${value.defaultView}` : '';
+        const shortcodeView = value.defaultView ? `/${value.defaultView}` : '';
+
+        this.shortcode$.next(
+          `[lumeer_embed code="${workspace?.organizationId}/${workspace?.projectId}${shortcodeView}" lang="${language}" show_panel="${showTopPanel}"]`
+        );
+
         return `<script type="text/javascript" src="${scriptSrc}"
             data-o="${workspace?.organizationId}" data-p="${workspace?.projectId}" ${view}
             data-tp="${showTopPanel}" data-l="${language}"></script>`;
@@ -91,5 +99,11 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
     this.clipboardService.copy(text);
     this.copied$.next(true);
     setTimeout(() => this.copied$.next(false), 3000);
+  }
+
+  public copyShortcodeValue(text: string) {
+    this.clipboardService.copy(text);
+    this.shortcodeCopied$.next(true);
+    setTimeout(() => this.shortcodeCopied$.next(false), 3000);
   }
 }

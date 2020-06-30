@@ -1,10 +1,20 @@
-<h5 class="m-0" i18n="@@projects.tab.template.script.title">Generate script</h5>
+<h4 class="m-0 py-3" i18n="@@projects.tab.template.script.title">Embeddable Lumeer</h4>
+<p i18n="@@projects.tab.template.script.description">
+  Embed this Lumeer project in any web page using the following script.
+  You can also use a WordPress shortcode (requires the Lumeer Embed Plugin in your WordPress installation).
+</p>
 
-<div class="script-content mt-3" *ngIf="{script: scriptText$ | async, copied: copied$ | async} as data">
-  <div class="custom-file form-control h-auto p-3">
-    <code>{{data.script}}</code>
+<div class="script-content mt-3" *ngIf="{script: scriptText$ | async, copied: copied$ | async, shortcode: shortcode$ | async, shortcodeCopied: shortcodeCopied$ | async} as data">
+  <div>
+    <div class="custom-file form-control h-auto p-3">
+      <code>{{data.script}}</code>
+    </div>
+    <div class="custom-file form-control h-auto p-3 mt-3">
+      <code>{{data.shortcode}}</code>
+    </div>
+    <div class="text-muted small" i18n="@@projects.tab.template.script.shortcode.note">WordPress shortcode, requires the Lumeer Embed Plugin installed in your WordPress.</div>
   </div>
-  <div class="ml-0 ml-md-2 mt-2 mt-md-0 d-flex flex-column" [formGroup]="formGroup">
+  <div class="ml-md-4 mt-2 mt-md-0 d-flex flex-column" [formGroup]="formGroup">
 
     <div class="row m-0">
       <button *ngIf="!data.copied" class="btn btn-outline-primary"
@@ -12,6 +22,14 @@
         <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copy">Copy script</span>
       </button>
       <button *ngIf="data.copied" class="btn btn-outline-primary"
+              [disabled]="true">
+        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copied">Copied!</span>
+      </button>
+      <button *ngIf="!data.shortcodeCopied" class="btn btn-outline-primary ml-2"
+              (click)="copyShortcodeValue(data.shortcode)">
+        <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copyShortcode">Copy shortcode</span>
+      </button>
+      <button *ngIf="data.shortcodeCopied" class="btn btn-outline-primary ml-2"
               [disabled]="true">
         <i class="fal fa-copy"></i>&nbsp;<span i18n="@@projects.tab.template.script.copied">Copied!</span>
       </button>
