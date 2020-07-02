@@ -1,4 +1,4 @@
-<div class="mt-3 mb-5" *ngIf="dataLoaded$ | async">
+<div class="mt-3 mb-5" *ngIf="dataLoaded$ | async; else loading">
 
   <ng-container
     *ngIf="{hasCollection: hasCollection$ | async, hasView: hasView$ | async, hasAnyView: hasAnyView$ | async, hasDocument: hasDocument$ | async} as data">
@@ -52,4 +52,14 @@
     [project]="project$ | async"
     [query]="query$ | async">
   </empty-data>
+</ng-template>
+
+<ng-template #loading>
+  <div class="h-100 d-flex align-items-center justify-content-center flex-column">
+    <div class="spinner-border mb-2"
+         role="status">
+      <span class="sr-only" i18n="@@message.loading">Loading...</span>
+    </div>
+    <h5 i18n="@@data.loading">Loading data</h5>
+  </div>
 </ng-template>
