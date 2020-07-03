@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {filter, map} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
 import {
@@ -28,7 +28,7 @@ import {
   selectDocumentsByQuery,
   selectViewsByQuery,
 } from '../../../../core/store/common/permissions.selectors';
-import {selectQuery} from '../../../../core/store/navigation/navigation.state';
+import {selectQuery, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
 import {selectAllViews, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
@@ -72,9 +72,11 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       map(([collectionsLoaded, viewLoaded, documentsLoaded]) => collectionsLoaded && viewLoaded && documentsLoaded)
     );
 
-    const navigationSubscription = this.store$
+    const workspace$ = this.store$.pipe(select(selectWorkspace), distinctUntilChanged());
+
+    const navigationSubscription = workspace$
       .pipe(
-        select(selectQuery),
+        switchMap(() => this.store$.pipe(select(selectQuery))),
         filter(query => !!query)
       )
       .subscribe(query => {
