@@ -202,6 +202,10 @@
           <context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
       </trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
         <source>Blockly Source Code</source>
         <context-group purpose="location">
@@ -3321,6 +3325,12 @@
           <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
+      </trans-unit><trans-unit id="data.loading" datatype="html">
+        <source>Loading data</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
       </trans-unit><trans-unit id="search.tab.all" datatype="html">
         <source>All</source>
         <context-group purpose="location">
@@ -4033,45 +4043,37 @@
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.script.shortcode.note" datatype="html">
-        <source>WordPress shortcode, requires the Lumeer Embed Plugin installed in your WordPress.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.script.copy" datatype="html">
-        <source>Copy script</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.script.copied" datatype="html">
-        <source>Copied!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">26</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.script.copyShortcode" datatype="html">
-        <source>Copy shortcode</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.showTopPanel" datatype="html">
         <source>Show application controls</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">17</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.defaultView.empty" datatype="html">
         <source>Select starting view</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.copy" datatype="html">
+        <source>Copy script</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.copied" datatype="html">
+        <source>Copied!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit><trans-unit id="projects.tab.template.script.shortcode.note" datatype="html">
+        <source>WordPress shortcode, requires the Lumeer Embed Plugin
+      installed in your WordPress.
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit id="page.title" datatype="html">
