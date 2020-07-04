@@ -332,7 +332,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           return code + Blockly.JavaScript.statementToCode(block, 'COMMANDS') + '\n';
         };
       }
-    } else if (this.masterType === MasterBlockType.Value) {
+    } else if (this.masterType === MasterBlockType.Value || this.masterType === MasterBlockType.Link) {
       if (collection) {
         Blockly.Blocks[VALUE_CONTAINER] = {
           init: function () {
