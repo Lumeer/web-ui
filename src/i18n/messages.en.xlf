@@ -2196,20 +2196,20 @@
       </trans-unit><trans-unit id="projects.tab.template.script.description" datatype="html">
         <source>
   Embed this Lumeer project in any web page using the following script.
-  You can also use a WordPress shortcode (requires the Lumeer Embed Plugin in your WordPress installation).
+  You can also use a WordPress shortcode (requires the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>Lumeer Embed Plugin<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> in your WordPress installation).
 </source><target state="final">
   Embed this Lumeer project in any web page using the following script.
-  You can also use a WordPress shortcode (requires the Lumeer Embed Plugin in your WordPress installation).
+  You can also use a WordPress shortcode (requires the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>Lumeer Embed Plugin<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> in your WordPress installation).
 </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.shortcode.note" datatype="html">
-        <source>WordPress shortcode, requires the Lumeer Embed Plugin
-      installed in your WordPress.
-    </source><target state="final">WordPress shortcode, requires the Lumeer Embed Plugin
-      installed in your WordPress.
+        <source>
+      WordPress shortcode, requires the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>Lumeer Embed Plugin<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> installed in your WordPress.
+    </source><target state="final">
+      WordPress shortcode, requires the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>Lumeer Embed Plugin<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/> installed in your WordPress.
     </target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.copy" datatype="html">
