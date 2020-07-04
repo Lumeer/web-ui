@@ -94,6 +94,7 @@ import {IdToReferencePipe} from './id-to-reference.pipe';
 import {FindAttributePipe} from './find-attribute.pipe';
 import {IsNotNullOrUndefinedPipe} from './is-not-null-or-undefined.pipe';
 import {ViewsSelectItemsPipe} from './views-select-items.pipe';
+import {TruncateStringPipe} from './truncate-string.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -171,6 +172,7 @@ import {ViewsSelectItemsPipe} from './views-select-items.pipe';
     FindAttributePipe,
     IsNotNullOrUndefinedPipe,
     ViewsSelectItemsPipe,
+    TruncateStringPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -248,6 +250,7 @@ import {ViewsSelectItemsPipe} from './views-select-items.pipe';
     FindAttributePipe,
     IsNotNullOrUndefinedPipe,
     ViewsSelectItemsPipe,
+    TruncateStringPipe,
   ],
 })
 export class PipesModule {}

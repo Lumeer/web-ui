@@ -23,7 +23,7 @@
   </p>
 
   <p *ngIf="resource?.description" class="card-text mt-1" [class.mb-3]="resource?.description"
-     [title]="resource?.description">{{resource?.description | slice:0:256}}</p>
+     [title]="resource?.description">{{resource?.description | truncateString:256}}</p>
 
   <div *ngIf="(type | isOrganizationType) && (resource | permissions:type:'manage' | async)"
        class="text-center mt-2 d-flex flex-row justify-content-center">
