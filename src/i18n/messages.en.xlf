@@ -187,7 +187,7 @@
         <source>Loading...</source><target state="final">Loading...</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context><context context-type="linenumber">2</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context><context context-type="linenumber">3</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context><context context-type="linenumber">6</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">61</context></context-group></trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
         <source>Blockly Source Code</source><target state="final">Blockly Source Code</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
@@ -2206,30 +2206,25 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.script.shortcode.note" datatype="html">
-        <source>WordPress shortcode, requires the Lumeer Embed Plugin installed in your WordPress.</source><target state="final">WordPress shortcode, requires the Lumeer Embed Plugin installed in your WordPress.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.script.copy" datatype="html">
+        <source>WordPress shortcode, requires the Lumeer Embed Plugin
+      installed in your WordPress.
+    </source><target state="final">WordPress shortcode, requires the Lumeer Embed Plugin
+      installed in your WordPress.
+    </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.copy" datatype="html">
         <source>Copy script</source><target state="final">Copy script</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.copied" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.copied" datatype="html">
         <source>Copied!</source><target state="final">Copied!</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.copyShortcode" datatype="html">
-        <source>Copy shortcode</source><target state="final">Copy shortcode</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.script.showTopPanel" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">55</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.showTopPanel" datatype="html">
         <source>Show application controls</source><target state="final">Show application controls</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.defaultView.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">17</context></context-group></trans-unit><trans-unit id="projects.tab.template.script.defaultView.empty" datatype="html">
         <source>Select starting view</source><target state="final">Select starting view</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">54</context></context-group></trans-unit><trans-unit id="page.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="page.title" datatype="html">
         <source>Lumeer - Visual Project&amp;Team Management</source><target state="final">Lumeer - Visual Project&amp;Team Management</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
@@ -2528,7 +2523,13 @@
           Records
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="search.all.views" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="data.loading" datatype="html">
+        <source>Loading data</source><target state="final">Loading data</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit><trans-unit id="search.all.views" datatype="html">
         <source>
           Views
         </source><target state="final">
