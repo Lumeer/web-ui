@@ -12,10 +12,6 @@
 $flag-icon-css-path: '~flag-icon-css/flags' !default;
 @import '~flag-icon-css/sass/flag-icon';
 
-@import '~@fullcalendar/core/main.css';
-@import '~@fullcalendar/daygrid/main.css';
-@import '~@fullcalendar/timegrid/main.css';
-@import '~@fullcalendar/list/main.css';
 @import 'styles/overrides/full-calendar';
 
 *[contenteditable] {

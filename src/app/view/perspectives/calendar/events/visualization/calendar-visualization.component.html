@@ -1,25 +1,3 @@
 <full-calendar #calendar
-               [defaultView]="defaultView"
-               [defaultDate]="defaultDate"
-               [events]="events"
-               [plugins]="calendarPlugins"
-               [navLinks]="true"
-               [selectable]="canCreateEvents"
-               [customButtons]="list ? listCustomButtons : calendarCustomButtons"
-               [locale]="locale"
-               [firstDay]="locale | firstDayOfWeek"
-               [buttonText]="buttonText"
-               [allDayText]="allDayText"
-               [noEventsMessage]="noEventsText"
-               [timeGridEventMinHeight]="18"
-               [eventLimit]="10"
-               [eventLimitText]="moreText"
-               [header]="list ? listHeader : calendarHeader"
-               [nowIndicator]="true"
-               (eventClick)="onEventClick($event)"
-               (eventDrop)="onEventDrop($event)"
-               (eventResize)="onEventResize($event)"
-               (select)="onRangeSelected($event)"
-               (datesRender)="datesRender($event)"
-               (navLinkDayClick)="onNavLinkDayClick($event)">
+               [options]="calendarOptions">
 </full-calendar>
