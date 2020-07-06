@@ -24,6 +24,7 @@ import {
   Input,
   OnChanges,
   Output,
+  SimpleChange,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -109,6 +110,8 @@ export class CalendarVisualizationComponent implements OnChanges {
   public defaultDate: Date;
   public calendarOptions: CalendarOptions;
 
+  private setupInitialDate = true;
+
   constructor(private i18n: I18n) {
     this.calendarText = this.i18n({id: 'perspective.calendar.display.calendar', value: 'Calendar'});
     this.listText = this.i18n({id: 'perspective.calendar.display.list', value: 'List'});
@@ -142,13 +145,30 @@ export class CalendarVisualizationComponent implements OnChanges {
     if (changes.currentMode && this.currentMode && !this.defaultView) {
       this.defaultView = this.getCalendarModeString(this.currentMode);
     }
-    if (changes.currentDate && changes.currentDate.isFirstChange() && this.currentDate && !this.defaultDate) {
+    if (changes.currentDate?.isFirstChange() && this.currentDate) {
       this.defaultDate = this.currentDate;
-    }
-    if (changes.currentMode || changes.currentDate || changes.list) {
-      this.checkCalendarModeChanged(!!changes.list);
+    } else if (
+      (changes.currentDate || changes.events) &&
+      this.events?.length > 0 &&
+      !this.defaultDate &&
+      this.setupInitialDate
+    ) {
+      this.defaultDate = this.setupDefaultDate();
+      this.setupInitialDate = false;
+      this.checkCalendarModeChanged(!!changes.list, this.currentMode, this.defaultDate);
+    } else if (changes.currentMode || changes.currentDate || changes.list) {
+      this.checkCalendarModeChanged(!!changes.list, this.currentMode, this.currentDate);
     }
     this.createCalendarOptions();
+  }
+
+  private setupDefaultDate(): Date {
+    const sortedEvents = this.events.sort((a, b) => a.start.getTime() - b.start.getTime());
+    const todayDate = moment().startOf('day').toDate().getTime();
+    const firstEventInFuture = sortedEvents.find(event => event.start.getTime() >= todayDate);
+    return moment(firstEventInFuture?.start || sortedEvents[sortedEvents.length - 1].start)
+      .startOf('day')
+      .toDate();
   }
 
   private createCalendarOptions() {
@@ -165,19 +185,20 @@ export class CalendarVisualizationComponent implements OnChanges {
       buttonText: this.buttonText,
       allDayText: this.allDayText,
       noEventsText: this.noEventsText,
+      height: 'auto',
+      eventMinHeight: 40,
       dayMaxEventRows: 10,
-      moreLinkContent: this.moreText,
+      moreLinkText: this.moreText,
       headerToolbar: this.list ? this.listHeader : this.calendarHeader,
       nowIndicator: true,
       stickyHeaderDates: true,
       eventClick: this.onEventClick.bind(this),
-      eventChange: this.onEventResize.bind(this),
+      eventDrop: this.onEventDrop.bind(this),
+      eventResize: this.onEventResize.bind(this),
       select: this.onRangeSelected.bind(this),
       datesSet: this.datesRender.bind(this),
       navLinkDayClick: this.onNavLinkDayClick.bind(this),
     };
-
-    // TODO timeGridEventMinHeight
   }
 
   private getCalendarModeString(mode: CalendarMode): string {
@@ -193,19 +214,16 @@ export class CalendarVisualizationComponent implements OnChanges {
     }
   }
 
-  private checkCalendarModeChanged(force: boolean) {
+  private checkCalendarModeChanged(force: boolean, mode: CalendarMode, date: Date) {
     const currentView = this.calendarComponent?.getApi()?.view?.type;
     const currentMode = this.calendarModeByDefaultView(currentView);
     const currentDate = this.calendarComponent?.getApi()?.getDate();
 
     if (
       force ||
-      (currentMode &&
-        currentDate &&
-        this.currentDate &&
-        (currentMode !== this.currentMode || currentDate.getTime() !== this.currentDate.getTime()))
+      (currentMode && currentDate && date && (currentMode !== mode || currentDate.getTime() !== date.getTime()))
     ) {
-      this.calendarComponent?.getApi()?.changeView(this.getCalendarModeString(this.currentMode), this.currentDate);
+      this.calendarComponent?.getApi()?.changeView(this.getCalendarModeString(mode), date);
     }
   }
 
