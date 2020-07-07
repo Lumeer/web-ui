@@ -54,6 +54,13 @@ import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {LanguageCode} from '../shared/top-panel/user-panel/user-menu/language';
 import {TemplateService} from './rest/template.service';
 import {DataServiceModule} from './data-service/data-service.module';
+import {FullCalendarModule} from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list';
+
+FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]);
 
 if (environment.locale === LanguageCode.CZ) {
   defineLocale('cs', csLocale);
@@ -81,6 +88,7 @@ if (environment.locale === LanguageCode.CZ) {
     TypeaheadModule.forRoot(),
     DeviceDetectorModule.forRoot(),
     DataServiceModule,
+    FullCalendarModule,
   ],
   declarations: [HomeComponent, RedirectComponent],
   providers: [

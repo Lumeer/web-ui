@@ -31,12 +31,6 @@ import {CalendarEventsComponent} from './events/calendar-events.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
 import {CalendarVisualizationComponent} from './events/visualization/calendar-visualization.component';
 import {FullCalendarModule} from '@fullcalendar/angular';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import interactionPlugin from '@fullcalendar/interaction';
-import listPlugin from '@fullcalendar/list';
-
-FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]);
 
 @NgModule({
   imports: [
@@ -46,8 +40,8 @@ FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPl
     PopoverModule,
     CalendarPerspectiveRoutingModule,
     CalendarPipesModule,
-    FullCalendarModule,
     ModalModule,
+    FullCalendarModule,
   ],
   declarations: [
     CalendarPerspectiveComponent,
