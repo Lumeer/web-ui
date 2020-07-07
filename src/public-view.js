@@ -4,7 +4,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
     const project = document.currentScript.getAttribute('data-p');
     const topPanel = document.currentScript.getAttribute('data-tp');
     const view = document.currentScript.getAttribute('data-v');
-    const language = document.currentScript.getAttribute('data-l');
+    const language = document.currentScript.getAttribute('data-l') || 'en';
 
     let useInLumeerUrl;
     let useInLumeerImageUrl;
@@ -45,7 +45,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
             <img style="cursor: pointer; height: 37px; margin: 0.25rem 0 0.5rem 0; transition: all .2s ease-in-out;" src="${useInLumeerImageUrl}" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''"/>
         </a>
      </div>
-    <iframe src="${publicViewCdn}?o=${organization}&p=${project}&tp=${topPanel}${viewParam}" width="100%" height="100%" style="min-height: 50px; box-sizing: border-box; border: solid 1px #e9ecef; border-radius: 3px; min-height: 50px;">
+    <iframe src="${publicViewCdn}?l=${language}o=${organization}&p=${project}&tp=${topPanel}${viewParam}" width="100%" height="100%" style="min-height: 50px; box-sizing: border-box; border: solid 1px #e9ecef; border-radius: 3px; min-height: 50px;">
     </iframe>
     <div style="display: flex; flex-direction: row-reverse;">
          <a href="https://www.lumeer.io/">
