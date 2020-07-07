@@ -68,10 +68,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         take(1)
       )
       .subscribe((params: Params) => {
-        if (params['l']) {
-          environment.locale = params['l'];
-        }
-
         this.store$.dispatch(
           new PublicDataAction.InitData({
             organizationId: params['o'],
