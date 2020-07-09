@@ -81,6 +81,9 @@ const MS_TO_DATE = 'ms_to_date';
 const DATE_TO_MS = 'date_to_ms';
 const DATE_NOW = 'date_now';
 const MS_TO_UNIT = 'ms_to_unit';
+const PARSE_DATE = 'parse_date';
+const FORMAT_DATE = 'format_date';
+const CURRENT_DATE = 'current_date';
 const CURRENT_USER = 'current_user';
 
 export const enum MasterBlockType {
@@ -763,7 +766,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       init: function () {
         this.jsonInit({
           type: DATE_NOW,
-          message0: '%{BKY_BLOCK_DATE_NOW}', // ms to date %1
+          message0: '%{BKY_BLOCK_DATE_NOW}', // now
           output: '',
           colour: COLOR_PINK,
           tooltip: '',
@@ -773,6 +776,110 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     };
     Blockly.JavaScript[DATE_NOW] = function (block) {
       const code = '(+(new Date()))';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks[CURRENT_DATE] = {
+      init: function () {
+        this.jsonInit({
+          type: CURRENT_DATE,
+          message0: '%{BKY_BLOCK_CURRENT_DATE}', // current date
+          output: '',
+          colour: COLOR_PINK,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript[CURRENT_DATE] = function (block) {
+      const code = '(new Date())';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks[PARSE_DATE] = {
+      init: function () {
+        this.jsonInit({
+          type: PARSE_DATE,
+          message0: '%{BKY_BLOCK_PARSE_DATE}', // parse date string %1 formatted as %2 with locale %3
+          args0: [
+            {
+              type: 'input_value',
+              name: 'DATE',
+            },
+            {
+              type: 'input_value',
+              name: 'FORMAT',
+            },
+            {
+              type: 'input_value',
+              name: 'LOCALE',
+            },
+          ],
+          inputsInline: true,
+          output: '',
+          colour: COLOR_PINK,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript[PARSE_DATE] = function (block) {
+      const argumentDate = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const argumentFormat =
+        Blockly.JavaScript.valueToCode(block, 'FORMAT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const argumentLocale =
+        Blockly.JavaScript.valueToCode(block, 'LOCALE', Blockly.JavaScript.ORDER_ASSIGNMENT) || 'en';
+
+      if (!argumentDate || !argumentFormat) {
+        return '';
+      }
+
+      const code = 'parseMomentJsDate(' + argumentDate + ', ' + argumentFormat + ', ' + argumentLocale + ')';
+
+      return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
+    };
+
+    Blockly.Blocks[FORMAT_DATE] = {
+      init: function () {
+        this.jsonInit({
+          type: FORMAT_DATE,
+          message0: '%{BKY_BLOCK_FORMAT_DATE}', // format date %1 using format %2 and locale %3
+          args0: [
+            {
+              type: 'input_value',
+              name: 'TIME',
+            },
+            {
+              type: 'input_value',
+              name: 'FORMAT',
+            },
+            {
+              type: 'input_value',
+              name: 'LOCALE',
+            },
+          ],
+          inputsInline: true,
+          output: '',
+          colour: COLOR_PINK,
+          tooltip: '',
+          helpUrl: '',
+        });
+      },
+    };
+    Blockly.JavaScript[FORMAT_DATE] = function (block) {
+      const argumentTime = Blockly.JavaScript.valueToCode(block, 'TIME', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const argumentFormat =
+        Blockly.JavaScript.valueToCode(block, 'FORMAT', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+      const argumentLocale =
+        Blockly.JavaScript.valueToCode(block, 'LOCALE', Blockly.JavaScript.ORDER_ASSIGNMENT) || 'en';
+
+      if (!argumentTime || !argumentFormat) {
+        return '';
+      }
+
+      const code = 'formatMomentJsDate(' + argumentTime + ', ' + argumentFormat + ', ' + argumentLocale + ')';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
@@ -1563,7 +1670,18 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now"></block></xml>').firstChild);
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="current_date"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_unit"></block></xml>').firstChild);
+    xmlList.push(
+      Blockly.Xml.textToDom(
+        '<xml><block type="parse_date"><value name="FORMAT"><shadow type="text"><field name="TEXT">DD.MM.YYYY</field></shadow></value><value name="LOCALE"><shadow type="text"><field name="TEXT">en</field></shadow></value></block></xml>'
+      ).firstChild
+    );
+    xmlList.push(
+      Blockly.Xml.textToDom(
+        '<xml><block type="format_date"><value name="FORMAT"><shadow type="text"><field name="TEXT">DD.MM.YYYY</field></shadow></value><value name="LOCALE"><shadow type="text"><field name="TEXT">en</field></shadow></value></block></xml>'
+      ).firstChild
+    );
 
     return xmlList;
   }
