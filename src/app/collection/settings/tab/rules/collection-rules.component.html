@@ -42,7 +42,7 @@
       </li>
 
       <li
-        *ngIf="data.collection && (data.rulesLimit === 0 || data.rulesLimit > data.collection.rules.length); else freePlan"
+        *ngIf="data.collection && (data.rulesLimit === -1 || data.rulesLimit > data.collection.rules.length); else freePlan"
         add-rule
         (click)="onNewRule()"
         class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">

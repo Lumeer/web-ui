@@ -41,7 +41,7 @@
     </li>
 
     <li
-      *ngIf="linkType && (data.rulesLimit === 0 || data.rulesLimit > linkType?.rules?.length); else freePlan"
+      *ngIf="linkType && (data.rulesLimit === -1 || data.rulesLimit > linkType?.rules?.length); else freePlan"
       add-rule
       (click)="onNewRule()"
       class="list-group-item list-group-item-action flex-column align-items-center cursor-pointer">
