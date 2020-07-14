@@ -20,6 +20,7 @@
 import {d3, Layout, LayoutAxis} from 'plotly.js';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
+import {truncate} from '../../../../../shared/utils/string.utils';
 
 export abstract class TwoDAxisPlotMaker extends PlotMaker {
   public abstract getPoints(): any;
@@ -112,11 +113,15 @@ function createAxisLayout(data: ChartAxisData, formatter: string): Partial<Layou
         axis.tickmode = 'array';
       }
       axis.tickvals = data.ticks.map(t => t.value);
-      axis.ticktext = data.ticks.map(t => t.title);
+      axis.ticktext = data.ticks.map(t => formatXValue(t.title));
     }
     axis.automargin = true;
     return axis;
   }
 
   return null;
+}
+
+function formatXValue(value: string): string {
+  return truncate(value, 35);
 }
