@@ -17,10 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Layout, LayoutAxis} from 'plotly.js';
+import {d3, Layout, LayoutAxis} from 'plotly.js';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 export abstract class TwoDAxisPlotMaker extends PlotMaker {
   public abstract getPoints(): any;
@@ -55,6 +54,24 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
     }
 
     return layout;
+  }
+
+  protected legendLayout(): Pick<Layout, 'legend'> {
+    const dataSetNames = this.chartData.sets.map(set => set.name).filter(name => !!name);
+    const longestDataSetName = dataSetNames.reduce((max, name) => (name.length > max.length ? name : max), '');
+    const approxLegendWidth = (longestDataSetName.length / 10 + 1) * 55; // 10 characters has length approximately 55px
+    const elementWidth = this.element?.nativeElement?.offsetWidth || Number.MAX_SAFE_INTEGER;
+    const isLegendWide = approxLegendWidth / elementWidth > 0.4; // length is bigger than 40%;
+    const xScale = d3.scale.linear().domain([0.05, 0.4]).range([1, 2]);
+    const x = xScale(approxLegendWidth / elementWidth);
+    return {
+      legend: {
+        xanchor: 'left',
+        x: isLegendWide ? 0 : x,
+        yanchor: 'top',
+        y: isLegendWide ? 2 : 1,
+      },
+    };
   }
 
   public initDoubleClick() {
@@ -97,6 +114,7 @@ function createAxisLayout(data: ChartAxisData, formatter: string): Partial<Layou
       axis.tickvals = data.ticks.map(t => t.value);
       axis.ticktext = data.ticks.map(t => t.title);
     }
+    axis.automargin = true;
     return axis;
   }
 

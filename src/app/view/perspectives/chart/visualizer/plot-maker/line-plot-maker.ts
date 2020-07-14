@@ -107,10 +107,7 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
 
   private otherLayout(): Partial<Layout> {
     return {
-      legend: {
-        xanchor: 'left',
-        x: 1.1,
-      },
+      ...this.legendLayout(),
     };
   }
 

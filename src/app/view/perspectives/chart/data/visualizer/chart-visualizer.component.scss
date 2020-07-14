@@ -1,5 +1,6 @@
 .chart-wrapper {
-  min-height: 550px;
+  height: fit-content;
+  min-height: 100%;
 }
 
 .draggable::ng-deep {

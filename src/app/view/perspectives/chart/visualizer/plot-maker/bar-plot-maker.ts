@@ -139,11 +139,8 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
 
   private otherLayout(): Partial<Layout> {
     return {
+      ...this.legendLayout(),
       barmode: 'group',
-      legend: {
-        xanchor: 'left',
-        x: 1.1,
-      },
     };
   }
 

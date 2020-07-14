@@ -4,12 +4,11 @@
           [fitParent]="fitParent"
           [origin]="origin"
           [pushOnScreen]="true"
-          [minHeight]="(options?.length || 0) * 30"
           [minWidth]="minWidth || 100"
           [positions]="dropdownPositions"
           (positionChange)="onPositionChange($event)">
   <div *ngIf="options?.length > 0"
-       class="card" [class.w-100]="fitParent">
+       class="card overflow-auto" [class.w-100]="fitParent">
     <a *ngFor="let option of options | reverseArrayByDropdownPosition:(dropdownPosition$ | async); let index = index"
        [class.active]="(activeValue$ | async) === option.value"
        (mousedown)="$event.stopImmediatePropagation(); $event.preventDefault();"
