@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {d3, Layout, LayoutAxis} from 'plotly.js';
+import {Layout, LayoutAxis} from 'plotly.js';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
 import {truncate} from '../../../../../shared/utils/string.utils';
@@ -63,8 +63,7 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
     const approxLegendWidth = (longestDataSetName.length / 10 + 1) * 55; // 10 characters has length approximately 55px
     const elementWidth = this.element?.nativeElement?.offsetWidth || Number.MAX_SAFE_INTEGER;
     const isLegendWide = approxLegendWidth / elementWidth > 0.4; // length is bigger than 40%;
-    const xScale = d3.scale.linear().domain([0.05, 0.4]).range([1, 2]);
-    const x = xScale(approxLegendWidth / elementWidth);
+    const x = this.legendXScale(approxLegendWidth / elementWidth);
     return {
       legend: {
         xanchor: 'left',
@@ -73,6 +72,14 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
         y: isLegendWide ? 2 : 1,
       },
     };
+  }
+
+  private legendXScale(value: number): number {
+    const domain = [0.05, 0.4];
+    const range = [1, 2];
+    const result = ((value - domain[0]) * (range[1] - range[0])) / (domain[1] - domain[0]) + range[0];
+
+    return Math.max(result, range[0]);
   }
 
   public initDoubleClick() {
