@@ -131,6 +131,10 @@ body {
   color: $white !important;
 }
 
+.dropdown-item.active:hover {
+  color: $success;
+}
+
 .dropdown-menu.text-secondary .dropdown-item {
   color: $primary;
 }
