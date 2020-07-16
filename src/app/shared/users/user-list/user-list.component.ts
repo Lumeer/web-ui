@@ -76,6 +76,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     workspace?: Workspace;
   }>();
 
+  public readonly resourceTypeOrganization = ResourceType.Organization;
+
   public searchString: string;
 
   private initialWorkspace: Workspace;

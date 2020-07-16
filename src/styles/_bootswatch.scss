@@ -159,6 +159,15 @@ body {
   }
 }
 
+.color-gray-600 {
+  color: $gray-600;
+  transition: $transition-base;
+
+  &.hover-effect:hover {
+    color: $gray-500;
+  }
+}
+
 // Tables ======================================================================
 
 .table {

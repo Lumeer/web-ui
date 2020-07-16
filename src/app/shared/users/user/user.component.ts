@@ -23,6 +23,8 @@ import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: '[user]',
@@ -49,6 +51,9 @@ export class UserComponent {
   @Input()
   public groupRoles: string[];
 
+  @Input()
+  public inheritedManage: boolean = false;
+
   @Output()
   public userUpdated = new EventEmitter<User>();
 
@@ -58,12 +63,31 @@ export class UserComponent {
   @Output()
   public rolesUpdate = new EventEmitter<string[]>();
 
-  constructor(private i18n: I18n, private notificationService: NotificationService) {}
+  private readonly inheritedManagerMsg: string;
+  private readonly cannotChangeRoleMsg: string;
+  private readonly deleteMsg: string;
+  private readonly deleteTitleMsg: string;
+
+  constructor(private i18n: I18n, private notificationService: NotificationService) {
+    this.deleteMsg = this.i18n({
+      id: 'users.user.delete.message',
+      value: 'Do you want to permanently remove this user?',
+    });
+    this.deleteTitleMsg = this.i18n({id: 'users.user.delete.title', value: 'Remove user?'});
+    this.cannotChangeRoleMsg = this.i18n({
+      id: 'users.user.changeRoles',
+      value:
+        'You cannot change these roles. Either you are this user, or you are the last manager here, or you do not have sufficient rights.',
+    });
+    this.inheritedManagerMsg = this.i18n({
+      id: 'users.user.inheritedManager',
+      value:
+        'This user is a manager of the organization and their permissions cannot be changed. Remove organization manage first.',
+    });
+  }
 
   public onDelete() {
-    const message = this.i18n({id: 'users.user.delete.message', value: 'Do you want to permanently remove this user?'});
-    const title = this.i18n({id: 'users.user.delete.title', value: 'Remove user?'});
-    this.notificationService.confirmYesOrNo(message, title, 'danger', () => this.deleteUser());
+    this.notificationService.confirmYesOrNo(this.deleteMsg, this.deleteTitleMsg, 'danger', () => this.deleteUser());
   }
 
   public deleteUser() {
@@ -72,6 +96,12 @@ export class UserComponent {
 
   public toggleRole(role: string) {
     if (!this.changeRoles) {
+      if (this.inheritedManage) {
+        this.notificationService.info(this.inheritedManagerMsg);
+      } else {
+        this.notificationService.info(this.cannotChangeRoleMsg);
+      }
+
       return;
     }
 
