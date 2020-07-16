@@ -23,8 +23,6 @@ import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../../core/notifications/notification.service';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../core/store/app.state';
 
 @Component({
   selector: '[user]',
