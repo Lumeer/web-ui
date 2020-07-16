@@ -1,14 +1,14 @@
 <div #linkMenu
      [contextMenu]="contextMenu"
      (click)="onClick($event)"
-     class="d-flex justify-content-center h-100 p-1">
+     class="d-flex justify-content-center align-items-center h-100 p-1">
   <icons-presenter *ngIf="!hidden; else iconPlaceholder"
                    [colors]="collections | colors"
                    [icons]="collections | icons"
                    [title]="linkType?.name">
   </icons-presenter>
   <ng-template #iconPlaceholder>
-    <i class="fa fa-fw fa-expand text-white"></i>
+    <i class="fa fa-fw fa-caret-down color-gray-600 hover-effect"></i>
   </ng-template>
 </div>
 
