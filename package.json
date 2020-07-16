@@ -151,15 +151,15 @@
   "bundlesize": [
     {
       "path": "./dist/lumeer/default*.js",
-      "maxSize": "15kb"
+      "maxSize": "515kb"
     },
     {
       "path": "./dist/lumeer/main*.js",
-      "maxSize": "5860kb"
+      "maxSize": "2860kb"
     },
     {
       "path": "./dist/lumeer/perspectives-chart*.js",
-      "maxSize": "9179kb"
+      "maxSize": "1379kb"
     },
     {
       "path": "./dist/lumeer/perspectives-detail*.js",
