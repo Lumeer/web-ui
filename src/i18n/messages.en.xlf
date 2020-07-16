@@ -2255,6 +2255,13 @@
           <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
+      </trans-unit><trans-unit id="863226cffd5b66a6fee9810a9282a5006d6ef576" datatype="html">
+        <source>Label</source><target state="final">Label</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <note priority="1" from="description">perspective.chart.config.label.placeholder</note>
       </trans-unit><trans-unit id="perspective.chart.config.axis.header" datatype="html">
         <source>
   <x id="ICU" equiv-text="{yAxisType, select, y1 {...} y2 {...}}"/>
@@ -2265,13 +2272,24 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
         <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source><target state="final">{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
-        <source>Size</source><target state="final">Size</target>
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="5049e204c14c648691ac775a64fb504467aeb549" datatype="html">
+        <source>Value</source><target state="final">Value</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">10</context>
         </context-group>
-      </trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
+        <note priority="1" from="description">perspective.chart.config.value.placeholder</note>
+      </trans-unit><trans-unit id="15fef249ef6179d7ba9bda73f8430826edf32fa2" datatype="html">
+        <source>Data set</source><target state="final">Data set</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+        <note priority="1" from="description">perspective.chart.config.dataSet.placeholder</note>
+      </trans-unit><trans-unit id="perspective.chart.config.axis.size" datatype="html">
+        <source>Size</source><target state="final">Size</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="perspective.gantt.invalid.range.title" datatype="html">
         <source>Tasks have long timespan</source><target state="final">Tasks have long timespan</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/gantt-chart/tasks/invalid-range/gantt-chart-invalid-range.component.html</context>
@@ -4094,12 +4112,16 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/chart/config/main/chart-main-config.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.empty" datatype="html">
         <source>Select attribute</source><target state="final">Select attribute</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.color" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">45</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="perspective.chart.config.axis.color" datatype="html">
         <source>Color</source><target state="final">Color</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="8e3b8a7970786b480c318a53bcfe215823ab5127" datatype="html">
+        <source>Aggregation</source><target state="final">Aggregation</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">68</context>
         </context-group>
+        <note priority="1" from="description">perspective.chart.config.aggregation.placeholder</note>
       </trans-unit><trans-unit id="perspective.chart.config.lockAxes" datatype="html">
         <source>Lock axes</source><target state="final">Lock axes</target>
         <context-group purpose="location">
@@ -4119,18 +4141,6 @@
         <source>{VAR_SELECT, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</source><target state="final">{VAR_SELECT, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/role-human-readable.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.chart.config.aggregation.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation} }</source><target state="final">{VAR_SELECT, select, y1 {Y1 Aggregation} y2 {Y2 Aggregation} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/axis/aggregation-select-placeholder.pipe.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit><trans-unit id="perspective.chart.config.dataSet.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, y1 {Y1 Data set} y2 {Y2 Data set} }</source><target state="final">{VAR_SELECT, select, y1 {Y1 Data set} y2 {Y2 Data set} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/chart/pipes/axis/data-set-select-placeholder.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="chart.type" datatype="html">

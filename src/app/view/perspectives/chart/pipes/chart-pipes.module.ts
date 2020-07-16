@@ -21,13 +21,11 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ShowAxisSelectPipe} from './axis/show-axis-select.pipe';
 import {ChartTypesToSelectPipe} from './chart-types-to-select.pipe';
-import {DataSetSelectPlaceholderPipe} from './axis/data-set-select-placeholder.pipe';
 import {AxisRestrictedIdsPipe} from './axis/axis-select-items.pipe';
 import {ConfigAxisByTypePipe} from './axis/config-axis-by-type.pipe';
 import {SortSelectItemsPipe} from './sort/sort-select-items.pipe';
 import {ChartDraggable} from './chart-draggable';
 import {SortTypeSelectItemsPipe} from './sort/sort-type-select-items.pipe';
-import {AggregationSelectPlaceholderPipe} from './axis/aggregation-select-placeholder.pipe';
 import {ChartAxisSelectItemIdPipe} from './axis/chart-axis-select-item-id.pipe';
 import {ChartCleanAxisPipe} from './axis/chart-clean-axis';
 
@@ -36,26 +34,22 @@ import {ChartCleanAxisPipe} from './axis/chart-clean-axis';
   declarations: [
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
-    DataSetSelectPlaceholderPipe,
     AxisRestrictedIdsPipe,
     ConfigAxisByTypePipe,
     SortSelectItemsPipe,
     ChartDraggable,
     SortTypeSelectItemsPipe,
-    AggregationSelectPlaceholderPipe,
     ChartAxisSelectItemIdPipe,
     ChartCleanAxisPipe,
   ],
   exports: [
     ShowAxisSelectPipe,
     ChartTypesToSelectPipe,
-    DataSetSelectPlaceholderPipe,
     AxisRestrictedIdsPipe,
     ConfigAxisByTypePipe,
     SortSelectItemsPipe,
     ChartDraggable,
     SortTypeSelectItemsPipe,
-    AggregationSelectPlaceholderPipe,
     ChartAxisSelectItemIdPipe,
     ChartCleanAxisPipe,
   ],

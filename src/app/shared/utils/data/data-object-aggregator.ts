@@ -102,7 +102,7 @@ export class DataObjectAggregator<T> {
 
   public convert(input: DataObjectInput<T>, uniqueObjects = false): DataObjectInfo<T>[] {
     const aggregatorAttributes = [
-      ...input.groupingAttributes.map(attribute => this.convertQueryAttribute(attribute)),
+      ...input.groupingAttributes.map(attribute => this.convertQueryAttribute(attribute, !uniqueObjects)),
       ...input.objectAttributes.map(attribute => this.convertQueryAttribute(attribute, !uniqueObjects)),
     ];
 

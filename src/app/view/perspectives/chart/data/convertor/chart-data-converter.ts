@@ -513,11 +513,9 @@ export class ChartDataConverter {
       attribute => !!attribute
     );
 
-    let uniqueObjects = false;
     const objectAttributes = [{...xAxis, key: DataObjectInfoKeyType.X}];
     if (config.type === ChartType.Bubble) {
       objectAttributes.push(valueAttribute);
-      uniqueObjects = true;
     }
 
     const dataObjectsInfo = this.dataObjectAggregator.convert(
@@ -527,7 +525,7 @@ export class ChartDataConverter {
         metaAttributes,
         objectsConverter: value => value,
       },
-      uniqueObjects
+      true
     );
 
     return this.convertAggregatedData(dataObjectsInfo, config, yAxisType);
