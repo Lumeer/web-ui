@@ -20,7 +20,7 @@
 import {Layout, LayoutAxis} from 'plotly.js';
 import {PlotMaker} from './plot-maker';
 import {ChartAxisData} from '../../data/convertor/chart-data';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {truncate} from '../../../../../shared/utils/string.utils';
 
 export abstract class TwoDAxisPlotMaker extends PlotMaker {
   public abstract getPoints(): any;
@@ -55,6 +55,31 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
     }
 
     return layout;
+  }
+
+  protected legendLayout(): Pick<Layout, 'legend'> {
+    const dataSetNames = this.chartData.sets.map(set => set.name).filter(name => !!name);
+    const longestDataSetName = dataSetNames.reduce((max, name) => (name.length > max.length ? name : max), '');
+    const approxLegendWidth = (longestDataSetName.length / 10 + 1) * 55; // 10 characters has length approximately 55px
+    const elementWidth = this.element?.nativeElement?.offsetWidth || Number.MAX_SAFE_INTEGER;
+    const isLegendWide = approxLegendWidth / elementWidth > 0.4; // length is bigger than 40%;
+    const x = this.legendXScale(approxLegendWidth / elementWidth);
+    return {
+      legend: {
+        xanchor: 'left',
+        x: isLegendWide ? 0 : x,
+        yanchor: 'top',
+        y: isLegendWide ? 2 : 1,
+      },
+    };
+  }
+
+  private legendXScale(value: number): number {
+    const domain = [0.05, 0.4];
+    const range = [1, 2];
+    const result = ((value - domain[0]) * (range[1] - range[0])) / (domain[1] - domain[0]) + range[0];
+
+    return Math.max(result, range[0]);
   }
 
   public initDoubleClick() {
@@ -95,10 +120,15 @@ function createAxisLayout(data: ChartAxisData, formatter: string): Partial<Layou
         axis.tickmode = 'array';
       }
       axis.tickvals = data.ticks.map(t => t.value);
-      axis.ticktext = data.ticks.map(t => t.title);
+      axis.ticktext = data.ticks.map(t => formatXValue(t.title));
     }
+    axis.automargin = true;
     return axis;
   }
 
   return null;
+}
+
+function formatXValue(value: string): string {
+  return truncate(value, 35);
 }

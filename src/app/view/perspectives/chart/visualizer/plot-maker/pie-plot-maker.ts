@@ -105,19 +105,6 @@ export class PiePlotMaker extends PlotMaker {
     return uniqueValues(colors).length > 1;
   }
 
-  private mapPointXValue(value: any): any {
-    if (!value) {
-      return value;
-    }
-
-    const constraintType = this.axisConstraintType(ChartAxisType.X);
-    if (constraintType === ConstraintType.Percentage) {
-      return value + '%';
-    }
-
-    return value;
-  }
-
   public createLayout(): Partial<Layout> {
     const sets = this.getSets();
     if (sets.length > 1) {

@@ -18,13 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {truncate} from '../../../../utils/string.utils';
 
 @Pipe({
   name: 'truncate',
 })
 export class TruncatePipe implements PipeTransform {
   public transform(value: string, limit: number): any {
-    const trail = '...';
-    return value.length > limit ? value.substring(0, limit) + trail : value;
+    return truncate(value, limit);
   }
 }

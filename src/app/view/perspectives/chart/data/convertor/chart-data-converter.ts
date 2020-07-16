@@ -513,12 +513,20 @@ export class ChartDataConverter {
       attribute => !!attribute
     );
 
-    const dataObjectsInfo = this.dataObjectAggregator.convert({
-      groupingAttributes: yName ? [{...yName, key: DataObjectInfoKeyType.Name}] : [],
-      objectAttributes: [{...xAxis, key: DataObjectInfoKeyType.X}],
-      metaAttributes,
-      objectsConverter: value => value,
-    });
+    const objectAttributes = [{...xAxis, key: DataObjectInfoKeyType.X}];
+    if (config.type === ChartType.Bubble) {
+      objectAttributes.push(valueAttribute);
+    }
+
+    const dataObjectsInfo = this.dataObjectAggregator.convert(
+      {
+        groupingAttributes: yName ? [{...yName, key: DataObjectInfoKeyType.Name}] : [],
+        objectAttributes,
+        metaAttributes,
+        objectsConverter: value => value,
+      },
+      true
+    );
 
     return this.convertAggregatedData(dataObjectsInfo, config, yAxisType);
   }

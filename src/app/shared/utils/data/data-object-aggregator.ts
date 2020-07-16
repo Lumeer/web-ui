@@ -100,10 +100,10 @@ export class DataObjectAggregator<T> {
     this.query = {stems: [queryStem]};
   }
 
-  public convert(input: DataObjectInput<T>): DataObjectInfo<T>[] {
+  public convert(input: DataObjectInput<T>, uniqueObjects = false): DataObjectInfo<T>[] {
     const aggregatorAttributes = [
-      ...input.groupingAttributes.map(attribute => this.convertQueryAttribute(attribute)),
-      ...input.objectAttributes.map(attribute => this.convertQueryAttribute(attribute)),
+      ...input.groupingAttributes.map(attribute => this.convertQueryAttribute(attribute, !uniqueObjects)),
+      ...input.objectAttributes.map(attribute => this.convertQueryAttribute(attribute, !uniqueObjects)),
     ];
 
     const valueAttributes = [...input.metaAttributes.map(attribute => this.convertQueryAttribute(attribute, false))];

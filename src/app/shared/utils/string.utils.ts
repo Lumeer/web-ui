@@ -80,3 +80,8 @@ export function replaceNbsp(value: string): string {
 export function idToReference(id: string): string {
   return convertBase(id, 16, 36);
 }
+
+export function truncate(value: string, limit: number = 25, trail: string = '...'): string {
+  const stringValue = value || '';
+  return stringValue.length > limit ? stringValue.substring(0, limit) + trail : value;
+}

@@ -30,6 +30,8 @@ import {
   OnChanges,
   OnDestroy,
   Output,
+  Renderer2,
+  RendererStyleFlags2,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -93,7 +95,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
   private currentPosition: DropdownPosition;
   private positionSubscription: Subscription;
 
-  constructor(private overlay: Overlay, private viewContainer: ViewContainerRef) {}
+  constructor(private overlay: Overlay, private viewContainer: ViewContainerRef, private renderer: Renderer2) {}
 
   public get dropdownPosition(): DropdownPosition {
     return this.currentPosition;
@@ -136,7 +138,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
       }
     }
 
-    this.syncWidth();
+    setTimeout(() => this.syncSizes());
   }
 
   public checkClickOutside(event: MouseEvent) {
@@ -221,7 +223,28 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
 
   @HostListener('window:resize')
   public onWindowResize() {
+    this.syncSizes();
+  }
+
+  private syncSizes() {
+    this.syncMaxHeight();
     this.syncWidth();
+  }
+
+  private syncMaxHeight() {
+    if (!this.overlayRef?.overlayElement?.children.item(0)) {
+      return;
+    }
+
+    const overlayElement = this.overlayRef.overlayElement;
+    if (overlayElement.style?.top) {
+      this.renderer.setStyle(
+        overlayElement.children.item(0),
+        'max-height',
+        `calc(100vh - ${overlayElement.style.top})`,
+        RendererStyleFlags2.Important
+      );
+    }
   }
 
   private syncWidth() {
