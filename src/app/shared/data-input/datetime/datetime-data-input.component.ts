@@ -88,11 +88,10 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public ngOnChanges(changes: SimpleChanges) {
     const value = this.value?.format() || '';
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
-      this.addKeyDownListener();
       setTimeout(() => {
         this.dateTimeInput.nativeElement.setSelectionRange(value.length, value.length);
         this.dateTimeInput.nativeElement.focus();
-        this.dateTimePicker && this.dateTimePicker.open();
+        this.dateTimePicker?.open();
       });
     }
     if (this.changedFromEditableToReadonly(changes)) {
@@ -102,9 +101,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       }
     }
     if (changes.focus && !this.focus) {
-      if (this.dateTimePicker) {
-        this.dateTimePicker.close();
-      }
+      this.dateTimePicker?.close();
     }
     if (changes.value && this.value) {
       this.date = this.value.toDate?.();
@@ -207,5 +204,9 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   public onBlur() {
     this.removeKeyDownListener();
+  }
+
+  public onFocus() {
+    this.addKeyDownListener();
   }
 }

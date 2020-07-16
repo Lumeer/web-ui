@@ -72,7 +72,6 @@ export class CoordinatesDataInputComponent {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.addKeyDownListener();
       setTimeout(() => {
         const input = this.coordinatesInput;
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
@@ -145,5 +144,9 @@ export class CoordinatesDataInputComponent {
   private saveValue(input: ElementRef) {
     const dataValue = this.value.parseInput(input.nativeElement.value);
     this.save.emit(dataValue);
+  }
+
+  public onFocus() {
+    this.addKeyDownListener();
   }
 }

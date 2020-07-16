@@ -83,7 +83,6 @@ export class ColorDataInputComponent implements OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     const value = this.value?.format() || '';
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
-      this.addKeyDownListener();
       setTimeout(() => {
         this.colorInput.nativeElement.setSelectionRange(value.length, value.length);
         this.colorInput.nativeElement.focus();
@@ -205,5 +204,9 @@ export class ColorDataInputComponent implements OnChanges {
 
   public onBlur() {
     this.removeKeyDownListener();
+  }
+
+  public onFocus() {
+    this.addKeyDownListener();
   }
 }

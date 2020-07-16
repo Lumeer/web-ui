@@ -12,6 +12,7 @@
        [title]="value | formatDataValueTitle"
        [value]="value | formatDataValueForEdit"
        (blur)="onBlur()"
+       (focus)="onFocus()"
        (input)="onInput($event)"
        [ngClass]="inputClass"
        class="border-0 w-100 h-100 px-1 bg-transparent"
