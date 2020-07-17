@@ -2565,7 +2565,7 @@
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="863226cffd5b66a6fee9810a9282a5006d6ef576" datatype="html">
-        <source>Label</source><target state="new">Label</target>
+        <source>Label</source><target>Popisky</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
           <context context-type="linenumber">14</context>
@@ -2582,14 +2582,14 @@
         <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source><target>{VAR_SELECT, select, y1 {Nastavení osy Y1} y2 {Nastavení osy Y2} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="5049e204c14c648691ac775a64fb504467aeb549" datatype="html">
-        <source>Value</source><target state="new">Value</target>
+        <source>Value</source><target>Hodnoty</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
         <note priority="1" from="description">perspective.chart.config.value.placeholder</note>
       </trans-unit><trans-unit id="15fef249ef6179d7ba9bda73f8430826edf32fa2" datatype="html">
-        <source>Data set</source><target state="new">Data set</target>
+        <source>Data set</source><target>Datová řada</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">26</context>
@@ -4161,7 +4161,7 @@
         <source>Color</source><target>Barva</target>
         
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="8e3b8a7970786b480c318a53bcfe215823ab5127" datatype="html">
-        <source>Aggregation</source><target state="new">Aggregation</target>
+        <source>Aggregation</source><target>Agregace</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">68</context>
