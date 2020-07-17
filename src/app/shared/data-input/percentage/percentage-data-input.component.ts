@@ -78,7 +78,6 @@ export class PercentageDataInputComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.addKeyDownListener();
       setTimeout(() => {
         HtmlModifier.setCursorAtTextContentEnd(this.percentageInput.nativeElement);
         this.percentageInput.nativeElement.focus();
@@ -156,5 +155,9 @@ export class PercentageDataInputComponent implements OnChanges {
         this.cancel.emit();
       }
     }
+  }
+
+  public onFocus() {
+    this.addKeyDownListener();
   }
 }

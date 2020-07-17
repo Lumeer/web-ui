@@ -78,7 +78,6 @@ export class DurationDataInputComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.addKeyDownListener();
       setTimeout(() => {
         HtmlModifier.setCursorAtTextContentEnd(this.durationInput.nativeElement);
         this.durationInput.nativeElement.focus();
@@ -158,5 +157,9 @@ export class DurationDataInputComponent implements OnChanges {
         this.cancel.emit();
       }
     }
+  }
+
+  public onFocus() {
+    this.addKeyDownListener();
   }
 }

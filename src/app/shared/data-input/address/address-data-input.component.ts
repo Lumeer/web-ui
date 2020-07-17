@@ -113,7 +113,6 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.addKeyDownListener();
       setTimeout(() => {
         if (this.addressInput) {
           HtmlModifier.setCursorAtTextContentEnd(this.addressInput.nativeElement);
@@ -224,5 +223,9 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   private saveValue(value: string) {
     const dataValue = this.value.parseInput(value);
     this.save.emit(dataValue);
+  }
+
+  public onFocus() {
+    this.addKeyDownListener();
   }
 }

@@ -19,7 +19,7 @@
 
 import * as moment from 'moment';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {getSmallestDateUnit, parseMomentDate, resetUnusedMomentPart} from '../../../shared/utils/date.utils';
+import {getSmallestDateUnit, parseMomentDate, resetUnusedMomentPart, resetWeek} from '../../../shared/utils/date.utils';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isDateValid, isNotNullOrUndefined, isNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
@@ -306,11 +306,11 @@ function constraintConditionValueMoment(value: ConstraintConditionValue): moment
     case DateTimeConstraintConditionValue.Today:
       return moment().startOf('day');
     case DateTimeConstraintConditionValue.LastWeek:
-      return moment().startOf('week').subtract(1, 'week');
+      return resetWeek(moment().startOf('day').subtract(1, 'week'));
     case DateTimeConstraintConditionValue.NextWeek:
-      return moment().startOf('week').add(1, 'week');
+      return resetWeek(moment().startOf('day').add(1, 'week'));
     case DateTimeConstraintConditionValue.ThisWeek:
-      return moment().startOf('week');
+      return resetWeek(moment().startOf('day'));
     case DateTimeConstraintConditionValue.LastMonth:
       return moment().startOf('month').subtract(1, 'month');
     case DateTimeConstraintConditionValue.NextMonth:

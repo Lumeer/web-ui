@@ -93,7 +93,6 @@ export class TextDataInputComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.addKeyDownListener();
       setTimeout(() => {
         const input = this.textInput;
         HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
@@ -213,8 +212,7 @@ export class TextDataInputComponent implements OnChanges {
   }
 
   public onFocused() {
-    if (this.dropdown) {
-      this.dropdown.open();
-    }
+    this.addKeyDownListener();
+    this.dropdown?.open();
   }
 }

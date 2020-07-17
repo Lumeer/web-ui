@@ -78,7 +78,6 @@ export class NumberDataInputComponent implements OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      this.addKeyDownListener();
       setTimeout(() => {
         HtmlModifier.setCursorAtTextContentEnd(this.numberInput.nativeElement);
         this.numberInput.nativeElement.focus();
@@ -160,5 +159,9 @@ export class NumberDataInputComponent implements OnChanges {
         this.cancel.emit();
       }
     }
+  }
+
+  public onFocus() {
+    this.addKeyDownListener();
   }
 }
