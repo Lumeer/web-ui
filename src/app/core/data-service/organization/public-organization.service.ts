@@ -94,4 +94,8 @@ export class PublicOrganizationService extends PublicPermissionService implement
   public createPayment(payment: PaymentDto, returnUrl: string): Observable<PaymentDto> {
     return of(payment);
   }
+
+  public getWritableOrganizations(organizationId: string, projectId: string): Observable<OrganizationDto[]> {
+    return of([]);
+  }
 }

@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {EMPTY, Observable, of} from 'rxjs';
+import {EMPTY, forkJoin, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {ProjectDto} from '../../dto';
@@ -44,7 +44,6 @@ import {ViewsAction} from '../views/views.action';
 import {ProjectConverter} from './project.converter';
 import {ProjectsAction, ProjectsActionType} from './projects.action';
 import {selectProjectsCodes, selectProjectsDictionary, selectProjectsLoaded} from './projects.state';
-import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
 import {NotificationService} from '../../notifications/notification.service';
 import ApplyTemplate = ProjectsAction.ApplyTemplate;
@@ -58,7 +57,7 @@ import {SearchesAction} from '../searches/searches.action';
 import {ChartAction} from '../charts/charts.action';
 import {TemplateService} from '../../rest/template.service';
 import {ProjectService} from '../../data-service';
-import Copy = ProjectsAction.Copy;
+import {OrganizationsAction} from '../organizations/organizations.action';
 
 @Injectable()
 export class ProjectsEffects {
@@ -68,7 +67,7 @@ export class ProjectsEffects {
     withLatestFrom(this.store$.pipe(select(selectProjectsLoaded))),
     filter(([action, projectsLoaded]) => action.payload.force || !projectsLoaded[action.payload.organizationId]),
     tap(([action]) =>
-      this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: action.payload.organizationId}))
+      this.store$.dispatch(new ProjectsAction.GetCodes({organizationIds: [action.payload.organizationId]}))
     ),
     mergeMap(([action]) => {
       const organizationId = action.payload.organizationId;
@@ -106,12 +105,17 @@ export class ProjectsEffects {
   @Effect()
   public getCodes$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.GetCodes>(ProjectsActionType.GET_CODES),
-    withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
-    filter(([action, projectCodes]) => isNullOrUndefined(projectCodes[action.payload.organizationId])),
-    mergeMap(([action]) => {
-      return this.projectService.getProjectCodes(action.payload.organizationId).pipe(
-        map(projectCodes => ({projectCodes, organizationId: action.payload.organizationId})),
-        map(({projectCodes, organizationId}) => new ProjectsAction.GetCodesSuccess({organizationId, projectCodes})),
+    mergeMap(action => {
+      const {organizationIds} = action.payload;
+      const observables: Observable<string[]>[] = organizationIds.map(organizationId =>
+        this.projectService.getProjectCodes(organizationId).pipe(catchError(() => of([])))
+      );
+
+      return forkJoin(observables).pipe(
+        map(arrayOfCodes =>
+          organizationIds.reduce((codesMap, id, index) => ({...codesMap, [id]: arrayOfCodes[index]}), {})
+        ),
+        map(codesMap => new ProjectsAction.GetCodesSuccess({codesMap})),
         catchError(error => of(new ProjectsAction.GetCodesFailure({error: error})))
       );
     })
@@ -154,7 +158,7 @@ export class ProjectsEffects {
 
           if (copyProject) {
             nextActions.push(
-              new Copy({
+              new ProjectsAction.Copy({
                 organizationId: project.organizationId,
                 projectId: newProject.id,
                 copyProject,
@@ -191,7 +195,7 @@ export class ProjectsEffects {
       const project = action.payload.project;
       const codesByOrg = (codes && codes[project.organizationId]) || [];
       const newCodes = [...codesByOrg, project.code];
-      return new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: newCodes});
+      return new ProjectsAction.GetCodesSuccess({codesMap: {[project.organizationId]: newCodes}});
     })
   );
 
@@ -201,22 +205,7 @@ export class ProjectsEffects {
     tap(action => console.error(action.payload.error)),
     map(action => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
-        const message = this.i18n({
-          id: 'project.create.serviceLimits',
-          value:
-            'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?',
-        });
-        return new NotificationsAction.Confirm({
-          title,
-          message,
-          action: new RouterAction.Go({
-            path: ['/o', action.payload.organizationCode, 'detail'],
-            extras: {fragment: 'orderService'},
-          }),
-          type: 'warning',
-          yesFirst: false,
-        });
+        return new OrganizationsAction.OfferPayment(action.payload);
       }
       const errorMessage = this.i18n({id: 'project.create.fail', value: 'Could not create the project'});
       return new NotificationsAction.Error({message: errorMessage});
@@ -255,9 +244,7 @@ export class ProjectsEffects {
         newCodes.push(project.code);
       }
 
-      const actions: Action[] = [
-        new ProjectsAction.GetCodesSuccess({organizationId: project.organizationId, projectCodes: newCodes}),
-      ];
+      const actions: Action[] = [new ProjectsAction.GetCodesSuccess({codesMap: {[project.organizationId]: newCodes}})];
 
       const paramMap = RouteFinder.getFirstChildRouteWithParams(this.router.routerState.root.snapshot).paramMap;
       const projCodeInRoute = paramMap.get('projectCode');
@@ -311,12 +298,10 @@ export class ProjectsEffects {
       let newCodes = [...codesByOrg];
       if (projectCode) {
         newCodes = newCodes.filter(code => code !== projectCode);
-        actions.push(
-          new ProjectsAction.GetCodesSuccess({organizationId: action.payload.organizationId, projectCodes: newCodes})
-        );
+        actions.push(new ProjectsAction.GetCodesSuccess({codesMap: {[action.payload.organizationId]: newCodes}}));
       }
 
-      if (navigation && navigation.workspace && navigation.workspace.projectCode === projectCode) {
+      if (navigation?.workspace?.projectCode === projectCode) {
         actions.push(new RouterAction.Go({path: ['/']}));
       }
 

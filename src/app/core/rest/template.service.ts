@@ -37,6 +37,10 @@ export class TemplateService extends BaseService {
     return this.http.get<ProjectDto[]>(this.apiPrefix(), {params: {l: environment.locale}});
   }
 
+  public getTemplateByCode(code: string): Observable<ProjectDto> {
+    return this.http.get<ProjectDto>(`${this.apiPrefix()}/code/${code}`, {params: {l: environment.locale}});
+  }
+
   private apiPrefix(): string {
     return `${environment.apiProdUrl}/rest/templates`;
   }

@@ -107,7 +107,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         } else if (organizations.length === 0) {
           this.selectService.createNewOrganization({replaceUrl: true});
         } else {
-          this.selectService.createNewProject(organizations[0], null, {replaceUrl: true});
+          this.selectService.createNewProject(organizations.slice(0, 1), null, {replaceUrl: true});
         }
       });
   }
@@ -138,7 +138,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       if (project) {
         this.navigateToProject(organization, project);
       } else {
-        this.selectService.createNewProject(organization, null, {replaceUrl: true});
+        this.selectService.createNewProject([organization], null, {replaceUrl: true});
       }
     } else {
       this.selectService.createNewOrganization({replaceUrl: true});

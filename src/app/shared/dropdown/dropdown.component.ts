@@ -39,7 +39,7 @@ import {
 } from '@angular/core';
 import {connectedPositionsMap, convertDropdownToConnectedPositions, DropdownPosition} from './dropdown-position';
 import {Subscription} from 'rxjs';
-import {deepObjectsEquals} from '../utils/common.utils';
+import {deepObjectsEquals, preventEvent} from '../utils/common.utils';
 
 @Component({
   selector: 'dropdown',
@@ -134,7 +134,7 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
         this.overlayRef.backdropClick().subscribe(() => this.close());
       } else {
         this.clickListener = event => this.checkClickOutside(event);
-        setTimeout(() => document.addEventListener('click', this.clickListener));
+        setTimeout(() => document.addEventListener('mousedown', this.clickListener));
       }
     }
 
@@ -146,11 +146,11 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
     const clickedOnOrigin = originElement.contains(event.target as any);
     if (
       event.isTrusted &&
-      this.overlayRef &&
-      this.overlayRef.overlayElement &&
+      this.overlayRef?.overlayElement &&
       !this.overlayRef.overlayElement.contains(event.target as any) &&
       ((clickedOnOrigin && this.closeOnClickOrigin) || !clickedOnOrigin)
     ) {
+      preventEvent(event);
       this.onCloseByClickOutside.emit();
       this.close();
     }

@@ -85,3 +85,13 @@ export function truncate(value: string, limit: number = 25, trail: string = '...
   const stringValue = value || '';
   return stringValue.length > limit ? stringValue.substring(0, limit) + trail : value;
 }
+
+export function createUniqueCode(prefix: string, usedCodes: string[] = [], length = 5): string {
+  let code = prefix.substring(0, length);
+  let i = 1;
+  while (usedCodes?.includes(code)) {
+    code = prefix.substring(0, length - 1) + i++;
+  }
+
+  return code;
+}

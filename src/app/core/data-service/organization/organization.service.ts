@@ -51,4 +51,6 @@ export abstract class OrganizationService extends PermissionService {
   public abstract getPayment(paymentId: string): Observable<PaymentDto>;
 
   public abstract createPayment(payment: PaymentDto, returnUrl: string): Observable<PaymentDto>;
+
+  public abstract getWritableOrganizations(organizationId: string, projectId: string): Observable<OrganizationDto[]>;
 }

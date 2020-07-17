@@ -40,6 +40,8 @@ import {ServiceLimitsAction} from './service-limits/service-limits.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {selectNavigation} from '../navigation/navigation.state';
 import {OrganizationService} from '../../data-service';
+import {ModalService} from '../../../shared/modal/modal.service';
+import {ChooseOrganizationModalComponent} from '../../../shared/modal/choose-organization/choose-organization-modal.component';
 
 @Injectable()
 export class OrganizationsEffects {
@@ -301,11 +303,44 @@ export class OrganizationsEffects {
     })
   );
 
+  @Effect({dispatch: false})
+  public choose$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.Choose>(OrganizationsActionType.CHOOSE),
+    tap((action: OrganizationsAction.Choose) => {
+      const modalRef = this.modalService.showStaticDialog(action.payload, ChooseOrganizationModalComponent);
+      modalRef.content.onClose$ = action.payload.onClose$;
+    })
+  );
+
+  @Effect()
+  public offerPayment$: Observable<Action> = this.actions$.pipe(
+    ofType<OrganizationsAction.OfferPayment>(OrganizationsActionType.OFFER_PAYMENT),
+    map(action => {
+      const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
+      const message = this.i18n({
+        id: 'project.create.serviceLimits',
+        value:
+          'You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?',
+      });
+      return new NotificationsAction.Confirm({
+        title,
+        message: action.payload.message || message,
+        action: new RouterAction.Go({
+          path: ['/o', action.payload.organizationCode, 'detail'],
+          extras: {fragment: 'orderService'},
+        }),
+        type: 'warning',
+        yesFirst: false,
+      });
+    })
+  );
+
   constructor(
     private i18n: I18n,
     private store$: Store<AppState>,
     private router: Router,
     private actions$: Actions,
+    private modalService: ModalService,
     private organizationService: OrganizationService
   ) {}
 }

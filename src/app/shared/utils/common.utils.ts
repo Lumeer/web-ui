@@ -191,3 +191,9 @@ export function escapeHtml<T extends string | number>(value: T): T {
 export function unescapeHtml<T extends string | number>(value: T): T {
   return <T>(typeof value === 'number' ? value : isNotNullOrUndefined(value) ? unescape(String(value)) : null);
 }
+
+export function preventEvent(event: Event) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+}

@@ -99,13 +99,13 @@ export namespace ProjectsAction {
   export class GetCodes implements Action {
     public readonly type = ProjectsActionType.GET_CODES;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: {organizationIds: string[]}) {}
   }
 
   export class GetCodesSuccess implements Action {
     public readonly type = ProjectsActionType.GET_CODES_SUCCESS;
 
-    public constructor(public payload: {organizationId: string; projectCodes: string[]}) {}
+    public constructor(public payload: {codesMap: Record<string, string[]>}) {}
   }
 
   export class GetCodesFailure implements Action {

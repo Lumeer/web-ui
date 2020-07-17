@@ -1,0 +1,31 @@
+<modal-wrapper dialogType="primary"
+               [performingAction]="performingAction$ | async"
+               [submitDisabled]="!(selectedOrganization$ | async)"
+               [customHeader]="true"
+               (onSubmit)="onSubmit()"
+               (onClose)="onClose()">
+
+  <div class="body p-4">
+    <h4 class="text-center mt-3" i18n="@@choose.organization.title">Choose organization</h4>
+
+    <div class="d-flex justify-content-center flex-wrap mt-3">
+
+      <div *ngFor="let organization of organizations" class="card p-3 m-1 cursor-pointer"
+           (click)="onSelect(organization)"
+           [class.selected]="(selectedOrganization$ | async)?.id === organization.id">
+        <div class="d-flex align-items-center flex-column text-center">
+          <i class="fa-fw fa-3x {{ organization.icon }}" [style.color]="organization.color"></i>
+          <h4 class="mb-0 mt-1" [style.color]="organization.color">{{organization.code}}</h4>
+          <div class="text-truncate mt-1 w-100" [title]="organization.name">{{organization.name}}</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <span class="button-cancel" i18n="@@button.back">Back</span>
+  <span class="button-submit" i18n="@@choose.organization.confirm">Use organization</span>
+
+</modal-wrapper>
+

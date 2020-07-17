@@ -37,8 +37,6 @@ import {ResourceType} from '../model/resource-type';
 import {CreateResourceModalComponent} from '../../shared/modal/create-resource/create-resource-modal.component';
 import {ModalService} from '../../shared/modal/modal.service';
 import {Perspective} from '../../view/perspectives/perspective';
-import {CreateProjectModalComponent} from '../../shared/modal/create-project/create-project-modal.component';
-import {CopyProjectModalComponent} from '../../shared/modal/copy-project/copy-project-modal.component';
 
 @Injectable({
   providedIn: 'root',
@@ -87,7 +85,7 @@ export class WorkspaceSelectService {
 
   private checkAndCreateNewProject(organization: Organization) {
     if (userHasRoleInResource(this.currentUser, organization, Role.Write)) {
-      this.createNewProject(organization);
+      this.createNewProject([organization]);
     } else {
       this.dispatchErrorCreateProjectNotification();
     }
@@ -101,24 +99,17 @@ export class WorkspaceSelectService {
     this.store$.dispatch(new NotificationsAction.Error({message}));
   }
 
-  public createNewProject(organization: Organization, templateCode?: string, extras?: NavigationExtras): BsModalRef {
-    return this.openCreateProjectModal(organization, templateCode, extras);
+  public createNewProject(organizations: Organization[], templateCode?: string, extras?: NavigationExtras): BsModalRef {
+    return this.modalService.showCreateProjectDialog(organizations, templateCode, extras);
   }
 
   public copyProject(
-    organization: Organization,
+    organizations: Organization[],
     organizationId: string,
     projectId: string,
     extras?: NavigationExtras
   ): BsModalRef {
-    const initialState = {
-      organization,
-      organizationId,
-      projectId,
-      navigationExtras: extras,
-    };
-    const config = {initialState, keyboard: false, class: 'modal-lg', backdrop: 'static' as const};
-    return this.modalService.show(CopyProjectModalComponent, config);
+    return this.modalService.showCopyProjectDialog(organizations, organizationId, projectId, extras);
   }
 
   public selectProject(organization: Organization, project: Project) {
@@ -126,22 +117,7 @@ export class WorkspaceSelectService {
   }
 
   public createNewOrganization(extras?: NavigationExtras): BsModalRef {
-    return this.openCreateOrganizationModal(organization => this.createNewProject(organization, null, extras));
-  }
-
-  private openCreateProjectModal(
-    organization: Organization,
-    templateCode: string,
-    extras?: NavigationExtras
-  ): BsModalRef {
-    this.store$.dispatch(new ProjectsAction.GetTemplates());
-    const initialState = {
-      templateCode,
-      organizationId: organization.id,
-      navigationExtras: extras,
-    };
-    const config = {initialState, keyboard: false, class: 'modal-xxl modal-xxl-height', backdrop: 'static' as const};
-    return this.modalService.show(CreateProjectModalComponent, config);
+    return this.openCreateOrganizationModal(organization => this.createNewProject([organization], null, extras));
   }
 
   private openCreateOrganizationModal(callback: (Organization) => void): BsModalRef {

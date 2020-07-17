@@ -88,6 +88,10 @@ export class ApiOrganizationService extends ApiPermissionService implements Orga
     return this.httpClient.get<PaymentDto>(`${this.actualApiPrefix()}/payment/${paymentId}`);
   }
 
+  public getWritableOrganizations(organizationId: string, projectId: string): Observable<OrganizationDto[]> {
+    return this.httpClient.get<OrganizationDto[]>(`${this.apiPrefix(organizationId)}/projects/${projectId}/limits`);
+  }
+
   public createPayment(payment: PaymentDto, returnUrl: string): Observable<PaymentDto> {
     return this.httpClient.post<PaymentDto>(`${this.actualApiPrefix()}/payments`, payment, {
       headers: {

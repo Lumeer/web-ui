@@ -18,7 +18,7 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
-import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
@@ -26,7 +26,6 @@ import {Project} from '../../../core/store/projects/project';
 import {LoadingState} from '../../../core/model/loading-state';
 import {
   selectAllProjects,
-  selectProjectsCodesForOrganization,
   selectProjectTemplates,
   selectProjectTemplatesLoadingState,
 } from '../../../core/store/projects/projects.state';
@@ -34,9 +33,10 @@ import {CreateProjectTemplatesComponent} from './templates/create-project-templa
 import {FormBuilder, Validators} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {ProjectsAction} from '../../../core/store/projects/projects.action';
-import {safeGetRandomIcon} from '../../picker/icons';
-import * as Colors from '../../picker/colors';
 import {NavigationExtras} from '@angular/router';
+import {Organization} from '../../../core/store/organizations/organization';
+import {CreateProjectService} from '../../../core/service/create-project.service';
+import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
 
 @Component({
   templateUrl: './create-project-modal.component.html',
@@ -44,7 +44,7 @@ import {NavigationExtras} from '@angular/router';
 })
 export class CreateProjectModalComponent implements OnInit {
   @Input()
-  public organizationId: string;
+  public organizations: Organization[];
 
   @Input()
   public templateCode: string;
@@ -72,10 +72,12 @@ export class CreateProjectModalComponent implements OnInit {
     map(() => this.form.invalid)
   );
 
-  private usedCodes: string[];
-  private subscription = new Subscription();
-
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private fb: FormBuilder) {}
+  constructor(
+    private bsModalRef: BsModalRef,
+    private store$: Store<AppState>,
+    private fb: FormBuilder,
+    private createProjectService: CreateProjectService
+  ) {}
 
   public ngOnInit() {
     this.templates$ = this.store$.pipe(select(selectProjectTemplates));
@@ -85,26 +87,26 @@ export class CreateProjectModalComponent implements OnInit {
       map(projects => (projects ? projects.length : 0))
     );
 
-    this.subscription.add(
-      this.store$
-        .pipe(select(selectProjectsCodesForOrganization(this.organizationId)))
-        .subscribe(codes => (this.usedCodes = codes))
-    );
+    this.store$.dispatch(new ProjectsAction.GetCodes({organizationIds: this.organizations.map(org => org.id)}));
   }
 
   public onSubmit() {
     const template = this.templatesComponent.selectedTemplate$.value;
-    const code = this.createCodeForTemplate(template.code);
-
-    this.performingAction$.next(true);
-    this.createProject(code, template);
+    if (this.organizations.length === 1) {
+      this.performingAction$.next(true);
+      this.createProject(template);
+    } else {
+      this.chooseOrganization(template);
+    }
   }
 
   public onSecondarySubmit() {
-    const code = this.createCodeForTemplate('EMPTY');
-
-    this.performingSecondaryAction$.next(true);
-    this.createProject(code);
+    if (this.organizations.length === 1) {
+      this.performingSecondaryAction$.next(true);
+      this.createProject();
+    } else {
+      this.chooseOrganization();
+    }
   }
 
   private onFailure() {
@@ -112,19 +114,26 @@ export class CreateProjectModalComponent implements OnInit {
     this.performingSecondaryAction$.next(false);
   }
 
-  private createProject(code: string, template?: Project) {
-    const colors = Colors.palette;
-    const color = colors[Math.round(Math.random() * colors.length)];
-    const icon = safeGetRandomIcon();
-    const project: Project = {code, name: '', organizationId: this.organizationId, icon, color};
+  private createProject(template?: Project) {
+    const code = template?.code || 'EMPTY';
+    this.createProjectService.createProjectInOrganization(this.organizations[0], code, {
+      templateId: template?.id,
+      navigationExtras: this.navigationExtras,
+      onSuccess: () => this.hideDialog(),
+      onFailure: () => this.onFailure(),
+    });
+  }
+
+  private chooseOrganization(template?: Project) {
+    this.hideDialog();
 
     this.store$.dispatch(
-      new ProjectsAction.Create({
-        project,
+      new OrganizationsAction.Choose({
+        organizations: this.organizations,
+        initialCode: template?.code || 'EMPTY',
         templateId: template?.id,
+        onClose$: this.onClose$,
         navigationExtras: this.navigationExtras,
-        onSuccess: () => this.hideDialog(),
-        onFailure: () => this.onFailure(),
       })
     );
   }
@@ -136,16 +145,5 @@ export class CreateProjectModalComponent implements OnInit {
 
   public hideDialog() {
     this.bsModalRef.hide();
-  }
-
-  private createCodeForTemplate(type: string): string {
-    let code = type.substring(0, 5);
-    let i = 1;
-    const usedCodes = this.usedCodes || [];
-    while (usedCodes.includes(code)) {
-      code = type.substring(0, 4) + i++;
-    }
-
-    return code;
   }
 }

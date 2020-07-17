@@ -55,6 +55,7 @@ import {
 } from './collections.state';
 import mixpanel from 'mixpanel-browser';
 import {CollectionService} from '../../data-service';
+import {OrganizationsAction} from '../organizations/organizations.action';
 
 @Injectable()
 export class CollectionsEffects {
@@ -144,22 +145,12 @@ export class CollectionsEffects {
     withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
           value:
             'You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?',
         });
-        return new NotificationsAction.Confirm({
-          title,
-          message,
-          action: new RouterAction.Go({
-            path: ['/o', organization.code, 'detail'],
-            extras: {fragment: 'orderService'},
-          }),
-          type: 'warning',
-          yesFirst: false,
-        });
+        return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
       }
       const errorMessage = this.i18n({id: 'collection.create.fail', value: 'Could not create table'});
       return new NotificationsAction.Error({message: errorMessage});
@@ -195,22 +186,12 @@ export class CollectionsEffects {
     withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'collection.create.serviceLimits',
           value:
             'You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?',
         });
-        return new NotificationsAction.Confirm({
-          title,
-          message,
-          action: new RouterAction.Go({
-            path: ['/o', organization.code, 'detail'],
-            extras: {fragment: 'orderService'},
-          }),
-          type: 'warning',
-          yesFirst: false,
-        });
+        return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
       }
       const errorMessage = this.i18n({id: 'collection.import.fail', value: 'Could not import table'});
       return new NotificationsAction.Error({message: errorMessage});

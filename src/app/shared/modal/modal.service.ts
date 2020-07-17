@@ -47,6 +47,11 @@ import {DocumentModel} from '../../core/store/documents/document.model';
 import {ToastrService} from 'ngx-toastr';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
+import {NavigationExtras} from '@angular/router';
+import {ProjectsAction} from '../../core/store/projects/projects.action';
+import {CreateProjectModalComponent} from './create-project/create-project-modal.component';
+import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
+import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 
 @Injectable({
   providedIn: 'root',
@@ -62,16 +67,12 @@ export class ModalService {
   ) {}
 
   public show(content: string | TemplateRef<any> | any, config?: ModalOptions): BsModalRef {
-    const modalRef = this.bsModalService.show(content, config);
-    this.modalRefs.push(modalRef);
-    return modalRef;
+    return this.addModalRef(this.bsModalService.show(content, config));
   }
 
   public showChooseLinkDocument(documentIds: string[], callback?: (document: DocumentModel) => void): BsModalRef {
     const config = {initialState: {documentIds, callback}, keyboard: true, class: 'modal-lg'};
-    const modalRef = this.bsModalService.show(ChooseLinkDocumentModalComponent, config);
-    this.modalRefs.push(modalRef);
-    return modalRef;
+    return this.addModalRef(this.bsModalService.show(ChooseLinkDocumentModalComponent, config));
   }
 
   public showDocumentDetail(id: string) {
@@ -122,34 +123,35 @@ export class ModalService {
       keyboard: true,
       class: 'modal-lg',
     };
-    const modalRef = this.bsModalService.show(DataResourceDetailModalComponent, config);
-    this.modalRefs.push(modalRef);
-    return modalRef;
+    return this.addModalRef(this.bsModalService.show(DataResourceDetailModalComponent, config));
   }
 
   public showShareView(view: View): BsModalRef {
     const initialState = {view};
-    const config = {initialState, keyboard: false, class: 'modal-lg'};
-    config['backdrop'] = 'static';
-    const modalRef = this.bsModalService.show(ShareViewModalComponent, config);
-    this.modalRefs.push(modalRef);
-    return modalRef;
+    return this.showStaticDialog(initialState, ShareViewModalComponent, 'modal-lg');
   }
 
   public showCreateLink(collections: Collection[], callback?: (linkType: LinkType) => void): BsModalRef {
     const initialState = {collections, callback};
-    const config = {initialState, keyboard: false};
-    config['backdrop'] = 'static';
-    const modalRef = this.bsModalService.show(CreateLinkModalComponent, config);
-    this.modalRefs.push(modalRef);
-    return modalRef;
+    return this.showStaticDialog(initialState, CreateLinkModalComponent);
   }
 
   public showAttributeType(attributeId: string, collectionId: string, linkTypeId?: string): BsModalRef {
     const initialState = {attributeId, collectionId, linkTypeId};
-    const config = {initialState, keyboard: false};
+    return this.showStaticDialog(initialState, AttributeTypeModalComponent);
+  }
+
+  public showStaticDialog(
+    initialState: any,
+    content: string | TemplateRef<any> | any,
+    classString: string = ''
+  ): BsModalRef {
+    const config = {initialState, keyboard: false, class: classString};
     config['backdrop'] = 'static';
-    const modalRef = this.bsModalService.show(AttributeTypeModalComponent, config);
+    return this.addModalRef(this.bsModalService.show(content, config));
+  }
+
+  private addModalRef(modalRef: BsModalRef): BsModalRef {
     this.modalRefs.push(modalRef);
     return modalRef;
   }
@@ -177,9 +179,7 @@ export class ModalService {
     const initialState = {attributeId, collectionId, linkTypeId};
     const config = {initialState, keyboard: false, class: 'modal-xxl'};
     config['backdrop'] = 'static';
-    const modalRef = this.bsModalService.show(AttributeFunctionModalComponent, config);
-    this.modalRefs.push(modalRef);
-    return modalRef;
+    return this.addModalRef(this.bsModalService.show(AttributeFunctionModalComponent, config));
   }
 
   private notifyFunctionsLimit() {
@@ -198,24 +198,12 @@ export class ModalService {
   }
 
   private notifyFunctionsLimitWithRedirect(organization: Organization) {
-    const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
     const message = this.i18n({
       id: 'function.create.serviceLimits',
       value:
         'You can have only a single function per table/link type in the Free Plan. Do you want to upgrade to Business now?',
     });
-    this.store$.dispatch(
-      new NotificationsAction.Confirm({
-        title,
-        message,
-        action: new RouterAction.Go({
-          path: ['/o', organization.code, 'detail'],
-          extras: {fragment: 'orderService'},
-        }),
-        type: 'warning',
-        yesFirst: false,
-      })
-    );
+    this.store$.dispatch(new OrganizationsAction.OfferPayment({message, organizationCode: organization.code}));
   }
 
   private notifyFunctionsLimitWithoutRights() {
@@ -225,6 +213,35 @@ export class ModalService {
       value: 'You can have only a single function per table/link type in the Free Plan.',
     });
     this.store$.dispatch(new NotificationsAction.Info({title, message}));
+  }
+
+  public showCreateProjectDialog(
+    organizations: Organization[],
+    templateCode: string,
+    extras?: NavigationExtras
+  ): BsModalRef {
+    this.store$.dispatch(new ProjectsAction.GetTemplates());
+    const initialState = {
+      templateCode,
+      organizations,
+      navigationExtras: extras,
+    };
+    return this.showStaticDialog(initialState, CreateProjectModalComponent, 'modal-xxl modal-xxl-height');
+  }
+
+  public showCopyProjectDialog(
+    organizations: Organization[],
+    organizationId: string,
+    projectId: string,
+    extras?: NavigationExtras
+  ): BsModalRef {
+    const initialState = {
+      organizations,
+      organizationId,
+      projectId,
+      navigationExtras: extras,
+    };
+    return this.showStaticDialog(initialState, CopyProjectModalComponent, 'modal-lg');
   }
 
   public destroy() {
