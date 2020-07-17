@@ -306,11 +306,11 @@ function constraintConditionValueMoment(value: ConstraintConditionValue): moment
     case DateTimeConstraintConditionValue.Today:
       return moment().startOf('day');
     case DateTimeConstraintConditionValue.LastWeek:
-      return resetWeek(moment()).startOf('day').subtract(1, 'week');
+      return resetWeek(moment().startOf('day').subtract(1, 'week'));
     case DateTimeConstraintConditionValue.NextWeek:
-      return resetWeek(moment()).startOf('day').add(1, 'week');
+      return resetWeek(moment().startOf('day').add(1, 'week'));
     case DateTimeConstraintConditionValue.ThisWeek:
-      return resetWeek(moment()).startOf('day');
+      return resetWeek(moment().startOf('day'));
     case DateTimeConstraintConditionValue.LastMonth:
       return moment().startOf('month').subtract(1, 'month');
     case DateTimeConstraintConditionValue.NextMonth:
