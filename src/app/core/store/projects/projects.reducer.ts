@@ -33,7 +33,7 @@ export function projectsReducer(
     case ProjectsActionType.GET_ONE_SUCCESS:
       return addOrUpdateProject(state, action.payload.project);
     case ProjectsActionType.GET_CODES_SUCCESS:
-      const projectCodes = {...state.projectCodes, [action.payload.organizationId]: action.payload.projectCodes};
+      const projectCodes = {...state.projectCodes, ...action.payload.codesMap};
       return {...state, projectCodes};
     case ProjectsActionType.CREATE_SUCCESS:
       return addOrUpdateProject(state, action.payload.project);

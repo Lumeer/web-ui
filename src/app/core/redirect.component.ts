@@ -19,30 +19,19 @@
 
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {combineLatest, forkJoin, Observable, of} from 'rxjs';
-import {filter, first, map, mergeMap, skipWhile, take, tap} from 'rxjs/operators';
+import {combineLatest, Observable, of} from 'rxjs';
+import {catchError, first, map, mergeMap, skipWhile, take, tap} from 'rxjs/operators';
 import {Organization} from './store/organizations/organization';
-import {Project} from './store/projects/project';
-import {User} from './store/users/user';
-import {ServiceLimits} from './store/organizations/service-limits/service.limits';
-import {userHasRoleInResource} from '../shared/utils/resource.utils';
-import {Role} from './model/role';
-import {
-  selectAllServiceLimits,
-  selectServiceLimitsLoaded,
-} from './store/organizations/service-limits/service-limits.state';
-import {ServiceLimitsAction} from './store/organizations/service-limits/service-limits.action';
 import {select, Store} from '@ngrx/store';
 import {selectAllOrganizations, selectOrganizationsLoaded} from './store/organizations/organizations.state';
 import {OrganizationsAction} from './store/organizations/organizations.action';
-import {selectProjectsByOrganizationId, selectProjectsLoadedForOrganization} from './store/projects/projects.state';
-import {ProjectsAction} from './store/projects/projects.action';
-import {selectCurrentUser} from './store/users/users.state';
-import {isNotNullOrUndefined} from '../shared/utils/common.utils';
 import {WorkspaceSelectService} from './service/workspace-select.service';
 import {AppState} from './store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationsAction} from './store/notifications/notifications.action';
+import {TemplateService} from './rest/template.service';
+import {OrganizationService} from './data-service';
+import {OrganizationConverter} from './store/organizations/organization.converter';
 
 @Component({
   template: '',
@@ -51,6 +40,8 @@ import {NotificationsAction} from './store/notifications/notifications.action';
 export class RedirectComponent implements OnInit {
   constructor(
     private workspaceSelectService: WorkspaceSelectService,
+    private templateService: TemplateService,
+    private organizationService: OrganizationService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private store$: Store<AppState>,
@@ -73,120 +64,98 @@ export class RedirectComponent implements OnInit {
   }
 
   public redirectToTemplate(templateCode: string) {
-    this.selectWritableOrganization(organization => this.createProjectByTemplate(organization, templateCode));
+    const observable = this.getWritableOrganizationsForTemplate(templateCode);
+    this.selectWritableOrganizations(observable, organizations =>
+      this.createProjectByTemplate(organizations, templateCode)
+    );
   }
 
   public redirectToCopyProject(organizationId: string, projectId: string) {
-    this.selectWritableOrganization(organization => this.createProjectByCopy(organization, organizationId, projectId));
+    const observable = this.getWritableOrganizations(organizationId, projectId);
+    this.selectWritableOrganizations(observable, organizations =>
+      this.createProjectByCopy(organizations, organizationId, projectId)
+    );
   }
 
-  public selectWritableOrganization(callback: (Organization) => void) {
-    this.selectUser()
-      .pipe(
-        mergeMap(user =>
-          combineLatest([this.selectOrganizations(), this.selectServiceLimits()]).pipe(
-            map(([organizations, limits]) => ({user, organizations, limits}))
-          )
-        ),
-        mergeMap(({user, organizations, limits}) => {
-          if (organizations && organizations.length) {
-            const observables: Observable<boolean>[] = (organizations || []).map(organization =>
-              this.canCreateProjectsInOrganization(organization, user, limits)
-            );
-            return forkJoin(observables).pipe(
-              map(canCreateArray => {
-                const checkedIds = [];
-                if (user.defaultWorkspace) {
-                  const organizationIndex = organizations.findIndex(
-                    org => org.id === user.defaultWorkspace.organizationId
-                  );
-                  if (organizationIndex >= 0 && canCreateArray[organizationIndex]) {
-                    return {organization: organizations[organizationIndex]};
-                  }
-                  checkedIds.push(user.defaultWorkspace.organizationId);
-                }
-
-                for (const organization of organizations.filter(org => !checkedIds.includes(org.id))) {
-                  const organizationIndex = organizations.findIndex(org => org.id === organization.id);
-                  if (organizationIndex >= 0 && canCreateArray[organizationIndex]) {
-                    return {organization: organizations[organizationIndex]};
-                  }
-                }
-                return {organization: null, hasOrganization: true};
-              })
-            );
-          } else {
-            return of({organization: null, hasOrganization: false});
-          }
-        }),
-        take(1)
-      )
-      .subscribe(({organization, hasOrganization}) => {
-        if (organization) {
-          callback(organization);
+  public selectWritableOrganizations(
+    observable: Observable<Organization[]>,
+    callback: (organizations: Organization[]) => void
+  ) {
+    combineLatest([this.selectOrganizations(), observable])
+      .pipe(take(1))
+      .subscribe(([organizations, writableOrganizations]) => {
+        if (!writableOrganizations) {
+          this.redirectToHome(() => this.showError());
+        } else if (writableOrganizations.length) {
+          callback(writableOrganizations);
         } else {
-          this.redirectToHome(() => this.showError(hasOrganization));
+          this.redirectToHome(() => this.showErrorNoRights(organizations));
         }
       });
   }
 
-  private createProjectByCopy(organization: Organization, organizationId: string, projectId: string) {
-    const modalRef = this.workspaceSelectService.copyProject(organization, organizationId, projectId, {
+  private createProjectByCopy(organizations: Organization[], organizationId: string, projectId: string) {
+    const modalRef = this.workspaceSelectService.copyProject(organizations, organizationId, projectId, {
       replaceUrl: true,
     });
     modalRef.content.onClose$.subscribe(() => this.redirectToHome());
   }
 
-  private createProjectByTemplate(organization: Organization, templateCode: string) {
-    const modalRef = this.workspaceSelectService.createNewProject(organization, templateCode, {replaceUrl: true});
+  private createProjectByTemplate(organizations: Organization[], templateCode: string) {
+    const modalRef = this.workspaceSelectService.createNewProject(organizations, templateCode, {replaceUrl: true});
     modalRef.content.onClose$.subscribe(() => this.redirectToHome());
   }
 
-  private showError(hasOrganization: boolean) {
-    let message: string;
-    if (hasOrganization) {
-      message = this.i18n({
-        id: 'template.create.limitExceeded',
-        value: 'I am sorry, you can not create any more projects in a free account.',
+  private showError() {
+    const message = this.i18n({
+      id: 'template.create.error',
+      value: 'I am sorry, something went wrong.',
+    });
+
+    setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
+  }
+
+  private showErrorNoRights(organizations: Organization[]) {
+    if (organizations.length) {
+      const message = this.i18n({
+        id: 'template.create.limitsExceeded',
+        value:
+          'I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?',
       });
+      setTimeout(
+        () =>
+          this.store$.dispatch(
+            new OrganizationsAction.OfferPayment({
+              message,
+              organizationCode: organizations[0].code,
+            })
+          ),
+        1000
+      );
     } else {
-      message = this.i18n({
+      const message = this.i18n({
         id: 'template.create.empty',
         value: 'I am sorry, you do not have any organization to create project in.',
       });
+      setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
     }
-    setTimeout(() => this.store$.dispatch(new NotificationsAction.Error({message})), 1000);
   }
 
   private redirectToHome(then?: () => void) {
     this.router.navigate(['/'], {replaceUrl: true}).then(() => then?.());
   }
 
-  private canCreateProjectsInOrganization(
-    organization: Organization,
-    user: User,
-    limits: ServiceLimits[]
-  ): Observable<boolean> {
-    const organizationLimits = (limits || []).find(limit => limit.organizationId === organization.id);
-    if (!organizationLimits || !userHasRoleInResource(user, organization, Role.Write)) {
-      return of(false);
-    }
-
-    return this.selectProjects(organization).pipe(
-      map(projects => (projects || []).length < organizationLimits.projects)
+  private getWritableOrganizationsForTemplate(templateCode: string): Observable<Organization[] | null> {
+    return this.templateService.getTemplateByCode(templateCode).pipe(
+      mergeMap(template => this.getWritableOrganizations(template.templateMetadata.organizationId, template.id)),
+      catchError(() => of([]))
     );
   }
 
-  private selectServiceLimits(): Observable<ServiceLimits[]> {
-    return this.store$.select(selectServiceLimitsLoaded).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new ServiceLimitsAction.GetAll());
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectAllServiceLimits))),
-      first()
+  private getWritableOrganizations(organizationId: string, projectId: string): Observable<Organization[] | null> {
+    return this.organizationService.getWritableOrganizations(organizationId, projectId).pipe(
+      map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
+      catchError(() => of([]))
     );
   }
 
@@ -199,27 +168,6 @@ export class RedirectComponent implements OnInit {
       }),
       skipWhile(loaded => !loaded),
       mergeMap(() => this.store$.pipe(select(selectAllOrganizations))),
-      first()
-    );
-  }
-
-  private selectProjects(organization: Organization): Observable<Project[]> {
-    return this.store$.select(selectProjectsLoadedForOrganization(organization.id)).pipe(
-      tap(loaded => {
-        if (!loaded) {
-          this.store$.dispatch(new ProjectsAction.Get({organizationId: organization.id}));
-        }
-      }),
-      skipWhile(loaded => !loaded),
-      mergeMap(() => this.store$.pipe(select(selectProjectsByOrganizationId(organization.id)))),
-      first()
-    );
-  }
-
-  private selectUser(): Observable<User> {
-    return this.store$.pipe(
-      select(selectCurrentUser),
-      filter(user => isNotNullOrUndefined(user)),
       first()
     );
   }

@@ -1,6 +1,10 @@
 <div class="d-flex align-items-center flex-column">
-  <i class="fa-fw fa-3x {{ project.icon }}" [style.color]="project.color"></i>
-  <h4 class="mb-0" [style.color]="project.color">{{project.code}}</h4>
+
+  <div class="image" *ngIf="project.templateMetadata?.imageUrl">
+    <img [src]="project.templateMetadata?.imageUrl" alt=""/>
+  </div>
+
+  <h4 class="mb-0 mt-1" [style.color]="project.color">{{project.code}}</h4>
 </div>
 
 <div class="mt-2 d-flex align-items-center flex-column">

@@ -1,5 +1,5 @@
 <div class="px-3 pt-2 pb-3">
-  <img src="https://www.lumeer.io/wp-content/uploads/2019/04/felipe-lopez-311216-unsplash.jpg" alt=""
+  <img [src]="tagImageUrl" alt=""
        class="main-image"/>
 </div>
 
@@ -9,6 +9,6 @@
   <template-item *ngFor="let template of templates"
                  class="d-block mb-3"
                  [template]="template"
-  (click)="selectTemplate.emit(template)">
+                 (click)="selectTemplate.emit(template)">
   </template-item>
 </div>

@@ -35,6 +35,7 @@ import {ReferralsOverviewModalModule} from './referrals-overview/referrals-overv
 import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
 import {CreateProjectModalModule} from './create-project/create-project-modal.module';
 import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
+import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
 
 @NgModule({
   declarations: [],
@@ -56,6 +57,7 @@ import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
     VerifyEmailModalModule,
     CreateProjectModalModule,
     CopyProjectModalModule,
+    ChooseOrganizationModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -74,6 +76,7 @@ import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
     VerifyEmailModalModule,
     CreateProjectModalModule,
     CopyProjectModalModule,
+    ChooseOrganizationModalModule,
   ],
 })
 export class ModalModule {}

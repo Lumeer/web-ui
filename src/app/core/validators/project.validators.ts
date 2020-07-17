@@ -34,7 +34,7 @@ export class ProjectValidators {
 
   public setOrganizationId(id: string) {
     this.currentOrganizationId = id;
-    this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: id}));
+    this.store$.dispatch(new ProjectsAction.GetCodes({organizationIds: [id]}));
   }
 
   public uniqueCode(excludeCode?: string): AsyncValidatorFn {

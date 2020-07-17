@@ -84,6 +84,6 @@ export class WorkspacePanelComponent implements OnInit {
   }
 
   public createNewProject(organization: Organization) {
-    this.selectService.createNewProject(organization);
+    this.selectService.createNewProject([organization]);
   }
 }

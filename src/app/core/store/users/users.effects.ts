@@ -37,6 +37,7 @@ import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state
 import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
+import {OrganizationsAction} from '../organizations/organizations.action';
 
 @Injectable()
 export class UsersEffects {
@@ -207,22 +208,12 @@ export class UsersEffects {
     map(([action, organizations]) => {
       const organization = organizations[action.payload.organizationId];
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'user.create.serviceLimits',
           value:
             'You are currently on the Free plan which allows you to invite only three users to your organization. Do you want to upgrade to Business now?',
         });
-        return new NotificationsAction.Confirm({
-          title,
-          message,
-          action: new RouterAction.Go({
-            path: ['/o', organization.code, 'detail'],
-            extras: {fragment: 'orderService'},
-          }),
-          type: 'warning',
-          yesFirst: false,
-        });
+        return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
       }
       const errorMessage = this.i18n({id: 'user.create.fail', value: 'Could not add the user'});
       return new NotificationsAction.Error({message: errorMessage});

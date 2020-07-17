@@ -17,8 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {Project} from '../../../../../../core/store/projects/project';
+import {removeAccent} from '../../../../../utils/string.utils';
 
 @Component({
   selector: 'templates-select',
@@ -26,7 +27,7 @@ import {Project} from '../../../../../../core/store/projects/project';
   styleUrls: ['./templates-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TemplatesSelectComponent {
+export class TemplatesSelectComponent implements OnChanges {
   @Input()
   public templates: Project[];
 
@@ -38,4 +39,17 @@ export class TemplatesSelectComponent {
 
   @Output()
   public selectTemplate = new EventEmitter<Project>();
+
+  public tagImageUrl: string;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.selectedTag) {
+      this.tagImageUrl = this.createTagImageUrl();
+    }
+  }
+
+  private createTagImageUrl(): string {
+    const tagWithoutAccent = removeAccent(this.selectedTag).replace(/ /g, '_');
+    return `https://www.lumeer.io/wp-content/uploads/lumeer-projects/${tagWithoutAccent}.jpg`;
+  }
 }

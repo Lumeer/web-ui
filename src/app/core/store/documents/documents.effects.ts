@@ -51,6 +51,7 @@ import {
 } from './documents.state';
 import {queryWithoutFilters} from '../navigation/query/query.util';
 import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../data-service';
+import {OrganizationsAction} from '../organizations/organizations.action';
 
 @Injectable()
 export class DocumentsEffects {
@@ -197,22 +198,12 @@ export class DocumentsEffects {
     withLatestFrom(this.store$.pipe(select(selectOrganizationByWorkspace))),
     map(([action, organization]) => {
       if (action.payload.error instanceof HttpErrorResponse && Number(action.payload.error.status) === 402) {
-        const title = this.i18n({id: 'serviceLimits.trial', value: 'Free Service'});
         const message = this.i18n({
           id: 'document.create.serviceLimits',
           value:
             'You are currently on the Free plan which allows you to have only limited number of records. Do you want to upgrade to Business now?',
         });
-        return new NotificationsAction.Confirm({
-          title,
-          message,
-          action: new RouterAction.Go({
-            path: ['/o', organization.code, 'detail'],
-            extras: {fragment: 'orderService'},
-          }),
-          type: 'warning',
-          yesFirst: false,
-        });
+        return new OrganizationsAction.OfferPayment({message, organizationCode: organization.code});
       }
       const errorMessage = this.i18n({id: 'document.create.fail', value: 'Could not create the record'});
       return new NotificationsAction.Error({message: errorMessage});

@@ -24,15 +24,14 @@ import {ProjectService} from '../../../core/data-service';
 import {catchError, map} from 'rxjs/operators';
 import {KeyCode} from '../../key-code';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Project} from '../../../core/store/projects/project';
 import {ProjectConverter} from '../../../core/store/projects/project.converter';
 import {NavigationExtras} from '@angular/router';
-import * as Colors from '../../picker/colors';
-import {safeGetRandomIcon} from '../../picker/icons';
 import {ProjectsAction} from '../../../core/store/projects/projects.action';
-import {selectProjectsCodesForOrganization} from '../../../core/store/projects/projects.state';
+import {CreateProjectService} from '../../../core/service/create-project.service';
+import {OrganizationsAction} from '../../../core/store/organizations/organizations.action';
 
 @Component({
   templateUrl: './copy-project-modal.component.html',
@@ -40,7 +39,7 @@ import {selectProjectsCodesForOrganization} from '../../../core/store/projects/p
 })
 export class CopyProjectModalComponent implements OnInit, OnDestroy {
   @Input()
-  public organization: Organization;
+  public organizations: Organization[];
 
   @Input()
   public organizationId: string;
@@ -51,7 +50,6 @@ export class CopyProjectModalComponent implements OnInit, OnDestroy {
   @Input()
   public navigationExtras: NavigationExtras;
 
-  private usedCodes: string[];
   private subscriptions = new Subscription();
 
   public project$: Observable<Project>;
@@ -62,7 +60,8 @@ export class CopyProjectModalComponent implements OnInit, OnDestroy {
   constructor(
     private projectService: ProjectService,
     private bsModalRef: BsModalRef,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private createProjectService: CreateProjectService
   ) {}
 
   public ngOnInit() {
@@ -71,51 +70,42 @@ export class CopyProjectModalComponent implements OnInit, OnDestroy {
       catchError(() => of(null))
     );
 
-    this.store$.dispatch(new ProjectsAction.GetCodes({organizationId: this.organization.id}));
-    this.subscriptions.add(
-      this.store$
-        .pipe(select(selectProjectsCodesForOrganization(this.organization.id)))
-        .subscribe(codes => (this.usedCodes = codes))
-    );
+    this.store$.dispatch(new ProjectsAction.GetCodes({organizationIds: this.organizations.map(org => org.id)}));
   }
 
   public onSubmit(project: Project) {
-    this.performingAction$.next(true);
-    this.createProject(project);
+    if (this.organizations.length === 1) {
+      this.createProject(project);
+    } else {
+      this.chooseOrganization(project);
+    }
   }
 
   private createProject(copyProject: Project) {
-    const colors = Colors.palette;
-    const color = colors[Math.round(Math.random() * colors.length)];
-    const icon = safeGetRandomIcon();
-    const project: Project = {
-      code: this.createSafeCode(copyProject?.code),
-      name: '',
-      organizationId: this.organizationId,
-      icon,
-      color,
-    };
-
-    this.store$.dispatch(
-      new ProjectsAction.Create({
-        project,
-        copyProject,
-        navigationExtras: this.navigationExtras,
-        onSuccess: () => this.hideDialog(),
-        onFailure: () => this.performingAction$.next(false),
-      })
-    );
+    this.performingAction$.next(true);
+    this.createProjectService.createProjectInOrganization(this.organizations[0], copyProject?.code, {
+      copyProject,
+      navigationExtras: this.navigationExtras,
+      onSuccess: () => this.hideDialog(),
+      onFailure: () => this.performingAction$.next(false),
+    });
   }
 
-  private createSafeCode(type: string): string {
-    let code = type.substring(0, 5);
-    let i = 1;
-    const usedCodes = this.usedCodes || [];
-    while (usedCodes.includes(code)) {
-      code = type.substring(0, 4) + i++;
-    }
+  private chooseOrganization(copyProject: Project) {
+    this.hideDialog();
 
-    return code;
+    const dialogState = {organizationId: this.organizationId, projectId: this.projectId};
+
+    this.store$.dispatch(
+      new OrganizationsAction.Choose({
+        organizations: this.organizations,
+        initialCode: copyProject.code,
+        copyProject,
+        onClose$: this.onClose$,
+        previousDialogState: dialogState,
+        navigationExtras: this.navigationExtras,
+      })
+    );
   }
 
   public onClose() {
