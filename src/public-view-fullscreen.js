@@ -18,7 +18,8 @@ if (typeof lumeer_public_view_fullscreen_fce !== 'function') {
     const iterator = params.keys();
     let result = iterator.next();
     while (!result.done) {
-      queryParamsArray.push(`${result.value}=${params.get(result.value)}`);
+      const val = result.value.replace(/^_/, '');
+      queryParamsArray.push(`${val}=${params.get(result.value)}`);
       result = iterator.next();
     }
 

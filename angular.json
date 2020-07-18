@@ -50,7 +50,8 @@
               "src/assets",
               "src/browserconfig.xml",
               "src/manifest.json",
-              "src/public-view.js"
+              "src/public-view.js",
+              "src/public-view-fullscreen.js"
             ],
             "i18nMissingTranslation": "error",
             "styles": [
@@ -267,7 +268,7 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "assets": ["src/favicon.ico", "src/assets", "src/public-view.js"]
+            "assets": ["src/favicon.ico", "src/assets", "src/public-view.js", "src/public-view-fullscreen.js"]
           }
         },
         "lint": {

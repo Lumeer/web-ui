@@ -29,6 +29,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
 
     const viewParam = view ? `&v=${view}` : '';
     const queryParams = `o=${organization}&p=${project}&tp=${topPanel}${viewParam}`;
+    const queryParamsLarger = `_o=${organization}&_p=${project}&tp=${topPanel}${viewParam}`;
     const div = document.createElement('div');
     div.style =
       'color: #2b3e52; font-family: LatoWeb, sans-serif; display: grid; height: 100%; grid-template-rows: 1fr auto; border: solid 1px #e9ecef; border-radius: 3px; padding: 0 5px; background: white;';
@@ -38,7 +39,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
     </iframe>
     <div style="display: flex; flex-direction: row; align-items: center;">
       <a href="https://www.lumeer.io/" style="transition: all .2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
-         <img style="cursor: pointer; height: 20px; margin: 0.25rem" src="${poweredByImageUrl}"/>
+         <img style="cursor: pointer; height: 20px; margin: 0.25rem; vertical-align: middle" src="${poweredByImageUrl}"/>
       </a>
       <div style="margin: 0.25rem; margin-left: auto">
         <a href="${useInLumeerUrl}" style="text-decoration: none; display: flex; align-items: center; transition: all .2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
@@ -48,9 +49,9 @@ if (typeof lumeer_public_view_fce !== 'function') {
       </div>
 
        <div style="margin: 0.25rem; margin-left: 2rem;">
-         <a href="https://www.lumeer.io/app-demo?${queryParams}" style="text-decoration: none; display: flex; align-items: center; transition: all .2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
+         <a href="https://www.lumeer.io/app-demo?${queryParamsLarger}" target="_blank" style="text-decoration: none; display: flex; align-items: center; transition: all .2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
             <img style="height: 15px; margin-right: 0.4rem;" src="${expandIconUrl}" />
-            <img style="height: 13px;" src="${viewLargerTextUrl}" />
+            <img style="height: 13px; margin-right: 0.4rem" src="${viewLargerTextUrl}" />
          </a>
        </div>
 
@@ -69,7 +70,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
   }
 
   function poweredBySvg() {
-    return `<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="powered_by_en.svg" inkscape:version="1.0 (4035a4f, 2020-05-01)" id="svg8" version="1.1" viewBox="0 0 163 23" height="46" width="326">
+    return `<svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" sodipodi:docname="powered_by_en.svg" inkscape:version="1.0 (4035a4f, 2020-05-01)" id="svg8" version="1.1" viewBox="0 0 165 23" height="46" width="328">
       <defs id="defs2">
           <rect id="rect106" height="80.469658" width="75.548935" y="211.95805" x="192.58051" />
       </defs>
