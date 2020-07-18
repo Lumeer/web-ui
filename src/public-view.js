@@ -32,26 +32,26 @@ if (typeof lumeer_public_view_fce !== 'function') {
     const queryParamsLarger = `_o=${organization}&_p=${project}&tp=${topPanel}${viewParam}`;
     const div = document.createElement('div');
     div.style =
-      'color: #2b3e52; font-family: LatoWeb, sans-serif; display: grid; height: 100%; grid-template-rows: 1fr auto; border: solid 1px #e9ecef; border-radius: 3px; padding: 0 5px; background: white;';
+      'color: #2b3e52; font-family: LatoWeb, sans-serif; display: grid; height: 100%; grid-template-rows: 1fr auto; border: solid 1px #e9ecef; border-radius: 3px; background: white;';
     div.innerHTML = `
 
     <iframe src="${publicViewCdn}?${queryParams}" width="100%" height="100%" style="min-height: 50px; box-sizing: border-box; border: 0;">
     </iframe>
-    <div style="display: flex; flex-direction: row; align-items: center;">
+    <div style="display: flex; flex-direction: row; align-items: center; padding-left: 2rem; padding-right: 2rem; margin-top: 0.5rem; border-top: 1px solid rgb(233, 236, 239);">
       <a href="https://www.lumeer.io/" style="transition: all .2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
          <img style="cursor: pointer; height: 20px; margin: 0.25rem; vertical-align: middle" src="${poweredByImageUrl}"/>
       </a>
       <div style="margin: 0.25rem; margin-left: auto">
         <a href="${useInLumeerUrl}" style="text-decoration: none; display: flex; align-items: center; transition: all .2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
             <img style="height: 15px; margin-right: 0.4rem;" src="${copyIconUrl}" />
-            <img style="height: 13px;" src="${copyTextUrl}" />
+            <img style="height: 13.2px;" src="${copyTextUrl}" />
         </a>
       </div>
 
        <div style="margin: 0.25rem; margin-left: 2rem;">
          <a href="https://www.lumeer.io/app-demo?${queryParamsLarger}" target="_blank" style="text-decoration: none; display: flex; align-items: center; transition: all .2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
-            <img style="height: 15px; margin-right: 0.4rem;" src="${expandIconUrl}" />
-            <img style="height: 13px; margin-right: 0.4rem" src="${viewLargerTextUrl}" />
+            <img style="height: 15px; margin-right: 0.5rem;" src="${expandIconUrl}" />
+            <img style="height: 13.2px; margin-right: 0.5rem" src="${viewLargerTextUrl}" />
          </a>
        </div>
 
