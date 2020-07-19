@@ -54,7 +54,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
       viewLargerText = createSvgUrl(viewLargerSvgCs());
     } else {
       useInLumeer = `https://get.lumeer.io/en/open/${organization}/${project}`;
-      publicView = `http://localhost:7000/ui/`; // `https://d2b894al51csxx.cloudfront.net/en/index.html`;
+      publicView = `https://d2b894al51csxx.cloudfront.net/en/index.html`;
       copyText = createSvgUrl(copyTextSvgEn());
       viewLargerText = createSvgUrl(viewLargerSvgEn());
     }
