@@ -34,7 +34,7 @@ export class FilterKanbanCardsByPagePipe implements PipeTransform {
     let currentHeight = 0;
     for (let i = 0; i < cards.length; i++) {
       currentHeight += this.estimatedCardHeight(cards[i], viewSettings);
-      if (currentHeight > visibleHeight) {
+      if (i > 0 && currentHeight > visibleHeight) {
         return cards.slice(0, i);
       }
     }
