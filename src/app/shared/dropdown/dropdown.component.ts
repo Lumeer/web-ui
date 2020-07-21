@@ -134,7 +134,8 @@ export class DropdownComponent implements AfterViewInit, OnDestroy, OnChanges {
         this.overlayRef.backdropClick().subscribe(() => this.close());
       } else {
         this.clickListener = event => this.checkClickOutside(event);
-        setTimeout(() => document.addEventListener('mousedown', this.clickListener));
+        const triggerEvent = this.closeOnClickOrigin ? 'click' : 'mousedown';
+        setTimeout(() => document.addEventListener(triggerEvent, this.clickListener));
       }
     }
 
