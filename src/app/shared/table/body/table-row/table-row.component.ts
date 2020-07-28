@@ -17,28 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 
-@Pipe({
-  name: 'perspectiveName',
+@Component({
+  selector: '[table-row]',
+  templateUrl: './table-row.component.html',
+  styleUrls: ['./table-row.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class PerspectiveNamePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+export class TableRowComponent implements OnInit {
 
-  public transform(perspective: string): string {
-    return this.i18n(
-      {
-        id: 'view.perspective.name',
-        value:
-          '{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}',
-      },
-      {
-        perspective,
-      }
-    );
+  constructor() {
   }
+
+  ngOnInit(): void {
+  }
+
 }

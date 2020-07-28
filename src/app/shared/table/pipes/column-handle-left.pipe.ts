@@ -17,28 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Pipe, PipeTransform} from '@angular/core';
+import {TableColumn} from '../model/table-column';
 
 @Pipe({
-  name: 'perspectiveName',
+  name: 'columnHandleLeft',
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class PerspectiveNamePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
-
-  public transform(perspective: string): string {
-    return this.i18n(
-      {
-        id: 'view.perspective.name',
-        value:
-          '{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}',
-      },
-      {
-        perspective,
-      }
-    );
+export class ColumnHandleLeftPipe implements PipeTransform {
+  public transform(columns: TableColumn[], index: number): number {
+    return (columns || []).reduce((sum, column, ix) => (sum + ix <= index ? column.width : 0), 0);
   }
 }

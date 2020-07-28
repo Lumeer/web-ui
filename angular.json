@@ -65,6 +65,15 @@
               "node_modules/quill/dist/quill.snow.css",
               "src/styles.scss"
             ],
+            "allowedCommonJsDependencies": [
+              "lodash",
+              "js-cookie",
+              "plotly.js",
+              "big.js",
+              "file-saver",
+              "coordinate-parser",
+              "util"
+            ],
             "scripts": [
               "node_modules/hammerjs/hammer.min.js",
               "node_modules/pusher-js/dist/web/pusher.min.js",
@@ -213,14 +222,18 @@
                 }
               ],
               "buildOptimizer": false,
-              "localize": ["cs"],
+              "localize": [
+                "cs"
+              ],
               "optimization": false,
               "sourceMap": true
             },
             "en": {
               "aot": true,
               "buildOptimizer": false,
-              "localize": ["en"],
+              "localize": [
+                "en"
+              ],
               "optimization": false,
               "sourceMap": true,
               "budgets": [
@@ -268,15 +281,24 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "assets": ["src/favicon.ico", "src/assets", "src/public-view.js"]
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/public-view.js"
+            ]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tslintConfig": "tslint.json",
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }

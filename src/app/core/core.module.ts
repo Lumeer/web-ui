@@ -33,7 +33,6 @@ import {ModalModule} from 'ngx-bootstrap/modal';
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import {TimepickerModule} from 'ngx-bootstrap/timepicker';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
-import {DeviceDetectorModule} from 'ngx-device-detector';
 import {environment} from '../../environments/environment';
 import {SharedModule} from '../shared/shared.module';
 import {SentryErrorHandler} from './error/sentry.error-handler';
@@ -93,7 +92,6 @@ if (environment.locale === LanguageCode.CZ) {
     ModalModule.forRoot(),
     TimepickerModule.forRoot(),
     TypeaheadModule.forRoot(),
-    DeviceDetectorModule.forRoot(),
     DataServiceModule,
     FullCalendarModule,
   ],

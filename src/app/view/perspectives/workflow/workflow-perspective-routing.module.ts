@@ -17,28 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {WorkflowPerspectiveComponent} from './workflow-perspective.component';
 
-@Pipe({
-  name: 'perspectiveName',
-})
-@Injectable({
-  providedIn: 'root',
-})
-export class PerspectiveNamePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+const routes: Routes = [
+  {
+    path: '',
+    component: WorkflowPerspectiveComponent,
+  },
+];
 
-  public transform(perspective: string): string {
-    return this.i18n(
-      {
-        id: 'view.perspective.name',
-        value:
-          '{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}',
-      },
-      {
-        perspective,
-      }
-    );
-  }
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class WorkflowPerspectiveRoutingModule {
 }

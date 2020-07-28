@@ -1,0 +1,13 @@
+<ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
+  <lmr-table *ngFor="let collection of collections"
+             [collection]="collection"
+             [documents]="documents | documentsByCollection:collection.id">
+  </lmr-table>
+
+</ng-container>
+
+<ng-template #notDisplayable>
+  <invalid-query class="w-100"
+                 [minStems]="1">
+  </invalid-query>
+</ng-template>

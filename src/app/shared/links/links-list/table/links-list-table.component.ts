@@ -166,7 +166,10 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   private createCollectionColumns(): LinkColumn[] {
     const defaultAttributeId = getDefaultAttributeId(this.collection);
-    const settings = this.viewSettings?.attributes?.collections?.[this.collection?.id];
+    const settings =
+      this.ignoreSettingsOnReadPermission && this.permissions?.read
+        ? []
+        : this.viewSettings?.attributes?.collections?.[this.collection?.id];
     return createAttributesSettingsOrder(this.collection?.attributes, settings)
       .filter(setting => !setting.hidden)
       .reduce((columns, setting) => {

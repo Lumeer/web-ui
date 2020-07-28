@@ -11,7 +11,7 @@
 
       <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
         <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
-          (click)="onContextMenu(index, $event)">
+             (click)="onContextMenu(index, $event)">
           <i *ngIf="(column.attribute | attributeFunctionDefined)"
              [class.mb-1]="typeData.iconName"
              class="fas fa-function fa-xs fa-fw">
@@ -27,12 +27,7 @@
         </div>
       </ng-container>
     </div>
-    <links-list-header-menu [permissions]="permissions"
-                            (attributeFunction)="onAttributeFunction(index)"
-                            (attributeType)="onAttributeType(index)">
-    </links-list-header-menu>
   </th>
-  <th class="border-0 bg-white fixed-header" *ngIf="permissions?.read && permissions?.writeWithView">&nbsp;</th>
 </tr>
 <div *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
      [style.left]="'calc(' + (columns | columnHandleLeft:index) + 'px - 0.5rem)'" cdkDragLockAxis="x" cdkDrag

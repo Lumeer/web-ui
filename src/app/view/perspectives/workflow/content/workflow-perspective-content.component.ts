@@ -17,28 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {Collection} from '../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
-@Pipe({
-  name: 'perspectiveName',
+@Component({
+  selector: 'workflow-perspective-content',
+  templateUrl: './workflow-perspective-content.component.html',
+  styleUrls: ['./workflow-perspective-content.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class PerspectiveNamePipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+export class WorkflowPerspectiveContentComponent implements OnInit {
 
-  public transform(perspective: string): string {
-    return this.i18n(
-      {
-        id: 'view.perspective.name',
-        value:
-          '{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}',
-      },
-      {
-        perspective,
-      }
-    );
+  @Input()
+  public query: Query;
+
+  @Input()
+  public collections: Collection[];
+
+  @Input()
+  public documents: DocumentModel[];
+
+  constructor() { }
+
+  ngOnInit(): void {
   }
+
 }

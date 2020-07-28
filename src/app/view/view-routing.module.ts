@@ -86,8 +86,14 @@ const viewRoutes: Routes = [
           import('./perspectives/search/search-perspective.module').then(m => m.SearchPerspectiveModule),
       },
       {
+        path: Perspective.Workflow,
+        loadChildren: () =>
+          import('./perspectives/workflow/workflow-perspective.module').then(m => m.WorkflowPerspectiveModule),
+      },
+      {
         path: Perspective.Table,
-        component: TablePerspectiveComponent,
+        loadChildren: () =>
+          import('./perspectives/table/table-perspective.module').then(m => m.TablePerspectiveModule),
       },
       {
         path: '',
@@ -103,4 +109,5 @@ const viewRoutes: Routes = [
   imports: [RouterModule.forChild(viewRoutes)],
   exports: [RouterModule],
 })
-export class ViewRoutingModule {}
+export class ViewRoutingModule {
+}

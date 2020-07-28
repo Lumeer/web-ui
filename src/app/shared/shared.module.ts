@@ -53,6 +53,7 @@ import {BookmarksModule} from './bookmarks/bookmarks.module';
 import {BuilderModule} from './builder/builder.module';
 import {SliderModule} from './slider/slider.module';
 import {SettingsModule} from './settings/settings.module';
+import {TableModule} from './table/table.module';
 
 @NgModule({
   imports: [
@@ -86,6 +87,7 @@ import {SettingsModule} from './settings/settings.module';
     BookmarksModule,
     BuilderModule,
     SettingsModule,
+    TableModule,
   ],
   declarations: [PerspectiveDirective, ResourceHeaderComponent, LoadingIndicatorComponent, TourComponent],
   exports: [
@@ -124,6 +126,7 @@ import {SettingsModule} from './settings/settings.module';
     BookmarksModule,
     BuilderModule,
     SettingsModule,
+    TableModule,
   ],
 })
 export class SharedModule {}

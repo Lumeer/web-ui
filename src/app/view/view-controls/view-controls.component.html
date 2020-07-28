@@ -20,8 +20,7 @@
                     class="btn btn-outline-gray-600 sharp-top-left sharp-bottom-left dropdown-toggle"
                     (click)="onPerspectiveChooserClick($event)">
               <i class="fa-fw {{perspective | perspectiveIcon}}"></i>
-              <span class="ml-sm-1 text-nowrap"
-                    i18n="@@view.perspective.name">{perspective, select, detail {Detail} pivot {Pivot} kanban {Board} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table}}</span>
+              <span class="ml-sm-1 text-nowrap">{{perspective | perspectiveName}}</span>
             </button>
 
             <options-dropdown
