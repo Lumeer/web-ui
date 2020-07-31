@@ -26,21 +26,21 @@ import {TableColumn} from './model/table-column';
 import {
   findAttribute,
   getDefaultAttributeId,
-  isCollectionAttributeEditable
+  isCollectionAttributeEditable,
 } from '../../core/store/collections/collection.util';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
 import {ViewSettings} from '../../core/store/views/view';
 import {Query} from '../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'lmr-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent implements OnChanges {
-
   @Input()
   public documents: DocumentModel[];
 
@@ -81,24 +81,34 @@ export class TableComponent implements OnChanges {
   private createCollectionColumns(): TableColumn[] {
     const defaultAttributeId = getDefaultAttributeId(this.collection);
     const settings = this.viewSettings?.attributes?.collections?.[this.collection?.id];
-    return createAttributesSettingsOrder(this.collection?.attributes, settings)
-      .reduce((columns, setting) => {
-        const attribute = findAttribute(this.collection?.attributes, setting.attributeId);
-        const editable = isCollectionAttributeEditable(attribute.id, this.collection, this.permissions, this.query);
-        const column: TableColumn = (this.columns$.value || []).find(
-          c => c.collectionId === this.collection.id && c.attribute.id === attribute.id
-        ) || {
-          attribute,
-          width: 100,
-          collectionId: this.collection.id,
-          color: this.collection.color,
-          bold: attribute.id === defaultAttributeId,
-          hidden: setting.hidden,
-          editable,
-        };
-        columns.push({...column, attribute, editable});
-        return columns;
-      }, []);
+    return createAttributesSettingsOrder(this.collection?.attributes, settings).reduce((columns, setting) => {
+      const attribute = findAttribute(this.collection?.attributes, setting.attributeId);
+      const editable = isCollectionAttributeEditable(attribute.id, this.collection, this.permissions, this.query);
+      const column: TableColumn = (this.columns$.value || []).find(
+        c => c.collectionId === this.collection.id && c.attribute.id === attribute.id
+      ) || {
+        attribute,
+        width: 100,
+        collectionId: this.collection.id,
+        color: this.collection.color,
+        bold: attribute.id === defaultAttributeId,
+        hidden: setting.hidden,
+        editable,
+      };
+      columns.push({...column, attribute, editable});
+      return columns;
+    }, []);
   }
 
+  public onResizeColumn(data: {index: number; width: number}) {
+    const columns = [...this.columns$.value];
+    columns[data.index] = {...columns[data.index], width: data.width};
+    this.columns$.next(columns);
+  }
+
+  public onMoveColumn(data: {fromIndex: number; toIndex: number}) {
+    const columns = [...this.columns$.value];
+    moveItemInArray(columns, data.fromIndex, data.toIndex);
+    this.columns$.next(columns);
+  }
 }

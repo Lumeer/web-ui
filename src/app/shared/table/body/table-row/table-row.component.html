@@ -1,1 +1,10 @@
-<p>table-row works!</p>
+<td *ngFor="let column of columns">
+  <data-input *ngIf="{value: document.data && document.data[column.attribute.id]} as data"
+              [constraint]="column.attribute.constraint"
+              [cursor]="document | dataCursor : column.attribute?.id"
+              [dataValue]="data.value | dataValue:column.attribute.constraint"
+              [focus]="false"
+              [readonly]="true"
+              [configuration]="configuration">
+  </data-input>
+</td>

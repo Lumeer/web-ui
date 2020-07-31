@@ -17,20 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {TableColumn} from '../../model/table-column';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
 
 @Component({
   selector: '[table-row]',
   templateUrl: './table-row.component.html',
   styleUrls: ['./table-row.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowComponent implements OnInit {
+export class TableRowComponent {
+  @Input()
+  public columns: TableColumn[];
 
-  constructor() {
-  }
+  @Input()
+  public document: DocumentModel;
 
-  ngOnInit(): void {
-  }
-
+  public readonly configuration: DataInputConfiguration = {
+    common: {allowRichText: true},
+    boolean: {center: true},
+    user: {allowCenterOnlyIcon: true},
+  };
 }

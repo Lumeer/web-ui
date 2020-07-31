@@ -25,6 +25,6 @@ import {TableColumn} from '../model/table-column';
 })
 export class ColumnHandleLeftPipe implements PipeTransform {
   public transform(columns: TableColumn[], index: number): number {
-    return (columns || []).reduce((sum, column, ix) => (sum + ix <= index ? column.width : 0), 0);
+    return (columns || []).reduce((sum, column, ix) => sum + (ix <= index ? column.width : 0), 0);
   }
 }

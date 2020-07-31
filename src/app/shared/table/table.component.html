@@ -1,8 +1,11 @@
-<table *ngIf="{columns: columns$ | async} as data" class="table">
-  <thead table-header [columns]="data.columns">
+<table *ngIf="{columns: columns$ | async} as data" class="table position-relative">
+  <thead table-header [columns]="data.columns"
+         (resizeColumn)="onResizeColumn($event)"
+         (moveColumn)="onMoveColumn($event)">
 
   </thead>
-  <tbody table-body>
+  <tbody table-body [columns]="data.columns"
+         [documents]="documents">
 
   </tbody>
 

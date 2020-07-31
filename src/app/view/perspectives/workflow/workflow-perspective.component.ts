@@ -26,25 +26,33 @@ import {select, Store} from '@ngrx/store';
 import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {tap} from 'rxjs/operators';
 
 @Component({
   selector: 'workflow-perspective',
   templateUrl: './workflow-perspective.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WorkflowPerspectiveComponent implements OnInit {
-
   public collections$: Observable<Collection[]>;
   public documents$: Observable<DocumentModel[]>;
   public query$: Observable<Query>;
 
-  constructor(private store$: Store<AppState>) {
-  }
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(
+      select(selectQuery),
+      tap(query => this.fetchData(query))
+    );
   }
 
+  private fetchData(query: Query) {
+    this.store$.dispatch(new DocumentsAction.Get({query}));
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
+  }
 }

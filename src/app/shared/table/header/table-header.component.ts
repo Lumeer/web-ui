@@ -25,12 +25,17 @@ import {
   EventEmitter,
   ViewChildren,
   QueryList,
-  ElementRef, Renderer2
+  ElementRef,
+  Renderer2,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import {TableColumn} from '../model/table-column';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {LinksListHeaderMenuComponent} from '../../links/links-list/table/header/menu/links-list-header-menu.component';
-import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragMove, CdkDragStart} from '@angular/cdk/drag-drop';
+import {BehaviorSubject} from 'rxjs';
+import {elementAt} from 'rxjs/operators';
 
 const columnMinWidth = 30;
 
@@ -38,12 +43,17 @@ const columnMinWidth = 30;
   selector: '[table-header]',
   templateUrl: './table-header.component.html',
   styleUrls: ['./table-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeaderComponent {
-
+export class TableHeaderComponent implements OnChanges {
   @Input()
   public columns: TableColumn[];
+
+  @Output()
+  public resizeColumn = new EventEmitter<{index: number; width: number}>();
+
+  @Output()
+  public moveColumn = new EventEmitter<{fromIndex: number; toIndex: number}>();
 
   @Output()
   public attributeFunction = new EventEmitter<TableColumn>();
@@ -60,7 +70,25 @@ export class TableHeaderComponent {
   @ViewChildren(LinksListHeaderMenuComponent)
   public headerMenuElements: QueryList<LinksListHeaderMenuComponent>;
 
+  private columnsPositionsStart: number[];
+  private dragStartOffset: number;
+
+  public draggedIndex$ = new BehaviorSubject(-1);
+
   constructor(private renderer: Renderer2, private contextMenuService: ContextMenuService) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.columns) {
+      this.computeColumnsPositions();
+    }
+  }
+
+  private computeColumnsPositions() {
+    this.columnsPositionsStart = [];
+    for (let i = 0; i < this.columns?.length; i++) {
+      this.columnsPositionsStart[i] = (this.columnsPositionsStart[i - 1] || 0) + (this.columns[i - 1]?.width || 0);
+    }
+  }
 
   public trackByColumn(index: number, column: TableColumn): string {
     return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
@@ -80,7 +108,7 @@ export class TableHeaderComponent {
     event.stopPropagation();
   }
 
-  public onDragMoved(dragMove: CdkDragMove, index: number) {
+  public onResizeMoved(dragMove: CdkDragMove, index: number) {
     const element = this.tableHeaderElements.toArray()[index];
     const width = this.computeNewWidth(index, dragMove.distance);
     if (element && element.nativeElement.offsetWidth !== width) {
@@ -93,9 +121,9 @@ export class TableHeaderComponent {
     return width - (width % 5);
   }
 
-  public onDragEnd(dragEnd: CdkDragEnd, index: number) {
+  public onResizeEnd(dragEnd: CdkDragEnd, index: number) {
     const width = this.computeNewWidth(index, dragEnd.distance);
-    // this.resizeColumn.emit({index, width});
+    this.resizeColumn.emit({index, width});
 
     const resizeElement = this.handlerElements.toArray()[index];
     if (resizeElement) {
@@ -104,4 +132,49 @@ export class TableHeaderComponent {
     dragEnd.source.reset();
   }
 
+  public onColumnDrop(event: CdkDragDrop<any>) {
+    const startPosition = this.getStartPosition(event.previousIndex);
+    const newPosition = startPosition + event.distance.x;
+    const toIndex = this.findColumnIndexByStartPosition(newPosition);
+    if (event.previousIndex !== toIndex) {
+      this.moveColumn.emit({fromIndex: event.previousIndex, toIndex});
+    }
+    this.dragStartOffset = null;
+  }
+
+  private getStartPosition(index: number): number {
+    return (this.columnsPositionsStart[index] || 0) + (this.dragStartOffset || 0);
+  }
+
+  private findColumnIndexByStartPosition(x: number): number {
+    return this.columnsPositionsStart?.findIndex(
+      (position, index, arr) => position <= x && (index === arr.length - 1 || x <= arr[index + 1])
+    );
+  }
+
+  public onColumnDragMoved(event: CdkDragMove, index: number) {
+    const startPosition = this.getStartPosition(index);
+    const newPosition = startPosition + event.distance.x;
+    const toIndex = this.findColumnIndexByStartPosition(newPosition);
+    this.draggedIndex$.next(toIndex);
+  }
+
+  public onColumnDragEnded() {
+    this.draggedIndex$.next(-1);
+  }
+
+  public onMouseDown(event: MouseEvent) {
+    this.dragStartOffset = this.offsetLeft(event);
+  }
+
+  private offsetLeft(event: MouseEvent): number {
+    let offset = event.offsetX;
+    let parent = event.target as HTMLElement;
+    while (parent && parent.tagName.toLowerCase() !== 'th') {
+      offset += parent.offsetLeft;
+      parent = parent.offsetParent as HTMLElement;
+    }
+
+    return offset;
+  }
 }

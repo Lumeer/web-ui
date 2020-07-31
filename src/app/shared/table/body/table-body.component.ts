@@ -17,20 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {TableColumn} from '../model/table-column';
+import {DocumentModel} from '../../../core/store/documents/document.model';
 
 @Component({
   selector: '[table-body]',
   templateUrl: './table-body.component.html',
   styleUrls: ['./table-body.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableBodyComponent implements OnInit {
+export class TableBodyComponent {
+  @Input()
+  public columns: TableColumn[];
 
-  constructor() {
+  @Input()
+  public documents: DocumentModel[];
+
+  public trackByDocument(index: number, document: DocumentModel): string {
+    return document.correlationId || document.id;
   }
-
-  ngOnInit(): void {
-  }
-
 }
