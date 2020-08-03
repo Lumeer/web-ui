@@ -123,7 +123,7 @@ export class UserMenuComponent {
           ([timerVal, user, collections, views, url]) => timerVal > 0 && !!user && !!collections && !!views && !!url
         ),
         filter(([, , , , url]) => this.isViewSearchAll(url)),
-        filter(([, user, , ,]) => !user.wizardDismissed),
+        filter(([, user, , ,]) => !user.wizardDismissed && user.emailVerified),
         first()
       )
       .subscribe(([, , collections, views]) => this.startTour(false, collections.length, views.length));
