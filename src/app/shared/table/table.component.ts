@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  OnInit,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
@@ -33,12 +42,13 @@ import {ViewSettings} from '../../core/store/views/view';
 import {Query} from '../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'lmr-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements OnChanges {
   @Input()
@@ -59,7 +69,12 @@ export class TableComponent implements OnChanges {
   @Input()
   public permissions: AllowedPermissions;
 
+  @ViewChild(CdkVirtualScrollViewport, {static: true})
+  viewPort: CdkVirtualScrollViewport;
+
   public columns$ = new BehaviorSubject<TableColumn[]>([]);
+
+  public scrollDisabled$ = new BehaviorSubject(false);
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection || changes.linkType || changes.viewSettings) {
@@ -100,13 +115,13 @@ export class TableComponent implements OnChanges {
     }, []);
   }
 
-  public onResizeColumn(data: {index: number; width: number}) {
+  public onResizeColumn(data: { index: number; width: number }) {
     const columns = [...this.columns$.value];
     columns[data.index] = {...columns[data.index], width: data.width};
     this.columns$.next(columns);
   }
 
-  public onMoveColumn(data: {fromIndex: number; toIndex: number}) {
+  public onMoveColumn(data: { fromIndex: number; toIndex: number }) {
     const columns = [...this.columns$.value];
     moveItemInArray(columns, data.fromIndex, data.toIndex);
     this.columns$.next(columns);

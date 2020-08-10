@@ -1,0 +1,23 @@
+@import '~src/styles/variables';
+
+
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+  visibility: hidden;
+}
+
+.visible {
+  visibility: visible !important;
+}
+
+.header-content {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.fa-caret-down {
+  color: $secondary;
+}

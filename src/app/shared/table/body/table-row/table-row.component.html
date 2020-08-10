@@ -1,4 +1,4 @@
-<td *ngFor="let column of columns">
+<td *ngFor="let column of columns" [style.width.px]="column.width">
   <data-input *ngIf="{value: document.data && document.data[column.attribute.id]} as data"
               [constraint]="column.attribute.constraint"
               [cursor]="document | dataCursor : column.attribute?.id"

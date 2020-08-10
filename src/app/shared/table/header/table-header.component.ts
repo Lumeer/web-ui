@@ -61,6 +61,12 @@ export class TableHeaderComponent implements OnChanges {
   @Output()
   public attributeType = new EventEmitter<TableColumn>();
 
+  @Output()
+  public dragStart = new EventEmitter();
+
+  @Output()
+  public dragEnd = new EventEmitter();
+
   @ViewChildren('tableHeader')
   public tableHeaderElements: QueryList<ElementRef>;
 
@@ -161,6 +167,7 @@ export class TableHeaderComponent implements OnChanges {
 
   public onColumnDragEnded() {
     this.draggedIndex$.next(-1);
+    this.dragEnd.emit();
   }
 
   public onMouseDown(event: MouseEvent) {
@@ -176,5 +183,9 @@ export class TableHeaderComponent implements OnChanges {
     }
 
     return offset;
+  }
+
+  public onColumnDragStarted() {
+    this.dragStart.emit();
   }
 }

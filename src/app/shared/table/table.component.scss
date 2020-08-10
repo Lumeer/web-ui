@@ -1,6 +1,8 @@
 :host {
   overflow: auto;
   display: block;
+  height: 100%;
+  position: relative;
 }
 
 .table {

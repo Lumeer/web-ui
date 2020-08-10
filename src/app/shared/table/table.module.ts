@@ -27,11 +27,14 @@ import {TableRowComponent} from './body/table-row/table-row.component';
 import {DataInputModule} from '../data-input/data-input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {ColumnHandleLeftPipe} from './pipes/column-handle-left.pipe';
+import {ScrollingModule} from '@angular/cdk/scrolling';
+import {TableItemSizeDirective} from './strategy/table-item-size-directive';
+import { TableAlternativeHeaderComponent } from './alternative-header/table-alternative-header.component';
 
 @NgModule({
-  declarations: [TableComponent, TableBodyComponent, TableHeaderComponent, TableRowComponent, ColumnHandleLeftPipe],
+  declarations: [TableComponent, TableBodyComponent, TableHeaderComponent, TableRowComponent, ColumnHandleLeftPipe, TableItemSizeDirective, TableAlternativeHeaderComponent],
   imports: [
-    CommonModule, DataInputModule, PipesModule, DragDropModule,
+    CommonModule, DataInputModule, PipesModule, DragDropModule, ScrollingModule,
   ],
   exports: [TableComponent]
 })

@@ -16,6 +16,10 @@ $width: 0.8rem;
   background-color: $light !important;
 }
 
+.hidden {
+  visibility: hidden;
+}
+
 th {
   z-index: 2;
   position: sticky;
@@ -31,8 +35,7 @@ th {
   background: transparent;
   cursor: col-resize;
   position: absolute;
-  top: 0;
-  z-index: 2;
+  z-index: 7;
 }
 
 .icons {
