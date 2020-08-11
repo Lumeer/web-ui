@@ -1,6 +1,7 @@
 <calendar-visualization [events]="events$ | async"
                         [currentMode]="config.mode"
                         [currentDate]="config.positionSaved ? config.date : null"
+                        [slotDuration]="config.slotDuration"
                         [list]="config.list"
                         [canCreateEvents]="canCreateEvents"
                         (eventClick)="onEventClicked($event)"

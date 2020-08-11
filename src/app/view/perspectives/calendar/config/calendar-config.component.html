@@ -13,6 +13,16 @@
         (click)="savePositionCheckbox.click()">Save position to view</span>
 </div>
 
+<select-item *ngIf="config?.mode !== configModeMonth"
+             class="d-block w-100 mt-2"
+             [items]="slotDurations"
+             [selectedId]="config?.slotDuration || defaultDuration"
+             placeholderText="Slot duration"
+             i18n-placeholderText="@@perspective.calendar.config.slotDuration.label"
+             [removable]="false"
+             (select)="onSlotDurationChange($event)">
+</select-item>
+
 <calendar-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"
                       class="d-block mt-4"
                       [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"

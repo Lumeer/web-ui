@@ -998,7 +998,25 @@
       </trans-unit><trans-unit id="button.reload" datatype="html">
         <source>Reload</source><target>Obnovit</target>
         
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/verify-email/verify-email-modal.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="choose.organization.title" datatype="html">
+        <source>Choose organization</source><target>Vyberte organizaci</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/choose-organization/choose-organization-modal.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.back" datatype="html">
+        <source>Back</source><target>Zpět</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/choose-organization/choose-organization-modal.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="choose.organization.confirm" datatype="html">
+        <source>Use organization</source><target>Zvolit organizaci</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/choose-organization/choose-organization-modal.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
 
             <trans-unit id="link.new.dialog.title" datatype="html">
                 <source>Create new link</source>
@@ -1504,8 +1522,14 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="template.create.limitExceeded" datatype="html">
-        <source>I am sorry, you can not create any more projects in a free account.</source><target>Je mi líto, v účtu zdarma už není možné vytvořit další projekt.</target>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="template.create.error" datatype="html">
+        <source>I am sorry, something went wrong.</source><target>Je mi líto, něco se pokazilo.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/redirect.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="template.create.limitsExceeded" datatype="html">
+        <source>I am sorry, you can not create any more projects in a free account. Do you want to upgrade to Business now?</source><target>Je mi líto, ale ve verzi zdarma nemůžete vytvořit víc projektů. Chcete se podívat na Business verzi?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/redirect.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2564,8 +2588,8 @@
           <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-      </trans-unit><trans-unit id="863226cffd5b66a6fee9810a9282a5006d6ef576" datatype="html">
-        <source>Label</source><target>Popisky</target>
+      </trans-unit><trans-unit id="2af7efecfae8d7fed3b07f718a623eca1ad8163f" datatype="html">
+        <source>Labels</source><target>Štítky</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/main/chart-main-config.component.html</context>
           <context context-type="linenumber">14</context>
@@ -2581,8 +2605,8 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="384ca48f58ac8336d17509bee83a389a6c4bc7b5" datatype="html">
         <source>{VAR_SELECT, select, y1 {Y1 Axis settings} y2 {Y2 Axis settings} }</source><target>{VAR_SELECT, select, y1 {Nastavení osy Y1} y2 {Nastavení osy Y2} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="5049e204c14c648691ac775a64fb504467aeb549" datatype="html">
-        <source>Value</source><target>Hodnoty</target>
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="809b0c848932a41318f77a2aace904ef429c13f4" datatype="html">
+        <source>Values</source><target>Hodnoty</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/chart/config/y-axis/chart-y-axis-config.component.html</context>
           <context context-type="linenumber">10</context>
@@ -2754,6 +2778,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/calendar/config/calendar-config.component.html</context>
           <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.config.slotDuration.label" datatype="html">
+        <source>Slot duration</source><target>Řádek trvá</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/calendar/config/calendar-config.component.html</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.gantt.header.scroll.today" datatype="html">
         <source>Scroll to Today
@@ -3033,7 +3063,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/documents/documents.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/modal.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="collection.create.serviceLimits" datatype="html">
                 <source>You are currently on the Free plan which allows you to have only limited number of tables. Do you want to upgrade to Business now?</source>
                 <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje vytvořit jen omezené množství tabulek. Chcete aktivovat program Lumeer Business, který tato omezení nemá?</target>
@@ -3194,11 +3224,8 @@
             <trans-unit id="project.create.serviceLimits" datatype="html">
                 <source>You are currently on the Free plan which allows you to have only one project. Do you want to upgrade to Business now?</source>
                 <target>Používáte nyní verzi Lumeera, která je zdarma. Tato verze umožňuje vytvořit jen jeden projekt. Chcete aktivovat program Lumeer Business, který tato omezení nemá?</target>
-                <context-group purpose="location">
-                    <context context-type="sourcefile">src/app/core/store/projects/projects.effects.ts</context>
-                    <context context-type="linenumber">1</context>
-                </context-group>
-            </trans-unit>
+                
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/organizations/organizations.effects.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
             <trans-unit id="project.permission.change.fail" datatype="html">
                 <source>Could not change the project permissions</source>
                 <target>Nelze nastavit oprávnění projektu</target>
@@ -4100,6 +4127,12 @@
         <source>This user is a manager of the organization and their permissions cannot be changed. Remove organization manage first.</source><target>Tento uživatel je správcem celé organizace a oprávnění zde nelze změnit. Nějdříve odeberte roli správce organizace v nastavení organizace.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/users/user/user.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.calendar.config.slotDuration.value" datatype="html">
+        <source>{VAR_SELECT, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes} }</source><target>{VAR_SELECT, select, Hour {1 hodinu} Half {30 minut} Quarter {15 minut} Ten {10 minut} Five {5 minut} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/view/perspectives/calendar/config/calendar-config.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.calendar.display.calendar" datatype="html">

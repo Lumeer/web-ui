@@ -28,11 +28,11 @@ import {
   ViewChild,
 } from '@angular/core';
 import {
-  FullCalendarComponent,
   ButtonTextCompoundInput,
-  CustomButtonInput,
-  ToolbarInput,
   CalendarOptions,
+  CustomButtonInput,
+  FullCalendarComponent,
+  ToolbarInput,
 } from '@fullcalendar/angular';
 import {ViewApi} from '@fullcalendar/common';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -42,7 +42,7 @@ import listPlugin from '@fullcalendar/list';
 import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
 import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarMode} from '../../../../../core/store/calendars/calendar';
+import {CalendarMode, slotDurationsMap} from '../../../../../core/store/calendars/calendar';
 import * as moment from 'moment';
 
 @Component({
@@ -65,6 +65,9 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   @Input()
   public list: boolean;
+
+  @Input()
+  public slotDuration = '0:30:00';
 
   @Output()
   public eventClick = new EventEmitter<CalendarEvent>();
@@ -198,6 +201,10 @@ export class CalendarVisualizationComponent implements OnChanges {
       datesSet: this.datesRender.bind(this),
       navLinkDayClick: this.onNavLinkDayClick.bind(this),
     };
+
+    if (this.slotDuration && this.currentMode !== CalendarMode.Month) {
+      this.calendarOptions.slotDuration = slotDurationsMap[this.slotDuration];
+    }
   }
 
   private getCalendarModeString(mode: CalendarMode): string {
