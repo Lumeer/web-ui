@@ -24,12 +24,10 @@ import {TableColumn} from '../model/table-column';
   selector: 'table-alternative-header',
   templateUrl: './table-alternative-header.component.html',
   styleUrls: ['./table-alternative-header.component.scss'],
-  host: {class: 'd-flex flex-nowrap alternative-header'},
+  host: {class: 'alternative-header w-100'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableAlternativeHeaderComponent {
-
   @Input()
   public columns: TableColumn[];
-
 }

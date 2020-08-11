@@ -35,7 +35,6 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
   private positionSnapshot: number;
 
   public stickyChange$ = new Subject<number>();
-  public scrollChange$ = new Subject<number>();
 
   public scrollStart$ = new Subject();
   public scrollEnd$ = new Subject();
@@ -58,21 +57,25 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
     this.viewport.renderedRangeStream.subscribe(this.renderedRangeStream$);
     this.onDataLengthChanged();
 
-    this.viewport.elementRef.nativeElement.addEventListener('wheel', (event) => {
-      if (event.deltaY) {
-        const offset = this.viewport.measureScrollOffset();
-        let newOffset = offset + event.deltaY / 2;
-        const scrollHeight = this.viewport.elementRef.nativeElement.scrollHeight - this.viewport.getViewportSize();
-        newOffset = Math.min(scrollHeight, Math.max(0, newOffset));
-        if (newOffset !== offset) {
-          this.viewport.scrollToOffset(newOffset);
-        }
+    this.viewport.elementRef.nativeElement.addEventListener(
+      'wheel',
+      event => {
+        if (event.deltaY) {
+          const offset = this.viewport.measureScrollOffset();
+          let newOffset = offset + event.deltaY / 2;
+          const scrollHeight = this.viewport.elementRef.nativeElement.scrollHeight - this.viewport.getViewportSize();
+          newOffset = Math.min(scrollHeight, Math.max(0, newOffset));
+          if (newOffset !== offset) {
+            this.viewport.scrollToOffset(newOffset);
+          }
 
-        event.preventDefault();
-        event.stopPropagation();
-        return true;
-      }
-    }, true);
+          event.preventDefault();
+          event.stopPropagation();
+          return true;
+        }
+      },
+      true
+    );
   }
 
   public detach() {
@@ -83,7 +86,9 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
 
   public onContentScrolled() {
     this.updateContent();
-    if (this.previousScroll !== this.viewport.measureScrollOffset()) {
+    const currentScroll = this.viewport.measureScrollOffset();
+    if (this.previousScroll !== currentScroll) {
+      this.previousScroll = currentScroll;
       this.onScrollStart();
       this.scheduleScrollEnd();
     }
@@ -139,10 +144,10 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
 
   public setConfig(rowHeight: number, headerHeight: number, footerHeight: number, bufferMultiplier: number) {
     if (
-      this.rowHeight === rowHeight
-      && this.headerHeight === headerHeight
-      && this.footerHeight === footerHeight
-      && this.bufferMultiplier === bufferMultiplier
+      this.rowHeight === rowHeight &&
+      this.headerHeight === headerHeight &&
+      this.footerHeight === footerHeight &&
+      this.bufferMultiplier === bufferMultiplier
     ) {
       return;
     }
@@ -178,7 +183,5 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
     this.viewport.setRenderedRange({start, end});
     this.indexChange$.next(index);
     this.stickyChange$.next(renderedOffset);
-    this.scrollChange$.next(scrollOffset % 35);
   }
-
 }

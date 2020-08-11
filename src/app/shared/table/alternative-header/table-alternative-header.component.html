@@ -1,26 +1,29 @@
-<div *ngFor="let column of columns"
-     class="font-italic table-border-left table-border-top table-border-right border-bottom-0 header-content"
-     [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
-     [style.font-weight]="column.bold ? 'bold' : 'normal'"
-     [style.width.px]="column.width"
-     [style.padding.rem]="0.4"
-     [style.height.px]="35">
-  <div class="overflow-hidden">{{column.attribute.name}}</div>
+<div class="d-flex flex-nowrap invisible-scroll-y" cdkScrollable>
+  <div *ngFor="let column of columns; let last = last"
+       class="font-italic table-border-left table-border-top border-bottom-0 header-content text-nowrap"
+       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
+       [style.font-weight]="column.bold ? 'bold' : 'normal'"
+       [style.width.px]="column.width"
+       [style.min-width.px]="column.width"
+       [style.padding.rem]="0.4"
+       [style.height.px]="35">
+    <div class="overflow-hidden">{{column.attribute.name}}</div>
 
-  <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
-    <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons">
-      <i *ngIf="(column.attribute | attributeFunctionDefined)"
-         [class.mb-1]="typeData.iconName"
-         class="fas fa-function fa-xs fa-fw">
-      </i>
-      <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
-         [ngClass]="typeData.iconName"
-         [title]="column.attribute.constraint | constraintTypeIconTitle"></i>
-      <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
-         title="Column settings..."
-         i18n-title="@@table.header.column.settings"
-         class="fa-xs fas fa-caret-down">
-      </i>
-    </div>
-  </ng-container>
+    <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
+      <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons">
+        <i *ngIf="(column.attribute | attributeFunctionDefined)"
+           [class.mb-1]="typeData.iconName"
+           class="fas fa-function fa-xs fa-fw">
+        </i>
+        <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
+           [ngClass]="typeData.iconName"
+           [title]="column.attribute.constraint | constraintTypeIconTitle"></i>
+        <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
+           title="Column settings..."
+           i18n-title="@@table.header.column.settings"
+           class="fa-xs fas fa-caret-down">
+        </i>
+      </div>
+    </ng-container>
+  </div>
 </div>

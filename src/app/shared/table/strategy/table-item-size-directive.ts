@@ -17,14 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  AfterContentInit,
-  Directive,
-  forwardRef,
-  Input,
-  OnChanges,
-  OnDestroy
-} from '@angular/core';
+import {AfterContentInit, Directive, forwardRef, Input, OnChanges, OnDestroy} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
 import {takeWhile, tap} from 'rxjs/operators';
 import {TableVirtualScrollStrategy} from './table-virtual-scroll-strategy';
@@ -34,7 +27,6 @@ export function _tableVirtualScrollDirectiveStrategyFactory(tableDir: TableItemS
 }
 
 const stickyHeaderSelector = '.lmr-table .sticky-header';
-const stickyHeaderElementSelector = '.lmr-table .sticky-element';
 
 const defaults = {
   rowHeight: 35,
@@ -42,16 +34,18 @@ const defaults = {
   headerEnabled: true,
   footerHeight: 35,
   footerEnabled: false,
-  bufferMultiplier: 0
+  bufferMultiplier: 0,
 };
 
 @Directive({
   selector: 'cdk-virtual-scroll-viewport[lmrItemSize]',
-  providers: [{
-    provide: VIRTUAL_SCROLL_STRATEGY,
-    useFactory: _tableVirtualScrollDirectiveStrategyFactory,
-    deps: [forwardRef(() => TableItemSizeDirective)]
-  }]
+  providers: [
+    {
+      provide: VIRTUAL_SCROLL_STRATEGY,
+      useFactory: _tableVirtualScrollDirectiveStrategyFactory,
+      deps: [forwardRef(() => TableItemSizeDirective)],
+    },
+  ],
 })
 export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDestroy {
   private alive = true;
@@ -77,7 +71,7 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
   @Input()
   public disabled: boolean;
 
-  scrollStrategy = new TableVirtualScrollStrategy();
+  public scrollStrategy = new TableVirtualScrollStrategy();
 
   private stickyPositions: Map<HTMLElement, number>;
 
@@ -99,27 +93,16 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
         }),
         takeWhile(this.isAlive())
       )
-      .subscribe((stickyOffset) => {
+      .subscribe(stickyOffset => {
         this.setStickyHeader(stickyOffset);
       });
 
-    this.scrollStrategy.scrollChange$
-      .pipe(takeWhile(this.isAlive()))
-      .subscribe((stickyOffset) => {
-        this.setStickyElement(stickyOffset);
-      });
+    this.scrollStrategy.scrollStart$.pipe(takeWhile(this.isAlive())).subscribe(() => this.onScrollChange(false));
 
-    this.scrollStrategy.scrollStart$
-      .pipe(takeWhile(this.isAlive()))
-      .subscribe(() => this.onScrollChange(false));
-
-    this.scrollStrategy.scrollEnd$
-      .pipe(takeWhile(this.isAlive()))
-      .subscribe(() => this.onScrollChange(true));
+    this.scrollStrategy.scrollEnd$.pipe(takeWhile(this.isAlive())).subscribe(() => this.onScrollChange(true));
   }
 
   private onScrollChange(end: boolean) {
-    console.log('scroll change', end);
     const parentElement = this.scrollStrategy.viewport.elementRef.nativeElement.parentElement;
     const alternativeHeader = parentElement.querySelector('.alternative-header');
     if (end) {
@@ -128,14 +111,13 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
       alternativeHeader.classList.add('visible');
     }
 
-    this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderSelector)
-      .forEach(el => {
-        if (end) {
-          el.classList.remove('hidden');
-        } else {
-          el.classList.add('hidden');
-        }
-      });
+    this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderSelector).forEach(el => {
+      if (end) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    });
   }
 
   public ngOnChanges() {
@@ -143,14 +125,15 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
       rowHeight: +this.rowHeight || defaults.rowHeight,
       headerHeight: this.headerEnabled ? +this.headerHeight || defaults.headerHeight : 0,
       footerHeight: this.footerEnabled ? +this.footerHeight || defaults.footerHeight : 0,
-      bufferMultiplier: +this.bufferMultiplier || defaults.bufferMultiplier
+      bufferMultiplier: +this.bufferMultiplier || defaults.bufferMultiplier,
     };
     this.scrollStrategy.setConfig(config.rowHeight, config.headerHeight, config.footerHeight, config.bufferMultiplier);
     this.scrollStrategy.setDisabled(this.disabled);
   }
 
   public setStickyHeader(offset: number) {
-    this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderSelector)
+    this.scrollStrategy.viewport.elementRef.nativeElement
+      .querySelectorAll(stickyHeaderSelector)
       .forEach((el: HTMLElement) => {
         const parent = el.parentElement;
         let baseOffset = -1;
@@ -163,19 +146,11 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
 
   private initStickyPositions() {
     this.stickyPositions = new Map<HTMLElement, number>();
-    this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderSelector)
-      .forEach(el => {
-        const parent = el.parentElement;
-        if (!this.stickyPositions.has(parent)) {
-          this.stickyPositions.set(parent, parent.offsetTop - 1);
-        }
-      });
-  }
-
-  public setStickyElement(offset: number) {
-    this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderElementSelector)
-      .forEach((el: HTMLElement) => {
-        el.style.top = `${offset}px`;
-      });
+    this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderSelector).forEach(el => {
+      const parent = el.parentElement;
+      if (!this.stickyPositions.has(parent)) {
+        this.stickyPositions.set(parent, parent.offsetTop - 1);
+      }
+    });
   }
 }

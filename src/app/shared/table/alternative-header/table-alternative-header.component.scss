@@ -1,6 +1,5 @@
 @import '~src/styles/variables';
 
-
 :host {
   position: absolute;
   top: 0;
@@ -20,4 +19,8 @@
 
 .fa-caret-down {
   color: $secondary;
+}
+
+.icons {
+  font-size: 13px;
 }

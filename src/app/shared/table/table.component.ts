@@ -25,12 +25,12 @@ import {
   SimpleChanges,
   OnInit,
   ViewChild,
-  ElementRef
+  OnDestroy,
 } from '@angular/core';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {Collection} from '../../core/store/collections/collection';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {TableColumn} from './model/table-column';
 import {
   findAttribute,
@@ -43,14 +43,16 @@ import {Query} from '../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
+import {filter} from 'rxjs/operators';
 
 @Component({
   selector: 'lmr-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent implements OnChanges {
+export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public documents: DocumentModel[];
 
@@ -70,11 +72,33 @@ export class TableComponent implements OnChanges {
   public permissions: AllowedPermissions;
 
   @ViewChild(CdkVirtualScrollViewport, {static: true})
-  viewPort: CdkVirtualScrollViewport;
+  public viewPort: CdkVirtualScrollViewport;
 
   public columns$ = new BehaviorSubject<TableColumn[]>([]);
-
   public scrollDisabled$ = new BehaviorSubject(false);
+
+  private subscriptions = new Subscription();
+
+  constructor(private scrollDispatcher: ScrollDispatcher) {}
+
+  public ngOnInit() {
+    this.subscriptions.add(this.subscribeToScrolling());
+  }
+
+  private subscribeToScrolling(): Subscription {
+    return this.scrollDispatcher
+      .scrolled()
+      .pipe(filter(scrollable => !!scrollable))
+      .subscribe((scrollable: CdkScrollable) => {
+        const left = scrollable.measureScrollOffset('left');
+
+        Array.from(this.scrollDispatcher.scrollContainers.keys())
+          .filter(s => s !== scrollable && s.measureScrollOffset('left') !== left)
+          .forEach(otherScrollable => {
+            otherScrollable.scrollTo({left});
+          });
+      });
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.collection || changes.linkType || changes.viewSettings) {
@@ -115,15 +139,19 @@ export class TableComponent implements OnChanges {
     }, []);
   }
 
-  public onResizeColumn(data: { index: number; width: number }) {
+  public onResizeColumn(data: {index: number; width: number}) {
     const columns = [...this.columns$.value];
     columns[data.index] = {...columns[data.index], width: data.width};
     this.columns$.next(columns);
   }
 
-  public onMoveColumn(data: { fromIndex: number; toIndex: number }) {
+  public onMoveColumn(data: {fromIndex: number; toIndex: number}) {
     const columns = [...this.columns$.value];
     moveItemInArray(columns, data.fromIndex, data.toIndex);
     this.columns$.next(columns);
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

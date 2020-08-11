@@ -33,11 +33,8 @@ import {
 import {TableColumn} from '../model/table-column';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {LinksListHeaderMenuComponent} from '../../links/links-list/table/header/menu/links-list-header-menu.component';
-import {CdkDragDrop, CdkDragEnd, CdkDragEnter, CdkDragMove, CdkDragStart} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
-import {elementAt} from 'rxjs/operators';
-
-const columnMinWidth = 30;
 
 @Component({
   selector: '[table-header]',
@@ -48,9 +45,6 @@ const columnMinWidth = 30;
 export class TableHeaderComponent implements OnChanges {
   @Input()
   public columns: TableColumn[];
-
-  @Output()
-  public resizeColumn = new EventEmitter<{index: number; width: number}>();
 
   @Output()
   public moveColumn = new EventEmitter<{fromIndex: number; toIndex: number}>();
@@ -66,9 +60,6 @@ export class TableHeaderComponent implements OnChanges {
 
   @Output()
   public dragEnd = new EventEmitter();
-
-  @ViewChildren('tableHeader')
-  public tableHeaderElements: QueryList<ElementRef>;
 
   @ViewChildren('resizeHandle')
   public handlerElements: QueryList<ElementRef>;
@@ -112,30 +103,6 @@ export class TableHeaderComponent implements OnChanges {
 
     event.preventDefault();
     event.stopPropagation();
-  }
-
-  public onResizeMoved(dragMove: CdkDragMove, index: number) {
-    const element = this.tableHeaderElements.toArray()[index];
-    const width = this.computeNewWidth(index, dragMove.distance);
-    if (element && element.nativeElement.offsetWidth !== width) {
-      this.renderer.setStyle(element.nativeElement, 'width', String(width) + 'px');
-    }
-  }
-
-  private computeNewWidth(index: number, distance: {x: number}): number {
-    const width = Math.max(columnMinWidth, this.columns[index].width + distance.x);
-    return width - (width % 5);
-  }
-
-  public onResizeEnd(dragEnd: CdkDragEnd, index: number) {
-    const width = this.computeNewWidth(index, dragEnd.distance);
-    this.resizeColumn.emit({index, width});
-
-    const resizeElement = this.handlerElements.toArray()[index];
-    if (resizeElement) {
-      this.renderer.setStyle(resizeElement.nativeElement, 'transform', 'none');
-    }
-    dragEnd.source.reset();
   }
 
   public onColumnDrop(event: CdkDragDrop<any>) {

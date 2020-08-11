@@ -11,7 +11,7 @@
       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
       [style.font-weight]="column.bold ? 'bold' : 'normal'"
       [style.width.px]="column.width"
-      scope="col" title="{{column.attribute.name}}" #tableHeader
+      scope="col" title="{{column.attribute.name}}"
       (contextmenu)="onContextMenu(index, $event)">
     <div class="header-content" *ngIf="index !== dragData.index">
       <div class="overflow-hidden">{{column.attribute.name}}</div>
@@ -36,9 +36,3 @@
     </div>
   </th>
 </tr>
-<div *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
-     [style.left]="'calc(' + (columns | columnHandleLeft:index) + 'px - 0.4rem)'" cdkDragLockAxis="x" cdkDrag
-     (cdkDragMoved)="onResizeMoved($event, index)"
-     (cdkDragEnded)="onResizeEnd($event, index)"
-     #resizeHandle class="resize-handle sticky-element">
-</div>

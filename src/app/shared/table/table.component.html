@@ -1,24 +1,20 @@
 <ng-container *ngIf="{columns: columns$ | async} as data">
   <table-alternative-header [columns]="data.columns"></table-alternative-header>
+  <table-resize-header [columns]="data.columns" (resizeColumn)="onResizeColumn($event)"></table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize style="height: 400px" [disabled]="scrollDisabled$ | async">
     <table class="table lmr-table position-relative">
       <thead table-header [columns]="data.columns"
-             (resizeColumn)="onResizeColumn($event)"
              (dragStart)="scrollDisabled$.next(true)"
              (dragEnd)="scrollDisabled$.next(false)"
              (moveColumn)="onMoveColumn($event)">
 
       </thead>
       <tbody>
-
       <tr *cdkVirtualFor="let document of documents" table-row
           [document]="document"
           [columns]="data.columns">
       </tr>
-
       </tbody>
-
-
     </table>
   </cdk-virtual-scroll-viewport>
 </ng-container>

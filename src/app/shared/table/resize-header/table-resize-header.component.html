@@ -1,0 +1,8 @@
+<div class="position-relative resize-handle-wrapper invisible-scroll-y" cdkScrollable>
+  <div *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
+       [style.left]="'calc(' + (columns | columnHandleLeft:index) + 'px - 0.4rem)'" cdkDragLockAxis="x" cdkDrag
+       (cdkDragMoved)="onResizeMoved($event, index)"
+       (cdkDragEnded)="onResizeEnd($event, index)"
+       class="resize-handle">
+  </div>
+</div>
