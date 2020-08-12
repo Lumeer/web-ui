@@ -49,12 +49,18 @@ export enum CalendarMode {
   Day = 'day',
 }
 
+export enum CalendarGridMode {
+  Week = 'resourceTimeGridWeek',
+  Day = 'resourceTimeGridDay',
+}
+
 export interface CalendarStemConfig {
   stem?: QueryStem;
   name?: CalendarBar;
   start?: CalendarBar;
   end?: CalendarBar;
   color?: CalendarBar;
+  group?: CalendarBar;
 }
 
 export enum SlotDuration {

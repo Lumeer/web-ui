@@ -4,6 +4,7 @@
                         [slotDuration]="config.slotDuration"
                         [list]="config.list"
                         [canCreateEvents]="canCreateEvents"
+                        [toolbarOpened]="toolbarOpened | async"
                         (eventClick)="onEventClicked($event)"
                         (newEvent)="onNewEvent($event)"
                         (listToggle)="onListToggle($event)"

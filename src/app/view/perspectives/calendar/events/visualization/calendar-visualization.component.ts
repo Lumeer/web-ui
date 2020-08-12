@@ -39,11 +39,13 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
+import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
 import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarMode, slotDurationsMap} from '../../../../../core/store/calendars/calendar';
+import {CalendarGridMode, CalendarMode, slotDurationsMap} from '../../../../../core/store/calendars/calendar';
 import * as moment from 'moment';
+import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'calendar-visualization',
@@ -69,6 +71,9 @@ export class CalendarVisualizationComponent implements OnChanges {
   @Input()
   public slotDuration = '0:30:00';
 
+  @Input()
+  public toolbarOpened: boolean;
+
   @Output()
   public eventClick = new EventEmitter<CalendarEvent>();
 
@@ -88,7 +93,13 @@ export class CalendarVisualizationComponent implements OnChanges {
   public calendarComponent: FullCalendarComponent;
 
   public readonly locale = environment.locale;
-  public readonly calendarPlugins = [timeGridPlugin, dayGridPlugin, interactionPlugin, listPlugin];
+  public readonly calendarPlugins = [
+    timeGridPlugin,
+    dayGridPlugin,
+    interactionPlugin,
+    listPlugin,
+    resourceTimeGridPlugin,
+  ];
   public readonly buttonText: ButtonTextCompoundInput = {};
   public readonly allDayText: string;
   public readonly moreText: string;
@@ -104,6 +115,11 @@ export class CalendarVisualizationComponent implements OnChanges {
   };
   public readonly calendarHeader: ToolbarInput = {
     left: `dayGridMonth,timeGridWeek,timeGridDay listToggle`,
+    center: 'title',
+    right: 'prev,today,next',
+  };
+  public readonly gridCalendarHeader: ToolbarInput = {
+    left: `dayGridMonth,resourceTimeGridWeek,resourceTimeGridDay listToggle`,
     center: 'title',
     right: 'prev,today,next',
   };
@@ -158,8 +174,11 @@ export class CalendarVisualizationComponent implements OnChanges {
       this.defaultDate = this.setupDefaultDate();
       this.setupInitialDate = false;
       this.checkCalendarModeChanged(!!changes.list, this.currentMode, this.defaultDate);
-    } else if (changes.currentMode || changes.currentDate || changes.list) {
+    } else if (changes.currentMode || changes.currentDate || changes.list || changes.events) {
       this.checkCalendarModeChanged(!!changes.list, this.currentMode, this.currentDate);
+    }
+    if (changes.toolbarOpened) {
+      this.calendarComponent?.getApi()?.updateSize();
     }
     this.createCalendarOptions();
   }
@@ -175,6 +194,7 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   private createCalendarOptions() {
     this.calendarOptions = {
+      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
       initialView: this.defaultView,
       initialDate: this.defaultDate,
       events: this.events,
@@ -191,7 +211,11 @@ export class CalendarVisualizationComponent implements OnChanges {
       eventMinHeight: 40,
       dayMaxEventRows: 10,
       moreLinkText: this.moreText,
-      headerToolbar: this.list ? this.listHeader : this.calendarHeader,
+      headerToolbar: this.list
+        ? this.listHeader
+        : this.hasResourcesGroups()
+        ? this.gridCalendarHeader
+        : this.calendarHeader,
       nowIndicator: true,
       stickyHeaderDates: true,
       eventClick: this.onEventClick.bind(this),
@@ -205,6 +229,40 @@ export class CalendarVisualizationComponent implements OnChanges {
     if (this.slotDuration && this.currentMode !== CalendarMode.Month) {
       this.calendarOptions.slotDuration = slotDurationsMap[this.slotDuration];
     }
+
+    if (this.hasResourcesGroups() && this.currentMode !== CalendarMode.Month) {
+      this.calendarOptions.resources = this.getResourceGroups();
+      this.calendarOptions.datesAboveResources = true;
+    }
+  }
+
+  private getResourceGroups(): {id: string; title: string}[] {
+    return this.events?.reduce((result, event) => {
+      for (let i = 0; i < event.resourceIds?.length; i++) {
+        const id = event.resourceIds[i];
+        if (!result.find(res => res.id === id)) {
+          result.push({id, title: event.extendedProps.formattedGroups[i]});
+        }
+      }
+
+      return result;
+    }, []);
+  }
+
+  private hasResourcesGroups(): boolean {
+    return this.events && this.events.length > 0 && isNotNullOrUndefined(this.events[0].extendedProps.stemConfig.group);
+  }
+
+  private translateMode(mode: CalendarMode): string {
+    if (this.hasResourcesGroups()) {
+      if (mode === CalendarMode.Day) {
+        return CalendarGridMode.Day;
+      } else if (mode === CalendarMode.Week) {
+        return CalendarGridMode.Week;
+      }
+    }
+
+    return this.getCalendarModeString(mode);
   }
 
   private getCalendarModeString(mode: CalendarMode): string {
@@ -212,9 +270,9 @@ export class CalendarVisualizationComponent implements OnChanges {
       case CalendarMode.Month:
         return this.list ? 'listMonth' : 'dayGridMonth';
       case CalendarMode.Week:
-        return this.list ? 'listWeek' : 'timeGridWeek';
+        return this.list ? 'listWeek' : this.hasResourcesGroups() ? CalendarGridMode.Week : 'timeGridWeek';
       case CalendarMode.Day:
-        return this.list ? 'listDay' : 'timeGridDay';
+        return this.list ? 'listDay' : this.hasResourcesGroups() ? CalendarGridMode.Day : 'timeGridDay';
       default:
         return '';
     }
@@ -227,8 +285,11 @@ export class CalendarVisualizationComponent implements OnChanges {
 
     if (
       force ||
-      (currentMode && currentDate && date && (currentMode !== mode || currentDate.getTime() !== date.getTime()))
+      (currentMode && currentDate && date && (currentMode !== mode || currentDate.getTime() !== date.getTime())) ||
+      this.defaultView !== this.getCalendarModeString(mode)
     ) {
+      this.defaultView = this.getCalendarModeString(mode);
+      //this.calendarComponent.getApi().updateSize()
       this.calendarComponent?.getApi()?.changeView(this.getCalendarModeString(mode), date);
     }
   }

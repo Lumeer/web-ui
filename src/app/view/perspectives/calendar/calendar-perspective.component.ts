@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {

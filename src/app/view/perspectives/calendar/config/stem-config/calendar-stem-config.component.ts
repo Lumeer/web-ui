@@ -44,7 +44,7 @@ export class CalendarStemConfigComponent {
   @Output()
   public configChange = new EventEmitter<CalendarStemConfig>();
 
-  public readonly properties = ['name', 'start', 'end', 'color'];
+  public readonly properties = ['name', 'start', 'end', 'color', 'group'];
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
 
   public onBarPropertySelect(type: string, bar: CalendarBar) {

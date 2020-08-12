@@ -5696,21 +5696,21 @@
         </context-group>
       </trans-unit>
       <trans-unit id="calendar.property.placeholder" datatype="html">
-        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} color {Color} }</source>
+        <source>{VAR_SELECT, select, name {Name} start {Start} end {End} color {Color} group {Group} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-property-placeholder.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="calendar.value.placeholder" datatype="html">
-        <source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...}}"/></source>
+        <source>Select <x id="ICU" equiv-text="{barProperty, select, name {...} start {...} end {...} color {...} group {...}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="ebfbff359f02cd574ee6b8aafab510fdb3f5de63" datatype="html">
-        <source>{VAR_SELECT, select, name {name} start {start date} end {end date} color {color} }</source>
+      <trans-unit id="c1d687e5043c51a7757a457dbdb77acbfbae24ba" datatype="html">
+        <source>{VAR_SELECT, select, name {name} start {start date} end {end date} color {color} group {group} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/calendar/pipes/calendar-value-property.pipe.ts</context>
           <context context-type="linenumber">1</context>

@@ -59,8 +59,15 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
+import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 
-FullCalendarModule.registerPlugins([dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]);
+FullCalendarModule.registerPlugins([
+  dayGridPlugin,
+  timeGridPlugin,
+  interactionPlugin,
+  listPlugin,
+  resourceTimeGridPlugin,
+]);
 
 if (environment.locale === LanguageCode.CZ) {
   defineLocale('cs', csLocale);

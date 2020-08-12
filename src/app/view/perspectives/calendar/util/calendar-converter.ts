@@ -24,7 +24,7 @@ import {LinkInstance} from '../../../../core/store/link-instances/link.instance'
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {CalendarConfig, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
+import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {CalendarEvent} from './calendar-event';
 import {isArray, isDateValid, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {
@@ -49,13 +49,14 @@ enum DataObjectInfoKeyType {
   Start = 'start',
   End = 'end',
   Color = 'color',
+  Group = 'group',
 }
 
 export class CalendarConverter {
   private config: CalendarConfig;
   private constraintData?: ConstraintData;
 
-  private dataObjectAggregator = new DataObjectAggregator<any>();
+  private dataObjectAggregator = new DataObjectAggregator<any>(value => value);
 
   public convert(
     config: CalendarConfig,
@@ -106,11 +107,15 @@ export class CalendarConverter {
     const metaAttributes: DataObjectAttribute[] = [
       stemConfig.color && {...stemConfig.color, key: DataObjectInfoKeyType.Color},
     ].filter(attribute => !!attribute);
+    const groupingAttributes: DataObjectAttribute[] = [
+      stemConfig.group && {...stemConfig.group, key: DataObjectInfoKeyType.Group},
+    ].filter(attribute => !!attribute);
 
     const dataObjectsInfo = this.dataObjectAggregator.convert({
-      groupingAttributes: [],
+      groupingAttributes: this.config.mode !== CalendarMode.Month ? groupingAttributes : [],
       objectAttributes,
       metaAttributes,
+      objectsConverter: value => value,
     });
 
     return this.createCalendarEventsForStem(stemConfig, dataObjectsInfo, stemIndex);
@@ -130,6 +135,8 @@ export class CalendarConverter {
     const endEditable = this.dataObjectAggregator.isAttributeEditable(stemConfig.end);
     const endConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.end);
     const endPermission = this.dataObjectAggregator.attributePermissions(stemConfig.end);
+
+    const groupConstraint = this.dataObjectAggregator.findAttributeConstraint(stemConfig.group);
 
     const resourceColor = this.dataObjectAggregator.getAttributeResourceColor(stemConfig.name || stemConfig.start);
 
@@ -180,6 +187,13 @@ export class CalendarConverter {
             dataResourcesChain: item.dataResourcesChain,
           },
         };
+
+        if (stemConfig.group) {
+          event.resourceIds = item.groupingObjects;
+          event.extendedProps.formattedGroups = event.resourceIds.map(value =>
+            groupConstraint.createDataValue(value, this.constraintData).preview()
+          );
+        }
 
         events.push(event);
       }

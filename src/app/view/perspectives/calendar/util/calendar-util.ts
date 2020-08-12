@@ -116,7 +116,7 @@ function calendarStemConfigChanged(config1: CalendarStemConfig, config2: Calenda
 }
 
 function calendarStemConfigProperties(config: CalendarStemConfig): CalendarBar[] {
-  return [config.start, config.end, config.name, config.color];
+  return [config.start, config.end, config.name, config.color, config.group];
 }
 
 function calendarConfigDefinedProperties(config: CalendarStemConfig): CalendarBar[] {
@@ -171,6 +171,7 @@ function checkOrTransformCalendarStemConfig(
     start: checkOrTransformQueryAttribute(stemConfig.start, attributesResourcesOrder),
     end: checkOrTransformQueryAttribute(stemConfig.end, attributesResourcesOrder),
     color: checkOrTransformQueryAttribute(stemConfig.color, attributesResourcesOrder),
+    group: checkOrTransformQueryAttribute(stemConfig.group, attributesResourcesOrder),
   };
 }
 
