@@ -110,8 +110,7 @@ export class CalendarConfigComponent {
   }
 
   public onSlotDurationChange(selected: SlotDuration) {
-    const config = deepObjectCopy<CalendarConfig>(this.config);
-    config.slotDuration = selected;
+    const config = {...this.config, slotDuration: selected};
 
     this.configChange.emit(config);
   }

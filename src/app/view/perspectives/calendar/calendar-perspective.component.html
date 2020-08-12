@@ -27,7 +27,7 @@
                      [permissions]="permissions$ | async"
                      [constraintData]="constraintData$ | async"
                      [query]="data.query"
-                     [toolbarOpened]="sidebarOpened$.asObservable()"
+                     [sidebarOpened]="sidebarOpened$ | async"
                      (patchDocumentData)="patchDocumentData($event)"
                      (patchLinkData)="patchLinkInstanceData($event)"
                      (configChange)="onConfigChanged($event)">

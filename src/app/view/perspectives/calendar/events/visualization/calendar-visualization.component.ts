@@ -43,7 +43,12 @@ import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 import {CalendarEvent, CalendarMetaData} from '../../util/calendar-event';
 import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CalendarGridMode, CalendarMode, slotDurationsMap} from '../../../../../core/store/calendars/calendar';
+import {
+  CalendarGridMode,
+  CalendarMode,
+  SlotDuration,
+  slotDurationsMap,
+} from '../../../../../core/store/calendars/calendar';
 import * as moment from 'moment';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 
@@ -69,10 +74,10 @@ export class CalendarVisualizationComponent implements OnChanges {
   public list: boolean;
 
   @Input()
-  public slotDuration = '0:30:00';
+  public slotDuration = slotDurationsMap[SlotDuration.Half];
 
   @Input()
-  public toolbarOpened: boolean;
+  public sidebarOpened: boolean;
 
   @Output()
   public eventClick = new EventEmitter<CalendarEvent>();
@@ -289,7 +294,6 @@ export class CalendarVisualizationComponent implements OnChanges {
       this.defaultView !== this.getCalendarModeString(mode)
     ) {
       this.defaultView = this.getCalendarModeString(mode);
-      //this.calendarComponent.getApi().updateSize()
       this.calendarComponent?.getApi()?.changeView(this.getCalendarModeString(mode), date);
     }
   }
