@@ -194,7 +194,7 @@ export class CalendarVisualizationComponent implements OnChanges {
 
   private createCalendarOptions() {
     this.calendarOptions = {
-      schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+      schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
       initialView: this.defaultView,
       initialDate: this.defaultDate,
       events: this.events,
