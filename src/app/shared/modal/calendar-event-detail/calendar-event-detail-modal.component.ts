@@ -176,6 +176,10 @@ export class CalendarEventDetailModalComponent implements OnInit {
           this.constraintData
         );
 
+        if (this.dataResource?.data && resource.id === this.dataResource?.id) {
+          Object.keys(this.dataResource.data).forEach(key => (data[key] = this.dataResource.data[key]));
+        }
+
         if (this.modelsAreFromSameResources(stemConfig?.name, dataModel)) {
           data[stemConfig.name.attributeId] = this.getInitialTitleName();
         }
