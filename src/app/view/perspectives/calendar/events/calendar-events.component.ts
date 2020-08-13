@@ -309,9 +309,18 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
     }
   }
 
-  public onNewEvent(data: {start: Date; end: Date}) {
+  public onNewEvent(data: {start: Date; end: Date; resourceId?: string}) {
+    const dataResource: DataResource = {data: {}};
     if (this.canCreateEvents) {
-      this.showCalendarEventDetail(data.start, data.end, this.config);
+      if (this.config?.stemsConfigs?.length === 1) {
+        const group = this.config.stemsConfigs[0].group;
+        if (group) {
+          dataResource.id = group.resourceId;
+          dataResource.data = {[group.attributeId]: data.resourceId};
+        }
+      }
+
+      this.showCalendarEventDetail(data.start, data.end, this.config, undefined, dataResource);
     }
   }
 

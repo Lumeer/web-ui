@@ -26,7 +26,7 @@ import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {CalendarConfig, CalendarMode, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {CalendarEvent} from './calendar-event';
-import {isArray, isDateValid, isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isArray, isDateValid, isNotNullOrUndefined, unescapeHtml} from '../../../../shared/utils/common.utils';
 import {
   DataObjectAggregator,
   DataObjectAttribute,
@@ -191,7 +191,7 @@ export class CalendarConverter {
         if (stemConfig.group) {
           event.resourceIds = item.groupingObjects;
           event.extendedProps.formattedGroups = event.resourceIds.map(value =>
-            groupConstraint.createDataValue(value, this.constraintData).preview()
+            unescapeHtml(groupConstraint.createDataValue(value, this.constraintData).preview())
           );
         }
 
