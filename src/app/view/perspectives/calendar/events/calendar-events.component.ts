@@ -103,6 +103,9 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
   @Input()
   public query: Query;
 
+  @Input()
+  public sidebarOpened: boolean;
+
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
 

@@ -27,6 +27,7 @@
                      [permissions]="permissions$ | async"
                      [constraintData]="constraintData$ | async"
                      [query]="data.query"
+                     [sidebarOpened]="sidebarOpened$ | async"
                      (patchDocumentData)="patchDocumentData($event)"
                      (patchLinkData)="patchLinkInstanceData($event)"
                      (configChange)="onConfigChanged($event)">

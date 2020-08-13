@@ -19,6 +19,7 @@
 
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute} from '../../model/query-attribute';
+import {MimeType} from '../../model/mime-type';
 
 export const DEFAULT_CALENDAR_ID = 'default';
 
@@ -33,6 +34,7 @@ export interface CalendarConfig {
   list?: boolean;
   stemsConfigs: CalendarStemConfig[];
   positionSaved?: boolean;
+  slotDuration?: SlotDuration;
   version?: CalendarConfigVersion;
 }
 
@@ -47,12 +49,34 @@ export enum CalendarMode {
   Day = 'day',
 }
 
+export enum CalendarGridMode {
+  Week = 'resourceTimeGridWeek',
+  Day = 'resourceTimeGridDay',
+}
+
 export interface CalendarStemConfig {
   stem?: QueryStem;
   name?: CalendarBar;
   start?: CalendarBar;
   end?: CalendarBar;
   color?: CalendarBar;
+  group?: CalendarBar;
 }
+
+export enum SlotDuration {
+  Hour = 'Hour',
+  Half = 'Half',
+  Quarter = 'Quarter',
+  Ten = 'Ten',
+  Five = 'Five',
+}
+
+export const slotDurationsMap: Record<SlotDuration, string> = {
+  [SlotDuration.Hour]: '1:00:00',
+  [SlotDuration.Half]: '0:30:00',
+  [SlotDuration.Quarter]: '0:15:00',
+  [SlotDuration.Ten]: '0:10:00',
+  [SlotDuration.Five]: '0:05:00',
+};
 
 export interface CalendarBar extends QueryAttribute {}

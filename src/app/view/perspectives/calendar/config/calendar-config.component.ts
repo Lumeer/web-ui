@@ -19,13 +19,20 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
-import {CalendarStemConfig, CalendarConfig} from '../../../../core/store/calendars/calendar';
+import {
+  CalendarStemConfig,
+  CalendarConfig,
+  SlotDuration,
+  CalendarMode,
+  slotDurationsMap,
+} from '../../../../core/store/calendars/calendar';
 import {Query, QueryStem} from '../../../../core/store/navigation/query/query';
 import {deepObjectCopy} from '../../../../shared/utils/common.utils';
 import {getCalendarDefaultStemConfig} from '../util/calendar-util';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {generateId} from '../../../../shared/utils/resource.utils';
-import {GanttChartConfig} from '../../../../core/store/gantt-charts/gantt-chart';
+import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'calendar-config',
@@ -50,6 +57,11 @@ export class CalendarConfigComponent {
 
   public readonly savePositionId = generateId();
   public readonly defaultStemConfig = getCalendarDefaultStemConfig();
+  public readonly slotDurations = this.getSlotDurationItems();
+  public readonly defaultDuration = SlotDuration.Half;
+  public readonly configModeMonth = CalendarMode.Month;
+
+  public constructor(private i18n: I18n) {}
 
   public onStemConfigChange(stemConfig: CalendarStemConfig, stem: QueryStem, index: number) {
     const config = deepObjectCopy<CalendarConfig>(this.config);
@@ -72,6 +84,33 @@ export class CalendarConfigComponent {
     } else {
       delete config[property];
     }
+
+    this.configChange.emit(config);
+  }
+
+  private getSlotDurationItems(): SelectItemModel[] {
+    return Object.keys(SlotDuration).map(key => {
+      return {
+        id: key,
+        value: this.getDurationString(key),
+      };
+    });
+  }
+
+  private getDurationString(key: string) {
+    return this.i18n(
+      {
+        id: 'perspective.calendar.config.slotDuration.value',
+        value: '{key, select, Hour {1 hour} Half {30 minutes} Quarter {15 minutes} Ten {10 minutes} Five {5 minutes}}',
+      },
+      {
+        key,
+      }
+    );
+  }
+
+  public onSlotDurationChange(selected: SlotDuration) {
+    const config = {...this.config, slotDuration: selected};
 
     this.configChange.emit(config);
   }

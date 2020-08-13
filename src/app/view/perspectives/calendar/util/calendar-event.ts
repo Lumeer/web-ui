@@ -28,6 +28,7 @@ export interface CalendarEvent {
   end?: Date;
   title: string;
   classNames?: string[];
+  resourceIds?: string[];
 
   startEditable: boolean;
   durationEditable: boolean;
@@ -45,4 +46,5 @@ export interface CalendarMetaData {
   stemConfig: CalendarStemConfig;
   stemIndex: number;
   dataResourcesChain: DataResourceChain[];
+  formattedGroups?: string[];
 }
