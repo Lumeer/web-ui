@@ -24,6 +24,7 @@ import {convertQueryModelToString} from '../../../../core/store/navigation/query
 import {Query} from '../../../../core/store/navigation/query/query';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
 import {Router} from '@angular/router';
+import {Perspective} from '../../../../view/perspectives/perspective';
 
 @Component({
   selector: 'post-it-collection',
@@ -102,7 +103,7 @@ export class PostItCollectionComponent {
 
   public openCollection() {
     if (this.collection?.id) {
-      this.router.navigate([this.workspacePath(), 'view', 'table'], {
+      this.router.navigate([this.workspacePath(), 'view', Perspective.Workflow], {
         queryParams: {q: this.queryForCollectionDocuments()},
       });
     }
