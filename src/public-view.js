@@ -9,7 +9,20 @@ if (typeof lumeer_public_view_fce !== 'function') {
       element = createElement();
     }
 
+    element.classList.add('lumeer-public');
+
     document.currentScript.parentElement.appendChild(element);
+
+    const mediaQueryList = window.matchMedia('(max-width: 700px)');
+    checkVisibleElements(mediaQueryList, document.currentScript);
+    mediaQueryList.addEventListener('change', checkVisibleElements);
+  }
+
+  function checkVisibleElements(mediaQueryList, currentDocument) {
+    const elements = (document || currentDocument).querySelectorAll('.lumeer-public .icon-text');
+    elements.forEach(node => {
+      node.style.display = mediaQueryList.matches ? 'none' : 'block';
+    });
   }
 
   function createFullScreenElement() {
@@ -49,12 +62,12 @@ if (typeof lumeer_public_view_fce !== 'function') {
 
     if (language === 'cs') {
       useInLumeer = `https://get.lumeer.io/cs/open/${organization}/${project}`;
-      publicView = `https://d2b894al51csxx.cloudfront.net/cs/index.html`;
+      publicView = `http://localhost:7000/ui/`;
       copyText = createSvgUrl(copyTextSvgCs());
       viewLargerText = createSvgUrl(viewLargerSvgCs());
     } else {
       useInLumeer = `https://get.lumeer.io/en/open/${organization}/${project}`;
-      publicView = `https://d2b894al51csxx.cloudfront.net/en/index.html`;
+      publicView = `http://localhost:7000/ui/`;
       copyText = createSvgUrl(copyTextSvgEn());
       viewLargerText = createSvgUrl(viewLargerSvgEn());
     }
@@ -92,7 +105,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
       urls.publicView
     }?${queryParams}" width="100%" height="100%" style="min-height: 50px; box-sizing: border-box; border: 0;">
     </iframe>
-    <div style="display: flex; flex-direction: row; align-items: center; padding-left: 2rem; padding-right: 2rem; margin-top: 0.5rem; border-top: 1px solid rgb(233, 236, 239);">
+    <div style="display: flex; flex-direction: row; flex-wrap: wrap; align-items: center; padding-left: 2rem; padding-right: 2rem; margin-top: 0.5rem; border-top: 1px solid rgb(233, 236, 239);">
       <a href="https://www.lumeer.io/" style="transition: all .2s ease-in-out;" target="_blank" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
          <img style="cursor: pointer; height: 20px; margin: 0.25rem; vertical-align: middle" src="${
            urls.poweredByImage
@@ -103,7 +116,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
           urls.useInLumeer
         }" style="text-decoration: none; display: flex; align-items: center; transition: all .2s ease-in-out;" target="_blank" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
             <img style="height: 15px; margin-right: 0.4rem;" src="${urls.copyIcon}" />
-            <img style="height: 13.2px;" src="${urls.copyText}" />
+            <img class="icon-text" style="height: 13.2px;" src="${urls.copyText}" />
         </a>
       </div>
 
@@ -113,7 +126,7 @@ if (typeof lumeer_public_view_fce !== 'function') {
         <div style="margin: 0.25rem; margin-left: 2rem;">
         <a href="https://www.lumeer.io/app-demo?${queryParamsLarger}" target="_blank" style="text-decoration: none; display: flex; align-items: center; transition: all .2s ease-in-out;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform=''">
         <img style="height: 15px; margin-right: 0.5rem;" src="${urls.viewLargerIcon}" />
-        <img style="height: 13.2px; margin-right: 0.5rem" src="${urls.viewLargerText}" />
+        <img class="icon-text" style="height: 13.2px; margin-right: 0.5rem" src="${urls.viewLargerText}" />
         </a>
         </div>`
         : ''

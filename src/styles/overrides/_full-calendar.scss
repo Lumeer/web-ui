@@ -18,6 +18,10 @@
   border: 0;
 }
 
+.fc .fc-view-harness.fc-view-harness-passive {
+  overflow: auto;
+}
+
 .fc th {
   text-align: right !important;
   margin-right: 0.2rem;

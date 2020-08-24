@@ -84,7 +84,7 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
         const showTopPanel = value.showTopPanel || false;
         const scriptSrc = environment.publicScriptCdn;
         const language = environment.locale;
-        const view = value.defaultView ? `data-v=${value.defaultView}` : '';
+        const view = value.defaultView ? `data-v="${value.defaultView}"` : '';
         const shortcodeView = value.defaultView ? `/${value.defaultView}` : '';
         const scriptType = <PublicScriptType>value.scriptType || PublicScriptType.Html;
 
