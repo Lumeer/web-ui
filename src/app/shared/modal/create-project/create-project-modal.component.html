@@ -1,18 +1,20 @@
 <modal-wrapper class="d-block"
                dialogType="primary"
+               *ngIf="{projectsCount: projectsCount$ | async, templates: templates$ | async} as data"
                [performingAction]="performingAction$ | async"
                [performingSecondaryAction]="performingSecondaryAction$ | async"
                [customHeader]="true"
                [submitDisabled]="formDisabled$ | async"
-               [showSecondarySubmit]="!((templates$ | async)?.length > 0) || ((projectsCount$ | async) > 0)"
+               [showSecondarySubmit]="!(data.templates?.length > 0) || (data.projectsCount > 0)"
                secondarySubmitClass="primary"
                [secondarySubmitDisabled]="false"
+               [showClose]="data.projectsCount > 0"
                (onSubmit)="onSubmit()"
                (onSecondarySubmit)="onSecondarySubmit()"
                (onClose)="onClose()">
 
   <div class="body w-100 h-100">
-    <create-project-templates [templates]="templates$ | async"
+    <create-project-templates [templates]="data.templates"
                               [loadingState]="templatesState$ | async"
                               [initialTemplateCode]="templateCode"
                               [form]="form">
