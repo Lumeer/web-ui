@@ -37,7 +37,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BsModalRef} from 'ngx-bootstrap/modal';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
@@ -45,7 +45,6 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
 import {ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettings} from '../../../core/store/views/views.state';
-import {ResourceType} from '../../../core/model/resource-type';
 import {AttributesResourceType} from '../../../core/model/resource';
 
 @Component({
@@ -81,13 +80,19 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
 
   private currentDocument: DocumentModel;
   private dataExistSubscription = new Subscription();
+  private initialModalsCount: number;
 
-  constructor(private store$: Store<AppState>, private bsModalRef: BsModalRef) {}
+  constructor(
+    private store$: Store<AppState>,
+    private bsModalRef: BsModalRef,
+    private bsModalService: BsModalService
+  ) {}
 
   public ngOnInit() {
     this.initData();
     this.query$ = this.store$.pipe(select(selectQuery));
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -148,7 +153,12 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    // when another dialog is presented in top of this dialog, we don't want to listen on escape events
+    if (
+      event.code === KeyCode.Escape &&
+      !this.performingAction$.getValue() &&
+      this.initialModalsCount >= this.bsModalService.getModalsCount()
+    ) {
       this.onClose();
     }
   }

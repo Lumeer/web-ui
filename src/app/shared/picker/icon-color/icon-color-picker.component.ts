@@ -82,8 +82,8 @@ export class IconColorPickerComponent implements OnDestroy {
   ];
 
   public open() {
-    this.dropdown && this.dropdown.open();
-    this.iconPickerComponent && this.iconPickerComponent.scrollToSelection();
+    this.dropdown?.open();
+    this.iconPickerComponent?.scrollToSelection();
 
     this.initialIcon = this.icon;
     this.initialColor = this.color;

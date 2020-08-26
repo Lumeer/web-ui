@@ -1,11 +1,12 @@
 <dropdown [origin]="origin"
           [positions]="dropdownPositions"
+          [pushOnScreen]="true"
           [showBackdrop]="false"
           [fitParent]="false">
 
   <div class="card p-0">
 
-    <div class="d-flex flex-md-row flex-column card-body p-0">
+    <div class="d-flex flex-md-row flex-column card-body p-0 overflow-auto">
 
       <color-choose class="d-block w-100 bg-white p-3" [color]="selectedColor$ | async"
                     (selected)="onColorSelected($event)"

@@ -102,10 +102,6 @@ export class OrganizationSettingsComponent implements OnInit, OnDestroy {
     this.updateOrganization(collection);
   }
 
-  public onProjectsClick() {
-    this.goBack();
-  }
-
   public goBack() {
     this.store$.dispatch(
       new NavigationAction.NavigateToPreviousUrl({

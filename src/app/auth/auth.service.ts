@@ -41,7 +41,7 @@ const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
 const ID_TOKEN_KEY = 'auth_id_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';
-const CHECK_INTERVAL = 3000; // millis
+const CHECK_INTERVAL = 10000; // millis
 const RENEW_TOKEN_EXPIRATION = 10;
 const RENEW_TOKEN_MINUTES = 4;
 
@@ -118,7 +118,7 @@ export class AuthService {
 
   public handleAuthentication() {
     this.auth0.parseHash((error, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
+      if (authResult?.accessToken && authResult?.idToken) {
         this.setSession(authResult);
         this.store$.dispatch(new UsersAction.GetCurrentUserWithLastLogin());
         this.trackUserLastLogin();
@@ -139,22 +139,20 @@ export class AuthService {
         filter(user => !!user)
       )
       .subscribe((user: User) => {
-        if (user) {
-          const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
-          this.angulartics2.eventTrack.next({
-            action: 'User returned',
-            properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
-          });
+        const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
+        this.angulartics2.eventTrack.next({
+          action: 'User returned',
+          properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
+        });
 
-          if (environment.mixpanelKey) {
-            mixpanel.identify(hashUserId(user.id));
-            mixpanel.track('User Returned', {
-              dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
-              wau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 7,
-              mau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 30,
-              hoursSinceLastLogin: hoursSinceLastLogin,
-            });
-          }
+        if (environment.mixpanelKey) {
+          mixpanel.identify(hashUserId(user.id));
+          mixpanel.track('User Returned', {
+            dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
+            wau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 7,
+            mau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 30,
+            hoursSinceLastLogin: hoursSinceLastLogin,
+          });
         }
       });
   }

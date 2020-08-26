@@ -36,7 +36,7 @@ import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} f
 import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {BsModalRef} from 'ngx-bootstrap/modal';
+import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
@@ -95,10 +95,12 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
 
   private dataExistSubscription = new Subscription();
   private currentDataResource: DataResource;
+  private initialModalsCount: number;
 
   constructor(
     private store$: Store<AppState>,
     private bsModalRef: BsModalRef,
+    private bsModalService: BsModalService,
     private collectionPermissionsPipe: CollectionPermissionsPipe,
     private linkTypePermissionsPipe: LinkTypePermissionsPipe
   ) {}
@@ -107,6 +109,7 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
     this.initData();
     this.query$ = this.store$.pipe(select(selectQuery));
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.initialModalsCount = this.bsModalService.getModalsCount();
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -209,7 +212,12 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
 
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
-    if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
+    // when another dialog is presented in top of this dialog, we don't want to listen on escape events
+    if (
+      event.code === KeyCode.Escape &&
+      !this.performingAction$.getValue() &&
+      this.initialModalsCount >= this.bsModalService.getModalsCount()
+    ) {
       this.onClose();
     }
   }

@@ -76,7 +76,12 @@ export class ViewComponent implements OnInit {
 
     this.fileAttachmentsService.init();
     this.viewSettingsService.init();
-    this.user = this.store$
+
+    this.checkEmailVerified();
+  }
+
+  private checkEmailVerified() {
+    this.store$
       .pipe(
         select(selectCurrentUser),
         filter(user => !!user),
@@ -84,10 +89,7 @@ export class ViewComponent implements OnInit {
       )
       .subscribe(user => {
         if (!user?.emailVerified) {
-          this.modalService.show(VerifyEmailModalComponent, {
-            keyboard: false,
-            backdrop: 'static',
-          });
+          this.modalService.showStaticDialog({}, VerifyEmailModalComponent);
         }
       });
   }
