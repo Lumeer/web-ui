@@ -10,21 +10,20 @@
       (nameChange)="onNewName($event)">
       <div class="d-flex flex-row text-primary flex-nowrap align-items-center mr-3"
            title="Number of users" i18n-title="@@collection.settings.users.count">
-        <i class="far fa-user mr-1" aria-hidden="true"></i>
-        <span>{{ userCount$ | async }}</span>
+        <i class="far fa-user" aria-hidden="true"></i>&nbsp;<span>{{ userCount$ | async }}</span>
       </div>
 
       <div class="d-flex flex-row text-success flex-nowrap align-items-center cursor-pointer color-success"
            (click)="onDocumentsClick()"
            title="Number of records" i18n-title="@@collection.settings.records.count">
-        <i class="far fa-file mr-1" aria-hidden="true"></i>
-        <span>{{ collection.documentsCount }}</span>
+        <i class="far fa-file" aria-hidden="true"></i>&nbsp;<span>{{ collection.documentsCount }}</span>
       </div>
 
     </resource-header>
 
     <div class="d-flex flex-row-reverse text-right mb-3" *ngIf="(organizationAndProject$ | async) as realWorkspace">
-      <copy-text-box [label]="tableIdLabel" [value]="realWorkspace.organization.id + '/' + realWorkspace.project.id + '/' + collection.id"></copy-text-box>
+      <copy-text-box [label]="tableIdLabel"
+                     [value]="realWorkspace.organization.id + '/' + realWorkspace.project.id + '/' + collection.id"></copy-text-box>
     </div>
 
     <ul class="nav nav-tabs px-5">

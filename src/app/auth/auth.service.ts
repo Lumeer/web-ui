@@ -118,7 +118,7 @@ export class AuthService {
 
   public handleAuthentication() {
     this.auth0.parseHash((error, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
+      if (authResult?.accessToken && authResult?.idToken) {
         this.setSession(authResult);
         this.store$.dispatch(new UsersAction.GetCurrentUserWithLastLogin());
         this.trackUserLastLogin();
@@ -139,22 +139,20 @@ export class AuthService {
         filter(user => !!user)
       )
       .subscribe((user: User) => {
-        if (user) {
-          const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
-          this.angulartics2.eventTrack.next({
-            action: 'User returned',
-            properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
-          });
+        const hoursSinceLastLogin: number = (+new Date() - +user.lastLoggedIn) / 1000 / 60 / 60;
+        this.angulartics2.eventTrack.next({
+          action: 'User returned',
+          properties: {category: 'User Actions', label: 'hoursSinceLastLogin', value: hoursSinceLastLogin},
+        });
 
-          if (environment.mixpanelKey) {
-            mixpanel.identify(hashUserId(user.id));
-            mixpanel.track('User Returned', {
-              dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
-              wau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 7,
-              mau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 30,
-              hoursSinceLastLogin: hoursSinceLastLogin,
-            });
-          }
+        if (environment.mixpanelKey) {
+          mixpanel.identify(hashUserId(user.id));
+          mixpanel.track('User Returned', {
+            dau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24,
+            wau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 7,
+            mau: hoursSinceLastLogin > 1 && hoursSinceLastLogin <= 24 * 30,
+            hoursSinceLastLogin: hoursSinceLastLogin,
+          });
         }
       });
   }

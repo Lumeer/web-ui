@@ -13,15 +13,13 @@
       (codeChange)="onNewCode($event)">
       <div class="d-flex flex-row flex-nowrap align-items-center mr-3"
            title="Number of users" i18n-title="@@project.settings.users.count">
-        <i class="far fa-user mr-1" aria-hidden="true"></i>&nbsp;
-        <span>{{ userCount$ | async }}</span>
+        <i class="far fa-user" aria-hidden="true"></i>&nbsp;<span>{{ userCount$ | async }}</span>
       </div>
 
       <div class="d-flex flex-row flex-nowrap align-items-center cursor-pointer color-success"
            (click)="onCollectionsClick()"
            title="Number of tables" i18n-title="@@project.settings.collections.count">
-        <i class="far fa-edit mr-1" aria-hidden="true"></i>&nbsp;
-        <span>{{project.collectionsCount}}</span>
+        <i class="far fa-edit" aria-hidden="true"></i>&nbsp;<span>{{project.collectionsCount}}</span>
       </div>
     </resource-header>
 
