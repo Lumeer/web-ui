@@ -41,7 +41,7 @@ const REDIRECT_KEY = 'auth_login_redirect';
 const ACCESS_TOKEN_KEY = 'auth_access_token';
 const ID_TOKEN_KEY = 'auth_id_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';
-const CHECK_INTERVAL = 10000; // millis
+const CHECK_INTERVAL = 3000; // millis
 const RENEW_TOKEN_EXPIRATION = 10;
 const RENEW_TOKEN_MINUTES = 4;
 
