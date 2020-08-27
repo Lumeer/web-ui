@@ -42,16 +42,14 @@ export class SentryHttpInterceptor implements HttpInterceptor {
   private processError(error: any): void {
     if (error instanceof Error || error instanceof ErrorEvent) {
       Sentry.captureException(error);
-    }
-
-    if (error instanceof HttpErrorResponse) {
+    } else if (error instanceof HttpErrorResponse) {
       if (error.error instanceof ErrorEvent) {
         Sentry.captureException(error.error);
       }
 
       Sentry.captureMessage(`${error.status}: ${error.error}`, Severity.Error);
+    } else {
+      Sentry.captureException(error);
     }
-
-    Sentry.captureMessage(error);
   }
 }
