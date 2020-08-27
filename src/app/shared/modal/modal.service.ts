@@ -167,7 +167,7 @@ export class ModalService {
         const functions = (attributesResource.attributes || []).filter(
           attr => attr.id !== attributeId && !!attr.function?.js
         ).length;
-        if (limits?.functionsPerCollection !== -1 && functions >= limits.functionsPerCollection) {
+        if (limits?.functionsPerCollection !== -1 && functions >= limits?.functionsPerCollection) {
           this.notifyFunctionsLimit();
         } else {
           this.showAttributeFunctionDialog(attributeId, collectionId, linkTypeId);

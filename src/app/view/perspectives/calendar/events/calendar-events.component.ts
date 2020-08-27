@@ -184,7 +184,7 @@ export class CalendarEventsComponent implements OnInit, OnChanges {
 
   private isSomeStemConfigWritable(): boolean {
     const linkTypesMap = objectsByIdMap(this.linkTypes);
-    return (this.config.stemsConfigs || []).some(config =>
+    return (this.config?.stemsConfigs || []).some(config =>
       calendarStemConfigIsWritable(config, this.permissions, linkTypesMap)
     );
   }

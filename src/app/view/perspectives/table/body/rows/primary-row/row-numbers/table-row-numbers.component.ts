@@ -76,7 +76,11 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
 
   public ngOnInit() {
     if (window['ResizeObserver']) {
-      this.resizeObserver = new ResizeObserver(entries => this.onElementResize(entries));
+      this.resizeObserver = new ResizeObserver(entries =>
+        window.requestAnimationFrame(() => {
+          this.onElementResize(entries);
+        })
+      );
     }
 
     this.firstNumber$ = this.bindFirstNumber();

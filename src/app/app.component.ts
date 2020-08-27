@@ -49,6 +49,7 @@ import {LUMEER_REFERRAL} from './core/constants';
 import {UserActivityService} from './auth/user-activity.service';
 import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
 import {BsLocaleService} from 'ngx-bootstrap/datepicker';
+import {parseQueryParams} from './core/store/navigation/query/query.util';
 
 @Component({
   selector: 'lmr-app',
@@ -87,9 +88,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   private storeReferralCookie() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('ref')) {
-      const referral = urlParams.get('ref');
+    const urlParams = parseQueryParams(window.location.search);
+    if (urlParams['ref']) {
+      const referral = urlParams['ref'];
 
       if (!Cookies.get(LUMEER_REFERRAL)) {
         const domain = environment.production || environment.name ? '.lumeer.io' : 'localhost';
