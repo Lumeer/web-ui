@@ -485,3 +485,13 @@ export function checkOrTransformQueryAttribute<T extends QueryAttribute>(
 function findAttribute(attributes: Attribute[], attributeId: string): Attribute {
   return (attributes || []).find(attr => attr.id === attributeId);
 }
+
+export function parseQueryParams(queryString: string) {
+  const query = {};
+  const pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+  for (let i = 0; i < pairs.length; i++) {
+    const pair = pairs[i].split('=');
+    query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  }
+  return query;
+}

@@ -85,7 +85,11 @@ export class TopPanelComponent implements OnInit, OnChanges, AfterViewInit, OnDe
     this.store$.dispatch(new OrganizationsAction.GetCodes());
 
     if (window['ResizeObserver']) {
-      this.resizeObserver = new ResizeObserver(() => this.onSideElementResize());
+      this.resizeObserver = new ResizeObserver(() =>
+        window.requestAnimationFrame(() => {
+          this.onSideElementResize();
+        })
+      );
     } else {
       this.subscriptions.add(this.subscribeToWorkspaceChanges());
     }
