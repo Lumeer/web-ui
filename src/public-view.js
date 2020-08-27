@@ -62,12 +62,12 @@ if (typeof lumeer_public_view_fce !== 'function') {
 
     if (language === 'cs') {
       useInLumeer = `https://get.lumeer.io/cs/open/${organization}/${project}`;
-      publicView = `http://localhost:7000/ui/`;
+      publicView = `https://d2b894al51csxx.cloudfront.net/cs/index.html`;
       copyText = createSvgUrl(copyTextSvgCs());
       viewLargerText = createSvgUrl(viewLargerSvgCs());
     } else {
       useInLumeer = `https://get.lumeer.io/en/open/${organization}/${project}`;
-      publicView = `http://localhost:7000/ui/`;
+      publicView = `https://d2b894al51csxx.cloudfront.net/en/index.html`;
       copyText = createSvgUrl(copyTextSvgEn());
       viewLargerText = createSvgUrl(viewLargerSvgEn());
     }

@@ -1,7 +1,7 @@
 <div class="custom-control custom-checkbox mt-2">
   <input [id]="savePositionId"
-         [attr.checked]="config.positionSaved"
-         [checked]="config.positionSaved"
+         [attr.checked]="config?.positionSaved"
+         [checked]="config?.positionSaved"
          (change)="onSavePositionChange($event.target.checked)"
          type="checkbox"
          #savePositionCheckbox
@@ -15,8 +15,8 @@
 
 <div class="custom-control custom-checkbox mt-2">
   <input [id]="showDatesId"
-         [attr.checked]="config.showDates"
-         [checked]="config.showDates"
+         [attr.checked]="config?.showDates"
+         [checked]="config?.showDates"
          (change)="onShowDatesChange($event.target.checked)"
          type="checkbox"
          #datesCheckbox
@@ -30,8 +30,8 @@
 
 <div class="custom-control custom-checkbox mt-2">
   <input [id]="lockResizeId"
-         [attr.checked]="config.lockResize"
-         [checked]="config.lockResize"
+         [attr.checked]="config?.lockResize"
+         [checked]="config?.lockResize"
          (change)="onLockResizeChange($event.target.checked)"
          type="checkbox"
          #resizeCheckbox
