@@ -177,7 +177,6 @@ export class AuthService {
     }
 
     this.clearLoginData();
-    this.saveLoginRedirectPath(this.router.url);
     window.location.assign(this.getLogoutUrl());
   }
 

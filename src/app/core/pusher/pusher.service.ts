@@ -299,6 +299,7 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Collection:update', data => {
       if (this.isCurrentWorkspace(data)) {
+        this.fetchDataIfCollectionIsNew(data.object.id);
         this.store$.dispatch(
           new CollectionsAction.UpdateSuccess({
             collection: convertCollectionDtoToModel(data.object, data.correlationId),
@@ -308,6 +309,7 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Collection:update:ALT', data => {
       if (this.isCurrentWorkspace(data)) {
+        this.fetchDataIfCollectionIsNew(data.id);
         this.store$.dispatch(
           new CollectionsAction.GetSingle({
             collectionId: data.id,
@@ -360,6 +362,20 @@ export class PusherService implements OnDestroy {
         );
       }
     });
+  }
+
+  private fetchDataIfCollectionIsNew(collectionId: string) {
+    this.store$
+      .pipe(
+        select(selectCollectionsDictionary),
+        map(collectionsMap => collectionsMap[collectionId]),
+        take(1)
+      )
+      .subscribe(collection => {
+        if (!collection) {
+          this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId}]}}));
+        }
+      });
   }
 
   private bindViewEvents() {

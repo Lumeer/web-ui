@@ -50,6 +50,9 @@ export class TableHierarchyCellComponent implements OnChanges {
   @Input()
   public maxLevel: number;
 
+  @Input()
+  public canManageConfig: boolean;
+
   @Output()
   public toggle = new EventEmitter();
 
