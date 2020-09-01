@@ -1,0 +1,8 @@
+.alert-warning {
+  display: grid;
+  grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
+
+  .text {
+    font-size: 0.85rem;
+  }
+}

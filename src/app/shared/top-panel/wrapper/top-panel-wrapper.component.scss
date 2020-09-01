@@ -1,5 +1,5 @@
 :host {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: calc(100vh - var(--browser-warning-height, 0px));
 }

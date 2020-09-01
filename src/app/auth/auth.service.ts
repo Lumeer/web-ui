@@ -42,7 +42,7 @@ const ACCESS_TOKEN_KEY = 'auth_access_token';
 const ID_TOKEN_KEY = 'auth_id_token';
 const EXPIRES_AT_KEY = 'auth_expires_at';
 const CHECK_INTERVAL = 3000; // millis
-const RENEW_TOKEN_EXPIRATION = 10;
+const RENEW_TOKEN_EXPIRATION = 10; // minutes
 const RENEW_TOKEN_MINUTES = 4;
 
 @Injectable({
@@ -57,7 +57,6 @@ export class AuthService {
   private expiresAt: number;
 
   private lastRenewedAt: number;
-  private checkingToken: boolean;
   private intervalId: number;
 
   public constructor(
@@ -270,7 +269,11 @@ export class AuthService {
     if (this.isAuthenticated()) {
       const expiresAt = this.getExpiresAt();
       const expiresInMinutes = (expiresAt - Date.now()) / 1000 / 60;
-      if (expiresInMinutes > RENEW_TOKEN_EXPIRATION || this.activityService.getLastActivityBeforeMinutes() > 15) {
+      const maximumInactivity = environment.sessionTimeout / 2;
+      if (
+        expiresInMinutes > RENEW_TOKEN_EXPIRATION ||
+        this.activityService.getLastActivityBeforeMinutes() > maximumInactivity
+      ) {
         return;
       }
 
@@ -281,15 +284,24 @@ export class AuthService {
           this.renewToken();
         });
       }
-    } else if (!this.checkingToken) {
-      this.checkingToken = true;
-      this.ngZone.runOutsideAngular(() => {
-        this.checkToken().subscribe(valid => {
-          this.checkingToken = false;
-          if (!valid) {
-            this.login(this.router.url);
-          }
-        });
+    } else {
+      this.redirectOnUnauthorized();
+    }
+  }
+
+  private redirectOnUnauthorized() {
+    this.ngZone.run(() => {
+      this.clearLoginData();
+      this.navigateToSessionExpiredPage();
+    });
+  }
+
+  private navigateToSessionExpiredPage() {
+    if (!this.isPathOutsideApp(this.router.url)) {
+      this.router.navigate(['/', 'session-expired'], {
+        queryParams: {
+          redirectUrl: this.router.url,
+        },
       });
     }
   }
@@ -299,12 +311,12 @@ export class AuthService {
   }
 
   public saveLoginRedirectPath(redirectPath: string) {
-    if (!this.isRestrictedPath(redirectPath)) {
+    if (!this.isPathOutsideApp(redirectPath)) {
       localStorage.setItem(REDIRECT_KEY, redirectPath);
     }
   }
 
-  private isRestrictedPath(redirectPath: string): boolean {
+  public isPathOutsideApp(redirectPath: string): boolean {
     const restrictedPaths = ['/agreement', '/logout', '/auth', '/session-expired'];
     return restrictedPaths.some(path => {
       const pathWithOrigin = window.location.origin + this.location.prepareExternalUrl(path);

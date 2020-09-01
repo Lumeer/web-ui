@@ -1,24 +1,45 @@
 $session-width: 350px;
 
+@media (max-width: 768px) {
+  :host {
+    background-position: center;
+  }
+}
+
 :host {
+  background-image: url(https://www.lumeer.io/wp-content/uploads/lumeer-img/lumeer-back.jpg);
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-color: white;
   height: 100%;
   width: 100%;
-  background: radial-gradient(#40404b, #111118) rgba(34, 34, 40, 0.94);
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8 !important;
+  background: radial-gradient(#40404b, #111118) rgba(34, 34, 40, 0.94);
 }
 
 .card {
   box-shadow: 0 0 40px 4px #111118;
   width: $session-width;
+  z-index: 3;
 }
 
 label > *::after {
   content: '\2009';
 }
 
-a {
+button {
   position: relative;
   right: 1px;
   top: 1px;

@@ -69,10 +69,12 @@ export class SessionService {
   }
 
   private navigateToSessionExpiredPage() {
-    this.router.navigate(['/', 'session-expired'], {
-      queryParams: {
-        redirectUrl: this.router.url,
-      },
-    });
+    if (!this.authService.isPathOutsideApp(this.router.url)) {
+      this.router.navigate(['/', 'session-expired'], {
+        queryParams: {
+          redirectUrl: this.router.url,
+        },
+      });
+    }
   }
 }

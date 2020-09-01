@@ -2,4 +2,6 @@
                    (hide)="onHideLoadingIndicator()">
 </loading-indicator>
 
+<public-project-message *ngIf="showPublicProjectWarning$ | async"></public-project-message>
+
 <router-outlet></router-outlet>

@@ -41,7 +41,6 @@ const authRoutes: Routes = [
   },
   {
     path: 'session-expired',
-    canActivate: [AuthGuard],
     component: SessionExpiredComponent,
   },
 ];

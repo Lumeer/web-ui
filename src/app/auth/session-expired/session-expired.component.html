@@ -1,21 +1,21 @@
+<div class="background-overlay"></div>
 <div class="card border-light mb-3">
   <div class="card-header">
-    <lumeer-logo [height]="48"
-                 [text]="'Lumeer'">
+    <lumeer-logo [height]="48" text="Lumeer">
     </lumeer-logo>
   </div>
-  <div class="card-body">
-    <p i18n="@@session.expired.message">
+  <div class="card-body" *ngIf="{authenticated: isAuthenticated$ | async, redirecting: redirecting$ | async} as data">
+    <p i18n="@@session.expired.message" *ngIf="data.authenticated">
       You have been inactive for {{sessionTimeout}} minutes and the application logged out for security reasons.
       Click Continue to log in again.
     </p>
+    <p i18n="@@session.expired.message.unathenticated" *ngIf="!data.authenticated">
+      You have been logged out from application for security reasons.
+      Click Continue to log in.
+    </p>
 
-    <a [href]="redirectUrl$ | async"
-       class="btn btn-success">
-        <span class="text-uppercase"
-              i18n="@@button.continue">Continue</span>
-      &nbsp;
-      <i class="fa fa-chevron-right"></i>
-    </a>
+    <button class="btn btn-success" [disabled]="data.redirecting" (click)="onContinue()">
+      <span class="text-uppercase" i18n="@@button.continue">Continue</span>&nbsp;<i class="fa fa-chevron-right"></i>
+    </button>
   </div>
 </div>
