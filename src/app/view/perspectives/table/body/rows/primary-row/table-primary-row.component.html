@@ -8,6 +8,7 @@
                       [cursor]="cursor"
                       [level]="hierarchyLevel$ | async"
                       [maxLevel]="maxLevel"
+                      [canManageConfig]="canManageConfig"
                       (toggle)="onHierarchyToggle()"
                       (click)="unsetCursor.emit()"
                       class="table-border-right table-border-bottom px-1">

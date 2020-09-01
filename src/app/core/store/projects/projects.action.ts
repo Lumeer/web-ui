@@ -61,6 +61,7 @@ export enum ProjectsActionType {
   GET_TEMPLATES_SUCCESS = '[Projects] Get Templates :: Success',
   GET_TEMPLATES_FAILURE = '[Projects] Get Templates :: Failure',
 
+  DISMISS_WARNING_MESSAGE = '[Projects] Dismiss Warning Message',
   SWITCH_WORKSPACE = '[Projects] Switch Workspace',
   CLEAR_WORKSPACE_DATA = '[Projects] Clear Workspace Data',
 }
@@ -245,6 +246,12 @@ export namespace ProjectsAction {
     ) {}
   }
 
+  export class DismissWarningMessage implements Action {
+    public readonly type = ProjectsActionType.DISMISS_WARNING_MESSAGE;
+
+    public constructor(public payload: {projectId: string}) {}
+  }
+
   export class SwitchWorkspace implements Action {
     public readonly type = ProjectsActionType.SWITCH_WORKSPACE;
 
@@ -283,6 +290,7 @@ export namespace ProjectsAction {
     | GetTemplates
     | GetTemplatesSuccess
     | GetTemplatesFailure
+    | DismissWarningMessage
     | SwitchWorkspace
     | ClearWorkspaceData;
 }

@@ -38,7 +38,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
   }
 
   public createDocument(document: DocumentDto): Observable<DocumentDto> {
-    return of({...document, id: generateId(), dataVersion: 0});
+    return of({...document, id: generateId(), dataVersion: 1, creationDate: new Date().getTime()});
   }
 
   public patchDocument(
@@ -55,6 +55,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
         ...documentFromStore,
         dataVersion: (documentFromStore.dataVersion || 0) + 1,
         data: document.data,
+        updateDate: new Date().getTime(),
       }))
     );
   }

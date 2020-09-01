@@ -58,27 +58,32 @@ export const selectCurrentUserIsManager = createSelector(
   }
 );
 
-export const selectCollectionsByReadPermission = createSelector(
-  selectCurrentUserIsManager,
-  selectAllCollections,
-  selectAllLinkTypes,
-  selectCurrentView,
-  selectCurrentUser,
-  (isManager, collections, linkTypes, view, user) => {
-    if (isManager) {
-      return collections;
+const selectCollectionsByPermission = (role: Role) =>
+  createSelector(
+    selectCurrentUserIsManager,
+    selectAllCollections,
+    selectAllLinkTypes,
+    selectCurrentView,
+    selectCurrentUser,
+    (isManager, collections, linkTypes, view, user) => {
+      if (isManager) {
+        return collections;
+      }
+      const collectionIdsFromView = view && getAllCollectionIdsFromQuery(view.query, linkTypes);
+      return collections.filter(
+        collection =>
+          userHasRoleInResource(user, collection, role) ||
+          (collectionIdsFromView &&
+            collectionIdsFromView.includes(collection.id) &&
+            userHasRoleInResource(user, view, role) &&
+            authorHasRoleInView(view, collection.id, role))
+      );
     }
-    const collectionIdsFromView = view && getAllCollectionIdsFromQuery(view.query, linkTypes);
-    return collections.filter(
-      collection =>
-        userHasRoleInResource(user, collection, Role.Read) ||
-        (collectionIdsFromView &&
-          collectionIdsFromView.includes(collection.id) &&
-          userHasRoleInResource(user, view, Role.Read) &&
-          authorHasRoleInView(view, collection.id, Role.Read))
-    );
-  }
-);
+  );
+
+export const selectCollectionsByReadPermission = selectCollectionsByPermission(Role.Read);
+
+export const selectCollectionsByWritePermission = selectCollectionsByPermission(Role.Write);
 
 export const selectCollectionsByQuery = createSelector(
   selectCollectionsByReadPermission,

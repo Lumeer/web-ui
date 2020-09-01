@@ -1,4 +1,5 @@
-<context-menu [disabled]="!(indentable$ | async) && !(outdentable$ | async)">
+<context-menu
+  [disabled]="(!(indentable$ | async) && !(outdentable$ | async)) || !canManageConfig || !(allowedPermissions$ | async)?.writeWithView">
   <!-- TODO add collapse/expand menu items -->
   <ng-template *ngIf="indentable$ | async"
                (execute)="onIndent()"

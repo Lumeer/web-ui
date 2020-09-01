@@ -19,15 +19,16 @@
 
 import {Location} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Route, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {BehaviorSubject, Observable, timer} from 'rxjs';
+import {map, take, tap} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {ModalService} from '../../shared/modal/modal.service';
 import {AuthService} from '../auth.service';
+import {SessionService} from '../session.service';
 
 @Component({
   selector: 'session-expired',
@@ -37,21 +38,31 @@ import {AuthService} from '../auth.service';
 export class SessionExpiredComponent implements OnInit {
   public readonly sessionTimeout = environment.sessionTimeout;
 
-  public redirectUrl$: Observable<string>;
+  public redirecting$ = new BehaviorSubject(false);
+  public isAuthenticated$: Observable<boolean>;
+
+  private redirectUrl: string;
 
   public constructor(
     private location: Location,
     private route: ActivatedRoute,
     private store$: Store<AppState>,
     private modalService: ModalService,
-    private authService: AuthService
+    private sessionService: SessionService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   public ngOnInit() {
     this.modalService.destroy();
+    this.bindAuthenticated();
     this.disableBackButton();
     this.clearStore();
     this.bindRedirectUrl();
+  }
+
+  private bindAuthenticated() {
+    this.isAuthenticated$ = timer(0, 3000).pipe(map(() => this.authService.isAuthenticated()));
   }
 
   private disableBackButton() {
@@ -66,10 +77,25 @@ export class SessionExpiredComponent implements OnInit {
   }
 
   private bindRedirectUrl() {
-    this.redirectUrl$ = this.route.queryParamMap.pipe(
-      map(params => params.get('redirectUrl') || ''),
-      tap(redirectUrl => this.authService.saveLoginRedirectPath(redirectUrl)),
-      map(redirectUrl => window.location.origin + this.location.prepareExternalUrl(redirectUrl))
-    );
+    this.route.queryParamMap
+      .pipe(
+        map(params => params.get('redirectUrl') || ''),
+        tap(redirectUrl => this.authService.saveLoginRedirectPath(redirectUrl)),
+        take(1)
+      )
+      .subscribe(redirectUrl => (this.redirectUrl = redirectUrl));
+  }
+
+  public onContinue() {
+    this.redirecting$.next(true);
+
+    this.authService.checkToken().subscribe(valid => {
+      if (valid) {
+        this.sessionService.init();
+        this.router.navigateByUrl(this.redirectUrl);
+      } else {
+        this.authService.login(this.redirectUrl);
+      }
+    });
   }
 }

@@ -47,6 +47,8 @@ export function projectsReducer(
       return onChangePermission(state, action);
     case ProjectsActionType.GET_TEMPLATES:
       return {...state, templatesState: LoadingState.Loading};
+    case ProjectsActionType.DISMISS_WARNING_MESSAGE:
+      return {...state, dismissedWarningIds: [...state.dismissedWarningIds, action.payload.projectId]};
     case ProjectsActionType.GET_TEMPLATES_SUCCESS:
       return {...state, templates: action.payload.templates, templatesState: LoadingState.Loaded};
     case ProjectsActionType.GET_TEMPLATES_FAILURE:

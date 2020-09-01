@@ -17,8 +17,8 @@
 
   <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
     <div class="small text-notice text-nowrap" *ngIf="resourceType === collectionResourceType">
-      <span i18n="@@document.detail.version">Version {{dataResource?.dataVersion}}</span><br/>
-      <span i18n="@@document.detail.createdBy">Created on {{dataResource?.creationDate | date : 'mediumDate'}}
+      <span i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
+      <span i18n="@@document.detail.createdBy">Created on {{dataResource.creationDate | date : 'mediumDate'}}
         by {{createdBy$ | async}}</span>
       <span *ngIf="dataResource.updateDate"
             i18n="@@document.detail.modifiedBy"><br/>Last modified on {{dataResource.updateDate | date : 'mediumDate'}}

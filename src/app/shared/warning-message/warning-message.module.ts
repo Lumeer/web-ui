@@ -27,6 +27,7 @@ import {EmptyStateComponent} from './empty-state/empty-state.component';
 import {InvalidQueryComponent} from './invalid-query/invalid-query.component';
 import {EmptyDataComponent} from './empty-data/empty-data.component';
 import {SelectModule} from '../select/select.module';
+import {PublicProjectMessageComponent} from './public-project-message/public-project-message.component';
 
 @NgModule({
   imports: [CommonModule, FormsModule, PipesModule, SelectModule],
@@ -36,6 +37,7 @@ import {SelectModule} from '../select/select.module';
     EmptyRecordsComponent,
     InvalidQueryComponent,
     EmptyDataComponent,
+    PublicProjectMessageComponent,
   ],
   exports: [
     EmptySearchComponent,
@@ -43,6 +45,7 @@ import {SelectModule} from '../select/select.module';
     EmptyRecordsComponent,
     InvalidQueryComponent,
     EmptyDataComponent,
+    PublicProjectMessageComponent,
   ],
 })
 export class WarningMessageModule {}

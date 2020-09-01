@@ -31,6 +31,7 @@ export interface ProjectsState extends EntityState<Project> {
   loaded: {[organizationId: string]: boolean};
   templates: Project[];
   templatesState: LoadingState;
+  dismissedWarningIds: string[];
 }
 
 export const projectsAdapter = createEntityAdapter<Project>({selectId: project => project.id});
@@ -40,6 +41,7 @@ export const initialProjectsState: ProjectsState = projectsAdapter.getInitialSta
   loaded: {},
   templates: [],
   templatesState: LoadingState.NotLoaded,
+  dismissedWarningIds: [],
 });
 
 export const selectProjectsState = (state: AppState) => state.projects;
@@ -97,3 +99,5 @@ export const selectPublicProject = createSelector(
 );
 
 export const selectProjectTemplatesLoadingState = createSelector(selectProjectsState, state => state.templatesState);
+
+export const selectProjectDismissedWarningIds = createSelector(selectProjectsState, state => state.dismissedWarningIds);

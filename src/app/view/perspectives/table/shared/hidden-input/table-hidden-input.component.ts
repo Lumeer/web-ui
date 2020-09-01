@@ -227,8 +227,8 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
       )
       .subscribe(([tablePart, tableRow, tableColumn, tableCursor]) => {
         if (tableRow) {
-          const column = tablePart.columns && tablePart.columns[tableCursor.columnIndex];
-          const attributeId = column && column.attributeIds && column.attributeIds[0];
+          const column = tablePart?.columns?.[tableCursor.columnIndex];
+          const attributeId = column?.attributeIds?.[0];
           if (attributeId) {
             if (tablePart.collectionId) {
               this.copyDocumentValue(tableRow.documentId, tablePart.collectionId, attributeId);

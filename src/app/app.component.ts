@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterViewInit, Component, ViewContainerRef} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewContainerRef} from '@angular/core';
 import {Title} from '@angular/platform-browser';
 import {Router} from '@angular/router';
 import {select, Store} from '@ngrx/store';
@@ -26,8 +26,8 @@ import * as Sentry from '@sentry/browser';
 import {Angulartics2GoogleAnalytics} from 'angulartics2/ga';
 import mixpanel from 'mixpanel-browser';
 import * as moment from 'moment';
-import {BehaviorSubject, of, Subscription} from 'rxjs';
-import {catchError, filter, first, timeout, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {catchError, filter, first, map, timeout, withLatestFrom} from 'rxjs/operators';
 import smartlookClient from 'smartlook-client';
 import {environment} from '../environments/environment';
 import {AuthService} from './auth/auth.service';
@@ -50,13 +50,15 @@ import {UserActivityService} from './auth/user-activity.service';
 import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
 import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {parseQueryParams} from './core/store/navigation/query/query.util';
+import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core/store/projects/projects.state';
 
 @Component({
   selector: 'lmr-app',
   templateUrl: './app.component.html',
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
   public lazyLoading$ = new BehaviorSubject(false);
+  public showPublicProjectWarning$: Observable<boolean>;
 
   constructor(
     private angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics,
@@ -85,6 +87,21 @@ export class AppComponent implements AfterViewInit {
     this.initCheckUserInteraction();
     this.initTooltipConfig();
     this.initLanguage();
+  }
+
+  public ngOnInit() {
+    this.subscribeToData();
+  }
+
+  private subscribeToData() {
+    if (environment.publicView) {
+      this.showPublicProjectWarning$ = of(false);
+    } else {
+      this.showPublicProjectWarning$ = combineLatest([
+        this.store$.pipe(select(selectProjectByWorkspace)),
+        this.store$.pipe(select(selectProjectDismissedWarningIds)),
+      ]).pipe(map(([project, dismissedIds]) => project && project.isPublic && !dismissedIds.includes(project.id)));
+    }
   }
 
   private storeReferralCookie() {

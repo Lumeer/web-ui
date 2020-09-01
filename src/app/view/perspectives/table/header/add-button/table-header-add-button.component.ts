@@ -35,6 +35,7 @@ import {
 } from '../../../../../core/store/collections/collections.state';
 import {
   selectCollectionsByReadPermission,
+  selectCollectionsByWritePermission,
   selectLinkTypesByReadPermission,
 } from '../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
@@ -84,9 +85,17 @@ export class TableHeaderAddButtonComponent implements OnChanges {
     this.collections$ = combineLatest([
       this.store$.pipe(select(selectCollectionsByReadPermission)),
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
+      this.store$.pipe(select(selectCollectionsByWritePermission)),
     ]).pipe(
-      map(([collections, lastCollectionId]) => {
-        return collections.filter(collection => collection.id !== lastCollectionId).slice(0, ITEMS_LIMIT);
+      map(([collections, lastCollectionId, writableCollections]) => {
+        const writableCollectionIds = writableCollections.map(collection => collection.id);
+        if (!writableCollectionIds.includes(lastCollectionId)) {
+          return [];
+        }
+
+        return collections
+          .filter(collection => collection.id !== lastCollectionId && writableCollectionIds.includes(collection.id))
+          .slice(0, ITEMS_LIMIT);
       })
     );
   }

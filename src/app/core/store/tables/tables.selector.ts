@@ -117,11 +117,11 @@ export const selectTableRowOutdentable = (cursor: TableBodyCursor) =>
     return Boolean((document && document.metaData && document.metaData.parentId) || row.parentDocumentId);
   });
 
+export const selectTableFirstCollectionId = (tableId: string) =>
+  createSelector(selectTableById(tableId), table => table?.config?.parts?.[0].collectionId);
+
 export const selectTableLastCollectionId = (tableId: string) =>
-  createSelector(selectTableById(tableId), table => {
-    const parts = table && table.config && table.config.parts;
-    return parts && parts[parts.length - 1].collectionId;
-  });
+  createSelector(selectTableById(tableId), table => table?.config?.parts?.[table.config.parts.length - 1].collectionId);
 
 export const selectTableCursor = createSelector(selectTablesState, state => state.cursor);
 export const selectTableCursorSelected = (cursor: TableCursor) =>
