@@ -1,8 +1,18 @@
-.alert-warning {
+@import '~src/styles/variables';
+
+.alert-danger {
   display: grid;
   grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
 
   .text {
     font-size: 0.85rem;
+  }
+}
+
+.hover-scale i {
+  transition: all $animation-duration;
+
+  &:hover {
+    transform: scale(1.5);
   }
 }

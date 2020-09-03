@@ -21,7 +21,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context>
@@ -49,7 +49,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context>
@@ -89,7 +89,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="resource.new.dialog.icon.label" datatype="html">
         <source>
@@ -368,13 +368,13 @@
         <source>Start with empty project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit><trans-unit id="templates.button.use" datatype="html">
         <source>Use this template</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.project.copy.title" datatype="html">
         <source>
@@ -627,6 +627,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/empty-data/empty-data.component.html</context>
           <context context-type="linenumber">29</context>
+        </context-group>
+      </trans-unit><trans-unit id="public.project.warning" datatype="html">
+        <source>PUBLIC PROJECT: Anyone can see contents of this project. Do no store any sensitive data in this project.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/warning-message/public-project-message/public-project-message.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.dismissClose" datatype="html">
+        <source>Dismiss</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/warning-message/public-project-message/public-project-message.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source>
@@ -952,7 +964,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit><trans-unit id="session.expired.message" datatype="html">
         <source>
@@ -962,6 +974,15 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context>
           <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="session.expired.message.unathenticated" datatype="html">
+        <source>
+      You have been logged out from application for security reasons.
+      Click Continue to log in.
+    </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="color-picker.select.icon" datatype="html">
         <source>1. Choose color
@@ -1115,13 +1136,13 @@
           <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.version" datatype="html">
-        <source>Version <x id="INTERPOLATION" equiv-text="{{dataResource?.dataVersion}}"/></source>
+        <source>Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.createdBy" datatype="html">
-        <source>Created on <x id="INTERPOLATION" equiv-text="{{dataResource?.creationDate | date : &apos;mediumDate&apos;}}"/>
+        <source>Created on <x id="INTERPOLATION" equiv-text="{{dataResource.creationDate | date : &apos;mediumDate&apos;}}"/>
         by <x id="INTERPOLATION_1" equiv-text="{{createdBy$ | async}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
@@ -2248,7 +2269,7 @@
         <source>Number of records</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.attributes" datatype="html">
         <source>
@@ -2256,7 +2277,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
         <source>
@@ -2264,7 +2285,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">42</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.link.types" datatype="html">
         <source>
@@ -2272,7 +2293,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
         <source>
@@ -2280,7 +2301,7 @@
         </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.attributes.header" datatype="html">
         <source>Existing attributes</source>
@@ -2705,7 +2726,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit><trans-unit id="table.body.row.outdent" datatype="html">
         <source>Outdent</source>
@@ -2715,7 +2736,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/primary-row/hierarchy-cell/menu/table-hierarchy-cell-menu.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit><trans-unit id="table.body.row.clone" datatype="html">
         <source>Duplicate row</source>
@@ -3441,19 +3462,19 @@
         <source>Number of projects</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/organization-settings.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail" datatype="html">
         <source>Detail</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/organization-settings.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.users" datatype="html">
         <source>Users</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/organization/organization-settings.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit><trans-unit id="project.settings.users.count" datatype="html">
         <source>Number of users</source>
@@ -3465,25 +3486,25 @@
         <source>Number of tables</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="project.settings.tab.users" datatype="html">
         <source>Users</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit><trans-unit id="project.settings.tab.sequences" datatype="html">
         <source>Sequences</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">37</context>
         </context-group>
       </trans-unit><trans-unit id="project.settings.tab.template" datatype="html">
-        <source>Template</source>
+        <source>Publish Project</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/project-settings.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit><trans-unit id="organizations.tab.detail.contact.invoicingContact" datatype="html">
         <source>Invoicing Contact</source>
@@ -4042,7 +4063,7 @@
         </context-group>
       </trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.help" datatype="html">
         <source>
-          The view that opens when the template is first loaded either in the project creation dialog.
+          The view that opens when the project is first loaded in the project creation dialog or embedded view.
           Leave empty for the default home page.
         </source>
         <context-group purpose="location">
