@@ -21,27 +21,27 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {TableComponent} from './table.component';
-import {TableBodyComponent} from './body/table-body.component';
-import {TableHeaderComponent} from './header/table-header.component';
-import {TableRowComponent} from './body/table-row/table-row.component';
+import {TableHeaderComponent} from './content/header/table-header.component';
+import {TableRowComponent} from './content/row/table-row.component';
 import {DataInputModule} from '../data-input/data-input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {ColumnHandleLeftPipe} from './pipes/column-handle-left.pipe';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {TableItemSizeDirective} from './strategy/table-item-size-directive';
-import {TableAlternativeHeaderComponent} from './alternative-header/table-alternative-header.component';
-import {TableResizeHeaderComponent} from './resize-header/table-resize-header.component';
+import {TableAlternativeHeaderComponent} from './content/alternative-header/table-alternative-header.component';
+import {TableResizeHeaderComponent} from './content/resize-header/table-resize-header.component';
+import {TableRowDataCursorPipe} from './pipes/table-row-data-cursor.pipe';
 
 @NgModule({
   declarations: [
     TableComponent,
-    TableBodyComponent,
     TableHeaderComponent,
     TableRowComponent,
     ColumnHandleLeftPipe,
     TableItemSizeDirective,
     TableAlternativeHeaderComponent,
     TableResizeHeaderComponent,
+    TableRowDataCursorPipe,
   ],
   imports: [CommonModule, DataInputModule, PipesModule, DragDropModule, ScrollingModule],
   exports: [TableComponent],

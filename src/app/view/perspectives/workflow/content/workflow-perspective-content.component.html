@@ -1,7 +1,7 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
-  <lmr-table *ngFor="let collection of collections" [style.height.px]="500"
-             [collection]="collection"
-             [documents]="documents | documentsByCollection:collection.id">
+  <lmr-table [columns]="columns$ | async"
+             [rows]="rows"
+             (columnChange)="onColumnsChange($event)">
   </lmr-table>
 
 </ng-container>

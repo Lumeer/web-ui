@@ -17,17 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
+import {TableRow} from '../model/table-row';
 import {TableColumn} from '../model/table-column';
+import {DataCursor} from '../../data-input/data-cursor';
 
-@Component({
-  selector: 'table-alternative-header',
-  templateUrl: './table-alternative-header.component.html',
-  styleUrls: ['./table-alternative-header.component.scss'],
-  host: {class: 'alternative-header w-100'},
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'tableRowDataCursor',
 })
-export class TableAlternativeHeaderComponent {
-  @Input()
-  public columns: TableColumn[];
+export class TableRowDataCursorPipe implements PipeTransform {
+  public transform(row: TableRow, column: TableColumn): DataCursor {
+    return {...row, ...column, attributeId: column.attribute?.id};
+  }
 }

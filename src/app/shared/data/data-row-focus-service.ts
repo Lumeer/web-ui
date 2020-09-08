@@ -90,7 +90,7 @@ export class DataRowFocusService {
         component.unFocusRow();
       }
     });
-    this.hiddenComponent() && this.hiddenComponent().focus();
+    this.hiddenComponent()?.focus();
   }
 
   public resetFocusAndEdit(row: number, column: number) {
@@ -128,7 +128,7 @@ export class DataRowFocusService {
       return;
     }
 
-    this.hiddenComponent() && this.hiddenComponent().blur();
+    this.hiddenComponent()?.blur();
 
     this.rows().forEach((component, index) => {
       if (index !== row) {

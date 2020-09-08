@@ -18,23 +18,27 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {TableColumn} from '../model/table-column';
-import {DocumentModel} from '../../../core/store/documents/document.model';
+import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {TableColumn} from '../../model/table-column';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {TableRow} from '../../model/table-row';
 
 @Component({
-  selector: '[table-body]',
-  templateUrl: './table-body.component.html',
-  styleUrls: ['./table-body.component.scss'],
+  selector: '[table-row]',
+  templateUrl: './table-row.component.html',
+  styleUrls: ['./table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableBodyComponent {
+export class TableRowComponent {
   @Input()
   public columns: TableColumn[];
 
   @Input()
-  public documents: DocumentModel[];
+  public row: TableRow;
 
-  public trackByDocument(index: number, document: DocumentModel): string {
-    return document.correlationId || document.id;
-  }
+  public readonly configuration: DataInputConfiguration = {
+    common: {allowRichText: true},
+    boolean: {center: true},
+    user: {allowCenterOnlyIcon: true},
+  };
 }

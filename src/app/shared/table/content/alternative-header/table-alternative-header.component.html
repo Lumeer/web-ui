@@ -1,0 +1,31 @@
+<div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable>
+  <div *ngFor="let column of columns; let last = last; let first = first"
+       class="header-cell"
+       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
+       [style.font-weight]="column.bold ? 'bold' : 'normal'"
+       [style.margin-left.px]="first ? 1 : 0"
+       [style.width.px]="first && !last ? column.width - 1 : column.width"
+       [style.min-width.px]="first && !last ? column.width - 1 : column.width">
+    <div class="header-content text-nowrap font-italic">
+      <div class="overflow-hidden name">{{column.attribute.name}}</div>
+
+      <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
+        <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons">
+          <i *ngIf="(column.attribute | attributeFunctionDefined)"
+             [class.mb-1]="typeData.iconName"
+             class="fas fa-function fa-xs fa-fw">
+          </i>
+          <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
+             [ngClass]="typeData.iconName"
+             [title]="column.attribute.constraint | constraintTypeIconTitle"></i>
+          <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
+             title="Column settings..."
+             i18n-title="@@table.header.column.settings"
+             class="fa-xs fas fa-caret-down">
+          </i>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  <div class="empty-cell"></div>
+</div>

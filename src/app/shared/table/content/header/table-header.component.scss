@@ -1,4 +1,4 @@
-@import '~src/styles/variables';
+@import 'src/styles/variables';
 
 $height: 2rem;
 $width: 0.8rem;
@@ -23,10 +23,17 @@ $width: 0.8rem;
 th {
   z-index: 2;
   position: sticky;
-  height: $height;
   vertical-align: middle !important;
-  padding: 0.4rem $width / 2 !important;
+  padding: 0 !important;
   font-style: italic;
+  border: 0 !important;
+  background: white;
+}
+
+th .wrapper {
+  border: 0.5px $gray-200 dotted;
+  height: calc(#{$height} + 3px);
+  padding: 0.4rem $width / 2 !important;
 }
 
 .resize-handle-wrapper {

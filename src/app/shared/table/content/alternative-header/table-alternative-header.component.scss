@@ -1,8 +1,8 @@
-@import '~src/styles/variables';
+@import 'src/styles/variables';
 
 :host {
   position: absolute;
-  top: -1px;
+  top: 0.5px;
   left: 0;
   z-index: 5;
   visibility: hidden;
@@ -12,9 +12,25 @@
   visibility: visible !important;
 }
 
+.header-wrapper {
+  display: table-row;
+}
+
+.header-cell {
+  display: table-cell;
+}
+
+.empty-cell {
+  width: 2rem;
+  min-width: 2rem;
+}
+
 .header-content {
   display: grid;
   grid-template-columns: 1fr auto;
+  border: 0.5px $gray-200 dotted;
+  padding: 0.4rem;
+  height: 35px;
 }
 
 .fa-caret-down {

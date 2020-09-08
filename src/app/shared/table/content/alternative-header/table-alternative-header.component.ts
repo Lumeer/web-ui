@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from '../../../core/store/collections/collection';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {TableColumn} from '../../model/table-column';
 
-export interface TableColumn {
-  width: number;
-  attribute?: Attribute;
-  name?: string;
-  linkTypeId?: string;
-  collectionId?: string;
-  color?: string;
-  bold?: boolean;
-  hidden?: boolean;
-  editable: boolean;
-  manageable?: boolean;
+@Component({
+  selector: 'table-alternative-header',
+  templateUrl: './table-alternative-header.component.html',
+  styleUrls: ['./table-alternative-header.component.scss'],
+  host: {class: 'alternative-header w-100'},
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TableAlternativeHeaderComponent {
+  @Input()
+  public columns: TableColumn[];
 }

@@ -30,9 +30,9 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {TableColumn} from '../model/table-column';
+import {TableColumn} from '../../model/table-column';
 import {ContextMenuService} from 'ngx-contextmenu';
-import {LinksListHeaderMenuComponent} from '../../links/links-list/table/header/menu/links-list-header-menu.component';
+import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
 

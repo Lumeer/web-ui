@@ -34,6 +34,7 @@ import {tap} from 'rxjs/operators';
   selector: 'workflow-perspective',
   templateUrl: './workflow-perspective.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'd-block h-100'},
 })
 export class WorkflowPerspectiveComponent implements OnInit {
   public collections$: Observable<Collection[]>;

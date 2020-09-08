@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, Renderer2, ElementRef} from '@angular/core';
-import {TableColumn} from '../model/table-column';
+import {TableColumn} from '../../model/table-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 
 const columnMinWidth = 30;

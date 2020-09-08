@@ -1,3 +1,5 @@
+@import '~src/styles/variables';
+
 :host {
   overflow: hidden;
   display: block;
@@ -8,4 +10,5 @@
 .table {
   table-layout: fixed;
   width: min-content;
+  border: 0.5px $gray-200 dotted;
 }

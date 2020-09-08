@@ -21,30 +21,20 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  OnChanges,
-  SimpleChanges,
   OnInit,
   ViewChild,
   OnDestroy,
+  EventEmitter,
+  Output,
+  ElementRef,
 } from '@angular/core';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {Collection} from '../../core/store/collections/collection';
-import {LinkType} from '../../core/store/link-types/link.type';
 import {BehaviorSubject, Subscription} from 'rxjs';
 import {TableColumn} from './model/table-column';
-import {
-  findAttribute,
-  getDefaultAttributeId,
-  isCollectionAttributeEditable,
-} from '../../core/store/collections/collection.util';
-import {createAttributesSettingsOrder} from '../settings/settings.util';
-import {ViewSettings} from '../../core/store/views/view';
-import {Query} from '../../core/store/navigation/query/query';
-import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {filter} from 'rxjs/operators';
+import {TableRow} from './model/table-row';
 
 @Component({
   selector: 'lmr-table',
@@ -52,34 +42,24 @@ import {filter} from 'rxjs/operators';
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent implements OnInit, OnChanges, OnDestroy {
+export class TableComponent implements OnInit, OnDestroy {
   @Input()
-  public documents: DocumentModel[];
+  public columns: TableColumn[];
 
   @Input()
-  public collection: Collection;
+  public rows: TableRow[];
 
-  @Input()
-  public linkType: LinkType;
-
-  @Input()
-  public viewSettings: ViewSettings;
-
-  @Input()
-  public query: Query;
-
-  @Input()
-  public permissions: AllowedPermissions;
+  @Output()
+  public columnChange = new EventEmitter<TableColumn[]>();
 
   @ViewChild(CdkVirtualScrollViewport, {static: true})
   public viewPort: CdkVirtualScrollViewport;
 
-  public columns$ = new BehaviorSubject<TableColumn[]>([]);
   public scrollDisabled$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
 
-  constructor(private scrollDispatcher: ScrollDispatcher) {}
+  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef<HTMLElement>) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToScrolling());
@@ -88,70 +68,42 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   private subscribeToScrolling(): Subscription {
     return this.scrollDispatcher
       .scrolled()
-      .pipe(filter(scrollable => !!scrollable))
+      .pipe(filter(scrollable => !!scrollable && this.isScrollableInsideComponent(scrollable)))
       .subscribe((scrollable: CdkScrollable) => {
         const left = scrollable.measureScrollOffset('left');
 
         Array.from(this.scrollDispatcher.scrollContainers.keys())
-          .filter(s => s !== scrollable && s.measureScrollOffset('left') !== left)
-          .forEach(otherScrollable => {
-            otherScrollable.scrollTo({left});
-          });
+          .filter(
+            otherScrollable =>
+              otherScrollable !== scrollable &&
+              otherScrollable.measureScrollOffset('left') !== left &&
+              this.isScrollableInsideComponent(otherScrollable)
+          )
+          .forEach(otherScrollable => otherScrollable.scrollTo({left}));
       });
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collection || changes.linkType || changes.viewSettings) {
-      this.createColumns();
-    }
-  }
-
-  private createColumns() {
-    const linkTypeColumns = this.createLinkTypeColumns();
-    const collectionColumns = this.createCollectionColumns();
-
-    this.columns$.next([...linkTypeColumns, ...collectionColumns]);
-  }
-
-  private createLinkTypeColumns(): TableColumn[] {
-    return [];
-  }
-
-  private createCollectionColumns(): TableColumn[] {
-    const defaultAttributeId = getDefaultAttributeId(this.collection);
-    const settings = this.viewSettings?.attributes?.collections?.[this.collection?.id];
-    return createAttributesSettingsOrder(this.collection?.attributes, settings).reduce((columns, setting) => {
-      const attribute = findAttribute(this.collection?.attributes, setting.attributeId);
-      const editable = isCollectionAttributeEditable(attribute.id, this.collection, this.permissions, this.query);
-      const column: TableColumn = (this.columns$.value || []).find(
-        c => c.collectionId === this.collection.id && c.attribute.id === attribute.id
-      ) || {
-        attribute,
-        width: 100,
-        collectionId: this.collection.id,
-        color: this.collection.color,
-        bold: attribute.id === defaultAttributeId,
-        hidden: setting.hidden,
-        editable,
-      };
-      columns.push({...column, attribute, editable});
-      return columns;
-    }, []);
+  private isScrollableInsideComponent(scrollable: CdkScrollable): boolean {
+    return this.element.nativeElement.contains(scrollable.getElementRef().nativeElement);
   }
 
   public onResizeColumn(data: {index: number; width: number}) {
-    const columns = [...this.columns$.value];
+    const columns = [...this.columns];
     columns[data.index] = {...columns[data.index], width: data.width};
-    this.columns$.next(columns);
+    this.columnChange.emit(columns);
   }
 
   public onMoveColumn(data: {fromIndex: number; toIndex: number}) {
-    const columns = [...this.columns$.value];
+    const columns = [...this.columns];
     moveItemInArray(columns, data.fromIndex, data.toIndex);
-    this.columns$.next(columns);
+    this.columnChange.emit(columns);
   }
 
   public ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  public trackByRow(index: number, row: TableRow): string {
+    return row.documentId;
   }
 }

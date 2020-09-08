@@ -1,0 +1,23 @@
+<ng-container *ngFor="let column of columns">
+
+  <ng-container
+    *ngIf="{dataValue: row.documentData[column.attribute.id] | dataValue:column.attribute.constraint} as data">
+    <td *ngIf="false" [style.width.px]="column.width">
+      <data-input
+        [constraint]="column.attribute.constraint"
+        [cursor]="row | tableRowDataCursor:column"
+        [dataValue]="data.dataValue"
+        [focus]="false"
+        [readonly]="true"
+        [configuration]="configuration">
+      </data-input>
+    </td>
+    <td *ngIf="true"
+        [innerHTML]="data.dataValue | previewDataValue | safeHtml"
+        class="text-pre overflow-hidden mx-1 align-middle"
+        [title]="data.dataValue | formatDataValueTitle"
+        [ngClass]="column.attribute?.constraint | constraintClass"
+        [class.invalid-value]="!(data.dataValue | isDataValueValid)">
+    </td>
+  </ng-container>
+</ng-container>

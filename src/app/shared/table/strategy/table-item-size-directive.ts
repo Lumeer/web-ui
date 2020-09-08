@@ -136,7 +136,7 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
       .querySelectorAll(stickyHeaderSelector)
       .forEach((el: HTMLElement) => {
         const parent = el.parentElement;
-        let baseOffset = -1;
+        let baseOffset = 0;
         if (this.stickyPositions.has(parent)) {
           baseOffset = this.stickyPositions.get(parent);
         }
@@ -149,7 +149,7 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
     this.scrollStrategy.viewport.elementRef.nativeElement.querySelectorAll(stickyHeaderSelector).forEach(el => {
       const parent = el.parentElement;
       if (!this.stickyPositions.has(parent)) {
-        this.stickyPositions.set(parent, parent.offsetTop - 1);
+        this.stickyPositions.set(parent, parent.offsetTop);
       }
     });
   }

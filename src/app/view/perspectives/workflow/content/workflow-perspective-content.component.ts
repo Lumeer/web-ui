@@ -17,21 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {TableColumn} from '../../../../shared/table/model/table-column';
+import {
+  findAttribute,
+  getDefaultAttributeId,
+  isCollectionAttributeEditable,
+} from '../../../../core/store/collections/collection.util';
+import {createAttributesSettingsOrder} from '../../../../shared/settings/settings.util';
+import {ViewSettings} from '../../../../core/store/views/view';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {TableRow} from '../../../../shared/table/model/table-row';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'workflow-perspective-content',
   templateUrl: './workflow-perspective-content.component.html',
   styleUrls: ['./workflow-perspective-content.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkflowPerspectiveContentComponent implements OnInit {
+export class WorkflowPerspectiveContentComponent implements OnChanges {
+  @Input()
+  public viewSettings: ViewSettings;
 
   @Input()
   public query: Query;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Input()
   public collections: Collection[];
@@ -39,9 +55,67 @@ export class WorkflowPerspectiveContentComponent implements OnInit {
   @Input()
   public documents: DocumentModel[];
 
-  constructor() { }
+  public columns$ = new BehaviorSubject<TableColumn[]>([]);
+  public rows: TableRow[];
 
-  ngOnInit(): void {
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.documents) {
+      this.rows = this.createRows();
+    }
+    if (changes.collections || changes.query || changes.permissions || changes.viewSettings) {
+      this.columns$.next(this.createColumns());
+    }
   }
 
+  private createRows(): TableRow[] {
+    const collection = this.collections?.[0];
+    if (!collection) {
+      return [];
+    }
+
+    return this.documents
+      .filter(document => document.collectionId === collection.id)
+      .map(document => ({documentData: document.data, documentId: document.id}));
+  }
+
+  private createColumns(): TableColumn[] {
+    const linkTypeColumns = this.createLinkTypeColumns();
+    const collectionColumns = this.createCollectionColumns();
+
+    return [...linkTypeColumns, ...collectionColumns];
+  }
+
+  private createLinkTypeColumns(): TableColumn[] {
+    return [];
+  }
+
+  private createCollectionColumns(): TableColumn[] {
+    const collection = this.collections?.[0];
+    if (!collection) {
+      return [];
+    }
+    const defaultAttributeId = getDefaultAttributeId(collection);
+    const settings = this.viewSettings?.attributes?.collections?.[collection.id];
+    return createAttributesSettingsOrder(collection.attributes, settings).reduce((columns, setting) => {
+      const attribute = findAttribute(collection.attributes, setting.attributeId);
+      const editable = isCollectionAttributeEditable(attribute.id, collection, this.permissions, this.query);
+      const column: TableColumn = (this.columns$.value || []).find(
+        c => c.collectionId === collection.id && c.attribute.id === attribute.id
+      ) || {
+        attribute,
+        width: 100,
+        collectionId: collection.id,
+        color: collection.color,
+        bold: attribute.id === defaultAttributeId,
+        hidden: setting.hidden,
+        editable,
+      };
+      columns.push({...column, attribute, editable});
+      return columns;
+    }, []);
+  }
+
+  public onColumnsChange(columns: TableColumn[]) {
+    this.columns$.next(columns);
+  }
 }
