@@ -1,6 +1,34 @@
 @import 'src/styles/variables';
 
 td {
-  padding: 0.4rem;
+  padding: 0.2rem 0.4rem;
   border: 0.5px $gray-200 dotted;
+  height: 35px;
+
+  &.color {
+    padding: 0;
+  }
+}
+
+%highlighted {
+  z-index: $z-index-selected;
+  outline-offset: -1px;
+}
+
+td.editing {
+  @extend %highlighted;
+  outline: $success solid 1px;
+  box-shadow: 1px 1px 4px $secondary;
+}
+
+td.focused {
+  @extend %highlighted;
+  outline: $primary solid 1px;
+  box-shadow: 0 0 4px $secondary;
+}
+
+td.affected:not(.editing) {
+  @extend %highlighted;
+  outline: $warning solid 1px;
+  box-shadow: 1px 1px 4px $secondary;
 }

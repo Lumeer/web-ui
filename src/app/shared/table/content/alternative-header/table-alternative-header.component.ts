@@ -30,4 +30,8 @@ import {TableColumn} from '../../model/table-column';
 export class TableAlternativeHeaderComponent {
   @Input()
   public columns: TableColumn[];
+
+  public trackByColumn(index: number, column: TableColumn): string {
+    return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
+  }
 }

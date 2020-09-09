@@ -31,6 +31,8 @@ import {TableItemSizeDirective} from './strategy/table-item-size-directive';
 import {TableAlternativeHeaderComponent} from './content/alternative-header/table-alternative-header.component';
 import {TableResizeHeaderComponent} from './content/resize-header/table-resize-header.component';
 import {TableRowDataCursorPipe} from './pipes/table-row-data-cursor.pipe';
+import {InputModule} from '../input/input.module';
+import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,15 @@ import {TableRowDataCursorPipe} from './pipes/table-row-data-cursor.pipe';
     TableResizeHeaderComponent,
     TableRowDataCursorPipe,
   ],
-  imports: [CommonModule, DataInputModule, PipesModule, DragDropModule, ScrollingModule],
+  imports: [
+    CommonModule,
+    DataInputModule,
+    PipesModule,
+    DragDropModule,
+    ScrollingModule,
+    InputModule,
+    ClickOutsideModule,
+  ],
   exports: [TableComponent],
 })
 export class TableModule {}

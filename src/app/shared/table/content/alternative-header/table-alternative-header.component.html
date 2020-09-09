@@ -1,5 +1,5 @@
 <div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable>
-  <div *ngFor="let column of columns; let last = last; let first = first"
+  <div *ngFor="let column of columns; let last = last; let first = first; trackBy:trackByColumn"
        class="header-cell"
        [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
        [style.font-weight]="column.bold ? 'bold' : 'normal'"
