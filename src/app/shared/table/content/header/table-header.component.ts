@@ -35,6 +35,7 @@ import {ContextMenuService} from 'ngx-contextmenu';
 import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
+import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 
 @Component({
   selector: '[table-header]',
@@ -46,14 +47,14 @@ export class TableHeaderComponent implements OnChanges {
   @Input()
   public columns: TableColumn[];
 
+  @Input()
+  public selectedCell: SelectedTableCell;
+
+  @Input()
+  public editedCell: EditedTableCell;
+
   @Output()
   public moveColumn = new EventEmitter<{fromIndex: number; toIndex: number}>();
-
-  @Output()
-  public attributeFunction = new EventEmitter<TableColumn>();
-
-  @Output()
-  public attributeType = new EventEmitter<TableColumn>();
 
   @Output()
   public dragStart = new EventEmitter();
@@ -66,6 +67,8 @@ export class TableHeaderComponent implements OnChanges {
 
   @ViewChildren(LinksListHeaderMenuComponent)
   public headerMenuElements: QueryList<LinksListHeaderMenuComponent>;
+
+  public readonly cellType = TableCellType.Header;
 
   private columnsPositionsStart: number[];
   private dragStartOffset: number;

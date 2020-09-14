@@ -20,6 +20,17 @@ $width: 0.8rem;
   visibility: hidden;
 }
 
+%highlighted {
+  z-index: $z-index-selected;
+  outline-offset: -1px;
+}
+
+th.focused {
+  @extend %highlighted;
+  outline: $primary solid 1px;
+  box-shadow: 0 0 4px $secondary;
+}
+
 th {
   z-index: 2;
   position: sticky;

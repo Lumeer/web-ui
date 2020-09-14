@@ -33,6 +33,7 @@ import {TableResizeHeaderComponent} from './content/resize-header/table-resize-h
 import {TableRowDataCursorPipe} from './pipes/table-row-data-cursor.pipe';
 import {InputModule} from '../input/input.module';
 import {ClickOutsideModule} from 'ng-click-outside';
+import {TableCellSelectedPipe} from './strategy/table-cell-selected.pipe';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     TableAlternativeHeaderComponent,
     TableResizeHeaderComponent,
     TableRowDataCursorPipe,
+    TableCellSelectedPipe,
   ],
   imports: [
     CommonModule,

@@ -24,9 +24,10 @@ import {WorkflowPerspectiveComponent} from './workflow-perspective.component';
 import {WorkflowPerspectiveRoutingModule} from './workflow-perspective-routing.module';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {TableModule} from '../../../shared/table/table.module';
-import { WorkflowPerspectiveContentComponent } from './content/workflow-perspective-content.component';
+import {WorkflowPerspectiveContentComponent} from './content/workflow-perspective-content.component';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
+import {ClickOutsideModule} from 'ng-click-outside';
 
 @NgModule({
   declarations: [WorkflowPerspectiveComponent, WorkflowPerspectiveContentComponent],
@@ -37,8 +38,8 @@ import {WarningMessageModule} from '../../../shared/warning-message/warning-mess
     WorkflowPerspectiveRoutingModule,
     DataInputModule,
     PipesModule,
-    WarningMessageModule
-  ]
+    WarningMessageModule,
+    ClickOutsideModule,
+  ],
 })
-export class WorkflowPerspectiveModule {
-}
+export class WorkflowPerspectiveModule {}

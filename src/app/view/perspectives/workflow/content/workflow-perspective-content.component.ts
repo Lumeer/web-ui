@@ -17,7 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, OnInit} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  OnInit,
+  HostListener,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+} from '@angular/core';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -30,6 +41,7 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {TableComponent} from '../../../../shared/table/table.component';
 
 @Component({
   selector: 'workflow-perspective-content',
@@ -52,6 +64,9 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
 
   @Input()
   public documents: DocumentModel[];
+
+  @ViewChildren('lmrTable', {read: ElementRef})
+  public tableComponents: QueryList<ElementRef>;
 
   private tablesService: WorkflowTablesService;
 
@@ -87,6 +102,11 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
     return table.id;
   }
 
+  @HostListener('document:keydown', ['$event'])
+  public onKeyDown(event: KeyboardEvent) {
+    this.tablesService.onKeyDown(event);
+  }
+
   public onColumnMove(table: TableModel, data: {from: number; to: number}) {
     // TODO send to attributes settings
     this.tablesService.onColumnMove(table, data.from, data.to);
@@ -102,5 +122,15 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
 
   public onTableCellDoubleClick(cell: TableCell) {
     this.tablesService.onCellDoubleClick(cell);
+  }
+
+  public onClickOutsideTables() {
+    this.tablesService.resetSelection();
+  }
+
+  public onClickInsideTables(event: MouseEvent) {
+    if (!this.tableComponents.some(component => component.nativeElement.contains(event.target))) {
+      this.tablesService.resetSelection();
+    }
   }
 }

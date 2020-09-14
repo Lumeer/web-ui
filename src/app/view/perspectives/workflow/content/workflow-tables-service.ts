@@ -18,7 +18,13 @@
  */
 
 import {BehaviorSubject} from 'rxjs';
-import {EditedTableCell, SelectedTableCell, TableCell, TableModel} from '../../../../shared/table/model/table-model';
+import {
+  EditedTableCell,
+  SelectedTableCell,
+  TableCell,
+  TableCellType,
+  TableModel,
+} from '../../../../shared/table/model/table-model';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
@@ -34,11 +40,178 @@ import {TableColumn} from '../../../../shared/table/model/table-column';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {TableRow} from '../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../shared/utils/array.utils';
+import {KeyCode} from '../../../../shared/key-code';
+import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 
 export class WorkflowTablesService {
   public selectedCell$ = new BehaviorSubject<SelectedTableCell>(null);
   public editedCell$ = new BehaviorSubject<EditedTableCell>(null);
   public tables$ = new BehaviorSubject<TableModel[]>([]);
+
+  public resetSelection() {
+    this.selectedCell$.next(null);
+  }
+
+  public onKeyDown(event: KeyboardEvent) {
+    switch (event.code) {
+      case KeyCode.ArrowDown:
+      case KeyCode.ArrowUp:
+      case KeyCode.ArrowLeft:
+      case KeyCode.ArrowRight:
+        this.onArrowKeyDown(event);
+        break;
+      case KeyCode.Tab:
+        this.onTabKeyDown(event);
+        break;
+      case KeyCode.NumpadEnter:
+      case KeyCode.Enter:
+        // TODO this.onEnterKeyDown(event);
+        break;
+      case KeyCode.F2:
+        // TODO this.onF2KeyDown(event);
+        break;
+      case KeyCode.Backspace:
+        // TODO this.onBackSpaceKeyDown(event);
+        break;
+    }
+  }
+
+  private onTabKeyDown(event: KeyboardEvent) {
+    if (this.isEditing()) {
+      event.preventDefault();
+      event.stopPropagation();
+    } else if (this.isFocusing()) {
+      this.onArrowKeyDown(event);
+    }
+  }
+
+  private onArrowKeyDown(event: KeyboardEvent) {
+    if (
+      this.isEditing() ||
+      !this.isFocusing() ||
+      (event.shiftKey && event.code !== KeyCode.Tab) ||
+      event.altKey ||
+      event.ctrlKey
+    ) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+
+    switch (this.selectedCell$.value.type) {
+      case TableCellType.Header:
+        this.onArrowKeyDownInHeader(event);
+        break;
+      case TableCellType.Body:
+        this.onArrowKeyDownInBody(event);
+        break;
+    }
+  }
+
+  private onArrowKeyDownInHeader(event: KeyboardEvent) {
+    const {tableIndex, columnIndex} = this.getCellIndexes(this.selectedCell$.value);
+    switch (event.code) {
+      case KeyCode.ArrowUp:
+        if (tableIndex > 0) {
+          const nextTableIndex = tableIndex - 1;
+          const nextRowIndex = this.numberOfRowsInTable(nextTableIndex) - 1;
+          const nextColumnIndex = Math.min(columnIndex, this.numberOfColumnsInTable(nextTableIndex) - 1);
+          this.selectCell(nextTableIndex, nextRowIndex, nextColumnIndex);
+        }
+        break;
+      case KeyCode.ArrowDown:
+        this.selectCell(tableIndex, 0, columnIndex);
+        break;
+      case KeyCode.ArrowLeft:
+        this.selectCell(tableIndex, null, columnIndex - 1, TableCellType.Header);
+        break;
+      case KeyCode.ArrowRight:
+        this.selectCell(tableIndex, null, columnIndex + 1, TableCellType.Header);
+        break;
+      case KeyCode.Tab:
+        if (event.shiftKey) {
+          this.selectCell(tableIndex, null, columnIndex - 1, TableCellType.Header);
+        } else {
+          this.selectCell(tableIndex, null, columnIndex + 1, TableCellType.Header);
+        }
+        break;
+    }
+  }
+
+  private numberOfRowsInTable(tableIndex: number): number {
+    return this.tables$.value[tableIndex]?.rows?.length || 0;
+  }
+
+  private numberOfColumnsInTable(tableIndex: number): number {
+    return this.tables$.value[tableIndex]?.columns?.length || 0;
+  }
+
+  private selectCell(
+    tableIndex: number,
+    rowIndex: number | null,
+    columnIndex: number,
+    type: TableCellType = TableCellType.Body
+  ) {
+    const table = this.tables$.value[tableIndex];
+    if (table) {
+      const column = table.columns[columnIndex];
+      const row = isNotNullOrUndefined(rowIndex) ? table.rows[rowIndex] : null;
+      if (column && (row || type !== TableCellType.Body)) {
+        this.selectedCell$.next({tableId: table.id, columnId: column.id, rowId: row?.id, type});
+      }
+    }
+  }
+
+  private onArrowKeyDownInBody(event: KeyboardEvent) {
+    const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.selectedCell$.value);
+    switch (event.code) {
+      case KeyCode.ArrowUp:
+        if (rowIndex === 0) {
+          this.selectCell(tableIndex, null, columnIndex, TableCellType.Header);
+        } else {
+          this.selectCell(tableIndex, rowIndex - 1, columnIndex);
+        }
+        break;
+      case KeyCode.ArrowDown:
+        if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
+          const nextTableIndex = tableIndex + 1;
+          const nextColumnIndex = Math.min(columnIndex, this.numberOfColumnsInTable(nextTableIndex) - 1);
+          this.selectCell(nextTableIndex, null, nextColumnIndex, TableCellType.Header);
+        } else {
+          this.selectCell(tableIndex, rowIndex + 1, columnIndex);
+        }
+        break;
+      case KeyCode.ArrowLeft:
+        this.selectCell(tableIndex, rowIndex, columnIndex - 1);
+        break;
+      case KeyCode.ArrowRight:
+        this.selectCell(tableIndex, rowIndex, columnIndex + 1);
+        break;
+      case KeyCode.Tab:
+        if (event.shiftKey) {
+          this.selectCell(tableIndex, rowIndex, columnIndex - 1);
+        } else {
+          this.selectCell(tableIndex, rowIndex, columnIndex + 1);
+        }
+        break;
+    }
+  }
+
+  private getCellIndexes(cell: TableCell): {tableIndex: number; rowIndex: number; columnIndex: number} {
+    const tableIndex = this.tables$.value.findIndex(table => table.id === cell.tableId);
+    const tableByIndex = this.tables$.value[tableIndex];
+    const columnIndex = tableByIndex?.columns.findIndex(column => column.id === cell.columnId);
+    const rowIndex = tableByIndex?.rows.findIndex(row => row.id === cell.rowId);
+    return {tableIndex, columnIndex, rowIndex};
+  }
+
+  private isEditing(): boolean {
+    return isNotNullOrUndefined(this.editedCell$.value);
+  }
+
+  private isFocusing(): boolean {
+    return isNotNullOrUndefined(this.selectedCell$.value);
+  }
 
   public onCellClick(cell: TableCell) {
     this.selectedCell$.next({...cell});
@@ -53,12 +226,12 @@ export class WorkflowTablesService {
     for (let i = 0; i < newTables.length; i++) {
       const table = newTables[i];
       if (table.collectionId === changedTable.collectionId) {
-        const columnIndex = newTables[i].columns.findIndex(column => column.id === columnId);
+        const columnIndex = table.columns.findIndex(column => column.id === columnId);
 
         if (columnIndex !== -1) {
-          const newColumns = [...table.columns];
-          newColumns[columnIndex] = {...table.columns[columnIndex], width};
-          newTables[i] = {...table, columns: newColumns};
+          const columns = [...table.columns];
+          columns[columnIndex] = {...table.columns[columnIndex], width};
+          newTables[i] = {...table, columns};
         }
       }
     }
@@ -86,14 +259,13 @@ export class WorkflowTablesService {
     query: Query,
     viewSettings: ViewSettings
   ) {
-    const newTables = collections.reduce((result, collection) => {
+    const colls = collections.length ? [...collections, ...collections] : collections;
+    const newTables = colls.reduce((result, collection) => {
       const collectionDocuments = documents.filter(document => document.collectionId === collection.id);
       const collectionPermissions = permissions?.[collection.id];
       const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
       const table = this.createTable(collection, collectionDocuments, collectionPermissions, query, collectionSettings);
-      result.push(table);
-      result.push(table);
-      return result;
+      return [...result, table];
     }, []);
     this.tables$.next(newTables);
   }

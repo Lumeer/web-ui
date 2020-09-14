@@ -2,6 +2,7 @@
   <th *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
       class="sticky-header"
       cdkDrag
+      [class.focused]="selectedCell | tableCellSelected:column:cellType"
       [class.dragging]="dragData.index === index"
       (cdkDragDropped)="onColumnDrop($event)"
       (cdkDragStarted)="onColumnDragStarted()"

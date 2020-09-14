@@ -38,7 +38,7 @@ import {UnknownConstraint} from '../../../../core/model/constraint/unknown.const
 import {isNotNullOrUndefined} from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
-import {EditedTableCell, SelectedTableCell} from '../../model/table-model';
+import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
@@ -75,6 +75,7 @@ export class TableRowComponent implements OnChanges {
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
 
+  public readonly cellType = TableCellType.Body;
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
     common: {allowRichText: true},
@@ -82,26 +83,14 @@ export class TableRowComponent implements OnChanges {
     user: {allowCenterOnlyIcon: true},
   };
 
-  public selectedColumnId: string;
   public editedColumnId: string;
   public editedValue: DataValue;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.selectedCell) {
-      this.checkSelected();
-    }
-    if (changes.editedCell) {
+    if (changes.editedCell || changes.row) {
       this.checkEdited();
-    }
-  }
-
-  private checkSelected() {
-    if (this.selectedCell?.rowId === this.row?.id) {
-      this.selectedColumnId = this.selectedCell.columnId;
-    } else {
-      this.selectedColumnId = null;
     }
   }
 

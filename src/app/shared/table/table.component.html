@@ -4,6 +4,8 @@
   <cdk-virtual-scroll-viewport lmrItemSize style="height: 100%" [disabled]="scrollDisabled$ | async">
     <table class="table lmr-table position-relative">
       <thead table-header [columns]="tableModel.columns"
+             [selectedCell]="selectedCell"
+             [editedCell]="editedCell"
              (dragStart)="scrollDisabled$.next(true)"
              (dragEnd)="scrollDisabled$.next(false)"
              (moveColumn)="onMoveColumn($event)">
