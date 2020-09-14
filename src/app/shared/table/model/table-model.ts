@@ -17,13 +17,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataResourceData} from '../../../core/model/resource';
+import {TableColumn} from './table-column';
+import {TableRow} from './table-row';
 
-export interface TableRow {
+export interface TableModel {
   id: string;
-  documentId: string;
-  documentData?: DataResourceData;
-  linkInstanceId?: string;
-  linkInstanceData?: DataResourceData;
-  correlationId?: string;
+  collectionId: string;
+  columns: TableColumn[];
+  rows: TableRow[];
+}
+
+export interface SelectedTableCell extends TableCell {}
+
+export interface EditedTableCell extends TableCell {
+  inputValue: any;
+}
+
+export interface TableCell {
+  tableId: string;
+  columnId: string;
+  type: TableCellType;
+  rowId?: string;
+}
+
+export enum TableCellType {
+  Header = 'header',
+  Body = 'body',
+  Footer = 'footer',
 }

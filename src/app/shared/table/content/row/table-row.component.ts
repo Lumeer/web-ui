@@ -17,12 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  ViewChild,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {TableColumn} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
-import {DataRowComponent} from '../../../data/data-row-component';
-import {BehaviorSubject} from 'rxjs';
 import {DataValue} from '../../../../core/model/data-value';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
 import {isKeyPrintable, KeyCode} from '../../../key-code';
@@ -31,6 +38,8 @@ import {UnknownConstraint} from '../../../../core/model/constraint/unknown.const
 import {isNotNullOrUndefined} from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
+import {EditedTableCell, SelectedTableCell} from '../../model/table-model';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: '[table-row]',
@@ -38,7 +47,7 @@ import {BooleanConstraint} from '../../../../core/model/constraint/boolean.const
   styleUrls: ['./table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowComponent implements DataRowComponent {
+export class TableRowComponent implements OnChanges {
   @Input()
   public columns: TableColumn[];
 
@@ -48,14 +57,17 @@ export class TableRowComponent implements DataRowComponent {
   @Input()
   public constraintData: ConstraintData;
 
-  @Output()
-  public onFocus = new EventEmitter<number>();
+  @Input()
+  public selectedCell: SelectedTableCell;
+
+  @Input()
+  public editedCell: EditedTableCell;
 
   @Output()
-  public onEdit = new EventEmitter<number>();
+  public onClick = new EventEmitter<string>();
 
   @Output()
-  public resetFocusAndEdit = new EventEmitter<number>();
+  public onDoubleClick = new EventEmitter<string>();
 
   @Output()
   public newValue = new EventEmitter<{column: number; value: any}>();
@@ -70,45 +82,48 @@ export class TableRowComponent implements DataRowComponent {
     user: {allowCenterOnlyIcon: true},
   };
 
-  public columnEditing$ = new BehaviorSubject<number>(null);
-  public columnFocused$ = new BehaviorSubject<number>(null);
-  public suggesting$ = new BehaviorSubject<DataValue>(null);
-
+  public selectedColumnId: string;
+  public editedColumnId: string;
   public editedValue: DataValue;
 
-  public endColumnEditing(column: number) {
-    if (this.columnEditing$.value === column) {
-      this.endRowEditing();
+  public suggesting$ = new BehaviorSubject<DataValue>(null);
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.selectedCell) {
+      this.checkSelected();
+    }
+    if (changes.editedCell) {
+      this.checkEdited();
     }
   }
 
-  public endRowEditing() {
-    this.suggesting$.next(null);
-    this.columnEditing$.next(null);
+  private checkSelected() {
+    if (this.selectedCell?.rowId === this.row?.id) {
+      this.selectedColumnId = this.selectedCell.columnId;
+    } else {
+      this.selectedColumnId = null;
+    }
   }
 
-  public focusColumn(column: number) {
-    this.columnFocused$.next(column);
-  }
-
-  public startColumnEditing(column: number, value?: any): boolean {
-    this.editedValue = null;
-    if (this.isColumnEditable(column)) {
-      if (this.shouldDirectEditValue(column)) {
-        this.onNewValue(column, this.computeDirectEditValue(column));
-      } else {
-        this.editedValue = this.createDataValue(column, value, true);
-        this.suggesting$.next(this.editedValue);
-        this.columnEditing$.next(column);
-        return true;
+  private checkEdited() {
+    if (this.editedCell?.rowId === this.row?.id) {
+      const column = this.columnById(this.editedCell.columnId);
+      if (column?.editable) {
+        if (this.shouldDirectEditValue(column)) {
+          this.onNewValue(column, this.computeDirectEditValue(column));
+        } else {
+          this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
+          this.suggesting$.next(this.editedValue);
+          this.editedColumnId = this.editedCell.columnId;
+        }
       }
+    } else {
+      this.editedColumnId = null;
     }
-    return false;
   }
 
-  private createDataValue(column: number, value?: any, typed?: boolean): DataValue {
-    const attribute = this.columns[column].attribute;
-    const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+  private createDataValue(column: TableColumn, value?: any, typed?: boolean): DataValue {
+    const constraint = column.attribute?.constraint || new UnknownConstraint();
     if (typed) {
       return constraint.createInputDataValue(value, this.columnValue(column), this.constraintData);
     }
@@ -116,30 +131,28 @@ export class TableRowComponent implements DataRowComponent {
     return constraint.createDataValue(initialValue, this.constraintData);
   }
 
-  private shouldDirectEditValue(column: number): boolean {
+  private shouldDirectEditValue(column: TableColumn): boolean {
     return this.columnConstraintType(column) === ConstraintType.Boolean;
   }
 
-  private columnConstraintType(column: number): ConstraintType {
-    const attribute = this.columns[column].attribute;
-    return attribute && attribute.constraint && attribute.constraint.type;
+  private columnConstraintType(column: TableColumn): ConstraintType {
+    return column.attribute?.constraint?.type || ConstraintType.Unknown;
   }
 
-  private isColumnEditable(column: number): boolean {
-    return this.columns[column].editable;
+  private columnById(columnId: string): TableColumn {
+    return this.columns.find(column => column.id === columnId);
   }
 
-  private computeDirectEditValue(column: number): DataValue {
+  private computeDirectEditValue(column: TableColumn): DataValue {
     if (this.columnConstraintType(column) === ConstraintType.Boolean) {
-      const constraint = this.columns[column].attribute.constraint as BooleanConstraint;
+      const constraint = column.attribute.constraint as BooleanConstraint;
       return constraint.createDataValue(!this.columnValue(column));
     }
 
     return null;
   }
 
-  private columnValue(index: number): any {
-    const column = this.columns[index];
+  private columnValue(column: TableColumn): any {
     if (column?.collectionId) {
       return this.row.documentData?.[column.attribute.id];
     } else if (column?.linkTypeId) {
@@ -148,13 +161,9 @@ export class TableRowComponent implements DataRowComponent {
     return null;
   }
 
-  public unFocusRow() {
-    this.columnFocused$.next(null);
-  }
-
-  public onNewValue(column: number, dataValue: DataValue) {
+  public onNewValue(column: TableColumn, dataValue: DataValue) {
     this.editedValue = null;
-    if (this.suggestions && this.suggestions.isSelected()) {
+    if (this.suggestions?.isSelected()) {
       this.suggestions.useSelection();
     } else {
       this.saveData(column, dataValue);
@@ -162,28 +171,28 @@ export class TableRowComponent implements DataRowComponent {
     this.onDataInputCancel(column);
   }
 
-  private saveData(column: number, dataValue: DataValue) {
+  private saveData(column: TableColumn, dataValue: DataValue) {
     const value = dataValue.serialize();
     const currentValue = this.columnValue(column);
     if (currentValue !== value) {
-      this.newValue.emit({column, value});
+      this.newValue.emit({column: 0, value});
     }
   }
 
-  public onDataInputDblClick(column: number, event: MouseEvent) {
-    if (this.columnEditing$.value !== column) {
+  public onDataInputDblClick(columnId: string, event: MouseEvent) {
+    if (this.editedColumnId !== columnId) {
       event.preventDefault();
-      this.onEdit.emit(column);
+      this.onDoubleClick.emit(columnId);
     }
   }
 
-  public onDataInputCancel(column: number) {
-    this.resetFocusAndEdit.emit(column);
+  public onDataInputCancel(column: TableColumn) {
+    // TODO this.resetFocusAndEdit.emit(column);
   }
 
-  public onDataInputFocus(column: number, event: MouseEvent) {
-    if (this.columnEditing$.value !== column) {
-      this.onFocus.emit(column);
+  public onDataInputClick(columnId: string, event: MouseEvent) {
+    if (this.editedColumnId !== columnId) {
+      this.onClick.emit(columnId);
     }
   }
 
@@ -205,17 +214,17 @@ export class TableRowComponent implements DataRowComponent {
   }
 
   public onUseHint() {
-    this.endRowEditing();
+    // TODO this.endRowEditing();
   }
 
   public onEnterInvalid() {
-    if (this.suggestions && this.suggestions.isSelected()) {
+    if (this.suggestions?.isSelected()) {
       this.suggestions.useSelection();
-      this.endRowEditing();
+      // TODO this.endRowEditing();
     }
   }
 
   public trackByColumn(index: number, column: TableColumn): string {
-    return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
+    return column.id;
   }
 }

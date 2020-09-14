@@ -17,21 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges, OnInit} from '@angular/core';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {TableColumn} from '../../../../shared/table/model/table-column';
-import {
-  findAttribute,
-  getDefaultAttributeId,
-  isCollectionAttributeEditable,
-} from '../../../../core/store/collections/collection.util';
-import {createAttributesSettingsOrder} from '../../../../shared/settings/settings.util';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {TableRow} from '../../../../shared/table/model/table-row';
-import {BehaviorSubject} from 'rxjs';
+import {Observable} from 'rxjs';
+import {WorkflowTablesService} from './workflow-tables-service';
+import {EditedTableCell, SelectedTableCell, TableCell, TableModel} from '../../../../shared/table/model/table-model';
+import {ConstraintData} from '../../../../core/model/data/constraint';
+import {AppState} from '../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'workflow-perspective-content',
@@ -39,7 +37,7 @@ import {BehaviorSubject} from 'rxjs';
   styleUrls: ['./workflow-perspective-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkflowPerspectiveContentComponent implements OnChanges {
+export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   @Input()
   public viewSettings: ViewSettings;
 
@@ -47,7 +45,7 @@ export class WorkflowPerspectiveContentComponent implements OnChanges {
   public query: Query;
 
   @Input()
-  public permissions: AllowedPermissions;
+  public permissions: Record<string, AllowedPermissions>;
 
   @Input()
   public collections: Collection[];
@@ -55,67 +53,54 @@ export class WorkflowPerspectiveContentComponent implements OnChanges {
   @Input()
   public documents: DocumentModel[];
 
-  public columns$ = new BehaviorSubject<TableColumn[]>([]);
-  public rows: TableRow[];
+  private tablesService: WorkflowTablesService;
+
+  public tables$: Observable<TableModel[]>;
+  public constraintData$: Observable<ConstraintData>;
+  public selectedCell$: Observable<SelectedTableCell>;
+  public editedCell$: Observable<EditedTableCell>;
+
+  constructor(private store$: Store<AppState>) {
+    this.tablesService = new WorkflowTablesService();
+    this.tables$ = this.tablesService.tables$.asObservable();
+    this.selectedCell$ = this.tablesService.selectedCell$.asObservable();
+    this.editedCell$ = this.tablesService.editedCell$.asObservable();
+  }
+
+  public ngOnInit() {
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.documents) {
-      this.rows = this.createRows();
+    if (changes.collections || changes.query || changes.permissions || changes.viewSettings || changes.documents) {
+      this.tablesService.onUpdateData(
+        this.collections,
+        this.documents,
+        this.permissions,
+        this.query,
+        this.viewSettings
+      );
     }
-    if (changes.collections || changes.query || changes.permissions || changes.viewSettings) {
-      this.columns$.next(this.createColumns());
-    }
   }
 
-  private createRows(): TableRow[] {
-    const collection = this.collections?.[0];
-    if (!collection) {
-      return [];
-    }
-
-    return this.documents
-      .filter(document => document.collectionId === collection.id)
-      .map(document => ({documentData: document.data, documentId: document.id}));
+  public trackByTable(index: number, table: TableModel): string {
+    return table.id;
   }
 
-  private createColumns(): TableColumn[] {
-    const linkTypeColumns = this.createLinkTypeColumns();
-    const collectionColumns = this.createCollectionColumns();
-
-    return [...linkTypeColumns, ...collectionColumns];
+  public onColumnMove(table: TableModel, data: {from: number; to: number}) {
+    // TODO send to attributes settings
+    this.tablesService.onColumnMove(table, data.from, data.to);
   }
 
-  private createLinkTypeColumns(): TableColumn[] {
-    return [];
+  public onColumnResize(table: TableModel, data: {id: string; width: number}) {
+    this.tablesService.onColumnResize(table, data.id, data.width);
   }
 
-  private createCollectionColumns(): TableColumn[] {
-    const collection = this.collections?.[0];
-    if (!collection) {
-      return [];
-    }
-    const defaultAttributeId = getDefaultAttributeId(collection);
-    const settings = this.viewSettings?.attributes?.collections?.[collection.id];
-    return createAttributesSettingsOrder(collection.attributes, settings).reduce((columns, setting) => {
-      const attribute = findAttribute(collection.attributes, setting.attributeId);
-      const editable = isCollectionAttributeEditable(attribute.id, collection, this.permissions, this.query);
-      const column: TableColumn = (this.columns$.value || []).find(
-        c => c.collectionId === collection.id && c.attribute.id === attribute.id
-      ) || {
-        attribute,
-        width: 100,
-        collectionId: collection.id,
-        color: collection.color,
-        bold: attribute.id === defaultAttributeId,
-        hidden: setting.hidden,
-        editable,
-      };
-      columns.push({...column, attribute, editable});
-      return columns;
-    }, []);
+  public onTableCellClick(cell: TableCell) {
+    this.tablesService.onCellClick(cell);
   }
 
-  public onColumnsChange(columns: TableColumn[]) {
-    this.columns$.next(columns);
+  public onTableCellDoubleClick(cell: TableCell) {
+    this.tablesService.onCellDoubleClick(cell);
   }
 }

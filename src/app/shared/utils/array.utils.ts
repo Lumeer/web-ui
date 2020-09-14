@@ -123,3 +123,11 @@ export function reversedArray<T>(array: T[]): T[] {
   copy.reverse();
   return copy;
 }
+
+export function moveItemsInArray<T>(array: T[], fromIndex: number, toIndex: number): T[] {
+  const arrayCopy = [...array];
+  const element = arrayCopy[fromIndex];
+  arrayCopy.splice(fromIndex, 1);
+  arrayCopy.splice(toIndex, 0, element);
+  return arrayCopy;
+}

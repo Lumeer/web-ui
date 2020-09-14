@@ -1,8 +1,18 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
-  <lmr-table [columns]="columns$ | async"
-             [rows]="rows"
-             (columnChange)="onColumnsChange($event)">
-  </lmr-table>
+
+  <ng-container *ngIf="{constraintData: constraintData$ | async} as data">
+    <lmr-table *ngFor="let table of tables$ | async; trackBy: trackByTable"
+               [style.height.px]="350"
+               [tableModel]="table"
+               [constraintData]="data.constraintData"
+               [selectedCell]="selectedCell$ | async"
+               [editedCell]="editedCell$ | async"
+               (columnMove)="onColumnMove(table, $event)"
+               (columnResize)="onColumnResize(table, $event)"
+               (onCellClick)="onTableCellClick($event)"
+               (onCellDoubleClick)="onTableCellDoubleClick($event)">
+    </lmr-table>
+  </ng-container>
 
 </ng-container>
 

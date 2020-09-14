@@ -1,30 +1,31 @@
 <ng-container *ngFor="let column of columns; let index = index; trackBy: trackByColumn">
 
   <ng-container
-    *ngIf="{dataValue: row.documentData[column.attribute.id] | dataValue:column.attribute.constraint, columnFocused: columnFocused$ | async, columnEditing: columnEditing$ | async} as data">
+    *ngIf="{dataValue: row.documentData[column.attribute.id] | dataValue:column.attribute.constraint, focused: column.id === selectedColumnId, edited: column.id === editedColumnId} as data">
     <td *ngIf="true"
         [style.width.px]="column.width"
         [class.color]="column.attribute?.constraint?.type === constraintType.Color"
-        [class.focused]="data.columnFocused === index"
-        [class.editing]="data.columnEditing === index"
+        [class.focused]="data.focused"
+        [class.editing]="data.edited"
         [class.cursor-pointer]="column.editable">
       <data-input
         [constraint]="column.attribute.constraint"
         [cursor]="row | tableRowDataCursor:column"
-        [dataValue]="(editedValue | isNotNullOrUndefined) && data.columnEditing === index ? editedValue : data.dataValue"
+        [dataValue]="(editedValue | isNotNullOrUndefined) && data.edited === index ? editedValue : data.dataValue"
         [focus]="true"
-        [readonly]="!column.editable || !(data.columnEditing === index || column.attribute?.constraint?.type === constraintType.Boolean)"
+        [readonly]="!column.editable || !(data.edited || column.attribute?.constraint?.type === constraintType.Boolean)"
         [configuration]="configuration"
-        (save)="onNewValue(index, $event)"
-        (dblclick)="onDataInputDblClick(index, $event)"
-        (cancel)="onDataInputCancel(index)"
-        (click)="onDataInputFocus(index, $event)"
+        (save)="onNewValue(column, $event)"
+        (dblclick)="onDataInputDblClick(column.id, $event)"
+        (cancel)="onDataInputCancel(column)"
+        (click)="onDataInputClick(column.id, $event)"
         (enterInvalid)="onEnterInvalid()">
       </data-input>
     </td>
     <td *ngIf="false"
         [innerHTML]="data.dataValue | previewDataValue | safeHtml"
-        [class.focused]="data.columnFocused === index"
+        [style.width.px]="column.width"
+        [class.focused]="data.focused"
         class="text-pre overflow-hidden mx-1 align-middle"
         [title]="data.dataValue | formatDataValueTitle"
         [ngClass]="column.attribute?.constraint | constraintClass"

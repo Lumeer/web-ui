@@ -1,26 +1,24 @@
-<hidden-input (newInput)="onNewHiddenInput($event)"
-              class="position-fixed">
-</hidden-input>
 <ng-container *ngIf="{} as data">
-  <table-alternative-header [columns]="columns"></table-alternative-header>
-  <table-resize-header [columns]="columns" (resizeColumn)="onResizeColumn($event)"></table-resize-header>
+  <table-alternative-header [columns]="tableModel.columns"></table-alternative-header>
+  <table-resize-header [columns]="tableModel.columns" (resizeColumn)="onResizeColumn($event)"></table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize style="height: 100%" [disabled]="scrollDisabled$ | async">
-    <table class="table lmr-table position-relative" (clickOutside)="onClickOutside()">
-      <thead table-header [columns]="columns"
+    <table class="table lmr-table position-relative">
+      <thead table-header [columns]="tableModel.columns"
              (dragStart)="scrollDisabled$.next(true)"
              (dragEnd)="scrollDisabled$.next(false)"
              (moveColumn)="onMoveColumn($event)">
       </thead>
       <tbody>
       <tr table-row #tableRow
-          *cdkVirtualFor="let row of rows; let index = index; trackBy:trackByRow"
+          *cdkVirtualFor="let row of tableModel.rows; let index = index; trackBy:trackByRow"
           [row]="row"
+          [selectedCell]="selectedCell"
+          [editedCell]="editedCell"
           [constraintData]="constraintData"
-          [columns]="columns"
-          (onEdit)="onEdit(index,$event)"
-          (onFocus)="onFocus(index,$event)"
-          (resetFocusAndEdit)="onResetFocusAndEdit(index,$event)"
-          (newValue)="onNewValue(index,$event)">
+          [columns]="tableModel.columns"
+          (newValue)="onNewValue(index,$event)"
+          (onClick)="onBodyCellClick(row.id, $event)"
+          (onDoubleClick)="onBodyCellDoubleClick(row.id, $event)">
       </tr>
       </tbody>
     </table>

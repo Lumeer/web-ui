@@ -20,6 +20,7 @@
 import {Attribute} from '../../../core/store/collections/collection';
 
 export interface TableColumn {
+  id: string;
   width: number;
   attribute?: Attribute;
   name?: string;
