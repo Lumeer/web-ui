@@ -21,6 +21,7 @@ import {AfterContentInit, Directive, forwardRef, Input, OnChanges, OnDestroy} fr
 import {VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
 import {takeWhile, tap} from 'rxjs/operators';
 import {TableVirtualScrollStrategy} from './table-virtual-scroll-strategy';
+import {TABLE_ROW_HEIGHT} from '../model/table-model';
 
 export function _tableVirtualScrollDirectiveStrategyFactory(tableDir: TableItemSizeDirective) {
   return tableDir.scrollStrategy;
@@ -29,10 +30,10 @@ export function _tableVirtualScrollDirectiveStrategyFactory(tableDir: TableItemS
 const stickyHeaderSelector = '.lmr-table .sticky-header';
 
 const defaults = {
-  rowHeight: 35,
-  headerHeight: 35,
+  rowHeight: TABLE_ROW_HEIGHT,
+  headerHeight: TABLE_ROW_HEIGHT,
   headerEnabled: true,
-  footerHeight: 35,
+  footerHeight: TABLE_ROW_HEIGHT,
   footerEnabled: false,
   bufferMultiplier: 0,
 };

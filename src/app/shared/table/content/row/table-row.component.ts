@@ -26,6 +26,7 @@ import {
   ViewChild,
   OnChanges,
   SimpleChanges,
+  ElementRef,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {TableColumn} from '../../model/table-column';
@@ -38,13 +39,13 @@ import {UnknownConstraint} from '../../../../core/model/constraint/unknown.const
 import {isNotNullOrUndefined} from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
-import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
+import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: '[table-row]',
   templateUrl: './table-row.component.html',
-  styleUrls: ['./table-row.component.scss'],
+  styleUrls: ['./table-row.component.scss', '../common/table-cell.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowComponent implements OnChanges {
@@ -70,11 +71,12 @@ export class TableRowComponent implements OnChanges {
   public onDoubleClick = new EventEmitter<string>();
 
   @Output()
-  public newValue = new EventEmitter<{column: number; value: any}>();
+  public newValue = new EventEmitter<{columnId: string; value: any}>();
 
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
 
+  public readonly tableRowHeight = TABLE_ROW_HEIGHT;
   public readonly cellType = TableCellType.Body;
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
@@ -164,7 +166,7 @@ export class TableRowComponent implements OnChanges {
     const value = dataValue.serialize();
     const currentValue = this.columnValue(column);
     if (currentValue !== value) {
-      this.newValue.emit({column: 0, value});
+      this.newValue.emit({columnId: column.id, value});
     }
   }
 

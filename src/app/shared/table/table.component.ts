@@ -23,10 +23,12 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
   QueryList,
+  SimpleChanges,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
@@ -39,6 +41,13 @@ import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component
 import {TableRowComponent} from './content/row/table-row.component';
 import {ConstraintData} from '../../core/model/data/constraint';
 import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel} from './model/table-model';
+import {TableScrollService} from './service/table-scroll.service';
+import {DocumentModel} from '../../core/store/documents/document.model';
+import {DocumentsAction} from '../../core/store/documents/documents.action';
+import {LinkInstance} from '../../core/store/link-instances/link.instance';
+import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
+import {AppState} from '../../core/store/app.state';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'lmr-table',
@@ -46,7 +55,7 @@ import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent implements OnInit, OnDestroy {
+export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public tableModel: TableModel;
 
@@ -83,11 +92,29 @@ export class TableComponent implements OnInit, OnDestroy {
   public scrollDisabled$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
+  private tableScrollService: TableScrollService;
 
-  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef<HTMLElement>) {}
+  constructor(
+    private scrollDispatcher: ScrollDispatcher,
+    private element: ElementRef<HTMLElement>,
+    private store$: Store<AppState>
+  ) {
+    this.tableScrollService = new TableScrollService(() => this.viewPort);
+  }
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToScrolling());
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.selectedCell && this.selectedCell) {
+      this.checkScrollPositionForSelectedCell();
+    }
+  }
+
+  private checkScrollPositionForSelectedCell() {
+    const {top, left} = this.tableScrollService.computeScrollOffsets(this.tableModel, this.selectedCell);
+    this.viewPort.scrollTo({top, left});
   }
 
   private subscribeToScrolling(): Subscription {
@@ -131,24 +158,28 @@ export class TableComponent implements OnInit, OnDestroy {
     return row.id;
   }
 
-  public onNewValue(row: number, data: {column: number; value: any}) {
-    // const linkRow = this.rows[row];
-    // const column = this.columns[data.column];
-    // if (linkRow && column) {
-    //   const patchData = {[column.attribute.id]: data.value};
-    //   if (column.collectionId && linkRow.documentId) {
-    //     const document: DocumentModel = {id: linkRow.documentId, collectionId: column.collectionId, data: patchData};
-    //     this.store$.dispatch(new DocumentsAction.PatchData({document}));
-    //   } else if (column.linkTypeId && linkRow.linkInstanceId) {
-    //     const linkInstance: LinkInstance = {
-    //       id: linkRow.linkInstanceId,
-    //       linkTypeId: column.linkTypeId,
-    //       data: patchData,
-    //       documentIds: ['', ''],
-    //     };
-    //     this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
-    //   }
-    // }
+  public onNewValue(rowId: string, data: {columnId: string; value: any}) {
+    const tableRow = this.tableModel?.rows?.find(row => row.id === rowId);
+    const tableColumn = this.tableModel?.columns?.find(column => column.id === data.columnId);
+    if (tableRow && tableColumn) {
+      const patchData = {[tableColumn.attribute.id]: data.value};
+      if (tableColumn.collectionId && tableRow.documentId) {
+        const document: DocumentModel = {
+          id: tableRow.documentId,
+          collectionId: tableColumn.collectionId,
+          data: patchData,
+        };
+        this.store$.dispatch(new DocumentsAction.PatchData({document}));
+      } else if (tableColumn.linkTypeId && tableRow.linkInstanceId) {
+        const linkInstance: LinkInstance = {
+          id: tableRow.linkInstanceId,
+          linkTypeId: tableColumn.linkTypeId,
+          data: patchData,
+          documentIds: ['', ''],
+        };
+        this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
+      }
+    }
   }
 
   public onBodyCellClick(rowId: string, columnId: string) {
@@ -157,5 +188,13 @@ export class TableComponent implements OnInit, OnDestroy {
 
   public onBodyCellDoubleClick(rowId: string, columnId: string) {
     this.onCellDoubleClick.emit({tableId: this.tableModel.id, rowId, columnId, type: TableCellType.Body});
+  }
+
+  public onHeaderCellClick(columnId: string) {
+    this.onCellClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
+  }
+
+  public onHeaderCellDoubleClick(columnId: string) {
+    this.onCellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
   }
 }

@@ -22,6 +22,7 @@ import {DataResourceData} from '../../../core/model/resource';
 export interface TableRow {
   id: string;
   documentId: string;
+  height: number;
   documentData?: DataResourceData;
   linkInstanceId?: string;
   linkInstanceData?: DataResourceData;

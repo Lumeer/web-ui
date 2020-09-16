@@ -1,10 +1,12 @@
 <div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable>
   <div *ngFor="let column of columns; let last = last; let first = first; trackBy:trackByColumn"
-       class="header-cell"
+       class="header-cell table-cell"
        [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
        [style.font-weight]="column.bold ? 'bold' : 'normal'"
        [style.margin-left.px]="first ? 1 : 0"
+       [style.height.px]="tableRowHeight"
        [style.width.px]="first && !last ? column.width - 1 : column.width"
+       [class.focused]="selectedCell | tableCellSelected:column:cellType"
        [style.min-width.px]="first && !last ? column.width - 1 : column.width">
     <div class="header-content text-nowrap font-italic">
       <div class="overflow-hidden name">{{column.attribute.name}}</div>

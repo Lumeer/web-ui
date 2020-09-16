@@ -1,6 +1,11 @@
 <ng-container *ngIf="{} as data">
-  <table-alternative-header [columns]="tableModel.columns"></table-alternative-header>
-  <table-resize-header [columns]="tableModel.columns" (resizeColumn)="onResizeColumn($event)"></table-resize-header>
+  <table-alternative-header [columns]="tableModel.columns"
+                            [selectedCell]="selectedCell">
+  </table-alternative-header>
+  <table-resize-header class="h-100"
+                       [columns]="tableModel.columns"
+                       (resizeColumn)="onResizeColumn($event)">
+  </table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize style="height: 100%" [disabled]="scrollDisabled$ | async">
     <table class="table lmr-table position-relative">
       <thead table-header [columns]="tableModel.columns"
@@ -8,6 +13,8 @@
              [editedCell]="editedCell"
              (dragStart)="scrollDisabled$.next(true)"
              (dragEnd)="scrollDisabled$.next(false)"
+             (onClick)="onHeaderCellClick($event)"
+             (onDoubleClick)="onHeaderCellDoubleClick($event)"
              (moveColumn)="onMoveColumn($event)">
       </thead>
       <tbody>
@@ -18,7 +25,7 @@
           [editedCell]="editedCell"
           [constraintData]="constraintData"
           [columns]="tableModel.columns"
-          (newValue)="onNewValue(index,$event)"
+          (newValue)="onNewValue(row.id, $event)"
           (onClick)="onBodyCellClick(row.id, $event)"
           (onDoubleClick)="onBodyCellDoubleClick(row.id, $event)">
       </tr>

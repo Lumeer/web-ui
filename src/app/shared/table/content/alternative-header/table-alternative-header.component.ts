@@ -19,11 +19,12 @@
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
 import {TableColumn} from '../../model/table-column';
+import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 
 @Component({
   selector: 'table-alternative-header',
   templateUrl: './table-alternative-header.component.html',
-  styleUrls: ['./table-alternative-header.component.scss'],
+  styleUrls: ['./table-alternative-header.component.scss', '../common/table-cell.scss'],
   host: {class: 'alternative-header w-100'},
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -31,7 +32,13 @@ export class TableAlternativeHeaderComponent {
   @Input()
   public columns: TableColumn[];
 
+  @Input()
+  public selectedCell: SelectedTableCell;
+
+  public readonly tableRowHeight = TABLE_ROW_HEIGHT;
+  public readonly cellType = TableCellType.Header;
+
   public trackByColumn(index: number, column: TableColumn): string {
-    return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
+    return column.id;
   }
 }

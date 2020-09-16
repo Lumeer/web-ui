@@ -6,7 +6,7 @@
     (click)="onClickInsideTables($event)">
     <lmr-table *ngFor="let table of tables$ | async; trackBy: trackByTable"
                class="my-3" #lmrTable
-               [style.height.px]="300"
+               [style.height.px]="200"
                [tableModel]="table"
                [constraintData]="data.constraintData"
                [selectedCell]="data.selectedCell?.tableId === table.id ? data.selectedCell : null"

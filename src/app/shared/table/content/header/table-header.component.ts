@@ -35,12 +35,12 @@ import {ContextMenuService} from 'ngx-contextmenu';
 import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
-import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
+import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 
 @Component({
   selector: '[table-header]',
   templateUrl: './table-header.component.html',
-  styleUrls: ['./table-header.component.scss'],
+  styleUrls: ['./table-header.component.scss', '../common/table-cell.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHeaderComponent implements OnChanges {
@@ -62,12 +62,19 @@ export class TableHeaderComponent implements OnChanges {
   @Output()
   public dragEnd = new EventEmitter();
 
+  @Output()
+  public onClick = new EventEmitter<string>();
+
+  @Output()
+  public onDoubleClick = new EventEmitter<string>();
+
   @ViewChildren('resizeHandle')
   public handlerElements: QueryList<ElementRef>;
 
   @ViewChildren(LinksListHeaderMenuComponent)
   public headerMenuElements: QueryList<LinksListHeaderMenuComponent>;
 
+  public readonly tableRowHeight = TABLE_ROW_HEIGHT;
   public readonly cellType = TableCellType.Header;
 
   private columnsPositionsStart: number[];
@@ -91,7 +98,7 @@ export class TableHeaderComponent implements OnChanges {
   }
 
   public trackByColumn(index: number, column: TableColumn): string {
-    return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
+    return column.id;
   }
 
   public onContextMenu(column: number, event: MouseEvent) {
@@ -157,5 +164,13 @@ export class TableHeaderComponent implements OnChanges {
 
   public onColumnDragStarted() {
     this.dragStart.emit();
+  }
+
+  public onHeaderClick(columnId: string) {
+    this.onClick.emit(columnId);
+  }
+
+  public onHeaderDoubleClick(columnId: string) {
+    this.onDoubleClick.emit(columnId);
   }
 }

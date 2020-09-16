@@ -1,6 +1,6 @@
 <tr cdkDropList class="row-boundary" *ngIf="{index: draggedIndex$ | async} as dragData ">
   <th *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
-      class="sticky-header"
+      class="sticky-header table-cell"
       cdkDrag
       [class.focused]="selectedCell | tableCellSelected:column:cellType"
       [class.dragging]="dragData.index === index"
@@ -11,11 +11,14 @@
       (mousedown)="onMouseDown($event)"
       [style.font-weight]="column.bold ? 'bold' : 'normal'"
       [style.width.px]="column.width"
+      [style.height.px]="tableRowHeight"
       scope="col" title="{{column.attribute.name}}"
-      (contextmenu)="onContextMenu(index, $event)">
-    <div class="wrapper"
+      (contextmenu)="onContextMenu(index, $event)"
+      (click)="onHeaderClick(column.id)"
+      (dblclick)="onHeaderDoubleClick(column.id)">
+    <div class="wrapper h-100"
          [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'">
-      <div class="header-content" *ngIf="index !== dragData.index">
+      <div class="header-content h-100" *ngIf="index !== dragData.index">
         <div class="overflow-hidden">{{column.attribute.name}}</div>
 
         <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">

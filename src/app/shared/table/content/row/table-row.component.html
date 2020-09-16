@@ -1,9 +1,13 @@
 <ng-container *ngFor="let column of columns; let index = index; trackBy: trackByColumn">
 
   <ng-container
-    *ngIf="{dataValue: row.documentData[column.attribute.id] | dataValue:column.attribute.constraint, focused: selectedCell | tableCellSelected:column:cellType:row, edited: column.id === editedColumnId} as data">
+    *ngIf="{dataValue: row.documentData[column.attribute.id] | dataValue:column.attribute.constraint,
+    focused: selectedCell | tableCellSelected:column:cellType:row,
+    edited: editedCell | tableCellSelected:column:cellType:row} as data">
     <td *ngIf="true"
+        class="table-cell"
         [style.width.px]="column.width"
+        [style.height.px]="row.height"
         [class.color]="column.attribute?.constraint?.type === constraintType.Color"
         [class.focused]="data.focused"
         [class.editing]="data.edited"
@@ -13,7 +17,7 @@
       <data-input
         [constraint]="column.attribute.constraint"
         [cursor]="row | tableRowDataCursor:column"
-        [dataValue]="(editedValue | isNotNullOrUndefined) && data.edited === index ? editedValue : data.dataValue"
+        [dataValue]="(editedValue | isNotNullOrUndefined) && data.edited ? editedValue : data.dataValue"
         [focus]="true"
         [readonly]="!column.editable || !(data.edited || column.attribute?.constraint?.type === constraintType.Boolean)"
         [configuration]="configuration"
@@ -25,8 +29,9 @@
     <td *ngIf="false"
         [innerHTML]="data.dataValue | previewDataValue | safeHtml"
         [style.width.px]="column.width"
+        [style.height.px]="row.height"
         [class.focused]="data.focused"
-        class="text-pre overflow-hidden mx-1 align-middle"
+        class="text-pre overflow-hidden mx-1 align-middle table-cell"
         [title]="data.dataValue | formatDataValueTitle"
         [ngClass]="column.attribute?.constraint | constraintClass"
         [class.invalid-value]="!(data.dataValue | isDataValueValid)"

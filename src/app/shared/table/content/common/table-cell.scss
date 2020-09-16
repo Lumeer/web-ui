@@ -1,0 +1,24 @@
+@import 'src/styles/variables';
+
+%highlighted {
+  z-index: $z-index-selected;
+  outline-offset: -1px;
+}
+
+.table-cell.focused {
+  @extend %highlighted;
+  outline: $primary solid 1px;
+  box-shadow: 0 0 4px $secondary;
+}
+
+.table-cell.editing {
+  @extend %highlighted;
+  outline: $success solid 1px;
+  box-shadow: 1px 1px 4px $secondary;
+}
+
+.table-cell.affected:not(.editing) {
+  @extend %highlighted;
+  outline: $warning solid 1px;
+  box-shadow: 1px 1px 4px $secondary;
+}

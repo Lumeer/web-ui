@@ -21,6 +21,7 @@ import {BehaviorSubject} from 'rxjs';
 import {
   EditedTableCell,
   SelectedTableCell,
+  TABLE_ROW_HEIGHT,
   TableCell,
   TableCellType,
   TableModel,
@@ -50,6 +51,7 @@ export class WorkflowTablesService {
 
   public resetSelection() {
     this.selectedCell$.next(null);
+    this.editedCell$.next(null);
   }
 
   public onKeyDown(event: KeyboardEvent) {
@@ -65,21 +67,73 @@ export class WorkflowTablesService {
         break;
       case KeyCode.NumpadEnter:
       case KeyCode.Enter:
-        // TODO this.onEnterKeyDown(event);
+        this.onEnterKeyDown(event);
         break;
       case KeyCode.F2:
-        // TODO this.onF2KeyDown(event);
+        this.onF2KeyDown(event);
         break;
       case KeyCode.Backspace:
-        // TODO this.onBackSpaceKeyDown(event);
+        this.onBackSpaceKeyDown(event);
         break;
     }
   }
 
-  private onTabKeyDown(event: KeyboardEvent) {
+  private onBackSpaceKeyDown(event: KeyboardEvent) {
+    if (!this.isFocusing()) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const selectedCell = this.selectedCell$.value;
+    this.selectedCell$.next(null);
+    this.editedCell$.next({...selectedCell, inputValue: ''});
+  }
+
+  private onF2KeyDown(event: KeyboardEvent) {
+    if (this.isFocusing()) {
+      const selectedCell = this.selectedCell$.value;
+      this.selectedCell$.next(null);
+      this.editedCell$.next({...selectedCell, inputValue: null});
+    } else if (this.isEditing()) {
+      const editedCell = this.editedCell$.value;
+      this.selectedCell$.next(editedCell);
+      this.editedCell$.next(null);
+    }
+  }
+
+  private onEnterKeyDown(event: KeyboardEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (this.isEditing()) {
-      event.preventDefault();
-      event.stopPropagation();
+      const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell$.value);
+      if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
+        const editedCell = this.editedCell$.value;
+        this.selectedCell$.next(editedCell);
+      } else {
+        this.selectCell(tableIndex, rowIndex + 1, columnIndex);
+      }
+      this.editedCell$.next(null);
+    } else if (this.isFocusing()) {
+      const selectedCell = this.selectedCell$.value;
+      this.selectedCell$.next(null);
+      this.editedCell$.next({...selectedCell, inputValue: null});
+    }
+  }
+
+  private onTabKeyDown(event: KeyboardEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.isEditing()) {
+      const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell$.value);
+      if (event.shiftKey) {
+        this.selectCell(tableIndex, rowIndex, columnIndex - 1);
+      } else {
+        this.selectCell(tableIndex, rowIndex, columnIndex + 1);
+      }
+      this.editedCell$.next(null);
     } else if (this.isFocusing()) {
       this.onArrowKeyDown(event);
     }
@@ -215,9 +269,11 @@ export class WorkflowTablesService {
 
   public onCellClick(cell: TableCell) {
     this.selectedCell$.next({...cell});
+    this.editedCell$.next(null);
   }
 
   public onCellDoubleClick(cell: TableCell) {
+    this.selectedCell$.next(null);
     this.editedCell$.next({...cell, inputValue: null});
   }
 
@@ -326,6 +382,11 @@ export class WorkflowTablesService {
   }
 
   private createDocumentRows(currentRows: TableRow[], documents: DocumentModel[]): TableRow[] {
-    return documents.map(document => ({id: generateId(), documentData: document.data, documentId: document.id}));
+    return documents.map(document => ({
+      id: generateId(),
+      documentData: document.data,
+      documentId: document.id,
+      height: TABLE_ROW_HEIGHT,
+    }));
   }
 }
