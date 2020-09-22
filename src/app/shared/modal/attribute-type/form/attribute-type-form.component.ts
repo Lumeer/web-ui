@@ -123,6 +123,7 @@ export class AttributeTypeFormComponent implements OnChanges {
           compact: this.configForm.get(NumberConstraintFormControl.Compact).value,
           forceSign: this.configForm.get(NumberConstraintFormControl.ForceSign).value,
           negative: this.configForm.get(NumberConstraintFormControl.Negative).value,
+          currency: this.configForm.get(NumberConstraintFormControl.Currency).value,
         };
       case ConstraintType.Percentage:
         return {

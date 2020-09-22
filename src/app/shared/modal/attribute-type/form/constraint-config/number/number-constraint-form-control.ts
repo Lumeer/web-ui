@@ -25,4 +25,5 @@ export enum NumberConstraintFormControl {
   Separated = 'separated',
   ForceSign = 'forceSign',
   Negative = 'negative',
+  Currency = 'currency',
 }

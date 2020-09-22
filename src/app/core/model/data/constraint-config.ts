@@ -20,6 +20,7 @@
 import Big from 'big.js';
 import {AddressField} from '../../store/geocoding/address';
 import {palette} from '../../../shared/picker/colors';
+import {LanguageTag} from './language-tag';
 
 export interface AddressConstraintConfig {
   fields: AddressField[];
@@ -78,6 +79,7 @@ export interface NumberConstraintConfig {
   separated?: boolean; // 10,000 in non compact mode; 1 m in compact mode
   forceSign?: boolean; // +350
   negative?: 'parenthesis'; // (100)
+  currency?: LanguageTag;
 }
 
 export interface PercentageConstraintConfig {

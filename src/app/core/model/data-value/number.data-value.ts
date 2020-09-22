@@ -32,6 +32,8 @@ import {escapeHtml, isNotNullOrUndefined, isNumeric, unescapeHtml} from '../../.
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 import numbro from 'numbro';
+import languages from 'numbro/dist/languages.min';
+import {currentLocaleLanguageTag, LanguageTag} from '../data/language-tag';
 
 export class NumberDataValue implements NumericDataValue {
   public readonly bigNumber: Big;
@@ -51,10 +53,23 @@ export class NumberDataValue implements NumericDataValue {
     }
 
     if (this.bigNumber) {
-      return numbro(this.bigNumber.toFixed()).format(parseNumbroConfig(this.config, overrideConfig));
+      const numbroConfig = parseNumbroConfig(this.config, overrideConfig);
+      if (this.config?.currency) {
+        this.setLanguage(this.config.currency);
+        return numbro(this.bigNumber.toFixed()).formatCurrency(numbroConfig);
+      }
+      this.setLanguage(currentLocaleLanguageTag());
+      return numbro(this.bigNumber.toFixed()).format(numbroConfig);
     }
 
     return formatUnknownDataValue(this.value);
+  }
+
+  private setLanguage(tag: LanguageTag) {
+    if (!numbro.languages()[tag]) {
+      numbro.registerLanguage(languages[tag]);
+    }
+    numbro.setLanguage(tag);
   }
 
   public preview(overrideConfig?: Partial<NumberConstraintConfig>): string {
@@ -150,6 +165,7 @@ function parseNumbroConfig(
   if (overrideConfig?.separated || config.separated) {
     numbroConfig.thousandSeparated = true;
     numbroConfig.spaceSeparated = true;
+    numbroConfig.spaceSeparatedCurrency = true;
   }
   if (overrideConfig?.compact || config.compact) {
     numbroConfig.average = true;
