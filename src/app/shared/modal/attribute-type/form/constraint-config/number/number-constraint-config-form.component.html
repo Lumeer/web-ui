@@ -22,7 +22,8 @@
       <input type="checkbox" [formControlName]="formControlName.Compact" [id]="formControlName.Compact" #compact>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.compact.label" (click)="compact.click()">Compact mode</span>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.compact.label"
+          (click)="compact.click()">Compact mode</span>
   </div>
 
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
@@ -30,7 +31,8 @@
       <input type="checkbox" [formControlName]="formControlName.Separated" [id]="formControlName.Separated" #separated>
       <span class="slider round" (click)="$event.stopPropagation()"></span>
     </label>
-    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.space.label" (click)="separated.click()">Thousands separated</span>
+    <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.space.label"
+          (click)="separated.click()">Thousands separated</span>
   </div>
 
   <div class="d-flex flex-column pt-3">
@@ -53,6 +55,22 @@
           i18n="@@constraint.number.decimals.description">
           Leave empty for no rounding.
     </span>
+  </div>
+
+  <div class="form-group mt-2">
+    <label i18n="@@constraint.number.currency.label">
+      Currency
+    </label>
+    <select-item class="w-100 d-block"
+                 [items]="currencySelectItems"
+                 [selectedId]="currencyControl.value"
+                 [removable]="true"
+                 (select)="onCurrencySelect($event)"
+                 (remove)="onCurrencySelect(null)"
+                 emptyValue="Select currency"
+                 i18n-emptyValue="@@constraint.number.currency.empty"
+                 buttonClasses="flex-grow-1 text-truncate">
+    </select-item>
   </div>
 
   <p class="text-secondary m-0 mt-2">

@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {NumberConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {minMaxValidator} from '../../../../../../core/validators/min-max-validator';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
@@ -27,6 +27,9 @@ import {NumberDataValue} from '../../../../../../core/model/data-value/number.da
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {NumberConstraint} from '../../../../../../core/model/constraint/number.constraint';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {LanguageTag} from '../../../../../../core/model/data/language-tag';
 
 @Component({
   selector: 'number-constraint-config-form',
@@ -41,8 +44,17 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   public form: FormGroup;
 
   public readonly formControlName = NumberConstraintFormControl;
+  public readonly currencySelectItems: SelectItemModel[];
 
   public exampleValue$: Observable<NumberDataValue>;
+
+  constructor(private i18n: I18n) {
+    this.currencySelectItems = this.createCurrencySelectItems();
+  }
+
+  public get currencyControl(): AbstractControl {
+    return this.form.get('currency');
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -64,6 +76,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
     this.form.addControl(NumberConstraintFormControl.Negative, new FormControl(this.config?.negative));
     this.form.addControl(NumberConstraintFormControl.MinValue, new FormControl(this.config?.minValue?.toFixed()));
     this.form.addControl(NumberConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue?.toFixed()));
+    this.form.addControl(NumberConstraintFormControl.Currency, new FormControl(this.config?.currency));
     this.form.setValidators(
       minMaxValidator(NumberConstraintFormControl.MinValue, NumberConstraintFormControl.MaxValue)
     );
@@ -82,5 +95,29 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
     }
 
     return new NumberConstraint(config).createDataValue(exampleValue);
+  }
+
+  private createCurrencySelectItems(): SelectItemModel[] {
+    return Object.values(LanguageTag)
+      .map(tag => ({
+        id: tag,
+        value: this.translateLanguageTag(tag),
+      }))
+      .sort((a, b) => b.value.localeCompare(a.value));
+  }
+
+  private translateLanguageTag(tag: LanguageTag): string {
+    return this.i18n(
+      {
+        id: 'constraint.number.currency.select',
+        value:
+          '{tag, select, es-ES {Spain - € (EUR)} fr-FR {France - € (EUR)} it-IT {Italy - € (EUR)} en-GB {United Kingdom - £ (GBP)} pt-PT {Portugal - € (EUR)} pl-PL {Poland - zł (PLN)} cs-CZ {Czech Republic - Kč (CZK)} sk-SK {Slovak Republic - € (EUR)} hu-HU {Hungary - Ft (HUF)} de-AT {Austria - € (EUR)} de-DE {Germany - € (EUR))} en-US {United States - $ (USD)} pt-BR {Brazil - R$ (BRL)} zh-TW {Taiwan - NT$ (TWD)} nl-NL {Netherland - € (EUR)} zh-CN {China - ¥ (CNY)} ru-RU {Russia - руб. (RUB)} ja-JP {Japan - ¥ (JPY)} en-AU {Australia - $ (AUD)}}',
+      },
+      {tag}
+    );
+  }
+
+  public onCurrencySelect(tag: LanguageTag) {
+    this.currencyControl.setValue(tag);
   }
 }
