@@ -43,6 +43,11 @@ export class NumberDataValue implements NumericDataValue {
     public readonly config: NumberConstraintConfig,
     public readonly inputValue?: string
   ) {
+    if (this.inputValue) {
+      this.setLanguage(config?.currency || currentLocaleLanguageTag());
+    } else {
+      this.setLanguage(LanguageTag.USA);
+    }
     const unformatted = numbro.unformat(value, parseNumbroConfig(config));
     this.bigNumber = convertToBig(unformatted);
   }
@@ -55,8 +60,10 @@ export class NumberDataValue implements NumericDataValue {
     if (this.bigNumber) {
       const numbroConfig = parseNumbroConfig(this.config, overrideConfig);
       if (this.config?.currency) {
+        this.setLanguage(LanguageTag.USA);
+        const numbroObject = numbro(this.bigNumber.toFixed());
         this.setLanguage(this.config.currency);
-        return numbro(this.bigNumber.toFixed()).formatCurrency(numbroConfig);
+        return numbroObject.formatCurrency(numbroConfig);
       }
       this.setLanguage(currentLocaleLanguageTag());
       return numbro(this.bigNumber.toFixed()).format(numbroConfig);
