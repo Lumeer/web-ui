@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {CdkScrollable} from '@angular/cdk/overlay';
 import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType, TableModel} from '../model/table-model';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 

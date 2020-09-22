@@ -43,15 +43,43 @@ import {TableRow} from '../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../shared/utils/array.utils';
 import {KeyCode} from '../../../../shared/key-code';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {DataRowHiddenComponent} from '../../../../shared/data/data-row-component';
+import {distinctUntilChanged, skip} from 'rxjs/operators';
 
 export class WorkflowTablesService {
   public selectedCell$ = new BehaviorSubject<SelectedTableCell>(null);
   public editedCell$ = new BehaviorSubject<EditedTableCell>(null);
   public tables$ = new BehaviorSubject<TableModel[]>([]);
 
+  constructor(private hiddenComponent?: () => DataRowHiddenComponent) {
+    this.selectedCell$.pipe(skip(1), distinctUntilChanged()).subscribe(() => {
+      if (this.isSelected()) {
+        this.hiddenComponent()?.focus();
+      } else {
+        this.hiddenComponent()?.blur();
+      }
+    });
+  }
+
   public resetSelection() {
     this.selectedCell$.next(null);
     this.editedCell$.next(null);
+  }
+
+  public newHiddenInput(value: string) {
+    if (this.isSelected()) {
+      const selectedCell = this.selectedCell$.value;
+      this.selectedCell$.next(null);
+      this.editedCell$.next({...selectedCell, inputValue: value});
+    }
+  }
+
+  public resetCellSelection(cell: TableCell) {
+    if (this.isEditing() && this.isEditingCell(cell)) {
+      this.editedCell$.next(null);
+    } else if (this.isSelected() && this.isCellSelected(cell)) {
+      this.selectedCell$.next(null);
+    }
   }
 
   public onKeyDown(event: KeyboardEvent) {
@@ -79,7 +107,7 @@ export class WorkflowTablesService {
   }
 
   private onBackSpaceKeyDown(event: KeyboardEvent) {
-    if (!this.isFocusing()) {
+    if (!this.isSelected()) {
       return;
     }
 
@@ -92,7 +120,7 @@ export class WorkflowTablesService {
   }
 
   private onF2KeyDown(event: KeyboardEvent) {
-    if (this.isFocusing()) {
+    if (this.isSelected()) {
       const selectedCell = this.selectedCell$.value;
       this.selectedCell$.next(null);
       this.editedCell$.next({...selectedCell, inputValue: null});
@@ -116,7 +144,7 @@ export class WorkflowTablesService {
         this.selectCell(tableIndex, rowIndex + 1, columnIndex);
       }
       this.editedCell$.next(null);
-    } else if (this.isFocusing()) {
+    } else if (this.isSelected()) {
       const selectedCell = this.selectedCell$.value;
       this.selectedCell$.next(null);
       this.editedCell$.next({...selectedCell, inputValue: null});
@@ -134,7 +162,7 @@ export class WorkflowTablesService {
         this.selectCell(tableIndex, rowIndex, columnIndex + 1);
       }
       this.editedCell$.next(null);
-    } else if (this.isFocusing()) {
+    } else if (this.isSelected()) {
       this.onArrowKeyDown(event);
     }
   }
@@ -142,7 +170,7 @@ export class WorkflowTablesService {
   private onArrowKeyDown(event: KeyboardEvent) {
     if (
       this.isEditing() ||
-      !this.isFocusing() ||
+      !this.isSelected() ||
       (event.shiftKey && event.code !== KeyCode.Tab) ||
       event.altKey ||
       event.ctrlKey
@@ -263,8 +291,20 @@ export class WorkflowTablesService {
     return isNotNullOrUndefined(this.editedCell$.value);
   }
 
-  private isFocusing(): boolean {
+  private isEditingCell(cell: TableCell): boolean {
+    return this.isEditing() && this.cellsAreSame(cell, this.editedCell$.value);
+  }
+
+  private isSelected(): boolean {
     return isNotNullOrUndefined(this.selectedCell$.value);
+  }
+
+  private cellsAreSame(c1: TableCell, c2: TableCell): boolean {
+    return c1.type === c2.type && c1.tableId === c2.tableId && c1.columnId === c2.columnId && c1.rowId === c2.rowId;
+  }
+
+  private isCellSelected(cell: TableCell): boolean {
+    return this.isEditing() && this.cellsAreSame(cell, this.selectedCell$.value);
   }
 
   public onCellClick(cell: TableCell) {
@@ -315,8 +355,7 @@ export class WorkflowTablesService {
     query: Query,
     viewSettings: ViewSettings
   ) {
-    const colls = collections.length ? [...collections, ...collections] : collections;
-    const newTables = colls.reduce((result, collection) => {
+    const newTables = collections.reduce((result, collection) => {
       const collectionDocuments = documents.filter(document => document.collectionId === collection.id);
       const collectionPermissions = permissions?.[collection.id];
       const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
@@ -333,10 +372,10 @@ export class WorkflowTablesService {
     query: Query,
     settings: ResourceAttributeSettings[]
   ): TableModel {
-    const currentTable = this.tables$.value.find(table => table.id === collection.id);
+    const currentTable = this.tables$.value.find(table => table.collectionId === collection.id);
     const columns = this.createCollectionColumns(currentTable?.columns || [], collection, permissions, query, settings);
     const rows = this.createDocumentRows(currentTable?.rows || [], documents);
-    return {columns, rows, id: currentTable?.id || generateId(), collectionId: collection.id};
+    return {id: currentTable?.id || generateId(), columns, rows, collectionId: collection.id};
   }
 
   private createCollectionColumns(
@@ -382,11 +421,17 @@ export class WorkflowTablesService {
   }
 
   private createDocumentRows(currentRows: TableRow[], documents: DocumentModel[]): TableRow[] {
-    return documents.map(document => ({
-      id: generateId(),
-      documentData: document.data,
-      documentId: document.id,
-      height: TABLE_ROW_HEIGHT,
-    }));
+    const rowsMap = currentRows.reduce((map, row) => ({...map, [row.correlationId || row.documentId]: row}), {});
+
+    return documents.map(document => {
+      const currentRow = rowsMap[document.correlationId || document.id];
+      return {
+        id: currentRow?.id || generateId(),
+        documentData: document.data,
+        documentId: document.id,
+        height: currentRow?.height || TABLE_ROW_HEIGHT,
+        correlationId: document.correlationId,
+      };
+    });
   }
 }

@@ -68,6 +68,9 @@ export class TableRowComponent implements OnChanges {
   public onClick = new EventEmitter<string>();
 
   @Output()
+  public onCancel = new EventEmitter<string>();
+
+  @Output()
   public onDoubleClick = new EventEmitter<string>();
 
   @Output()
@@ -85,7 +88,6 @@ export class TableRowComponent implements OnChanges {
     user: {allowCenterOnlyIcon: true},
   };
 
-  public editedColumnId: string;
   public editedValue: DataValue;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
@@ -105,11 +107,8 @@ export class TableRowComponent implements OnChanges {
         } else {
           this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
           this.suggesting$.next(this.editedValue);
-          this.editedColumnId = this.editedCell.columnId;
         }
       }
-    } else {
-      this.editedColumnId = null;
     }
   }
 
@@ -171,18 +170,18 @@ export class TableRowComponent implements OnChanges {
   }
 
   public onDataInputDblClick(columnId: string, event: MouseEvent) {
-    if (this.editedColumnId !== columnId) {
+    if (this.editedCell?.columnId !== columnId) {
       event.preventDefault();
       this.onDoubleClick.emit(columnId);
     }
   }
 
   public onDataInputCancel(column: TableColumn) {
-    // TODO this.resetFocusAndEdit.emit(column);
+    this.onCancel.emit(column.id);
   }
 
   public onDataInputClick(columnId: string, event: MouseEvent) {
-    if (this.editedColumnId !== columnId) {
+    if (this.editedCell?.columnId !== columnId) {
       this.onClick.emit(columnId);
     }
   }

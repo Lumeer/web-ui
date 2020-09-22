@@ -27,6 +27,7 @@
           [columns]="tableModel.columns"
           (newValue)="onNewValue(row.id, $event)"
           (onClick)="onBodyCellClick(row.id, $event)"
+          (onCancel)="onBodyCancel(row.id, $event)"
           (onDoubleClick)="onBodyCellDoubleClick(row.id, $event)">
       </tr>
       </tbody>

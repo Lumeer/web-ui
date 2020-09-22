@@ -72,6 +72,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public onCellClick = new EventEmitter<TableCell>();
 
   @Output()
+  public onCancel = new EventEmitter<TableCell>();
+
+  @Output()
   public onCellDoubleClick = new EventEmitter<TableCell>();
 
   @Output()
@@ -196,5 +199,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   public onHeaderCellDoubleClick(columnId: string) {
     this.onCellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
+  }
+
+  public onBodyCancel(rowId: string, columnId: string) {
+    this.onCancel.emit({tableId: this.tableModel.id, rowId, columnId, type: TableCellType.Body});
   }
 }

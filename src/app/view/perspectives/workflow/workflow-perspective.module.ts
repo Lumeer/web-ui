@@ -28,6 +28,7 @@ import {WorkflowPerspectiveContentComponent} from './content/workflow-perspectiv
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {ClickOutsideModule} from 'ng-click-outside';
+import {InputModule} from '../../../shared/input/input.module';
 
 @NgModule({
   declarations: [WorkflowPerspectiveComponent, WorkflowPerspectiveContentComponent],
@@ -40,6 +41,7 @@ import {ClickOutsideModule} from 'ng-click-outside';
     PipesModule,
     WarningMessageModule,
     ClickOutsideModule,
+    InputModule,
   ],
 })
 export class WorkflowPerspectiveModule {}

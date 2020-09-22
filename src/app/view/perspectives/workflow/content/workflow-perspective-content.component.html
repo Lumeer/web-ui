@@ -1,5 +1,9 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
 
+  <hidden-input (newInput)="onNewHiddenInput($event)"
+                class="position-fixed">
+  </hidden-input>
+
   <div
     *ngIf="{constraintData: constraintData$ | async, selectedCell: selectedCell$ | async, editedCell: editedCell$ | async} as data"
     (clickOutside)="onClickOutsideTables()"
@@ -14,6 +18,7 @@
                (columnMove)="onColumnMove(table, $event)"
                (columnResize)="onColumnResize(table, $event)"
                (onCellClick)="onTableCellClick($event)"
+               (onCancel)="onTableCellCancel($event)"
                (onCellDoubleClick)="onTableCellDoubleClick($event)">
     </lmr-table>
   </div>

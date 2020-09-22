@@ -28,6 +28,7 @@ import {
   ViewChildren,
   QueryList,
   ElementRef,
+  ViewChild,
 } from '@angular/core';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -42,6 +43,9 @@ import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {TableComponent} from '../../../../shared/table/table.component';
+import {distinctUntilChanged} from 'rxjs/operators';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
+import {HiddenInputComponent} from '../../../../shared/input/hidden-input/hidden-input.component';
 
 @Component({
   selector: 'workflow-perspective-content',
@@ -68,6 +72,9 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   @ViewChildren('lmrTable', {read: ElementRef})
   public tableComponents: QueryList<ElementRef>;
 
+  @ViewChild(HiddenInputComponent)
+  public hiddenInputComponent: HiddenInputComponent;
+
   private tablesService: WorkflowTablesService;
 
   public tables$: Observable<TableModel[]>;
@@ -76,10 +83,16 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   public editedCell$: Observable<EditedTableCell>;
 
   constructor(private store$: Store<AppState>) {
-    this.tablesService = new WorkflowTablesService();
-    this.tables$ = this.tablesService.tables$.asObservable();
-    this.selectedCell$ = this.tablesService.selectedCell$.asObservable();
-    this.editedCell$ = this.tablesService.editedCell$.asObservable();
+    this.tablesService = new WorkflowTablesService(() => this.hiddenInputComponent);
+    this.tables$ = this.tablesService.tables$
+      .asObservable()
+      .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
+    this.selectedCell$ = this.tablesService.selectedCell$
+      .asObservable()
+      .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
+    this.editedCell$ = this.tablesService.editedCell$
+      .asObservable()
+      .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
   }
 
   public ngOnInit() {
@@ -132,5 +145,13 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
     if (!this.tableComponents.some(component => component.nativeElement.contains(event.target))) {
       this.tablesService.resetSelection();
     }
+  }
+
+  public onTableCellCancel(cell: TableCell) {
+    this.tablesService.resetCellSelection(cell);
+  }
+
+  public onNewHiddenInput(input: string) {
+    this.tablesService.newHiddenInput(input);
   }
 }
