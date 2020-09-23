@@ -25,7 +25,7 @@ import {
   RouterNavigatedAction,
   RouterNavigationAction,
 } from '@ngrx/router-store';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectsEquals, objectValues} from '../../../shared/utils/common.utils';
 import {Perspective, perspectivesMap} from '../../../view/perspectives/perspective';
 import {AppState} from '../app.state';
 import {parseMapCoordinates} from '../maps/map-coordinates';
@@ -93,7 +93,7 @@ function extractPerspectiveIdFromUrl(url: string): string {
 
   if (urlSegments.length > 5 && urlSegments[1] === 'w' && urlSegments[4].startsWith('view')) {
     const perspectiveSegment = urlSegments[5];
-    const perspectiveNames = Object.values(Perspective).join('|');
+    const perspectiveNames = objectValues(Perspective).join('|');
     const regex = new RegExp(`^(${perspectiveNames}).*`);
     return perspectiveSegment.replace(regex, '$1');
   }

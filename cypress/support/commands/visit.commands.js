@@ -1,5 +1,6 @@
 import * as CRC32 from 'crc-32';
 import {Base64} from 'js-base64';
+import {padStart} from '../../../src/app/shared/utils/string.utils';
 
 Cypress.Commands.add('visitAndWait', url => {
   cy.visit(url);
@@ -25,5 +26,5 @@ function encodeQuery(query) {
 
 function calculateQueryCRC(query) {
   const crcNumber = CRC32.str(query) + Math.pow(16, 8) / 2;
-  return crcNumber.toString(16).padStart(8, '0');
+  return padStart(crcNumber.toString(16), 8, '0');
 }

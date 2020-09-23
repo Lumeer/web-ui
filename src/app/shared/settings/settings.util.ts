@@ -24,6 +24,7 @@ import {AttributesResource} from '../../core/model/resource';
 import {deepArrayEquals} from '../utils/array.utils';
 import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
+import {objectValues} from '../utils/common.utils';
 
 export function createAttributesSettingsOrder(
   attributes: Attribute[],
@@ -83,7 +84,7 @@ export function createSaveAttributesSettings(
     return settings;
   }
 
-  const collectionIds = getAllCollectionIdsFromQuery(query, Object.values(linkTypesMap));
+  const collectionIds = getAllCollectionIdsFromQuery(query, objectValues(linkTypesMap));
   const linkTypeIds = getAllLinkTypeIdsFromQuery(query);
 
   return {

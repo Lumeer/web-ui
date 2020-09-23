@@ -25,7 +25,7 @@ import {Perspective} from '../../../perspective';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
+import {deepObjectCopy, objectValues} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'chart-main-config',
@@ -42,9 +42,9 @@ export class ChartMainConfigComponent {
   @Output()
   public configChange = new EventEmitter<ChartConfig>();
 
-  public readonly chartTypes = Object.values(ChartType);
+  public readonly chartTypes = objectValues(ChartType);
   public readonly chartPerspective = Perspective.Chart;
-  public readonly chartSortTypes = Object.values(ChartSortType);
+  public readonly chartSortTypes = objectValues(ChartSortType);
 
   public readonly xAxisType = ChartAxisType.X;
 

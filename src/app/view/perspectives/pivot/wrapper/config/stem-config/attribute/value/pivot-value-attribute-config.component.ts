@@ -26,6 +26,7 @@ import {SelectItemWithConstraintId} from '../../../../../../../../shared/select/
 import {SelectItemModel} from '../../../../../../../../shared/select/select-item/select-item.model';
 import {DataAggregationType} from '../../../../../../../../shared/utils/data/data-aggregation';
 import {getAttributesResourceType} from '../../../../../../../../shared/utils/resource.utils';
+import {objectValues} from '../../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'pivot-value-attribute-config',
@@ -53,8 +54,8 @@ export class PivotValueAttributeConfigComponent {
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly aggregationPlaceholder: string;
-  public readonly aggregations = Object.values(DataAggregationType);
-  public readonly valueTypes = Object.values(PivotValueType);
+  public readonly aggregations = objectValues(DataAggregationType);
+  public readonly valueTypes = objectValues(PivotValueType);
   public readonly valueType = PivotValueType;
   public readonly emptyValueString: string;
 

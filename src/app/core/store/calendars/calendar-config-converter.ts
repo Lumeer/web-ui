@@ -20,7 +20,7 @@
 import {AttributesResourceType} from '../../model/resource';
 import {CalendarBar, CalendarConfig, CalendarConfigVersion, CalendarStemConfig} from './calendar';
 import {CalendarCollectionConfigV0, CalendarConfigV0, CalendarConfigV1, CalendarStemConfigV1} from './calendar-old';
-import {isDateValid, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isDateValid, isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
 
 export function convertCalendarDtoConfigToModel(config: any): CalendarConfig {
   if (!config) {
@@ -97,7 +97,7 @@ function convertCalendarDtoToModelV0(config: CalendarConfigV0): CalendarConfigV1
   return {
     date: config.date,
     mode: config.mode,
-    stemsConfigs: Object.values(stemConfigsMap),
+    stemsConfigs: objectValues(stemConfigsMap),
     version: CalendarConfigVersion.V1,
   };
 }

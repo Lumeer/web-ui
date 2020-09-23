@@ -23,7 +23,7 @@ import {queryIsEmptyExceptPagination, queryStemAttributesResourcesOrder} from '.
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {LinkInstance} from '../link-instances/link.instance';
-import {escapeHtml, isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {escapeHtml, isNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
 import {ConstraintData} from '../../model/data/constraint';
 import {AttributeFilter, Query, QueryStem} from '../navigation/query/query';
 import {groupLinkInstancesByLinkTypes, mergeLinkInstances} from '../link-instances/link-instance.utils';
@@ -321,7 +321,7 @@ function dataValuesMeetsFulltexts(dataValues: Record<string, DataValue>, fulltex
     return true;
   }
 
-  return fulltexts.some(fulltext => Object.values(dataValues).some(dataValue => dataValue.meetFullTexts([fulltext])));
+  return fulltexts.some(fulltext => objectValues(dataValues).some(dataValue => dataValue.meetFullTexts([fulltext])));
 }
 
 function paginate(documents: DocumentModel[], query: Query) {

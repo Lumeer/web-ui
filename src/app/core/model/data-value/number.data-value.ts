@@ -76,7 +76,9 @@ export class NumberDataValue implements NumericDataValue {
     if (!numbro.languages()[tag]) {
       numbro.registerLanguage(languages[tag]);
     }
-    numbro.setLanguage(tag);
+    if (numbro.language() !== tag) {
+      numbro.setLanguage(tag);
+    }
   }
 
   public preview(overrideConfig?: Partial<NumberConstraintConfig>): string {
@@ -108,7 +110,7 @@ export class NumberDataValue implements NumericDataValue {
 
   public isValid(ignoreConfig?: boolean): boolean {
     if (isNotNullOrUndefined(this.inputValue)) {
-      return this.copy(this.inputValue).isValid(ignoreConfig);
+      return !!this.bigNumber;
     }
     if (!this.value) {
       return true;
@@ -174,9 +176,8 @@ function parseNumbroConfig(
     numbroConfig.spaceSeparated = true;
     numbroConfig.spaceSeparatedCurrency = true;
   }
-  if (overrideConfig?.compact || config.compact) {
-    numbroConfig.average = true;
-  }
+  numbroConfig.average = overrideConfig?.compact || config.compact;
+
   if (overrideConfig?.negative || config.negative) {
     numbroConfig.negative = 'parenthesis';
   }

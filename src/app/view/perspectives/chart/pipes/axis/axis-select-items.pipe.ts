@@ -20,6 +20,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {ChartAxis, ChartAxisType, ChartConfig} from '../../../../../core/store/charts/chart';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {objectValues} from '../../../../../shared/utils/common.utils';
 
 @Pipe({
   name: 'axisRestrictedIds',
@@ -43,14 +44,14 @@ export class AxisRestrictedIdsPipe implements PipeTransform {
         ...Object.entries(namesEntries)
           .filter(entry => entry[0] !== axisType && entry[1])
           .map(entry => entry[1]),
-        ...Object.values(axisEntries).filter(axis => !!axis),
+        ...objectValues(axisEntries).filter(axis => !!axis),
       ].map(axis => ({attributeId: axis.attributeId, resourceIndex: axis.resourceIndex}));
     } else {
       return [
         ...Object.entries(axisEntries)
           .filter(entry => entry[0] !== axisType && entry[1])
           .map(entry => entry[1]),
-        ...Object.values(namesEntries).filter(axis => !!axis),
+        ...objectValues(namesEntries).filter(axis => !!axis),
       ].map(axis => ({attributeId: axis.attributeId, resourceIndex: axis.resourceIndex}));
     }
   }

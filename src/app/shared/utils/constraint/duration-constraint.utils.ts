@@ -18,7 +18,7 @@
  */
 
 import {DurationConstraintConfig, DurationType, DurationUnit} from '../../../core/model/data/constraint-config';
-import {isNotNullOrUndefined, isNumeric, toNumber} from '../common.utils';
+import {isNotNullOrUndefined, isNumeric, objectValues, toNumber} from '../common.utils';
 import {DurationUnitsMap} from '../../../core/model/data/constraint';
 import Big, {Comparison, RoundingMode} from 'big.js';
 import numbro from 'numbro';
@@ -91,7 +91,7 @@ export function getDurationUnitToMillisMap(
   config: DurationConstraintConfig,
   durationUnitsMap?: DurationUnitsMap
 ): Record<string, number> {
-  return Object.values(DurationUnit).reduce((map, unit) => {
+  return objectValues(DurationUnit).reduce((map, unit) => {
     const value = getDurationUnitToMillis(unit, config.type || DurationType.Work, config.conversions);
     const key = (durationUnitsMap && durationUnitsMap[unit]) || unit;
 
@@ -165,7 +165,7 @@ export function isDurationDataValueValid(value: any, durationUnitsMap: DurationU
 
 function isDurationValidByGlobalLetters(value: any): boolean {
   const stringValue = prepareDurationValue(value);
-  const globalLetters = Object.values(DurationUnit);
+  const globalLetters = objectValues(DurationUnit);
   const globalRegex = durationInvalidityTestRegex(globalLetters);
   return !stringValue.match(globalRegex);
 }
@@ -176,7 +176,7 @@ function prepareDurationValue(value: any): string {
 
 function isDurationValidByNativeLetters(value: any, durationUnitsMap: DurationUnitsMap): boolean {
   const stringValue = prepareDurationValue(value);
-  const nativeLetters = Object.values(durationUnitsMap || {});
+  const nativeLetters = objectValues(durationUnitsMap || {});
   const nativeRegex = durationInvalidityTestRegex(nativeLetters);
   return !stringValue.match(nativeRegex);
 }

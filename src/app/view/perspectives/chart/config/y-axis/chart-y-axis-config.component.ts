@@ -26,7 +26,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {ChartYAxisType} from '../../data/convertor/chart-data';
-import {deepObjectCopy} from '../../../../../shared/utils/common.utils';
+import {deepObjectCopy, objectValues} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'chart-y-axis-config',
@@ -46,7 +46,7 @@ export class ChartYAxisConfigComponent {
   @Output()
   public configChange = new EventEmitter<ChartConfig>();
 
-  public readonly chartAggregations = Object.values(DataAggregationType);
+  public readonly chartAggregations = objectValues(DataAggregationType);
   public readonly chartType = ChartType;
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly axisEmptyValue: string;

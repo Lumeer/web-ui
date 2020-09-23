@@ -136,6 +136,8 @@ export interface UserConstraintConfig {
   externalUsers: boolean;
 }
 
+export interface LinkConstraintConfig {}
+
 export type ConstraintConfig =
   | AddressConstraintConfig
   | CoordinatesConstraintConfig
@@ -145,6 +147,7 @@ export type ConstraintConfig =
   | PercentageConstraintConfig
   | RatingConstraintConfig
   | SelectConstraintConfig
+  | LinkConstraintConfig
   | TagConstraintConfig
   | TextConstraintConfig
   | UserConstraintConfig

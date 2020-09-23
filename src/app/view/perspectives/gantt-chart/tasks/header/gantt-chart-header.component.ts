@@ -19,6 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {GanttChartMode} from '../../../../../core/store/gantt-charts/gantt-chart';
+import {objectValues} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'gantt-chart-header',
@@ -38,7 +39,7 @@ export class GanttChartHeaderComponent {
   @Output()
   public scrollToToday = new EventEmitter();
 
-  public readonly ganttChartModes = Object.values(GanttChartMode);
+  public readonly ganttChartModes = objectValues(GanttChartMode);
 
   public onModeSelect(mode: GanttChartMode) {
     this.currentMode = mode;

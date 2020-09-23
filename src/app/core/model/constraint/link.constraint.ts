@@ -17,19 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {padStart} from '../string.utils';
+import {ConstraintType} from '../data/constraint';
+import {Constraint} from './index';
+import {QueryCondition} from '../../store/navigation/query/query';
+import {LinkDataValue} from '../data-value/link.data-value';
 
-export function convertRgbColorToHex(rgb: string): string {
-  if (!rgb) {
-    return '';
+export class LinkConstraint implements Constraint {
+  public readonly type = ConstraintType.Link;
+  public readonly config = {};
+  public readonly isTextRepresentation = false;
+
+  public createDataValue(value: any): LinkDataValue {
+    return new LinkDataValue(value);
   }
 
-  const value =
-    '#' +
-    rgb
-      .slice(4, -1)
-      .split(',')
-      .map(val => padStart(Number(val.trim()).toString(16), 2, '0'))
-      .join('');
-  return /^#?[0-9a-f]{6}$/.test(value) ? value : '';
+  public createInputDataValue(inputValue: string, value: any): LinkDataValue {
+    return new LinkDataValue(value, inputValue);
+  }
+
+  public conditions(): QueryCondition[] {
+    return [QueryCondition.Equals, QueryCondition.NotEquals];
+  }
 }

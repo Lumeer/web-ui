@@ -27,6 +27,7 @@ import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {CoordinatesDataValue} from '../../../../../../core/model/data-value/coordinates.data-value';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {objectValues} from '../../../../../utils/common.utils';
 
 @Component({
   selector: 'coordinates-constraint-config-form',
@@ -41,7 +42,7 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   public form: FormGroup;
 
   public readonly controls = CoordinatesConstraintFormControl;
-  public readonly formats = Object.values(CoordinatesFormat);
+  public readonly formats = objectValues(CoordinatesFormat);
   public readonly coordinatesFormat = CoordinatesFormat;
 
   public readonly precisions = {

@@ -30,6 +30,7 @@ import {NumberConstraint} from '../../../../../../core/model/constraint/number.c
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {LanguageTag} from '../../../../../../core/model/data/language-tag';
+import {objectValues} from '../../../../../utils/common.utils';
 
 @Component({
   selector: 'number-constraint-config-form',
@@ -98,7 +99,7 @@ export class NumberConstraintConfigFormComponent implements OnChanges {
   }
 
   private createCurrencySelectItems(): SelectItemModel[] {
-    return Object.values(LanguageTag)
+    return objectValues(LanguageTag)
       .map(tag => ({
         id: tag,
         value: this.translateLanguageTag(tag),

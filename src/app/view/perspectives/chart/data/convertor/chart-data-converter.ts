@@ -43,6 +43,7 @@ import {
   isNotNullOrUndefined,
   isNullOrUndefined,
   isNumeric,
+  objectValues,
   toNumber,
 } from '../../../../../shared/utils/common.utils';
 import {aggregateDataValues, isValueAggregation} from '../../../../../shared/utils/data/data-aggregation';
@@ -353,7 +354,7 @@ export class ChartDataConverter {
           ticksMap[tick.value] = tick;
         }
       });
-      ticks = Object.values(ticksMap);
+      ticks = objectValues(ticksMap);
     }
 
     let showTicksAsLinear = false;
@@ -640,7 +641,7 @@ export class ChartDataConverter {
         yTicks.push({value: yValue, title: yConstraint.createDataValue(yValue, this.constraintData).title()});
       }
     }
-    const sets = Object.values(setsMap);
+    const sets = objectValues(setsMap);
     const xAxisHelperData: ChartAxisHelperData = {
       constraint: xConstraint,
       values: Array.from(xValues),

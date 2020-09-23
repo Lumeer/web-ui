@@ -20,7 +20,7 @@
 import {KanbanAttribute, KanbanColumn, KanbanConfig, KanbanConfigVersion, KanbanStemConfig} from './kanban';
 import {KanbanCollectionConfigV0, KanbanColumnV0, KanbanConfigV0} from './kanban-old';
 import {AttributesResourceType} from '../../model/resource';
-import {deepObjectCopy, isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {deepObjectCopy, isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
 import {SizeType} from '../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../shared/post-it/post-it-layout-type';
 import {cleanKanbanAttribute} from '../../../view/perspectives/kanban/util/kanban.util';
@@ -107,7 +107,7 @@ function convertKanbanConfigDtoToModelV0(config: KanbanConfigV0): KanbanConfig {
   return {
     columns: (config.columns || []).map(column => convertKanbanColumnConfigDtoToModelV0(column)),
     otherColumn: convertKanbanColumnConfigDtoToModelV0(config.otherColumn),
-    stemsConfigs: Object.values(stemConfigsMap),
+    stemsConfigs: objectValues(stemConfigsMap),
     version: KanbanConfigVersion.V1,
   };
 }

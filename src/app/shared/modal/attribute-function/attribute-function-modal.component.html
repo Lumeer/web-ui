@@ -3,6 +3,7 @@
   [dialogType]="dialogType.Primary"
   [performingAction]="performingAction$ | async"
   [customHeader]="true"
+  [showSubmit]="!!data.attribute"
   (onSubmit)="onSubmit(data.attribute)"
   (onClose)="hideDialog()">
 
@@ -15,16 +16,16 @@
         [colors]="iconColors.colors"
         [icons]="iconColors.icons">
       </icons-presenter>
-      <span class="ml-1">{{data.attribute.name}}</span>
+      <span class="ml-1">{{data.attribute?.name}}</span>
     </h5>
   </div>
 
-  <div class="body p-4">
+  <div class="body p-4" *ngIf="data.attribute; else noAttribute">
     <div class="d-flex pb-1">
       <div class="flex-grow-1 text-right">
         <div class="form-check mr-3 d-inline-block" (click)="switchEditable()">
           <input class="form-check-input" type="checkbox" [checked]="editable$ | async" id="editable">
-          <label class="form-check-label" for="editable" i18n="@@dialog.attrtibute.function.editable">
+          <label class="form-check-label" for="editable" i18n="@@dialog.attribute.function.editable">
             Allow manual value overwrite
           </label>
         </div>
@@ -61,3 +62,9 @@
   <span class="button-submit" i18n="@@button.save">Save</span>
 
 </modal-wrapper>
+
+<ng-template #noAttribute>
+  <div class="body p-4">
+    <h4 class="text-danger text-center my-5" i18n="@@resource.attribute.deleted">Such an attribute does not exist.</h4>
+  </div>
+</ng-template>

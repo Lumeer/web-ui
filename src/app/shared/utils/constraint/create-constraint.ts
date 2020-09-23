@@ -32,6 +32,7 @@ import {TextConstraint} from '../../../core/model/constraint/text.constraint';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {UserConstraint} from '../../../core/model/constraint/user.constraint';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {LinkConstraint} from '../../../core/model/constraint/link.constraint';
 
 export function createConstraint(type: string, config: any): Constraint {
   switch (type) {
@@ -59,6 +60,8 @@ export function createConstraint(type: string, config: any): Constraint {
       return new TextConstraint(config);
     case ConstraintType.User:
       return new UserConstraint(config);
+    case ConstraintType.Link:
+      return new LinkConstraint();
     default:
       return new UnknownConstraint();
   }

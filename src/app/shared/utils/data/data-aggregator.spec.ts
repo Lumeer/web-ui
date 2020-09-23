@@ -23,6 +23,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {DataAggregatorAttribute, DataAggregator} from './data-aggregator';
+import {objectValues} from '../common.utils';
 
 const documents: DocumentModel[] = [
   {
@@ -271,7 +272,7 @@ describe('Data aggregator', () => {
     const aggregatedData = aggregator.aggregate(aggregationAttributes, [], []);
     expect(Object.keys(aggregatedData.map)).toEqual(['Abc', 'Ara', 'Aka']);
 
-    const ids = Object.values(aggregatedData.map).reduce((arr, val) => [...arr, ...val[0].objects.map(v => v.id)], []);
+    const ids = objectValues(aggregatedData.map).reduce((arr, val) => [...arr, ...val[0].objects.map(v => v.id)], []);
     expect(ids).toEqual([]);
     expect(aggregatedData.rowLevels).toEqual(1);
     expect(aggregatedData.columnLevels).toEqual(0);
@@ -304,7 +305,7 @@ describe('Data aggregator', () => {
     const aggregatedData = aggregator.aggregate([], aggregationAttributes, []);
     expect(Object.keys(aggregatedData.map)).toEqual(['La', 'Lb', 'Lc', 'Ld', 'Le', 'Lf']);
 
-    const ids = Object.values(aggregatedData.map).reduce((arr, val) => [...arr, ...val[0].objects.map(v => v.id)], []);
+    const ids = objectValues(aggregatedData.map).reduce((arr, val) => [...arr, ...val[0].objects.map(v => v.id)], []);
     expect(ids).toEqual([]);
     expect(aggregatedData.rowLevels).toEqual(0);
     expect(aggregatedData.columnLevels).toEqual(1);

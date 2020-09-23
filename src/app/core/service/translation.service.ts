@@ -28,6 +28,7 @@ import {
   DateTimeConstraintConditionValue,
   UserConstraintConditionValue,
 } from '../model/data/constraint-condition';
+import {objectValues} from '../../shared/utils/common.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +37,7 @@ export class TranslationService {
   constructor(private i18n: I18n) {}
 
   public createDurationUnitsMap(): Record<DurationUnit | string, string> {
-    return Object.values(DurationUnit).reduce((map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}), {});
+    return objectValues(DurationUnit).reduce((map, unit) => ({...map, [unit]: this.translateDurationUnit(unit)}), {});
   }
 
   public translateDurationUnit(unit: DurationUnit): string {
