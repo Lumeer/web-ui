@@ -20,65 +20,105 @@
 import {DataValue} from './index';
 import {LinkConstraintConfig} from '../data/constraint-config';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
+import {dataValuesMeetConditionByText} from './data-value.utils';
 
+/*
+ * Saved value is formatted as 'Link [Text]'
+ */
 export class LinkDataValue implements DataValue {
+  public readonly linkValue: string;
+  public readonly titleValue: string;
   public readonly config: LinkConstraintConfig = {};
 
-  constructor(public readonly value: string, public readonly inputValue?: string) {}
-
-  public compareTo(otherValue: DataValue): number {
-    return 0;
-  }
-
-  public copy(newValue?: any): DataValue {
-    return undefined;
-  }
-
-  public decrement(): DataValue {
-    return undefined;
-  }
-
-  public editValue(): string {
-    return '';
+  constructor(public readonly value: string, public readonly inputValue?: string) {
+    const {link, title} = parseLinkValue(value || '');
+    this.linkValue = link || '';
+    this.titleValue = title || '';
   }
 
   public format(): string {
-    return '';
+    if (this.linkValue) {
+      const linkValue = this.linkValue.startsWith('http') ? this.linkValue : `https://${this.linkValue}`;
+      return `<a href="${linkValue}" target="_blank">${this.titleValue || this.linkValue}</a>`
+    }
+    return this.titleValue || '';
   }
 
-  public increment(): DataValue {
-    return undefined;
-  }
-
-  public isValid(ignoreConfig?: boolean): boolean {
-    return false;
-  }
-
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    return false;
-  }
-
-  public meetFullTexts(fulltexts: string[]): boolean {
-    return false;
-  }
-
-  public parseInput(inputValue: string): DataValue {
-    return undefined;
+  public editValue(): string {
+    return formatLinkValue(this.linkValue, this.titleValue);
   }
 
   public preview(): string {
-    return '';
+    return this.format();
   }
 
   public serialize(): any {
-    return '';
+    return formatLinkValue(this.linkValue, this.titleValue);
   }
 
   public title(): string {
-    return '';
+    return this.titleValue || this.linkValue;
+  }
+
+  public compareTo(otherValue: LinkDataValue): number {
+    return this.title().localeCompare(otherValue.title());
+  }
+
+  public copy(newValue?: any): LinkDataValue {
+    const value = newValue !== undefined ? newValue : this.value;
+    return new LinkDataValue(value);
+  }
+
+  public increment(): DataValue {
+    return undefined; // not supported
+  }
+
+  public decrement(): DataValue {
+    return undefined; // not supported
+  }
+
+  public isValid(ignoreConfig?: boolean): boolean {
+    return !!this.linkValue;
+  }
+
+  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+    const dataValues = (values || []).map(value => new LinkDataValue(value.value));
+    const formattedValue = this.format().toLowerCase().trim();
+    const otherFormattedValues = dataValues.map(dataValue => dataValue.format().toLowerCase().trim());
+    return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
+  }
+
+  public meetFullTexts(fulltexts: string[]): boolean {
+    return false; // TODO
+  }
+
+  public parseInput(inputValue: string): LinkDataValue {
+    return new LinkDataValue(inputValue, inputValue);
   }
 
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
-    return undefined;
+    return undefined;  // TODO
   }
+}
+
+export function formatLinkValue(link: string, title: string): string {
+  if (link && title) {
+    return `${link} [${title}]`;
+  } else if (link || title) {
+    return link || title;
+  }
+  return '';
+}
+
+export function parseLinkValue(value: string): { link?: string, title?: string } {
+  if (value[value.length - 1] === ']') {
+    const titleStartIndex = value.lastIndexOf('[');
+    if (titleStartIndex !== -1) {
+      return {
+        link: value.substring(0, titleStartIndex).trim(),
+        title: value.substring(titleStartIndex + 1, value.length - 1)
+      };
+    }
+  }
+  return {link: value};
 }

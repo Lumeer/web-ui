@@ -61,6 +61,8 @@ import {ConstraintAsTextPipe} from './pipes/constraint-as-text.pipe';
 import {UserIsValidPipe} from './user/pipes/user-is-valid.pipe';
 import {ConstraintClassPipe} from './pipes/constraint-class.pipe';
 import {SelectOptionsJoinedPipe} from './select/pipes/select-options-joined.pipe';
+import { LinkDataInputComponent } from './link/link-data-input.component';
+import { LinkInputDropdownComponent } from './link/dropdown/link-input-dropdown.component';
 
 @NgModule({
   imports: [
@@ -109,6 +111,8 @@ import {SelectOptionsJoinedPipe} from './select/pipes/select-options-joined.pipe
     ConstraintAsTextPipe,
     ConstraintClassPipe,
     SelectOptionsJoinedPipe,
+    LinkDataInputComponent,
+    LinkInputDropdownComponent,
   ],
   exports: [
     DataInputComponent,

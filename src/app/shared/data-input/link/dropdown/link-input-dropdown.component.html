@@ -1,0 +1,31 @@
+<dropdown [origin]="origin"
+          [pushOnScreen]="true"
+          [showBackdrop]="false"
+          [positions]="dropdownPositions">
+
+  <div class="card p-3" (click)="$event.stopPropagation();">
+
+    <div><span i18n="@@link.input.dropdown.text">Link</span><span class="text-danger">*</span></div>
+    <input class="form-control" type="text" #linkElement
+           [(ngModel)]="linkValue"
+           placeholder="https://..."
+           (keydown)="onLinkKeyDown($event)">
+    <div i18n="@@link.input.dropdown.title" class="mt-2">Title</div>
+    <input class="form-control" type="text" #titleElement
+           [(ngModel)]="titleValue"
+           placeholder="Custom title"
+           i18n-placeholder="@@link.input.dropdown.title.placeholder"
+           (keydown)="onTitleKeyDown($event)">
+
+    <div class="d-flex flex-grow-0 justify-content-end mt-3">
+      <button class="btn btn-sm btn-outline-secondary"
+              i18n="@@button.cancel" (click)="onCancel()">Cancel
+      </button>
+      <button class="btn btn-sm btn-primary ml-1"
+              [disabled]="!linkValue"
+              i18n="@@button.save" (click)="onSave()">Save
+      </button>
+    </div>
+  </div>
+
+</dropdown>

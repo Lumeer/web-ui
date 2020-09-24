@@ -1,0 +1,14 @@
+<div class="border-0 w-100 h-100 px-1 bg-transparent"
+     [innerHTML]="value | formatDataValue"
+     [title]="value | formatDataValueTitle"
+     [class.invalid-value]="!(value | isDataValueValid)"
+     #linkElement>
+</div>
+
+<link-input-dropdown *ngIf="!readonly"
+                     [linkValue]="linkValue"
+                     [titleValue]="titleValue"
+                     [origin]="linkElement"
+                     (cancel)="onCancel()"
+                     (save)="onSave($event)">
+</link-input-dropdown>

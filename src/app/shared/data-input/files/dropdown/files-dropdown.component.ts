@@ -37,7 +37,6 @@ import {DropdownPosition} from '../../../dropdown/dropdown-position';
 @Component({
   selector: 'files-dropdown',
   templateUrl: './files-dropdown.component.html',
-  styleUrls: ['./files-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FilesDropdownComponent implements AfterViewInit {
