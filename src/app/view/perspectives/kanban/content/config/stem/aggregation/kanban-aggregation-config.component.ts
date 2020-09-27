@@ -21,6 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 import {DataAggregationType} from '../../../../../../../shared/utils/data/data-aggregation';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {KanbanAggregation, KanbanValueType} from '../../../../../../../core/store/kanbans/kanban';
+import {objectValues} from '../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'kanban-aggregation-config',
@@ -36,8 +37,8 @@ export class KanbanAggregationConfigComponent {
 
   public readonly buttonClasses = 'flex-grow-1 text-truncate';
   public readonly aggregationPlaceholder: string;
-  public readonly aggregations = Object.values(DataAggregationType);
-  public readonly valueTypes = Object.values(KanbanValueType);
+  public readonly aggregations = objectValues(DataAggregationType);
+  public readonly valueTypes = objectValues(KanbanValueType);
   public readonly valueType = KanbanValueType;
   public readonly aggregationType = DataAggregationType;
 

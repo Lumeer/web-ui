@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {padStart} from '../string.utils';
+
 export function convertHslColorToHex(hsl: string): string {
   if (!hsl) {
     return '';
@@ -57,7 +59,5 @@ function hueToRgb(p: number, q: number, t: number): number {
 }
 
 function colorToHex(x: number) {
-  return Math.round(x * 255)
-    .toString(16)
-    .padStart(2, '0');
+  return padStart(Math.round(x * 255).toString(16), 2, '0');
 }

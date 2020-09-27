@@ -44,6 +44,7 @@ import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/mo
 import {QueryCondition, QueryConditionValue} from '../store/navigation/query/query';
 import {UnknownConstraint} from '../model/constraint/unknown.constraint';
 import {ConstraintType} from '../model/data/constraint';
+import {objectValues} from '../../shared/utils/common.utils';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -365,7 +366,7 @@ export class SuggestionsService {
     ]).pipe(
       map(([collectionsMap, linkTypes]) => {
         const linkTypesWithCollections = linkTypes.map(linkType => mapLinkType(linkType, collectionsMap));
-        const sortedCollections = sortResourcesLastUsed(Object.values(collectionsMap)).slice(0, lastUsedThreshold);
+        const sortedCollections = sortResourcesLastUsed(objectValues(collectionsMap)).slice(0, lastUsedThreshold);
 
         return linkTypesWithCollections.map(linkType => {
           let score = 0;
@@ -392,7 +393,7 @@ export class SuggestionsService {
     ]).pipe(
       map(([collectionsMap, linkTypes]) => {
         const linkTypesWithCollections = linkTypes.map(linkType => mapLinkType(linkType, collectionsMap));
-        const sortedCollections = sortResourcesLastUsed(Object.values(collectionsMap)).slice(0, lastUsedThreshold);
+        const sortedCollections = sortResourcesLastUsed(objectValues(collectionsMap)).slice(0, lastUsedThreshold);
 
         return linkTypesWithCollections.reduce((suggestions, linkType) => {
           const attributes = linkType.attributes;

@@ -690,7 +690,7 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.number.currency.empty" datatype="html">
         <source>Select currency</source><target state="new">Select currency</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">70</context></context-group></trans-unit><trans-unit id="constraint.example" datatype="html">
         <source>Example:</source><target>Příklad:</target>
 
@@ -1153,10 +1153,10 @@
         </context-group>
       </trans-unit><trans-unit id="templates.button.empty" datatype="html">
         <source>Start with empty project</source><target>Začít s prázdným projektem</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="templates.button.use" datatype="html">
         <source>Use this template</source><target>Použít tuto šablonu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="dialog.project.copy.title" datatype="html">
         <source>
       Copy and Open Project
@@ -2087,7 +2087,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/project-settings.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="project.settings.tab.template" datatype="html">
         <source>Publish Project</source><target>Zveřejnění projektu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/project-settings.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
 
             <trans-unit id="organizations.tab.detail.order.prolong" datatype="html">
@@ -4459,7 +4459,7 @@
           <context context-type="sourcefile">app/shared/top-panel/controls-toggle/controls-toggle.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-      </trans-unit><trans-unit id="attribute.config.dialog.not.exists" datatype="html">
+      </trans-unit><trans-unit id="resource.attribute.deleted" datatype="html">
         <source>Such an attribute does not exist.</source><target>Tento atribut neexistuje.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit>
@@ -4839,7 +4839,7 @@
       Nastavení funkce atributu
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="dialog.attrtibute.function.editable" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.editable" datatype="html">
         <source>
             Allow manual value overwrite
           </source><target>

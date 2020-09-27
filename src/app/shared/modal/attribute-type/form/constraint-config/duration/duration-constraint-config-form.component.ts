@@ -37,6 +37,7 @@ import {
 import {removeAllFormControls} from '../../../../../utils/form.utils';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
+import {objectValues} from '../../../../../utils/common.utils';
 
 @Component({
   selector: 'duration-constraint-config-form',
@@ -52,8 +53,8 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
 
   public readonly controls = DurationConstraintFormControl;
   public readonly type = DurationType;
-  public readonly types = Object.values(DurationType);
-  public readonly units = Object.values(DurationUnit);
+  public readonly types = objectValues(DurationType);
+  public readonly units = objectValues(DurationUnit);
   public readonly exampleString: string;
   public readonly typeItems: SelectItemModel[];
 
@@ -63,7 +64,7 @@ export class DurationConstraintConfigFormComponent implements OnChanges {
   }
 
   private generateExampleString(): string {
-    return Object.values(DurationUnit)
+    return objectValues(DurationUnit)
       .map(unit => `${this.generateRandomNumberForUnit(unit)}${this.translateDurationUnit(unit)}`)
       .join('');
   }

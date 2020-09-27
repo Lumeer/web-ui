@@ -35,6 +35,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemModel} from '../../../../../shared/select/select-item/select-item.model';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {objectValues} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'add-rule-form',
@@ -67,7 +68,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public onSaveRule = new EventEmitter<Rule>();
 
-  public readonly types = Object.values(RuleTypeMap);
+  public readonly types = objectValues(RuleTypeMap);
   public readonly typeItems: SelectItemModel[];
 
   public form: FormGroup;

@@ -182,7 +182,7 @@
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-      </trans-unit><trans-unit id="attribute.config.dialog.not.exists" datatype="html">
+      </trans-unit><trans-unit id="resource.attribute.deleted" datatype="html">
         <source>Such an attribute does not exist.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context>
@@ -290,7 +290,7 @@
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-      </trans-unit><trans-unit id="dialog.attrtibute.function.editable" datatype="html">
+      </trans-unit><trans-unit id="dialog.attribute.function.editable" datatype="html">
         <source>
             Allow manual value overwrite
           </source>

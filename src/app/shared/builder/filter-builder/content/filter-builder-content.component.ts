@@ -45,6 +45,7 @@ import {
   UserConstraintConditionValue,
 } from '../../../../core/model/data/constraint-condition';
 import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
+import {objectValues} from '../../../utils/common.utils';
 
 @Component({
   selector: 'filter-builder-content',
@@ -122,10 +123,10 @@ export class FilterBuilderContentComponent implements OnInit {
     let values = [];
     switch (constraint.type) {
       case ConstraintType.User:
-        values = Object.values(UserConstraintConditionValue);
+        values = objectValues(UserConstraintConditionValue);
         break;
       case ConstraintType.DateTime:
-        values = Object.values(DateTimeConstraintConditionValue);
+        values = objectValues(DateTimeConstraintConditionValue);
         break;
     }
 

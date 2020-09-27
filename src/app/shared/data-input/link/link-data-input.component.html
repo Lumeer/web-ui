@@ -1,0 +1,9 @@
+<a [href]="completeLinkValue" target="_blank">{{titleValue || linkValue}}</a>
+
+<link-input-dropdown *ngIf="!readonly"
+                     [linkValue]="linkValue"
+                     [titleValue]="titleValue"
+                     [origin]="element"
+                     (cancel)="onCancel()"
+                     (save)="onSave($event)">
+</link-input-dropdown>

@@ -31,6 +31,7 @@ import {Store, select} from '@ngrx/store';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
 import {debounceTime, take, filter} from 'rxjs/operators';
 import {Subject, Subscription} from 'rxjs';
+import {objectValues} from '../../utils/common.utils';
 
 @Component({
   selector: 'user-list',
@@ -112,7 +113,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     if (Object.keys(this.pendingUserUpdates).length > 0) {
       const permissions: Permission[] = [];
       const currentPermissions: Permission[] = [];
-      Object.values(this.pendingUserUpdates).forEach(value => {
+      objectValues(this.pendingUserUpdates).forEach(value => {
         permissions.push(value.new);
         currentPermissions.push(value.current);
       });

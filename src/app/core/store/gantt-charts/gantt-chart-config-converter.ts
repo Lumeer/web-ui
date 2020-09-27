@@ -26,7 +26,7 @@ import {
   GanttChartConfigVersion,
   GanttChartStemConfig,
 } from './gantt-chart';
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
 import {
   GanttChartCollectionConfigV0,
   GanttChartConfigV0,
@@ -125,5 +125,5 @@ function convertGanttChartDtoToModelV0(config: GanttChartConfigV0): GanttChartCo
     stemConfigsMap[collectionId] = {barsProperties, stem: {collectionId}};
   }
 
-  return {mode: config.mode, stemsConfigs: Object.values(stemConfigsMap), version: GanttChartConfigVersion.V1};
+  return {mode: config.mode, stemsConfigs: objectValues(stemConfigsMap), version: GanttChartConfigVersion.V1};
 }

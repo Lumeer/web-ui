@@ -20,6 +20,7 @@
 import {Workspace} from '../store/navigation/workspace';
 import {Subject, Subscription} from 'rxjs';
 import {debounceTime} from 'rxjs/operators';
+import {objectValues} from '../../shared/utils/common.utils';
 
 export abstract class UpdateValueService<V, T> {
   private pendingUpdates: Record<string, V> = {};
@@ -71,7 +72,7 @@ export abstract class UpdateValueService<V, T> {
     Object.keys(this.pendingUpdates).forEach(id =>
       this.processUpdate(id, this.pendingUpdates[id], this.pendingUpdatesData[id])
     );
-    Object.values(this.pendingSubscriptions).forEach(subject => subject.unsubscribe());
+    objectValues(this.pendingSubscriptions).forEach(subject => subject.unsubscribe());
     this.pendingUpdates = {};
     this.pendingUpdatesData = {};
     this.pendingSubscriptions = {};

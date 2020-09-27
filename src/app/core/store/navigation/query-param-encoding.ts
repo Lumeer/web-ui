@@ -19,6 +19,7 @@
 
 import * as CRC32 from 'crc-32';
 import {Base64} from 'js-base64';
+import {padStart} from '../../../shared/utils/string.utils';
 
 export function encodeQueryParam(param: string): string {
   if (!param || param === '{}') {
@@ -51,5 +52,5 @@ export function decodeQueryParam(param: string): string {
 
 function calculateQueryCRC(query: string): string {
   const crcNumber = CRC32.str(query) + Math.pow(16, 8) / 2;
-  return crcNumber.toString(16).padStart(8, '0');
+  return padStart(crcNumber.toString(16), 8, '0');
 }

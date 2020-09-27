@@ -197,3 +197,8 @@ export function preventEvent(event: Event) {
   event.stopPropagation();
   event.stopImmediatePropagation();
 }
+
+export function objectValues<T>(object: Record<string, T>): T[] {
+  // Object.values is not supported in older version of js
+  return Object.keys(object || {}).map(key => object[key]);
+}

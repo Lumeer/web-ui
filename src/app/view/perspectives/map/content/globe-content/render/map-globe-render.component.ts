@@ -62,6 +62,7 @@ import {
 import {MarkerMoveEvent} from './marker-move.event';
 import {areMapMarkerListsEqual, createMapMarkersMap} from '../../map-content.utils';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
 
 mapboxgl.accessToken = environment.mapboxKey;
 window['mapboxgl'] = mapboxgl; // openmaptiles-language.js needs this
@@ -139,7 +140,7 @@ export class MapGlobeRenderComponent implements OnInit, OnChanges, AfterViewInit
     }
 
     if (changes.markers && this.markers) {
-      const markersChanged = !areMapMarkerListsEqual(this.markers, Object.values(this.currentMarkerProperties));
+      const markersChanged = !areMapMarkerListsEqual(this.markers, objectValues(this.currentMarkerProperties));
       this.currentMarkerProperties = createMapMarkersMap(this.markers);
       if (markersChanged) {
         this.markers$.next(this.markers);

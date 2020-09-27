@@ -28,7 +28,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
-import {isArray, isNotNullOrUndefined, isNullOrUndefined} from '../common.utils';
+import {isArray, isNotNullOrUndefined, isNullOrUndefined, objectValues} from '../common.utils';
 
 type DataResourceWithLinks = DataResource & {from: DataResource[]; to: DataResource[]};
 
@@ -116,7 +116,7 @@ export class DataAggregator {
 
   public getDataResources(index: number): DataResource[] {
     const resourceId = this.attributesResourceIdForIndex(index);
-    return Object.values(this.dataMap[resourceId] || {});
+    return objectValues(this.dataMap[resourceId] || {});
   }
 
   public getNextCollectionResource(index: number): AttributesResource {
@@ -321,7 +321,7 @@ export class DataAggregator {
       return {};
     }
     const resourceId = this.attributesResourceIdForIndex(chain[0].index);
-    const dataObjects = Object.values(this.dataMap[resourceId] || {});
+    const dataObjects = objectValues(this.dataMap[resourceId] || {});
     const data = {};
     const chainVisitedIds = [];
     this.iterateRecursive(dataObjects, data, chain, valuesChains, 0, chainVisitedIds);
@@ -434,7 +434,7 @@ export class DataAggregator {
       return [];
     }
     const resourceId = this.attributesResourceIdForIndex(chain[0].index);
-    const dataObjects = Object.values(this.dataMap[resourceId] || {});
+    const dataObjects = objectValues(this.dataMap[resourceId] || {});
     const items = [];
     const chainVisitedIds = [];
     this.iterateRecursiveArray(dataObjects, items, chain, valuesChains, 0, chainVisitedIds, []);

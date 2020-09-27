@@ -94,6 +94,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
     case ConstraintType.Duration:
     case ConstraintType.Files:
     case ConstraintType.Number:
+    case ConstraintType.Link:
     case ConstraintType.Percentage:
     case ConstraintType.Select:
     case ConstraintType.Text:

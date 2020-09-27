@@ -28,6 +28,7 @@ import {AddressesMap, AddressField} from '../../../../../../core/store/geocoding
 import {AddressConstraintConfig} from '../../../../../../core/model/data/constraint-config';
 import {AddressDataValue} from '../../../../../../core/model/data-value/address.data-value';
 import {removeAllFormControls} from '../../../../../utils/form.utils';
+import {objectValues} from '../../../../../utils/common.utils';
 
 @Component({
   selector: 'address-constraint-config-form',
@@ -37,7 +38,7 @@ import {removeAllFormControls} from '../../../../../utils/form.utils';
 })
 export class AddressConstraintConfigFormComponent {
   public readonly controls = AddressConstraintFormControl;
-  public readonly fields = Object.values(AddressField);
+  public readonly fields = objectValues(AddressField);
 
   private readonly exampleAddressesMap: AddressesMap = {
     example: [EXAMPLE_ADDRESS],

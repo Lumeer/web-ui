@@ -21,6 +21,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {constraintIconsMap, ConstraintType, isConstraintTypeEnabled} from '../../../../../core/model/data/constraint';
 import {SelectItemModel} from '../../../../select/select-item/select-item.model';
+import {objectValues} from '../../../../utils/common.utils';
 
 @Component({
   selector: 'attribute-type-select',
@@ -43,12 +44,12 @@ export class AttributeTypeSelectComponent implements OnInit {
   }
 
   private createSelectItems(): SelectItemModel[] {
-    const result: SelectItemModel[] = Object.values(ConstraintType)
+    const result: SelectItemModel[] = objectValues(ConstraintType)
       .filter(type => isConstraintTypeEnabled(type))
       .map(type => ({
         id: type,
         value: this.i18n(
-          '{type, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User}}',
+          '{type, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User}}',
           {type}
         ),
         icons: [constraintIconsMap[type]],

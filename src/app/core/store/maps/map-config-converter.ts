@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
 import {MapAttributeModel, MapConfig, MapConfigVersion, MapStemConfig} from './map.model';
 import {MapConfigV0} from './map.model-old';
 import {AttributesResourceType} from '../../model/resource';
@@ -67,5 +67,5 @@ function convertMapDtoToModelV0(config: MapConfigV0): MapConfig {
     stemConfigsMap[collectionId] = {attributes, stem: {collectionId}};
   }
 
-  return {...config, stemsConfigs: Object.values(stemConfigsMap), version: MapConfigVersion.V1};
+  return {...config, stemsConfigs: objectValues(stemConfigsMap), version: MapConfigVersion.V1};
 }

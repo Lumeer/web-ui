@@ -23,9 +23,8 @@
   </div>
 
 
-  <div class="body">
+  <div class="body" *ngIf="data.attribute; else notFound">
     <attribute-type-form class="p-3 d-block"
-                         *ngIf="data.attribute; else notFound"
                          [attribute]="data.attribute"
                          (attributeChange)="onAttributeChange($event)">
     </attribute-type-form>
@@ -38,5 +37,7 @@
 </modal-wrapper>
 
 <ng-template #notFound>
-  <span i18n="@@attribute.config.dialog.not.exists">Such an attribute does not exist.</span>
+  <div class="body p-4">
+    <h4 class="text-danger text-center my-2" i18n="@@resource.attribute.deleted">Such an attribute does not exist.</h4>
+  </div>
 </ng-template>

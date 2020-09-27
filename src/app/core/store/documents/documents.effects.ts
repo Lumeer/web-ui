@@ -52,6 +52,7 @@ import {
 import {queryWithoutFilters} from '../navigation/query/query.util';
 import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
+import {objectValues} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class DocumentsEffects {
@@ -420,7 +421,7 @@ export class DocumentsEffects {
     ),
     mergeMap(([action, documents, collections]) => {
       const document = action.payload.document;
-      const documentsInCollection = Object.values(documents).filter(d => d.collectionId === document.collectionId);
+      const documentsInCollection = objectValues(documents).filter(d => d.collectionId === document.collectionId);
       const currentCollection = collections[document.collectionId];
       const entries = Object.entries(document.data);
 

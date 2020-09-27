@@ -17,19 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {padStart} from '../string.utils';
+export const URL_REGEX = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/;
 
-export function convertRgbColorToHex(rgb: string): string {
-  if (!rgb) {
-    return '';
-  }
-
-  const value =
-    '#' +
-    rgb
-      .slice(4, -1)
-      .split(',')
-      .map(val => padStart(Number(val.trim()).toString(16), 2, '0'))
-      .join('');
-  return /^#?[0-9a-f]{6}$/.test(value) ? value : '';
+export function isUrlValid(url: string): boolean {
+  return url && URL_REGEX.test(url);
 }

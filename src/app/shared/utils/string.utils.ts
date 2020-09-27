@@ -95,3 +95,11 @@ export function createUniqueCode(prefix: string, usedCodes: string[] = [], lengt
 
   return code;
 }
+
+export function padStart(value: string, num: number, character: string): string {
+  let text = value || '';
+  while (text.length < num) {
+    text = character + text;
+  }
+  return text;
+}

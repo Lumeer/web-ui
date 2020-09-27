@@ -32,7 +32,7 @@ import {
   scaleImagePoint,
   SVGContainer,
 } from './map-image-render-utils';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, objectValues} from '../../../../../../shared/utils/common.utils';
 import {MimeType} from '../../../../../../core/model/mime-type';
 import {ElementRef, EventEmitter} from '@angular/core';
 import {deepArrayEquals} from '../../../../../../shared/utils/array.utils';
@@ -70,7 +70,7 @@ export class SvgImageMap {
       return;
     }
     this.currentData = data;
-    this.initImage(Object.values(this.markers));
+    this.initImage(objectValues(this.markers));
   }
 
   private initImage(markers: MapMarkerProperties[]) {
@@ -465,7 +465,7 @@ export class SvgImageMap {
     this.setSvgImageRectangle();
 
     const {scale, pixelScale} = this.getCurrentTranslate();
-    for (const marker of Object.values(this.markers)) {
+    for (const marker of objectValues(this.markers)) {
       const {x, y} = computeMarkerPosition(markerPosition(marker), scale, pixelScale, elementSize, bounds);
       const selection = this.findMarkerContainer(marker);
       if (!selection.empty()) {
