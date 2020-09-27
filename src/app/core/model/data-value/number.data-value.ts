@@ -110,7 +110,7 @@ export class NumberDataValue implements NumericDataValue {
 
   public isValid(ignoreConfig?: boolean): boolean {
     if (isNotNullOrUndefined(this.inputValue)) {
-      return !!this.bigNumber;
+      return this.inputValue === '' || !!this.bigNumber;
     }
     if (!this.value) {
       return true;
