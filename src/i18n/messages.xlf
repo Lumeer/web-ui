@@ -29,11 +29,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">60</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context>
@@ -70,6 +70,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context>
           <context context-type="linenumber">51</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context>
@@ -160,11 +164,11 @@
         <source>Save</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
@@ -179,6 +183,10 @@
           <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
@@ -187,6 +195,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context>
           <context context-type="linenumber">41</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit><trans-unit id="message.loading" datatype="html">
         <source>Loading...</source>
@@ -288,7 +300,7 @@
         <source>Configure function of</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="dialog.attribute.function.editable" datatype="html">
         <source>
@@ -296,7 +308,7 @@
           </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="link.new.dialog.title" datatype="html">
         <source>Create new link</source>
@@ -939,7 +951,7 @@
           <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
-        <source>Subscribe me to Lumeer Newsletter (see </source>
+        <source>Keep me informed about productivity ideas via newsletter (see </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
           <context context-type="linenumber">38</context>
@@ -1134,6 +1146,24 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context>
           <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit><trans-unit id="link.input.dropdown.url" datatype="html">
+        <source>Url</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="link.input.dropdown.title" datatype="html">
+        <source>Title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="link.input.dropdown.title.placeholder" datatype="html">
+        <source>Custom title</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.version" datatype="html">
         <source>Version <x id="INTERPOLATION" equiv-text="{{dataResource.dataVersion}}"/></source>
@@ -5232,8 +5262,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3dc1fa939c26ba547db151442ada4865d1376bc9" datatype="html">
-        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
+      <trans-unit id="b366ace6fd68cd76b3815231ab2f3995c3d2df4d" datatype="html">
+        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/select/attribute-type-select.component.ts</context>
           <context context-type="linenumber">1</context>
