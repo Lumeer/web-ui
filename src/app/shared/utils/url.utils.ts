@@ -17,25 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ConstraintType} from '../data/constraint';
-import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
-import {LinkDataValue} from '../data-value/link.data-value';
+export const URL_REGEX = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/;
 
-export class LinkConstraint implements Constraint {
-  public readonly type = ConstraintType.Link;
-  public readonly config = {};
-  public readonly isTextRepresentation = false;
-
-  public createDataValue(value: any): LinkDataValue {
-    return new LinkDataValue(value);
-  }
-
-  public createInputDataValue(inputValue: string, value: any): LinkDataValue {
-    return new LinkDataValue(value, inputValue);
-  }
-
-  public conditions(): QueryCondition[] {
-    return [QueryCondition.Equals, QueryCondition.NotEquals, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
-  }
+export function isUrlValid(url: string): boolean {
+  return url && URL_REGEX.test(url);
 }

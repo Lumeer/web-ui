@@ -20,7 +20,7 @@
 import {DataValue} from './index';
 import {LinkConstraintConfig} from '../data/constraint-config';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
-import {dataValuesMeetConditionByText} from './data-value.utils';
+import {dataValuesMeetConditionByText, valueByConditionText} from './data-value.utils';
 
 /*
  * Saved value is formatted as 'Link [Text]'
@@ -38,8 +38,7 @@ export class LinkDataValue implements DataValue {
 
   public format(): string {
     if (this.linkValue) {
-      const linkValue = this.linkValue.startsWith('http') ? this.linkValue : `https://${this.linkValue}`;
-      return `<a href="${linkValue}" target="_blank">${this.titleValue || this.linkValue}</a>`
+      return `<a href="${completeLinkValue(this.linkValue)}" target="_blank">${this.titleValue || this.linkValue}</a>`;
     }
     return this.titleValue || '';
   }
@@ -89,7 +88,11 @@ export class LinkDataValue implements DataValue {
   }
 
   public meetFullTexts(fulltexts: string[]): boolean {
-    return false; // TODO
+    const linkFormattedValue = this.linkValue?.toLowerCase().toString() || '';
+    const titleFormattedValue = this.titleValue?.toLowerCase().toString() || '';
+    return (fulltexts || [])
+      .map(fulltext => fulltext.toLowerCase().trim())
+      .every(fulltext => linkFormattedValue.includes(fulltext) || titleFormattedValue.includes(fulltext));
   }
 
   public parseInput(inputValue: string): LinkDataValue {
@@ -97,8 +100,15 @@ export class LinkDataValue implements DataValue {
   }
 
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
-    return undefined;  // TODO
+    return valueByConditionText(condition, values?.[0]?.value);
   }
+}
+
+export function completeLinkValue(link: string): string {
+  if (link) {
+    return link.startsWith('http://') || link.startsWith('https://') ? link : `https://${link}`;
+  }
+  return '';
 }
 
 export function formatLinkValue(link: string, title: string): string {
@@ -110,13 +120,13 @@ export function formatLinkValue(link: string, title: string): string {
   return '';
 }
 
-export function parseLinkValue(value: string): { link?: string, title?: string } {
+export function parseLinkValue(value: string): {link?: string; title?: string} {
   if (value[value.length - 1] === ']') {
     const titleStartIndex = value.lastIndexOf('[');
     if (titleStartIndex !== -1) {
       return {
         link: value.substring(0, titleStartIndex).trim(),
-        title: value.substring(titleStartIndex + 1, value.length - 1)
+        title: value.substring(titleStartIndex + 1, value.length - 1),
       };
     }
   }

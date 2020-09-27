@@ -47,5 +47,12 @@
                       [value]="dataValue">
     </files-data-input>
 
+    <link-data-input *ngSwitchCase="constraintType.Link"
+                     [focus]="false"
+                     [readonly]="true"
+                     [skipValidation]="true"
+                     [value]="dataValue">
+    </link-data-input>
+
   </ng-container>
 </ng-template>

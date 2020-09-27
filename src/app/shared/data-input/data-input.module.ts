@@ -19,7 +19,7 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
 import {ColorPickerModule} from 'ngx-color-picker';
@@ -61,8 +61,8 @@ import {ConstraintAsTextPipe} from './pipes/constraint-as-text.pipe';
 import {UserIsValidPipe} from './user/pipes/user-is-valid.pipe';
 import {ConstraintClassPipe} from './pipes/constraint-class.pipe';
 import {SelectOptionsJoinedPipe} from './select/pipes/select-options-joined.pipe';
-import { LinkDataInputComponent } from './link/link-data-input.component';
-import { LinkInputDropdownComponent } from './link/dropdown/link-input-dropdown.component';
+import {LinkDataInputComponent} from './link/link-data-input.component';
+import {LinkInputDropdownComponent} from './link/dropdown/link-input-dropdown.component';
 
 @NgModule({
   imports: [
@@ -79,6 +79,7 @@ import { LinkInputDropdownComponent } from './link/dropdown/link-input-dropdown.
     DropdownModule,
     QuillModule,
     TextEditorModalModule,
+    ReactiveFormsModule,
   ],
   declarations: [
     DataInputComponent,

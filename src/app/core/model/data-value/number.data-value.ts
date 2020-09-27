@@ -176,7 +176,7 @@ function parseNumbroConfig(
     numbroConfig.spaceSeparated = true;
     numbroConfig.spaceSeparatedCurrency = true;
   }
-  numbroConfig.average = overrideConfig?.compact || config.compact;
+  numbroConfig.average = overrideConfig?.compact || config.compact || false;
 
   if (overrideConfig?.negative || config.negative) {
     numbroConfig.negative = 'parenthesis';

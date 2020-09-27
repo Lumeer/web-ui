@@ -17,27 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  ElementRef,
-  ViewChild,
-  Output,
-  EventEmitter
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, Output, EventEmitter} from '@angular/core';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {KeyCode} from '../../../key-code';
 import {preventEvent} from '../../../utils/common.utils';
+import {parseLinkValue} from '../../../../core/model/data-value/link.data-value';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import {isUrlValid} from '../../../utils/url.utils';
 
 @Component({
   selector: 'link-input-dropdown',
   templateUrl: './link-input-dropdown.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LinkInputDropdownComponent {
-
   @Input()
   public titleValue: string;
 
@@ -51,7 +53,7 @@ export class LinkInputDropdownComponent {
   public cancel = new EventEmitter();
 
   @Output()
-  public save = new EventEmitter<{ link: string, title: string }>();
+  public save = new EventEmitter<{link: string; title: string}>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -69,11 +71,28 @@ export class LinkInputDropdownComponent {
     DropdownPosition.TopEnd,
   ];
 
-  constructor() {
+  public form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
+      link: ['', linkValidator()],
+      title: '',
+    });
+  }
+
+  public get linkControl(): AbstractControl {
+    return this.form.controls.link;
+  }
+
+  public get titleControl(): AbstractControl {
+    return this.form.controls.title;
   }
 
   public ngAfterViewInit() {
     this.dropdown.open();
+    this.linkControl.setValue(this.linkValue);
+    this.titleControl.setValue(this.titleValue);
+
     this.linkInput.nativeElement.focus();
     if (this.linkValue) {
       this.linkInput.nativeElement.setSelectionRange(this.linkValue.length, this.linkValue.length);
@@ -81,10 +100,10 @@ export class LinkInputDropdownComponent {
   }
 
   public onSave() {
-    if (this.linkValue) {
+    if (this.linkControl.value) {
       this.save.emit({
-        link: (this.linkValue || '').trim(),
-        title: (this.titleValue || '').trim()
+        link: (this.linkControl.value || '').trim(),
+        title: (this.titleControl.value || '').trim(),
       });
     }
   }
@@ -138,4 +157,22 @@ export class LinkInputDropdownComponent {
         event.stopPropagation();
     }
   }
+
+  public onLinkBlur() {
+    const {link, title} = parseLinkValue(this.linkControl.value);
+    if (link && title) {
+      this.linkControl.setValue(link);
+      this.titleControl.setValue(title);
+    }
+  }
+}
+
+function linkValidator(): ValidatorFn {
+  return (form: FormControl): ValidationErrors | null => {
+    if (isUrlValid(form.value)) {
+      return null;
+    }
+
+    return {urlInvalid: true};
+  };
 }

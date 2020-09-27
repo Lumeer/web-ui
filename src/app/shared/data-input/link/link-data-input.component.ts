@@ -24,17 +24,18 @@ import {
   Output,
   EventEmitter,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
+  ElementRef,
 } from '@angular/core';
-import {formatLinkValue, LinkDataValue} from '../../../core/model/data-value/link.data-value';
+import {completeLinkValue, formatLinkValue, LinkDataValue} from '../../../core/model/data-value/link.data-value';
 
 @Component({
   selector: 'link-data-input',
   templateUrl: './link-data-input.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'px-1 w-100 h-100 d-flex align-items-center'},
 })
 export class LinkDataInputComponent implements OnChanges {
-
   @Input()
   public focus: boolean;
 
@@ -60,14 +61,15 @@ export class LinkDataInputComponent implements OnChanges {
   public enterInvalid = new EventEmitter();
 
   public linkValue: string;
+  public completeLinkValue: string;
   public titleValue: string;
 
-  constructor() {
-  }
+  constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value && this.value) {
       this.linkValue = this.value.linkValue;
+      this.completeLinkValue = completeLinkValue(this.linkValue);
       this.titleValue = this.value.titleValue;
     }
   }
@@ -76,7 +78,7 @@ export class LinkDataInputComponent implements OnChanges {
     this.cancel.emit();
   }
 
-  public onSave(data: { link: string; title: string }) {
+  public onSave(data: {link: string; title: string}) {
     const formattedValue = formatLinkValue(data.link, data.title);
     const newValue = this.value.parseInput(formattedValue);
     this.save.next(newValue);
