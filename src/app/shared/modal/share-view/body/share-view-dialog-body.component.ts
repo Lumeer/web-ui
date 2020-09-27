@@ -41,7 +41,7 @@ import {ResourceType} from '../../../../core/model/resource-type';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../utils/common.utils';
 import {KeyCode} from '../../../key-code';
 import {isEmailValid} from '../../../utils/email.utils';
-import {generateCorrelationId, userIsManagerInWorkspace} from '../../../utils/resource.utils';
+import {generateCorrelationId, userCanReadWorkspace, userIsManagerInWorkspace} from '../../../utils/resource.utils';
 import {containsSameElements} from '../../../utils/array.utils';
 
 @Component({
@@ -79,6 +79,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   public canAddNewUsers: boolean;
   public staticUsers: User[] = [];
   public initialUserRoles: Record<string, string[]> = {};
+  public usersWithReadPermission: User[];
 
   public changeableUsers$ = new BehaviorSubject<User[]>([]);
   public newUsers$ = new BehaviorSubject<User[]>([]);
@@ -101,6 +102,10 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.users || changes.organization || changes.project) {
+      this.usersWithReadPermission =
+        this.users?.filter(user => userCanReadWorkspace(user, this.organization, this.project)) || [];
+    }
     if (this.currentUser && this.organization && this.project && this.view) {
       this.initUsers(this.currentUser, this.organization, this.project);
     }
@@ -141,7 +146,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
         ...this.changeableUsers$.getValue(),
         ...this.newUsers$.getValue(),
       ].find(u => u.email.toLowerCase() === text.toLowerCase());
-      const user = this.users.find(u => u.email.toLowerCase() === text.toLowerCase());
+      const user = this.usersWithReadPermission?.find(u => u.email.toLowerCase() === text.toLowerCase());
       if (!userWasAdded) {
         if (user) {
           this.addUser(user);
@@ -153,7 +158,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
   }
 
   private addUserWithEmail(email: string) {
-    const user = this.users.find(u => u.email === email);
+    const user = this.usersWithReadPermission?.find(u => u.email === email);
     if (user) {
       this.addUser(user);
     }
@@ -213,7 +218,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
 
   public suggest() {
     const textLowerCase = this.text$.getValue().toLowerCase();
-    const newSuggestions = this.users
+    const newSuggestions = this.usersWithReadPermission
       .filter(user => !this.isUserPresented(user))
       .map(user => user.email)
       .filter(email => email.toLowerCase().includes(textLowerCase));
@@ -256,7 +261,7 @@ export class ShareViewDialogBodyComponent implements OnInit, OnChanges, OnDestro
     for (const user of this.users || []) {
       if (userIsManagerInWorkspace(user, organization, project) || user.id === currentUser.id) {
         this.addUserToStaticIfNotPresented(user, organization, project);
-      } else if (((this.view.permissions && this.view.permissions.users) || []).find(u => u.id === user.id)) {
+      } else if ((this.view.permissions?.users || []).find(u => u.id === user.id)) {
         this.addUserToChangeableIfNotPresented(user, organization, project);
       }
     }

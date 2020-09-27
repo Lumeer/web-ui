@@ -46,7 +46,7 @@
   </i>
 </div>
 
-<filter-builder *ngIf="queryItem | isAttributeItem"
+<filter-builder *ngIf="!readonly && (queryItem | isAttributeItem)"
                 [attribute]="attribute"
                 [origin]="hostElement"
                 [condition]="conditionControl?.value"
