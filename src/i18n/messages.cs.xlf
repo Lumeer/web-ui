@@ -384,7 +384,13 @@
         <source>{VAR_SELECT, select, None {Any case} LowerCase {Lower case} UpperCase {Upper case} TitleCase {Every first letter upper case} SentenceCase {First letter of sentence upper case} }</source>
         <target>{VAR_SELECT, select, None {Libovolná velikost} LowerCase {Jen malá písmena} UpperCase {Jen velká písmena} TitleCase {Každé první písmeno slova velké} SentenceCase {Každé první písmeno věty velké} }</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.text.minLength.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="b366ace6fd68cd76b3815231ab2f3995c3d2df4d" datatype="html">
+        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</source><target state="new">{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/modal/attribute-type/form/select/attribute-type-select.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.text.minLength.label" datatype="html">
         <source>
         Minimum length
       </source><target>
@@ -1768,11 +1774,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.select.modify.value.message" datatype="html">
         <source>You are modifying the value of an option which might be used in some records. This will make those records value invalid. Do you want to proceed?</source><target>Měníte hodnotu možnosti, která může být již použitá v záznamech. To způsobí, že tyto záznamy nebudou mít platnou hodnotu. Chcete pokračovat?</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="3dc1fa939c26ba547db151442ada4865d1376bc9" datatype="html">
-        <source>{VAR_SELECT, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Select {Selection} Text {Text} User {User} }</source>
-        <target>{VAR_SELECT, select, Address {Adresa} Boolean {Zaškrtávátko} Color {Barva} Coordinates {Souřadnice} DateTime {Datum} FileAttachment {Soubor} Duration {Trvání} None {Žádný} Number {Číslo} Percentage {Procenta} Select {Výběr} Text {Text} User {Uživatel} }</target>
-
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/select/attribute-type-select.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.default.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/attribute-type-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="dialog.create.calendar.event.default.title" datatype="html">
         <source>New event</source><target>Nová událost</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/calendar-event-detail/calendar-event-detail-modal.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
@@ -4435,7 +4437,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">60</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit>
             <trans-unit id="button.create" datatype="html">
                 <source>Create</source>
                 <target>Vytvořit</target>
@@ -4462,7 +4464,7 @@
       </trans-unit><trans-unit id="resource.attribute.deleted" datatype="html">
         <source>Such an attribute does not exist.</source><target>Tento atribut neexistuje.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">68</context></context-group></trans-unit>
             <trans-unit id="button.share" datatype="html">
                 <source>Share</source>
                 <target>Sdílet</target>
@@ -4486,7 +4488,25 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="files.dropdown.button.add" datatype="html">
         <source>Add file</source><target>Přidat soubor</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">62</context></context-group></trans-unit><trans-unit id="link.input.dropdown.url" datatype="html">
+        <source>Url</source><target state="new">Url</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="link.input.dropdown.title" datatype="html">
+        <source>Title</source><target state="new">Title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit><trans-unit id="link.input.dropdown.title.placeholder" datatype="html">
+        <source>Custom title</source><target state="new">Custom title</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="button.select" datatype="html">
                 <source>
         Select
@@ -4617,7 +4637,7 @@
         <source>and I agree to them.</source><target>a souhlasím s nimi.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
-        <source>Subscribe me to Lumeer Newsletter (see </source><target>Příhlasit se k odběru Novinek Lumeera (souhlasím se </target>
+        <source>Keep me informed about productivity ideas via newsletter (see </source><target>Chci být informován o možnostech zvýšení produktivity odběrem novinek (souhlasím se </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source><target>Zpracováním osobních údajů</target>
@@ -4834,19 +4854,19 @@
       </trans-unit><trans-unit id="button.save" datatype="html">
         <source>Save</source><target>Uložit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
         <source>Configure function of</source><target>
       Nastavení funkce atributu
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">11</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.editable" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.editable" datatype="html">
         <source>
             Allow manual value overwrite
           </source><target>
             Povolit ruční přepis hodnoty
           </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="view.discard.changes.message.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="view.discard.changes.message.title" datatype="html">
         <source>Save view</source><target>Uložit pohled</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/view-controls/view-controls.component.ts</context>
