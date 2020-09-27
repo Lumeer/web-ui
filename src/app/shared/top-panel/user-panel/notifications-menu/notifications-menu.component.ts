@@ -155,8 +155,10 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   private navigateToProject(notification: ProjectSharedUserNotification) {
     if (!this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
       this.getOrganization(notification.organizationId, organization => {
-        const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Search];
-        this.router.navigate(path);
+        if (organization) {
+          const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Search];
+          this.router.navigate(path);
+        }
       });
     }
   }
@@ -167,16 +169,18 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
 
   private navigateToCollection(notification: CollectionSharedUserNotification) {
     this.getOrganization(notification.organizationId, organization => {
-      const query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
-      const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Table];
+      if (organization) {
+        const query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
+        const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Table];
 
-      if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
-        const buildUrl = this.router.createUrlTree(path, {queryParams: {q: query}}).toString();
-        if (!this.startsWithCurrentUrl(buildUrl)) {
+        if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
+          const buildUrl = this.router.createUrlTree(path, {queryParams: {q: query}}).toString();
+          if (!this.startsWithCurrentUrl(buildUrl)) {
+            this.router.navigate(path, {queryParams: {q: query}});
+          }
+        } else {
           this.router.navigate(path, {queryParams: {q: query}});
         }
-      } else {
-        this.router.navigate(path, {queryParams: {q: query}});
       }
     });
   }
@@ -191,15 +195,17 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
 
   private navigateToView(notification: ViewSharedUserNotification) {
     this.getOrganization(notification.organizationId, organization => {
-      const path = ['w', organization.code, notification.projectCode, 'view', {vc: notification.viewCode}];
+      if (organization) {
+        const path = ['w', organization.code, notification.projectCode, 'view', {vc: notification.viewCode}];
 
-      if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
-        const buildUrl = this.router.createUrlTree(path).toString();
-        if (!this.startsWithCurrentUrl(buildUrl)) {
+        if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
+          const buildUrl = this.router.createUrlTree(path).toString();
+          if (!this.startsWithCurrentUrl(buildUrl)) {
+            this.router.navigate(path);
+          }
+        } else {
           this.router.navigate(path);
         }
-      } else {
-        this.router.navigate(path);
       }
     });
   }

@@ -53,7 +53,7 @@ export function userRolesInResource(user: User, resource: Resource): string[] {
   if (!user) {
     return [];
   }
-  const permissions = (resource && resource.permissions) || {users: [], groups: []};
+  const permissions = resource?.permissions || {users: [], groups: []};
   const allUserRoles = userRoles(user, permissions.users);
   allUserRoles.push(...userGroupRoles(user, permissions.groups));
   return rolesWithTransitionRoles(allUserRoles);

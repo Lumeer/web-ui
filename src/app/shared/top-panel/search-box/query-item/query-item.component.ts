@@ -125,7 +125,7 @@ export class QueryItemComponent implements OnInit, OnChanges {
 
   public ngOnInit() {
     if (this.isAttributeType() && this.queryItem.fromSuggestion) {
-      setTimeout(() => this.filterBuilderComponent && this.filterBuilderComponent.open());
+      setTimeout(() => this.filterBuilderComponent?.open());
     }
   }
 

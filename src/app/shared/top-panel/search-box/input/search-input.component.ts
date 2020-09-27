@@ -138,7 +138,7 @@ export class SearchInputComponent {
   public onUpAndDownArrowKeysDown(event: KeyboardEvent) {
     event.preventDefault();
     const direction = event.code === KeyCode.ArrowUp ? -1 : 1;
-    this.searchSuggestions.moveSelection(direction);
+    this.searchSuggestions?.moveSelection(direction);
   }
 
   public onBackspaceKeyDown() {
@@ -153,8 +153,8 @@ export class SearchInputComponent {
   }
 
   public onEnterKeyUp() {
-    if (this.text || this.searchSuggestions.hasSelection()) {
-      this.searchSuggestions.useSelection(this.text);
+    if (this.text || this.searchSuggestions?.hasSelection()) {
+      this.searchSuggestions?.useSelection(this.text);
     } else {
       this.search.emit();
     }
