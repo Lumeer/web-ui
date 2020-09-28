@@ -56,7 +56,7 @@
     "@fullcalendar/daygrid": "^5.2.0",
     "@fullcalendar/interaction": "^5.2.0",
     "@fullcalendar/list": "^5.2.0",
-    "@fullcalendar/resource-timegrid": "^5.2.0",
+    "@fullcalendar/resource-timegrid": "^5.3.1",
     "@fullcalendar/timegrid": "^5.2.0",
     "@lumeer/lumeer-gantt": "^1.0.29",
     "@ngrx/effects": "^9.1.2",
