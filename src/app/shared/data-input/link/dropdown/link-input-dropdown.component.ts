@@ -17,29 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ElementRef, ViewChild, Output, EventEmitter} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  ElementRef,
+  ViewChild,
+  Output,
+  EventEmitter,
+  OnInit,
+} from '@angular/core';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {KeyCode} from '../../../key-code';
 import {preventEvent} from '../../../utils/common.utils';
-import {parseLinkValue} from '../../../../core/model/data-value/link.data-value';
-import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
+import {linkHasValidProtocol, parseLinkValue} from '../../../../core/model/data-value/link.data-value';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isUrlValid} from '../../../utils/url.utils';
+import {Observable} from 'rxjs';
+import {distinctUntilChanged, map, startWith, tap} from 'rxjs/operators';
 
 @Component({
   selector: 'link-input-dropdown',
   templateUrl: './link-input-dropdown.component.html',
+  styleUrls: ['./link-input-dropdown.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinkInputDropdownComponent {
+export class LinkInputDropdownComponent implements OnInit {
   @Input()
   public titleValue: string;
 
@@ -73,6 +77,8 @@ export class LinkInputDropdownComponent {
 
   public form: FormGroup;
 
+  public invalid$: Observable<boolean>;
+
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       link: ['', linkValidator()],
@@ -88,10 +94,19 @@ export class LinkInputDropdownComponent {
     return this.form.controls.title;
   }
 
-  public ngAfterViewInit() {
-    this.dropdown.open();
+  public ngOnInit() {
+    this.invalid$ = this.form.statusChanges.pipe(
+      startWith(''),
+      map(() => this.form.invalid),
+      distinctUntilChanged()
+    );
+
     this.linkControl.setValue(this.linkValue);
     this.titleControl.setValue(this.titleValue);
+  }
+
+  public ngAfterViewInit() {
+    this.dropdown.open();
 
     this.linkInput.nativeElement.focus();
     if (this.linkValue) {

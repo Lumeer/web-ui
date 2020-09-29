@@ -106,9 +106,44 @@ export class LinkDataValue implements DataValue {
 
 export function completeLinkValue(link: string): string {
   if (link) {
-    return link.startsWith('http://') || link.startsWith('https://') ? link : `https://${link}`;
+    return linkHasValidProtocol(link) ? link : `https://${link}`;
   }
   return '';
+}
+
+export function linkHasValidProtocol(link: string) {
+  // https://en.wikipedia.org/wiki/List_of_URI_schemes
+  const protocols = [
+    'http://',
+    'https://',
+    'ftp://',
+    'mailto:',
+    'callto:',
+    'spotify:',
+    'bitcoin:',
+    'dns:',
+    'facetime:',
+    'file://',
+    'geo:',
+    'git://',
+    'imap://',
+    'lastfm://',
+    'market://',
+    'pop://',
+    'imap://',
+    's3://',
+    'sftp://',
+    'skype:',
+    'sms:',
+    'ssh://',
+    'svn://',
+    'tag:',
+    'tel:',
+    'slack://',
+    'zoommtg://',
+    'app://',
+  ];
+  return protocols.some(protocol => (link || '').startsWith(protocol));
 }
 
 export function formatLinkValue(link: string, title: string): string {

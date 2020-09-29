@@ -1,4 +1,4 @@
-<a [href]="completeLinkValue" target="_blank">{{titleValue || linkValue}}</a>
+<a [href]="completeLinkValue" target="_blank" class="overflow-hidden text-nowrap">{{titleValue || linkValue}}</a>
 
 <link-input-dropdown *ngIf="!readonly"
                      [linkValue]="linkValue"

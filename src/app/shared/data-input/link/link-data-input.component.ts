@@ -28,6 +28,7 @@ import {
   ElementRef,
 } from '@angular/core';
 import {completeLinkValue, formatLinkValue, LinkDataValue} from '../../../core/model/data-value/link.data-value';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'link-data-input',
@@ -61,15 +62,15 @@ export class LinkDataInputComponent implements OnChanges {
   public enterInvalid = new EventEmitter();
 
   public linkValue: string;
-  public completeLinkValue: string;
+  public completeLinkValue: any;
   public titleValue: string;
 
-  constructor(public element: ElementRef) {}
+  constructor(public element: ElementRef, private domSanitizer: DomSanitizer) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value && this.value) {
       this.linkValue = this.value.linkValue;
-      this.completeLinkValue = completeLinkValue(this.linkValue);
+      this.completeLinkValue = this.domSanitizer.bypassSecurityTrustUrl(completeLinkValue(this.linkValue));
       this.titleValue = this.value.titleValue;
     }
   }
