@@ -81,8 +81,8 @@ export class AgreementComponent implements OnInit, OnDestroy {
         .select(selectCurrentUser)
         .pipe(filter(user => !!user))
         .subscribe(user => {
-          this.agreement.setValue(user.agreement);
-          this.newsletter.setValue(user.newsletter);
+          this.agreement.setValue(user.agreement || false);
+          this.newsletter.setValue(user.newsletter || false);
         })
     );
   }
@@ -105,8 +105,8 @@ export class AgreementComponent implements OnInit, OnDestroy {
     this.store$.dispatch(
       new UsersAction.PatchCurrentUser({
         user: {
-          agreement: this.agreement.value,
-          newsletter: this.newsletter.value,
+          agreement: this.agreement.value || false,
+          newsletter: this.newsletter.value || false,
         },
         onSuccess: () => this.onSuccess(),
         onFailure: () => this.onFailure(),
