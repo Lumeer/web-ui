@@ -17,33 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableColumn} from './table-column';
-import {TableRow} from './table-row';
+import {KeyCode} from '../key-code';
 
-export const TABLE_ROW_HEIGHT = 36;
-
-export interface TableModel {
-  id: string;
-  collectionId: string;
-  columns: TableColumn[];
-  rows: TableRow[];
+export enum DataInputSaveAction {
+  Enter = 'enter',
+  Tab = 'tab',
+  Button = 'button',
+  Blur = 'blur',
+  Select = 'select',
+  Direct = 'direct',
 }
 
-export interface SelectedTableCell extends TableCell {}
-
-export interface EditedTableCell extends TableCell {
-  inputValue: any;
-}
-
-export interface TableCell {
-  tableId: string;
-  columnId: string;
-  type: TableCellType;
-  rowId?: string;
-}
-
-export enum TableCellType {
-  Header = 'header',
-  Body = 'body',
-  Footer = 'footer',
+export function keyboardEventInputSaveAction(event: KeyboardEvent): DataInputSaveAction {
+  if (event.code === KeyCode.Tab) {
+    return DataInputSaveAction.Tab;
+  } else if (event.code === KeyCode.Enter || event.code === KeyCode.NumpadEnter) {
+    return DataInputSaveAction.Enter;
+  }
+  return null;
 }

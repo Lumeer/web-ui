@@ -57,7 +57,7 @@ export class LinkInputDropdownComponent implements OnInit {
   public cancel = new EventEmitter();
 
   @Output()
-  public save = new EventEmitter<{link: string; title: string}>();
+  public save = new EventEmitter<{link: string; title: string; enter?: boolean}>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -114,13 +114,16 @@ export class LinkInputDropdownComponent implements OnInit {
     }
   }
 
-  public onSave() {
+  public onSave(enter?: boolean): boolean {
     if (this.linkControl.value) {
       this.save.emit({
         link: (this.linkControl.value || '').trim(),
         title: (this.titleControl.value || '').trim(),
+        enter,
       });
+      return true;
     }
+    return false;
   }
 
   public onCancel() {
@@ -165,8 +168,9 @@ export class LinkInputDropdownComponent implements OnInit {
         break;
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
-        this.onSave();
-        preventEvent(event);
+        if (!this.onSave(true)) {
+          preventEvent(event);
+        }
         break;
       default:
         event.stopPropagation();

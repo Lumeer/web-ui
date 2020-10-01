@@ -17,33 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableColumn} from './table-column';
-import {TableRow} from './table-row';
+import {Pipe, PipeTransform} from '@angular/core';
+import {TableCell, TableCellType} from '../model/table-model';
+import {TableColumn} from '../model/table-column';
+import {TableRow} from '../model/table-row';
+import {isTableCellSelected} from '../model/table-utils';
 
-export const TABLE_ROW_HEIGHT = 36;
-
-export interface TableModel {
-  id: string;
-  collectionId: string;
-  columns: TableColumn[];
-  rows: TableRow[];
-}
-
-export interface SelectedTableCell extends TableCell {}
-
-export interface EditedTableCell extends TableCell {
-  inputValue: any;
-}
-
-export interface TableCell {
-  tableId: string;
-  columnId: string;
-  type: TableCellType;
-  rowId?: string;
-}
-
-export enum TableCellType {
-  Header = 'header',
-  Body = 'body',
-  Footer = 'footer',
+@Pipe({
+  name: 'tableCellSelected',
+})
+export class TableCellSelectedPipe implements PipeTransform {
+  public transform(selectedCell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {
+    return isTableCellSelected(selectedCell, column, type, row);
+  }
 }

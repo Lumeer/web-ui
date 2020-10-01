@@ -112,7 +112,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   public valueFocused: boolean;
 
   public readonly booleanConstraintType = ConstraintType.Boolean;
-  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
+  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true, delaySaveAction: true}};
 
   public placeholder: string;
 

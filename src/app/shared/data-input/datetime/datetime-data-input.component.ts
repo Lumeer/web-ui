@@ -38,6 +38,8 @@ import {isDateValid, isNotNullOrUndefined} from '../../utils/common.utils';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'datetime-data-input',
@@ -52,7 +54,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public readonly: boolean;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Input()
   public value: DateTimeDataValue;
@@ -61,7 +63,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
   public valueChange = new EventEmitter<DateTimeDataValue>();
 
   @Output()
-  public save = new EventEmitter<DateTimeDataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: DateTimeDataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -144,18 +146,28 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
         event.preventDefault();
 
-        if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+        if (!this.configuration.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }
 
         // needs to be executed after parent event handlers
-        setTimeout(() => this.save.emit(dataValue));
+        this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
         this.onCancel();
         return;
+    }
+  }
+
+  private saveDataValue(dataValue: DateTimeDataValue, event: KeyboardEvent) {
+    const action = keyboardEventInputSaveAction(event);
+    if (this.configuration?.delaySaveAction) {
+      // needs to be executed after parent event handlers
+      setTimeout(() => this.save.emit({action, dataValue}));
+    } else {
+      this.save.emit({action, dataValue});
     }
   }
 
@@ -174,7 +186,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
     this.pendingUpdate = null;
     this.value = this.value.copy(date);
-    this.save.emit(this.value);
+    this.save.emit({action: DataInputSaveAction.Button, dataValue: this.value});
   }
 
   public onSaveOnClose(inputValue: string, selectedDate: Date) {

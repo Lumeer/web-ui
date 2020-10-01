@@ -76,7 +76,7 @@ export class FilterBuilderContentComponent implements OnInit {
   public hiddenInputComponent: HiddenInputComponent;
 
   public readonly constraintType = ConstraintType;
-  public readonly configuration: DataInputConfiguration = {common: {skipValidation: true}};
+  public readonly configuration: DataInputConfiguration = {common: {skipValidation: true, delaySaveAction: true}};
 
   public editing$ = new BehaviorSubject(-1);
 

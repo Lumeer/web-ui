@@ -35,7 +35,7 @@ const defaults = {
   headerEnabled: true,
   footerHeight: TABLE_ROW_HEIGHT,
   footerEnabled: false,
-  bufferMultiplier: 0,
+  buffer: 1,
 };
 
 @Directive({
@@ -67,7 +67,7 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
   public footerHeight = defaults.footerHeight;
 
   @Input()
-  public bufferMultiplier = defaults.bufferMultiplier;
+  public buffer = defaults.buffer;
 
   @Input()
   public disabled: boolean;
@@ -126,9 +126,9 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
       rowHeight: +this.rowHeight || defaults.rowHeight,
       headerHeight: this.headerEnabled ? +this.headerHeight || defaults.headerHeight : 0,
       footerHeight: this.footerEnabled ? +this.footerHeight || defaults.footerHeight : 0,
-      bufferMultiplier: +this.bufferMultiplier || defaults.bufferMultiplier,
+      buffer: +this.buffer || defaults.buffer,
     };
-    this.scrollStrategy.setConfig(config.rowHeight, config.headerHeight, config.footerHeight, config.bufferMultiplier);
+    this.scrollStrategy.setConfig(config.rowHeight, config.headerHeight, config.footerHeight, config.buffer);
     this.scrollStrategy.setDisabled(this.disabled);
   }
 

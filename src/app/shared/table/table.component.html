@@ -2,8 +2,7 @@
   <table-alternative-header [columns]="tableModel.columns"
                             [selectedCell]="selectedCell">
   </table-alternative-header>
-  <table-resize-header class="h-100"
-                       [columns]="tableModel.columns"
+  <table-resize-header [columns]="tableModel.columns"
                        (resizeColumn)="onResizeColumn($event)">
   </table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize style="height: 100%" [disabled]="scrollDisabled$ | async">

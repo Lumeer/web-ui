@@ -20,6 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, Renderer2, ElementRef} from '@angular/core';
 import {TableColumn} from '../../model/table-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {TABLE_ROW_HEIGHT} from '../../model/table-model';
 
 const columnMinWidth = 30;
 
@@ -36,6 +37,8 @@ export class TableResizeHeaderComponent {
 
   @Output()
   public resizeColumn = new EventEmitter<{index: number; width: number}>();
+
+  public readonly tableRowHeight = TABLE_ROW_HEIGHT;
 
   private headerElementsCache: Record<number, HTMLElement> = {};
 

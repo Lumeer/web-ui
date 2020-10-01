@@ -45,6 +45,7 @@ import {KeyCode} from '../../../../shared/key-code';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {DataRowHiddenComponent} from '../../../../shared/data/data-row-component';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
+import {DataInputSaveAction} from '../../../../shared/data-input/data-input-save-action';
 
 export class WorkflowTablesService {
   public selectedCell$ = new BehaviorSubject<SelectedTableCell>(null);
@@ -74,9 +75,13 @@ export class WorkflowTablesService {
     }
   }
 
-  public resetCellSelection(cell: TableCell) {
+  public resetCellSelection(cell: TableCell, action: DataInputSaveAction) {
+    if (action === DataInputSaveAction.Enter) {
+      return;
+    }
     if (this.isEditing() && this.isEditingCell(cell)) {
       this.editedCell$.next(null);
+      this.selectedCell$.next({...cell});
     } else if (this.isSelected() && this.isCellSelected(cell)) {
       this.selectedCell$.next(null);
     }
@@ -136,14 +141,7 @@ export class WorkflowTablesService {
     event.stopPropagation();
 
     if (this.isEditing()) {
-      const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell$.value);
-      if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
-        const editedCell = this.editedCell$.value;
-        this.selectedCell$.next(editedCell);
-      } else {
-        this.selectCell(tableIndex, rowIndex + 1, columnIndex);
-      }
-      this.editedCell$.next(null);
+      this.moveSelectionDownFromEdited();
     } else if (this.isSelected()) {
       const selectedCell = this.selectedCell$.value;
       this.selectedCell$.next(null);
@@ -151,9 +149,21 @@ export class WorkflowTablesService {
     }
   }
 
+  private moveSelectionDownFromEdited() {
+    const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell$.value);
+    if (this.numberOfRowsInTable(tableIndex) - 1 === rowIndex) {
+      const editedCell = this.editedCell$.value;
+      this.selectedCell$.next({...editedCell});
+    } else {
+      this.selectCell(tableIndex, rowIndex + 1, columnIndex);
+    }
+    this.editedCell$.next(null);
+  }
+
   private onTabKeyDown(event: KeyboardEvent) {
     event.preventDefault();
     event.stopPropagation();
+
     if (this.isEditing()) {
       const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell$.value);
       if (event.shiftKey) {
@@ -304,12 +314,23 @@ export class WorkflowTablesService {
   }
 
   private isCellSelected(cell: TableCell): boolean {
-    return this.isEditing() && this.cellsAreSame(cell, this.selectedCell$.value);
+    return this.isSelected() && this.cellsAreSame(cell, this.selectedCell$.value);
   }
 
   public onCellClick(cell: TableCell) {
     this.selectedCell$.next({...cell});
     this.editedCell$.next(null);
+  }
+
+  public onCellSave(cell: TableCell, action: DataInputSaveAction) {
+    if (this.isEditingCell(cell)) {
+      if ([DataInputSaveAction.Button, DataInputSaveAction.Select].includes(action)) {
+        this.editedCell$.next(null);
+        this.selectedCell$.next({...cell});
+      } else if (DataInputSaveAction.Direct === action) {
+        this.moveSelectionDownFromEdited();
+      }
+    }
   }
 
   public onCellDoubleClick(cell: TableCell) {

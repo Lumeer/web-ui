@@ -21,18 +21,13 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {TableCell, TableCellType} from '../model/table-model';
 import {TableColumn} from '../model/table-column';
 import {TableRow} from '../model/table-row';
+import {isTableCellSelected, isTableColumnDirectlyEditable} from '../model/table-utils';
 
 @Pipe({
-  name: 'tableCellSelected',
+  name: 'tableCellEdited',
 })
-export class TableCellSelectedPipe implements PipeTransform {
+export class TableCellEditedPipe implements PipeTransform {
   public transform(selectedCell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {
-    if (!selectedCell || selectedCell.type !== type) {
-      return false;
-    }
-    if (type === TableCellType.Header || type === TableCellType.Footer) {
-      return selectedCell.columnId === column.id;
-    }
-    return selectedCell.columnId === column.id && selectedCell.rowId === row?.id;
+    return isTableCellSelected(selectedCell, column, type, row) && !isTableColumnDirectlyEditable(column);
   }
 }

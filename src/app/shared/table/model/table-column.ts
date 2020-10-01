@@ -18,6 +18,7 @@
  */
 
 import {Attribute} from '../../../core/store/collections/collection';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
 export interface TableColumn {
   id: string;
@@ -31,4 +32,8 @@ export interface TableColumn {
   hidden?: boolean;
   editable: boolean;
   manageable?: boolean;
+}
+
+export function columnConstraintType(column: TableColumn): ConstraintType {
+  return column.attribute?.constraint?.type || ConstraintType.Unknown;
 }

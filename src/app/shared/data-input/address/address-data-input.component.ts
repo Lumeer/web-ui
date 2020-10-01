@@ -41,6 +41,8 @@ import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'address-data-input',
@@ -55,7 +57,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   public readonly: boolean;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Input()
   public value: AddressDataValue;
@@ -64,7 +66,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   public valueChange = new EventEmitter<AddressDataValue>();
 
   @Output()
-  public save = new EventEmitter<AddressDataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: AddressDataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -162,9 +164,9 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     } else {
       const selectedOption = this.dropdown.getActiveOption();
       if (selectedOption) {
-        this.saveValue(selectedOption.value);
+        this.saveValueOnBlur(selectedOption.value);
       } else {
-        this.saveValue(this.addressInput.nativeElement.value);
+        this.saveValueOnBlur(this.addressInput.nativeElement.value);
       }
     }
   }
@@ -180,7 +182,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
   public onSelectOption(option: DropdownOption) {
     this.preventSaveAndBlur();
     const dataValue = this.value.copy(option.value);
-    this.save.emit(dataValue);
+    this.save.emit({action: DataInputSaveAction.Select, dataValue});
   }
 
   private onKeyDown(event: KeyboardEvent) {
@@ -189,20 +191,14 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         const input = this.addressInput;
+        const value = input.nativeElement.value;
         const selectedOption = this.dropdown.getActiveOption();
+        const dataValue = this.value.parseInput(selectedOption?.value || value);
 
         event.preventDefault();
 
         this.preventSaveAndBlur();
-        // needs to be executed after parent event handlers
-        const value = input.nativeElement.value;
-        setTimeout(() => {
-          if (selectedOption) {
-            this.saveValue(selectedOption.value);
-          } else {
-            input && this.saveValue(value);
-          }
-        });
+        this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
@@ -213,6 +209,16 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     this.dropdown.onKeyDown(event);
   }
 
+  private saveDataValue(dataValue: AddressDataValue, event: KeyboardEvent) {
+    const action = keyboardEventInputSaveAction(event);
+    if (this.configuration?.delaySaveAction) {
+      // needs to be executed after parent event handlers
+      setTimeout(() => this.save.emit({action, dataValue}));
+    } else {
+      this.save.emit({action, dataValue});
+    }
+  }
+
   private preventSaveAndBlur() {
     if (this.addressInput) {
       this.preventSave = true;
@@ -220,9 +226,9 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
     }
   }
 
-  private saveValue(value: string) {
+  private saveValueOnBlur(value: string) {
     const dataValue = this.value.parseInput(value);
-    this.save.emit(dataValue);
+    this.save.emit({action: DataInputSaveAction.Blur, dataValue});
   }
 
   public onFocus() {

@@ -38,6 +38,7 @@ import {DataSuggestion} from './data-suggestion';
 import {DataInputConfiguration} from './data-input-configuration';
 import {isNotNullOrUndefined} from '../utils/common.utils';
 import {KeyCode} from '../key-code';
+import {DataInputSaveAction} from './data-input-save-action';
 
 @Component({
   selector: 'data-input',
@@ -78,6 +79,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
 
   @Output()
   public save = new EventEmitter<DataValue>();
+
+  @Output()
+  public saveAction = new EventEmitter<{action?: DataInputSaveAction; dataValue: DataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -173,10 +177,20 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   }
 
   public onSaveValue(dataValue: DataValue) {
+    this.saveValue(dataValue);
+    this.saveAction.emit({dataValue});
+  }
+
+  private saveValue(dataValue: DataValue) {
     if (this.resizeToContent) {
       this.recalculateWidth(dataValue);
     }
     this.save.emit(dataValue);
+  }
+
+  public onSaveValueWithAction(data: {action: DataInputSaveAction; dataValue: DataValue}) {
+    this.saveValue(data.dataValue);
+    this.saveAction.emit(data);
   }
 
   public onValueChange(dataValue: DataValue) {

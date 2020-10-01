@@ -203,5 +203,10 @@
     "**/!(*.spec).ts": [
       "npm run tslint"
     ]
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
   }
 }

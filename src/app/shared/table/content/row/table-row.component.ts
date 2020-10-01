@@ -26,10 +26,9 @@ import {
   ViewChild,
   OnChanges,
   SimpleChanges,
-  ElementRef,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {TableColumn} from '../../model/table-column';
+import {columnConstraintType, TableColumn} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
 import {DataValue} from '../../../../core/model/data-value';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
@@ -41,6 +40,8 @@ import {ConstraintData, ConstraintType} from '../../../../core/model/data/constr
 import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
+import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
+import {isTableColumnDirectlyEditable} from '../../model/table-utils';
 
 @Component({
   selector: '[table-row]',
@@ -68,13 +69,13 @@ export class TableRowComponent implements OnChanges {
   public onClick = new EventEmitter<string>();
 
   @Output()
-  public onCancel = new EventEmitter<string>();
+  public onCancel = new EventEmitter<{columnId: string; action: DataInputSaveAction}>();
 
   @Output()
   public onDoubleClick = new EventEmitter<string>();
 
   @Output()
-  public newValue = new EventEmitter<{columnId: string; value: any}>();
+  public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
 
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
@@ -93,7 +94,7 @@ export class TableRowComponent implements OnChanges {
   public suggesting$ = new BehaviorSubject<DataValue>(null);
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.editedCell || changes.row) {
+    if (changes.editedCell) {
       this.checkEdited();
     }
   }
@@ -102,8 +103,8 @@ export class TableRowComponent implements OnChanges {
     if (this.editedCell?.rowId === this.row?.id) {
       const column = this.columnById(this.editedCell.columnId);
       if (column?.editable) {
-        if (this.shouldDirectEditValue(column)) {
-          this.onNewValue(column, this.computeDirectEditValue(column));
+        if (isTableColumnDirectlyEditable(column)) {
+          this.onNewValue(column, {action: DataInputSaveAction.Direct, dataValue: this.computeDirectEditValue(column)});
         } else {
           this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
           this.suggesting$.next(this.editedValue);
@@ -121,20 +122,12 @@ export class TableRowComponent implements OnChanges {
     return constraint.createDataValue(initialValue, this.constraintData);
   }
 
-  private shouldDirectEditValue(column: TableColumn): boolean {
-    return this.columnConstraintType(column) === ConstraintType.Boolean;
-  }
-
-  private columnConstraintType(column: TableColumn): ConstraintType {
-    return column.attribute?.constraint?.type || ConstraintType.Unknown;
-  }
-
   private columnById(columnId: string): TableColumn {
     return this.columns.find(column => column.id === columnId);
   }
 
   private computeDirectEditValue(column: TableColumn): DataValue {
-    if (this.columnConstraintType(column) === ConstraintType.Boolean) {
+    if (columnConstraintType(column) === ConstraintType.Boolean) {
       const constraint = column.attribute.constraint as BooleanConstraint;
       return constraint.createDataValue(!this.columnValue(column));
     }
@@ -151,21 +144,22 @@ export class TableRowComponent implements OnChanges {
     return null;
   }
 
-  public onNewValue(column: TableColumn, dataValue: DataValue) {
+  public onNewValue(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
     this.editedValue = null;
     if (this.suggestions?.isSelected()) {
       this.suggestions.useSelection();
     } else {
-      this.saveData(column, dataValue);
+      this.saveData(column, data);
     }
-    this.onDataInputCancel(column);
   }
 
-  private saveData(column: TableColumn, dataValue: DataValue) {
-    const value = dataValue.serialize();
+  private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
+    const value = data.dataValue.serialize();
     const currentValue = this.columnValue(column);
     if (currentValue !== value) {
-      this.newValue.emit({columnId: column.id, value});
+      this.newValue.emit({columnId: column.id, value, action: data.action});
+    } else {
+      this.onDataInputCancel(column, data.action);
     }
   }
 
@@ -176,12 +170,12 @@ export class TableRowComponent implements OnChanges {
     }
   }
 
-  public onDataInputCancel(column: TableColumn) {
-    this.onCancel.emit(column.id);
+  public onDataInputCancel(column: TableColumn, action?: DataInputSaveAction) {
+    this.onCancel.emit({columnId: column.id, action});
   }
 
   public onDataInputClick(columnId: string, event: MouseEvent) {
-    if (this.editedCell?.columnId !== columnId) {
+    if (this.editedCell?.columnId !== columnId || this.editedCell?.rowId !== this.row.id) {
       this.onClick.emit(columnId);
     }
   }

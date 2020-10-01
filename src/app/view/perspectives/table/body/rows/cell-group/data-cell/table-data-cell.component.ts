@@ -154,7 +154,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
-    common: {allowRichText: true},
+    common: {allowRichText: true, delaySaveAction: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
   };

@@ -16,4 +16,4 @@
        (input)="onInput($event)"
        type="text"
        class="border-0 w-100 h-100 px-1 {{inputClass}}"
-       [ngClass]="valid || skipValidation ? 'bg-transparent' : 'bg-danger-light'">
+       [ngClass]="valid || configuration.skipValidation ? 'bg-transparent' : 'bg-danger-light'">

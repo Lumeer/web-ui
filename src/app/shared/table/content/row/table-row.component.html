@@ -2,40 +2,45 @@
 
   <ng-container
     *ngIf="{dataValue: row.documentData[column.attribute.id] | dataValue:column.attribute.constraint,
-    focused: selectedCell | tableCellSelected:column:cellType:row,
-    edited: editedCell | tableCellSelected:column:cellType:row} as data">
-    <td *ngIf="true"
-        class="table-cell"
-        [style.width.px]="column.width"
-        [style.height.px]="row.height"
-        [class.color]="column.attribute?.constraint?.type === constraintType.Color"
-        [class.focused]="data.focused"
-        [class.editing]="data.edited"
-        [class.cursor-pointer]="column.editable"
-        (click)="onDataInputClick(column.id, $event)"
-        (dblclick)="onDataInputDblClick(column.id, $event)">
-      <data-input
-        [constraint]="column.attribute.constraint"
-        [cursor]="row | tableRowDataCursor:column"
-        [dataValue]="(editedValue | isNotNullOrUndefined) && data.edited ? editedValue : data.dataValue"
-        [focus]="true"
-        [readonly]="!column.editable || !(data.edited || column.attribute?.constraint?.type === constraintType.Boolean)"
-        [configuration]="configuration"
-        (save)="onNewValue(column, $event)"
-        (cancel)="onDataInputCancel(column)"
-        (enterInvalid)="onEnterInvalid()">
-      </data-input>
-    </td>
-    <td *ngIf="false"
-        [innerHTML]="data.dataValue | previewDataValue | safeHtml"
-        [style.width.px]="column.width"
-        [style.height.px]="row.height"
-        [class.focused]="data.focused"
-        class="text-pre overflow-hidden mx-1 align-middle table-cell"
-        [title]="data.dataValue | formatDataValueTitle"
-        [ngClass]="column.attribute?.constraint | constraintClass"
-        [class.invalid-value]="!(data.dataValue | isDataValueValid)"
-        (click)="onDataInputClick(column.id, $event)">
-    </td>
+    focused: selectedCell | tableBodyCellSelected:editedCell:column:cellType:row,
+    edited: editedCell | tableCellEdited:column:cellType:row} as data">
+
+    <ng-container *ngIf="column.attribute | dataInputEditInfo:data.dataValue:column.editable:data.edited as dataInputInfo">
+      <td *ngIf="dataInputInfo.showDataInput"
+          class="table-cell"
+          [style.width.px]="column.width"
+          [style.height.px]="row.height"
+          [style.max-height.px]="row.height"
+          [class.color]="column.attribute?.constraint?.type === constraintType.Color"
+          [class.focused]="data.focused"
+          [class.editing]="data.edited"
+          [class.cursor-pointer]="column.editable"
+          (click)="onDataInputClick(column.id, $event)"
+          (dblclick)="onDataInputDblClick(column.id, $event)">
+        <data-input
+          [constraint]="column.attribute.constraint"
+          [cursor]="row | tableRowDataCursor:column"
+          [dataValue]="(editedValue | isNotNullOrUndefined) && data.edited ? editedValue : data.dataValue"
+          [focus]="true"
+          [readonly]="!column.editable || !(data.edited || column.attribute?.constraint?.type === constraintType.Boolean)"
+          [configuration]="configuration"
+          (saveAction)="onNewValue(column, $event)"
+          (cancel)="onDataInputCancel(column)"
+          (enterInvalid)="onEnterInvalid()">
+        </data-input>
+      </td>
+      <td *ngIf="!dataInputInfo.showDataInput"
+          class="text-pre overflow-hidden px-1 align-middle table-cell"
+          [innerHTML]="data.dataValue | previewDataValue | safeHtml"
+          [class.cursor-pointer]="column.editable"
+          [style.width.px]="column.width"
+          [style.height.px]="row.height"
+          [style.max-height.px]="row.height"
+          [class.focused]="data.focused"
+          [title]="data.dataValue | formatDataValueTitle"
+          (click)="onDataInputClick(column.id, $event)"
+          (dblclick)="onDataInputDblClick(column.id, $event)">
+      </td>
+    </ng-container>
   </ng-container>
 </ng-container>

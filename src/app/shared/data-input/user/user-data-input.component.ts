@@ -40,7 +40,8 @@ import {uniqueValues} from '../../utils/array.utils';
 import {isEmailValid} from '../../utils/email.utils';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {UserDataInputConfiguration} from '../data-input-configuration';
+import {CommonDataInputConfiguration, UserDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'user-data-input',
@@ -56,7 +57,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public readonly: boolean;
 
   @Input()
-  public skipValidation: boolean;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
   public value: UserDataValue;
@@ -68,7 +69,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   public valueChange = new EventEmitter<UserDataValue>();
 
   @Output()
-  public save = new EventEmitter<UserDataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: UserDataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -170,8 +171,13 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
           this.dropdown.resetActiveOption();
         } else {
           this.preventSaveAndBlur();
-          // needs to be executed after parent event handlers
-          setTimeout(() => this.saveValue(selectedOption, event.code !== KeyCode.Tab));
+          const action = keyboardEventInputSaveAction(event);
+          if (this.commonConfiguration?.delaySaveAction) {
+            // needs to be executed after parent event handlers
+            setTimeout(() => this.saveValue(action, selectedOption));
+          } else {
+            this.saveValue(action, selectedOption);
+          }
         }
         return;
       case KeyCode.Escape:
@@ -203,7 +209,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     this.resetSearchInput();
   }
 
-  private saveValue(activeOption?: DropdownOption, enter?: boolean) {
+  private saveValue(action: DataInputSaveAction, activeOption?: DropdownOption) {
     const inputIsEmail = isEmailValid(this.name.trim());
     if (this.multi) {
       const selectedUser = activeOption && this.users.find(option => option.email === activeOption.value);
@@ -211,26 +217,26 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         const options = [...this.selectedUsers, selectedUser].filter(option => !!option);
         const emails = uniqueValues(options.map(option => option.email));
         const dataValue = this.value.copy(emails);
-        this.save.emit(dataValue);
+        this.save.emit({action, dataValue});
         return;
       }
     }
 
     if (activeOption || !this.name) {
-      this.saveValueByOption(activeOption);
+      this.saveValueByOption(action, activeOption);
     } else if (
       this.name &&
-      (this.skipValidation || (this.value.config && this.value.config.externalUsers)) &&
+      (this.commonConfiguration.skipValidation || (this.value.config && this.value.config.externalUsers)) &&
       inputIsEmail
     ) {
       if (this.multi) {
         const emails = uniqueValues([...this.selectedUsers.map(option => option.email), this.name.trim()]);
-        this.save.emit(this.value.copy(emails));
+        this.save.emit({action, dataValue: this.value.copy(emails)});
       } else {
-        this.save.emit(this.value.parseInput(this.name));
+        this.save.emit({action, dataValue: this.value.parseInput(this.name)});
       }
     } else {
-      if (enter) {
+      if (action === DataInputSaveAction.Enter) {
         this.enterInvalid.emit();
       } else {
         this.cancel.emit();
@@ -239,10 +245,10 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     this.resetSearchInput();
   }
 
-  private saveValueByOption(option: DropdownOption) {
+  private saveValueByOption(action: DataInputSaveAction, option: DropdownOption) {
     const user = option && (this.users || []).find(u => (u.email || u.name) === option.value);
     const dataValue = this.value.copy(user ? user.email || user.name : '');
-    this.save.emit(dataValue);
+    this.save.emit({action, dataValue});
   }
 
   private resetSearchInput() {
@@ -261,9 +267,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.preventSave = false;
       this.blurCleanup();
     } else if (this.multi) {
-      this.saveValue();
+      this.saveValue(DataInputSaveAction.Blur);
     } else if (this.dropdown?.getActiveOption()) {
-      this.saveValue(this.dropdown.getActiveOption());
+      this.saveValue(DataInputSaveAction.Blur, this.dropdown.getActiveOption());
     }
   }
 
@@ -283,7 +289,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.toggleOption(option);
     } else {
       this.preventSaveAndBlur();
-      this.saveValue(option);
+      this.saveValue(DataInputSaveAction.Select, option);
     }
   }
 

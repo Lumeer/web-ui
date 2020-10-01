@@ -17,33 +17,26 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableColumn} from './table-column';
+import {TableCell, TableCellType} from './table-model';
+import {columnConstraintType, TableColumn} from './table-column';
 import {TableRow} from './table-row';
+import {ConstraintType} from '../../../core/model/data/constraint';
 
-export const TABLE_ROW_HEIGHT = 36;
-
-export interface TableModel {
-  id: string;
-  collectionId: string;
-  columns: TableColumn[];
-  rows: TableRow[];
+export function isTableCellSelected(
+  selectedCell: TableCell,
+  column: TableColumn,
+  type: TableCellType,
+  row?: TableRow
+): boolean {
+  if (!selectedCell || selectedCell.type !== type) {
+    return false;
+  }
+  if (type === TableCellType.Header || type === TableCellType.Footer) {
+    return selectedCell.columnId === column.id;
+  }
+  return selectedCell.columnId === column.id && selectedCell.rowId === row?.id;
 }
 
-export interface SelectedTableCell extends TableCell {}
-
-export interface EditedTableCell extends TableCell {
-  inputValue: any;
-}
-
-export interface TableCell {
-  tableId: string;
-  columnId: string;
-  type: TableCellType;
-  rowId?: string;
-}
-
-export enum TableCellType {
-  Header = 'header',
-  Body = 'body',
-  Footer = 'footer',
+export function isTableColumnDirectlyEditable(column: TableColumn): boolean {
+  return columnConstraintType(column) === ConstraintType.Boolean;
 }

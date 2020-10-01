@@ -33,7 +33,9 @@ import {TableResizeHeaderComponent} from './content/resize-header/table-resize-h
 import {TableRowDataCursorPipe} from './pipes/table-row-data-cursor.pipe';
 import {InputModule} from '../input/input.module';
 import {ClickOutsideModule} from 'ng-click-outside';
-import {TableCellSelectedPipe} from './strategy/table-cell-selected.pipe';
+import {TableCellSelectedPipe} from './pipes/table-cell-selected.pipe';
+import {TableCellEditedPipe} from './pipes/table-cell-edited.pipe';
+import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
 
 @NgModule({
   declarations: [
@@ -46,6 +48,8 @@ import {TableCellSelectedPipe} from './strategy/table-cell-selected.pipe';
     TableResizeHeaderComponent,
     TableRowDataCursorPipe,
     TableCellSelectedPipe,
+    TableCellEditedPipe,
+    TableBodyCellSelectedPipe,
   ],
   imports: [
     CommonModule,

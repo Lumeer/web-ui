@@ -42,6 +42,8 @@ import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {isNotNullOrUndefined, unescapeHtml} from '../../utils/common.utils';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -57,7 +59,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public readonly: boolean;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Input()
   @HostBinding('class.multiline')
@@ -73,7 +75,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   public valueChange = new EventEmitter<DataValue>();
 
   @Output()
-  public save = new EventEmitter<DataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: DataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -144,13 +146,13 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   private refreshBackgroundClass(value: DataValue) {
-    this.invalidBackground = !this.readonly && value && !value.isValid() && !this.skipValidation;
+    this.invalidBackground = !this.readonly && value && !value.isValid() && !this.configuration?.skipValidation;
   }
 
-  private saveValue(value: string) {
+  private saveValue(value: string, action: DataInputSaveAction) {
     const dataValue = this.value.parseInput(value);
-    if (this.skipValidation || dataValue.isValid()) {
-      this.save.emit(dataValue);
+    if (this.configuration?.skipValidation || dataValue.isValid()) {
+      this.save.emit({action, dataValue});
     }
   }
 
@@ -173,7 +175,9 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
       },
     });
 
-    this.modalSubscription.add(this.modalRef.content.onSave$.subscribe(value => this.saveValue(value)));
+    this.modalSubscription.add(
+      this.modalRef.content.onSave$.subscribe(value => this.saveValue(value, DataInputSaveAction.Button))
+    );
     this.modalSubscription.add(this.modalRef.content.onCancel$.subscribe(() => this.cancel.emit()));
   }
 
@@ -219,20 +223,29 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
 
         event.preventDefault();
 
-        if (!this.skipValidation && !dataValue.isValid()) {
+        if (!this.configuration?.skipValidation && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }
 
         this.preventSaveAndBlur();
-        // needs to be executed after parent event handlers
-        setTimeout(() => this.save.emit(dataValue));
+        this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private saveDataValue(dataValue: TextDataValue, event: KeyboardEvent) {
+    const action = keyboardEventInputSaveAction(event);
+    if (this.configuration?.delaySaveAction) {
+      // needs to be executed after parent event handlers
+      setTimeout(() => this.save.emit({action, dataValue}));
+    } else {
+      this.save.emit({action, dataValue});
     }
   }
 
@@ -248,7 +261,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     if (this.preventSave) {
       this.preventSave = false;
     } else {
-      this.saveValue(this.text);
+      this.saveValue(this.text, DataInputSaveAction.Blur);
     }
   }
 }

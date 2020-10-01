@@ -29,7 +29,7 @@ export class TableScrollService {
       return {};
     }
 
-    const width = viewPort.elementRef.nativeElement.offsetWidth;
+    const width = viewPort.elementRef.nativeElement.clientWidth;
     const left = viewPort.measureScrollOffset('left');
     const right = left + width;
 
@@ -44,7 +44,7 @@ export class TableScrollService {
       scrollLeft = columnLeft + (width > selectedColumn.width ? selectedColumn.width - width : 0);
     }
 
-    const height = viewPort.elementRef.nativeElement.offsetHeight - TABLE_ROW_HEIGHT;
+    const height = viewPort.getViewportSize() - TABLE_ROW_HEIGHT;
     const top = viewPort.measureScrollOffset('top');
     const bottom = top + height;
 

@@ -48,6 +48,7 @@ import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../core/store/app.state';
 import {Store} from '@ngrx/store';
+import {DataInputSaveAction} from '../data-input/data-input-save-action';
 
 @Component({
   selector: 'lmr-table',
@@ -72,7 +73,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public onCellClick = new EventEmitter<TableCell>();
 
   @Output()
-  public onCancel = new EventEmitter<TableCell>();
+  public onCancel = new EventEmitter<{cell: TableCell; action: DataInputSaveAction}>();
+
+  @Output()
+  public onSave = new EventEmitter<{cell: TableCell; action: DataInputSaveAction}>();
 
   @Output()
   public onCellDoubleClick = new EventEmitter<TableCell>();
@@ -117,7 +121,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   private checkScrollPositionForSelectedCell() {
     const {top, left} = this.tableScrollService.computeScrollOffsets(this.tableModel, this.selectedCell);
-    this.viewPort.scrollTo({top, left});
+    this.viewPort.scrollTo({top, left, behavior: 'smooth'});
   }
 
   private subscribeToScrolling(): Subscription {
@@ -161,7 +165,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     return row.id;
   }
 
-  public onNewValue(rowId: string, data: {columnId: string; value: any}) {
+  public onNewValue(rowId: string, data: {columnId: string; value: any; action: DataInputSaveAction}) {
     const tableRow = this.tableModel?.rows?.find(row => row.id === rowId);
     const tableColumn = this.tableModel?.columns?.find(column => column.id === data.columnId);
     if (tableRow && tableColumn) {
@@ -183,6 +187,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
         this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
       }
     }
+
+    const cell = {rowId, columnId: data.columnId, type: TableCellType.Body, tableId: this.tableModel.id};
+    this.onSave.emit({cell, action: data.action});
   }
 
   public onBodyCellClick(rowId: string, columnId: string) {
@@ -201,7 +208,8 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     this.onCellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
   }
 
-  public onBodyCancel(rowId: string, columnId: string) {
-    this.onCancel.emit({tableId: this.tableModel.id, rowId, columnId, type: TableCellType.Body});
+  public onBodyCancel(rowId: string, data: {action: DataInputSaveAction; columnId: string}) {
+    const cell = {tableId: this.tableModel.id, rowId, columnId: data.columnId, type: TableCellType.Body};
+    this.onCancel.emit({cell, action: data.action});
   }
 }

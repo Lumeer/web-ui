@@ -5,20 +5,20 @@
        [value]="value | formatDataValue | unescapeHtml"
        [placeholder]="placeholder || ''"
        class="border-0 w-100 h-100 px-1 bg-transparent"
-       [class.invalid-value]="!skipValidation && !valid"
+       [class.invalid-value]="!configuration?.skipValidation && !valid"
        [ngClass]="inputClass"
        type="text">
 
 <ng-container *ngIf="!readonly">
   <input #textInput
          [(ngModel)]="text"
-         [attr.maxlength]="skipValidation ? null : value?.config?.maxLength"
+         [attr.maxlength]="configuration?.skipValidation ? null : value?.config?.maxLength"
          (blur)="onBlur()"
          (ngModelChange)="onInput()"
          (focus)="onFocused()"
          [spellcheck]="false"
          class="border-0 w-100 h-100 px-1 {{inputClass}}"
-         [ngClass]="valid || skipValidation ? 'bg-transparent' : 'bg-danger-light'"
+         [ngClass]="valid || configuration?.skipValidation ? 'bg-transparent' : 'bg-danger-light'"
          type="text">
   <options-dropdown [options]="suggestions | filterDataSuggestions:text"
                     [showBackdrop]="false"

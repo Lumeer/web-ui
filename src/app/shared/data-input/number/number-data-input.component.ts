@@ -33,6 +33,8 @@ import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'number-data-input',
@@ -50,13 +52,13 @@ export class NumberDataInputComponent implements OnChanges {
   public value: NumberDataValue;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<NumberDataValue>();
 
   @Output()
-  public save = new EventEmitter<NumberDataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: NumberDataValue}>();
 
   @Output()
   public enterInvalid = new EventEmitter();
@@ -114,20 +116,29 @@ export class NumberDataInputComponent implements OnChanges {
 
         event.preventDefault();
 
-        if (!this.skipValidation && !dataValue.isValid()) {
+        if (!this.configuration?.skipValidation && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }
 
         this.preventSaveAndBlur();
-        // needs to be executed after parent event handlers
-        setTimeout(() => this.save.emit(dataValue));
+        this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private saveDataValue(dataValue: NumberDataValue, event: KeyboardEvent) {
+    const action = keyboardEventInputSaveAction(event);
+    if (this.configuration?.delaySaveAction) {
+      // needs to be executed after parent event handlers
+      setTimeout(() => this.save.emit({action, dataValue}));
+    } else {
+      this.save.emit({action, dataValue});
     }
   }
 
@@ -153,8 +164,8 @@ export class NumberDataInputComponent implements OnChanges {
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.numberInput.nativeElement.value);
-      if (this.skipValidation || dataValue.isValid()) {
-        this.save.emit(dataValue);
+      if (this.configuration?.skipValidation || dataValue.isValid()) {
+        this.save.emit({action: DataInputSaveAction.Blur, dataValue});
       } else {
         this.cancel.emit();
       }

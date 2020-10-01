@@ -28,7 +28,7 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
   private rowHeight!: number;
   private headerHeight!: number;
   private footerHeight!: number;
-  private bufferMultiplier!: number;
+  private buffer!: number;
 
   private indexChange$ = new Subject<number>();
   private disabled: boolean;
@@ -142,19 +142,19 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
     }
   }
 
-  public setConfig(rowHeight: number, headerHeight: number, footerHeight: number, bufferMultiplier: number) {
+  public setConfig(rowHeight: number, headerHeight: number, footerHeight: number, buffer: number) {
     if (
       this.rowHeight === rowHeight &&
       this.headerHeight === headerHeight &&
       this.footerHeight === footerHeight &&
-      this.bufferMultiplier === bufferMultiplier
+      this.buffer === buffer
     ) {
       return;
     }
     this.rowHeight = rowHeight;
     this.headerHeight = headerHeight;
     this.footerHeight = footerHeight;
-    this.bufferMultiplier = bufferMultiplier;
+    this.buffer = buffer;
     this.onDataLengthChanged();
   }
 
@@ -172,7 +172,7 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
 
     const amount = Math.ceil(this.viewport.getViewportSize() / this.rowHeight);
     const offset = Math.max(scrollOffset - this.headerHeight, 0);
-    const buffer = Math.ceil(amount * this.bufferMultiplier);
+    const buffer = this.buffer || 0;
 
     const skip = Math.round(offset / this.rowHeight);
     const index = Math.max(0, skip);

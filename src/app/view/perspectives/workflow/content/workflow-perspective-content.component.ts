@@ -42,10 +42,10 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
-import {TableComponent} from '../../../../shared/table/table.component';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {HiddenInputComponent} from '../../../../shared/input/hidden-input/hidden-input.component';
+import {DataInputSaveAction} from '../../../../shared/data-input/data-input-save-action';
 
 @Component({
   selector: 'workflow-perspective-content',
@@ -147,11 +147,15 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
     }
   }
 
-  public onTableCellCancel(cell: TableCell) {
-    this.tablesService.resetCellSelection(cell);
+  public onTableCellCancel(data: {cell: TableCell; action: DataInputSaveAction}) {
+    this.tablesService.resetCellSelection(data.cell, data.action);
   }
 
   public onNewHiddenInput(input: string) {
     this.tablesService.newHiddenInput(input);
+  }
+
+  public onTableCellSave(data: {cell: TableCell; action: DataInputSaveAction}) {
+    this.tablesService.onCellSave(data.cell, data.action);
   }
 }

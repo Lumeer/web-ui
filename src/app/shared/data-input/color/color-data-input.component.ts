@@ -35,6 +35,8 @@ import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {COLOR_SUCCESS} from '../../../core/constants';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'color-data-input',
@@ -52,13 +54,13 @@ export class ColorDataInputComponent implements OnChanges {
   public value: ColorDataValue;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<ColorDataValue>();
 
   @Output()
-  public save = new EventEmitter<ColorDataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: ColorDataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -152,18 +154,27 @@ export class ColorDataInputComponent implements OnChanges {
 
         event.preventDefault();
 
-        if (!this.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
+        if (!this.configuration?.skipValidation && input.nativeElement.value && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }
 
-        // needs to be executed after parent event handlers
-        setTimeout(() => this.saveDataValue(dataValue));
+        this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
         this.onCancel();
         return;
+    }
+  }
+
+  private saveDataValue(dataValue: ColorDataValue, event: KeyboardEvent) {
+    const action = keyboardEventInputSaveAction(event);
+    if (this.configuration?.delaySaveAction) {
+      // needs to be executed after parent event handlers
+      setTimeout(() => this.save.emit({action, dataValue}));
+    } else {
+      this.save.emit({action, dataValue});
     }
   }
 
@@ -175,20 +186,16 @@ export class ColorDataInputComponent implements OnChanges {
   }
 
   public onSave(color: string) {
-    const value = this.value.copy(color);
-    if (color && !value.isValid()) {
+    const dataValue = this.value.copy(color);
+    if (color && !dataValue.isValid()) {
       this.cancel.emit();
       return;
     }
 
-    this.saveDataValue(value);
-  }
-
-  private saveDataValue(dataValue: ColorDataValue) {
     this.pendingUpdate = null;
     this.value = dataValue;
     this.colorInput && (this.colorInput.nativeElement.value = '');
-    this.save.emit(dataValue);
+    this.save.emit({action: DataInputSaveAction.Button, dataValue});
   }
 
   public onSaveOnClose(color: string) {

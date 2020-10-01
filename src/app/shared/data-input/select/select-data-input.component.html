@@ -8,7 +8,7 @@
         <span class="d-inline-block px-2 py-1 tag text-nowrap"
               [style.background]="option.background"
               [style.color]="option.background | contrastColor"
-              [class.invalid-value]="!skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions.length)"
+              [class.invalid-value]="!configuration?.skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions.length)"
               [spellcheck]="false"
               [innerHTML]="option.displayValue || option.value"
               [class.ml-2]="!first">
