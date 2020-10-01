@@ -43,13 +43,22 @@ export class NumberDataValue implements NumericDataValue {
     public readonly config: NumberConstraintConfig,
     public readonly inputValue?: string
   ) {
-    if (this.inputValue) {
-      this.setLanguage(config?.currency || currentLocaleLanguageTag());
-    } else {
-      this.setLanguage(LanguageTag.USA);
-    }
-    const unformatted = numbro.unformat(value, parseNumbroConfig(config));
+    this.setLanguage(config?.currency || currentLocaleLanguageTag());
+    const parsedValue = this.parseValue(value, config, inputValue);
+    const unformatted = numbro.unformat(parsedValue, parseNumbroConfig(config));
     this.bigNumber = convertToBig(unformatted);
+  }
+
+  private parseValue(value: any, config: NumberConstraintConfig, inputValue?: string): any {
+    if (typeof value === 'number') {
+      return value;
+    }
+
+    if (config?.separated || config?.currency) {
+      return inputValue || value;
+    }
+
+    return decimalUserToStore(String(inputValue || value || '')).replace(',', '.');
   }
 
   public format(overrideConfig?: Partial<NumberConstraintConfig>): string {
@@ -65,7 +74,6 @@ export class NumberDataValue implements NumericDataValue {
         this.setLanguage(this.config.currency);
         return numbroObject.formatCurrency(numbroConfig);
       }
-      this.setLanguage(currentLocaleLanguageTag());
       return numbro(this.bigNumber.toFixed()).format(numbroConfig);
     }
 
