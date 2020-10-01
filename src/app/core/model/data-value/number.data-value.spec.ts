@@ -153,7 +153,7 @@ describe('NumberDataValue', () => {
     });
   });
 
-  fdescribe('Format', () => {
+  describe('Format', () => {
     const emptyConfig: NumberConstraintConfig = {};
     it('Empty config', () => {
       expect(new NumberDataValue('10.11', emptyConfig).format()).toBe('10.11');
