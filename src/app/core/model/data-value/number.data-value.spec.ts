@@ -20,6 +20,7 @@
 import {QueryCondition} from '../../store/navigation/query/query';
 import {NumberDataValue} from './number.data-value';
 import {NumberConstraintConfig} from '../data/constraint-config';
+import {LanguageTag} from '../data/language-tag';
 
 describe('NumberDataValue', () => {
   const config: NumberConstraintConfig = {};
@@ -149,6 +150,56 @@ describe('NumberDataValue', () => {
     it('multiple', () => {
       expect(new NumberDataValue('10.456', config).meetFullTexts(['10', '45', '6'])).toBeTruthy();
       expect(new NumberDataValue('253.21', config).meetFullTexts(['25', '21', '22'])).toBeFalsy();
+    });
+  });
+
+  describe('Format', () => {
+    const emptyConfig: NumberConstraintConfig = {};
+    it('Empty config', () => {
+      expect(new NumberDataValue('10.11', emptyConfig).format()).toBe('10.11');
+      expect(new NumberDataValue('10,11', emptyConfig).format()).toBe('10.11');
+      expect(new NumberDataValue(10, emptyConfig).format()).toBe('10');
+
+      expect(new NumberDataValue('10.11', emptyConfig, '10.11').serialize()).toBe('10.11');
+      expect(new NumberDataValue('10,11', emptyConfig, '10,11').serialize()).toBe('10.11');
+      expect(new NumberDataValue(10, emptyConfig, '10').serialize()).toBe('10');
+    });
+
+    const thousandSeparatedConfig: NumberConstraintConfig = {separated: true};
+    const thousandSeparatedConfig2: NumberConstraintConfig = {decimals: 3, separated: true};
+    it('Thousand separated config', () => {
+      expect(new NumberDataValue('10.11', thousandSeparatedConfig).format()).toBe('10.11');
+      expect(new NumberDataValue('10,11', thousandSeparatedConfig).format()).toBe('1,011');
+      expect(new NumberDataValue('10,000', thousandSeparatedConfig).format()).toBe('10,000');
+      expect(new NumberDataValue('10,000.12345', thousandSeparatedConfig2).format()).toBe('10,000.123');
+      expect(new NumberDataValue('2,3.77777', thousandSeparatedConfig2).format()).toBe('23.778');
+
+      expect(new NumberDataValue('10.11', thousandSeparatedConfig, '10.11').serialize()).toBe('10.11');
+      expect(new NumberDataValue('10,11', thousandSeparatedConfig, '10,11').serialize()).toBe('1011');
+      expect(new NumberDataValue('10,000', thousandSeparatedConfig, '10,000').serialize()).toBe('10000');
+      expect(new NumberDataValue('10,000.12345', thousandSeparatedConfig2, '10,000.12345').serialize()).toBe(
+        '10000.12345'
+      );
+    });
+
+    const slovakCurrencyConfig: NumberConstraintConfig = {currency: LanguageTag.Slovak};
+    it('Currency config', () => {
+      expect(new NumberDataValue('10.11', slovakCurrencyConfig).format()).toBe('10,11€');
+      expect(new NumberDataValue('10,11', slovakCurrencyConfig).format()).toBe('10,11€');
+      expect(new NumberDataValue(10, slovakCurrencyConfig).format()).toBe('10€');
+
+      expect(new NumberDataValue('10.11', slovakCurrencyConfig, '10.11').serialize()).toBe('10.11');
+      expect(new NumberDataValue('10,11', slovakCurrencyConfig, '10,11').serialize()).toBe('10.11');
+    });
+
+    const usCurrencyConfig: NumberConstraintConfig = {currency: LanguageTag.USA};
+    it('Currency config', () => {
+      expect(new NumberDataValue('10.11', usCurrencyConfig).format()).toBe('$10.11');
+      expect(new NumberDataValue('10,11', usCurrencyConfig).format()).toBe('$1011');
+      expect(new NumberDataValue(10, usCurrencyConfig).format()).toBe('$10');
+
+      expect(new NumberDataValue('10.11', usCurrencyConfig, '10.11').serialize()).toBe('10.11');
+      expect(new NumberDataValue('10,11', usCurrencyConfig, '10,11').serialize()).toBe('1011');
     });
   });
 });
