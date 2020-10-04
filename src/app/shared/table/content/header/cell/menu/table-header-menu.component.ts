@@ -17,31 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {TableColumn} from '../../model/table-column';
-import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
+import {Component, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, Input} from '@angular/core';
+import {ContextMenuComponent} from 'ngx-contextmenu';
+import {TableColumn} from '../../../../model/table-column';
 
 @Component({
-  selector: 'table-alternative-header',
-  templateUrl: './table-alternative-header.component.html',
-  styleUrls: ['./table-alternative-header.component.scss', '../common/table-cell.scss'],
-  host: {class: 'alternative-header w-100'},
+  selector: 'table-header-menu',
+  templateUrl: './table-header-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableAlternativeHeaderComponent {
+export class TableHeaderMenuComponent {
   @Input()
-  public columns: TableColumn[];
+  public column: TableColumn;
 
-  @Input()
-  public selectedCell: SelectedTableCell;
+  @Output()
+  public attributeType = new EventEmitter();
 
-  @Input()
-  public editedCell: SelectedTableCell;
+  @Output()
+  public attributeFunction = new EventEmitter();
 
-  public readonly tableRowHeight = TABLE_ROW_HEIGHT;
-  public readonly cellType = TableCellType.Header;
+  @Output()
+  public edit = new EventEmitter();
 
-  public trackByColumn(index: number, column: TableColumn): string {
-    return column.id;
-  }
+  @Output()
+  public remove = new EventEmitter();
+
+  @Output()
+  public hide = new EventEmitter();
+
+  @Output()
+  public setDefaultAttribute = new EventEmitter();
+
+  @ViewChild(ContextMenuComponent, {static: true})
+  public contextMenu: ContextMenuComponent;
 }

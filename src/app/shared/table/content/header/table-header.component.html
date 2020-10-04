@@ -1,44 +1,32 @@
 <tr cdkDropList class="row-boundary" *ngIf="{index: draggedIndex$ | async} as dragData ">
   <th *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
-      class="sticky-header table-cell"
+      class="sticky-header table-cell text-nowrap"
       cdkDrag
       [class.focused]="selectedCell | tableCellSelected:column:cellType"
+      [class.editing]="editedCell | tableCellEdited:column:cellType"
       [class.dragging]="dragData.index === index"
       (cdkDragDropped)="onColumnDrop($event)"
       (cdkDragStarted)="onColumnDragStarted()"
       (cdkDragMoved)="onColumnDragMoved($event, index)"
       (cdkDragEnded)="onColumnDragEnded()"
       (mousedown)="onMouseDown($event)"
-      [style.font-weight]="column.bold ? 'bold' : 'normal'"
       [style.width.px]="column.width"
       [style.height.px]="tableRowHeight"
       scope="col" title="{{column.attribute.name}}"
-      (contextmenu)="onContextMenu(index, $event)"
       (click)="onHeaderClick(column.id)"
       (dblclick)="onHeaderDoubleClick(column.id)">
-    <div class="wrapper h-100"
-         [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'">
-      <div class="header-content h-100" *ngIf="index !== dragData.index">
-        <div class="overflow-hidden">{{column.attribute.name}}</div>
-
-        <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
-          <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
-               (click)="onContextMenu(index, $event)">
-            <i *ngIf="(column.attribute | attributeFunctionDefined)"
-               [class.mb-1]="typeData.iconName"
-               class="fas fa-function fa-xs fa-fw">
-            </i>
-            <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
-               [ngClass]="typeData.iconName"
-               [title]="column.attribute.constraint | constraintTypeIconTitle"></i>
-            <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
-               title="Column settings..."
-               i18n-title="@@table.header.column.settings"
-               class="fa-xs fas fa-caret-down">
-            </i>
-          </div>
-        </ng-container>
-      </div>
-    </div>
+    <table-header-cell *ngIf="index !== dragData.index"
+                       [editing]="editedCell | tableCellEdited:column:cellType"
+                       [editingValue]="editedCell?.inputValue"
+                       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
+                       [offsetTop]="true"
+                       [column]="column"
+                       (onCancel)="onHeaderCancel(column.id)"
+                       (newName)="onHeaderSave(column, $event)"
+                       (setDefaultAttribute)="setDefaultAttribute(column)"
+                       (edit)="onColumnEdit(column.id)"
+                       (remove)="onColumnRemove(column)">
+    </table-header-cell>
+    <div class="bg-gray h-100 w-100" *ngIf="index === dragData.index">&nbsp;</div>
   </th>
 </tr>

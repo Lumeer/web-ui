@@ -28,7 +28,10 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {tap} from 'rxjs/operators';
+import {distinctUntilChanged, mergeMap, tap} from 'rxjs/operators';
+import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 
 @Component({
   selector: 'workflow-perspective',
@@ -39,12 +42,17 @@ import {tap} from 'rxjs/operators';
 export class WorkflowPerspectiveComponent implements OnInit {
   public collections$: Observable<Collection[]>;
   public documents$: Observable<DocumentModel[]>;
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.permissions$ = this.collections$.pipe(
+      mergeMap(collection => this.collectionsPermissionsPipe.transform(collection)),
+      distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
+    );
     this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
     this.query$ = this.store$.pipe(
       select(selectQuery),

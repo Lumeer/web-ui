@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {
   EditedTableCell,
@@ -42,17 +43,20 @@ import {generateId} from '../../../../shared/utils/resource.utils';
 import {TableRow} from '../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../shared/utils/array.utils';
 import {KeyCode} from '../../../../shared/key-code';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, preventEvent} from '../../../../shared/utils/common.utils';
 import {DataRowHiddenComponent} from '../../../../shared/data/data-row-component';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
 import {DataInputSaveAction} from '../../../../shared/data-input/data-input-save-action';
 
+@Injectable()
 export class WorkflowTablesService {
+  private hiddenComponent?: () => DataRowHiddenComponent;
+
   public selectedCell$ = new BehaviorSubject<SelectedTableCell>(null);
   public editedCell$ = new BehaviorSubject<EditedTableCell>(null);
   public tables$ = new BehaviorSubject<TableModel[]>([]);
 
-  constructor(private hiddenComponent?: () => DataRowHiddenComponent) {
+  constructor() {
     this.selectedCell$.pipe(skip(1), distinctUntilChanged()).subscribe(() => {
       if (this.isSelected()) {
         this.hiddenComponent()?.focus();
@@ -60,6 +64,10 @@ export class WorkflowTablesService {
         this.hiddenComponent()?.blur();
       }
     });
+  }
+
+  public setHiddenComponent(hiddenComponent?: () => DataRowHiddenComponent) {
+    this.hiddenComponent = hiddenComponent;
   }
 
   public resetSelection() {
@@ -70,8 +78,7 @@ export class WorkflowTablesService {
   public newHiddenInput(value: string) {
     if (this.isSelected()) {
       const selectedCell = this.selectedCell$.value;
-      this.selectedCell$.next(null);
-      this.editedCell$.next({...selectedCell, inputValue: value});
+      this.setEditedCell(selectedCell, value);
     }
   }
 
@@ -80,8 +87,7 @@ export class WorkflowTablesService {
       return;
     }
     if (this.isEditing() && this.isEditingCell(cell)) {
-      this.editedCell$.next(null);
-      this.selectedCell$.next({...cell});
+      this.setSelectedCell({...cell});
     } else if (this.isSelected() && this.isCellSelected(cell)) {
       this.selectedCell$.next(null);
     }
@@ -116,36 +122,30 @@ export class WorkflowTablesService {
       return;
     }
 
-    event.preventDefault();
-    event.stopPropagation();
+    preventEvent(event);
 
     const selectedCell = this.selectedCell$.value;
-    this.selectedCell$.next(null);
-    this.editedCell$.next({...selectedCell, inputValue: ''});
+    this.setEditedCell(selectedCell, '');
   }
 
   private onF2KeyDown(event: KeyboardEvent) {
     if (this.isSelected()) {
       const selectedCell = this.selectedCell$.value;
-      this.selectedCell$.next(null);
-      this.editedCell$.next({...selectedCell, inputValue: null});
+      this.setEditedCell(selectedCell);
     } else if (this.isEditing()) {
       const editedCell = this.editedCell$.value;
-      this.selectedCell$.next(editedCell);
-      this.editedCell$.next(null);
+      this.setSelectedCell(editedCell);
     }
   }
 
   private onEnterKeyDown(event: KeyboardEvent) {
-    event.preventDefault();
-    event.stopPropagation();
+    preventEvent(event);
 
     if (this.isEditing()) {
       this.moveSelectionDownFromEdited();
     } else if (this.isSelected()) {
       const selectedCell = this.selectedCell$.value;
-      this.selectedCell$.next(null);
-      this.editedCell$.next({...selectedCell, inputValue: null});
+      this.setEditedCell(selectedCell);
     }
   }
 
@@ -160,16 +160,42 @@ export class WorkflowTablesService {
     this.editedCell$.next(null);
   }
 
+  private setEditedCell(cell: TableCell, inputValue?: any) {
+    const column = this.findTableColumn(cell.tableId, cell.columnId);
+    if (this.canEditCell(cell, column)) {
+      this.selectedCell$.next(null);
+      this.editedCell$.next({...cell, inputValue});
+    }
+  }
+
+  private canEditCell(cell: TableCell, column: TableColumn): boolean {
+    if (cell.type === TableCellType.Header) {
+      return column.manageable;
+    } else if (cell.type === TableCellType.Body) {
+      return column.editable;
+    }
+    return false;
+  }
+
+  private setSelectedCell(cell: TableCell) {
+    this.selectedCell$.next(cell);
+    this.editedCell$.next(null);
+  }
+
+  private findTableColumn(tableId: string, columnId: string): TableColumn {
+    const table = this.tables$.value.find(t => t.id === tableId);
+    return table?.columns.find(column => column.id === columnId);
+  }
+
   private onTabKeyDown(event: KeyboardEvent) {
-    event.preventDefault();
-    event.stopPropagation();
+    preventEvent(event);
 
     if (this.isEditing()) {
-      const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.editedCell$.value);
+      const {tableIndex, rowIndex, columnIndex, type} = this.getCellIndexes(this.editedCell$.value);
       if (event.shiftKey) {
-        this.selectCell(tableIndex, rowIndex, columnIndex - 1);
+        this.selectCell(tableIndex, rowIndex, columnIndex - 1, type);
       } else {
-        this.selectCell(tableIndex, rowIndex, columnIndex + 1);
+        this.selectCell(tableIndex, rowIndex, columnIndex + 1, type);
       }
       this.editedCell$.next(null);
     } else if (this.isSelected()) {
@@ -187,8 +213,7 @@ export class WorkflowTablesService {
     ) {
       return;
     }
-    event.preventDefault();
-    event.stopPropagation();
+    preventEvent(event);
 
     switch (this.selectedCell$.value.type) {
       case TableCellType.Header:
@@ -289,12 +314,14 @@ export class WorkflowTablesService {
     }
   }
 
-  private getCellIndexes(cell: TableCell): {tableIndex: number; rowIndex: number; columnIndex: number} {
+  private getCellIndexes(
+    cell: TableCell
+  ): {tableIndex: number; rowIndex: number; columnIndex: number; type: TableCellType} {
     const tableIndex = this.tables$.value.findIndex(table => table.id === cell.tableId);
     const tableByIndex = this.tables$.value[tableIndex];
     const columnIndex = tableByIndex?.columns.findIndex(column => column.id === cell.columnId);
     const rowIndex = tableByIndex?.rows.findIndex(row => row.id === cell.rowId);
-    return {tableIndex, columnIndex, rowIndex};
+    return {tableIndex, columnIndex, rowIndex, type: cell.type};
   }
 
   private isEditing(): boolean {
@@ -310,7 +337,11 @@ export class WorkflowTablesService {
   }
 
   private cellsAreSame(c1: TableCell, c2: TableCell): boolean {
-    return c1.type === c2.type && c1.tableId === c2.tableId && c1.columnId === c2.columnId && c1.rowId === c2.rowId;
+    const columnAndTableAreSame = c1.type === c2.type && c1.tableId === c2.tableId && c1.columnId === c2.columnId;
+    if (c1.type === TableCellType.Body) {
+      return columnAndTableAreSame && c1.rowId === c2.rowId;
+    }
+    return columnAndTableAreSame;
   }
 
   private isCellSelected(cell: TableCell): boolean {
@@ -318,15 +349,13 @@ export class WorkflowTablesService {
   }
 
   public onCellClick(cell: TableCell) {
-    this.selectedCell$.next({...cell});
-    this.editedCell$.next(null);
+    this.setSelectedCell({...cell});
   }
 
   public onCellSave(cell: TableCell, action: DataInputSaveAction) {
     if (this.isEditingCell(cell)) {
       if ([DataInputSaveAction.Button, DataInputSaveAction.Select].includes(action)) {
-        this.editedCell$.next(null);
-        this.selectedCell$.next({...cell});
+        this.setSelectedCell({...cell});
       } else if (DataInputSaveAction.Direct === action) {
         this.moveSelectionDownFromEdited();
       }
@@ -334,8 +363,7 @@ export class WorkflowTablesService {
   }
 
   public onCellDoubleClick(cell: TableCell) {
-    this.selectedCell$.next(null);
-    this.editedCell$.next({...cell, inputValue: null});
+    this.setEditedCell(cell);
   }
 
   public onColumnResize(changedTable: TableModel, columnId: string, width: number) {
@@ -421,9 +449,11 @@ export class WorkflowTablesService {
           width: currentColumn?.width || 100,
           collectionId: collection.id,
           color: collection.color,
-          bold: attribute.id === defaultAttributeId,
+          default: attribute.id === defaultAttributeId,
           hidden: setting.hidden,
           editable,
+          manageable: permissions?.manageWithView,
+          readable: permissions?.read,
         };
         columns.push(column);
         return columns;

@@ -1,6 +1,7 @@
 <ng-container *ngIf="{} as data">
   <table-alternative-header [columns]="tableModel.columns"
-                            [selectedCell]="selectedCell">
+                            [selectedCell]="selectedCell"
+                            [editedCell]="editedCell">
   </table-alternative-header>
   <table-resize-header [columns]="tableModel.columns"
                        (resizeColumn)="onResizeColumn($event)">
@@ -14,7 +15,8 @@
              (dragEnd)="scrollDisabled$.next(false)"
              (onClick)="onHeaderCellClick($event)"
              (onDoubleClick)="onHeaderCellDoubleClick($event)"
-             (moveColumn)="onMoveColumn($event)">
+             (moveColumn)="onMoveColumn($event)"
+             (onCancel)="onHeaderCancel($event)">
       </thead>
       <tbody>
       <tr table-row #tableRow

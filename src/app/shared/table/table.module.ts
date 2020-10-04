@@ -36,6 +36,11 @@ import {ClickOutsideModule} from 'ng-click-outside';
 import {TableCellSelectedPipe} from './pipes/table-cell-selected.pipe';
 import {TableCellEditedPipe} from './pipes/table-cell-edited.pipe';
 import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
+import {TableHeaderInputComponent} from './content/header/cell/input/table-header-input.component';
+import {TableHeaderCellComponent} from './content/header/cell/table-header-cell.component';
+import {TableHeaderMenuComponent} from './content/header/cell/menu/table-header-menu.component';
+import {ContextMenuModule} from 'ngx-contextmenu';
+import {TableRowMenuComponent} from './content/row/menu/table-row-menu.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +55,10 @@ import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
     TableCellSelectedPipe,
     TableCellEditedPipe,
     TableBodyCellSelectedPipe,
+    TableHeaderInputComponent,
+    TableHeaderCellComponent,
+    TableHeaderMenuComponent,
+    TableRowMenuComponent,
   ],
   imports: [
     CommonModule,
@@ -59,6 +68,7 @@ import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
     ScrollingModule,
     InputModule,
     ClickOutsideModule,
+    ContextMenuModule,
   ],
   exports: [TableComponent],
 })

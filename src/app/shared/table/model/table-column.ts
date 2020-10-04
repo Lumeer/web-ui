@@ -28,10 +28,12 @@ export interface TableColumn {
   linkTypeId?: string;
   collectionId?: string;
   color?: string;
-  bold?: boolean;
+  default?: boolean;
   hidden?: boolean;
   editable: boolean;
   manageable?: boolean;
+  configurable?: boolean;
+  readable?: boolean;
 }
 
 export function columnConstraintType(column: TableColumn): ConstraintType {

@@ -46,6 +46,10 @@ export function collectionsReducer(
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);
     case CollectionsActionType.DELETE_SUCCESS:
       return collectionsAdapter.removeOne(action.payload.collectionId, state);
+    case CollectionsActionType.RENAME_ATTRIBUTE_SUCCESS:
+      return renameAttribute(state, action.payload.collectionId, action.payload.attributeId, action.payload.name);
+    case CollectionsActionType.RENAME_ATTRIBUTE_FAILURE:
+      return renameAttribute(state, action.payload.collectionId, action.payload.attributeId, action.payload.oldName);
     case CollectionsActionType.SET_DEFAULT_ATTRIBUTE_SUCCESS:
       return setDefaultAttribute(state, action.payload.collectionId, action.payload.attributeId);
     case CollectionsActionType.SET_DEFAULT_ATTRIBUTE_FAILURE:
@@ -86,6 +90,25 @@ function addOrUpdateCollection(state: CollectionsState, collection: Collection):
   if (isCollectionNewer(collection, oldCollection)) {
     return collectionsAdapter.upsertOne(collection, state);
   }
+  return state;
+}
+
+function renameAttribute(
+  state: CollectionsState,
+  collectionId: string,
+  attributeId: string,
+  name: string
+): CollectionsState {
+  const collection = state.entities[collectionId];
+  if (collection) {
+    const attributes = [...collection.attributes];
+    const attributeIndex = attributes.findIndex(attribute => attribute.id === attributeId);
+    if (attributeIndex !== -1) {
+      attributes.splice(attributeIndex, 1, {...attributes[attributeIndex], name});
+      return collectionsAdapter.updateOne({id: collectionId, changes: {attributes}}, state);
+    }
+  }
+
   return state;
 }
 

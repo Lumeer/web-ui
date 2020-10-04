@@ -20,7 +20,7 @@
 import {TableColumn} from './table-column';
 import {TableRow} from './table-row';
 
-export const TABLE_ROW_HEIGHT = 36;
+export const TABLE_ROW_HEIGHT = 37;
 
 export interface TableModel {
   id: string;

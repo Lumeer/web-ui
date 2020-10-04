@@ -26,6 +26,8 @@ import {
   ViewChild,
   OnChanges,
   SimpleChanges,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {columnConstraintType, TableColumn} from '../../model/table-column';
@@ -35,13 +37,16 @@ import {DocumentHintsComponent} from '../../../document-hints/document-hints.com
 import {isKeyPrintable, KeyCode} from '../../../key-code';
 import {Direction} from '../../../direction';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {isNotNullOrUndefined} from '../../../utils/common.utils';
+import {isNotNullOrUndefined, preventEvent} from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
 import {isTableColumnDirectlyEditable} from '../../model/table-utils';
+import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
+import {TableRowMenuComponent} from './menu/table-row-menu.component';
+import {ContextMenuService} from 'ngx-contextmenu';
 
 @Component({
   selector: '[table-row]',
@@ -80,6 +85,9 @@ export class TableRowComponent implements OnChanges {
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
 
+  @ViewChildren(TableRowMenuComponent)
+  public tableRowMenuComponents: QueryList<TableRowMenuComponent>;
+
   public readonly tableRowHeight = TABLE_ROW_HEIGHT;
   public readonly cellType = TableCellType.Body;
   public readonly constraintType = ConstraintType;
@@ -92,6 +100,8 @@ export class TableRowComponent implements OnChanges {
   public editedValue: DataValue;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
+
+  constructor(private contextMenuService: ContextMenuService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.editedCell) {
@@ -210,5 +220,22 @@ export class TableRowComponent implements OnChanges {
 
   public trackByColumn(index: number, column: TableColumn): string {
     return column.id;
+  }
+
+  public onRowEdit(columnId: string) {
+    this.onDoubleClick.emit(columnId);
+  }
+
+  public onContextMenu(column: number, event: MouseEvent) {
+    const menuElement = this.tableRowMenuComponents.toArray()[column];
+    if (menuElement) {
+      this.contextMenuService.show.next({
+        contextMenu: menuElement.contextMenu,
+        event,
+        item: null,
+      });
+    }
+
+    preventEvent(event);
   }
 }

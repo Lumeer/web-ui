@@ -1,43 +1,13 @@
 @import 'src/styles/variables';
 
-$width: 0.8rem;
-
-.sticky-header {
-  white-space: nowrap;
-}
-
-.header-content {
-  display: grid;
-  grid-template-columns: 1fr auto;
-}
-
-.dragging {
-  background-color: $light !important;
-}
-
-.hidden {
-  visibility: hidden;
-}
-
 th {
   z-index: 2;
   position: sticky;
   vertical-align: middle !important;
   padding: 0 !important;
-  font-style: italic;
   border: 0 !important;
-  background: white;
 }
 
-th .wrapper {
-  border: 0.5px $gray-200 dotted;
-  padding: 0.4rem !important;
-}
-
-.icons {
-  font-size: 13px;
-}
-
-.fa-caret-down {
-  color: $secondary;
+.dragging {
+  background-color: $light !important;
 }

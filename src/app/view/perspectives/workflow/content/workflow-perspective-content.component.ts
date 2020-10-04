@@ -52,6 +52,7 @@ import {DataInputSaveAction} from '../../../../shared/data-input/data-input-save
   templateUrl: './workflow-perspective-content.component.html',
   styleUrls: ['./workflow-perspective-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [WorkflowTablesService],
 })
 export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   @Input()
@@ -75,15 +76,13 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
 
-  private tablesService: WorkflowTablesService;
-
   public tables$: Observable<TableModel[]>;
   public constraintData$: Observable<ConstraintData>;
   public selectedCell$: Observable<SelectedTableCell>;
   public editedCell$: Observable<EditedTableCell>;
 
-  constructor(private store$: Store<AppState>) {
-    this.tablesService = new WorkflowTablesService(() => this.hiddenInputComponent);
+  constructor(private store$: Store<AppState>, private tablesService: WorkflowTablesService) {
+    this.tablesService.setHiddenComponent(() => this.hiddenInputComponent);
     this.tables$ = this.tablesService.tables$
       .asObservable()
       .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
@@ -147,7 +146,7 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
     }
   }
 
-  public onTableCellCancel(data: {cell: TableCell; action: DataInputSaveAction}) {
+  public onTableCellCancel(data: {cell: TableCell; action?: DataInputSaveAction}) {
     this.tablesService.resetCellSelection(data.cell, data.action);
   }
 

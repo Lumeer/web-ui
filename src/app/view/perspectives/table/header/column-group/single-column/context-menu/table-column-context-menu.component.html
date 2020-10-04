@@ -21,7 +21,7 @@
                contextMenuItem
                divider="true"></ng-template>
   <ng-template contextMenuItem
-               [enabled]="allowedPermissions?.writeWithView"
+               [enabled]="allowedPermissions?.manageWithView"
                (execute)="edit.emit()">
     <i class="fa fa-fw fa-edit mr-1"
        aria-hidden="true">
@@ -62,7 +62,7 @@
   <ng-template contextMenuItem
                divider="true"></ng-template>
   <ng-template (execute)="addNextColumn()"
-               [enabled]="allowedPermissions?.writeWithView"
+               [enabled]="allowedPermissions?.manageWithView"
                contextMenuItem>
     <i class="fa fa-fw fa-arrow-alt-circle-right mr-1"
        aria-hidden="true">
@@ -71,7 +71,7 @@
           i18n="@@table.header.menu.add.column.next">Add column right</span>
   </ng-template>
   <ng-template (execute)="addPreviousColumn()"
-               [enabled]="allowedPermissions?.writeWithView"
+               [enabled]="allowedPermissions?.manageWithView"
                contextMenuItem>
     <i class="fa fa-fw fa-arrow-alt-circle-left mr-1"
        aria-hidden="true">
@@ -100,7 +100,7 @@
     <span i18n="@@table.header.menu.hide">Hide column</span>
   </ng-template>
   <ng-template (execute)="remove.emit()"
-               [enabled]="allowedPermissions?.writeWithView"
+               [enabled]="allowedPermissions?.manageWithView"
                contextMenuItem>
     <i class="fas fa-fw fa-trash text-danger mr-1"
        aria-hidden="true">

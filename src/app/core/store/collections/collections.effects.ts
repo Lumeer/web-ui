@@ -25,7 +25,7 @@ import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2} from 'angulartics2';
 import {EMPTY, from, Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../../../../environments/environment';
 import {CollectionDto} from '../../dto';
 import {ImportService} from '../../rest';
@@ -258,7 +258,7 @@ export class CollectionsEffects {
   public deleteSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.DeleteSuccess>(CollectionsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    flatMap(([action, navigation]) => {
+    mergeMap(([action, navigation]) => {
       const {collectionId} = action.payload;
       const actions: Action[] = [new DocumentsAction.ClearByCollection({collectionId})];
       const isCollectionSettingsPage =
@@ -330,6 +330,26 @@ export class CollectionsEffects {
         value: 'Could not remove the table from favorites',
       });
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public renameAttribute$ = this.actions$.pipe(
+    ofType<CollectionsAction.RenameAttribute>(CollectionsActionType.RENAME_ATTRIBUTE),
+    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
+    tap(([action]) => this.store$.dispatch(new CollectionsAction.RenameAttributeSuccess(action.payload))),
+    mergeMap(([action, collections]) => {
+      const {collectionId, attributeId, name} = action.payload;
+      const collection = collections[collectionId];
+      const attribute = collection?.attributes?.find(attr => attr.id === attributeId);
+      const oldName = attribute?.name;
+      const attributeDto = convertAttributeModelToDto({...attribute, name});
+      return this.collectionService.updateAttribute(collectionId, attributeId, attributeDto).pipe(
+        mergeMap(() => of()),
+        catchError(error =>
+          of(new CollectionsAction.RenameAttributeFailure({error, collectionId, attributeId, oldName}))
+        )
+      );
     })
   );
 
@@ -418,7 +438,7 @@ export class CollectionsEffects {
 
       return this.collectionService.updateAttribute(collectionId, attributeId, attributeDto).pipe(
         map(result => convertAttributeDtoToModel(result)),
-        flatMap(attribute => {
+        mergeMap(attribute => {
           const actions: Action[] = [
             new CollectionsAction.ChangeAttributeSuccess({collectionId, attributeId, attribute: attribute}),
           ];
@@ -462,7 +482,7 @@ export class CollectionsEffects {
         mergeMap(attribute =>
           this.collectionService.removeAttribute(collectionId, attributeId).pipe(
             withLatestFrom(this.store$.pipe(select(selectCollectionById(collectionId)))),
-            flatMap(([, collection]) => {
+            mergeMap(([, collection]) => {
               const actions: Action[] = [new CollectionsAction.RemoveAttributeSuccess({collectionId, attribute})];
               if (collection.defaultAttributeId === attributeId || !collection.defaultAttributeId) {
                 const setDefaultAttributeAction = createSetDefaultAttributeAction(collection, null, attributeId);

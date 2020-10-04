@@ -1,0 +1,10 @@
+input {
+  background: unset;
+  border: unset;
+  font-style: italic;
+  outline: none;
+
+  &[readonly] {
+    cursor: default;
+  }
+}

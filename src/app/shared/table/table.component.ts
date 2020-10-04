@@ -49,6 +49,7 @@ import {LinkInstancesAction} from '../../core/store/link-instances/link-instance
 import {AppState} from '../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
+import {CollectionsAction} from '../../core/store/collections/collections.action';
 
 @Component({
   selector: 'lmr-table',
@@ -73,13 +74,13 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public onCellClick = new EventEmitter<TableCell>();
 
   @Output()
-  public onCancel = new EventEmitter<{cell: TableCell; action: DataInputSaveAction}>();
+  public onCellDoubleClick = new EventEmitter<TableCell>();
+
+  @Output()
+  public onCancel = new EventEmitter<{cell: TableCell; action?: DataInputSaveAction}>();
 
   @Output()
   public onSave = new EventEmitter<{cell: TableCell; action: DataInputSaveAction}>();
-
-  @Output()
-  public onCellDoubleClick = new EventEmitter<TableCell>();
 
   @Output()
   public columnResize = new EventEmitter<{id: string; width: number}>();
@@ -211,5 +212,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public onBodyCancel(rowId: string, data: {action: DataInputSaveAction; columnId: string}) {
     const cell = {tableId: this.tableModel.id, rowId, columnId: data.columnId, type: TableCellType.Body};
     this.onCancel.emit({cell, action: data.action});
+  }
+
+  public onHeaderCancel(columnId: string) {
+    const cell = {tableId: this.tableModel.id, columnId, type: TableCellType.Header};
+    this.onCancel.emit({cell});
   }
 }

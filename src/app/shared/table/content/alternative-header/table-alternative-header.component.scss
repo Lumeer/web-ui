@@ -8,10 +8,6 @@
   visibility: hidden;
 }
 
-.visible {
-  visibility: visible !important;
-}
-
 .header-wrapper {
   display: table-row;
 }
@@ -23,19 +19,4 @@
 .empty-cell {
   width: 2rem;
   min-width: 2rem;
-}
-
-.header-content {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  border: 0.5px $gray-200 dotted;
-  padding: 0.4rem;
-}
-
-.fa-caret-down {
-  color: $secondary;
-}
-
-.icons {
-  font-size: 13px;
 }
