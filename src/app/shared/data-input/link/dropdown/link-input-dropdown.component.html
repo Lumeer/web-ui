@@ -4,13 +4,13 @@
           [positions]="dropdownPositions"
           (onCloseByClickOutside)="onCancel()">
 
-  <div class="card p-3"
+  <div class="card link-dialog"
        [style.min-width.px]="300"
        (click)="$event.stopPropagation();"
        (mousedown)="$event.stopPropagation()">
     <form [formGroup]="form" class="grid">
 
-      <div class="small">
+      <div class="small pb-1">
         <span i18n="@@link.input.dropdown.link">Link</span><span class="text-danger">*</span>
       </div>
       <div class="grid-empty-cell"></div>
@@ -21,7 +21,7 @@
              (keydown)="onLinkKeyDown($event)">
       <div class="grid-empty-cell"></div>
 
-      <div i18n="@@link.input.dropdown.title" class="mt-3 small">Title</div>
+      <div i18n="@@link.input.dropdown.title" class="mt-3 pb-1 small">Title</div>
       <div class="grid-empty-cell"></div>
       <input class="form-control" type="text" #titleElement
              formControlName="title"

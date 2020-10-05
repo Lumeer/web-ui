@@ -2,3 +2,8 @@
   display: grid;
   grid-template-columns: 1fr auto;
 }
+
+.link-dialog {
+  width: min(400px, 90vw);
+  padding: 0.75rem;
+}

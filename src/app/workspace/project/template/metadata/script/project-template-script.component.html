@@ -6,7 +6,7 @@
 
 <div class="script-content mt-3"
      *ngIf="{script: scriptText$ | async, copied: copied$ | async} as data">
-  <div class="mr-md-4 d-flex flex-column justify-content-center" [formGroup]="formGroup">
+  <div class="mr-md-4 d-flex flex-column pt-3" [formGroup]="formGroup">
 
     <div class="d-flex flex-row flex-nowrap align-items-center">
       <label class="switch" for="showTopPanelScript">
@@ -44,6 +44,10 @@
                 [class.active]="scriptTypeControl.value === scriptType.WordPress"
                 (click)="onScriptTypeSelected(scriptType.WordPress)"><i
           class="fab fa-wordpress"></i></button>
+        <button type="button" class="btn btn-outline-primary"
+                [class.active]="scriptTypeControl.value === scriptType.Link"
+                (click)="onScriptTypeSelected(scriptType.Link)"><i
+          class="fas fa-link"></i></button>
       </div>
 
       <button *ngIf="!data.copied" class="btn btn-outline-primary ml-auto"

@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
-import {BehaviorSubject, combineLatest, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {map, startWith} from 'rxjs/operators';
 import {environment} from '../../../../../../environments/environment';
@@ -86,6 +86,7 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
         const language = environment.locale;
         const view = value.defaultView ? `data-v="${value.defaultView}"` : '';
         const shortcodeView = value.defaultView ? `/${value.defaultView}` : '';
+        const linkView = value.defaultView ? `&v=${value.defaultView}` : '';
         const scriptType = <PublicScriptType>value.scriptType || PublicScriptType.Html;
 
         switch (scriptType) {
@@ -95,6 +96,8 @@ export class ProjectTemplateScriptComponent implements OnChanges, OnInit {
             data-tp="${showTopPanel}" data-l="${language}"></script>`;
           case PublicScriptType.WordPress:
             return `[lumeer_embed code="${workspace?.organizationId}/${workspace?.projectId}${shortcodeView}" lang="${language}" show_panel="${showTopPanel}"]`;
+          case PublicScriptType.Link:
+            return `https://www.lumeer.io/app-demo?_o=${workspace?.organizationId}&_p=${workspace?.projectId}&tp=${showTopPanel}${linkView}&l=${language}`;
           default:
             return '';
         }
