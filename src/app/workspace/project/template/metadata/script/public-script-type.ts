@@ -20,4 +20,5 @@
 export enum PublicScriptType {
   Html = 'Html',
   WordPress = 'WP',
+  Link = 'Link',
 }

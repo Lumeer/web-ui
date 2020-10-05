@@ -21,6 +21,14 @@ import {LanguageCode} from '../../../shared/top-panel/user-panel/user-menu/langu
 import {environment} from '../../../../environments/environment';
 
 export enum LanguageTag {
+  Denmark = 'da-DK',
+  Switzerland = 'de-CH',
+  NewZealand = 'en-NZ',
+  Canada = 'fr-CA',
+  Sweden = 'sv-SE',
+  Norway = 'nb-NO',
+  Finland = 'fi-FI',
+  Israel = 'he-IL',
   Spain = 'es-ES',
   France = 'fr-FR',
   Italy = 'it-IT',
