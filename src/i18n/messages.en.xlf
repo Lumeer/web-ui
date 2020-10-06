@@ -2256,7 +2256,7 @@
         <source>Select starting view</source><target state="final">Select starting view</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="page.title" datatype="html">
-        <source>Lumeer - Visual Project&amp;Team Management</source><target state="final">Lumeer - Visual Project&amp;Team Management</target>
+        <source>Lumeer | Visual, easy project and team management</source><target state="final">Lumeer | Visual, easy project and team management</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">1</context>

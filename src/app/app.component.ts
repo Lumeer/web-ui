@@ -76,7 +76,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private constraintDataService: ConstraintDataService, // for init constraint data
     public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
-    this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer - Visual Project&Team Management'}));
+    this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer | Visual, easy project and team management'}));
 
     this.storeReferralCookie();
     this.moduleLazyLoadingService.init();
