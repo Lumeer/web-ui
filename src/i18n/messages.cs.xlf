@@ -2576,7 +2576,7 @@
         <source>Select starting view</source><target>Vyberte počáteční pohled</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/script/project-template-script.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="page.title" datatype="html">
-        <source>Lumeer - Visual Project&amp;Team Management</source><target>Lumeer - Vizuální řízení projektů a týmů</target>
+        <source>Lumeer | Visual, easy project and team management</source><target>Lumeer | Jednoduchý vizuální nástroj na řízení projektů a týmů</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/app.component.ts</context>
           <context context-type="linenumber">1</context>
