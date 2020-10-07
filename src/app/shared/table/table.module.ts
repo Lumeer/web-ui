@@ -38,9 +38,9 @@ import {TableCellEditedPipe} from './pipes/table-cell-edited.pipe';
 import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
 import {TableHeaderInputComponent} from './content/header/cell/input/table-header-input.component';
 import {TableHeaderCellComponent} from './content/header/cell/table-header-cell.component';
-import {TableHeaderMenuComponent} from './content/header/cell/menu/table-header-menu.component';
+import {TableMenuComponent} from './content/common/menu/table-menu.component';
 import {ContextMenuModule} from 'ngx-contextmenu';
-import {TableRowMenuComponent} from './content/row/menu/table-row-menu.component';
+import {GroupTableMenuItemsPipe} from './pipes/group-table-menu-items.pipe';
 
 @NgModule({
   declarations: [
@@ -57,8 +57,8 @@ import {TableRowMenuComponent} from './content/row/menu/table-row-menu.component
     TableBodyCellSelectedPipe,
     TableHeaderInputComponent,
     TableHeaderCellComponent,
-    TableHeaderMenuComponent,
-    TableRowMenuComponent,
+    TableMenuComponent,
+    GroupTableMenuItemsPipe,
   ],
   imports: [
     CommonModule,

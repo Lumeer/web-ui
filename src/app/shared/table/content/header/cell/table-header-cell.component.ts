@@ -18,8 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import {TableColumn} from '../../../model/table-column';
-import {TableHeaderMenuComponent} from './menu/table-header-menu.component';
+import {TableColumn, TableContextMenuItem} from '../../../model/table-column';
+import {TableMenuComponent} from '../../common/menu/table-menu.component';
 import {preventEvent} from '../../../../utils/common.utils';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {ModalService} from '../../../../modal/modal.service';
@@ -51,19 +51,10 @@ export class TableHeaderCellComponent {
   public newName = new EventEmitter<string>();
 
   @Output()
-  public edit = new EventEmitter();
+  public menuSelected = new EventEmitter<TableContextMenuItem>();
 
-  @Output()
-  public remove = new EventEmitter();
-
-  @Output()
-  public hide = new EventEmitter();
-
-  @Output()
-  public setDefaultAttribute = new EventEmitter();
-
-  @ViewChild(TableHeaderMenuComponent)
-  public contextMenuComponent: TableHeaderMenuComponent;
+  @ViewChild(TableMenuComponent)
+  public contextMenuComponent: TableMenuComponent;
 
   constructor(private contextMenuService: ContextMenuService, private modalService: ModalService) {}
 
@@ -76,13 +67,15 @@ export class TableHeaderCellComponent {
   }
 
   public onContextMenu(event: MouseEvent) {
-    this.contextMenuService.show.next({
-      contextMenu: this.contextMenuComponent?.contextMenu,
-      event,
-      item: null,
-    });
+    if (this.column.menuItems?.length) {
+      this.contextMenuService.show.next({
+        contextMenu: this.contextMenuComponent?.contextMenu,
+        event,
+        item: null,
+      });
 
-    preventEvent(event);
+      preventEvent(event);
+    }
   }
 
   public onAttributeFunction() {

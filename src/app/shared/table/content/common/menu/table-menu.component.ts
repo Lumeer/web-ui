@@ -19,34 +19,19 @@
 
 import {Component, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, Input} from '@angular/core';
 import {ContextMenuComponent} from 'ngx-contextmenu';
-import {TableColumn} from '../../../../model/table-column';
+import {TableContextMenuItem} from '../../../model/table-column';
 
 @Component({
-  selector: 'table-header-menu',
-  templateUrl: './table-header-menu.component.html',
+  selector: 'table-menu',
+  templateUrl: './table-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeaderMenuComponent {
+export class TableMenuComponent {
   @Input()
-  public column: TableColumn;
+  public items: TableContextMenuItem[];
 
   @Output()
-  public attributeType = new EventEmitter();
-
-  @Output()
-  public attributeFunction = new EventEmitter();
-
-  @Output()
-  public edit = new EventEmitter();
-
-  @Output()
-  public remove = new EventEmitter();
-
-  @Output()
-  public hide = new EventEmitter();
-
-  @Output()
-  public setDefaultAttribute = new EventEmitter();
+  public selected = new EventEmitter<TableContextMenuItem>();
 
   @ViewChild(ContextMenuComponent, {static: true})
   public contextMenu: ContextMenuComponent;

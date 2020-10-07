@@ -18,13 +18,16 @@
  */
 
 import {DataResourceData} from '../../../core/model/resource';
+import {TableContextMenuItem} from './table-column';
 
 export interface TableRow {
   id: string;
   documentId: string;
+  tableId: string;
   height: number;
   documentData?: DataResourceData;
   linkInstanceId?: string;
   linkInstanceData?: DataResourceData;
   correlationId?: string;
+  menuItems: TableContextMenuItem[];
 }

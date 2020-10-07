@@ -17,34 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Attribute} from '../../../core/store/collections/collection';
-import {ConstraintType} from '../../../core/model/data/constraint';
+import {Pipe, PipeTransform} from '@angular/core';
+import {TableContextMenuItem} from '../model/table-column';
 
-export interface TableColumn {
-  id: string;
-  width: number;
-  tableId: string;
-  attribute?: Attribute;
-  name?: string;
-  linkTypeId?: string;
-  collectionId?: string;
-  color?: string;
-  default?: boolean;
-  hidden?: boolean;
-  editable: boolean;
-  manageable?: boolean;
-  menuItems: TableContextMenuItem[];
-}
-
-export interface TableContextMenuItem {
-  id: string;
-  title: string;
-  iconClass: string;
-  group: number;
-  shortcut?: string;
-  disabled: boolean;
-}
-
-export function columnConstraintType(column: TableColumn): ConstraintType {
-  return column.attribute?.constraint?.type || ConstraintType.Unknown;
+@Pipe({
+  name: 'groupTableMenuItems',
+})
+export class GroupTableMenuItemsPipe implements PipeTransform {
+  public transform(items: TableContextMenuItem[]): {group: number; items: TableContextMenuItem[]}[] {
+    return (items || [])
+      .reduce((array, item) => {
+        const element = array.find(elem => elem.group === item.group);
+        if (element) {
+          element.items.push(item);
+        } else {
+          array.push({group: item.group, items: [item]});
+        }
+        return array;
+      }, [])
+      .sort((a, b) => a.group - b.group);
+  }
 }

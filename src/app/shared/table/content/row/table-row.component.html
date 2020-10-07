@@ -41,10 +41,9 @@
         </div>
         <ng-container
           *ngIf="!dataInputInfo.showDataInput && data.constraintType !== constraintType.Text">{{data.dataValue | previewDataValue}}</ng-container>
-        <table-row-menu [column]="column"
-                        [row]="row"
-                        (edit)="onRowEdit(column.id)">
-        </table-row-menu>
+        <table-menu [items]="row.menuItems"
+                    (selected)="onMenuSelected(row, column, $event)">
+        </table-menu>
       </td>
     </ng-container>
   </ng-container>

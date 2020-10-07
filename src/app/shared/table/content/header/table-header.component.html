@@ -23,9 +23,7 @@
                        [column]="column"
                        (onCancel)="onHeaderCancel(column.id)"
                        (newName)="onHeaderSave(column, $event)"
-                       (setDefaultAttribute)="setDefaultAttribute(column)"
-                       (edit)="onColumnEdit(column.id)"
-                       (remove)="onColumnRemove(column)">
+                       (menuSelected)="onMenuSelected(column, $event)">
     </table-header-cell>
     <div class="bg-gray h-100 w-100" *ngIf="index === dragData.index">&nbsp;</div>
   </th>

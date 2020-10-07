@@ -30,7 +30,7 @@ import {
   QueryList,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {columnConstraintType, TableColumn} from '../../model/table-column';
+import {columnConstraintType, TableColumn, TableContextMenuItem} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
 import {DataValue} from '../../../../core/model/data-value';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
@@ -44,9 +44,8 @@ import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} fro
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
 import {isTableColumnDirectlyEditable} from '../../model/table-utils';
-import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
-import {TableRowMenuComponent} from './menu/table-row-menu.component';
 import {ContextMenuService} from 'ngx-contextmenu';
+import {TableMenuComponent} from '../common/menu/table-menu.component';
 
 @Component({
   selector: '[table-row]',
@@ -82,11 +81,14 @@ export class TableRowComponent implements OnChanges {
   @Output()
   public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
 
+  @Output()
+  public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
+
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
 
-  @ViewChildren(TableRowMenuComponent)
-  public tableRowMenuComponents: QueryList<TableRowMenuComponent>;
+  @ViewChildren(TableMenuComponent)
+  public tableMenuComponents: QueryList<TableMenuComponent>;
 
   public readonly tableRowHeight = TABLE_ROW_HEIGHT;
   public readonly cellType = TableCellType.Body;
@@ -227,7 +229,7 @@ export class TableRowComponent implements OnChanges {
   }
 
   public onContextMenu(column: number, event: MouseEvent) {
-    const menuElement = this.tableRowMenuComponents.toArray()[column];
+    const menuElement = this.tableMenuComponents.toArray()[column];
     if (menuElement) {
       this.contextMenuService.show.next({
         contextMenu: menuElement.contextMenu,
@@ -237,5 +239,9 @@ export class TableRowComponent implements OnChanges {
     }
 
     preventEvent(event);
+  }
+
+  public onMenuSelected(row: TableRow, column: TableColumn, item: TableContextMenuItem) {
+    this.menuSelected.emit({row, column, item});
   }
 }

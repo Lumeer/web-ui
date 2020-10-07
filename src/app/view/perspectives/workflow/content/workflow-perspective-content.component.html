@@ -17,10 +17,13 @@
                [editedCell]="data.editedCell"
                (columnMove)="onColumnMove(table, $event)"
                (columnResize)="onColumnResize(table, $event)"
-               (onCellClick)="onTableCellClick($event)"
-               (onCancel)="onTableCellCancel($event)"
-               (onSave)="onTableCellSave($event)"
-               (onCellDoubleClick)="onTableCellDoubleClick($event)">
+               (columnRename)="onColumnRename($event)"
+               (columnMenuSelected)="onColumnMenuSelected($event)"
+               (cellClick)="onTableCellClick($event)"
+               (cellCancel)="onTableCellCancel($event)"
+               (cellDoubleClick)="onTableCellDoubleClick($event)"
+               (rowNewValue)="onRowNewValue($event)"
+               (rowMenuSelected)="onRowMenuSelected($event)">
     </lmr-table>
   </div>
 

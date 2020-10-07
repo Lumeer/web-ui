@@ -16,7 +16,9 @@
              (onClick)="onHeaderCellClick($event)"
              (onDoubleClick)="onHeaderCellDoubleClick($event)"
              (moveColumn)="onMoveColumn($event)"
-             (onCancel)="onHeaderCancel($event)">
+             (onCancel)="onHeaderCancel($event)"
+             (onRename)="columnRename.emit($event)"
+             (menuSelected)="columnMenuSelected.emit($event)">
       </thead>
       <tbody>
       <tr table-row #tableRow
@@ -26,10 +28,11 @@
           [editedCell]="editedCell"
           [constraintData]="constraintData"
           [columns]="tableModel.columns"
-          (newValue)="onNewValue(row.id, $event)"
-          (onClick)="onBodyCellClick(row.id, $event)"
-          (onCancel)="onBodyCancel(row.id, $event)"
-          (onDoubleClick)="onBodyCellDoubleClick(row.id, $event)">
+          (newValue)="onNewValue(row, $event)"
+          (onClick)="onBodyCellClick(row, $event)"
+          (onCancel)="onBodyCancel(row, $event)"
+          (onDoubleClick)="onBodyCellDoubleClick(row, $event)"
+          (menuSelected)="rowMenuSelected.emit($event)">
       </tr>
       </tbody>
     </table>

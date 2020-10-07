@@ -36,7 +36,7 @@ import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
-import {WorkflowTablesService} from './workflow-tables-service';
+import {WorkflowTablesService} from './service/workflow-tables.service';
 import {EditedTableCell, SelectedTableCell, TableCell, TableModel} from '../../../../shared/table/model/table-model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AppState} from '../../../../core/store/app.state';
@@ -46,13 +46,17 @@ import {distinctUntilChanged} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {HiddenInputComponent} from '../../../../shared/input/hidden-input/hidden-input.component';
 import {DataInputSaveAction} from '../../../../shared/data-input/data-input-save-action';
+import {TableRow} from '../../../../shared/table/model/table-row';
+import {TableColumn, TableContextMenuItem} from '../../../../shared/table/model/table-column';
+import {WorkflowTablesMenuService} from './service/workflow-tables-menu.service';
+import {WorkflowTablesDataService} from './service/workflow-tables-data.service';
 
 @Component({
   selector: 'workflow-perspective-content',
   templateUrl: './workflow-perspective-content.component.html',
   styleUrls: ['./workflow-perspective-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [WorkflowTablesService],
+  providers: [WorkflowTablesService, WorkflowTablesMenuService, WorkflowTablesDataService],
 })
 export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   @Input()
@@ -124,8 +128,8 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
     this.tablesService.onColumnMove(table, data.from, data.to);
   }
 
-  public onColumnResize(table: TableModel, data: {id: string; width: number}) {
-    this.tablesService.onColumnResize(table, data.id, data.width);
+  public onColumnResize(table: TableModel, data: {column: TableColumn; width: number}) {
+    this.tablesService.onColumnResize(table, data.column, data.width);
   }
 
   public onTableCellClick(cell: TableCell) {
@@ -154,7 +158,19 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
     this.tablesService.newHiddenInput(input);
   }
 
-  public onTableCellSave(data: {cell: TableCell; action: DataInputSaveAction}) {
-    this.tablesService.onCellSave(data.cell, data.action);
+  public onRowNewValue(event: {row: TableRow; column: TableColumn; value: any; action: DataInputSaveAction}) {
+    this.tablesService.onRowNewValue(event.row, event.column, event.value, event.action);
+  }
+
+  public onColumnRename(data: {column: TableColumn; name: string}) {
+    this.tablesService.onColumnRename(data.column, data.name);
+  }
+
+  public onColumnMenuSelected(data: {column: TableColumn; item: TableContextMenuItem}) {
+    this.tablesService.onColumnMenuSelected(data.column, data.item);
+  }
+
+  public onRowMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
+    this.tablesService.onRowMenuSelected(data.row, data.column, data.item);
   }
 }

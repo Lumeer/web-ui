@@ -42,14 +42,8 @@ import {TableRowComponent} from './content/row/table-row.component';
 import {ConstraintData} from '../../core/model/data/constraint';
 import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel} from './model/table-model';
 import {TableScrollService} from './service/table-scroll.service';
-import {DocumentModel} from '../../core/store/documents/document.model';
-import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {LinkInstance} from '../../core/store/link-instances/link.instance';
-import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
-import {AppState} from '../../core/store/app.state';
-import {Store} from '@ngrx/store';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
-import {CollectionsAction} from '../../core/store/collections/collections.action';
+import {TableColumn, TableContextMenuItem} from './model/table-column';
 
 @Component({
   selector: 'lmr-table',
@@ -71,22 +65,36 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public constraintData: ConstraintData;
 
   @Output()
-  public onCellClick = new EventEmitter<TableCell>();
-
-  @Output()
-  public onCellDoubleClick = new EventEmitter<TableCell>();
-
-  @Output()
-  public onCancel = new EventEmitter<{cell: TableCell; action?: DataInputSaveAction}>();
-
-  @Output()
-  public onSave = new EventEmitter<{cell: TableCell; action: DataInputSaveAction}>();
-
-  @Output()
-  public columnResize = new EventEmitter<{id: string; width: number}>();
+  public columnResize = new EventEmitter<{column: TableColumn; width: number}>();
 
   @Output()
   public columnMove = new EventEmitter<{from: number; to: number}>();
+
+  @Output()
+  public columnRename = new EventEmitter<{column: TableColumn; name: string}>();
+
+  @Output()
+  public columnMenuSelected = new EventEmitter<{column: TableColumn; item: TableContextMenuItem}>();
+
+  @Output()
+  public cellClick = new EventEmitter<TableCell>();
+
+  @Output()
+  public cellDoubleClick = new EventEmitter<TableCell>();
+
+  @Output()
+  public cellCancel = new EventEmitter<{cell: TableCell; action?: DataInputSaveAction}>();
+
+  @Output()
+  public rowNewValue = new EventEmitter<{
+    row: TableRow;
+    column: TableColumn;
+    value: any;
+    action: DataInputSaveAction;
+  }>();
+
+  @Output()
+  public rowMenuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
 
   @ViewChild(CdkVirtualScrollViewport, {static: false})
   public viewPort: CdkVirtualScrollViewport;
@@ -102,11 +110,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   private subscriptions = new Subscription();
   private tableScrollService: TableScrollService;
 
-  constructor(
-    private scrollDispatcher: ScrollDispatcher,
-    private element: ElementRef<HTMLElement>,
-    private store$: Store<AppState>
-  ) {
+  constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef<HTMLElement>) {
     this.tableScrollService = new TableScrollService(() => this.viewPort);
   }
 
@@ -150,7 +154,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public onResizeColumn(data: {index: number; width: number}) {
     const column = this.tableModel?.columns?.[data.index];
     if (column) {
-      this.columnResize.emit({id: column.id, width: data.width});
+      this.columnResize.emit({column, width: data.width});
     }
   }
 
@@ -166,56 +170,36 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     return row.id;
   }
 
-  public onNewValue(rowId: string, data: {columnId: string; value: any; action: DataInputSaveAction}) {
-    const tableRow = this.tableModel?.rows?.find(row => row.id === rowId);
-    const tableColumn = this.tableModel?.columns?.find(column => column.id === data.columnId);
-    if (tableRow && tableColumn) {
-      const patchData = {[tableColumn.attribute.id]: data.value};
-      if (tableColumn.collectionId && tableRow.documentId) {
-        const document: DocumentModel = {
-          id: tableRow.documentId,
-          collectionId: tableColumn.collectionId,
-          data: patchData,
-        };
-        this.store$.dispatch(new DocumentsAction.PatchData({document}));
-      } else if (tableColumn.linkTypeId && tableRow.linkInstanceId) {
-        const linkInstance: LinkInstance = {
-          id: tableRow.linkInstanceId,
-          linkTypeId: tableColumn.linkTypeId,
-          data: patchData,
-          documentIds: ['', ''],
-        };
-        this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
-      }
+  public onNewValue(row: TableRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
+    const column = this.tableModel?.columns?.find(col => col.id === data.columnId);
+    if (row && column) {
+      this.rowNewValue.emit({...data, row, column});
     }
-
-    const cell = {rowId, columnId: data.columnId, type: TableCellType.Body, tableId: this.tableModel.id};
-    this.onSave.emit({cell, action: data.action});
   }
 
-  public onBodyCellClick(rowId: string, columnId: string) {
-    this.onCellClick.emit({tableId: this.tableModel.id, rowId, columnId, type: TableCellType.Body});
+  public onBodyCellClick(row: TableRow, columnId: string) {
+    this.cellClick.emit({tableId: this.tableModel.id, rowId: row.id, columnId, type: TableCellType.Body});
   }
 
-  public onBodyCellDoubleClick(rowId: string, columnId: string) {
-    this.onCellDoubleClick.emit({tableId: this.tableModel.id, rowId, columnId, type: TableCellType.Body});
+  public onBodyCellDoubleClick(row: TableRow, columnId: string) {
+    this.cellDoubleClick.emit({tableId: this.tableModel.id, rowId: row.id, columnId, type: TableCellType.Body});
   }
 
   public onHeaderCellClick(columnId: string) {
-    this.onCellClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
+    this.cellClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
   }
 
   public onHeaderCellDoubleClick(columnId: string) {
-    this.onCellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
+    this.cellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
   }
 
-  public onBodyCancel(rowId: string, data: {action: DataInputSaveAction; columnId: string}) {
-    const cell = {tableId: this.tableModel.id, rowId, columnId: data.columnId, type: TableCellType.Body};
-    this.onCancel.emit({cell, action: data.action});
+  public onBodyCancel(row: TableRow, data: {action: DataInputSaveAction; columnId: string}) {
+    const cell = {tableId: this.tableModel.id, rowId: row.id, columnId: data.columnId, type: TableCellType.Body};
+    this.cellCancel.emit({cell, action: data.action});
   }
 
   public onHeaderCancel(columnId: string) {
     const cell = {tableId: this.tableModel.id, columnId, type: TableCellType.Header};
-    this.onCancel.emit({cell});
+    this.cellCancel.emit({cell});
   }
 }

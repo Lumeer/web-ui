@@ -26,27 +26,29 @@ import {
   TableCell,
   TableCellType,
   TableModel,
-} from '../../../../shared/table/model/table-model';
-import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Query} from '../../../../core/store/navigation/query/query';
-import {ResourceAttributeSettings, ViewSettings} from '../../../../core/store/views/view';
+} from '../../../../../shared/table/model/table-model';
+import {Collection} from '../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {Query} from '../../../../../core/store/navigation/query/query';
+import {ResourceAttributeSettings, ViewSettings} from '../../../../../core/store/views/view';
 import {
   findAttribute,
   getDefaultAttributeId,
   isCollectionAttributeEditable,
-} from '../../../../core/store/collections/collection.util';
-import {createAttributesSettingsOrder} from '../../../../shared/settings/settings.util';
-import {TableColumn} from '../../../../shared/table/model/table-column';
-import {generateId} from '../../../../shared/utils/resource.utils';
-import {TableRow} from '../../../../shared/table/model/table-row';
-import {moveItemsInArray} from '../../../../shared/utils/array.utils';
-import {KeyCode} from '../../../../shared/key-code';
-import {isNotNullOrUndefined, preventEvent} from '../../../../shared/utils/common.utils';
-import {DataRowHiddenComponent} from '../../../../shared/data/data-row-component';
+} from '../../../../../core/store/collections/collection.util';
+import {createAttributesSettingsOrder} from '../../../../../shared/settings/settings.util';
+import {TableColumn, TableContextMenuItem} from '../../../../../shared/table/model/table-column';
+import {generateId} from '../../../../../shared/utils/resource.utils';
+import {TableRow} from '../../../../../shared/table/model/table-row';
+import {moveItemsInArray} from '../../../../../shared/utils/array.utils';
+import {KeyCode} from '../../../../../shared/key-code';
+import {isNotNullOrUndefined, preventEvent} from '../../../../../shared/utils/common.utils';
+import {DataRowHiddenComponent} from '../../../../../shared/data/data-row-component';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
-import {DataInputSaveAction} from '../../../../shared/data-input/data-input-save-action';
+import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
+import {HeaderMenuId, RowMenuId, WorkflowTablesMenuService} from './workflow-tables-menu.service';
+import {WorkflowTablesDataService} from './workflow-tables-data.service';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -56,7 +58,7 @@ export class WorkflowTablesService {
   public editedCell$ = new BehaviorSubject<EditedTableCell>(null);
   public tables$ = new BehaviorSubject<TableModel[]>([]);
 
-  constructor() {
+  constructor(private dataService: WorkflowTablesDataService, private menuService: WorkflowTablesMenuService) {
     this.selectedCell$.pipe(skip(1), distinctUntilChanged()).subscribe(() => {
       if (this.isSelected()) {
         this.hiddenComponent()?.focus();
@@ -66,8 +68,73 @@ export class WorkflowTablesService {
     });
   }
 
+  public onRowMenuSelected(row: TableRow, column: TableColumn, item: TableContextMenuItem) {
+    switch (item.id) {
+      case RowMenuId.Edit:
+        this.setEditedCell({rowId: row.id, columnId: column.id, tableId: column.tableId, type: TableCellType.Body});
+        break;
+      case RowMenuId.Detail:
+        this.dataService.showRowDetail(row, column);
+        break;
+      case HeaderMenuId.Delete:
+        this.dataService.removeRow(row, column);
+        break;
+    }
+  }
+
+  public onColumnMenuSelected(column: TableColumn, item: TableContextMenuItem) {
+    switch (item.id) {
+      case HeaderMenuId.Edit:
+        this.setEditedCell({columnId: column.id, tableId: column.tableId, type: TableCellType.Header});
+        break;
+      case HeaderMenuId.Type:
+        this.dataService.showAttributeType(column);
+        break;
+      case HeaderMenuId.Function:
+        this.dataService.showAttributeFunction(column);
+        break;
+      case HeaderMenuId.Delete:
+        this.deleteColumn(column);
+        break;
+      case HeaderMenuId.Displayed:
+        this.setDisplayedAttribute(column);
+        break;
+      case HeaderMenuId.Hide:
+        this.hideColumn(column);
+    }
+  }
+
+  private setDisplayedAttribute(column: TableColumn) {
+    if (column?.collectionId && column?.attribute?.id) {
+      this.dataService.setDisplayedAttribute(column);
+    }
+  }
+
+  private deleteColumn(column: TableColumn) {
+    if (column.attribute) {
+      this.dataService.deleteAttribute(column);
+    } else {
+      this.deleteUninitializedColumn(column);
+    }
+  }
+
+  private deleteUninitializedColumn(column: TableColumn) {
+    // TODO
+  }
+
+  private hideColumn(column: TableColumn) {
+    // TODO
+  }
+
   public setHiddenComponent(hiddenComponent?: () => DataRowHiddenComponent) {
     this.hiddenComponent = hiddenComponent;
+  }
+
+  public onRowNewValue(row: TableRow, column: TableColumn, value: any, action: DataInputSaveAction) {
+    this.dataService.saveRowNewValue(row, column, value);
+
+    const cell = {rowId: row.id, columnId: column.id, type: TableCellType.Body, tableId: column.tableId};
+    this.onCellSave(cell, action);
   }
 
   public resetSelection() {
@@ -142,7 +209,11 @@ export class WorkflowTablesService {
     preventEvent(event);
 
     if (this.isEditing()) {
-      this.moveSelectionDownFromEdited();
+      if (this.editedCell$.value.type === TableCellType.Body) {
+        this.moveSelectionDownFromEdited();
+      } else {
+        this.setSelectedCell(this.editedCell$.value);
+      }
     } else if (this.isSelected()) {
       const selectedCell = this.selectedCell$.value;
       this.setEditedCell(selectedCell);
@@ -366,12 +437,20 @@ export class WorkflowTablesService {
     this.setEditedCell(cell);
   }
 
-  public onColumnResize(changedTable: TableModel, columnId: string, width: number) {
+  public onColumnRename(column: TableColumn, name: string) {
+    if (column?.attribute) {
+      this.dataService.renameAttribute(column, name);
+    } else {
+      // unitialized
+    }
+  }
+
+  public onColumnResize(changedTable: TableModel, column: TableColumn, width: number) {
     const newTables = [...this.tables$.value];
     for (let i = 0; i < newTables.length; i++) {
       const table = newTables[i];
       if (table.collectionId === changedTable.collectionId) {
-        const columnIndex = table.columns.findIndex(column => column.id === columnId);
+        const columnIndex = table.columns.findIndex(col => col.id === column.id);
 
         if (columnIndex !== -1) {
           const columns = [...table.columns];
@@ -422,12 +501,21 @@ export class WorkflowTablesService {
     settings: ResourceAttributeSettings[]
   ): TableModel {
     const currentTable = this.tables$.value.find(table => table.collectionId === collection.id);
-    const columns = this.createCollectionColumns(currentTable?.columns || [], collection, permissions, query, settings);
-    const rows = this.createDocumentRows(currentTable?.rows || [], documents);
-    return {id: currentTable?.id || generateId(), columns, rows, collectionId: collection.id};
+    const tableId = currentTable?.id || generateId();
+    const columns = this.createCollectionColumns(
+      tableId,
+      currentTable?.columns || [],
+      collection,
+      permissions,
+      query,
+      settings
+    );
+    const rows = this.createDocumentRows(tableId, currentTable?.rows || [], documents, permissions);
+    return {id: tableId, columns, rows, collectionId: collection.id};
   }
 
   private createCollectionColumns(
+    tableId: string,
     currentColumns: TableColumn[],
     collection: Collection,
     permissions: AllowedPermissions,
@@ -446,15 +534,17 @@ export class WorkflowTablesService {
         const column = {
           id: currentColumn?.id || generateId(),
           attribute,
+          tableId,
+          editable,
           width: currentColumn?.width || 100,
           collectionId: collection.id,
           color: collection.color,
           default: attribute.id === defaultAttributeId,
           hidden: setting.hidden,
-          editable,
           manageable: permissions?.manageWithView,
-          readable: permissions?.read,
+          menuItems: [],
         };
+        column.menuItems.push(...this.menuService.createHeaderMenu(permissions, column, true));
         columns.push(column);
         return columns;
       },
@@ -471,18 +561,27 @@ export class WorkflowTablesService {
     return attributeColumns;
   }
 
-  private createDocumentRows(currentRows: TableRow[], documents: DocumentModel[]): TableRow[] {
+  private createDocumentRows(
+    tableId: string,
+    currentRows: TableRow[],
+    documents: DocumentModel[],
+    permissions: AllowedPermissions
+  ): TableRow[] {
     const rowsMap = currentRows.reduce((map, row) => ({...map, [row.correlationId || row.documentId]: row}), {});
 
     return documents.map(document => {
       const currentRow = rowsMap[document.correlationId || document.id];
-      return {
+      const row = {
         id: currentRow?.id || generateId(),
         documentData: document.data,
+        tableId,
         documentId: document.id,
         height: currentRow?.height || TABLE_ROW_HEIGHT,
         correlationId: document.correlationId,
+        menuItems: [],
       };
+      row.menuItems.push(...this.menuService.createRowMenu(permissions, row));
+      return row;
     });
   }
 }

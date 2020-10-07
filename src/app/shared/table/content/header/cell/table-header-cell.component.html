@@ -29,12 +29,7 @@
     </div>
   </ng-container>
 </div>
-<table-header-menu #contextMenu
-                   [column]="column"
-                   (attributeFunction)="onAttributeFunction()"
-                   (attributeType)="onAttributeType()"
-                   (edit)="edit.emit()"
-                   (remove)="remove.emit()"
-                   (hide)="hide.emit()"
-                   (setDefaultAttribute)="setDefaultAttribute.emit()">
-</table-header-menu>
+<table-menu #contextMenu *ngIf="column.menuItems?.length"
+            [items]="column.menuItems"
+            (selected)="menuSelected.emit($event)">
+</table-menu>
