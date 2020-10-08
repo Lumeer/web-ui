@@ -1,35 +1,47 @@
-<div class="header-content h-100"
-     (contextmenu)="onContextMenu($event)">
-  <table-header-input
-    [initialized]="!!column.attribute"
-    [edited]="editing"
-    [offsetTop]="offsetTop"
-    [default]="column.default"
-    [value]="editing && (editingValue | isNotNullOrUndefined) ? editingValue :  column.name || column.attribute?.name"
-    (save)="onHeaderSave($event)"
-    (cancel)="onHeaderCancel()">
-  </table-header-input>
+<ng-container *ngIf="column; else hiddenContent">
+  <div class="header-content h-100"
+       (contextmenu)="onContextMenu($event)">
+    <table-header-input
+      [initialized]="!!column.attribute"
+      [edited]="editing"
+      [offsetTop]="offsetTop"
+      [default]="column.default"
+      [value]="editing && (editingValue | isNotNullOrUndefined) ? editingValue :  column.name || column.attribute?.name"
+      (save)="onHeaderSave($event)"
+      (cancel)="onHeaderCancel()">
+    </table-header-input>
 
-  <ng-container *ngIf="{iconName: (column.attribute.constraint | constraintTypeIcon)} as typeData">
-    <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
-         [style.margin-top.px]="offsetTop ? 1 : 0"
-         (click)="onContextMenu($event)">
-      <i *ngIf="(column.attribute | attributeFunctionDefined)"
-         [class.mb-1]="typeData.iconName"
-         class="fas fa-function fa-xs fa-fw">
-      </i>
-      <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
-         [ngClass]="typeData.iconName"
-         [title]="column.attribute.constraint | constraintTypeIconTitle"></i>
-      <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
-         title="Column settings..."
-         i18n-title="@@table.header.column.settings"
-         class="fa-xs fas fa-caret-down">
-      </i>
-    </div>
-  </ng-container>
-</div>
-<table-menu #contextMenu *ngIf="column.menuItems?.length"
-            [items]="column.menuItems"
-            (selected)="menuSelected.emit($event)">
-</table-menu>
+    <ng-container *ngIf="{iconName: (column.attribute?.constraint | constraintTypeIcon)} as typeData">
+      <div class="d-flex flex-column align-items-center justify-content-center ml-1 icons"
+           [style.margin-top.px]="offsetTop ? 1 : 0"
+           (click)="onContextMenu($event)">
+        <i *ngIf="(column.attribute | attributeFunctionDefined)"
+           [class.mb-1]="typeData.iconName"
+           class="fas fa-function fa-xs fa-fw">
+        </i>
+        <i *ngIf="typeData.iconName" class="fa-xs fa-fw"
+           [ngClass]="typeData.iconName"
+           [title]="column.attribute?.constraint | constraintTypeIconTitle"></i>
+        <i *ngIf="!(column.attribute | attributeFunctionDefined) && !(typeData.iconName)"
+           title="Column settings..."
+           i18n-title="@@table.header.column.settings"
+           class="fa-xs fas fa-caret-down">
+        </i>
+      </div>
+    </ng-container>
+  </div>
+  <table-menu *ngIf="column.menuItems?.length"
+              [items]="column.menuItems"
+              (selected)="menuSelected.emit($event)">
+  </table-menu>
+</ng-container>
+
+<ng-template #hiddenContent>
+  <table-header-hidden class="cursor-pointer"
+                       (contextmenu)="onHiddenContextMenu($event)"
+                       (click)="onHiddenContextMenu($event)">
+  </table-header-hidden>
+  <table-header-hidden-menu [hiddenColumns]="hiddenColumns"
+                            (selected)="onHiddenMenuSelected($event)">
+  </table-header-hidden-menu>
+</ng-template>

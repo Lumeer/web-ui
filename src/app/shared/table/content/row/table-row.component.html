@@ -1,48 +1,48 @@
-<ng-container *ngFor="let column of columns; let index = index; trackBy: trackByColumn">
+<ng-container *ngFor="let group of columns | groupTableColumns; let index = index; trackBy: trackByColumn">
 
   <ng-container
-    *ngIf="{dataValue: row.documentData[column.attribute.id] | dataValue:column.attribute.constraint:constraintData,
-    constraintType: column.attribute?.constraint?.type,
-    focused: selectedCell | tableBodyCellSelected:editedCell:column:cellType:row,
-    edited: editedCell | tableCellEdited:column:cellType:row} as data">
+    *ngIf="{dataValue: group.column ? ((group.column.attribute && row.documentData[group.column.attribute.id]) | dataValue:group.column.attribute?.constraint:constraintData) : null,
+    constraintType: group.column?.attribute?.constraint?.type,
+    focused: selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row,
+    edited: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
     <ng-container
-      *ngIf="column.attribute | dataInputEditInfo:data.dataValue:column.editable:data.edited as dataInputInfo">
+      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:group.column?.editable:data.edited as dataInputInfo">
       <td class="table-cell"
-          [style.width.px]="column.width"
+          [style.width.px]="group.width"
           [style.height.px]="row.height"
           [style.max-height.px]="row.height"
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
           [class.focused]="data.focused"
           [class.editing]="data.edited"
-          [class.cursor-pointer]="column.editable"
-          [title]="dataInputInfo?.showDataInput ? null : (data.dataValue | formatDataValueTitle)"
-          (click)="onDataInputClick(column.id, $event)"
-          (dblclick)="onDataInputDblClick(column.id, $event)"
+          [class.cursor-pointer]="group.column?.editable"
+          [title]="dataInputInfo?.showDataInput && data.dataValue ? null : (data.dataValue | formatDataValueTitle)"
+          (click)="onDataInputClick(group.column, $event)"
+          (dblclick)="onDataInputDblClick(group.column, $event)"
           (contextmenu)="onContextMenu(index, $event)">
         <data-input
-          *ngIf="dataInputInfo.showDataInput"
+          *ngIf="group.column && dataInputInfo.showDataInput"
           class="d-block h-100"
-          [constraint]="column.attribute.constraint"
-          [cursor]="row | tableRowDataCursor:column"
+          [constraint]="group.column.attribute?.constraint"
+          [cursor]="row | tableRowDataCursor:group.column"
           [style.height.px]="row.height - 1"
           [style.max-height.px]="row.height -1"
           [dataValue]="(editedValue | isNotNullOrUndefined) && data.edited ? editedValue : data.dataValue"
           [focus]="true"
-          [readonly]="!column.editable || !(data.edited || column.attribute?.constraint?.type === constraintType.Boolean)"
+          [readonly]="!group.column.editable || !(data.edited || group.column.attribute?.constraint?.type === constraintType.Boolean)"
           [configuration]="configuration"
-          (saveAction)="onNewValue(column, $event)"
-          (cancel)="onDataInputCancel(column)"
+          (saveAction)="onNewValue(group.column, $event)"
+          (cancel)="onDataInputCancel(group.column)"
           (enterInvalid)="onEnterInvalid()">
         </data-input>
         <div class="d-flex align-items-center"
-             *ngIf="!dataInputInfo.showDataInput && data.constraintType === constraintType.Text"
+             *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType === constraintType.Text"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
         <ng-container
-          *ngIf="!dataInputInfo.showDataInput && data.constraintType !== constraintType.Text">{{data.dataValue | previewDataValue}}</ng-container>
-        <table-menu [items]="row.menuItems"
-                    (selected)="onMenuSelected(row, column, $event)">
+          *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType !== constraintType.Text">{{data.dataValue | previewDataValue}}</ng-container>
+        <table-menu *ngIf="group.column" [items]="row.menuItems"
+                    (selected)="onMenuSelected(row, group.column, $event)">
         </table-menu>
       </td>
     </ng-container>

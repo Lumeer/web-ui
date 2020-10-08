@@ -23,6 +23,7 @@ import {TableMenuComponent} from '../../common/menu/table-menu.component';
 import {preventEvent} from '../../../../utils/common.utils';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {ModalService} from '../../../../modal/modal.service';
+import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
 
 @Component({
   selector: 'table-header-cell',
@@ -34,6 +35,9 @@ import {ModalService} from '../../../../modal/modal.service';
 export class TableHeaderCellComponent {
   @Input()
   public column: TableColumn;
+
+  @Input()
+  public hiddenColumns: TableColumn[];
 
   @Input()
   public editing: boolean;
@@ -53,8 +57,14 @@ export class TableHeaderCellComponent {
   @Output()
   public menuSelected = new EventEmitter<TableContextMenuItem>();
 
+  @Output()
+  public hiddenMenuSelected = new EventEmitter<TableColumn[]>();
+
   @ViewChild(TableMenuComponent)
   public contextMenuComponent: TableMenuComponent;
+
+  @ViewChild(TableHeaderHiddenMenuComponent)
+  public hiddenContextMenuComponent: TableHeaderHiddenMenuComponent;
 
   constructor(private contextMenuService: ContextMenuService, private modalService: ModalService) {}
 
@@ -67,7 +77,7 @@ export class TableHeaderCellComponent {
   }
 
   public onContextMenu(event: MouseEvent) {
-    if (this.column.menuItems?.length) {
+    if (!this.column?.hidden && this.column.menuItems?.length) {
       this.contextMenuService.show.next({
         contextMenu: this.contextMenuComponent?.contextMenu,
         event,
@@ -78,11 +88,19 @@ export class TableHeaderCellComponent {
     }
   }
 
-  public onAttributeFunction() {
-    this.modalService.showAttributeFunction(this.column.attribute.id, this.column.collectionId, this.column.linkTypeId);
+  public onHiddenContextMenu(event: MouseEvent) {
+    if (this.hiddenColumns?.length) {
+      this.contextMenuService.show.next({
+        contextMenu: this.hiddenContextMenuComponent?.contextMenu,
+        event,
+        item: null,
+      });
+
+      preventEvent(event);
+    }
   }
 
-  public onAttributeType() {
-    this.modalService.showAttributeType(this.column.attribute.id, this.column.collectionId, this.column.linkTypeId);
+  public onHiddenMenuSelected(columns: TableColumn[]) {
+    this.hiddenMenuSelected.emit(columns);
   }
 }

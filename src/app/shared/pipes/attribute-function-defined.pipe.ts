@@ -25,6 +25,6 @@ import {Attribute} from '../../core/store/collections/collection';
 })
 export class AttributeFunctionDefinedPipe implements PipeTransform {
   public transform(attribute: Attribute): boolean {
-    return attribute && attribute.function && attribute.function.js && attribute.function.js.length > 0;
+    return attribute?.function?.js?.length > 0;
   }
 }

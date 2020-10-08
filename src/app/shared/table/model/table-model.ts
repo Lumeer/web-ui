@@ -21,6 +21,8 @@ import {TableColumn} from './table-column';
 import {TableRow} from './table-row';
 
 export const TABLE_ROW_HEIGHT = 37;
+export const TABLE_COLUMN_WIDTH = 100;
+export const TABLE_HIDDEN_COLUMN_WIDTH = 18;
 
 export interface TableModel {
   id: string;

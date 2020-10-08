@@ -41,6 +41,9 @@ import {TableHeaderCellComponent} from './content/header/cell/table-header-cell.
 import {TableMenuComponent} from './content/common/menu/table-menu.component';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {GroupTableMenuItemsPipe} from './pipes/group-table-menu-items.pipe';
+import {TableHeaderHiddenComponent} from './content/header/cell/hidden/table-header-hidden.component';
+import {GroupTableColumnsPipe} from './pipes/group-table-columns.pipe';
+import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/table-header-hidden-menu.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +62,9 @@ import {GroupTableMenuItemsPipe} from './pipes/group-table-menu-items.pipe';
     TableHeaderCellComponent,
     TableMenuComponent,
     GroupTableMenuItemsPipe,
+    TableHeaderHiddenComponent,
+    GroupTableColumnsPipe,
+    TableHeaderHiddenMenuComponent,
   ],
   imports: [
     CommonModule,

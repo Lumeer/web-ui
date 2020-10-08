@@ -29,7 +29,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {TableColumn, TableContextMenuItem} from '../../model/table-column';
+import {TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
 import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
@@ -73,6 +73,9 @@ export class TableHeaderComponent implements OnChanges {
   public menuSelected = new EventEmitter<{column: TableColumn; item: TableContextMenuItem}>();
 
   @Output()
+  public hiddenMenuSelected = new EventEmitter<TableColumn[]>();
+
+  @Output()
   public onRename = new EventEmitter<{column: TableColumn; name: string}>();
 
   @ViewChildren('resizeHandle')
@@ -102,7 +105,7 @@ export class TableHeaderComponent implements OnChanges {
     }
   }
 
-  public trackByColumn(index: number, column: TableColumn): string {
+  public trackByColumn(index: number, column: TableColumnGroup): string {
     return column.id;
   }
 
@@ -157,23 +160,33 @@ export class TableHeaderComponent implements OnChanges {
     this.dragStart.emit();
   }
 
-  public onHeaderClick(columnId: string) {
-    this.onClick.emit(columnId);
+  public onHeaderClick(column: TableColumn) {
+    if (column) {
+      this.onClick.emit(column.id);
+    }
   }
 
-  public onHeaderDoubleClick(columnId: string) {
-    this.onDoubleClick.emit(columnId);
+  public onHeaderDoubleClick(column: TableColumn) {
+    if (column) {
+      this.onDoubleClick.emit(column.id);
+    }
   }
 
-  public onHeaderCancel(columnId: string) {
-    this.onCancel.emit(columnId);
+  public onHeaderCancel(column: TableColumn) {
+    if (column) {
+      this.onCancel.emit(column.id);
+    }
   }
 
   public onHeaderSave(column: TableColumn, name: string) {
-    this.onRename.emit({column, name});
+    if (column) {
+      this.onRename.emit({column, name});
+    }
   }
 
   public onMenuSelected(column: TableColumn, item: TableContextMenuItem) {
-    this.menuSelected.emit({column, item});
+    if (column) {
+      this.menuSelected.emit({column, item});
+    }
   }
 }

@@ -17,10 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, Renderer2, ElementRef} from '@angular/core';
-import {TableColumn} from '../../model/table-column';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Output,
+  EventEmitter,
+  Renderer2,
+  ElementRef,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
+import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {TABLE_ROW_HEIGHT} from '../../model/table-model';
+import {groupTableColumns} from '../../model/table-utils';
 
 const columnMinWidth = 30;
 
@@ -31,7 +42,7 @@ const columnMinWidth = 30;
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'w-100'},
 })
-export class TableResizeHeaderComponent {
+export class TableResizeHeaderComponent implements OnChanges {
   @Input()
   public columns: TableColumn[];
 
@@ -42,10 +53,18 @@ export class TableResizeHeaderComponent {
 
   private headerElementsCache: Record<number, HTMLElement> = {};
 
+  public groupedTableColumns: TableColumnGroup[] = [];
+
   constructor(private renderer: Renderer2, private element: ElementRef) {}
 
-  public trackByColumn(index: number, column: TableColumn): string {
-    return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.columns) {
+      this.groupedTableColumns = groupTableColumns(this.columns);
+    }
+  }
+
+  public trackByColumn(index: number, column: TableColumnGroup): string {
+    return column.id;
   }
 
   public onResizeEnd(dragEnd: CdkDragEnd, index: number) {
@@ -76,7 +95,7 @@ export class TableResizeHeaderComponent {
   }
 
   private computeNewWidth(index: number, distance: {x: number}): number {
-    const width = Math.max(columnMinWidth, this.columns[index].width + distance.x);
+    const width = Math.max(columnMinWidth, this.groupedTableColumns[index].width + distance.x);
     return width - (width % 5);
   }
 }

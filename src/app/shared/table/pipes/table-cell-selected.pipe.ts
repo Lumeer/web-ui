@@ -28,6 +28,6 @@ import {isTableCellSelected} from '../model/table-utils';
 })
 export class TableCellSelectedPipe implements PipeTransform {
   public transform(selectedCell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {
-    return isTableCellSelected(selectedCell, column, type, row);
+    return selectedCell && column && isTableCellSelected(selectedCell, column, type, row);
   }
 }

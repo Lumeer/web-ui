@@ -22,6 +22,7 @@ import {BehaviorSubject} from 'rxjs';
 import {
   EditedTableCell,
   SelectedTableCell,
+  TABLE_COLUMN_WIDTH,
   TABLE_ROW_HEIGHT,
   TableCell,
   TableCellType,
@@ -82,6 +83,29 @@ export class WorkflowTablesService {
     }
   }
 
+  public onColumnHiddenMenuSelected(columns: TableColumn[]) {
+    const newTables = [...this.tables$.value];
+    const table = this.tables$.value.find(t => t.id === columns[0].tableId);
+
+    const newColumns = [...table.columns];
+    for (let j = 0; j < columns.length; j++) {
+      const columnIndex = newColumns.findIndex(col => col.id === columns[j].id);
+
+      if (columnIndex !== -1) {
+        newColumns[columnIndex] = {...newColumns[columnIndex], hidden: false};
+      }
+    }
+
+    for (let i = 0; i < newTables.length; i++) {
+      const newTable = newTables[i];
+      if (tablesAreSame(table, newTable)) {
+        newTables[i] = {...newTable, columns: newColumns};
+      }
+    }
+
+    this.tables$.next(newTables);
+  }
+
   public onColumnMenuSelected(column: TableColumn, item: TableContextMenuItem) {
     switch (item.id) {
       case HeaderMenuId.Edit:
@@ -119,11 +143,29 @@ export class WorkflowTablesService {
   }
 
   private deleteUninitializedColumn(column: TableColumn) {
-    // TODO
+    const newTables = [...this.tables$.value];
+    const table = this.tables$.value.find(t => t.id === column.tableId);
+    for (let i = 0; i < newTables.length; i++) {
+      const newTable = newTables[i];
+      if (tablesAreSame(table, newTable)) {
+        const columnIndex = newTable.columns.findIndex(col => col.id === column.id);
+
+        if (columnIndex !== -1) {
+          const columns = [...newTable.columns];
+          columns.splice(columnIndex, 1);
+          newTables[i] = {...newTable, columns};
+        }
+      }
+    }
+
+    this.tables$.next(newTables);
   }
 
   private hideColumn(column: TableColumn) {
-    // TODO
+    const table = this.tables$.value.find(t => t.id === column.tableId);
+    if (table) {
+      this.setColumnProperty(table, column, 'hidden', true);
+    }
   }
 
   public setHiddenComponent(hiddenComponent?: () => DataRowHiddenComponent) {
@@ -233,24 +275,18 @@ export class WorkflowTablesService {
 
   private setEditedCell(cell: TableCell, inputValue?: any) {
     const column = this.findTableColumn(cell.tableId, cell.columnId);
-    if (this.canEditCell(cell, column)) {
+    if (canEditCell(cell, column)) {
       this.selectedCell$.next(null);
       this.editedCell$.next({...cell, inputValue});
     }
   }
 
-  private canEditCell(cell: TableCell, column: TableColumn): boolean {
-    if (cell.type === TableCellType.Header) {
-      return column.manageable;
-    } else if (cell.type === TableCellType.Body) {
-      return column.editable;
-    }
-    return false;
-  }
-
   private setSelectedCell(cell: TableCell) {
-    this.selectedCell$.next(cell);
-    this.editedCell$.next(null);
+    const column = this.findTableColumn(cell.tableId, cell.columnId);
+    if (canSelectCell(cell, column)) {
+      this.selectedCell$.next(cell);
+      this.editedCell$.next(null);
+    }
   }
 
   private findTableColumn(tableId: string, columnId: string): TableColumn {
@@ -298,6 +334,9 @@ export class WorkflowTablesService {
 
   private onArrowKeyDownInHeader(event: KeyboardEvent) {
     const {tableIndex, columnIndex} = this.getCellIndexes(this.selectedCell$.value);
+    const table = this.tables$.value[tableIndex];
+    const arrowLeftIndex = this.firstNonHiddenColumnIndex(table, 0, columnIndex - 1, true);
+    const arrowRightIndex = this.firstNonHiddenColumnIndex(table, columnIndex + 1, table.columns.length);
     switch (event.code) {
       case KeyCode.ArrowUp:
         if (tableIndex > 0) {
@@ -311,19 +350,31 @@ export class WorkflowTablesService {
         this.selectCell(tableIndex, 0, columnIndex);
         break;
       case KeyCode.ArrowLeft:
-        this.selectCell(tableIndex, null, columnIndex - 1, TableCellType.Header);
+        this.selectCell(tableIndex, null, arrowLeftIndex, TableCellType.Header);
         break;
       case KeyCode.ArrowRight:
-        this.selectCell(tableIndex, null, columnIndex + 1, TableCellType.Header);
+        this.selectCell(tableIndex, null, arrowRightIndex, TableCellType.Header);
         break;
       case KeyCode.Tab:
         if (event.shiftKey) {
-          this.selectCell(tableIndex, null, columnIndex - 1, TableCellType.Header);
+          this.selectCell(tableIndex, null, arrowLeftIndex, TableCellType.Header);
         } else {
-          this.selectCell(tableIndex, null, columnIndex + 1, TableCellType.Header);
+          this.selectCell(tableIndex, null, arrowRightIndex, TableCellType.Header);
         }
         break;
     }
+  }
+
+  private firstNonHiddenColumnIndex(table: TableModel, from: number, to: number, fromEnd?: boolean): number {
+    if (fromEnd) {
+      const index = table.columns
+        .slice(from, to + 1)
+        .reverse()
+        .findIndex(column => !column.hidden);
+      const count = to - from;
+      return index >= 0 ? count - index : to + 1;
+    }
+    return table.columns.slice(from, to).findIndex(column => !column.hidden) + from;
   }
 
   private numberOfRowsInTable(tableIndex: number): number {
@@ -345,13 +396,16 @@ export class WorkflowTablesService {
       const column = table.columns[columnIndex];
       const row = isNotNullOrUndefined(rowIndex) ? table.rows[rowIndex] : null;
       if (column && (row || type !== TableCellType.Body)) {
-        this.selectedCell$.next({tableId: table.id, columnId: column.id, rowId: row?.id, type});
+        this.setSelectedCell({tableId: table.id, columnId: column.id, rowId: row?.id, type});
       }
     }
   }
 
   private onArrowKeyDownInBody(event: KeyboardEvent) {
     const {tableIndex, rowIndex, columnIndex} = this.getCellIndexes(this.selectedCell$.value);
+    const table = this.tables$.value[tableIndex];
+    const arrowLeftIndex = this.firstNonHiddenColumnIndex(table, 0, columnIndex - 1, true);
+    const arrowRightIndex = this.firstNonHiddenColumnIndex(table, columnIndex + 1, table.columns.length);
     switch (event.code) {
       case KeyCode.ArrowUp:
         if (rowIndex === 0) {
@@ -370,16 +424,16 @@ export class WorkflowTablesService {
         }
         break;
       case KeyCode.ArrowLeft:
-        this.selectCell(tableIndex, rowIndex, columnIndex - 1);
+        this.selectCell(tableIndex, rowIndex, arrowLeftIndex);
         break;
       case KeyCode.ArrowRight:
-        this.selectCell(tableIndex, rowIndex, columnIndex + 1);
+        this.selectCell(tableIndex, rowIndex, arrowRightIndex);
         break;
       case KeyCode.Tab:
         if (event.shiftKey) {
-          this.selectCell(tableIndex, rowIndex, columnIndex - 1);
+          this.selectCell(tableIndex, rowIndex, arrowLeftIndex);
         } else {
-          this.selectCell(tableIndex, rowIndex, columnIndex + 1);
+          this.selectCell(tableIndex, rowIndex, arrowRightIndex);
         }
         break;
     }
@@ -400,23 +454,15 @@ export class WorkflowTablesService {
   }
 
   private isEditingCell(cell: TableCell): boolean {
-    return this.isEditing() && this.cellsAreSame(cell, this.editedCell$.value);
+    return this.isEditing() && cellsAreSame(cell, this.editedCell$.value);
   }
 
   private isSelected(): boolean {
     return isNotNullOrUndefined(this.selectedCell$.value);
   }
 
-  private cellsAreSame(c1: TableCell, c2: TableCell): boolean {
-    const columnAndTableAreSame = c1.type === c2.type && c1.tableId === c2.tableId && c1.columnId === c2.columnId;
-    if (c1.type === TableCellType.Body) {
-      return columnAndTableAreSame && c1.rowId === c2.rowId;
-    }
-    return columnAndTableAreSame;
-  }
-
   private isCellSelected(cell: TableCell): boolean {
-    return this.isSelected() && this.cellsAreSame(cell, this.selectedCell$.value);
+    return this.isSelected() && cellsAreSame(cell, this.selectedCell$.value);
   }
 
   public onCellClick(cell: TableCell) {
@@ -441,21 +487,30 @@ export class WorkflowTablesService {
     if (column?.attribute) {
       this.dataService.renameAttribute(column, name);
     } else {
-      // unitialized
+      const table = this.findTableByColumn(column);
+      this.setColumnProperty(table, column, 'name', name);
     }
   }
 
+  private findTableByColumn(column: TableColumn): TableModel {
+    return this.tables$.value.find(table => table.id === column.tableId);
+  }
+
   public onColumnResize(changedTable: TableModel, column: TableColumn, width: number) {
+    this.setColumnProperty(changedTable, column, 'width', width);
+  }
+
+  private setColumnProperty(table: TableModel, column: TableColumn, property: string, value: any) {
     const newTables = [...this.tables$.value];
     for (let i = 0; i < newTables.length; i++) {
-      const table = newTables[i];
-      if (table.collectionId === changedTable.collectionId) {
-        const columnIndex = table.columns.findIndex(col => col.id === column.id);
+      const newTable = newTables[i];
+      if (tablesAreSame(table, newTable)) {
+        const columnIndex = newTable.columns.findIndex(col => col.id === column.id);
 
         if (columnIndex !== -1) {
-          const columns = [...table.columns];
-          columns[columnIndex] = {...table.columns[columnIndex], width};
-          newTables[i] = {...table, columns};
+          const columns = [...newTable.columns];
+          columns[columnIndex] = {...newTable.columns[columnIndex], [property]: value};
+          newTables[i] = {...newTable, columns};
         }
       }
     }
@@ -467,7 +522,7 @@ export class WorkflowTablesService {
     const newTables = [...this.tables$.value];
     for (let i = 0; i < newTables.length; i++) {
       const table = newTables[i];
-      if (table.collectionId === changedTable.collectionId) {
+      if (tablesAreSame(table, changedTable)) {
         const newColumns = moveItemsInArray(table.columns, from, to);
         newTables[i] = {...table, columns: newColumns};
       }
@@ -536,7 +591,7 @@ export class WorkflowTablesService {
           attribute,
           tableId,
           editable,
-          width: currentColumn?.width || 100,
+          width: currentColumn?.width || TABLE_COLUMN_WIDTH,
           collectionId: collection.id,
           color: collection.color,
           default: attribute.id === defaultAttributeId,
@@ -557,6 +612,20 @@ export class WorkflowTablesService {
         // TODO
       }
     }
+
+    const lastColumn: TableColumn = {
+      id: generateId(),
+      tableId,
+      name: 'A',
+      collectionId: collection.id,
+      editable: true,
+      width: TABLE_COLUMN_WIDTH,
+      color: collection.color,
+      menuItems: [],
+    };
+    lastColumn.menuItems.push(...this.menuService.createHeaderMenu(permissions, lastColumn, true));
+
+    attributeColumns.push(lastColumn);
 
     return attributeColumns;
   }
@@ -584,4 +653,35 @@ export class WorkflowTablesService {
       return row;
     });
   }
+}
+
+function tablesAreSame(t1: TableModel, t2: TableModel): boolean {
+  return t1.collectionId === t2.collectionId;
+}
+
+function cellsAreSame(c1: TableCell, c2: TableCell): boolean {
+  const columnAndTableAreSame = c1.type === c2.type && c1.tableId === c2.tableId && c1.columnId === c2.columnId;
+  if (c1.type === TableCellType.Body) {
+    return columnAndTableAreSame && c1.rowId === c2.rowId;
+  }
+  return columnAndTableAreSame;
+}
+
+function canEditCell(cell: TableCell, column: TableColumn): boolean {
+  if (column.hidden) {
+    return false;
+  }
+  if (cell.type === TableCellType.Header) {
+    return column.manageable;
+  } else if (cell.type === TableCellType.Body) {
+    return column.editable;
+  }
+  return false;
+}
+
+function canSelectCell(cell: TableCell, column: TableColumn): boolean {
+  if (column.hidden) {
+    return false;
+  }
+  return true;
 }

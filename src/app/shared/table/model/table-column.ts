@@ -20,6 +20,14 @@
 import {Attribute} from '../../../core/store/collections/collection';
 import {ConstraintType} from '../../../core/model/data/constraint';
 
+export interface TableColumnGroup {
+  id: string;
+  width: number;
+  color: string;
+  hiddenColumns?: TableColumn[];
+  column?: TableColumn;
+}
+
 export interface TableColumn {
   id: string;
   width: number;

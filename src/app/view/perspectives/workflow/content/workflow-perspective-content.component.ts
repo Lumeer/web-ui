@@ -173,4 +173,8 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   public onRowMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
     this.tablesService.onRowMenuSelected(data.row, data.column, data.item);
   }
+
+  public onColumnHiddenMenuSelected(columns: TableColumn[]) {
+    this.tablesService.onColumnHiddenMenuSelected(columns);
+  }
 }

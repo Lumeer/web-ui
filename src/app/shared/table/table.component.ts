@@ -77,6 +77,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public columnMenuSelected = new EventEmitter<{column: TableColumn; item: TableContextMenuItem}>();
 
   @Output()
+  public columnHiddenMenuSelected = new EventEmitter<TableColumn[]>();
+
+  @Output()
   public cellClick = new EventEmitter<TableCell>();
 
   @Output()

@@ -1,10 +1,13 @@
 <div class="position-relative resize-handle-wrapper invisible-scroll-y" cdkScrollable
      [style.height.px]="tableRowHeight">
-  <div *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
-       [style.left]="'calc(' + (columns | columnHandleLeft:index) + 'px - 0.4rem + 1px)'" cdkDragLockAxis="x" cdkDrag
-       [style.height.px]="tableRowHeight"
-       (cdkDragMoved)="onResizeMoved($event, index)"
-       (cdkDragEnded)="onResizeEnd($event, index)"
-       class="resize-handle">
-  </div>
+  <ng-container *ngFor="let group of groupedTableColumns; trackBy:trackByColumn; let index = index">
+    <div *ngIf="group.column"
+         [style.left]="'calc(' + (groupedTableColumns | columnHandleLeft:index) + 'px - 0.4rem + 1px)'"
+         cdkDragLockAxis="x" cdkDrag
+         [style.height.px]="tableRowHeight"
+         (cdkDragMoved)="onResizeMoved($event, index)"
+         (cdkDragEnded)="onResizeEnd($event, index)"
+         class="resize-handle">
+    </div>
+  </ng-container>
 </div>

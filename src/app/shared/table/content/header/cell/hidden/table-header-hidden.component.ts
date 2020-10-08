@@ -17,14 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {TableColumnGroup} from '../model/table-column';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 
-@Pipe({
-  name: 'columnHandleLeft',
+@Component({
+  selector: 'table-header-hidden',
+  templateUrl: './table-header-hidden.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'h-100 d-flex align-items-center justify-content-center'},
 })
-export class ColumnHandleLeftPipe implements PipeTransform {
-  public transform(columns: TableColumnGroup[], index: number): number {
-    return (columns || []).reduce((sum, column, ix) => sum + (ix <= index ? column.width : 0), 0);
-  }
-}
+export class TableHeaderHiddenComponent {}

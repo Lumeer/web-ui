@@ -1,16 +1,16 @@
 <div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable>
-  <div *ngFor="let column of columns; let last = last; let first = first; trackBy:trackByColumn"
+  <div *ngFor="let group of columns | groupTableColumns; let last = last; let first = first; trackBy:trackByColumn"
        class="header-cell table-cell"
-       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
-       [style.font-weight]="column.default ? 'bold' : 'normal'"
+       [style.background-color]="group.color && (group.color | lightenColor:0.5) || 'white'"
        [style.margin-left.px]="first ? 1 : 0"
        [style.height.px]="tableRowHeight"
-       [style.width.px]="first && !last ? column.width - 1 : column.width"
-       [class.focused]="selectedCell | tableCellSelected:column:cellType"
-       [class.editing]="editedCell | tableCellEdited:column:cellType"
-       [style.min-width.px]="first && !last ? column.width - 1 : column.width">
-    <table-header-cell [editing]="editedCell | tableCellEdited:column:cellType"
-                       [column]="column">
+       [style.width.px]="first && !last ? group.width - 1 : group.width"
+       [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
+       [class.editing]="editedCell | tableCellEdited:group.column:cellType"
+       [style.min-width.px]="first && !last ? group.width - 1 : group.width">
+    <table-header-cell [editing]="editedCell | tableCellEdited:group.column:cellType"
+                       [column]="group.column"
+                       [hiddenColumns]="group.hiddenColumns">
     </table-header-cell>
   </div>
   <div class="empty-cell"></div>

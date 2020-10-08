@@ -1,0 +1,17 @@
+<context-menu #contextMenu>
+
+  <ng-template *ngFor="let column of hiddenColumns"
+               contextMenuItem
+               [enabled]="true"
+               (execute)="onSelected(column)">
+    <span>{{column.attribute?.name}}</span>
+  </ng-template>
+
+  <ng-template *ngIf="hiddenColumns.length > 1"
+               contextMenuItem
+               [enabled]="true"
+               (execute)="onAllSelected()">
+    <span i18n="@@table.header.show.all">All columns</span>
+  </ng-template>
+
+</context-menu>

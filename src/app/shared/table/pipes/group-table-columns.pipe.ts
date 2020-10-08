@@ -18,13 +18,14 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableColumnGroup} from '../model/table-column';
+import {TableColumn, TableColumnGroup} from '../model/table-column';
+import {groupTableColumns} from '../model/table-utils';
 
 @Pipe({
-  name: 'columnHandleLeft',
+  name: 'groupTableColumns',
 })
-export class ColumnHandleLeftPipe implements PipeTransform {
-  public transform(columns: TableColumnGroup[], index: number): number {
-    return (columns || []).reduce((sum, column, ix) => sum + (ix <= index ? column.width : 0), 0);
+export class GroupTableColumnsPipe implements PipeTransform {
+  public transform(columns: TableColumn[]): TableColumnGroup[] {
+    return groupTableColumns(columns);
   }
 }

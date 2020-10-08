@@ -17,31 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {TableColumn, TableColumnGroup} from '../../model/table-column';
-import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
+import {Component, ChangeDetectionStrategy, Input, ViewChild, EventEmitter, Output} from '@angular/core';
+import {TableColumn} from '../../../../model/table-column';
+import {ContextMenuComponent} from 'ngx-contextmenu';
 
 @Component({
-  selector: 'table-alternative-header',
-  templateUrl: './table-alternative-header.component.html',
-  styleUrls: ['./table-alternative-header.component.scss', '../common/table-cell.scss'],
-  host: {class: 'alternative-header w-100'},
+  selector: 'table-header-hidden-menu',
+  templateUrl: './table-header-hidden-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableAlternativeHeaderComponent {
+export class TableHeaderHiddenMenuComponent {
   @Input()
-  public columns: TableColumn[];
+  public hiddenColumns: TableColumn[];
 
-  @Input()
-  public selectedCell: SelectedTableCell;
+  @Output()
+  public selected = new EventEmitter<TableColumn[]>();
 
-  @Input()
-  public editedCell: SelectedTableCell;
+  @ViewChild(ContextMenuComponent, {static: true})
+  public contextMenu: ContextMenuComponent;
 
-  public readonly tableRowHeight = TABLE_ROW_HEIGHT;
-  public readonly cellType = TableCellType.Header;
+  public onSelected(column: TableColumn) {
+    this.selected.emit([column]);
+  }
 
-  public trackByColumn(index: number, column: TableColumnGroup): string {
-    return column.id;
+  public onAllSelected() {
+    this.selected.emit(this.hiddenColumns);
   }
 }

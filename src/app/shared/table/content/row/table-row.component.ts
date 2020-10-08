@@ -30,7 +30,7 @@ import {
   QueryList,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {columnConstraintType, TableColumn, TableContextMenuItem} from '../../model/table-column';
+import {columnConstraintType, TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
 import {DataValue} from '../../../../core/model/data-value';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
@@ -140,7 +140,7 @@ export class TableRowComponent implements OnChanges {
 
   private computeDirectEditValue(column: TableColumn): DataValue {
     if (columnConstraintType(column) === ConstraintType.Boolean) {
-      const constraint = column.attribute.constraint as BooleanConstraint;
+      const constraint = column.attribute?.constraint as BooleanConstraint;
       return constraint.createDataValue(!this.columnValue(column));
     }
 
@@ -148,10 +148,12 @@ export class TableRowComponent implements OnChanges {
   }
 
   private columnValue(column: TableColumn): any {
-    if (column?.collectionId) {
-      return this.row.documentData?.[column.attribute.id];
-    } else if (column?.linkTypeId) {
-      return this.row.linkInstanceData?.[column.attribute.id];
+    if (column.attribute) {
+      if (column?.collectionId) {
+        return this.row.documentData?.[column.attribute.id];
+      } else if (column?.linkTypeId) {
+        return this.row.linkInstanceData?.[column.attribute.id];
+      }
     }
     return null;
   }
@@ -175,10 +177,10 @@ export class TableRowComponent implements OnChanges {
     }
   }
 
-  public onDataInputDblClick(columnId: string, event: MouseEvent) {
-    if (this.editedCell?.columnId !== columnId) {
+  public onDataInputDblClick(column: TableColumn, event: MouseEvent) {
+    if (column && this.editedCell?.columnId !== column.id) {
       event.preventDefault();
-      this.onDoubleClick.emit(columnId);
+      this.onDoubleClick.emit(column.id);
     }
   }
 
@@ -186,9 +188,9 @@ export class TableRowComponent implements OnChanges {
     this.onCancel.emit({columnId: column.id, action});
   }
 
-  public onDataInputClick(columnId: string, event: MouseEvent) {
-    if (this.editedCell?.columnId !== columnId || this.editedCell?.rowId !== this.row.id) {
-      this.onClick.emit(columnId);
+  public onDataInputClick(column: TableColumn, event: MouseEvent) {
+    if (column && (this.editedCell?.columnId !== column.id || this.editedCell?.rowId !== this.row.id)) {
+      this.onClick.emit(column.id);
     }
   }
 
@@ -220,7 +222,7 @@ export class TableRowComponent implements OnChanges {
     }
   }
 
-  public trackByColumn(index: number, column: TableColumn): string {
+  public trackByColumn(index: number, column: TableColumnGroup): string {
     return column.id;
   }
 

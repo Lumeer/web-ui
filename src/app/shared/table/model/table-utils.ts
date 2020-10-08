@@ -17,10 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableCell, TableCellType} from './table-model';
-import {columnConstraintType, TableColumn} from './table-column';
+import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType} from './table-model';
+import {columnConstraintType, TableColumn, TableColumnGroup} from './table-column';
 import {TableRow} from './table-row';
 import {ConstraintType} from '../../../core/model/data/constraint';
+
+export function groupTableColumns(columns: TableColumn[]): TableColumnGroup[] {
+  return (columns || []).reduce<TableColumnGroup[]>((array, column) => {
+    if (column.hidden) {
+      if (!array[array.length - 1]?.hiddenColumns?.length) {
+        array.push({id: column.id, color: column.color, width: TABLE_HIDDEN_COLUMN_WIDTH, hiddenColumns: []});
+      }
+      array[array.length - 1].hiddenColumns.push(column);
+    } else {
+      array.push({id: column.id, color: column.color, column, width: column.width});
+    }
+
+    return array;
+  }, []);
+}
 
 export function isTableCellSelected(
   selectedCell: TableCell,
@@ -28,7 +43,7 @@ export function isTableCellSelected(
   type: TableCellType,
   row?: TableRow
 ): boolean {
-  if (!selectedCell || selectedCell.type !== type) {
+  if (!selectedCell || !column || selectedCell.type !== type) {
     return false;
   }
   if (type === TableCellType.Header || type === TableCellType.Footer) {
