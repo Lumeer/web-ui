@@ -28,12 +28,20 @@ import {
 import {NumberConstraintConfig} from '../data/constraint-config';
 import {NumericDataValue} from './index';
 import {removeNonNumberCharacters} from '../../../shared/directives/number.directive';
-import {escapeHtml, isNotNullOrUndefined, isNumeric, unescapeHtml} from '../../../shared/utils/common.utils';
+import {
+  escapeHtml,
+  isNotNullOrUndefined,
+  isNullOrUndefined,
+  isNumeric,
+  toNumber,
+  unescapeHtml,
+} from '../../../shared/utils/common.utils';
 import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 import numbro from 'numbro';
 import languages from 'numbro/dist/languages.min';
 import {currentLocaleLanguageTag, LanguageTag} from '../data/language-tag';
+import {trimTrailingNulls} from '@angular/compiler/src/render3/view/util';
 
 export class NumberDataValue implements NumericDataValue {
   public readonly bigNumber: Big;
@@ -50,8 +58,8 @@ export class NumberDataValue implements NumericDataValue {
   }
 
   private parseValue(value: any, config: NumberConstraintConfig, inputValue?: string): any {
-    if (typeof value === 'number') {
-      return value;
+    if (typeof value === 'number' || (isNullOrUndefined(inputValue) && isNumeric(value))) {
+      return toNumber(value);
     }
 
     if (config?.separated || config?.currency) {
@@ -67,17 +75,21 @@ export class NumberDataValue implements NumericDataValue {
     }
 
     if (this.bigNumber) {
-      const numbroConfig = parseNumbroConfig(this.config, overrideConfig);
-      if (this.config?.currency) {
-        this.setLanguage(LanguageTag.USA);
-        const numbroObject = numbro(this.bigNumber.toFixed());
-        this.setLanguage(this.config.currency);
-        return numbroObject.formatCurrency(numbroConfig);
-      }
-      return numbro(this.bigNumber.toFixed()).format(numbroConfig);
+      return this.formatBigNumber(this.bigNumber, overrideConfig);
     }
 
     return formatUnknownDataValue(this.value);
+  }
+
+  private formatBigNumber(big: Big, overrideConfig?: Partial<NumberConstraintConfig>): string {
+    const numbroConfig = parseNumbroConfig(this.config, overrideConfig);
+    if (this.config?.currency) {
+      this.setLanguage(LanguageTag.USA);
+      const numbroObject = numbro(this.bigNumber.toFixed());
+      this.setLanguage(this.config.currency);
+      return numbroObject.formatCurrency(numbroConfig);
+    }
+    return numbro(big.toFixed()).format(numbroConfig);
   }
 
   private setLanguage(tag: LanguageTag) {
@@ -103,10 +115,18 @@ export class NumberDataValue implements NumericDataValue {
     }
 
     if (this.bigNumber) {
-      return decimalStoreToUser(this.bigNumber.toFixed());
+      const separator = this.getCurrencyDecimalSeparator();
+      return decimalStoreToUser(this.bigNumber.toFixed(), separator);
     }
 
     return unescapeHtml(formatUnknownDataValue(this.value));
+  }
+
+  private getCurrencyDecimalSeparator(): string {
+    if (this.config?.currency) {
+      return numbro.languages()[this.config.currency]?.delimiters?.decimal;
+    }
+    return null;
   }
 
   public serialize(): any {
@@ -147,7 +167,7 @@ export class NumberDataValue implements NumericDataValue {
   }
 
   public parseInput(inputValue: string): NumberDataValue {
-    return new NumberDataValue(decimalUserToStore(inputValue), this.config, inputValue);
+    return new NumberDataValue(inputValue, this.config, inputValue);
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {

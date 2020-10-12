@@ -169,8 +169,10 @@ describe('NumberDataValue', () => {
     const thousandSeparatedConfig2: NumberConstraintConfig = {decimals: 3, separated: true};
     it('Thousand separated config', () => {
       expect(new NumberDataValue('10.11', thousandSeparatedConfig).format()).toBe('10.11');
-      expect(new NumberDataValue('10,11', thousandSeparatedConfig).format()).toBe('1,011');
-      expect(new NumberDataValue('10,000', thousandSeparatedConfig).format()).toBe('10,000');
+      expect(new NumberDataValue('10,11', thousandSeparatedConfig).format()).toBe('10.11');
+      expect(new NumberDataValue('10,11', thousandSeparatedConfig, '10,11').format()).toBe('10,11');
+      expect(new NumberDataValue('10,000', thousandSeparatedConfig).format()).toBe('10');
+      expect(new NumberDataValue('10,000', thousandSeparatedConfig, '10,000').format()).toBe('10,000');
       expect(new NumberDataValue('10,000.12345', thousandSeparatedConfig2).format()).toBe('10,000.123');
       expect(new NumberDataValue('2,3.77777', thousandSeparatedConfig2).format()).toBe('23.778');
 
@@ -183,7 +185,7 @@ describe('NumberDataValue', () => {
     });
 
     const slovakCurrencyConfig: NumberConstraintConfig = {currency: LanguageTag.Slovak};
-    it('Currency config', () => {
+    it('Slovak currency config', () => {
       expect(new NumberDataValue('10.11', slovakCurrencyConfig).format()).toBe('10,11€');
       expect(new NumberDataValue('10,11', slovakCurrencyConfig).format()).toBe('10,11€');
       expect(new NumberDataValue(10, slovakCurrencyConfig).format()).toBe('10€');
@@ -193,13 +195,24 @@ describe('NumberDataValue', () => {
     });
 
     const usCurrencyConfig: NumberConstraintConfig = {currency: LanguageTag.USA};
-    it('Currency config', () => {
+    it('USA currency config', () => {
       expect(new NumberDataValue('10.11', usCurrencyConfig).format()).toBe('$10.11');
-      expect(new NumberDataValue('10,11', usCurrencyConfig).format()).toBe('$1011');
+      expect(new NumberDataValue('10,11', usCurrencyConfig).format()).toBe('$10.11');
       expect(new NumberDataValue(10, usCurrencyConfig).format()).toBe('$10');
 
       expect(new NumberDataValue('10.11', usCurrencyConfig, '10.11').serialize()).toBe('10.11');
       expect(new NumberDataValue('10,11', usCurrencyConfig, '10,11').serialize()).toBe('1011');
+    });
+
+    const deCurrencyConfig: NumberConstraintConfig = {currency: LanguageTag.Germany};
+    it('Germany currency config', () => {
+      expect(new NumberDataValue('10.11', deCurrencyConfig).format()).toBe('10,11€');
+      expect(new NumberDataValue('10,11', deCurrencyConfig).format()).toBe('10,11€');
+      expect(new NumberDataValue(10, deCurrencyConfig).format()).toBe('10€');
+      expect(new NumberDataValue(10.3, deCurrencyConfig).format()).toBe('10,3€');
+
+      expect(new NumberDataValue('10.11', deCurrencyConfig, '10.11').serialize()).toBe('1011');
+      expect(new NumberDataValue('10,11', deCurrencyConfig, '10,11').serialize()).toBe('10.11');
     });
   });
 });
