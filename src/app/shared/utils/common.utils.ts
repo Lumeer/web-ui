@@ -31,7 +31,7 @@ export function isNotNullOrUndefined(object: any): boolean {
 }
 
 export function isNumeric(value: any): boolean {
-  if (isNullOrUndefined(value) || typeof value === 'boolean' || (value && String(value).trim() === '')) {
+  if (isNullOrUndefined(value) || typeof value === 'boolean' || String(value).trim() === '') {
     return false;
   }
   return !isNaN(toNumber(value));

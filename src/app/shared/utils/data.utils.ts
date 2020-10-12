@@ -74,8 +74,9 @@ export function decimalUserToStore(value: string): string {
   return separator === '.' ? value : value.replace(separator, '.');
 }
 
-export function decimalStoreToUser(value: string): string {
-  return separator === '.' ? value : value.replace('.', separator);
+export function decimalStoreToUser(value: string, customSeparator?: string): string {
+  const currentSeparator = customSeparator || separator;
+  return currentSeparator === '.' ? value : value.replace('.', currentSeparator);
 }
 
 export function convertToBig(value: any): Big {
