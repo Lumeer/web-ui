@@ -1,7 +1,7 @@
 <ng-container *ngFor="let group of columns | groupTableColumns; let index = index; trackBy: trackByColumn">
 
   <ng-container
-    *ngIf="{dataValue: group.column ? ((group.column.attribute && row.documentData[group.column.attribute.id]) | dataValue:group.column.attribute?.constraint:constraintData) : null,
+    *ngIf="{dataValue: group.column && (row.data[group.column.id] | dataValue:group.column.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
     focused: selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row,
     edited: editedCell | tableCellEdited:group.column:cellType:row} as data">

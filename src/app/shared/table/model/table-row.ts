@@ -25,9 +25,8 @@ export interface TableRow {
   documentId: string;
   tableId: string;
   height: number;
-  documentData?: DataResourceData;
+  data?: Record<string, any>; // columnId -> string
   linkInstanceId?: string;
-  linkInstanceData?: DataResourceData;
   correlationId?: string;
   menuItems: TableContextMenuItem[];
 }

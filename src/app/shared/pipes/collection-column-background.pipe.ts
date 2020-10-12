@@ -18,8 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {shadeColor, stripedBackground} from '../../../../../shared/utils/html-modifier';
+import {shadeColor, stripedBackground} from '../utils/html-modifier';
 
 export const DEFAULT_COLOR = '#ffffff';
 export const DEFAULT_STRIPED_COLOR = '#eeeeee';
@@ -28,14 +27,14 @@ export const DEFAULT_STRIPED_COLOR = '#eeeeee';
   name: 'columnBackground',
 })
 export class ColumnBackgroundPipe implements PipeTransform {
-  public transform(collection: Collection, unsaved?: boolean): any {
-    const color = collection ? shadeColor(collection.color, 0.5) : DEFAULT_COLOR;
-    const stripeColor = collection ? shadeColor(color, 0.25) : DEFAULT_STRIPED_COLOR;
+  public transform(color: string, unsaved?: boolean): any {
+    const shadedColor = color ? shadeColor(color, 0.5) : DEFAULT_COLOR;
+    const stripeColor = color ? shadeColor(shadedColor, 0.25) : DEFAULT_STRIPED_COLOR;
 
     if (unsaved) {
-      return stripedBackground(color, stripeColor);
+      return stripedBackground(shadedColor, stripeColor);
     }
 
-    return color;
+    return shadedColor;
   }
 }

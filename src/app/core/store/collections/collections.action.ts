@@ -245,7 +245,8 @@ export namespace CollectionsAction {
         collectionId: string;
         attributes: Attribute[];
         nextAction?: DocumentsAction.All;
-        callback?: (attributes: Attribute[]) => void;
+        onSuccess?: (attributes: Attribute[]) => void;
+        onFailure?: () => void;
       }
     ) {}
   }

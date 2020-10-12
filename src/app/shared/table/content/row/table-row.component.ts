@@ -150,9 +150,9 @@ export class TableRowComponent implements OnChanges {
   private columnValue(column: TableColumn): any {
     if (column.attribute) {
       if (column?.collectionId) {
-        return this.row.documentData?.[column.attribute.id];
+        return this.row.data?.[column.id];
       } else if (column?.linkTypeId) {
-        return this.row.linkInstanceData?.[column.attribute.id];
+        return this.row.data?.[column.id];
       }
     }
     return null;

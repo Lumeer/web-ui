@@ -55,7 +55,6 @@ import {
   filterOutInvalidAttributeNameCharacters,
 } from '../../../../../../shared/utils/attribute.utils';
 import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-changed.pipe';
-import {ColumnBackgroundPipe} from '../../../shared/pipes/column-background.pipe';
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
@@ -117,7 +116,6 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     private actions$: Actions,
     private attributeNameChangedPipe: AttributeNameChangedPipe,
     private changeDetector: ChangeDetectorRef,
-    private columnBackgroundPipe: ColumnBackgroundPipe,
     private contextMenuService: ContextMenuService,
     private modalService: ModalService,
     private i18n: I18n,

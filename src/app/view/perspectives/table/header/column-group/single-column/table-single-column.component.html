@@ -10,7 +10,7 @@
        [class.edited]="state.edited"
        [class.selected]="state.selected"
        [class.uninitialized-column]="!column?.attributeIds[0]"
-       [style.background]="collection | columnBackground : (attribute | attributeNameChanged : state.lastName)"
+       [style.background]="collection?.color | columnBackground : (attribute | attributeNameChanged : state.lastName)"
        (contextmenu)="onContextMenu($event)"
        (dblclick)="onDoubleClick()"
        (click)="onClick()"

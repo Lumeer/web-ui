@@ -22,8 +22,6 @@ import {BehaviorSubject} from 'rxjs';
 import {
   EditedTableCell,
   SelectedTableCell,
-  TABLE_COLUMN_WIDTH,
-  TABLE_ROW_HEIGHT,
   TableCell,
   TableCellType,
   TableModel,
@@ -32,15 +30,8 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {ResourceAttributeSettings, ViewSettings} from '../../../../../core/store/views/view';
-import {
-  findAttribute,
-  getDefaultAttributeId,
-  isCollectionAttributeEditable,
-} from '../../../../../core/store/collections/collection.util';
-import {createAttributesSettingsOrder} from '../../../../../shared/settings/settings.util';
+import {ViewSettings} from '../../../../../core/store/views/view';
 import {TableColumn, TableContextMenuItem} from '../../../../../shared/table/model/table-column';
-import {generateId} from '../../../../../shared/utils/resource.utils';
 import {TableRow} from '../../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../../shared/utils/array.utils';
 import {KeyCode} from '../../../../../shared/key-code';
@@ -48,7 +39,7 @@ import {isNotNullOrUndefined, preventEvent} from '../../../../../shared/utils/co
 import {DataRowHiddenComponent} from '../../../../../shared/data/data-row-component';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
 import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
-import {HeaderMenuId, RowMenuId, WorkflowTablesMenuService} from './workflow-tables-menu.service';
+import {HeaderMenuId, RowMenuId} from './workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './workflow-tables-data.service';
 
 @Injectable()
@@ -59,7 +50,7 @@ export class WorkflowTablesService {
   public editedCell$ = new BehaviorSubject<EditedTableCell>(null);
   public tables$ = new BehaviorSubject<TableModel[]>([]);
 
-  constructor(private dataService: WorkflowTablesDataService, private menuService: WorkflowTablesMenuService) {
+  constructor(private dataService: WorkflowTablesDataService) {
     this.selectedCell$.pipe(skip(1), distinctUntilChanged()).subscribe(() => {
       if (this.isSelected()) {
         this.hiddenComponent()?.focus();
@@ -441,7 +432,7 @@ export class WorkflowTablesService {
 
   private getCellIndexes(
     cell: TableCell
-  ): {tableIndex: number; rowIndex: number; columnIndex: number; type: TableCellType} {
+  ): { tableIndex: number; rowIndex: number; columnIndex: number; type: TableCellType } {
     const tableIndex = this.tables$.value.findIndex(table => table.id === cell.tableId);
     const tableByIndex = this.tables$.value[tableIndex];
     const columnIndex = tableByIndex?.columns.findIndex(column => column.id === cell.columnId);
@@ -489,6 +480,8 @@ export class WorkflowTablesService {
     } else {
       const table = this.findTableByColumn(column);
       this.setColumnProperty(table, column, 'name', name);
+      this.dataService.createAttribute(column, name, attribute =>
+        this.setColumnProperty(table, column, 'attribute', attribute));
     }
   }
 
@@ -538,120 +531,8 @@ export class WorkflowTablesService {
     query: Query,
     viewSettings: ViewSettings
   ) {
-    const newTables = collections.reduce((result, collection) => {
-      const collectionDocuments = documents.filter(document => document.collectionId === collection.id);
-      const collectionPermissions = permissions?.[collection.id];
-      const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
-      const table = this.createTable(collection, collectionDocuments, collectionPermissions, query, collectionSettings);
-      return [...result, table];
-    }, []);
+    const newTables = this.dataService.createTables(this.tables$.value, collections, documents, permissions, query, viewSettings);
     this.tables$.next(newTables);
-  }
-
-  private createTable(
-    collection: Collection,
-    documents: DocumentModel[],
-    permissions: AllowedPermissions,
-    query: Query,
-    settings: ResourceAttributeSettings[]
-  ): TableModel {
-    const currentTable = this.tables$.value.find(table => table.collectionId === collection.id);
-    const tableId = currentTable?.id || generateId();
-    const columns = this.createCollectionColumns(
-      tableId,
-      currentTable?.columns || [],
-      collection,
-      permissions,
-      query,
-      settings
-    );
-    const rows = this.createDocumentRows(tableId, currentTable?.rows || [], documents, permissions);
-    return {id: tableId, columns, rows, collectionId: collection.id};
-  }
-
-  private createCollectionColumns(
-    tableId: string,
-    currentColumns: TableColumn[],
-    collection: Collection,
-    permissions: AllowedPermissions,
-    query: Query,
-    settings: ResourceAttributeSettings[]
-  ) {
-    const defaultAttributeId = getDefaultAttributeId(collection);
-
-    const attributeColumns = createAttributesSettingsOrder(collection.attributes, settings).reduce<TableColumn[]>(
-      (columns, setting) => {
-        const attribute = findAttribute(collection.attributes, setting.attributeId);
-        const editable = isCollectionAttributeEditable(attribute.id, collection, permissions, query);
-        const currentColumn = currentColumns.find(
-          c => c.collectionId === collection.id && c.attribute?.id === attribute.id
-        );
-        const column = {
-          id: currentColumn?.id || generateId(),
-          attribute,
-          tableId,
-          editable,
-          width: currentColumn?.width || TABLE_COLUMN_WIDTH,
-          collectionId: collection.id,
-          color: collection.color,
-          default: attribute.id === defaultAttributeId,
-          hidden: setting.hidden,
-          manageable: permissions?.manageWithView,
-          menuItems: [],
-        };
-        column.menuItems.push(...this.menuService.createHeaderMenu(permissions, column, true));
-        columns.push(column);
-        return columns;
-      },
-      []
-    );
-
-    for (let i = 0; i < currentColumns?.length; i++) {
-      const column = currentColumns[i];
-      if (!column.attribute) {
-        // TODO
-      }
-    }
-
-    const lastColumn: TableColumn = {
-      id: generateId(),
-      tableId,
-      name: 'A',
-      collectionId: collection.id,
-      editable: true,
-      width: TABLE_COLUMN_WIDTH,
-      color: collection.color,
-      menuItems: [],
-    };
-    lastColumn.menuItems.push(...this.menuService.createHeaderMenu(permissions, lastColumn, true));
-
-    attributeColumns.push(lastColumn);
-
-    return attributeColumns;
-  }
-
-  private createDocumentRows(
-    tableId: string,
-    currentRows: TableRow[],
-    documents: DocumentModel[],
-    permissions: AllowedPermissions
-  ): TableRow[] {
-    const rowsMap = currentRows.reduce((map, row) => ({...map, [row.correlationId || row.documentId]: row}), {});
-
-    return documents.map(document => {
-      const currentRow = rowsMap[document.correlationId || document.id];
-      const row = {
-        id: currentRow?.id || generateId(),
-        documentData: document.data,
-        tableId,
-        documentId: document.id,
-        height: currentRow?.height || TABLE_ROW_HEIGHT,
-        correlationId: document.correlationId,
-        menuItems: [],
-      };
-      row.menuItems.push(...this.menuService.createRowMenu(permissions, row));
-      return row;
-    });
   }
 }
 

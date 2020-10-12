@@ -95,6 +95,7 @@ import {FindAttributePipe} from './find-attribute.pipe';
 import {IsNotNullOrUndefinedPipe} from './is-not-null-or-undefined.pipe';
 import {ViewsSelectItemsPipe} from './views-select-items.pipe';
 import {TruncateStringPipe} from './truncate-string.pipe';
+import {ColumnBackgroundPipe} from './collection-column-background.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -173,6 +174,7 @@ import {TruncateStringPipe} from './truncate-string.pipe';
     IsNotNullOrUndefinedPipe,
     ViewsSelectItemsPipe,
     TruncateStringPipe,
+    ColumnBackgroundPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -251,6 +253,7 @@ import {TruncateStringPipe} from './truncate-string.pipe';
     IsNotNullOrUndefinedPipe,
     ViewsSelectItemsPipe,
     TruncateStringPipe,
+    ColumnBackgroundPipe,
   ],
 })
 export class PipesModule {}

@@ -26,7 +26,6 @@ import {AttributeNameChangedPipe} from './attribute-name-changed.pipe';
 import {AttributeNamePipe} from './attribute-name.pipe';
 import {AttributeParentNamePipe} from './attribute-parent-name.pipe';
 import {CollapsiblePipe} from './collapsible.pipe';
-import {ColumnBackgroundPipe} from './column-background.pipe';
 import {ColumnChildCursorPipe} from './column-child-cursor.pipe';
 import {ColumnCursorPipe} from './column-cursor.pipe';
 import {ColumnHeightPipe} from './column-height.pipe';
@@ -83,7 +82,6 @@ import {LastColumnPipe} from './last-column.pipe';
     ColumnCursorPipe,
     ColumnHeightPipe,
     ResizeEdgesPipe,
-    ColumnBackgroundPipe,
     PartPipe,
     AttributeNameChangedPipe,
     AttributeNamePipe,
@@ -125,7 +123,6 @@ import {LastColumnPipe} from './last-column.pipe';
     ColumnCursorPipe,
     ColumnHeightPipe,
     ResizeEdgesPipe,
-    ColumnBackgroundPipe,
     PartPipe,
     AttributeNameChangedPipe,
     AttributeNamePipe,
@@ -146,6 +143,6 @@ import {LastColumnPipe} from './last-column.pipe';
     DocumentHintsOffsetPipe,
     LastColumnPipe,
   ],
-  providers: [AttributeNameChangedPipe, ColumnBackgroundPipe],
+  providers: [AttributeNameChangedPipe],
 })
 export class TablePipesModule {}

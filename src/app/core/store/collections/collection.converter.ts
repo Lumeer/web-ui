@@ -40,7 +40,7 @@ export function convertCollectionDtoToModel(
     color: dto.color,
     icon: dto.icon,
     attributes: !preventSortAttributes
-      ? attributes.sort((a, b) => +a.id.substring(1) - +b.id.substring(1))
+      ? attributes.sort((a, b) => +a.id?.substring(1) - +b.id?.substring(1))
       : attributes,
     defaultAttributeId: dto.defaultAttributeId,
     permissions: dto.permissions ? PermissionsConverter.fromDto(dto.permissions) : null,
