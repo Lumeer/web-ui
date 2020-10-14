@@ -34,6 +34,7 @@ export interface TableColumn {
   tableId: string;
   attribute?: Attribute;
   name?: string;
+  creating?: boolean;
   linkTypeId?: string;
   collectionId?: string;
   color?: string;

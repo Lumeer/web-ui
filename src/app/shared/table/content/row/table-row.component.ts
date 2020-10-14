@@ -37,7 +37,7 @@ import {DocumentHintsComponent} from '../../../document-hints/document-hints.com
 import {isKeyPrintable, KeyCode} from '../../../key-code';
 import {Direction} from '../../../direction';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {isNotNullOrUndefined, preventEvent} from '../../../utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefinedOrEmpty, preventEvent} from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
@@ -170,10 +170,10 @@ export class TableRowComponent implements OnChanges {
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
     const value = data.dataValue.serialize();
     const currentValue = this.columnValue(column);
-    if (currentValue !== value) {
-      this.newValue.emit({columnId: column.id, value, action: data.action});
-    } else {
+    if (currentValue === value || (isNullOrUndefinedOrEmpty(value) && isNullOrUndefinedOrEmpty(currentValue))) {
       this.onDataInputCancel(column, data.action);
+    } else {
+      this.newValue.emit({columnId: column.id, value, action: data.action});
     }
   }
 

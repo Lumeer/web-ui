@@ -400,11 +400,12 @@ export class CollectionsEffects {
         map(attributes => attributes.map(attr => convertAttributeDtoToModel(attr, correlationIdMap[attr.name]))),
         withLatestFrom(this.store$.pipe(select(selectCollectionById(collectionId)))),
         mergeMap(([attributes, collection]) => {
-          // callback needs to be executed before store is updated
-          const actions: Action[] = [...createCallbackActions(onSuccess, attributes), new CollectionsAction.CreateAttributesSuccess({
-            collectionId,
-            attributes
-          })];
+          const actions: Action[] = [
+            new CollectionsAction.CreateAttributesSuccess({
+              collectionId,
+              attributes,
+            }),
+          ];
           if (nextAction) {
             actions.push(updateCreateAttributesNextAction(nextAction, attributes));
           }
@@ -414,9 +415,12 @@ export class CollectionsEffects {
               actions.push(setDefaultAttributeAction);
             }
           }
+          actions.push(...createCallbackActions(onSuccess, attributes));
           return actions;
         }),
-        catchError(error => of(...createCallbackActions(onFailure), new CollectionsAction.CreateAttributesFailure({error: error})))
+        catchError(error =>
+          of(...createCallbackActions(onFailure), new CollectionsAction.CreateAttributesFailure({error: error}))
+        )
       );
     })
   );
@@ -559,8 +563,7 @@ export class CollectionsEffects {
     private i18n: I18n,
     private importService: ImportService,
     private angulartics2: Angulartics2
-  ) {
-  }
+  ) {}
 }
 
 function createSetDefaultAttributeAction(

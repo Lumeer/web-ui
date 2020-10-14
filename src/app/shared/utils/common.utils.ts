@@ -26,6 +26,10 @@ export function isNullOrUndefined(object: any): object is null | undefined {
   return object === null || object === undefined;
 }
 
+export function isNullOrUndefinedOrEmpty(object: any): object is null | undefined {
+  return object === null || object === undefined || object === '';
+}
+
 export function isNotNullOrUndefined(object: any): boolean {
   return !isNullOrUndefined(object);
 }

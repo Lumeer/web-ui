@@ -2,11 +2,11 @@
   <div class="header-content h-100"
        (contextmenu)="onContextMenu($event)">
     <table-header-input
-      [initialized]="!!column.attribute"
       [edited]="editing"
+      [restrictedNames]="restrictedNames"
       [offsetTop]="offsetTop"
       [default]="column.default"
-      [value]="editing && (editingValue | isNotNullOrUndefined) ? editingValue :  column.name || column.attribute?.name"
+      [value]="editing && (editingValue | isNotNullOrUndefined) ? editingValue : column.name || column.attribute?.name"
       (save)="onHeaderSave($event)"
       (cancel)="onHeaderCancel()">
     </table-header-input>

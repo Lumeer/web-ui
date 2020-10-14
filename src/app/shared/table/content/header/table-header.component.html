@@ -22,6 +22,7 @@
                        [offsetTop]="true"
                        [column]="group.column"
                        [hiddenColumns]="group.hiddenColumns"
+                       [restrictedNames]="columns | columnHeaderRestrictedNames:index"
                        (onCancel)="onHeaderCancel(group.column)"
                        (newName)="onHeaderSave(group.column, $event)"
                        (menuSelected)="onMenuSelected(group.column, $event)"

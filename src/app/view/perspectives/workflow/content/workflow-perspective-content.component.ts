@@ -50,13 +50,21 @@ import {TableRow} from '../../../../shared/table/model/table-row';
 import {TableColumn, TableContextMenuItem} from '../../../../shared/table/model/table-column';
 import {WorkflowTablesMenuService} from './service/workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './service/workflow-tables-data.service';
+import {WorkflowTablesStateService} from './service/workflow-tables-state.service';
+import {WorkflowTablesKeyboardService} from './service/workflow-tables-keyboard.service';
 
 @Component({
   selector: 'workflow-perspective-content',
   templateUrl: './workflow-perspective-content.component.html',
   styleUrls: ['./workflow-perspective-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [WorkflowTablesService, WorkflowTablesMenuService, WorkflowTablesDataService],
+  providers: [
+    WorkflowTablesService,
+    WorkflowTablesMenuService,
+    WorkflowTablesDataService,
+    WorkflowTablesStateService,
+    WorkflowTablesKeyboardService,
+  ],
 })
 export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   @Input()
@@ -87,15 +95,9 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
 
   constructor(private store$: Store<AppState>, private tablesService: WorkflowTablesService) {
     this.tablesService.setHiddenComponent(() => this.hiddenInputComponent);
-    this.tables$ = this.tablesService.tables$
-      .asObservable()
-      .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
-    this.selectedCell$ = this.tablesService.selectedCell$
-      .asObservable()
-      .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
-    this.editedCell$ = this.tablesService.editedCell$
-      .asObservable()
-      .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
+    this.tables$ = this.tablesService.tables$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
+    this.selectedCell$ = this.tablesService.selectedCell$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
+    this.editedCell$ = this.tablesService.editedCell$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
   }
 
   public ngOnInit() {

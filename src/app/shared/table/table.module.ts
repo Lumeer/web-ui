@@ -44,6 +44,7 @@ import {GroupTableMenuItemsPipe} from './pipes/group-table-menu-items.pipe';
 import {TableHeaderHiddenComponent} from './content/header/cell/hidden/table-header-hidden.component';
 import {GroupTableColumnsPipe} from './pipes/group-table-columns.pipe';
 import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/table-header-hidden-menu.component';
+import {ColumnHeaderRestrictedNamesPipe} from './pipes/column-header-restricted-names.pipe';
 
 @NgModule({
   declarations: [
@@ -65,6 +66,7 @@ import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/
     TableHeaderHiddenComponent,
     GroupTableColumnsPipe,
     TableHeaderHiddenMenuComponent,
+    ColumnHeaderRestrictedNamesPipe,
   ],
   imports: [
     CommonModule,

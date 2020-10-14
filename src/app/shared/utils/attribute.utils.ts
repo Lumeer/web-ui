@@ -80,12 +80,7 @@ export function splitAttributeName(name: string): {parentName: string; lastName:
   };
 }
 
-export function generateAttributeName(
-  otherAttributes: Attribute[],
-  attributeNames: string[] = [],
-  parentName?: string
-): string {
-  const existingNames = (otherAttributes || []).map(attr => attr.name).concat(attributeNames);
+export function generateAttributeName(existingNames: string[], parentName?: string): string {
   const prefix = parentName ? `${parentName}.` : '';
 
   let lastName = 'A';

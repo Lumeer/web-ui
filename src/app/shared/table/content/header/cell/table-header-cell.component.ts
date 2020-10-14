@@ -40,6 +40,9 @@ export class TableHeaderCellComponent {
   public hiddenColumns: TableColumn[];
 
   @Input()
+  public restrictedNames: string[];
+
+  @Input()
   public editing: boolean;
 
   @Input()

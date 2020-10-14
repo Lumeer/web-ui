@@ -45,24 +45,31 @@ import {generateId} from '../../../../../shared/utils/resource.utils';
 import {
   findAttribute,
   getDefaultAttributeId,
-  isCollectionAttributeEditable
+  isCollectionAttributeEditable,
 } from '../../../../../core/store/collections/collection.util';
 import {createAttributesSettingsOrder} from '../../../../../shared/settings/settings.util';
 import {objectKeys} from 'codelyzer/util/objectKeys';
 import {WorkflowTablesMenuService} from './workflow-tables-menu.service';
 import {groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
+import {generateAttributeName} from '../../../../../shared/utils/attribute.utils';
+import {WorkflowTablesStateService} from './workflow-tables-state.service';
+
+interface PendingRowUpdate {
+  row: TableRow;
+  value: any;
+}
 
 @Injectable()
 export class WorkflowTablesDataService {
+  private pendingColumnValues: Record<string, PendingRowUpdate[]> = {};
 
-  private pendingColumnRenames: Record<string, string> = {};
-  private pendingColumnValues: Record<string, Record<string, any>> = {};
-
-  constructor(private store$: Store<AppState>,
-              private menuService: WorkflowTablesMenuService,
-              private modalService: ModalService,
-              private i18n: I18n) {
-  }
+  constructor(
+    private store$: Store<AppState>,
+    private menuService: WorkflowTablesMenuService,
+    private stateService: WorkflowTablesStateService,
+    private modalService: ModalService,
+    private i18n: I18n
+  ) {}
 
   public createTables(
     currentTables: TableModel[],
@@ -77,7 +84,14 @@ export class WorkflowTablesDataService {
       const collectionDocuments = documentsByCollection[collection.id] || [];
       const collectionPermissions = permissions?.[collection.id];
       const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
-      const table = this.createTable(currentTables, collection, collectionDocuments, collectionPermissions, query, collectionSettings);
+      const table = this.createTable(
+        currentTables,
+        collection,
+        collectionDocuments,
+        collectionPermissions,
+        query,
+        collectionSettings
+      );
       return [...result, table];
     }, []);
   }
@@ -114,13 +128,41 @@ export class WorkflowTablesDataService {
   ) {
     const defaultAttributeId = getDefaultAttributeId(collection);
 
+    // const attributesMap: Record<string, Attribute> = collection.attributes?.reduce((map, attribute) => ({
+    //   ...map,
+    //   [attribute.id]: attribute
+    // }), {});
+    //
+    // const newColumns: TableColumn[] = [];
+    //
+    // for (let i = 0; i < currentColumns?.length; i++) {
+    //   const column = currentColumns[i];
+    //   if (column.attribute) {
+    //     const attribute = findAttribute(collection.attributes, setting.attributeId);
+    //     const editable = isCollectionAttributeEditable(attribute.id, collection, permissions, query);
+    //       newColumns[i] = {...column, attribute: attributesMap[column.attribute.id]}
+    //   } else if (column.name) {
+    //
+    //   }
+    // }
+
+    const mappedUncreatedColumns: Record<string, TableColumn> = {};
+
     const attributeColumns = createAttributesSettingsOrder(collection.attributes, settings).reduce<TableColumn[]>(
       (columns, setting) => {
         const attribute = findAttribute(collection.attributes, setting.attributeId);
         const editable = isCollectionAttributeEditable(attribute.id, collection, permissions, query);
-        const currentColumn = currentColumns.find(
-          c => c.collectionId === collection.id && c.attribute?.id === attribute.id
+        const columnByAttribute = currentColumns.find(
+          col => col.collectionId === collection.id && col.attribute?.id === attribute.id
         );
+        let columnByName;
+        if (!columnByAttribute) {
+          // this is our created attribute and we know that attribute name is unique
+          columnByName = currentColumns.find(
+            col => col.collectionId === collection.id && !col.attribute && col.name === attribute.name
+          );
+        }
+        const currentColumn = columnByAttribute || columnByName;
         const column = {
           id: currentColumn?.id || generateId(),
           attribute,
@@ -135,33 +177,41 @@ export class WorkflowTablesDataService {
           menuItems: [],
         };
         column.menuItems.push(...this.menuService.createHeaderMenu(permissions, column, true));
+        if (columnByName) {
+          mappedUncreatedColumns[column.id] = column;
+          return columns;
+        }
+
         columns.push(column);
         return columns;
       },
       []
     );
 
+    const columnNames = (collection.attributes || []).map(attribute => attribute.name);
     for (let i = 0; i < currentColumns?.length; i++) {
       const column = currentColumns[i];
       if (!column.attribute) {
-        // TODO
+        attributeColumns.splice(i, 0, mappedUncreatedColumns[column.id] || column);
       }
+      columnNames.push(column.name || column.attribute?.name);
     }
 
-    const lastColumn: TableColumn = {
-      id: generateId(),
-      tableId,
-      name: 'A',
-      collectionId: collection.id,
-      editable: true,
-      manageable: true,
-      width: TABLE_COLUMN_WIDTH,
-      color: collection.color,
-      menuItems: [],
-    };
-    lastColumn.menuItems.push(...this.menuService.createHeaderMenu(permissions, lastColumn, true));
-
-    attributeColumns.push(lastColumn);
+    if (!attributeColumns.some(column => !column.attribute)) {
+      const lastColumn: TableColumn = {
+        id: generateId(),
+        tableId,
+        name: generateAttributeName(columnNames),
+        collectionId: collection.id,
+        editable: true,
+        manageable: true,
+        width: TABLE_COLUMN_WIDTH,
+        color: collection.color,
+        menuItems: [],
+      };
+      lastColumn.menuItems.push(...this.menuService.createHeaderMenu(permissions, lastColumn, true));
+      attributeColumns.push(lastColumn);
+    }
 
     return attributeColumns;
   }
@@ -182,16 +232,29 @@ export class WorkflowTablesDataService {
       return idsMap;
     }, {});
 
+    const pendingColumnValuesByRow = Object.keys(this.pendingColumnValues).reduce((map, columnId) => {
+      const updates = this.pendingColumnValues[columnId];
+      for (const update of updates) {
+        if (!map[update.row.id]) {
+          map[update.row.id] = {};
+        }
+        map[update.row.id][columnId] = update.value;
+      }
+      return map;
+    }, {});
+
     return documents.map(document => {
       const currentRow = rowsMap[document.correlationId || document.id];
+      const documentData = objectKeys(document.data || {}).reduce((data, attributeId) => {
+        if (columnIdsMap[attributeId]) {
+          data[columnIdsMap[attributeId]] = document.data[attributeId];
+        }
+        return data;
+      }, {});
+      const pendingData = (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
       const row: TableRow = {
         id: currentRow?.id || generateId(),
-        data: objectKeys(document.data || {}).reduce((data, attributeId) => {
-          if (columnIdsMap[attributeId]) {
-            data[columnIdsMap[attributeId]] = document.data[attributeId];
-          }
-          return data;
-        }, {}),
+        data: {...documentData, ...pendingData},
         tableId,
         documentId: document.id,
         height: currentRow?.height || TABLE_ROW_HEIGHT,
@@ -203,53 +266,45 @@ export class WorkflowTablesDataService {
     });
   }
 
-  public createAttribute(column: TableColumn, name: string, onSuccess?: (Attribute) => void) {
+  public createAttribute(column: TableColumn, name: string) {
     if (this.isColumnCreating(column)) {
-      this.pendingColumnRenames[column.id] = name;
-    } else {
-      const attribute: Attribute = {name, correlationId: column.id};
-      if (column.collectionId) {
-        this.pendingColumnRenames[column.id] = name;
-        this.store$.dispatch(new CollectionsAction.CreateAttributes({
+      return;
+    }
+
+    this.stateService.startColumnCreating(column, name);
+
+    const attribute: Attribute = {name, correlationId: column.id};
+    if (column.collectionId) {
+      this.store$.dispatch(
+        new CollectionsAction.CreateAttributes({
           collectionId: column.collectionId,
           attributes: [attribute],
-          onSuccess: (attributes => {
-            const pendingName = this.pendingColumnRenames[column.id];
-            onSuccess?.({...attributes[0], name: pendingName})
-            this.onAttributeCreated(attributes[0], column);
-          }),
-          onFailure: () => (delete this.pendingColumnRenames[column.id])
-        }));
-      } else if (column.linkTypeId) {
-        this.pendingColumnRenames[column.id] = name;
-        this.store$.dispatch(new LinkTypesAction.CreateAttributes({
+          onSuccess: attributes => this.onAttributeCreated(attributes[0], column),
+          onFailure: () => this.stateService.endColumnCreating(column),
+        })
+      );
+    } else if (column.linkTypeId) {
+      this.store$.dispatch(
+        new LinkTypesAction.CreateAttributes({
           linkTypeId: column.linkTypeId,
           attributes: [attribute],
-          onSuccess: (attributes => {
-            const pendingName = this.pendingColumnRenames[column.id];
-            onSuccess?.({...attributes[0], name: pendingName})
-            this.onAttributeCreated(attributes[0], column);
-          }),
-          onFailure: () => (delete this.pendingColumnRenames[column.id])
-        }));
-      }
+          onSuccess: attributes => this.onAttributeCreated(attributes[0], column),
+          onFailure: () => this.stateService.endColumnCreating(column),
+        })
+      );
     }
   }
 
-  private isColumnCreating(column: TableColumn): boolean {
-    return !!this.pendingColumnRenames[column.id];
+  public isColumnCreating(column: TableColumn): boolean {
+    return column.creating;
   }
 
   private onAttributeCreated(attribute: Attribute, column: TableColumn) {
-    if (attribute.name !== this.pendingColumnRenames[column.id]) {
-      this.renameAttribute({...column, attribute}, this.pendingColumnRenames[column.id]);
+    const newColumn = {...column, attribute};
+    for (const update of this.pendingColumnValues[column.id] || []) {
+      this.patchData(update.row, newColumn, update.value);
     }
 
-    if (this.pendingColumnValues[column.id]) {
-      console.log('i should send row updates');
-    }
-
-    delete this.pendingColumnRenames[column.id];
     delete this.pendingColumnValues[column.id];
   }
 
@@ -341,12 +396,22 @@ export class WorkflowTablesDataService {
     if (column.attribute) {
       this.patchData(row, column, value);
     } else {
-      this.pendingColumnValues[column.id] = this.pendingColumnValues[column.id] || {};
-      this.pendingColumnValues[column.id][row.id] = value;
+      this.stateService.setRowValue(row, column, value);
+      this.setPendingRowValue(row, column, value);
 
       if (!this.isColumnCreating(column)) {
         this.createAttribute(column, column.name);
       }
+    }
+  }
+
+  private setPendingRowValue(row: TableRow, column: TableColumn, value: any) {
+    this.pendingColumnValues[column.id] = this.pendingColumnValues[column.id] || [];
+    const rowUpdate = this.pendingColumnValues[column.id].find(update => update.row.id === row.id);
+    if (rowUpdate) {
+      rowUpdate.value = value;
+    } else {
+      this.pendingColumnValues[column.id].push({row, value});
     }
   }
 
@@ -368,5 +433,22 @@ export class WorkflowTablesDataService {
       };
       this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
     }
+  }
+
+  public copyTableColumn(table: TableModel, column: TableColumn): TableColumn {
+    const columnNames = table?.columns.map(col => col.name || col.attribute?.name) || [];
+    const copiedColumn = {
+      ...column,
+      id: generateId(),
+      attribute: undefined,
+      creating: undefined,
+      default: false,
+      hidden: false,
+      name: generateAttributeName(columnNames),
+      menuItems: [],
+    };
+    const permissions = this.stateService.getColumnPermissions(column);
+    copiedColumn.menuItems.push(...this.menuService.createHeaderMenu(permissions, copiedColumn, true));
+    return copiedColumn;
   }
 }

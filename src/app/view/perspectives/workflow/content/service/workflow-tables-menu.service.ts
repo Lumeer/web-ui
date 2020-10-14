@@ -31,6 +31,8 @@ export enum HeaderMenuId {
   Hide = 'hide',
   Displayed = 'displayed',
   Delete = 'delete',
+  AddToRight = 'addToRight',
+  AddToLeft = 'addToLeft',
 }
 
 export enum RowMenuId {
@@ -135,13 +137,29 @@ export class WorkflowTablesMenuService {
       });
     }
 
+    items.push({
+      id: HeaderMenuId.AddToLeft,
+      title: this.translateHeaderMenuItem(HeaderMenuId.AddToLeft),
+      disabled: !permissions?.manageWithView,
+      iconClass: 'fa fa-arrow-alt-circle-left',
+      group: 2,
+    });
+
+    items.push({
+      id: HeaderMenuId.AddToRight,
+      title: this.translateHeaderMenuItem(HeaderMenuId.AddToRight),
+      disabled: !permissions?.manageWithView,
+      iconClass: 'fa fa-arrow-alt-circle-right',
+      group: 2,
+    });
+
     if (column.attribute?.id) {
       items.push({
         id: HeaderMenuId.Hide,
         title: this.translateHeaderMenuItem(HeaderMenuId.Hide),
         disabled: !configurable,
         iconClass: 'fa fa-eye-slash',
-        group: 2,
+        group: 3,
       });
     }
 
@@ -150,7 +168,7 @@ export class WorkflowTablesMenuService {
       title: this.translateHeaderMenuItem(HeaderMenuId.Delete),
       disabled: !permissions?.manageWithView,
       iconClass: 'fa fa-trash text-danger',
-      group: 2,
+      group: 3,
     });
 
     return items;
@@ -170,6 +188,10 @@ export class WorkflowTablesMenuService {
         return this.i18n({id: 'table.header.menu.hide', value: 'Hide column'});
       case HeaderMenuId.Delete:
         return this.i18n({id: 'table.header.menu.remove', value: 'Delete column'});
+      case HeaderMenuId.AddToRight:
+        return this.i18n({id: 'table.header.menu.add.column.next', value: 'Add column left'});
+      case HeaderMenuId.AddToLeft:
+        return this.i18n({id: 'table.header.menu.add.column.previous', value: 'Add column right'});
       default:
         return '';
     }

@@ -34,6 +34,7 @@ import {
   FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS,
 } from '../../../../../utils/attribute.utils';
 import {KeyCode} from '../../../../../key-code';
+import {preventEvent} from '../../../../../utils/common.utils';
 
 @Component({
   selector: 'table-header-input',
@@ -43,13 +44,13 @@ import {KeyCode} from '../../../../../key-code';
 })
 export class TableHeaderInputComponent implements OnChanges {
   @Input()
+  public restrictedNames: string[];
+
+  @Input()
   public default: boolean;
 
   @Input()
   public edited: boolean;
-
-  @Input()
-  public initialized: boolean;
 
   @Input()
   public offsetTop: boolean;
@@ -89,7 +90,11 @@ export class TableHeaderInputComponent implements OnChanges {
     if (this.preventSave) {
       this.preventSave = false;
     } else {
-      this.saveValue();
+      if (this.isNameValid()) {
+        this.saveValue();
+      } else {
+        this.textInput.nativeElement.value = this.value;
+      }
     }
   }
 
@@ -122,9 +127,13 @@ export class TableHeaderInputComponent implements OnChanges {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        this.preventSaveAndBlur();
-        this.saveValue();
-        event.preventDefault();
+        if (this.isNameValid()) {
+          this.preventSaveAndBlur();
+          this.saveValue();
+          event.preventDefault();
+        } else {
+          preventEvent(event);
+        }
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
@@ -141,6 +150,11 @@ export class TableHeaderInputComponent implements OnChanges {
     if (FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS.includes(event.key)) {
       event.preventDefault();
     }
+  }
+
+  private isNameValid(): boolean {
+    const value = this.textInput.nativeElement.value?.trim() || '';
+    return value && !(this.restrictedNames || []).includes(value);
   }
 
   public preventSaveAndBlur() {
