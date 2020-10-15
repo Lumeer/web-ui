@@ -26,7 +26,8 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
   public abstract getPoints(): any;
 
   protected xAxisLayout(): Partial<Layout> {
-    const layout: Partial<Layout> = {};
+    const layout: Partial<Layout> = {hovermode: 'closest'};
+
     const axis = createAxisLayout(this.chartData.xAxisData, 'xFormatter');
     if (axis) {
       layout.xaxis = axis;
@@ -36,7 +37,7 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
   }
 
   protected yAxis1Layout(): Partial<Layout> {
-    const layout: Partial<Layout> = {};
+    const layout: Partial<Layout> = {hovermode: 'closest'};
 
     const axis = createAxisLayout(this.chartData.y1AxisData, 'y1Formatter');
     if (axis) {
@@ -47,7 +48,7 @@ export abstract class TwoDAxisPlotMaker extends PlotMaker {
   }
 
   protected yAxis2Layout(): Partial<Layout> {
-    const layout: Partial<Layout> = {};
+    const layout: Partial<Layout> = {hovermode: 'closest'};
 
     const axis = createAxisLayout(this.chartData.y2AxisData, 'y2Formatter');
     if (axis) {

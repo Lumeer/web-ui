@@ -423,8 +423,8 @@ export class ChartDataConverter {
           x: xAxis ? formattedValue : null,
           y: yAxis ? formattedValue : null,
           color: pointColor,
-          title: yAxis ? this.formatPointTitleValue(values[i], definedAxis) : null,
-          xTitle: xAxis ? this.formatPointTitleValue(values[i], definedAxis) : null,
+          title: yAxis ? title : null,
+          xTitle: xAxis ? title : null,
           size: null,
         };
         points.push(point);
@@ -621,12 +621,13 @@ export class ChartDataConverter {
         const id =
           canDragAxis && valueObjects.length === 1 && isValueAggregation(aggregation) ? valueObjects[0].id : null;
 
+        const sizeTitle = yAxisConfig?.size ? this.formatPointTitleValue(size, yAxisConfig?.size) : null;
         set.points.push({
           id,
           x: xValue,
           y: yValue,
           color: pointColor,
-          title: isNotNullOrUndefined(size) ? String(size) : title,
+          title: sizeTitle || title,
           xTitle,
           size,
         });
@@ -634,13 +635,14 @@ export class ChartDataConverter {
 
         isXNum = isXNum && isNumeric(xValue);
         xValues.add(xValue);
-        xTicks.push({value: xValue, title: xConstraint.createDataValue(xValue, this.constraintData).title()});
+        xTicks.push({value: xValue, title: xTitle});
 
         isYNum = isYNum && isNumeric(yValue);
         yValues.add(yValue);
-        yTicks.push({value: yValue, title: yConstraint.createDataValue(yValue, this.constraintData).title()});
+        yTicks.push({value: yValue, title});
       }
     }
+
     const sets = objectValues(setsMap);
     const xAxisHelperData: ChartAxisHelperData = {
       constraint: xConstraint,
