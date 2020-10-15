@@ -7,6 +7,10 @@
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.sign.label"
           (click)="forceSign.click()">Force sign</span>
+    <i class="fas fa-question-circle ml-1 cursor-help"
+       title="If turned on, there is always the plus or minus sign in front of the number."
+       i18n-title="@@constraint.number.sign.help">
+    </i>
   </div>
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
     <label class="switch" [for]="formControlName.Negative">
@@ -15,6 +19,10 @@
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.negative.label"
           (click)="negative.click()">Accounting negative numbers</span>
+    <i class="fas fa-question-circle ml-1 cursor-help"
+       title="If turned on, the negative numbers are in brackets instead of having the minus sign."
+       i18n-title="@@constraint.number.negative.help">
+    </i>
   </div>
 
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
@@ -24,6 +32,10 @@
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.compact.label"
           (click)="compact.click()">Compact mode</span>
+    <i class="fas fa-question-circle ml-1 cursor-help"
+       title="If turned on, the large numbers are abbreviated with corresponding suffixes like 10k, 12m etc."
+       i18n-title="@@constraint.number.compact.help">
+    </i>
   </div>
 
   <div class="d-flex flex-row flex-nowrap pt-2 align-items-center">
@@ -33,6 +45,10 @@
     </label>
     <span class="pl-2 cursor-pointer user-select-none" i18n="@@constraint.number.space.label"
           (click)="separated.click()">Thousands separated</span>
+    <i class="fas fa-question-circle ml-1 cursor-help"
+       title="If turned on, uses default thousands currency separator, or a space if currency is not set. E.g. 11 234."
+       i18n-title="@@constraint.number.space.help">
+    </i>
   </div>
 
   <div class="d-flex flex-column pt-3">
@@ -41,6 +57,10 @@
               i18n="@@constraint.number.decimals.label">
           Round to no. of decimal digits (0-10):
         </span>
+      <i class="fas fa-question-circle ml-1 cursor-help"
+         title="Leave empty for no rounding. Set to 0 for whole numbers. Otherwise specifies the mantissa length."
+         i18n-title="@@constraint.number.decimals.help">
+      </i>
     </label>
     <input class="form-control"
            [formControlName]="formControlName.Decimals"
@@ -65,6 +85,7 @@
                  [items]="currencySelectItems"
                  [selectedId]="currencyControl.value"
                  [removable]="true"
+                 [positionReverse]="false"
                  (select)="onCurrencySelect($event)"
                  (remove)="onCurrencySelect(null)"
                  emptyValue="Select currency"

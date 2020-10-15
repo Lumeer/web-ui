@@ -24,7 +24,8 @@ export enum LanguageTag {
   Denmark = 'da-DK',
   Switzerland = 'de-CH',
   NewZealand = 'en-NZ',
-  Canada = 'fr-CA',
+  FrenchCanada = 'fr-CA',
+  Canada = 'en-CA',
   Sweden = 'sv-SE',
   Norway = 'nb-NO',
   Finland = 'fi-FI',
@@ -48,6 +49,11 @@ export enum LanguageTag {
   Russia = 'ru-RU',
   Japan = 'ja-JP',
   Australia = 'en-AU',
+  Ireland = 'en-IE',
+  Malta = 'en-MT',
+  Turkey = 'tr-TR',
+  Ukraine = 'uk-UA',
+  India = 'en-IN',
 }
 
 export const localeLanguageTags: Record<string, LanguageTag> = {

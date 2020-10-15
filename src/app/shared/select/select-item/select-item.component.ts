@@ -72,6 +72,9 @@ export class SelectItemComponent implements OnChanges, OnDestroy {
   @Input()
   public fitParent = true;
 
+  @Input()
+  public positionReverse = true;
+
   @Output()
   public select = new EventEmitter<any>();
 

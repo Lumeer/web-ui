@@ -57,6 +57,9 @@ export class OptionsDropdownComponent implements OnChanges {
   public showBackdrop = true;
 
   @Input()
+  public positionReverse = true;
+
+  @Input()
   public fitParent: boolean;
 
   @Input()
@@ -245,6 +248,8 @@ export class OptionsDropdownComponent implements OnChanges {
   }
 
   public onPositionChange(position: DropdownPosition) {
-    this.dropdownPosition$.next(position);
+    if (this.positionReverse) {
+      this.dropdownPosition$.next(position);
+    }
   }
 }
