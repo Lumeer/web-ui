@@ -134,7 +134,7 @@ export class WorkflowTablesService {
   private copyColumnToPosition(column: TableColumn, direction: number) {
     const table = this.findTableByColumn(column);
     const newColumn = this.dataService.copyTableColumn(table, column);
-    this.stateService.addColumnToPosition(newColumn, direction);
+    this.stateService.addColumnToPosition(column.id, newColumn, direction);
   }
 
   private setDisplayedAttribute(column: TableColumn) {

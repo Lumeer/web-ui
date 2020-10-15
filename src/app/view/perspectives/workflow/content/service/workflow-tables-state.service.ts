@@ -243,9 +243,9 @@ export class WorkflowTablesStateService {
     }
   }
 
-  public addColumnToPosition(column: TableColumn, direction: number) {
+  public addColumnToPosition(columnId: string, column: TableColumn, direction: number) {
     const table = this.findTableByColumn(column);
-    const columnIndex = table?.columns.findIndex(c => c.id === column.id);
+    const columnIndex = table?.columns.findIndex(col => col.id === columnId);
     if (columnIndex > -1) {
       const newTables = [...this.tables];
 
