@@ -19,12 +19,9 @@
 
 import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {NumberConstraintConfig} from '../../core/model/data/constraint-config';
 import numbro from 'numbro';
 import NumbroLanguage = numbro.NumbroLanguage;
 import {environment} from '../../../environments/environment';
-import {isNumeric} from '../utils/common.utils';
-import Format = numbro.Format;
 import {LanguageTag} from '../../core/model/data/language-tag';
 
 export interface Currency {

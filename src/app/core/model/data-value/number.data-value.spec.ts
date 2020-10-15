@@ -21,9 +21,37 @@ import {QueryCondition} from '../../store/navigation/query/query';
 import {NumberDataValue} from './number.data-value';
 import {NumberConstraintConfig} from '../data/constraint-config';
 import {LanguageTag} from '../data/language-tag';
+import {CurrencyFormatService} from '../../../shared/currency/currencies';
+import {TestBed} from '@angular/core/testing';
+import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {environment} from '../../../../environments/environment';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 describe('NumberDataValue', () => {
   const config: NumberConstraintConfig = {};
+
+  beforeAll(() => {
+    let currencyService: CurrencyFormatService;
+    TestBed.configureTestingModule({
+      providers: [
+        {
+          provide: LOCALE_ID,
+          useFactory: () => environment.locale,
+        },
+        {
+          provide: TRANSLATIONS,
+          useFactory: () => require(`raw-loader!../../../../../src/i18n/messages.en.xlf`).default,
+          deps: [LOCALE_ID],
+        },
+        {
+          provide: TRANSLATIONS_FORMAT,
+          useFactory: () => environment.i18nFormat,
+        },
+        I18n,
+      ],
+    });
+    currencyService = TestBed.inject(CurrencyFormatService);
+  });
 
   describe('meet condition', () => {
     it('equals', () => {
@@ -186,9 +214,9 @@ describe('NumberDataValue', () => {
 
     const slovakCurrencyConfig: NumberConstraintConfig = {currency: LanguageTag.Slovak};
     it('Slovak currency config', () => {
-      expect(new NumberDataValue('10.11', slovakCurrencyConfig).format()).toBe('10,11€');
-      expect(new NumberDataValue('10,11', slovakCurrencyConfig).format()).toBe('10,11€');
-      expect(new NumberDataValue(10, slovakCurrencyConfig).format()).toBe('10€');
+      expect(new NumberDataValue('10.11', slovakCurrencyConfig).format()).toBe('10,11 €');
+      expect(new NumberDataValue('10,11', slovakCurrencyConfig).format()).toBe('10,11 €');
+      expect(new NumberDataValue(10, slovakCurrencyConfig).format()).toBe('10 €');
 
       expect(new NumberDataValue('10.11', slovakCurrencyConfig, '10.11').serialize()).toBe('10.11');
       expect(new NumberDataValue('10,11', slovakCurrencyConfig, '10,11').serialize()).toBe('10.11');
@@ -206,10 +234,10 @@ describe('NumberDataValue', () => {
 
     const deCurrencyConfig: NumberConstraintConfig = {currency: LanguageTag.Germany};
     it('Germany currency config', () => {
-      expect(new NumberDataValue('10.11', deCurrencyConfig).format()).toBe('10,11€');
-      expect(new NumberDataValue('10,11', deCurrencyConfig).format()).toBe('10,11€');
-      expect(new NumberDataValue(10, deCurrencyConfig).format()).toBe('10€');
-      expect(new NumberDataValue(10.3, deCurrencyConfig).format()).toBe('10,3€');
+      expect(new NumberDataValue('10.11', deCurrencyConfig).format()).toBe('10,11 €');
+      expect(new NumberDataValue('10,11', deCurrencyConfig).format()).toBe('10,11 €');
+      expect(new NumberDataValue(10, deCurrencyConfig).format()).toBe('10 €');
+      expect(new NumberDataValue(10.3, deCurrencyConfig).format()).toBe('10,3 €');
 
       expect(new NumberDataValue('10.11', deCurrencyConfig, '10.11').serialize()).toBe('1011');
       expect(new NumberDataValue('10,11', deCurrencyConfig, '10,11').serialize()).toBe('10.11');
