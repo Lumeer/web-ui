@@ -132,8 +132,16 @@ export class WorkflowTablesStateService {
   }
 
   public findTableColumn(tableId: string, columnId: string): TableColumn {
+    return this.findTableColumns(tableId).find(column => column.id === columnId);
+  }
+
+  public findTableColumns(tableId: string): TableColumn[] {
+    return this.tables.find(t => t.id === tableId)?.columns || [];
+  }
+
+  public findTableRow(tableId: string, rowId: string): TableRow {
     const table = this.tables.find(t => t.id === tableId);
-    return table?.columns.find(column => column.id === columnId);
+    return table?.rows.find(row => row.id === rowId);
   }
 
   public selectCell(
@@ -192,6 +200,21 @@ export class WorkflowTablesStateService {
     }
 
     this.setTables(newTables);
+  }
+
+  private setRowProperty(tableId: string, row: TableRow, properties: Record<string, any>) {
+    const newTables = [...this.tables];
+    const tableIndex = newTables.findIndex(table => table.id === tableId);
+    if (tableIndex !== -1) {
+      const rows = [...newTables[tableIndex].rows];
+      const rowIndex = rows.findIndex(r => r.id === row.id);
+      if (rowIndex !== -1) {
+        rows[rowIndex] = {...rows[rowIndex], ...properties};
+        newTables[tableIndex] = {...newTables[tableIndex], rows};
+
+        this.setTables(newTables);
+      }
+    }
   }
 
   public showColumns(columns: TableColumn[]) {
@@ -284,6 +307,14 @@ export class WorkflowTablesStateService {
   public endColumnCreating(column: TableColumn) {
     const table = this.findTableByColumn(column);
     this.setColumnProperty(table, column, {['creating']: false});
+  }
+
+  public startRowCreating(row: TableRow) {
+    this.setRowProperty(row.tableId, row, {['creating']: true});
+  }
+
+  public endRowCreating(row: TableRow) {
+    this.setRowProperty(row.tableId, row, {['creating']: false});
   }
 
   public resizeColumn(changedTable: TableModel, column: TableColumn, width: number) {

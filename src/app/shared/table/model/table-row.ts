@@ -17,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataResourceData} from '../../../core/model/resource';
 import {TableContextMenuItem} from './table-column';
 
 export interface TableRow {
   id: string;
-  documentId: string;
   tableId: string;
   height: number;
+  creating?: boolean;
+  documentId?: string;
   data?: Record<string, any>; // columnId -> string
   linkInstanceId?: string;
   correlationId?: string;

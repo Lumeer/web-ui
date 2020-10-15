@@ -197,7 +197,7 @@ export class WorkflowTablesDataService {
       columnNames.push(column.name || column.attribute?.name);
     }
 
-    if (!attributeColumns.some(column => !column.attribute)) {
+    if (permissions.manageWithView && !attributeColumns.some(column => !column.attribute)) {
       const lastColumn: TableColumn = {
         id: generateId(),
         tableId,
@@ -243,7 +243,7 @@ export class WorkflowTablesDataService {
       return map;
     }, {});
 
-    return documents.map(document => {
+    const rows = documents.map(document => {
       const currentRow = rowsMap[document.correlationId || document.id];
       const documentData = objectKeys(document.data || {}).reduce((data, attributeId) => {
         if (columnIdsMap[attributeId]) {
@@ -264,6 +264,20 @@ export class WorkflowTablesDataService {
       row.menuItems.push(...this.menuService.createRowMenu(permissions, row));
       return row;
     });
+
+    if (permissions.writeWithView && !rows.some(row => !row.documentId)) {
+      const newRow = {
+        id: generateId(),
+        data: {},
+        tableId,
+        height: TABLE_ROW_HEIGHT,
+        menuItems: [],
+      };
+      newRow.menuItems.push(...this.menuService.createRowMenu(permissions, newRow));
+      rows.push(newRow);
+    }
+
+    return rows;
   }
 
   public createAttribute(column: TableColumn, name: string) {
@@ -299,13 +313,31 @@ export class WorkflowTablesDataService {
     return column.creating;
   }
 
+  public isRowCreating(row: TableRow): boolean {
+    return row.creating;
+  }
+
   private onAttributeCreated(attribute: Attribute, column: TableColumn) {
     const newColumn = {...column, attribute};
+    const deleteRows = [];
     for (const update of this.pendingColumnValues[column.id] || []) {
-      this.patchData(update.row, newColumn, update.value);
+      const freshRow = this.stateService?.findTableRow(update.row.tableId, update.row.id);
+      if (freshRow?.documentId) {
+        this.patchColumnData(freshRow, newColumn, update.value);
+        deleteRows.push(freshRow.id);
+      } else if (freshRow) {
+        this.createDocument(freshRow, newColumn, update.value);
+      }
     }
 
-    delete this.pendingColumnValues[column.id];
+    if (this.pendingColumnValues) {
+      this.pendingColumnValues[column.id] = this.pendingColumnValues[column.id].filter(
+        update => !deleteRows.includes(update.row.id)
+      );
+      if (this.pendingColumnValues[column.id].length === 0) {
+        delete this.pendingColumnValues[column.id];
+      }
+    }
   }
 
   public removeRow(row: TableRow, column: TableColumn) {
@@ -394,7 +426,7 @@ export class WorkflowTablesDataService {
 
   public saveRowNewValue(row: TableRow, column: TableColumn, value: any) {
     if (column.attribute) {
-      this.patchData(row, column, value);
+      this.patchColumnData(row, column, value);
     } else {
       this.stateService.setRowValue(row, column, value);
       this.setPendingRowValue(row, column, value);
@@ -402,6 +434,95 @@ export class WorkflowTablesDataService {
       if (!this.isColumnCreating(column)) {
         this.createAttribute(column, column.name);
       }
+    }
+  }
+
+  public createNewDocument(row: TableRow, column: TableColumn, value: any) {
+    if (column.attribute) {
+      this.createDocument(row, column, value);
+    } else {
+      this.stateService.setRowValue(row, column, value);
+      this.setPendingRowValue(row, column, value);
+
+      if (!this.isColumnCreating(column)) {
+        this.createAttribute(column, column.name);
+      }
+    }
+  }
+
+  private createDocument(row: TableRow, column: TableColumn, value: any) {
+    if (this.isRowCreating(row)) {
+      this.setPendingRowValue(row, column, value);
+      return;
+    }
+
+    this.stateService.startRowCreating(row);
+    const data = {...this.createPendingRowValues(row), [column.attribute.id]: value};
+    if (column.collectionId) {
+      const document: DocumentModel = {
+        correlationId: row.id,
+        collectionId: column.collectionId,
+        data,
+      };
+      this.store$.dispatch(
+        new DocumentsAction.Create({
+          document,
+          onSuccess: documentId => this.onRowCreated(row, data, documentId),
+          onFailure: () => this.stateService.endRowCreating(row),
+        })
+      );
+    } else if (column.linkTypeId) {
+      // TODO create with link
+    }
+  }
+
+  private createPendingRowValues(row: TableRow): Record<string, any> {
+    return this.stateService.findTableColumns(row.tableId).reduce((map, column) => {
+      if (column.attribute) {
+        const pendingRowUpdate = this.findPendingRowUpdate(column, row);
+        if (pendingRowUpdate) {
+          map[column.attribute.id] = pendingRowUpdate.value;
+        }
+      }
+      return map;
+    }, {});
+  }
+
+  private findPendingRowUpdate(column: TableColumn, row: TableRow): PendingRowUpdate {
+    const pendingValues = this.pendingColumnValues[column.id];
+    return pendingValues?.find(pending => pending.row.id === row.id);
+  }
+
+  private onRowCreated(row: TableRow, data: Record<string, any>, documentId: string, linkInstanceId?: string) {
+    const columns = this.stateService.findTableColumns(row.tableId);
+    const patchData: Record<string, any> = {};
+    const patchLinkData: Record<string, any> = {};
+    let collectionId: string;
+    let linkTypeId: string;
+
+    const usedAttributeIds = Object.keys(data);
+    for (const column of columns.filter(col => !!col.attribute)) {
+      const updates = this.pendingColumnValues[column.id] || [];
+      const rowUpdateIndex = updates.findIndex(update => update.row.id === row.id);
+      const columnUpdate = updates[rowUpdateIndex];
+      if (rowUpdateIndex !== -1) {
+        updates.splice(rowUpdateIndex, 1);
+        if (!usedAttributeIds.includes(column.id)) {
+          if (column.collectionId) {
+            collectionId = column.collectionId;
+            patchData[column.attribute.id] = columnUpdate.value;
+          } else if (column.linkTypeId) {
+            linkTypeId = column.linkTypeId;
+            patchLinkData[column.attribute.id] = columnUpdate.value;
+          }
+        }
+      }
+    }
+
+    if (collectionId && Object.keys(patchData).length) {
+      this.patchData({...row, documentId}, patchData, collectionId);
+    } else if (linkTypeId && Object.keys(patchLinkData).length) {
+      this.patchData({...row, documentId, linkInstanceId}, patchLinkData, null, linkTypeId);
     }
   }
 
@@ -415,22 +536,17 @@ export class WorkflowTablesDataService {
     }
   }
 
-  private patchData(row: TableRow, column: TableColumn, value: any) {
+  private patchColumnData(row: TableRow, column: TableColumn, value: any) {
     const patchData = {[column.attribute.id]: value};
-    if (column.collectionId && row.documentId) {
-      const document: DocumentModel = {
-        id: row.documentId,
-        collectionId: column.collectionId,
-        data: patchData,
-      };
+    this.patchData(row, patchData, column.collectionId, column.linkTypeId);
+  }
+
+  private patchData(row: TableRow, data: Record<string, any>, collectionId?: string, linkTypeId?: string) {
+    if (collectionId && row.documentId) {
+      const document: DocumentModel = {id: row.documentId, collectionId, data};
       this.store$.dispatch(new DocumentsAction.PatchData({document}));
-    } else if (column.linkTypeId && row.linkInstanceId) {
-      const linkInstance: LinkInstance = {
-        id: row.linkInstanceId,
-        linkTypeId: column.linkTypeId,
-        data: patchData,
-        documentIds: ['', ''],
-      };
+    } else if (linkTypeId && row.linkInstanceId) {
+      const linkInstance: LinkInstance = {id: row.linkInstanceId, linkTypeId, data, documentIds: ['', '']};
       this.store$.dispatch(new LinkInstancesAction.PatchData({linkInstance}));
     }
   }

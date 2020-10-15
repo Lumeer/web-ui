@@ -152,7 +152,11 @@ export class WorkflowTablesService {
   }
 
   public onRowNewValue(row: TableRow, column: TableColumn, value: any, action: DataInputSaveAction) {
-    this.dataService.saveRowNewValue(row, column, value);
+    if (row.documentId) {
+      this.dataService.saveRowNewValue(row, column, value);
+    } else {
+      this.dataService.createNewDocument(row, column, value);
+    }
 
     const cell = {rowId: row.id, columnId: column.id, type: TableCellType.Body, tableId: column.tableId};
     this.onCellSave(cell, action);
