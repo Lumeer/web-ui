@@ -41,7 +41,6 @@ import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFullte
 import numbro from 'numbro';
 import languages from 'numbro/dist/languages.min';
 import {currentLocaleLanguageTag, LanguageTag} from '../data/language-tag';
-import {trimTrailingNulls} from '@angular/compiler/src/render3/view/util';
 
 export class NumberDataValue implements NumericDataValue {
   public readonly bigNumber: Big;
@@ -202,7 +201,9 @@ function parseNumbroConfig(
   if (overrideConfig?.separated || config.separated) {
     numbroConfig.thousandSeparated = true;
     numbroConfig.spaceSeparated = true;
-    numbroConfig.spaceSeparatedCurrency = true;
+  }
+  if (overrideConfig?.currency || config.currency) {
+    numbroConfig.spaceSeparatedCurrency = numbro.languageData().currencyFormat.spaceSeparatedCurrency;
   }
   numbroConfig.average = overrideConfig?.compact || config.compact || false;
 
