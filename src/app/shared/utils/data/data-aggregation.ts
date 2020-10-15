@@ -88,6 +88,8 @@ function sumValues(values: any[], constraint: Constraint, onlyNumeric): any {
     case ConstraintType.Percentage:
     case ConstraintType.Duration:
       return sumNumericValues(values, onlyNumeric);
+    case ConstraintType.DateTime:
+      return sumAnyValues(values, onlyNumeric);
     default:
       if (formattedValuesAreNumeric(values, constraint)) {
         return sumNumericValues(formattedValues(values, constraint), onlyNumeric);
@@ -157,6 +159,8 @@ function avgValues(values: any[], constraint: Constraint, onlyNumeric): any {
     case ConstraintType.Percentage:
     case ConstraintType.Duration:
       return avgNumericValues(values, onlyNumeric);
+    case ConstraintType.DateTime:
+      return avgNumericValues(values, onlyNumeric);
     default:
       if (formattedValuesAreNumeric(values, constraint)) {
         return avgNumericValues(formattedValues(values, constraint), onlyNumeric);
@@ -207,6 +211,8 @@ function minInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
     case ConstraintType.Percentage:
     case ConstraintType.Duration:
       return minInNumericValues(values, onlyNumeric);
+    case ConstraintType.DateTime:
+      return minInNumericValues(values, onlyNumeric);
     default:
       if (formattedValuesAreNumeric(values, constraint)) {
         return minInNumericValues(formattedValues(values, constraint), onlyNumeric);
@@ -240,6 +246,8 @@ function maxInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
     case ConstraintType.Number:
     case ConstraintType.Percentage:
     case ConstraintType.Duration:
+      return maxInNumericValues(values, onlyNumeric);
+    case ConstraintType.DateTime:
       return maxInNumericValues(values, onlyNumeric);
     default:
       if (formattedValuesAreNumeric(values, constraint)) {

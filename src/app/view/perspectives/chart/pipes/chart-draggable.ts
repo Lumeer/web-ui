@@ -19,12 +19,16 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {ChartData} from '../data/convertor/chart-data';
+import {ChartType} from '../../../../core/store/charts/chart';
 
 @Pipe({
   name: 'chartDraggable',
 })
 export class ChartDraggable implements PipeTransform {
   public transform(data: ChartData): boolean {
+    if (data?.type === ChartType.Bubble) {
+      return false;
+    }
     return data?.sets?.some(set => set.draggable);
   }
 }
