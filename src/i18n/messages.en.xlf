@@ -2393,7 +2393,7 @@
           <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit><trans-unit id="map.config.attribute.placeholder" datatype="html">
-        <source>Attribute</source><target state="final">Attribute</target>
+        <source>Location</source><target state="final">Location</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="map.placeholder.title" datatype="html">
         <source>No places found!</source><target state="final">No places found!</target>
@@ -2547,10 +2547,12 @@
         <source>Cannot display anything</source><target state="final">Cannot display anything</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
-        <source>Please configure your view in the sidebar on the left
-      first.
-    </source><target state="final">Please configure your view in the sidebar on the left
-      first.
+        <source>
+      Please make sure your query results in some data (by switching to the Detail view for example).
+      Also check your pivot table configuration in the sidebar on the left.
+    </source><target state="final">
+      Please make sure your query results in some data (by switching to the Detail view for example).
+      Also check your pivot table configuration in the sidebar on the left.
     </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
@@ -4379,7 +4381,7 @@
         <source>Reset bearing to north</source><target state="final">Reset bearing to north</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.config.attribute.empty" datatype="html">
-        <source>Select attribute</source><target state="final">Select attribute</target>
+        <source>Select location</source><target state="final">Select location</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="pivot.config.attribute.empty" datatype="html">
         <source>Select attribute</source><target state="final">Select attribute</target>

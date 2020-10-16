@@ -2721,7 +2721,7 @@
           <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit><trans-unit id="map.config.attribute.placeholder" datatype="html">
-        <source>Attribute</source><target>Atribut</target>
+        <source>Location</source><target>Poloha</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit>
             <trans-unit id="map.placeholder.title" datatype="html">
@@ -2876,9 +2876,13 @@
         <source>Cannot display anything</source><target>Nemohu nic zobrazit</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
-        <source>Please configure your view in the sidebar on the left
-      first.
-    </source><target>Nejdříve si prosím nastavte pohled v panelu nalevo.</target>
+        <source>
+      Please make sure your query results in some data (by switching to the Detail view for example).
+      Also check your pivot table configuration in the sidebar on the left.
+    </source><target>
+    Ujistěte se, že váš dotaz obsahuje nějaké údaje (například přepnutím do pohledu Detail).
+    Také prověřte nastavení pivot tabulky v panelu vlevo.
+    </target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
         <source>Select value aggregation</source><target>Zvolte způsob agregace hodnot</target>
@@ -4412,7 +4416,7 @@
         <source>Reset bearing to north</source><target>Otočit zpět na sever</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/map/content/globe-content/render/map-globe-render.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="map.config.attribute.empty" datatype="html">
-        <source>Select attribute</source><target>Vyberte atribut</target>
+        <source>Select location</source><target>Vyberte polohu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/map/panel/stem-config/attribute-select/map-attribute-select.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="pivot.config.attribute.empty" datatype="html">
         <source>Select attribute</source><target>Vyberte atribut</target>
