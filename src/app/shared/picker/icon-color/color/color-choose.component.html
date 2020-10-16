@@ -30,6 +30,15 @@
     </i>
   </div>
   <div class="rounded"
+       *ngFor="let colorOption of sepiaColors"
+       [style.background]="colorOption"
+       [style.border-color]="colorOption | highlightColor:color"
+       (mouseenter)="onPreview(elem, colorOption)"
+       (mouseleave)="unPreview(elem, colorOption)"
+       #elem
+       (click)="onSelect(colorOption)">
+  </div>
+  <div class="rounded"
     *ngFor="let colorOption of saturatedColors"
     [style.background]="colorOption"
     [style.border-color]="colorOption | highlightColor:color"

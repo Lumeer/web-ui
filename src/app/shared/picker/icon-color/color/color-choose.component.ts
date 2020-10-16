@@ -50,6 +50,7 @@ export class ColorChooseComponent implements OnChanges {
   public customColor = false;
 
   public readonly greyscaleColors = colors.greyscale;
+  public readonly sepiaColors = colors.sepia;
   public readonly saturatedColors = colors.saturated;
   public readonly colors = colors.palette;
 

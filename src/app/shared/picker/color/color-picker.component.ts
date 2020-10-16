@@ -27,7 +27,7 @@ import {
   ViewChild,
   HostListener,
 } from '@angular/core';
-import {greyscale, palette, saturated} from '../colors';
+import {greyscale, palette, saturated, sepia} from '../colors';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
@@ -64,7 +64,7 @@ export class ColorPickerComponent {
 
   private selectedValue: string;
 
-  public readonly localPalette = [...greyscale, '#ffffff', ...saturated, ...palette];
+  public readonly localPalette = [...greyscale, '#ffffff', ...sepia, ...saturated, ...palette];
   public readonly dropdownPositions = [
     DropdownPosition.BottomStart,
     DropdownPosition.TopStart,
