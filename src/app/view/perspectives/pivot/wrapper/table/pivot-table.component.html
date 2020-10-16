@@ -1,4 +1,4 @@
-<ng-container *ngIf="pivotTables?.length; else emptyCells">
+<ng-container *ngIf="pivotTables?.length && !(pivotData | pivotDataEmpty); else emptyCells">
   <table *ngFor="let pivotTable of pivotTables; let first"
          class="table table-bordered table-md"
          [class.mt-4]="!first">
@@ -42,8 +42,9 @@
   <empty-state class="w-100"
                icon="far fa-empty-set">
     <h3 i18n="@@perspective.pivot.table.empty.title">Cannot display anything</h3>
-    <div i18n="@@perspective.pivot.table.empty.description">Please configure your view in the sidebar on the left
-      first.
+    <div i18n="@@perspective.pivot.table.empty.description">
+      Please make sure your query results in some data (by switching to the Detail view for example).
+      Also check your pivot table configuration in the sidebar on the left.
     </div>
   </empty-state>
 </ng-template>
