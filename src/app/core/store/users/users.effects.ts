@@ -30,7 +30,6 @@ import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
-import {RouterAction} from '../router/router.action';
 import {convertDefaultWorkspaceModelToDto, convertUserDtoToModel, convertUserModelToDto} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
@@ -46,7 +45,7 @@ export class UsersEffects {
     ofType<UsersAction.Get>(UsersActionType.GET),
     withLatestFrom(this.store$.select(selectUsersLoadedForOrganization)),
     filter(([action, loadedOrganizationId]) => loadedOrganizationId !== action.payload.organizationId),
-    map(([action, loaded]) => action),
+    map(([action]) => action),
     mergeMap(action =>
       this.userService.getUsers(action.payload.organizationId).pipe(
         map(dtos => ({

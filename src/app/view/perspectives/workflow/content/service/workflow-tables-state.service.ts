@@ -32,7 +32,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {ViewSettings} from '../../../../../core/store/views/view';
-import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {deepObjectCopy, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {TableRow} from '../../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../../shared/utils/array.utils';
 
@@ -193,7 +193,7 @@ export class WorkflowTablesStateService {
 
         if (columnIndex !== -1) {
           const columns = [...newTable.columns];
-          columns[columnIndex] = {...newTable.columns[columnIndex], ...properties};
+          columns[columnIndex] = setObjectProperties(newTable.columns[columnIndex], properties);
           newTables[i] = {...newTable, columns};
         }
       }
@@ -209,7 +209,7 @@ export class WorkflowTablesStateService {
       const rows = [...newTables[tableIndex].rows];
       const rowIndex = rows.findIndex(r => r.id === row.id);
       if (rowIndex !== -1) {
-        rows[rowIndex] = {...rows[rowIndex], ...properties};
+        rows[rowIndex] = setObjectProperties(rows[rowIndex], properties);
         newTables[tableIndex] = {...newTables[tableIndex], rows};
 
         this.setTables(newTables);
@@ -286,14 +286,17 @@ export class WorkflowTablesStateService {
   }
 
   public setRowValue(row: TableRow, column: TableColumn, value: any) {
-    const tableIndex = this.findTableIndexByColumn(column);
+    this.setRowProperty(column.tableId, row, {[`data.${column.id}`]: value});
+  }
+
+  public removeRow(row: TableRow) {
+    const tableIndex = this.findTableIndexByRow(row);
     const rowIndex = this.tables[tableIndex]?.rows.findIndex(r => r.id === row.id);
     if (rowIndex > -1) {
       const newTables = [...this.tables];
-      const newRows = [...newTables[tableIndex].rows];
-      const currentRow = newRows[rowIndex];
-      newRows[rowIndex] = {...currentRow, data: {...currentRow.data, [column.id]: value}};
-      newTables[tableIndex] = {...newTables[tableIndex], rows: newRows};
+      const rows = [...newTables[tableIndex].rows];
+      rows.splice(rowIndex, 1);
+      newTables[tableIndex] = {...newTables[tableIndex], rows};
 
       this.setTables(newTables);
     }
@@ -309,8 +312,8 @@ export class WorkflowTablesStateService {
     this.setColumnProperty(table, column, {['creating']: false});
   }
 
-  public startRowCreating(row: TableRow) {
-    this.setRowProperty(row.tableId, row, {['creating']: true});
+  public startRowCreating(row: TableRow, column: TableColumn, value) {
+    this.setRowProperty(row.tableId, row, {['creating']: true, [`data.${column.id}`]: value});
   }
 
   public endRowCreating(row: TableRow) {
@@ -339,8 +342,33 @@ export class WorkflowTablesStateService {
   }
 
   private findTableIndexByColumn(column: TableColumn): number {
-    return this.tables.findIndex(table => table.id === column.tableId);
+    return this.findTableIndexById(column.tableId);
   }
+
+  private findTableIndexByRow(row: TableRow): number {
+    return this.findTableIndexById(row.tableId);
+  }
+
+  private findTableIndexById(id: string): number {
+    return this.tables.findIndex(table => table.id === id);
+  }
+}
+
+function setObjectProperties<T>(object: T, properties: Record<string, any>): T {
+  const copy = deepObjectCopy<T>(object);
+  Object.keys(properties).forEach(property => {
+    let currentObject = copy;
+    const parts = property.split('.');
+
+    for (let i = 0; i < parts.length - 1; i++) {
+      const key = parts[i];
+      currentObject[key] = currentObject[key] || {};
+      currentObject = currentObject[key];
+    }
+
+    currentObject[parts[parts.length - 1]] = properties[property];
+  });
+  return copy;
 }
 
 function tablesAreSame(t1: TableModel, t2: TableModel): boolean {

@@ -223,7 +223,7 @@ export class WorkflowTablesDataService {
     documents: DocumentModel[],
     permissions: AllowedPermissions
   ): TableRow[] {
-    const rowsMap = currentRows.reduce((map, row) => ({...map, [row.correlationId || row.documentId]: row}), {});
+    const rowsMap = currentRows.reduce((map, row) => ({...map, [row.documentId || row.correlationId]: row}), {});
 
     const columnIdsMap = columns.reduce((idsMap, column) => {
       if (column.attribute) {
@@ -243,8 +243,8 @@ export class WorkflowTablesDataService {
       return map;
     }, {});
 
-    const rows = documents.map(document => {
-      const currentRow = rowsMap[document.correlationId || document.id];
+    const rows = documents.map((document, index) => {
+      const currentRow = rowsMap[document.correlationId || document.id] || rowsMap[document.id];
       const documentData = objectKeys(document.data || {}).reduce((data, attributeId) => {
         if (columnIdsMap[attributeId]) {
           data[columnIdsMap[attributeId]] = document.data[attributeId];
@@ -252,24 +252,36 @@ export class WorkflowTablesDataService {
         return data;
       }, {});
       const pendingData = (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
+      const id = currentRow?.id || generateId();
       const row: TableRow = {
-        id: currentRow?.id || generateId(),
-        data: {...documentData, ...pendingData},
+        id,
         tableId,
+        data: {...documentData, ...pendingData},
         documentId: document.id,
         height: currentRow?.height || TABLE_ROW_HEIGHT,
-        correlationId: document.correlationId,
+        correlationId: document.correlationId || id,
         menuItems: [],
       };
       row.menuItems.push(...this.menuService.createRowMenu(permissions, row));
       return row;
     });
+    const rowsIds = new Set(rows.map(row => row.id));
+
+    for (let i = 0; i < currentRows?.length; i++) {
+      const row = currentRows[i];
+      if (!row.documentId && !rowsIds.has(row.id)) {
+        // we are adding new rows only to the end
+        rows.push(row);
+      }
+    }
 
     if (permissions.writeWithView && !rows.some(row => !row.documentId)) {
-      const newRow = {
-        id: generateId(),
-        data: {},
+      const id = generateId();
+      const newRow: TableRow = {
+        id,
         tableId,
+        data: {},
+        correlationId: id,
         height: TABLE_ROW_HEIGHT,
         menuItems: [],
       };
@@ -341,15 +353,19 @@ export class WorkflowTablesDataService {
   }
 
   public removeRow(row: TableRow, column: TableColumn) {
-    if (row.documentId && column.collectionId) {
-      this.store$.dispatch(
-        new DocumentsAction.DeleteConfirm({
-          collectionId: column.collectionId,
-          documentId: row.documentId,
-        })
-      );
+    if (row.documentId) {
+      if (row.linkInstanceId) {
+        // TODO remove only connection when its link
+      } else {
+        this.store$.dispatch(
+          new DocumentsAction.DeleteConfirm({
+            collectionId: column.collectionId,
+            documentId: row.documentId,
+          })
+        );
+      }
     } else {
-      // TODO
+      this.stateService.removeRow(row);
     }
   }
 
@@ -456,7 +472,7 @@ export class WorkflowTablesDataService {
       return;
     }
 
-    this.stateService.startRowCreating(row);
+    this.stateService.startRowCreating(row, column, value);
     const data = {...this.createPendingRowValues(row), [column.attribute.id]: value};
     if (column.collectionId) {
       const document: DocumentModel = {
@@ -467,7 +483,7 @@ export class WorkflowTablesDataService {
       this.store$.dispatch(
         new DocumentsAction.Create({
           document,
-          onSuccess: documentId => this.onRowCreated(row, data, documentId),
+          afterSuccess: documentId => this.onRowCreated(row, data, documentId),
           onFailure: () => this.stateService.endRowCreating(row),
         })
       );
@@ -507,7 +523,7 @@ export class WorkflowTablesDataService {
       const columnUpdate = updates[rowUpdateIndex];
       if (rowUpdateIndex !== -1) {
         updates.splice(rowUpdateIndex, 1);
-        if (!usedAttributeIds.includes(column.id)) {
+        if (!usedAttributeIds.includes(column.attribute.id)) {
           if (column.collectionId) {
             collectionId = column.collectionId;
             patchData[column.attribute.id] = columnUpdate.value;

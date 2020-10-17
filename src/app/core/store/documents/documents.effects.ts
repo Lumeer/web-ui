@@ -135,6 +135,7 @@ export class DocumentsEffects {
                   correlationId: document.correlationId,
                 }),
                 new DocumentsAction.CheckDataHint({document: action.payload.document}),
+                ...createCallbackActions(action.payload.afterSuccess, document.id),
               ];
             }),
             catchError(error =>

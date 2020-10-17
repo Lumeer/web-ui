@@ -114,6 +114,7 @@ export namespace DocumentsAction {
         document: DocumentModel;
         onSuccess?: (documentId: string) => void;
         onFailure?: () => void;
+        afterSuccess?: (documentId: string) => void;
       }
     ) {}
   }
