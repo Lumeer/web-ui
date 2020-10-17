@@ -21,8 +21,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -46,6 +48,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {ModalService} from '../../../../../shared/modal/modal.service';
+import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 
 const ITEMS_LIMIT = 15;
 
@@ -59,10 +62,17 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   @Input()
   public cursor: TableBodyCursor;
 
+  @Input()
+  public parts: TableConfigPart[];
+
+  @Output()
+  public addColumn = new EventEmitter();
+
   @ViewChild(ContextMenuComponent)
   public contextMenuComponent: ContextMenuComponent;
 
   public collections$: Observable<Collection[]>;
+  public collection$: Observable<Collection>;
   public linkTypes$: Observable<[LinkType, Collection, Collection][]>;
 
   private menuShown: boolean;
@@ -136,6 +146,10 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   public onUseLinkType(linkType: LinkType) {
     this.store$.dispatch(new NavigationAction.AddLinkToQuery({linkTypeId: linkType.id}));
+  }
+
+  public onAddColumn() {
+    this.addColumn.emit();
   }
 
   public onButtonClick(event: MouseEvent) {
