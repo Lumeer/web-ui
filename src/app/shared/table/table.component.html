@@ -6,7 +6,11 @@
   <table-resize-header [columns]="tableModel.columns"
                        (resizeColumn)="onResizeColumn($event)">
   </table-resize-header>
-  <cdk-virtual-scroll-viewport lmrItemSize style="height: 100%" [disabled]="scrollDisabled$ | async">
+  <cdk-virtual-scroll-viewport lmrItemSize
+                               (scroll)="onScroll()"
+                               [style.height.%]="100"
+                               [disabled]="scrollDisabled$ | async"
+                               [columns]="tableModel.columns">
     <table class="table lmr-table position-relative">
       <thead table-header [columns]="tableModel.columns"
              [selectedCell]="selectedCell"

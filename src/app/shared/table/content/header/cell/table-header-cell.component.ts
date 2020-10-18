@@ -22,7 +22,6 @@ import {TableColumn, TableContextMenuItem} from '../../../model/table-column';
 import {TableMenuComponent} from '../../common/menu/table-menu.component';
 import {preventEvent} from '../../../../utils/common.utils';
 import {ContextMenuService} from 'ngx-contextmenu';
-import {ModalService} from '../../../../modal/modal.service';
 import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
 
 @Component({
@@ -69,14 +68,16 @@ export class TableHeaderCellComponent {
   @ViewChild(TableHeaderHiddenMenuComponent)
   public hiddenContextMenuComponent: TableHeaderHiddenMenuComponent;
 
-  constructor(private contextMenuService: ContextMenuService, private modalService: ModalService) {}
+  constructor(private contextMenuService: ContextMenuService) {}
 
   public onHeaderCancel() {
     this.onCancel.emit();
   }
 
   public onHeaderSave(name: string) {
-    this.newName.emit(name);
+    if (!this.column.attribute || this.column.attribute.name !== name) {
+      this.newName.emit(name);
+    }
   }
 
   public onContextMenu(event: MouseEvent) {

@@ -32,9 +32,12 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {ViewSettings} from '../../../../../core/store/views/view';
-import {deepObjectCopy, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {deepObjectCopy, isNotNullOrUndefined, objectsByIdMap} from '../../../../../shared/utils/common.utils';
 import {TableRow} from '../../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../../shared/utils/array.utils';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../shared/settings/settings.util';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -42,11 +45,12 @@ export class WorkflowTablesStateService {
   public readonly editedCell$ = new BehaviorSubject<EditedTableCell>(null);
   public readonly tables$ = new BehaviorSubject<TableModel[]>([]);
 
-  private collections: Collection[];
-  private documents: DocumentModel[];
-  private query: Query;
-  private viewSettings: ViewSettings;
-  private permissions: Record<string, AllowedPermissions>;
+  private currentCollectionsMap: Record<string, Collection>;
+  private currentLinkTypesMap: Record<string, LinkType>;
+  private currentDocuments: DocumentModel[];
+  private currentQuery: Query;
+  private currentViewSettings: ViewSettings;
+  private currentPermissions: Record<string, AllowedPermissions>;
 
   public updateData(
     collections: Collection[],
@@ -55,11 +59,12 @@ export class WorkflowTablesStateService {
     query: Query,
     viewSettings: ViewSettings
   ) {
-    this.collections = collections;
-    this.documents = documents;
-    this.permissions = permissions;
-    this.query = query;
-    this.viewSettings = viewSettings;
+    this.currentCollectionsMap = objectsByIdMap(collections);
+    this.currentLinkTypesMap = objectsByIdMap([]);
+    this.currentDocuments = documents;
+    this.currentPermissions = permissions;
+    this.currentQuery = query;
+    this.currentViewSettings = viewSettings;
   }
 
   public setTables(tables: TableModel[]) {
@@ -78,9 +83,45 @@ export class WorkflowTablesStateService {
     return {...this.editedCell$.value};
   }
 
+  public get collections(): Collection[] {
+    return Object.values(this.currentCollectionsMap || {});
+  }
+
+  public get collectionsMap(): Record<string, Collection> {
+    return this.currentCollectionsMap;
+  }
+
+  public get linkTypes(): LinkType[] {
+    return Object.values(this.currentLinkTypesMap || {});
+  }
+
+  public get linkTypesMap(): Record<string, LinkType> {
+    return this.currentLinkTypesMap;
+  }
+
+  public get query(): Query {
+    return this.currentQuery;
+  }
+
+  public get permissions(): Record<string, AllowedPermissions> {
+    return this.currentPermissions;
+  }
+
+  public get viewSettings(): ViewSettings {
+    return this.currentViewSettings;
+  }
+
+  public get documents(): DocumentModel[] {
+    return this.currentDocuments;
+  }
+
+  public get linkInstances(): LinkInstance[] {
+    return [];
+  }
+
   public getColumnPermissions(column: TableColumn): AllowedPermissions {
     if (column.collectionId) {
-      return this.permissions?.[column.collectionId];
+      return this.currentPermissions?.[column.collectionId];
     }
     // TODO links
     return {};
@@ -142,6 +183,13 @@ export class WorkflowTablesStateService {
   public findTableRow(tableId: string, rowId: string): TableRow {
     const table = this.tables.find(t => t.id === tableId);
     return table?.rows.find(row => row.id === rowId);
+  }
+
+  public findColumnResources(column: TableColumn): {collection: Collection; linkType: LinkType} {
+    return {
+      collection: this.currentCollectionsMap?.[column.collectionId],
+      linkType: this.currentLinkTypesMap?.[column.linkTypeId],
+    };
   }
 
   public selectCell(
@@ -217,29 +265,6 @@ export class WorkflowTablesStateService {
     }
   }
 
-  public showColumns(columns: TableColumn[]) {
-    const newTables = [...this.tables];
-    const table = this.findTableByColumn(columns[0]);
-
-    const newColumns = [...table.columns];
-    for (let j = 0; j < columns.length; j++) {
-      const columnIndex = newColumns.findIndex(col => col.id === columns[j].id);
-
-      if (columnIndex !== -1) {
-        newColumns[columnIndex] = {...newColumns[columnIndex], hidden: false};
-      }
-    }
-
-    for (let i = 0; i < newTables.length; i++) {
-      const newTable = newTables[i];
-      if (tablesAreSame(table, newTable)) {
-        newTables[i] = {...newTable, columns: newColumns};
-      }
-    }
-
-    this.setTables(newTables);
-  }
-
   public deleteColumn(column: TableColumn) {
     const newTables = [...this.tables];
     const table = this.findTableByColumn(column);
@@ -257,13 +282,6 @@ export class WorkflowTablesStateService {
     }
 
     this.setTables(newTables);
-  }
-
-  public hideColumn(column: TableColumn) {
-    const table = this.findTableByColumn(column);
-    if (table) {
-      this.setColumnProperty(table, column, {['hidden']: true});
-    }
   }
 
   public addColumnToPosition(columnId: string, column: TableColumn, direction: number) {
@@ -324,7 +342,26 @@ export class WorkflowTablesStateService {
     this.setColumnProperty(changedTable, column, {['width']: width});
   }
 
+  public addColumn(column: TableColumn, position: number) {
+    // prevent from detect change for settings
+    this.syncColumnSettingsAfterAdd(column, position);
+  }
+
+  private syncColumnSettingsAfterAdd(column: TableColumn, position: number) {
+    const {collection, linkType} = this.findColumnResources(column);
+    this.currentViewSettings = addAttributeToSettings(
+      this.currentViewSettings,
+      column.attribute.id,
+      position,
+      collection,
+      linkType
+    );
+  }
+
   public moveColumns(changedTable: TableModel, from: number, to: number) {
+    // prevent from detect change for settings
+    this.syncColumnSettingsAfterMove(changedTable, from, to);
+
     const newTables = [...this.tables];
     for (let i = 0; i < newTables.length; i++) {
       const table = newTables[i];
@@ -337,12 +374,20 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  private findTableByColumn(column: TableColumn): TableModel {
-    return this.tables.find(table => table.id === column.tableId);
+  private syncColumnSettingsAfterMove(table: TableModel, from: number, to: number) {
+    const column = table.columns[from];
+    if (column) {
+      const {collection, linkType} = this.findColumnResources(column);
+      this.currentViewSettings = moveAttributeInSettings(this.currentViewSettings, from, to, collection, linkType);
+    }
   }
 
-  private findTableIndexByColumn(column: TableColumn): number {
-    return this.findTableIndexById(column.tableId);
+  public findTableByColumn(column: TableColumn): TableModel {
+    return this.findTable(column.tableId);
+  }
+
+  public findTable(id: string): TableModel {
+    return this.tables.find(table => table.id === id);
   }
 
   private findTableIndexByRow(row: TableRow): number {

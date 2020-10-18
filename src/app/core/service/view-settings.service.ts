@@ -23,8 +23,8 @@ import {Subscription} from 'rxjs';
 import {AppState} from '../store/app.state';
 import {selectCurrentView} from '../store/views/views.state';
 import {View} from '../store/views/view';
-import {ViewsAction} from '../store/views/views.action';
 import {pairwise, startWith} from 'rxjs/operators';
+import {ViewSettingsAction} from '../store/view-settings/view-settings.action';
 
 @Injectable()
 export class ViewSettingsService implements OnDestroy {
@@ -44,9 +44,9 @@ export class ViewSettingsService implements OnDestroy {
 
   private checkViewSettings(previousView: View, currentView: View) {
     if (previousView && !currentView) {
-      this.store$.dispatch(new ViewsAction.ResetViewSettings());
+      this.store$.dispatch(new ViewSettingsAction.ResetSettings());
     } else if (currentView && (!previousView || previousView.id !== currentView.id)) {
-      this.store$.dispatch(new ViewsAction.SetViewSettings({settings: currentView.settings}));
+      this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: currentView.settings}));
     }
   }
 

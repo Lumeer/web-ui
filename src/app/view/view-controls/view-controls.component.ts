@@ -46,7 +46,6 @@ import {
   selectViewConfigChanged,
   selectViewPerspectiveChanged,
   selectViewQueryChanged,
-  selectViewSettingsChanged,
 } from '../../core/store/views/views.state';
 import {Perspective} from '../perspectives/perspective';
 import {Query} from '../../core/store/navigation/query/query';
@@ -60,6 +59,8 @@ import {convertQueryModelToString} from '../../core/store/navigation/query/query
 import {ViewsAction} from '../../core/store/views/views.action';
 import {environment} from '../../../environments/environment';
 import {objectValues} from '../../shared/utils/common.utils';
+import {selectViewSettingsChanged} from '../../core/store/view-settings/view-settings.state';
+import {ViewSettingsAction} from '../../core/store/view-settings/view-settings.action';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -306,7 +307,7 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private resetViewSettings(view: View) {
-    this.store$.dispatch(new ViewsAction.SetViewSettings({settings: view.settings}));
+    this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: view.settings}));
   }
 
   private resetViewConfig(view: View) {

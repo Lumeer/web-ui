@@ -16,7 +16,7 @@
           [class.focused]="data.focused"
           [class.editing]="data.edited"
           [class.cursor-pointer]="group.column?.editable"
-          [title]="dataInputInfo?.showDataInput && data.dataValue ? null : (data.dataValue | formatDataValueTitle)"
+          [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"
           (click)="onDataInputClick(group.column, $event)"
           (dblclick)="onDataInputDblClick(group.column, $event)"
           (contextmenu)="onContextMenu(index, $event)">

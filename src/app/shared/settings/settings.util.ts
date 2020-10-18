@@ -18,10 +18,10 @@
  */
 
 import {Attribute, Collection} from '../../core/store/collections/collection';
-import {AttributesSettings, ResourceAttributeSettings} from '../../core/store/views/view';
+import {AttributesSettings, ResourceAttributeSettings, ViewSettings} from '../../core/store/views/view';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource} from '../../core/model/resource';
-import {deepArrayEquals} from '../utils/array.utils';
+import {deepArrayEquals, moveItemsInArray} from '../utils/array.utils';
 import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
 import {objectValues} from '../utils/common.utils';
@@ -123,4 +123,47 @@ function createSaveResourceAttributesSettings(
     }
     return map;
   }, {});
+}
+
+export function moveAttributeInSettings(
+  state: ViewSettings,
+  from: number,
+  to: number,
+  collection: Collection,
+  linkType?: LinkType
+): ViewSettings {
+  const attributesSettings = {...state?.attributes};
+  const resource = linkType || collection;
+  const property = linkType ? 'linkTypes' : 'collections';
+  const resourceSettings = {...attributesSettings?.[property]};
+  const orderedSettingsAttributes = createAttributesSettingsOrder(
+    resource.attributes,
+    resourceSettings?.[resource.id] || []
+  );
+  resourceSettings[resource.id] = moveItemsInArray(orderedSettingsAttributes, from, to);
+  attributesSettings[property] = resourceSettings;
+
+  return {...state, attributes: attributesSettings};
+}
+
+export function addAttributeToSettings(
+  state: ViewSettings,
+  attributeId: string,
+  position: number,
+  collection: Collection,
+  linkType?: LinkType
+): ViewSettings {
+  const attributesSettings = {...state?.attributes};
+  const resource = linkType || collection;
+  const property = linkType ? 'linkTypes' : 'collections';
+  const resourceSettings = {...attributesSettings?.[property]};
+  const orderedSettingsAttributes = createAttributesSettingsOrder(
+    resource.attributes,
+    resourceSettings?.[resource.id] || []
+  );
+  orderedSettingsAttributes.splice(position, 0, {attributeId});
+  resourceSettings[resource.id] = orderedSettingsAttributes;
+  attributesSettings[property] = resourceSettings;
+
+  return {...state, attributes: attributesSettings};
 }

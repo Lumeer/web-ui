@@ -44,8 +44,8 @@ import {selectDocumentById} from '../../../core/store/documents/documents.state'
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
 import {ViewSettings} from '../../../core/store/views/view';
-import {selectViewSettings} from '../../../core/store/views/views.state';
 import {AttributesResourceType} from '../../../core/model/resource';
+import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 
 @Component({
   selector: 'document-detail-modal',

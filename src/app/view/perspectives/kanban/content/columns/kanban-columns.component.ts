@@ -36,7 +36,7 @@ import {DocumentModel} from '../../../../../core/store/documents/document.model'
 import {Query, QueryCondition, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {findLastIndex, findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {CollectionsPermissionsPipe} from '../../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
@@ -70,7 +70,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
 import {ViewSettings} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
-import {selectViewSettings} from '../../../../../core/store/views/views.state';
+import {selectViewSettings} from '../../../../../core/store/view-settings/view-settings.state';
 
 @Component({
   selector: 'kanban-columns',

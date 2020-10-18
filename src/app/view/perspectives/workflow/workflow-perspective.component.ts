@@ -23,10 +23,7 @@ import {Observable} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {
-  selectCollectionsInQuery,
-  selectDocumentsByQuery
-} from '../../../core/store/common/permissions.selectors';
+import {selectCollectionsInQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -35,6 +32,8 @@ import {distinctUntilChanged, mergeMap, tap} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
+import {ViewSettings} from '../../../core/store/views/view';
+import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 
 @Component({
   selector: 'workflow-perspective',
@@ -47,6 +46,7 @@ export class WorkflowPerspectiveComponent implements OnInit {
   public documents$: Observable<DocumentModel[]>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
+  public viewSettings$: Observable<ViewSettings>;
 
   constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
@@ -61,6 +61,7 @@ export class WorkflowPerspectiveComponent implements OnInit {
       select(selectQuery),
       tap(query => this.fetchData(query))
     );
+    this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
   }
 
   private fetchData(query: Query) {

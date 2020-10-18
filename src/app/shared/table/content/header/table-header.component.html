@@ -1,10 +1,13 @@
 <tr cdkDropList class="row-boundary" *ngIf="{index: draggedIndex$ | async} as dragData ">
-  <th *ngFor="let group of columns | groupTableColumns; trackBy:trackByColumn; let index = index"
+  <th *ngFor="let group of columnGroups; trackBy:trackByColumn; let index = index"
       class="sticky-header table-cell text-nowrap"
       cdkDrag
+      [cdkDragDisabled]="!group.column"
       [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
       [class.editing]="editedCell | tableCellEdited:group.column:cellType"
       [class.dragging]="dragData.index === index"
+      [class.creating]="group.column?.creating"
+      [style.background]="group.color | columnBackground:(group.column && !group.column.attribute)"
       (cdkDragDropped)="onColumnDrop($event)"
       (cdkDragStarted)="onColumnDragStarted()"
       (cdkDragMoved)="onColumnDragMoved($event, index)"
@@ -18,7 +21,6 @@
     <table-header-cell *ngIf="index !== dragData.index"
                        [editing]="editedCell | tableCellEdited:group.column:cellType"
                        [editingValue]="editedCell?.inputValue"
-                       [style.background]="group.color | columnBackground:(group.column && !group.column.attribute)"
                        [offsetTop]="true"
                        [column]="group.column"
                        [hiddenColumns]="group.hiddenColumns"

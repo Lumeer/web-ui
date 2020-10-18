@@ -205,4 +205,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     const cell = {tableId: this.tableModel.id, columnId, type: TableCellType.Header};
     this.cellCancel.emit({cell});
   }
+
+  public onScroll() {
+    if (this.editedCell?.type === TableCellType.Header) {
+      this.cellCancel.emit({cell: this.editedCell, action: DataInputSaveAction.Direct});
+    }
+  }
 }

@@ -23,6 +23,15 @@
   box-shadow: 1px 1px 4px $secondary;
 }
 
-td.table-cell {
-  //display: block;
+.table-cell.creating {
+  animation: progress 2s linear infinite;
+
+  @keyframes progress {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: -37px 0px;
+    }
+  }
 }

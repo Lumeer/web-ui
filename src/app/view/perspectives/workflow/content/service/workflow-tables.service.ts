@@ -75,10 +75,6 @@ export class WorkflowTablesService {
     this.hiddenComponent = hiddenComponent;
   }
 
-  private get currentTables(): TableModel[] {
-    return this.stateService.tables;
-  }
-
   public onRowMenuSelected(row: TableRow, column: TableColumn, item: TableContextMenuItem) {
     switch (item.id) {
       case RowMenuId.Edit:
@@ -99,7 +95,7 @@ export class WorkflowTablesService {
   }
 
   public onColumnHiddenMenuSelected(columns: TableColumn[]) {
-    this.stateService.showColumns(columns);
+    this.dataService.showColumns(columns);
   }
 
   public onColumnMenuSelected(column: TableColumn, item: TableContextMenuItem) {
@@ -120,7 +116,7 @@ export class WorkflowTablesService {
         this.setDisplayedAttribute(column);
         break;
       case HeaderMenuId.Hide:
-        this.stateService.hideColumn(column);
+        this.dataService.hideColumn(column);
         break;
       case HeaderMenuId.AddToRight:
         this.copyColumnToPosition(column, 1);
@@ -132,7 +128,7 @@ export class WorkflowTablesService {
   }
 
   private copyColumnToPosition(column: TableColumn, direction: number) {
-    const table = this.findTableByColumn(column);
+    const table = this.stateService.findTableByColumn(column);
     const newColumn = this.dataService.copyTableColumn(table, column);
     this.stateService.addColumnToPosition(column.id, newColumn, direction);
   }
@@ -229,16 +225,16 @@ export class WorkflowTablesService {
     }
   }
 
-  private findTableByColumn(column: TableColumn): TableModel {
-    return this.currentTables.find(table => table.id === column.tableId);
-  }
-
   public onColumnResize(changedTable: TableModel, column: TableColumn, width: number) {
     this.stateService.resizeColumn(changedTable, column, width);
   }
 
   public onColumnMove(changedTable: TableModel, from: number, to: number) {
-    this.stateService.moveColumns(changedTable, from, to);
+    this.dataService.moveColumns(changedTable, from, to);
+  }
+
+  public onUpdateSettings(viewSettings: ViewSettings) {
+    this.dataService.checkSettingsChange(viewSettings);
   }
 
   public onUpdateData(
@@ -248,15 +244,6 @@ export class WorkflowTablesService {
     query: Query,
     viewSettings: ViewSettings
   ) {
-    const newTables = this.dataService.createTables(
-      this.currentTables,
-      collections,
-      documents,
-      permissions,
-      query,
-      viewSettings
-    );
-    this.stateService.setTables(newTables);
-    this.stateService.updateData(collections, documents, permissions, query, viewSettings);
+    this.dataService.createAndSyncTables(collections, documents, [], [], permissions, query, viewSettings);
   }
 }

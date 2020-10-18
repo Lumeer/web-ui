@@ -22,9 +22,9 @@ import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {AttributesSettings, ViewSettings} from '../../../../core/store/views/view';
 import {Observable} from 'rxjs';
-import {selectViewSettings} from '../../../../core/store/views/views.state';
 import {tap} from 'rxjs/operators';
-import {ViewsAction} from '../../../../core/store/views/views.action';
+import {selectViewSettings} from '../../../../core/store/view-settings/view-settings.state';
+import {ViewSettingsAction} from '../../../../core/store/view-settings/view-settings.action';
 
 @Component({
   selector: 'settings-button',
@@ -46,6 +46,6 @@ export class SettingsButtonComponent implements OnInit {
 
   public onAttributesSettingsChanged(attributesSettings: AttributesSettings) {
     const changedSettings: ViewSettings = {...this.viewSettings, attributes: attributesSettings};
-    this.store$.dispatch(new ViewsAction.SetViewSettings({settings: changedSettings}));
+    this.store$.dispatch(new ViewSettingsAction.SetSettings({settings: changedSettings}));
   }
 }

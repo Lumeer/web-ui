@@ -17,11 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AfterContentInit, Directive, forwardRef, Input, OnChanges, OnDestroy} from '@angular/core';
+import {AfterContentInit, Directive, forwardRef, Input, OnChanges, OnDestroy, SimpleChanges} from '@angular/core';
 import {VIRTUAL_SCROLL_STRATEGY} from '@angular/cdk/scrolling';
 import {takeWhile, tap} from 'rxjs/operators';
 import {TableVirtualScrollStrategy} from './table-virtual-scroll-strategy';
 import {TABLE_ROW_HEIGHT} from '../model/table-model';
+import {TableColumn} from '../model/table-column';
+import {isNotNullOrUndefined} from '../../utils/common.utils';
 
 export function _tableVirtualScrollDirectiveStrategyFactory(tableDir: TableItemSizeDirective) {
   return tableDir.scrollStrategy;
@@ -49,8 +51,6 @@ const defaults = {
   ],
 })
 export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDestroy {
-  private alive = true;
-
   @Input('lmrItemSize')
   public rowHeight = defaults.rowHeight;
 
@@ -71,6 +71,12 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
 
   @Input()
   public disabled: boolean;
+
+  @Input()
+  public columns: TableColumn[];
+
+  private alive = true;
+  private stickyOffset: number;
 
   public scrollStrategy = new TableVirtualScrollStrategy();
 
@@ -95,6 +101,7 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
         takeWhile(this.isAlive())
       )
       .subscribe(stickyOffset => {
+        this.stickyOffset = stickyOffset;
         this.setStickyHeader(stickyOffset);
       });
 
@@ -121,15 +128,31 @@ export class TableItemSizeDirective implements OnChanges, AfterContentInit, OnDe
     });
   }
 
-  public ngOnChanges() {
-    const config = {
-      rowHeight: +this.rowHeight || defaults.rowHeight,
-      headerHeight: this.headerEnabled ? +this.headerHeight || defaults.headerHeight : 0,
-      footerHeight: this.footerEnabled ? +this.footerHeight || defaults.footerHeight : 0,
-      buffer: +this.buffer || defaults.buffer,
-    };
-    this.scrollStrategy.setConfig(config.rowHeight, config.headerHeight, config.footerHeight, config.buffer);
-    this.scrollStrategy.setDisabled(this.disabled);
+  public ngOnChanges(changes: SimpleChanges) {
+    if (
+      changes.rowHeight ||
+      changes.footerEnabled ||
+      changes.headerEnabled ||
+      changes.headerHeight ||
+      changes.footerHeight ||
+      changes.buffer
+    ) {
+      const config = {
+        rowHeight: +this.rowHeight || defaults.rowHeight,
+        headerHeight: this.headerEnabled ? +this.headerHeight || defaults.headerHeight : 0,
+        footerHeight: this.footerEnabled ? +this.footerHeight || defaults.footerHeight : 0,
+        buffer: +this.buffer || defaults.buffer,
+      };
+      this.scrollStrategy.setConfig(config.rowHeight, config.headerHeight, config.footerHeight, config.buffer);
+    }
+    if (changes.disabled) {
+      this.scrollStrategy.setDisabled(this.disabled);
+    }
+    if (changes.columns) {
+      if (isNotNullOrUndefined(this.stickyOffset)) {
+        setTimeout(() => this.setStickyHeader(this.stickyOffset));
+      }
+    }
   }
 
   public setStickyHeader(offset: number) {

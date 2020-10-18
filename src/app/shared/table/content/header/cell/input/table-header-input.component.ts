@@ -73,8 +73,12 @@ export class TableHeaderInputComponent implements OnChanges {
   private preventSave: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.edited && this.edited) {
-      setTimeout(() => this.focusInput());
+    if (changes.edited) {
+      if (this.edited) {
+        setTimeout(() => this.focusInput());
+      } else {
+        // TODO not editing
+      }
     }
   }
 
@@ -165,7 +169,7 @@ export class TableHeaderInputComponent implements OnChanges {
   }
 
   private saveValue() {
-    const {value} = this.textInput.nativeElement;
-    this.save.emit(value?.trim());
+    const value = this.textInput.nativeElement?.value?.trim();
+    this.save.emit(value);
   }
 }

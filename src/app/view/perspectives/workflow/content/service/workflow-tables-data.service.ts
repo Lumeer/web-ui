@@ -53,6 +53,9 @@ import {WorkflowTablesMenuService} from './workflow-tables-menu.service';
 import {groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
 import {generateAttributeName} from '../../../../../shared/utils/attribute.utils';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
+import {ViewSettingsAction} from '../../../../../core/store/view-settings/view-settings.action';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {viewSettingsChanged} from '../../../../../core/store/views/view.utils';
 
 interface PendingRowUpdate {
   row: TableRow;
@@ -71,29 +74,79 @@ export class WorkflowTablesDataService {
     private i18n: I18n
   ) {}
 
-  public createTables(
+  public checkSettingsChange(viewSettings: ViewSettings) {
+    if (
+      viewSettingsChanged(
+        this.stateService.viewSettings,
+        viewSettings,
+        this.stateService.collectionsMap,
+        this.stateService.linkTypesMap
+      )
+    ) {
+      this.createAndSyncTables(
+        this.stateService.collections,
+        this.stateService.documents,
+        this.stateService.linkTypes,
+        this.stateService.linkInstances,
+        this.stateService.permissions,
+        this.stateService.query,
+        viewSettings
+      );
+    }
+  }
+
+  public createAndSyncTables(
+    collections: Collection[],
+    documents: DocumentModel[],
+    linkTypes: LinkType[],
+    linkInstances: LinkInstance[],
+    permissions: Record<string, AllowedPermissions>,
+    query: Query,
+    viewSettings: ViewSettings
+  ) {
+    const currentTables = this.stateService.tables;
+    this.stateService.updateData(collections, documents, permissions, query, viewSettings);
+
+    const {tables, actions} = this.createTablesAndSyncActions(
+      currentTables,
+      collections,
+      documents,
+      permissions,
+      query,
+      viewSettings
+    );
+    actions.forEach(action => this.store$.dispatch(action));
+    this.stateService.setTables(tables);
+  }
+
+  public createTablesAndSyncActions(
     currentTables: TableModel[],
     collections: Collection[],
     documents: DocumentModel[],
     permissions: Record<string, AllowedPermissions>,
     query: Query,
     viewSettings: ViewSettings
-  ): TableModel[] {
+  ): {tables: TableModel[]; actions: Action[]} {
     const documentsByCollection = groupDocumentsByCollection(documents);
-    return collections.reduce((result, collection) => {
-      const collectionDocuments = documentsByCollection[collection.id] || [];
-      const collectionPermissions = permissions?.[collection.id];
-      const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
-      const table = this.createTable(
-        currentTables,
-        collection,
-        collectionDocuments,
-        collectionPermissions,
-        query,
-        collectionSettings
-      );
-      return [...result, table];
-    }, []);
+    return collections.reduce(
+      (result, collection) => {
+        const collectionDocuments = documentsByCollection[collection.id] || [];
+        const collectionPermissions = permissions?.[collection.id];
+        const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
+        const {table, actions} = this.createTable(
+          currentTables,
+          collection,
+          collectionDocuments,
+          collectionPermissions,
+          query,
+          collectionSettings
+        );
+        result.tables.push(table);
+        result.actions.push(...actions);
+        return result;
+      },
+      {tables: [], actions: []}
+    );
   }
 
   private createTable(
@@ -103,10 +156,10 @@ export class WorkflowTablesDataService {
     permissions: AllowedPermissions,
     query: Query,
     settings: ResourceAttributeSettings[]
-  ): TableModel {
-    const currentTable = currentTables.find(table => table.collectionId === collection.id);
+  ): {table: TableModel; actions: Action[]} {
+    const currentTable = currentTables.find(tab => tab.collectionId === collection.id);
     const tableId = currentTable?.id || generateId();
-    const columns = this.createCollectionColumns(
+    const {columns, actions} = this.createCollectionColumns(
       tableId,
       currentTable?.columns || [],
       collection,
@@ -115,7 +168,8 @@ export class WorkflowTablesDataService {
       settings
     );
     const rows = this.createDocumentRows(tableId, columns, currentTable?.rows || [], documents, permissions);
-    return {id: tableId, columns, rows, collectionId: collection.id};
+    const table = {id: tableId, columns, rows, collectionId: collection.id};
+    return {table, actions};
   }
 
   private createCollectionColumns(
@@ -125,26 +179,8 @@ export class WorkflowTablesDataService {
     permissions: AllowedPermissions,
     query: Query,
     settings: ResourceAttributeSettings[]
-  ) {
+  ): {columns: TableColumn[]; actions: Action[]} {
     const defaultAttributeId = getDefaultAttributeId(collection);
-
-    // const attributesMap: Record<string, Attribute> = collection.attributes?.reduce((map, attribute) => ({
-    //   ...map,
-    //   [attribute.id]: attribute
-    // }), {});
-    //
-    // const newColumns: TableColumn[] = [];
-    //
-    // for (let i = 0; i < currentColumns?.length; i++) {
-    //   const column = currentColumns[i];
-    //   if (column.attribute) {
-    //     const attribute = findAttribute(collection.attributes, setting.attributeId);
-    //     const editable = isCollectionAttributeEditable(attribute.id, collection, permissions, query);
-    //       newColumns[i] = {...column, attribute: attributesMap[column.attribute.id]}
-    //   } else if (column.name) {
-    //
-    //   }
-    // }
 
     const mappedUncreatedColumns: Record<string, TableColumn> = {};
 
@@ -188,11 +224,22 @@ export class WorkflowTablesDataService {
       []
     );
 
+    const syncActions = [];
     const columnNames = (collection.attributes || []).map(attribute => attribute.name);
     for (let i = 0; i < currentColumns?.length; i++) {
       const column = currentColumns[i];
       if (!column.attribute) {
         attributeColumns.splice(i, 0, mappedUncreatedColumns[column.id] || column);
+        if (mappedUncreatedColumns[column.id]) {
+          this.stateService.addColumn(mappedUncreatedColumns[column.id], i);
+          syncActions.push(
+            new ViewSettingsAction.AddAttribute({
+              attributeId: mappedUncreatedColumns[column.id].attribute.id,
+              collection,
+              position: i,
+            })
+          );
+        }
       }
       columnNames.push(column.name || column.attribute?.name);
     }
@@ -213,7 +260,7 @@ export class WorkflowTablesDataService {
       attributeColumns.push(lastColumn);
     }
 
-    return attributeColumns;
+    return {columns: attributeColumns, actions: syncActions};
   }
 
   private createDocumentRows(
@@ -292,6 +339,51 @@ export class WorkflowTablesDataService {
     return rows;
   }
 
+  public moveColumns(table: TableModel, from: number, to: number) {
+    this.stateService.moveColumns(table, from, to);
+
+    const columns = [...(this.stateService.findTable(table.id)?.columns || [])];
+    const column = columns[from];
+    if (column?.attribute) {
+      const fromWithoutUncreated = from - columns.slice(0, from).filter(col => !col.attribute).length;
+      const toWithoutUncreated = to - columns.slice(0, to).filter(col => !col.attribute).length;
+
+      if (fromWithoutUncreated !== toWithoutUncreated) {
+        const {collection, linkType} = this.stateService.findColumnResources(column);
+        this.store$.dispatch(
+          new ViewSettingsAction.MoveAttribute({
+            from: fromWithoutUncreated,
+            to: toWithoutUncreated,
+            collection,
+            linkType,
+          })
+        );
+      }
+    }
+  }
+
+  public hideColumn(column: TableColumn) {
+    const {collection, linkType} = this.stateService.findColumnResources(column);
+    this.store$.dispatch(
+      new ViewSettingsAction.HideAttributes({
+        attributeIds: [column.attribute.id],
+        collection,
+        linkType,
+      })
+    );
+  }
+
+  public showColumns(columns: TableColumn[]) {
+    const {collection, linkType} = this.stateService.findColumnResources(columns[0]);
+    this.store$.dispatch(
+      new ViewSettingsAction.ShowAttributes({
+        attributeIds: columns.map(column => column.attribute.id),
+        collection,
+        linkType,
+      })
+    );
+  }
+
   public createAttribute(column: TableColumn, name: string) {
     if (this.isColumnCreating(column)) {
       return;
@@ -342,7 +434,7 @@ export class WorkflowTablesDataService {
       }
     }
 
-    if (this.pendingColumnValues) {
+    if (this.pendingColumnValues?.[column.id]) {
       this.pendingColumnValues[column.id] = this.pendingColumnValues[column.id].filter(
         update => !deleteRows.includes(update.row.id)
       );
@@ -468,6 +560,7 @@ export class WorkflowTablesDataService {
 
   private createDocument(row: TableRow, column: TableColumn, value: any) {
     if (this.isRowCreating(row)) {
+      this.stateService.setRowValue(row, column, value);
       this.setPendingRowValue(row, column, value);
       return;
     }

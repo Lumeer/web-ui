@@ -81,10 +81,10 @@ export function getCaretCharacterOffsetWithin(element) {
 }
 
 export function stripedBackground(color: string, stripeColor: string): string {
-  return `repeating-linear-gradient(-45deg, ${color}, ${color} 10px, ${stripeColor} 10px, ${stripeColor} 20px)`;
+  return `linear-gradient(-45deg, ${color} 25%, ${stripeColor} 25%, ${stripeColor} 50%, ${color} 50%, ${color} 75%, ${stripeColor} 75%, ${stripeColor})`;
 }
 
-export function hex2rgba(hex: string, opacity: number) {
+export function hex2rgba(hex: string, opacity: number): string {
   hex = (hex || '').replace('#', '');
   const r = parseInt(hex.substring(0, hex.length / 3), 16);
   const g = parseInt(hex.substring(hex.length / 3, (2 * hex.length) / 3), 16);

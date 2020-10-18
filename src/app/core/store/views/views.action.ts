@@ -21,7 +21,7 @@ import {Action} from '@ngrx/store';
 import {Workspace} from '../navigation/workspace';
 import {Permission, PermissionType} from '../permissions/permissions';
 import {User} from '../users/user';
-import {DefaultViewConfig, View, ViewSettings} from './view';
+import {DefaultViewConfig, View} from './view';
 import {Perspective} from '../../../view/perspectives/perspective';
 
 export enum ViewsActionType {
@@ -63,9 +63,6 @@ export enum ViewsActionType {
   GET_DEFAULT_CONFIGS_SUCCESS = '[Views] Get Default Configs :: Success',
 
   SET_DEFAULT_CONFIG_SNAPSHOT = '[Views] Set Default Config Snapshot',
-
-  SET_VIEW_SETTINGS = '[Views] Set View Settings',
-  RESET_VIEW_SETTINGS = '[Views] Reset View Settings',
 
   RESET_VIEW_CONFIG = '[Views] Reset View Config',
 
@@ -278,16 +275,6 @@ export namespace ViewsAction {
     public constructor(public payload: {model?: DefaultViewConfig}) {}
   }
 
-  export class SetViewSettings implements Action {
-    public readonly type = ViewsActionType.SET_VIEW_SETTINGS;
-
-    public constructor(public payload: {settings: ViewSettings}) {}
-  }
-
-  export class ResetViewSettings implements Action {
-    public readonly type = ViewsActionType.RESET_VIEW_SETTINGS;
-  }
-
   export class Clear implements Action {
     public readonly type = ViewsActionType.CLEAR;
   }
@@ -323,7 +310,5 @@ export namespace ViewsAction {
     | SetDefaultConfigSnapshot
     | GetDefaultConfigs
     | GetDefaultConfigsSuccess
-    | SetViewSettings
-    | ResetViewSettings
     | Clear;
 }

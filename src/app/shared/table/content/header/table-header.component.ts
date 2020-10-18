@@ -34,6 +34,7 @@ import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/head
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
+import {groupTableColumns} from '../../model/table-utils';
 
 @Component({
   selector: '[table-header]',
@@ -91,17 +92,19 @@ export class TableHeaderComponent implements OnChanges {
   private dragStartOffset: number;
 
   public draggedIndex$ = new BehaviorSubject(-1);
+  public columnGroups: TableColumnGroup[];
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.columns) {
+      this.columnGroups = groupTableColumns(this.columns);
       this.computeColumnsPositions();
     }
   }
 
   private computeColumnsPositions() {
     this.columnsPositionsStart = [];
-    for (let i = 0; i < this.columns?.length; i++) {
-      this.columnsPositionsStart[i] = (this.columnsPositionsStart[i - 1] || 0) + (this.columns[i - 1]?.width || 0);
+    for (let i = 0; i < this.columnGroups?.length; i++) {
+      this.columnsPositionsStart[i] = (this.columnsPositionsStart[i - 1] || 0) + (this.columnGroups[i - 1]?.width || 0);
     }
   }
 
@@ -112,11 +115,18 @@ export class TableHeaderComponent implements OnChanges {
   public onColumnDrop(event: CdkDragDrop<any>) {
     const startPosition = this.getStartPosition(event.previousIndex);
     const newPosition = startPosition + event.distance.x;
-    const toIndex = this.findColumnIndexByStartPosition(newPosition);
-    if (event.previousIndex !== toIndex) {
-      this.moveColumn.emit({fromIndex: event.previousIndex, toIndex});
+    const toIndex = this.computeColumnIndex(this.findColumnIndexByStartPosition(newPosition));
+    const previousIndex = this.computeColumnIndex(event.previousIndex);
+    if (previousIndex !== toIndex) {
+      this.moveColumn.emit({fromIndex: previousIndex, toIndex});
     }
     this.dragStartOffset = null;
+  }
+
+  private computeColumnIndex(groupIndex: number): number {
+    return (this.columnGroups || [])
+      .slice(0, groupIndex)
+      .reduce((sum, group) => (sum += group.hiddenColumns?.length || 1), 0);
   }
 
   private getStartPosition(index: number): number {
@@ -133,7 +143,10 @@ export class TableHeaderComponent implements OnChanges {
     const startPosition = this.getStartPosition(index);
     const newPosition = startPosition + event.distance.x;
     const toIndex = this.findColumnIndexByStartPosition(newPosition);
-    this.draggedIndex$.next(toIndex);
+    const columnGroup = this.columnGroups?.[toIndex];
+    if (columnGroup?.column) {
+      this.draggedIndex$.next(toIndex);
+    }
   }
 
   public onColumnDragEnded() {

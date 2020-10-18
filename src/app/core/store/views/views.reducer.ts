@@ -53,10 +53,6 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return updateDefaultConfigs(state, action.payload.configs);
     case ViewsActionType.SET_DEFAULT_CONFIG_SNAPSHOT:
       return {...state, defaultConfigSnapshot: action.payload.model};
-    case ViewsActionType.SET_VIEW_SETTINGS:
-      return {...state, settings: action.payload.settings};
-    case ViewsActionType.RESET_VIEW_SETTINGS:
-      return {...state, settings: {}};
     case ViewsActionType.CLEAR:
       return initialViewsState;
     default:

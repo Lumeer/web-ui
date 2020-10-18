@@ -139,9 +139,11 @@ export function renameChildAttributes(
 }
 
 export function filterOutAttributeAndChildren(attributes: Attribute[], oldAttribute: Attribute): Attribute[] {
-  return attributes.filter(
-    attribute => attribute.id !== oldAttribute.id && !attribute.name.startsWith(`${oldAttribute.name}.`)
-  );
+  return oldAttribute
+    ? attributes.filter(
+        attribute => attribute.id !== oldAttribute.id && !attribute.name.startsWith(`${oldAttribute.name}.`)
+      )
+    : attributes;
 }
 
 export function isAttributeConstraintType(attribute: Attribute, type: ConstraintType): boolean {

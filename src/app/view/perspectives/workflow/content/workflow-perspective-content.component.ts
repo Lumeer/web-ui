@@ -105,7 +105,15 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collections || changes.query || changes.permissions || changes.viewSettings || changes.documents) {
+    if (this.onlyViewSettingsChanged(changes)) {
+      this.tablesService.onUpdateSettings(this.viewSettings);
+    } else if (
+      changes.collections ||
+      changes.query ||
+      changes.permissions ||
+      changes.viewSettings ||
+      changes.documents
+    ) {
       this.tablesService.onUpdateData(
         this.collections,
         this.documents,
@@ -114,6 +122,10 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
         this.viewSettings
       );
     }
+  }
+
+  private onlyViewSettingsChanged(changes: SimpleChanges): boolean {
+    return changes.viewSettings && Object.keys(changes).length === 1;
   }
 
   public trackByTable(index: number, table: TableModel): string {
@@ -126,7 +138,6 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   }
 
   public onColumnMove(table: TableModel, data: {from: number; to: number}) {
-    // TODO send to attributes settings
     this.tablesService.onColumnMove(table, data.from, data.to);
   }
 
