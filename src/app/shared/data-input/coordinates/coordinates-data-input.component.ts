@@ -18,11 +18,13 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
   SimpleChanges,
   ViewChild,
@@ -40,7 +42,7 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
   templateUrl: './coordinates-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CoordinatesDataInputComponent {
+export class CoordinatesDataInputComponent implements AfterViewChecked, OnChanges {
   @Input()
   public focus: boolean;
 
@@ -69,15 +71,28 @@ export class CoordinatesDataInputComponent {
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => {
-        HtmlModifier.setCursorAtTextContentEnd(this.coordinatesInput.nativeElement);
-        this.coordinatesInput.nativeElement.focus();
-      });
+      this.setFocus = true;
+    }
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.coordinatesInput) {
+      const element = this.coordinatesInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
     }
   }
 

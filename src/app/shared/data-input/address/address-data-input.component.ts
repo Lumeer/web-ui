@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -49,7 +50,7 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
   templateUrl: './address-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddressDataInputComponent implements OnInit, OnChanges {
+export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -84,6 +85,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(private store$: Store<{}>, private element: ElementRef) {}
 
@@ -115,15 +117,25 @@ export class AddressDataInputComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => {
-        if (this.addressInput) {
-          HtmlModifier.setCursorAtTextContentEnd(this.addressInput.nativeElement);
-          this.addressInput.nativeElement.focus();
-        }
-      });
+      this.setFocus = true;
     }
     if (changes.value) {
       this.value$.next(this.value.format());
+    }
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.addressInput) {
+      const element = this.addressInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
     }
   }
 

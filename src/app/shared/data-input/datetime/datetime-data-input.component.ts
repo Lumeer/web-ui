@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
@@ -40,13 +41,14 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'datetime-data-input',
   templateUrl: './datetime-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
+export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -84,17 +86,13 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
 
   private pendingUpdate: Date;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    const value = this.value?.format() || '';
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
-      setTimeout(() => {
-        this.dateTimeInput.nativeElement.setSelectionRange(value.length, value.length);
-        this.dateTimeInput.nativeElement.focus();
-        this.dateTimePicker?.open();
-      });
+      this.setFocus = true;
     }
     if (this.changedFromEditableToReadonly(changes)) {
       this.removeKeyDownListener();
@@ -109,6 +107,22 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit {
       this.date = this.value.toDate?.();
       this.options = createDateTimeOptions(this.value.config?.format);
       this.dateTimeInput.nativeElement.value = this.value.format();
+    }
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.dateTimePicker?.open();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.dateTimeInput) {
+      const element = this.dateTimeInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
     }
   }
 

@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -41,7 +42,7 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
   templateUrl: './percentage-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PercentageDataInputComponent implements OnChanges {
+export class PercentageDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -75,17 +76,30 @@ export class PercentageDataInputComponent implements OnChanges {
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => {
-        HtmlModifier.setCursorAtTextContentEnd(this.percentageInput.nativeElement);
-        this.percentageInput.nativeElement.focus();
-      });
+      this.setFocus = true;
     }
     this.valid = !this.value || this.value.isValid();
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.percentageInput) {
+      const element = this.percentageInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
+    }
   }
 
   private addKeyDownListener() {

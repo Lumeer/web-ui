@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -41,7 +42,7 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
   templateUrl: './number-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NumberDataInputComponent implements OnChanges {
+export class NumberDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -75,17 +76,30 @@ export class NumberDataInputComponent implements OnChanges {
   private preventSave: boolean;
 
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => {
-        HtmlModifier.setCursorAtTextContentEnd(this.numberInput.nativeElement);
-        this.numberInput.nativeElement.focus();
-      });
+      this.setFocus = true;
     }
     this.refreshValid(this.value);
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.numberInput) {
+      const element = this.numberInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
+    }
   }
 
   private addKeyDownListener() {

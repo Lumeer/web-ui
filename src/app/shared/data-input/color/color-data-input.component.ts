@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -37,13 +38,14 @@ import {ConstraintType} from '../../../core/model/data/constraint';
 import {COLOR_SUCCESS} from '../../../core/constants';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'color-data-input',
   templateUrl: './color-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ColorDataInputComponent implements OnChanges {
+export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -81,17 +83,13 @@ export class ColorDataInputComponent implements OnChanges {
 
   private pendingUpdate: string;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    const value = this.value?.format() || '';
     if ((changes.readonly || changes.focus) && !this.readonly && this.focus) {
-      setTimeout(() => {
-        this.colorInput.nativeElement.setSelectionRange(value.length, value.length);
-        this.colorInput.nativeElement.focus();
-        this.openColorPicker();
-      });
+      this.setFocus = true;
     }
     if (this.changedFromEditableToReadonly(changes)) {
       if (isNotNullOrUndefined(this.pendingUpdate)) {
@@ -103,6 +101,22 @@ export class ColorDataInputComponent implements OnChanges {
       this.closeColorPicker();
     }
     this.refreshValid(this.value);
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.openColorPicker();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.colorInput) {
+      const element = this.colorInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
+    }
   }
 
   private addKeyDownListener() {

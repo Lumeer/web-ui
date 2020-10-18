@@ -31,7 +31,7 @@ import {DropdownComponent} from '../../../dropdown/dropdown.component';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {KeyCode} from '../../../key-code';
 import {preventEvent} from '../../../utils/common.utils';
-import {linkHasValidProtocol, parseLinkValue} from '../../../../core/model/data-value/link.data-value';
+import {parseLinkValue} from '../../../../core/model/data-value/link.data-value';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isUrlValid} from '../../../utils/url.utils';
 import {Observable} from 'rxjs';
@@ -115,7 +115,7 @@ export class LinkInputDropdownComponent implements OnInit {
   }
 
   public onSave(enter?: boolean): boolean {
-    if (this.linkControl.value) {
+    if (this.form.valid) {
       this.save.emit({
         link: (this.linkControl.value || '').trim(),
         title: (this.titleControl.value || '').trim(),

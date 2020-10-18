@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -46,7 +47,7 @@ import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-s
   templateUrl: './text-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextDataInputComponent implements OnChanges {
+export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -90,16 +91,13 @@ export class TextDataInputComponent implements OnChanges {
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => {
-        const input = this.textInput;
-        HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
-        input.nativeElement.focus();
-      });
+      this.setFocus = true;
       this.text = this.value.editValue();
     }
     if (changes.value && this.value) {
@@ -107,6 +105,21 @@ export class TextDataInputComponent implements OnChanges {
     }
 
     this.refreshValid(this.value);
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.textInput) {
+      const element = this.textInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
+    }
   }
 
   private addKeyDownListener() {
