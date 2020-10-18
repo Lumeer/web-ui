@@ -109,7 +109,15 @@ export interface SelectConstraintConfig {
   options: SelectConstraintOption[];
 }
 
-export const selectDefaultPalette = palette.slice(0, 8);
+const paletteOrder = [11, 10, 8, 6, 2, 4, 0, 7, 1, 5, 3, 9];
+//24, 48, 72
+
+export const selectDefaultPalette = [
+  ...paletteOrder.map(i => palette[i]),
+  ...paletteOrder.map(i => palette[i + 24]),
+  ...paletteOrder.map(i => palette[i + 48]),
+  ...paletteOrder.map(i => palette[i + 72]),
+];
 
 export interface TagConstraintConfig {
   options: string[];
