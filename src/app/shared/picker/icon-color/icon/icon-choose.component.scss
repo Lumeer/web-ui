@@ -1,7 +1,8 @@
 @import '../../../../../styles/variables';
 
 .tab-content-container {
-  height: 153px;
+  height: 220px;
+  min-width: 280px;
   overflow: auto;
 }
 

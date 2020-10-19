@@ -25,7 +25,9 @@
 
   <table-header-add-button *ngIf="canManageConfig && (hasCollectionToLink$ | async)"
                            [cursor]="cursor"
+                           [parts]="table.config.parts"
                            (click)="unsetCursor()"
+                           (addColumn)="onAddColumn()"
                            class="align-self-end">
   </table-header-add-button>
 

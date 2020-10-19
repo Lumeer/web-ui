@@ -98,6 +98,24 @@ export class TableHeaderComponent implements OnInit, OnChanges {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
     }
   }
+
+  public onAddColumn() {
+    const parts = this.table?.config?.parts;
+    if (parts && parts.length > 0) {
+      const lastPart = parts[parts.length - 1];
+      const column = lastPart.columns?.length;
+
+      this.store$.dispatch(
+        new TablesAction.AddColumn({
+          cursor: {
+            tableId: this.table.id,
+            partIndex: this.table.config.parts.length - 1,
+            columnPath: [column],
+          },
+        })
+      );
+    }
+  }
 }
 
 function hasTableIdChanged(change: SimpleChange): boolean {

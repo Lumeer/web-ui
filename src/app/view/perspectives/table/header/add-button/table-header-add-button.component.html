@@ -9,9 +9,25 @@
   <i class="far fa-plus"></i>
 </button>
 
-<context-menu *ngIf="{collections: collections$ | async, linkTypes: linkTypes$ | async} as data"
+<context-menu *ngIf="{collections: collections$ | async, linkTypes: linkTypes$ | async, lastCol: parts | lastColumn} as data"
               (open)="onOpen()"
               (close)="onClose()">
+  <ng-template *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)"
+               contextMenuItem
+               (execute)="onAddColumn()">
+    <icons-presenter [colors]="['#000']"
+                     [icons]="['fas fa-plus-circle']"
+                     class="mr-1">
+    </icons-presenter>
+    <span i18n="@@table.header.menu.add.column">
+      Add a new column
+    </span>
+  </ng-template>
+  <ng-template *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)"
+               contextMenuItem
+               [divider]="true">
+  </ng-template>
+
   <ng-template *ngIf="data.linkTypes && data.linkTypes.length > 0"
                contextMenuItem
                [enabled]="false"
