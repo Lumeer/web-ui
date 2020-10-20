@@ -35,6 +35,7 @@ import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {groupTableColumns} from '../../model/table-utils';
+import {AttributeSortType} from '../../../../core/store/views/view';
 
 @Component({
   selector: '[table-header]',
@@ -78,6 +79,9 @@ export class TableHeaderComponent implements OnChanges {
 
   @Output()
   public onRename = new EventEmitter<{column: TableColumn; name: string}>();
+
+  @Output()
+  public sortChanged = new EventEmitter<{column: TableColumn; type: AttributeSortType | null}>();
 
   @ViewChildren('resizeHandle')
   public handlerElements: QueryList<ElementRef>;
@@ -200,6 +204,12 @@ export class TableHeaderComponent implements OnChanges {
   public onMenuSelected(column: TableColumn, item: TableContextMenuItem) {
     if (column) {
       this.menuSelected.emit({column, item});
+    }
+  }
+
+  public onSortChanged(column: TableColumn, type?: AttributeSortType) {
+    if (column) {
+      this.sortChanged.emit({column, type});
     }
   }
 }

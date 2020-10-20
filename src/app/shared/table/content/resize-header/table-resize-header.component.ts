@@ -30,10 +30,8 @@ import {
 } from '@angular/core';
 import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
-import {TABLE_ROW_HEIGHT} from '../../model/table-model';
+import {TABLE_COLUMN_MIN_WIDTH, TABLE_ROW_HEIGHT} from '../../model/table-model';
 import {groupTableColumns} from '../../model/table-utils';
-
-const columnMinWidth = 30;
 
 @Component({
   selector: 'table-resize-header',
@@ -95,7 +93,7 @@ export class TableResizeHeaderComponent implements OnChanges {
   }
 
   private computeNewWidth(index: number, distance: {x: number}): number {
-    const width = Math.max(columnMinWidth, this.groupedTableColumns[index].width + distance.x);
-    return width - (width % 5);
+    const width = Math.max(TABLE_COLUMN_MIN_WIDTH, this.groupedTableColumns[index].width + distance.x);
+    return width - (width % 1);
   }
 }

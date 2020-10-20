@@ -19,6 +19,7 @@
 
 import {Attribute} from '../../../core/store/collections/collection';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {AttributeSortType} from '../../../core/store/views/view';
 
 export interface TableColumnGroup {
   id: string;
@@ -42,6 +43,7 @@ export interface TableColumn {
   hidden?: boolean;
   editable: boolean;
   manageable?: boolean;
+  sort?: AttributeSortType;
   menuItems: TableContextMenuItem[];
 }
 

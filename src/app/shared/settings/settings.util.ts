@@ -20,7 +20,7 @@
 import {Attribute, Collection} from '../../core/store/collections/collection';
 import {AttributesSettings, ResourceAttributeSettings, ViewSettings} from '../../core/store/views/view';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {AttributesResource} from '../../core/model/resource';
+import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
 import {deepArrayEquals, moveItemsInArray} from '../utils/array.utils';
 import {Query} from '../../core/store/navigation/query/query';
 import {getAllCollectionIdsFromQuery, getAllLinkTypeIdsFromQuery} from '../../core/store/navigation/query/query.util';
@@ -125,6 +125,24 @@ function createSaveResourceAttributesSettings(
   }, {});
 }
 
+export function createAndModifyAttributesSettings(
+  settings: ViewSettings,
+  resource: AttributesResource,
+  type: AttributesResourceType,
+  modify: (array: ResourceAttributeSettings[]) => ResourceAttributeSettings[]
+): ViewSettings {
+  const property = type === AttributesResourceType.LinkType ? 'linkTypes' : 'collections';
+  const attributesSettings = {...settings?.attributes};
+  const resourceSettings = {...attributesSettings?.[property]};
+  const orderedSettingsAttributes = createAttributesSettingsOrder(
+    resource.attributes,
+    resourceSettings?.[resource.id] || []
+  );
+  resourceSettings[resource.id] = modify(orderedSettingsAttributes);
+  attributesSettings[property] = resourceSettings;
+  return {...settings, attributes: attributesSettings};
+}
+
 export function moveAttributeInSettings(
   state: ViewSettings,
   from: number,
@@ -132,18 +150,10 @@ export function moveAttributeInSettings(
   collection: Collection,
   linkType?: LinkType
 ): ViewSettings {
-  const attributesSettings = {...state?.attributes};
-  const resource = linkType || collection;
-  const property = linkType ? 'linkTypes' : 'collections';
-  const resourceSettings = {...attributesSettings?.[property]};
-  const orderedSettingsAttributes = createAttributesSettingsOrder(
-    resource.attributes,
-    resourceSettings?.[resource.id] || []
+  const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
+  return createAndModifyAttributesSettings(state, linkType || collection, resourceType, attributesSettings =>
+    moveItemsInArray(attributesSettings, from, to)
   );
-  resourceSettings[resource.id] = moveItemsInArray(orderedSettingsAttributes, from, to);
-  attributesSettings[property] = resourceSettings;
-
-  return {...state, attributes: attributesSettings};
 }
 
 export function addAttributeToSettings(
@@ -153,17 +163,9 @@ export function addAttributeToSettings(
   collection: Collection,
   linkType?: LinkType
 ): ViewSettings {
-  const attributesSettings = {...state?.attributes};
-  const resource = linkType || collection;
-  const property = linkType ? 'linkTypes' : 'collections';
-  const resourceSettings = {...attributesSettings?.[property]};
-  const orderedSettingsAttributes = createAttributesSettingsOrder(
-    resource.attributes,
-    resourceSettings?.[resource.id] || []
-  );
-  orderedSettingsAttributes.splice(position, 0, {attributeId});
-  resourceSettings[resource.id] = orderedSettingsAttributes;
-  attributesSettings[property] = resourceSettings;
-
-  return {...state, attributes: attributesSettings};
+  const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
+  return createAndModifyAttributesSettings(state, linkType || collection, resourceType, attributesSettings => {
+    attributesSettings.splice(position, 0, {attributeId});
+    return attributesSettings;
+  });
 }

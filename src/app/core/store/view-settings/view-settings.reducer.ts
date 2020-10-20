@@ -19,13 +19,12 @@
 
 import {initialViewSettingsState, ViewSettingsState} from './view-settings.state';
 import {ViewSettingsAction, ViewSettingsActionType} from './view-settings.action';
-import {ResourceAttributeSettings, ViewSettings} from '../views/view';
 import {
   addAttributeToSettings,
-  createAttributesSettingsOrder,
+  createAndModifyAttributesSettings,
   moveAttributeInSettings,
 } from '../../../shared/settings/settings.util';
-import {AttributesResource} from '../../model/resource';
+import {AttributesResourceType} from '../../model/resource';
 
 export function viewSettingsReducer(
   state: ViewSettingsState = initialViewSettingsState,
@@ -40,6 +39,8 @@ export function viewSettingsReducer(
       return moveAttribute(state, action);
     case ViewSettingsActionType.ADD_ATTRIBUTE:
       return addAttribute(state, action);
+    case ViewSettingsActionType.SET_ATTRIBUTE:
+      return setAttribute(state, action);
     case ViewSettingsActionType.SET_SETTINGS:
       return {...action.payload.settings};
     case ViewSettingsActionType.RESET_SETTINGS:
@@ -55,43 +56,16 @@ function hideOrShowAttributes(
   hide: boolean
 ): ViewSettingsState {
   const {attributeIds, collection, linkType} = action.payload;
-  const property = linkType ? 'linkTypes' : 'collections';
-  const settings = hideOrShowAttributesInResource(state, linkType || collection, attributeIds, property, hide);
-  return {...settings};
-}
-
-function hideOrShowAttributesInResource(
-  settings: ViewSettings,
-  resource: AttributesResource,
-  attributeIds: string[],
-  property: string,
-  hide: boolean
-): ViewSettings {
-  const attributesSettings = {...settings?.attributes};
-  const resourceSettings = {...attributesSettings?.[property]};
-  const orderedSettingsAttributes = createAttributesSettingsOrder(
-    resource.attributes,
-    resourceSettings?.[resource.id] || []
-  );
-  resourceSettings[resource.id] = hideOrShowAttributesInSettings(orderedSettingsAttributes, attributeIds, hide);
-  attributesSettings[property] = resourceSettings;
-
-  return {...settings, attributes: attributesSettings};
-}
-
-function hideOrShowAttributesInSettings(
-  attributesSettings: ResourceAttributeSettings[],
-  attributeIds: string[],
-  hide: boolean
-): ResourceAttributeSettings[] {
-  const newSettings = [...(attributesSettings || [])];
-  for (const attributeId of attributeIds) {
-    const attributeIndex = newSettings.findIndex(setting => setting.attributeId === attributeId);
-    if (attributeIndex !== -1) {
-      newSettings[attributeIndex] = {...newSettings[attributeIndex], hidden: hide};
+  const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
+  return createAndModifyAttributesSettings(state, linkType || collection, resourceType, settingsAttributes => {
+    for (const attributeId of attributeIds) {
+      const attributeIndex = settingsAttributes.findIndex(setting => setting.attributeId === attributeId);
+      if (attributeIndex !== -1) {
+        settingsAttributes[attributeIndex] = {...settingsAttributes[attributeIndex], hidden: hide};
+      }
     }
-  }
-  return newSettings;
+    return settingsAttributes;
+  });
 }
 
 function moveAttribute(state: ViewSettingsState, action: ViewSettingsAction.MoveAttribute): ViewSettingsState {
@@ -102,4 +76,16 @@ function moveAttribute(state: ViewSettingsState, action: ViewSettingsAction.Move
 function addAttribute(state: ViewSettingsState, action: ViewSettingsAction.AddAttribute): ViewSettingsState {
   const {attributeId, position, collection, linkType} = action.payload;
   return addAttributeToSettings(state, attributeId, position, collection, linkType);
+}
+
+function setAttribute(state: ViewSettingsState, action: ViewSettingsAction.SetAttribute): ViewSettingsState {
+  const {attributeId, settings, collection, linkType} = action.payload;
+  const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
+  return createAndModifyAttributesSettings(state, linkType || collection, resourceType, settingAttributes => {
+    const attributeIndex = settingAttributes.findIndex(setting => setting.attributeId === attributeId);
+    if (attributeIndex !== -1) {
+      settingAttributes[attributeIndex] = {...settingAttributes[attributeIndex], ...settings};
+    }
+    return settingAttributes;
+  });
 }

@@ -11,6 +11,7 @@
        [style.min-width.px]="first && !last ? group.width - 1 : group.width">
     <table-header-cell [editing]="editedCell | tableCellEdited:group.column:cellType"
                        [column]="group.column"
+                       [offsetHorizontal]="true"
                        [hiddenColumns]="group.hiddenColumns">
     </table-header-cell>
   </div>

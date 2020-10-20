@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {ViewSettings} from '../views/view';
+import {ResourceAttributeSettings, ViewSettings} from '../views/view';
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 
@@ -30,6 +30,7 @@ export enum ViewSettingsActionType {
   SHOW_ATTRIBUTES = '[View Settings] Show Attributes',
   MOVE_ATTRIBUTE = '[View Settings] Move Attribute',
   ADD_ATTRIBUTE = '[View Settings] Add Attribute',
+  SET_ATTRIBUTE = '[View Settings] Set Attribute',
 }
 
 export namespace ViewSettingsAction {
@@ -61,6 +62,19 @@ export namespace ViewSettingsAction {
     public constructor(public payload: {attributeIds: string[]; collection: Collection; linkType?: LinkType}) {}
   }
 
+  export class SetAttribute implements Action {
+    public readonly type = ViewSettingsActionType.SET_ATTRIBUTE;
+
+    public constructor(
+      public payload: {
+        attributeId: string;
+        settings: Partial<ResourceAttributeSettings>;
+        collection: Collection;
+        linkType?: LinkType;
+      }
+    ) {}
+  }
+
   export class AddAttribute implements Action {
     public readonly type = ViewSettingsActionType.ADD_ATTRIBUTE;
 
@@ -69,5 +83,12 @@ export namespace ViewSettingsAction {
     ) {}
   }
 
-  export type All = SetSettings | ResetSettings | HideAttributes | ShowAttributes | MoveAttribute | AddAttribute;
+  export type All =
+    | SetSettings
+    | ResetSettings
+    | HideAttributes
+    | ShowAttributes
+    | MoveAttribute
+    | AddAttribute
+    | SetAttribute;
 }

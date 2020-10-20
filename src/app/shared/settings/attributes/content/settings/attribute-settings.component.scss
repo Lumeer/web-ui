@@ -1,5 +1,10 @@
 :host {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
+}
+
+.sort-wrapper {
+  width: 20px;
+  height: 100%;
 }

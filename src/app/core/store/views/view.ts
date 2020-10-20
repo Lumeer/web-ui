@@ -88,4 +88,10 @@ export interface AttributesSettings {
 export interface ResourceAttributeSettings {
   attributeId: string;
   hidden?: boolean;
+  sort?: AttributeSortType;
+}
+
+export enum AttributeSortType {
+  Ascending = 'asc',
+  Descending = 'desc',
 }

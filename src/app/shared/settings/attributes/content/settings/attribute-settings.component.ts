@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {ResourceAttributeSettings} from '../../../../../core/store/views/view';
+import {AttributeSortType, ResourceAttributeSettings} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'attribute-settings',
@@ -40,12 +40,26 @@ export class AttributeSettingsComponent {
   @Output()
   public settingsChanged = new EventEmitter<ResourceAttributeSettings>();
 
+  public sortType = AttributeSortType;
+
   public onHiddenChanged(checked: boolean) {
     const settings: ResourceAttributeSettings = {...this.settings, attributeId: this.attribute.id};
     if (checked) {
       delete settings.hidden;
     } else {
       settings.hidden = true;
+    }
+    this.settingsChanged.emit(settings);
+  }
+
+  public onSortToggle() {
+    const settings: ResourceAttributeSettings = {...this.settings, attributeId: this.attribute.id};
+    if (!settings.sort) {
+      settings.sort = AttributeSortType.Ascending;
+    } else if (settings.sort === AttributeSortType.Ascending) {
+      settings.sort = AttributeSortType.Descending;
+    } else {
+      delete settings.sort;
     }
     this.settingsChanged.emit(settings);
   }

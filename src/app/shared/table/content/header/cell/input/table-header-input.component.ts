@@ -53,7 +53,7 @@ export class TableHeaderInputComponent implements OnChanges {
   public edited: boolean;
 
   @Input()
-  public offsetTop: boolean;
+  public offsetHorizontal: boolean;
 
   @Input()
   public value: any;

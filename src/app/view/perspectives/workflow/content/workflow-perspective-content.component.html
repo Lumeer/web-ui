@@ -11,7 +11,7 @@
     (click)="onClickInsideTables($event)">
     <lmr-table *ngFor="let table of tables$ | async; trackBy: trackByTable"
                #lmrTable
-               [style.height.px]="600"
+               [style.height.px]="550"
                [tableModel]="table"
                [constraintData]="data.constraintData"
                [selectedCell]="data.selectedCell?.tableId === table.id ? data.selectedCell : null"
@@ -21,6 +21,7 @@
                (columnRename)="onColumnRename($event)"
                (columnMenuSelected)="onColumnMenuSelected($event)"
                (columnHiddenMenuSelected)="onColumnHiddenMenuSelected($event)"
+               (columnSortChanged)="onColumnSortChanged($event)"
                (cellClick)="onTableCellClick($event)"
                (cellCancel)="onTableCellCancel($event)"
                (cellDoubleClick)="onTableCellDoubleClick($event)"

@@ -39,7 +39,7 @@ import {selectLinkInstanceById} from '../../../../../core/store/link-instances/l
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {ResourceAttributeSettings, ViewSettings} from '../../../../../core/store/views/view';
+import {AttributeSortType, ResourceAttributeSettings, ViewSettings} from '../../../../../core/store/views/view';
 import {TABLE_COLUMN_WIDTH, TABLE_ROW_HEIGHT, TableModel} from '../../../../../shared/table/model/table-model';
 import {generateId} from '../../../../../shared/utils/resource.utils';
 import {
@@ -199,7 +199,7 @@ export class WorkflowTablesDataService {
           );
         }
         const currentColumn = columnByAttribute || columnByName;
-        const column = {
+        const column: TableColumn = {
           id: currentColumn?.id || generateId(),
           attribute,
           tableId,
@@ -210,6 +210,7 @@ export class WorkflowTablesDataService {
           default: attribute.id === defaultAttributeId,
           hidden: setting.hidden,
           manageable: permissions?.manageWithView,
+          sort: setting.sort,
           menuItems: [],
         };
         column.menuItems.push(...this.menuService.createHeaderMenu(permissions, column, true));
@@ -360,6 +361,18 @@ export class WorkflowTablesDataService {
         );
       }
     }
+  }
+
+  public changeSort(column: TableColumn, sort: AttributeSortType) {
+    const {collection, linkType} = this.stateService.findColumnResources(column);
+    this.store$.dispatch(
+      new ViewSettingsAction.SetAttribute({
+        attributeId: column.attribute.id,
+        settings: {sort},
+        collection,
+        linkType,
+      })
+    );
   }
 
   public hideColumn(column: TableColumn) {

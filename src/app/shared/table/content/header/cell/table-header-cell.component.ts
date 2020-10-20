@@ -23,6 +23,7 @@ import {TableMenuComponent} from '../../common/menu/table-menu.component';
 import {preventEvent} from '../../../../utils/common.utils';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
+import {AttributeSortType} from '../../../../../core/store/views/view';
 
 @Component({
   selector: 'table-header-cell',
@@ -48,13 +49,16 @@ export class TableHeaderCellComponent {
   public editingValue: any;
 
   @Input()
-  public offsetTop: boolean;
+  public offsetHorizontal: boolean;
 
   @Output()
   public onCancel = new EventEmitter();
 
   @Output()
   public newName = new EventEmitter<string>();
+
+  @Output()
+  public sortChanged = new EventEmitter<AttributeSortType | null>();
 
   @Output()
   public menuSelected = new EventEmitter<TableContextMenuItem>();
@@ -67,6 +71,8 @@ export class TableHeaderCellComponent {
 
   @ViewChild(TableHeaderHiddenMenuComponent)
   public hiddenContextMenuComponent: TableHeaderHiddenMenuComponent;
+
+  public readonly sortType = AttributeSortType;
 
   constructor(private contextMenuService: ContextMenuService) {}
 
@@ -106,5 +112,17 @@ export class TableHeaderCellComponent {
 
   public onHiddenMenuSelected(columns: TableColumn[]) {
     this.hiddenMenuSelected.emit(columns);
+  }
+
+  public onSortToggle(event: MouseEvent) {
+    preventEvent(event);
+
+    if (!this.column.sort) {
+      this.sortChanged.emit(AttributeSortType.Ascending);
+    } else if (this.column.sort === AttributeSortType.Ascending) {
+      this.sortChanged.emit(AttributeSortType.Descending);
+    } else {
+      this.sortChanged.emit(null);
+    }
   }
 }

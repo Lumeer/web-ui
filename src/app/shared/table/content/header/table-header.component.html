@@ -21,12 +21,12 @@
     <table-header-cell *ngIf="index !== dragData.index"
                        [editing]="editedCell | tableCellEdited:group.column:cellType"
                        [editingValue]="editedCell?.inputValue"
-                       [offsetTop]="true"
                        [column]="group.column"
                        [hiddenColumns]="group.hiddenColumns"
                        [restrictedNames]="columns | columnHeaderRestrictedNames:index"
                        (onCancel)="onHeaderCancel(group.column)"
                        (newName)="onHeaderSave(group.column, $event)"
+                       (sortChanged)="onSortChanged(group.column, $event)"
                        (menuSelected)="onMenuSelected(group.column, $event)"
                        (hiddenMenuSelected)="hiddenMenuSelected.emit($event)">
     </table-header-cell>

@@ -30,7 +30,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../core/store/navigation/query/query';
-import {ViewSettings} from '../../../../../core/store/views/view';
+import {AttributeSortType, ViewSettings} from '../../../../../core/store/views/view';
 import {TableColumn, TableContextMenuItem} from '../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../shared/table/model/table-row';
 import {DataRowHiddenComponent} from '../../../../../shared/data/data-row-component';
@@ -96,6 +96,10 @@ export class WorkflowTablesService {
 
   public onColumnHiddenMenuSelected(columns: TableColumn[]) {
     this.dataService.showColumns(columns);
+  }
+
+  public onColumnSortChanged(column: TableColumn, sort: AttributeSortType) {
+    this.dataService.changeSort(column, sort);
   }
 
   public onColumnMenuSelected(column: TableColumn, item: TableContextMenuItem) {

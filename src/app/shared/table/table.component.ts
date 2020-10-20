@@ -44,6 +44,7 @@ import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel
 import {TableScrollService} from './service/table-scroll.service';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn, TableContextMenuItem} from './model/table-column';
+import {AttributeSortType} from '../../core/store/views/view';
 
 @Component({
   selector: 'lmr-table',
@@ -78,6 +79,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   public columnHiddenMenuSelected = new EventEmitter<TableColumn[]>();
+
+  @Output()
+  public columnSortChanged = new EventEmitter<{column: TableColumn; type: AttributeSortType | null}>();
 
   @Output()
   public cellClick = new EventEmitter<TableCell>();
