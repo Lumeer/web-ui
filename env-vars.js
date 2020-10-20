@@ -12,6 +12,7 @@ config.I18N_LOCALE = env.I18N_LOCALE || 'en';
 config.I18N_PATH = env.I18N_PATH || `src/i18n/messages.${config.I18N_LOCALE}.${config.I18N_FORMAT}`;
 config.SKIP_MULTI_LOCALIZE = env.SKIP_MULTI_LOCALIZE || false;
 config.LOGZIO_KEY = env.LOGZIO_KEY;
+config.LOGZIO_REGION = env.LOGZIO_REGION;
 config.LUMEER_ENGINE = env.LUMEER_ENGINE;
 config.LUMEER_ENGINE_PROD = env.LUMEER_ENGINE_PROD;
 config.LUMEER_ENV = env.LUMEER_ENV;
