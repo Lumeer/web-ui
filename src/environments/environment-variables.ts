@@ -46,6 +46,7 @@ export interface EnvironmentVariables {
   publicViewCdn: string;
   publicScriptCdn: string;
   logzioKey: string;
+  logzioRegion: string;
   smartlookKey: string;
   mixpanelKey: string;
 }
@@ -71,6 +72,7 @@ const blocklyCdn = env['BLOCKLY_CDN'] || `https://d1p6nuvm5rqwq0.cloudfront.net/
 const publicViewCdn = env['PUBLIC_VIEW_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/index.html`;
 const publicScriptCdn = env['PUBLIC_SCRIPT_CDN'] || `https://d2b894al51csxx.cloudfront.net/${locale}/public-view.js`;
 const logzioKey = env['LOGZIO_KEY'] || '';
+const logzioRegion = env['LOGZIO_REGION'] || 'eu';
 const smartlookKey = env['SMARTLOOK_KEY'] || '';
 const mixpanelKey = env['MIXPANEL_KEY'] || '';
 
@@ -96,6 +98,7 @@ export const environmentVariables: EnvironmentVariables = {
   publicViewCdn,
   publicScriptCdn,
   logzioKey,
+  logzioRegion,
   smartlookKey,
   mixpanelKey,
 };
