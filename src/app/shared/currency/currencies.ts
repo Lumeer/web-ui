@@ -319,6 +319,19 @@ export class CurrencyFormatService {
     Object.values(LanguageTag).forEach(lang => numbro.registerLanguage(this.getNumbroLanguage(lang), false));
   }
 
+  public ordinal(num: number): string {
+    const b = num % 10;
+    return ~~((num % 100) / 10) === 1
+      ? this.ordinals[3] || ''
+      : b === 1
+      ? this.ordinals[0] || ''
+      : b === 2
+      ? this.ordinals[1] || ''
+      : b === 3
+      ? this.ordinals[2] || ''
+      : this.ordinals[3] || '';
+  }
+
   public getNumbroLanguage(language: LanguageTag): NumbroLanguage {
     return {
       languageTag: language,
@@ -332,18 +345,7 @@ export class CurrencyFormatService {
         billion: this.abbreviations[2] || '',
         trillion: this.abbreviations[3] || '',
       },
-      ordinal(num: number): string {
-        const b = num % 10;
-        return ~~((num % 100) / 10) === 1
-          ? this.ordinals[3] || ''
-          : b === 1
-          ? this.ordinals[0] || ''
-          : b === 2
-          ? this.ordinals[1] || ''
-          : b === 3
-          ? this.ordinals[2] || ''
-          : this.ordinals[3] || '';
-      },
+      ordinal: this.ordinal.bind(this),
       currency: {
         symbol: currencies[language].symbol,
         code: currencies[language].code,
