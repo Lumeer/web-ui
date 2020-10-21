@@ -31,7 +31,7 @@ export class LinkDataValue implements DataValue {
   public readonly config: LinkConstraintConfig = {};
 
   constructor(public readonly value: string, public readonly inputValue?: string) {
-    const {link, title} = parseLinkValue(value || '');
+    const {link, title} = parseLinkValue(inputValue || value || '');
     this.linkValue = link || '';
     this.titleValue = title || '';
   }
