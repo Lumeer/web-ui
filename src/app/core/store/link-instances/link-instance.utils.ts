@@ -18,7 +18,6 @@
  */
 
 import {LinkInstance} from './link.instance';
-import {DocumentModel} from '../documents/document.model';
 
 export function isDocumentInLinkInstance(linkInstance: LinkInstance, documentId: string): boolean {
   return linkInstance.documentIds.some(id => id === documentId);

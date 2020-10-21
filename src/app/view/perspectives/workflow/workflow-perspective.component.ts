@@ -23,7 +23,7 @@ import {Observable} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectCollectionsInQuery, selectDocumentsByQuery} from '../../../core/store/common/permissions.selectors';
+import {selectCollectionsInQuery, selectDocumentsByQuerySorted} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -56,7 +56,7 @@ export class WorkflowPerspectiveComponent implements OnInit {
       mergeMap(collection => this.collectionsPermissionsPipe.transform(collection)),
       distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
     );
-    this.documents$ = this.store$.pipe(select(selectDocumentsByQuery));
+    this.documents$ = this.store$.pipe(select(selectDocumentsByQuerySorted));
     this.query$ = this.store$.pipe(
       select(selectQuery),
       tap(query => this.fetchData(query))
