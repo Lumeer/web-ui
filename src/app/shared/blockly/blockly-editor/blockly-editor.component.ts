@@ -355,7 +355,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
                 {
                   type: 'input_value',
                   name: 'VALUE',
-                  check: ['', 'Number', 'String', 'Boolean'], // only regular variables - no fields or objects
+                  check: ['', 'Number', 'String', 'Boolean', 'Colour'], // only regular variables - no fields or objects
                 },
               ],
               colour: COLOR_DARK,
@@ -412,7 +412,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
                 {
                   type: 'input_value',
                   name: 'VALUE',
-                  check: ['', 'Number', 'String', 'Boolean'], // only regular variables - no fields or objects
+                  check: ['', 'Number', 'String', 'Boolean', 'Colour'], // only regular variables - no fields or objects
                 },
               ],
               colour: COLOR_DARK,
@@ -566,7 +566,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             {
               type: 'input_value',
               name: 'VALUE',
-              check: ['', 'Number', 'String', 'Boolean'], // only regular variables
+              check: ['', 'Number', 'String', 'Boolean', 'Colour'], // only regular variables
             },
           ],
           previousStatement: null,
@@ -644,7 +644,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             {
               type: 'input_value',
               name: 'VALUE',
-              check: ['', 'Number', 'String', 'Boolean'], // only regular variables
+              check: ['', 'Number', 'String', 'Boolean', 'Colour'], // only regular variables
             },
           ],
           previousStatement: null,
@@ -1174,7 +1174,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       const newType =
         block.type.endsWith(LINK_TYPE_BLOCK_SUFFIX) || block.type.endsWith(LINK_INSTANCE_BLOCK_SUFFIX)
           ? ['Array']
-          : ['', 'Number', 'String', 'Boolean'];
+          : ['', 'Number', 'String', 'Boolean', 'Colour'];
       const parentBlockOutputType = this.getOutputConnectionCheck(parentBlock);
       if (!skipDisconnect && parentBlockOutputType !== newType[0]) {
         this.tryDisconnect(parentBlock, parentBlock.outputConnection);
