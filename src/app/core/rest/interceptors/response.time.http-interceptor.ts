@@ -79,7 +79,7 @@ export class ResponseTimeHttpInterceptor implements HttpInterceptor {
             if (random < 10 || responseTime > 999) {
               this.http
                 .post(
-                  `https://listener.${environment.logzioRegion}.logz.io:8071/?token=${environment.logzioKey}`,
+                  `https://listener-${environment.logzioRegion}.logz.io:8071/?token=${environment.logzioKey}`,
                   {
                     startTime: headerStartTimestamp,
                     endTime: endTimestamp,
