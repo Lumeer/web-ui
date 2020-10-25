@@ -115,7 +115,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
       take(1),
       mergeMap(calendarEntity => {
         const calendarConfig = view.config && view.config.calendar;
-        if (preferViewConfigUpdate(previousView, view, !!calendarEntity)) {
+        if (preferViewConfigUpdate(previousView?.config?.calendar, view?.config?.calendar, !!calendarEntity)) {
           return this.checkCalendarConfig(calendarConfig).pipe(map(config => ({calendarId, config})));
         }
         return of({calendarId, config: calendarEntity?.config || calendarConfig});

@@ -30,7 +30,12 @@ import {AttributesResourceType} from '../../core/model/resource';
   name: 'queryStemResourcesSelectItems',
 })
 export class QueryStemResourcesSelectItemsPipe implements PipeTransform {
-  public transform(stem: QueryStem, collections: Collection[], linkTypes: LinkType[]): SelectItemModel[] {
+  public transform(
+    stem: QueryStem,
+    collections: Collection[],
+    linkTypes: LinkType[],
+    skipLinks = false
+  ): SelectItemModel[] {
     if (!stem) {
       return [];
     }
@@ -41,7 +46,7 @@ export class QueryStemResourcesSelectItemsPipe implements PipeTransform {
       if (i % 2 === 0) {
         // collection
         items.push(this.collectionSelectItem(resources[i] as Collection, i));
-      } else {
+      } else if (!skipLinks) {
         // linkType
         items.push(
           this.linkTypeSelectItem(

@@ -163,7 +163,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
       withLatestFrom(this.store$.pipe(select(selectMapPosition))),
       mergeMap(([mapEntity, position]) => {
         const mapConfig = view.config && view.config.map;
-        if (preferViewConfigUpdate(previousView, view, !!mapEntity)) {
+        if (preferViewConfigUpdate(previousView?.config?.map, view?.config?.map, !!mapEntity)) {
           const configToCheck: MapConfig = {
             ...mapConfig,
             position: mapConfig?.positionSaved ? mapConfig.position : position,

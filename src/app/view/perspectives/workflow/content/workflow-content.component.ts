@@ -23,12 +23,13 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  OnInit,
   HostListener,
   ViewChildren,
   QueryList,
   ElementRef,
   ViewChild,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -40,8 +41,7 @@ import {WorkflowTablesService} from './service/workflow-tables.service';
 import {EditedTableCell, SelectedTableCell, TableCell, TableModel} from '../../../../shared/table/model/table-model';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
+import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {HiddenInputComponent} from '../../../../shared/input/hidden-input/hidden-input.component';
@@ -52,11 +52,15 @@ import {WorkflowTablesMenuService} from './service/workflow-tables-menu.service'
 import {WorkflowTablesDataService} from './service/workflow-tables-data.service';
 import {WorkflowTablesStateService} from './service/workflow-tables-state.service';
 import {WorkflowTablesKeyboardService} from './service/workflow-tables-keyboard.service';
+import {LinkType} from '../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
+import {WorkflowConfig, WorkflowStemConfig} from '../../../../core/store/workflows/workflow';
+import {WorkflowTable} from '../model/workflow-table';
 
 @Component({
-  selector: 'workflow-perspective-content',
-  templateUrl: './workflow-perspective-content.component.html',
-  styleUrls: ['./workflow-perspective-content.component.scss'],
+  selector: 'workflow-content',
+  templateUrl: './workflow-content.component.html',
+  styleUrls: ['./workflow-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     WorkflowTablesService,
@@ -66,7 +70,7 @@ import {WorkflowTablesKeyboardService} from './service/workflow-tables-keyboard.
     WorkflowTablesKeyboardService,
   ],
 })
-export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
+export class WorkflowContentComponent implements OnChanges {
   @Input()
   public viewSettings: ViewSettings;
 
@@ -80,7 +84,25 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   public collections: Collection[];
 
   @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
+  public linkInstances: LinkInstance[];
+
+  @Input()
   public documents: DocumentModel[];
+
+  @Input()
+  public config: WorkflowConfig;
+
+  @Input()
+  public constraintData: ConstraintData;
+
+  @Input()
+  public canManageConfig: boolean;
+
+  @Output()
+  public configChange = new EventEmitter<WorkflowConfig>();
 
   @ViewChildren('lmrTable', {read: ElementRef})
   public tableComponents: QueryList<ElementRef>;
@@ -88,8 +110,7 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
   @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
 
-  public tables$: Observable<TableModel[]>;
-  public constraintData$: Observable<ConstraintData>;
+  public tables$: Observable<WorkflowTable[]>;
   public selectedCell$: Observable<SelectedTableCell>;
   public editedCell$: Observable<EditedTableCell>;
 
@@ -100,10 +121,6 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
     this.editedCell$ = this.tablesService.editedCell$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
   }
 
-  public ngOnInit() {
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-  }
-
   public ngOnChanges(changes: SimpleChanges) {
     if (this.onlyViewSettingsChanged(changes)) {
       this.tablesService.onUpdateSettings(this.viewSettings);
@@ -112,14 +129,22 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
       changes.query ||
       changes.permissions ||
       changes.viewSettings ||
-      changes.documents
+      changes.documents ||
+      changes.linkTypes ||
+      changes.linkInstances ||
+      changes.config ||
+      changes.constraintData
     ) {
       this.tablesService.onUpdateData(
         this.collections,
         this.documents,
+        this.linkTypes,
+        this.linkInstances,
+        this.config,
         this.permissions,
         this.query,
-        this.viewSettings
+        this.viewSettings,
+        this.constraintData
       );
     }
   }
@@ -193,5 +218,12 @@ export class WorkflowPerspectiveContentComponent implements OnInit, OnChanges {
 
   public onColumnSortChanged(data: {column: TableColumn; type: AttributeSortType | null}) {
     this.tablesService.onColumnSortChanged(data.column, data.type);
+  }
+
+  public onStemConfigChange(stemConfig: WorkflowStemConfig, index: number) {
+    const stemsConfigs = [...this.config.stemsConfigs];
+    stemsConfigs.splice(index, 1, stemConfig);
+    const newConfig = {...this.config, stemsConfigs};
+    this.configChange.emit(newConfig);
   }
 }

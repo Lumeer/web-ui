@@ -40,6 +40,11 @@ import {HeaderMenuId, RowMenuId} from './workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './workflow-tables-data.service';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {WorkflowTablesKeyboardService} from './workflow-tables-keyboard.service';
+import {LinkType} from '../../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {WorkflowConfig} from '../../../../../core/store/workflows/workflow';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {WorkflowTable} from '../../model/workflow-table';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -67,7 +72,7 @@ export class WorkflowTablesService {
     return this.stateService.editedCell$.asObservable();
   }
 
-  public get tables$(): Observable<TableModel[]> {
+  public get tables$(): Observable<WorkflowTable[]> {
     return this.stateService.tables$.asObservable();
   }
 
@@ -244,10 +249,24 @@ export class WorkflowTablesService {
   public onUpdateData(
     collections: Collection[],
     documents: DocumentModel[],
+    linkTypes: LinkType[],
+    linkInstances: LinkInstance[],
+    config: WorkflowConfig,
     permissions: Record<string, AllowedPermissions>,
     query: Query,
-    viewSettings: ViewSettings
+    viewSettings: ViewSettings,
+    constraintData: ConstraintData
   ) {
-    this.dataService.createAndSyncTables(collections, documents, [], [], permissions, query, viewSettings);
+    this.dataService.createAndSyncTables(
+      collections,
+      documents,
+      linkTypes,
+      linkInstances,
+      config,
+      permissions,
+      query,
+      viewSettings,
+      constraintData
+    );
   }
 }

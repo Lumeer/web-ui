@@ -111,8 +111,8 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
       select(selectKanbanById(kanbanId)),
       take(1),
       mergeMap(kanbanEntity => {
-        const kanbanConfig = view.config && view.config.kanban;
-        if (preferViewConfigUpdate(previousView, view, !!kanbanEntity)) {
+        const kanbanConfig = view.config?.kanban;
+        if (preferViewConfigUpdate(previousView?.config?.kanban, view?.config?.kanban, !!kanbanEntity)) {
           return this.checkKanbanConfig(kanbanConfig).pipe(map(config => ({kanbanId, config})));
         }
         return of({kanbanId, config: kanbanEntity?.config || kanbanConfig});

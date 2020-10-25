@@ -99,7 +99,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
       take(1),
       mergeMap(pivotEntity => {
         const pivotConfig = view.config && view.config.pivot;
-        if (preferViewConfigUpdate(previousView, view, !!pivotEntity)) {
+        if (preferViewConfigUpdate(previousView?.config?.pivot, view?.config?.pivot, !!pivotEntity)) {
           return this.checkPivotConfig(pivotConfig).pipe(map(config => ({pivotId, config})));
         }
         return of({pivotId, config: (pivotEntity && pivotEntity.config) || pivotConfig});

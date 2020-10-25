@@ -355,7 +355,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
               return {query, config: view.config.table, tableId};
             }
 
-            if (preferViewConfigUpdate(previousView, view, !!table)) {
+            if (preferViewConfigUpdate(previousView?.config?.table, view?.config?.table, !!table)) {
               return {
                 query,
                 config: view.config?.table,

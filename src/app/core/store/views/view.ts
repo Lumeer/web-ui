@@ -28,6 +28,7 @@ import {KanbanConfig} from '../kanbans/kanban';
 import {PivotConfig} from '../pivots/pivot';
 import {SearchConfig} from '../searches/search';
 import {MapConfig} from '../maps/map.model';
+import {WorkflowConfig} from '../workflows/workflow';
 
 export interface View extends Resource {
   perspective: Perspective;
@@ -49,6 +50,7 @@ export interface ViewConfig {
   kanban?: KanbanConfig;
   pivot?: PivotConfig;
   map?: MapConfig;
+  workflow?: WorkflowConfig;
 }
 
 export interface DetailConfig {
@@ -63,6 +65,8 @@ export type PerspectiveConfig =
   | CalendarConfig
   | ChartConfig
   | KanbanConfig
+  | MapConfig
+  | WorkflowConfig
   | PivotConfig;
 
 export interface ViewGlobalConfig {

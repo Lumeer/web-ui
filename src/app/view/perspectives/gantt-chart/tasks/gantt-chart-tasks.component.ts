@@ -89,6 +89,7 @@ interface Data {
   permissions: Record<string, AllowedPermissions>;
   query: Query;
   constraintData: ConstraintData;
+  sortDefined: boolean;
 }
 
 interface PatchData {
@@ -137,6 +138,9 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
 
   @Input()
   public dataLoaded: boolean;
+
+  @Input()
+  public sortDefined: boolean;
 
   @Output()
   public patchDocumentData = new EventEmitter<DocumentModel>();
@@ -208,7 +212,8 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       data.linkInstances,
       data.permissions || {},
       data.constraintData,
-      data.query
+      data.query,
+      data.sortDefined
     );
   }
 
@@ -223,6 +228,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
         config: this.config,
         query: this.query,
         constraintData: this.constraintData,
+        sortDefined: this.sortDefined,
       });
     }
   }
@@ -232,6 +238,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
       this.dataLoaded &&
       (changes.dataLoaded ||
         changes.documents ||
+        changes.sortDefined ||
         (changes.config && this.configChanged(changes.config)) ||
         changes.collections ||
         changes.permissions ||

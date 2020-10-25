@@ -4,3 +4,7 @@ td {
   padding: 0;
   border: 0.5px $gray-200 dotted;
 }
+
+.html-input ::ng-deep * {
+  margin: 0;
+}

@@ -24,14 +24,22 @@ import {WorkflowPerspectiveComponent} from './workflow-perspective.component';
 import {WorkflowPerspectiveRoutingModule} from './workflow-perspective-routing.module';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {TableModule} from '../../../shared/table/table.module';
-import {WorkflowPerspectiveContentComponent} from './content/workflow-perspective-content.component';
+import {WorkflowContentComponent} from './content/workflow-content.component';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {InputModule} from '../../../shared/input/input.module';
+import {WorkflowToolbarComponent} from './content/toolbar/workflow-toolbar.component';
+import {SelectModule} from '../../../shared/select/select.module';
+import {WorkflowSelectedItemPipe} from './pipes/workflow-selected-item.pipe';
 
 @NgModule({
-  declarations: [WorkflowPerspectiveComponent, WorkflowPerspectiveContentComponent],
+  declarations: [
+    WorkflowPerspectiveComponent,
+    WorkflowContentComponent,
+    WorkflowToolbarComponent,
+    WorkflowSelectedItemPipe,
+  ],
   imports: [
     CommonModule,
     TableModule,
@@ -42,6 +50,7 @@ import {InputModule} from '../../../shared/input/input.module';
     WarningMessageModule,
     ClickOutsideModule,
     InputModule,
+    SelectModule,
   ],
 })
 export class WorkflowPerspectiveModule {}

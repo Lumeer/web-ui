@@ -45,6 +45,14 @@ export function createAttributesSettingsOrder(
   return modifiedSettings;
 }
 
+export function viewAttributeSettingsSortDefined(settings: ViewSettings): boolean {
+  const attributesSettings = [
+    ...Object.values(settings?.attributes?.collections || {}),
+    ...Object.values(settings?.attributes?.linkTypes || {}),
+  ];
+  return attributesSettings.some(attributeSettings => attributeSettings.some(setting => setting.sort));
+}
+
 export function viewAttributeSettingsChanged(
   previousSettings: AttributesSettings,
   currentSettings: AttributesSettings,

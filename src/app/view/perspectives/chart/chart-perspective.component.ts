@@ -131,7 +131,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
       take(1),
       mergeMap(chartEntity => {
         const chartConfig = view.config?.chart;
-        if (preferViewConfigUpdate(previousView, view, !!chartEntity)) {
+        if (preferViewConfigUpdate(previousView?.config?.chart, view?.config?.chart, !!chartEntity)) {
           return this.checkChartConfig(chartConfig).pipe(map(config => ({chartId, config})));
         }
         return of({chartId, config: chartEntity?.config || chartConfig});

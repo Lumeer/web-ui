@@ -38,40 +38,53 @@ import {moveItemsInArray} from '../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../shared/settings/settings.util';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
+import {WorkflowConfig} from '../../../../../core/store/workflows/workflow';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {WorkflowTable} from '../../model/workflow-table';
 
 @Injectable()
 export class WorkflowTablesStateService {
   public readonly selectedCell$ = new BehaviorSubject<SelectedTableCell>(null);
   public readonly editedCell$ = new BehaviorSubject<EditedTableCell>(null);
-  public readonly tables$ = new BehaviorSubject<TableModel[]>([]);
+  public readonly tables$ = new BehaviorSubject<WorkflowTable[]>([]);
 
   private currentCollectionsMap: Record<string, Collection>;
   private currentLinkTypesMap: Record<string, LinkType>;
   private currentDocuments: DocumentModel[];
+  private currentLinkInstances: LinkInstance[];
   private currentQuery: Query;
   private currentViewSettings: ViewSettings;
+  private currentConfig: WorkflowConfig;
   private currentPermissions: Record<string, AllowedPermissions>;
+  private currentConstraintData: ConstraintData;
 
   public updateData(
     collections: Collection[],
     documents: DocumentModel[],
+    linkTypes: LinkType[],
+    linkInstances: LinkInstance[],
+    config: WorkflowConfig,
     permissions: Record<string, AllowedPermissions>,
     query: Query,
-    viewSettings: ViewSettings
+    viewSettings: ViewSettings,
+    constraintData: ConstraintData
   ) {
     this.currentCollectionsMap = objectsByIdMap(collections);
-    this.currentLinkTypesMap = objectsByIdMap([]);
+    this.currentLinkTypesMap = objectsByIdMap(linkTypes);
     this.currentDocuments = documents;
+    this.currentLinkInstances = linkInstances;
+    this.currentConfig = config;
     this.currentPermissions = permissions;
     this.currentQuery = query;
     this.currentViewSettings = viewSettings;
+    this.currentConstraintData = constraintData;
   }
 
-  public setTables(tables: TableModel[]) {
+  public setTables(tables: WorkflowTable[]) {
     this.tables$.next(tables);
   }
 
-  public get tables(): TableModel[] {
+  public get tables(): WorkflowTable[] {
     return this.tables$.value;
   }
 
@@ -103,8 +116,16 @@ export class WorkflowTablesStateService {
     return this.currentQuery;
   }
 
+  public get config(): WorkflowConfig {
+    return this.currentConfig;
+  }
+
   public get permissions(): Record<string, AllowedPermissions> {
     return this.currentPermissions;
+  }
+
+  public get constraintData(): ConstraintData {
+    return this.currentConstraintData;
   }
 
   public get viewSettings(): ViewSettings {

@@ -60,6 +60,8 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
+import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
+import {viewAttributeSettingsSortDefined} from '../../../shared/settings/settings.util';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -75,6 +77,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public constraintData$: Observable<ConstraintData>;
+  public sortDefined$: Observable<boolean>;
   public dataLoaded$: Observable<boolean>;
 
   public sidebarOpened$ = new BehaviorSubject(false);
@@ -125,7 +128,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
       take(1),
       mergeMap(ganttEntity => {
         const ganttConfig = view.config && view.config.ganttChart;
-        if (preferViewConfigUpdate(previousView, view, !!ganttEntity)) {
+        if (preferViewConfigUpdate(previousView?.config?.ganttChart, view?.config?.ganttChart, !!ganttEntity)) {
           return this.checkGanttConfig(ganttConfig).pipe(map(config => ({ganttChartId, config})));
         }
         return of({ganttChartId, config: ganttEntity?.config || ganttConfig});
@@ -182,6 +185,11 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
       this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
       this.store$.pipe(select(selectCurrentQueryLinkInstancesLoaded)),
     ]).pipe(map(loaded => loaded.every(load => load)));
+    this.sortDefined$ = this.store$.pipe(
+      select(selectViewSettings),
+      map(settings => viewAttributeSettingsSortDefined(settings)),
+      distinctUntilChanged()
+    );
   }
 
   public ngOnDestroy() {

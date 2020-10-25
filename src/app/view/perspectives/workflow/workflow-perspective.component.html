@@ -1,7 +1,14 @@
-<workflow-perspective-content class="d-block mx-3 h-100"
-                              [query]="query$ | async"
-                              [collections]="collections$ | async"
-                              [permissions]="permissions$ | async"
-                              [documents]="documents$ | async"
-                              [viewSettings]="viewSettings$ |async">
-</workflow-perspective-content>
+<workflow-content class="d-block mx-3 h-100"
+                  *ngIf="{documentsAndLinks: documentsAndLinks$ | async} as data"
+                  [collections]="collections$ | async"
+                  [documents]="data.documentsAndLinks.documents"
+                  [linkTypes]="linkTypes$ | async"
+                  [linkInstances]="data.documentsAndLinks.linkInstances"
+                  [config]="config$ | async"
+                  [canManageConfig]="currentView$ | async | canManageConfig | async"
+                  [query]="query$ | async"
+                  [permissions]="permissions$ | async"
+                  [viewSettings]="viewSettings$ |async"
+                  [constraintData]="constraintData$ | async"
+                  (configChange)="onConfigChanged($event)">
+</workflow-content>

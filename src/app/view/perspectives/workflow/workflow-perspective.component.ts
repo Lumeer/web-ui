@@ -17,23 +17,50 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
-import {Observable} from 'rxjs';
+import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectCollectionsInQuery, selectDocumentsByQuerySorted} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByQuery,
+  selectDocumentsAndLinksByQuery,
+  selectLinkTypesInQuery,
+} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {distinctUntilChanged, mergeMap, tap} from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  map,
+  mergeMap,
+  pairwise,
+  startWith,
+  switchMap,
+  take,
+  tap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
-import {ViewSettings} from '../../../core/store/views/view';
+import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
+import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {LinkType} from '../../../core/store/link-types/link.type';
+import {selectCurrentView} from '../../../core/store/views/views.state';
+import {DEFAULT_WORKFLOW_ID, WorkflowConfig} from '../../../core/store/workflows/workflow';
+import {selectWorkflowById, selectWorkflowConfig} from '../../../core/store/workflows/workflow.state';
+import {
+  checkOrTransformWorkflowConfig,
+  createDefaultWorkflowConfig,
+} from '../../../core/store/workflows/workflow.utils';
+import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
+import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   selector: 'workflow-perspective',
@@ -43,29 +70,106 @@ import {selectViewSettings} from '../../../core/store/view-settings/view-setting
 })
 export class WorkflowPerspectiveComponent implements OnInit {
   public collections$: Observable<Collection[]>;
-  public documents$: Observable<DocumentModel[]>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
+  public linkTypes$: Observable<LinkType[]>;
+  public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
   public viewSettings$: Observable<ViewSettings>;
+  public config$: Observable<WorkflowConfig>;
+  public constraintData$: Observable<ConstraintData>;
+
+  private subscriptions = new Subscription();
+  private workflowId: string;
 
   constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsInQuery));
+    this.initWorkflow();
+    this.subscribeData();
+  }
+
+  private initWorkflow() {
+    const subscription = this.store$
+      .pipe(
+        select(selectCurrentView),
+        startWith(null as View),
+        pairwise(),
+        switchMap(([previousView, view]) =>
+          view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
+        )
+      )
+      .subscribe(({workflowId, config}: {workflowId?: string; config?: WorkflowConfig}) => {
+        if (workflowId) {
+          this.workflowId = workflowId;
+          this.store$.dispatch(new WorkflowsAction.AddWorkflow({workflow: {id: workflowId, config}}));
+        }
+      });
+    this.subscriptions.add(subscription);
+  }
+
+  private subscribeToView(previousView: View, view: View): Observable<{workflowId?: string; config?: WorkflowConfig}> {
+    const workflowId = view.code;
+    return this.store$.pipe(
+      select(selectWorkflowById(workflowId)),
+      take(1),
+      mergeMap(workflowEntity => {
+        const workflowConfig = view.config?.workflow;
+        if (preferViewConfigUpdate(previousView?.config?.workflow, view?.config?.workflow, !!workflowEntity)) {
+          return this.checkKanbanConfig(workflowConfig).pipe(map(config => ({workflowId, config})));
+        }
+        return of({workflowId: workflowId, config: workflowEntity?.config || workflowConfig});
+      })
+    );
+  }
+
+  private checkKanbanConfig(config: WorkflowConfig): Observable<WorkflowConfig> {
+    return combineLatest([
+      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectCollectionsByQuery)),
+      this.store$.pipe(select(selectLinkTypesInQuery)),
+    ]).pipe(
+      take(1),
+      map(([query, collections, linkTypes]) => checkOrTransformWorkflowConfig(config, query, collections, linkTypes))
+    );
+  }
+
+  private subscribeToDefault(): Observable<{workflowId?: string; config?: WorkflowConfig}> {
+    const workflowId = DEFAULT_WORKFLOW_ID;
+    return this.store$.pipe(
+      select(selectQuery),
+      withLatestFrom(this.store$.pipe(select(selectWorkflowById(workflowId)))),
+      mergeMap(([, workflow]) => this.checkKanbanConfig(workflow?.config)),
+      map(config => ({workflowId, config}))
+    );
+  }
+
+  public subscribeData() {
+    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
+    this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.permissions$ = this.collections$.pipe(
       mergeMap(collection => this.collectionsPermissionsPipe.transform(collection)),
       distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
     );
-    this.documents$ = this.store$.pipe(select(selectDocumentsByQuerySorted));
+    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
     this.query$ = this.store$.pipe(
       select(selectQuery),
       tap(query => this.fetchData(query))
     );
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
+    this.config$ = this.store$.pipe(select(selectWorkflowConfig));
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   private fetchData(query: Query) {
     this.store$.dispatch(new DocumentsAction.Get({query}));
     this.store$.dispatch(new LinkInstancesAction.Get({query}));
+  }
+
+  public onConfigChanged(config: WorkflowConfig) {
+    if (this.workflowId) {
+      this.store$.dispatch(new WorkflowsAction.SetConfig({workflowId: this.workflowId, config}));
+    }
   }
 }

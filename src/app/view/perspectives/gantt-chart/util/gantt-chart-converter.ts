@@ -111,26 +111,29 @@ export class GanttChartConverter {
     linkInstances: LinkInstance[],
     permissions: Record<string, AllowedPermissions>,
     constraintData: ConstraintData,
-    query: Query
+    query: Query,
+    sortDefined?: boolean
   ): {options: GanttOptions; tasks: GanttTask[]} {
     this.config = config;
     this.constraintData = constraintData;
 
-    const tasks = (query?.stems || [])
-      .reduce((allTasks, stem, index) => {
-        this.dataObjectAggregator.updateData(
-          collections,
-          documents,
-          linkTypes,
-          linkInstances,
-          stem,
-          permissions,
-          constraintData
-        );
-        allTasks.push(...this.convertByStem(index));
-        return allTasks;
-      }, [])
-      .sort((t1, t2) => this.compareTasks(t1, t2));
+    let tasks = (query?.stems || []).reduce((allTasks, stem, index) => {
+      this.dataObjectAggregator.updateData(
+        collections,
+        documents,
+        linkTypes,
+        linkInstances,
+        stem,
+        permissions,
+        constraintData
+      );
+      allTasks.push(...this.convertByStem(index));
+      return allTasks;
+    }, []);
+
+    if (!sortDefined) {
+      tasks = tasks.sort((t1, t2) => this.compareTasks(t1, t2));
+    }
 
     const options = this.createGanttOptions(config, permissions, linkTypes);
 

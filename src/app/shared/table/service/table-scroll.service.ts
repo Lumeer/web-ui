@@ -19,6 +19,7 @@
 
 import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType, TableModel} from '../model/table-model';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
+import {groupTableColumns} from '../model/table-utils';
 
 export class TableScrollService {
   constructor(private viewPort: () => CdkVirtualScrollViewport) {}
@@ -33,15 +34,17 @@ export class TableScrollService {
     const left = viewPort.measureScrollOffset('left');
     const right = left + width;
 
-    const columnIndex = tableModel.columns.findIndex(column => column.id === selectedCell.columnId);
-    const selectedColumn = tableModel.columns[columnIndex];
-    const columnLeft = tableModel.columns.slice(0, columnIndex).reduce((sum, column) => sum + column.width, 0);
+    const groupedColumns = groupTableColumns(tableModel.columns);
+
+    const groupIndex = groupedColumns.findIndex(group => group.column?.id === selectedCell.columnId);
+    const selectedGroup = groupedColumns[groupIndex];
+    const columnLeft = groupedColumns.slice(0, groupIndex).reduce((sum, group) => sum + group.width, 0);
 
     let scrollLeft = undefined;
     if (columnLeft < left) {
       scrollLeft = columnLeft;
-    } else if (right < columnLeft + selectedColumn.width) {
-      scrollLeft = columnLeft + (width > selectedColumn.width ? selectedColumn.width - width : 0);
+    } else if (right < columnLeft + selectedGroup.width) {
+      scrollLeft = columnLeft + (width > selectedGroup.width ? selectedGroup.width - width : 0);
     }
 
     const height = viewPort.getViewportSize() - TABLE_ROW_HEIGHT;

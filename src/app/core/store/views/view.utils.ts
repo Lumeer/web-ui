@@ -39,6 +39,7 @@ import {CalendarConfig} from '../calendars/calendar';
 import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
 import {Query} from '../navigation/query/query';
 import {ChartConfig} from '../charts/chart';
+import {isWorkflowConfigChanged} from '../workflows/workflow.utils';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -46,7 +47,8 @@ export function isViewConfigChanged(
   perspectiveConfig: any,
   documentsMap: Record<string, DocumentModel>,
   collectionsMap: Record<string, Collection>,
-  linkTypesMap: Record<string, LinkType>
+  linkTypesMap: Record<string, LinkType>,
+  query: Query
 ): boolean {
   switch (perspective) {
     case Perspective.Table:
@@ -63,6 +65,8 @@ export function isViewConfigChanged(
       return isMapConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Pivot:
       return isPivotConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Workflow:
+      return isWorkflowConfigChanged(viewConfig, perspectiveConfig, query);
     default:
       return !deepObjectsEquals(viewConfig, perspectiveConfig);
   }
@@ -84,11 +88,15 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
   }
 }
 
-export function preferViewConfigUpdate(previousView: View, view: View, hasStoreConfig: boolean): boolean {
-  if (!previousView) {
+export function preferViewConfigUpdate(
+  previousConfig: PerspectiveConfig,
+  viewConfig: PerspectiveConfig,
+  hasStoreConfig: boolean
+): boolean {
+  if (!previousConfig) {
     return !hasStoreConfig;
   }
-  return !deepObjectsEquals(previousView.config?.search, view.config?.search);
+  return !deepObjectsEquals(previousConfig, viewConfig);
 }
 
 export function viewSettingsChanged(

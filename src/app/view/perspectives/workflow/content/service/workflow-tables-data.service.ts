@@ -56,6 +56,15 @@ import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {ViewSettingsAction} from '../../../../../core/store/view-settings/view-settings.action';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {viewSettingsChanged} from '../../../../../core/store/views/view.utils';
+import {WorkflowConfig} from '../../../../../core/store/workflows/workflow';
+import {SelectItemWithConstraintFormatter} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
+import {DataAggregator, DataAggregatorAttribute} from '../../../../../shared/utils/data/data-aggregator';
+import {Constraint} from '../../../../../core/model/constraint';
+import {ConstraintData} from '../../../../../core/model/data/constraint';
+import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
+import {findAttributeByQueryAttribute, QueryAttribute} from '../../../../../core/model/query-attribute';
+import {KanbanAttribute} from '../../../../../core/store/kanbans/kanban';
+import {WorkflowTable} from '../../model/workflow-table';
 
 interface PendingRowUpdate {
   row: TableRow;
@@ -65,14 +74,33 @@ interface PendingRowUpdate {
 @Injectable()
 export class WorkflowTablesDataService {
   private pendingColumnValues: Record<string, PendingRowUpdate[]> = {};
+  private dataAggregator: DataAggregator;
 
   constructor(
     private store$: Store<AppState>,
     private menuService: WorkflowTablesMenuService,
     private stateService: WorkflowTablesStateService,
     private modalService: ModalService,
-    private i18n: I18n
-  ) {}
+    private i18n: I18n,
+    private constraintItemsFormatter: SelectItemWithConstraintFormatter
+  ) {
+    this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
+      this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
+    );
+  }
+
+  private formatWorkflowValue(
+    value: any,
+    constraint: Constraint,
+    constraintData: ConstraintData,
+    aggregatorAttribute: DataAggregatorAttribute
+  ): any {
+    const kanbanConstraint = aggregatorAttribute.data && (aggregatorAttribute.data as Constraint);
+    const overrideConstraint =
+      kanbanConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanConstraint);
+    const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
+    return finalConstraint.createDataValue(value, constraintData).serialize();
+  }
 
   public checkSettingsChange(viewSettings: ViewSettings) {
     if (
@@ -88,9 +116,11 @@ export class WorkflowTablesDataService {
         this.stateService.documents,
         this.stateService.linkTypes,
         this.stateService.linkInstances,
+        this.stateService.config,
         this.stateService.permissions,
         this.stateService.query,
-        viewSettings
+        viewSettings,
+        this.stateService.constraintData
       );
     }
   }
@@ -100,20 +130,36 @@ export class WorkflowTablesDataService {
     documents: DocumentModel[],
     linkTypes: LinkType[],
     linkInstances: LinkInstance[],
+    config: WorkflowConfig,
     permissions: Record<string, AllowedPermissions>,
     query: Query,
-    viewSettings: ViewSettings
+    viewSettings: ViewSettings,
+    constraintData: ConstraintData
   ) {
     const currentTables = this.stateService.tables;
-    this.stateService.updateData(collections, documents, permissions, query, viewSettings);
+    this.stateService.updateData(
+      collections,
+      documents,
+      linkTypes,
+      linkInstances,
+      config,
+      permissions,
+      query,
+      viewSettings,
+      constraintData
+    );
 
     const {tables, actions} = this.createTablesAndSyncActions(
       currentTables,
       collections,
       documents,
+      linkTypes,
+      linkInstances,
+      config,
       permissions,
       query,
-      viewSettings
+      viewSettings,
+      constraintData
     );
     actions.forEach(action => this.store$.dispatch(action));
     this.stateService.setTables(tables);
@@ -123,30 +169,101 @@ export class WorkflowTablesDataService {
     currentTables: TableModel[],
     collections: Collection[],
     documents: DocumentModel[],
+    linkTypes: LinkType[],
+    linkInstances: LinkInstance[],
+    config: WorkflowConfig,
     permissions: Record<string, AllowedPermissions>,
     query: Query,
-    viewSettings: ViewSettings
-  ): {tables: TableModel[]; actions: Action[]} {
+    viewSettings: ViewSettings,
+    constraintData: ConstraintData
+  ): {tables: WorkflowTable[]; actions: Action[]} {
     const documentsByCollection = groupDocumentsByCollection(documents);
-    return collections.reduce(
-      (result, collection) => {
+    return config.stemsConfigs.reduce(
+      (result, stemConfig) => {
+        const collection = collections.find(coll => coll.id === stemConfig.resource.resourceId);
         const collectionDocuments = documentsByCollection[collection.id] || [];
         const collectionPermissions = permissions?.[collection.id];
         const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
-        const {table, actions} = this.createTable(
-          currentTables,
+
+        const currentTable = currentTables.find(tab => tab.collectionId === collection.id);
+        const tableId = currentTable?.id || generateId();
+
+        const {columns, actions} = this.createCollectionColumns(
+          tableId,
+          currentTable?.columns || [],
           collection,
-          collectionDocuments,
           collectionPermissions,
           query,
           collectionSettings
         );
-        result.tables.push(table);
+
+        const attribute = findAttributeByQueryAttribute(stemConfig.attribute, collections, linkTypes);
+        const constraint = this.checkOverrideConstraint(attribute, stemConfig.attribute);
+        if (!attribute) {
+          return result;
+        }
+
+        this.dataAggregator.updateData(
+          collections,
+          documents,
+          linkTypes,
+          linkInstances,
+          stemConfig.stem,
+          constraintData
+        );
+        const rowAttribute: DataAggregatorAttribute = {
+          resourceIndex: stemConfig.attribute.resourceIndex,
+          attributeId: attribute.id,
+          data: stemConfig.attribute.constraint,
+          unique: true,
+        };
+
+        const valueAttribute: DataAggregatorAttribute = stemConfig.resource
+          ? {
+              resourceIndex: stemConfig.resource.resourceIndex,
+              attributeId: null,
+              unique: true,
+            }
+          : {...rowAttribute};
+
+        const aggregatedData = this.dataAggregator.aggregateArray([rowAttribute, valueAttribute], []);
+
+        for (const aggregatedDataItem of aggregatedData.items) {
+          const firstChain = aggregatedDataItem.dataResourcesChains[0] || [];
+          const title = aggregatedDataItem.value || '';
+          const titleDataResources = aggregatedDataItem.dataResources;
+
+          for (const childItem of aggregatedDataItem.children || []) {
+            const dataResources = <DocumentModel[]>childItem.dataResources || [];
+            const dataResourcesChain = stemConfig.resource
+              ? [...firstChain, ...(childItem.dataResourcesChains[0] || [])]
+              : firstChain;
+
+            const rows = this.createDocumentRows(
+              tableId,
+              columns,
+              currentTable?.rows || [],
+              dataResources,
+              permissions
+            );
+            const table = {id: tableId, columns, rows, collectionId: collection.id, title, titleDataResources};
+            result.tables.push(table);
+          }
+        }
+
         result.actions.push(...actions);
         return result;
       },
       {tables: [], actions: []}
     );
+  }
+
+  private checkOverrideConstraint(attribute: Attribute, workflowAttribute: QueryAttribute): Constraint {
+    const kanbanConstraint = workflowAttribute?.constraint;
+    const overrideConstraint =
+      kanbanConstraint &&
+      this.constraintItemsFormatter.checkValidConstraintOverride(attribute?.constraint, kanbanConstraint);
+    return overrideConstraint || attribute?.constraint || new UnknownConstraint();
   }
 
   private createTable(
@@ -228,7 +345,7 @@ export class WorkflowTablesDataService {
     const syncActions = [];
     const columnNames = (collection.attributes || []).map(attribute => attribute.name);
     for (let i = 0; i < currentColumns?.length; i++) {
-      const column = currentColumns[i];
+      const column = {...currentColumns[i], color: collection.color};
       if (!column.attribute) {
         attributeColumns.splice(i, 0, mappedUncreatedColumns[column.id] || column);
         if (mappedUncreatedColumns[column.id]) {

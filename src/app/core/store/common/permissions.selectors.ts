@@ -236,8 +236,9 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
     selectCollectionsByReadPermission,
     selectAllLinkTypes,
     selectAllLinkInstances,
+    selectViewSettings,
     selectConstraintData,
-    (documents, collections, linkTypes, linkInstances, constraintData) => {
+    (documents, collections, linkTypes, linkInstances, viewSettings, constraintData) => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
         collections,
@@ -247,9 +248,23 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
         constraintData,
         includeChildren
       );
+      const collectionsMap = objectsByIdMap(collections);
+      const linkTypesMap = objectsByIdMap(linkTypes);
       return {
-        documents: sortDocumentsByCreationDate(data.documents, desc),
-        linkInstances: sortLinkInstances(data.linkInstances),
+        documents: sortDataResourcesByViewSettings(
+          data.documents,
+          collectionsMap,
+          AttributesResourceType.Collection,
+          viewSettings,
+          constraintData
+        ),
+        linkInstances: sortDataResourcesByViewSettings(
+          data.linkInstances,
+          linkTypesMap,
+          AttributesResourceType.LinkType,
+          viewSettings,
+          constraintData
+        ),
       };
     }
   );

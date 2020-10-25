@@ -35,7 +35,7 @@
           (cancel)="onDataInputCancel(group.column)"
           (enterInvalid)="onEnterInvalid()">
         </data-input>
-        <div class="d-flex align-items-center"
+        <div class="d-flex align-items-center html-input"
              *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType === constraintType.Text"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>

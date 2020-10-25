@@ -47,6 +47,7 @@ import {initialSequencesState, SequencesState} from './sequences/sequences.state
 import {ConstraintDataState, initialConstraintDataState} from './constraint-data/constraint-data.state';
 import {initialPublicDataState, PublicDataState} from './public-data/public-data.state';
 import {initialViewSettingsState, ViewSettingsState} from './view-settings/view-settings.state';
+import {initialWorkflowsState, WorkflowsState} from './workflows/workflow.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -78,6 +79,7 @@ export interface AppState {
   constraintData: ConstraintDataState;
   publicData: PublicDataState;
   viewSettings: ViewSettingsState;
+  workflows: WorkflowsState;
 }
 
 export function initialAppState(): AppState {
@@ -111,5 +113,6 @@ export function initialAppState(): AppState {
     constraintData: initialConstraintDataState,
     publicData: initialPublicDataState,
     viewSettings: initialViewSettingsState,
+    workflows: initialWorkflowsState,
   };
 }

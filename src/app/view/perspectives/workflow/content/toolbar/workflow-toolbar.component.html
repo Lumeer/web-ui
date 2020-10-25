@@ -1,0 +1,22 @@
+<select-item class="d-inline-block mb-2"
+             [items]="stem | queryStemResourcesSelectItems:collections:linkTypes:true"
+             placeholderTitle=""
+             [selectedId]="config?.resource"
+             [removable]="false"
+             [fitParent]="false"
+             buttonClasses="text-truncate"
+             (select)="onResourceSelected($event)">
+</select-item>
+
+<select-item-with-constraint class="d-inline-block mb-2 ml-2"
+                             [attributesResources]="attributesResourcesOrder"
+                             [restrictedIds]="[]"
+                             [emptyValue]="'Attribute'"
+                             buttonClasses="text-truncate"
+                             [selectedConstraint]="config?.attribute?.constraint"
+                             [selectedId]="config | workflowSelectedItem"
+                             [removable]="true"
+                             [fitParent]="false"
+                             (select)="onAttributeSelected($event)"
+                             (remove)="onAttributeRemoved()">
+</select-item-with-constraint>

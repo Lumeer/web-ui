@@ -1,0 +1,54 @@
+<ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
+
+  <hidden-input (newInput)="onNewHiddenInput($event)"
+                class="position-fixed">
+  </hidden-input>
+
+  <div *ngFor="let stemConfig of config.stemsConfigs; let index = index">
+
+    <workflow-toolbar [config]="stemConfig"
+                      [linkTypes]="linkTypes"
+                      [collections]="collections"
+                      [stem]="stemConfig.stem"
+                      (configChange)="onStemConfigChange($event, index)">
+    </workflow-toolbar>
+
+    <div
+      *ngIf="{selectedCell: selectedCell$ | async, editedCell: editedCell$ | async} as data"
+      class="mb-3"
+      (clickOutside)="onClickOutsideTables()"
+      (click)="onClickInsideTables($event)">
+      <ng-container *ngFor="let table of tables$ | async; trackBy: trackByTable">
+        {{table.titleDataResources?.length}}: {{table.title}}
+        <lmr-table
+          #lmrTable
+          [style.height.px]="table.rows.length > 6 ? 7 * 37 : (table.rows.length + 1) * 37"
+          [tableModel]="table"
+          [constraintData]="constraintData"
+          [selectedCell]="data.selectedCell?.tableId === table.id ? data.selectedCell : null"
+          [editedCell]="data.editedCell"
+          (columnMove)="onColumnMove(table, $event)"
+          (columnResize)="onColumnResize(table, $event)"
+          (columnRename)="onColumnRename($event)"
+          (columnMenuSelected)="onColumnMenuSelected($event)"
+          (columnHiddenMenuSelected)="onColumnHiddenMenuSelected($event)"
+          (columnSortChanged)="onColumnSortChanged($event)"
+          (cellClick)="onTableCellClick($event)"
+          (cellCancel)="onTableCellCancel($event)"
+          (cellDoubleClick)="onTableCellDoubleClick($event)"
+          (rowNewValue)="onRowNewValue($event)"
+          (rowMenuSelected)="onRowMenuSelected($event)">
+        </lmr-table>
+      </ng-container>
+    </div>
+
+  </div>
+
+
+</ng-container>
+
+<ng-template #notDisplayable>
+  <invalid-query class="w-100"
+                 [minStems]="1">
+  </invalid-query>
+</ng-template>
