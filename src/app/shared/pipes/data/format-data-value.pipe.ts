@@ -19,12 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
+import {isNullOrUndefined} from '../../utils/common.utils';
 
 @Pipe({
   name: 'formatDataValue',
 })
 export class FormatDataValuePipe implements PipeTransform {
-  public transform(dataValue: DataValue): string {
-    return dataValue?.format() || '';
+  public transform(dataValue: DataValue, defaultValue?: any): string {
+    return dataValue?.format() || (isNullOrUndefined(defaultValue) ? '' : defaultValue);
   }
 }

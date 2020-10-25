@@ -14,7 +14,7 @@
   type="text">
 
 <color-picker *ngIf="!readonly"
-  [color]="value | formatDataValue"
+  [color]="value | formatDataValue:'#00B388'"
   [origin]="element"
   (valueChange)="onValueChange($event)"
   (save)="onSave($event)"
