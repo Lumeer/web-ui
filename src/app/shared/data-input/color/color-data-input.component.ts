@@ -34,6 +34,7 @@ import {ColorPickerComponent} from '../../picker/color/color-picker.component';
 import {isNotNullOrUndefined} from '../../utils/common.utils';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {COLOR_SUCCESS} from '../../../core/constants';
 
 @Component({
   selector: 'color-data-input',
@@ -72,6 +73,7 @@ export class ColorDataInputComponent implements OnChanges {
   public colorPicker: ColorPickerComponent;
 
   public readonly inputClass = constraintTypeClass(ConstraintType.Color);
+  public readonly defaultColor = COLOR_SUCCESS;
 
   public valid = true;
 
