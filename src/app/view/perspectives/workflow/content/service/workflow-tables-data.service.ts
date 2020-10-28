@@ -32,7 +32,7 @@ import {DocumentsAction} from '../../../../../core/store/documents/documents.act
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
-import {take, withLatestFrom} from 'rxjs/operators';
+import {map, mergeMap, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../../../../core/store/link-instances/link-instances.state';
@@ -50,7 +50,7 @@ import {
 import {createAttributesSettingsOrder} from '../../../../../shared/settings/settings.util';
 import {objectKeys} from 'codelyzer/util/objectKeys';
 import {WorkflowTablesMenuService} from './workflow-tables-menu.service';
-import {groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
+import {groupDocumentsByCollection, uniqueDocuments} from '../../../../../core/store/documents/document.utils';
 import {generateAttributeName} from '../../../../../shared/utils/attribute.utils';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {ViewSettingsAction} from '../../../../../core/store/view-settings/view-settings.action';
@@ -180,28 +180,24 @@ export class WorkflowTablesDataService {
     const documentsByCollection = groupDocumentsByCollection(documents);
     return config.stemsConfigs.reduce(
       (result, stemConfig) => {
+        if (!stemConfig.resource) {
+          return result;
+        }
+
         const collection = collections.find(coll => coll.id === stemConfig.resource.resourceId);
         const collectionDocuments = documentsByCollection[collection.id] || [];
         const collectionPermissions = permissions?.[collection.id];
         const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
 
-        const currentTable = currentTables.find(tab => tab.collectionId === collection.id);
-        const tableId = currentTable?.id || generateId();
+        const tableByCollection = currentTables.find(tab => tab.collectionId === collection.id);
 
         const {columns, actions} = this.createCollectionColumns(
-          tableId,
-          currentTable?.columns || [],
+          tableByCollection?.columns || [],
           collection,
           collectionPermissions,
           query,
           collectionSettings
         );
-
-        const attribute = findAttributeByQueryAttribute(stemConfig.attribute, collections, linkTypes);
-        const constraint = this.checkOverrideConstraint(attribute, stemConfig.attribute);
-        if (!attribute) {
-          return result;
-        }
 
         this.dataAggregator.updateData(
           collections,
@@ -211,26 +207,35 @@ export class WorkflowTablesDataService {
           stemConfig.stem,
           constraintData
         );
-        const rowAttribute: DataAggregatorAttribute = {
-          resourceIndex: stemConfig.attribute.resourceIndex,
-          attributeId: attribute.id,
-          data: stemConfig.attribute.constraint,
-          unique: true,
+
+        const aggregatorAttributes = [];
+        const attribute = findAttributeByQueryAttribute(stemConfig.attribute, collections, linkTypes);
+        const constraint = this.checkOverrideConstraint(attribute, stemConfig.attribute);
+        if (attribute) {
+          const rowAttribute: DataAggregatorAttribute = {
+            resourceIndex: stemConfig.attribute.resourceIndex,
+            attributeId: attribute.id,
+            data: stemConfig.attribute.constraint,
+          };
+
+          aggregatorAttributes.push(rowAttribute);
+        }
+        const valueAttribute: DataAggregatorAttribute = {
+          resourceIndex: stemConfig.resource.resourceIndex,
+          attributeId: null,
         };
+        aggregatorAttributes.push(valueAttribute);
+        if (aggregatorAttributes.length === 1) {
+          aggregatorAttributes.push(valueAttribute);
+        }
 
-        const valueAttribute: DataAggregatorAttribute = stemConfig.resource
-          ? {
-              resourceIndex: stemConfig.resource.resourceIndex,
-              attributeId: null,
-              unique: true,
-            }
-          : {...rowAttribute};
-
-        const aggregatedData = this.dataAggregator.aggregateArray([rowAttribute, valueAttribute], []);
+        const aggregatedData = this.dataAggregator.aggregateArray(aggregatorAttributes, []);
 
         for (const aggregatedDataItem of aggregatedData.items) {
           const firstChain = aggregatedDataItem.dataResourcesChains[0] || [];
           const title = aggregatedDataItem.value || '';
+          const tableId = collection.id + title;
+          const titleDataValue = constraint.createDataValue(title, constraintData);
           const titleDataResources = aggregatedDataItem.dataResources;
 
           for (const childItem of aggregatedDataItem.children || []) {
@@ -239,15 +244,26 @@ export class WorkflowTablesDataService {
               ? [...firstChain, ...(childItem.dataResourcesChains[0] || [])]
               : firstChain;
 
+            const currentTable = currentTables.find(table => table.id === tableId) || tableByCollection;
             const rows = this.createDocumentRows(
               tableId,
               columns,
               currentTable?.rows || [],
-              dataResources,
+              uniqueDocuments(dataResources),
               permissions
             );
-            const table = {id: tableId, columns, rows, collectionId: collection.id, title, titleDataResources};
-            result.tables.push(table);
+            const workflowTable: WorkflowTable = {
+              id: tableId,
+              columns: columns.map(column => ({...column, tableId})),
+              rows,
+              collectionId: collection.id,
+              title: attribute && {
+                dataValue: titleDataValue,
+                constraint,
+                dataResources: titleDataResources,
+              },
+            };
+            result.tables.push(workflowTable);
           }
         }
 
@@ -266,31 +282,7 @@ export class WorkflowTablesDataService {
     return overrideConstraint || attribute?.constraint || new UnknownConstraint();
   }
 
-  private createTable(
-    currentTables: TableModel[],
-    collection: Collection,
-    documents: DocumentModel[],
-    permissions: AllowedPermissions,
-    query: Query,
-    settings: ResourceAttributeSettings[]
-  ): {table: TableModel; actions: Action[]} {
-    const currentTable = currentTables.find(tab => tab.collectionId === collection.id);
-    const tableId = currentTable?.id || generateId();
-    const {columns, actions} = this.createCollectionColumns(
-      tableId,
-      currentTable?.columns || [],
-      collection,
-      permissions,
-      query,
-      settings
-    );
-    const rows = this.createDocumentRows(tableId, columns, currentTable?.rows || [], documents, permissions);
-    const table = {id: tableId, columns, rows, collectionId: collection.id};
-    return {table, actions};
-  }
-
   private createCollectionColumns(
-    tableId: string,
     currentColumns: TableColumn[],
     collection: Collection,
     permissions: AllowedPermissions,
@@ -319,7 +311,6 @@ export class WorkflowTablesDataService {
         const column: TableColumn = {
           id: currentColumn?.id || generateId(),
           attribute,
-          tableId,
           editable,
           width: currentColumn?.width || TABLE_COLUMN_WIDTH,
           collectionId: collection.id,
@@ -365,7 +356,6 @@ export class WorkflowTablesDataService {
     if (permissions.manageWithView && !attributeColumns.some(column => !column.attribute)) {
       const lastColumn: TableColumn = {
         id: generateId(),
-        tableId,
         name: generateAttributeName(columnNames),
         collectionId: collection.id,
         editable: true,
@@ -388,7 +378,7 @@ export class WorkflowTablesDataService {
     documents: DocumentModel[],
     permissions: AllowedPermissions
   ): TableRow[] {
-    const rowsMap = currentRows.reduce((map, row) => ({...map, [row.documentId || row.correlationId]: row}), {});
+    const rowsMap = currentRows.reduce((result, row) => ({...result, [row.documentId || row.correlationId]: row}), {});
 
     const columnIdsMap = columns.reduce((idsMap, column) => {
       if (column.attribute) {
@@ -397,15 +387,15 @@ export class WorkflowTablesDataService {
       return idsMap;
     }, {});
 
-    const pendingColumnValuesByRow = Object.keys(this.pendingColumnValues).reduce((map, columnId) => {
+    const pendingColumnValuesByRow = Object.keys(this.pendingColumnValues).reduce((result, columnId) => {
       const updates = this.pendingColumnValues[columnId];
       for (const update of updates) {
-        if (!map[update.row.id]) {
-          map[update.row.id] = {};
+        if (!result[update.row.id]) {
+          result[update.row.id] = {};
         }
-        map[update.row.id][columnId] = update.value;
+        result[update.row.id][columnId] = update.value;
       }
-      return map;
+      return result;
     }, {});
 
     const rows = documents.map((document, index) => {
@@ -417,7 +407,7 @@ export class WorkflowTablesDataService {
         return data;
       }, {});
       const pendingData = (currentRow && pendingColumnValuesByRow[currentRow.id]) || {};
-      const id = currentRow?.id || generateId();
+      const id = currentRow?.id || document.id;
       const row: TableRow = {
         id,
         tableId,
@@ -591,6 +581,21 @@ export class WorkflowTablesDataService {
     }
   }
 
+  public showRowDocumentDetail(row: TableRow) {
+    this.store$
+      .pipe(
+        select(selectDocumentById(row.documentId)),
+        switchMap(document =>
+          this.store$.pipe(
+            select(selectCollectionById(document.collectionId)),
+            map(collection => ({collection, document}))
+          )
+        ),
+        take(1)
+      )
+      .subscribe(({collection, document}) => this.modalService.showDataResourceDetail(document, collection));
+  }
+
   public showRowDetail(row: TableRow, column: TableColumn) {
     if (row.documentId && column.collectionId) {
       this.store$
@@ -716,14 +721,14 @@ export class WorkflowTablesDataService {
   }
 
   private createPendingRowValues(row: TableRow): Record<string, any> {
-    return this.stateService.findTableColumns(row.tableId).reduce((map, column) => {
+    return this.stateService.findTableColumns(row.tableId).reduce((result, column) => {
       if (column.attribute) {
         const pendingRowUpdate = this.findPendingRowUpdate(column, row);
         if (pendingRowUpdate) {
-          map[column.attribute.id] = pendingRowUpdate.value;
+          result[column.attribute.id] = pendingRowUpdate.value;
         }
       }
-      return map;
+      return result;
     }, {});
   }
 

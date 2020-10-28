@@ -27,6 +27,7 @@ import {
   ElementRef,
   SimpleChanges,
   OnChanges,
+  AfterViewChecked,
 } from '@angular/core';
 import {HtmlModifier} from '../../../../../utils/html-modifier';
 import {
@@ -35,6 +36,7 @@ import {
 } from '../../../../../utils/attribute.utils';
 import {KeyCode} from '../../../../../key-code';
 import {preventEvent} from '../../../../../utils/common.utils';
+import {TableColumn} from '../../../../model/table-column';
 
 @Component({
   selector: 'table-header-input',
@@ -42,7 +44,10 @@ import {preventEvent} from '../../../../../utils/common.utils';
   styleUrls: ['./table-header-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeaderInputComponent implements OnChanges {
+export class TableHeaderInputComponent implements OnChanges, AfterViewChecked {
+  @Input()
+  public column: TableColumn;
+
   @Input()
   public restrictedNames: string[];
 
@@ -71,20 +76,24 @@ export class TableHeaderInputComponent implements OnChanges {
   public textInput: ElementRef<HTMLInputElement>;
 
   private preventSave: boolean;
+  private setFocus: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.edited) {
-      if (this.edited) {
-        setTimeout(() => this.focusInput());
-      } else {
-        // TODO not editing
-      }
+    if (changes.edited && this.edited) {
+      this.setFocus = true;
     }
   }
 
-  private focusInput() {
-    const element = this.textInput && (this.textInput.nativeElement as HTMLElement);
-    if (element) {
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.textInput) {
+      const element = this.textInput.nativeElement;
       HtmlModifier.setCursorAtTextContentEnd(element);
       element.focus();
     }

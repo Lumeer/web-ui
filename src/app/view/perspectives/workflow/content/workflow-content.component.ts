@@ -56,6 +56,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {WorkflowConfig, WorkflowStemConfig} from '../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../model/workflow-table';
+import {DataInputConfiguration} from '../../../../shared/data-input/data-input-configuration';
 
 @Component({
   selector: 'workflow-content',
@@ -109,6 +110,8 @@ export class WorkflowContentComponent implements OnChanges {
 
   @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
+
+  public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
 
   public tables$: Observable<WorkflowTable[]>;
   public selectedCell$: Observable<SelectedTableCell>;
@@ -225,5 +228,9 @@ export class WorkflowContentComponent implements OnChanges {
     stemsConfigs.splice(index, 1, stemConfig);
     const newConfig = {...this.config, stemsConfigs};
     this.configChange.emit(newConfig);
+  }
+
+  public onRowDetail(row: TableRow) {
+    this.tablesService.onRowDetail(row);
   }
 }

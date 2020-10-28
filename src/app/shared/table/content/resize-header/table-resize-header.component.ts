@@ -17,21 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  Renderer2,
-  ElementRef,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
-import {TableColumn, TableColumnGroup} from '../../model/table-column';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, Renderer2, ElementRef} from '@angular/core';
+import {TableColumnGroup} from '../../model/table-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {TABLE_COLUMN_MIN_WIDTH, TABLE_ROW_HEIGHT} from '../../model/table-model';
-import {groupTableColumns} from '../../model/table-utils';
 
 @Component({
   selector: 'table-resize-header',
@@ -40,9 +29,9 @@ import {groupTableColumns} from '../../model/table-utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'w-100'},
 })
-export class TableResizeHeaderComponent implements OnChanges {
+export class TableResizeHeaderComponent {
   @Input()
-  public columns: TableColumn[];
+  public columnGroups: TableColumnGroup[];
 
   @Output()
   public resizeColumn = new EventEmitter<{index: number; width: number}>();
@@ -51,15 +40,7 @@ export class TableResizeHeaderComponent implements OnChanges {
 
   private headerElementsCache: Record<number, HTMLElement> = {};
 
-  public groupedTableColumns: TableColumnGroup[] = [];
-
   constructor(private renderer: Renderer2, private element: ElementRef) {}
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.columns) {
-      this.groupedTableColumns = groupTableColumns(this.columns);
-    }
-  }
 
   public trackByColumn(index: number, column: TableColumnGroup): string {
     return column.id;
@@ -93,7 +74,7 @@ export class TableResizeHeaderComponent implements OnChanges {
   }
 
   private computeNewWidth(index: number, distance: {x: number}): number {
-    const width = Math.max(TABLE_COLUMN_MIN_WIDTH, this.groupedTableColumns[index].width + distance.x);
+    const width = Math.max(TABLE_COLUMN_MIN_WIDTH, this.columnGroups[index].width + distance.x);
     return width - (width % 1);
   }
 }

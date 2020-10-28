@@ -55,7 +55,7 @@ import {TableMenuComponent} from '../common/menu/table-menu.component';
 })
 export class TableRowComponent implements OnChanges {
   @Input()
-  public columns: TableColumn[];
+  public columnGroups: TableColumnGroup[];
 
   @Input()
   public row: TableRow;
@@ -71,6 +71,9 @@ export class TableRowComponent implements OnChanges {
 
   @Output()
   public onClick = new EventEmitter<string>();
+
+  @Output()
+  public onDetail = new EventEmitter();
 
   @Output()
   public onCancel = new EventEmitter<{columnId: string; action: DataInputSaveAction}>();
@@ -112,7 +115,7 @@ export class TableRowComponent implements OnChanges {
   }
 
   private checkEdited() {
-    if (this.editedCell?.rowId === this.row?.id) {
+    if (this.isEditing()) {
       const column = this.columnById(this.editedCell.columnId);
       if (column?.editable) {
         if (isTableColumnDirectlyEditable(column)) {
@@ -125,6 +128,10 @@ export class TableRowComponent implements OnChanges {
     }
   }
 
+  private isEditing(): boolean {
+    return this.editedCell?.rowId === this.row?.id && this.editedCell?.tableId === this.row?.tableId;
+  }
+
   private createDataValue(column: TableColumn, value?: any, typed?: boolean): DataValue {
     const constraint = column.attribute?.constraint || new UnknownConstraint();
     if (typed) {
@@ -135,7 +142,7 @@ export class TableRowComponent implements OnChanges {
   }
 
   private columnById(columnId: string): TableColumn {
-    return this.columns.find(column => column.id === columnId);
+    return this.columnGroups.find(group => group.column?.id === columnId)?.column;
   }
 
   private computeDirectEditValue(column: TableColumn): DataValue {
@@ -245,5 +252,10 @@ export class TableRowComponent implements OnChanges {
 
   public onMenuSelected(row: TableRow, column: TableColumn, item: TableContextMenuItem) {
     this.menuSelected.emit({row, column, item});
+  }
+
+  public onDetailClick(event: MouseEvent) {
+    preventEvent(event);
+    this.onDetail.emit();
   }
 }

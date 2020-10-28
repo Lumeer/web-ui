@@ -85,6 +85,7 @@ function checkOrTransformWorkflowStemConfig(
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
   return {
     ...stemConfig,
+    stem,
     resource: checkOrTransformQueryResource(stemConfig.resource, attributesResourcesOrder),
     attribute: checkOrTransformQueryAttribute(stemConfig.attribute, attributesResourcesOrder),
   };

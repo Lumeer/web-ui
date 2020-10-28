@@ -101,6 +101,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }>();
 
   @Output()
+  public rowDetail = new EventEmitter<TableRow>();
+
+  @Output()
   public rowMenuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
 
   @ViewChild(CdkVirtualScrollViewport, {static: false})

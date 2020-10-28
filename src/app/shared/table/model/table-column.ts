@@ -25,6 +25,7 @@ export interface TableColumnGroup {
   id: string;
   width: number;
   color: string;
+  tableId: string;
   hiddenColumns?: TableColumn[];
   column?: TableColumn;
 }
@@ -32,7 +33,7 @@ export interface TableColumnGroup {
 export interface TableColumn {
   id: string;
   width: number;
-  tableId: string;
+  tableId?: string;
   attribute?: Attribute;
   name?: string;
   creating?: boolean;

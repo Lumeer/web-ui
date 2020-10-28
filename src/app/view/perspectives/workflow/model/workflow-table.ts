@@ -19,8 +19,13 @@
 
 import {TableModel} from '../../../../shared/table/model/table-model';
 import {DataResource} from '../../../../core/model/resource';
+import {DataValue} from '../../../../core/model/data-value';
+import {Constraint} from '../../../../core/model/constraint';
 
 export interface WorkflowTable extends TableModel {
-  title?: string;
-  titleDataResources?: DataResource[];
+  title: {
+    dataValue?: DataValue;
+    constraint?: Constraint;
+    dataResources?: DataResource[];
+  };
 }

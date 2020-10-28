@@ -1,9 +1,9 @@
-<ng-container *ngIf="{} as data">
-  <table-alternative-header [columns]="tableModel.columns"
+<ng-container *ngIf="{columnGroups: tableModel.columns | groupTableColumns} as data">
+  <table-alternative-header [columnGroups]="data.columnGroups"
                             [selectedCell]="selectedCell"
                             [editedCell]="editedCell">
   </table-alternative-header>
-  <table-resize-header [columns]="tableModel.columns"
+  <table-resize-header [columnGroups]="data.columnGroups"
                        (resizeColumn)="onResizeColumn($event)">
   </table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize
@@ -12,7 +12,7 @@
                                [disabled]="scrollDisabled$ | async"
                                [columns]="tableModel.columns">
     <table class="table lmr-table position-relative">
-      <thead table-header [columns]="tableModel.columns"
+      <thead table-header [columnGroups]="data.columnGroups"
              [selectedCell]="selectedCell"
              [editedCell]="editedCell"
              (dragStart)="scrollDisabled$.next(true)"
@@ -33,12 +33,13 @@
           [selectedCell]="selectedCell"
           [editedCell]="editedCell"
           [constraintData]="constraintData"
-          [columns]="tableModel.columns"
+          [columnGroups]="data.columnGroups"
           (newValue)="onNewValue(row, $event)"
           (onClick)="onBodyCellClick(row, $event)"
           (onCancel)="onBodyCancel(row, $event)"
           (onDoubleClick)="onBodyCellDoubleClick(row, $event)"
-          (menuSelected)="rowMenuSelected.emit($event)">
+          (menuSelected)="rowMenuSelected.emit($event)"
+          (onDetail)="rowDetail.emit(row)">
       </tr>
       </tbody>
     </table>

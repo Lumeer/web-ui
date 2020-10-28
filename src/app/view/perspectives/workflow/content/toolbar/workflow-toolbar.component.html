@@ -18,5 +18,6 @@
                              [removable]="true"
                              [fitParent]="false"
                              (select)="onAttributeSelected($event)"
+                             (selectConstraint)="onConstraintSelect($event)"
                              (remove)="onAttributeRemoved()">
 </select-item-with-constraint>

@@ -45,7 +45,7 @@ import {AttributeSortType} from '../../../../core/store/views/view';
 })
 export class TableHeaderComponent implements OnChanges {
   @Input()
-  public columns: TableColumn[];
+  public columnGroups: TableColumnGroup[];
 
   @Input()
   public selectedCell: SelectedTableCell;
@@ -96,11 +96,9 @@ export class TableHeaderComponent implements OnChanges {
   private dragStartOffset: number;
 
   public draggedIndex$ = new BehaviorSubject(-1);
-  public columnGroups: TableColumnGroup[];
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.columns) {
-      this.columnGroups = groupTableColumns(this.columns);
+    if (changes.columnGroups) {
       this.computeColumnsPositions();
     }
   }

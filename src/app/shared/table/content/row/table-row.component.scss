@@ -8,3 +8,22 @@ td {
 .html-input ::ng-deep * {
   margin: 0;
 }
+
+:host:hover {
+  background: lighten($success, 60%);
+
+  .detail-trigger {
+    visibility: visible;
+  }
+}
+
+.detail-trigger {
+  visibility: hidden;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  background: lighten($success, 60%);
+  right: 1px;
+  top: 1px;
+  height: calc(100% - 2px);
+}

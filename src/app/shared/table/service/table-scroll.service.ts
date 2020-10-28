@@ -36,14 +36,16 @@ export class TableScrollService {
 
     const groupedColumns = groupTableColumns(tableModel.columns);
 
-    const groupIndex = groupedColumns.findIndex(group => group.column?.id === selectedCell.columnId);
+    const groupIndex = groupedColumns.findIndex(
+      group => group.column?.tableId === tableModel.id && group.column?.id === selectedCell.columnId
+    );
     const selectedGroup = groupedColumns[groupIndex];
     const columnLeft = groupedColumns.slice(0, groupIndex).reduce((sum, group) => sum + group.width, 0);
 
     let scrollLeft = undefined;
     if (columnLeft < left) {
       scrollLeft = columnLeft;
-    } else if (right < columnLeft + selectedGroup.width) {
+    } else if (selectedGroup && right < columnLeft + selectedGroup.width) {
       scrollLeft = columnLeft + (width > selectedGroup.width ? selectedGroup.width - width : 0);
     }
 
@@ -53,13 +55,13 @@ export class TableScrollService {
 
     let scrollTop = undefined;
     if (selectedCell?.type === TableCellType.Body) {
-      const rowIndex = tableModel.rows.findIndex(row => row.id === selectedCell.rowId);
+      const rowIndex = tableModel.rows.findIndex(row => row.tableId === tableModel.id && row.id === selectedCell.rowId);
       const selectedRow = tableModel.rows[rowIndex];
       const rowTop = tableModel.rows.slice(0, rowIndex).reduce((sum, row) => sum + row.height, 0);
 
       if (rowTop < top) {
         scrollTop = rowTop;
-      } else if (bottom < rowTop + selectedRow.height) {
+      } else if (selectedRow && bottom < rowTop + selectedRow.height) {
         scrollTop = rowTop + (height > selectedRow.height ? selectedRow.height - height : 0);
       }
     }

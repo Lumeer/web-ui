@@ -19,13 +19,17 @@
       (clickOutside)="onClickOutsideTables()"
       (click)="onClickInsideTables($event)">
       <ng-container *ngFor="let table of tables$ | async; trackBy: trackByTable">
-        {{table.titleDataResources?.length}}: {{table.title}}
+        <data-input-preview *ngIf="table.title" class="font-weight-bold d-block mb-2 mt-1"
+                            [dataValue]="table.title.dataValue"
+                            [configuration]="configuration"
+                            [constraint]="table.title.constraint">
+        </data-input-preview>
         <lmr-table
           #lmrTable
-          [style.height.px]="table.rows.length > 6 ? 7 * 37 : (table.rows.length + 1) * 37"
+          [style.height.px]="(table.rows.length > 6 ? 7 * 37 : (table.rows.length + 1) * 37) + 20"
           [tableModel]="table"
           [constraintData]="constraintData"
-          [selectedCell]="data.selectedCell?.tableId === table.id ? data.selectedCell : null"
+          [selectedCell]="data.selectedCell"
           [editedCell]="data.editedCell"
           (columnMove)="onColumnMove(table, $event)"
           (columnResize)="onColumnResize(table, $event)"
@@ -37,7 +41,8 @@
           (cellCancel)="onTableCellCancel($event)"
           (cellDoubleClick)="onTableCellDoubleClick($event)"
           (rowNewValue)="onRowNewValue($event)"
-          (rowMenuSelected)="onRowMenuSelected($event)">
+          (rowMenuSelected)="onRowMenuSelected($event)"
+          (rowDetail)="onRowDetail($event)">
         </lmr-table>
       </ng-container>
     </div>

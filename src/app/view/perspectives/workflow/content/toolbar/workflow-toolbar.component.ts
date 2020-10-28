@@ -27,6 +27,7 @@ import {SelectItemWithConstraintId} from '../../../../../shared/select/select-co
 import {AttributesResource} from '../../../../../core/model/resource';
 import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
+import {Constraint} from '../../../../../core/model/constraint';
 
 @Component({
   selector: 'workflow-toolbar',
@@ -81,5 +82,10 @@ export class WorkflowToolbarComponent implements OnChanges {
 
   private onConfigChange(config: WorkflowStemConfig) {
     this.configChange.next(config);
+  }
+
+  public onConstraintSelect(constraint: Constraint) {
+    const attribute = {...this.config.attribute};
+    this.onConfigChange({...this.config, attribute: {...attribute, constraint}});
   }
 }

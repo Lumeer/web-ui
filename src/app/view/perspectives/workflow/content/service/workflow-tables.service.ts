@@ -99,6 +99,10 @@ export class WorkflowTablesService {
     }
   }
 
+  public onRowDetail(row: TableRow) {
+    this.dataService.showRowDocumentDetail(row);
+  }
+
   public onColumnHiddenMenuSelected(columns: TableColumn[]) {
     this.dataService.showColumns(columns);
   }

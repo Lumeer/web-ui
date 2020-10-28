@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
-import {TableColumn, TableColumnGroup} from '../../model/table-column';
+import {TableColumnGroup} from '../../model/table-column';
 import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 
 @Component({
@@ -30,7 +30,7 @@ import {SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/ta
 })
 export class TableAlternativeHeaderComponent {
   @Input()
-  public columns: TableColumn[];
+  public columnGroups: TableColumnGroup[];
 
   @Input()
   public selectedCell: SelectedTableCell;

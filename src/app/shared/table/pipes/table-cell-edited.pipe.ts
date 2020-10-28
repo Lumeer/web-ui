@@ -27,11 +27,11 @@ import {isTableCellSelected, isTableColumnDirectlyEditable} from '../model/table
   name: 'tableCellEdited',
 })
 export class TableCellEditedPipe implements PipeTransform {
-  public transform(selectedCell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {
+  public transform(cell: TableCell, column: TableColumn, type: TableCellType, row?: TableRow): boolean {
     return (
-      selectedCell &&
+      cell &&
       column &&
-      isTableCellSelected(selectedCell, column, type, row) &&
+      isTableCellSelected(cell, column, type, row) &&
       (type !== TableCellType.Body || !isTableColumnDirectlyEditable(column))
     );
   }

@@ -18,16 +18,22 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableColumn} from '../model/table-column';
-import {isNullOrUndefined} from '../../utils/common.utils';
+import {TableColumnGroup} from '../model/table-column';
 
 @Pipe({
   name: 'columnHeaderRestrictedNames',
 })
 export class ColumnHeaderRestrictedNamesPipe implements PipeTransform {
-  public transform(columns: TableColumn[], skipIndex?: number): string[] {
-    return columns
-      .filter((column, index) => column.attribute && (isNullOrUndefined(skipIndex) || skipIndex !== index))
-      .map(column => column.attribute.name);
+  public transform(groups: TableColumnGroup[], skipIndex?: number): string[] {
+    return groups.reduce((names, group, index) => {
+      if (index !== skipIndex) {
+        if (group.column?.attribute) {
+          names.push(group.column.attribute.name);
+        } else if (group.hiddenColumns) {
+          names.push(...group.hiddenColumns.filter(column => column.attribute).map(column => column.attribute.name));
+        }
+      }
+      return names;
+    }, []);
   }
 }

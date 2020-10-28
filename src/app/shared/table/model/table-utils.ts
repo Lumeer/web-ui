@@ -26,11 +26,17 @@ export function groupTableColumns(columns: TableColumn[]): TableColumnGroup[] {
   return (columns || []).reduce<TableColumnGroup[]>((array, column) => {
     if (column.hidden) {
       if (!array[array.length - 1]?.hiddenColumns?.length) {
-        array.push({id: column.id, color: column.color, width: TABLE_HIDDEN_COLUMN_WIDTH, hiddenColumns: []});
+        array.push({
+          id: column.id,
+          color: column.color,
+          tableId: column.tableId,
+          width: TABLE_HIDDEN_COLUMN_WIDTH,
+          hiddenColumns: [],
+        });
       }
       array[array.length - 1].hiddenColumns.push(column);
     } else {
-      array.push({id: column.id, color: column.color, column, width: column.width});
+      array.push({id: column.id, color: column.color, tableId: column.tableId, column, width: column.width});
     }
 
     return array;

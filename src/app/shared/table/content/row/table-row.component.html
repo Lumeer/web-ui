@@ -1,20 +1,22 @@
-<ng-container *ngFor="let group of columns | groupTableColumns; let index = index; trackBy: trackByColumn">
+<ng-container *ngFor="let group of columnGroups; let index = index; trackBy: trackByColumn">
 
   <ng-container
     *ngIf="{dataValue: group.column && (row.data[group.column.id] | dataValue:group.column.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
     focused: selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row,
-    edited: editedCell | tableCellEdited:group.column:cellType:row} as data">
+    edited: editedCell | tableCellEdited:group.column:cellType:row,
+    directlyEditable: group.column.attribute?.constraint?.type === constraintType.Boolean} as data">
 
     <ng-container
       *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:group.column?.editable:data.edited as dataInputInfo">
-      <td class="table-cell"
+      <td class="table-cell position-relative"
           [style.width.px]="group.width"
           [style.height.px]="row.height"
           [style.max-height.px]="row.height"
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
-          [class.focused]="data.focused"
-          [class.editing]="data.edited"
+          [class.focused]="(selectedCell || editedCell)?.tableId === row.tableId && data.focused"
+          [class.editing]="editedCell?.tableId === row.tableId && data.edited"
+          [class.affected]="editedCell?.tableId !== row.tableId && data.edited"
           [class.cursor-pointer]="group.column?.editable"
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"
           (click)="onDataInputClick(group.column, $event)"
@@ -26,10 +28,10 @@
           [constraint]="group.column.attribute?.constraint"
           [cursor]="row | tableRowDataCursor:group.column"
           [style.height.px]="row.height - 1"
-          [style.max-height.px]="row.height -1"
-          [dataValue]="(editedValue | isNotNullOrUndefined) && data.edited ? editedValue : data.dataValue"
+          [style.max-height.px]="row.height - 1"
+          [dataValue]="(editedValue | isNotNullOrUndefined) && editedCell?.tableId === row.tableId && data.edited ? editedValue : data.dataValue"
           [focus]="true"
-          [readonly]="!group.column.editable || !(data.edited || group.column.attribute?.constraint?.type === constraintType.Boolean)"
+          [readonly]="!group.column.editable || !((editedCell?.tableId === row.tableId && data.edited) || data.directlyEditable)"
           [configuration]="configuration"
           (saveAction)="onNewValue(group.column, $event)"
           (cancel)="onDataInputCancel(group.column)"
@@ -41,9 +43,13 @@
         </div>
         <ng-container
           *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType !== constraintType.Text">{{data.dataValue | previewDataValue}}</ng-container>
-        <table-menu *ngIf="group.column" [items]="row.menuItems"
+        <table-menu *ngIf="group.column"
+                    [items]="row.menuItems"
                     (selected)="onMenuSelected(row, group.column, $event)">
         </table-menu>
+        <div class="detail-trigger small px-2 btn-link" *ngIf="index === 0"
+             (click)="onDetailClick($event)"
+             (dblclick)="$event.preventDefault(); $event.stopPropagation()">Detail&nbsp;></div>
       </td>
     </ng-container>
   </ng-container>
