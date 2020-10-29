@@ -1,7 +1,7 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else invalidQuery">
   <ng-container
     *ngIf="{collections: collections$ | async, documentsAndLinks: documentsAndLinks$ | async, map: map$ | async, linkTypes: linkTypes$ | async, query: query$ | async} as data">
-    <collapsible-sidebar *ngIf="currentView$ | async | canManageConfig | async"
+    <collapsible-sidebar *ngIf="(currentView$ | async | canManageConfig | async) && data.map"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <map-panel [collections]="data.collections"
@@ -12,7 +12,8 @@
       </map-panel>
     </collapsible-sidebar>
 
-    <map-content [collections]="data.collections"
+    <map-content *ngIf="data.map"
+                 [collections]="data.collections"
                  [documents]="data.documentsAndLinks.documents"
                  [linkTypes]="data.linkTypes"
                  [query]="data.query"

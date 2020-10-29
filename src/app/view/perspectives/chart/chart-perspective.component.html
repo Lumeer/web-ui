@@ -1,7 +1,7 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1:1; else notDisplayable">
   <ng-container
     *ngIf="{collections: collections$ | async, config: config$ | async, query: query$ | async, linkTypes: linkTypes$ | async, documentsAndLinks: documentsAndLinks$ | async} as data">
-    <collapsible-sidebar *ngIf="currentView$ | async | canManageConfig | async"
+    <collapsible-sidebar *ngIf="(currentView$ | async | canManageConfig | async) && data.config"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <chart-config
@@ -15,6 +15,7 @@
     </collapsible-sidebar>
 
     <chart-data
+      *ngIf="data.config"
       class="flex-grow-1 mx-4"
       [collections]="data.collections"
       [documents]="data.documentsAndLinks.documents"
