@@ -3,7 +3,7 @@
   <ng-container *ngIf="{pivotData: pivotData$ | async,
                       canManageConfig: currentView | canManageConfig | async} as data">
 
-    <collapsible-sidebar *ngIf="data.canManageConfig"
+    <collapsible-sidebar *ngIf="data.canManageConfig && config"
                          [collapsed]="!sidebarOpened"
                          (toggle)="onSidebarToggle()">
 
@@ -18,7 +18,8 @@
 
     </collapsible-sidebar>
 
-    <pivot-table class="flex-grow-1 h-100 overflow-auto mx-4"
+    <pivot-table *ngIf="config"
+                 class="flex-grow-1 h-100 overflow-auto mx-4"
                  [pivotData]="data.pivotData"
                  [constraintData]="constraintData">
     </pivot-table>

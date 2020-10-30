@@ -4,7 +4,7 @@
   canManageConfig: currentView$ | async | canManageConfig | async, linkTypes: linkTypes$ | async,
   query: query$ | async, documentsAndLinks: documentsAndLinks$ | async} as data">
 
-    <collapsible-sidebar *ngIf="data.canManageConfig"
+    <collapsible-sidebar *ngIf="data.canManageConfig && data.config"
                          [collapsed]="!(sidebarOpened$ | async)"
                          (toggle)="onSidebarToggle()">
       <gantt-chart-config
@@ -18,7 +18,8 @@
 
     </collapsible-sidebar>
 
-    <gantt-chart-tasks class="flex-grow-1 mx-4"
+    <gantt-chart-tasks *ngIf="data.config"
+                       class="flex-grow-1 mx-4"
                        [style.width.px]="1"
                        [canManageConfig]="data.canManageConfig"
                        [collections]="data.collections"

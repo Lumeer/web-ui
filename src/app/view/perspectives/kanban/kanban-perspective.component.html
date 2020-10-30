@@ -1,5 +1,6 @@
-<ng-container *ngIf="{documentsAndLinks: documentsAndLinks$ | async} as data">
-  <kanban-content [config]="config$ | async"
+<ng-container *ngIf="{documentsAndLinks: documentsAndLinks$ | async, config: config$ | async} as data">
+  <kanban-content *ngIf="data.config"
+                  [config]="data.config"
                   [collections]="collections$ | async"
                   [linkTypes]="linkTypes$ | async"
                   [documents]="data.documentsAndLinks.documents"
