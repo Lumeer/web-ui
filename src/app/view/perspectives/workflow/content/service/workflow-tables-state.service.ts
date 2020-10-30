@@ -41,6 +41,8 @@ import {LinkInstance} from '../../../../../core/store/link-instances/link.instan
 import {WorkflowConfig} from '../../../../../core/store/workflows/workflow';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {WorkflowTable} from '../../model/workflow-table';
+import {queryAttributePermissions} from '../../../../../core/model/query-attribute';
+import {AttributesResourceType} from '../../../../../core/model/resource';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -137,14 +139,33 @@ export class WorkflowTablesStateService {
   }
 
   public get linkInstances(): LinkInstance[] {
-    return [];
+    return this.currentLinkInstances;
+  }
+
+  public columns(tableId: string): TableColumn[] {
+    return [...(this.findTable(tableId)?.columns || [])];
   }
 
   public getColumnPermissions(column: TableColumn): AllowedPermissions {
     if (column.collectionId) {
-      return this.currentPermissions?.[column.collectionId];
+      return queryAttributePermissions(
+        {
+          resourceId: column.collectionId,
+          resourceType: AttributesResourceType.Collection,
+        },
+        this.currentPermissions,
+        this.linkTypesMap
+      );
+    } else if (column.linkTypeId) {
+      return queryAttributePermissions(
+        {
+          resourceId: column.linkTypeId,
+          resourceType: AttributesResourceType.LinkType,
+        },
+        this.currentPermissions,
+        this.linkTypesMap
+      );
     }
-    // TODO links
     return {};
   }
 
@@ -380,9 +401,6 @@ export class WorkflowTablesStateService {
   }
 
   public moveColumns(changedTable: TableModel, from: number, to: number) {
-    // prevent from detect change for settings
-    this.syncColumnSettingsAfterMove(changedTable, from, to);
-
     const newTables = [...this.tables];
     for (let i = 0; i < newTables.length; i++) {
       const table = newTables[i];
@@ -395,7 +413,7 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  private syncColumnSettingsAfterMove(table: TableModel, from: number, to: number) {
+  public syncColumnSettingsBeforeMove(table: TableModel, from: number, to: number) {
     const column = table.columns[from];
     if (column) {
       const {collection, linkType} = this.findColumnResources(column);

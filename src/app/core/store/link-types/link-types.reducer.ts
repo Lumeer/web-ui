@@ -39,6 +39,10 @@ export function linkTypesReducer(
       return revertLinkType(state, action.payload.linkType);
     case LinkTypesActionType.DELETE_SUCCESS:
       return linkTypesAdapter.removeOne(action.payload.linkTypeId, state);
+    case LinkTypesActionType.RENAME_ATTRIBUTE_SUCCESS:
+      return renameAttribute(state, action.payload.linkTypeId, action.payload.attributeId, action.payload.name);
+    case LinkTypesActionType.RENAME_ATTRIBUTE_FAILURE:
+      return renameAttribute(state, action.payload.linkTypeId, action.payload.attributeId, action.payload.oldName);
     case LinkTypesActionType.CREATE_ATTRIBUTES_SUCCESS:
       return onCreateAttributesSuccess(action, state);
     case LinkTypesActionType.UPDATE_ATTRIBUTE_SUCCESS:
@@ -50,6 +54,20 @@ export function linkTypesReducer(
     default:
       return state;
   }
+}
+
+function renameAttribute(state: LinkTypesState, linkTypeId: string, attributeId: string, name: string): LinkTypesState {
+  const collection = state.entities[linkTypeId];
+  if (collection) {
+    const attributes = [...collection.attributes];
+    const attributeIndex = attributes.findIndex(attribute => attribute.id === attributeId);
+    if (attributeIndex !== -1) {
+      attributes.splice(attributeIndex, 1, {...attributes[attributeIndex], name});
+      return linkTypesAdapter.updateOne({id: linkTypeId, changes: {attributes}}, state);
+    }
+  }
+
+  return state;
 }
 
 function addLinkTypes(state: LinkTypesState, linkTypes: LinkType[]): LinkTypesState {

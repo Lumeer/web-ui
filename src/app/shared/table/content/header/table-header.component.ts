@@ -34,7 +34,6 @@ import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/head
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
-import {groupTableColumns} from '../../model/table-utils';
 import {AttributeSortType} from '../../../../core/store/views/view';
 
 @Component({
@@ -117,25 +116,36 @@ export class TableHeaderComponent implements OnChanges {
   public onColumnDrop(event: CdkDragDrop<any>) {
     const startPosition = this.getStartPosition(event.previousIndex);
     const newPosition = startPosition + event.distance.x;
-    const toIndex = this.computeColumnIndex(this.findColumnIndexByStartPosition(newPosition));
     const previousIndex = this.computeColumnIndex(event.previousIndex);
+    const groupIndex = this.findGroupIndexByStartPosition(newPosition);
+    const direction = groupIndex - event.previousIndex;
+    const toIndex = this.computeColumnIndex(groupIndex, direction);
     if (previousIndex !== toIndex) {
       this.moveColumn.emit({fromIndex: previousIndex, toIndex});
     }
     this.dragStartOffset = null;
   }
 
-  private computeColumnIndex(groupIndex: number): number {
-    return (this.columnGroups || [])
+  private computeColumnIndex(groupIndex: number, direction?: number): number {
+    const resultIndex = (this.columnGroups || [])
       .slice(0, groupIndex)
       .reduce((sum, group) => (sum += group.hiddenColumns?.length || 1), 0);
+
+    const columnGroup = this.columnGroups?.[groupIndex];
+    if (direction > 0 && columnGroup?.hiddenColumns?.length) {
+      return resultIndex - 1 + columnGroup?.hiddenColumns?.length;
+    }
+    return resultIndex;
   }
 
   private getStartPosition(index: number): number {
     return (this.columnsPositionsStart[index] || 0) + (this.dragStartOffset || 0);
   }
 
-  private findColumnIndexByStartPosition(x: number): number {
+  private findGroupIndexByStartPosition(x: number): number {
+    if (x <= 0) {
+      return 0;
+    }
     return this.columnsPositionsStart?.findIndex(
       (position, index, arr) => position <= x && (index === arr.length - 1 || x <= arr[index + 1])
     );
@@ -144,11 +154,22 @@ export class TableHeaderComponent implements OnChanges {
   public onColumnDragMoved(event: CdkDragMove, index: number) {
     const startPosition = this.getStartPosition(index);
     const newPosition = startPosition + event.distance.x;
-    const toIndex = this.findColumnIndexByStartPosition(newPosition);
-    const columnGroup = this.columnGroups?.[toIndex];
-    if (columnGroup?.column) {
+    const toIndex = this.findGroupIndexByStartPosition(newPosition);
+    if (this.canDragColumns(index, toIndex)) {
       this.draggedIndex$.next(toIndex);
     }
+  }
+
+  private canDragColumns(fromIndex: number, toIndex: number): boolean {
+    const fromColumn = this.columnGroups?.[fromIndex]?.column;
+    const toColumn = this.columnGroups?.[toIndex]?.column;
+    return this.columnsAreFromSameResource(fromColumn, toColumn);
+  }
+
+  private columnsAreFromSameResource(c1: TableColumn, c2: TableColumn): boolean {
+    return (
+      c1 && c2 && ((c1.collectionId && c1.collectionId === c2.collectionId) || (c1 && c1.linkTypeId === c2.linkTypeId))
+    );
   }
 
   public onColumnDragEnded() {

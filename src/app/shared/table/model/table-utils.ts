@@ -43,6 +43,17 @@ export function groupTableColumns(columns: TableColumn[]): TableColumnGroup[] {
   }, []);
 }
 
+export function flattenTableColumnGroups(groups: TableColumnGroup[]): TableColumn[] {
+  return (groups || []).reduce((columns, group) => {
+    if (group.column) {
+      columns.push(group.column);
+    } else if (group.hiddenColumns) {
+      columns.push(...group.hiddenColumns);
+    }
+    return columns;
+  }, []);
+}
+
 export function isTableCellSelected(
   selectedCell: TableCell,
   column: TableColumn,
@@ -60,4 +71,12 @@ export function isTableCellSelected(
 
 export function isTableColumnDirectlyEditable(column: TableColumn): boolean {
   return columnConstraintType(column) === ConstraintType.Boolean;
+}
+
+export function numberOfDiffColumnsBefore(index: number, columns: TableColumn[]): number {
+  const column = columns[index];
+  if (column.collectionId) {
+    return columns.slice(0, index).filter(col => !col.attribute || !!col.linkTypeId).length;
+  }
+  return columns.slice(0, index).filter(col => !col.attribute || !!col.collectionId).length;
 }
