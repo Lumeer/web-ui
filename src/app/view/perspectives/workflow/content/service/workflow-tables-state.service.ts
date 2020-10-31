@@ -227,10 +227,20 @@ export class WorkflowTablesStateService {
     return table?.rows.find(row => row.id === rowId);
   }
 
-  public findColumnResources(column: TableColumn): {collection: Collection; linkType: LinkType} {
+  public findColumnResourcesByColumn(column: TableColumn): {collection: Collection; linkType: LinkType} {
     return {
       collection: this.currentCollectionsMap?.[column.collectionId],
       linkType: this.currentLinkTypesMap?.[column.linkTypeId],
+    };
+  }
+
+  public findColumnResourcesByColumns(columns: TableColumn[]): {collection: Collection; linkType: LinkType} {
+    const collectionId = columns.find(column => column.collectionId)?.collectionId;
+    const linkTypeId = columns.find(column => column.linkTypeId)?.linkTypeId;
+
+    return {
+      collection: this.currentCollectionsMap?.[collectionId],
+      linkType: this.currentLinkTypesMap?.[linkTypeId],
     };
   }
 
@@ -390,7 +400,7 @@ export class WorkflowTablesStateService {
   }
 
   private syncColumnSettingsAfterAdd(column: TableColumn, position: number) {
-    const {collection, linkType} = this.findColumnResources(column);
+    const {collection, linkType} = this.findColumnResourcesByColumn(column);
     this.currentViewSettings = addAttributeToSettings(
       this.currentViewSettings,
       column.attribute.id,
@@ -416,7 +426,7 @@ export class WorkflowTablesStateService {
   public syncColumnSettingsBeforeMove(table: TableModel, from: number, to: number) {
     const column = table.columns[from];
     if (column) {
-      const {collection, linkType} = this.findColumnResources(column);
+      const {collection, linkType} = this.findColumnResourcesByColumn(column);
       this.currentViewSettings = moveAttributeInSettings(this.currentViewSettings, from, to, collection, linkType);
     }
   }

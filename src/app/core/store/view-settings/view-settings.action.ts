@@ -53,13 +53,27 @@ export namespace ViewSettingsAction {
   export class HideAttributes implements Action {
     public readonly type = ViewSettingsActionType.HIDE_ATTRIBUTES;
 
-    public constructor(public payload: {attributeIds: string[]; collection: Collection; linkType?: LinkType}) {}
+    public constructor(
+      public payload: {
+        collectionAttributeIds: string[];
+        collection: Collection;
+        linkTypeAttributeIds?: string[];
+        linkType?: LinkType;
+      }
+    ) {}
   }
 
   export class ShowAttributes implements Action {
     public readonly type = ViewSettingsActionType.SHOW_ATTRIBUTES;
 
-    public constructor(public payload: {attributeIds: string[]; collection: Collection; linkType?: LinkType}) {}
+    public constructor(
+      public payload: {
+        collectionAttributeIds: string[];
+        collection: Collection;
+        linkTypeAttributeIds?: string[];
+        linkType?: LinkType;
+      }
+    ) {}
   }
 
   export class SetAttribute implements Action {

@@ -28,6 +28,7 @@ export const TABLE_HIDDEN_COLUMN_WIDTH = 18;
 export interface TableModel {
   id: string;
   collectionId: string;
+  linkTypeId?: string;
   columns: TableColumn[];
   rows: TableRow[];
 }

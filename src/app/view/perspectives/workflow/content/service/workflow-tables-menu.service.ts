@@ -39,6 +39,7 @@ export enum RowMenuId {
   Edit = 'edit',
   Detail = 'detail',
   Delete = 'delete',
+  Unlink = 'unlink',
 }
 
 @Injectable()
@@ -47,7 +48,7 @@ export class WorkflowTablesMenuService {
 
   constructor(private i18n: I18n) {}
 
-  public createRowMenu(permissions: AllowedPermissions, row: TableRow): TableContextMenuItem[] {
+  public createRowMenu(permissions: AllowedPermissions, row: TableRow, linked: boolean): TableContextMenuItem[] {
     const items: TableContextMenuItem[] = [
       {
         id: RowMenuId.Edit,
@@ -69,13 +70,23 @@ export class WorkflowTablesMenuService {
       });
     }
 
-    items.push({
-      id: RowMenuId.Delete,
-      title: this.translateRowMenuItem(RowMenuId.Delete),
-      disabled: !permissions?.writeWithView,
-      iconClass: 'fa fa-trash text-danger',
-      group: 1,
-    });
+    if (linked) {
+      items.push({
+        id: RowMenuId.Unlink,
+        title: this.translateRowMenuItem(RowMenuId.Unlink),
+        disabled: !permissions?.writeWithView,
+        iconClass: 'fa fa-unlink text-warning',
+        group: 1,
+      });
+    } else {
+      items.push({
+        id: RowMenuId.Delete,
+        title: this.translateRowMenuItem(RowMenuId.Delete),
+        disabled: !permissions?.writeWithView,
+        iconClass: 'fa fa-trash text-danger',
+        group: 1,
+      });
+    }
 
     return items;
   }
@@ -88,6 +99,8 @@ export class WorkflowTablesMenuService {
         return this.i18n({id: 'table.body.row.show.detail', value: 'Show detail'});
       case RowMenuId.Delete:
         return this.i18n({id: 'remove.row', value: 'Remove row'});
+      case RowMenuId.Unlink:
+        return this.i18n({id: 'table.body.row.unlink', value: 'Unlink row'});
       default:
         return '';
     }

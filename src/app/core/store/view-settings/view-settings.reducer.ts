@@ -24,7 +24,7 @@ import {
   createAndModifyAttributesSettings,
   moveAttributeInSettings,
 } from '../../../shared/settings/settings.util';
-import {AttributesResourceType} from '../../model/resource';
+import {AttributesResource, AttributesResourceType} from '../../model/resource';
 
 export function viewSettingsReducer(
   state: ViewSettingsState = initialViewSettingsState,
@@ -55,17 +55,35 @@ function hideOrShowAttributes(
   action: ViewSettingsAction.HideAttributes | ViewSettingsAction.ShowAttributes,
   hide: boolean
 ): ViewSettingsState {
-  const {attributeIds, collection, linkType} = action.payload;
-  const resourceType = linkType ? AttributesResourceType.LinkType : AttributesResourceType.Collection;
-  return createAndModifyAttributesSettings(state, linkType || collection, resourceType, settingsAttributes => {
-    for (const attributeId of attributeIds) {
-      const attributeIndex = settingsAttributes.findIndex(setting => setting.attributeId === attributeId);
-      if (attributeIndex !== -1) {
-        settingsAttributes[attributeIndex] = {...settingsAttributes[attributeIndex], hidden: hide};
+  const {collectionAttributeIds, collection, linkTypeAttributeIds, linkType} = action.payload;
+  const resources: {resource: AttributesResource; type: AttributesResourceType; attributeIds: string[]}[] = [];
+
+  if (collection) {
+    resources.push({
+      resource: collection,
+      type: AttributesResourceType.Collection,
+      attributeIds: collectionAttributeIds || [],
+    });
+  }
+  if (linkType) {
+    resources.push({
+      resource: linkType,
+      type: AttributesResourceType.LinkType,
+      attributeIds: linkTypeAttributeIds || [],
+    });
+  }
+
+  return resources.reduce((currentState, resource) => {
+    return createAndModifyAttributesSettings(currentState, resource.resource, resource.type, settingsAttributes => {
+      for (const attributeId of resource.attributeIds) {
+        const attributeIndex = settingsAttributes.findIndex(setting => setting.attributeId === attributeId);
+        if (attributeIndex !== -1) {
+          settingsAttributes[attributeIndex] = {...settingsAttributes[attributeIndex], hidden: hide};
+        }
       }
-    }
-    return settingsAttributes;
-  });
+      return settingsAttributes;
+    });
+  }, state);
 }
 
 function moveAttribute(state: ViewSettingsState, action: ViewSettingsAction.MoveAttribute): ViewSettingsState {

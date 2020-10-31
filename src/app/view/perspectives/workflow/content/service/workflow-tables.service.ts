@@ -93,8 +93,11 @@ export class WorkflowTablesService {
       case RowMenuId.Detail:
         this.dataService.showRowDetail(row, column);
         break;
-      case HeaderMenuId.Delete:
+      case RowMenuId.Delete:
         this.dataService.removeRow(row, column);
+        break;
+      case RowMenuId.Unlink:
+        this.dataService.unlinkRow(row, column);
         break;
     }
   }
