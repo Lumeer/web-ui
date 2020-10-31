@@ -82,7 +82,7 @@ export function addMarkerToSvgContainer(
       .attr('fill', '#ffffff')
       .style('font-family', '"Font Awesome 5 Pro"')
       .style('font-size', '12px')
-      .text(() => '\uf6bb');
+      .text(() => iconsMap[properties.icons[0].split(' ').slice(-1)[0]]);
   } else if (properties.icons?.length === 2) {
     const radius = innerCircleRadius / 2 - 1;
     const icons = properties.icons.map(icon => icon.split(' ').slice(-1)[0]).map(icon => iconsMap[icon]);
