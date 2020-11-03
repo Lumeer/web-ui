@@ -4,7 +4,7 @@
                             [editedCell]="editedCell">
   </table-alternative-header>
   <table-resize-header [columnGroups]="data.columnGroups"
-                       (resizeColumn)="onResizeColumn($event)">
+                       (resizeColumn)="columnResize.emit($event)">
   </table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize
                                (scroll)="onScroll()"

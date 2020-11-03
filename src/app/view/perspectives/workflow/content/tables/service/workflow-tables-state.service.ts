@@ -25,24 +25,24 @@ import {
   TableCell,
   TableCellType,
   TableModel,
-} from '../../../../../shared/table/model/table-model';
-import {TableColumn} from '../../../../../shared/table/model/table-column';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {ViewSettings} from '../../../../../core/store/views/view';
-import {deepObjectCopy, isNotNullOrUndefined, objectsByIdMap} from '../../../../../shared/utils/common.utils';
-import {TableRow} from '../../../../../shared/table/model/table-row';
-import {moveItemsInArray} from '../../../../../shared/utils/array.utils';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../shared/settings/settings.util';
-import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {WorkflowConfig} from '../../../../../core/store/workflows/workflow';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {WorkflowTable} from '../../model/workflow-table';
-import {queryAttributePermissions} from '../../../../../core/model/query-attribute';
-import {AttributesResourceType} from '../../../../../core/model/resource';
+} from '../../../../../../shared/table/model/table-model';
+import {TableColumn} from '../../../../../../shared/table/model/table-column';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {ViewSettings} from '../../../../../../core/store/views/view';
+import {deepObjectCopy, isNotNullOrUndefined, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
+import {TableRow} from '../../../../../../shared/table/model/table-row';
+import {moveItemsInArray} from '../../../../../../shared/utils/array.utils';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
+import {ConstraintData} from '../../../../../../core/model/data/constraint';
+import {WorkflowTable} from '../../../model/workflow-table';
+import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
+import {AttributesResourceType} from '../../../../../../core/model/resource';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -284,7 +284,11 @@ export class WorkflowTablesStateService {
     return {tableIndex, columnIndex, rowIndex, type: cell.type};
   }
 
-  private setColumnProperty(table: TableModel, column: TableColumn, properties: Record<string, any>) {
+  private setColumnProperty(
+    table: TableModel,
+    column: TableColumn,
+    properties: Partial<Record<keyof TableColumn, any>>
+  ) {
     const newTables = [...this.tables];
     for (let i = 0; i < newTables.length; i++) {
       const newTable = newTables[i];
@@ -302,7 +306,7 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  private setRowProperty(tableId: string, row: TableRow, properties: Record<string, any>) {
+  private setRowProperty(tableId: string, row: TableRow, properties: Partial<Record<keyof TableRow, any>>) {
     const newTables = [...this.tables];
     const tableIndex = newTables.findIndex(table => table.id === tableId);
     if (tableIndex !== -1) {
@@ -374,24 +378,24 @@ export class WorkflowTablesStateService {
 
   public startColumnCreating(column: TableColumn, name: string) {
     const table = this.findTableByColumn(column);
-    this.setColumnProperty(table, column, {['name']: name, ['creating']: true});
+    this.setColumnProperty(table, column, {name, creating: true});
   }
 
   public endColumnCreating(column: TableColumn) {
     const table = this.findTableByColumn(column);
-    this.setColumnProperty(table, column, {['creating']: false});
+    this.setColumnProperty(table, column, {creating: false});
   }
 
   public startRowCreating(row: TableRow, column: TableColumn, value) {
-    this.setRowProperty(row.tableId, row, {['creating']: true, [`data.${column.id}`]: value});
+    this.setRowProperty(row.tableId, row, {creating: true, [`data.${column.id}`]: value});
   }
 
   public endRowCreating(row: TableRow) {
-    this.setRowProperty(row.tableId, row, {['creating']: false});
+    this.setRowProperty(row.tableId, row, {creating: false});
   }
 
   public resizeColumn(changedTable: TableModel, column: TableColumn, width: number) {
-    this.setColumnProperty(changedTable, column, {['width']: width});
+    this.setColumnProperty(changedTable, column, {width});
   }
 
   public addColumn(column: TableColumn, position: number) {

@@ -1,0 +1,76 @@
+<ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
+
+  <hidden-input (newInput)="onNewHiddenInput($event)"
+                class="position-fixed">
+  </hidden-input>
+
+
+  <ng-container
+    *ngIf="{selectedCell: selectedCell$ | async, editedCell: editedCell$ | async, tables: tables$ | async} as data">
+    <div *ngFor="let stemConfig of config.stemsConfigs; trackBy:trackByStem; let index = index;">
+
+      <workflow-toolbar [config]="stemConfig"
+                        [linkTypes]="linkTypes"
+                        [collections]="collections"
+                        [stem]="stemConfig.stem"
+                        (configChange)="onStemConfigChange($event, index)">
+      </workflow-toolbar>
+
+      <div
+        class="mb-3"
+        (clickOutside)="onClickOutsideTables($event)"
+        (click)="onClickInsideTables($event)">
+        <ng-container *ngFor="let table of data.tables | filterStemTables:stemConfig; trackBy: trackByTable">
+          <data-input-preview *ngIf="table.title" class="font-weight-bold d-block mb-2"
+                              [dataValue]="table.title.dataValue"
+                              [configuration]="configuration"
+                              [constraint]="table.title.constraint">
+          </data-input-preview>
+          <lmr-table
+            #lmrTable
+            [id]="table.id"
+            class="lmr-table"
+            [tableModel]="table"
+            [style.height.px]="table.height"
+            [style.min-height.px]="table.minHeight"
+            [style.max-height.px]="table.maxHeight"
+            [constraintData]="constraintData"
+            [selectedCell]="data.selectedCell"
+            [editedCell]="data.editedCell"
+            (columnMove)="onColumnMove(table, $event)"
+            (columnResize)="onColumnResize(table, $event)"
+            (columnRename)="onColumnRename($event)"
+            (columnMenuSelected)="onColumnMenuSelected($event)"
+            (columnHiddenMenuSelected)="onColumnHiddenMenuSelected($event)"
+            (columnSortChanged)="onColumnSortChanged($event)"
+            (cellClick)="onTableCellClick($event)"
+            (cellCancel)="onTableCellCancel($event)"
+            (cellDoubleClick)="onTableCellDoubleClick($event)"
+            (rowNewValue)="onRowNewValue($event)"
+            (rowMenuSelected)="onRowMenuSelected($event)"
+            (rowDetail)="onRowDetail($event)">
+          </lmr-table>
+
+          <div resizer class="resizer d-flex align-items-center justify-content-center"
+               *ngIf="table.maxHeight > table.minHeight"
+               [reference]="table.id"
+               (onResize)="onTableResize(table, $event)"
+               i18n-title="@@perspective.workflow.table.resize"
+               title="Resize table">
+            <i class="fal fa-grip-lines"></i>
+          </div>
+
+        </ng-container>
+      </div>
+
+    </div>
+  </ng-container>
+
+
+</ng-container>
+
+<ng-template #notDisplayable>
+  <invalid-query class="w-100"
+                 [minStems]="1">
+  </invalid-query>
+</ng-template>

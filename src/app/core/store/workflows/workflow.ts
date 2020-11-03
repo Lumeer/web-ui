@@ -19,6 +19,7 @@
 
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute, QueryResource} from '../../model/query-attribute';
+import {AttributeSortType} from '../views/view';
 
 export const DEFAULT_WORKFLOW_ID = 'default';
 
@@ -29,17 +30,44 @@ export interface Workflow {
 
 export interface WorkflowConfig {
   stemsConfigs: WorkflowStemConfig[];
-  version?: WorkflowConfigVersion;
+  version: WorkflowConfigVersion;
+  tables: WorkflowTableConfig[];
+  columns: WorkflowColumnsSettings;
+  sidebar?: WorkflowSidebarConfig;
+}
+
+export interface WorkflowSidebarConfig {
+  documentId: string;
+  width?: number;
+}
+
+export interface WorkflowTableConfig {
+  stem: QueryStem;
+  collectionId: string;
+  value?: any;
+  height: number;
+}
+
+export interface WorkflowColumnsSettings {
+  collections?: Record<string, WorkflowColumnSettings[]>;
+  linkTypes?: Record<string, WorkflowColumnSettings[]>;
+}
+
+export interface WorkflowColumnSettings {
+  attributeId: string;
+  width?: number;
 }
 
 export enum WorkflowConfigVersion {
   V1 = '1',
 }
 
+export const latestWorkflowVersion = WorkflowConfigVersion.V1;
+
 export interface WorkflowStemConfig {
   stem?: QueryStem;
   attribute?: WorkflowAttribute;
-  resource: WorkflowResource;
+  collection?: WorkflowResource;
 }
 
 export interface WorkflowAttribute extends QueryAttribute {}

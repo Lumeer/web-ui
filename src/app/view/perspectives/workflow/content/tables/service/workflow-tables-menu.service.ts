@@ -19,10 +19,10 @@
 
 import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {TableColumn, TableContextMenuItem} from '../../../../../shared/table/model/table-column';
-import {TableRow} from '../../../../../shared/table/model/table-row';
-import {isMacOS} from '../../../../../shared/utils/system.utils';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {TableColumn, TableContextMenuItem} from '../../../../../../shared/table/model/table-column';
+import {TableRow} from '../../../../../../shared/table/model/table-row';
+import {isMacOS} from '../../../../../../shared/utils/system.utils';
 
 export enum HeaderMenuId {
   Edit = 'edit',

@@ -21,7 +21,7 @@
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"
           (click)="onDataInputClick(group.column, $event)"
           (dblclick)="onDataInputDblClick(group.column, $event)"
-          (contextmenu)="onContextMenu(index, $event)">
+          (contextmenu)="onContextMenu(group.column?.id, $event)">
         <data-input
           *ngIf="group.column && dataInputInfo.showDataInput"
           class="d-block h-100"
@@ -34,8 +34,7 @@
           [readonly]="!group.column.editable || !((editedCell?.tableId === row.tableId && data.edited) || data.directlyEditable)"
           [configuration]="configuration"
           (saveAction)="onNewValue(group.column, $event)"
-          (cancel)="onDataInputCancel(group.column)"
-          (enterInvalid)="onEnterInvalid()">
+          (cancel)="onDataInputCancel(group.column)">
         </data-input>
         <div class="d-flex align-items-center html-input"
              *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType === constraintType.Text"
@@ -44,6 +43,7 @@
         <ng-container
           *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType !== constraintType.Text">{{data.dataValue | previewDataValue}}</ng-container>
         <table-menu *ngIf="group.column"
+                    [id]="group.column.id"
                     [items]="group.column.collectionId ? row.documentMenuItems : row.linkMenuItems"
                     (selected)="onMenuSelected(row, group.column, $event)">
         </table-menu>

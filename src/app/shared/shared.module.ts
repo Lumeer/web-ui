@@ -54,6 +54,7 @@ import {BuilderModule} from './builder/builder.module';
 import {SliderModule} from './slider/slider.module';
 import {SettingsModule} from './settings/settings.module';
 import {TableModule} from './table/table.module';
+import {ResizableSidebarModule} from './resizable-sidebar/resizable-sidebar.module';
 
 @NgModule({
   imports: [
@@ -88,6 +89,7 @@ import {TableModule} from './table/table.module';
     BuilderModule,
     SettingsModule,
     TableModule,
+    ResizableSidebarModule,
   ],
   declarations: [PerspectiveDirective, ResourceHeaderComponent, LoadingIndicatorComponent, TourComponent],
   exports: [
@@ -127,6 +129,7 @@ import {TableModule} from './table/table.module';
     BuilderModule,
     SettingsModule,
     TableModule,
+    ResizableSidebarModule,
   ],
 })
 export class SharedModule {}

@@ -23,7 +23,6 @@ import {
   Input,
   Output,
   EventEmitter,
-  ViewChild,
   OnChanges,
   SimpleChanges,
   ViewChildren,
@@ -33,9 +32,6 @@ import {DataInputConfiguration} from '../../../data-input/data-input-configurati
 import {columnConstraintType, TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
 import {DataValue} from '../../../../core/model/data-value';
-import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
-import {isKeyPrintable, KeyCode} from '../../../key-code';
-import {Direction} from '../../../direction';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {isNotNullOrUndefined, isNullOrUndefinedOrEmpty, preventEvent} from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
@@ -86,9 +82,6 @@ export class TableRowComponent implements OnChanges {
 
   @Output()
   public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
-
-  @ViewChild(DocumentHintsComponent)
-  public suggestions: DocumentHintsComponent;
 
   @ViewChildren(TableMenuComponent)
   public tableMenuComponents: QueryList<TableMenuComponent>;
@@ -167,11 +160,7 @@ export class TableRowComponent implements OnChanges {
 
   public onNewValue(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
     this.editedValue = null;
-    if (this.suggestions?.isSelected()) {
-      this.suggestions.useSelection();
-    } else {
-      this.saveData(column, data);
-    }
+    this.saveData(column, data);
   }
 
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
@@ -201,34 +190,6 @@ export class TableRowComponent implements OnChanges {
     }
   }
 
-  public onDataInputKeyDown(event: KeyboardEvent) {
-    switch (event.code) {
-      case KeyCode.ArrowDown:
-        event.preventDefault();
-        this.suggestions?.moveSelection(Direction.Down);
-        break;
-      case KeyCode.ArrowUp:
-        event.preventDefault();
-        this.suggestions?.moveSelection(Direction.Up);
-        break;
-    }
-
-    if (isKeyPrintable(event) && this.suggestions) {
-      this.suggestions?.clearSelection();
-    }
-  }
-
-  public onUseHint() {
-    // TODO this.endRowEditing();
-  }
-
-  public onEnterInvalid() {
-    if (this.suggestions?.isSelected()) {
-      this.suggestions.useSelection();
-      // TODO this.endRowEditing();
-    }
-  }
-
   public trackByColumn(index: number, column: TableColumnGroup): string {
     return column.id;
   }
@@ -237,8 +198,8 @@ export class TableRowComponent implements OnChanges {
     this.onDoubleClick.emit(columnId);
   }
 
-  public onContextMenu(column: number, event: MouseEvent) {
-    const menuElement = this.tableMenuComponents.toArray()[column];
+  public onContextMenu(columnId: string, event: MouseEvent) {
+    const menuElement = columnId && this.tableMenuComponents.find(component => component.id === columnId);
     if (menuElement) {
       this.contextMenuService.show.next({
         contextMenu: menuElement.contextMenu,

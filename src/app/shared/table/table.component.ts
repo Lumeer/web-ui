@@ -132,6 +132,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.selectedCell && this.selectedCell) {
       this.checkScrollPositionForSelectedCell();
     }
+    if (changes.tableModel) {
+      this.viewPort?.checkViewportSize();
+    }
   }
 
   private checkScrollPositionForSelectedCell() {
@@ -159,13 +162,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   private isScrollableInsideComponent(scrollable: CdkScrollable): boolean {
     return this.element.nativeElement.contains(scrollable.getElementRef().nativeElement);
-  }
-
-  public onResizeColumn(data: {index: number; width: number}) {
-    const column = this.tableModel?.columns?.[data.index];
-    if (column) {
-      this.columnResize.emit({column, width: data.width});
-    }
   }
 
   public onMoveColumn(data: {fromIndex: number; toIndex: number}) {

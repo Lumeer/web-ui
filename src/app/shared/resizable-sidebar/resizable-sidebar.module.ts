@@ -17,25 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, Input} from '@angular/core';
-import {ContextMenuComponent} from 'ngx-contextmenu';
-import {TableContextMenuItem} from '../../../model/table-column';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {ResizableSidebarComponent} from './resizable-sidebar.component';
 
-@Component({
-  selector: 'table-menu',
-  templateUrl: './table-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@NgModule({
+  declarations: [ResizableSidebarComponent],
+  imports: [CommonModule],
+  exports: [ResizableSidebarComponent],
 })
-export class TableMenuComponent {
-  @Input()
-  public id: string;
-
-  @Input()
-  public items: TableContextMenuItem[];
-
-  @Output()
-  public selected = new EventEmitter<TableContextMenuItem>();
-
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenu: ContextMenuComponent;
-}
+export class ResizableSidebarModule {}

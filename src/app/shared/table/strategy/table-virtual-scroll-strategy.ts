@@ -57,25 +57,21 @@ export class TableVirtualScrollStrategy implements VirtualScrollStrategy {
     this.viewport.renderedRangeStream.subscribe(this.renderedRangeStream$);
     this.onDataLengthChanged();
 
-    this.viewport.elementRef.nativeElement.addEventListener(
-      'wheel',
-      event => {
-        if (event.deltaY) {
-          const offset = this.viewport.measureScrollOffset();
-          let newOffset = offset + event.deltaY / 2;
-          const scrollHeight = this.viewport.elementRef.nativeElement.scrollHeight - this.viewport.getViewportSize();
-          newOffset = Math.min(scrollHeight, Math.max(0, newOffset));
-          if (newOffset !== offset) {
-            this.viewport.scrollToOffset(newOffset);
-          }
-
-          event.preventDefault();
-          event.stopPropagation();
-          return true;
-        }
-      },
-      true
-    );
+    // const listener = event => {
+    //   if (event.deltaY) {
+    //     const offset = this.viewport.measureScrollOffset();
+    //     let newOffset = offset + event.deltaY / 2;
+    //     const scrollHeight = this.viewport.elementRef.nativeElement.scrollHeight - this.viewport.getViewportSize();
+    //     newOffset = Math.min(scrollHeight, Math.max(0, newOffset));
+    //     if (newOffset !== offset) {
+    //       this.viewport.scrollToOffset(newOffset);
+    //     }
+    //     event.preventDefault();
+    //   }
+    //   return true;
+    // };
+    //
+    // this.viewport.elementRef.nativeElement.addEventListener('wheel', listener);
   }
 
   public detach() {

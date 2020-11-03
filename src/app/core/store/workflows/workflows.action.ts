@@ -19,12 +19,18 @@
 
 import {Action} from '@ngrx/store';
 import {Workflow, WorkflowConfig} from './workflow';
+import {QueryStem} from '../navigation/query/query';
 
 export enum WorkflowsActionType {
   ADD_KANBAN = '[Workflow] Add workflow',
   REMOVE_KANBAN = '[Workflow] Remove workflow',
 
   SET_CONFIG = '[Workflow] Set config',
+  SET_COLUMN_WIDTH = '[Workflow] Set column width',
+  SET_TABLE_HEIGHT = '[Workflow] Set table height',
+  SET_OPENED_DOCUMENT = '[Workflow] Set opened document',
+  SET_SIDEBAR_WIDTH = '[Workflow] Set sidebar width',
+  RESET_OPENED_DOCUMENT = '[Workflow] Reset opened document',
 
   CLEAR = '[Workflow] Clear',
 }
@@ -48,9 +54,58 @@ export namespace WorkflowsAction {
     public constructor(public payload: {workflowId: string; config: WorkflowConfig}) {}
   }
 
+  export class SetColumnWidth implements Action {
+    public readonly type = WorkflowsActionType.SET_COLUMN_WIDTH;
+
+    public constructor(
+      public payload: {
+        workflowId: string;
+        width: number;
+        attributeId: string;
+        collectionId: string;
+        linkTypeId?: string;
+      }
+    ) {}
+  }
+
+  export class SetTableHeight implements Action {
+    public readonly type = WorkflowsActionType.SET_TABLE_HEIGHT;
+
+    public constructor(
+      public payload: {workflowId: string; height: number; collectionId: string; stem: QueryStem; value?: any}
+    ) {}
+  }
+
+  export class SetOpenedDocument implements Action {
+    public readonly type = WorkflowsActionType.SET_OPENED_DOCUMENT;
+
+    public constructor(public payload: {workflowId: string; documentId: string}) {}
+  }
+
+  export class SetSidebarWidth implements Action {
+    public readonly type = WorkflowsActionType.SET_SIDEBAR_WIDTH;
+
+    public constructor(public payload: {workflowId: string; width: number}) {}
+  }
+
+  export class ResetOpenedDocument implements Action {
+    public readonly type = WorkflowsActionType.RESET_OPENED_DOCUMENT;
+
+    public constructor(public payload: {workflowId: string}) {}
+  }
+
   export class Clear implements Action {
     public readonly type = WorkflowsActionType.CLEAR;
   }
 
-  export type All = AddWorkflow | RemoveWorkflow | SetConfig | Clear;
+  export type All =
+    | AddWorkflow
+    | RemoveWorkflow
+    | SetConfig
+    | SetTableHeight
+    | SetColumnWidth
+    | SetSidebarWidth
+    | SetOpenedDocument
+    | ResetOpenedDocument
+    | Clear;
 }

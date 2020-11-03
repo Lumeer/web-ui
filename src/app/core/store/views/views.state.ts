@@ -131,11 +131,10 @@ export const selectViewConfigChanged = createSelector(
   selectDocumentsDictionary,
   selectCollectionsDictionary,
   selectLinkTypesDictionary,
-  selectQuery,
-  (perspective, perspectiveConfig, viewConfig, documentsMap, collectionsMap, linkTypesMap, query) =>
+  (perspective, perspectiveConfig, viewConfig, documentsMap, collectionsMap, linkTypesMap) =>
     viewConfig &&
     perspectiveConfig &&
-    isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap, query)
+    isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap)
 );
 
 export const selectViewQueryChanged = createSelector(

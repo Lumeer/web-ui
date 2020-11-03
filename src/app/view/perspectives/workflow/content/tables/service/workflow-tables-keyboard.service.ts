@@ -19,9 +19,9 @@
 
 import {Injectable} from '@angular/core';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
-import {KeyCode} from '../../../../../shared/key-code';
-import {preventEvent} from '../../../../../shared/utils/common.utils';
-import {TableCellType, TableModel} from '../../../../../shared/table/model/table-model';
+import {KeyCode} from '../../../../../../shared/key-code';
+import {preventEvent} from '../../../../../../shared/utils/common.utils';
+import {TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
 
 @Injectable()
 export class WorkflowTablesKeyboardService {

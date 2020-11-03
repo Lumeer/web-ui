@@ -17,10 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {WorkflowConfig, WorkflowConfigVersion, WorkflowResource, WorkflowStemConfig} from './workflow';
+import {
+  latestWorkflowVersion,
+  WorkflowColumnsSettings,
+  WorkflowConfig,
+  WorkflowResource,
+  WorkflowStemConfig,
+  WorkflowTableConfig,
+} from './workflow';
 import {Query, QueryStem} from '../navigation/query/query';
 import {AttributesResourceType} from '../../model/resource';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {deepObjectCopy, deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {
@@ -29,17 +36,12 @@ import {
   collectionIdsChainForStem,
   findBestStemConfigIndex,
   queryStemAttributesResourcesOrder,
+  queryStemsAreSame,
+  uniqueStems,
 } from '../navigation/query/query.util';
 
-export function isWorkflowConfigChanged(
-  previousConfig: WorkflowConfig,
-  currentConfig: WorkflowConfig,
-  query: Query
-): boolean {
-  return !deepObjectsEquals(
-    createDefaultWorkflowConfig(previousConfig, query),
-    createDefaultWorkflowConfig(currentConfig, query)
-  );
+export function isWorkflowConfigChanged(previousConfig: WorkflowConfig, currentConfig: WorkflowConfig): boolean {
+  return !deepObjectsEquals(createWorkflowSaveConfig(previousConfig), createWorkflowSaveConfig(currentConfig));
 }
 
 export function checkOrTransformWorkflowConfig(
@@ -65,12 +67,17 @@ function checkOrTransformWorkflowStemsConfig(
   linkTypes: LinkType[]
 ): WorkflowStemConfig[] {
   const stemsConfigsCopy = [...stemsConfigs];
-  return (query?.stems || []).reduce((newConfigs, stem) => {
+  return uniqueStems(query?.stems).reduce<WorkflowStemConfig[]>((newConfigs, stem) => {
     const stemCollectionIds = collectionIdsChainForStem(stem, linkTypes);
     const stemConfigIndex = findBestStemConfigIndex(stemsConfigsCopy, stemCollectionIds, linkTypes);
     const stemConfig = stemsConfigsCopy.splice(stemConfigIndex, 1);
-    if (stemConfig?.[0]?.resource) {
+    if (stemConfig?.[0]?.collection) {
       newConfigs.push(checkOrTransformWorkflowStemConfig(stemConfig[0], stem, collections, linkTypes));
+    } else {
+      newConfigs.push({
+        stem,
+        collection: {resourceId: stem.collectionId, resourceIndex: 0, resourceType: AttributesResourceType.Collection},
+      });
     }
     return newConfigs;
   }, []);
@@ -86,7 +93,7 @@ function checkOrTransformWorkflowStemConfig(
   return {
     ...stemConfig,
     stem,
-    resource: checkOrTransformQueryResource(stemConfig.resource, attributesResourcesOrder),
+    collection: checkOrTransformQueryResource(stemConfig.collection, attributesResourcesOrder),
     attribute: checkOrTransformQueryAttribute(stemConfig.attribute, attributesResourcesOrder),
   };
 }
@@ -99,25 +106,56 @@ function createDefaultConfig(query: Query): WorkflowConfig {
       resourceIndex: 0,
       resourceType: AttributesResourceType.Collection,
     };
-    return {stemsConfigs: [{stem, resource}], version: WorkflowConfigVersion.V1};
+    return {stemsConfigs: [{stem, collection: resource}], version: latestWorkflowVersion, columns: {}, tables: []};
   }
 
-  return {stemsConfigs: [], version: WorkflowConfigVersion.V1};
+  return {stemsConfigs: [], version: latestWorkflowVersion, columns: {}, tables: []};
 }
 
-export function createDefaultWorkflowConfig(config: WorkflowConfig, query: Query): WorkflowConfig {
-  if (config?.stemsConfigs?.length) {
-    return config;
-  }
-  const stem = query.stems?.[0];
-  if (stem) {
-    const resource: WorkflowResource = {
-      resourceId: stem.collectionId,
-      resourceIndex: 0,
-      resourceType: AttributesResourceType.Collection,
-    };
-    return {...config, stemsConfigs: [{stem, resource}], version: WorkflowConfigVersion.V1};
+export function createWorkflowSaveConfig(config: WorkflowConfig): WorkflowConfig {
+  const saveConfig = config && {
+    ...config,
+    tables: cleanWorkflowTables(config),
+    columns: cleanWorkflowColumns(config),
+  };
+
+  if (saveConfig && !saveConfig.sidebar?.documentId) {
+    delete saveConfig.sidebar;
   }
 
-  return {stemsConfigs: [], version: WorkflowConfigVersion.V1};
+  return saveConfig;
+}
+
+function cleanWorkflowTables(config: WorkflowConfig): WorkflowTableConfig[] {
+  return config.tables?.filter(table =>
+    config.stemsConfigs.some(
+      stemConfig =>
+        queryStemsAreSame(table.stem, stemConfig.stem) && table.collectionId === stemConfig.collection?.resourceId
+    )
+  );
+}
+
+function cleanWorkflowColumns(config: WorkflowConfig): WorkflowColumnsSettings {
+  const showingCollectionIds =
+    config.stemsConfigs?.map(stemConfig => stemConfig.collection?.resourceId).filter(collectionId => !!collectionId) ||
+    [];
+  const showingLinkTypeIds =
+    config.stemsConfigs
+      ?.filter(stemConfig => stemConfig.attribute?.resourceType === AttributesResourceType.LinkType)
+      .map(stemConfig => stemConfig.attribute.resourceId) || [];
+
+  const columns = deepObjectCopy(config.columns || {});
+  Object.keys(columns.collections || {}).forEach(collectionId => {
+    if (!showingCollectionIds.includes(collectionId)) {
+      delete columns.collections[collectionId];
+    }
+  });
+
+  Object.keys(columns.linkTypes || {}).forEach(linkTypeId => {
+    if (!showingLinkTypeIds.includes(linkTypeId)) {
+      delete columns.linkTypes[linkTypeId];
+    }
+  });
+
+  return columns;
 }

@@ -18,7 +18,7 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, Renderer2, ElementRef} from '@angular/core';
-import {TableColumnGroup} from '../../model/table-column';
+import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
 import {TABLE_COLUMN_MIN_WIDTH, TABLE_ROW_HEIGHT} from '../../model/table-model';
 
@@ -34,7 +34,7 @@ export class TableResizeHeaderComponent {
   public columnGroups: TableColumnGroup[];
 
   @Output()
-  public resizeColumn = new EventEmitter<{index: number; width: number}>();
+  public resizeColumn = new EventEmitter<{column: TableColumn; width: number}>();
 
   public readonly tableRowHeight = TABLE_ROW_HEIGHT;
 
@@ -48,7 +48,10 @@ export class TableResizeHeaderComponent {
 
   public onResizeEnd(dragEnd: CdkDragEnd, index: number) {
     const width = this.computeNewWidth(index, dragEnd.distance);
-    this.resizeColumn.emit({index, width});
+    const column = this.columnGroups[index]?.column;
+    if (column) {
+      this.resizeColumn.emit({column, width});
+    }
     this.setHeaderElementWidth(index, width);
     dragEnd.source.reset();
 

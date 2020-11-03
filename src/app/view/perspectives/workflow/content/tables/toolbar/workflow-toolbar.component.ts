@@ -18,16 +18,16 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
-import {WorkflowStemConfig} from '../../../../../core/store/workflows/workflow';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {QueryStem} from '../../../../../core/store/navigation/query/query';
-import {QueryAttribute} from '../../../../../core/model/query-attribute';
-import {SelectItemWithConstraintId} from '../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {AttributesResource} from '../../../../../core/model/resource';
-import {queryStemAttributesResourcesOrder} from '../../../../../core/store/navigation/query/query.util';
-import {getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
-import {Constraint} from '../../../../../core/model/constraint';
+import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {QueryStem} from '../../../../../../core/store/navigation/query/query';
+import {QueryAttribute} from '../../../../../../core/model/query-attribute';
+import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
+import {AttributesResource} from '../../../../../../core/model/resource';
+import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
+import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
+import {Constraint} from '../../../../../../core/model/constraint';
 
 @Component({
   selector: 'workflow-toolbar',
@@ -60,7 +60,7 @@ export class WorkflowToolbarComponent implements OnChanges {
   }
 
   public onResourceSelected(resource: QueryAttribute) {
-    this.onConfigChange({...this.config, resource});
+    this.onConfigChange({...this.config, collection: resource});
   }
 
   public onAttributeSelected(selectId: SelectItemWithConstraintId) {

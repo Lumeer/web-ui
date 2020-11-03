@@ -37,7 +37,7 @@ export class TableScrollService {
     const groupedColumns = groupTableColumns(tableModel.columns);
 
     const groupIndex = groupedColumns.findIndex(
-      group => group.column?.tableId === tableModel.id && group.column?.id === selectedCell.columnId
+      group => tableModel.id === selectedCell.tableId && group.column?.id === selectedCell.columnId
     );
     const selectedGroup = groupedColumns[groupIndex];
     const columnLeft = groupedColumns.slice(0, groupIndex).reduce((sum, group) => sum + group.width, 0);
@@ -55,7 +55,9 @@ export class TableScrollService {
 
     let scrollTop = undefined;
     if (selectedCell?.type === TableCellType.Body) {
-      const rowIndex = tableModel.rows.findIndex(row => row.tableId === tableModel.id && row.id === selectedCell.rowId);
+      const rowIndex = tableModel.rows.findIndex(
+        row => tableModel.id === selectedCell.tableId && row.id === selectedCell.rowId
+      );
       const selectedRow = tableModel.rows[rowIndex];
       const rowTop = tableModel.rows.slice(0, rowIndex).reduce((sum, row) => sum + row.height, 0);
 

@@ -53,10 +53,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {selectCurrentView} from '../../../core/store/views/views.state';
 import {DEFAULT_WORKFLOW_ID, WorkflowConfig} from '../../../core/store/workflows/workflow';
 import {selectWorkflowById, selectWorkflowConfig} from '../../../core/store/workflows/workflow.state';
-import {
-  checkOrTransformWorkflowConfig,
-  createDefaultWorkflowConfig,
-} from '../../../core/store/workflows/workflow.utils';
+import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {ConstraintData} from '../../../core/model/data/constraint';
@@ -116,14 +113,14 @@ export class WorkflowPerspectiveComponent implements OnInit {
       mergeMap(workflowEntity => {
         const workflowConfig = view.config?.workflow;
         if (preferViewConfigUpdate(previousView?.config?.workflow, view?.config?.workflow, !!workflowEntity)) {
-          return this.checkKanbanConfig(workflowConfig).pipe(map(config => ({workflowId, config})));
+          return this.checkWorkflowConfig(workflowConfig).pipe(map(config => ({workflowId, config})));
         }
         return of({workflowId: workflowId, config: workflowEntity?.config || workflowConfig});
       })
     );
   }
 
-  private checkKanbanConfig(config: WorkflowConfig): Observable<WorkflowConfig> {
+  private checkWorkflowConfig(config: WorkflowConfig): Observable<WorkflowConfig> {
     return combineLatest([
       this.store$.pipe(select(selectQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
@@ -135,12 +132,10 @@ export class WorkflowPerspectiveComponent implements OnInit {
   }
 
   private subscribeToDefault(): Observable<{workflowId?: string; config?: WorkflowConfig}> {
-    const workflowId = DEFAULT_WORKFLOW_ID;
     return this.store$.pipe(
-      select(selectQuery),
-      withLatestFrom(this.store$.pipe(select(selectWorkflowById(workflowId)))),
-      mergeMap(([, workflow]) => this.checkKanbanConfig(workflow?.config)),
-      map(config => ({workflowId, config}))
+      select(selectWorkflowById(DEFAULT_WORKFLOW_ID)),
+      take(1),
+      map(workflow => ({workflowId: DEFAULT_WORKFLOW_ID, config: workflow?.config}))
     );
   }
 

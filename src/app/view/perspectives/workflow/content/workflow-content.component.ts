@@ -17,59 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  HostListener,
-  ViewChildren,
-  QueryList,
-  ElementRef,
-  ViewChild,
-  EventEmitter,
-  Output,
-} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {ViewSettings} from '../../../../core/store/views/view';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {Collection} from '../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {AttributeSortType, ViewSettings} from '../../../../core/store/views/view';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {Observable} from 'rxjs';
-import {WorkflowTablesService} from './service/workflow-tables.service';
-import {EditedTableCell, SelectedTableCell, TableCell, TableModel} from '../../../../shared/table/model/table-model';
-import {ConstraintData} from '../../../../core/model/data/constraint';
-import {AppState} from '../../../../core/store/app.state';
-import {Store} from '@ngrx/store';
-import {distinctUntilChanged} from 'rxjs/operators';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {HiddenInputComponent} from '../../../../shared/input/hidden-input/hidden-input.component';
-import {DataInputSaveAction} from '../../../../shared/data-input/data-input-save-action';
-import {TableRow} from '../../../../shared/table/model/table-row';
-import {TableColumn, TableContextMenuItem} from '../../../../shared/table/model/table-column';
-import {WorkflowTablesMenuService} from './service/workflow-tables-menu.service';
-import {WorkflowTablesDataService} from './service/workflow-tables-data.service';
-import {WorkflowTablesStateService} from './service/workflow-tables-state.service';
-import {WorkflowTablesKeyboardService} from './service/workflow-tables-keyboard.service';
+import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
-import {WorkflowConfig, WorkflowStemConfig} from '../../../../core/store/workflows/workflow';
-import {WorkflowTable} from '../model/workflow-table';
-import {DataInputConfiguration} from '../../../../shared/data-input/data-input-configuration';
+import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {WorkflowConfig} from '../../../../core/store/workflows/workflow';
+import {ConstraintData} from '../../../../core/model/data/constraint';
+import {checkOrTransformWorkflowConfig} from '../../../../core/store/workflows/workflow.utils';
+import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'workflow-content',
   templateUrl: './workflow-content.component.html',
   styleUrls: ['./workflow-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    WorkflowTablesService,
-    WorkflowTablesMenuService,
-    WorkflowTablesDataService,
-    WorkflowTablesStateService,
-    WorkflowTablesKeyboardService,
-  ],
 })
 export class WorkflowContentComponent implements OnChanges {
   @Input()
@@ -105,132 +70,30 @@ export class WorkflowContentComponent implements OnChanges {
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();
 
-  @ViewChildren('lmrTable', {read: ElementRef})
-  public tableComponents: QueryList<ElementRef>;
-
-  @ViewChild(HiddenInputComponent)
-  public hiddenInputComponent: HiddenInputComponent;
-
-  public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
-
-  public tables$: Observable<WorkflowTable[]>;
-  public selectedCell$: Observable<SelectedTableCell>;
-  public editedCell$: Observable<EditedTableCell>;
-
-  constructor(private store$: Store<AppState>, private tablesService: WorkflowTablesService) {
-    this.tablesService.setHiddenComponent(() => this.hiddenInputComponent);
-    this.tables$ = this.tablesService.tables$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
-    this.selectedCell$ = this.tablesService.selectedCell$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
-    this.editedCell$ = this.tablesService.editedCell$.pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
-  }
+  public selectedDocument: DocumentModel;
+  public selectedCollection: Collection;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.onlyViewSettingsChanged(changes)) {
-      this.tablesService.onUpdateSettings(this.viewSettings);
-    } else if (
-      changes.collections ||
-      changes.query ||
-      changes.permissions ||
-      changes.viewSettings ||
-      changes.documents ||
-      changes.linkTypes ||
-      changes.linkInstances ||
-      changes.config ||
-      changes.constraintData
-    ) {
-      this.tablesService.onUpdateData(
-        this.collections,
-        this.documents,
-        this.linkTypes,
-        this.linkInstances,
-        this.config,
-        this.permissions,
-        this.query,
-        this.viewSettings,
-        this.constraintData
-      );
+    this.checkSelectedDocument(changes);
+    this.checkConfig();
+  }
+
+  private checkSelectedDocument(changes: SimpleChanges) {
+    if (changes.config || changes.collections || changes.documents) {
+      this.selectedDocument =
+        this.config?.sidebar?.documentId &&
+        this.documents.find(document => document.id === this.config.sidebar.documentId);
+      this.selectedCollection =
+        this.selectedDocument &&
+        this.collections.find(collection => collection.id === this.selectedDocument.collectionId);
     }
   }
 
-  private onlyViewSettingsChanged(changes: SimpleChanges): boolean {
-    return changes.viewSettings && Object.keys(changes).length === 1;
-  }
-
-  public trackByTable(index: number, table: TableModel): string {
-    return table.id;
-  }
-
-  @HostListener('document:keydown', ['$event'])
-  public onKeyDown(event: KeyboardEvent) {
-    this.tablesService.onKeyDown(event);
-  }
-
-  public onColumnMove(table: TableModel, data: {from: number; to: number}) {
-    this.tablesService.onColumnMove(table, data.from, data.to);
-  }
-
-  public onColumnResize(table: TableModel, data: {column: TableColumn; width: number}) {
-    this.tablesService.onColumnResize(table, data.column, data.width);
-  }
-
-  public onTableCellClick(cell: TableCell) {
-    this.tablesService.onCellClick(cell);
-  }
-
-  public onTableCellDoubleClick(cell: TableCell) {
-    this.tablesService.onCellDoubleClick(cell);
-  }
-
-  public onClickOutsideTables() {
-    this.tablesService.resetSelection();
-  }
-
-  public onClickInsideTables(event: MouseEvent) {
-    if (!this.tableComponents.some(component => component.nativeElement.contains(event.target))) {
-      this.tablesService.resetSelection();
+  private checkConfig() {
+    const previousConfig = {...this.config};
+    this.config = checkOrTransformWorkflowConfig(this.config, this.query, this.collections, this.linkTypes);
+    if (!deepObjectsEquals(previousConfig, this.config)) {
+      this.configChange.emit(this.config);
     }
-  }
-
-  public onTableCellCancel(data: {cell: TableCell; action?: DataInputSaveAction}) {
-    this.tablesService.resetCellSelection(data.cell, data.action);
-  }
-
-  public onNewHiddenInput(input: string) {
-    this.tablesService.newHiddenInput(input);
-  }
-
-  public onRowNewValue(event: {row: TableRow; column: TableColumn; value: any; action: DataInputSaveAction}) {
-    this.tablesService.onRowNewValue(event.row, event.column, event.value, event.action);
-  }
-
-  public onColumnRename(data: {column: TableColumn; name: string}) {
-    this.tablesService.onColumnRename(data.column, data.name);
-  }
-
-  public onColumnMenuSelected(data: {column: TableColumn; item: TableContextMenuItem}) {
-    this.tablesService.onColumnMenuSelected(data.column, data.item);
-  }
-
-  public onRowMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
-    this.tablesService.onRowMenuSelected(data.row, data.column, data.item);
-  }
-
-  public onColumnHiddenMenuSelected(columns: TableColumn[]) {
-    this.tablesService.onColumnHiddenMenuSelected(columns);
-  }
-
-  public onColumnSortChanged(data: {column: TableColumn; type: AttributeSortType | null}) {
-    this.tablesService.onColumnSortChanged(data.column, data.type);
-  }
-
-  public onStemConfigChange(stemConfig: WorkflowStemConfig, index: number) {
-    const stemsConfigs = [...this.config.stemsConfigs];
-    stemsConfigs.splice(index, 1, stemConfig);
-    const newConfig = {...this.config, stemsConfigs};
-    this.configChange.emit(newConfig);
-  }
-
-  public onRowDetail(row: TableRow) {
-    this.tablesService.onRowDetail(row);
   }
 }

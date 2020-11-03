@@ -1,59 +1,26 @@
-<ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
+<resizable-sidebar [opened]="!!selectedDocument && !!selectedCollection">
 
-  <hidden-input (newInput)="onNewHiddenInput($event)"
-                class="position-fixed">
-  </hidden-input>
+  <workflow-tables class="d-block mx-3 content"
+                   [collections]="collections"
+                   [documents]="documents"
+                   [linkTypes]="linkTypes"
+                   [linkInstances]="linkInstances"
+                   [config]="config"
+                   [canManageConfig]="canManageConfig"
+                   [query]="query"
+                   [permissions]="permissions"
+                   [viewSettings]="viewSettings"
+                   [constraintData]="constraintData"
+                   (configChange)="configChange.emit($event)">
+  </workflow-tables>
 
-  <div *ngFor="let stemConfig of config.stemsConfigs; let index = index">
+  <workflow-sidebar class="d-block sidebar"
+                    *ngIf="selectedDocument && selectedCollection"
+                    [viewSettings]="viewSettings"
+                    [query]="query"
+                    [permissions]="permissions && permissions[selectedCollection.id]"
+                    [collection]="selectedCollection"
+                    [document]="selectedDocument">
+  </workflow-sidebar>
 
-    <workflow-toolbar [config]="stemConfig"
-                      [linkTypes]="linkTypes"
-                      [collections]="collections"
-                      [stem]="stemConfig.stem"
-                      (configChange)="onStemConfigChange($event, index)">
-    </workflow-toolbar>
-
-    <div
-      *ngIf="{selectedCell: selectedCell$ | async, editedCell: editedCell$ | async} as data"
-      class="mb-3"
-      (clickOutside)="onClickOutsideTables()"
-      (click)="onClickInsideTables($event)">
-      <ng-container *ngFor="let table of tables$ | async; trackBy: trackByTable">
-        <data-input-preview *ngIf="table.title" class="font-weight-bold d-block mb-2 mt-1"
-                            [dataValue]="table.title.dataValue"
-                            [configuration]="configuration"
-                            [constraint]="table.title.constraint">
-        </data-input-preview>
-        <lmr-table
-          #lmrTable
-          [style.height.px]="(table.rows.length > 6 ? 7 * 37 : (table.rows.length + 1) * 37) + 20"
-          [tableModel]="table"
-          [constraintData]="constraintData"
-          [selectedCell]="data.selectedCell"
-          [editedCell]="data.editedCell"
-          (columnMove)="onColumnMove(table, $event)"
-          (columnResize)="onColumnResize(table, $event)"
-          (columnRename)="onColumnRename($event)"
-          (columnMenuSelected)="onColumnMenuSelected($event)"
-          (columnHiddenMenuSelected)="onColumnHiddenMenuSelected($event)"
-          (columnSortChanged)="onColumnSortChanged($event)"
-          (cellClick)="onTableCellClick($event)"
-          (cellCancel)="onTableCellCancel($event)"
-          (cellDoubleClick)="onTableCellDoubleClick($event)"
-          (rowNewValue)="onRowNewValue($event)"
-          (rowMenuSelected)="onRowMenuSelected($event)"
-          (rowDetail)="onRowDetail($event)">
-        </lmr-table>
-      </ng-container>
-    </div>
-
-  </div>
-
-
-</ng-container>
-
-<ng-template #notDisplayable>
-  <invalid-query class="w-100"
-                 [minStems]="1">
-  </invalid-query>
-</ng-template>
+</resizable-sidebar>

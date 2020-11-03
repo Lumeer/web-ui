@@ -24,21 +24,33 @@ import {WorkflowPerspectiveComponent} from './workflow-perspective.component';
 import {WorkflowPerspectiveRoutingModule} from './workflow-perspective-routing.module';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
 import {TableModule} from '../../../shared/table/table.module';
-import {WorkflowContentComponent} from './content/workflow-content.component';
+import {WorkflowTablesComponent} from './content/tables/workflow-tables.component';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
 import {ClickOutsideModule} from 'ng-click-outside';
 import {InputModule} from '../../../shared/input/input.module';
-import {WorkflowToolbarComponent} from './content/toolbar/workflow-toolbar.component';
+import {WorkflowToolbarComponent} from './content/tables/toolbar/workflow-toolbar.component';
 import {SelectModule} from '../../../shared/select/select.module';
 import {WorkflowSelectedItemPipe} from './pipes/workflow-selected-item.pipe';
+import {FilterStemTablesPipe} from './pipes/filter-stem-tables.pipe';
+import {ResizerDirective} from './content/tables/resizer.directive';
+import {WorkflowContentComponent} from './content/workflow-content.component';
+import {ResizableSidebarModule} from '../../../shared/resizable-sidebar/resizable-sidebar.module';
+import {WorkflowSidebarComponent} from './content/sidebar/workflow-sidebar.component';
+import {DataResourceModule} from '../../../shared/data-resource/data-resource.module';
+import {SettingsModule} from '../../../shared/settings/settings.module';
+import {LinksListModule} from '../../../shared/links/links-list/links-list.module';
 
 @NgModule({
   declarations: [
     WorkflowPerspectiveComponent,
-    WorkflowContentComponent,
+    WorkflowTablesComponent,
     WorkflowToolbarComponent,
     WorkflowSelectedItemPipe,
+    FilterStemTablesPipe,
+    ResizerDirective,
+    WorkflowContentComponent,
+    WorkflowSidebarComponent,
   ],
   imports: [
     CommonModule,
@@ -51,6 +63,11 @@ import {WorkflowSelectedItemPipe} from './pipes/workflow-selected-item.pipe';
     ClickOutsideModule,
     InputModule,
     SelectModule,
+    ResizableSidebarModule,
+    DataResourceModule,
+    SettingsModule,
+    LinksListModule,
   ],
+  providers: [ResizerDirective],
 })
 export class WorkflowPerspectiveModule {}

@@ -17,25 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, Input} from '@angular/core';
-import {ContextMenuComponent} from 'ngx-contextmenu';
-import {TableContextMenuItem} from '../../../model/table-column';
+import {Pipe, PipeTransform} from '@angular/core';
+import {WorkflowTable} from '../model/workflow-table';
+import {WorkflowStemConfig} from '../../../../core/store/workflows/workflow';
+import {queryStemsAreSame} from '../../../../core/store/navigation/query/query.util';
 
-@Component({
-  selector: 'table-menu',
-  templateUrl: './table-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'filterStemTables',
 })
-export class TableMenuComponent {
-  @Input()
-  public id: string;
-
-  @Input()
-  public items: TableContextMenuItem[];
-
-  @Output()
-  public selected = new EventEmitter<TableContextMenuItem>();
-
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenu: ContextMenuComponent;
+export class FilterStemTablesPipe implements PipeTransform {
+  public transform(tables: WorkflowTable[], stemConfig: WorkflowStemConfig): WorkflowTable[] {
+    return tables.filter(table => queryStemsAreSame(table.stem, stemConfig.stem));
+  }
 }

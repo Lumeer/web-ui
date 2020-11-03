@@ -1,0 +1,12 @@
+<div class="wrapper h-100">
+
+  <div class="content h-100 overflow-auto">
+    <ng-content select=".content"></ng-content>
+  </div>
+
+  <div *ngIf="opened" class="sidebar h-100 overflow-auto" [style.width.vh]="50">
+    <ng-content select=".sidebar"></ng-content>
+  </div>
+
+
+</div>

@@ -25,26 +25,26 @@ import {
   TableCell,
   TableCellType,
   TableModel,
-} from '../../../../../shared/table/model/table-model';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
-import {Query} from '../../../../../core/store/navigation/query/query';
-import {AttributeSortType, ViewSettings} from '../../../../../core/store/views/view';
-import {TableColumn, TableContextMenuItem} from '../../../../../shared/table/model/table-column';
-import {TableRow} from '../../../../../shared/table/model/table-row';
-import {DataRowHiddenComponent} from '../../../../../shared/data/data-row-component';
+} from '../../../../../../shared/table/model/table-model';
+import {Collection} from '../../../../../../core/store/collections/collection';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {Query} from '../../../../../../core/store/navigation/query/query';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
+import {TableColumn, TableContextMenuItem} from '../../../../../../shared/table/model/table-column';
+import {TableRow} from '../../../../../../shared/table/model/table-row';
+import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
-import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
+import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
 import {HeaderMenuId, RowMenuId} from './workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './workflow-tables-data.service';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {WorkflowTablesKeyboardService} from './workflow-tables-keyboard.service';
-import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
-import {WorkflowConfig} from '../../../../../core/store/workflows/workflow';
-import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {WorkflowTable} from '../../model/workflow-table';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
+import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
+import {ConstraintData} from '../../../../../../core/model/data/constraint';
+import {WorkflowTable} from '../../../model/workflow-table';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -242,7 +242,7 @@ export class WorkflowTablesService {
   }
 
   public onColumnResize(changedTable: TableModel, column: TableColumn, width: number) {
-    this.stateService.resizeColumn(changedTable, column, width);
+    this.dataService.resizeColumn(changedTable, column, width);
   }
 
   public onColumnMove(changedTable: TableModel, from: number, to: number) {
@@ -275,5 +275,9 @@ export class WorkflowTablesService {
       viewSettings,
       constraintData
     );
+  }
+
+  public onTableResize(table: WorkflowTable, height: number) {
+    this.dataService.resizeTable(table, height);
   }
 }

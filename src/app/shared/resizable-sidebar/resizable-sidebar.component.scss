@@ -1,0 +1,11 @@
+@import '~src/styles/variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  .sidebar {
+    border-left: 1px solid $gray-200;
+    box-shadow: 1px 0 5px 2px $gray-200;
+  }
+}

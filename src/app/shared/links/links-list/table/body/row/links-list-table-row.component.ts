@@ -73,6 +73,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public documentId: string;
 
   @Input()
+  public allowSelectDocument: boolean;
+
+  @Input()
   public attributeEditing: {documentId?: string; attributeId?: string};
 
   @Input()

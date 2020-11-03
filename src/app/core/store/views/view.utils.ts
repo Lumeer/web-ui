@@ -32,14 +32,15 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {PerspectiveConfig, View, ViewSettings} from './view';
+import {PerspectiveConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
 import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
 import {Query} from '../navigation/query/query';
 import {ChartConfig} from '../charts/chart';
-import {isWorkflowConfigChanged} from '../workflows/workflow.utils';
+import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
+import {WorkflowConfig} from '../workflows/workflow';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -47,8 +48,7 @@ export function isViewConfigChanged(
   perspectiveConfig: any,
   documentsMap: Record<string, DocumentModel>,
   collectionsMap: Record<string, Collection>,
-  linkTypesMap: Record<string, LinkType>,
-  query: Query
+  linkTypesMap: Record<string, LinkType>
 ): boolean {
   switch (perspective) {
     case Perspective.Table:
@@ -66,7 +66,7 @@ export function isViewConfigChanged(
     case Perspective.Pivot:
       return isPivotConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Workflow:
-      return isWorkflowConfigChanged(viewConfig, perspectiveConfig, query);
+      return isWorkflowConfigChanged(viewConfig, perspectiveConfig);
     default:
       return !deepObjectsEquals(viewConfig, perspectiveConfig);
   }
@@ -81,6 +81,8 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
       return createCalendarSaveConfig(config as CalendarConfig);
     case Perspective.Table:
       return createTableSaveConfig(config as TableConfig);
+    case Perspective.Workflow:
+      return createWorkflowSaveConfig(config as WorkflowConfig);
     case Perspective.Chart:
       return createChartSaveConfig(config as ChartConfig);
     default:

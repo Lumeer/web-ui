@@ -1,0 +1,17 @@
+<div class="p-3">
+  <data-resource-detail [resource]="collection"
+                        [dataResource]="document"
+                        [query]="query"
+                        [ignoreSettingsOnReadPermission]="true"
+                        [permissions]="permissions"
+                        [attributeSettings]="viewSettings | resourceAttributesSettings:collectionResourceType:collection.id">
+  </data-resource-detail>
+  <links-list class="d-block mt-5"
+              [document]="document"
+              [preventEventBubble]="true"
+              [ignoreSettingsOnReadPermission]="true"
+              [allowSelectDocument]="false"
+              [collection]="collection"
+              [viewSettings]="viewSettings">
+  </links-list>
+</div>

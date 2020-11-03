@@ -94,6 +94,9 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   public ignoreSettingsOnReadPermission: boolean;
 
   @Input()
+  public allowSelectDocument: boolean;
+
+  @Input()
   public viewSettings: ViewSettings;
 
   @ViewChild('tableWrapper')

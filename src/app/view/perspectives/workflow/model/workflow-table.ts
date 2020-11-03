@@ -21,11 +21,17 @@ import {TableModel} from '../../../../shared/table/model/table-model';
 import {DataResource} from '../../../../core/model/resource';
 import {DataValue} from '../../../../core/model/data-value';
 import {Constraint} from '../../../../core/model/constraint';
+import {QueryStem} from '../../../../core/store/navigation/query/query';
 
 export interface WorkflowTable extends TableModel {
   title: {
-    dataValue?: DataValue;
-    constraint?: Constraint;
-    dataResources?: DataResource[];
+    value: any;
+    dataValue: DataValue;
+    constraint: Constraint;
+    dataResources: DataResource[];
   };
+  stem: QueryStem;
+  height: number;
+  minHeight: number;
+  maxHeight: number;
 }

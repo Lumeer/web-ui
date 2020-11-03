@@ -20,13 +20,13 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 import {TableComponent} from './table.component';
 import {TableHeaderComponent} from './content/header/table-header.component';
 import {TableRowComponent} from './content/row/table-row.component';
 import {DataInputModule} from '../data-input/data-input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {ColumnHandleLeftPipe} from './pipes/column-handle-left.pipe';
-import {ScrollingModule} from '@angular/cdk/scrolling';
 import {TableItemSizeDirective} from './strategy/table-item-size-directive';
 import {TableAlternativeHeaderComponent} from './content/alternative-header/table-alternative-header.component';
 import {TableResizeHeaderComponent} from './content/resize-header/table-resize-header.component';
@@ -45,6 +45,7 @@ import {TableHeaderHiddenComponent} from './content/header/cell/hidden/table-hea
 import {GroupTableColumnsPipe} from './pipes/group-table-columns.pipe';
 import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/table-header-hidden-menu.component';
 import {ColumnHeaderRestrictedNamesPipe} from './pipes/column-header-restricted-names.pipe';
+import {ResizableSidebarModule} from '../resizable-sidebar/resizable-sidebar.module';
 
 @NgModule({
   declarations: [
@@ -77,6 +78,7 @@ import {ColumnHeaderRestrictedNamesPipe} from './pipes/column-header-restricted-
     InputModule,
     ClickOutsideModule,
     ContextMenuModule,
+    ResizableSidebarModule,
   ],
   exports: [TableComponent],
 })

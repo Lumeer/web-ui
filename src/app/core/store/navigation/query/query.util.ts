@@ -270,8 +270,26 @@ export function queryWithoutFilters(query: Query): Query {
     return query;
   }
 
-  const stems: QueryStem[] = query.stems && query.stems.map(stem => ({...stem, filters: [], linkFilters: []}));
+  const stems: QueryStem[] = query.stems && query.stems.map(stem => queryStemWithoutFilters(stem));
   return {...query, stems, fulltexts: []};
+}
+
+export function queryStemWithoutFilters(stem: QueryStem): QueryStem {
+  return stem && {...stem, filters: [], linkFilters: []};
+}
+
+export function queryStemsAreSame(s1: QueryStem, s2: QueryStem): boolean {
+  return deepObjectsEquals(queryStemWithoutFilters(s1), queryStemWithoutFilters(s2));
+}
+
+export function uniqueStems(stems: QueryStem[]): QueryStem[] {
+  return (stems || []).reduce((currentStems, currentStem) => {
+    if (!currentStems.some(stem => queryStemsAreSame(stem, currentStem))) {
+      currentStems.push(currentStem);
+    }
+
+    return currentStems;
+  }, []);
 }
 
 export function filterStemByLinkIndex(stem: QueryStem, linkIndex: number, linkTypes: LinkType[]): QueryStem {
