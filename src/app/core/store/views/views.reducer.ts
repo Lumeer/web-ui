@@ -39,6 +39,8 @@ export function viewsReducer(state: ViewsState = initialViewsState, action: View
       return {...state, globalConfig: {}};
     case ViewsActionType.SET_SIDEBAR_OPENED:
       return {...state, globalConfig: {...state.globalConfig, sidebarOpened: action.payload.opened}};
+    case ViewsActionType.SET_PANEL_WIDTH:
+      return {...state, globalConfig: {...state.globalConfig, panelWidth: action.payload.width}};
     case ViewsActionType.ADD_FAVORITE_SUCCESS:
       return viewsAdapter.updateOne({id: action.payload.viewId, changes: {favorite: true}}, state);
     case ViewsActionType.REMOVE_FAVORITE_SUCCESS:

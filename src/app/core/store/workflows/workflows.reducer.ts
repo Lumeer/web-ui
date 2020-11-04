@@ -19,7 +19,7 @@
 
 import {initialWorkflowsState, workflowsAdapter, WorkflowsState} from './workflow.state';
 import {WorkflowsAction, WorkflowsActionType} from './workflows.action';
-import {WorkflowColumnSettings, WorkflowSidebarConfig} from './workflow';
+import {WorkflowColumnSettings} from './workflow';
 import {queryStemsAreSame, queryStemWithoutFilters} from '../navigation/query/query.util';
 
 export function workflowsReducer(
@@ -41,30 +41,14 @@ export function workflowsReducer(
         state
       );
     case WorkflowsActionType.RESET_OPENED_DOCUMENT:
-      return setSidebarProperty(state, action.payload.workflowId, {documentId: undefined});
+      return {...state, selectedDocumentId: undefined};
     case WorkflowsActionType.SET_OPENED_DOCUMENT:
-      return setSidebarProperty(state, action.payload.workflowId, {documentId: action.payload.documentId});
-    case WorkflowsActionType.SET_SIDEBAR_WIDTH:
-      return setSidebarProperty(state, action.payload.workflowId, {width: action.payload.width});
+      return {...state, selectedDocumentId: action.payload.documentId};
     case WorkflowsActionType.CLEAR:
       return initialWorkflowsState;
     default:
       return state;
   }
-}
-
-function setSidebarProperty(
-  state: WorkflowsState,
-  workflowId: string,
-  params: Partial<Record<keyof WorkflowSidebarConfig, any>>
-): WorkflowsState {
-  const workflow = state.entities[workflowId];
-  if (workflow) {
-    const sidebar = <WorkflowSidebarConfig>{...(workflow.config.sidebar || {}), ...params};
-    return workflowsAdapter.updateOne({id: workflowId, changes: {config: {...workflow.config, sidebar}}}, state);
-  }
-
-  return state;
 }
 
 function setTableHeight(state: WorkflowsState, action: WorkflowsAction.SetTableHeight): WorkflowsState {

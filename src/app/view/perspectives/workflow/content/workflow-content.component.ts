@@ -67,8 +67,20 @@ export class WorkflowContentComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
+  @Input()
+  public selectedDocumentId: string;
+
+  @Input()
+  public sidebarWidth: number;
+
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();
+
+  @Output()
+  public closeSidebar = new EventEmitter();
+
+  @Output()
+  public sidebarResize = new EventEmitter<number>();
 
   public selectedDocument: DocumentModel;
   public selectedCollection: Collection;
@@ -79,13 +91,9 @@ export class WorkflowContentComponent implements OnChanges {
   }
 
   private checkSelectedDocument(changes: SimpleChanges) {
-    if (changes.config || changes.collections || changes.documents) {
-      this.selectedDocument =
-        this.config?.sidebar?.documentId &&
-        this.documents.find(document => document.id === this.config.sidebar.documentId);
-      this.selectedCollection =
-        this.selectedDocument &&
-        this.collections.find(collection => collection.id === this.selectedDocument.collectionId);
+    if (changes.selectedDocumentId || changes.collections || changes.documents) {
+      this.selectedDocument = this.selectedDocumentId && this.documents.find(document => document.id === this.selectedDocumentId);
+      this.selectedCollection = this.selectedDocument && this.collections.find(collection => collection.id === this.selectedDocument.collectionId);
     }
   }
 

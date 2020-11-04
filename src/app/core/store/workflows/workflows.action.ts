@@ -29,7 +29,6 @@ export enum WorkflowsActionType {
   SET_COLUMN_WIDTH = '[Workflow] Set column width',
   SET_TABLE_HEIGHT = '[Workflow] Set table height',
   SET_OPENED_DOCUMENT = '[Workflow] Set opened document',
-  SET_SIDEBAR_WIDTH = '[Workflow] Set sidebar width',
   RESET_OPENED_DOCUMENT = '[Workflow] Reset opened document',
 
   CLEAR = '[Workflow] Clear',
@@ -79,19 +78,11 @@ export namespace WorkflowsAction {
   export class SetOpenedDocument implements Action {
     public readonly type = WorkflowsActionType.SET_OPENED_DOCUMENT;
 
-    public constructor(public payload: {workflowId: string; documentId: string}) {}
-  }
-
-  export class SetSidebarWidth implements Action {
-    public readonly type = WorkflowsActionType.SET_SIDEBAR_WIDTH;
-
-    public constructor(public payload: {workflowId: string; width: number}) {}
+    public constructor(public payload: {documentId: string}) {}
   }
 
   export class ResetOpenedDocument implements Action {
     public readonly type = WorkflowsActionType.RESET_OPENED_DOCUMENT;
-
-    public constructor(public payload: {workflowId: string}) {}
   }
 
   export class Clear implements Action {
@@ -104,7 +95,6 @@ export namespace WorkflowsAction {
     | SetConfig
     | SetTableHeight
     | SetColumnWidth
-    | SetSidebarWidth
     | SetOpenedDocument
     | ResetOpenedDocument
     | Clear;

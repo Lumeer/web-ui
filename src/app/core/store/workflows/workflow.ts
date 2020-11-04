@@ -19,7 +19,6 @@
 
 import {QueryStem} from '../navigation/query/query';
 import {QueryAttribute, QueryResource} from '../../model/query-attribute';
-import {AttributeSortType} from '../views/view';
 
 export const DEFAULT_WORKFLOW_ID = 'default';
 
@@ -33,12 +32,6 @@ export interface WorkflowConfig {
   version: WorkflowConfigVersion;
   tables: WorkflowTableConfig[];
   columns: WorkflowColumnsSettings;
-  sidebar?: WorkflowSidebarConfig;
-}
-
-export interface WorkflowSidebarConfig {
-  documentId: string;
-  width?: number;
 }
 
 export interface WorkflowTableConfig {

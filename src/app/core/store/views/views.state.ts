@@ -153,6 +153,8 @@ const selectViewGlobalConfig = createSelector(selectViewsState, state => state.g
 
 export const selectSidebarOpened = createSelector(selectViewGlobalConfig, config => config.sidebarOpened);
 
+export const selectPanelWidth = createSelector(selectViewGlobalConfig, config => config.panelWidth);
+
 export const selectPerspectiveDefaultViewConfig = createSelector(
   selectViewsState,
   selectPerspective,

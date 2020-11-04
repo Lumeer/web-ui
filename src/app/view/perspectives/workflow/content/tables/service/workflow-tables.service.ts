@@ -175,6 +175,7 @@ export class WorkflowTablesService {
   }
 
   public resetSelection() {
+    this.dataService.resetSidebar();
     this.stateService.resetSelection();
   }
 

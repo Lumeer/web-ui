@@ -43,7 +43,7 @@ import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {deepObjectsEquals} from '../../../../../shared/utils/common.utils';
+import {deepObjectsEquals, preventEvent} from '../../../../../shared/utils/common.utils';
 import {HiddenInputComponent} from '../../../../../shared/input/hidden-input/hidden-input.component';
 import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
 import {TableRow} from '../../../../../shared/table/model/table-row';
@@ -191,6 +191,11 @@ export class WorkflowTablesComponent implements OnChanges {
   }
 
   public onClickInsideTables(event: MouseEvent) {
+    this.checkClickOutsideTables(event);
+  }
+
+  @HostListener('document:click', ['$event'])
+  private onDocumentClick(event: MouseEvent) {
     this.checkClickOutsideTables(event);
   }
 

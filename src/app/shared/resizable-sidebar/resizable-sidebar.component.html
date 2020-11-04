@@ -1,12 +1,23 @@
-<div class="wrapper h-100">
+<div class="wrapper h-100 position-relative">
 
   <div class="content h-100 overflow-auto">
     <ng-content select=".content"></ng-content>
   </div>
 
-  <div *ngIf="opened" class="sidebar h-100 overflow-auto" [style.width.vh]="50">
-    <ng-content select=".sidebar"></ng-content>
+  <div *ngIf="opened" class="sidebar h-100 position-relative" [@enterAnimation]=""
+       [style.width]="width ? width + 'px' : 50 + 'vw'" (click)="$event.stopPropagation()">
+    <div class="resizer" horizontal-resizer
+         (onResize)="widthChanged.emit($event)"
+         (resizeStart)="resizeOverlay$.next(true)"
+         (resizeEnd)="resizeOverlay$.next(false)">
+    </div>
+    <div class="overflow-auto h-100 w-100">
+      <ng-content select=".sidebar"></ng-content>
+    </div>
   </div>
 
 
+</div>
+
+<div class="resize-overlay" *ngIf="resizeOverlay$ | async" (click)="$event.stopPropagation(); resizeOverlay$.next(false)">
 </div>

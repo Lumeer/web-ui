@@ -1,4 +1,20 @@
 @import '~src/styles/variables';
+@import '~src/styles/bootstrap_var';
+
+:host {
+  position: relative;
+}
+
+.resize-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(2, 229, 175, 0.1);
+  z-index: 1000;
+}
+
 
 .wrapper {
   display: grid;
@@ -7,5 +23,34 @@
   .sidebar {
     border-left: 1px solid $gray-200;
     box-shadow: 1px 0 5px 2px $gray-200;
+    min-width: min(100vh, 400px);
+    max-width: 60vw;
+    overflow-y: auto;
+  }
+
+  .resizer {
+    width: 10px;
+    height: 100%;
+    cursor: col-resize;
+    position: absolute;
+    left: -5px;
+  }
+}
+
+@include media-breakpoint-down(sm) {
+  .wrapper .sidebar {
+    max-width: 100vw;
+  }
+}
+
+@include media-breakpoint-between(sm, lg) {
+  .wrapper .sidebar {
+    max-width: 70vw;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+  .wrapper .sidebar {
+    max-width: 65vw;
   }
 }

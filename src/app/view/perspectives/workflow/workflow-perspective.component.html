@@ -10,5 +10,9 @@
                   [permissions]="permissions$ | async"
                   [viewSettings]="viewSettings$ |async"
                   [constraintData]="constraintData$ | async"
-                  (configChange)="onConfigChanged($event)">
+                  [selectedDocumentId]="selectedDocumentId$ | async"
+                  [sidebarWidth]="panelWidth$ | async"
+                  (configChange)="onConfigChanged($event)"
+                  (closeSidebar)="onCloseSidebar()"
+                  (sidebarResize)="setSidebarWidth($event)">
 </workflow-content>

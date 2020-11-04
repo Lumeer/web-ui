@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -41,7 +41,6 @@ import {
   switchMap,
   take,
   tap,
-  withLatestFrom,
 } from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
@@ -50,14 +49,19 @@ import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectPanelWidth} from '../../../core/store/views/views.state';
 import {DEFAULT_WORKFLOW_ID, WorkflowConfig} from '../../../core/store/workflows/workflow';
-import {selectWorkflowById, selectWorkflowConfig} from '../../../core/store/workflows/workflow.state';
+import {
+  selectWorkflowById,
+  selectWorkflowConfig,
+  selectWorkflowSelectedDocumentId
+} from '../../../core/store/workflows/workflow.state';
 import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {ViewsAction} from '../../../core/store/views/views.action';
 
 @Component({
   selector: 'workflow-perspective',
@@ -65,9 +69,9 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'd-block h-100'},
 })
-export class WorkflowPerspectiveComponent implements OnInit {
+export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
-  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
+  public documentsAndLinks$: Observable<{ documents: DocumentModel[]; linkInstances: LinkInstance[] }>;
   public linkTypes$: Observable<LinkType[]>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
@@ -75,11 +79,14 @@ export class WorkflowPerspectiveComponent implements OnInit {
   public viewSettings$: Observable<ViewSettings>;
   public config$: Observable<WorkflowConfig>;
   public constraintData$: Observable<ConstraintData>;
+  public selectedDocumentId$: Observable<string>;
+  public panelWidth$: Observable<number>;
 
   private subscriptions = new Subscription();
   private workflowId: string;
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {
+  }
 
   public ngOnInit() {
     this.initWorkflow();
@@ -96,7 +103,7 @@ export class WorkflowPerspectiveComponent implements OnInit {
           view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
         )
       )
-      .subscribe(({workflowId, config}: {workflowId?: string; config?: WorkflowConfig}) => {
+      .subscribe(({workflowId, config}: { workflowId?: string; config?: WorkflowConfig }) => {
         if (workflowId) {
           this.workflowId = workflowId;
           this.store$.dispatch(new WorkflowsAction.AddWorkflow({workflow: {id: workflowId, config}}));
@@ -105,7 +112,7 @@ export class WorkflowPerspectiveComponent implements OnInit {
     this.subscriptions.add(subscription);
   }
 
-  private subscribeToView(previousView: View, view: View): Observable<{workflowId?: string; config?: WorkflowConfig}> {
+  private subscribeToView(previousView: View, view: View): Observable<{ workflowId?: string; config?: WorkflowConfig }> {
     const workflowId = view.code;
     return this.store$.pipe(
       select(selectWorkflowById(workflowId)),
@@ -131,7 +138,7 @@ export class WorkflowPerspectiveComponent implements OnInit {
     );
   }
 
-  private subscribeToDefault(): Observable<{workflowId?: string; config?: WorkflowConfig}> {
+  private subscribeToDefault(): Observable<{ workflowId?: string; config?: WorkflowConfig }> {
     return this.store$.pipe(
       select(selectWorkflowById(DEFAULT_WORKFLOW_ID)),
       take(1),
@@ -155,6 +162,8 @@ export class WorkflowPerspectiveComponent implements OnInit {
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.config$ = this.store$.pipe(select(selectWorkflowConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));
+    this.panelWidth$ = this.store$.pipe(select(selectPanelWidth));
   }
 
   private fetchData(query: Query) {
@@ -166,5 +175,17 @@ export class WorkflowPerspectiveComponent implements OnInit {
     if (this.workflowId) {
       this.store$.dispatch(new WorkflowsAction.SetConfig({workflowId: this.workflowId, config}));
     }
+  }
+
+  public ngOnDestroy() {
+    this.onCloseSidebar();
+  }
+
+  public onCloseSidebar() {
+    this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument());
+  }
+
+  public setSidebarWidth(width: number) {
+    this.store$.dispatch(new ViewsAction.SetPanelWidth({width}));
   }
 }

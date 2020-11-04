@@ -71,6 +71,7 @@ export type PerspectiveConfig =
 
 export interface ViewGlobalConfig {
   sidebarOpened?: boolean;
+  panelWidth?: number;
 }
 
 export interface DefaultViewConfig {

@@ -192,7 +192,7 @@ export class WorkflowTablesDataService {
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData
-  ): {tables: WorkflowTable[]; actions: Action[]} {
+  ): { tables: WorkflowTable[]; actions: Action[] } {
     const collectionsMap = objectsByIdMap(collections);
     const linkTypesMap = objectsByIdMap(linkTypes);
     const linkInstancesMap = objectsByIdMap(linkInstances);
@@ -344,7 +344,7 @@ export class WorkflowTablesDataService {
     linkTypesMap: Record<string, LinkType>,
     viewSettings: ViewSettings,
     query: Query
-  ): {columns: TableColumn[]; actions: Action[]; permissions: AllowedPermissions} {
+  ): { columns: TableColumn[]; actions: Action[]; permissions: AllowedPermissions } {
     const collectionPermissions = queryAttributePermissions(stemConfig.collection, permissions, linkTypesMap);
     const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
 
@@ -371,7 +371,7 @@ export class WorkflowTablesDataService {
     linkTypesMap: Record<string, LinkType>,
     viewSettings: ViewSettings,
     query: Query
-  ): {columns: TableColumn[]; actions: Action[]; linkType?: LinkType; permissions?: AllowedPermissions} {
+  ): { columns: TableColumn[]; actions: Action[]; linkType?: LinkType; permissions?: AllowedPermissions } {
     if (stemConfig.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex) {
       const attributesResourcesOrder = queryStemAttributesResourcesOrder(
         stemConfig.stem,
@@ -417,7 +417,7 @@ export class WorkflowTablesDataService {
     query: Query,
     settings: ResourceAttributeSettings[],
     columnsSettings: WorkflowColumnSettings[]
-  ): {columns: TableColumn[]; actions: Action[]} {
+  ): { columns: TableColumn[]; actions: Action[] } {
     const isCollection = resourceType === AttributesResourceType.Collection;
     const defaultAttributeId = isCollection ? getDefaultAttributeId(resource) : null;
     const columnSettingsMap = columnsSettings.reduce(
@@ -518,7 +518,7 @@ export class WorkflowTablesDataService {
   private createRows(
     tableId: string,
     currentRows: TableRow[],
-    data: {document: DocumentModel; linkInstance?: LinkInstance}[],
+    data: { document: DocumentModel; linkInstance?: LinkInstance }[],
     linkColumns: TableColumn[],
     collectionColumns: TableColumn[],
     linkPermissions: AllowedPermissions,
@@ -756,14 +756,7 @@ export class WorkflowTablesDataService {
   }
 
   public showRowDocumentDetail(row: TableRow) {
-    this.setWorkflowConfig(workflowId =>
-      this.store$.dispatch(
-        new WorkflowsAction.SetOpenedDocument({
-          workflowId,
-          documentId: row.documentId,
-        })
-      )
-    );
+      this.store$.dispatch(new WorkflowsAction.SetOpenedDocument({documentId: row.documentId}));
   }
 
   public showRowDetail(row: TableRow, column: TableColumn) {
@@ -973,12 +966,16 @@ export class WorkflowTablesDataService {
     copiedColumn.menuItems.push(...this.menuService.createHeaderMenu(permissions, copiedColumn, true));
     return copiedColumn;
   }
+
+  public resetSidebar() {
+    this.store$.dispatch(new WorkflowsAction.ResetOpenedDocument());
+  }
 }
 
 function createRowDataFromAggregated(
   item: AggregatedDataItem,
   linkInstancesMap: Record<string, LinkInstance>
-): {document: DocumentModel; linkInstance?: LinkInstance}[] {
+): { document: DocumentModel; linkInstance?: LinkInstance }[] {
   const dataResources = <DocumentModel[]>item.dataResources || [];
   const dataResourcesChains = item.dataResourcesChains;
   return dataResources.reduce(

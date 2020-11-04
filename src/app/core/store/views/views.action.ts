@@ -68,6 +68,7 @@ export enum ViewsActionType {
 
   RESET_VIEW_GLOBAL_CONFIG = '[Views] Reset View Global Config',
   SET_SIDEBAR_OPENED = '[Views] Set Sidebar Opened',
+  SET_PANEL_WIDTH = '[Views] Set Panel Opened',
 
   CLEAR = '[Views] Clear',
 }
@@ -197,6 +198,12 @@ export namespace ViewsAction {
     public constructor(public payload: {opened: boolean}) {}
   }
 
+  export class SetPanelWidth implements Action {
+    public readonly type = ViewsActionType.SET_PANEL_WIDTH;
+
+    public constructor(public payload: {width: number}) {}
+  }
+
   export class AddFavorite implements Action {
     public readonly type = ViewsActionType.ADD_FAVORITE;
 
@@ -303,6 +310,7 @@ export namespace ViewsAction {
     | RemoveFavoriteSuccess
     | RemoveFavoriteFailure
     | SetSidebarOpened
+    | SetPanelWidth
     | SetDefaultConfig
     | ResetDefaultConfigBySnapshot
     | ResetViewConfig

@@ -20,9 +20,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {ResizableSidebarComponent} from './resizable-sidebar.component';
+import {HorizontalResizerDirective} from './horizontal-resizer.directive';
 
 @NgModule({
-  declarations: [ResizableSidebarComponent],
+  declarations: [ResizableSidebarComponent, HorizontalResizerDirective],
   imports: [CommonModule],
   exports: [ResizableSidebarComponent],
 })

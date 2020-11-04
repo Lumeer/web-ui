@@ -18,7 +18,6 @@
 
       <div
         class="mb-3"
-        (clickOutside)="onClickOutsideTables($event)"
         (click)="onClickInsideTables($event)">
         <ng-container *ngFor="let table of data.tables | filterStemTables:stemConfig; trackBy: trackByTable">
           <data-input-preview *ngIf="table.title" class="font-weight-bold d-block mb-2"
@@ -52,7 +51,7 @@
           </lmr-table>
 
           <div resizer class="resizer d-flex align-items-center justify-content-center"
-               *ngIf="table.maxHeight > table.minHeight"
+               *ngIf="table.maxHeight >= table.minHeight"
                [reference]="table.id"
                (onResize)="onTableResize(table, $event)"
                i18n-title="@@perspective.workflow.table.resize"

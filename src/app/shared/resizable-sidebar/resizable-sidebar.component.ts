@@ -18,12 +18,28 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {animate, style, transition, trigger} from '@angular/animations';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'resizable-sidebar',
   templateUrl: './resizable-sidebar.component.html',
   styleUrls: ['./resizable-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger(
+      'enterAnimation', [
+        transition(':enter', [
+          style({transform: 'translateX(100%)', width: 0}),
+          animate('300ms ease-in-out', style({transform: 'translateX(0)', width: '*'}))
+        ]),
+        transition(':leave', [
+          style({transform: 'translateX(0)', width: '*'}),
+          animate('300ms ease-in-out', style({transform: 'translateX(100%)', width: '0'}))
+        ])
+      ]
+    )
+  ],
 })
 export class ResizableSidebarComponent {
   @Input()
@@ -34,4 +50,6 @@ export class ResizableSidebarComponent {
 
   @Output()
   public widthChanged = new EventEmitter<number>();
+
+  public resizeOverlay$ = new BehaviorSubject(false);
 }
