@@ -30,6 +30,7 @@ import {
   selectDefaultPalette,
 } from '../../model/data/constraint-config';
 import {Attribute, AttributeFunction} from './collection';
+import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 
 export function convertAttributeDtoToModel(dto: AttributeDto, correlationId?: string): Attribute {
   return {
@@ -53,7 +54,7 @@ export function convertAttributeModelToDto(model: Attribute): AttributeDto {
 
 function convertAttributeConstraintDtoToModel(dto: ConstraintDto): Constraint {
   if (!dto) {
-    return null;
+    return new UnknownConstraint();
   }
 
   const config = convertConstraintConfigDtoToModel(dto.type, dto.config);

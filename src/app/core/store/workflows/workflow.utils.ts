@@ -113,17 +113,13 @@ function createDefaultConfig(query: Query): WorkflowConfig {
 }
 
 export function createWorkflowSaveConfig(config: WorkflowConfig): WorkflowConfig {
-  const saveConfig = config && {
-    ...config,
-    tables: cleanWorkflowTables(config),
-    columns: cleanWorkflowColumns(config),
-  };
-
-  if (saveConfig && !saveConfig.sidebar?.documentId) {
-    delete saveConfig.sidebar;
-  }
-
-  return saveConfig;
+  return (
+    config && {
+      ...config,
+      tables: cleanWorkflowTables(config),
+      columns: cleanWorkflowColumns(config),
+    }
+  );
 }
 
 function cleanWorkflowTables(config: WorkflowConfig): WorkflowTableConfig[] {

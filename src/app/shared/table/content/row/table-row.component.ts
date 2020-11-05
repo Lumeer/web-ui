@@ -65,6 +65,9 @@ export class TableRowComponent implements OnChanges {
   @Input()
   public editedCell: EditedTableCell;
 
+  @Input()
+  public detailColumnId: string;
+
   @Output()
   public onClick = new EventEmitter<string>();
 
@@ -185,7 +188,12 @@ export class TableRowComponent implements OnChanges {
   }
 
   public onDataInputClick(column: TableColumn, event: MouseEvent) {
-    if (column && (this.editedCell?.columnId !== column.id || this.editedCell?.rowId !== this.row.id)) {
+    if (
+      column &&
+      (this.editedCell?.columnId !== column.id ||
+        this.editedCell?.rowId !== this.row.id ||
+        this.editedCell?.linkId !== this.row.linkInstanceId)
+    ) {
       this.onClick.emit(column.id);
     }
   }

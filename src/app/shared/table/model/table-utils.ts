@@ -66,7 +66,12 @@ export function isTableCellSelected(
   if (type === TableCellType.Header || type === TableCellType.Footer) {
     return selectedCell.columnId === column.id;
   }
-  return selectedCell.columnId === column.id && selectedCell.rowId === row?.id;
+
+  const isSameRow = selectedCell.columnId === column.id && selectedCell.rowId === row?.id;
+  if (column.linkTypeId) {
+    return isSameRow && row?.linkInstanceId === selectedCell.linkId;
+  }
+  return isSameRow;
 }
 
 export function isTableColumnDirectlyEditable(column: TableColumn): boolean {

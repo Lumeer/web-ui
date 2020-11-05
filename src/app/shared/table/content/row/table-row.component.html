@@ -47,7 +47,7 @@
                     [items]="group.column.collectionId ? row.documentMenuItems : row.linkMenuItems"
                     (selected)="onMenuSelected(row, group.column, $event)">
         </table-menu>
-        <div class="detail-trigger small px-2 btn-link" *ngIf="index === 0"
+        <div class="detail-trigger small px-2 btn-link" *ngIf="group.column && group.column.id === detailColumnId"
              (click)="onDetailClick($event)"
              (dblclick)="$event.preventDefault(); $event.stopPropagation()">Detail&nbsp;></div>
       </td>

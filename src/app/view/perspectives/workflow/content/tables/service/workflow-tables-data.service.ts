@@ -81,6 +81,7 @@ import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
 import {numberOfDiffColumnsBefore} from '../../../../../../shared/table/model/table-utils';
 import {selectWorkflowId} from '../../../../../../core/store/workflows/workflow.state';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
+import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 
 interface PendingRowUpdate {
   row: TableRow;
@@ -192,7 +193,7 @@ export class WorkflowTablesDataService {
     query: Query,
     viewSettings: ViewSettings,
     constraintData: ConstraintData
-  ): { tables: WorkflowTable[]; actions: Action[] } {
+  ): {tables: WorkflowTable[]; actions: Action[]} {
     const collectionsMap = objectsByIdMap(collections);
     const linkTypesMap = objectsByIdMap(linkTypes);
     const linkInstancesMap = objectsByIdMap(linkInstances);
@@ -266,7 +267,7 @@ export class WorkflowTablesDataService {
             const rows = this.createRows(
               tableId,
               currentTable?.rows || [],
-              createRowDataFromAggregated(childItem, linkInstancesMap),
+              createRowDataFromAggregated(childItem, collectionsMap, linkInstancesMap, viewSettings, constraintData),
               linkColumns,
               collectionColumns,
               linkPermissions,
@@ -344,7 +345,7 @@ export class WorkflowTablesDataService {
     linkTypesMap: Record<string, LinkType>,
     viewSettings: ViewSettings,
     query: Query
-  ): { columns: TableColumn[]; actions: Action[]; permissions: AllowedPermissions } {
+  ): {columns: TableColumn[]; actions: Action[]; permissions: AllowedPermissions} {
     const collectionPermissions = queryAttributePermissions(stemConfig.collection, permissions, linkTypesMap);
     const collectionSettings = viewSettings?.attributes?.collections?.[collection.id] || [];
 
@@ -371,7 +372,7 @@ export class WorkflowTablesDataService {
     linkTypesMap: Record<string, LinkType>,
     viewSettings: ViewSettings,
     query: Query
-  ): { columns: TableColumn[]; actions: Action[]; linkType?: LinkType; permissions?: AllowedPermissions } {
+  ): {columns: TableColumn[]; actions: Action[]; linkType?: LinkType; permissions?: AllowedPermissions} {
     if (stemConfig.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex) {
       const attributesResourcesOrder = queryStemAttributesResourcesOrder(
         stemConfig.stem,
@@ -417,7 +418,7 @@ export class WorkflowTablesDataService {
     query: Query,
     settings: ResourceAttributeSettings[],
     columnsSettings: WorkflowColumnSettings[]
-  ): { columns: TableColumn[]; actions: Action[] } {
+  ): {columns: TableColumn[]; actions: Action[]} {
     const isCollection = resourceType === AttributesResourceType.Collection;
     const defaultAttributeId = isCollection ? getDefaultAttributeId(resource) : null;
     const columnSettingsMap = columnsSettings.reduce(
@@ -518,7 +519,7 @@ export class WorkflowTablesDataService {
   private createRows(
     tableId: string,
     currentRows: TableRow[],
-    data: { document: DocumentModel; linkInstance?: LinkInstance }[],
+    data: {document: DocumentModel; linkInstance?: LinkInstance}[],
     linkColumns: TableColumn[],
     collectionColumns: TableColumn[],
     linkPermissions: AllowedPermissions,
@@ -756,7 +757,7 @@ export class WorkflowTablesDataService {
   }
 
   public showRowDocumentDetail(row: TableRow) {
-      this.store$.dispatch(new WorkflowsAction.SetOpenedDocument({documentId: row.documentId}));
+    this.store$.dispatch(new WorkflowsAction.SetOpenedDocument({documentId: row.documentId}));
   }
 
   public showRowDetail(row: TableRow, column: TableColumn) {
@@ -974,19 +975,35 @@ export class WorkflowTablesDataService {
 
 function createRowDataFromAggregated(
   item: AggregatedDataItem,
-  linkInstancesMap: Record<string, LinkInstance>
-): { document: DocumentModel; linkInstance?: LinkInstance }[] {
-  const dataResources = <DocumentModel[]>item.dataResources || [];
-  const dataResourcesChains = item.dataResourcesChains;
-  return dataResources.reduce(
-    (rowData, document, index) => {
+  collectionsMap: Record<string, Collection>,
+  linkInstancesMap: Record<string, LinkInstance>,
+  viewSettings: ViewSettings,
+  constraintData: ConstraintData
+): {document: DocumentModel; linkInstance?: LinkInstance}[] {
+  const documents = <DocumentModel[]>item.dataResources || [];
+  const dataResourcesChains = item.dataResourcesChains?.reduce(
+    (chainMap, chain, index) => ({
+      ...chainMap,
+      [documents[index].id]: chain,
+    }),
+    {}
+  );
+  const sortedDocuments = sortDataResourcesByViewSettings<DocumentModel>(
+    documents,
+    collectionsMap,
+    AttributesResourceType.Collection,
+    viewSettings,
+    constraintData
+  );
+  return sortedDocuments.reduce(
+    (rowData, document) => {
       if (rowData.documentIds.has(document.id)) {
         return rowData;
       }
 
-      const chain = dataResourcesChains[index];
+      const chain = dataResourcesChains?.[document.id];
       let linkInstance: LinkInstance;
-      if (chain.length > 1) {
+      if (chain?.length > 1) {
         // documentIds and linkInstanceIds are in sequence
         const linkInstanceId = chain[chain.length - 2].linkInstanceId;
         linkInstance = linkInstancesMap[linkInstanceId];

@@ -26,7 +26,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
   selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuery,
+  selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
@@ -162,7 +162,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.documentsAndLinks$ = this.store$.pipe(
-      select(selectDocumentsAndLinksByQuery),
+      select(selectDocumentsAndLinksByQuerySorted),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));

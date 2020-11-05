@@ -44,6 +44,7 @@ export interface TableCell {
   columnId: string;
   type: TableCellType;
   rowId?: string;
+  linkId?: string;
 }
 
 export enum TableCellType {

@@ -30,7 +30,8 @@ export function sortDataResourcesByViewSettings<T extends DataResource>(
   resourcesMap: Record<string, AttributesResource>,
   type: AttributesResourceType,
   viewSettings: ViewSettings,
-  constraintData: ConstraintData
+  constraintData: ConstraintData,
+  sortDesc?: boolean
 ): T[] {
   const dataResourcesByResource = groupDataResourceByResource(dataResources, type);
   const viewSettingsAttributes = viewSettings?.attributes;
@@ -61,7 +62,7 @@ export function sortDataResourcesByViewSettings<T extends DataResource>(
         }
         // otherwise sort by creation date
         const value = a.creationDate.getTime() - b.creationDate.getTime();
-        return value !== 0 ? value : a.id.localeCompare(b.id);
+        return (value !== 0 ? value : a.id.localeCompare(b.id)) * (sortDesc ? -1 : 1);
       });
       resultDataResources.push(...sortedDataResources);
     } else {

@@ -116,6 +116,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public hiddenInputComponent: HiddenInputComponent;
 
   public scrollDisabled$ = new BehaviorSubject(false);
+  public detailColumnId: string;
 
   private subscriptions = new Subscription();
   private tableScrollService: TableScrollService;
@@ -134,6 +135,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     }
     if (changes.tableModel) {
       this.viewPort?.checkViewportSize();
+      this.detailColumnId = this.tableModel?.columns?.find(
+        column => !column.hidden && column.attribute?.constraint?.isTextRepresentation
+      )?.id;
     }
   }
 
@@ -184,11 +188,23 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onBodyCellClick(row: TableRow, columnId: string) {
-    this.cellClick.emit({tableId: this.tableModel.id, rowId: row.id, columnId, type: TableCellType.Body});
+    this.cellClick.emit({
+      tableId: this.tableModel.id,
+      rowId: row.id,
+      linkId: row.linkInstanceId,
+      columnId,
+      type: TableCellType.Body,
+    });
   }
 
   public onBodyCellDoubleClick(row: TableRow, columnId: string) {
-    this.cellDoubleClick.emit({tableId: this.tableModel.id, rowId: row.id, columnId, type: TableCellType.Body});
+    this.cellDoubleClick.emit({
+      tableId: this.tableModel.id,
+      rowId: row.id,
+      linkId: row.linkInstanceId,
+      columnId,
+      type: TableCellType.Body,
+    });
   }
 
   public onHeaderCellClick(columnId: string) {
@@ -200,7 +216,13 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onBodyCancel(row: TableRow, data: {action: DataInputSaveAction; columnId: string}) {
-    const cell = {tableId: this.tableModel.id, rowId: row.id, columnId: data.columnId, type: TableCellType.Body};
+    const cell = {
+      tableId: this.tableModel.id,
+      rowId: row.id,
+      linkId: row.linkInstanceId,
+      columnId: data.columnId,
+      type: TableCellType.Body,
+    };
     this.cellCancel.emit({cell, action: data.action});
   }
 

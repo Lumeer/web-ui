@@ -56,7 +56,10 @@ export class TableScrollService {
     let scrollTop = undefined;
     if (selectedCell?.type === TableCellType.Body) {
       const rowIndex = tableModel.rows.findIndex(
-        row => tableModel.id === selectedCell.tableId && row.id === selectedCell.rowId
+        row =>
+          tableModel.id === selectedCell.tableId &&
+          row.id === selectedCell.rowId &&
+          row.linkInstanceId === selectedCell.linkId
       );
       const selectedRow = tableModel.rows[rowIndex];
       const rowTop = tableModel.rows.slice(0, rowIndex).reduce((sum, row) => sum + row.height, 0);

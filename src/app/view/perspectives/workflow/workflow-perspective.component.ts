@@ -25,23 +25,14 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {
   selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuery,
+  selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {
-  distinctUntilChanged,
-  map,
-  mergeMap,
-  pairwise,
-  startWith,
-  switchMap,
-  take,
-  tap,
-} from 'rxjs/operators';
+import {distinctUntilChanged, map, mergeMap, pairwise, startWith, switchMap, take, tap} from 'rxjs/operators';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
@@ -54,7 +45,7 @@ import {DEFAULT_WORKFLOW_ID, WorkflowConfig} from '../../../core/store/workflows
 import {
   selectWorkflowById,
   selectWorkflowConfig,
-  selectWorkflowSelectedDocumentId
+  selectWorkflowSelectedDocumentId,
 } from '../../../core/store/workflows/workflow.state';
 import {checkOrTransformWorkflowConfig} from '../../../core/store/workflows/workflow.utils';
 import {WorkflowsAction} from '../../../core/store/workflows/workflows.action';
@@ -71,7 +62,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 })
 export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
-  public documentsAndLinks$: Observable<{ documents: DocumentModel[]; linkInstances: LinkInstance[] }>;
+  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public linkTypes$: Observable<LinkType[]>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
@@ -85,8 +76,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private workflowId: string;
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {
-  }
+  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
 
   public ngOnInit() {
     this.initWorkflow();
@@ -103,7 +93,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
           view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
         )
       )
-      .subscribe(({workflowId, config}: { workflowId?: string; config?: WorkflowConfig }) => {
+      .subscribe(({workflowId, config}: {workflowId?: string; config?: WorkflowConfig}) => {
         if (workflowId) {
           this.workflowId = workflowId;
           this.store$.dispatch(new WorkflowsAction.AddWorkflow({workflow: {id: workflowId, config}}));
@@ -112,7 +102,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
     this.subscriptions.add(subscription);
   }
 
-  private subscribeToView(previousView: View, view: View): Observable<{ workflowId?: string; config?: WorkflowConfig }> {
+  private subscribeToView(previousView: View, view: View): Observable<{workflowId?: string; config?: WorkflowConfig}> {
     const workflowId = view.code;
     return this.store$.pipe(
       select(selectWorkflowById(workflowId)),
@@ -138,7 +128,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
     );
   }
 
-  private subscribeToDefault(): Observable<{ workflowId?: string; config?: WorkflowConfig }> {
+  private subscribeToDefault(): Observable<{workflowId?: string; config?: WorkflowConfig}> {
     return this.store$.pipe(
       select(selectWorkflowById(DEFAULT_WORKFLOW_ID)),
       take(1),
@@ -154,7 +144,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
       mergeMap(collection => this.collectionsPermissionsPipe.transform(collection)),
       distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
     );
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
+    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.query$ = this.store$.pipe(
       select(selectQuery),
       tap(query => this.fetchData(query))

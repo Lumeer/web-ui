@@ -46,12 +46,12 @@ import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView} from '../views/views.state';
 import {selectWorkspaceModels} from './common.selectors';
 import {LinkInstance} from '../link-instances/link.instance';
-import {sortLinkInstances} from '../link-instances/link-instance.utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {selectViewSettings} from '../view-settings/view-settings.state';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
+import {sortLinkInstances} from '../link-instances/link-instance.utils';
 
 export const selectCurrentUserIsManager = createSelector(
   selectCurrentUser,
@@ -163,6 +163,26 @@ export const selectDocumentsAndLinksByQuery = createSelector(
     query,
     viewSettings,
     constraintData
+  ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} =>
+    filterDocumentsAndLinksByQuery(documents, collections, linkTypes, linkInstances, query, constraintData)
+);
+
+export const selectDocumentsAndLinksByQuerySorted = createSelector(
+  selectDocumentsByReadPermission,
+  selectCollectionsByReadPermission,
+  selectAllLinkTypes,
+  selectAllLinkInstances,
+  selectQuery,
+  selectViewSettings,
+  selectConstraintData,
+  (
+    documents,
+    collections,
+    linkTypes,
+    linkInstances,
+    query,
+    viewSettings,
+    constraintData
   ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} => {
     const data = filterDocumentsAndLinksByQuery(
       documents,
@@ -236,9 +256,8 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
     selectCollectionsByReadPermission,
     selectAllLinkTypes,
     selectAllLinkInstances,
-    selectViewSettings,
     selectConstraintData,
-    (documents, collections, linkTypes, linkInstances, viewSettings, constraintData) => {
+    (documents, collections, linkTypes, linkInstances, constraintData) => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
         collections,
@@ -248,23 +267,9 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
         constraintData,
         includeChildren
       );
-      const collectionsMap = objectsByIdMap(collections);
-      const linkTypesMap = objectsByIdMap(linkTypes);
       return {
-        documents: sortDataResourcesByViewSettings(
-          data.documents,
-          collectionsMap,
-          AttributesResourceType.Collection,
-          viewSettings,
-          constraintData
-        ),
-        linkInstances: sortDataResourcesByViewSettings(
-          data.linkInstances,
-          linkTypesMap,
-          AttributesResourceType.LinkType,
-          viewSettings,
-          constraintData
-        ),
+        documents: sortDocumentsByCreationDate(data.documents, desc),
+        linkInstances: sortLinkInstances(data.linkInstances),
       };
     }
   );

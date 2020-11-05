@@ -255,7 +255,13 @@ export class WorkflowTablesStateService {
       const column = table.columns[columnIndex];
       const row = isNotNullOrUndefined(rowIndex) ? table.rows[rowIndex] : null;
       if (column && (row || type !== TableCellType.Body)) {
-        this.setSelectedCell({tableId: table.id, columnId: column.id, rowId: row?.id, type});
+        this.setSelectedCell({
+          tableId: table.id,
+          columnId: column.id,
+          rowId: row?.id,
+          type,
+          linkId: row?.linkInstanceId,
+        });
       }
     }
   }
@@ -476,7 +482,7 @@ function tablesAreSame(t1: TableModel, t2: TableModel): boolean {
 function cellsAreSame(c1: TableCell, c2: TableCell): boolean {
   const columnAndTableAreSame = c1.type === c2.type && c1.tableId === c2.tableId && c1.columnId === c2.columnId;
   if (c1.type === TableCellType.Body) {
-    return columnAndTableAreSame && c1.rowId === c2.rowId;
+    return columnAndTableAreSame && c1.rowId === c2.rowId && c1.linkId === c2.linkId;
   }
   return columnAndTableAreSame;
 }
