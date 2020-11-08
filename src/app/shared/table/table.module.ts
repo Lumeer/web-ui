@@ -48,6 +48,7 @@ import {GroupTableColumnsPipe} from './pipes/group-table-columns.pipe';
 import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/table-header-hidden-menu.component';
 import {ColumnHeaderRestrictedNamesPipe} from './pipes/column-header-restricted-names.pipe';
 import {ResizableSidebarModule} from '../resizable-sidebar/resizable-sidebar.module';
+import {TableNewRowComponent} from './new-row/table-new-row.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import {ResizableSidebarModule} from '../resizable-sidebar/resizable-sidebar.mod
     GroupTableColumnsPipe,
     TableHeaderHiddenMenuComponent,
     ColumnHeaderRestrictedNamesPipe,
+    TableNewRowComponent,
   ],
   imports: [
     CommonModule,
@@ -84,5 +86,4 @@ import {ResizableSidebarModule} from '../resizable-sidebar/resizable-sidebar.mod
   ],
   exports: [TableComponent],
 })
-export class TableModule {
-}
+export class TableModule {}

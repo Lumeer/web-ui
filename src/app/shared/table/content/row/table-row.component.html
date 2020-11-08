@@ -5,6 +5,7 @@
     constraintType: group.column?.attribute?.constraint?.type,
     focused: selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row,
     edited: editedCell | tableCellEdited:group.column:cellType:row,
+    affected: editedCell | tableCellEdited:group.column:cellType:row: true,
     directlyEditable: group.column?.attribute?.constraint?.type === constraintType.Boolean} as data">
 
     <ng-container
@@ -16,7 +17,7 @@
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
           [class.focused]="(selectedCell || editedCell)?.tableId === row.tableId && data.focused"
           [class.editing]="editedCell?.tableId === row.tableId && data.edited"
-          [class.affected]="editedCell?.tableId !== row.tableId && data.edited"
+          [class.affected]="data.affected"
           [class.cursor-pointer]="group.column?.editable"
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"
           (click)="onDataInputClick(group.column, $event)"

@@ -18,27 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableCell, TableCellType} from '../model/table-model';
-import {TableColumn} from '../model/table-column';
-import {TableRow} from '../model/table-row';
-import {isTableCellSelected, isTableColumnDirectlyEditable} from '../model/table-utils';
+import {WorkflowTable} from '../model/workflow-table';
 
 @Pipe({
-  name: 'tableCellEdited',
+  name: 'workflowTablesIds',
 })
-export class TableCellEditedPipe implements PipeTransform {
-  public transform(
-    cell: TableCell,
-    column: TableColumn,
-    type: TableCellType,
-    row?: TableRow,
-    affected?: boolean
-  ): boolean {
-    return (
-      cell &&
-      column &&
-      isTableCellSelected(cell, column, type, row, !!column.linkTypeId || !affected) &&
-      (type !== TableCellType.Body || !isTableColumnDirectlyEditable(column))
-    );
+export class WorkflowTablesIdsPipe implements PipeTransform {
+  public transform(tables: WorkflowTable[]): string[] {
+    return tables?.map(table => table.id);
   }
 }

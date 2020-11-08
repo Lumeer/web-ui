@@ -36,6 +36,7 @@ export class ResizerDirective {
   public onResize = new EventEmitter<number>();
 
   private height: number;
+  private initialHeight: number;
   private oldY = 0;
   private resizingElement: HTMLElement;
 
@@ -53,11 +54,12 @@ export class ResizerDirective {
 
   @HostListener('document:mouseup', ['$event'])
   private onMouseUp(event: MouseEvent) {
-    if (this.height) {
+    if (this.height && this.height !== this.initialHeight) {
       this.onResize.emit(this.height);
     }
     this.resizingElement = null;
     this.height = null;
+    this.initialHeight = null;
   }
 
   private resize(offsetY: number) {
@@ -75,8 +77,22 @@ export class ResizerDirective {
   private onMouseDown(event: MouseEvent) {
     event.preventDefault();
 
-    this.resizingElement = document.getElementById(this.reference);
+    this.resizingElement = this.findResizingElement();
     this.height = this.resizingElement?.offsetHeight;
+    this.initialHeight = this.height;
     this.oldY = event.clientY;
+  }
+
+  private findResizingElement(): HTMLElement {
+    const elementsByTag: HTMLCollectionOf<any> = this.element.nativeElement?.parentElement?.getElementsByTagName(
+      'LMR-TABLE'
+    );
+    for (let i = 0; i < elementsByTag?.length; i++) {
+      if (elementsByTag.item(i).id === this.reference) {
+        return elementsByTag.item(i);
+      }
+    }
+
+    return document.getElementById(this.reference);
   }
 }

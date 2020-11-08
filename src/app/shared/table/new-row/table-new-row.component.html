@@ -1,0 +1,32 @@
+<div [style.height.px]="newRow.height + 1">
+  <div *ngIf="newRow.initialized; else uninitialized"
+       class="overflow-auto invisible-scroll-y" cdkScrollable [id]="scrollId">
+    <table class="table m-0 position-relative">
+      <tbody>
+      <tr table-row
+          [columnGroups]="columnGroups"
+          [row]="newRow"
+          [editedCell]="editedCell"
+          [selectedCell]="selectedCell"
+          [constraintData]="constraintData"
+          [cellType]="cellType"
+          (onClick)="onClick.emit($event)"
+          (onDoubleClick)="onDoubleClick.emit($event)"
+          (onCancel)="onCancel.emit($event.columnId)"
+          (menuSelected)="menuSelected.emit($event)"
+          (newValue)="newValue.emit($event)">
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
+
+</div>
+
+<ng-template #uninitialized>
+  <div class="d-flex align-items-center">
+    <button class="btn btn-link px-0 small" (click)="onNewRowClick.emit()"><i class="fas fa-plus-circle mr-2"></i><span
+      i18n="@@perspective.workflow.row.new">Add new row</span></button>
+  </div>
+</ng-template>

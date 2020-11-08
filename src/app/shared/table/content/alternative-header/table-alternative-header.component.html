@@ -1,4 +1,4 @@
-<div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable>
+<div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable [id]="scrollId">
   <ng-container *ngFor="let group of columnGroups; let last = last; let first = first; trackBy:trackByColumn">
     <div *ngIf="{selected: selectedCell | tableCellSelected:group.column:cellType, edited: editedCell | tableCellEdited:group.column:cellType} as columnData"
          class="header-cell table-cell"

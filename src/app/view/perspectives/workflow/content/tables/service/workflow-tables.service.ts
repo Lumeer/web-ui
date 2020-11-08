@@ -25,6 +25,7 @@ import {
   TableCell,
   TableCellType,
   TableModel,
+  TableNewRow,
 } from '../../../../../../shared/table/model/table-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
@@ -80,7 +81,12 @@ export class WorkflowTablesService {
     this.hiddenComponent = hiddenComponent;
   }
 
-  public onRowMenuSelected(row: TableRow, column: TableColumn, item: TableContextMenuItem) {
+  public onRowMenuSelected(
+    row: TableRow,
+    column: TableColumn,
+    item: TableContextMenuItem,
+    type: TableCellType = TableCellType.Body
+  ) {
     switch (item.id) {
       case RowMenuId.Edit:
         this.stateService.setEditedCell({
@@ -88,7 +94,7 @@ export class WorkflowTablesService {
           columnId: column.id,
           tableId: column.tableId,
           linkId: row.linkInstanceId,
-          type: TableCellType.Body,
+          type,
         });
         break;
       case RowMenuId.Detail:
@@ -118,7 +124,12 @@ export class WorkflowTablesService {
   public onColumnMenuSelected(column: TableColumn, item: TableContextMenuItem) {
     switch (item.id) {
       case HeaderMenuId.Edit:
-        this.stateService.setEditedCell({columnId: column.id, tableId: column.tableId, type: TableCellType.Header, linkId: undefined});
+        this.stateService.setEditedCell({
+          columnId: column.id,
+          tableId: column.tableId,
+          type: TableCellType.Header,
+          linkId: undefined,
+        });
         break;
       case HeaderMenuId.Type:
         this.dataService.showAttributeType(column);
@@ -164,11 +175,17 @@ export class WorkflowTablesService {
     }
   }
 
-  public onRowNewValue(row: TableRow, column: TableColumn, value: any, action: DataInputSaveAction) {
+  public onRowNewValue(
+    row: TableRow,
+    column: TableColumn,
+    value: any,
+    action: DataInputSaveAction,
+    cellType: TableCellType
+  ) {
     if (row.documentId) {
       this.dataService.saveRowNewValue(row, column, value);
-    } else {
-      this.dataService.createNewDocument(row, column, value);
+    } else if (cellType === TableCellType.NewRow) {
+      this.dataService.createNewDocument(<TableNewRow>row, column, value);
     }
 
     const cell = {rowId: row.id, columnId: column.id, type: TableCellType.Body, tableId: column.tableId};
@@ -281,5 +298,9 @@ export class WorkflowTablesService {
 
   public onTableResize(table: WorkflowTable, height: number) {
     this.dataService.resizeTable(table, height);
+  }
+
+  public onNewRow(table: WorkflowTable) {
+    this.stateService.initiateNewRow(table.id);
   }
 }

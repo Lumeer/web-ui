@@ -38,6 +38,9 @@ export class TableAlternativeHeaderComponent {
   @Input()
   public editedCell: SelectedTableCell;
 
+  @Input()
+  public scrollId: string;
+
   public readonly tableRowHeight = TABLE_ROW_HEIGHT;
   public readonly cellType = TableCellType.Header;
 

@@ -41,6 +41,7 @@ import {DataResourceModule} from '../../../shared/data-resource/data-resource.mo
 import {SettingsModule} from '../../../shared/settings/settings.module';
 import {LinksListModule} from '../../../shared/links/links-list/links-list.module';
 import {MatMenuModule} from '@angular/material/menu';
+import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
 
 @NgModule({
   declarations: [
@@ -52,24 +53,25 @@ import {MatMenuModule} from '@angular/material/menu';
     ResizerDirective,
     WorkflowContentComponent,
     WorkflowSidebarComponent,
+    WorkflowTablesIdsPipe,
   ],
-    imports: [
-        CommonModule,
-        TableModule,
-        RouterModule,
-        WorkflowPerspectiveRoutingModule,
-        DataInputModule,
-        PipesModule,
-        WarningMessageModule,
-        ClickOutsideModule,
-        InputModule,
-        SelectModule,
-        ResizableSidebarModule,
-        DataResourceModule,
-        SettingsModule,
-        LinksListModule,
-        MatMenuModule,
-    ],
+  imports: [
+    CommonModule,
+    TableModule,
+    RouterModule,
+    WorkflowPerspectiveRoutingModule,
+    DataInputModule,
+    PipesModule,
+    WarningMessageModule,
+    ClickOutsideModule,
+    InputModule,
+    SelectModule,
+    ResizableSidebarModule,
+    DataResourceModule,
+    SettingsModule,
+    LinksListModule,
+    MatMenuModule,
+  ],
   providers: [ResizerDirective],
 })
 export class WorkflowPerspectiveModule {}

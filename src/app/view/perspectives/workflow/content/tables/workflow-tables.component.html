@@ -15,10 +15,9 @@
                         (configChange)="onStemConfigChange($event, index)">
       </workflow-toolbar>
 
-      <div
-        class="mb-3"
-        (click)="onClickInsideTables($event)">
-        <ng-container *ngFor="let table of data.tables | filterStemTables:stemConfig; trackBy: trackByTable">
+      <div class="mb-3" (click)="onClickInsideTables($event)"
+           *ngIf="{tables: data.tables | filterStemTables:stemConfig} as stemData">
+        <ng-container *ngFor="let table of stemData.tables; trackBy: trackByTable; let first = first">
           <data-input-preview *ngIf="table.title" class="font-weight-bold d-block mb-2"
                               [dataValue]="table.title.dataValue"
                               [configuration]="configuration"
@@ -27,6 +26,9 @@
           <lmr-table
             #lmrTable
             [id]="table.id"
+            [scrollId]="table.id"
+            [class.mb-4]="table.maxHeight <= table.minHeight"
+            [syncScrollIds]="stemData.tables | workflowTablesIds"
             class="lmr-table"
             [tableModel]="table"
             [style.height.px]="table.height"
@@ -46,11 +48,12 @@
             (cellDoubleClick)="onTableCellDoubleClick($event)"
             (rowNewValue)="onRowNewValue($event)"
             (rowMenuSelected)="onRowMenuSelected($event)"
-            (rowDetail)="onRowDetail($event)">
+            (rowDetail)="onRowDetail($event)"
+            (rowNewClick)="onRowNewClick(table)">
           </lmr-table>
 
-          <div resizer class="resizer d-flex align-items-center justify-content-center"
-               *ngIf="table.maxHeight >= table.minHeight"
+          <div resizer class="resizer d-flex align-items-center justify-content-center mb-4"
+               *ngIf="table.maxHeight > table.minHeight"
                [reference]="table.id"
                (onResize)="onTableResize(table, $event)"
                i18n-title="@@perspective.workflow.table.resize"

@@ -48,7 +48,7 @@ export class WorkflowTablesMenuService {
 
   constructor(private i18n: I18n) {}
 
-  public createRowMenu(permissions: AllowedPermissions, row: TableRow, linked: boolean): TableContextMenuItem[] {
+  public createRowMenu(permissions: AllowedPermissions, row: TableRow, linked?: boolean): TableContextMenuItem[] {
     const items: TableContextMenuItem[] = [
       {
         id: RowMenuId.Edit,
@@ -68,24 +68,24 @@ export class WorkflowTablesMenuService {
         iconClass: 'fa fa-file-search',
         group: 0,
       });
-    }
 
-    if (linked) {
-      items.push({
-        id: RowMenuId.Unlink,
-        title: this.translateRowMenuItem(RowMenuId.Unlink),
-        disabled: !permissions?.writeWithView,
-        iconClass: 'fa fa-unlink text-warning',
-        group: 1,
-      });
-    } else {
-      items.push({
-        id: RowMenuId.Delete,
-        title: this.translateRowMenuItem(RowMenuId.Delete),
-        disabled: !permissions?.writeWithView,
-        iconClass: 'fa fa-trash text-danger',
-        group: 1,
-      });
+      if (linked) {
+        items.push({
+          id: RowMenuId.Unlink,
+          title: this.translateRowMenuItem(RowMenuId.Unlink),
+          disabled: !permissions?.writeWithView,
+          iconClass: 'fa fa-unlink text-warning',
+          group: 1,
+        });
+      } else {
+        items.push({
+          id: RowMenuId.Delete,
+          title: this.translateRowMenuItem(RowMenuId.Delete),
+          disabled: !permissions?.writeWithView,
+          iconClass: 'fa fa-trash text-danger',
+          group: 1,
+        });
+      }
     }
 
     return items;

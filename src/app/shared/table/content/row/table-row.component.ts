@@ -18,12 +18,12 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
+  Component,
   EventEmitter,
+  Input,
   OnChanges,
+  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -36,11 +36,11 @@ import {
   computeElementPositionInParent,
   isNotNullOrUndefined,
   isNullOrUndefinedOrEmpty,
-  preventEvent
+  preventEvent,
 } from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
-import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
+import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
 import {isTableColumnDirectlyEditable} from '../../model/table-utils';
@@ -71,6 +71,9 @@ export class TableRowComponent implements OnChanges {
   @Input()
   public detailColumnId: string;
 
+  @Input()
+  public cellType: TableCellType = TableCellType.Body;
+
   @Output()
   public onClick = new EventEmitter<string>();
 
@@ -78,22 +81,20 @@ export class TableRowComponent implements OnChanges {
   public onDetail = new EventEmitter();
 
   @Output()
-  public onCancel = new EventEmitter<{ columnId: string; action: DataInputSaveAction }>();
+  public onCancel = new EventEmitter<{columnId: string; action: DataInputSaveAction}>();
 
   @Output()
   public onDoubleClick = new EventEmitter<string>();
 
   @Output()
-  public newValue = new EventEmitter<{ columnId: string; value: any; action: DataInputSaveAction }>();
+  public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
 
   @Output()
-  public menuSelected = new EventEmitter<{ row: TableRow; column: TableColumn; item: TableContextMenuItem }>();
+  public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
 
   @ViewChild(TableMenuComponent)
   public tableMenuComponent: TableMenuComponent;
 
-  public readonly tableRowHeight = TABLE_ROW_HEIGHT;
-  public readonly cellType = TableCellType.Body;
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
     common: {allowRichText: true},
@@ -126,7 +127,14 @@ export class TableRowComponent implements OnChanges {
   }
 
   private isEditing(): boolean {
-    return this.editedCell?.rowId === this.row?.id && this.editedCell?.tableId === this.row?.tableId;
+    if (this.cellType === TableCellType.Body) {
+      return (
+        this.editedCell?.rowId === this.row?.id &&
+        this.editedCell?.linkId === this.row?.linkInstanceId &&
+        this.editedCell?.tableId === this.row?.tableId
+      );
+    }
+    return this.editedCell?.type === this.cellType && this.editedCell?.tableId === this.row?.tableId;
   }
 
   private createDataValue(column: TableColumn, value?: any, typed?: boolean): DataValue {
@@ -162,12 +170,12 @@ export class TableRowComponent implements OnChanges {
     return null;
   }
 
-  public onNewValue(column: TableColumn, data: { action?: DataInputSaveAction; dataValue: DataValue }) {
+  public onNewValue(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
     this.editedValue = null;
     this.saveData(column, data);
   }
 
-  private saveData(column: TableColumn, data: { action?: DataInputSaveAction; dataValue: DataValue }) {
+  private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
     const value = data.dataValue.serialize();
     const currentValue = this.columnValue(column);
     if (currentValue === value || (isNullOrUndefinedOrEmpty(value) && isNullOrUndefinedOrEmpty(currentValue))) {

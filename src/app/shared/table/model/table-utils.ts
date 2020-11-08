@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType} from './table-model';
+import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType, TableModel} from './table-model';
 import {columnConstraintType, TableColumn, TableColumnGroup} from './table-column';
 import {TableRow} from './table-row';
 import {ConstraintType} from '../../../core/model/data/constraint';
@@ -58,20 +58,21 @@ export function isTableCellSelected(
   selectedCell: TableCell,
   column: TableColumn,
   type: TableCellType,
-  row?: TableRow
+  row?: TableRow,
+  checkLink = true
 ): boolean {
   if (!selectedCell || !column || selectedCell.type !== type) {
     return false;
   }
-  if (type === TableCellType.Header || type === TableCellType.Footer) {
+  if (type === TableCellType.Header || type === TableCellType.Footer || type === TableCellType.NewRow) {
     return selectedCell.columnId === column.id;
   }
 
-  const isSameRow = selectedCell.columnId === column.id && selectedCell.rowId === row?.id;
-  if (column.linkTypeId) {
-    return isSameRow && row?.linkInstanceId === selectedCell.linkId;
-  }
-  return isSameRow;
+  return (
+    selectedCell.columnId === column.id &&
+    selectedCell.rowId === row?.id &&
+    (!checkLink || row?.linkInstanceId === selectedCell.linkId)
+  );
 }
 
 export function isTableColumnDirectlyEditable(column: TableColumn): boolean {
@@ -84,4 +85,8 @@ export function numberOfDiffColumnsBefore(index: number, columns: TableColumn[])
     return columns.slice(0, index).filter(col => !col.attribute || !!col.linkTypeId).length;
   }
   return columns.slice(0, index).filter(col => !col.attribute || !!col.collectionId).length;
+}
+
+export function tableHasNewRowPresented(table: TableModel): boolean {
+  return table.newRow?.initialized;
 }

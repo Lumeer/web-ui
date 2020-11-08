@@ -1,14 +1,17 @@
 <ng-container *ngIf="{columnGroups: tableModel.columns | groupTableColumns} as data">
   <table-alternative-header [columnGroups]="data.columnGroups"
                             [selectedCell]="selectedCell"
-                            [editedCell]="editedCell">
+                            [editedCell]="editedCell"
+                            [scrollId]="scrollId">
   </table-alternative-header>
   <table-resize-header [columnGroups]="data.columnGroups"
                        (resizeColumn)="columnResize.emit($event)">
   </table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize
+                               class="invisible-scroll-y"
+                               [id]="scrollId"
                                (scroll)="onScroll()"
-                               [style.height.%]="100"
+                               [style.height]="tableModel.newRow ? 'calc(100% - ' + (tableModel.newRow.height + 1) + 'px)' : '100%'"
                                [disabled]="scrollDisabled$ | async"
                                [columns]="tableModel.columns">
     <table class="table lmr-table position-relative">
@@ -35,14 +38,26 @@
           [constraintData]="constraintData"
           [columnGroups]="data.columnGroups"
           [detailColumnId]="detailColumnId"
-          (newValue)="onNewValue(row, $event)"
+          (newValue)="onBodyRowNewValue(row, $event)"
           (onClick)="onBodyCellClick(row, $event)"
           (onCancel)="onBodyCancel(row, $event)"
           (onDoubleClick)="onBodyCellDoubleClick(row, $event)"
-          (menuSelected)="rowMenuSelected.emit($event)"
+          (menuSelected)="onBodyMenuSelected($event)"
           (onDetail)="rowDetail.emit(row)">
       </tr>
       </tbody>
     </table>
   </cdk-virtual-scroll-viewport>
+  <table-new-row [newRow]="tableModel.newRow"
+                 [columnGroups]="data.columnGroups"
+                 [scrollId]="scrollId"
+                 [selectedCell]="selectedCell"
+                 [editedCell]="editedCell"
+                 (onNewRowClick)="rowNewClick.emit()"
+                 (onClick)="onNewRowCellClick($event)"
+                 (onCancel)="onNewRowCancel($event)"
+                 (onDoubleClick)="onNewRowCellDoubleClick($event)"
+                 (newValue)="onNewRowNewValue(tableModel.newRow, $event)"
+                 (menuSelected)="onNewRowMenuSelected($event)">
+  </table-new-row>
 </ng-container>

@@ -31,6 +31,13 @@ export interface TableModel {
   linkTypeId?: string;
   columns: TableColumn[];
   rows: TableRow[];
+  newRow?: TableNewRow;
+}
+
+export interface TableNewRow extends TableRow {
+  linkedDocumentId?: string;
+  creating?: boolean;
+  initialized?: boolean;
 }
 
 export interface SelectedTableCell extends TableCell {}
@@ -50,5 +57,6 @@ export interface TableCell {
 export enum TableCellType {
   Header = 'header',
   Body = 'body',
+  NewRow = 'newRow',
   Footer = 'footer',
 }

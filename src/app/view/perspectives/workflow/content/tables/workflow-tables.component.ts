@@ -38,7 +38,13 @@ import {AttributeSortType, ViewSettings} from '../../../../../core/store/views/v
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Observable} from 'rxjs';
 import {WorkflowTablesService} from './service/workflow-tables.service';
-import {EditedTableCell, SelectedTableCell, TableCell, TableModel} from '../../../../../shared/table/model/table-model';
+import {
+  EditedTableCell,
+  SelectedTableCell,
+  TableCell,
+  TableCellType,
+  TableModel,
+} from '../../../../../shared/table/model/table-model';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
@@ -213,8 +219,14 @@ export class WorkflowTablesComponent implements OnChanges {
     this.tablesService.newHiddenInput(input);
   }
 
-  public onRowNewValue(event: {row: TableRow; column: TableColumn; value: any; action: DataInputSaveAction}) {
-    this.tablesService.onRowNewValue(event.row, event.column, event.value, event.action);
+  public onRowNewValue(data: {
+    row: TableRow;
+    column: TableColumn;
+    value: any;
+    action: DataInputSaveAction;
+    cellType: TableCellType;
+  }) {
+    this.tablesService.onRowNewValue(data.row, data.column, data.value, data.action, data.cellType);
   }
 
   public onColumnRename(data: {column: TableColumn; name: string}) {
@@ -225,8 +237,13 @@ export class WorkflowTablesComponent implements OnChanges {
     this.tablesService.onColumnMenuSelected(data.column, data.item);
   }
 
-  public onRowMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
-    this.tablesService.onRowMenuSelected(data.row, data.column, data.item);
+  public onRowMenuSelected(data: {
+    row: TableRow;
+    column: TableColumn;
+    item: TableContextMenuItem;
+    cellType: TableCellType;
+  }) {
+    this.tablesService.onRowMenuSelected(data.row, data.column, data.item, data.cellType);
   }
 
   public onColumnHiddenMenuSelected(columns: TableColumn[]) {
@@ -250,5 +267,9 @@ export class WorkflowTablesComponent implements OnChanges {
 
   public onTableResize(table: WorkflowTable, height: number) {
     this.tablesService.onTableResize(table, height);
+  }
+
+  public onRowNewClick(table: WorkflowTable) {
+    this.tablesService.onNewRow(table);
   }
 }

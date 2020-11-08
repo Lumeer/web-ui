@@ -40,7 +40,14 @@ import {TableRow} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
 import {ConstraintData} from '../../core/model/data/constraint';
-import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel} from './model/table-model';
+import {
+  EditedTableCell,
+  SelectedTableCell,
+  TableCell,
+  TableCellType,
+  TableModel,
+  TableNewRow,
+} from './model/table-model';
 import {TableScrollService} from './service/table-scroll.service';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn, TableContextMenuItem} from './model/table-column';
@@ -64,6 +71,12 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public scrollId: string;
+
+  @Input()
+  public syncScrollIds: string[];
 
   @Output()
   public columnResize = new EventEmitter<{column: TableColumn; width: number}>();
@@ -98,13 +111,22 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     column: TableColumn;
     value: any;
     action: DataInputSaveAction;
+    cellType: TableCellType;
   }>();
 
   @Output()
   public rowDetail = new EventEmitter<TableRow>();
 
   @Output()
-  public rowMenuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
+  public rowNewClick = new EventEmitter();
+
+  @Output()
+  public rowMenuSelected = new EventEmitter<{
+    row: TableRow;
+    column: TableColumn;
+    item: TableContextMenuItem;
+    cellType: TableCellType;
+  }>();
 
   @ViewChild(CdkVirtualScrollViewport, {static: false})
   public viewPort: CdkVirtualScrollViewport;
@@ -158,7 +180,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
             otherScrollable =>
               otherScrollable !== scrollable &&
               otherScrollable.measureScrollOffset('left') !== left &&
-              this.isScrollableInsideComponent(otherScrollable)
+              this.syncScrollIds?.includes(otherScrollable.getElementRef()?.nativeElement?.id)
           )
           .forEach(otherScrollable => otherScrollable.scrollTo({left}));
       });
@@ -177,13 +199,20 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public trackByRow(index: number, row: TableRow): string {
-    return row.id;
+    return row.documentId + (row.linkInstanceId || '');
   }
 
-  public onNewValue(row: TableRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
+  public onBodyRowNewValue(row: TableRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
     const column = this.tableModel?.columns?.find(col => col.id === data.columnId);
     if (row && column) {
-      this.rowNewValue.emit({...data, row, column});
+      this.rowNewValue.emit({...data, row, column, cellType: TableCellType.Body});
+    }
+  }
+
+  public onNewRowNewValue(row: TableNewRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
+    const column = this.tableModel?.columns?.find(col => col.id === data.columnId);
+    if (row && column) {
+      this.rowNewValue.emit({...data, row, column, cellType: TableCellType.NewRow});
     }
   }
 
@@ -207,14 +236,6 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  public onHeaderCellClick(columnId: string) {
-    this.cellClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
-  }
-
-  public onHeaderCellDoubleClick(columnId: string) {
-    this.cellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
-  }
-
   public onBodyCancel(row: TableRow, data: {action: DataInputSaveAction; columnId: string}) {
     const cell = {
       tableId: this.tableModel.id,
@@ -226,8 +247,29 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     this.cellCancel.emit({cell, action: data.action});
   }
 
+  public onHeaderCellClick(columnId: string) {
+    this.cellClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
+  }
+
+  public onHeaderCellDoubleClick(columnId: string) {
+    this.cellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
+  }
+
   public onHeaderCancel(columnId: string) {
     const cell = {tableId: this.tableModel.id, columnId, type: TableCellType.Header};
+    this.cellCancel.emit({cell});
+  }
+
+  public onNewRowCellClick(columnId: string) {
+    this.cellClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.NewRow});
+  }
+
+  public onNewRowCellDoubleClick(columnId: string) {
+    this.cellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.NewRow});
+  }
+
+  public onNewRowCancel(columnId: string) {
+    const cell = {tableId: this.tableModel.id, columnId, type: TableCellType.NewRow};
     this.cellCancel.emit({cell});
   }
 
@@ -235,5 +277,13 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     if (this.editedCell?.type === TableCellType.Header) {
       this.cellCancel.emit({cell: this.editedCell, action: DataInputSaveAction.Direct});
     }
+  }
+
+  public onBodyMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
+    this.rowMenuSelected.emit({...data, cellType: TableCellType.Body});
+  }
+
+  public onNewRowMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
+    this.rowMenuSelected.emit({...data, cellType: TableCellType.NewRow});
   }
 }
