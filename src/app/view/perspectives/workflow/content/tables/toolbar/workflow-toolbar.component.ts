@@ -28,6 +28,7 @@ import {AttributesResource} from '../../../../../../core/model/resource';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {Constraint} from '../../../../../../core/model/constraint';
+import {SelectItem2Model} from '../../../../../../shared/select/select-item2/select-item2.model';
 
 @Component({
   selector: 'workflow-toolbar',
@@ -59,17 +60,23 @@ export class WorkflowToolbarComponent implements OnChanges {
     }
   }
 
-  public onResourceSelected(resource: QueryAttribute) {
-    console.log(resource);
+  public onResourceSelected(items: [SelectItem2Model]) {
+    const resource = items?.[0]?.id;
     this.onConfigChange({...this.config, collection: resource});
   }
 
-  public onAttributeSelected(selectId: SelectItemWithConstraintId) {
-    const {attributeId, resourceIndex} = selectId;
+  public onAttributeSelected(data: {id: SelectItemWithConstraintId; constraint?: Constraint}) {
+    const {attributeId, resourceIndex} = data.id;
     const resource = (this.attributesResourcesOrder || [])[resourceIndex];
     if (resource) {
       const resourceType = getAttributesResourceType(resource);
-      const selection = {attributeId, resourceIndex, resourceType, resourceId: resource.id};
+      const selection: QueryAttribute = {
+        attributeId,
+        resourceIndex,
+        resourceType,
+        resourceId: resource.id,
+        constraint: data.constraint,
+      };
 
       this.onConfigChange({...this.config, attribute: selection});
     }
@@ -83,10 +90,5 @@ export class WorkflowToolbarComponent implements OnChanges {
 
   private onConfigChange(config: WorkflowStemConfig) {
     this.configChange.next(config);
-  }
-
-  public onConstraintSelect(constraint: Constraint) {
-    const attribute = {...this.config.attribute};
-    this.onConfigChange({...this.config, attribute: {...attribute, constraint}});
   }
 }

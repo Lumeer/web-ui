@@ -21,6 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@
 import {Constraint} from '../../../core/model/constraint';
 import {AttributesResource} from '../../../core/model/resource';
 import {SelectItemWithConstraintId} from '../select-constraint-item/select-item-with-constraint.component';
+import {SelectItem2Model} from '../select-item2/select-item2.model';
 
 @Component({
   selector: 'select-item-with-constraint2',
@@ -50,7 +51,7 @@ export class SelectItemWithConstraint2Component {
   public removable: boolean = false;
 
   @Output()
-  public select = new EventEmitter<SelectItemWithConstraintId>();
+  public select = new EventEmitter<{id: SelectItemWithConstraintId; constraint?: Constraint}>();
 
   @Output()
   public selectConstraint = new EventEmitter<Constraint>();
@@ -58,15 +59,13 @@ export class SelectItemWithConstraint2Component {
   @Output()
   public remove = new EventEmitter();
 
-  public onSelect(id: SelectItemWithConstraintId) {
-    this.select.emit(id);
-  }
-
   public onRemove() {
     this.remove.emit();
   }
 
-  public onSelectConstraint(constraint: Constraint) {
-    this.selectConstraint.emit(constraint);
+  public onSelectPath(path: SelectItem2Model[]) {
+    const id = path[0].id;
+    const constraint = path[1]?.id;
+    this.select.emit({id, constraint});
   }
 }

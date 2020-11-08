@@ -1,17 +1,17 @@
-<select-item2 class="d-inline-block mr-4"
+<select-item2 class="d-inline-block mr-4 mw-100 text-truncate"
               [items]="stem | queryStemResourcesSelectItems:collections:linkTypes:true"
-              [selectedId]="config?.collection"
-              (select)="onResourceSelected($event)">
+              [selectedPath]="[config?.collection]"
+              (selectPath)="onResourceSelected($event)">
 </select-item2>
 
-<select-item-with-constraint2 class="d-inline-block"
+<select-item-with-constraint2 class="d-inline-block mw-100 text-truncate"
                               [attributesResources]="attributesResourcesOrder"
                               [restrictedIds]="[]"
-                              [emptyValue]="'Select grouping Attribute'"
+                              i18n-emptyValue="@@perspective.workflow.toolbar.grouping"
+                              emptyValue="Select grouping attribute"
                               [selectedConstraint]="config?.attribute?.constraint"
                               [selectedId]="config | workflowSelectedItem"
                               [removable]="true"
                               (select)="onAttributeSelected($event)"
-                              (selectConstraint)="onConstraintSelect($event)"
                               (remove)="onAttributeRemoved()">
 </select-item-with-constraint2>

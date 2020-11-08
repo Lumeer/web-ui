@@ -5443,7 +5443,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="select.constraint.items.duration.maxUnit" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</source>
+        <source>{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context>
           <context context-type="linenumber">1</context>

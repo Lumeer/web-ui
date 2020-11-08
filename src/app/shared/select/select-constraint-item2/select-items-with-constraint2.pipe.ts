@@ -30,7 +30,6 @@ import {SelectItem2Model} from '../select-item2/select-item2.model';
   name: 'selectItemsWithConstraint2',
 })
 export class SelectItemsWithConstraint2Pipe implements PipeTransform {
-
   constructor(private formatter: SelectItemWithConstraintFormatter) {}
 
   public transform(
@@ -56,7 +55,7 @@ export class SelectItemsWithConstraint2Pipe implements PipeTransform {
       value: attribute.name,
       icons: [collection.icon],
       iconColors: [collection.color],
-      children: this.formatter.createItems(attribute)
+      children: this.formatter.createItems(attribute, false),
     }));
   }
 

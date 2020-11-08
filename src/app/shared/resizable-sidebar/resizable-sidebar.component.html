@@ -7,9 +7,7 @@
   <div *ngIf="opened" class="sidebar h-100 position-relative" [@enterAnimation]=""
        [style.width]="width ? width + 'px' : 50 + 'vw'" (click)="$event.stopPropagation()">
     <div class="resizer" horizontal-resizer
-         (onResize)="widthChanged.emit($event)"
-         (resizeStart)="resizeOverlay$.next(true)"
-         (resizeEnd)="resizeOverlay$.next(false)">
+         (onResize)="widthChanged.emit($event)">
     </div>
     <div class="overflow-auto h-100 w-100">
       <ng-content select=".sidebar"></ng-content>
@@ -17,7 +15,4 @@
   </div>
 
 
-</div>
-
-<div class="resize-overlay" *ngIf="resizeOverlay$ | async" (click)="$event.stopPropagation(); resizeOverlay$.next(false)">
 </div>

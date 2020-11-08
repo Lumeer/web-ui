@@ -1,17 +1,25 @@
 <mat-menu #childMenu="matMenu">
-  <span *ngFor="let child of items">
+  <ng-template matMenuContent>
+    <ng-container *ngFor="let child of items">
 
-    <span *ngIf="child.children?.length > 0">
-      <button mat-menu-item [matMenuTriggerFor]="menu.childMenu">
-        <select-item-row [item]="child"></select-item-row>
-      </button>
-      <select-item-menu #menu [items]="child.children"></select-item-menu>
-    </span>
+      <ng-container *ngIf="child.children?.length > 0">
+        <button mat-menu-item [matMenuTriggerFor]="menu.childMenu"
+                [class.active]="selectedItem?.id | areIdsEqual:child.id"
+                (click)="onSelect(child)">
+          <select-item-row [item]="child"></select-item-row>
+        </button>
+        <select-item-menu #menu [items]="child.children" (select)="onSelectChild(child, $event)"
+                          [selectedItem]="selectedItem?.children && selectedItem?.children[0]">
+        </select-item-menu>
+      </ng-container>
 
-    <span *ngIf="!child.children || child.children.length === 0">
-      <button mat-menu-item>
-        <select-item-row [item]="child"></select-item-row>
-      </button>
-    </span>
-  </span>
+      <ng-container *ngIf="!child.children || child.children.length === 0">
+        <button mat-menu-item
+                [class.active]="selectedItem?.id | areIdsEqual:child.id"
+                (click)="onSelect(child)">
+          <select-item-row [item]="child"></select-item-row>
+        </button>
+      </ng-container>
+    </ng-container>
+  </ng-template>
 </mat-menu>

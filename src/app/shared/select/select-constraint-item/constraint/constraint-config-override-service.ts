@@ -21,7 +21,7 @@ import {Constraint} from '../../../../core/model/constraint';
 import {SelectItemModel} from '../../select-item/select-item.model';
 
 export abstract class ConstraintConfigOverrideService<T> {
-  public abstract create(config: T): SelectItemModel[];
+  public abstract create(config: T, withDefaultItem: boolean): SelectItemModel[];
 
   public abstract isValidOverride(constraint: Constraint, overrideConstraint: Constraint): Constraint;
 }

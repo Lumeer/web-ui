@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
 import {SelectItem2Model} from '../../select-item2/select-item2.model';
 import {preventEvent} from '../../../utils/common.utils';
 
@@ -25,12 +25,14 @@ import {preventEvent} from '../../../utils/common.utils';
   selector: 'select-item-row',
   templateUrl: './select-item-row.component.html',
   styleUrls: ['./select-item-row.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectItemRowComponent {
-
+export class SelectItemRowComponent implements OnChanges {
   @Input()
   public item: SelectItem2Model;
+
+  @Input()
+  public displayChildren: boolean;
 
   @Input()
   public removable: boolean;
@@ -46,4 +48,25 @@ export class SelectItemRowComponent {
     this.remove.emit();
   }
 
+  public displayValue: string;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.item || changes.displayChildren) {
+      this.displayValue = this.buildDisplayValue();
+    }
+  }
+
+  private buildDisplayValue(): string {
+    if (this.displayChildren && this.item) {
+      return this.childrenDisplayValue(this.item);
+    }
+    return this.item.value;
+  }
+
+  private childrenDisplayValue(item: SelectItem2Model): string {
+    if (item?.children?.length) {
+      return `${item.value} (${this.childrenDisplayValue(item.children[0])})`;
+    }
+    return item.value;
+  }
 }

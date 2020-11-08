@@ -17,18 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
-  SimpleChanges, ViewChild,
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {SelectItem2Model} from './select-item2.model';
-import {preventEvent} from '../../utils/common.utils';
 
 @Component({
   selector: 'select-item2',
@@ -36,12 +27,12 @@ import {preventEvent} from '../../utils/common.utils';
   styleUrls: ['./select-item2.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectItem2Component implements OnChanges {
+export class SelectItem2Component {
   @Input()
   public items: SelectItem2Model[];
 
   @Input()
-  public selectedId: any;
+  public selectedPath: any[];
 
   @Input()
   public emptyValue: string = '';
@@ -53,7 +44,7 @@ export class SelectItem2Component implements OnChanges {
   public removable: boolean;
 
   @Output()
-  public select = new EventEmitter<any>();
+  public selectPath = new EventEmitter<SelectItem2Model[]>();
 
   @Output()
   public remove = new EventEmitter();
@@ -61,13 +52,8 @@ export class SelectItem2Component implements OnChanges {
   @ViewChild(MatMenuTrigger)
   public contextMenu: MatMenuTrigger;
 
-  public ngOnChanges(changes: SimpleChanges): void {
-  }
-
-  public onSelect(event: MouseEvent, item: SelectItem2Model) {
-    preventEvent(event);
-    this.contextMenu.closeMenu();
-    this.select.emit(item.id);
+  public onSelect(items: SelectItem2Model[]) {
+    this.selectPath.emit(items);
   }
 
   public onRemove(event: any) {
@@ -75,5 +61,4 @@ export class SelectItem2Component implements OnChanges {
     event.stopPropagation();
     this.remove.emit();
   }
-
 }

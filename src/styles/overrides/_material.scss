@@ -9,69 +9,69 @@ $typography: mat-typography-config(
 @include mat-core();
 
 $primary-palette: (
-  50 : #e5e7e9,
-  100 : #bec3c8,
-  200 : #929ba3,
-  300 : #66737e,
-  400 : #465562,
-  500 : #253746,
-  600 : #21313f,
-  700 : #1b2a37,
-  800 : #16232f,
-  900 : #0d1620,
-  A100 : #61a5ff,
-  A200 : #2e87ff,
-  A400 : #006bfa,
-  A700 : #0060e0,
+  50: #e5e7e9,
+  100: #bec3c8,
+  200: #929ba3,
+  300: #66737e,
+  400: #465562,
+  500: #253746,
+  600: #21313f,
+  700: #1b2a37,
+  800: #16232f,
+  900: #0d1620,
+  A100: #61a5ff,
+  A200: #2e87ff,
+  A400: #006bfa,
+  A700: #0060e0,
   contrast: (
-    50 : #000000,
-    100 : #000000,
-    200 : #000000,
-    300 : #ffffff,
-    400 : #ffffff,
-    500 : #ffffff,
-    600 : #ffffff,
-    700 : #ffffff,
-    800 : #ffffff,
-    900 : #ffffff,
-    A100 : #000000,
-    A200 : #ffffff,
-    A400 : #ffffff,
-    A700 : #ffffff,
-  )
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #ffffff,
+    400: #ffffff,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #ffffff,
+    A400: #ffffff,
+    A700: #ffffff,
+  ),
 );
 
 $success-palette: (
-  50 : #e0f6f1,
-  100 : #b3e8db,
-  200 : #80d9c4,
-  300 : #4dcaac,
-  400 : #26be9a,
-  500 : #00b388,
-  600 : #00ac80,
-  700 : #00a375,
-  800 : #009a6b,
-  900 : #008b58,
-  A100 : #b7ffe0,
-  A200 : #84ffcb,
-  A400 : #51ffb5,
-  A700 : #37ffaa,
+  50: #e0f6f1,
+  100: #b3e8db,
+  200: #80d9c4,
+  300: #4dcaac,
+  400: #26be9a,
+  500: #00b388,
+  600: #00ac80,
+  700: #00a375,
+  800: #009a6b,
+  900: #008b58,
+  A100: #b7ffe0,
+  A200: #84ffcb,
+  A400: #51ffb5,
+  A700: #37ffaa,
   contrast: (
-    50 : #000000,
-    100 : #000000,
-    200 : #000000,
-    300 : #000000,
-    400 : #000000,
-    500 : #ffffff,
-    600 : #ffffff,
-    700 : #ffffff,
-    800 : #ffffff,
-    900 : #ffffff,
-    A100 : #000000,
-    A200 : #000000,
-    A400 : #000000,
-    A700 : #000000,
-  )
+    50: #000000,
+    100: #000000,
+    200: #000000,
+    300: #000000,
+    400: #000000,
+    500: #ffffff,
+    600: #ffffff,
+    700: #ffffff,
+    800: #ffffff,
+    900: #ffffff,
+    A100: #000000,
+    A200: #000000,
+    A400: #000000,
+    A700: #000000,
+  ),
 );
 
 $primary-mat-palette: mat-palette($primary-palette);
@@ -81,37 +81,49 @@ $app-theme: mat-light-theme($primary-mat-palette, $success-mat-palette);
 
 @function theme-foreground($color) {
   @return (
-    base:              $color,
-    divider:           $black-12-opacity,
-    dividers:          $black-12-opacity,
-    disabled:          rgba($color, 0.38),
-    disabled-button:   rgba($color, 0.38),
-    disabled-text:     rgba($color, 0.38),
-    hint-text:         rgba($color, 0.38),
-    secondary-text:    rgba($color, 0.54),
-    icon:              rgba($color, 0.54),
-    icons:             rgba($color, 0.54),
-    text:              $color,
-    slider-min:        rgba($color, 0.87),
-    slider-off:        rgba($color, 0.26),
-    slider-off-active: rgba($color, 0.38),
+    base: $color,
+    divider: $black-12-opacity,
+    dividers: $black-12-opacity,
+    disabled: rgba($color, 0.38),
+    disabled-button: rgba($color, 0.38),
+    disabled-text: rgba($color, 0.38),
+    hint-text: rgba($color, 0.38),
+    secondary-text: rgba($color, 0.54),
+    icon: rgba($color, 0.54),
+    icons: rgba($color, 0.54),
+    text: $color,
+    slider-min: rgba($color, 0.87),
+    slider-off: rgba($color, 0.26),
+    slider-off-active: rgba($color, 0.38)
   );
-};
+}
 
 $foreground-color: theme-foreground(mat-color($primary-mat-palette, 500));
 
-@include angular-material-theme(map-merge($app-theme, (foreground: $foreground-color)));
+@include angular-material-theme(
+  map-merge(
+    $app-theme,
+    (
+      foreground: $foreground-color,
+    )
+  )
+);
+
+button.mat-menu-item {
+  outline: none;
+}
 
 .mat-menu-item {
-  height: 30px !important;;
+  height: 30px !important;
   line-height: 30px !important;
 
   &:hover:not([disabled]) {
-    background: rgba(0,0,0,.1);
+    background: rgba(0, 0, 0, 0.1);
     color: $primary;
   }
 
-  &.active, &:active {
+  &.active,
+  &:active {
     background: $primary !important;
     color: white !important;
   }
@@ -121,9 +133,12 @@ $foreground-color: theme-foreground(mat-color($primary-mat-palette, 500));
     background: $primary;
   }
 }
+.mat-menu-item-submenu-trigger.active:after,
+.mat-menu-item-submenu-trigger:active:after {
+  color: white;
+}
 
 .mat-menu-panel {
   min-width: 50px !important;
   min-height: 30px !important;
 }
-

@@ -263,31 +263,31 @@
         <note priority="1" from="description">auth.redirect</note>
       </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target state="final">Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source><target state="final">I have read</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
         <source>Terms of Service</source><target state="final">Terms of Service</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="and" datatype="html">
         <source>and</source><target state="final">and</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
         <source>Privacy Policy</source><target state="final">Privacy Policy</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
         <source>and I agree to them.</source><target state="final">and I agree to them.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
         <source>Keep me informed about productivity ideas via newsletter (see </source><target state="final">Keep me informed about productivity ideas via newsletter (see </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source><target state="final">Data Processing Agreement</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="label.newsletter.end" datatype="html">
         <source>).</source><target state="final">).</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source><target state="final">Continue</target>
 
@@ -465,10 +465,10 @@
         </context-group>
       </trans-unit><trans-unit id="link.input.dropdown.title" datatype="html">
         <source>Title</source><target state="final">Title</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="link.input.dropdown.title.placeholder" datatype="html">
         <source>Custom title</source><target state="final">Custom title</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="count.of" datatype="html">
         <source>of</source><target state="final">of</target>
 
@@ -1484,7 +1484,7 @@
     </source><target state="final">
       Currency
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="constraint.number.currency.empty" datatype="html">
         <source>Select currency</source><target state="final">Select currency</target>
 
@@ -2810,8 +2810,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source><target state="final">Column settings...</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/links-list-table-header.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/table/content/header/cell/table-header-cell.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="show.detail" datatype="html">
         <source>Show detail</source><target state="final">Show detail</target>
 
@@ -3910,7 +3910,7 @@
         <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source><target state="final">{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.duration.maxUnit" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</source><target state="final">{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</target>
+        <source>{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</source><target state="final">{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context>
           <context context-type="linenumber">1</context>
@@ -4441,11 +4441,11 @@
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.title" datatype="html">
         <source>Delete this column?</source><target state="final">Delete this column?</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
         <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source><target state="final">Do you really want to delete the column? This will permanently remove the attribute and all its data.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
       <trans-unit id="view.discard.changes.message" datatype="html">
         <source>The view was changed. Do you want to save the changes?</source><target state="final">The view was changed. Do you want to save the changes?</target>

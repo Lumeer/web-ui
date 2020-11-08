@@ -17,20 +17,33 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, ViewChild, Output, EventEmitter} from '@angular/core';
 import {MatMenu} from '@angular/material/menu';
 import {SelectItem2Model} from '../select-item2.model';
 
 @Component({
   selector: 'select-item-menu',
   templateUrl: './select-item-menu.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectItemMenuComponent {
-
   @Input()
   public items: SelectItem2Model[];
 
+  @Input()
+  public selectedItem: SelectItem2Model;
+
+  @Output()
+  public select = new EventEmitter<SelectItem2Model[]>();
+
   @ViewChild('childMenu', {static: true})
   public childMenu: MatMenu;
+
+  public onSelect(item: SelectItem2Model) {
+    this.select.emit([item]);
+  }
+
+  public onSelectChild(item: SelectItem2Model, path: SelectItem2Model[]) {
+    this.select.emit([item, ...path]);
+  }
 }

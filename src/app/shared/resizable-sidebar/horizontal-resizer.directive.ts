@@ -17,27 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Directive, HostListener, ElementRef, Renderer2, Output, EventEmitter} from '@angular/core';
+import {Directive, HostListener, ElementRef, Renderer2, Output, EventEmitter, OnInit} from '@angular/core';
 import {preventEvent} from '../utils/common.utils';
 
 @Directive({
   selector: '[horizontal-resizer]',
 })
-export class HorizontalResizerDirective {
+export class HorizontalResizerDirective implements OnInit {
   @Output()
   public onResize = new EventEmitter<number>();
-
-  @Output()
-  public resizeStart = new EventEmitter();
-
-  @Output()
-  public resizeEnd = new EventEmitter();
 
   private width: number;
   private oldX = 0;
   private resizingElement: HTMLElement;
 
-  constructor(private element: ElementRef, private renderer: Renderer2) {
+  constructor(private element: ElementRef, private renderer: Renderer2) {}
+
+  public ngOnInit() {
+    document.addEventListener('click', event => this.onClick(event), true);
   }
 
   @HostListener('document:mousemove', ['$event'])
@@ -50,9 +47,7 @@ export class HorizontalResizerDirective {
     this.oldX = event.clientX;
   }
 
-  @HostListener('document:click', ['$event'])
   private onClick(event: MouseEvent) {
-    console.log('doc click');
     if (!this.resizingElement) {
       return;
     }
@@ -60,12 +55,10 @@ export class HorizontalResizerDirective {
     preventEvent(event);
     this.resizingElement = null;
     this.width = null;
-    this.resizeEnd.emit();
   }
 
   @HostListener('document:mouseup', ['$event'])
   private onMouseUp(event: MouseEvent) {
-    console.log('mouse up');
     if (!this.resizingElement) {
       return;
     }
@@ -88,6 +81,5 @@ export class HorizontalResizerDirective {
     this.resizingElement = this.element.nativeElement.parentNode;
     this.width = this.resizingElement?.offsetWidth;
     this.oldX = event.clientX;
-    this.resizeStart.emit();
   }
 }

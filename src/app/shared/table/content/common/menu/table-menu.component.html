@@ -6,7 +6,7 @@
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent>
     <ng-container *ngFor="let group of items | groupTableMenuItems; let last = last">
-      <div *ngFor="let item of group.items"
+      <button *ngFor="let item of group.items"
            mat-menu-item
            [disabled]="item.disabled"
            [disableRipple]="true"
@@ -16,7 +16,7 @@
           <span class="flex-grow-1">{{item.title}}</span>
           <small *ngIf="item.shortcut" class="text-secondary ml-3">{{item.shortcut}}</small>
         </div>
-      </div>
+      </button>
 
       <hr *ngIf="!last" class="my-2">
     </ng-container>

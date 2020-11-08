@@ -6,17 +6,17 @@
 <mat-menu #contextMenu="matMenu">
   <ng-template matMenuContent>
 
-    <div *ngFor="let column of hiddenColumns"
+    <button *ngFor="let column of hiddenColumns"
          mat-menu-item
          (click)="onSelected($event, column)">
       <span>{{column.attribute?.name}}</span>
-    </div>
+    </button>
 
-    <div *ngIf="hiddenColumns.length > 1"
+    <button *ngIf="hiddenColumns.length > 1"
          mat-menu-item
          (click)="onAllSelected($event)">
       <span i18n="@@table.header.show.all" class="font-italic">All columns</span>
-    </div>
+    </button>
   </ng-template>
 
 </mat-menu>

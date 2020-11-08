@@ -722,7 +722,7 @@
     </source><target>
       Měna
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="constraint.number.currency.empty" datatype="html">
         <source>Select currency</source><target>Vyberte měnu</target>
 
@@ -842,8 +842,8 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source><target>Nastavení sloupce...</target>
-        
-        
+
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/links-list-table-header.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/table/content/header/cell/table-header-cell.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="show.detail" datatype="html">
         <source>Show detail</source><target>Zobrazit detail</target>
 
@@ -1277,7 +1277,7 @@
         <target>{VAR_SELECT, select, yearly {Roky} quarterly {Kvartály} weekly {Týdny} monthYear {Měsíce a roky} month {Měsíce} dayMonth {Dny a měsíce} day {Dny} dayMonthYear {Dny, měsíce a roky} weekDay {Den v týdnu} hour {Hodiny} hourMinutes {Hodiny a minuty} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.duration.maxUnit" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</source><target>{VAR_SELECT, select, w {w (týdny} d {d (dny)} h {h (hodiny)} m {m (minuty)} s {s (sekundy)} }</target>
+        <source>{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</source><target>{VAR_SELECT, select, w {týdny} d {dny} h {hodiny} m {minuty} s {sekundy} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context>
           <context context-type="linenumber">1</context>
@@ -4523,10 +4523,10 @@
         </context-group>
       </trans-unit><trans-unit id="link.input.dropdown.title" datatype="html">
         <source>Title</source><target>Název</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="link.input.dropdown.title.placeholder" datatype="html">
         <source>Custom title</source><target>Název odkazu</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit>
             <trans-unit id="button.select" datatype="html">
                 <source>
