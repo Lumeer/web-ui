@@ -1,0 +1,14 @@
+@import 'src/styles/variables';
+
+:host {
+  display: flex;
+  align-items: baseline;
+}
+
+.clear {
+  color: $primary;
+
+  &:hover {
+    color: $primary-hover;
+  }
+}

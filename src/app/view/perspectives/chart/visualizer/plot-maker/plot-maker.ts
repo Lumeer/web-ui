@@ -19,11 +19,13 @@
 
 import {ElementRef} from '@angular/core';
 
-import {Data, Layout} from 'plotly.js';
+import {Layout, PlotData} from 'plotly.js';
 import {ChartData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ValueChange} from '../chart-visualizer';
+
+export type PlotlyChartData = Partial<PlotData>;
 
 export abstract class PlotMaker {
   protected chartData: ChartData;
@@ -52,7 +54,7 @@ export abstract class PlotMaker {
     this.onDataChanged = onDataChanged;
   }
 
-  public abstract createData(): Data[];
+  public abstract createData(): PlotlyChartData[];
 
   public abstract createLayout(): Partial<Layout>;
 

@@ -18,8 +18,9 @@
  */
 
 import {Component, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, Input} from '@angular/core';
-import {ContextMenuComponent} from 'ngx-contextmenu';
 import {TableContextMenuItem} from '../../../model/table-column';
+import {MatMenuTrigger} from '@angular/material/menu';
+import {preventEvent} from '../../../../utils/common.utils';
 
 @Component({
   selector: 'table-menu',
@@ -36,6 +37,21 @@ export class TableMenuComponent {
   @Output()
   public selected = new EventEmitter<TableContextMenuItem>();
 
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenu: ContextMenuComponent;
+  @ViewChild(MatMenuTrigger)
+  public contextMenu: MatMenuTrigger;
+
+  public contextMenuPosition = {x: 0, y: 0};
+
+  public open(x: number, y: number) {
+    this.contextMenuPosition = {x, y};
+    this.contextMenu.menu.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
+
+  public onClick(event: MouseEvent, item: TableContextMenuItem) {
+    preventEvent(event);
+    this.contextMenu.closeMenu();
+    this.selected.emit(item);
+  }
+
 }

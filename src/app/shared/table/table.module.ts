@@ -21,6 +21,10 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {MatMenuModule} from '@angular/material/menu';
+
+import {ClickOutsideModule} from 'ng-click-outside';
+
 import {TableComponent} from './table.component';
 import {TableHeaderComponent} from './content/header/table-header.component';
 import {TableRowComponent} from './content/row/table-row.component';
@@ -32,14 +36,12 @@ import {TableAlternativeHeaderComponent} from './content/alternative-header/tabl
 import {TableResizeHeaderComponent} from './content/resize-header/table-resize-header.component';
 import {TableRowDataCursorPipe} from './pipes/table-row-data-cursor.pipe';
 import {InputModule} from '../input/input.module';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {TableCellSelectedPipe} from './pipes/table-cell-selected.pipe';
 import {TableCellEditedPipe} from './pipes/table-cell-edited.pipe';
 import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
 import {TableHeaderInputComponent} from './content/header/cell/input/table-header-input.component';
 import {TableHeaderCellComponent} from './content/header/cell/table-header-cell.component';
 import {TableMenuComponent} from './content/common/menu/table-menu.component';
-import {ContextMenuModule} from 'ngx-contextmenu';
 import {GroupTableMenuItemsPipe} from './pipes/group-table-menu-items.pipe';
 import {TableHeaderHiddenComponent} from './content/header/cell/hidden/table-header-hidden.component';
 import {GroupTableColumnsPipe} from './pipes/group-table-columns.pipe';
@@ -77,9 +79,10 @@ import {ResizableSidebarModule} from '../resizable-sidebar/resizable-sidebar.mod
     ScrollingModule,
     InputModule,
     ClickOutsideModule,
-    ContextMenuModule,
     ResizableSidebarModule,
+    MatMenuModule,
   ],
   exports: [TableComponent],
 })
-export class TableModule {}
+export class TableModule {
+}

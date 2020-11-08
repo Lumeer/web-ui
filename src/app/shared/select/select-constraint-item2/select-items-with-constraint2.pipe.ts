@@ -19,20 +19,24 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
-import {SelectItemModel} from '../select-item/select-item.model';
 import {Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {deepObjectsEquals} from '../../utils/common.utils';
 import {getAttributesResourceType} from '../../utils/resource.utils';
+import {SelectItemWithConstraintFormatter} from '../select-constraint-item/select-item-with-constraint-formatter.service';
+import {SelectItem2Model} from '../select-item2/select-item2.model';
 
 @Pipe({
-  name: 'selectItemsWithConstraint',
+  name: 'selectItemsWithConstraint2',
 })
-export class SelectItemsWithConstraintPipe implements PipeTransform {
+export class SelectItemsWithConstraint2Pipe implements PipeTransform {
+
+  constructor(private formatter: SelectItemWithConstraintFormatter) {}
+
   public transform(
     attributesResources: AttributesResource[],
     restrictedAttributes: {resourceIndex: number; attributeId: string}[]
-  ): SelectItemModel[] {
+  ): SelectItem2Model[] {
     return (attributesResources || [])
       .reduce((selectItems, resource, index) => {
         const resourceType = getAttributesResourceType(resource);
@@ -46,16 +50,17 @@ export class SelectItemsWithConstraintPipe implements PipeTransform {
       .filter(item => !(restrictedAttributes || []).some(attr => deepObjectsEquals(item.id, attr)));
   }
 
-  public collectionSelectItems(collection: Collection, index: number): SelectItemModel[] {
+  public collectionSelectItems(collection: Collection, index: number): SelectItem2Model[] {
     return (collection?.attributes || []).map(attribute => ({
       id: {resourceIndex: index, attributeId: attribute.id},
       value: attribute.name,
       icons: [collection.icon],
       iconColors: [collection.color],
+      children: this.formatter.createItems(attribute)
     }));
   }
 
-  public linkTypeSelectItems(linkType: LinkType, index: number): SelectItemModel[] {
+  public linkTypeSelectItems(linkType: LinkType, index: number): SelectItem2Model[] {
     if (!linkType || !linkType.collections || linkType.collections.length !== 2) {
       return [];
     }

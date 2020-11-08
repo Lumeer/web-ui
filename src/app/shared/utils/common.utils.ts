@@ -122,7 +122,7 @@ enum SuggestionScore {
 
 export function sortObjectsByScore<T>(objects: T[], text: string, params: string[]): T[] {
   const textLowerCase = removeAccent(text || '').trim();
-  const valuesArray = (objects || []).reduce<{object: T; score: number}[]>((array, object) => {
+  const valuesArray = (objects || []).reduce<{ object: T; score: number }[]>((array, object) => {
     const value = String(getValueFromObjectParams<T>(object, params));
     const valueLowerCase = removeAccent(value).trim();
     if (valueLowerCase === textLowerCase) {
@@ -157,7 +157,7 @@ function getValueFromObjectParams<T>(object: T, params: string[]): any {
   return '';
 }
 
-export function objectsByIdMap<T extends {id?: string}>(objects: T[]): Record<string, T> {
+export function objectsByIdMap<T extends { id?: string }>(objects: T[]): Record<string, T> {
   return (objects || []).reduce((map, object) => ({...map, [object.id]: object}), {});
 }
 
@@ -205,4 +205,16 @@ export function preventEvent(event: Event) {
 export function objectValues<T>(object: Record<string, T>): T[] {
   // Object.values is not supported in older version of js
   return Object.keys(object || {}).map(key => object[key]);
+}
+
+export function computeElementPositionInParent(event: MouseEvent, parentTag: string): { x: number, y: number } {
+  let x = event.offsetX;
+  let y = event.offsetY;
+  let element = event.target as HTMLElement;
+  while (element && element.tagName.toLowerCase() !== parentTag) {
+    x += element.offsetLeft;
+    y += element.offsetTop;
+    element = element.offsetParent as HTMLElement;
+  }
+  return {x, y};
 }

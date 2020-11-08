@@ -1,23 +1,17 @@
-<select-item class="d-inline-block mb-2"
-             [items]="stem | queryStemResourcesSelectItems:collections:linkTypes:true"
-             placeholderTitle=""
-             [selectedId]="config?.collection"
-             [removable]="false"
-             [fitParent]="false"
-             buttonClasses="text-truncate"
-             (select)="onResourceSelected($event)">
-</select-item>
+<select-item2 class="d-inline-block mr-4"
+              [items]="stem | queryStemResourcesSelectItems:collections:linkTypes:true"
+              [selectedId]="config?.collection"
+              (select)="onResourceSelected($event)">
+</select-item2>
 
-<select-item-with-constraint class="d-inline-block mb-2 ml-2"
-                             [attributesResources]="attributesResourcesOrder"
-                             [restrictedIds]="[]"
-                             [emptyValue]="'Attribute'"
-                             buttonClasses="text-truncate"
-                             [selectedConstraint]="config?.attribute?.constraint"
-                             [selectedId]="config | workflowSelectedItem"
-                             [removable]="true"
-                             [fitParent]="false"
-                             (select)="onAttributeSelected($event)"
-                             (selectConstraint)="onConstraintSelect($event)"
-                             (remove)="onAttributeRemoved()">
-</select-item-with-constraint>
+<select-item-with-constraint2 class="d-inline-block"
+                              [attributesResources]="attributesResourcesOrder"
+                              [restrictedIds]="[]"
+                              [emptyValue]="'Select grouping Attribute'"
+                              [selectedConstraint]="config?.attribute?.constraint"
+                              [selectedId]="config | workflowSelectedItem"
+                              [removable]="true"
+                              (select)="onAttributeSelected($event)"
+                              (selectConstraint)="onConstraintSelect($event)"
+                              (remove)="onAttributeRemoved()">
+</select-item-with-constraint2>

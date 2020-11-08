@@ -60,6 +60,7 @@ export class WorkflowToolbarComponent implements OnChanges {
   }
 
   public onResourceSelected(resource: QueryAttribute) {
+    console.log(resource);
     this.onConfigChange({...this.config, collection: resource});
   }
 

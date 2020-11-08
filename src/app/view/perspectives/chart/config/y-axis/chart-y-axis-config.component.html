@@ -38,7 +38,7 @@
 
   <select-item class="d-block w-100 mt-2"
                *ngIf="config.type === chartType.Bubble"
-               [items]="attributesResources | selectItemWithConstraint:[]"
+               [items]="attributesResources | selectItemsWithConstraint:[]"
                [selectedId]="yAxis?.size | chartAxisSelectItemId"
                placeholderText="Size"
                i18n-placeholderText="@@perspective.chart.config.axis.size"
@@ -51,7 +51,7 @@
   </select-item>
 
   <select-item class="d-block w-100 mt-2"
-               [items]="attributesResources | selectItemWithConstraint:[]"
+               [items]="attributesResources | selectItemsWithConstraint:[]"
                [selectedId]="yAxis?.color | chartAxisSelectItemId"
                placeholderText="Color"
                i18n-placeholderText="@@perspective.chart.config.axis.color"

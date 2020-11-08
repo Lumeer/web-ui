@@ -20,18 +20,14 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
 import {Constraint} from '../../../core/model/constraint';
 import {AttributesResource} from '../../../core/model/resource';
-
-export interface SelectItemWithConstraintId {
-  resourceIndex: number;
-  attributeId: string;
-}
+import {SelectItemWithConstraintId} from '../select-constraint-item/select-item-with-constraint.component';
 
 @Component({
-  selector: 'select-item-with-constraint',
-  templateUrl: './select-item-with-constraint.component.html',
+  selector: 'select-item-with-constraint2',
+  templateUrl: './select-item-with-constraint2.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectItemWithConstraint {
+export class SelectItemWithConstraint2Component {
   @Input()
   public attributesResources: AttributesResource[];
 
@@ -45,12 +41,6 @@ export class SelectItemWithConstraint {
   public selectedConstraint: Constraint;
 
   @Input()
-  public placeholderIcon: string;
-
-  @Input()
-  public placeholderText: string = '';
-
-  @Input()
   public emptyValue: string = '';
 
   @Input()
@@ -58,12 +48,6 @@ export class SelectItemWithConstraint {
 
   @Input()
   public removable: boolean = false;
-
-  @Input()
-  public buttonClasses: string;
-
-  @Input()
-  public fitParent = true;
 
   @Output()
   public select = new EventEmitter<SelectItemWithConstraintId>();

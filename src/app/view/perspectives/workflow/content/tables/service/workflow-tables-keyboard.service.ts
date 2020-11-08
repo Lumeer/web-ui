@@ -25,13 +25,17 @@ import {TableCellType, TableModel} from '../../../../../../shared/table/model/ta
 
 @Injectable()
 export class WorkflowTablesKeyboardService {
-  constructor(private stateService: WorkflowTablesStateService) {}
+  constructor(private stateService: WorkflowTablesStateService) {
+  }
 
   private get tables(): TableModel[] {
     return this.stateService.tables;
   }
 
   public onKeyDown(event: KeyboardEvent) {
+    if (!this.shouldHandleKeyDown()) {
+      return;
+    }
     switch (event.code) {
       case KeyCode.ArrowDown:
       case KeyCode.ArrowUp:
@@ -55,6 +59,15 @@ export class WorkflowTablesKeyboardService {
     }
   }
 
+  private shouldHandleKeyDown(): boolean {
+    return !this.overlayOpened();
+  }
+
+  private overlayOpened(): boolean {
+    const overlayContainer = document.body.getElementsByClassName('cdk-overlay-container');
+    return overlayContainer.length > 0 && overlayContainer.item(0).hasChildNodes();
+  }
+
   private onBackSpaceKeyDown(event: KeyboardEvent) {
     if (!this.isSelected()) {
       return;
@@ -74,23 +87,22 @@ export class WorkflowTablesKeyboardService {
   }
 
   private onEnterKeyDown(event: KeyboardEvent) {
-    preventEvent(event);
-
     if (this.isEditing()) {
+      preventEvent(event);
       if (this.stateService.editedCell.type === TableCellType.Body) {
         this.stateService.moveSelectionDownFromEdited();
       } else {
         this.stateService.setSelectedCell(this.stateService.editedCell);
       }
     } else if (this.isSelected()) {
+      preventEvent(event);
       this.stateService.setEditedCell(this.stateService.selectedCell);
     }
   }
 
   private onTabKeyDown(event: KeyboardEvent) {
-    preventEvent(event);
-
     if (this.isEditing()) {
+      preventEvent(event);
       const {tableIndex, rowIndex, columnIndex, type} = this.stateService.getCellIndexes(this.stateService.editedCell);
       if (event.shiftKey) {
         this.stateService.selectCell(tableIndex, rowIndex, columnIndex - 1, type);
@@ -99,6 +111,7 @@ export class WorkflowTablesKeyboardService {
       }
       this.stateService.resetEditedCell();
     } else if (this.isSelected()) {
+      preventEvent(event);
       this.onArrowKeyDown(event);
     }
   }

@@ -17,18 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Data, Layout, PlotType} from 'plotly.js';
+import {Layout, PlotType} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {ChartDataSet} from '../../data/convertor/chart-data';
-import {PlotMaker} from './plot-maker';
+import {PlotlyChartData, PlotMaker} from './plot-maker';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {uniqueValues} from '../../../../../shared/utils/array.utils';
 
 const MAX_COLUMNS = 3;
 
 export class PiePlotMaker extends PlotMaker {
-  public createData(): Data[] {
+  public createData(): PlotlyChartData[] {
     const dataStyle = this.getDataStyle();
 
     const sets = this.getSets();
@@ -57,11 +57,11 @@ export class PiePlotMaker extends PlotMaker {
     );
   }
 
-  private getDataStyle(): Data {
+  private getDataStyle(): PlotlyChartData {
     return {type: <PlotType>'pie', marker: {}};
   }
 
-  private createEmptyPie(): Data {
+  private createEmptyPie(): PlotlyChartData {
     return {
       ...this.getDataStyle(),
       showlegend: false,
@@ -76,7 +76,7 @@ export class PiePlotMaker extends PlotMaker {
     // nothing to do
   }
 
-  private createAxesData(dataStyle: Data, set: ChartDataSet, row?: number, column?: number): Data {
+  private createAxesData(dataStyle: PlotlyChartData, set: ChartDataSet, row?: number, column?: number): PlotlyChartData {
     const labels = [];
     const values = [];
     const colors = [];

@@ -1,5 +1,9 @@
 @import 'src/styles/variables';
 
+:host {
+  position: relative;
+}
+
 td {
   padding: 0;
   border: 0.5px $gray-200 dotted;

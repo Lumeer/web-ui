@@ -17,18 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Data, Layout, d3} from 'plotly.js';
+import {Layout, d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
 import {AxisDraggablePlotMaker, PointData} from './axis-draggable-plot-maker';
 import {ChartAxisData, ChartDataSet, ChartYAxisType} from '../../data/convertor/chart-data';
+import {PlotlyChartData} from './plot-maker';
 
 export class BarPlotMaker extends AxisDraggablePlotMaker {
-  public createData(): Data[] {
+  public createData(): PlotlyChartData[] {
     const y1Sets = this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y1);
     const y2Sets = this.chartData.sets.filter(set => set.yAxisType === ChartAxisType.Y2);
 
-    const helperData: {y1: Data[]; y2: Data[]} = this.createHelperData(
+    const helperData: {y1: PlotlyChartData[]; y2: PlotlyChartData[]} = this.createHelperData(
       this.chartData.y1AxisData,
       y1Sets,
       this.chartData.y2AxisData,
@@ -41,13 +42,13 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return [...y1Data, ...helperData.y1, ...helperData.y2, ...y2Data];
   }
 
-  private createAxisData(set: ChartDataSet): Data {
+  private createAxisData(set: ChartDataSet): PlotlyChartData {
     const traceX = [];
     const traceY = [];
     const colors = [];
     const texts = [];
 
-    let data: Data;
+    let data: PlotlyChartData;
     set.points.forEach(point => {
       traceX.push(point.x);
       traceY.push(point.y);
@@ -74,15 +75,15 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return data;
   }
 
-  private axis1DataStyle(set: ChartDataSet): Data {
+  private axis1DataStyle(set: ChartDataSet): PlotlyChartData {
     return this.getDefaultDataStyle(set.color, ChartAxisType.Y1);
   }
 
-  private axis2DataStyle(set: ChartDataSet): Data {
+  private axis2DataStyle(set: ChartDataSet): PlotlyChartData {
     return {...this.getDefaultDataStyle(set.color, ChartAxisType.Y2), yaxis: 'y2'};
   }
 
-  private getDefaultDataStyle(color: string, type: ChartYAxisType): Data {
+  private getDefaultDataStyle(color: string, type: ChartYAxisType): PlotlyChartData {
     if (type === ChartAxisType.Y1) {
       return {type: 'bar' as const, marker: {color}};
     } else {
@@ -95,7 +96,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     y1Sets: ChartDataSet[],
     y2Axis: ChartAxisData,
     y2Sets: ChartDataSet[]
-  ): {y1: Data[]; y2: Data[]} {
+  ): {y1: PlotlyChartData[]; y2: PlotlyChartData[]} {
     const y1Point = this.firstNonNullValue(y1Axis, y1Sets);
     const y2Point = this.firstNonNullValue(y2Axis, y2Sets);
     if (!y1Point || !y2Point) {
@@ -121,7 +122,7 @@ export class BarPlotMaker extends AxisDraggablePlotMaker {
     return null;
   }
 
-  private createHelperDataForPoint(x: any, y: any, yaxis?: string): Data {
+  private createHelperDataForPoint(x: any, y: any, yaxis?: string): PlotlyChartData {
     return {
       x: [x],
       y: [y],

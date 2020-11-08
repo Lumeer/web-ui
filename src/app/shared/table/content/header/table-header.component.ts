@@ -35,6 +35,7 @@ import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {AttributeSortType} from '../../../../core/store/views/view';
+import {computeElementPositionInParent} from '../../../utils/common.utils';
 
 @Component({
   selector: '[table-header]',
@@ -178,18 +179,7 @@ export class TableHeaderComponent implements OnChanges {
   }
 
   public onMouseDown(event: MouseEvent) {
-    this.dragStartOffset = this.offsetLeft(event);
-  }
-
-  private offsetLeft(event: MouseEvent): number {
-    let offset = event.offsetX;
-    let parent = event.target as HTMLElement;
-    while (parent && parent.tagName.toLowerCase() !== 'th') {
-      offset += parent.offsetLeft;
-      parent = parent.offsetParent as HTMLElement;
-    }
-
-    return offset;
+    this.dragStartOffset = computeElementPositionInParent(event, 'th').x;
   }
 
   public onColumnDragStarted() {

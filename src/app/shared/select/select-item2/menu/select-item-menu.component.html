@@ -1,0 +1,17 @@
+<mat-menu #childMenu="matMenu">
+  <span *ngFor="let child of items">
+
+    <span *ngIf="child.children?.length > 0">
+      <button mat-menu-item [matMenuTriggerFor]="menu.childMenu">
+        <select-item-row [item]="child"></select-item-row>
+      </button>
+      <select-item-menu #menu [items]="child.children"></select-item-menu>
+    </span>
+
+    <span *ngIf="!child.children || child.children.length === 0">
+      <button mat-menu-item>
+        <select-item-row [item]="child"></select-item-row>
+      </button>
+    </span>
+  </span>
+</mat-menu>

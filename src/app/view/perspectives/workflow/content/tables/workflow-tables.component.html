@@ -4,12 +4,11 @@
                 class="position-fixed">
   </hidden-input>
 
-
   <ng-container
     *ngIf="{selectedCell: selectedCell$ | async, editedCell: editedCell$ | async, tables: tables$ | async} as data">
     <div *ngFor="let stemConfig of config.stemsConfigs; trackBy:trackByStem; let index = index;">
 
-      <workflow-toolbar [config]="stemConfig"
+      <workflow-toolbar class="mb-2" [config]="stemConfig"
                         [linkTypes]="linkTypes"
                         [collections]="collections"
                         [stem]="stemConfig.stem"

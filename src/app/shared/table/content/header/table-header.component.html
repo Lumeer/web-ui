@@ -23,6 +23,7 @@
       (dblclick)="onHeaderDoubleClick(group.column)">
       <table-header-cell *ngIf="index !== dragData.index"
                          [editing]="columnData.edited && editedCell?.tableId === group.tableId"
+                         [style.border-color]="columnData.selected || columnData.edited ? 'transparent' : null"
                          [editingValue]="editedCell?.inputValue"
                          [column]="group.column"
                          [hiddenColumns]="group.hiddenColumns"

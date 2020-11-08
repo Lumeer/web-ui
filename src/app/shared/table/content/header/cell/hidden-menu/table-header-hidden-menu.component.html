@@ -1,17 +1,22 @@
-<context-menu #contextMenu>
+<div class="position-absolute"
+     [style.left.px]="contextMenuPosition.x"
+     [style.top.px]="contextMenuPosition.y"
+     [matMenuTriggerFor]="contextMenu">
+</div>
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent>
 
-  <ng-template *ngFor="let column of hiddenColumns"
-               contextMenuItem
-               [enabled]="true"
-               (execute)="onSelected(column)">
-    <span>{{column.attribute?.name}}</span>
+    <div *ngFor="let column of hiddenColumns"
+         mat-menu-item
+         (click)="onSelected($event, column)">
+      <span>{{column.attribute?.name}}</span>
+    </div>
+
+    <div *ngIf="hiddenColumns.length > 1"
+         mat-menu-item
+         (click)="onAllSelected($event)">
+      <span i18n="@@table.header.show.all" class="font-italic">All columns</span>
+    </div>
   </ng-template>
 
-  <ng-template *ngIf="hiddenColumns.length > 1"
-               contextMenuItem
-               [enabled]="true"
-               (execute)="onAllSelected()">
-    <span i18n="@@table.header.show.all" class="font-italic">All columns</span>
-  </ng-template>
-
-</context-menu>
+</mat-menu>

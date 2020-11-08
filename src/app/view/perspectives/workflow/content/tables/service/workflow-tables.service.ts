@@ -87,6 +87,7 @@ export class WorkflowTablesService {
           rowId: row.id,
           columnId: column.id,
           tableId: column.tableId,
+          linkId: row.linkInstanceId,
           type: TableCellType.Body,
         });
         break;
@@ -117,7 +118,7 @@ export class WorkflowTablesService {
   public onColumnMenuSelected(column: TableColumn, item: TableContextMenuItem) {
     switch (item.id) {
       case HeaderMenuId.Edit:
-        this.stateService.setEditedCell({columnId: column.id, tableId: column.tableId, type: TableCellType.Header});
+        this.stateService.setEditedCell({columnId: column.id, tableId: column.tableId, type: TableCellType.Header, linkId: undefined});
         break;
       case HeaderMenuId.Type:
         this.dataService.showAttributeType(column);

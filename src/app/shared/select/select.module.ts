@@ -25,7 +25,7 @@ import {PickerModule} from '../picker/picker.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {SelectItemWithConstraint} from './select-constraint-item/select-item-with-constraint.component';
 import {SelectItemWithConstraintConfigPipe} from './select-constraint-item/select-items-with-constraint-config.pipe';
-import {SelectItemWithConstraintPipe} from './select-constraint-item/select-items-with-constraint.pipe';
+import {SelectItemsWithConstraintPipe} from './select-constraint-item/select-items-with-constraint.pipe';
 import {AreIdsEqualPipe} from './select-item/are-ids-equal.pipe';
 import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
 
@@ -36,6 +36,12 @@ import {DataInputModule} from '../data-input/data-input.module';
 import {GetSelectDataItemPipe} from './select-data-item/get-select-data-item.pipe';
 import {DataDropdownModule} from '../data-dropdown/data-dropdown.module';
 import {SelectCollectionComponent} from './select-collection/select-collection.component';
+import {SelectItem2Component} from './select-item2/select-item2.component';
+import {MatMenuModule} from '@angular/material/menu';
+import { SelectItemRowComponent } from './select-item/row/select-item-row.component';
+import {SelectItemWithConstraint2Component} from './select-constraint-item2/select-item-with-constraint2.component';
+import {SelectItemsWithConstraint2Pipe} from './select-constraint-item2/select-items-with-constraint2.pipe';
+import { SelectItemMenuComponent } from './select-item2/menu/select-item-menu.component';
 
 @NgModule({
   imports: [
@@ -47,25 +53,33 @@ import {SelectCollectionComponent} from './select-collection/select-collection.c
     DropdownModule,
     DataInputModule,
     DataDropdownModule,
+    MatMenuModule,
   ],
   declarations: [
     SelectItemComponent,
+    SelectItem2Component,
     GetSelectItemPipe,
     AreIdsEqualPipe,
     SelectItemWithConstraint,
-    SelectItemWithConstraintPipe,
+    SelectItemWithConstraint2Component,
     SelectItemWithConstraintConfigPipe,
+    SelectItemsWithConstraintPipe,
+    SelectItemsWithConstraint2Pipe,
     SelectDataItemComponent,
     GetSelectDataItemPipe,
     SelectCollectionComponent,
+    SelectItemRowComponent,
+    SelectItemMenuComponent,
   ],
   providers: [AreIdsEqualPipe],
   exports: [
     SelectItemComponent,
+    SelectItem2Component,
     SelectItemWithConstraint,
+    SelectItemWithConstraint2Component,
     SelectDataItemComponent,
     SelectCollectionComponent,
-    SelectItemWithConstraintPipe,
+    SelectItemsWithConstraintPipe,
   ],
 })
 export class SelectModule {}

@@ -17,43 +17,63 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild, EventEmitter, Output} from '@angular/core';
-import {TableColumn} from '../../../../model/table-column';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges, ViewChild,
+} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
-import {preventEvent} from '../../../../../utils/common.utils';
+import {SelectItem2Model} from './select-item2.model';
+import {preventEvent} from '../../utils/common.utils';
 
 @Component({
-  selector: 'table-header-hidden-menu',
-  templateUrl: './table-header-hidden-menu.component.html',
+  selector: 'select-item2',
+  templateUrl: './select-item2.component.html',
+  styleUrls: ['./select-item2.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableHeaderHiddenMenuComponent {
+export class SelectItem2Component implements OnChanges {
   @Input()
-  public hiddenColumns: TableColumn[];
+  public items: SelectItem2Model[];
+
+  @Input()
+  public selectedId: any;
+
+  @Input()
+  public emptyValue: string = '';
+
+  @Input()
+  public disabled: boolean;
+
+  @Input()
+  public removable: boolean;
 
   @Output()
-  public selected = new EventEmitter<TableColumn[]>();
+  public select = new EventEmitter<any>();
+
+  @Output()
+  public remove = new EventEmitter();
 
   @ViewChild(MatMenuTrigger)
   public contextMenu: MatMenuTrigger;
 
-  public contextMenuPosition = {x: 0, y: 0};
-
-  public open(x: number, y: number) {
-    this.contextMenuPosition = {x, y};
-    this.contextMenu.menu.focusFirstItem('mouse');
-    this.contextMenu.openMenu();
+  public ngOnChanges(changes: SimpleChanges): void {
   }
 
-  public onSelected(event: MouseEvent, column: TableColumn) {
+  public onSelect(event: MouseEvent, item: SelectItem2Model) {
     preventEvent(event);
     this.contextMenu.closeMenu();
-    this.selected.emit([column]);
+    this.select.emit(item.id);
   }
 
-  public onAllSelected(event: MouseEvent) {
-    preventEvent(event);
-    this.contextMenu.closeMenu();
-    this.selected.emit(this.hiddenColumns);
+  public onRemove(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.remove.emit();
   }
+
 }

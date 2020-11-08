@@ -1,0 +1,21 @@
+<button class="btn btn-link text-decoration-none px-0"
+        *ngIf="{selectedItem: selectedId | getSelectItem:items } as data"
+        type="button"
+        [disabled]="disabled"
+        [matMenuTriggerFor]="menu.childMenu"
+        [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'">
+
+  <select-item-row *ngIf="data.selectedItem; else empty"
+                   [item]="data.selectedItem"
+                   [disabled]="disabled"
+                   [removable]="removable"
+                   (remove)="remove.emit()">
+  </select-item-row>
+</button>
+
+<ng-template #empty>
+      <span class="flex-grow-1 text-left empty-text text-truncate"
+            [title]="emptyValue">{{emptyValue}}</span>
+</ng-template>
+
+<select-item-menu #menu [items]="items"></select-item-menu>

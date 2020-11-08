@@ -20,7 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import {TableColumn, TableContextMenuItem} from '../../../model/table-column';
 import {TableMenuComponent} from '../../common/menu/table-menu.component';
-import {preventEvent} from '../../../../utils/common.utils';
+import {computeElementPositionInParent, preventEvent} from '../../../../utils/common.utils';
 import {ContextMenuService} from 'ngx-contextmenu';
 import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
 import {AttributeSortType} from '../../../../../core/store/views/view';
@@ -70,11 +70,12 @@ export class TableHeaderCellComponent {
   public contextMenuComponent: TableMenuComponent;
 
   @ViewChild(TableHeaderHiddenMenuComponent)
-  public hiddenContextMenuComponent: TableHeaderHiddenMenuComponent;
+  public hiddenMenuComponent: TableHeaderHiddenMenuComponent;
 
   public readonly sortType = AttributeSortType;
 
-  constructor(private contextMenuService: ContextMenuService) {}
+  constructor(private contextMenuService: ContextMenuService) {
+  }
 
   public onHeaderCancel() {
     this.onCancel.emit();
@@ -88,11 +89,8 @@ export class TableHeaderCellComponent {
 
   public onContextMenu(event: MouseEvent) {
     if (!this.column?.hidden && this.column.menuItems?.length) {
-      this.contextMenuService.show.next({
-        contextMenu: this.contextMenuComponent?.contextMenu,
-        event,
-        item: null,
-      });
+      const {x, y} = computeElementPositionInParent(event, 'table-header-cell');
+      this.contextMenuComponent?.open(x, y);
 
       preventEvent(event);
     }
@@ -100,11 +98,8 @@ export class TableHeaderCellComponent {
 
   public onHiddenContextMenu(event: MouseEvent) {
     if (this.hiddenColumns?.length) {
-      this.contextMenuService.show.next({
-        contextMenu: this.hiddenContextMenuComponent?.contextMenu,
-        event,
-        item: null,
-      });
+      const {x, y} = computeElementPositionInParent(event, 'table-header-cell');
+      this.hiddenMenuComponent?.open(x, y);
 
       preventEvent(event);
     }

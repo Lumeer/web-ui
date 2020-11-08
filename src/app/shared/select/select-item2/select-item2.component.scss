@@ -1,13 +1,5 @@
 @import '../../../../styles/variables';
 
-.clear {
-  color: $primary;
-
-  &:hover {
-    color: $primary-hover;
-  }
-}
-
 .empty-text {
   color: $gray-500;
 }

@@ -25,22 +25,25 @@ import {
   EventEmitter,
   OnChanges,
   SimpleChanges,
-  ViewChildren,
-  QueryList,
+  ViewChild,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {columnConstraintType, TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
 import {DataValue} from '../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {isNotNullOrUndefined, isNullOrUndefinedOrEmpty, preventEvent} from '../../../utils/common.utils';
+import {
+  computeElementPositionInParent,
+  isNotNullOrUndefined,
+  isNullOrUndefinedOrEmpty,
+  preventEvent
+} from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
 import {isTableColumnDirectlyEditable} from '../../model/table-utils';
-import {ContextMenuService} from 'ngx-contextmenu';
 import {TableMenuComponent} from '../common/menu/table-menu.component';
 
 @Component({
@@ -75,19 +78,19 @@ export class TableRowComponent implements OnChanges {
   public onDetail = new EventEmitter();
 
   @Output()
-  public onCancel = new EventEmitter<{columnId: string; action: DataInputSaveAction}>();
+  public onCancel = new EventEmitter<{ columnId: string; action: DataInputSaveAction }>();
 
   @Output()
   public onDoubleClick = new EventEmitter<string>();
 
   @Output()
-  public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
+  public newValue = new EventEmitter<{ columnId: string; value: any; action: DataInputSaveAction }>();
 
   @Output()
-  public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
+  public menuSelected = new EventEmitter<{ row: TableRow; column: TableColumn; item: TableContextMenuItem }>();
 
-  @ViewChildren(TableMenuComponent)
-  public tableMenuComponents: QueryList<TableMenuComponent>;
+  @ViewChild(TableMenuComponent)
+  public tableMenuComponent: TableMenuComponent;
 
   public readonly tableRowHeight = TABLE_ROW_HEIGHT;
   public readonly cellType = TableCellType.Body;
@@ -101,8 +104,6 @@ export class TableRowComponent implements OnChanges {
   public editedValue: DataValue;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
-
-  constructor(private contextMenuService: ContextMenuService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.editedCell) {
@@ -161,12 +162,12 @@ export class TableRowComponent implements OnChanges {
     return null;
   }
 
-  public onNewValue(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
+  public onNewValue(column: TableColumn, data: { action?: DataInputSaveAction; dataValue: DataValue }) {
     this.editedValue = null;
     this.saveData(column, data);
   }
 
-  private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
+  private saveData(column: TableColumn, data: { action?: DataInputSaveAction; dataValue: DataValue }) {
     const value = data.dataValue.serialize();
     const currentValue = this.columnValue(column);
     if (currentValue === value || (isNullOrUndefinedOrEmpty(value) && isNullOrUndefinedOrEmpty(currentValue))) {
@@ -207,20 +208,24 @@ export class TableRowComponent implements OnChanges {
   }
 
   public onContextMenu(columnId: string, event: MouseEvent) {
-    const menuElement = columnId && this.tableMenuComponents.find(component => component.id === columnId);
-    if (menuElement) {
-      this.contextMenuService.show.next({
-        contextMenu: menuElement.contextMenu,
-        event,
-        item: null,
-      });
+    const columnIndex = this.columnGroups?.findIndex(group => group.column?.id === columnId);
+    const column = this.columnGroups[columnIndex]?.column;
+    if (column) {
+      this.tableMenuComponent.id = columnId;
+      this.tableMenuComponent.items = column.collectionId ? this.row.documentMenuItems : this.row.linkMenuItems;
+
+      const {x, y} = computeElementPositionInParent(event, 'table');
+      this.tableMenuComponent.open(x, y);
     }
 
     preventEvent(event);
   }
 
-  public onMenuSelected(row: TableRow, column: TableColumn, item: TableContextMenuItem) {
-    this.menuSelected.emit({row, column, item});
+  public onMenuSelected(row: TableRow, columnId: string, item: TableContextMenuItem) {
+    const column = this.columnGroups?.find(group => group.column?.id === columnId)?.column;
+    if (column) {
+      this.menuSelected.emit({row, column, item});
+    }
   }
 
   public onDetailClick(event: MouseEvent) {
