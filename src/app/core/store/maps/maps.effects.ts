@@ -22,7 +22,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {ContentService} from '../../rest/content.service';
 import {EMPTY, Observable, of} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
-import {catchError, flatMap, map, mergeMap, withLatestFrom} from 'rxjs/operators';
+import {catchError, map, mergeMap, withLatestFrom} from 'rxjs/operators';
 import {MapsAction, MapsActionType} from './maps.action';
 import {AppState} from '../app.state';
 import {selectMapsState} from './maps.state';
@@ -60,7 +60,7 @@ export class MapsEffects {
               map(data => DOMPurify.sanitize(data)),
               mergeMap(data => checkSvgSize(data)),
               map(data => ({...data, mimeType})),
-              flatMap(data => [
+              mergeMap(data => [
                 new MapsAction.DownloadImageDataSuccess({
                   url,
                   data,
@@ -74,7 +74,7 @@ export class MapsEffects {
             map(blob => URL.createObjectURL(blob)),
             mergeMap(data => checkBlobUrlSize(data)),
             map(data => ({...data, mimeType})),
-            flatMap(data => [
+            mergeMap(data => [
               new MapsAction.DownloadImageDataSuccess({
                 url,
                 data,

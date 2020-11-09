@@ -24,7 +24,7 @@ import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {AppState} from '../app.state';
 import {NotificationsAction} from '../notifications/notifications.action';
@@ -54,7 +54,7 @@ export class OrganizationsEffects {
       this.organizationService.getOrganizations().pipe(
         map(dtos => dtos.map(dto => OrganizationConverter.fromDto(dto))),
         map(organizations => new OrganizationsAction.GetSuccess({organizations: organizations})),
-        catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.GetFailure({error})))
       )
     )
   );
@@ -66,7 +66,7 @@ export class OrganizationsEffects {
       this.organizationService.getOrganization(action.payload.organizationId).pipe(
         map((dto: OrganizationDto) => OrganizationConverter.fromDto(dto)),
         map(organization => new OrganizationsAction.GetSuccess({organizations: [organization]})),
-        catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.GetFailure({error})))
       )
     )
   );
@@ -89,7 +89,7 @@ export class OrganizationsEffects {
     mergeMap(() =>
       this.organizationService.getOrganizationsCodes().pipe(
         map(organizationCodes => new OrganizationsAction.GetCodesSuccess({organizationCodes})),
-        catchError(error => of(new OrganizationsAction.GetCodesFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.GetCodesFailure({error})))
       )
     )
   );
@@ -109,7 +109,7 @@ export class OrganizationsEffects {
 
       return this.organizationService.createOrganization(organizationDto).pipe(
         map(dto => OrganizationConverter.fromDto(dto, organization.correlationId)),
-        flatMap(newOrganization => {
+        mergeMap(newOrganization => {
           const actions: Action[] = [
             new OrganizationsAction.CreateSuccess({organization: newOrganization}),
             new ServiceLimitsAction.GetServiceLimits({organizationId: newOrganization.id}),
@@ -122,7 +122,7 @@ export class OrganizationsEffects {
           return actions;
         }),
         catchError(error => {
-          const actions: Action[] = [new OrganizationsAction.CreateFailure({error: error})];
+          const actions: Action[] = [new OrganizationsAction.CreateFailure({error})];
           if (onFailure) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure()}));
           }
@@ -171,7 +171,7 @@ export class OrganizationsEffects {
               oldCode: oldOrganization.code,
             })
         ),
-        catchError(error => of(new OrganizationsAction.UpdateFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.UpdateFailure({error})))
       );
     })
   );
@@ -180,7 +180,7 @@ export class OrganizationsEffects {
   public updateSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<OrganizationsAction.UpdateSuccess>(OrganizationsActionType.UPDATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
-    flatMap(([action, codes]) => {
+    mergeMap(([action, codes]) => {
       const {organization, oldCode} = action.payload;
       let newCodes = (codes && [...codes]) || [];
       if (oldCode) {
@@ -224,7 +224,7 @@ export class OrganizationsEffects {
       const organization = organizationEntities[organizationId];
       return this.organizationService.deleteOrganization(organizationId).pipe(
         map(() => new OrganizationsAction.DeleteSuccess({organizationId, organizationCode: organization.code})),
-        catchError(error => of(new OrganizationsAction.DeleteFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.DeleteFailure({error})))
       );
     })
   );
@@ -234,7 +234,7 @@ export class OrganizationsEffects {
     ofType<OrganizationsAction.DeleteSuccess>(OrganizationsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectOrganizationCodes))),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    flatMap(([[action, codes], navigation]) => {
+    mergeMap(([[action, codes], navigation]) => {
       const {organizationCode} = action.payload;
       let newCodes = (codes && [...codes]) || [];
       if (organizationCode) {

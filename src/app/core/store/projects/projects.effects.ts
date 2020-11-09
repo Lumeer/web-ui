@@ -117,7 +117,7 @@ export class ProjectsEffects {
           organizationIds.reduce((codesMap, id, index) => ({...codesMap, [id]: arrayOfCodes[index]}), {})
         ),
         map(codesMap => new ProjectsAction.GetCodesSuccess({codesMap})),
-        catchError(error => of(new ProjectsAction.GetCodesFailure({error: error})))
+        catchError(error => of(new ProjectsAction.GetCodesFailure({error})))
       );
     })
   );
@@ -226,7 +226,7 @@ export class ProjectsEffects {
         .pipe(
           map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId)),
           map(newProject => new ProjectsAction.UpdateSuccess({project: newProject, oldCode: oldProject.code})),
-          catchError(error => of(new ProjectsAction.UpdateFailure({error: error})))
+          catchError(error => of(new ProjectsAction.UpdateFailure({error})))
         );
     })
   );
@@ -282,7 +282,7 @@ export class ProjectsEffects {
       const project = projectsMap[projectId];
       return this.projectService.deleteProject(organizationId, projectId).pipe(
         map(() => new ProjectsAction.DeleteSuccess({...action.payload, projectCode: project.code})),
-        catchError(error => of(new ProjectsAction.DeleteFailure({error: error})))
+        catchError(error => of(new ProjectsAction.DeleteFailure({error})))
       );
     })
   );

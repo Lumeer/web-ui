@@ -34,4 +34,6 @@ export interface WorkflowTable extends TableModel {
   height: number;
   minHeight: number;
   maxHeight: number;
+  width: number;
+  newRowData: Record<string, any>;
 }

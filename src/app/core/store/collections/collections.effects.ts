@@ -70,7 +70,7 @@ export class CollectionsEffects {
       return this.collectionService.getCollections(action.payload.workspace).pipe(
         map((dtos: CollectionDto[]) => dtos.map(dto => convertCollectionDtoToModel(dto))),
         map(collections => new CollectionsAction.GetSuccess({collections: collections})),
-        catchError(error => of(new CollectionsAction.GetFailure({error: error})))
+        catchError(error => of(new CollectionsAction.GetFailure({error})))
       );
     })
   );
@@ -82,7 +82,7 @@ export class CollectionsEffects {
       return this.collectionService.getCollection(action.payload.collectionId).pipe(
         map((dto: CollectionDto) => convertCollectionDtoToModel(dto)),
         map(collection => new CollectionsAction.GetSuccess({collections: [collection]})),
-        catchError(error => of(new CollectionsAction.GetFailure({error: error})))
+        catchError(error => of(new CollectionsAction.GetFailure({error})))
       );
     })
   );
@@ -134,7 +134,7 @@ export class CollectionsEffects {
 
           return actions;
         }),
-        catchError(error => of(new CollectionsAction.CreateFailure({error: error})))
+        catchError(error => of(new CollectionsAction.CreateFailure({error})))
       );
     })
   );
@@ -175,7 +175,7 @@ export class CollectionsEffects {
 
           return actions;
         }),
-        catchError(error => of(new CollectionsAction.ImportFailure({error: error})))
+        catchError(error => of(new CollectionsAction.ImportFailure({error})))
       );
     })
   );
@@ -250,7 +250,7 @@ export class CollectionsEffects {
 
           return actions;
         }),
-        catchError(error => of(new CollectionsAction.DeleteFailure({error: error})))
+        catchError(error => of(new CollectionsAction.DeleteFailure({error})))
       )
     )
   );
@@ -289,7 +289,7 @@ export class CollectionsEffects {
       this.collectionService.addFavorite(action.payload.collectionId).pipe(
         mergeMap(() => of()),
         catchError(error =>
-          of(new CollectionsAction.AddFavoriteFailure({collectionId: action.payload.collectionId, error: error}))
+          of(new CollectionsAction.AddFavoriteFailure({collectionId: action.payload.collectionId, error}))
         )
       )
     )
@@ -315,7 +315,7 @@ export class CollectionsEffects {
       this.collectionService.removeFavorite(action.payload.collectionId).pipe(
         mergeMap(() => of()),
         catchError(error =>
-          of(new CollectionsAction.RemoveFavoriteFailure({collectionId: action.payload.collectionId, error: error}))
+          of(new CollectionsAction.RemoveFavoriteFailure({collectionId: action.payload.collectionId, error}))
         )
       )
     )
@@ -419,7 +419,7 @@ export class CollectionsEffects {
           return actions;
         }),
         catchError(error =>
-          of(...createCallbackActions(onFailure), new CollectionsAction.CreateAttributesFailure({error: error}))
+          of(...createCallbackActions(onFailure), new CollectionsAction.CreateAttributesFailure({error}))
         )
       );
     })
@@ -457,7 +457,7 @@ export class CollectionsEffects {
           return actions;
         }),
         catchError(error => {
-          const actions: Action[] = [new CollectionsAction.ChangeAttributeFailure({error: error})];
+          const actions: Action[] = [new CollectionsAction.ChangeAttributeFailure({error})];
           if (onFailure) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure(error)}));
           }

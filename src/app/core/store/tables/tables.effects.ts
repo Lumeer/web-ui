@@ -27,7 +27,6 @@ import {
   distinctUntilChanged,
   filter,
   first,
-  flatMap,
   map,
   mergeMap,
   switchMap,
@@ -389,7 +388,7 @@ export class TablesEffects {
         })
       )
     ),
-    flatMap(({action, part, collection}) => {
+    mergeMap(({action, part, collection}) => {
       const childNames = ['A', 'B'];
 
       const {cursor} = action.payload;
@@ -529,7 +528,7 @@ export class TablesEffects {
     mergeMap(action =>
       this.store$.select(selectTableById(action.payload.cursor.tableId)).pipe(
         first(),
-        flatMap(table => {
+        mergeMap(table => {
           const {cursor} = action.payload;
           const part = table.config.parts[cursor.partIndex];
           const column = findTableColumn(part.columns, cursor.columnPath);

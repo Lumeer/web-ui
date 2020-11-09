@@ -127,7 +127,7 @@ export class TableRowComponent implements OnChanges {
   }
 
   private isEditing(): boolean {
-    if (this.cellType === TableCellType.Body) {
+    if (this.isBodyCell()) {
       return (
         this.editedCell?.rowId === this.row?.id &&
         this.editedCell?.linkId === this.row?.linkInstanceId &&
@@ -178,11 +178,18 @@ export class TableRowComponent implements OnChanges {
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
     const value = data.dataValue.serialize();
     const currentValue = this.columnValue(column);
-    if (currentValue === value || (isNullOrUndefinedOrEmpty(value) && isNullOrUndefinedOrEmpty(currentValue))) {
+    if (
+      this.isBodyCell() &&
+      (currentValue === value || (isNullOrUndefinedOrEmpty(value) && isNullOrUndefinedOrEmpty(currentValue)))
+    ) {
       this.onDataInputCancel(column, data.action);
     } else {
       this.newValue.emit({columnId: column.id, value, action: data.action});
     }
+  }
+
+  private isBodyCell(): boolean {
+    return this.cellType === TableCellType.Body;
   }
 
   public onDataInputDblClick(column: TableColumn, event: MouseEvent) {

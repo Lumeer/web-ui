@@ -46,7 +46,7 @@ export class SequencesEffects {
               sequences: SequenceConverter.fromDtos(sequences),
             })
         ),
-        catchError(error => of(new SequencesAction.GetFailure({error: error})))
+        catchError(error => of(new SequencesAction.GetFailure({error})))
       )
     )
   );
@@ -70,7 +70,7 @@ export class SequencesEffects {
       return this.sequenceService.updateSequence(sequenceDto).pipe(
         map(dto => SequenceConverter.fromDto(dto)),
         map(sequence => new SequencesAction.UpdateSuccess({sequence})),
-        catchError(error => of(new SequencesAction.UpdateFailure({error: error})))
+        catchError(error => of(new SequencesAction.UpdateFailure({error})))
       );
     })
   );
@@ -91,7 +91,7 @@ export class SequencesEffects {
     mergeMap(action => {
       return this.sequenceService.removeSequence(action.payload.sequence.id).pipe(
         map(notificationId => new SequencesAction.DeleteSuccess({id: notificationId})),
-        catchError(error => of(new SequencesAction.DeleteFailure({error: error, id: action.payload.sequence.id})))
+        catchError(error => of(new SequencesAction.DeleteFailure({error, id: action.payload.sequence.id})))
       );
     })
   );

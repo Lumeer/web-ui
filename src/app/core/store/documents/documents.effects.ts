@@ -23,7 +23,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {UserHintService} from '../../../shared/user-hint/user-hint.service';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {ConstraintType} from '../../model/data/constraint';
@@ -39,7 +39,6 @@ import {convertQueryModelToDto} from '../navigation/query/query.converter';
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationByWorkspace} from '../organizations/organizations.state';
-import {RouterAction} from '../router/router.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
@@ -139,7 +138,10 @@ export class DocumentsEffects {
               ];
             }),
             catchError(error =>
-              of(...createCallbackActions(action.payload.onFailure), new DocumentsAction.CreateFailure({error: error}))
+              of(
+                ...createCallbackActions(action.payload.onFailure),
+                new DocumentsAction.CreateFailure({correlationId, error})
+              )
             )
           );
         })
@@ -171,7 +173,7 @@ export class DocumentsEffects {
             ])
           );
         }),
-        catchError(error => of(...createCallbackActions(onFailure), new DocumentsAction.CreateFailure({error: error})))
+        catchError(error => of(...createCallbackActions(onFailure), new DocumentsAction.CreateFailure({error})))
       );
     })
   );
@@ -247,7 +249,7 @@ export class DocumentsEffects {
           return this.documentService.patchDocument(collectionId, documentId, documentDto).pipe(
             map(dto => convertDocumentDtoToModel(dto)),
             map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
-            catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+            catchError(error => of(new DocumentsAction.UpdateFailure({error})))
           );
         })
       );
@@ -300,7 +302,7 @@ export class DocumentsEffects {
             of(
               new DocumentsAction.AddFavoriteFailure({
                 documentId: action.payload.documentId,
-                error: error,
+                error,
               })
             )
           )
@@ -330,7 +332,7 @@ export class DocumentsEffects {
             of(
               new DocumentsAction.RemoveFavoriteFailure({
                 documentId: action.payload.documentId,
-                error: error,
+                error,
               })
             )
           )
@@ -398,7 +400,7 @@ export class DocumentsEffects {
       return this.documentService.updateDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
         map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
-        catchError(error => of(new DocumentsAction.UpdateFailure({error: error, originalDocument})))
+        catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
       );
     })
   );
@@ -445,11 +447,11 @@ export class DocumentsEffects {
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.patchDocumentData(documentDto).pipe(
         map(dto => convertDocumentDtoToModel(dto)),
-        flatMap(document => [
+        mergeMap(document => [
           new DocumentsAction.UpdateSuccess({document, originalDocument}),
           new DocumentsAction.CheckDataHint({document: action.payload.document}),
         ]),
-        catchError(error => of(new DocumentsAction.UpdateFailure({error: error, originalDocument})))
+        catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
       );
     })
   );
@@ -488,7 +490,7 @@ export class DocumentsEffects {
 
               return actions;
             }),
-            catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+            catchError(error => of(new DocumentsAction.UpdateFailure({error})))
           );
         })
       );
@@ -513,7 +515,7 @@ export class DocumentsEffects {
                   originalDocument,
                 })
             ),
-            catchError(error => of(new DocumentsAction.UpdateFailure({error: error})))
+            catchError(error => of(new DocumentsAction.UpdateFailure({error})))
           );
         })
       );
@@ -526,7 +528,7 @@ export class DocumentsEffects {
     mergeMap(action => {
       return this.documentService.removeDocument(action.payload.collectionId, action.payload.documentId).pipe(
         map(() => action.payload),
-        flatMap(payload => {
+        mergeMap(payload => {
           const actions: Action[] = [new DocumentsAction.DeleteSuccess({documentId: action.payload.documentId})];
 
           if (payload.nextAction) {
@@ -535,7 +537,7 @@ export class DocumentsEffects {
 
           return actions;
         }),
-        catchError(error => of(new DocumentsAction.DeleteFailure({error: error})))
+        catchError(error => of(new DocumentsAction.DeleteFailure({error})))
       );
     })
   );

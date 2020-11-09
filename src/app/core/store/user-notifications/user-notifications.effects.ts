@@ -46,7 +46,7 @@ export class UserNotificationsEffects {
               userNotifications: UserNotificationConverter.fromDtos(userNotifications),
             })
         ),
-        catchError(error => of(new UserNotificationsAction.GetFailure({error: error})))
+        catchError(error => of(new UserNotificationsAction.GetFailure({error})))
       )
     )
   );
@@ -72,7 +72,7 @@ export class UserNotificationsEffects {
         .pipe(
           map(dto => UserNotificationConverter.fromDto(dto)),
           map(userNotification => new UserNotificationsAction.UpdateSuccess({userNotification})),
-          catchError(error => of(new UserNotificationsAction.UpdateFailure({error: error})))
+          catchError(error => of(new UserNotificationsAction.UpdateFailure({error})))
         );
     })
   );
@@ -95,7 +95,7 @@ export class UserNotificationsEffects {
         return this.userNotificationsService.removeNotification(action.payload.userNotification.id).pipe(
           map(notificationId => new UserNotificationsAction.DeleteSuccess({id: notificationId})),
           catchError(error =>
-            of(new UserNotificationsAction.DeleteFailure({error: error, id: action.payload.userNotification.id}))
+            of(new UserNotificationsAction.DeleteFailure({error, id: action.payload.userNotification.id}))
           )
         );
       } else {

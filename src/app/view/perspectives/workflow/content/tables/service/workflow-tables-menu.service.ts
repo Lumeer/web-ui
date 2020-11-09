@@ -33,6 +33,7 @@ export enum HeaderMenuId {
   Delete = 'delete',
   AddToRight = 'addToRight',
   AddToLeft = 'addToLeft',
+  AddLinkColumn = 'addLinkColumn',
 }
 
 export enum RowMenuId {
@@ -109,7 +110,8 @@ export class WorkflowTablesMenuService {
   public createHeaderMenu(
     permissions: AllowedPermissions,
     column: TableColumn,
-    configurable: boolean
+    configurable: boolean,
+    otherPermissions?: AllowedPermissions
   ): TableContextMenuItem[] {
     const items: TableContextMenuItem[] = [
       {
@@ -166,6 +168,16 @@ export class WorkflowTablesMenuService {
       group: 2,
     });
 
+    if (column.collectionId && otherPermissions?.manageWithView) {
+      items.push({
+        id: HeaderMenuId.AddLinkColumn,
+        title: this.translateHeaderMenuItem(HeaderMenuId.AddLinkColumn),
+        disabled: false,
+        iconClass: 'fa fa-link',
+        group: 2,
+      });
+    }
+
     if (column.attribute?.id) {
       items.push({
         id: HeaderMenuId.Hide,
@@ -205,6 +217,8 @@ export class WorkflowTablesMenuService {
         return this.i18n({id: 'table.header.menu.add.column.next', value: 'Add column left'});
       case HeaderMenuId.AddToLeft:
         return this.i18n({id: 'table.header.menu.add.column.previous', value: 'Add column right'});
+      case HeaderMenuId.AddLinkColumn:
+        return this.i18n({id: 'table.header.menu.add.linkColumn', value: 'Add Link column'});
       default:
         return '';
     }

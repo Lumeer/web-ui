@@ -49,7 +49,7 @@ export class LinkTypesEffects {
       return this.linkTypeService.getLinkTypes(action.payload.workspace).pipe(
         map(dtos => dtos.map(dto => convertLinkTypeDtoToModel(dto))),
         map(linkTypes => new LinkTypesAction.GetSuccess({linkTypes: linkTypes})),
-        catchError(error => of(new LinkTypesAction.GetFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.GetFailure({error})))
       );
     })
   );
@@ -61,7 +61,7 @@ export class LinkTypesEffects {
       return this.linkTypeService.getLinkType(action.payload.linkTypeId).pipe(
         map((dto: LinkTypeDto) => convertLinkTypeDtoToModel(dto)),
         map(linkType => new LinkTypesAction.GetSuccess({linkTypes: [linkType]})),
-        catchError(error => of(new LinkTypesAction.GetFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.GetFailure({error})))
       );
     })
   );
@@ -89,7 +89,7 @@ export class LinkTypesEffects {
           ...createCallbackActions(action.payload.onSuccess, linkType),
         ]),
         catchError(error =>
-          of(new LinkTypesAction.CreateFailure({error: error}), ...createCallbackActions(action.payload.onFailure))
+          of(new LinkTypesAction.CreateFailure({error}), ...createCallbackActions(action.payload.onFailure))
         )
       );
     })
@@ -135,7 +135,7 @@ export class LinkTypesEffects {
     mergeMap(action =>
       this.linkTypeService.deleteLinkType(action.payload.linkTypeId).pipe(
         map(linkTypeId => new LinkTypesAction.DeleteSuccess({linkTypeId: linkTypeId})),
-        catchError(error => of(new LinkTypesAction.DeleteFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.DeleteFailure({error})))
       )
     )
   );

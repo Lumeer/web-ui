@@ -128,7 +128,7 @@ export namespace DocumentsAction {
   export class CreateFailure implements Action {
     public readonly type = DocumentsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; correlationId?: string}) {}
   }
 
   export class CreateWithLink implements Action {

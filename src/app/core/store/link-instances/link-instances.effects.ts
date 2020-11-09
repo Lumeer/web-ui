@@ -22,7 +22,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {ConstraintType} from '../../model/data/constraint';
@@ -147,7 +147,7 @@ export class LinkInstancesEffects {
         map(originalLinkInstance => ({...originalLinkInstance, correlationId: linkInstance.correlationId})),
         mergeMap(originalLinkInstance =>
           this.linkInstanceService.updateLinkInstance(linkInstanceDto).pipe(
-            flatMap(() => {
+            mergeMap(() => {
               const actions: Action[] = [new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})];
               nextAction && actions.push(nextAction);
               return actions;
@@ -209,7 +209,7 @@ export class LinkInstancesEffects {
       return this.linkInstanceService.updateLinkInstanceData(linkInstanceDto).pipe(
         map(dto => convertLinkInstanceDtoToModel(dto)),
         map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})),
-        catchError(error => of(new LinkInstancesAction.UpdateFailure({error: error, originalLinkInstance})))
+        catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
       );
     })
   );

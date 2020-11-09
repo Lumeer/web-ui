@@ -152,13 +152,22 @@ export class WorkflowTablesService {
       case HeaderMenuId.AddToLeft:
         this.copyColumnToPosition(column, 0);
         break;
+      case HeaderMenuId.AddLinkColumn:
+        this.addLinkColumn(column);
+        break;
     }
+  }
+
+  private addLinkColumn(column: TableColumn) {
+    const table = this.stateService.findTableByColumn(column);
+    const newColumn = this.dataService.createEmptyLinkColumn(table);
+    this.stateService.addColumnToEnd(table, newColumn);
   }
 
   private copyColumnToPosition(column: TableColumn, direction: number) {
     const table = this.stateService.findTableByColumn(column);
     const newColumn = this.dataService.copyTableColumn(table, column);
-    this.stateService.addColumnToPosition(column.id, newColumn, direction);
+    this.stateService.moveColumnToPosition(table, newColumn, column.id, direction);
   }
 
   private setDisplayedAttribute(column: TableColumn) {

@@ -76,7 +76,7 @@ export class ViewsEffects {
       return this.viewService.getViews(action.payload.workspace).pipe(
         map((dtos: ViewDto[]) => dtos.map(dto => convertViewDtoToModel(dto))),
         map((views: View[]) => new ViewsAction.GetSuccess({views})),
-        catchError(error => of(new ViewsAction.GetFailure({error: error})))
+        catchError(error => of(new ViewsAction.GetFailure({error})))
       );
     })
   );
@@ -120,7 +120,7 @@ export class ViewsEffects {
           return actions;
         }),
         catchError(error => {
-          const actions: Action[] = [new ViewsAction.CreateFailure({error: error})];
+          const actions: Action[] = [new ViewsAction.CreateFailure({error})];
           if (onFailure) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure()}));
           }
@@ -283,7 +283,7 @@ export class ViewsEffects {
       const view = viewsMap[action.payload.viewId];
       return this.viewService.deleteView(action.payload.viewId).pipe(
         map(() => new ViewsAction.DeleteSuccess({viewId: action.payload.viewId, viewCode: view.code})),
-        catchError(error => of(new ViewsAction.DeleteFailure({error: error})))
+        catchError(error => of(new ViewsAction.DeleteFailure({error})))
       );
     })
   );
@@ -379,7 +379,7 @@ export class ViewsEffects {
           of(
             new ViewsAction.AddFavoriteFailure({
               viewId: action.payload.viewId,
-              error: error,
+              error,
             })
           )
         )
@@ -407,7 +407,7 @@ export class ViewsEffects {
           of(
             new ViewsAction.RemoveFavoriteFailure({
               viewId: action.payload.viewId,
-              error: error,
+              error,
             })
           )
         )

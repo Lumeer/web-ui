@@ -24,7 +24,7 @@ import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Angulartics2} from 'angulartics2';
 import {Observable, of} from 'rxjs';
-import {catchError, flatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {catchError, map, mergeMap, tap} from 'rxjs/operators';
 import {environment} from '../../../../../environments/environment';
 import {AppState} from '../../app.state';
 import {NotificationsAction} from '../../notifications/notifications.action';
@@ -43,7 +43,7 @@ export class PaymentsEffects {
       return this.organizationService.getPayments().pipe(
         map(dtos => dtos.map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto))),
         map(payments => new PaymentsAction.GetPaymentsSuccess({payments: payments})),
-        catchError(error => of(new PaymentsAction.GetPaymentsFailure({error: error})))
+        catchError(error => of(new PaymentsAction.GetPaymentsFailure({error})))
       );
     })
   );
@@ -106,14 +106,14 @@ export class PaymentsEffects {
       return this.organizationService.getPayment(action.payload.paymentId).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
         map(payment => ({payment, nextAction: action.payload.nextAction})),
-        flatMap(({payment, nextAction}) => {
+        mergeMap(({payment, nextAction}) => {
           const actions: Action[] = [new PaymentsAction.GetPaymentSuccess({payment: payment})];
           if (nextAction) {
             actions.push(nextAction);
           }
           return actions;
         }),
-        catchError(error => of(new PaymentsAction.GetPaymentFailure({error: error})))
+        catchError(error => of(new PaymentsAction.GetPaymentFailure({error})))
       );
     })
   );
@@ -139,7 +139,7 @@ export class PaymentsEffects {
       return this.organizationService.createPayment(PaymentConverter.toDto(action.payload.payment), returnUrl).pipe(
         map(dto => PaymentConverter.fromDto(action.payload.organizationId, dto)),
         map(payment => new PaymentsAction.CreatePaymentSuccess({payment: payment})),
-        catchError(error => of(new PaymentsAction.CreatePaymentFailure({error: error})))
+        catchError(error => of(new PaymentsAction.CreatePaymentFailure({error})))
       );
     })
   );

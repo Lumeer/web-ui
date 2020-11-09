@@ -32,6 +32,7 @@
             class="lmr-table"
             [tableModel]="table"
             [style.height.px]="table.height"
+            [style.width]="'min(100%, ' + table.width + 'px)'"
             [style.min-height.px]="table.minHeight"
             [style.max-height.px]="table.maxHeight"
             [constraintData]="constraintData"
@@ -55,6 +56,7 @@
           <div resizer class="resizer d-flex align-items-center justify-content-center mb-4"
                *ngIf="table.maxHeight > table.minHeight"
                [reference]="table.id"
+               [style.width]="'min(100%, ' + table.width + 'px)'"
                (onResize)="onTableResize(table, $event)"
                i18n-title="@@perspective.workflow.table.resize"
                title="Resize table">

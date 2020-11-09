@@ -53,7 +53,7 @@ export class UsersEffects {
           users: dtos.map(dto => convertUserDtoToModel(dto)),
         })),
         map(({organizationId, users}) => new UsersAction.GetSuccess({organizationId, users})),
-        catchError(error => of(new UsersAction.GetFailure({error: error})))
+        catchError(error => of(new UsersAction.GetFailure({error})))
       )
     )
   );
@@ -286,7 +286,7 @@ export class UsersEffects {
       return this.userService.updateUser(action.payload.organizationId, userDto.id, userDto).pipe(
         map(dto => convertUserDtoToModel(dto)),
         map(user => new UsersAction.UpdateSuccess({user: user})),
-        catchError(error => of(new UsersAction.UpdateFailure({error: error})))
+        catchError(error => of(new UsersAction.UpdateFailure({error})))
       );
     })
   );
@@ -307,7 +307,7 @@ export class UsersEffects {
     mergeMap(action =>
       this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
         map(() => new UsersAction.DeleteSuccess(action.payload)),
-        catchError(error => of(new UsersAction.DeleteFailure({error: error})))
+        catchError(error => of(new UsersAction.DeleteFailure({error})))
       )
     )
   );
@@ -336,7 +336,7 @@ export class UsersEffects {
               defaultWorkspace: action.payload.defaultWorkspace,
             })
         ),
-        catchError(error => of(new UsersAction.SaveDefaultWorkspaceFailure({error: error})))
+        catchError(error => of(new UsersAction.SaveDefaultWorkspaceFailure({error})))
       );
     })
   );

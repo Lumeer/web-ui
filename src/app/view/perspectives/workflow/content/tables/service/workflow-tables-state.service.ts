@@ -208,6 +208,10 @@ export class WorkflowTablesStateService {
     }
   }
 
+  public setSelectedCellWithDelay(cell: TableCell) {
+    setTimeout(() => this.setSelectedCell(cell));
+  }
+
   public setSelectedCell(cell: TableCell) {
     const column = this.findTableColumn(cell.tableId, cell.columnId);
     if (canSelectCell(cell, column)) {
@@ -366,23 +370,32 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  public addColumnToPosition(columnId: string, column: TableColumn, direction: number) {
-    const table = this.findTableByColumn(column);
+  public addColumnToEnd(table: TableModel, column: TableColumn) {
+    const firstColumnIndex = table?.columns.findIndex(col => col.collectionId);
+    const columnIndex = firstColumnIndex !== -1 ? firstColumnIndex : 0;
+    this.addColumnToPosition(table, column, columnIndex);
+  }
+
+  public moveColumnToPosition(table: TableModel, column: TableColumn, columnId: string, direction: number) {
     const columnIndex = table?.columns.findIndex(col => col.id === columnId);
     if (columnIndex > -1) {
-      const newTables = [...this.tables];
-
-      for (let i = 0; i < newTables.length; i++) {
-        const newTable = newTables[i];
-        if (tablesAreSame(table, newTable)) {
-          const columns = [...newTable.columns];
-          columns.splice(columnIndex + direction, 0, {...column, tableId: newTable.id});
-          newTables[i] = {...newTable, columns};
-        }
-      }
-
-      this.setTables(newTables);
+      this.addColumnToPosition(table, column, columnIndex + direction);
     }
+  }
+
+  private addColumnToPosition(table: TableModel, column: TableColumn, position: number) {
+    const newTables = [...this.tables];
+
+    for (let i = 0; i < newTables.length; i++) {
+      const newTable = newTables[i];
+      if (tablesAreSame(table, newTable)) {
+        const columns = [...newTable.columns];
+        columns.splice(position, 0, {...column, tableId: newTable.id});
+        newTables[i] = {...newTable, columns};
+      }
+    }
+
+    this.setTables(newTables);
   }
 
   public setRowValue(row: TableRow, column: TableColumn, value: any) {
@@ -469,11 +482,11 @@ export class WorkflowTablesStateService {
     }
   }
 
-  public findTableByColumn(column: TableColumn): TableModel {
+  public findTableByColumn(column: TableColumn): WorkflowTable {
     return this.findTable(column.tableId);
   }
 
-  public findTable(id: string): TableModel {
+  public findTable(id: string): WorkflowTable {
     return this.tables.find(table => table.id === id);
   }
 

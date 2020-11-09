@@ -169,7 +169,7 @@ export class PusherService implements OnDestroy {
             this.store$.dispatch(new OrganizationsAction.UpdateSuccess({organization: newOrganization, oldCode}));
           });
         }),
-        catchError(error => of(new OrganizationsAction.GetFailure({error: error})))
+        catchError(error => of(new OrganizationsAction.GetFailure({error})))
       );
     });
     this.channel.bind('Organization:remove', data => {
@@ -254,7 +254,7 @@ export class PusherService implements OnDestroy {
             const oldCode = oldProject && oldProject.code;
             this.store$.dispatch(new ProjectsAction.UpdateSuccess({project: newProject, oldCode}));
           }),
-          catchError(error => of(new ProjectsAction.GetFailure({error: error})))
+          catchError(error => of(new ProjectsAction.GetFailure({error})))
         );
       });
     });

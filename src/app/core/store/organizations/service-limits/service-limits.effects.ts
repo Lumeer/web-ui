@@ -44,7 +44,7 @@ export class ServiceLimitsEffects {
           }, [])
         ),
         map(serviceLimits => new ServiceLimitsAction.GetAllSuccess({allServiceLimits: serviceLimits})),
-        catchError(error => of(new ServiceLimitsAction.GetAllFailure({error: error})))
+        catchError(error => of(new ServiceLimitsAction.GetAllFailure({error})))
       );
     })
   );
@@ -69,7 +69,7 @@ export class ServiceLimitsEffects {
       return this.organizationService.getServiceLimits(action.payload.organizationId).pipe(
         map(dto => ServiceLimitsConverter.fromDto(action.payload.organizationId, dto)),
         map(serviceLimits => new ServiceLimitsAction.GetServiceLimitsSuccess({serviceLimits: serviceLimits})),
-        catchError(error => of(new ServiceLimitsAction.GetServiceLimitsFailure({error: error})))
+        catchError(error => of(new ServiceLimitsAction.GetServiceLimitsFailure({error})))
       );
     })
   );

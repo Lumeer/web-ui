@@ -37,7 +37,7 @@ export class GroupsEffects {
       this.groupService.getGroups().pipe(
         map(dtos => dtos.map(dto => GroupConverter.fromDto(dto))),
         map(groups => new GroupsAction.GetSuccess({groups: groups})),
-        catchError(error => of(new GroupsAction.GetFailure({error: error})))
+        catchError(error => of(new GroupsAction.GetFailure({error})))
       )
     )
   );
@@ -61,7 +61,7 @@ export class GroupsEffects {
       return this.groupService.createGroup(groupDto).pipe(
         map(dto => GroupConverter.fromDto(dto)),
         map(group => new GroupsAction.CreateSuccess({group: group})),
-        catchError(error => of(new GroupsAction.CreateFailure({error: error})))
+        catchError(error => of(new GroupsAction.CreateFailure({error})))
       );
     })
   );
@@ -85,7 +85,7 @@ export class GroupsEffects {
       return this.groupService.updateGroup(groupDto.id, groupDto).pipe(
         map(dto => GroupConverter.fromDto(dto)),
         map(group => new GroupsAction.UpdateSuccess({group: group})),
-        catchError(error => of(new GroupsAction.UpdateFailure({error: error})))
+        catchError(error => of(new GroupsAction.UpdateFailure({error})))
       );
     })
   );
@@ -106,7 +106,7 @@ export class GroupsEffects {
     mergeMap(action =>
       this.groupService.deleteGroup(action.payload.groupId).pipe(
         map(() => new GroupsAction.DeleteSuccess(action.payload)),
-        catchError(error => of(new GroupsAction.DeleteFailure({error: error})))
+        catchError(error => of(new GroupsAction.DeleteFailure({error})))
       )
     )
   );
