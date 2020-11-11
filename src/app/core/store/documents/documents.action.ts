@@ -141,6 +141,7 @@ export namespace DocumentsAction {
         linkInstance: LinkInstance;
         onSuccess?: (documentId: string) => void;
         onFailure?: () => void;
+        afterSuccess?: (documentId: string) => void;
       }
     ) {}
   }

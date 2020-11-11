@@ -310,6 +310,6 @@ export class WorkflowTablesService {
   }
 
   public onNewRow(table: WorkflowTable) {
-    this.stateService.initiateNewRow(table.id);
+    this.dataService.createNewRow(table.id);
   }
 }

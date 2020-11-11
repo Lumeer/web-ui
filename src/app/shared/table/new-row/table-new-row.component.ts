@@ -49,6 +49,12 @@ export class TableNewRowComponent {
   @Input()
   public scrollId: string;
 
+  @Input()
+  public collectionId: string;
+
+  @Input()
+  public linkTypeId: string;
+
   @Output()
   public onNewRowClick = new EventEmitter();
 

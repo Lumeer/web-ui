@@ -34,6 +34,7 @@
           [focus]="true"
           [readonly]="!group.column.editable || !((editedCell?.tableId === row.tableId && data.edited) || data.directlyEditable)"
           [configuration]="configuration"
+          (valueChange)="onValueChange($event)"
           (saveAction)="onNewValue(group.column, $event)"
           (cancel)="onDataInputCancel(group.column)">
         </data-input>
@@ -52,3 +53,18 @@
   </ng-container>
 </ng-container>
 <table-menu #tableMenu (selected)="onMenuSelected(row, tableMenu.id, $event)"></table-menu>
+<document-hints
+  *ngIf="editedColumn?.attribute && linkedDocumentId"
+  [attributeId]="editedColumn?.attribute?.id"
+  [correlationId]="row.correlationId"
+  [dataValue]="suggesting$ | async"
+  [collectionId]="collectionId"
+  [columns]="columnGroups | documentHintsColumns"
+  [offsetLeft]="columnGroups | calculateHintsOffset"
+  [linkedDocumentId]="linkedDocumentId"
+  [linkInstanceId]="row.linkInstanceId"
+  [linkTypeId]="linkTypeId"
+  [constraintData]="constraintData"
+  [origin]="element"
+  (useHint)="onUseHint()">
+</document-hints>

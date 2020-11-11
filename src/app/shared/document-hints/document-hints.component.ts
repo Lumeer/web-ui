@@ -106,7 +106,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public constraintData: ConstraintData;
 
   @Output()
-  public useHint = new EventEmitter();
+  public useHint = new EventEmitter<DocumentModel>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -271,7 +271,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public onUseDocument(document: DocumentModel, emit = true) {
-    emit && this.useHint.emit();
+    emit && this.useHint.emit(document);
 
     if (this.linkInstanceId) {
       this.createLinkWithExistingLinkData(document);

@@ -49,6 +49,9 @@ import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/
 import {ColumnHeaderRestrictedNamesPipe} from './pipes/column-header-restricted-names.pipe';
 import {ResizableSidebarModule} from '../resizable-sidebar/resizable-sidebar.module';
 import {TableNewRowComponent} from './new-row/table-new-row.component';
+import {DocumentHintsModule} from '../document-hints/document-hints.module';
+import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
+import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
 
 @NgModule({
   declarations: [
@@ -72,6 +75,8 @@ import {TableNewRowComponent} from './new-row/table-new-row.component';
     TableHeaderHiddenMenuComponent,
     ColumnHeaderRestrictedNamesPipe,
     TableNewRowComponent,
+    DocumentHintsColumnsPipe,
+    CalculateHintsOffsetPipe,
   ],
   imports: [
     CommonModule,
@@ -83,6 +88,7 @@ import {TableNewRowComponent} from './new-row/table-new-row.component';
     ClickOutsideModule,
     ResizableSidebarModule,
     MatMenuModule,
+    DocumentHintsModule,
   ],
   exports: [TableComponent],
 })

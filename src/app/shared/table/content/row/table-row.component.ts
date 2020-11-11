@@ -20,6 +20,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
@@ -45,6 +46,9 @@ import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
 import {isTableColumnDirectlyEditable} from '../../model/table-utils';
 import {TableMenuComponent} from '../common/menu/table-menu.component';
+import {isKeyPrintable, KeyCode} from '../../../key-code';
+import {Direction} from '../../../direction';
+import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
 
 @Component({
   selector: '[table-row]',
@@ -74,6 +78,15 @@ export class TableRowComponent implements OnChanges {
   @Input()
   public cellType: TableCellType = TableCellType.Body;
 
+  @Input()
+  public linkedDocumentId: string;
+
+  @Input()
+  public collectionId: string;
+
+  @Input()
+  public linkTypeId: string;
+
   @Output()
   public onClick = new EventEmitter<string>();
 
@@ -95,6 +108,9 @@ export class TableRowComponent implements OnChanges {
   @ViewChild(TableMenuComponent)
   public tableMenuComponent: TableMenuComponent;
 
+  @ViewChild(DocumentHintsComponent)
+  public suggestions: DocumentHintsComponent;
+
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
     common: {allowRichText: true},
@@ -103,8 +119,11 @@ export class TableRowComponent implements OnChanges {
   };
 
   public editedValue: DataValue;
+  public editedColumn: TableColumn;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
+
+  constructor(public element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.editedCell) {
@@ -118,11 +137,15 @@ export class TableRowComponent implements OnChanges {
       if (column?.editable) {
         if (isTableColumnDirectlyEditable(column)) {
           this.onNewValue(column, {action: DataInputSaveAction.Direct, dataValue: this.computeDirectEditValue(column)});
+          this.endSuggesting();
         } else {
           this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
+          this.editedColumn = column;
           this.suggesting$.next(this.editedValue);
         }
       }
+    } else {
+      this.endSuggesting();
     }
   }
 
@@ -172,7 +195,11 @@ export class TableRowComponent implements OnChanges {
 
   public onNewValue(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
     this.editedValue = null;
-    this.saveData(column, data);
+    if (this.suggestions?.isSelected()) {
+      this.suggestions.useSelection();
+    } else {
+      this.saveData(column, data);
+    }
   }
 
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
@@ -246,5 +273,45 @@ export class TableRowComponent implements OnChanges {
   public onDetailClick(event: MouseEvent) {
     preventEvent(event);
     this.onDetail.emit();
+  }
+
+  public onUseHint() {
+    this.endSuggesting();
+  }
+
+  public onValueChange(dataValue: DataValue) {
+    this.suggesting$.next(dataValue);
+  }
+
+  public onDataInputKeyDown(event: KeyboardEvent) {
+    switch (event.code) {
+      case KeyCode.ArrowDown:
+        event.preventDefault();
+        this.suggestions?.moveSelection(Direction.Down);
+        return;
+      case KeyCode.ArrowUp:
+        event.preventDefault();
+        this.suggestions?.moveSelection(Direction.Up);
+        return;
+    }
+
+    if (isKeyPrintable(event) && this.suggestions) {
+      return this.suggestions.clearSelection();
+    }
+  }
+
+  public onEnterInvalid() {
+    if (this.suggestions?.isSelected()) {
+      this.suggestions.useSelection();
+      this.endSuggesting();
+    }
+  }
+
+  private endSuggesting() {
+    if (this.editedColumn) {
+      this.onDataInputCancel(this.editedColumn);
+    }
+    this.suggesting$.next(null);
+    this.editedColumn = null;
   }
 }

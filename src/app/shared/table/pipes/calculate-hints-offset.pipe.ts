@@ -17,25 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableModel} from '../../../../shared/table/model/table-model';
-import {DataResource} from '../../../../core/model/resource';
-import {DataValue} from '../../../../core/model/data-value';
-import {Constraint} from '../../../../core/model/constraint';
-import {QueryStem} from '../../../../core/store/navigation/query/query';
+import {Pipe, PipeTransform} from '@angular/core';
+import {TableColumnGroup} from '../model/table-column';
 
-export interface WorkflowTable extends TableModel {
-  title: {
-    value: any;
-    dataValue: DataValue;
-    constraint: Constraint;
-    dataResources: DataResource[];
-  };
-  stem: QueryStem;
-  height: number;
-  minHeight: number;
-  maxHeight: number;
-  width: number;
-  newRowData: Record<string, any>;
-  linkingDocumentIds: string[];
-  linkingCollectionId: string;
+@Pipe({
+  name: 'calculateHintsOffset',
+})
+export class CalculateHintsOffsetPipe implements PipeTransform {
+  public transform(groups: TableColumnGroup[]): number {
+    const firstCollectionColumnIndex = groups.findIndex(
+      group => group?.column?.collectionId || group?.hiddenColumns?.some(column => column.collectionId)
+    );
+    return groups.slice(0, firstCollectionColumnIndex).reduce((sum, group) => sum + group.width, 0);
+  }
 }

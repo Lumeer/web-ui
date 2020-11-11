@@ -10,7 +10,7 @@
     <i *ngIf="!(page + 1 | canActivatePage:pageSize:documents.length)" class="fas fa-angle-double-right"></i>
   </div>
 </div>
-<div class="h-10em"
+<div class="h-10em overflow-auto"
      [class.table-responsive]="resizeable" #table>
   <table class="table table-sm" id="preview-results-table">
     <thead>

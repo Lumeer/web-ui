@@ -153,7 +153,14 @@ export class DocumentsEffects {
   public createWithLink$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.CreateWithLink>(DocumentsActionType.CREATE_WITH_LINK),
     mergeMap(action => {
-      const {document, otherDocumentId, linkInstance: preparedLinkInstance, onSuccess, onFailure} = action.payload;
+      const {
+        document,
+        otherDocumentId,
+        linkInstance: preparedLinkInstance,
+        afterSuccess,
+        onSuccess,
+        onFailure,
+      } = action.payload;
       const documentDto = convertDocumentModelToDto(document);
 
       return this.documentService.createDocument(documentDto).pipe(
@@ -167,9 +174,10 @@ export class DocumentsEffects {
           return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
             map(dto => convertLinkInstanceDtoToModel(dto)),
             mergeMap(newLink => [
+              ...createCallbackActions(onSuccess, document.id),
               new DocumentsAction.CreateSuccess({document: newDocument}),
               new LinkInstancesAction.CreateSuccess({linkInstance: newLink}),
-              ...createCallbackActions(onSuccess, newDocument.id),
+              ...createCallbackActions(afterSuccess, newDocument.id),
             ])
           );
         }),

@@ -24,6 +24,24 @@ import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
+import {AggregatedDataItem} from '../../../../../../shared/utils/data/data-aggregator';
+import {uniqueValues} from '../../../../../../shared/utils/array.utils';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
+import {TABLE_ROW_HEIGHT, TableNewRow} from '../../../../../../shared/table/model/table-model';
+import {generateId} from '../../../../../../shared/utils/resource.utils';
+
+export function createEmptyNewRow(tableId: string): TableNewRow {
+  const id = generateId();
+  return {
+    id,
+    tableId,
+    data: null,
+    correlationId: id,
+    height: TABLE_ROW_HEIGHT,
+    documentMenuItems: [],
+    linkMenuItems: [],
+  };
+}
 
 export function createLinkTypeData(
   stemConfig: WorkflowStemConfig,
@@ -51,4 +69,44 @@ export function createLinkTypeData(
     return {linkType, permissions: linkTypePermissions};
   }
   return {};
+}
+
+export function createLinkingCollectionId(
+  stemConfig: WorkflowStemConfig,
+  collections: Collection[],
+  linkTypesMap: Record<string, LinkType>,
+  documents: DocumentModel[]
+): string | null {
+  const isNearResource =
+    stemConfig.attribute && Math.abs(stemConfig.collection.resourceIndex - stemConfig.attribute?.resourceIndex) === 1;
+  if (isNearResource) {
+    const attributesResourcesOrder = queryStemAttributesResourcesOrder(
+      stemConfig.stem,
+      collections,
+      Object.values(linkTypesMap)
+    );
+    const resourceIndex = stemConfig.collection.resourceIndex;
+    const collectionIndex = resourceIndex + (resourceIndex < stemConfig.attribute.resourceIndex ? 2 : -2);
+    return attributesResourcesOrder[collectionIndex]?.id;
+  }
+  return null;
+}
+
+export function createAggregatedLinkingDocumentsIds(item: AggregatedDataItem, childItem: AggregatedDataItem): string[] {
+  const linkingDocumentIds = [];
+  for (const parentChain of item.dataResourcesChains) {
+    for (const childChain of childItem.dataResourcesChains) {
+      const chain = [...parentChain, ...childChain];
+      if (chain.length > 2) {
+        // sequence of documentId, linkId, documentId
+        chain.reverse();
+        // skip first documentId which is showed in table
+        const documentId = chain.slice(1).find(ch => ch.documentId)?.documentId;
+        if (documentId) {
+          linkingDocumentIds.push(documentId);
+        }
+      }
+    }
+  }
+  return uniqueValues(linkingDocumentIds);
 }

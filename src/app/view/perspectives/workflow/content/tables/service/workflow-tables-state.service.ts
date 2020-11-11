@@ -429,8 +429,8 @@ export class WorkflowTablesStateService {
     this.setColumnProperty(table, column, {creating: false});
   }
 
-  public initiateNewRow(tableId: string) {
-    this.setNewRowProperty(tableId, {initialized: true});
+  public initiateNewRow(tableId: string, linkedDocumentId?: string) {
+    this.setNewRowProperty(tableId, {initialized: true, linkedDocumentId});
   }
 
   public startRowCreating(row: TableRow, column: TableColumn, value) {

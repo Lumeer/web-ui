@@ -30,7 +30,6 @@ import {selectOrganizationByWorkspace} from '../../core/store/organizations/orga
 import {userHasManageRoleInResource} from '../utils/resource.utils';
 import {Organization} from '../../core/store/organizations/organization';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {RouterAction} from '../../core/store/router/router.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributeFunctionModalComponent} from './attribute-function/attribute-function-modal.component';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
@@ -72,6 +71,14 @@ export class ModalService {
 
   public showChooseLinkDocument(documentIds: string[], callback?: (document: DocumentModel) => void): BsModalRef {
     const config = {initialState: {documentIds, callback}, keyboard: true, class: 'modal-lg'};
+    return this.addModalRef(this.bsModalService.show(ChooseLinkDocumentModalComponent, config));
+  }
+
+  public showChooseLinkDocumentByCollection(
+    collectionId: string,
+    callback?: (document: DocumentModel) => void
+  ): BsModalRef {
+    const config = {initialState: {collectionId, callback}, keyboard: true, class: 'modal-lg'};
     return this.addModalRef(this.bsModalService.show(ChooseLinkDocumentModalComponent, config));
   }
 
