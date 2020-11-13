@@ -17,14 +17,12 @@
           (onDoubleClick)="onDoubleClick.emit($event)"
           (onCancel)="onCancel.emit($event.columnId)"
           (menuSelected)="menuSelected.emit($event)"
+          (linkedDocumentSelect)="linkedDocumentSelect.emit($event)"
           (newValue)="newValue.emit($event)">
       </tr>
       </tbody>
     </table>
-
   </div>
-
-
 </div>
 
 <ng-template #uninitialized>

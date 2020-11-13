@@ -31,3 +31,9 @@ export interface TableRow {
   documentMenuItems: TableContextMenuItem[];
   linkMenuItems: TableContextMenuItem[];
 }
+
+export interface TableNewRow extends TableRow {
+  linkedDocumentId?: string;
+  creating?: boolean;
+  initialized?: boolean;
+}

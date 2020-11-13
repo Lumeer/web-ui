@@ -36,22 +36,16 @@ import {BehaviorSubject, Subscription} from 'rxjs';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
 import {filter} from 'rxjs/operators';
-import {TableRow} from './model/table-row';
+import {TableNewRow, TableRow} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
 import {ConstraintData} from '../../core/model/data/constraint';
-import {
-  EditedTableCell,
-  SelectedTableCell,
-  TableCell,
-  TableCellType,
-  TableModel,
-  TableNewRow,
-} from './model/table-model';
+import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel} from './model/table-model';
 import {TableScrollService} from './service/table-scroll.service';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn, TableContextMenuItem} from './model/table-column';
 import {AttributeSortType} from '../../core/store/views/view';
+import {DocumentModel} from '../../core/store/documents/document.model';
 
 @Component({
   selector: 'lmr-table',
@@ -116,6 +110,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   @Output()
   public rowDetail = new EventEmitter<TableRow>();
+
+  @Output()
+  public rowLinkedDocumentSelect = new EventEmitter<{row: TableRow; document: DocumentModel}>();
 
   @Output()
   public rowNewClick = new EventEmitter();
@@ -285,5 +282,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   public onNewRowMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
     this.rowMenuSelected.emit({...data, cellType: TableCellType.NewRow});
+  }
+
+  public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {
+    this.rowLinkedDocumentSelect.emit({row, document});
   }
 }

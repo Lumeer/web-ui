@@ -1,7 +1,7 @@
 @import 'src/styles/variables';
 
 %highlighted {
-  z-index: $z-index-selected;
+  z-index: 2;
   outline-offset: -1px;
 }
 

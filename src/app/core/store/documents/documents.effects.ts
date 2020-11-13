@@ -174,10 +174,10 @@ export class DocumentsEffects {
           return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
             map(dto => convertLinkInstanceDtoToModel(dto)),
             mergeMap(newLink => [
-              ...createCallbackActions(onSuccess, document.id),
+              ...createCallbackActions(onSuccess, {documentId: newDocument.id, linkInstanceId: newLink.id}),
               new DocumentsAction.CreateSuccess({document: newDocument}),
               new LinkInstancesAction.CreateSuccess({linkInstance: newLink}),
-              ...createCallbackActions(afterSuccess, newDocument.id),
+              ...createCallbackActions(afterSuccess, {documentId: newDocument.id, linkInstanceId: newLink.id}),
             ])
           );
         }),

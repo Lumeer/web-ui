@@ -18,11 +18,12 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {EditedTableCell, SelectedTableCell, TableCellType, TableNewRow} from '../model/table-model';
+import {EditedTableCell, SelectedTableCell, TableCellType} from '../model/table-model';
 import {TableColumn, TableColumnGroup, TableContextMenuItem} from '../model/table-column';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {DataInputSaveAction} from '../../data-input/data-input-save-action';
-import {TableRow} from '../model/table-row';
+import {TableNewRow, TableRow} from '../model/table-row';
+import {DocumentModel} from '../../../core/store/documents/document.model';
 
 @Component({
   selector: 'table-new-row',
@@ -69,6 +70,9 @@ export class TableNewRowComponent {
 
   @Output()
   public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
+
+  @Output()
+  public linkedDocumentSelect = new EventEmitter<DocumentModel>();
 
   @Output()
   public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();

@@ -38,11 +38,14 @@
           [constraintData]="constraintData"
           [columnGroups]="data.columnGroups"
           [detailColumnId]="detailColumnId"
+          [collectionId]="tableModel.collectionId"
+          [linkTypeId]="tableModel.linkTypeId"
           (newValue)="onBodyRowNewValue(row, $event)"
           (onClick)="onBodyCellClick(row, $event)"
           (onCancel)="onBodyCancel(row, $event)"
           (onDoubleClick)="onBodyCellDoubleClick(row, $event)"
           (menuSelected)="onBodyMenuSelected($event)"
+          (linkedDocumentSelect)="onRowLinkedDocumentSelect(row, $event)"
           (onDetail)="rowDetail.emit(row)">
       </tr>
       </tbody>
@@ -61,6 +64,7 @@
                  (onCancel)="onNewRowCancel($event)"
                  (onDoubleClick)="onNewRowCellDoubleClick($event)"
                  (newValue)="onNewRowNewValue(tableModel.newRow, $event)"
+                 (linkedDocumentSelect)="onRowLinkedDocumentSelect(tableModel.newRow, $event)"
                  (menuSelected)="onNewRowMenuSelected($event)">
   </table-new-row>
 </ng-container>

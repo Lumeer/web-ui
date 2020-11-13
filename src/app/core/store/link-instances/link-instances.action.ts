@@ -98,6 +98,7 @@ export namespace LinkInstancesAction {
         linkInstance: LinkInstance;
         onSuccess?: (linkInstanceId: string) => void;
         onFailure?: () => void;
+        afterSuccess?: (linkInstanceId: string) => void;
       }
     ) {}
   }

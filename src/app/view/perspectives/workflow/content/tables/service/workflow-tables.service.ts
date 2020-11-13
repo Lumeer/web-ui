@@ -25,7 +25,6 @@ import {
   TableCell,
   TableCellType,
   TableModel,
-  TableNewRow,
 } from '../../../../../../shared/table/model/table-model';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
@@ -33,7 +32,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {TableColumn, TableContextMenuItem} from '../../../../../../shared/table/model/table-column';
-import {TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
 import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
 import {DataInputSaveAction} from '../../../../../../shared/data-input/data-input-save-action';
@@ -311,5 +310,9 @@ export class WorkflowTablesService {
 
   public onNewRow(table: WorkflowTable) {
     this.dataService.createNewRow(table.id);
+  }
+
+  public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {
+    this.dataService.createOrUpdateLink(row, document);
   }
 }

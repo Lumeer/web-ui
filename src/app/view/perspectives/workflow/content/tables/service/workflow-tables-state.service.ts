@@ -25,7 +25,6 @@ import {
   TableCell,
   TableCellType,
   TableModel,
-  TableNewRow,
 } from '../../../../../../shared/table/model/table-model';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {Collection} from '../../../../../../core/store/collections/collection';
@@ -34,7 +33,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {ViewSettings} from '../../../../../../core/store/views/view';
 import {deepObjectCopy, isNotNullOrUndefined, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
-import {TableRow} from '../../../../../../shared/table/model/table-row';
+import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {addAttributeToSettings, moveAttributeInSettings} from '../../../../../../shared/settings/settings.util';
@@ -433,8 +432,12 @@ export class WorkflowTablesStateService {
     this.setNewRowProperty(tableId, {initialized: true, linkedDocumentId});
   }
 
-  public startRowCreating(row: TableRow, column: TableColumn, value) {
+  public startRowCreatingWithValue(row: TableRow, column: TableColumn, value: any) {
     this.setNewRowProperty(row.tableId, {creating: true, [`data.${column.id}`]: value});
+  }
+
+  public startRowCreating(row: TableRow, data: Record<string, any>, documentId: string) {
+    this.setNewRowProperty(row.tableId, {creating: true, data, documentId});
   }
 
   public endRowCreating(row: TableRow) {

@@ -52,7 +52,7 @@ import {ConstraintData} from '../../core/model/data/constraint';
 import {getOtherLinkedDocumentId} from '../../core/store/link-instances/link.instance';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {escapeHtml, isNotNullOrUndefined} from '../utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined, preventEvent} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
 import {DataValue} from '../../core/model/data-value';
@@ -104,6 +104,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public createLinkDirectly = true;
 
   @Output()
   public useHint = new EventEmitter<DocumentModel>();
@@ -267,16 +270,20 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
         map(documents => documents[index]),
         filter(document => !!document)
       )
-      .subscribe(document => this.onUseDocument(document, false));
+      .subscribe(document => this.onUseDocument(document, !this.createLinkDirectly));
   }
 
   public onUseDocument(document: DocumentModel, emit = true) {
     emit && this.useHint.emit(document);
 
-    if (this.linkInstanceId) {
-      this.createLinkWithExistingLinkData(document);
+    if (this.createLinkDirectly) {
+      if (this.linkInstanceId) {
+        this.createLinkWithExistingLinkData(document);
+      } else {
+        this.createLink(document);
+      }
     } else {
-      this.createLink(document);
+      this.close();
     }
   }
 
@@ -311,5 +318,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   public isSelected(): boolean {
     return this.selectedIndex$.getValue() > -1;
+  }
+
+  public preventEvent(event: MouseEvent) {
+    preventEvent(event);
   }
 }

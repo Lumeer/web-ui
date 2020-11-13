@@ -139,9 +139,9 @@ export namespace DocumentsAction {
         document: DocumentModel;
         otherDocumentId: string;
         linkInstance: LinkInstance;
-        onSuccess?: (documentId: string) => void;
+        onSuccess?: ({documentId, linkInstanceId}) => void;
         onFailure?: () => void;
-        afterSuccess?: (documentId: string) => void;
+        afterSuccess?: ({documentId, linkInstanceId}) => void;
       }
     ) {}
   }

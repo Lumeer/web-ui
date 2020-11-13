@@ -26,9 +26,9 @@ import {queryAttributePermissions} from '../../../../../../core/model/query-attr
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {AggregatedDataItem} from '../../../../../../shared/utils/data/data-aggregator';
 import {uniqueValues} from '../../../../../../shared/utils/array.utils';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {TABLE_ROW_HEIGHT, TableNewRow} from '../../../../../../shared/table/model/table-model';
+import {TABLE_ROW_HEIGHT} from '../../../../../../shared/table/model/table-model';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
+import {TableNewRow} from '../../../../../../shared/table/model/table-row';
 
 export function createEmptyNewRow(tableId: string): TableNewRow {
   const id = generateId();
@@ -74,8 +74,7 @@ export function createLinkTypeData(
 export function createLinkingCollectionId(
   stemConfig: WorkflowStemConfig,
   collections: Collection[],
-  linkTypesMap: Record<string, LinkType>,
-  documents: DocumentModel[]
+  linkTypesMap: Record<string, LinkType>
 ): string | null {
   const isNearResource =
     stemConfig.attribute && Math.abs(stemConfig.collection.resourceIndex - stemConfig.attribute?.resourceIndex) === 1;

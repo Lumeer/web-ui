@@ -272,4 +272,8 @@ export class WorkflowTablesComponent implements OnChanges {
   public onRowNewClick(table: WorkflowTable) {
     this.tablesService.onNewRow(table);
   }
+
+  public onRowLinkedDocumentSelect(data: {row: TableRow; document: DocumentModel}) {
+    this.tablesService.onRowLinkedDocumentSelect(data.row, data.document);
+  }
 }
