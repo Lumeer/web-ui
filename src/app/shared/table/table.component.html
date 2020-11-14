@@ -5,7 +5,8 @@
                             [scrollId]="scrollId">
   </table-alternative-header>
   <table-resize-header [columnGroups]="data.columnGroups"
-                       (resizeColumn)="columnResize.emit($event)">
+                       (resizeColumn)="columnResize.emit($event)"
+                       [scrollId]="scrollId">
   </table-resize-header>
   <cdk-virtual-scroll-viewport lmrItemSize
                                class="invisible-scroll-y"
@@ -14,7 +15,7 @@
                                [style.height]="tableModel.newRow ? 'calc(100% - ' + (tableModel.newRow.height + 1) + 'px)' : '100%'"
                                [disabled]="scrollDisabled$ | async"
                                [columns]="tableModel.columns">
-    <table class="table lmr-table position-relative">
+    <table #table class="table lmr-table position-relative">
       <thead table-header [columnGroups]="data.columnGroups"
              [selectedCell]="selectedCell"
              [editedCell]="editedCell"
@@ -60,7 +61,7 @@
                  [collectionId]="tableModel.collectionId"
                  [linkTypeId]="tableModel.linkTypeId"
                  [constraintData]="constraintData"
-                 [scrollOffset]="scrollOffset"
+                 [scrollOffset]="scrollOffsetLeft"
                  (onNewRowClick)="rowNewClick.emit()"
                  (onClick)="onNewRowCellClick($event)"
                  (onCancel)="onNewRowCancel($event)"

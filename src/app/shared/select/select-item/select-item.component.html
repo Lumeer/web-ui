@@ -23,6 +23,7 @@
           *ngIf="{selectedItem: selectedId | getSelectItem:items } as data">
 
     <select-item-row *ngIf="data.selectedItem; else empty"
+                     class="w-100"
                      [item]="data.selectedItem"
                      [disabled]="disabled"
                      [removable]="removable"

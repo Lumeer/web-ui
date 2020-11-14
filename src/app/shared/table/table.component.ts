@@ -32,10 +32,10 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import {BehaviorSubject, Subscription} from 'rxjs';
+import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
-import {filter} from 'rxjs/operators';
+import {filter, throttle, throttleTime} from 'rxjs/operators';
 import {TableNewRow, TableRow} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
@@ -137,19 +137,25 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
 
+  @ViewChild('table', {read: ElementRef})
+  public table: ElementRef;
+
   public scrollDisabled$ = new BehaviorSubject(false);
   public detailColumnId: string;
-  public scrollOffset: number;
+  public scrollOffsetLeft: number;
 
+  private scrollOffsetTop: number;
   private subscriptions = new Subscription();
   private tableScrollService: TableScrollService;
+  private scrollCheckSubject = new Subject();
 
   constructor(private scrollDispatcher: ScrollDispatcher, private element: ElementRef<HTMLElement>) {
     this.tableScrollService = new TableScrollService(() => this.viewPort);
   }
 
   public ngOnInit() {
-    this.subscriptions.add(this.subscribeToScrolling());
+    this.subscriptions.add(this.subscribeHorizontalScrolling());
+    this.subscriptions.add(this.subscribeVerticalScrolling());
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -157,7 +163,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.checkScrollPositionForSelectedCell();
     }
     if (changes.tableModel) {
-      this.scrollOffset = this.viewPort?.measureScrollOffset('left');
+      this.scrollOffsetLeft = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
       this.detailColumnId = this.tableModel?.columns?.find(
         column =>
@@ -173,7 +179,17 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     this.viewPort?.scrollTo({top, left, behavior: 'smooth'});
   }
 
-  private subscribeToScrolling(): Subscription {
+  private subscribeVerticalScrolling(): Subscription {
+    return this.scrollCheckSubject.pipe(throttleTime(200)).subscribe(() => {
+      const top = this.viewPort?.measureScrollOffset('top');
+      if (top !== this.scrollOffsetTop && this.editedCell?.type === TableCellType.Header) {
+        this.cellCancel.emit({cell: this.editedCell, action: DataInputSaveAction.Direct});
+      }
+      this.scrollOffsetTop = top;
+    });
+  }
+
+  private subscribeHorizontalScrolling(): Subscription {
     return this.scrollDispatcher
       .scrolled()
       .pipe(filter(scrollable => !!scrollable && this.isScrollableInsideComponent(scrollable)))
@@ -297,9 +313,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onScroll() {
-    if (this.editedCell?.type === TableCellType.Header) {
-      this.cellCancel.emit({cell: this.editedCell, action: DataInputSaveAction.Direct});
-    }
+    this.scrollCheckSubject.next();
   }
 
   public onBodyMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {

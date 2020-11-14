@@ -1,4 +1,4 @@
-<div class="position-relative resize-handle-wrapper invisible-scroll-y" cdkScrollable
+<div class="position-relative resize-handle-wrapper invisible-scroll-y" cdkScrollable [id]="scrollId"
      [style.height.px]="tableRowHeight">
   <ng-container *ngFor="let group of columnGroups; trackBy:trackByColumn; let index = index">
     <div *ngIf="group.column"

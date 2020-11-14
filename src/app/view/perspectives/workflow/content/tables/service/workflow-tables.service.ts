@@ -45,6 +45,7 @@ import {LinkInstance} from '../../../../../../core/store/link-instances/link.ins
 import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {WorkflowTable} from '../../../model/workflow-table';
+import {deepObjectsEquals} from '../../../../../../shared/utils/common.utils';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -55,13 +56,18 @@ export class WorkflowTablesService {
     private keyboardService: WorkflowTablesKeyboardService,
     private dataService: WorkflowTablesDataService
   ) {
-    this.stateService.selectedCell$.pipe(skip(1), distinctUntilChanged()).subscribe(() => {
-      if (this.isSelected()) {
-        this.hiddenComponent()?.focus();
-      } else {
-        this.hiddenComponent()?.blur();
-      }
-    });
+    this.stateService.selectedCell$
+      .pipe(
+        skip(1),
+        distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
+      )
+      .subscribe(() => {
+        if (this.isSelected()) {
+          this.hiddenComponent()?.focus();
+        } else {
+          this.hiddenComponent()?.blur();
+        }
+      });
   }
 
   public get selectedCell$(): Observable<SelectedTableCell> {
@@ -98,7 +104,7 @@ export class WorkflowTablesService {
         });
         break;
       case RowMenuId.Detail:
-        this.dataService.showRowDetail(row, column);
+        this.dataService.showRowDocumentDetail(row);
         break;
       case RowMenuId.Delete:
         this.dataService.removeRow(row, column);
@@ -251,6 +257,7 @@ export class WorkflowTablesService {
 
   public onCellClick(cell: TableCell) {
     this.stateService.setSelectedCell({...cell});
+    this.dataService.onCellClick(cell);
   }
 
   public onCellSave(cell: TableCell, action: DataInputSaveAction) {

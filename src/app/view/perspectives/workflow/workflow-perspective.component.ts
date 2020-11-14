@@ -128,11 +128,12 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
     );
   }
 
-  private subscribeToDefault(): Observable<{workflowId?: string; config?: WorkflowConfig}> {
+  private subscribeToDefault(): Observable<{workflowId?: string; config: WorkflowConfig}> {
     return this.store$.pipe(
       select(selectWorkflowById(DEFAULT_WORKFLOW_ID)),
       take(1),
-      map(workflow => ({workflowId: DEFAULT_WORKFLOW_ID, config: workflow?.config}))
+      mergeMap(workflow => this.checkWorkflowConfig(workflow?.config)),
+      map(config => ({workflowId: DEFAULT_WORKFLOW_ID, config}))
     );
   }
 

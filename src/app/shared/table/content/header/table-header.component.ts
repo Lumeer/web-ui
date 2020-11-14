@@ -187,15 +187,19 @@ export class TableHeaderComponent implements OnChanges {
   }
 
   public onHeaderClick(column: TableColumn) {
-    if (column) {
+    if (column && !this.editingColumn(column)) {
       this.onClick.emit(column.id);
     }
   }
 
   public onHeaderDoubleClick(column: TableColumn) {
-    if (column) {
+    if (column && !this.editingColumn(column)) {
       this.onDoubleClick.emit(column.id);
     }
+  }
+
+  private editingColumn(column: TableColumn): boolean {
+    return this.editedCell?.columnId === column.id && this.editedCell?.tableId === column.tableId;
   }
 
   public onHeaderCancel(column: TableColumn) {

@@ -115,7 +115,7 @@ button.mat-menu-item {
 
 .mat-menu-item {
   height: 30px !important;
-  line-height: 30px !important;
+  line-height: 1.2rem !important;
 
   &:hover:not([disabled]) {
     background: rgba(0, 0, 0, 0.1);

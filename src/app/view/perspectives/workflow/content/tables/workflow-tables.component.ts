@@ -63,6 +63,7 @@ import {LinkInstance} from '../../../../../core/store/link-instances/link.instan
 import {WorkflowConfig, WorkflowStemConfig} from '../../../../../core/store/workflows/workflow';
 import {WorkflowTable} from '../../model/workflow-table';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
+import {TableComponent} from '../../../../../shared/table/table.component';
 
 @Component({
   selector: 'workflow-tables',
@@ -114,8 +115,8 @@ export class WorkflowTablesComponent implements OnChanges {
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();
 
-  @ViewChildren('lmrTable', {read: ElementRef})
-  public tableComponents: QueryList<ElementRef>;
+  @ViewChildren('lmrTable')
+  public tableComponents: QueryList<TableComponent>;
 
   @ViewChild(HiddenInputComponent)
   public hiddenInputComponent: HiddenInputComponent;
@@ -209,7 +210,7 @@ export class WorkflowTablesComponent implements OnChanges {
   }
 
   private checkClickOutsideTables(event: Event) {
-    if (!this.tableComponents.some(component => component.nativeElement.contains(event.target))) {
+    if (!this.tableComponents.some(component => component.table?.nativeElement.contains(event.target))) {
       this.tablesService.resetSelection();
     }
   }

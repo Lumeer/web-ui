@@ -68,6 +68,7 @@ export class SelectItemsWithConstraint2Pipe implements PipeTransform {
       value: attribute.name,
       icons: [linkType.collections?.[0]?.icon, linkType.collections?.[1]?.icon],
       iconColors: [linkType.collections?.[0]?.color, linkType.collections?.[1]?.color],
+      children: this.formatter.createItems(attribute, false),
     }));
   }
 }

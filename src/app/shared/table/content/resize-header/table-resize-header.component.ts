@@ -33,6 +33,9 @@ export class TableResizeHeaderComponent {
   @Input()
   public columnGroups: TableColumnGroup[];
 
+  @Input()
+  public scrollId: string;
+
   @Output()
   public resizeColumn = new EventEmitter<{column: TableColumn; width: number}>();
 

@@ -42,6 +42,7 @@ import {SettingsModule} from '../../../shared/settings/settings.module';
 import {LinksListModule} from '../../../shared/links/links-list/links-list.module';
 import {MatMenuModule} from '@angular/material/menu';
 import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
+import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table-title.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
     WorkflowContentComponent,
     WorkflowSidebarComponent,
     WorkflowTablesIdsPipe,
+    WorkflowTableTitleComponent,
   ],
   imports: [
     CommonModule,

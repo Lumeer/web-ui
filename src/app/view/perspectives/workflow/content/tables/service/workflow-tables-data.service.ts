@@ -31,7 +31,7 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {DocumentsAction} from '../../../../../../core/store/documents/documents.action';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
-import {take} from 'rxjs/operators';
+import {map, mergeMap, take} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
@@ -39,6 +39,7 @@ import {AttributeSortType, ResourceAttributeSettings, ViewSettings} from '../../
 import {
   TABLE_COLUMN_WIDTH,
   TABLE_ROW_HEIGHT,
+  TableCell,
   TableCellType,
   TableModel,
 } from '../../../../../../shared/table/model/table-model';
@@ -78,9 +79,12 @@ import {
 import {WorkflowTable} from '../../../model/workflow-table';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {queryStemsAreSame} from '../../../../../../core/store/navigation/query/query.util';
-import {deepObjectCopy, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
+import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfDiffColumnsBefore} from '../../../../../../shared/table/model/table-utils';
-import {selectWorkflowId} from '../../../../../../core/store/workflows/workflow.state';
+import {
+  selectWorkflowId,
+  selectWorkflowSelectedDocumentId,
+} from '../../../../../../core/store/workflows/workflow.state';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
 import {generateDocumentDataByResourceQuery} from '../../../../../../core/store/documents/document.utils';
 import {
@@ -99,6 +103,8 @@ import {
 } from './workflow-utils';
 import {selectLinkInstanceById} from '../../../../../../core/store/link-instances/link-instances.state';
 import {getOtherDocumentIdFromLinkInstance} from '../../../../../../core/store/link-instances/link-instance.utils';
+import {Observable} from 'rxjs';
+import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -869,12 +875,6 @@ export class WorkflowTablesDataService {
     this.store$.dispatch(new WorkflowsAction.SetOpenedDocument({documentId: row.documentId}));
   }
 
-  public showRowDetail(row: TableRow, column: TableColumn) {
-    if (row.documentId) {
-      this.showRowDocumentDetail(row);
-    }
-  }
-
   public showAttributeType(column: TableColumn) {
     this.modalService.showAttributeType(column.attribute.id, column.collectionId, column.linkTypeId);
   }
@@ -1173,5 +1173,25 @@ export class WorkflowTablesDataService {
     } else {
       this.stateService.initiateNewRow(tableId);
     }
+  }
+
+  public onCellClick(cell: TableCell) {
+    this.selectSidebarOpened$().subscribe(opened => {
+      if (opened) {
+        const row = this.stateService.findTableRow(cell.tableId, cell.rowId);
+        if (row) {
+          this.showRowDocumentDetail(row);
+        }
+      }
+    });
+  }
+
+  private selectSidebarOpened$(): Observable<boolean> {
+    return this.store$.pipe(
+      select(selectWorkflowSelectedDocumentId),
+      mergeMap(documentId => this.store$.pipe(select(selectDocumentById(documentId)))),
+      take(1),
+      map(document => !!document)
+    );
   }
 }

@@ -21,7 +21,6 @@ import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChi
 import {TableColumn, TableContextMenuItem} from '../../../model/table-column';
 import {TableMenuComponent} from '../../common/menu/table-menu.component';
 import {computeElementPositionInParent, preventEvent} from '../../../../utils/common.utils';
-import {ContextMenuService} from 'ngx-contextmenu';
 import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
 import {AttributeSortType} from '../../../../../core/store/views/view';
 
@@ -73,8 +72,6 @@ export class TableHeaderCellComponent {
   public hiddenMenuComponent: TableHeaderHiddenMenuComponent;
 
   public readonly sortType = AttributeSortType;
-
-  constructor(private contextMenuService: ContextMenuService) {}
 
   public onHeaderCancel() {
     this.onCancel.emit();

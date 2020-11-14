@@ -223,10 +223,14 @@ export class TableRowComponent implements OnChanges {
   }
 
   public onDataInputDblClick(column: TableColumn, event: MouseEvent) {
-    if (column && this.editedCell?.columnId !== column.id) {
+    if (column && !this.isEditingColumn(column)) {
       event.preventDefault();
       this.onDoubleClick.emit(column.id);
     }
+  }
+
+  private isEditingColumn(column: TableColumn): boolean {
+    return this.isEditing() && this.editedCell?.columnId === column.id;
   }
 
   public onDataInputCancel(column: TableColumn, action?: DataInputSaveAction) {
@@ -236,7 +240,7 @@ export class TableRowComponent implements OnChanges {
   }
 
   public onDataInputClick(column: TableColumn, event: MouseEvent) {
-    if (column && (this.editedCell?.columnId !== column.id || this.editedCell?.rowId !== this.row.id)) {
+    if (column && !this.isEditingColumn(column)) {
       this.onClick.emit(column.id);
     }
   }
