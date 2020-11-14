@@ -21,7 +21,7 @@
 
   .sidebar {
     border-left: 1px solid $gray-200;
-    box-shadow: 1px 0 5px 2px $gray-200;
+    box-shadow: 0 5px 20px 0 $gray-200;
     min-width: min(100vh, 400px);
     max-width: 60vw;
     overflow-y: auto;

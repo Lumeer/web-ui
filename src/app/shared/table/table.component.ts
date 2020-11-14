@@ -39,7 +39,7 @@ import {filter} from 'rxjs/operators';
 import {TableNewRow, TableRow} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
-import {ConstraintData} from '../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel} from './model/table-model';
 import {TableScrollService} from './service/table-scroll.service';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
@@ -160,7 +160,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.scrollOffset = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
       this.detailColumnId = this.tableModel?.columns?.find(
-        column => !column.hidden && column.attribute?.constraint?.isTextRepresentation
+        column =>
+          !column.hidden &&
+          (column.attribute?.constraint?.isTextRepresentation ||
+            column.attribute?.constraint?.type === ConstraintType.User)
       )?.id;
     }
   }

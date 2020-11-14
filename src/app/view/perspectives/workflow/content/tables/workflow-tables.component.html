@@ -9,6 +9,7 @@
     <div *ngFor="let stemConfig of config.stemsConfigs; trackBy:trackByStem; let index = index;">
 
       <workflow-toolbar class="mb-2" [config]="stemConfig"
+                        [class.mb-3]="data?.tables?.length > 1"
                         [linkTypes]="linkTypes"
                         [collections]="collections"
                         [stem]="stemConfig.stem"
@@ -55,7 +56,7 @@
             (rowLinkedDocumentSelect)="onRowLinkedDocumentSelect($event)">
           </lmr-table>
 
-          <div resizer class="resizer d-flex align-items-center justify-content-center mb-4"
+          <div resizer class="resizer d-flex align-items-center justify-content-center mb-5"
                *ngIf="table.maxHeight > table.minHeight"
                [reference]="table.id"
                [style.width]="'min(100%, ' + table.width + 'px)'"
