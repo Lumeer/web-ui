@@ -25,15 +25,14 @@ import {PerspectiveNamePipe} from './perspective-name.pipe';
   name: 'sortPerspectives',
 })
 export class SortPerspectivesPipe implements PipeTransform {
-  public constructor(private perspectiveNamePipe: PerspectiveNamePipe) {
-  }
+  public constructor(private perspectiveNamePipe: PerspectiveNamePipe) {}
 
-  public transform(perspectives: Perspective[]): { perspective: Perspective; name: string }[] {
+  public transform(perspectives: Perspective[]): {perspective: Perspective; name: string}[] {
     const allPerspectives = perspectives.map(perspective => {
       return {perspective, name: this.perspectiveNamePipe.transform(perspective)};
     });
 
-    const result: { perspective: Perspective; name: string }[] = [];
+    const result: {perspective: Perspective; name: string}[] = [];
     const searchIndex = allPerspectives.findIndex(perspective => perspective.perspective === Perspective.Search);
     if (searchIndex >= 0) {
       result.push(allPerspectives[searchIndex]);

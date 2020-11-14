@@ -74,8 +74,7 @@ export class TableHeaderCellComponent {
 
   public readonly sortType = AttributeSortType;
 
-  constructor(private contextMenuService: ContextMenuService) {
-  }
+  constructor(private contextMenuService: ContextMenuService) {}
 
   public onHeaderCancel() {
     this.onCancel.emit();

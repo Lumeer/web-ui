@@ -53,5 +53,4 @@ export class TableMenuComponent {
     this.contextMenu.closeMenu();
     this.selected.emit(item);
   }
-
 }

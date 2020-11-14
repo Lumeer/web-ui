@@ -223,18 +223,14 @@
                 }
               ],
               "buildOptimizer": false,
-              "localize": [
-                "cs"
-              ],
+              "localize": ["cs"],
               "optimization": false,
               "sourceMap": true
             },
             "en": {
               "aot": true,
               "buildOptimizer": false,
-              "localize": [
-                "en"
-              ],
+              "localize": ["en"],
               "optimization": false,
               "sourceMap": true,
               "budgets": [
@@ -282,24 +278,15 @@
               "src/styles.scss"
             ],
             "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/public-view.js"
-            ]
+            "assets": ["src/favicon.ico", "src/assets", "src/public-view.js"]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tslintConfig": "tslint.json",
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }

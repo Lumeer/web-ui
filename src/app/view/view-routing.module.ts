@@ -92,8 +92,7 @@ const viewRoutes: Routes = [
       },
       {
         path: Perspective.Table,
-        loadChildren: () =>
-          import('./perspectives/table/table-perspective.module').then(m => m.TablePerspectiveModule),
+        loadChildren: () => import('./perspectives/table/table-perspective.module').then(m => m.TablePerspectiveModule),
       },
       {
         path: '',
@@ -109,5 +108,4 @@ const viewRoutes: Routes = [
   imports: [RouterModule.forChild(viewRoutes)],
   exports: [RouterModule],
 })
-export class ViewRoutingModule {
-}
+export class ViewRoutingModule {}

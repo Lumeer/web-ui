@@ -92,8 +92,11 @@ export class WorkflowContentComponent implements OnChanges {
 
   private checkSelectedDocument(changes: SimpleChanges) {
     if (changes.selectedDocumentId || changes.collections || changes.documents) {
-      this.selectedDocument = this.selectedDocumentId && this.documents.find(document => document.id === this.selectedDocumentId);
-      this.selectedCollection = this.selectedDocument && this.collections.find(collection => collection.id === this.selectedDocument.collectionId);
+      this.selectedDocument =
+        this.selectedDocumentId && this.documents.find(document => document.id === this.selectedDocumentId);
+      this.selectedCollection =
+        this.selectedDocument &&
+        this.collections.find(collection => collection.id === this.selectedDocument.collectionId);
     }
   }
 

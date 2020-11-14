@@ -27,7 +27,7 @@ export enum Perspective {
   Map = 'map',
   Pivot = 'pivot',
   GanttChart = 'ganttChart',
-  Workflow = 'workflow'
+  Workflow = 'workflow',
 }
 
 export const perspectivesMap: Record<string, Perspective> = {

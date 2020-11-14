@@ -76,7 +76,12 @@ export class PiePlotMaker extends PlotMaker {
     // nothing to do
   }
 
-  private createAxesData(dataStyle: PlotlyChartData, set: ChartDataSet, row?: number, column?: number): PlotlyChartData {
+  private createAxesData(
+    dataStyle: PlotlyChartData,
+    set: ChartDataSet,
+    row?: number,
+    column?: number
+  ): PlotlyChartData {
     const labels = [];
     const values = [];
     const colors = [];
