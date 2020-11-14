@@ -32,6 +32,7 @@
       <tbody>
       <tr table-row #tableRow
           *cdkVirtualFor="let row of tableModel.rows; let index = index; trackBy:trackByRow"
+          [class.selected]="row.documentId === selectedDocumentId"
           [row]="row"
           [selectedCell]="selectedCell"
           [editedCell]="editedCell"
@@ -59,6 +60,7 @@
                  [collectionId]="tableModel.collectionId"
                  [linkTypeId]="tableModel.linkTypeId"
                  [constraintData]="constraintData"
+                 [scrollOffset]="scrollOffset"
                  (onNewRowClick)="rowNewClick.emit()"
                  (onClick)="onNewRowCellClick($event)"
                  (onCancel)="onNewRowCancel($event)"

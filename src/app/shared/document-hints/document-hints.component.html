@@ -14,7 +14,8 @@
       <div
         *ngFor="let doc of data.documents | reverseArrayByDropdownPosition:(dropdownPosition$ | async); index as documentIndex"
         [class.selected]="(selectedIndex$ | async) === documentIndex"
-        (click)="preventEvent($event); onUseDocument(doc)"
+        (mousedown)="preventEvent($event)"
+        (click)="preventEvent($event); onUseDocument(documentIndex, doc)"
         class="dropdown-item p-0 d-flex">
         <ng-container *ngFor="let column of columns">
           <div

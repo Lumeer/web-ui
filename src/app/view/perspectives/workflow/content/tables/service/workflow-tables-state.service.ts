@@ -171,7 +171,7 @@ export class WorkflowTablesStateService {
   }
 
   public isEditing(): boolean {
-    return isNotNullOrUndefined(this.editedCell$.value);
+    return isNotNullOrUndefined(this.editedCell$.value) && Object.keys(this.editedCell$.value).length > 0;
   }
 
   public isEditingCell(cell: TableCell): boolean {
@@ -179,11 +179,15 @@ export class WorkflowTablesStateService {
   }
 
   public isSelected(): boolean {
-    return isNotNullOrUndefined(this.selectedCell$.value);
+    return isNotNullOrUndefined(this.selectedCell$.value) && Object.keys(this.selectedCell$.value).length > 0;
   }
 
   public isCellSelected(cell: TableCell): boolean {
     return this.isSelected() && cellsAreSame(cell, this.selectedCell$.value);
+  }
+
+  public isRowSelected(row: TableRow): boolean {
+    return this.isSelected() && this.selectedCell.rowId === row.id && this.selectedCell.tableId === row.tableId;
   }
 
   public resetSelection() {
@@ -264,6 +268,7 @@ export class WorkflowTablesStateService {
           tableId: table.id,
           columnId: column.id,
           rowId: row?.id,
+          documentId: row?.documentId,
           type,
           linkId: row?.linkInstanceId,
         });
@@ -295,10 +300,7 @@ export class WorkflowTablesStateService {
     const tableIndex = this.tables.findIndex(table => table.id === cell.tableId);
     const tableByIndex = this.tables[tableIndex];
     const columnIndex = tableByIndex?.columns.findIndex(column => column.id === cell.columnId);
-    const rowIndex =
-      cell.type === TableCellType.Body
-        ? tableByIndex?.rows.findIndex(row => row.id === cell.rowId && row.linkInstanceId === cell.linkId)
-        : 0;
+    const rowIndex = cell.type === TableCellType.Body ? tableByIndex?.rows.findIndex(row => row.id === cell.rowId) : 0;
     return {tableIndex, columnIndex, rowIndex, type: cell.type};
   }
 

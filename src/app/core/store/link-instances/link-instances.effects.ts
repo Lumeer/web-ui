@@ -148,12 +148,18 @@ export class LinkInstancesEffects {
         map(originalLinkInstance => ({...originalLinkInstance, correlationId: linkInstance.correlationId})),
         mergeMap(originalLinkInstance =>
           this.linkInstanceService.updateLinkInstance(linkInstanceDto).pipe(
-            mergeMap(() => {
-              const actions: Action[] = [new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})];
-              nextAction && actions.push(nextAction);
-              return actions;
-            }),
-            catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
+            mergeMap(() => [
+              ...createCallbackActions(action.payload.onSuccess),
+              new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}),
+              ...(nextAction ? [nextAction] : []),
+              ...createCallbackActions(action.payload.afterSuccess),
+            ]),
+            catchError(error =>
+              of(
+                ...createCallbackActions(action.payload.onFailure),
+                new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})
+              )
+            )
           )
         )
       );
@@ -256,7 +262,7 @@ export class LinkInstancesEffects {
         mergeMap(linkInstance => {
           if (linkInstance) {
             const linkInstanceUpdate = {...linkInstance, documentIds};
-            return [new LinkInstancesAction.Update({linkInstance: linkInstanceUpdate})];
+            return [new LinkInstancesAction.Update({...action.payload, linkInstance: linkInstanceUpdate})];
           }
           return EMPTY;
         })

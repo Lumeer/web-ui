@@ -53,10 +53,12 @@ export class WorkflowToolbarComponent implements OnChanges {
   public configChange = new EventEmitter<WorkflowStemConfig>();
 
   public attributesResourcesOrder: AttributesResource[];
+  public hasAttribute: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.stem || changes.collections || changes.linkTypes) {
       this.attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
+      this.hasAttribute = this.attributesResourcesOrder.some(resource => resource.attributes.length);
     }
   }
 

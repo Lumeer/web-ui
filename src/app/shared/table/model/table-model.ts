@@ -45,6 +45,7 @@ export interface TableCell {
   columnId: string;
   type: TableCellType;
   rowId?: string;
+  documentId?: string;
   linkId?: string;
 }
 

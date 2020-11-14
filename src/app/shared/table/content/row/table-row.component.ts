@@ -157,11 +157,7 @@ export class TableRowComponent implements OnChanges {
 
   private isEditing(): boolean {
     if (this.isBodyCell()) {
-      return (
-        this.editedCell?.rowId === this.row?.id &&
-        this.editedCell?.linkId === this.row?.linkInstanceId &&
-        this.editedCell?.tableId === this.row?.tableId
-      );
+      return this.editedCell?.rowId === this.row?.id && this.editedCell?.tableId === this.row?.tableId;
     }
     return this.editedCell?.type === this.cellType && this.editedCell?.tableId === this.row?.tableId;
   }
@@ -203,10 +199,10 @@ export class TableRowComponent implements OnChanges {
     this.editedValue = null;
     if (this.suggestions?.isSelected()) {
       this.suggestions.useSelection();
-    } else {
-      this.suggestions?.close();
+    } else if (!this.suggestions?.isSelectionConfirmed()) {
       this.saveData(column, data);
     }
+    this.suggestions?.close();
   }
 
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
@@ -234,16 +230,13 @@ export class TableRowComponent implements OnChanges {
   }
 
   public onDataInputCancel(column: TableColumn, action?: DataInputSaveAction) {
-    this.onCancel.emit({columnId: column.id, action});
+    if (column) {
+      this.onCancel.emit({columnId: column.id, action});
+    }
   }
 
   public onDataInputClick(column: TableColumn, event: MouseEvent) {
-    if (
-      column &&
-      (this.editedCell?.columnId !== column.id ||
-        this.editedCell?.rowId !== this.row.id ||
-        this.editedCell?.linkId !== this.row.linkInstanceId)
-    ) {
+    if (column && (this.editedCell?.columnId !== column.id || this.editedCell?.rowId !== this.row.id)) {
       this.onClick.emit(column.id);
     }
   }
@@ -282,9 +275,9 @@ export class TableRowComponent implements OnChanges {
     this.onDetail.emit();
   }
 
-  public onUseHint(document: DocumentModel) {
-    this.endSuggesting(true);
-    this.linkedDocumentSelect.emit(document);
+  public onUseHint(data: {document: DocumentModel; external: boolean}) {
+    this.endSuggesting(!data.external);
+    this.linkedDocumentSelect.emit(data.document);
   }
 
   public onValueChange(dataValue: DataValue) {
@@ -315,7 +308,7 @@ export class TableRowComponent implements OnChanges {
   }
 
   private endSuggesting(cancel = false) {
-    if (this.suggestedColumn && cancel) {
+    if (cancel) {
       this.onDataInputCancel(this.suggestedColumn);
     }
     this.suggesting$.next(null);

@@ -1,10 +1,12 @@
 <select-item2 class="d-inline-block mr-4 mw-100 text-truncate"
+              [class.mr-4]="hasAttribute"
               [items]="stem | queryStemResourcesSelectItems:collections:linkTypes:true"
               [selectedPath]="[config?.collection]"
               (selectPath)="onResourceSelected($event)">
 </select-item2>
 
-<select-item-with-constraint2 class="d-inline-block mw-100 text-truncate"
+<select-item-with-constraint2 *ngIf="hasAttribute"
+                              class="d-inline-block mw-100 text-truncate"
                               [attributesResources]="attributesResourcesOrder"
                               [restrictedIds]="[]"
                               i18n-emptyValue="@@perspective.workflow.toolbar.grouping"

@@ -24,7 +24,7 @@ import {Constraint} from '../../../../core/model/constraint';
 import {QueryStem} from '../../../../core/store/navigation/query/query';
 
 export interface WorkflowTable extends TableModel {
-  title: {
+  title?: {
     value: any;
     dataValue: DataValue;
     constraint: Constraint;
@@ -36,6 +36,6 @@ export interface WorkflowTable extends TableModel {
   maxHeight: number;
   width: number;
   newRowData: Record<string, any>;
-  linkingDocumentIds: string[];
-  linkingCollectionId: string;
+  linkingDocumentIds?: string[];
+  linkingCollectionId?: string;
 }

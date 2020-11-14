@@ -109,7 +109,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public createLinkDirectly = true;
 
   @Output()
-  public useHint = new EventEmitter<DocumentModel>();
+  public useHint = new EventEmitter<{document: DocumentModel; external: boolean}>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -126,6 +126,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public dropdownPosition$ = new BehaviorSubject<DropdownPosition>(null);
 
   private hintsCount = 0;
+  private confirmedSelectedIndex: number;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -270,11 +271,12 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
         map(documents => documents[index]),
         filter(document => !!document)
       )
-      .subscribe(document => this.onUseDocument(document, !this.createLinkDirectly));
+      .subscribe(document => this.onUseDocument(index, document, !this.createLinkDirectly, true));
   }
 
-  public onUseDocument(document: DocumentModel, emit = true) {
-    emit && this.useHint.emit(document);
+  public onUseDocument(index: number, document: DocumentModel, emit = true, external = false) {
+    this.confirmedSelectedIndex = index;
+    emit && this.useHint.emit({document, external});
 
     if (this.createLinkDirectly) {
       if (this.linkInstanceId) {
@@ -318,6 +320,10 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   public isSelected(): boolean {
     return this.selectedIndex$.getValue() > -1;
+  }
+
+  public isSelectionConfirmed(): boolean {
+    return this.confirmedSelectedIndex > -1;
   }
 
   public preventEvent(event: MouseEvent) {

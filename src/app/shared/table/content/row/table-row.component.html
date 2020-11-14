@@ -3,21 +3,19 @@
   <ng-container
     *ngIf="{dataValue: group.column && (row.data[group.column.id] | dataValue:group.column?.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
-    focused: selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row,
-    edited: editedCell | tableCellEdited:group.column:cellType:row,
-    affected: editedCell | tableCellEdited:group.column:cellType:row: true,
+    editing: editedCell | tableCellEdited:group.column:cellType:row,
     directlyEditable: group.column?.attribute?.constraint?.type === constraintType.Boolean} as data">
 
     <ng-container
-      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:group.column?.editable:data.edited as dataInputInfo">
+      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:group.column?.editable:data.editing as dataInputInfo">
       <td class="table-cell position-relative"
           [style.width.px]="group.width"
           [style.height.px]="row.height"
           [style.max-height.px]="row.height"
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
-          [class.focused]="(selectedCell || editedCell)?.tableId === row.tableId && data.focused"
-          [class.editing]="editedCell?.tableId === row.tableId && data.edited"
-          [class.affected]="data.affected"
+          [class.focused]="selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row"
+          [class.editing]="data.editing"
+          [class.affected]="editedCell | tableCellEdited:group.column:cellType:row: true"
           [class.cursor-pointer]="group.column?.editable"
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"
           (click)="onDataInputClick(group.column, $event)"
@@ -30,10 +28,11 @@
           [cursor]="row | tableRowDataCursor:group.column"
           [style.height.px]="row.height - 1"
           [style.max-height.px]="row.height - 1"
-          [dataValue]="(editedValue | isNotNullOrUndefined) && editedCell?.tableId === row.tableId && data.edited ? editedValue : data.dataValue"
+          [dataValue]="(editedValue | isNotNullOrUndefined) && data.editing ? editedValue : data.dataValue"
           [focus]="true"
-          [readonly]="!group.column.editable || !((editedCell?.tableId === row.tableId && data.edited) || data.directlyEditable)"
+          [readonly]="!group.column.editable || !(data.editing || data.directlyEditable)"
           [configuration]="configuration"
+          (keydown)="onDataInputKeyDown($event)"
           (valueChange)="onValueChange($event)"
           (saveAction)="onNewValue(group.column, $event)"
           (cancel)="onDataInputCancel(group.column)">

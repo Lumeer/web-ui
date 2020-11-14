@@ -1,13 +1,12 @@
 <tr cdkDropList class="row-boundary" *ngIf="{index: draggedIndex$ | async} as dragData ">
   <ng-container *ngFor="let group of columnGroups; trackBy:trackByColumn; let index = index">
-    <th
-      *ngIf="{selected: selectedCell | tableCellSelected:group.column:cellType, edited: editedCell | tableCellEdited:group.column:cellType} as columnData"
+    <th *ngIf="{editing: editedCell | tableCellEdited:group.column:cellType} as columnData"
       class="sticky-header table-cell text-nowrap"
       cdkDrag
       [cdkDragDisabled]="!group.column"
-      [class.focused]="columnData.selected && selectedCell?.tableId === group.tableId"
-      [class.editing]="columnData.edited && editedCell?.tableId === group.tableId"
-      [class.affected]="columnData.edited && editedCell?.tableId !== group.tableId"
+      [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
+      [class.editing]="editedCell | tableCellEdited:group.column:cellType"
+      [class.affected]="editedCell | tableCellEdited:group.column:cellType:null:true"
       [class.dragging]="dragData.index === index"
       [class.creating]="group.column?.creating"
       [style.background]="group.color | columnBackground:(group.column && !group.column.attribute)"
@@ -22,8 +21,8 @@
       (click)="onHeaderClick(group.column)"
       (dblclick)="onHeaderDoubleClick(group.column)">
       <table-header-cell *ngIf="index !== dragData.index"
-                         [editing]="columnData.edited && editedCell?.tableId === group.tableId"
-                         [style.border-color]="columnData.selected || columnData.edited ? 'transparent' : null"
+                         class="inner-cell"
+                         [editing]="columnData.editing"
                          [editingValue]="editedCell?.inputValue"
                          [column]="group.column"
                          [hiddenColumns]="group.hiddenColumns"

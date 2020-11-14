@@ -21,7 +21,7 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {TableCell, TableCellType} from '../model/table-model';
 import {TableColumn} from '../model/table-column';
 import {TableRow} from '../model/table-row';
-import {isTableCellSelected, isTableColumnDirectlyEditable} from '../model/table-utils';
+import {isTableCellEdited, isTableColumnDirectlyEditable} from '../model/table-utils';
 
 @Pipe({
   name: 'tableCellEdited',
@@ -35,9 +35,7 @@ export class TableCellEditedPipe implements PipeTransform {
     affected?: boolean
   ): boolean {
     return (
-      cell &&
-      column &&
-      isTableCellSelected(cell, column, type, row, !!column.linkTypeId || !affected) &&
+      isTableCellEdited(cell, column, type, row, affected) &&
       (type !== TableCellType.Body || !isTableColumnDirectlyEditable(column))
     );
   }

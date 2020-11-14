@@ -90,6 +90,7 @@ export class WorkflowTablesService {
       case RowMenuId.Edit:
         this.stateService.setEditedCell({
           rowId: row.id,
+          documentId: row.documentId,
           columnId: column.id,
           tableId: column.tableId,
           linkId: row.linkInstanceId,
@@ -127,7 +128,6 @@ export class WorkflowTablesService {
           columnId: column.id,
           tableId: column.tableId,
           type: TableCellType.Header,
-          linkId: undefined,
         });
         break;
       case HeaderMenuId.Type:
@@ -196,7 +196,14 @@ export class WorkflowTablesService {
       this.dataService.createNewDocument(<TableNewRow>row, column, value);
     }
 
-    const cell = {rowId: row.id, columnId: column.id, type: TableCellType.Body, tableId: column.tableId};
+    const cell: TableCell = {
+      rowId: row.id,
+      columnId: column.id,
+      documentId: row.documentId,
+      linkId: row.linkInstanceId,
+      type: cellType,
+      tableId: column.tableId,
+    };
     this.onCellSave(cell, action);
   }
 

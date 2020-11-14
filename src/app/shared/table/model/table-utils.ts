@@ -58,21 +58,46 @@ export function isTableCellSelected(
   selectedCell: TableCell,
   column: TableColumn,
   type: TableCellType,
-  row?: TableRow,
-  checkLink = true
+  row: TableRow
 ): boolean {
   if (!selectedCell || !column || selectedCell.type !== type) {
     return false;
   }
   if (type === TableCellType.Header || type === TableCellType.Footer || type === TableCellType.NewRow) {
-    return selectedCell.columnId === column.id;
+    return selectedCell.columnId === column.id && selectedCell.tableId === column.tableId;
   }
 
-  return (
-    selectedCell.columnId === column.id &&
-    selectedCell.rowId === row?.id &&
-    (!checkLink || row?.linkInstanceId === selectedCell.linkId)
-  );
+  return selectedCell.columnId === column.id && selectedCell.rowId === row?.id && selectedCell.tableId === row?.tableId;
+}
+
+export function isTableCellEdited(
+  editedCell: TableCell,
+  column: TableColumn,
+  type: TableCellType,
+  row: TableRow,
+  affected: boolean
+): boolean {
+  if (!editedCell || !column || editedCell.type !== type) {
+    return false;
+  }
+
+  switch (type) {
+    case TableCellType.Header:
+      const headerCondition = affected ? editedCell.tableId !== column.tableId : editedCell.tableId === column.tableId;
+      return editedCell.columnId === column.id && headerCondition;
+    case TableCellType.NewRow:
+      return editedCell.columnId === column.id;
+    case TableCellType.Body:
+      const bodyCondition =
+        editedCell.columnId === column.id && (affected ? editedCell.rowId !== row?.id : editedCell.rowId === row?.id);
+      if (column.collectionId) {
+        return editedCell.documentId === row?.documentId && bodyCondition;
+      } else {
+        return editedCell.linkId === row?.linkInstanceId && bodyCondition;
+      }
+    default:
+      return false;
+  }
 }
 
 export function isTableColumnDirectlyEditable(column: TableColumn): boolean {

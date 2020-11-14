@@ -1,14 +1,13 @@
 <div class="d-flex flex-nowrap invisible-scroll-y header-wrapper" cdkScrollable [id]="scrollId">
   <ng-container *ngFor="let group of columnGroups; let last = last; let first = first; trackBy:trackByColumn">
-    <div *ngIf="{selected: selectedCell | tableCellSelected:group.column:cellType, edited: editedCell | tableCellEdited:group.column:cellType} as columnData"
-         class="header-cell table-cell"
+    <div class="header-cell table-cell"
          [style.background]="group.color | columnBackground:(group.column && !group.column.attribute)"
          [style.margin-left.px]="first ? 1 : 0"
          [style.height.px]="tableRowHeight"
          [style.width.px]="first && !last ? group.width - 1 : group.width"
-         [class.focused]="columnData.selected && selectedCell?.tableId === group.tableId"
-         [class.editing]="columnData.edited && editedCell?.tableId === group.tableId"
-         [class.affected]="columnData.edited && editedCell?.tableId !== group.tableId"
+         [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
+         [class.editing]="editedCell | tableCellEdited:group.column:cellType"
+         [class.affected]="editedCell | tableCellEdited:group.column:cellType:null:false"
          [class.creating]="group.column?.creating"
          [style.min-width.px]="first && !last ? group.width - 1 : group.width">
       <table-header-cell [editing]="false"

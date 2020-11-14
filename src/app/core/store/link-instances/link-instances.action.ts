@@ -148,7 +148,15 @@ export namespace LinkInstancesAction {
   export class Update implements Action {
     public readonly type = LinkInstancesActionType.UPDATE;
 
-    public constructor(public payload: {linkInstance: LinkInstance; nextAction?: Action}) {}
+    public constructor(
+      public payload: {
+        linkInstance: LinkInstance;
+        onSuccess?: () => void;
+        onFailure?: () => void;
+        afterSuccess?: () => void;
+        nextAction?: Action;
+      }
+    ) {}
   }
 
   export class UpdateInternal implements Action {
@@ -172,7 +180,15 @@ export namespace LinkInstancesAction {
   export class ChangeDocuments implements Action {
     public readonly type = LinkInstancesActionType.CHANGE_DOCUMENTS;
 
-    public constructor(public payload: {linkInstanceId: string; documentIds: [string, string]}) {}
+    public constructor(
+      public payload: {
+        linkInstanceId: string;
+        documentIds: [string, string];
+        onSuccess?: () => void;
+        onFailure?: () => void;
+        afterSuccess?: () => void;
+      }
+    ) {}
   }
 
   export class Delete implements Action {

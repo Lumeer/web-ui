@@ -17,13 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild, ElementRef} from '@angular/core';
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../model/table-model';
 import {TableColumn, TableColumnGroup, TableContextMenuItem} from '../model/table-column';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {DataInputSaveAction} from '../../data-input/data-input-save-action';
 import {TableNewRow, TableRow} from '../model/table-row';
 import {DocumentModel} from '../../../core/store/documents/document.model';
+import {CdkScrollable, CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 
 @Component({
   selector: 'table-new-row',
@@ -56,6 +57,9 @@ export class TableNewRowComponent {
   @Input()
   public linkTypeId: string;
 
+  @Input()
+  public scrollOffset: number;
+
   @Output()
   public onNewRowClick = new EventEmitter();
 
@@ -76,6 +80,13 @@ export class TableNewRowComponent {
 
   @Output()
   public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
+
+  @ViewChild(CdkScrollable, {static: false})
+  set content(content: CdkScrollable) {
+    if (this.scrollOffset && content) {
+      content.scrollTo({left: this.scrollOffset});
+    }
+  }
 
   public readonly cellType = TableCellType.NewRow;
 }

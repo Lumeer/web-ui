@@ -70,6 +70,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public scrollId: string;
 
   @Input()
+  public selectedDocumentId: string;
+
+  @Input()
   public syncScrollIds: string[];
 
   @Output()
@@ -136,6 +139,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   public scrollDisabled$ = new BehaviorSubject(false);
   public detailColumnId: string;
+  public scrollOffset: number;
 
   private subscriptions = new Subscription();
   private tableScrollService: TableScrollService;
@@ -153,6 +157,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
       this.checkScrollPositionForSelectedCell();
     }
     if (changes.tableModel) {
+      this.scrollOffset = this.viewPort?.measureScrollOffset('left');
       this.viewPort?.checkViewportSize();
       this.detailColumnId = this.tableModel?.columns?.find(
         column => !column.hidden && column.attribute?.constraint?.isTextRepresentation
@@ -162,7 +167,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   private checkScrollPositionForSelectedCell() {
     const {top, left} = this.tableScrollService.computeScrollOffsets(this.tableModel, this.selectedCell);
-    this.viewPort.scrollTo({top, left, behavior: 'smooth'});
+    this.viewPort?.scrollTo({top, left, behavior: 'smooth'});
   }
 
   private subscribeToScrolling(): Subscription {
@@ -196,7 +201,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public trackByRow(index: number, row: TableRow): string {
-    return row.documentId + (row.linkInstanceId || '');
+    return row.id;
   }
 
   public onBodyRowNewValue(row: TableRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
@@ -216,8 +221,9 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public onBodyCellClick(row: TableRow, columnId: string) {
     this.cellClick.emit({
       tableId: this.tableModel.id,
-      rowId: row.id,
+      documentId: row.documentId,
       linkId: row.linkInstanceId,
+      rowId: row.id,
       columnId,
       type: TableCellType.Body,
     });
@@ -226,48 +232,65 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public onBodyCellDoubleClick(row: TableRow, columnId: string) {
     this.cellDoubleClick.emit({
       tableId: this.tableModel.id,
-      rowId: row.id,
+      documentId: row.documentId,
       linkId: row.linkInstanceId,
+      rowId: row.id,
       columnId,
       type: TableCellType.Body,
     });
   }
 
   public onBodyCancel(row: TableRow, data: {action: DataInputSaveAction; columnId: string}) {
-    const cell = {
+    const cell: TableCell = {
       tableId: this.tableModel.id,
-      rowId: row.id,
+      documentId: row.documentId,
       linkId: row.linkInstanceId,
       columnId: data.columnId,
+      rowId: row.id,
       type: TableCellType.Body,
     };
     this.cellCancel.emit({cell, action: data.action});
   }
 
   public onHeaderCellClick(columnId: string) {
-    this.cellClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
+    this.cellClick.emit({tableId: this.tableModel.id, columnId, type: TableCellType.Header});
   }
 
   public onHeaderCellDoubleClick(columnId: string) {
-    this.cellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.Header});
+    this.cellDoubleClick.emit({tableId: this.tableModel.id, columnId, type: TableCellType.Header});
   }
 
   public onHeaderCancel(columnId: string) {
-    const cell = {tableId: this.tableModel.id, columnId, type: TableCellType.Header};
-    this.cellCancel.emit({cell});
+    this.cellCancel.emit({cell: {tableId: this.tableModel.id, columnId, type: TableCellType.Header}});
   }
 
   public onNewRowCellClick(columnId: string) {
-    this.cellClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.NewRow});
+    this.cellClick.emit({
+      tableId: this.tableModel.id,
+      rowId: this.tableModel.newRow.id,
+      columnId,
+      type: TableCellType.NewRow,
+    });
   }
 
   public onNewRowCellDoubleClick(columnId: string) {
-    this.cellDoubleClick.emit({tableId: this.tableModel.id, rowId: null, columnId, type: TableCellType.NewRow});
+    this.cellDoubleClick.emit({
+      tableId: this.tableModel.id,
+      rowId: this.tableModel.newRow.id,
+      columnId,
+      type: TableCellType.NewRow,
+    });
   }
 
   public onNewRowCancel(columnId: string) {
-    const cell = {tableId: this.tableModel.id, columnId, type: TableCellType.NewRow};
-    this.cellCancel.emit({cell});
+    this.cellCancel.emit({
+      cell: {
+        tableId: this.tableModel.id,
+        rowId: this.tableModel.newRow.id,
+        columnId,
+        type: TableCellType.NewRow,
+      },
+    });
   }
 
   public onScroll() {
