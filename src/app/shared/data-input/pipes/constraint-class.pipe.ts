@@ -19,7 +19,6 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Constraint} from '../../../core/model/constraint';
-import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {TextConstraint} from '../../../core/model/constraint/text.constraint';
 
@@ -28,7 +27,8 @@ import {TextConstraint} from '../../../core/model/constraint/text.constraint';
 })
 export class ConstraintClassPipe implements PipeTransform {
   public transform(constraint: Constraint): string {
-    return constraintTypeClass((constraint || new TextConstraint({})).type);
+    const type = (constraint || new TextConstraint({})).type;
+    return constraintTypeClass(type !== ConstraintType.Unknown ? type : ConstraintType.Text);
   }
 }
 
