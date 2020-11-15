@@ -53,6 +53,8 @@ import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {ViewsAction} from '../../../core/store/views/views.action';
+import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
+import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 
 @Component({
   selector: 'workflow-perspective',
@@ -63,6 +65,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
+  public dataLoaded$: Observable<boolean>;
   public linkTypes$: Observable<LinkType[]>;
   public currentView$: Observable<View>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
@@ -155,6 +158,13 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.selectedDocumentId$ = this.store$.pipe(select(selectWorkflowSelectedDocumentId));
     this.panelWidth$ = this.store$.pipe(select(selectPanelWidth));
+    this.dataLoaded$ = combineLatest([
+      this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
+      this.store$.pipe(select(selectCurrentQueryLinkInstancesLoaded)),
+    ]).pipe(
+      map(loaded => loaded.every(load => load)),
+      distinctUntilChanged()
+    );
   }
 
   private fetchData(query: Query) {

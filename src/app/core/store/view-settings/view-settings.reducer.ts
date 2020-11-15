@@ -79,6 +79,9 @@ function hideOrShowAttributes(
         const attributeIndex = settingsAttributes.findIndex(setting => setting.attributeId === attributeId);
         if (attributeIndex !== -1) {
           settingsAttributes[attributeIndex] = {...settingsAttributes[attributeIndex], hidden: hide};
+          if (!hide) {
+            delete settingsAttributes[attributeIndex].hidden;
+          }
         }
       }
       return settingsAttributes;

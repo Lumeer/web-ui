@@ -53,7 +53,8 @@
       </tbody>
     </table>
   </cdk-virtual-scroll-viewport>
-  <table-new-row [newRow]="tableModel.newRow"
+  <table-new-row *ngIf="tableModel.newRow"
+                 [newRow]="tableModel.newRow"
                  [columnGroups]="data.columnGroups"
                  [scrollId]="scrollId"
                  [selectedCell]="selectedCell"

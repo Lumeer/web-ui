@@ -104,7 +104,7 @@ export function isTableColumnDirectlyEditable(column: TableColumn): boolean {
   return columnConstraintType(column) === ConstraintType.Boolean;
 }
 
-export function numberOfDiffColumnsBefore(index: number, columns: TableColumn[]): number {
+export function numberOfOtherColumnsBefore(index: number, columns: TableColumn[]): number {
   const column = columns[index];
   if (column.collectionId) {
     return columns.slice(0, index).filter(col => !col.attribute || !!col.linkTypeId).length;

@@ -112,6 +112,9 @@ export class WorkflowTablesComponent implements OnChanges {
   @Input()
   public selectedDocumentId: string;
 
+  @Input()
+  public dataLoaded: boolean;
+
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();
 

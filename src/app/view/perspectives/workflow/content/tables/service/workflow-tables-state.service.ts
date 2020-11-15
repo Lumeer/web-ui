@@ -479,9 +479,8 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  public syncColumnSettingsBeforeMove(table: TableModel, from: number, to: number) {
-    const column = table.columns[from];
-    if (column) {
+  public syncColumnSettingsBeforeMove(column: TableColumn, from: number, to: number) {
+    if (column?.attribute) {
       const {collection, linkType} = this.findColumnResourcesByColumn(column);
       this.currentViewSettings = moveAttributeInSettings(this.currentViewSettings, from, to, collection, linkType);
     }

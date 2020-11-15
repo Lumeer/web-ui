@@ -185,7 +185,10 @@ export class WorkflowTablesService {
     if (column.attribute) {
       this.dataService.deleteAttribute(column);
     } else {
-      this.stateService.deleteColumn(column);
+      const numberOfColumns = this.stateService.findTableColumns(column.tableId).length;
+      if (numberOfColumns > 1) {
+        this.stateService.deleteColumn(column);
+      }
     }
   }
 

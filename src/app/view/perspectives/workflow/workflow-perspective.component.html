@@ -12,6 +12,7 @@
                   [constraintData]="constraintData$ | async"
                   [selectedDocumentId]="selectedDocumentId$ | async"
                   [sidebarWidth]="panelWidth$ | async"
+                  [dataLoaded]="dataLoaded$ | async"
                   (configChange)="onConfigChanged($event)"
                   (closeSidebar)="onCloseSidebar()"
                   (sidebarResize)="setSidebarWidth($event)">

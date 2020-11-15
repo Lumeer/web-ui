@@ -74,7 +74,7 @@
 </ng-container>
 
 <ng-template #emptyTable>
-  <div class="text-muted mb-5" i18n="@@workflow.table.empty">
+  <div *ngIf="dataLoaded" class="text-muted mb-5 mt-1" i18n="@@workflow.table.empty">
     There are no rows to display and you are not allowed to create any.
   </div>
 </ng-template>

@@ -73,6 +73,9 @@ export class WorkflowContentComponent implements OnChanges {
   @Input()
   public sidebarWidth: number;
 
+  @Input()
+  public dataLoaded: boolean;
+
   @Output()
   public configChange = new EventEmitter<WorkflowConfig>();
 

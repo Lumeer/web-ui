@@ -80,7 +80,7 @@ import {WorkflowTable} from '../../../model/workflow-table';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {queryStemsAreSame} from '../../../../../../core/store/navigation/query/query.util';
 import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
-import {groupTableColumns, numberOfDiffColumnsBefore} from '../../../../../../shared/table/model/table-utils';
+import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
 import {
   selectWorkflowId,
   selectWorkflowSelectedDocumentId,
@@ -702,20 +702,20 @@ export class WorkflowTablesDataService {
 
   public moveColumns(table: TableModel, from: number, to: number) {
     const columns = this.stateService.columns(table.id);
-    const fromWithoutDifferent = from - numberOfDiffColumnsBefore(from, columns);
-    const toWithoutDifferent = to - numberOfDiffColumnsBefore(to, columns);
+    const fromWithoutOther = from - numberOfOtherColumnsBefore(from, columns);
+    const toWithoutOther = to - numberOfOtherColumnsBefore(to, columns);
     const column = columns[from];
 
     // prevent from detect change for settings
-    this.stateService.syncColumnSettingsBeforeMove(table, fromWithoutDifferent, toWithoutDifferent);
+    this.stateService.syncColumnSettingsBeforeMove(column, fromWithoutOther, toWithoutOther);
     this.stateService.moveColumns(table, from, to);
 
-    if (column?.attribute && fromWithoutDifferent !== toWithoutDifferent && toWithoutDifferent >= 0) {
+    if (column?.attribute && fromWithoutOther !== toWithoutOther && toWithoutOther >= 0) {
       const {collection, linkType} = this.stateService.findColumnResourcesByColumn(column);
       this.store$.dispatch(
         new ViewSettingsAction.MoveAttribute({
-          from: fromWithoutDifferent,
-          to: toWithoutDifferent,
+          from: fromWithoutOther,
+          to: toWithoutOther,
           collection,
           linkType,
         })
