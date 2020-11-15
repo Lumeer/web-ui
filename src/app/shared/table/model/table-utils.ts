@@ -86,7 +86,7 @@ export function isTableCellEdited(
       const headerCondition = affected ? editedCell.tableId !== column.tableId : editedCell.tableId === column.tableId;
       return editedCell.columnId === column.id && headerCondition;
     case TableCellType.NewRow:
-      return editedCell.columnId === column.id;
+      return editedCell.columnId === column.id && editedCell.tableId === column.tableId;
     case TableCellType.Body:
       const bodyCondition =
         editedCell.columnId === column.id && (affected ? editedCell.rowId !== row?.id : editedCell.rowId === row?.id);

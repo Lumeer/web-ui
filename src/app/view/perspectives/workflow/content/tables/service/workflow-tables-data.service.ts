@@ -289,7 +289,7 @@ export class WorkflowTablesDataService {
 
         if (aggregatedData.items.length) {
           for (const aggregatedDataItem of aggregatedData.items) {
-            const title = aggregatedDataItem.value || '';
+            const title = aggregatedDataItem.value?.toString() || '';
             const tableId = collection.id + title;
             const titleDataValue = constraint.createDataValue(title, constraintData);
             const titleDataResources = aggregatedDataItem.dataResources;
@@ -337,7 +337,7 @@ export class WorkflowTablesDataService {
                 minHeight: computeTableHeight(Math.min(rows.length, 1), newRow),
                 height: tableSettings?.height || computeTableHeight(Math.min(rows.length, 5), newRow),
                 width: columnsWidth + 1, // + 1 for border
-                newRow: newRow ? {...newRow, data: newRow.data || newRowDataAggregated} : undefined,
+                newRow: newRow ? {...newRow, tableId, data: newRow.data || newRowDataAggregated} : undefined,
                 newRowData,
                 linkingDocumentIds:
                   !linkingCollectionId && createAggregatedLinkingDocumentsIds(aggregatedDataItem, childItem),
@@ -360,6 +360,7 @@ export class WorkflowTablesDataService {
             collectionPermissions
           );
 
+          const height = computeTableHeight(rows.length, newRow);
           const workflowTable: WorkflowTable = {
             id: tableId,
             columns: columns.map(column => ({...column, tableId})),
@@ -367,11 +368,11 @@ export class WorkflowTablesDataService {
             collectionId: collection.id,
             linkTypeId: linkType?.id,
             stem: stemConfig.stem,
-            maxHeight: computeTableHeight(0, newRow),
-            minHeight: computeTableHeight(0, newRow),
-            height: computeTableHeight(0, newRow),
+            maxHeight: height,
+            minHeight: height,
+            height,
             width: columnsWidth + 1, // + 1 for border
-            newRow: newRow ? {...newRow, data: newRow.data || newRowData} : undefined,
+            newRow: newRow ? {...newRow, tableId, data: newRow.data || newRowData} : undefined,
             newRowData,
             linkingCollectionId,
           };

@@ -55,6 +55,7 @@
           </lmr-table>
 
           <div resizer class="resizer d-flex align-items-center justify-content-center mb-5"
+               *ngIf="table.rows.length || table.newRow; else emptyTable"
                [reference]="table.id"
                [style.width]="'min(100%, ' + table.width + 'px)'"
                (onResize)="onTableResize(table, $event)"
@@ -71,6 +72,12 @@
 
 
 </ng-container>
+
+<ng-template #emptyTable>
+  <div class="text-muted mb-5" i18n="@@workflow.table.empty">
+    There are no rows to display and you are not allowed to create any.
+  </div>
+</ng-template>
 
 <ng-template #notDisplayable>
   <invalid-query class="w-100"
