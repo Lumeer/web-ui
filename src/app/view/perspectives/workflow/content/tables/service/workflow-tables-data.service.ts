@@ -274,21 +274,20 @@ export class WorkflowTablesDataService {
 
         const columns = [...linkColumns, ...collectionColumns];
         const columnsWidth = groupTableColumns(columns).reduce((width, group) => (width += group.width), 0);
+        const linkColumnIdsMap = createColumnIdsMap(linkColumns);
+        const columnIdsMap = createColumnIdsMap(collectionColumns);
+        const stemTableSettings = config.tables?.filter(
+          tab => queryStemsAreSame(tab.stem, stemConfig.stem) && tab.collectionId === collection.id
+        );
+        const isGroupedByCollection = isWorkflowStemConfigGroupedByResourceType(
+          stemConfig,
+          AttributesResourceType.Collection
+        );
+        const isGroupedByLink = isWorkflowStemConfigGroupedByResourceType(stemConfig, AttributesResourceType.LinkType);
+        const linkingCollectionId = createLinkingCollectionId(stemConfig, collections, linkTypesMap);
+        const newRowData = this.createNewRowData(collection, linkType, columnIdsMap, linkColumnIdsMap);
+
         if (aggregatedData.items.length) {
-          const stemTableSettings = config.tables?.filter(
-            tab => queryStemsAreSame(tab.stem, stemConfig.stem) && tab.collectionId === collection.id
-          );
-          const linkColumnIdsMap = createColumnIdsMap(linkColumns);
-          const isGroupedByCollection = isWorkflowStemConfigGroupedByResourceType(
-            stemConfig,
-            AttributesResourceType.Collection
-          );
-          const isGroupedByLink = isWorkflowStemConfigGroupedByResourceType(
-            stemConfig,
-            AttributesResourceType.LinkType
-          );
-          const columnIdsMap = createColumnIdsMap(collectionColumns);
-          const linkingCollectionId = createLinkingCollectionId(stemConfig, collections, linkTypesMap);
           for (const aggregatedDataItem of aggregatedData.items) {
             const title = aggregatedDataItem.value || '';
             const tableId = collection.id + title;
@@ -314,16 +313,11 @@ export class WorkflowTablesDataService {
                 collectionPermissions
               );
 
-              const collectionInitialData = isGroupedByCollection ? {[attribute.id]: title} : {};
-              const linkInitialData = isGroupedByLink ? {[attribute.id]: title} : {};
-              const newRowData = this.createNewRowData(
-                collectionInitialData,
-                linkInitialData,
-                collection,
-                linkType,
-                columnIdsMap,
-                linkColumnIdsMap
-              );
+              const newRowDataAggregated = {
+                ...newRowData,
+                ...createRowValues(isGroupedByCollection ? {[attribute.id]: title} : {}, columnIdsMap),
+                ...createRowValues(isGroupedByLink ? {[attribute.id]: title} : {}, linkColumnIdsMap),
+              };
 
               const tableSettings = stemTableSettings?.find(tab => tab.value === title);
               const workflowTable: WorkflowTable = {
@@ -343,7 +337,7 @@ export class WorkflowTablesDataService {
                 minHeight: computeTableHeight(Math.min(rows.length, 1), newRow),
                 height: tableSettings?.height || computeTableHeight(Math.min(rows.length, 5), newRow),
                 width: columnsWidth + 1, // + 1 for border
-                newRow: newRow ? {...newRow, data: newRow.data || newRowData} : undefined,
+                newRow: newRow ? {...newRow, data: newRow.data || newRowDataAggregated} : undefined,
                 newRowData,
                 linkingDocumentIds:
                   !linkingCollectionId && createAggregatedLinkingDocumentsIds(aggregatedDataItem, childItem),
@@ -354,19 +348,32 @@ export class WorkflowTablesDataService {
           }
         } else {
           const tableId = collection.id;
-          const newRow = {...createEmptyNewRow(tableId), data: {}};
+
+          const {rows, newRow} = this.createRows(
+            tableId,
+            tableByCollection?.rows || [],
+            tableByCollection?.newRow,
+            [],
+            linkColumnIdsMap,
+            columnIdsMap,
+            linkPermissions,
+            collectionPermissions
+          );
+
           const workflowTable: WorkflowTable = {
             id: tableId,
             columns: columns.map(column => ({...column, tableId})),
-            rows: [],
+            rows,
             collectionId: collection.id,
+            linkTypeId: linkType?.id,
             stem: stemConfig.stem,
             maxHeight: computeTableHeight(0, newRow),
             minHeight: computeTableHeight(0, newRow),
             height: computeTableHeight(0, newRow),
             width: columnsWidth + 1, // + 1 for border
-            newRow: newRow,
-            newRowData: {},
+            newRow: newRow ? {...newRow, data: newRow.data || newRowData} : undefined,
+            newRowData,
+            linkingCollectionId,
           };
           result.tables.push(workflowTable);
         }
@@ -380,8 +387,6 @@ export class WorkflowTablesDataService {
   }
 
   private createNewRowData(
-    initialCollectionData: Record<string, any>,
-    initialLinkData: Record<string, any>,
     collection: Collection,
     linkType: LinkType,
     collectionColumnsMap: Record<string, string>,
@@ -395,8 +400,6 @@ export class WorkflowTablesDataService {
     return {
       ...createRowValues(documentData, collectionColumnsMap),
       ...createRowValues(linkData, linkColumnsMap),
-      ...createRowValues(initialCollectionData, collectionColumnsMap),
-      ...createRowValues(initialLinkData, linkColumnsMap),
     };
   }
 

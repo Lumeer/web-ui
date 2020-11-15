@@ -93,9 +93,7 @@ export function createLinkTypeData(
   permissions: Record<string, AllowedPermissions>,
   linkTypesMap: Record<string, LinkType>
 ): {linkType?: LinkType; permissions?: AllowedPermissions} {
-  const isGrouped = stemConfig?.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex;
-  const isLinked = stemConfig.collection?.resourceIndex > 0;
-  if (isGrouped || isLinked) {
+  if (isLinkedOrGroupedConfig(stemConfig)) {
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(
       stemConfig.stem,
       collections,
@@ -117,21 +115,25 @@ export function createLinkTypeData(
   return {};
 }
 
+export function isLinkedOrGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
+  const isGrouped = stemConfig?.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex;
+  const isLinked = stemConfig.collection?.resourceIndex > 0;
+  return isGrouped || isLinked;
+}
+
 export function createLinkingCollectionId(
   stemConfig: WorkflowStemConfig,
   collections: Collection[],
   linkTypesMap: Record<string, LinkType>
 ): string | null {
-  const isNearResource =
-    stemConfig.attribute && Math.abs(stemConfig.collection.resourceIndex - stemConfig.attribute?.resourceIndex) === 1;
-  if (isNearResource) {
+  if (isLinkedOrGroupedConfig(stemConfig)) {
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(
       stemConfig.stem,
       collections,
       Object.values(linkTypesMap)
     );
     const resourceIndex = stemConfig.collection.resourceIndex;
-    const collectionIndex = resourceIndex + (resourceIndex < stemConfig.attribute.resourceIndex ? 2 : -2);
+    const collectionIndex = resourceIndex + (resourceIndex < stemConfig.attribute?.resourceIndex ? 2 : -2);
     return attributesResourcesOrder[collectionIndex]?.id;
   }
   return null;
