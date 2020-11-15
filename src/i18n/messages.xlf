@@ -916,59 +916,83 @@
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
+      </trans-unit><trans-unit id="agreement.welcome.newsletterCheck" datatype="html">
+        <source>By skipping the newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
       </trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="termsOfService" datatype="html">
         <source>Terms of Service</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit><trans-unit id="and" datatype="html">
         <source>and</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit><trans-unit id="privacyPolicy" datatype="html">
         <source>Privacy Policy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="label.terms.end" datatype="html">
         <source>and I agree to them.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
-      </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
-        <source>Keep me informed about productivity ideas via newsletter (see </source>
+      </trans-unit><trans-unit id="label.newsletter.secondChance" datatype="html">
+        <source>Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
+        <source>Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.newsletter.end" datatype="html">
+        <source>increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.newsletter.termsStart" datatype="html">
+        <source>See </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">45</context>
         </context-group>
-      </trans-unit><trans-unit id="label.newsletter.end" datatype="html">
-        <source>).</source>
+      </trans-unit><trans-unit id="label.newsletter.termsEnd" datatype="html">
+        <source>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context>
