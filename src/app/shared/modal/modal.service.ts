@@ -52,6 +52,8 @@ import {CreateProjectModalComponent} from './create-project/create-project-modal
 import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 
+type Options = ModalOptions & {initialState: any};
+
 @Injectable({
   providedIn: 'root',
 })
@@ -65,13 +67,13 @@ export class ModalService {
     private toastrService: ToastrService
   ) {}
 
-  public show(content: string | TemplateRef<any> | any, config?: ModalOptions): BsModalRef {
+  public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
   }
 
   public showChooseLinkDocument(documentIds: string[], callback?: (document: DocumentModel) => void): BsModalRef {
     const config = {initialState: {documentIds, callback}, keyboard: true, class: 'modal-lg'};
-    return this.addModalRef(this.bsModalService.show(ChooseLinkDocumentModalComponent, config));
+    return this.show(ChooseLinkDocumentModalComponent, config);
   }
 
   public showChooseLinkDocumentByCollection(
@@ -79,7 +81,7 @@ export class ModalService {
     callback?: (document: DocumentModel) => void
   ): BsModalRef {
     const config = {initialState: {collectionId, callback}, keyboard: true, class: 'modal-lg'};
-    return this.addModalRef(this.bsModalService.show(ChooseLinkDocumentModalComponent, config));
+    return this.show(ChooseLinkDocumentModalComponent, config);
   }
 
   public showDocumentDetail(id: string) {
@@ -130,7 +132,7 @@ export class ModalService {
       keyboard: true,
       class: 'modal-lg',
     };
-    return this.addModalRef(this.bsModalService.show(DataResourceDetailModalComponent, config));
+    return this.show(DataResourceDetailModalComponent, config);
   }
 
   public showShareView(view: View): BsModalRef {
@@ -155,7 +157,7 @@ export class ModalService {
   ): BsModalRef {
     const config = {initialState, keyboard: false, class: classString};
     config['backdrop'] = 'static';
-    return this.addModalRef(this.bsModalService.show(content, config));
+    return this.show(content, config);
   }
 
   private addModalRef(modalRef: BsModalRef): BsModalRef {
@@ -186,7 +188,7 @@ export class ModalService {
     const initialState = {attributeId, collectionId, linkTypeId};
     const config = {initialState, keyboard: false, class: 'modal-xxl'};
     config['backdrop'] = 'static';
-    return this.addModalRef(this.bsModalService.show(AttributeFunctionModalComponent, config));
+    return this.show(AttributeFunctionModalComponent, config);
   }
 
   private notifyFunctionsLimit() {

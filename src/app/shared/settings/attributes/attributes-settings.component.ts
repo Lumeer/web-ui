@@ -28,6 +28,8 @@ import {selectCollectionsDictionary} from '../../../core/store/collections/colle
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {map} from 'rxjs/operators';
 import {AttributesSettings} from '../../../core/store/views/view';
+import {Query} from '../../../core/store/navigation/query/query';
+import {selectQuery} from '../../../core/store/navigation/navigation.state';
 
 @Component({
   selector: 'attributes-settings',
@@ -43,10 +45,12 @@ export class AttributesSettingsComponent implements OnInit {
 
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
+  public query$: Observable<Query>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
+    this.query$ = this.store$.pipe(select(selectQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByStems));
     this.linkTypes$ = combineLatest([
       this.store$.pipe(select(selectLinkTypesInQuery)),

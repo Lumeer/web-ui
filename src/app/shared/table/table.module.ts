@@ -23,8 +23,6 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MatMenuModule} from '@angular/material/menu';
 
-import {ClickOutsideModule} from 'ng-click-outside';
-
 import {TableComponent} from './table.component';
 import {TableHeaderComponent} from './content/header/table-header.component';
 import {TableRowComponent} from './content/row/table-row.component';
@@ -52,6 +50,7 @@ import {TableNewRowComponent} from './new-row/table-new-row.component';
 import {DocumentHintsModule} from '../document-hints/document-hints.module';
 import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
 import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -85,7 +84,7 @@ import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
     DragDropModule,
     ScrollingModule,
     InputModule,
-    ClickOutsideModule,
+    DirectivesModule,
     ResizableSidebarModule,
     MatMenuModule,
     DocumentHintsModule,

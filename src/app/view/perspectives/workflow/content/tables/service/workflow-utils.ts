@@ -93,14 +93,16 @@ export function createLinkTypeData(
   permissions: Record<string, AllowedPermissions>,
   linkTypesMap: Record<string, LinkType>
 ): {linkType?: LinkType; permissions?: AllowedPermissions} {
-  if (stemConfig?.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex) {
+  const isGrouped = stemConfig?.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex;
+  const isLinked = stemConfig.collection?.resourceIndex > 0;
+  if (isGrouped || isLinked) {
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(
       stemConfig.stem,
       collections,
       Object.values(linkTypesMap)
     );
     const resourceIndex = stemConfig.collection.resourceIndex;
-    const linkIndex = resourceIndex + (resourceIndex < stemConfig.attribute.resourceIndex ? 1 : -1);
+    const linkIndex = resourceIndex + (resourceIndex < stemConfig.attribute?.resourceIndex ? 1 : -1);
     const linkType = <LinkType>attributesResourcesOrder[linkIndex];
     const linkTypePermissions = queryAttributePermissions(
       {

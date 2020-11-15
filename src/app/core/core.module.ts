@@ -23,7 +23,6 @@ import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {AlertModule} from 'ngx-bootstrap/alert';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
@@ -80,7 +79,6 @@ if (environment.locale === LanguageCode.CZ) {
     HttpClientModule,
     RouterModule,
     SharedModule,
-    ClickOutsideModule,
     GuardsModule,
     BrowserAnimationsModule,
     NotificationsModule,

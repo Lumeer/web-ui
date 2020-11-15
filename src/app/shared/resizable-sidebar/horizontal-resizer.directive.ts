@@ -38,7 +38,7 @@ export class HorizontalResizerDirective implements OnInit {
   }
 
   @HostListener('document:mousemove', ['$event'])
-  private onMouseMove(event: MouseEvent) {
+  public onMouseMove(event: MouseEvent) {
     if (!this.resizingElement) {
       return;
     }
@@ -58,7 +58,7 @@ export class HorizontalResizerDirective implements OnInit {
   }
 
   @HostListener('document:mouseup', ['$event'])
-  private onMouseUp(event: MouseEvent) {
+  public onMouseUp(event: MouseEvent) {
     if (!this.resizingElement) {
       return;
     }
@@ -75,7 +75,7 @@ export class HorizontalResizerDirective implements OnInit {
   }
 
   @HostListener('mousedown', ['$event'])
-  private onMouseDown(event: MouseEvent) {
+  public onMouseDown(event: MouseEvent) {
     preventEvent(event);
 
     this.resizingElement = this.element.nativeElement.parentNode;

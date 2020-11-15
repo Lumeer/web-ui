@@ -205,7 +205,7 @@ export class WorkflowTablesComponent implements OnChanges {
   }
 
   @HostListener('document:click', ['$event'])
-  private onDocumentClick(event: MouseEvent) {
+  public onDocumentClick(event: MouseEvent) {
     this.checkClickOutsideTables(event);
   }
 

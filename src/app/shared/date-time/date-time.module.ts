@@ -21,7 +21,6 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {TimepickerModule} from 'ngx-bootstrap/timepicker';
 import {DropdownModule} from '../dropdown/dropdown.module';
@@ -30,6 +29,7 @@ import {DateTimeInputComponent} from './input/date-time-input.component';
 import {DateTimePickerComponent} from './picker/date-time-picker.component';
 import {HasDateOptionPipe} from './picker/has-date-option.pipe';
 import {HasTimeOptionPipe} from './picker/has-time-option.pipe';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -40,7 +40,7 @@ import {HasTimeOptionPipe} from './picker/has-time-option.pipe';
     PipesModule,
     ReactiveFormsModule,
     TimepickerModule,
-    ClickOutsideModule,
+    DirectivesModule,
   ],
   declarations: [DateTimeInputComponent, DateTimePickerComponent, HasDateOptionPipe, HasTimeOptionPipe],
   exports: [DateTimeInputComponent, DateTimePickerComponent],

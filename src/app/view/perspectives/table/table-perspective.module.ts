@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {CommonModule} from '@angular/common';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {NgModule} from '@angular/core';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {SharedModule} from '../../../shared/shared.module';
 import {TableBodyModule} from './body/table-body.module';
@@ -29,10 +29,12 @@ import {TableSharedModule} from './shared/table-shared.module';
 import {TablePerspectiveComponent} from './table-perspective.component';
 import {ModalModule} from '../../../shared/modal/modal.module';
 import {TablePerspectiveRoutingModule} from './table-perspective-routing.module';
+import {DirectivesModule} from '../../../shared/directives/directives.module';
 
 @NgModule({
   imports: [
-    ClickOutsideModule,
+    CommonModule,
+    DirectivesModule,
     TableBodyModule,
     TableHeaderModule,
     TableSharedModule,

@@ -23,13 +23,13 @@ import {PostItComponent} from './post-it.component';
 import {DataInputModule} from '../data-input/data-input.module';
 import {PostItRowComponent} from './row/post-it-row.component';
 import {PipesModule} from '../pipes/pipes.module';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {PostItHeaderComponent} from './header/post-it-header.component';
 import {PresenterModule} from '../presenter/presenter.module';
 import {DataResourceFavoritePipe} from './pipes/data-resource-favorite.pipe';
 import {InputModule} from '../input/input.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {PostItLayoutTypeClassPipe} from './pipes/post-it-layout-type-class.pipe';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -39,15 +39,7 @@ import {PostItLayoutTypeClassPipe} from './pipes/post-it-layout-type-class.pipe'
     DataResourceFavoritePipe,
     PostItLayoutTypeClassPipe,
   ],
-  imports: [
-    CommonModule,
-    DataInputModule,
-    PipesModule,
-    PresenterModule,
-    ClickOutsideModule,
-    InputModule,
-    DragDropModule,
-  ],
+  imports: [CommonModule, DataInputModule, PipesModule, PresenterModule, DirectivesModule, InputModule, DragDropModule],
   exports: [PostItComponent],
 })
 export class PostItModule {}

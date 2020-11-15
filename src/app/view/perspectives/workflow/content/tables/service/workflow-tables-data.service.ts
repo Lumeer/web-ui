@@ -410,6 +410,14 @@ export class WorkflowTablesDataService {
       };
 
       aggregatorAttributes.push(rowAttribute);
+    } else if (stemConfig.collection?.resourceIndex > 0) {
+      // is linked collection
+      const rowAttribute: DataAggregatorAttribute = {
+        resourceIndex: stemConfig.collection.resourceIndex - 1,
+        attributeId: null,
+      };
+
+      aggregatorAttributes.push(rowAttribute);
     }
     const valueAttribute: DataAggregatorAttribute = {
       resourceIndex: stemConfig.collection.resourceIndex,

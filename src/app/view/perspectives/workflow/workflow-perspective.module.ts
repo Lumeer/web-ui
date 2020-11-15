@@ -20,6 +20,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
+import {MatMenuModule} from '@angular/material/menu';
 import {WorkflowPerspectiveComponent} from './workflow-perspective.component';
 import {WorkflowPerspectiveRoutingModule} from './workflow-perspective-routing.module';
 import {DataInputModule} from '../../../shared/data-input/data-input.module';
@@ -27,7 +28,6 @@ import {TableModule} from '../../../shared/table/table.module';
 import {WorkflowTablesComponent} from './content/tables/workflow-tables.component';
 import {PipesModule} from '../../../shared/pipes/pipes.module';
 import {WarningMessageModule} from '../../../shared/warning-message/warning-message.module';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {InputModule} from '../../../shared/input/input.module';
 import {WorkflowToolbarComponent} from './content/tables/toolbar/workflow-toolbar.component';
 import {SelectModule} from '../../../shared/select/select.module';
@@ -40,7 +40,6 @@ import {WorkflowSidebarComponent} from './content/sidebar/workflow-sidebar.compo
 import {DataResourceModule} from '../../../shared/data-resource/data-resource.module';
 import {SettingsModule} from '../../../shared/settings/settings.module';
 import {LinksListModule} from '../../../shared/links/links-list/links-list.module';
-import {MatMenuModule} from '@angular/material/menu';
 import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
 import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table-title.component';
 
@@ -65,7 +64,6 @@ import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table
     DataInputModule,
     PipesModule,
     WarningMessageModule,
-    ClickOutsideModule,
     InputModule,
     SelectModule,
     ResizableSidebarModule,

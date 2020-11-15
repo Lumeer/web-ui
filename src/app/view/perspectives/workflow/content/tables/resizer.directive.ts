@@ -43,7 +43,7 @@ export class ResizerDirective {
   constructor(private element: ElementRef, private renderer: Renderer2) {}
 
   @HostListener('document:mousemove', ['$event'])
-  private onMouseMove(event: MouseEvent) {
+  public onMouseMove(event: MouseEvent) {
     if (!this.resizingElement) {
       return;
     }
@@ -53,7 +53,7 @@ export class ResizerDirective {
   }
 
   @HostListener('document:mouseup', ['$event'])
-  private onMouseUp(event: MouseEvent) {
+  public onMouseUp(event: MouseEvent) {
     if (this.height && this.height !== this.initialHeight) {
       this.onResize.emit(this.height);
     }
@@ -74,7 +74,7 @@ export class ResizerDirective {
   }
 
   @HostListener('mousedown', ['$event'])
-  private onMouseDown(event: MouseEvent) {
+  public onMouseDown(event: MouseEvent) {
     event.preventDefault();
 
     this.resizingElement = this.findResizingElement();
