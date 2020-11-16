@@ -74,7 +74,7 @@
     "coordinate-parser": "^1.0.3",
     "core-js": "~3.6.5",
     "crc-32": "^1.2.0",
-    "d3-drag": "^1.2.5",
+    "d3-drag": "^2.0.0",
     "d3-zoom": "^1.8.3",
     "dompurify": "^2.0.11",
     "driver.js": "^0.9.8",
