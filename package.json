@@ -71,7 +71,7 @@
     "auth0-js": "^9.13.2",
     "big.js": "^5.2.2",
     "bootstrap": "^4.5.0",
-    "coordinate-parser": "^1.0.3",
+    "coordinate-parser": "^1.0.7",
     "core-js": "~3.6.5",
     "crc-32": "^1.2.0",
     "d3-drag": "^1.2.5",
