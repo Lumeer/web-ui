@@ -58,6 +58,8 @@ export class AgreementComponent implements OnInit, OnDestroy {
   public readonly privacyPolicyLink = privacyPolicyLinks[environment.locale];
   public readonly dataProcessingAgreementLink = dataProcessingAgreementLinks[environment.locale];
 
+  public stage = 0;
+
   public form = new FormGroup({
     [this.agreementName]: new FormControl(false, Validators.requiredTrue),
     [this.newsletterName]: new FormControl(false),
@@ -85,6 +87,7 @@ export class AgreementComponent implements OnInit, OnDestroy {
           this.newsletter.setValue(user.newsletter || false);
         })
     );
+    this.stage = 0;
   }
 
   public ngOnDestroy() {
@@ -96,7 +99,11 @@ export class AgreementComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.sendAgreement();
+    if (this.newsletter.value || this.stage === 1) {
+      this.sendAgreement();
+    } else {
+      this.stage = 1;
+    }
   }
 
   private sendAgreement() {

@@ -1,0 +1,19 @@
+<input *ngIf="!edited; else editableInput"
+       [value]="value"
+       [class.text-default-attribute]="default"
+       [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
+       class="w-100 p-0"
+       readonly>
+
+<ng-template #editableInput>
+  <input #textInput
+         [readonly]="!edited"
+         [value]="value"
+         [class.text-default-attribute]="default"
+         [style.margin-bottom.px]="offsetHorizontal ? 1 : 0"
+         (blur)="onBlur()"
+         (input)="onInput($event)"
+         (keydown)="onKeyDown($event)"
+         (paste)="onPaste($event)"
+         class="w-100 p-0">
+</ng-template>

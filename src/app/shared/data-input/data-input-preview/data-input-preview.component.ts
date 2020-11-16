@@ -22,7 +22,7 @@ import {Constraint} from '../../../core/model/constraint';
 import {DataValue} from '../../../core/model/data-value';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {DataCursor} from '../data-cursor';
-import {DataInputConfiguration} from '../data-input-configuration';
+import {CommonDataInputConfiguration, DataInputConfiguration} from '../data-input-configuration';
 
 @Component({
   selector: 'data-input-preview',
@@ -46,10 +46,14 @@ export class DataInputPreviewComponent implements OnChanges {
   public readonly constraintType = ConstraintType;
 
   public hasValue: boolean;
+  public commonConfiguration: CommonDataInputConfiguration;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.dataValue) {
       this.hasValue = this.dataValue && !!this.dataValue.format();
+    }
+    if (changes.configuration) {
+      this.commonConfiguration = {...this.configuration?.common, skipValidation: true};
     }
   }
 }

@@ -2,6 +2,9 @@
   "extends": ["rxjs-tslint-rules"],
   "rules": {
     "class-name": true,
+    "deprecation": {
+      "severity": "warning"
+    },
     "file-header": [true, "Copyright \\(C\\) since 2017 Lumeer\\.io, s\\.r\\.o\\."],
     "forin": true,
     "label-position": true,
@@ -25,8 +28,6 @@
     "no-string-literal": false,
     "no-switch-case-fall-through": true,
     "no-unused-expression": false,
-    "no-unused-variable": false,
-    "no-use-before-declare": true,
     "no-var-keyword": true,
     "prefer-const": true,
     "radix": true,

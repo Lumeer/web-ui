@@ -12,8 +12,8 @@
        type="text">
 
 <date-time-picker *ngIf="!readonly"
-                  [min]="skipValidation ? null : value?.config?.minValue"
-                  [max]="skipValidation ? null : value?.config?.maxValue"
+                  [min]="configuration?.skipValidation ? null : value?.config?.minValue"
+                  [max]="configuration?.skipValidation ? null : value?.config?.maxValue"
                   [options]="options"
                   [origin]="element"
                   [value]="date"

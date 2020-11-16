@@ -63,6 +63,19 @@ export function mergeDocuments(documentsA: DocumentModel[], documentsB: Document
   return documentsA.concat(documentsBToAdd);
 }
 
+export function uniqueDocuments(documents: DocumentModel[]): DocumentModel[] {
+  return (documents || []).reduce(
+    (data, document) => {
+      if (!data.ids.has(document.id)) {
+        data.ids.add(document.id);
+        data.documents.push(document);
+      }
+      return data;
+    },
+    {documents: [], ids: new Set()}
+  ).documents;
+}
+
 export function groupDocumentsByCollection(documents: DocumentModel[]): Record<string, DocumentModel[]> {
   return (documents || []).reduce((map, document) => {
     if (!map[document.collectionId]) {

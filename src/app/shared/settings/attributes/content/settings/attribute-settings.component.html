@@ -7,3 +7,15 @@
   <input type="checkbox" [checked]="!settings?.hidden" #checkbox (change)="onHiddenChanged($event.target.checked)">
   <span class="slider round" (click)="$event.stopPropagation()"></span>
 </label>
+
+<div class="ml-1 position-relative cursor-pointer sort-wrapper d-flex align-items-center justify-content-center"
+     title="Toggle sort"
+     i18n-title="@@attribute.settings.sort.toggle"
+     (click)="onSortToggle()">
+  <i class="fas fa-fw fa-lg fa-sort-up position-absolute"
+     [class.text-muted]="!settings.sort || settings.sort !== sortType.Ascending">
+  </i>
+  <i class="fas fa-fw fa-lg fa-sort-down position-absolute"
+     [class.text-muted]="!settings.sort || settings.sort !== sortType.Descending">
+  </i>
+</div>

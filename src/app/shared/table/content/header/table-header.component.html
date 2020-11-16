@@ -1,0 +1,39 @@
+<tr cdkDropList class="row-boundary" *ngIf="{index: draggedIndex$ | async} as dragData ">
+  <ng-container *ngFor="let group of columnGroups; trackBy:trackByColumn; let index = index">
+    <th *ngIf="{editing: editedCell | tableCellEdited:group.column:cellType} as columnData"
+      class="sticky-header table-cell text-nowrap"
+      cdkDrag
+      [cdkDragDisabled]="!group.column"
+      [class.focused]="selectedCell | tableCellSelected:group.column:cellType"
+      [class.editing]="editedCell | tableCellEdited:group.column:cellType"
+      [class.affected]="editedCell | tableCellEdited:group.column:cellType:null:true"
+      [class.dragging]="dragData.index === index"
+      [class.creating]="group.column?.creating"
+      [style.background]="group.color | columnBackground:(group.column && !group.column.attribute)"
+      (cdkDragDropped)="onColumnDrop($event)"
+      (cdkDragStarted)="onColumnDragStarted()"
+      (cdkDragMoved)="onColumnDragMoved($event, index)"
+      (cdkDragEnded)="onColumnDragEnded()"
+      (mousedown)="onMouseDown($event)"
+      [style.width.px]="group.width"
+      [style.height.px]="tableRowHeight"
+      scope="col" title="{{group.column?.name || group.column?.attribute?.name}}"
+      (click)="onHeaderClick(group.column)"
+      (dblclick)="onHeaderDoubleClick(group.column)">
+      <table-header-cell *ngIf="index !== dragData.index"
+                         class="inner-cell"
+                         [editing]="columnData.editing"
+                         [editingValue]="editedCell?.inputValue"
+                         [column]="group.column"
+                         [hiddenColumns]="group.hiddenColumns"
+                         [restrictedNames]="columnGroups | columnHeaderRestrictedNames:index"
+                         (onCancel)="onHeaderCancel(group.column)"
+                         (newName)="onHeaderSave(group.column, $event)"
+                         (sortChanged)="onSortChanged(group.column, $event)"
+                         (menuSelected)="onMenuSelected(group.column, $event)"
+                         (hiddenMenuSelected)="hiddenMenuSelected.emit($event)">
+      </table-header-cell>
+      <div class="bg-gray h-100 w-100" *ngIf="index === dragData.index">&nbsp;</div>
+    </th>
+  </ng-container>
+</tr>

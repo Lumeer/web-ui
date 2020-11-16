@@ -21,7 +21,6 @@ import {FormsModule} from '@angular/forms';
 import {BrowserModule} from '@angular/platform-browser';
 import {RouterModule} from '@angular/router';
 import {SharedModule} from '../shared/shared.module';
-import {TablePerspectiveModule} from './perspectives/table/table-perspective.module';
 import {ViewControlsInfoPipe} from './view-controls/view-controls-info.pipe';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewLoadingComponent} from './view-loading.component';
@@ -30,7 +29,7 @@ import {ViewComponent} from './view.component';
 import {PerspectivesOptionsPipe} from './view-controls/perspectives-options.pipe';
 
 @NgModule({
-  imports: [BrowserModule, FormsModule, RouterModule, SharedModule, TablePerspectiveModule, ViewRoutingModule],
+  imports: [BrowserModule, FormsModule, RouterModule, SharedModule, ViewRoutingModule],
   declarations: [
     ViewComponent,
     ViewControlsComponent,

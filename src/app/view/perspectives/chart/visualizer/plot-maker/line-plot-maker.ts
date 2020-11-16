@@ -17,18 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Data, Layout, d3} from 'plotly.js';
+import {Layout, d3} from 'plotly.js';
 import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ChartDataSet} from '../../data/convertor/chart-data';
 import {AxisDraggablePlotMaker} from './axis-draggable-plot-maker';
+import {PlotlyChartData} from './plot-maker';
 
 export class LinePlotMaker extends AxisDraggablePlotMaker {
-  public createData(): Data[] {
+  public createData(): PlotlyChartData[] {
     return this.chartData.sets.map(set => this.createAxisData(set));
   }
 
-  private createAxisData(set: ChartDataSet): Data {
-    let data: Data;
+  private createAxisData(set: ChartDataSet): PlotlyChartData {
+    let data: PlotlyChartData;
     let isYCategory: boolean;
     if (set.yAxisType === ChartAxisType.Y1) {
       data = this.axis1DataStyle(set);
@@ -76,11 +77,11 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     return data;
   }
 
-  private axis1DataStyle(set: ChartDataSet): Data {
+  private axis1DataStyle(set: ChartDataSet): PlotlyChartData {
     return this.getDefaultDataStyle(set);
   }
 
-  private axis2DataStyle(set: ChartDataSet): Data {
+  private axis2DataStyle(set: ChartDataSet): PlotlyChartData {
     return {
       ...this.getDefaultDataStyle(set),
       yaxis: 'y2',
@@ -92,7 +93,7 @@ export class LinePlotMaker extends AxisDraggablePlotMaker {
     };
   }
 
-  private getDefaultDataStyle(set: ChartDataSet): Data {
+  private getDefaultDataStyle(set: ChartDataSet): PlotlyChartData {
     return {
       marker: {size: 10},
       line: {color: set.color},

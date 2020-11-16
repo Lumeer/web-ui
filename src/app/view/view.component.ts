@@ -35,17 +35,13 @@ import {
 import {View} from '../core/store/views/view';
 import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
-import {
-  selectCurrentView,
-  selectPerspectiveConfig,
-  selectSaveViewSettings,
-  selectViewByCode,
-} from '../core/store/views/views.state';
+import {selectCurrentView, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewSettingsService} from '../core/service/view-settings.service';
 import {selectCurrentUser} from '../core/store/users/users.state';
 import {ModalService} from '../shared/modal/modal.service';
 import {VerifyEmailModalComponent} from '../shared/modal/verify-email/verify-email-modal.component';
+import {selectSaveViewSettings} from '../core/store/view-settings/view-settings.state';
 
 @Component({
   templateUrl: './view.component.html',

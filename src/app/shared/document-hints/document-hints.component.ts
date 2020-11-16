@@ -52,7 +52,7 @@ import {ConstraintData} from '../../core/model/data/constraint';
 import {getOtherLinkedDocumentId} from '../../core/store/link-instances/link.instance';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
-import {escapeHtml, isNotNullOrUndefined} from '../utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined, preventEvent} from '../utils/common.utils';
 import {findAttributeConstraint} from '../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
 import {DataValue} from '../../core/model/data-value';
@@ -105,8 +105,11 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public createLinkDirectly = true;
+
   @Output()
-  public useHint = new EventEmitter();
+  public useHint = new EventEmitter<{document: DocumentModel; external: boolean}>();
 
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
@@ -123,6 +126,7 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public dropdownPosition$ = new BehaviorSubject<DropdownPosition>(null);
 
   private hintsCount = 0;
+  private confirmedSelectedIndex: number;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -267,16 +271,21 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
         map(documents => documents[index]),
         filter(document => !!document)
       )
-      .subscribe(document => this.onUseDocument(document, false));
+      .subscribe(document => this.onUseDocument(index, document, !this.createLinkDirectly, true));
   }
 
-  public onUseDocument(document: DocumentModel, emit = true) {
-    emit && this.useHint.emit();
+  public onUseDocument(index: number, document: DocumentModel, emit = true, external = false) {
+    this.confirmedSelectedIndex = index;
+    emit && this.useHint.emit({document, external});
 
-    if (this.linkInstanceId) {
-      this.createLinkWithExistingLinkData(document);
+    if (this.createLinkDirectly) {
+      if (this.linkInstanceId) {
+        this.createLinkWithExistingLinkData(document);
+      } else {
+        this.createLink(document);
+      }
     } else {
-      this.createLink(document);
+      this.close();
     }
   }
 
@@ -311,5 +320,13 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
 
   public isSelected(): boolean {
     return this.selectedIndex$.getValue() > -1;
+  }
+
+  public isSelectionConfirmed(): boolean {
+    return this.confirmedSelectedIndex > -1;
+  }
+
+  public preventEvent(event: MouseEvent) {
+    preventEvent(event);
   }
 }

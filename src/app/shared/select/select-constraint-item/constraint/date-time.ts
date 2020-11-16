@@ -61,11 +61,11 @@ export class DateTimeConfigOverrideService extends ConstraintConfigOverrideServi
     this.defaultTitle = i18n({id: 'default', value: 'Default'});
   }
 
-  public create(config: DateTimeConstraintConfig): SelectItemModel[] {
+  public create(config: DateTimeConstraintConfig, withDefaultItem: boolean): SelectItemModel[] {
     const formatTypes = createDateConstraintOverrideFormatTypes(config);
     const defaultItem: SelectItemModel = {id: null, value: this.defaultTitle};
     return [
-      defaultItem,
+      ...(withDefaultItem ? [defaultItem] : []),
       ...formatTypes
         .map(type => ({type, format: dateReadableFormatsMap[type]}))
         .filter(({format}) => format !== config.format)

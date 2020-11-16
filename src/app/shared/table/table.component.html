@@ -1,0 +1,74 @@
+<ng-container *ngIf="{columnGroups: tableModel.columns | groupTableColumns} as data">
+  <table-alternative-header [columnGroups]="data.columnGroups"
+                            [selectedCell]="selectedCell"
+                            [editedCell]="editedCell"
+                            [scrollId]="scrollId">
+  </table-alternative-header>
+  <table-resize-header [columnGroups]="data.columnGroups"
+                       (resizeColumn)="columnResize.emit($event)"
+                       [scrollId]="scrollId">
+  </table-resize-header>
+  <cdk-virtual-scroll-viewport lmrItemSize
+                               class="invisible-scroll-y"
+                               [id]="scrollId"
+                               (scroll)="onScroll()"
+                               [style.height]="tableModel.newRow ? 'calc(100% - ' + (tableModel.newRow.height + 1) + 'px)' : '100%'"
+                               [disabled]="scrollDisabled$ | async"
+                               [columns]="tableModel.columns">
+    <table #table class="table lmr-table position-relative">
+      <thead table-header [columnGroups]="data.columnGroups"
+             [selectedCell]="selectedCell"
+             [editedCell]="editedCell"
+             (dragStart)="scrollDisabled$.next(true)"
+             (dragEnd)="scrollDisabled$.next(false)"
+             (onClick)="onHeaderCellClick($event)"
+             (onDoubleClick)="onHeaderCellDoubleClick($event)"
+             (moveColumn)="onMoveColumn($event)"
+             (onCancel)="onHeaderCancel($event)"
+             (sortChanged)="columnSortChanged.emit($event)"
+             (onRename)="columnRename.emit($event)"
+             (menuSelected)="columnMenuSelected.emit($event)"
+             (hiddenMenuSelected)="columnHiddenMenuSelected.emit($event)">
+      </thead>
+      <tbody>
+      <tr table-row #tableRow
+          *cdkVirtualFor="let row of tableModel.rows; let index = index; trackBy:trackByRow"
+          [class.selected]="row.documentId === selectedDocumentId"
+          [row]="row"
+          [selectedCell]="selectedCell"
+          [editedCell]="editedCell"
+          [constraintData]="constraintData"
+          [columnGroups]="data.columnGroups"
+          [detailColumnId]="detailColumnId"
+          [collectionId]="tableModel.collectionId"
+          [linkTypeId]="tableModel.linkTypeId"
+          (newValue)="onBodyRowNewValue(row, $event)"
+          (onClick)="onBodyCellClick(row, $event)"
+          (onCancel)="onBodyCancel(row, $event)"
+          (onDoubleClick)="onBodyCellDoubleClick(row, $event)"
+          (menuSelected)="onBodyMenuSelected($event)"
+          (linkedDocumentSelect)="onRowLinkedDocumentSelect(row, $event)"
+          (onDetail)="rowDetail.emit(row)">
+      </tr>
+      </tbody>
+    </table>
+  </cdk-virtual-scroll-viewport>
+  <table-new-row *ngIf="tableModel.newRow"
+                 [newRow]="tableModel.newRow"
+                 [columnGroups]="data.columnGroups"
+                 [scrollId]="scrollId"
+                 [selectedCell]="selectedCell"
+                 [editedCell]="editedCell"
+                 [collectionId]="tableModel.collectionId"
+                 [linkTypeId]="tableModel.linkTypeId"
+                 [constraintData]="constraintData"
+                 [scrollOffset]="scrollOffsetLeft"
+                 (onNewRowClick)="rowNewClick.emit()"
+                 (onClick)="onNewRowCellClick($event)"
+                 (onCancel)="onNewRowCancel($event)"
+                 (onDoubleClick)="onNewRowCellDoubleClick($event)"
+                 (newValue)="onNewRowNewValue(tableModel.newRow, $event)"
+                 (linkedDocumentSelect)="onRowLinkedDocumentSelect(tableModel.newRow, $event)"
+                 (menuSelected)="onNewRowMenuSelected($event)">
+  </table-new-row>
+</ng-container>

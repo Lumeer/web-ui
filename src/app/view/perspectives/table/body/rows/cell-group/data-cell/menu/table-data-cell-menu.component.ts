@@ -57,7 +57,6 @@ import {selectLinkTypeById} from '../../../../../../../../core/store/link-types/
 @Component({
   selector: 'table-data-cell-menu',
   templateUrl: './table-data-cell-menu.component.html',
-  styleUrls: ['./table-data-cell-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableDataCellMenuComponent implements OnChanges {

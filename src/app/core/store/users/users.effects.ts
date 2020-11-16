@@ -30,7 +30,6 @@ import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
-import {RouterAction} from '../router/router.action';
 import {convertDefaultWorkspaceModelToDto, convertUserDtoToModel, convertUserModelToDto} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
@@ -46,7 +45,7 @@ export class UsersEffects {
     ofType<UsersAction.Get>(UsersActionType.GET),
     withLatestFrom(this.store$.select(selectUsersLoadedForOrganization)),
     filter(([action, loadedOrganizationId]) => loadedOrganizationId !== action.payload.organizationId),
-    map(([action, loaded]) => action),
+    map(([action]) => action),
     mergeMap(action =>
       this.userService.getUsers(action.payload.organizationId).pipe(
         map(dtos => ({
@@ -54,7 +53,7 @@ export class UsersEffects {
           users: dtos.map(dto => convertUserDtoToModel(dto)),
         })),
         map(({organizationId, users}) => new UsersAction.GetSuccess({organizationId, users})),
-        catchError(error => of(new UsersAction.GetFailure({error: error})))
+        catchError(error => of(new UsersAction.GetFailure({error})))
       )
     )
   );
@@ -287,7 +286,7 @@ export class UsersEffects {
       return this.userService.updateUser(action.payload.organizationId, userDto.id, userDto).pipe(
         map(dto => convertUserDtoToModel(dto)),
         map(user => new UsersAction.UpdateSuccess({user: user})),
-        catchError(error => of(new UsersAction.UpdateFailure({error: error})))
+        catchError(error => of(new UsersAction.UpdateFailure({error})))
       );
     })
   );
@@ -308,7 +307,7 @@ export class UsersEffects {
     mergeMap(action =>
       this.userService.deleteUser(action.payload.organizationId, action.payload.userId).pipe(
         map(() => new UsersAction.DeleteSuccess(action.payload)),
-        catchError(error => of(new UsersAction.DeleteFailure({error: error})))
+        catchError(error => of(new UsersAction.DeleteFailure({error})))
       )
     )
   );
@@ -337,7 +336,7 @@ export class UsersEffects {
               defaultWorkspace: action.payload.defaultWorkspace,
             })
         ),
-        catchError(error => of(new UsersAction.SaveDefaultWorkspaceFailure({error: error})))
+        catchError(error => of(new UsersAction.SaveDefaultWorkspaceFailure({error})))
       );
     })
   );

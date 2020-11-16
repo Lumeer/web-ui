@@ -24,7 +24,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, forkJoin, Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {RouteFinder} from '../../../shared/utils/route-finder';
 import {ProjectDto} from '../../dto';
 import {AppState} from '../app.state';
@@ -58,6 +58,7 @@ import {ChartAction} from '../charts/charts.action';
 import {TemplateService} from '../../rest/template.service';
 import {ProjectService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
+import {WorkflowsAction} from '../workflows/workflows.action';
 
 @Injectable()
 export class ProjectsEffects {
@@ -116,7 +117,7 @@ export class ProjectsEffects {
           organizationIds.reduce((codesMap, id, index) => ({...codesMap, [id]: arrayOfCodes[index]}), {})
         ),
         map(codesMap => new ProjectsAction.GetCodesSuccess({codesMap})),
-        catchError(error => of(new ProjectsAction.GetCodesFailure({error: error})))
+        catchError(error => of(new ProjectsAction.GetCodesFailure({error})))
       );
     })
   );
@@ -225,7 +226,7 @@ export class ProjectsEffects {
         .pipe(
           map(dto => ProjectConverter.fromDto(dto, action.payload.project.organizationId)),
           map(newProject => new ProjectsAction.UpdateSuccess({project: newProject, oldCode: oldProject.code})),
-          catchError(error => of(new ProjectsAction.UpdateFailure({error: error})))
+          catchError(error => of(new ProjectsAction.UpdateFailure({error})))
         );
     })
   );
@@ -234,7 +235,7 @@ export class ProjectsEffects {
   public updateSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<ProjectsAction.UpdateSuccess>(ProjectsActionType.UPDATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
-    flatMap(([action, codes]) => {
+    mergeMap(([action, codes]) => {
       const {project, oldCode} = action.payload;
       const codesByOrg = (codes && codes[project.organizationId]) || [];
       let newCodes = [...codesByOrg];
@@ -281,7 +282,7 @@ export class ProjectsEffects {
       const project = projectsMap[projectId];
       return this.projectService.deleteProject(organizationId, projectId).pipe(
         map(() => new ProjectsAction.DeleteSuccess({...action.payload, projectCode: project.code})),
-        catchError(error => of(new ProjectsAction.DeleteFailure({error: error})))
+        catchError(error => of(new ProjectsAction.DeleteFailure({error})))
       );
     })
   );
@@ -291,7 +292,7 @@ export class ProjectsEffects {
     ofType<ProjectsAction.DeleteSuccess>(ProjectsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectProjectsCodes))),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    flatMap(([[action, codes], navigation]) => {
+    mergeMap(([[action, codes], navigation]) => {
       const {organizationId, projectCode} = action.payload;
       const codesByOrg = (codes && codes[organizationId]) || [];
       const actions: Action[] = [];
@@ -452,6 +453,7 @@ export class ProjectsEffects {
         new GanttChartAction.Clear(),
         new SearchesAction.Clear(),
         new ChartAction.Clear(),
+        new WorkflowsAction.Clear(),
       ];
 
       if (nextAction) {

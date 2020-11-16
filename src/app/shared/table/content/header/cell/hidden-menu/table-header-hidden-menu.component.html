@@ -1,0 +1,22 @@
+<div class="position-absolute"
+     [style.left.px]="contextMenuPosition.x"
+     [style.top.px]="contextMenuPosition.y"
+     [matMenuTriggerFor]="contextMenu">
+</div>
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent>
+
+    <button *ngFor="let column of hiddenColumns"
+         mat-menu-item
+         (click)="onSelected($event, column)">
+      <span>{{column.attribute?.name}}</span>
+    </button>
+
+    <button *ngIf="hiddenColumns.length > 1"
+         mat-menu-item
+         (click)="onAllSelected($event)">
+      <span i18n="@@table.header.show.all" class="font-italic">All columns</span>
+    </button>
+  </ng-template>
+
+</mat-menu>

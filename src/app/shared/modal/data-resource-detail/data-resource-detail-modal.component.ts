@@ -49,12 +49,12 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Collection} from '../../../core/store/collections/collection';
 import {ViewSettings} from '../../../core/store/views/view';
-import {selectViewSettings} from '../../../core/store/views/views.state';
 import {LinkTypePermissionsPipe} from '../../pipes/permissions/link-type-permissions.pipe';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-permissions.pipe';
 import {distinctUntilChanged} from 'rxjs/operators';
 import {LinkType} from '../../../core/store/link-types/link.type';
+import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 
 @Component({
   selector: 'data-resource-detail-modal',

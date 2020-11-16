@@ -32,7 +32,7 @@
     <user-data-input *ngSwitchCase="constraintType.User"
                      [readonly]="true"
                      [title]="data.stringValues | join"
-                     [configuration]="userConfiguration"
+                     [commonConfiguration]="userConfiguration"
                      [value]="values | createCombinedUserValue:data.constraint:constraintData"
                      class="h-100">
 

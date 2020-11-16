@@ -18,10 +18,10 @@
  */
 
 import {ElementRef} from '@angular/core';
-import {Config, d3, Data, Layout, newPlot, PlotData, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
+import {Config, d3, Layout, newPlot, PlotData, PlotRelayoutEvent, Plots, purge, react} from 'plotly.js';
 import {environment} from '../../../../../environments/environment';
 import {ChartAxisType, ChartType} from '../../../../core/store/charts/chart';
-import {DataChange, PlotMaker} from './plot-maker/plot-maker';
+import {DataChange, PlotlyChartData, PlotMaker} from './plot-maker/plot-maker';
 import {ChartData, ChartSettings} from '../data/convertor/chart-data';
 import {DraggablePlotMaker} from './plot-maker/draggable-plot-maker';
 import {LinePlotMaker} from './plot-maker/line-plot-maker';
@@ -35,7 +35,7 @@ import {COLOR_PRIMARY} from '../../../../core/constants';
 export class ChartVisualizer {
   private currentType: ChartType;
 
-  private data: Data[] = [];
+  private data: PlotlyChartData[] = [];
 
   private layout: Partial<Layout>;
 

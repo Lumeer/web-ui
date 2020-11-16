@@ -80,6 +80,9 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
   @Input()
   public preventEventBubble: boolean;
 
+  @Input()
+  public allowSelectDocument: boolean;
+
   @ViewChildren('tableRow')
   public tableRows: QueryList<LinksListTableRowComponent>;
 

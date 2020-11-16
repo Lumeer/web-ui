@@ -1,0 +1,45 @@
+@import 'src/styles/variables';
+
+%highlighted {
+  z-index: 2;
+  outline-offset: -1px;
+}
+
+.table-cell.focused {
+  @extend %highlighted;
+  outline: $primary solid 1px;
+  box-shadow: 0 0 4px $secondary;
+}
+
+.table-cell.editing {
+  @extend %highlighted;
+  outline: $success solid 1px;
+  box-shadow: 1px 1px 4px $secondary;
+}
+
+.table-cell.affected:not(.editing) {
+  @extend %highlighted;
+  outline: $warning solid 1px;
+  box-shadow: 1px 1px 4px $secondary;
+}
+
+.table-cell.focused,
+.table-cell.editing,
+.table-cell.affected {
+  .inner-cell {
+    border-color: transparent;
+  }
+}
+
+.table-cell.creating {
+  animation: progress 2s linear infinite;
+
+  @keyframes progress {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: -37px 0px;
+    }
+  }
+}

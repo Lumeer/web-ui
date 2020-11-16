@@ -1,0 +1,23 @@
+<div class="p-2">
+  <i class="fal fa-times close-icon cursor-pointer p-1"
+     (click)="onCloseClick()"
+     i18n-title="@@close"
+     i18n="Close"></i>
+</div>
+<div class="px-3 pb-3">
+  <data-resource-detail [resource]="collection"
+                        [dataResource]="document"
+                        [query]="query"
+                        [ignoreSettingsOnReadPermission]="true"
+                        [permissions]="permissions"
+                        [attributeSettings]="viewSettings | resourceAttributesSettings:collectionResourceType:collection.id">
+  </data-resource-detail>
+  <links-list class="d-block mt-5"
+              [document]="document"
+              [preventEventBubble]="true"
+              [ignoreSettingsOnReadPermission]="true"
+              [allowSelectDocument]="false"
+              [collection]="collection"
+              [viewSettings]="viewSettings">
+  </links-list>
+</div>

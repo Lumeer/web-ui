@@ -26,6 +26,10 @@ export function isNullOrUndefined(object: any): object is null | undefined {
   return object === null || object === undefined;
 }
 
+export function isNullOrUndefinedOrEmpty(object: any): object is null | undefined {
+  return object === null || object === undefined || object === '';
+}
+
 export function isNotNullOrUndefined(object: any): boolean {
   return !isNullOrUndefined(object);
 }
@@ -201,4 +205,16 @@ export function preventEvent(event: Event) {
 export function objectValues<T>(object: Record<string, T>): T[] {
   // Object.values is not supported in older version of js
   return Object.keys(object || {}).map(key => object[key]);
+}
+
+export function computeElementPositionInParent(event: MouseEvent, parentTag: string): {x: number; y: number} {
+  let x = event.offsetX;
+  let y = event.offsetY;
+  let element = event.target as HTMLElement;
+  while (element && element.tagName.toLowerCase() !== parentTag) {
+    x += element.offsetLeft;
+    y += element.offsetTop;
+    element = element.offsetParent as HTMLElement;
+  }
+  return {x, y};
 }

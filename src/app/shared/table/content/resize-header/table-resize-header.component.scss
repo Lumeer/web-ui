@@ -1,0 +1,21 @@
+@import 'src/styles/variables';
+
+$width: 0.6rem;
+
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.resize-handle-wrapper {
+  margin-right: 1rem;
+
+  .resize-handle {
+    width: $width;
+    background: transparent;
+    cursor: col-resize;
+    position: absolute;
+    z-index: 3;
+  }
+}

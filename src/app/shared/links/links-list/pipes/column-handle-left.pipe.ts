@@ -25,6 +25,6 @@ import {LinkColumn} from '../model/link-column';
 })
 export class ColumnHandleLeftPipe implements PipeTransform {
   public transform(columns: LinkColumn[], index: number): number {
-    return (columns || []).reduce((sum, column, ix) => (sum += ix <= index ? column.width : 0), 0);
+    return (columns || []).reduce((sum, column, ix) => sum + (ix <= index ? column.width : 0), 0);
   }
 }

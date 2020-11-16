@@ -32,6 +32,7 @@
                        [config]="data.config"
                        [constraintData]="constraintData$ | async"
                        [query]="data.query"
+                       [sortDefined]="sortDefined$ | async"
                        (patchDocumentData)="patchDocumentData($event)"
                        (patchLinkData)="patchLinkInstanceData($event)"
                        (patchMetaData)="patchDocumentMetaData($event)"

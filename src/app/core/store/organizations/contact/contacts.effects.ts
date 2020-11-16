@@ -38,7 +38,7 @@ export class ContactsEffects {
     mergeMap(action =>
       this.organizationService.getOrganizationContact(action.payload.organizationId).pipe(
         map(contact => new ContactsAction.GetContactSuccess({contact: ContactConverter.fromDto(contact)})),
-        catchError(error => of(new ContactsAction.GetContactFailure({error: error})))
+        catchError(error => of(new ContactsAction.GetContactFailure({error})))
       )
     )
   );
@@ -61,7 +61,7 @@ export class ContactsEffects {
         .setOrganizationContact(action.payload.organizationId, ContactConverter.toDto(action.payload.contact))
         .pipe(
           map(contact => new ContactsAction.SetContactSuccess({contact: ContactConverter.fromDto(contact)})),
-          catchError(error => of(new ContactsAction.SetContactFailure({error: error})))
+          catchError(error => of(new ContactsAction.SetContactFailure({error})))
         )
     )
   );

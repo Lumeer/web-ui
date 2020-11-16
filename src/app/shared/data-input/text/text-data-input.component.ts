@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -38,13 +39,15 @@ import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'text-data-input',
   templateUrl: './text-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextDataInputComponent implements OnChanges {
+export class TextDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -52,7 +55,7 @@ export class TextDataInputComponent implements OnChanges {
   public readonly: boolean;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Input()
   public value: TextDataValue | UnknownDataValue;
@@ -67,7 +70,7 @@ export class TextDataInputComponent implements OnChanges {
   public valueChange = new EventEmitter<DataValue>();
 
   @Output()
-  public save = new EventEmitter<DataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: DataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -88,16 +91,13 @@ export class TextDataInputComponent implements OnChanges {
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => {
-        const input = this.textInput;
-        HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
-        input.nativeElement.focus();
-      });
+      this.setFocus = true;
       this.text = this.value.editValue();
     }
     if (changes.value && this.value) {
@@ -105,6 +105,21 @@ export class TextDataInputComponent implements OnChanges {
     }
 
     this.refreshValid(this.value);
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.textInput) {
+      const element = this.textInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
+    }
   }
 
   private addKeyDownListener() {
@@ -135,13 +150,12 @@ export class TextDataInputComponent implements OnChanges {
       this.blurCleanup();
     } else {
       const selectedOption = this.dropdown.getActiveOption();
-      const dataValue = this.value.parseInput(this.text);
-      if (selectedOption || this.skipValidation || dataValue.isValid()) {
+      let dataValue = this.value.parseInput(this.text);
+      if (selectedOption || this.configuration?.skipValidation || dataValue.isValid()) {
         if (selectedOption) {
-          this.saveValue(selectedOption.value);
-        } else {
-          this.save.emit(dataValue);
+          dataValue = this.value.parseInput(selectedOption.value);
         }
+        this.save.emit({action: DataInputSaveAction.Blur, dataValue});
       } else {
         this.cancel.emit();
       }
@@ -164,26 +178,20 @@ export class TextDataInputComponent implements OnChanges {
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
         const input = this.textInput;
-        const dataValue = this.value.parseInput(input.nativeElement.value);
+        let dataValue = this.value.parseInput(input.nativeElement.value);
         const selectedOption = this.dropdown.getActiveOption();
 
         event.preventDefault();
 
-        if (!this.skipValidation && !dataValue.isValid() && !selectedOption) {
+        if (!this.configuration?.skipValidation && !dataValue.isValid() && !selectedOption) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }
 
         this.preventSaveAndBlur();
-        // needs to be executed after parent event handlers
-        setTimeout(() => {
-          if (selectedOption) {
-            this.saveValue(selectedOption.value);
-          } else {
-            this.save.emit(dataValue);
-          }
-        });
+        dataValue = selectedOption ? this.value.parseInput(selectedOption.displayValue) : dataValue;
+        this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
@@ -194,6 +202,16 @@ export class TextDataInputComponent implements OnChanges {
     this.dropdown.onKeyDown(event);
   }
 
+  private saveDataValue(dataValue: DataValue, event: KeyboardEvent) {
+    const action = keyboardEventInputSaveAction(event);
+    if (this.configuration?.delaySaveAction) {
+      // needs to be executed after parent event handlers
+      setTimeout(() => this.save.emit({action, dataValue}));
+    } else {
+      this.save.emit({action, dataValue});
+    }
+  }
+
   private preventSaveAndBlur() {
     if (this.textInput) {
       this.preventSave = true;
@@ -201,14 +219,10 @@ export class TextDataInputComponent implements OnChanges {
     }
   }
 
-  private saveValue(value: string) {
-    const dataValue = this.value.parseInput(value);
-    this.save.emit(dataValue);
-  }
-
   public onSelectOption(option: DropdownOption) {
     this.preventSaveAndBlur();
-    this.saveValue(option.value);
+    const dataValue = this.value.parseInput(option.value);
+    this.save.emit({action: DataInputSaveAction.Select, dataValue});
   }
 
   public onFocused() {

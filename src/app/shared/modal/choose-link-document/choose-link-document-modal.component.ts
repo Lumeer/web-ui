@@ -31,6 +31,9 @@ import {selectDocumentsByIds} from '../../../core/store/documents/documents.stat
 import {mergeMap, tap} from 'rxjs/operators';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {uniqueValues} from '../../utils/array.utils';
+import {Query} from '../../../core/store/navigation/query/query';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
@@ -39,6 +42,9 @@ import {uniqueValues} from '../../utils/array.utils';
 export class ChooseLinkDocumentModalComponent implements OnInit {
   @Input()
   public documentIds: string[];
+
+  @Input()
+  public collectionId: string;
 
   @Input()
   public callback: (document: DocumentModel) => void;
@@ -57,13 +63,25 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
 
   public ngOnInit() {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.documents$ = this.store$.pipe(
-      select(selectDocumentsByIds(this.documentIds)),
-      tap(documents => {
-        this.documents = documents;
-        this.checkSelectedDocument(documents);
-      })
-    );
+    if (this.collectionId) {
+      const query: Query = {stems: [{collectionId: this.collectionId}]};
+      this.store$.dispatch(new DocumentsAction.Get({query}));
+      this.documents$ = this.store$.pipe(
+        select(selectDocumentsByCustomQuery(query)),
+        tap(documents => {
+          this.documents = documents;
+          this.checkSelectedDocument(documents);
+        })
+      );
+    } else {
+      this.documents$ = this.store$.pipe(
+        select(selectDocumentsByIds(this.documentIds)),
+        tap(documents => {
+          this.documents = documents;
+          this.checkSelectedDocument(documents);
+        })
+      );
+    }
     this.collections$ = this.documents$.pipe(
       mergeMap(documents => this.selectCollectionsByDocuments$(documents)),
       tap(collections => this.checkSelectedCollection(collections))

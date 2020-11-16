@@ -80,12 +80,7 @@ export function splitAttributeName(name: string): {parentName: string; lastName:
   };
 }
 
-export function generateAttributeName(
-  otherAttributes: Attribute[],
-  attributeNames: string[] = [],
-  parentName?: string
-): string {
-  const existingNames = (otherAttributes || []).map(attr => attr.name).concat(attributeNames);
+export function generateAttributeName(existingNames: string[], parentName?: string): string {
   const prefix = parentName ? `${parentName}.` : '';
 
   let lastName = 'A';
@@ -144,9 +139,11 @@ export function renameChildAttributes(
 }
 
 export function filterOutAttributeAndChildren(attributes: Attribute[], oldAttribute: Attribute): Attribute[] {
-  return attributes.filter(
-    attribute => attribute.id !== oldAttribute.id && !attribute.name.startsWith(`${oldAttribute.name}.`)
-  );
+  return oldAttribute
+    ? attributes.filter(
+        attribute => attribute.id !== oldAttribute.id && !attribute.name.startsWith(`${oldAttribute.name}.`)
+      )
+    : attributes;
 }
 
 export function isAttributeConstraintType(attribute: Attribute, type: ConstraintType): boolean {

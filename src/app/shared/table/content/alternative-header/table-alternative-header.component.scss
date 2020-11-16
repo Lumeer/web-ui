@@ -1,0 +1,23 @@
+@import 'src/styles/variables';
+
+:host {
+  position: absolute;
+  top: 0.5px;
+  left: 0;
+  z-index: 4;
+  visibility: hidden;
+}
+
+.header-wrapper {
+  display: table-row;
+}
+
+.header-cell {
+  display: table-cell;
+  background-size: 37px 100% !important;
+}
+
+.empty-cell {
+  width: 2rem;
+  min-width: 2rem;
+}

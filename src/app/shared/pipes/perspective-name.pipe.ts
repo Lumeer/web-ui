@@ -34,7 +34,7 @@ export class PerspectiveNamePipe implements PipeTransform {
       {
         id: 'view.perspective.name',
         value:
-          '{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document}}',
+          '{perspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow}}',
       },
       {
         perspective,

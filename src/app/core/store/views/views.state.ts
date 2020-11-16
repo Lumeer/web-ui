@@ -33,9 +33,10 @@ import {selectPerspective, selectQuery, selectViewCode} from '../navigation/navi
 import {areQueriesEqual} from '../navigation/query/query.helper';
 import {selectPivotConfig} from '../pivots/pivots.state';
 import {selectTableConfig} from '../tables/tables.selector';
-import {DefaultViewConfig, View, ViewGlobalConfig, ViewSettings} from './view';
-import {createSaveViewSettings, isViewConfigChanged, viewSettingsChanged} from './view.utils';
+import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
+import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
+import {selectWorkflowConfig} from '../workflows/workflow.state';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -43,7 +44,6 @@ export interface ViewsState extends EntityState<View> {
   defaultConfigs: Record<string, Record<string, DefaultViewConfig>>;
   defaultConfigsLoaded: boolean;
   defaultConfigSnapshot?: DefaultViewConfig;
-  settings?: ViewSettings;
 }
 
 export const viewsAdapter = createEntityAdapter<View>({selectId: view => view.id});
@@ -53,7 +53,6 @@ export const initialViewsState: ViewsState = viewsAdapter.getInitialState({
   globalConfig: {},
   defaultConfigs: {},
   defaultConfigsLoaded: false,
-  settings: {},
 });
 
 export const selectViewsState = (state: AppState) => state.views;
@@ -70,7 +69,7 @@ export const selectViewsLoaded = createSelector(selectViewsState, state => state
 
 export const selectDefaultViewConfigSnapshot = createSelector(selectViewsState, state => state.defaultConfigSnapshot);
 
-const selectConfigs = createSelector(
+const selectConfigs1 = createSelector(
   selectTableConfig,
   selectChartConfig,
   selectMapConfig,
@@ -91,12 +90,18 @@ const selectConfigs = createSelector(
   })
 );
 
+const selectConfigs2 = createSelector(selectWorkflowConfig, workflowConfig => ({
+  workflowConfig,
+}));
+
 export const selectPerspectiveConfig = createSelector(
   selectPerspective,
-  selectConfigs,
+  selectConfigs1,
+  selectConfigs2,
   (
     perspective,
-    {tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig, pivotConfig, searchConfig}
+    {tableConfig, chartConfig, mapConfig, ganttChartConfig, calendarConfig, kanbanConfig, pivotConfig, searchConfig},
+    {workflowConfig}
   ) =>
     ({
       [Perspective.Map]: mapConfig,
@@ -107,16 +112,17 @@ export const selectPerspectiveConfig = createSelector(
       [Perspective.Kanban]: kanbanConfig,
       [Perspective.Pivot]: pivotConfig,
       [Perspective.Search]: searchConfig,
+      [Perspective.Workflow]: workflowConfig,
     }[perspective])
 );
 
 export const selectPerspectiveViewConfig = createSelector(
   selectCurrentView,
   selectPerspective,
-  (view, perspective) => view && view.config && view.config[perspective]
+  (view, perspective) => view?.config?.[perspective]
 );
 
-export const selectViewConfig = createSelector(selectCurrentView, view => view && view.config);
+export const selectViewConfig = createSelector(selectCurrentView, view => view?.config);
 
 export const selectViewConfigChanged = createSelector(
   selectPerspective,
@@ -137,26 +143,6 @@ export const selectViewQueryChanged = createSelector(
   (view, query) => view && query && !areQueriesEqual(view.query, query)
 );
 
-export const selectViewSettings = createSelector(selectViewsState, state => state.settings);
-
-export const selectViewSettingsChanged = createSelector(
-  selectCurrentView,
-  selectViewSettings,
-  selectCollectionsDictionary,
-  selectLinkTypesDictionary,
-  (view, settings, collectionsMap, linkTypesMap) =>
-    view && viewSettingsChanged(view.settings, settings, collectionsMap, linkTypesMap)
-);
-
-export const selectSaveViewSettings = createSelector(
-  selectViewSettings,
-  selectCollectionsDictionary,
-  selectLinkTypesDictionary,
-  selectQuery,
-  (settings, collectionsMap, linkTypesMap, query) =>
-    createSaveViewSettings(settings, query, collectionsMap, linkTypesMap)
-);
-
 export const selectViewPerspectiveChanged = createSelector(
   selectCurrentView,
   selectPerspective,
@@ -167,14 +153,16 @@ const selectViewGlobalConfig = createSelector(selectViewsState, state => state.g
 
 export const selectSidebarOpened = createSelector(selectViewGlobalConfig, config => config.sidebarOpened);
 
+export const selectPanelWidth = createSelector(selectViewGlobalConfig, config => config.panelWidth);
+
 export const selectPerspectiveDefaultViewConfig = createSelector(
   selectViewsState,
   selectPerspective,
   selectQuery,
   (state, perspective, query) => {
-    const firstStem = ((query && query.stems) || [])[0];
-    const collectionId = firstStem && firstStem.collectionId;
-    const configsByPerspective = state.defaultConfigs[perspective];
+    const firstStem = query?.stems?.[0];
+    const collectionId = firstStem?.collectionId;
+    const configsByPerspective = state.defaultConfigs?.[perspective];
     if (configsByPerspective && collectionId) {
       return configsByPerspective[collectionId];
     }

@@ -20,7 +20,6 @@
 import {NgModule} from '@angular/core';
 import {DatePipe} from '@angular/common';
 
-import {ClickOutsideModule} from 'ng-click-outside';
 import {WorkspaceRoutingModule} from './workspace-routing.module';
 import {SharedModule} from '../shared/shared.module';
 import {ProjectUsersComponent} from './project/users/project-users.component';
@@ -45,9 +44,10 @@ import {ProjectTemplateMetadataComponent} from './project/template/metadata/proj
 import {ProjectTemplateTagsComponent} from './project/template/metadata/tags/project-template-tags.component';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
 import {ProjectTemplateScriptComponent} from './project/template/metadata/script/project-template-script.component';
+import {DirectivesModule} from '../shared/directives/directives.module';
 
 @NgModule({
-  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, ClickOutsideModule, BsDatepickerModule],
+  imports: [SharedModule, WorkspaceRoutingModule, UsersModule, DirectivesModule, BsDatepickerModule],
   declarations: [
     OrganizationDetailComponent,
     ProjectUsersComponent,

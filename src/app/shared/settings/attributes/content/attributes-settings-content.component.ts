@@ -17,11 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {AttributesSettings, ResourceAttributeSettings} from '../../../../core/store/views/view';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {Query} from '../../../../core/store/navigation/query/query';
+import {AttributesResource, AttributesResourceType} from '../../../../core/model/resource';
+import {queryStemAttributesResourcesOrder} from '../../../../core/store/navigation/query/query.util';
+import {getAttributesResourceType} from '../../../utils/resource.utils';
+import {getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {createAttributesSettingsOrder} from '../../settings.util';
+
+interface AttributesResourceData {
+  resource: AttributesResource;
+  attributeSettings: ResourceAttributeSettings[];
+  type: AttributesResourceType;
+  defaultAttributeId: string;
+}
 
 @Component({
   selector: 'attributes-settings-content',
@@ -29,7 +43,10 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
   styleUrls: ['./attributes-settings-content.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributesSettingsContentComponent {
+export class AttributesSettingsContentComponent implements OnChanges {
+  @Input()
+  public query: Query;
+
   @Input()
   public collections: Collection[];
 
@@ -42,27 +59,63 @@ export class AttributesSettingsContentComponent {
   @Output()
   public settingsChanged = new EventEmitter<AttributesSettings>();
 
-  public onCollectionSettingsChanged(
+  public attributesResourcesOrder: AttributesResourceData[];
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.attributesResourcesOrder = this.createAttributesResourcesOrder();
+  }
+
+  private createAttributesResourcesOrder(): AttributesResourceData[] {
+    return (this.query?.stems || []).reduce<AttributesResourceData[]>((order, stem) => {
+      const stemOrder = queryStemAttributesResourcesOrder(stem, this.collections, this.linkTypes).filter(
+        resource => !order.some(o => o.resource.id === resource.id)
+      );
+
+      for (const resource of stemOrder) {
+        const type = getAttributesResourceType(resource);
+        const defaultAttributeId = type === AttributesResourceType.Collection ? getDefaultAttributeId(resource) : null;
+        const settings =
+          type === AttributesResourceType.Collection ? this.settings?.collections : this.settings?.linkTypes;
+        const attributeSettings = createAttributesSettingsOrder(resource.attributes, settings?.[resource.id]);
+        order.push({resource, type, attributeSettings, defaultAttributeId});
+      }
+
+      return order;
+    }, []);
+  }
+
+  public onResourceSettingsChanged(
     settingsOrder: ResourceAttributeSettings[],
     index: number,
-    collection: Collection,
+    resource: AttributesResource,
+    type: AttributesResourceType,
     attributeSettings: ResourceAttributeSettings
   ) {
     const settingsOrderCopy = [...settingsOrder];
     settingsOrderCopy[index] = attributeSettings;
 
-    this.emitCollectionChange(settingsOrderCopy, collection);
+    if (type === AttributesResourceType.Collection) {
+      this.emitCollectionChange(settingsOrderCopy, resource);
+    } else {
+      this.emitLinkTypeChange(settingsOrderCopy, <LinkType>resource);
+    }
   }
 
-  public onCollectionSettingsDropped(
+  public onResourceSettingsDropped(
     settingsOrder: ResourceAttributeSettings[],
-    collection: Collection,
+    resource: AttributesResource,
+    type: AttributesResourceType,
     event: CdkDragDrop<any>
   ) {
     if (event.currentIndex !== event.previousIndex) {
       const settingsOrderCopy = [...settingsOrder];
       moveItemInArray(settingsOrderCopy, event.previousIndex, event.currentIndex);
-      this.emitCollectionChange(settingsOrderCopy, collection);
+
+      if (type === AttributesResourceType.Collection) {
+        this.emitCollectionChange(settingsOrderCopy, resource);
+      } else {
+        this.emitLinkTypeChange(settingsOrderCopy, <LinkType>resource);
+      }
     }
   }
 
@@ -72,30 +125,6 @@ export class AttributesSettingsContentComponent {
       collections: {...this.settings?.collections, [collection.id]: settingsOrder},
     };
     this.settingsChanged.next(settingsCopy);
-  }
-
-  public onLinkTypeSettingsChanged(
-    settingsOrder: ResourceAttributeSettings[],
-    index: number,
-    linkType: LinkType,
-    attributeSettings: ResourceAttributeSettings
-  ) {
-    const settingsOrderCopy = [...settingsOrder];
-    settingsOrderCopy[index] = attributeSettings;
-
-    this.emitLinkTypeChange(settingsOrderCopy, linkType);
-  }
-
-  public onLinkTypeSettingsDropped(
-    settingsOrder: ResourceAttributeSettings[],
-    linkType: LinkType,
-    event: CdkDragDrop<any>
-  ) {
-    if (event.currentIndex !== event.previousIndex) {
-      const settingsOrderCopy = [...settingsOrder];
-      moveItemInArray(settingsOrderCopy, event.previousIndex, event.currentIndex);
-      this.emitLinkTypeChange(settingsOrderCopy, linkType);
-    }
   }
 
   private emitLinkTypeChange(settingsOrder: ResourceAttributeSettings[], linkType: LinkType) {
@@ -110,7 +139,7 @@ export class AttributesSettingsContentComponent {
     return settings.attributeId;
   }
 
-  public trackById(index: number, resource: Collection | LinkType): string {
-    return resource.id;
+  public trackByResourceId(index: number, data: AttributesResourceData): string {
+    return data.resource.id;
   }
 }

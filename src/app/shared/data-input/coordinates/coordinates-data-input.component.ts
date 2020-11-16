@@ -18,11 +18,13 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
   SimpleChanges,
   ViewChild,
@@ -32,13 +34,15 @@ import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'coordinates-data-input',
   templateUrl: './coordinates-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CoordinatesDataInputComponent {
+export class CoordinatesDataInputComponent implements AfterViewChecked, OnChanges {
   @Input()
   public focus: boolean;
 
@@ -46,7 +50,7 @@ export class CoordinatesDataInputComponent {
   public readonly: boolean;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Input()
   public value: CoordinatesDataValue;
@@ -55,7 +59,7 @@ export class CoordinatesDataInputComponent {
   public valueChange = new EventEmitter<CoordinatesDataValue>();
 
   @Output()
-  public save = new EventEmitter<CoordinatesDataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: CoordinatesDataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -67,16 +71,28 @@ export class CoordinatesDataInputComponent {
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => {
-        const input = this.coordinatesInput;
-        HtmlModifier.setCursorAtTextContentEnd(input.nativeElement);
-        input.nativeElement.focus();
-      });
+      this.setFocus = true;
+    }
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.coordinatesInput) {
+      const element = this.coordinatesInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
     }
   }
 
@@ -106,7 +122,8 @@ export class CoordinatesDataInputComponent {
     if (this.preventSave) {
       this.preventSave = false;
     } else {
-      this.saveValue(this.coordinatesInput);
+      const dataValue = this.value.parseInput(this.coordinatesInput.nativeElement.value);
+      this.save.emit({action: DataInputSaveAction.Blur, dataValue});
     }
   }
 
@@ -125,7 +142,7 @@ export class CoordinatesDataInputComponent {
         event.preventDefault();
 
         this.preventSaveAndBlur();
-        setTimeout(() => this.save.emit(dataValue));
+        this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
@@ -134,16 +151,21 @@ export class CoordinatesDataInputComponent {
     }
   }
 
+  private saveDataValue(dataValue: CoordinatesDataValue, event: KeyboardEvent) {
+    const action = keyboardEventInputSaveAction(event);
+    if (this.configuration?.delaySaveAction) {
+      // needs to be executed after parent event handlers
+      setTimeout(() => this.save.emit({action, dataValue}));
+    } else {
+      this.save.emit({action, dataValue});
+    }
+  }
+
   private preventSaveAndBlur() {
     if (this.coordinatesInput) {
       this.preventSave = true;
       this.coordinatesInput.nativeElement.blur();
     }
-  }
-
-  private saveValue(input: ElementRef) {
-    const dataValue = this.value.parseInput(input.nativeElement.value);
-    this.save.emit(dataValue);
   }
 
   public onFocus() {

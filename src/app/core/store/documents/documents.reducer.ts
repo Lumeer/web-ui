@@ -33,6 +33,8 @@ export function documentsReducer(
       return onCreateDocument(state, action);
     case DocumentsActionType.CREATE_SUCCESS:
       return addOrUpdateDocument(state, action.payload.document);
+    case DocumentsActionType.CREATE_FAILURE:
+      return onCreateDocumentFailure(state, action);
     case DocumentsActionType.UPDATE_DATA_INTERNAL:
       return updateDocument(state, action);
     case DocumentsActionType.PATCH_DATA:
@@ -84,6 +86,16 @@ function onCreateDocument(state: DocumentsState, action: DocumentsAction.Create)
     ...state.pendingDataUpdates,
     [correlationId]: pendingDocumentData ? {...pendingDocumentData, ...data} : {},
   };
+  return {...state, pendingDataUpdates};
+}
+
+function onCreateDocumentFailure(state: DocumentsState, action: DocumentsAction.CreateFailure): DocumentsState {
+  const {correlationId} = action.payload;
+  if (!correlationId) {
+    return state;
+  }
+  const pendingDataUpdates = {...state.pendingDataUpdates};
+  delete pendingDataUpdates[correlationId];
   return {...state, pendingDataUpdates};
 }
 

@@ -23,7 +23,6 @@ import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule} from '@angular/router';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {AlertModule} from 'ngx-bootstrap/alert';
 import {defineLocale} from 'ngx-bootstrap/chronos';
 import {BsDatepickerModule} from 'ngx-bootstrap/datepicker';
@@ -33,7 +32,6 @@ import {ModalModule} from 'ngx-bootstrap/modal';
 import {PopoverModule} from 'ngx-bootstrap/popover';
 import {TimepickerModule} from 'ngx-bootstrap/timepicker';
 import {TypeaheadModule} from 'ngx-bootstrap/typeahead';
-import {DeviceDetectorModule} from 'ngx-device-detector';
 import {environment} from '../../environments/environment';
 import {SharedModule} from '../shared/shared.module';
 import {SentryErrorHandler} from './error/sentry.error-handler';
@@ -81,7 +79,6 @@ if (environment.locale === LanguageCode.CZ) {
     HttpClientModule,
     RouterModule,
     SharedModule,
-    ClickOutsideModule,
     GuardsModule,
     BrowserAnimationsModule,
     NotificationsModule,
@@ -93,7 +90,6 @@ if (environment.locale === LanguageCode.CZ) {
     ModalModule.forRoot(),
     TimepickerModule.forRoot(),
     TypeaheadModule.forRoot(),
-    DeviceDetectorModule.forRoot(),
     DataServiceModule,
     FullCalendarModule,
   ],

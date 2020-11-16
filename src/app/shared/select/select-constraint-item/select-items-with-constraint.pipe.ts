@@ -26,9 +26,9 @@ import {deepObjectsEquals} from '../../utils/common.utils';
 import {getAttributesResourceType} from '../../utils/resource.utils';
 
 @Pipe({
-  name: 'selectItemWithConstraint',
+  name: 'selectItemsWithConstraint',
 })
-export class SelectItemWithConstraintPipe implements PipeTransform {
+export class SelectItemsWithConstraintPipe implements PipeTransform {
   public transform(
     attributesResources: AttributesResource[],
     restrictedAttributes: {resourceIndex: number; attributeId: string}[]

@@ -18,24 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../../../../core/store/collections/collection';
-import {shadeColor, stripedBackground} from '../../../../../shared/utils/html-modifier';
-
-export const DEFAULT_COLOR = '#ffffff';
-export const DEFAULT_STRIPED_COLOR = '#eeeeee';
+import {WorkflowTable} from '../model/workflow-table';
 
 @Pipe({
-  name: 'columnBackground',
+  name: 'workflowTablesIds',
 })
-export class ColumnBackgroundPipe implements PipeTransform {
-  public transform(collection: Collection, unsaved?: boolean): any {
-    const color = collection ? shadeColor(collection.color, 0.5) : DEFAULT_COLOR;
-    const stripeColor = collection ? shadeColor(color, 0.25) : DEFAULT_STRIPED_COLOR;
-
-    if (unsaved) {
-      return stripedBackground(color, stripeColor);
-    }
-
-    return color;
+export class WorkflowTablesIdsPipe implements PipeTransform {
+  public transform(tables: WorkflowTable[]): string[] {
+    return tables?.map(table => table.id);
   }
 }

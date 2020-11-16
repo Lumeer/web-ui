@@ -48,7 +48,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/picker/icon-color/icon-color-picker.component.html</context><context context-type="linenumber">26</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-resource/create-resource-modal.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">34</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">61</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">21</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/choose-link-document/choose-link-document-modal.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/create-project/create-project-modal.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/copy-project/copy-project-modal.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">24</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/files/dropdown/files-dropdown.component.html</context><context context-type="linenumber">51</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">80</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context><context context-type="linenumber">77</context></context-group></trans-unit><trans-unit id="button.select" datatype="html">
         <source>
         Select
       </source><target state="final">
@@ -263,36 +263,61 @@
         <note priority="1" from="description">auth.redirect</note>
       </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target state="final">Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="label.terms.start" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="agreement.welcome.newsletterCheck" datatype="html">
+        <source>By skipping the Newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</source><target state="final">By skipping the Newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source><target state="final">I have read</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
         <source>Terms of Service</source><target state="final">Terms of Service</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="and" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="and" datatype="html">
         <source>and</source><target state="final">and</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
         <source>Privacy Policy</source><target state="final">Privacy Policy</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
         <source>and I agree to them.</source><target state="final">and I agree to them.</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
-        <source>Keep me informed about productivity ideas via newsletter (see </source><target state="final">Keep me informed about productivity ideas via newsletter (see </target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="label.newsletter.secondChance" datatype="html">
+        <source>Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source><target state="final">Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
+        <source>Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source><target state="final">Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source><target state="final">Data Processing Agreement</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="label.newsletter.end" datatype="html">
-        <source>).</source><target state="final">).</target>
-        
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="button.continue" datatype="html">
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="label.newsletter.termsEnd" datatype="html">
+        <source>.</source><target state="final">.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit><trans-unit id="label.newsletter.end" datatype="html">
+        <source>increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source>
+        <target state="final">increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
+
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="label.newsletter.termsStart" datatype="html">
+        <source>See </source><target state="final">See </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source><target state="final">Continue</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">48</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="session.expired.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="session.expired.message" datatype="html">
         <source>
       You have been inactive for <x id="INTERPOLATION" equiv-text="{{sessionTimeout}}"/> minutes and the application logged out for security reasons.
       Click Continue to log in again.
@@ -465,10 +490,10 @@
         </context-group>
       </trans-unit><trans-unit id="link.input.dropdown.title" datatype="html">
         <source>Title</source><target state="final">Title</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="link.input.dropdown.title.placeholder" datatype="html">
         <source>Custom title</source><target state="final">Custom title</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">28</context></context-group></trans-unit><trans-unit id="count.of" datatype="html">
         <source>of</source><target state="final">of</target>
 
@@ -742,6 +767,12 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/search-box/input/suggestions/item/search-suggestion-item.component.html</context>
           <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit><trans-unit id="attribute.settings.sort.toggle" datatype="html">
+        <source>Toggle sort</source><target state="final">Toggle sort</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/settings/attributes/content/settings/attribute-settings.component.html</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="topPanel.notifications.title" datatype="html">
         <source>Notifications</source><target state="final">Notifications</target>
@@ -1484,7 +1515,7 @@
     </source><target state="final">
       Currency
     </target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">81</context></context-group></trans-unit><trans-unit id="constraint.number.currency.empty" datatype="html">
         <source>Select currency</source><target state="final">Select currency</target>
 
@@ -1496,7 +1527,7 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">84</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="resource.new.dialog.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/share-view/share-view-modal.component.html</context><context context-type="linenumber">22</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">83</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="resource.new.dialog.title" datatype="html">
         <source>
   Create a new <x id="ICU" equiv-text="{resourceType, select, organization {...} project {...}}"/>
   </source><target state="final">
@@ -1628,19 +1659,19 @@
         <source>1. Select View</source><target state="final">1. Select View</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">11</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="view.perspective.name" datatype="html">
-        <source>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Board} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} }</source><target state="final">{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Board} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} }</target>
+        <source>{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} }</source><target state="final">{VAR_SELECT, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document} workflow {Workflow} }</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="view.perspective.guide.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/perspective-name.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="view.perspective.guide.title" datatype="html">
         <source>2. Set Title</source><target state="final">2. Set Title</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="view.untitled" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="view.untitled" datatype="html">
         <source>Type a title of this page, save, and share!</source><target state="final">Type a title of this page, save, and share!</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="button.save" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="button.save" datatype="html">
         <source>Save</source><target state="final">Save</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">27</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">75</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/attribute-type-modal.component.html</context><context context-type="linenumber">35</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">62</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context><context context-type="linenumber">46</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/text-editor/text-editor-modal.component.html</context><context context-type="linenumber">32</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/picker/color/color-picker.component.html</context><context context-type="linenumber">28</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-input/link/dropdown/link-input-dropdown.component.html</context><context context-type="linenumber">33</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
         <source>Configure function of</source><target state="final">Configure function of</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="dialog.attribute.function.editable" datatype="html">
@@ -1654,10 +1685,10 @@
         <source>Changes are not saved yet</source><target state="final">Changes are not saved yet</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">92</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">94</context></context-group></trans-unit><trans-unit id="view.changes.not.saved.undo" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">91</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">93</context></context-group></trans-unit><trans-unit id="view.changes.not.saved.undo" datatype="html">
         <source>Undo changes</source><target state="final">Undo changes</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="collection.document.favorite" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="collection.document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target state="final"><x id="INTERPOLATION" equiv-text="{{ favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="organization.settings.users.count" datatype="html">
@@ -2791,7 +2822,19 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/empty-documents/empty-documents.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="document.favorite" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></source><target state="final"><x id="INTERPOLATION" equiv-text="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="table.header.menu.sort.ascending" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
+        <source>Resize table</source><target state="final">Resize table</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.workflow.toolbar.groupBy" datatype="html">
+        <source>Group By</source><target state="final">Group By</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/workflow/content/tables/toolbar/workflow-toolbar.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.header.menu.sort.ascending" datatype="html">
         <source>Sort ascending</source><target state="final">Sort ascending</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="table.header.menu.sort.descending" datatype="html">
@@ -2810,15 +2853,9 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context><context context-type="linenumber">17</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source><target state="final">Column settings...</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/links/links-list/table/header/links-list-table-header.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="show.detail" datatype="html">
+
+
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/header/links-list-table-header.component.html</context><context context-type="linenumber">23</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/table/content/header/cell/table-header-cell.component.html</context><context context-type="linenumber">41</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/icons/table-column-icons.component.html</context><context context-type="linenumber">13</context></context-group></trans-unit><trans-unit id="show.detail" datatype="html">
         <source>Show detail</source><target state="final">Show detail</target>
 
 
@@ -2920,7 +2957,19 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/hidden-column/table-hidden-column.component.html</context><context context-type="linenumber">6</context></context-group></trans-unit><trans-unit id="table.header.show.all" datatype="html">
         <source>All columns</source><target state="final">All columns</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/hidden-column/table-hidden-column.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="create.new.attribute" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/table/content/header/cell/hidden-menu/table-header-hidden-menu.component.html</context><context context-type="linenumber">18</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/hidden-column/table-hidden-column.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="table.header.column.sort.toggle" datatype="html">
+        <source>Toggle sort</source><target state="final">Toggle sort</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/table/content/header/cell/table-header-cell.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit><trans-unit id="perspective.workflow.row.new" datatype="html">
+        <source>Add new row</source><target state="final">Add new row</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/table/new-row/table-new-row.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit><trans-unit id="create.new.attribute" datatype="html">
         <source>Create new attribute
           </source><target state="final">Create new attribute
           </target>
@@ -2930,12 +2979,12 @@
             </source><target state="final">Use existing link
             </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">20</context></context-group></trans-unit><trans-unit id="create.new.link" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">43</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="create.new.link" datatype="html">
         <source>Create new link
             </source><target state="final">Create new link
             </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="unlink" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/attribute-suggestions/table-attribute-suggestions.component.html</context><context context-type="linenumber">65</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="unlink" datatype="html">
         <source>Unlink</source><target state="final">Unlink</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/table/body/row/links-list-table-row.component.html</context><context context-type="linenumber">56</context></context-group></trans-unit><trans-unit id="table.body.row.edit" datatype="html">
@@ -2976,7 +3025,17 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">120</context></context-group></trans-unit><trans-unit id="table.header.add-button" datatype="html">
         <source>Link table</source><target state="final">Link table</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="table.row.noResults" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context><context context-type="linenumber">4</context></context-group></trans-unit><trans-unit id="table.header.menu.add.column" datatype="html">
+        <source>
+      Add a new column
+    </source><target state="final">
+      Add a new column
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/add-button/table-header-add-button.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.row.noResults" datatype="html">
         <source>There are no records to display. Try a different query.
   </source><target state="final">There are no records to display. Try a different query.
   </target>
@@ -3916,7 +3975,7 @@
         <source>{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</source><target state="final">{VAR_SELECT, select, yearly {Years} quarterly {Quarters} weekly {Weeks} monthYear {Months and years} month {Months} dayMonth {Days and months} day {Days} dayMonthYear {Days, months and years} weekDay {Day of week} hour {Hours} hourMinutes {Hours and minutes} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/date-time.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="select.constraint.items.duration.maxUnit" datatype="html">
-        <source>{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</source><target state="final">{VAR_SELECT, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)} }</target>
+        <source>{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</source><target state="final">{VAR_SELECT, select, w {weeks} d {days} h {hours} m {minutes} s {seconds} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/select/select-constraint-item/constraint/duration.ts</context>
           <context context-type="linenumber">1</context>
@@ -4447,15 +4506,15 @@
       </trans-unit>
       <trans-unit id="table.delete.column.dialog.title" datatype="html">
         <source>Delete this column?</source><target state="final">Delete this column?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
       <trans-unit id="table.delete.column.dialog.message" datatype="html">
         <source>Do you really want to delete the column? This will permanently remove the attribute and all its data.</source><target state="final">Do you really want to delete the column? This will permanently remove the attribute and all its data.</target>
+
+      <context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-data.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="table.header.menu.add.linkColumn" datatype="html">
+        <source>Add Link column</source><target state="final">Add Link column</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/view/perspectives/table/header/column-group/single-column/table-single-column.component.ts</context>
+          <context context-type="sourcefile">src/app/view/perspectives/workflow/content/tables/service/workflow-tables-menu.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

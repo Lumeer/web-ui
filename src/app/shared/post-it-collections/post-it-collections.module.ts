@@ -28,12 +28,12 @@ import {PostItCollectionNameComponent} from './content/collection-name/post-it-c
 import {PostItCollectionImportButtonComponent} from './content/import-button/post-it-collection-import-button.component';
 import {PostItCollectionAddButtonComponent} from './content/add-button/post-it-collection-add-button.component';
 import {PostItCollectionComponent} from './content/post-it/post-it-collection.component';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {PickerModule} from '../picker/picker.module';
 import {WarningMessageModule} from '../warning-message/warning-message.module';
 import {EmptyCollectionsComponent} from './content/empty-collections/empty-collections.component';
 import {PostItCollectionsContentComponent} from './content/post-it-collections-content.component';
 import {PresenterModule} from '../presenter/presenter.module';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -41,7 +41,7 @@ import {PresenterModule} from '../presenter/presenter.module';
     FormsModule,
     PickerModule,
     PresenterModule,
-    ClickOutsideModule,
+    DirectivesModule,
     RouterModule,
     PipesModule,
     WarningMessageModule,

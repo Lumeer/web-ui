@@ -32,13 +32,15 @@ import {isMapConfigChanged} from '../maps/map-config.utils';
 import {TableConfig} from '../tables/table.model';
 import {isTableConfigChanged} from '../tables/utils/table-config-changed.utils';
 import {createTableSaveConfig} from '../tables/utils/table-save-config.util';
-import {PerspectiveConfig, View, ViewSettings} from './view';
+import {PerspectiveConfig, ViewSettings} from './view';
 import {isPivotConfigChanged} from '../../../view/perspectives/pivot/util/pivot-util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {CalendarConfig} from '../calendars/calendar';
 import {createSaveAttributesSettings, viewAttributeSettingsChanged} from '../../../shared/settings/settings.util';
 import {Query} from '../navigation/query/query';
 import {ChartConfig} from '../charts/chart';
+import {createWorkflowSaveConfig, isWorkflowConfigChanged} from '../workflows/workflow.utils';
+import {WorkflowConfig} from '../workflows/workflow';
 
 export function isViewConfigChanged(
   perspective: Perspective,
@@ -63,6 +65,8 @@ export function isViewConfigChanged(
       return isMapConfigChanged(viewConfig, perspectiveConfig);
     case Perspective.Pivot:
       return isPivotConfigChanged(viewConfig, perspectiveConfig);
+    case Perspective.Workflow:
+      return isWorkflowConfigChanged(viewConfig, perspectiveConfig);
     default:
       return !deepObjectsEquals(viewConfig, perspectiveConfig);
   }
@@ -77,6 +81,8 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
       return createCalendarSaveConfig(config as CalendarConfig);
     case Perspective.Table:
       return createTableSaveConfig(config as TableConfig);
+    case Perspective.Workflow:
+      return createWorkflowSaveConfig(config as WorkflowConfig);
     case Perspective.Chart:
       return createChartSaveConfig(config as ChartConfig);
     default:
@@ -84,11 +90,15 @@ export function createPerspectiveSaveConfig(perspective: Perspective, config: Pe
   }
 }
 
-export function preferViewConfigUpdate(previousView: View, view: View, hasStoreConfig: boolean): boolean {
-  if (!previousView) {
+export function preferViewConfigUpdate(
+  previousConfig: PerspectiveConfig,
+  viewConfig: PerspectiveConfig,
+  hasStoreConfig: boolean
+): boolean {
+  if (!previousConfig) {
     return !hasStoreConfig;
   }
-  return !deepObjectsEquals(previousView.config?.search, view.config?.search);
+  return !deepObjectsEquals(previousConfig, viewConfig);
 }
 
 export function viewSettingsChanged(

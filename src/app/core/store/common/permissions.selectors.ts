@@ -46,8 +46,12 @@ import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView} from '../views/views.state';
 import {selectWorkspaceModels} from './common.selectors';
 import {LinkInstance} from '../link-instances/link.instance';
-import {sortLinkInstances} from '../link-instances/link-instance.utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
+import {selectViewSettings} from '../view-settings/view-settings.state';
+import {objectsByIdMap} from '../../../shared/utils/common.utils';
+import {AttributesResourceType} from '../../model/resource';
+import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
+import {sortLinkInstances} from '../link-instances/link-instance.utils';
 
 export const selectCurrentUserIsManager = createSelector(
   selectCurrentUser,
@@ -149,6 +153,7 @@ export const selectDocumentsAndLinksByQuery = createSelector(
   selectAllLinkTypes,
   selectAllLinkInstances,
   selectQuery,
+  selectViewSettings,
   selectConstraintData,
   (
     documents,
@@ -156,6 +161,27 @@ export const selectDocumentsAndLinksByQuery = createSelector(
     linkTypes,
     linkInstances,
     query,
+    viewSettings,
+    constraintData
+  ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} =>
+    filterDocumentsAndLinksByQuery(documents, collections, linkTypes, linkInstances, query, constraintData)
+);
+
+export const selectDocumentsAndLinksByQuerySorted = createSelector(
+  selectDocumentsByReadPermission,
+  selectCollectionsByReadPermission,
+  selectAllLinkTypes,
+  selectAllLinkInstances,
+  selectQuery,
+  selectViewSettings,
+  selectConstraintData,
+  (
+    documents,
+    collections,
+    linkTypes,
+    linkInstances,
+    query,
+    viewSettings,
     constraintData
   ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} => {
     const data = filterDocumentsAndLinksByQuery(
@@ -166,9 +192,23 @@ export const selectDocumentsAndLinksByQuery = createSelector(
       query,
       constraintData
     );
+    const collectionsMap = objectsByIdMap(collections);
+    const linkTypesMap = objectsByIdMap(linkTypes);
     return {
-      documents: sortDocumentsByCreationDate(data.documents),
-      linkInstances: sortLinkInstances(data.linkInstances),
+      documents: sortDataResourcesByViewSettings(
+        data.documents,
+        collectionsMap,
+        AttributesResourceType.Collection,
+        viewSettings,
+        constraintData
+      ),
+      linkInstances: sortDataResourcesByViewSettings(
+        data.linkInstances,
+        linkTypesMap,
+        AttributesResourceType.LinkType,
+        viewSettings,
+        constraintData
+      ),
     };
   }
 );
@@ -176,6 +216,21 @@ export const selectDocumentsAndLinksByQuery = createSelector(
 export const selectDocumentsByQuery = createSelector(
   selectDocumentsAndLinksByQuery,
   (data): DocumentModel[] => data.documents
+);
+
+export const selectDocumentsByQuerySorted = createSelector(
+  selectDocumentsByQuery,
+  selectCollectionsDictionary,
+  selectViewSettings,
+  selectConstraintData,
+  (documents, collectionsMap, viewSettings, constraintData) =>
+    sortDataResourcesByViewSettings(
+      documents,
+      collectionsMap,
+      AttributesResourceType.Collection,
+      viewSettings,
+      constraintData
+    )
 );
 
 export const selectDocumentsByQueryIncludingChildren = createSelector(

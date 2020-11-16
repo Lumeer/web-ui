@@ -38,7 +38,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {
   selectCollectionsByQuery,
   selectCollectionsInQuery,
-  selectDocumentsAndLinksByQuery,
+  selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
@@ -108,7 +108,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     this.query$ = this.store$.pipe(select(selectQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
+    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.map$ = this.store$.pipe(select(selectMap));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
@@ -163,7 +163,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
       withLatestFrom(this.store$.pipe(select(selectMapPosition))),
       mergeMap(([mapEntity, position]) => {
         const mapConfig = view.config && view.config.map;
-        if (preferViewConfigUpdate(previousView, view, !!mapEntity)) {
+        if (preferViewConfigUpdate(previousView?.config?.map, view?.config?.map, !!mapEntity)) {
           const configToCheck: MapConfig = {
             ...mapConfig,
             position: mapConfig?.positionSaved ? mapConfig.position : position,

@@ -114,6 +114,7 @@ export namespace DocumentsAction {
         document: DocumentModel;
         onSuccess?: (documentId: string) => void;
         onFailure?: () => void;
+        afterSuccess?: (documentId: string) => void;
       }
     ) {}
   }
@@ -127,7 +128,7 @@ export namespace DocumentsAction {
   export class CreateFailure implements Action {
     public readonly type = DocumentsActionType.CREATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {error: any; correlationId?: string}) {}
   }
 
   export class CreateWithLink implements Action {
@@ -138,8 +139,9 @@ export namespace DocumentsAction {
         document: DocumentModel;
         otherDocumentId: string;
         linkInstance: LinkInstance;
-        onSuccess?: (documentId: string) => void;
+        onSuccess?: ({documentId, linkInstanceId}) => void;
         onFailure?: () => void;
+        afterSuccess?: ({documentId, linkInstanceId}) => void;
       }
     ) {}
   }

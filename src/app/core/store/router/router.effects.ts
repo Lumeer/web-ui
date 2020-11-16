@@ -21,7 +21,7 @@ import {Location} from '@angular/common';
 import {Injectable} from '@angular/core';
 import {Router} from '@angular/router';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import {flatMap, map, mergeMap, tap} from 'rxjs/operators';
+import {map, mergeMap, tap} from 'rxjs/operators';
 import {RouterAction, RouterActionType} from './router.action';
 import {from} from 'rxjs';
 
@@ -32,7 +32,7 @@ export class RouterEffects {
     ofType<RouterAction.Go>(RouterActionType.GO),
     map(action => action.payload),
     mergeMap(({path, queryParams, extras, nextActions}) =>
-      from(this.router.navigate(path, {queryParams, ...extras})).pipe(flatMap(() => nextActions || []))
+      from(this.router.navigate(path, {queryParams, ...extras})).pipe(mergeMap(() => nextActions || []))
     )
   );
 

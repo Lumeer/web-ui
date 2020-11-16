@@ -50,6 +50,10 @@ export enum LinkTypesActionType {
   UPDATE_ATTRIBUTE_SUCCESS = '[Link Types] Update Attribute :: Success',
   UPDATE_ATTRIBUTE_FAILURE = '[Link Types] Update Attribute :: Failure',
 
+  RENAME_ATTRIBUTE = '[Link Types] Rename Attribute',
+  RENAME_ATTRIBUTE_SUCCESS = '[Link Types] Rename Attribute :: Success',
+  RENAME_ATTRIBUTE_FAILURE = '[Link Types] Rename Attribute :: Failure',
+
   DELETE_ATTRIBUTE = '[Link Types] Delete Attribute',
   DELETE_ATTRIBUTE_SUCCESS = '[Link Types] Delete Attribute :: Success',
   DELETE_ATTRIBUTE_FAILURE = '[Link Types] Delete Attribute :: Failure',
@@ -200,6 +204,24 @@ export namespace LinkTypesAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class RenameAttribute implements Action {
+    public readonly type = LinkTypesActionType.RENAME_ATTRIBUTE;
+
+    public constructor(public payload: {linkTypeId: string; attributeId: string; name: string}) {}
+  }
+
+  export class RenameAttributeSuccess implements Action {
+    public readonly type = LinkTypesActionType.RENAME_ATTRIBUTE_SUCCESS;
+
+    public constructor(public payload: {linkTypeId: string; attributeId: string; name: string}) {}
+  }
+
+  export class RenameAttributeFailure implements Action {
+    public readonly type = LinkTypesActionType.RENAME_ATTRIBUTE_FAILURE;
+
+    public constructor(public payload: {error: any; linkTypeId: string; attributeId: string; oldName: string}) {}
+  }
+
   export class DeleteAttribute implements Action {
     public readonly type = LinkTypesActionType.DELETE_ATTRIBUTE;
 
@@ -244,6 +266,9 @@ export namespace LinkTypesAction {
     | Delete
     | DeleteSuccess
     | DeleteFailure
+    | RenameAttribute
+    | RenameAttributeSuccess
+    | RenameAttributeFailure
     | CreateAttributes
     | CreateAttributesSuccess
     | CreateAttributesFailure

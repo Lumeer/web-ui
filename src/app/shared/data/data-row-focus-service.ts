@@ -90,7 +90,13 @@ export class DataRowFocusService {
         component.unFocusRow();
       }
     });
-    this.hiddenComponent() && this.hiddenComponent().focus();
+    this.hiddenComponent()?.focus();
+  }
+
+  public checkAndResetFocusAndEdit() {
+    if (this.isFocusing() || this.isEditing()) {
+      this.resetFocusAndEdit(this.focused?.row || this.edited?.row, this.focused?.column || this.edited?.column);
+    }
   }
 
   public resetFocusAndEdit(row: number, column: number) {
@@ -128,7 +134,7 @@ export class DataRowFocusService {
       return;
     }
 
-    this.hiddenComponent() && this.hiddenComponent().blur();
+    this.hiddenComponent()?.blur();
 
     this.rows().forEach((component, index) => {
       if (index !== row) {
@@ -136,7 +142,7 @@ export class DataRowFocusService {
       }
     });
 
-    const editingConfirmed = this.rows()[row].startColumnEditing(column, value);
+    const editingConfirmed = this.rows()[row]?.startColumnEditing(column, value);
     if (editingConfirmed) {
       this.edited = {row, column};
     } else {

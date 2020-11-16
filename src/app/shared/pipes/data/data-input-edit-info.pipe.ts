@@ -31,14 +31,13 @@ export class DataInputEditInfoPipe implements PipeTransform {
   public transform(
     attribute: Attribute,
     dataValue: DataValue,
-    permissions: AllowedPermissions,
+    editable: boolean,
     editing: boolean
   ): {readonly: boolean; hasValue: boolean; showDataInput: boolean; selectConstraint: boolean; editing: boolean} {
     const constraint = attribute?.constraint || new UnknownConstraint();
     const asText = constraint.isTextRepresentation;
     const hasValue = dataValue && !!dataValue.format();
-    const readonly =
-      !permissions || !permissions.writeWithView || !(editing || constraint.type === ConstraintType.Boolean);
+    const readonly = !editable || !(editing || constraint.type === ConstraintType.Boolean);
 
     const forceDataInput = constraint.type === ConstraintType.Files;
     return {

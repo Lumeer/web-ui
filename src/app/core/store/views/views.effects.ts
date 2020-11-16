@@ -23,7 +23,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of, pipe} from 'rxjs';
-import {catchError, concatMap, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, concatMap, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {PermissionDto, ViewDto} from '../../dto';
 import {AppState} from '../app.state';
@@ -62,6 +62,7 @@ import {CalendarsAction} from '../calendars/calendars.action';
 import {KanbansAction} from '../kanbans/kanbans.action';
 import {ChartAction} from '../charts/charts.action';
 import {ViewService, UserService} from '../../data-service';
+import {WorkflowsAction} from '../workflows/workflows.action';
 
 @Injectable()
 export class ViewsEffects {
@@ -75,7 +76,7 @@ export class ViewsEffects {
       return this.viewService.getViews(action.payload.workspace).pipe(
         map((dtos: ViewDto[]) => dtos.map(dto => convertViewDtoToModel(dto))),
         map((views: View[]) => new ViewsAction.GetSuccess({views})),
-        catchError(error => of(new ViewsAction.GetFailure({error: error})))
+        catchError(error => of(new ViewsAction.GetFailure({error})))
       );
     })
   );
@@ -111,7 +112,7 @@ export class ViewsEffects {
 
       return this.viewService.createView(viewDto).pipe(
         map(dto => convertViewDtoToModel(dto)),
-        flatMap(view => {
+        mergeMap(view => {
           const actions: Action[] = [new ViewsAction.CreateSuccess({view, nextActions})];
           if (onSuccess) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess(view)}));
@@ -119,7 +120,7 @@ export class ViewsEffects {
           return actions;
         }),
         catchError(error => {
-          const actions: Action[] = [new ViewsAction.CreateFailure({error: error})];
+          const actions: Action[] = [new ViewsAction.CreateFailure({error})];
           if (onFailure) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onFailure()}));
           }
@@ -189,7 +190,7 @@ export class ViewsEffects {
 
       return this.viewService.updateView(action.payload.viewId, viewDto).pipe(
         map(dto => convertViewDtoToModel(dto)),
-        flatMap(view => {
+        mergeMap(view => {
           const actions: Action[] = [new ViewsAction.UpdateSuccess({view: view})];
           if (onSuccess) {
             actions.push(new CommonAction.ExecuteCallback({callback: () => onSuccess()}));
@@ -211,7 +212,7 @@ export class ViewsEffects {
   public updateSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.UpdateSuccess>(ViewsActionType.UPDATE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    flatMap(([action, navigation]) => {
+    mergeMap(([action, navigation]) => {
       const viewCodeInUrl = navigation && navigation.workspace && navigation.workspace.viewCode;
       const {code, query} = action.payload.view;
       if (viewCodeInUrl && viewCodeInUrl === code && !areQueriesEqual(query, navigation.query)) {
@@ -264,6 +265,9 @@ export class ViewsEffects {
         case Perspective.Chart:
           const chartConfig = view.config?.chart;
           return of(new ChartAction.SetConfig({chartId: view.code, config: chartConfig}));
+        case Perspective.Workflow:
+          const workflowConfig = view.config?.workflow;
+          return of(new WorkflowsAction.SetConfig({workflowId: view.code, config: workflowConfig}));
         default:
           return EMPTY;
       }
@@ -279,7 +283,7 @@ export class ViewsEffects {
       const view = viewsMap[action.payload.viewId];
       return this.viewService.deleteView(action.payload.viewId).pipe(
         map(() => new ViewsAction.DeleteSuccess({viewId: action.payload.viewId, viewCode: view.code})),
-        catchError(error => of(new ViewsAction.DeleteFailure({error: error})))
+        catchError(error => of(new ViewsAction.DeleteFailure({error})))
       );
     })
   );
@@ -288,7 +292,7 @@ export class ViewsEffects {
   public deleteSuccess$ = this.actions$.pipe(
     ofType<ViewsAction.DeleteSuccess>(ViewsActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectNavigation))),
-    flatMap(([action, navigation]) => {
+    mergeMap(([action, navigation]) => {
       const viewCodeInUrl = navigation && navigation.workspace && navigation.workspace.viewCode;
       if (viewCodeInUrl && viewCodeInUrl === action.payload.viewCode) {
         return [new RemoveViewFromUrl({})];
@@ -375,7 +379,7 @@ export class ViewsEffects {
           of(
             new ViewsAction.AddFavoriteFailure({
               viewId: action.payload.viewId,
-              error: error,
+              error,
             })
           )
         )
@@ -403,7 +407,7 @@ export class ViewsEffects {
           of(
             new ViewsAction.RemoveFavoriteFailure({
               viewId: action.payload.viewId,
-              error: error,
+              error,
             })
           )
         )
@@ -460,7 +464,7 @@ export class ViewsEffects {
   public resetDefaultConfigBySnapshot: Observable<Action> = this.actions$.pipe(
     ofType<ViewsAction.ResetDefaultConfigBySnapshot>(ViewsActionType.RESET_DEFAULT_CONFIG_BY_SNAPSHOT),
     withLatestFrom(this.store$.pipe(select(selectViewsState))),
-    flatMap(([action, viewsState]) => {
+    mergeMap(([action, viewsState]) => {
       const {defaultConfigSnapshot} = viewsState;
       if (!defaultConfigSnapshot || defaultConfigSnapshot.perspective !== action.payload.perspective) {
         return [];

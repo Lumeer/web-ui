@@ -81,7 +81,7 @@ export class PostItRowComponent implements DataRowComponent, OnChanges {
   @Output()
   public resetFocusAndEdit = new EventEmitter<number>();
 
-  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true}};
+  public readonly configuration: DataInputConfiguration = {common: {allowRichText: true, delaySaveAction: true}};
 
   public keyFocused$ = new BehaviorSubject(false);
   public keyEditing$ = new BehaviorSubject(false);

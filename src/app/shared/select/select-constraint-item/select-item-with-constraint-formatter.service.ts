@@ -39,16 +39,22 @@ export class SelectItemWithConstraintFormatter {
     this.durationConfigOverrideService = new DurationConfigOverrideService(i18n);
   }
 
-  public createItems(attribute: Attribute): SelectItemModel[] {
+  public createItems(attribute: Attribute, withDefaultItem = true): SelectItemModel[] {
     if (!attribute || !attribute.constraint) {
       return [];
     }
 
     switch (attribute.constraint.type) {
       case ConstraintType.DateTime:
-        return this.dateTimeConfigOverrideService.create(attribute.constraint.config as DateTimeConstraintConfig);
+        return this.dateTimeConfigOverrideService.create(
+          attribute.constraint.config as DateTimeConstraintConfig,
+          withDefaultItem
+        );
       case ConstraintType.Duration:
-        return this.durationConfigOverrideService.create(attribute.constraint.config as DurationConstraintConfig);
+        return this.durationConfigOverrideService.create(
+          attribute.constraint.config as DurationConstraintConfig,
+          withDefaultItem
+        );
       default:
         return [];
     }

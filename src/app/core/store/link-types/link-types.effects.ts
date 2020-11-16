@@ -22,7 +22,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {LinkTypeDto} from '../../dto';
 import {AppState} from '../app.state';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
@@ -32,7 +32,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
 import {LinkTypesAction, LinkTypesActionType} from './link-types.action';
-import {selectLinkTypeAttributeById, selectLinkTypesLoaded} from './link-types.state';
+import {selectLinkTypeAttributeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from './link-types.state';
 import {Attribute} from '../collections/collection';
 import {LinkInstance} from '../link-instances/link.instance';
 import {LinkTypeService} from '../../data-service';
@@ -49,7 +49,7 @@ export class LinkTypesEffects {
       return this.linkTypeService.getLinkTypes(action.payload.workspace).pipe(
         map(dtos => dtos.map(dto => convertLinkTypeDtoToModel(dto))),
         map(linkTypes => new LinkTypesAction.GetSuccess({linkTypes: linkTypes})),
-        catchError(error => of(new LinkTypesAction.GetFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.GetFailure({error})))
       );
     })
   );
@@ -61,7 +61,7 @@ export class LinkTypesEffects {
       return this.linkTypeService.getLinkType(action.payload.linkTypeId).pipe(
         map((dto: LinkTypeDto) => convertLinkTypeDtoToModel(dto)),
         map(linkType => new LinkTypesAction.GetSuccess({linkTypes: [linkType]})),
-        catchError(error => of(new LinkTypesAction.GetFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.GetFailure({error})))
       );
     })
   );
@@ -89,7 +89,7 @@ export class LinkTypesEffects {
           ...createCallbackActions(action.payload.onSuccess, linkType),
         ]),
         catchError(error =>
-          of(new LinkTypesAction.CreateFailure({error: error}), ...createCallbackActions(action.payload.onFailure))
+          of(new LinkTypesAction.CreateFailure({error}), ...createCallbackActions(action.payload.onFailure))
         )
       );
     })
@@ -135,7 +135,7 @@ export class LinkTypesEffects {
     mergeMap(action =>
       this.linkTypeService.deleteLinkType(action.payload.linkTypeId).pipe(
         map(linkTypeId => new LinkTypesAction.DeleteSuccess({linkTypeId: linkTypeId})),
-        catchError(error => of(new LinkTypesAction.DeleteFailure({error: error})))
+        catchError(error => of(new LinkTypesAction.DeleteFailure({error})))
       )
     )
   );
@@ -144,7 +144,7 @@ export class LinkTypesEffects {
   public deleteSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.DeleteSuccess>(LinkInstancesActionType.DELETE_SUCCESS),
     withLatestFrom(this.store$.pipe(select(selectQuery))),
-    flatMap(([action, query]) => {
+    mergeMap(([action]) => {
       const {linkTypeId} = action.payload;
       const actions: Action[] = [new LinkInstancesAction.ClearByLinkType({linkTypeId})];
 
@@ -208,6 +208,24 @@ export class LinkTypesEffects {
   );
 
   @Effect()
+  public renameAttribute$ = this.actions$.pipe(
+    ofType<LinkTypesAction.RenameAttribute>(LinkTypesActionType.RENAME_ATTRIBUTE),
+    withLatestFrom(this.store$.pipe(select(selectLinkTypesDictionary))),
+    tap(([action]) => this.store$.dispatch(new LinkTypesAction.RenameAttributeSuccess(action.payload))),
+    mergeMap(([action, linkTypesMap]) => {
+      const {linkTypeId, attributeId, name} = action.payload;
+      const linkType = linkTypesMap[linkTypeId];
+      const attribute = linkType?.attributes?.find(attr => attr.id === attributeId);
+      const oldName = attribute?.name;
+      const attributeDto = convertAttributeModelToDto({...attribute, name});
+      return this.linkTypeService.updateAttribute(linkTypeId, attributeId, attributeDto).pipe(
+        mergeMap(() => of()),
+        catchError(error => of(new LinkTypesAction.RenameAttributeFailure({error, linkTypeId, attributeId, oldName})))
+      );
+    })
+  );
+
+  @Effect()
   public deleteAttribute$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.DeleteAttribute>(LinkTypesActionType.DELETE_ATTRIBUTE),
     mergeMap(action => {
@@ -217,7 +235,7 @@ export class LinkTypesEffects {
         take(1),
         mergeMap(attribute => {
           return this.linkTypeService.deleteAttribute(linkTypeId, attributeId).pipe(
-            flatMap(() => [
+            mergeMap(() => [
               new LinkTypesAction.DeleteAttributeSuccess({linkTypeId, attribute}),
               ...createCallbackActions(onSuccess),
             ]),

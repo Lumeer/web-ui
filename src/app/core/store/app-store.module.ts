@@ -73,6 +73,8 @@ import {sequencesReducer} from './sequences/sequences.reducer';
 import {constraintDataReducer} from './constraint-data/constraint-data.reducer';
 import {MapsEffects} from './maps/maps.effects';
 import {publicDataReducer} from './public-data/public-data.reducer';
+import {viewSettingsReducer} from './view-settings/view-settings.reducer';
+import {workflowsReducer} from './workflows/workflows.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -103,6 +105,8 @@ const reducers: ActionReducerMap<AppState> = {
   sequences: sequencesReducer,
   constraintData: constraintDataReducer,
   publicData: publicDataReducer,
+  viewSettings: viewSettingsReducer,
+  workflows: workflowsReducer,
 };
 
 const effects = [

@@ -20,7 +20,11 @@
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Constraint} from '../../../../core/model/constraint';
 import {DurationConstraint} from '../../../../core/model/constraint/duration.constraint';
-import {DurationConstraintConfig, DurationUnit} from '../../../../core/model/data/constraint-config';
+import {
+  DateTimeConstraintConfig,
+  DurationConstraintConfig,
+  DurationUnit,
+} from '../../../../core/model/data/constraint-config';
 import {SelectItemModel} from '../../select-item/select-item.model';
 import {ConstraintConfigOverrideService} from './constraint-config-override-service';
 
@@ -34,10 +38,10 @@ export class DurationConfigOverrideService extends ConstraintConfigOverrideServi
     this.defaultTitle = i18n({id: 'default', value: 'Default'});
   }
 
-  public create(config: DurationConstraintConfig): SelectItemModel[] {
+  public create(config: DurationConstraintConfig, withDefaultItem: boolean): SelectItemModel[] {
     const defaultItem: SelectItemModel = {id: null, value: this.defaultTitle};
     return [
-      defaultItem,
+      ...(withDefaultItem ? [defaultItem] : []),
       ...maxDurationUnits.map(unit => ({
         id: new DurationConstraint({maxUnit: unit} as DurationConstraintConfig),
         value: this.translateDurationUnit(unit),
@@ -49,7 +53,7 @@ export class DurationConfigOverrideService extends ConstraintConfigOverrideServi
     return this.i18n(
       {
         id: 'select.constraint.items.duration.maxUnit',
-        value: '{unit, select, w {w (weeks)} d {d (days)} h {h (hours)} m {m (minutes)} s {s (seconds)}}',
+        value: '{unit, select, w {weeks} d {days} h {hours} m {minutes} s {seconds}}',
       },
       {unit}
     );

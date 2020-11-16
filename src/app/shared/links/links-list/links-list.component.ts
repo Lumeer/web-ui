@@ -67,6 +67,9 @@ export class LinksListComponent implements OnChanges, OnInit {
   public ignoreSettingsOnReadPermission: boolean;
 
   @Input()
+  public allowSelectDocument = true;
+
+  @Input()
   public viewSettings: ViewSettings;
 
   @Output()

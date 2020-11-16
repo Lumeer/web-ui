@@ -24,7 +24,7 @@ import {select, Store} from '@ngrx/store';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {
   selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuery,
+  selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
@@ -115,7 +115,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
       take(1),
       mergeMap(calendarEntity => {
         const calendarConfig = view.config && view.config.calendar;
-        if (preferViewConfigUpdate(previousView, view, !!calendarEntity)) {
+        if (preferViewConfigUpdate(previousView?.config?.calendar, view?.config?.calendar, !!calendarEntity)) {
           return this.checkCalendarConfig(calendarConfig).pipe(map(config => ({calendarId, config})));
         }
         return of({calendarId, config: calendarEntity?.config || calendarConfig});
@@ -163,7 +163,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
+    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.permissions$ = this.collections$.pipe(
       mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))

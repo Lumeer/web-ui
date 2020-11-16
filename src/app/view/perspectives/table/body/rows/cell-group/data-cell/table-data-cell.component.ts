@@ -154,7 +154,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
-    common: {allowRichText: true},
+    common: {allowRichText: true, delaySaveAction: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
   };
@@ -514,7 +514,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   private createDocumentWithNewAttribute(table: TableModel, row: TableConfigRow, attributeName: string, value: any) {
     const document: DocumentModel = {
       ...this.document,
-      correlationId: row && row.correlationId,
+      correlationId: row?.correlationId,
       newData: {[attributeName]: {value}},
       metaData: this.createDocumentMetaData(row),
     };

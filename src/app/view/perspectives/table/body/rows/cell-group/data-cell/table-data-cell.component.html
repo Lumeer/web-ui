@@ -9,7 +9,7 @@
   </table-data-cell-menu>
 
   <ng-container
-    *ngIf="data.attribute | dataInputEditInfo:data.dataValue:allowedPermissions: (editing$ | async) as dataInputInfo">
+    *ngIf="data.attribute | dataInputEditInfo:data.dataValue:allowedPermissions?.writeWithView: (editing$ | async) as dataInputInfo">
 
     <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
          [innerHTML]="data.dataValue | previewDataValue | safeHtml"

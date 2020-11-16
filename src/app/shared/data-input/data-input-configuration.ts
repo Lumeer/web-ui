@@ -30,6 +30,7 @@ export interface CommonDataInputConfiguration {
   minWidth?: number;
   resizeToContent?: boolean;
   allowRichText?: boolean;
+  delaySaveAction?: boolean;
 }
 
 export interface ColorDataInputConfiguration {

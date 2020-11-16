@@ -1,0 +1,21 @@
+@import 'src/styles/variables';
+
+:host {
+  border: 0.5px $gray-200 dotted;
+  padding: 0 0.2rem !important;
+  position: relative;
+}
+
+.header-content {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+}
+
+.icons {
+  font-size: 13px;
+}
+
+.fa-caret-down {
+  color: $secondary;
+}

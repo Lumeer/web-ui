@@ -18,6 +18,7 @@
  */
 
 import {
+  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -33,13 +34,15 @@ import {KeyCode} from '../../key-code';
 import {HtmlModifier} from '../../utils/html-modifier';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'duration-data-input',
   templateUrl: './duration-data-input.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DurationDataInputComponent implements OnChanges {
+export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
   @Input()
   public focus: boolean;
 
@@ -50,13 +53,13 @@ export class DurationDataInputComponent implements OnChanges {
   public value: DurationDataValue;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Output()
   public valueChange = new EventEmitter<DurationDataValue>();
 
   @Output()
-  public save = new EventEmitter<DurationDataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: DurationDataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -73,18 +76,31 @@ export class DurationDataInputComponent implements OnChanges {
 
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
+  private setFocus: boolean;
 
   constructor(private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {
-      setTimeout(() => {
-        HtmlModifier.setCursorAtTextContentEnd(this.durationInput.nativeElement);
-        this.durationInput.nativeElement.focus();
-      });
+      this.setFocus = true;
     }
     if (changes.value && this.value) {
       this.valid = this.value.isValid();
+    }
+  }
+
+  public ngAfterViewChecked() {
+    if (this.setFocus) {
+      this.setFocusToInput();
+      this.setFocus = false;
+    }
+  }
+
+  public setFocusToInput() {
+    if (this.durationInput) {
+      const element = this.durationInput.nativeElement;
+      HtmlModifier.setCursorAtTextContentEnd(element);
+      element.focus();
     }
   }
 
@@ -112,20 +128,29 @@ export class DurationDataInputComponent implements OnChanges {
 
         event.preventDefault();
 
-        if (!this.skipValidation && input && !dataValue.isValid()) {
+        if (!this.configuration.skipValidation && input && !dataValue.isValid()) {
           event.stopImmediatePropagation();
           this.enterInvalid.emit();
           return;
         }
 
         this.preventSaveAndBlur();
-        // needs to be executed after parent event handlers
-        setTimeout(() => input && this.save.emit(dataValue));
+        this.saveDataValue(dataValue, event);
         return;
       case KeyCode.Escape:
         this.preventSaveAndBlur();
         this.cancel.emit();
         return;
+    }
+  }
+
+  private saveDataValue(dataValue: DurationDataValue, event: KeyboardEvent) {
+    const action = keyboardEventInputSaveAction(event);
+    if (this.configuration?.delaySaveAction) {
+      // needs to be executed after parent event handlers
+      setTimeout(() => this.save.emit({action, dataValue}));
+    } else {
+      this.save.emit({action, dataValue});
     }
   }
 
@@ -151,8 +176,8 @@ export class DurationDataInputComponent implements OnChanges {
       this.preventSave = false;
     } else {
       const dataValue = this.value.parseInput(this.durationInput.nativeElement.value);
-      if (this.skipValidation || dataValue.isValid()) {
-        this.save.emit(dataValue);
+      if (this.configuration.skipValidation || dataValue.isValid()) {
+        this.save.emit({action: DataInputSaveAction.Blur, dataValue});
       } else {
         this.cancel.emit();
       }

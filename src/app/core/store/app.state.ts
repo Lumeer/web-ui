@@ -46,6 +46,8 @@ import {initialSearchesState, SearchesState} from './searches/searches.state';
 import {initialSequencesState, SequencesState} from './sequences/sequences.state';
 import {ConstraintDataState, initialConstraintDataState} from './constraint-data/constraint-data.state';
 import {initialPublicDataState, PublicDataState} from './public-data/public-data.state';
+import {initialViewSettingsState, ViewSettingsState} from './view-settings/view-settings.state';
+import {initialWorkflowsState, WorkflowsState} from './workflows/workflow.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -76,6 +78,8 @@ export interface AppState {
   sequences: SequencesState;
   constraintData: ConstraintDataState;
   publicData: PublicDataState;
+  viewSettings: ViewSettingsState;
+  workflows: WorkflowsState;
 }
 
 export function initialAppState(): AppState {
@@ -108,5 +112,7 @@ export function initialAppState(): AppState {
     sequences: initialSequencesState,
     constraintData: initialConstraintDataState,
     publicData: initialPublicDataState,
+    viewSettings: initialViewSettingsState,
+    workflows: initialWorkflowsState,
   };
 }

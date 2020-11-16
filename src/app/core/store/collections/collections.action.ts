@@ -61,6 +61,10 @@ export enum CollectionsActionType {
   CHANGE_ATTRIBUTE_SUCCESS = '[Collections] Change Attribute :: Success',
   CHANGE_ATTRIBUTE_FAILURE = '[Collections] Change Attribute :: Failure',
 
+  RENAME_ATTRIBUTE = '[Collections] Rename Attribute',
+  RENAME_ATTRIBUTE_SUCCESS = '[Collections] Rename Attribute :: Success',
+  RENAME_ATTRIBUTE_FAILURE = '[Collections] Rename Attribute :: Failure',
+
   CREATE_ATTRIBUTES = '[Collections] Create Attributes',
   CREATE_ATTRIBUTES_SUCCESS = '[Collections] Create Attributes :: Success',
   CREATE_ATTRIBUTES_FAILURE = '[Collections] Create Attributes :: Failure',
@@ -241,7 +245,8 @@ export namespace CollectionsAction {
         collectionId: string;
         attributes: Attribute[];
         nextAction?: DocumentsAction.All;
-        callback?: (attributes: Attribute[]) => void;
+        onSuccess?: (attributes: Attribute[]) => void;
+        onFailure?: () => void;
       }
     ) {}
   }
@@ -256,6 +261,24 @@ export namespace CollectionsAction {
     public readonly type = CollectionsActionType.CREATE_ATTRIBUTES_FAILURE;
 
     public constructor(public payload: {error: any}) {}
+  }
+
+  export class RenameAttribute implements Action {
+    public readonly type = CollectionsActionType.RENAME_ATTRIBUTE;
+
+    public constructor(public payload: {collectionId: string; attributeId: string; name: string}) {}
+  }
+
+  export class RenameAttributeSuccess implements Action {
+    public readonly type = CollectionsActionType.RENAME_ATTRIBUTE_SUCCESS;
+
+    public constructor(public payload: {collectionId: string; attributeId: string; name: string}) {}
+  }
+
+  export class RenameAttributeFailure implements Action {
+    public readonly type = CollectionsActionType.RENAME_ATTRIBUTE_FAILURE;
+
+    public constructor(public payload: {error: any; collectionId: string; attributeId: string; oldName: string}) {}
   }
 
   export class ChangeAttribute implements Action {
@@ -367,6 +390,9 @@ export namespace CollectionsAction {
     | ChangeAttribute
     | ChangeAttributeSuccess
     | ChangeAttributeFailure
+    | RenameAttribute
+    | RenameAttributeFailure
+    | RenameAttributeSuccess
     | RemoveAttribute
     | RemoveAttributeSuccess
     | RemoveAttributeFailure

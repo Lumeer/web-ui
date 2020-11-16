@@ -1,0 +1,86 @@
+<ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
+
+  <hidden-input (newInput)="onNewHiddenInput($event)"
+                class="position-fixed">
+  </hidden-input>
+
+  <ng-container
+    *ngIf="{selectedCell: selectedCell$ | async, editedCell: editedCell$ | async, tables: tables$ | async} as data">
+    <div *ngFor="let stemConfig of config.stemsConfigs; trackBy:trackByStem; let index = index;">
+
+      <workflow-toolbar class="mb-2" [config]="stemConfig"
+                        [class.mb-3]="data?.tables?.length > 1"
+                        [linkTypes]="linkTypes"
+                        [collections]="collections"
+                        [stem]="stemConfig.stem"
+                        (configChange)="onStemConfigChange($event, index)">
+      </workflow-toolbar>
+
+      <div class="mb-3" (click)="onClickInsideTables($event)"
+           *ngIf="{tables: data.tables | filterStemTables:stemConfig} as stemData">
+        <ng-container *ngFor="let table of stemData.tables; trackBy: trackByTable; let first = first">
+          <workflow-table-title *ngIf="table.title"
+                                class="d-block mb-2"
+                                [collections]="collections"
+                                [stemConfig]="stemConfig"
+                                [title]="table.title">
+          </workflow-table-title>
+          <lmr-table
+            #lmrTable
+            [id]="table.id"
+            [scrollId]="table.id"
+            [syncScrollIds]="stemData.tables | workflowTablesIds"
+            class="lmr-table"
+            [tableModel]="table"
+            [style.height.px]="table.height"
+            [style.min-height.px]="table.minHeight"
+            [constraintData]="constraintData"
+            [selectedCell]="data.selectedCell"
+            [selectedDocumentId]="selectedDocumentId"
+            [editedCell]="data.editedCell"
+            (columnMove)="onColumnMove(table, $event)"
+            (columnResize)="onColumnResize(table, $event)"
+            (columnRename)="onColumnRename($event)"
+            (columnMenuSelected)="onColumnMenuSelected($event)"
+            (columnHiddenMenuSelected)="onColumnHiddenMenuSelected($event)"
+            (columnSortChanged)="onColumnSortChanged($event)"
+            (cellClick)="onTableCellClick($event)"
+            (cellCancel)="onTableCellCancel($event)"
+            (cellDoubleClick)="onTableCellDoubleClick($event)"
+            (rowNewValue)="onRowNewValue($event)"
+            (rowMenuSelected)="onRowMenuSelected($event)"
+            (rowDetail)="onRowDetail($event)"
+            (rowNewClick)="onRowNewClick(table)"
+            (rowLinkedDocumentSelect)="onRowLinkedDocumentSelect($event)">
+          </lmr-table>
+
+          <div resizer class="resizer d-flex align-items-center justify-content-center mb-5"
+               *ngIf="table.rows.length || table.newRow; else emptyTable"
+               [reference]="table.id"
+               [style.width]="'min(100%, ' + table.width + 'px)'"
+               (onResize)="onTableResize(table, $event)"
+               i18n-title="@@perspective.workflow.table.resize"
+               title="Resize table">
+            <i class="fal fa-grip-lines"></i>
+          </div>
+
+        </ng-container>
+      </div>
+
+    </div>
+  </ng-container>
+
+
+</ng-container>
+
+<ng-template #emptyTable>
+  <div *ngIf="dataLoaded" class="text-muted mb-5 mt-1" i18n="@@workflow.table.empty">
+    There are no rows to display and you are not allowed to create any.
+  </div>
+</ng-template>
+
+<ng-template #notDisplayable>
+  <invalid-query class="w-100"
+                 [minStems]="1">
+  </invalid-query>
+</ng-template>

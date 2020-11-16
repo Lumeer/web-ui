@@ -338,14 +338,15 @@ export function createEmptyColumn(
   columns: TableConfigColumn[],
   parentName?: string
 ): TableConfigColumn {
-  const uninitializedAttributeNames = columns.reduce((attributeNames, column) => {
+  const uninitializedAttributeNames = columns.reduce((names, column) => {
     if (column.attributeName) {
-      attributeNames.push(column.attributeName);
+      names.push(column.attributeName);
     }
-    return attributeNames;
+    return names;
   }, []);
 
-  const attributeName = generateAttributeName(attributes, uninitializedAttributeNames, parentName);
+  const attributeNames = (attributes || []).map(attr => attr.name);
+  const attributeName = generateAttributeName([...attributeNames, ...uninitializedAttributeNames], parentName);
   return {
     type: TableColumnType.COMPOUND,
     attributeIds: [],

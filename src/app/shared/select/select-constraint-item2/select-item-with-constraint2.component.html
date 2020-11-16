@@ -1,0 +1,9 @@
+<select-item2
+  [items]="attributesResources | selectItemsWithConstraint2:restrictedIds"
+  [selectedPath]="[selectedId, selectedConstraint]"
+  [removable]="removable"
+  [disabled]="disabled"
+  [emptyValue]="emptyValue"
+  (selectPath)="onSelectPath($event)"
+  (remove)="onRemove()">
+</select-item2>

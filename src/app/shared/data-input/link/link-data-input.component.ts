@@ -18,17 +18,19 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
-  Input,
-  Output,
-  EventEmitter,
-  OnChanges,
-  SimpleChanges,
+  Component,
   ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import {completeLinkValue, formatLinkValue, LinkDataValue} from '../../../core/model/data-value/link.data-value';
 import {DomSanitizer} from '@angular/platform-browser';
+import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {DataInputSaveAction} from '../data-input-save-action';
 
 @Component({
   selector: 'link-data-input',
@@ -44,7 +46,7 @@ export class LinkDataInputComponent implements OnChanges {
   public readonly: boolean;
 
   @Input()
-  public skipValidation: boolean;
+  public configuration: CommonDataInputConfiguration;
 
   @Input()
   public value: LinkDataValue;
@@ -53,7 +55,7 @@ export class LinkDataInputComponent implements OnChanges {
   public valueChange = new EventEmitter<LinkDataValue>();
 
   @Output()
-  public save = new EventEmitter<LinkDataValue>();
+  public save = new EventEmitter<{action: DataInputSaveAction; dataValue: LinkDataValue}>();
 
   @Output()
   public cancel = new EventEmitter();
@@ -79,9 +81,10 @@ export class LinkDataInputComponent implements OnChanges {
     this.cancel.emit();
   }
 
-  public onSave(data: {link: string; title: string}) {
+  public onSave(data: {link: string; title: string; enter?: boolean}) {
     const formattedValue = formatLinkValue(data.link, data.title);
     const newValue = this.value.parseInput(formattedValue);
-    this.save.next(newValue);
+    const action = data.enter ? DataInputSaveAction.Enter : DataInputSaveAction.Button;
+    this.save.next({action, dataValue: newValue});
   }
 }

@@ -73,6 +73,9 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public documentId: string;
 
   @Input()
+  public allowSelectDocument: boolean;
+
+  @Input()
   public attributeEditing: {documentId?: string; attributeId?: string};
 
   @Input()
@@ -110,7 +113,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   public readonly booleanConstraintType = ConstraintType.Boolean;
   public readonly configuration: DataInputConfiguration = {
-    common: {allowRichText: true},
+    common: {allowRichText: true, delaySaveAction: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
   };
@@ -294,10 +297,12 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     switch (event.code) {
       case KeyCode.ArrowDown:
         event.preventDefault();
-        return this.suggestions && this.suggestions.moveSelection(Direction.Down);
+        this.suggestions?.moveSelection(Direction.Down);
+        return;
       case KeyCode.ArrowUp:
         event.preventDefault();
-        return this.suggestions && this.suggestions.moveSelection(Direction.Up);
+        this.suggestions?.moveSelection(Direction.Up);
+        return;
     }
 
     if (isKeyPrintable(event) && this.suggestions) {

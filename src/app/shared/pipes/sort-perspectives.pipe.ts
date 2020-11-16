@@ -19,29 +19,17 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Perspective} from '../../view/perspectives/perspective';
-import {I18n} from '@ngx-translate/i18n-polyfill';
+import {PerspectiveNamePipe} from './perspective-name.pipe';
 
 @Pipe({
   name: 'sortPerspectives',
 })
 export class SortPerspectivesPipe implements PipeTransform {
-  public constructor(private i18n: I18n) {}
+  public constructor(private perspectiveNamePipe: PerspectiveNamePipe) {}
 
   public transform(perspectives: Perspective[]): {perspective: Perspective; name: string}[] {
-    const allPerspectives = perspectives.map(aperspective => {
-      return {
-        perspective: aperspective,
-        name: this.i18n(
-          {
-            id: 'view.perspective.name',
-            value:
-              '{aperspective, select, detail {Detail} pivot {Pivot} kanban {Kanban} chart {Chart} ganttChart {Timelines} calendar {Calendar} map {Map} search {Search} table {Table} smartdoc {Smart document}}',
-          },
-          {
-            aperspective,
-          }
-        ),
-      };
+    const allPerspectives = perspectives.map(perspective => {
+      return {perspective, name: this.perspectiveNamePipe.transform(perspective)};
     });
 
     const result: {perspective: Perspective; name: string}[] = [];

@@ -44,7 +44,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
   selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuery,
+  selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {checkOrTransformKanbanConfig} from './util/kanban.util';
@@ -111,8 +111,8 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
       select(selectKanbanById(kanbanId)),
       take(1),
       mergeMap(kanbanEntity => {
-        const kanbanConfig = view.config && view.config.kanban;
-        if (preferViewConfigUpdate(previousView, view, !!kanbanEntity)) {
+        const kanbanConfig = view.config?.kanban;
+        if (preferViewConfigUpdate(previousView?.config?.kanban, view?.config?.kanban, !!kanbanEntity)) {
           return this.checkKanbanConfig(kanbanConfig).pipe(map(config => ({kanbanId, config})));
         }
         return of({kanbanId, config: kanbanEntity?.config || kanbanConfig});
@@ -156,7 +156,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeData() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuery));
+    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.currentView$ = this.store$.pipe(select(selectCurrentView));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));

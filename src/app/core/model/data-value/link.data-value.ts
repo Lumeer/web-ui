@@ -156,7 +156,7 @@ export function formatLinkValue(link: string, title: string): string {
 }
 
 export function parseLinkValue(value: string): {link?: string; title?: string} {
-  if (value[value.length - 1] === ']') {
+  if (value && value[value.length - 1] === ']') {
     const titleStartIndex = value.lastIndexOf('[');
     if (titleStartIndex !== -1) {
       return {

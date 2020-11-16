@@ -1,0 +1,14 @@
+@import '~src/styles/variables';
+
+:host {
+  overflow: hidden;
+  display: block;
+  height: 100%;
+  position: relative;
+}
+
+.table {
+  table-layout: fixed;
+  width: min-content;
+  border: 0.5px $gray-200 dotted;
+}

@@ -26,7 +26,7 @@ import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
   selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuery,
+  selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
@@ -131,7 +131,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
       take(1),
       mergeMap(chartEntity => {
         const chartConfig = view.config?.chart;
-        if (preferViewConfigUpdate(previousView, view, !!chartEntity)) {
+        if (preferViewConfigUpdate(previousView?.config?.chart, view?.config?.chart, !!chartEntity)) {
           return this.checkChartConfig(chartConfig).pipe(map(config => ({chartId, config})));
         }
         return of({chartId, config: chartEntity?.config || chartConfig});
@@ -162,7 +162,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.documentsAndLinks$ = this.store$.pipe(
-      select(selectDocumentsAndLinksByQuery),
+      select(selectDocumentsAndLinksByQuerySorted),
       distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
     );
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));

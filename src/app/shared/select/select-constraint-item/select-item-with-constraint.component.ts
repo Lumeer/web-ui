@@ -29,7 +29,6 @@ export interface SelectItemWithConstraintId {
 @Component({
   selector: 'select-item-with-constraint',
   templateUrl: './select-item-with-constraint.component.html',
-  styleUrls: ['./select-item-with-constraint.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SelectItemWithConstraint {

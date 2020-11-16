@@ -22,7 +22,7 @@ import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {EMPTY, Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
+import {catchError, filter, map, mergeMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {hasFilesAttributeChanged} from '../../../shared/utils/data/has-files-attribute-changed';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {ConstraintType} from '../../model/data/constraint';
@@ -108,6 +108,7 @@ export class LinkInstancesEffects {
         mergeMap(linkInstance => [
           ...createCallbackActions(action.payload.onSuccess, linkInstance.id),
           new LinkInstancesAction.CreateSuccess({linkInstance}),
+          ...createCallbackActions(action.payload.afterSuccess, linkInstance.id),
         ]),
         catchError(error =>
           of(...createCallbackActions(action.payload.onFailure), new LinkInstancesAction.CreateFailure({error}))
@@ -147,12 +148,18 @@ export class LinkInstancesEffects {
         map(originalLinkInstance => ({...originalLinkInstance, correlationId: linkInstance.correlationId})),
         mergeMap(originalLinkInstance =>
           this.linkInstanceService.updateLinkInstance(linkInstanceDto).pipe(
-            flatMap(() => {
-              const actions: Action[] = [new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})];
-              nextAction && actions.push(nextAction);
-              return actions;
-            }),
-            catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
+            mergeMap(() => [
+              ...createCallbackActions(action.payload.onSuccess),
+              new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}),
+              ...(nextAction ? [nextAction] : []),
+              ...createCallbackActions(action.payload.afterSuccess),
+            ]),
+            catchError(error =>
+              of(
+                ...createCallbackActions(action.payload.onFailure),
+                new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})
+              )
+            )
           )
         )
       );
@@ -209,7 +216,7 @@ export class LinkInstancesEffects {
       return this.linkInstanceService.updateLinkInstanceData(linkInstanceDto).pipe(
         map(dto => convertLinkInstanceDtoToModel(dto)),
         map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})),
-        catchError(error => of(new LinkInstancesAction.UpdateFailure({error: error, originalLinkInstance})))
+        catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
       );
     })
   );
@@ -255,7 +262,7 @@ export class LinkInstancesEffects {
         mergeMap(linkInstance => {
           if (linkInstance) {
             const linkInstanceUpdate = {...linkInstance, documentIds};
-            return [new LinkInstancesAction.Update({linkInstance: linkInstanceUpdate})];
+            return [new LinkInstancesAction.Update({...action.payload, linkInstance: linkInstanceUpdate})];
           }
           return EMPTY;
         })

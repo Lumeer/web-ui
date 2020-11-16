@@ -1,6 +1,10 @@
 @import '../../../../../../../styles/variables';
 @import '../../../../../../../styles/bootstrap_var';
 
+.cell {
+  background-size: 35px 100% !important;
+}
+
 :host {
   & > div {
     line-height: calc(35px - 0.5rem);

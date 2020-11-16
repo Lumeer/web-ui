@@ -19,6 +19,7 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 import {LinksListComponent} from './links-list.component';
 import {LinksListTabsComponent} from './tabs/links-list-tabs.component';
@@ -26,13 +27,11 @@ import {PresenterModule} from '../../presenter/presenter.module';
 import {PipesModule} from '../../pipes/pipes.module';
 import {LinksListTableComponent} from './table/links-list-table.component';
 import {LinksListTableHeaderComponent} from './table/header/links-list-table-header.component';
-import {DragDropModule} from '@angular/cdk/drag-drop';
 import {ColumnHandleLeftPipe} from './pipes/column-handle-left.pipe';
 import {LinksListTableBodyComponent} from './table/body/links-list-table-body.component';
 import {DataInputModule} from '../../data-input/data-input.module';
 import {LinksListTableRowComponent} from './table/body/row/links-list-table-row.component';
 import {InputModule} from '../../input/input.module';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {LinksListHeaderMenuComponent} from './table/header/menu/links-list-header-menu.component';
 import {ContextMenuModule} from 'ngx-contextmenu';
 import {AttributeTypeModalModule} from '../../modal/attribute-type/attribute-type-modal.module';
@@ -40,6 +39,7 @@ import {AttributeFunctionModalModule} from '../../modal/attribute-function/attri
 import {DocumentHintsModule} from '../../document-hints/document-hints.module';
 import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
 import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
+import {DirectivesModule} from '../../directives/directives.module';
 
 @NgModule({
   declarations: [
@@ -61,7 +61,7 @@ import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
     DragDropModule,
     DataInputModule,
     InputModule,
-    ClickOutsideModule,
+    DirectivesModule,
     ContextMenuModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,

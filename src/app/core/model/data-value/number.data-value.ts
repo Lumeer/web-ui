@@ -203,7 +203,7 @@ function parseNumbroConfig(
     numbroConfig.spaceSeparated = true;
   }
   if (overrideConfig?.currency || config.currency) {
-    numbroConfig.spaceSeparatedCurrency = numbro.languageData().currencyFormat.spaceSeparatedCurrency;
+    numbroConfig.spaceSeparatedCurrency = numbro.languageData().currencyFormat.spaceSeparatedCurrency || false;
   }
   numbroConfig.average = overrideConfig?.compact || config.compact || false;
 

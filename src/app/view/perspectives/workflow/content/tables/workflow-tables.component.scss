@@ -1,0 +1,12 @@
+@import 'src/styles/variables';
+
+.resizer {
+  height: 15px;
+  background: $gray-200;
+  cursor: ns-resize;
+  margin-bottom: 10px;
+
+  i {
+    color: $gray-400;
+  }
+}

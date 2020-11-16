@@ -31,15 +31,12 @@ export function isCollectionAttributeEditable(
   permissions: AllowedPermissions,
   query?: Query
 ): boolean {
-  const attribute = attributeId && ((collection && collection.attributes) || []).find(attr => attr.id === attributeId);
+  const attribute = attributeId && (collection?.attributes || []).find(attr => attr.id === attributeId);
   return (
     isAttributeEditable(attribute) &&
-    (canManageByPermissions(permissions) || !isCollectionAttributeLockedByQuery(query, collection, attributeId))
+    permissions?.writeWithView &&
+    !isCollectionAttributeLockedByQuery(query, collection, attributeId)
   );
-}
-
-function canManageByPermissions(permissions: AllowedPermissions): boolean {
-  return permissions && (permissions.manageWithView || permissions.manage);
 }
 
 export function isCollectionAttributeLockedByQuery(query: Query, collection: Collection, attributeId: string): boolean {
@@ -63,10 +60,11 @@ export function isLinkTypeAttributeEditable(
   permissions: AllowedPermissions,
   query?: Query
 ): boolean {
-  const attribute = attributeId && ((linkType && linkType.attributes) || []).find(attr => attr.id === attributeId);
+  const attribute = attributeId && (linkType?.attributes || []).find(attr => attr.id === attributeId);
   return (
     isAttributeEditable(attribute) &&
-    (canManageByPermissions(permissions) || !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId))
+    permissions?.writeWithView &&
+    !isLinkTypeAttributeLockedByQuery(query, linkType, attributeId)
   );
 }
 
@@ -93,8 +91,7 @@ export function isAttributeEditableWithQuery(
   }
 
   return (
-    isAttributeEditable(attribute) &&
-    (canManageByPermissions(permissions) || !isAttributeLockedByFilters(filters, attribute.id))
+    isAttributeEditable(attribute) && permissions?.writeWithView && !isAttributeLockedByFilters(filters, attribute.id)
   );
 }
 

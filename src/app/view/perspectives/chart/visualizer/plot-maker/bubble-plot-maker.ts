@@ -22,16 +22,17 @@ import {ChartAxisType} from '../../../../../core/store/charts/chart';
 import {ChartDataSet, ChartPoint} from '../../data/convertor/chart-data';
 import {TwoDAxisPlotMaker} from './two-d-axis-plot-maker';
 import {isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
+import {PlotlyChartData} from './plot-maker';
 
 const MIN_POINT_SIZE = 20;
 const MAX_POINT_SIZE = 60;
 
 export class BubblePlotMaker extends TwoDAxisPlotMaker {
-  public createData(): Data[] {
+  public createData(): PlotlyChartData[] {
     return this.chartData.sets.map(set => this.createAxisData(set));
   }
 
-  private createAxisData(set: ChartDataSet): Data {
+  private createAxisData(set: ChartDataSet): PlotlyChartData {
     const traceX = [];
     const traceY = [];
     const colors = [];
@@ -85,11 +86,11 @@ export class BubblePlotMaker extends TwoDAxisPlotMaker {
     return d3.scale.linear().domain([minimum, maximum]).range([MIN_POINT_SIZE, MAX_POINT_SIZE]);
   }
 
-  private axis1DataStyle(set: ChartDataSet): Data {
+  private axis1DataStyle(set: ChartDataSet): PlotlyChartData {
     return this.getDefaultDataStyle(set);
   }
 
-  private axis2DataStyle(set: ChartDataSet): Data {
+  private axis2DataStyle(set: ChartDataSet): PlotlyChartData {
     return {
       ...this.getDefaultDataStyle(set),
       yaxis: 'y2',
@@ -97,7 +98,7 @@ export class BubblePlotMaker extends TwoDAxisPlotMaker {
     };
   }
 
-  private getDefaultDataStyle(set: ChartDataSet): Data {
+  private getDefaultDataStyle(set: ChartDataSet): PlotlyChartData {
     return {
       mode: 'markers' as const,
       type: 'scatter' as const,

@@ -25,7 +25,6 @@ import {DataInputModule} from '../data-input/data-input.module';
 import {DocumentDetailHeaderComponent} from './data-resource-detail/header/document-detail-header.component';
 import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
-import {ClickOutsideModule} from 'ng-click-outside';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {DefaultDataRowPipe} from './data-resource-detail/header/default-data-row.pipe';
 import {PresenterModule} from '../presenter/presenter.module';
@@ -33,6 +32,7 @@ import {DataResourceDataComponent} from './data-resource-detail/data/data-resour
 import {DataResourceDetailComponent} from './data-resource-detail/data-resource-detail.component';
 import {DataResourceDataRowIconsComponent} from './data-resource-detail/data/row/icons/data-resource-data-row-icons.component';
 import {DataResourceDataRowComponent} from './data-resource-detail/data/row/data-resource-data-row.component';
+import {DirectivesModule} from '../directives/directives.module';
 
 @NgModule({
   imports: [
@@ -40,7 +40,7 @@ import {DataResourceDataRowComponent} from './data-resource-detail/data/row/data
     DataInputModule,
     InputModule,
     PipesModule,
-    ClickOutsideModule,
+    DirectivesModule,
     ColorPickerModule,
     InputModule,
     AttributeTypeModalModule,
