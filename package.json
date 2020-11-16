@@ -54,7 +54,7 @@
     "@angular/router": "^10.2.3",
     "@fullcalendar/angular": "^5.3.1",
     "@fullcalendar/core": "^5.3.1",
-    "@fullcalendar/daygrid": "^5.3.2",
+    "@fullcalendar/daygrid": "^5.4.0",
     "@fullcalendar/interaction": "^5.3.1",
     "@fullcalendar/list": "^5.3.1",
     "@fullcalendar/resource-timegrid": "^5.3.1",
