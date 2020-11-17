@@ -35,8 +35,8 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {PivotDataConverter} from '../util/pivot-data-converter';
 import {PivotConfig} from '../../../../core/store/pivots/pivot';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {debounceTime, filter, map} from 'rxjs/operators';
+import {asyncScheduler, BehaviorSubject, Observable} from 'rxjs';
+import {filter, map, throttleTime} from 'rxjs/operators';
 import {PivotData} from '../util/pivot-data';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
@@ -89,6 +89,9 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   @Input()
   public sidebarOpened: boolean;
 
+  @Input()
+  public dataLoaded: boolean;
+
   @Output()
   public configChange = new EventEmitter<PivotConfig>();
 
@@ -118,21 +121,17 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   }
 
   public ngOnInit() {
-    this.pivotData$ = this.dataSubject.pipe(
-      filter(data => !!data),
-      debounceTime(100),
+    const observable = this.dataSubject.pipe(filter(data => !!data));
+
+    this.pivotData$ = observable.pipe(
+      throttleTime(200, asyncScheduler, {trailing: true, leading: true}),
       map(data => this.handleData(data))
     );
   }
 
   private handleData(data: Data): PivotData {
-    const config = checkOrTransformPivotConfig(data.config, data.query, data.collections, data.linkTypes);
-    if (!deepObjectsEquals(data.config, config)) {
-      this.configChange.next(config);
-    }
-
     return this.pivotTransformer.transform(
-      config,
+      data.config,
       data.collections,
       data.documents,
       data.linkTypes,
@@ -143,15 +142,40 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    this.dataSubject.next({
-      documents: this.documents,
-      config: this.config,
-      collections: this.collections,
-      linkTypes: this.linkTypes,
-      linkInstances: this.linkInstances,
-      query: this.query,
-      constraintData: this.constraintData,
-    });
+    this.checkConfig(changes);
+    this.checkData(changes);
+  }
+
+  private checkConfig(changes: SimpleChanges) {
+    if (changes.config || changes.query || changes.collections || changes.linkTypes) {
+      const previousConfig = {...this.config};
+      this.config = checkOrTransformPivotConfig(this.config, this.query, this.collections, this.linkTypes);
+      if (!deepObjectsEquals(previousConfig, this.config)) {
+        this.configChange.emit(this.config);
+      }
+    }
+  }
+
+  private checkData(changes: SimpleChanges) {
+    if (
+      changes.documents ||
+      changes.config ||
+      changes.collections ||
+      changes.linkTypes ||
+      changes.linkInstances ||
+      changes.query ||
+      changes.constraintData
+    ) {
+      this.dataSubject.next({
+        documents: this.documents,
+        config: this.config,
+        collections: this.collections,
+        linkTypes: this.linkTypes,
+        linkInstances: this.linkInstances,
+        query: this.query,
+        constraintData: this.constraintData,
+      });
+    }
   }
 
   public onConfigChange(config: PivotConfig) {

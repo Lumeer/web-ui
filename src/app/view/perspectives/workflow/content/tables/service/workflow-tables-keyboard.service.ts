@@ -21,7 +21,7 @@ import {Injectable} from '@angular/core';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
 import {KeyCode} from '../../../../../../shared/key-code';
 import {preventEvent} from '../../../../../../shared/utils/common.utils';
-import {TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
+import {TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
 import {tableHasNewRowPresented} from '../../../../../../shared/table/model/table-utils';
 
 @Injectable()
@@ -103,12 +103,7 @@ export class WorkflowTablesKeyboardService {
   private onTabKeyDown(event: KeyboardEvent) {
     if (this.isEditing()) {
       preventEvent(event);
-      const {tableIndex, rowIndex, columnIndex, type} = this.stateService.getCellIndexes(this.stateService.editedCell);
-      if (event.shiftKey) {
-        this.stateService.selectCell(tableIndex, rowIndex, columnIndex - 1, type);
-      } else {
-        this.stateService.selectCell(tableIndex, rowIndex, columnIndex + 1, type);
-      }
+      this.handleArrowKeyDown(event, this.stateService.editedCell);
       this.stateService.resetEditedCell();
     } else if (this.isSelected()) {
       preventEvent(event);
@@ -126,31 +121,34 @@ export class WorkflowTablesKeyboardService {
     ) {
       return;
     }
+    this.handleArrowKeyDown(event, this.stateService.selectedCell);
+  }
+
+  private handleArrowKeyDown(event: KeyboardEvent, cell: TableCell) {
     preventEvent(event);
 
-    const {tableIndex, rowIndex, columnIndex} = this.stateService.getCellIndexes(this.stateService.selectedCell);
+    const {tableIndex, rowIndex, columnIndex} = this.stateService.getCellIndexes(cell);
     const table = this.tables[tableIndex];
     const arrowLeftIndex = firstNonHiddenColumnIndex(table, 0, columnIndex - 1, true);
     const arrowRightIndex = firstNonHiddenColumnIndex(table, columnIndex + 1, table.columns.length);
-    const cellType = this.stateService.selectedCell.type;
     switch (event.code) {
       case KeyCode.ArrowUp:
-        this.onArrowUp(cellType, tableIndex, columnIndex, rowIndex);
+        this.onArrowUp(cell.type, tableIndex, columnIndex, rowIndex);
         break;
       case KeyCode.ArrowDown:
-        this.onArrowDown(cellType, tableIndex, columnIndex, rowIndex);
+        this.onArrowDown(cell.type, tableIndex, columnIndex, rowIndex);
         break;
       case KeyCode.ArrowLeft:
-        this.stateService.selectCell(tableIndex, rowIndex, arrowLeftIndex, cellType);
+        this.stateService.selectCell(tableIndex, rowIndex, arrowLeftIndex, cell.type);
         break;
       case KeyCode.ArrowRight:
-        this.stateService.selectCell(tableIndex, rowIndex, arrowRightIndex, cellType);
+        this.stateService.selectCell(tableIndex, rowIndex, arrowRightIndex, cell.type);
         break;
       case KeyCode.Tab:
         if (event.shiftKey) {
-          this.stateService.selectCell(tableIndex, rowIndex, arrowLeftIndex, cellType);
+          this.stateService.selectCell(tableIndex, rowIndex, arrowLeftIndex, cell.type);
         } else {
-          this.stateService.selectCell(tableIndex, rowIndex, arrowRightIndex, cellType);
+          this.stateService.selectCell(tableIndex, rowIndex, arrowRightIndex, cell.type);
         }
         break;
     }

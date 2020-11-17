@@ -65,6 +65,7 @@ import {
 import {SelectItemWithConstraintFormatter} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {
   AggregatedArrayData,
+  AggregatedDataItem,
   DataAggregator,
   DataAggregatorAttribute,
 } from '../../../../../../shared/utils/data/data-aggregator';
@@ -100,6 +101,7 @@ import {
   PendingRowUpdate,
   createRowValues,
   isWorkflowStemConfigGroupedByResourceType,
+  createAggregatorAttributes,
 } from './workflow-utils';
 import {selectLinkInstanceById} from '../../../../../../core/store/link-instances/link-instances.state';
 import {getOtherDocumentIdFromLinkInstance} from '../../../../../../core/store/link-instances/link-instance.utils';
@@ -405,34 +407,27 @@ export class WorkflowTablesDataService {
   }
 
   private aggregateData(stemConfig: WorkflowStemConfig, attribute: Attribute): AggregatedArrayData {
-    const aggregatorAttributes = [];
-    if (attribute) {
-      const rowAttribute: DataAggregatorAttribute = {
-        resourceIndex: stemConfig.attribute.resourceIndex,
-        attributeId: attribute.id,
-        data: stemConfig.attribute.constraint,
-      };
+    const aggregatorAttributes = createAggregatorAttributes(stemConfig, attribute);
+    const aggregatedData = this.dataAggregator.aggregateArray(aggregatorAttributes, []);
+    if (aggregatedData.levels > 2) {
+      // tables creation expect only two levels so we need to merge additional levels
+      const items: AggregatedDataItem[] = [];
+      for (const item of aggregatedData.items) {
+        const children = item.children.reduce((array, child) => {
+          const nextChild = child.children?.[0];
+          const dataResourcesChains = child.dataResourcesChains.map((chain, index) => [
+            ...chain,
+            ...(nextChild?.dataResourcesChains?.[index] || []),
+          ]);
+          array.push({...(nextChild || child), dataResourcesChains});
+          return array;
+        }, []);
+        items.push({...item, children, dataResourcesChains: []});
+      }
 
-      aggregatorAttributes.push(rowAttribute);
-    } else if (stemConfig.collection?.resourceIndex > 0) {
-      // is linked collection
-      const rowAttribute: DataAggregatorAttribute = {
-        resourceIndex: stemConfig.collection.resourceIndex - 1,
-        attributeId: null,
-      };
-
-      aggregatorAttributes.push(rowAttribute);
+      return {items, levels: 2};
     }
-    const valueAttribute: DataAggregatorAttribute = {
-      resourceIndex: stemConfig.collection.resourceIndex,
-      attributeId: null,
-    };
-    aggregatorAttributes.push(valueAttribute);
-    if (aggregatorAttributes.length === 1) {
-      aggregatorAttributes.push(valueAttribute);
-    }
-
-    return this.dataAggregator.aggregateArray(aggregatorAttributes, []);
+    return aggregatedData;
   }
 
   private checkOverrideConstraint(attribute: Attribute, workflowAttribute: QueryAttribute): Constraint {

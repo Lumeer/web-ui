@@ -5,8 +5,7 @@ $typography: mat-typography-config(
   $font-family: 'LatoWeb, sans-serif',
 );
 
-@include angular-material-typography($typography);
-@include mat-core();
+@include mat-core($typography);
 
 $primary-palette: (
   50: #e5e7e9,

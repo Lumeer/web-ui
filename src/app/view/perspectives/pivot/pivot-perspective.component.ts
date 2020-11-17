@@ -26,7 +26,16 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {selectQuery} from '../../../core/store/navigation/navigation.state';
-import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
+import {
+  distinctUntilChanged,
+  map,
+  mergeMap,
+  pairwise,
+  startWith,
+  switchMap,
+  take,
+  withLatestFrom,
+} from 'rxjs/operators';
 import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
 import {selectPivotById, selectPivotConfig, selectPivotId} from '../../../core/store/pivots/pivots.state';
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
@@ -45,6 +54,8 @@ import {checkOrTransformPivotConfig} from './util/pivot-util';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
+import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
+import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 
 @Component({
   selector: 'pivot-perspective',
@@ -56,6 +67,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<PivotConfig>;
   public currentView$: Observable<View>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
+  public dataLoaded$: Observable<boolean>;
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
   public query$ = new BehaviorSubject<Query>(null);
@@ -148,6 +160,13 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
+    this.dataLoaded$ = combineLatest([
+      this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
+      this.store$.pipe(select(selectCurrentQueryLinkInstancesLoaded)),
+    ]).pipe(
+      map(loaded => loaded.every(load => load)),
+      distinctUntilChanged()
+    );
   }
 
   public onConfigChange(config: PivotConfig) {

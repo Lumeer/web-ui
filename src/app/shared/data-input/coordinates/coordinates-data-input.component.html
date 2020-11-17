@@ -1,16 +1,8 @@
-<input *ngIf="readonly"
+<input #coordinatesInput
        [readonly]="readonly"
        [title]="value | formatDataValueTitle"
-       [value]="value | formatDataValue | unescapeHtml"
-       [class.invalid-value]="!(value | isDataValueValid)"
-       [ngClass]="inputClass"
-       class="border-0 w-100 h-100 px-1 bg-transparent"
-       type="text">
-
-<input *ngIf="!readonly"
-       #coordinatesInput
-       [title]="value | formatDataValueTitle"
-       [value]="value | formatDataValueForEdit"
+       [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
+       [class.invalid-value]="!configuration?.skipValidation && !(value | isDataValueValid)"
        (blur)="onBlur()"
        (focus)="onFocus()"
        (input)="onInput($event)"

@@ -136,8 +136,10 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
     this.keyDownListener = null;
   }
 
-  public onInput() {
-    const dataValue = this.value.parseInput(this.text);
+  public onInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    this.text = element.value;
+    const dataValue = this.value.parseInput(element.value);
     this.refreshValid(dataValue);
     this.valueChange.emit(dataValue);
   }

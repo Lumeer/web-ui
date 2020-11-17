@@ -1,19 +1,11 @@
-<input *ngIf="readonly"
+<input #durationInput
        [title]="value | formatDataValueTitle"
-       [value]="value | formatDataValue | unescapeHtml"
+       [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
        type="text"
        class="border-0 w-100 h-100 px-1 bg-transparent"
-       [class.invalid-value]="!valid"
-       [ngClass]="inputClass"
-       readonly>
-
-<input *ngIf="!readonly"
-       #durationInput
-       [title]="value | formatDataValueTitle"
-       [value]="value | formatDataValueForEdit"
        (blur)="onBlur()"
        (focus)="onFocus()"
        (input)="onInput($event)"
-       type="text"
-       class="border-0 w-100 h-100 px-1 {{inputClass}}"
-       [ngClass]="valid || configuration?.skipValidation ? 'bg-transparent' : 'bg-danger-light'">
+       [readonly]="readonly"
+       [class.invalid-value]="!configuration?.skipValidation && !valid"
+       [ngClass]="readonly || valid || configuration?.skipValidation ? 'bg-transparent ' + inputClass : 'bg-danger-light ' + inputClass">

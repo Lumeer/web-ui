@@ -7,5 +7,5 @@
        (focus)="onFocus()"
        (input)="onInput($event)"
        [class.invalid-value]="!configuration?.skipValidation && !valid"
-       [ngClass]="readonly || valid || configuration?.skipValidation ? 'bg-transparent ' + inputClass : 'bg-danger-light' + inputClass"
+       [ngClass]="readonly || valid || configuration?.skipValidation ? 'bg-transparent ' + inputClass : 'bg-danger-light ' + inputClass"
        [readonly]="readonly">
