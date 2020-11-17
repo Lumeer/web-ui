@@ -23,6 +23,7 @@ import {AllowedPermissions, mergeAllowedPermissions} from './allowed-permissions
 import {LinkType} from '../store/link-types/link.type';
 import {Attribute, Collection} from '../store/collections/collection';
 import {findAttribute} from '../store/collections/collection.util';
+import {deepObjectsEquals} from '../../shared/utils/common.utils';
 
 export interface QueryResource {
   resourceId: string;
@@ -33,6 +34,18 @@ export interface QueryResource {
 export interface QueryAttribute extends QueryResource {
   attributeId: string;
   constraint?: Constraint;
+}
+
+export function queryResourcesAreSame(a1: QueryResource, a2: QueryResource): boolean {
+  return (
+    a1?.resourceId === a2?.resourceId &&
+    a1?.resourceIndex === a2?.resourceIndex &&
+    a1?.resourceType === a2?.resourceType
+  );
+}
+
+export function queryAttributesAreSame(a1: QueryAttribute, a2: QueryAttribute): boolean {
+  return deepObjectsEquals(cleanQueryAttribute(a1), cleanQueryAttribute(a2));
 }
 
 export function cleanQueryAttribute(attribute: QueryAttribute): QueryAttribute {

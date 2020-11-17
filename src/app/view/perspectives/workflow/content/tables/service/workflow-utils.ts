@@ -31,10 +31,12 @@ import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {ViewSettings} from '../../../../../../core/store/views/view';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
+import {WorkflowTable} from '../../../model/workflow-table';
+import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 
 export interface PendingRowUpdate {
   row?: TableRow;
@@ -287,4 +289,25 @@ export function isWorkflowStemConfigGroupedByResourceType(
       : Math.abs(stemConfig.attribute.resourceIndex - stemConfig.collection.resourceIndex) === 1;
   }
   return false;
+}
+
+export function sortWorkflowTables(
+  tables: WorkflowTable[],
+  config: WorkflowStemConfig,
+  settings: ViewSettings
+): WorkflowTable[] {
+  if (config.attribute) {
+    const attributeSettings = resourceAttributeSettings(
+      settings,
+      config.attribute.attributeId,
+      config.attribute.resourceId,
+      config.attribute.resourceType
+    );
+    if (attributeSettings?.sort) {
+      const ascending = attributeSettings.sort === AttributeSortType.Ascending;
+      return tables.sort((a, b) => a.title?.dataValue?.compareTo(b.title?.dataValue) * (ascending ? 1 : -1));
+    }
+  }
+
+  return tables;
 }

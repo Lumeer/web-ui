@@ -50,7 +50,10 @@ import {
   isCollectionAttributeEditable,
   isLinkTypeAttributeEditable,
 } from '../../../../../../core/store/collections/collection.util';
-import {createAttributesSettingsOrder} from '../../../../../../shared/settings/settings.util';
+import {
+  createAttributesSettingsOrder,
+  resourceAttributeSettings,
+} from '../../../../../../shared/settings/settings.util';
 import {WorkflowTablesMenuService} from './workflow-tables-menu.service';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
@@ -102,11 +105,13 @@ import {
   createRowValues,
   isWorkflowStemConfigGroupedByResourceType,
   createAggregatorAttributes,
+  sortWorkflowTables,
 } from './workflow-utils';
 import {selectLinkInstanceById} from '../../../../../../core/store/link-instances/link-instances.state';
 import {getOtherDocumentIdFromLinkInstance} from '../../../../../../core/store/link-instances/link-instance.utils';
 import {Observable} from 'rxjs';
 import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
+import {settings} from 'cluster';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -289,6 +294,7 @@ export class WorkflowTablesDataService {
         const linkingCollectionId = createLinkingCollectionId(stemConfig, collections, linkTypesMap);
         const newRowData = this.createNewRowData(collection, linkType, columnIdsMap, linkColumnIdsMap);
 
+        const tables = [];
         if (aggregatedData.items.length) {
           for (const aggregatedDataItem of aggregatedData.items) {
             const title = aggregatedDataItem.value?.toString() || '';
@@ -345,7 +351,7 @@ export class WorkflowTablesDataService {
                   !linkingCollectionId && createAggregatedLinkingDocumentsIds(aggregatedDataItem, childItem),
                 linkingCollectionId,
               };
-              result.tables.push(workflowTable);
+              tables.push(workflowTable);
             }
           }
         } else {
@@ -378,9 +384,10 @@ export class WorkflowTablesDataService {
             newRowData,
             linkingCollectionId,
           };
-          result.tables.push(workflowTable);
+          tables.push(workflowTable);
         }
 
+        result.tables.push(...sortWorkflowTables(tables, stemConfig, viewSettings));
         result.actions.push(...linkActions);
         result.actions.push(...collectionActions);
         return result;
@@ -500,7 +507,7 @@ export class WorkflowTablesDataService {
     resourceType: AttributesResourceType,
     permissions: AllowedPermissions,
     query: Query,
-    settings: ResourceAttributeSettings[],
+    attributeSettings: ResourceAttributeSettings[],
     columnsSettings: WorkflowColumnSettings[],
     otherPermissions?: AllowedPermissions
   ): {columns: TableColumn[]; actions: Action[]} {
@@ -516,50 +523,49 @@ export class WorkflowTablesDataService {
     const mappedUncreatedColumns: Record<string, TableColumn> = {};
 
     const color = isCollection ? (<Collection>resource).color : null;
-    const attributeColumns = createAttributesSettingsOrder(resource.attributes, settings).reduce<TableColumn[]>(
-      (columns, setting) => {
-        const attribute = findAttribute(resource.attributes, setting.attributeId);
-        const editable = isCollection
-          ? isCollectionAttributeEditable(attribute.id, resource, permissions, query)
-          : isLinkTypeAttributeEditable(attribute.id, <LinkType>resource, permissions, query);
-        const columnResourceId = (col: TableColumn) => (isCollection ? col.collectionId : col.linkTypeId);
-        const columnByAttribute = currentColumns.find(
-          col => columnResourceId(col) === resource.id && col.attribute?.id === attribute.id
+    const attributeColumns = createAttributesSettingsOrder(resource.attributes, attributeSettings).reduce<
+      TableColumn[]
+    >((columns, setting) => {
+      const attribute = findAttribute(resource.attributes, setting.attributeId);
+      const editable = isCollection
+        ? isCollectionAttributeEditable(attribute.id, resource, permissions, query)
+        : isLinkTypeAttributeEditable(attribute.id, <LinkType>resource, permissions, query);
+      const columnResourceId = (col: TableColumn) => (isCollection ? col.collectionId : col.linkTypeId);
+      const columnByAttribute = currentColumns.find(
+        col => columnResourceId(col) === resource.id && col.attribute?.id === attribute.id
+      );
+      let columnByName;
+      if (!columnByAttribute) {
+        // this is our created attribute and we know that attribute name is unique
+        columnByName = currentColumns.find(
+          col => columnResourceId(col) === resource.id && !col.attribute && col.name === attribute.name
         );
-        let columnByName;
-        if (!columnByAttribute) {
-          // this is our created attribute and we know that attribute name is unique
-          columnByName = currentColumns.find(
-            col => columnResourceId(col) === resource.id && !col.attribute && col.name === attribute.name
-          );
-        }
-        const currentColumn = columnByAttribute || columnByName;
-        const columnSettings = columnSettingsMap[attribute.id];
-        const column: TableColumn = {
-          id: currentColumn?.id || generateId(),
-          attribute,
-          editable,
-          width: columnSettings?.width || TABLE_COLUMN_WIDTH,
-          collectionId: isCollection ? resource.id : null,
-          linkTypeId: isCollection ? null : resource.id,
-          color,
-          default: attribute.id === defaultAttributeId,
-          hidden: setting.hidden,
-          manageable: permissions?.manageWithView,
-          sort: setting.sort,
-          menuItems: [],
-        };
-        column.menuItems.push(...this.menuService.createHeaderMenu(permissions, column, true, otherPermissions));
-        if (columnByName) {
-          mappedUncreatedColumns[column.id] = column;
-          return columns;
-        }
-
-        columns.push(column);
+      }
+      const currentColumn = columnByAttribute || columnByName;
+      const columnSettings = columnSettingsMap[attribute.id];
+      const column: TableColumn = {
+        id: currentColumn?.id || generateId(),
+        attribute,
+        editable,
+        width: columnSettings?.width || TABLE_COLUMN_WIDTH,
+        collectionId: isCollection ? resource.id : null,
+        linkTypeId: isCollection ? null : resource.id,
+        color,
+        default: attribute.id === defaultAttributeId,
+        hidden: setting.hidden,
+        manageable: permissions?.manageWithView,
+        sort: setting.sort,
+        menuItems: [],
+      };
+      column.menuItems.push(...this.menuService.createHeaderMenu(permissions, column, true, otherPermissions));
+      if (columnByName) {
+        mappedUncreatedColumns[column.id] = column;
         return columns;
-      },
-      []
-    );
+      }
+
+      columns.push(column);
+      return columns;
+    }, []);
 
     const syncActions = [];
     const columnNames = (resource.attributes || []).map(attribute => attribute.name);

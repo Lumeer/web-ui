@@ -17,18 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnChanges, SimpleChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
-import {QueryAttribute} from '../../../../../../core/model/query-attribute';
+import {
+  QueryAttribute,
+  queryAttributesAreSame,
+  queryResourcesAreSame,
+} from '../../../../../../core/model/query-attribute';
 import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
-import {AttributesResource} from '../../../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
 import {Constraint} from '../../../../../../core/model/constraint';
 import {SelectItem2Model} from '../../../../../../shared/select/select-item2/select-item2.model';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
+import {AppState} from '../../../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
+import {ViewSettingsAction} from '../../../../../../core/store/view-settings/view-settings.action';
+import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 
 @Component({
   selector: 'workflow-toolbar',
@@ -49,11 +58,16 @@ export class WorkflowToolbarComponent implements OnChanges {
   @Input()
   public linkTypes: LinkType[];
 
+  @Input()
+  public viewSettings: ViewSettings;
+
   @Output()
   public configChange = new EventEmitter<WorkflowStemConfig>();
 
   public attributesResourcesOrder: AttributesResource[];
   public hasAttribute: boolean;
+
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.stem || changes.collections || changes.linkTypes) {
@@ -64,7 +78,9 @@ export class WorkflowToolbarComponent implements OnChanges {
 
   public onResourceSelected(items: [SelectItem2Model]) {
     const resource = items?.[0]?.id;
-    this.onConfigChange({...this.config, collection: resource});
+    if (!queryResourcesAreSame(resource, this.config?.collection)) {
+      this.onConfigChange({...this.config, collection: resource});
+    }
   }
 
   public onAttributeSelected(data: {id: SelectItemWithConstraintId; constraint?: Constraint}) {
@@ -80,14 +96,48 @@ export class WorkflowToolbarComponent implements OnChanges {
         constraint: data.constraint,
       };
 
+      const previousAttribute = {...this.config?.attribute};
       this.onConfigChange({...this.config, attribute: selection});
+      this.setAttributeSort(resource, resourceType, attributeId, AttributeSortType.Ascending);
+      if (previousAttribute && !queryAttributesAreSame(selection, previousAttribute)) {
+        this.removeAttributeSort(previousAttribute.attributeId, previousAttribute.resourceIndex);
+      }
     }
   }
 
   public onAttributeRemoved() {
-    const configCopy = {...this.config};
-    delete configCopy.attribute;
-    this.onConfigChange(configCopy);
+    if (this.config.attribute) {
+      const {attributeId, resourceIndex} = this.config.attribute;
+      const configCopy = {...this.config};
+      delete configCopy.attribute;
+      this.onConfigChange(configCopy);
+      this.removeAttributeSort(attributeId, resourceIndex);
+    }
+  }
+
+  private removeAttributeSort(attributeId: string, resourceIndex: number) {
+    const resource = (this.attributesResourcesOrder || [])[resourceIndex];
+    const resourceType = getAttributesResourceType(resource);
+    this.setAttributeSort(resource, resourceType, attributeId, undefined);
+  }
+
+  private setAttributeSort(
+    resource: AttributesResource,
+    resourceType: AttributesResourceType,
+    attributeId: string,
+    sort: AttributeSortType
+  ) {
+    const attributeSettings = resourceAttributeSettings(this.viewSettings, attributeId, resource?.id, resourceType);
+    if ((!sort && attributeSettings?.sort) || (sort && !attributeSettings?.sort)) {
+      this.store$.dispatch(
+        new ViewSettingsAction.SetAttribute({
+          attributeId,
+          collection: resourceType === AttributesResourceType.Collection ? resource : undefined,
+          linkType: resourceType === AttributesResourceType.LinkType ? <LinkType>resource : undefined,
+          settings: {sort},
+        })
+      );
+    }
   }
 
   private onConfigChange(config: WorkflowStemConfig) {

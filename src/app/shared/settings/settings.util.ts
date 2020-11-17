@@ -177,3 +177,18 @@ export function addAttributeToSettings(
     return attributesSettings;
   });
 }
+
+export function resourceAttributeSettings(
+  viewSettings: ViewSettings,
+  attributeId: string,
+  resourceId: string,
+  resourceType: AttributesResourceType
+): ResourceAttributeSettings {
+  let settings: ResourceAttributeSettings[];
+  if (resourceType === AttributesResourceType.LinkType) {
+    settings = viewSettings?.attributes?.linkTypes?.[resourceId];
+  } else {
+    settings = viewSettings?.attributes?.collections?.[resourceId];
+  }
+  return settings?.find(setting => setting.attributeId === attributeId);
+}

@@ -18,12 +18,10 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {CalendarBar, CalendarStemConfig} from '../../../../core/store/calendars/calendar';
-import {Attribute, Collection} from '../../../../core/store/collections/collection';
+import {CalendarStemConfig} from '../../../../core/store/calendars/calendar';
 import {SelectItemModel} from '../../../../shared/select/select-item/select-item.model';
 import {GanttChartBarModel, GanttChartStemConfig} from '../../../../core/store/gantt-charts/gantt-chart';
-import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
-import {cleanQueryAttribute} from '../../../../core/model/query-attribute';
+import {queryAttributesAreSame} from '../../../../core/model/query-attribute';
 
 const sameCollectionProperties = ['start', 'end'];
 
@@ -57,9 +55,7 @@ export class CalendarPropertyItemsPipe implements PipeTransform {
         const model = item.id as GanttChartBarModel;
         return (
           allowedResourceIndexes.includes(model.resourceIndex) &&
-          !sameCollectionModels.some(definedModel =>
-            deepObjectsEquals(cleanQueryAttribute(definedModel), cleanQueryAttribute(model))
-          )
+          !sameCollectionModels.some(definedModel => queryAttributesAreSame(definedModel, model))
         );
       });
     }
