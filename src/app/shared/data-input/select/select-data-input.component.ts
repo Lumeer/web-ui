@@ -106,7 +106,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.dropdownOptions = this.createDropdownOptions(this.value.config);
       this.selectedOptions = this.value.options;
       this.text = this.value.inputValue || '';
-      this.multi = this.value.config && this.value.config.multi;
+      this.multi = this.value.config?.multi;
     }
   }
 

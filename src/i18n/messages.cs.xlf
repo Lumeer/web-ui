@@ -2897,7 +2897,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/pivot-config.component.html</context><context context-type="linenumber">107</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.title" datatype="html">
         <source>Cannot display anything</source><target>Nemohu nic zobrazit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="perspective.pivot.table.empty.description" datatype="html">
         <source>
       Please make sure your query results in some data (by switching to the Detail view for example).
       Also check your pivot table configuration in the sidebar on the left.
@@ -2906,7 +2906,7 @@
     Také prověřte nastavení pivot tabulky v panelu vlevo.
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/table/pivot-table.component.html</context><context context-type="linenumber">44</context></context-group></trans-unit><trans-unit id="perspective.pivot.config.valueAggregation" datatype="html">
         <source>Select value aggregation</source><target>Zvolte způsob agregace hodnot</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/kanban/content/config/stem/aggregation/kanban-aggregation-config.component.html</context><context context-type="linenumber">4</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/pivot/wrapper/config/stem-config/attribute/value/pivot-value-attribute-config.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="perspective.kanban.config.valueAbsOrRel" datatype="html">
@@ -3503,23 +3503,20 @@
                 <source>Remove Record</source>
                 <target>Smazat záznam</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="link.detail.unlink" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="link.detail.unlink" datatype="html">
         <source>Unlink</source><target>Odpojit</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-      </trans-unit>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit>
             <trans-unit id="document.detail.favorite.remove" datatype="html">
                 <source>Remove from favorites</source>
                 <target>Odebrat z oblíbených</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">37</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit>
             <trans-unit id="document.detail.favorite.add" datatype="html">
                 <source>Add to favorites</source>
                 <target>Přidat k oblíbeným</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit>
 
 
 
@@ -4671,7 +4668,7 @@
         <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="agreement.welcome.newsletterCheck" datatype="html">
-        <source>By skipping the newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</source><target>Vynecháním odběru novinek přijdete o spoustu cenných informací, elektronických knih a příruček zdarma. Skutečně chcete pokračovat?</target>
+        <source>By skipping the Newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</source><target>Vynecháním odběru novinek přijdete o spoustu cenných informací, elektronických knih a příruček zdarma. Skutečně chcete pokračovat?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
           <context context-type="linenumber">8</context>
@@ -4757,9 +4754,16 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source><target>Roztáhnout tabulku</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
+        <source>
+    There are no rows to display and you are not allowed to create any.
+  </source><target>
+    Nejsou žádné řádky k zobrazení a nemáte ani právo je vytvářet.
+  </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.workflow.toolbar.groupBy" datatype="html">
         <source>Group By</source><target>Seskupit podle</target>
@@ -5019,14 +5023,14 @@
         <source>Created on <x id="INTERPOLATION" equiv-text="{{dataResource.creationDate | date : 'mediumDate'}}"/>
         by <x id="INTERPOLATION_1" equiv-text="{{createdBy$ | async}}"/></source><target>Vytvořeno <x id="INTERPOLATION" equiv-text="{{document.creationDate | date : 'mediumDate'}}"/> uživatelem <x id="INTERPOLATION_1" equiv-text="{{createdBy$ | async}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="document.detail.modifiedBy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="document.detail.modifiedBy" datatype="html">
         <source><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>Last modified on <x id="INTERPOLATION" equiv-text="{{dataResource.updateDate | date : 'mediumDate'}}"/>
         by <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></source><target><x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/>Naposledy změněno <x id="INTERPOLATION" equiv-text="{{document.updateDate | date : 'mediumDate'}}"/> uživatelem <x id="INTERPOLATION_1" equiv-text="{{updatedBy$ | async}}"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">24</context></context-group></trans-unit><trans-unit id="document.detail.switch.table" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="document.detail.switch.table" datatype="html">
         <source>Switch to Table perspective</source><target>Přepnout se do Tabulky</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">32</context></context-group></trans-unit><trans-unit id="session.expired.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="session.expired.message" datatype="html">
         <source>
       You have been inactive for <x id="INTERPOLATION" equiv-text="{{sessionTimeout}}"/> minutes and the application logged out for security reasons.
       Click Continue to log in again.

@@ -110,8 +110,8 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     if (changes.value && this.value) {
       this.users = this.bindUsers();
       this.selectedUsers = this.value.users;
-      this.multi = this.value.config && this.value.config.multi;
-      this.name = this.value.format();
+      this.multi = this.value.config?.multi;
+      this.name = this.value.inputValue || '';
     }
   }
 

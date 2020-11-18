@@ -1,32 +1,22 @@
-<input *ngIf="readonly"
-       [attr.maxlength]="value?.config?.maxLength"
+<input #textInput
+       [attr.maxlength]="configuration?.skipValidation ? null : value?.config?.maxLength"
        [readonly]="readonly"
+       [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
        [title]="value | formatDataValueTitle"
-       [value]="value | formatDataValue | unescapeHtml"
+       (blur)="onBlur()"
+       (input)="onInput($event)"
+       (focus)="onFocused()"
        [placeholder]="placeholder || ''"
+       [spellcheck]="false"
        class="border-0 w-100 h-100 px-1 bg-transparent"
-       [class.invalid-value]="!configuration?.skipValidation && !valid"
-       [ngClass]="inputClass"
+       [ngClass]="readonly || valid || configuration?.skipValidation ? 'bg-transparent ' + inputClass : 'bg-danger-light ' + inputClass"
        type="text">
 
-<ng-container *ngIf="!readonly">
-  <input #textInput
-         [(ngModel)]="text"
-         [attr.maxlength]="configuration?.skipValidation ? null : value?.config?.maxLength"
-         (blur)="onBlur()"
-         (ngModelChange)="onInput()"
-         (focus)="onFocused()"
-         [spellcheck]="false"
-         class="border-0 w-100 h-100 px-1 {{inputClass}}"
-         [ngClass]="valid || configuration?.skipValidation ? 'bg-transparent' : 'bg-danger-light'"
-         type="text">
-  <options-dropdown [options]="suggestions | filterDataSuggestions:text"
-                    [showBackdrop]="false"
-                    [closeOnClickOutside]="false"
-                    [origin]="textInput"
-                    [firstItemActive]="text?.length > 0"
-                    (selectOption)="onSelectOption($event)">
-  </options-dropdown>
-
-</ng-container>
-
+<options-dropdown *ngIf="!readonly"
+                  [options]="suggestions | filterDataSuggestions:text"
+                  [showBackdrop]="false"
+                  [closeOnClickOutside]="false"
+                  [origin]="textInput"
+                  [firstItemActive]="text?.length > 0"
+                  (selectOption)="onSelectOption($event)">
+</options-dropdown>

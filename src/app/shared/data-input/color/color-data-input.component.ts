@@ -38,7 +38,6 @@ import {ConstraintType} from '../../../core/model/data/constraint';
 import {COLOR_SUCCESS} from '../../../core/constants';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {HtmlModifier} from '../../utils/html-modifier';
 
 @Component({
   selector: 'color-data-input',
@@ -106,7 +105,7 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   public ngAfterViewChecked() {
     if (this.setFocus) {
       this.setFocusToInput();
-      this.openColorPicker();
+      setTimeout(() => this.openColorPicker());
       this.setFocus = false;
     }
   }
@@ -114,7 +113,8 @@ export class ColorDataInputComponent implements OnChanges, AfterViewChecked {
   public setFocusToInput() {
     if (this.colorInput) {
       const element = this.colorInput.nativeElement;
-      HtmlModifier.setCursorAtTextContentEnd(element);
+      const value = this.value?.format() || '';
+      element.setSelectionRange(value.length, value.length);
       element.focus();
     }
   }

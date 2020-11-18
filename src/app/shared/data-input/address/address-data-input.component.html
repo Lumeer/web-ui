@@ -1,30 +1,20 @@
-<input *ngIf="readonly"
+<input #addressInput
        [readonly]="readonly"
        [title]="value | formatDataValueTitle"
-       [value]="value | formatDataValue | unescapeHtml"
+       [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [ngClass]="inputClass"
+       (focus)="onFocused()"
+       (blur)="onBlur()"
+       (input)="onInput($event)"
        spellcheck="false"
        type="text">
 
-<ng-container *ngIf="!readonly">
-  <input #addressInput
-         [title]="value | formatDataValueTitle"
-         [value]="value | formatDataValueForEdit"
-         (focus)="onFocused()"
-         (blur)="onBlur()"
-         (focus)="onFocus()"
-         (input)="onInput($event)"
-         [ngClass]="inputClass"
-         class="border-0 w-100 h-100 px-1 bg-transparent"
-         spellcheck="false"
-         type="text">
-
-  <options-dropdown [options]="addressOptions$ | async"
-                    [showBackdrop]="false"
-                    [closeOnClickOutside]="false"
-                    [origin]="addressInput"
-                    [minWidth]="250"
-                    (selectOption)="onSelectOption($event)">
-  </options-dropdown>
-</ng-container>
+<options-dropdown *ngIf="!readonly"
+                  [options]="addressOptions$ | async"
+                  [showBackdrop]="false"
+                  [closeOnClickOutside]="false"
+                  [origin]="addressInput"
+                  [minWidth]="250"
+                  (selectOption)="onSelectOption($event)">
+</options-dropdown>

@@ -18,23 +18,25 @@
  */
 
 import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
-import {Collection} from '../../../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
 import {AttributesResourceType} from '../../../../../../core/model/resource';
-import {AggregatedDataItem} from '../../../../../../shared/utils/data/data-aggregator';
+import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
 import {uniqueValues} from '../../../../../../shared/utils/array.utils';
 import {TABLE_ROW_HEIGHT} from '../../../../../../shared/table/model/table-model';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {ViewSettings} from '../../../../../../core/store/views/view';
+import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
 import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
+import {WorkflowTable} from '../../../model/workflow-table';
+import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 
 export interface PendingRowUpdate {
   row?: TableRow;
@@ -116,9 +118,52 @@ export function createLinkTypeData(
 }
 
 export function isLinkedOrGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
-  const isGrouped = stemConfig?.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex;
-  const isLinked = stemConfig.collection?.resourceIndex > 0;
-  return isGrouped || isLinked;
+  return isGroupedConfig(stemConfig) || isLinkedConfig(stemConfig);
+}
+
+function isGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
+  return stemConfig?.attribute && stemConfig.collection.resourceIndex !== stemConfig.attribute.resourceIndex;
+}
+
+function isLinkedConfig(stemConfig: WorkflowStemConfig): boolean {
+  return stemConfig.collection?.resourceIndex > 0;
+}
+
+export function createAggregatorAttributes(
+  stemConfig: WorkflowStemConfig,
+  attribute: Attribute
+): DataAggregatorAttribute[] {
+  const aggregatorAttributes = [];
+  if (attribute) {
+    const rowAttribute: DataAggregatorAttribute = {
+      resourceIndex: stemConfig.attribute.resourceIndex,
+      attributeId: attribute.id,
+      data: stemConfig.attribute.constraint,
+    };
+    aggregatorAttributes.push(rowAttribute);
+  }
+
+  if (isLinkedConfig(stemConfig) && !isGroupedConfig(stemConfig)) {
+    // is linked collection
+    const rowAttribute: DataAggregatorAttribute = {
+      resourceIndex: stemConfig.collection.resourceIndex - 1,
+      attributeId: null,
+    };
+
+    aggregatorAttributes.push(rowAttribute);
+  }
+
+  const valueAttribute: DataAggregatorAttribute = {
+    resourceIndex: stemConfig.collection.resourceIndex,
+    attributeId: null,
+  };
+  aggregatorAttributes.push(valueAttribute);
+
+  if (aggregatorAttributes.length === 1) {
+    aggregatorAttributes.push(valueAttribute);
+  }
+
+  return aggregatorAttributes;
 }
 
 export function createLinkingCollectionId(
@@ -244,4 +289,25 @@ export function isWorkflowStemConfigGroupedByResourceType(
       : Math.abs(stemConfig.attribute.resourceIndex - stemConfig.collection.resourceIndex) === 1;
   }
   return false;
+}
+
+export function sortWorkflowTables(
+  tables: WorkflowTable[],
+  config: WorkflowStemConfig,
+  settings: ViewSettings
+): WorkflowTable[] {
+  if (config.attribute) {
+    const attributeSettings = resourceAttributeSettings(
+      settings,
+      config.attribute.attributeId,
+      config.attribute.resourceId,
+      config.attribute.resourceType
+    );
+    if (attributeSettings?.sort) {
+      const ascending = attributeSettings.sort === AttributeSortType.Ascending;
+      return tables.sort((a, b) => a.title?.dataValue?.compareTo(b.title?.dataValue) * (ascending ? 1 : -1));
+    }
+  }
+
+  return tables;
 }

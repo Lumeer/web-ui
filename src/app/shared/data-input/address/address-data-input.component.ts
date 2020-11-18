@@ -162,6 +162,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   }
 
   public onFocused() {
+    this.addKeyDownListener();
     if (this.dropdown) {
       this.dropdown.open();
     }
@@ -241,9 +242,5 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
   private saveValueOnBlur(value: string) {
     const dataValue = this.value.parseInput(value);
     this.save.emit({action: DataInputSaveAction.Blur, dataValue});
-  }
-
-  public onFocus() {
-    this.addKeyDownListener();
   }
 }

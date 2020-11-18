@@ -39,8 +39,7 @@
 </ng-container>
 
 <ng-template #emptyCells>
-  <empty-state class="w-100"
-               icon="far fa-empty-set">
+  <empty-state *ngIf="dataLoaded" class="w-100" icon="far fa-empty-set">
     <h3 i18n="@@perspective.pivot.table.empty.title">Cannot display anything</h3>
     <div i18n="@@perspective.pivot.table.empty.description">
       Please make sure your query results in some data (by switching to the Detail view for example).

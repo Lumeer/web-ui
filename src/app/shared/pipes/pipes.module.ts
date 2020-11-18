@@ -96,6 +96,7 @@ import {IsNotNullOrUndefinedPipe} from './is-not-null-or-undefined.pipe';
 import {ViewsSelectItemsPipe} from './views-select-items.pipe';
 import {TruncateStringPipe} from './truncate-string.pipe';
 import {ColumnBackgroundPipe} from './collection-column-background.pipe';
+import {IsDateValidPipe} from './is-date-valid.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -175,6 +176,7 @@ import {ColumnBackgroundPipe} from './collection-column-background.pipe';
     ViewsSelectItemsPipe,
     TruncateStringPipe,
     ColumnBackgroundPipe,
+    IsDateValidPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -254,6 +256,7 @@ import {ColumnBackgroundPipe} from './collection-column-background.pipe';
     ViewsSelectItemsPipe,
     TruncateStringPipe,
     ColumnBackgroundPipe,
+    IsDateValidPipe,
   ],
 })
 export class PipesModule {}

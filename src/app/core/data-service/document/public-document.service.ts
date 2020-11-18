@@ -30,6 +30,7 @@ import {Workspace} from '../../store/navigation/workspace';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {selectDocumentById, selectDocumentsByIds} from '../../store/documents/documents.state';
 import {convertDocumentModelToDto} from '../../store/documents/document.converter';
+import {DocumentModel} from '../../store/documents/document.model';
 
 @Injectable()
 export class PublicDocumentService extends BaseService implements DocumentService {
@@ -66,6 +67,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
         ...documentFromStore,
         dataVersion: (documentFromStore.dataVersion || 0) + 1,
         data: {...documentFromStore.data, ...document.data},
+        updateDate: new Date().getTime(),
       }))
     );
   }
@@ -98,7 +100,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     return this.store$.pipe(
       select(selectDocumentById(id)),
       take(1),
-      map(model => model && convertDocumentModelToDto(model))
+      map(model => this.convertDocumentModelToDto(model))
     );
   }
 
@@ -121,7 +123,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
   public getDocuments(documentsIds: string[]): Observable<DocumentDto[]> {
     return this.store$.pipe(
       select(selectDocumentsByIds(documentsIds)),
-      map(documents => documents.map(document => convertDocumentModelToDto(document))),
+      map(documents => documents.map(document => this.convertDocumentModelToDto(document))),
       take(1)
     );
   }
@@ -134,7 +136,7 @@ export class PublicDocumentService extends BaseService implements DocumentServic
     return this.store$.pipe(
       select(selectDocumentsByIds(documentIds)),
       take(1),
-      map(documents => documents.map(document => ({...convertDocumentModelToDto(document), id: generateId()})))
+      map(documents => documents.map(document => ({...this.convertDocumentModelToDto(document), id: generateId()})))
     );
   }
 
@@ -149,5 +151,16 @@ export class PublicDocumentService extends BaseService implements DocumentServic
       documentIds: [chainDocuments[index]?.id, chainDocuments[index + 1]?.id],
     }));
     return of({documents: chainDocuments, linkInstances: chainLinks});
+  }
+
+  private convertDocumentModelToDto(model: DocumentModel): DocumentDto {
+    return (
+      model && {
+        ...convertDocumentModelToDto(model),
+        creationDate: model.creationDate?.getTime(),
+        dataVersion: model.dataVersion || 0,
+        updateDate: model.updateDate?.getTime(),
+      }
+    );
   }
 }

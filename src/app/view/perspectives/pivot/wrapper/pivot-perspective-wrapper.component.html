@@ -21,7 +21,8 @@
     <pivot-table *ngIf="config"
                  class="flex-grow-1 h-100 overflow-auto mx-4"
                  [pivotData]="data.pivotData"
-                 [constraintData]="constraintData">
+                 [constraintData]="constraintData"
+                 [dataLoaded]="dataLoaded">
     </pivot-table>
 
   </ng-container>

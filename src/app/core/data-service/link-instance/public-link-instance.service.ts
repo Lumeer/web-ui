@@ -30,6 +30,7 @@ import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {generateId} from '../../../shared/utils/resource.utils';
 import {selectLinkInstanceById, selectLinkInstancesByIds} from '../../store/link-instances/link-instances.state';
 import {convertLinkInstanceModelToDto} from '../../store/link-instances/link-instance.converter';
+import {LinkInstance} from '../../store/link-instances/link.instance';
 
 @Injectable()
 export class PublicLinkInstanceService extends BaseService implements LinkInstanceService {
@@ -45,7 +46,7 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
     return this.store$.pipe(
       select(selectLinkInstancesByIds(linkInstanceIds)),
       take(1),
-      map(linkInstances => linkInstances.map(linkInstance => convertLinkInstanceModelToDto(linkInstance)))
+      map(linkInstances => linkInstances.map(linkInstance => this.convertLinkInstanceModelToDto(linkInstance)))
     );
   }
 
@@ -79,7 +80,7 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
     return this.store$.pipe(
       select(selectLinkInstanceById(id)),
       take(1),
-      map(model => model && convertLinkInstanceModelToDto(model))
+      map(model => this.convertLinkInstanceModelToDto(model))
     );
   }
 
@@ -100,9 +101,20 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
           ) as [string, string];
 
           const newLinkInstance = {...linkInstance, id: generateId(), documentIds};
-          return convertLinkInstanceModelToDto(newLinkInstance);
+          return this.convertLinkInstanceModelToDto(newLinkInstance);
         })
       )
+    );
+  }
+
+  private convertLinkInstanceModelToDto(model: LinkInstance): LinkInstanceDto {
+    return (
+      model && {
+        ...convertLinkInstanceModelToDto(model),
+        creationDate: model.creationDate?.getTime(),
+        dataVersion: model.dataVersion || 0,
+        updateDate: model.updateDate?.getTime(),
+      }
     );
   }
 }

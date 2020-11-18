@@ -39,6 +39,9 @@ export class PivotTableComponent implements OnChanges {
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public dataLoaded: boolean;
+
   public readonly configuration: DataInputConfiguration = {common: {inline: true, minWidth: 40}};
 
   private pivotTableConverter: PivotTableConverter;
