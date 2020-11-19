@@ -34,13 +34,15 @@ import {Attribute} from '../../../../core/store/collections/collection';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Constraint} from '../../../../core/model/constraint';
 import {createConstraint} from '../../../utils/constraint/create-constraint';
-import {ConstraintType, constraintTypesMap} from '../../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType, constraintTypesMap} from '../../../../core/model/data/constraint';
 import {ConstraintConfig, SelectConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {convertToBig} from '../../../utils/data.utils';
 import {DatetimeConstraintFormControl} from './constraint-config/datetime/datetime-constraint-form-control';
 import {TextConstraintFormControl} from './constraint-config/text/text-constraint-form-control';
 import {NumberConstraintFormControl} from './constraint-config/number/number-constraint-form-control';
-import {escapeHtml} from '../../../utils/common.utils';
+import {escapeHtml, isNotNullOrUndefined} from '../../../utils/common.utils';
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
+import {uniqueValues} from '../../../utils/array.utils';
 
 @Component({
   selector: 'attribute-type-form',
@@ -51,6 +53,12 @@ export class AttributeTypeFormComponent implements OnChanges {
   @Input()
   public attribute: Attribute;
 
+  @Input()
+  public dataValues: any[];
+
+  @Input()
+  public constraintData: ConstraintData;
+
   @Output()
   public attributeChange = new EventEmitter<Attribute>();
 
@@ -59,12 +67,25 @@ export class AttributeTypeFormComponent implements OnChanges {
     config: new FormGroup({}),
   });
 
+  public uniqueValues: any[];
+
   constructor(private i18n: I18n, private notificationService: NotificationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.attribute && this.attribute) {
       this.typeControl.setValue(this.attribute.constraint?.type || ConstraintType.Unknown);
     }
+    if (changes.uniqueValues || changes.constraintData || changes.attribute) {
+      this.uniqueValues = this.mapValues();
+    }
+  }
+
+  private mapValues(): any[] {
+    const constraint = this.attribute?.constraint || new UnknownConstraint();
+    const values = (this.dataValues || [])
+      .map(value => constraint.createDataValue(value, this.constraintData).format())
+      .filter(value => isNotNullOrUndefined(value) && value !== '');
+    return uniqueValues(values);
   }
 
   public onSubmit() {

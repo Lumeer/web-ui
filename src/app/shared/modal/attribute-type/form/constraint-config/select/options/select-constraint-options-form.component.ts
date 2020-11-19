@@ -51,6 +51,9 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   @Input()
   public options: SelectConstraintOption[];
 
+  @Input()
+  public uniqueValues: any[];
+
   @ViewChildren('valueInput')
   public valueInputs: QueryList<ElementRef<HTMLInputElement>>;
 
@@ -75,10 +78,11 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   }
 
   private createForm() {
-    (this.options || [])
-      .map((option, index) => this.createOptionForm(index, option))
-      .forEach(form => this.form.push(form));
-    const optionsLength = (this.options || []).length;
+    const options: SelectConstraintOption[] = this.options?.length
+      ? this.options
+      : (this.uniqueValues || []).map(value => ({value}));
+    options.map((option, index) => this.createOptionForm(index, option)).forEach(form => this.form.push(form));
+    const optionsLength = options.length;
     this.form.push(this.createOptionForm(optionsLength));
 
     if (this.form.length < 2) {

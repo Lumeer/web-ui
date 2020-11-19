@@ -37,6 +37,9 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
   @Input()
   public form: FormGroup;
 
+  @Input()
+  public uniqueValues: any[];
+
   public readonly formControlName = SelectConstraintFormControl;
 
   public ngOnChanges(changes: SimpleChanges) {
