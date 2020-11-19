@@ -27,7 +27,7 @@ import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {selectCollectionsLoaded} from '../../core/store/collections/collections.state';
-import {selectQuery, selectWorkspace} from '../../core/store/navigation/navigation.state';
+import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {Project} from '../../core/store/projects/project';
@@ -39,6 +39,7 @@ import {selectCollectionsByQuery} from '../../core/store/common/permissions.sele
 import {Query} from '../../core/store/navigation/query/query';
 import {CollectionImportData} from './content/import-button/post-it-collection-import-button.component';
 import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
+import {selectViewQuery} from '../../core/store/views/views.state';
 
 @Component({
   selector: 'post-it-collections',
@@ -66,7 +67,7 @@ export class PostItCollectionsComponent implements OnInit {
     );
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.query$ = this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       tap(query => (this.query = query))
     );
     this.workspace$ = this.store$.pipe(select(selectWorkspace));

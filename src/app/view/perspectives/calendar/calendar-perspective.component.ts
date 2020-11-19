@@ -21,7 +21,6 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuerySorted,
@@ -39,7 +38,7 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import {View} from '../../../core/store/views/view';
-import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
 import {selectCalendarById, selectCalendarConfig} from '../../../core/store/calendars/calendars.state';
@@ -125,7 +124,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkCalendarConfig(config: CalendarConfig): Observable<CalendarConfig> {
     return combineLatest([
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
       this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
@@ -137,7 +136,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToDefault(): Observable<{calendarId?: string; config?: CalendarConfig}> {
     const calendarId = DEFAULT_CALENDAR_ID;
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       withLatestFrom(this.store$.pipe(select(selectCalendarById(calendarId)))),
       mergeMap(([, calendar]) => this.checkCalendarConfig(calendar?.config)),
       map(config => ({calendarId, config}))
@@ -145,7 +144,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
       this.query$.next(query);
       this.fetchData(query);
     });

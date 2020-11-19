@@ -41,7 +41,6 @@ import {
   selectLinkTypesByReadPermission,
 } from '../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
-import {selectQuery} from '../../../../../core/store/navigation/navigation.state';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -49,6 +48,7 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {TableConfigPart} from '../../../../../core/store/tables/table.model';
+import {selectViewQuery} from '../../../../../core/store/views/views.state';
 
 const ITEMS_LIMIT = 15;
 
@@ -114,7 +114,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
     this.linkTypes$ = combineLatest([
       this.store$.pipe(select(selectLinkTypesByReadPermission)),
       this.store$.pipe(select(selectCollectionsDictionary)),
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
     ]).pipe(
       map(([linkTypes, collectionsMap, query, lastCollectionId]) => {

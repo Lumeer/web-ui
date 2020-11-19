@@ -20,10 +20,9 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
 import {AppState} from '../store/app.state';
 import {FileAttachmentsAction} from '../store/file-attachments/file-attachments.action';
-import {selectQuery} from '../store/navigation/navigation.state';
+import {selectViewQuery} from '../store/views/views.state';
 
 @Injectable()
 export class FileAttachmentsService implements OnDestroy {
@@ -37,7 +36,7 @@ export class FileAttachmentsService implements OnDestroy {
 
   private subscribeToQuery(): Subscription {
     return this.store$
-      .pipe(select(selectQuery))
+      .pipe(select(selectViewQuery))
       .subscribe(query => this.store$.dispatch(new FileAttachmentsAction.GetByQuery({query})));
   }
 

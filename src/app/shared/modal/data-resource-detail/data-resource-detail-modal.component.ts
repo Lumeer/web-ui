@@ -38,7 +38,6 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
@@ -55,6 +54,7 @@ import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-perm
 import {distinctUntilChanged} from 'rxjs/operators';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
+import {selectViewQuery} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -107,7 +107,7 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
 
   public ngOnInit() {
     this.initData();
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }

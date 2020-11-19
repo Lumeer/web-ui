@@ -45,7 +45,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DEFAULT_MAP_CONFIG, MapConfig, MapModel, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
 import {DEFAULT_MAP_ID, selectMap, selectMapById, selectMapConfig} from '../../../core/store/maps/maps.state';
-import {selectMapPosition, selectQuery} from '../../../core/store/navigation/navigation.state';
+import {selectMapPosition} from '../../../core/store/navigation/navigation.state';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -54,6 +54,7 @@ import {
   selectDefaultViewConfig,
   selectDefaultViewConfigSnapshot,
   selectSidebarOpened,
+  selectViewQuery,
 } from '../../../core/store/views/views.state';
 import {MapContentComponent} from './content/map-content.component';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -105,7 +106,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
@@ -127,7 +128,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
       this.fetchData(query);
     });
     this.subscriptions.add(subscription);
@@ -177,7 +178,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkMapConfig(config: MapConfig): Observable<MapConfig> {
     return combineLatest([
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
       this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
@@ -189,7 +190,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToDefault(): Observable<{mapId?: string; config?: MapConfig}> {
     const mapId = DEFAULT_MAP_ID;
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       switchMap(() =>
         this.selectCurrentDefaultViewConfig$().pipe(
           distinctUntilChanged((a, b) => deepObjectsEquals(defaultViewMapPosition(a), defaultViewMapPosition(b))),
@@ -257,7 +258,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
   private selectMapDefaultConfigId$(): Observable<string> {
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       map(query => getBaseCollectionIdsFromQuery(query)[0])
     );
   }

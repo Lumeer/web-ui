@@ -32,7 +32,6 @@ import {
 } from '@angular/core';
 import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {Collection} from '../../../core/store/collections/collection';
@@ -46,6 +45,7 @@ import {KeyCode} from '../../key-code';
 import {ViewSettings} from '../../../core/store/views/view';
 import {AttributesResourceType} from '../../../core/model/resource';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
+import {selectViewQuery} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'document-detail-modal',
@@ -90,7 +90,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
 
   public ngOnInit() {
     this.initData();
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));
     this.initialModalsCount = this.bsModalService.getModalsCount();
   }

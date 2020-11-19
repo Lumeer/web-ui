@@ -28,8 +28,8 @@ import {
   selectDocumentsByQuery,
   selectViewsByQuery,
 } from '../../../../core/store/common/permissions.selectors';
-import {selectQuery, selectWorkspace} from '../../../../core/store/navigation/navigation.state';
-import {selectAllViews, selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
+import {selectAllViews, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {Query} from '../../../../core/store/navigation/query/query';
@@ -76,7 +76,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
     const navigationSubscription = workspace$
       .pipe(
-        switchMap(() => this.store$.pipe(select(selectQuery))),
+        switchMap(() => this.store$.pipe(select(selectViewQuery))),
         filter(query => !!query)
       )
       .subscribe(query => {

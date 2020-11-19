@@ -29,7 +29,6 @@ import {
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, map, mergeMap, pairwise, startWith, switchMap, take, tap} from 'rxjs/operators';
@@ -40,7 +39,7 @@ import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {selectCurrentView, selectPanelWidth} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectPanelWidth, selectViewQuery} from '../../../core/store/views/views.state';
 import {DEFAULT_WORKFLOW_ID, WorkflowConfig} from '../../../core/store/workflows/workflow';
 import {
   selectWorkflowById,
@@ -122,7 +121,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkWorkflowConfig(config: WorkflowConfig): Observable<WorkflowConfig> {
     return combineLatest([
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
       this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
@@ -150,7 +149,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
     );
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.query$ = this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       tap(query => this.fetchData(query))
     );
     this.viewSettings$ = this.store$.pipe(select(selectViewSettings));

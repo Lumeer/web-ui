@@ -37,6 +37,9 @@ import {DefaultViewConfig, View, ViewGlobalConfig} from './view';
 import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
+import {selectCurrentUser} from '../users/users.state';
+import {userHasManageRoleInResource} from '../../../shared/utils/resource.utils';
+import {isQuerySubset} from '../navigation/query/query.util';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -137,9 +140,20 @@ export const selectViewConfigChanged = createSelector(
     isViewConfigChanged(perspective, viewConfig, perspectiveConfig, documentsMap, collectionsMap, linkTypesMap)
 );
 
-export const selectViewQueryChanged = createSelector(
+export const selectViewQuery = createSelector(
   selectCurrentView,
   selectQuery,
+  selectCurrentUser,
+  (view, query, currentUser) => {
+    if (!view || userHasManageRoleInResource(currentUser, view) || isQuerySubset(query, view.query)) {
+      return query;
+    }
+    return view.query;
+  }
+);
+export const selectViewQueryChanged = createSelector(
+  selectCurrentView,
+  selectViewQuery,
   (view, query) => view && query && !areQueriesEqual(view.query, query)
 );
 
@@ -158,7 +172,7 @@ export const selectPanelWidth = createSelector(selectViewGlobalConfig, config =>
 export const selectPerspectiveDefaultViewConfig = createSelector(
   selectViewsState,
   selectPerspective,
-  selectQuery,
+  selectViewQuery,
   (state, perspective, query) => {
     const firstStem = query?.stems?.[0];
     const collectionId = firstStem?.collectionId;

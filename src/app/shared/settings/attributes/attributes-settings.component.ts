@@ -29,7 +29,7 @@ import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {map} from 'rxjs/operators';
 import {AttributesSettings} from '../../../core/store/views/view';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
+import {selectViewQuery} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'attributes-settings',
@@ -50,7 +50,7 @@ export class AttributesSettingsComponent implements OnInit {
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectCollectionsByStems));
     this.linkTypes$ = combineLatest([
       this.store$.pipe(select(selectLinkTypesInQuery)),
