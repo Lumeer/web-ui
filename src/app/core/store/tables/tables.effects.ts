@@ -584,7 +584,7 @@ export class TablesEffects {
             mergeMap(([entity, viewCode]) => {
               const filteredColumns = filterTableColumnsByAttributes(part.columns, entity.attributes);
               const initializedColumns = initializeExistingTableColumns(filteredColumns, entity.attributes);
-              const columns = addMissingTableColumns(initializedColumns, entity.attributes, !!viewCode);
+              const columns = addMissingTableColumns(initializedColumns, entity.attributes, false);
 
               const lastColumn = columns[columns.length - 1];
               const lastPartIndex = table.config.parts.length - 1;
