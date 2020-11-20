@@ -25,7 +25,6 @@ import {Collection} from '../../../core/store/collections/collection';
 import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {
   distinctUntilChanged,
   map,
@@ -36,7 +35,7 @@ import {
   take,
   withLatestFrom,
 } from 'rxjs/operators';
-import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
 import {selectPivotById, selectPivotConfig, selectPivotId} from '../../../core/store/pivots/pivots.state';
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -121,7 +120,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkPivotConfig(config: PivotConfig): Observable<PivotConfig> {
     return combineLatest([
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
       this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
@@ -133,7 +132,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToDefault(): Observable<{pivotId?: string; config?: PivotConfig}> {
     const pivotId = DEFAULT_PIVOT_ID;
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       withLatestFrom(this.store$.pipe(select(selectPivotById(pivotId)))),
       mergeMap(([, pivot]) => this.checkPivotConfig(pivot && pivot.config)),
       map(config => ({pivotId, config}))
@@ -141,7 +140,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
       this.query$.next(query);
       this.fetchData(query);
     });

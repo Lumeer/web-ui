@@ -63,7 +63,7 @@ import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
 import {NavigationAction} from '../navigation/navigation.action';
-import {selectQuery, selectViewCode, selectViewCursor} from '../navigation/navigation.state';
+import {selectViewCode, selectViewCursor} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
 import {convertQueryModelToString} from '../navigation/query/query.converter';
 import {isSingleCollectionQuery} from '../navigation/query/query.util';
@@ -120,6 +120,7 @@ import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInit
 import {QueryParam} from '../navigation/query-param';
 import {selectTable} from './tables.state';
 import {AttributesResource} from '../../model/resource';
+import {selectViewQuery} from '../views/views.state';
 
 @Injectable()
 export class TablesEffects {
@@ -262,7 +263,7 @@ export class TablesEffects {
     ofType<TablesAction.SwitchParts>(TablesActionType.SWITCH_PARTS),
     mergeMap(action => this.getLatestTable(action)),
     filter(({action, table}) => table.config.parts.length === 3),
-    withLatestFrom(this.store$.select(selectQuery)),
+    withLatestFrom(this.store$.select(selectViewQuery)),
     mergeMap(([{action, table}, query]) => {
       const linkTypeIds = [table.config.parts[1].linkTypeId];
       const collectionId = table.config.parts[2].collectionId;
@@ -299,7 +300,7 @@ export class TablesEffects {
   public removePart$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.RemovePart>(TablesActionType.REMOVE_PART),
     mergeMap(action => this.getLatestTable(action)),
-    withLatestFrom(this.store$.select(selectQuery)),
+    withLatestFrom(this.store$.select(selectViewQuery)),
     map(([{action, table}, query]) => {
       const linkTypeIds = table.config.parts.slice(0, action.payload.cursor.partIndex).reduce((ids, part) => {
         if (part.linkTypeId) {
@@ -583,7 +584,7 @@ export class TablesEffects {
             mergeMap(([entity, viewCode]) => {
               const filteredColumns = filterTableColumnsByAttributes(part.columns, entity.attributes);
               const initializedColumns = initializeExistingTableColumns(filteredColumns, entity.attributes);
-              const columns = addMissingTableColumns(initializedColumns, entity.attributes, !!viewCode);
+              const columns = addMissingTableColumns(initializedColumns, entity.attributes, false);
 
               const lastColumn = columns[columns.length - 1];
               const lastPartIndex = table.config.parts.length - 1;

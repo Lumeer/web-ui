@@ -23,8 +23,8 @@ import {AppState} from '../app.state';
 import {LinkInstance} from './link.instance';
 import {Query} from '../navigation/query/query';
 import {sortLinkInstances} from './link-instance.utils';
-import {selectQuery} from '../navigation/navigation.state';
 import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
+import {selectQuery} from '../navigation/navigation.state';
 
 export interface LinkInstancesState extends EntityState<LinkInstance> {
   queries: Query[];

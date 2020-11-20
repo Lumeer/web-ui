@@ -42,11 +42,11 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-permissions.pipe';
 import {deepObjectsEquals} from '../../utils/common.utils';
 import {ViewSettings} from '../../../core/store/views/view';
+import {selectViewQuery} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'links-list',
@@ -85,7 +85,7 @@ export class LinksListComponent implements OnChanges, OnInit {
   public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

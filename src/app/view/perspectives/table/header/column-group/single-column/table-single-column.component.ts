@@ -214,21 +214,22 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   public onSave(lastName: string) {
     this.stopEditing();
 
-    if (!lastName) {
-      return;
-    }
-    this.lastName$.next(lastName);
-
-    if (this.suggestions && this.suggestions.isSelected()) {
+    if (this.suggestions?.isSelected()) {
+      this.lastName$.next(lastName);
       this.suggestions.useSelection();
       return;
     }
 
     if (
+      lastName &&
       this.attributeNameChangedPipe.transform(this.attribute, lastName) &&
-      this.isUniqueAttributeName(this.attributes, this.attribute ? this.attribute.id : null, lastName)
+      this.isUniqueAttributeName(this.attributes, this.attribute?.id || null, lastName)
     ) {
+      this.lastName$.next(lastName);
       this.renameAttribute(this.attribute, lastName);
+    } else {
+      const previousName = this.lastName$.value;
+      this.lastName$.next(this.attribute?.name || previousName);
     }
   }
 

@@ -23,7 +23,7 @@ import {AppState} from '../../../core/store/app.state';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
 import {
   distinctUntilChanged,
   map,
@@ -39,7 +39,6 @@ import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/
 import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
 import {View} from '../../../core/store/views/view';
 import {KanbansAction} from '../../../core/store/kanbans/kanbans.action';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
@@ -122,7 +121,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkKanbanConfig(config: KanbanConfig): Observable<KanbanConfig> {
     return combineLatest([
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
       this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
@@ -134,7 +133,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToDefault(): Observable<{kanbanId?: string; config?: KanbanConfig}> {
     const kanbanId = DEFAULT_KANBAN_ID;
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       withLatestFrom(this.store$.pipe(select(selectKanbanById(kanbanId)))),
       mergeMap(([, kanban]) => this.checkKanbanConfig(kanban?.config)),
       map(config => ({kanbanId, config}))
@@ -143,7 +142,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeToQuery() {
     this.query$ = this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       tap(query => this.fetchData(query))
     );
   }

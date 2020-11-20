@@ -22,8 +22,7 @@ import {createSelector} from '@ngrx/store';
 import {selectCollectionsDictionary} from '../collections/collections.state';
 import {selectLinkTypesDictionary} from '../link-types/link-types.state';
 import {createSaveViewSettings, viewSettingsChanged} from '../views/view.utils';
-import {selectQuery} from '../navigation/navigation.state';
-import {selectCurrentView} from '../views/views.state';
+import {selectCurrentView, selectViewQuery} from '../views/views.state';
 import {AppState} from '../app.state';
 
 export interface ViewSettingsState extends ViewSettings {}
@@ -45,7 +44,7 @@ export const selectSaveViewSettings = createSelector(
   selectViewSettings,
   selectCollectionsDictionary,
   selectLinkTypesDictionary,
-  selectQuery,
+  selectViewQuery,
   (settings, collectionsMap, linkTypesMap, query) =>
     createSaveViewSettings(settings, query, collectionsMap, linkTypesMap)
 );

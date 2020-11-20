@@ -57,7 +57,7 @@ export function areTableConfigPartsChanged(
   return savedParts.some((savedPart, index) => {
     const collection = collectionsMap[savedPart.collectionId];
     const linkType = linkTypesMap[savedPart.linkTypeId];
-    const attributes = (collection && collection.attributes) || (linkType && linkType.attributes) || [];
+    const attributes = collection?.attributes || linkType?.attributes || [];
 
     return isTablePartChanged(savedPart, shownParts[index], attributes);
   });
@@ -79,7 +79,7 @@ function isTablePartChanged(savedPart: TableConfigPart, shownPart: TableConfigPa
 }
 
 function areTableColumnsChanged(savedColumns: TableConfigColumn[], shownColumns: TableConfigColumn[]): boolean {
-  if (savedColumns.length !== shownColumns.length && savedColumns.length !== shownColumns.length - 1) {
+  if (savedColumns.length > shownColumns.length) {
     return true;
   }
 
@@ -87,8 +87,9 @@ function areTableColumnsChanged(savedColumns: TableConfigColumn[], shownColumns:
     return true;
   }
 
-  const additionalColumn = shownColumns[savedColumns.length];
-  return Boolean(additionalColumn && additionalColumn.type !== TableColumnType.HIDDEN);
+  return shownColumns
+    .slice(savedColumns.length)
+    .some(column => column.type === TableColumnType.HIDDEN || column.width !== DEFAULT_COLUMN_WIDTH);
 }
 
 function isTableColumnChanged(savedColumn: TableConfigColumn, shownColumn: TableConfigColumn): boolean {

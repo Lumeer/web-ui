@@ -47,7 +47,6 @@ import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-ty
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
 import {NavigationAction} from '../../../../../../../core/store/navigation/navigation.action';
-import {selectQuery} from '../../../../../../../core/store/navigation/navigation.state';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableModel} from '../../../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
@@ -57,6 +56,7 @@ import {DropdownPosition} from '../../../../../../../shared/dropdown/dropdown-po
 import {DropdownComponent} from '../../../../../../../shared/dropdown/dropdown.component';
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
+import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
 
 interface LinkedAttribute {
   linkType?: LinkType;
@@ -233,7 +233,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
         combineLatest([
           this.store$.select(selectLinkTypesByCollectionId(collection.id)),
           this.store$.select(selectCollectionsDictionary),
-          this.store$.select(selectQuery),
+          this.store$.select(selectViewQuery),
         ]).pipe(
           map(([linkTypes, collectionsMap, query]) =>
             linkTypes

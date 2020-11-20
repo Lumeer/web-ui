@@ -25,7 +25,6 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
 import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
-import {selectQuery} from '../../../../../../core/store/navigation/navigation.state';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
 import {
@@ -45,6 +44,7 @@ import {ConstraintData, DurationUnitsMap} from '../../../../../../core/model/dat
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
+import {selectViewQuery} from '../../../../../../core/store/views/views.state';
 
 @Component({
   selector: 'table-cell-group',
@@ -82,7 +82,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public constructor(private store$: Store<{}>) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.columns$ = this.bindColumns();

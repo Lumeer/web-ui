@@ -26,7 +26,6 @@ import {AppState} from '../../../../core/store/app.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
-import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {User} from '../../../../core/store/users/user';
 import {selectAllUsers} from '../../../../core/store/users/users.state';
 import {Collection} from '../../../../core/store/collections/collection';
@@ -48,6 +47,7 @@ import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
 import {queryWithoutFilters} from '../../../../core/store/navigation/query/query.util';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {Perspective} from '../../perspective';
+import {selectViewQuery} from '../../../../core/store/views/views.state';
 
 const PAGE_SIZE = 40;
 
@@ -83,7 +83,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
     this.users$ = this.store$.pipe(select(selectAllUsers));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.loaded$ = this.store$.pipe(select(selectCurrentQueryDocumentsLoaded));
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.documentsConfig$ = this.selectDocumentsConfig$();
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
@@ -164,7 +164,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   public onFetchNextPage() {
     this.page$.next(this.page$.value + 1);
-    this.store$.pipe(select(selectQuery), take(1)).subscribe(query => {
+    this.store$.pipe(select(selectViewQuery), take(1)).subscribe(query => {
       this.fetchDocuments(query);
     });
   }
@@ -176,7 +176,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private subscribeQueryChange() {
     const navigationSubscription = this.store$
       .pipe(
-        select(selectQuery),
+        select(selectViewQuery),
         filter(query => !!query),
         distinctUntilChanged((a, b) => deepObjectsEquals(a, b)),
         startWith(null as Query),

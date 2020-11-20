@@ -28,11 +28,11 @@ import {
 } from '../../../core/store/common/permissions.selectors';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
+import {selectViewQuery} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'invalid-query',
@@ -56,11 +56,11 @@ export class InvalidQueryComponent implements OnInit {
 
   public ngOnInit() {
     this.stemsLength$ = this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       map(query => query?.stems?.length || 0)
     );
     this.collections$ = this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       mergeMap(query =>
         queryIsEmptyExceptPagination(query)
           ? this.store$.pipe(select(selectCollectionsByReadPermission))
@@ -68,7 +68,7 @@ export class InvalidQueryComponent implements OnInit {
       )
     );
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.hasCollection$ = this.store$.pipe(
       select(selectCollectionsByReadPermission),
       map(collections => collections?.length > 0)
@@ -76,7 +76,7 @@ export class InvalidQueryComponent implements OnInit {
   }
 
   public onCollectionSelect(data: {collection: Collection; index: number}) {
-    this.store$.pipe(select(selectQuery), take(1)).subscribe(query => {
+    this.store$.pipe(select(selectViewQuery), take(1)).subscribe(query => {
       let stem = ((query && query.stems) || [])[data.index];
       if (!stem) {
         stem = {collectionId: data.collection.id};

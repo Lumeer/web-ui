@@ -29,7 +29,7 @@ import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
-import {selectNavigation, selectQuery, selectViewCursor} from '../../../core/store/navigation/navigation.state';
+import {selectNavigation, selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
@@ -44,6 +44,7 @@ import {
 } from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
+import {selectViewQuery} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'detail-perspective',
@@ -69,7 +70,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       tap(query => (this.query = query))
     );
     this.initSelection();
@@ -148,7 +149,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   public selectCollection(collection: Collection) {
     const subscription = this.store$
       .pipe(
-        select(selectQuery),
+        select(selectViewQuery),
         mergeMap(query => {
           const collectionQuery = filterStemsForCollection(collection.id, query);
           return this.store$.pipe(

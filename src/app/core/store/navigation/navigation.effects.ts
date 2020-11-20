@@ -28,19 +28,19 @@ import {ModuleLazyLoadingService} from '../../service/module-lazy-loading.servic
 import {AppState} from '../app.state';
 import {RouterAction} from '../router/router.action';
 import {NavigationAction, NavigationActionType} from './navigation.action';
-import {selectNavigation, selectQuery} from './navigation.state';
+import {selectNavigation} from './navigation.state';
 import {QueryParam} from './query-param';
 import {Query, QueryStem} from './query/query';
 import {convertQueryModelToString} from './query/query.converter';
-import {SearchTab} from './search-tab';
 import {convertViewCursorToString} from './view-cursor/view-cursor';
+import {selectViewQuery} from '../views/views.state';
 
 @Injectable()
 export class NavigationEffects {
   @Effect()
   public addLinkToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddLinkToQuery>(NavigationActionType.ADD_LINK_TO_QUERY),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    withLatestFrom(this.store$.pipe(select(selectViewQuery))),
     map(([action, query]) => {
       const stem: QueryStem = query.stems[0]; // TODO be aware when using with more than 1 stem
       const linkTypeIds = (stem.linkTypeIds || []).concat(action.payload.linkTypeId);
@@ -53,7 +53,7 @@ export class NavigationEffects {
   @Effect()
   public addCollectionToQuery$: Observable<Action> = this.actions$.pipe(
     ofType<NavigationAction.AddCollectionToQuery>(NavigationActionType.ADD_COLLECTION_TO_QUERY),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    withLatestFrom(this.store$.pipe(select(selectViewQuery))),
     map(([action, query]) => {
       const stems = query.stems || [];
       stems.push({collectionId: action.payload.collectionId});

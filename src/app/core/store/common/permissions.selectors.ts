@@ -33,7 +33,6 @@ import {filterDocumentsAndLinksByQuery} from '../documents/documents.filters';
 import {selectAllDocuments} from '../documents/documents.state';
 import {selectAllLinkInstances} from '../link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../link-types/link-types.state';
-import {selectQuery} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
 import {
   getAllCollectionIdsFromQuery,
@@ -43,7 +42,7 @@ import {
 import {selectCurrentUser} from '../users/users.state';
 import {View} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
-import {selectAllViews, selectCurrentView} from '../views/views.state';
+import {selectAllViews, selectCurrentView, selectViewQuery} from '../views/views.state';
 import {selectWorkspaceModels} from './common.selectors';
 import {LinkInstance} from '../link-instances/link.instance';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
@@ -93,7 +92,7 @@ export const selectCollectionsByQuery = createSelector(
   selectCollectionsByReadPermission,
   selectAllDocuments,
   selectAllLinkTypes,
-  selectQuery,
+  selectViewQuery,
   selectConstraintData,
   (collections, documents, linkTypes, query, constraintData) =>
     filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
@@ -103,7 +102,7 @@ export const selectCollectionsByQueryWithoutLinks = createSelector(
   selectCollectionsByReadPermission,
   selectAllDocuments,
   selectAllLinkTypes,
-  selectQuery,
+  selectViewQuery,
   selectConstraintData,
   (collections, documents, linkTypes, query, constraintData) =>
     filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query), constraintData)
@@ -111,7 +110,7 @@ export const selectCollectionsByQueryWithoutLinks = createSelector(
 
 export const selectCollectionsInQuery = createSelector(
   selectCollectionsDictionary,
-  selectQuery,
+  selectViewQuery,
   (collectionsMap, query) => {
     const collectionIds = uniqueValues(query?.stems?.map(stem => stem.collectionId) || []);
     return collectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
@@ -121,7 +120,7 @@ export const selectCollectionsInQuery = createSelector(
 export const selectCollectionsByStems = createSelector(
   selectCollectionsDictionary,
   selectAllLinkTypes,
-  selectQuery,
+  selectViewQuery,
   (collectionsMap, linkTypes, query) => {
     const collectionIds = getAllCollectionIdsFromQuery(query, linkTypes);
     return collectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
@@ -152,7 +151,7 @@ export const selectDocumentsAndLinksByQuery = createSelector(
   selectCollectionsByReadPermission,
   selectAllLinkTypes,
   selectAllLinkInstances,
-  selectQuery,
+  selectViewQuery,
   selectViewSettings,
   selectConstraintData,
   (
@@ -172,7 +171,7 @@ export const selectDocumentsAndLinksByQuerySorted = createSelector(
   selectCollectionsByReadPermission,
   selectAllLinkTypes,
   selectAllLinkInstances,
-  selectQuery,
+  selectViewQuery,
   selectViewSettings,
   selectConstraintData,
   (
@@ -238,7 +237,7 @@ export const selectDocumentsByQueryIncludingChildren = createSelector(
   selectCollectionsByReadPermission,
   selectAllLinkTypes,
   selectAllLinkInstances,
-  selectQuery,
+  selectViewQuery,
   selectConstraintData,
   (documents, collections, linkTypes, linkInstances, query, constraintData): DocumentModel[] =>
     sortDocumentsByCreationDate(
@@ -288,7 +287,7 @@ export const selectLinkTypesByReadPermission = createSelector(
 
 export const selectLinkTypesInQuery = createSelector(
   selectLinkTypesByReadPermission,
-  selectQuery,
+  selectViewQuery,
   (linkTypes, query) => {
     const linkTypesIdsInQuery = getAllLinkTypeIdsFromQuery(query);
     return linkTypes.filter(linkType => linkTypesIdsInQuery.includes(linkType.id));
@@ -311,6 +310,6 @@ export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views)
   sortResourcesByFavoriteAndLastUsed<View>(views)
 );
 
-export const selectViewsByQuery = createSelector(selectViewsByRead, selectQuery, (views, query): View[] =>
+export const selectViewsByQuery = createSelector(selectViewsByRead, selectViewQuery, (views, query): View[] =>
   sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
 );

@@ -23,7 +23,6 @@ import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {AttributeFilter, Query} from '../../../core/store/navigation/query/query';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {distinctUntilChanged, map, mergeMap, take, tap} from 'rxjs/operators';
 import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../core/store/calendars/calendar';
@@ -50,6 +49,7 @@ import {ConstraintData, ConstraintType} from '../../../core/model/data/constrain
 import {durationCountsMapToString} from '../../utils/constraint/duration-constraint.utils';
 import {DurationConstraint} from '../../../core/model/constraint/duration.constraint';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
+import {selectViewQuery} from '../../../core/store/views/views.state';
 
 const DEFAULT_EVENT_DURATION = 60;
 
@@ -99,7 +99,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   ) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.linkTypes$ = this.store$.pipe(select(selectAllLinkTypes));
     this.permissions$ = this.collections$.pipe(
@@ -163,7 +163,7 @@ export class CalendarEventDetailModalComponent implements OnInit {
   }
 
   private selectNewDataResource$(stemIndex: number): Observable<DataResource> {
-    return combineLatest([this.selectResourceByStemIndex$(stemIndex), this.store$.pipe(select(selectQuery))]).pipe(
+    return combineLatest([this.selectResourceByStemIndex$(stemIndex), this.store$.pipe(select(selectViewQuery))]).pipe(
       tap(([resource]) => (this.currentResource = resource)),
       map(([resource, query]) => {
         const stemConfig = this.getStemConfig(stemIndex);

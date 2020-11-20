@@ -20,11 +20,11 @@
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
-import {selectQuery} from '../navigation/navigation.state';
 import {Query} from '../navigation/query/query';
 import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
 import {DocumentModel} from './document.model';
 import {DataResourceData} from '../../model/resource';
+import {selectQuery} from '../navigation/navigation.state';
 
 export interface DocumentsState extends EntityState<DocumentModel> {
   pendingDataUpdates: Record<string, DataResourceData>; // key is correlationId

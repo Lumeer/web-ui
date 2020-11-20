@@ -58,7 +58,6 @@ import {LinkInstancesAction} from '../../../../../../../core/store/link-instance
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
-import {selectQuery} from '../../../../../../../core/store/navigation/navigation.state';
 import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
@@ -80,6 +79,7 @@ import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../../../../shar
 import {DataValue} from '../../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
+import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
 
 @Component({
   selector: 'table-data-cell',
@@ -709,7 +709,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
           })
         )
       ),
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectAllCollections)),
     ])
       .pipe(take(1))

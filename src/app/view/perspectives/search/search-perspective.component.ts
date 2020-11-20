@@ -22,10 +22,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectNavigation, selectQuery, selectSearchTab} from '../../../core/store/navigation/navigation.state';
+import {selectNavigation, selectSearchTab} from '../../../core/store/navigation/navigation.state';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectCurrentView, selectDefaultViewConfig} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectDefaultViewConfig, selectViewQuery} from '../../../core/store/views/views.state';
 import {distinctUntilChanged, filter, map, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {createDefaultSearchConfig, DEFAULT_SEARCH_ID, Search, SearchConfig} from '../../../core/store/searches/search';
@@ -63,7 +63,7 @@ export class SearchPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToNavigation() {
-    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
       this.query = query;
       this.stringQuery = convertQueryModelToString(query);
     });

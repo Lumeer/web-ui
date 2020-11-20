@@ -47,7 +47,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {Query, QueryStem} from '../../../core/store/navigation/query/query';
 import {getNewLinkTypeIdFromQuery, hasQueryNewLink} from '../../../core/store/navigation/query/query.helper';
 import {isFirstTableCell, isLastTableCell, TableCursor} from '../../../core/store/tables/table-cursor';
@@ -59,6 +58,7 @@ import {
   selectCurrentView,
   selectDefaultViewConfig,
   selectDefaultViewConfigSnapshot,
+  selectViewQuery,
 } from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
@@ -344,7 +344,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     view: View
   ): Observable<{query: Query; config: TableConfig; tableId: string; forceRefresh?: boolean}> {
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       switchMap(query => {
         const tableId = view.code;
         return this.store$.pipe(
@@ -377,7 +377,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     forceRefresh?: boolean;
   }> {
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       switchMap(query => {
         const tableId = DEFAULT_TABLE_ID;
         return this.selectCurrentDefaultViewConfig$().pipe(
@@ -427,7 +427,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
 
   private selectTableDefaultConfigId$(): Observable<string> {
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       map(query => getBaseCollectionIdsFromQuery(query)[0])
     );
   }

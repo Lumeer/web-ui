@@ -26,16 +26,16 @@ import {NotificationService} from '../core/notifications/notification.service';
 import {FileAttachmentsService} from '../core/service/file-attachments.service';
 import {AppState} from '../core/store/app.state';
 import {selectViewsByRead} from '../core/store/common/permissions.selectors';
-import {
-  NavigationState,
-  selectNavigation,
-  selectPerspective,
-  selectQuery,
-} from '../core/store/navigation/navigation.state';
+import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {View} from '../core/store/views/view';
 import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
-import {selectCurrentView, selectPerspectiveConfig, selectViewByCode} from '../core/store/views/views.state';
+import {
+  selectCurrentView,
+  selectPerspectiveConfig,
+  selectViewByCode,
+  selectViewQuery,
+} from '../core/store/views/views.state';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewSettingsService} from '../core/service/view-settings.service';
 import {selectCurrentUser} from '../core/store/users/users.state';
@@ -131,7 +131,7 @@ export class ViewComponent implements OnInit {
       this.store$.pipe(select(selectPerspectiveConfig)),
       this.store$.pipe(select(selectPerspective)),
       this.getViewByName(name),
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectCurrentView)),
       this.store$.pipe(select(selectSaveViewSettings)),
     ])

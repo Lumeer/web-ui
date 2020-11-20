@@ -22,7 +22,6 @@ import {select, Store} from '@ngrx/store';
 
 import {AppState} from '../../../../core/store/app.state';
 import {combineLatest, Observable, Subscription} from 'rxjs';
-import {selectQuery} from '../../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {View} from '../../../../core/store/views/view';
 import {selectAllCollections} from '../../../../core/store/collections/collections.state';
@@ -39,6 +38,7 @@ import {selectSearchConfig, selectSearchId} from '../../../../core/store/searche
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {Perspective} from '../../perspective';
+import {selectViewQuery} from '../../../../core/store/views/views.state';
 
 @Component({
   selector: 'search-views',
@@ -63,7 +63,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
 
   public ngOnInit() {
     this.views$ = this.store$.pipe(select(selectViewsByQuery));
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.queryData$ = combineLatest([
       this.store$.pipe(select(selectAllCollections)),

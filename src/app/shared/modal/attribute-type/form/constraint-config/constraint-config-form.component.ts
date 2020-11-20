@@ -22,6 +22,7 @@ import {FormGroup} from '@angular/forms';
 import {ConstraintConfig} from '../../../../../core/model/data/constraint-config';
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {removeAllFormControls} from '../../../../utils/form.utils';
+import {Attribute} from '../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'constraint-config-form',
@@ -37,6 +38,12 @@ export class ConstraintConfigFormComponent implements OnChanges {
 
   @Input()
   public type: ConstraintType;
+
+  @Input()
+  public attribute: Attribute;
+
+  @Input()
+  public uniqueValues: any[];
 
   public readonly constraintTypes = ConstraintType;
 

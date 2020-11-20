@@ -22,7 +22,6 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {selectQuery} from '../../../core/store/navigation/navigation.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
   selectCollectionsByQuery,
@@ -43,7 +42,7 @@ import {
 import {ChartConfig, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
 import {View} from '../../../core/store/views/view';
-import {selectCurrentView, selectSidebarOpened} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
 import {Query} from '../../../core/store/navigation/query/query';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -93,7 +92,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const subscription = this.store$.pipe(select(selectQuery)).subscribe(query => {
+    const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
       this.query$.next(query);
       this.fetchData(query);
     });
@@ -141,7 +140,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private checkChartConfig(config: ChartConfig): Observable<ChartConfig> {
     return combineLatest([
-      this.store$.pipe(select(selectQuery)),
+      this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectCollectionsByQuery)),
       this.store$.pipe(select(selectLinkTypesInQuery)),
     ]).pipe(
@@ -153,7 +152,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private subscribeToDefault(): Observable<{chartId?: string; config?: ChartConfig}> {
     const chartId = DEFAULT_CHART_ID;
     return this.store$.pipe(
-      select(selectQuery),
+      select(selectViewQuery),
       withLatestFrom(this.store$.pipe(select(selectChartById(chartId)))),
       mergeMap(([, chart]) => this.checkChartConfig(chart?.config)),
       map(config => ({chartId, config}))

@@ -27,7 +27,7 @@ import {debounceTime, filter, map, startWith, tap, withLatestFrom} from 'rxjs/op
 import {AppState} from '../../../core/store/app.state';
 import {selectAllCollections, selectCollectionsLoaded} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes, selectLinkTypesLoaded} from '../../../core/store/link-types/link-types.state';
-import {selectNavigation, selectPerspective, selectQuery} from '../../../core/store/navigation/navigation.state';
+import {selectNavigation, selectPerspective} from '../../../core/store/navigation/navigation.state';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {View} from '../../../core/store/views/view';
 import {Perspective} from '../../../view/perspectives/perspective';
@@ -43,7 +43,7 @@ import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query/query.util';
 import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
-import {selectCurrentView} from '../../../core/store/views/views.state';
+import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Organization} from '../../../core/store/organizations/organization';
@@ -93,7 +93,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.subscribeToNavigation();
     this.users$ = this.store$.pipe(select(selectAllUsers));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.query$ = this.store$.pipe(select(selectQuery));
+    this.query$ = this.store$.pipe(select(selectViewQuery));
     this.perspective$ = this.store$.pipe(select(selectPerspective));
   }
 
@@ -103,7 +103,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToQuery() {
-    const querySubscription = combineLatest([this.store$.pipe(select(selectQuery)), this.loadData()])
+    const querySubscription = combineLatest([this.store$.pipe(select(selectViewQuery)), this.loadData()])
       .pipe(
         debounceTime(100),
         withLatestFrom(this.router.events.pipe(startWith(null))),

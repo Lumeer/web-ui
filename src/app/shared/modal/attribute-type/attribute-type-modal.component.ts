@@ -32,6 +32,10 @@ import {CollectionsAction} from '../../../core/store/collections/collections.act
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {AppState} from '../../../core/store/app.state';
 import {KeyCode} from '../../key-code';
+import {selectDocumentsByCollectionId} from '../../../core/store/documents/documents.state';
+import {selectLinkInstancesByType} from '../../../core/store/link-instances/link-instances.state';
+import {ConstraintData} from '../../../core/model/data/constraint';
+import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 
 @Component({
   templateUrl: './attribute-type-modal.component.html',
@@ -58,7 +62,9 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
   public collection$: Observable<Collection>;
   public linkType$: Observable<LinkType>;
   public attribute$: Observable<Attribute>;
+  public dataValues$: Observable<any[]>;
   public formInvalid$ = new BehaviorSubject(true);
+  public constraintData$: Observable<ConstraintData>;
   public performingAction$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
@@ -72,10 +78,19 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
       this.attribute$ = this.collection$.pipe(
         map(collection => findAttribute(collection?.attributes, this.attributeId))
       );
+      this.dataValues$ = this.store$.pipe(
+        select(selectDocumentsByCollectionId(this.collectionId)),
+        map(documents => documents.map(document => document?.data[this.attributeId]))
+      );
     } else if (this.linkTypeId) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
       this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType?.attributes, this.attributeId)));
+      this.dataValues$ = this.store$.pipe(
+        select(selectLinkInstancesByType(this.linkTypeId)),
+        map(links => links.map(link => link?.data[this.attributeId]))
+      );
     }
+    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
   public initFormStatusChanges() {

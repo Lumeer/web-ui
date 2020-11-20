@@ -29,7 +29,6 @@ import {ViewConfigCleanUpGuard} from '../core/guards/view-config-clean-up-guard.
 import {ViewRedirectGuard} from '../core/guards/view-redirect.guard';
 import {WorkspaceGuard} from '../core/guards/workspace.guard';
 import {Perspective} from './perspectives/perspective';
-import {TablePerspectiveComponent} from './perspectives/table/table-perspective.component';
 import {ViewLoadingComponent} from './view-loading.component';
 import {ViewComponent} from './view.component';
 import {ViewDefaultConfigsGuard} from '../core/guards/data/view-default-configs.guard';

@@ -26,6 +26,8 @@
   <div class="body" *ngIf="data.attribute; else notFound">
     <attribute-type-form class="p-3 d-block"
                          [attribute]="data.attribute"
+                         [dataValues]="dataValues$ | async"
+                         [constraintData]="constraintData$ | async"
                          (attributeChange)="onAttributeChange($event)">
     </attribute-type-form>
 

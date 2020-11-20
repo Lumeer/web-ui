@@ -224,16 +224,16 @@ export function getBaseCollectionIdsFromQuery(query: Query): string[] {
 }
 
 export function isQuerySubset(superset: Query, subset: Query): boolean {
-  if (!isArraySubset(superset.fulltexts || [], subset.fulltexts || [])) {
+  if (!isArraySubset(superset?.fulltexts || [], subset?.fulltexts || [])) {
     return false;
   }
 
-  if (subset.stems.length > superset.stems.length) {
+  if (subset?.stems?.length > superset?.stems?.length) {
     return false;
   }
 
-  return subset.stems.every(stem => {
-    const supersetStem = superset.stems.find(s => s.collectionId === stem.collectionId);
+  return subset?.stems?.every(stem => {
+    const supersetStem = superset?.stems?.find(s => s.collectionId === stem.collectionId);
     return supersetStem && isQueryStemSubset(supersetStem, stem);
   });
 }
@@ -249,11 +249,11 @@ export function isQueryStemSubset(superset: QueryStem, subset: QueryStem): boole
 }
 
 function isQueryFiltersSubset(superset: CollectionAttributeFilter[], subset: CollectionAttributeFilter[]): boolean {
-  return subset.every(sub => !!superset.find(sup => JSON.stringify(sup) === JSON.stringify(sub)));
+  return subset.every(sub => superset.some(sup => deepObjectsEquals(sub, sup)));
 }
 
 function isQueryLinkFiltersSubset(superset: LinkAttributeFilter[], subset: LinkAttributeFilter[]): boolean {
-  return subset.every(sub => !!superset.find(sup => JSON.stringify(sup) === JSON.stringify(sub)));
+  return subset.every(sub => superset.some(sup => deepObjectsEquals(sub, sup)));
 }
 
 export function queryWithoutLinks(query: Query): Query {

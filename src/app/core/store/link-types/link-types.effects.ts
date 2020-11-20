@@ -27,7 +27,6 @@ import {LinkTypeDto} from '../../dto';
 import {AppState} from '../app.state';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from '../collections/attribute.converter';
 import {LinkInstancesAction, LinkInstancesActionType} from '../link-instances/link-instances.action';
-import {selectQuery} from '../navigation/navigation.state';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertLinkTypeDtoToModel, convertLinkTypeModelToDto} from './link-type.converter';
@@ -36,6 +35,7 @@ import {selectLinkTypeAttributeById, selectLinkTypesDictionary, selectLinkTypesL
 import {Attribute} from '../collections/collection';
 import {LinkInstance} from '../link-instances/link.instance';
 import {LinkTypeService} from '../../data-service';
+import {selectViewQuery} from '../views/views.state';
 
 @Injectable()
 export class LinkTypesEffects {
@@ -143,7 +143,7 @@ export class LinkTypesEffects {
   @Effect()
   public deleteSuccess$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.DeleteSuccess>(LinkInstancesActionType.DELETE_SUCCESS),
-    withLatestFrom(this.store$.pipe(select(selectQuery))),
+    withLatestFrom(this.store$.pipe(select(selectViewQuery))),
     mergeMap(([action]) => {
       const {linkTypeId} = action.payload;
       const actions: Action[] = [new LinkInstancesAction.ClearByLinkType({linkTypeId})];
