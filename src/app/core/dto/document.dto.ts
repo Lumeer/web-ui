@@ -30,6 +30,7 @@ export interface DocumentDto {
   data: DocumentDataDto;
   metaData?: DocumentMetaDataDto;
   favorite?: boolean;
+  commentsCount?: number;
 }
 
 export type DocumentDataDto = {[attributeId: string]: any};

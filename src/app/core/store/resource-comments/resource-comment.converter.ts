@@ -17,34 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LinkInstanceDto} from '../../dto';
-import {LinkInstance} from './link.instance';
+import {ResourceCommentDto} from '../../dto/resource-comment.dto';
+import {ResourceCommentModel} from './resource-comment.model';
 
-export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto, correlationId?: string): LinkInstance {
-  const data = {...dto.data};
-  delete data['_id'];
-
+export function convertResourceCommentDtoToModel(
+  dto: ResourceCommentDto,
+  correlationId?: string
+): ResourceCommentModel {
   return {
     id: dto.id,
-    correlationId,
-    linkTypeId: dto.linkTypeId,
-    documentIds: dto.documentIds,
-    data,
-    dataVersion: dto.dataVersion,
+    resourceType: dto.resourceType,
+    resourceId: dto.resourceId,
+    metaData: dto.metaData,
     creationDate: new Date(dto.creationDate),
     updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
-    createdBy: dto.createdBy,
-    updatedBy: dto.updatedBy,
-    commentsCount: dto.commentsCount,
+    author: dto.author,
+    authorEmail: dto.authorEmail,
+    authorName: dto.authorName,
+    comment: dto.comment,
+    correlationId,
   };
 }
 
-export function convertLinkInstanceModelToDto(model: LinkInstance): LinkInstanceDto {
+export function convertResourceCommentModelToDto(
+  model: ResourceCommentModel | Partial<ResourceCommentModel>
+): ResourceCommentDto {
   return {
     id: model.id,
     correlationId: model.correlationId,
-    linkTypeId: model.linkTypeId,
-    documentIds: model.documentIds,
-    data: model.data,
+    resourceType: model.resourceType,
+    resourceId: model.resourceId,
+    metaData: model.metaData,
+    comment: model.comment,
   };
 }

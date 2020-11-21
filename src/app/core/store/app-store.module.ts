@@ -75,6 +75,8 @@ import {MapsEffects} from './maps/maps.effects';
 import {publicDataReducer} from './public-data/public-data.reducer';
 import {viewSettingsReducer} from './view-settings/view-settings.reducer';
 import {workflowsReducer} from './workflows/workflows.reducer';
+import {resourceCommentsReducer} from './resource-comments/resource-comments.reducer';
+import {ResourceCommentsEffects} from './resource-comments/resource-comments.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -107,6 +109,7 @@ const reducers: ActionReducerMap<AppState> = {
   publicData: publicDataReducer,
   viewSettings: viewSettingsReducer,
   workflows: workflowsReducer,
+  resourceComments: resourceCommentsReducer,
 };
 
 const effects = [
@@ -132,6 +135,7 @@ const effects = [
   UserNotificationsEffects,
   SequencesEffects,
   MapsEffects,
+  ResourceCommentsEffects,
 ];
 
 @NgModule({

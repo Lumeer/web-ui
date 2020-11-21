@@ -17,18 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const enum ResourceType {
-  Organization = 'organization',
-  Project = 'project',
-  Collection = 'collection',
-  View = 'view',
-  Link = 'link',
+import {ResourceType} from '../../model/resource-type';
+
+export interface ResourceCommentModel {
+  id?: string;
+  correlationId?: string;
+  resourceType: ResourceType;
+  resourceId: string;
+  creationDate?: Date;
+  updateDate?: Date;
+  author?: string;
+  authorEmail?: string;
+  authorName?: string;
+  comment?: string;
+  metaData?: ResourceCommentModelMetaData;
 }
 
-export const resourceTypesMap: {[id: string]: ResourceType} = {
-  [ResourceType.Organization]: ResourceType.Organization,
-  [ResourceType.Project]: ResourceType.Project,
-  [ResourceType.Collection]: ResourceType.Collection,
-  [ResourceType.View]: ResourceType.View,
-  [ResourceType.Link]: ResourceType.Link,
-};
+export interface ResourceCommentModelMetaData {}

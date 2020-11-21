@@ -48,6 +48,7 @@ import {ConstraintDataState, initialConstraintDataState} from './constraint-data
 import {initialPublicDataState, PublicDataState} from './public-data/public-data.state';
 import {initialViewSettingsState, ViewSettingsState} from './view-settings/view-settings.state';
 import {initialWorkflowsState, WorkflowsState} from './workflows/workflow.state';
+import {initialResourceCommentsState, ResourceCommentsState} from './resource-comments/resource-comments.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -80,6 +81,7 @@ export interface AppState {
   publicData: PublicDataState;
   viewSettings: ViewSettingsState;
   workflows: WorkflowsState;
+  resourceComments: ResourceCommentsState;
 }
 
 export function initialAppState(): AppState {
@@ -114,5 +116,6 @@ export function initialAppState(): AppState {
     publicData: initialPublicDataState,
     viewSettings: initialViewSettingsState,
     workflows: initialWorkflowsState,
+    resourceComments: initialResourceCommentsState,
   };
 }

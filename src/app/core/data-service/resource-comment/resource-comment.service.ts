@@ -17,18 +17,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const enum ResourceType {
-  Organization = 'organization',
-  Project = 'project',
-  Collection = 'collection',
-  View = 'view',
-  Link = 'link',
-}
+import {Observable} from 'rxjs';
+import {ResourceCommentDto} from '../../dto/resource-comment.dto';
+import {ResourceType} from '../../model/resource-type';
 
-export const resourceTypesMap: {[id: string]: ResourceType} = {
-  [ResourceType.Organization]: ResourceType.Organization,
-  [ResourceType.Project]: ResourceType.Project,
-  [ResourceType.Collection]: ResourceType.Collection,
-  [ResourceType.View]: ResourceType.View,
-  [ResourceType.Link]: ResourceType.Link,
-};
+export abstract class ResourceCommentService {
+  public abstract createComment(comment: ResourceCommentDto): Observable<ResourceCommentDto>;
+
+  public abstract updateComment(comment: ResourceCommentDto): Observable<ResourceCommentDto>;
+
+  public abstract removeComment(comment: ResourceCommentDto): Observable<any>;
+
+  public abstract getComments(
+    resourceType: ResourceType,
+    resourceId: string,
+    pageStart?: number,
+    pageLength?: number
+  ): Observable<ResourceCommentDto[]>;
+}
