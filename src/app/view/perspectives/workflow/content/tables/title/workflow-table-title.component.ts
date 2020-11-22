@@ -22,6 +22,9 @@ import {WorkflowTableTitle} from '../../../model/workflow-table';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {WorkflowStemConfig} from '../../../../../../core/store/workflows/workflow';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
+import {LinkType} from '../../../../../../core/store/link-types/link.type';
+import {findResourceByQueryResource} from '../../../../../../core/model/query-attribute';
+import {AttributesResource} from '../../../../../../core/model/resource';
 
 @Component({
   selector: 'workflow-table-title',
@@ -36,15 +39,18 @@ export class WorkflowTableTitleComponent implements OnChanges {
   public collections: Collection[];
 
   @Input()
+  public linkTypes: LinkType[];
+
+  @Input()
   public stemConfig: WorkflowStemConfig;
 
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
 
-  public collection: Collection;
+  public resource: AttributesResource;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.collections || changes.stemConfig) {
-      this.collection = this.collections?.find(coll => coll.id === this.stemConfig?.collection?.resourceId);
+    if (changes.collections || changes.linkTypes || changes.stemConfig) {
+      this.resource = findResourceByQueryResource(this.stemConfig?.attribute, this.collections, this.linkTypes);
     }
   }
 }

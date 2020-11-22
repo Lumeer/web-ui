@@ -17,13 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnChanges, SimpleChanges} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {ViewSettings} from '../../../../../core/store/views/view';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {AttributesResourceType} from '../../../../../core/model/resource';
+import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
+import {AppState} from '../../../../../core/store/app.state';
+import {Store} from '@ngrx/store';
 
 @Component({
   selector: 'workflow-sidebar',
@@ -31,7 +34,7 @@ import {AttributesResourceType} from '../../../../../core/model/resource';
   styleUrls: ['./workflow-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WorkflowSidebarComponent {
+export class WorkflowSidebarComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
@@ -51,6 +54,21 @@ export class WorkflowSidebarComponent {
   public close = new EventEmitter();
 
   public readonly collectionResourceType = AttributesResourceType.Collection;
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.document) {
+      this.loadLinkInstances(this.document);
+    }
+  }
+
+  private loadLinkInstances(document: DocumentModel) {
+    if (document) {
+      const query: Query = {stems: [{collectionId: document.collectionId, documentIds: [document.id]}]};
+      this.store$.dispatch(new LinkInstancesAction.Get({query}));
+    }
+  }
 
   public onCloseClick() {
     this.close.emit();

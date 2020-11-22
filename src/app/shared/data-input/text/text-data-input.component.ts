@@ -151,7 +151,7 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
       this.preventSave = false;
       this.blurCleanup();
     } else {
-      const selectedOption = this.dropdown.getActiveOption();
+      const selectedOption = this.dropdown?.getActiveOption();
       let dataValue = this.value.parseInput(this.text);
       if (selectedOption || this.configuration?.skipValidation || dataValue.isValid()) {
         if (selectedOption) {

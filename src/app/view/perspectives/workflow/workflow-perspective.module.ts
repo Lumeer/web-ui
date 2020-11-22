@@ -42,6 +42,7 @@ import {SettingsModule} from '../../../shared/settings/settings.module';
 import {LinksListModule} from '../../../shared/links/links-list/links-list.module';
 import {WorkflowTablesIdsPipe} from './pipes/workflow-tables-ids.pipe';
 import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table-title.component';
+import {PresenterModule} from '../../../shared/presenter/presenter.module';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import {WorkflowTableTitleComponent} from './content/tables/title/workflow-table
     SettingsModule,
     LinksListModule,
     MatMenuModule,
+    PresenterModule,
   ],
   providers: [ResizerDirective],
 })
