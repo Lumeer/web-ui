@@ -1,12 +1,12 @@
 <div *ngIf="views?.length; else noViews"
      class="mt-2 mb-5">
   <size-slider class="d-flex justify-content-end mb-2"
-               [defaultSize]="config?.size" (newSize)="onSizeChange($event)">
+               [defaultSize]="config?.size || defaultSizeType" (newSize)="onSizeChange($event)">
   </size-slider>
   <view-detail *ngFor="let view of (maxViews > 0 ? (views | slice:0:maxViews) : views); trackBy:trackByView"
                [view]="view"
                [queryData]="queryData"
-               [viewSize]="config?.size"
+               [viewSize]="config?.size || defaultSizeType"
                (delete)="onDeleteView(view)"
                (clicked)="showView(view)"
                (favoriteToggle)="onFavoriteToggle(view)">

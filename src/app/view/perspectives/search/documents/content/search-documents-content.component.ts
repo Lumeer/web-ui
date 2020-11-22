@@ -17,10 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  EventEmitter,
+  Output,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
-import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
+import {defaultSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Query} from '../../../../../core/store/navigation/query/query';
@@ -45,7 +54,7 @@ import {DataInputConfiguration} from '../../../../../shared/data-input/data-inpu
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DocumentFavoriteToggleService],
 })
-export class SearchDocumentsContentComponent implements OnInit {
+export class SearchDocumentsContentComponent implements OnInit, OnChanges {
   @Input()
   public documents: DocumentModel[];
 
@@ -78,6 +87,7 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly sizeType = SizeType;
+  public currentSize: SizeType;
 
   constructor(
     private perspectiveService: PerspectiveService,
@@ -88,6 +98,12 @@ export class SearchDocumentsContentComponent implements OnInit {
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.config) {
+      this.currentSize = this.config?.size || defaultSizeType;
+    }
   }
 
   public onDetailClick(document: DocumentModel) {

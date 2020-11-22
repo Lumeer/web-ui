@@ -19,7 +19,7 @@
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, OnInit, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
-import {SearchViewsConfig} from '../../../../../core/store/searches/search';
+import {defaultSizeType, SearchViewsConfig} from '../../../../../core/store/searches/search';
 import {View} from '../../../../../core/store/views/view';
 import {QueryData} from '../../../../../shared/top-panel/search-box/util/query-data';
 import {Query} from '../../../../../core/store/navigation/query/query';
@@ -61,6 +61,8 @@ export class SearchViewsContentComponent implements OnInit, OnDestroy {
 
   @Output()
   public deleteView = new EventEmitter<View>();
+
+  public readonly defaultSizeType = defaultSizeType;
 
   constructor(private router: Router, private toggleService: ViewFavoriteToggleService) {}
 
