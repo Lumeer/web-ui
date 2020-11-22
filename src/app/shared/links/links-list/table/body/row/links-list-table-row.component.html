@@ -7,20 +7,20 @@
       [class.editing]="data.columnEditing === index"
       [class.affected]="!(attributeEditing?.documentId | isNullOrUndefined) &&
       (row.document?.id === attributeEditing?.documentId) &&
-      (column.collectionId && column.attribute.id === attributeEditing?.attributeId)">
+      (column.collectionId && column.attribute.id === attributeEditing?.attributeId)"
+      (click)="onDataInputFocus(index, $event)"
+      (dblclick)="onDataInputDblClick(index, $event)">
     <data-input *ngIf="column.linkTypeId"
                 [constraint]="column.attribute?.constraint"
                 [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id)"
                 [dataValue]="!(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : ((row.linkInstance?.data && row.linkInstance.data[column.attribute.id]) | dataValue:column.attribute?.constraint:constraintData)"
                 [focus]="true"
-                [preventEventBubble]="true"
+                [preventEventBubble]="preventEventBubble"
                 [configuration]="configuration"
                 [readonly]="!column.editable || data.readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
                 [class.cursor-pointer]="!data.readonly && column.editable"
                 (save)="onNewValue(index, $event)"
-                (dblclick)="onDataInputDblClick(index, $event)"
                 (cancel)="onDataInputCancel(index)"
-                (click)="onDataInputFocus(index, $event)"
                 (enterInvalid)="onEnterInvalid()"
                 (clickOutside)="onDataInputCancel(index)">
     </data-input>
@@ -30,16 +30,14 @@
                 [cursor]="row.document && (row.document | dataCursor : column.attribute.id)"
                 [dataValue]="!(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : ((row.document?.data && row.document.data[column.attribute.id]) | dataValue:column.attribute?.constraint:constraintData)"
                 [focus]="true"
-                [preventEventBubble]="true"
+                [preventEventBubble]="preventEventBubble"
                 [configuration]="configuration"
                 [readonly]="!column.editable || data.readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
                 [class.cursor-pointer]="!data.readonly && column.editable"
                 (save)="onNewValue(index, $event)"
                 (keydown)="onDataInputKeyDown($event)"
                 (valueChange)="onValueChange(index, $event)"
-                (dblclick)="onDataInputDblClick(index, $event)"
                 (cancel)="onDataInputCancel(index)"
-                (click)="onDataInputFocus(index, $event)"
                 (clickOutside)="onDataInputCancel(index)"
                 (enterInvalid)="onEnterInvalid()">
     </data-input>

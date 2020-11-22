@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {DurationDataValue} from '../../../core/model/data-value/duration.data-value';
 import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
@@ -98,9 +98,7 @@ export class DurationDataInputComponent implements OnChanges, AfterViewChecked {
 
   public setFocusToInput() {
     if (this.durationInput) {
-      const element = this.durationInput.nativeElement;
-      HtmlModifier.setCursorAtTextContentEnd(element);
-      element.focus();
+      setCursorAtDataInputEnd(this.durationInput.nativeElement, this.value);
     }
   }
 

@@ -4,8 +4,8 @@
        [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
        class="border-0 w-100 h-100 px-1 bg-transparent"
        [ngClass]="inputClass"
-       (focus)="onFocused()"
-       (blur)="onBlur()"
+       (focus)="!readonly && onFocused()"
+       (blur)="!readonly && onBlur()"
        (input)="onInput($event)"
        spellcheck="false"
        type="text">

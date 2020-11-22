@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {PercentageDataValue} from '../../../core/model/data-value/percentage.data-value';
 import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
@@ -96,9 +96,7 @@ export class PercentageDataInputComponent implements OnChanges, AfterViewChecked
 
   public setFocusToInput() {
     if (this.percentageInput) {
-      const element = this.percentageInput.nativeElement;
-      HtmlModifier.setCursorAtTextContentEnd(element);
-      element.focus();
+      setCursorAtDataInputEnd(this.percentageInput.nativeElement, this.value);
     }
   }
 
