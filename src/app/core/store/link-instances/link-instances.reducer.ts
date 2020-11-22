@@ -93,12 +93,19 @@ function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkIn
   }
 
   if (isLinkInstanceNewer(linkInstance, oldLinkInstance)) {
+    if (!linkInstance.commentsCount && !!oldLinkInstance.commentsCount) {
+      linkInstance.commentsCount = oldLinkInstance.commentsCount;
+    }
     return linkInstancesAdapter.upsertOne(linkInstance, state);
   } else if (isModifiedLater(linkInstance, oldLinkInstance)) {
     return linkInstancesAdapter.updateOne(
       {
         id: linkInstance.id,
-        changes: {updateDate: linkInstance.updateDate, updatedBy: linkInstance.updatedBy},
+        changes: {
+          updateDate: linkInstance.updateDate,
+          updatedBy: linkInstance.updatedBy,
+          commentsCount: linkInstance.commentsCount || oldLinkInstance.commentsCount,
+        },
       },
       state
     );

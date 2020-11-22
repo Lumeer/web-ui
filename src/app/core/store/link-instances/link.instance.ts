@@ -21,6 +21,7 @@ import {DataResource} from '../../model/resource';
 
 export interface LinkInstance extends DataResource {
   linkTypeId: string;
+  commentsCount?: number;
   documentIds: [string, string];
 }
 

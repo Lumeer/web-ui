@@ -23,6 +23,7 @@ export interface DocumentModel extends DataResource {
   collectionId: string;
   metaData?: DocumentMetaData;
   favorite?: boolean;
+  commentsCount?: number;
 }
 
 export interface DocumentMetaData {

@@ -53,6 +53,9 @@ import {ApiAttachmentsService} from './attachments/api-attachments.service';
 import {GeocodingService} from './geocoding/geocoding.service';
 import {PublicGeocodingService} from './geocoding/public-geocoding.service';
 import {ApiGeocodingService} from './geocoding/api-geocoding.service';
+import {ResourceCommentService} from './resource-comment/resource-comment.service';
+import {PublicResourceCommentService} from './resource-comment/public-resource-comment.service';
+import {ApiResourceCommentService} from './resource-comment/api-resource-comment.service';
 
 @NgModule({
   declarations: [],
@@ -101,6 +104,10 @@ import {ApiGeocodingService} from './geocoding/api-geocoding.service';
     {
       provide: GeocodingService,
       useClass: environment.publicView ? PublicGeocodingService : ApiGeocodingService,
+    },
+    {
+      provide: ResourceCommentService,
+      useClass: environment.publicView ? PublicResourceCommentService : ApiResourceCommentService,
     },
   ],
 })

@@ -26,6 +26,7 @@ export interface LinkInstanceDto {
   updateDate?: number;
   createdBy?: string;
   updatedBy?: string;
+  commentsCount?: number;
   dataVersion?: number;
 
   data?: {[attributeId: string]: any};

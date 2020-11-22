@@ -164,12 +164,19 @@ function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): Do
   }
 
   if (isDocumentNewer(document, oldDocument)) {
+    if (!document.commentsCount && !!oldDocument.commentsCount) {
+      document.commentsCount = oldDocument.commentsCount;
+    }
     return documentsAdapter.upsertOne(document, state);
   } else if (isModifiedLater(document, oldDocument)) {
     return documentsAdapter.updateOne(
       {
         id: document.id,
-        changes: {updateDate: document.updateDate, updatedBy: document.updatedBy},
+        changes: {
+          updateDate: document.updateDate,
+          updatedBy: document.updatedBy,
+          commentsCount: document.commentsCount || oldDocument.commentsCount,
+        },
       },
       state
     );

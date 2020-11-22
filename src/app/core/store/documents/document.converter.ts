@@ -34,6 +34,7 @@ export function convertDocumentDtoToModel(dto: DocumentDto, correlationId?: stri
     updateDate: dto.updateDate ? new Date(dto.updateDate) : null,
     createdBy: dto.createdBy,
     updatedBy: dto.updatedBy,
+    commentsCount: dto.commentsCount,
     dataVersion: dto.dataVersion,
     correlationId,
   };

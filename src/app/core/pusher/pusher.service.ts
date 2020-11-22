@@ -26,7 +26,7 @@ import {environment} from '../../../environments/environment';
 import {AuthService} from '../../auth/auth.service';
 import {userHasManageRoleInResource} from '../../shared/utils/resource.utils';
 import {OrganizationDto, ProjectDto} from '../dto';
-import {ResourceType} from '../model/resource-type';
+import {ResourceType, resourceTypesMap} from '../model/resource-type';
 import {AppState} from '../store/app.state';
 import {convertCollectionDtoToModel} from '../store/collections/collection.converter';
 import {CollectionsAction} from '../store/collections/collections.action';
@@ -69,6 +69,8 @@ import {selectViewsDictionary} from '../store/views/views.state';
 import {SequencesAction} from '../store/sequences/sequences.action';
 import {SequenceConverter} from '../store/sequences/sequence.converter';
 import {OrganizationService, ProjectService} from '../data-service';
+import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
+import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
 
 @Injectable({
   providedIn: 'root',
@@ -701,6 +703,62 @@ export class PusherService implements OnDestroy {
         this.store$.dispatch(
           new SequencesAction.DeleteSuccess({
             id: data.id,
+          })
+        );
+      }
+    });
+  }
+
+  private bindResourceCommentEvents() {
+    this.channel.bind('ResourceComment:create', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new ResourceCommentsAction.CreateSuccess({
+            comment: convertResourceCommentDtoToModel(data.object),
+          })
+        );
+      }
+    });
+    this.channel.bind('ResourceComment:create:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        const ids: string[] = data.extraId?.split('/');
+        if (ids && ids.length === 2) {
+          this.store$.dispatch(
+            new ResourceCommentsAction.Get({
+              resourceType: resourceTypesMap[ids[0]],
+              resourceId: ids[1],
+            })
+          );
+        }
+      }
+    });
+    this.channel.bind('ResourceComment:update', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new ResourceCommentsAction.UpdateSuccess({
+            comment: convertResourceCommentDtoToModel(data.object),
+          })
+        );
+      }
+    });
+    this.channel.bind('ResourceComment:update:ALT', data => {
+      if (this.isCurrentWorkspace(data)) {
+        const ids: string[] = data.extraId?.split('/');
+        if (ids && ids.length === 2) {
+          this.store$.dispatch(
+            new ResourceCommentsAction.Get({
+              resourceType: resourceTypesMap[ids[0]],
+              resourceId: ids[1],
+            })
+          );
+        }
+      }
+    });
+    this.channel.bind('ResourceComment:remove', data => {
+      if (this.isCurrentWorkspace(data)) {
+        this.store$.dispatch(
+          new ResourceCommentsAction.DeleteSuccess({
+            commentId: data.id,
           })
         );
       }
