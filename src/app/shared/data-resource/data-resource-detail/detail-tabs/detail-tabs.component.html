@@ -1,0 +1,42 @@
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link text-truncate"
+       [class.active]="activeTab === detailTabTypes.Detail"
+       title="Detail"
+       i18n-title="@@document.detail.tabs.detail"
+       i18n="@@document.detail.tabs.detail"
+       (click)="onTabSelect.emit(detailTabTypes.Detail)">
+      Detail
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-truncate"
+       [class.active]="activeTab === detailTabTypes.Links"
+       title="Links"
+       i18n-title="@@document.detail.tabs.links"
+       i18n="@@document.detail.tabs.links"
+       (click)="onTabSelect.emit(detailTabTypes.Links)">
+      Links
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-truncate"
+       [class.active]="activeTab === detailTabTypes.Comments"
+       title="Comments"
+       i18n-title="@@document.detail.tabs.comments"
+       i18n="@@document.detail.tabs.comments"
+       (click)="onTabSelect.emit(detailTabTypes.Comments)">
+      Comments
+    </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-truncate"
+       [class.active]="activeTab === detailTabTypes.Activity"
+       title="Activity"
+       i18n-title="@@document.detail.tabs.activity"
+       i18n="@@document.detail.tabs.activity"
+       (click)="onTabSelect.emit(detailTabTypes.Activity)">
+      Activity
+    </a>
+  </li>
+</ul>
