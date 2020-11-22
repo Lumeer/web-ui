@@ -39,7 +39,7 @@ import {selectLocationsByQuery} from '../../../core/store/geocoding/geocoding.st
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
 import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
@@ -133,9 +133,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
 
   public setFocusToInput() {
     if (this.addressInput) {
-      const element = this.addressInput.nativeElement;
-      HtmlModifier.setCursorAtTextContentEnd(element);
-      element.focus();
+      setCursorAtDataInputEnd(this.addressInput.nativeElement, this.value);
     }
   }
 

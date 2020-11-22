@@ -33,7 +33,7 @@ import {DataValue} from '../../../core/model/data-value';
 import {TextDataValue} from '../../../core/model/data-value/text.data-value';
 import {UnknownDataValue} from '../../../core/model/data-value/unknown.data-value';
 import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {DataSuggestion} from '../data-suggestion';
 import {DropdownOption} from '../../dropdown/options/dropdown-option';
 import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.component';
@@ -116,9 +116,7 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
 
   public setFocusToInput() {
     if (this.textInput) {
-      const element = this.textInput.nativeElement;
-      HtmlModifier.setCursorAtTextContentEnd(element);
-      element.focus();
+      setCursorAtDataInputEnd(this.textInput.nativeElement, this.value);
     }
   }
 

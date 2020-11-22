@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {DataValue} from '../../core/model/data-value';
+
 export class HtmlModifier {
   public static removeHtmlComments(html: HTMLElement): string {
     return html && html.innerHTML && html.innerHTML.replace(/<!--[\s\S]*?-->/g, '').trim();
@@ -31,6 +33,12 @@ export class HtmlModifier {
     selection.removeAllRanges();
     selection.addRange(range);
   }
+}
+
+export function setCursorAtDataInputEnd(element: HTMLInputElement, dataValue: DataValue) {
+  const value = dataValue.editValue() || '';
+  element.setSelectionRange(value.length, value.length);
+  element.focus();
 }
 
 export function shadeColor(color: string, percent: number): string {
