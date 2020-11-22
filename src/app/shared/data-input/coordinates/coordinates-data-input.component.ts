@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import {CoordinatesDataValue} from '../../../core/model/data-value/coordinates.data-value';
 import {KeyCode} from '../../key-code';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
@@ -90,9 +90,7 @@ export class CoordinatesDataInputComponent implements AfterViewChecked, OnChange
 
   public setFocusToInput() {
     if (this.coordinatesInput) {
-      const element = this.coordinatesInput.nativeElement;
-      HtmlModifier.setCursorAtTextContentEnd(element);
-      element.focus();
+      setCursorAtDataInputEnd(this.coordinatesInput.nativeElement, this.value);
     }
   }
 

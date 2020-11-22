@@ -113,7 +113,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   public readonly booleanConstraintType = ConstraintType.Boolean;
   public readonly configuration: DataInputConfiguration = {
-    common: {allowRichText: true, delaySaveAction: true},
+    common: {allowRichText: true, delaySaveAction: false},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
   };

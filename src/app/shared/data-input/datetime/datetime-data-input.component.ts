@@ -41,7 +41,7 @@ import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
-import {HtmlModifier} from '../../utils/html-modifier';
+import {setCursorAtDataInputEnd} from '../../utils/html-modifier';
 
 @Component({
   selector: 'datetime-data-input',
@@ -120,9 +120,7 @@ export class DatetimeDataInputComponent implements OnChanges, AfterViewInit, Aft
 
   public setFocusToInput() {
     if (this.dateTimeInput) {
-      const element = this.dateTimeInput.nativeElement;
-      HtmlModifier.setCursorAtTextContentEnd(element);
-      element.focus();
+      setCursorAtDataInputEnd(this.dateTimeInput.nativeElement, this.value);
     }
   }
 

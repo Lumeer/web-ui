@@ -59,7 +59,7 @@ export class ColorDataValue implements DataValue {
   }
 
   public editValue(): string {
-    return '';
+    return this.format();
   }
 
   public serialize(): any {

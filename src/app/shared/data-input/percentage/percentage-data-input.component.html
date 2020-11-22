@@ -1,11 +1,11 @@
 <input #percentageInput
        [title]="value | formatDataValueTitle"
-       [value]="value | formatDataValue | unescapeHtml"
+       [value]="readonly ? (value | formatDataValue | unescapeHtml) : (value | formatDataValueForEdit)"
        type="text"
        percentage
        class="border-0 w-100 h-100 px-1 bg-transparent"
-       (blur)="onBlur()"
-       (focus)="onFocus()"
+       (blur)="!readonly && onBlur()"
+       (focus)="!readonly && onFocus()"
        (input)="onInput($event)"
        [class.invalid-value]="!configuration?.skipValidation && !valid"
        [ngClass]="readonly || valid || configuration?.skipValidation ? 'bg-transparent ' + inputClass : 'bg-danger-light ' + inputClass"
