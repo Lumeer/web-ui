@@ -13,7 +13,8 @@
     </button>
 
     <size-slider class="ml-auto" *ngIf="documents?.length"
-                 [defaultSize]="config?.size" (newSize)="onSizeChange($event)"></size-slider>
+                 [defaultSize]="currentSize" (newSize)="onSizeChange($event)">
+    </size-slider>
   </div>
 </ng-container>
 
@@ -27,7 +28,7 @@
     <search-document-header
       class="p-2"
       (detail)="onDetailClick(document)"
-      [size]="config?.size"
+      [size]="currentSize"
       [document]="document"
       [isOpened]="document | isDocumentOpened:config"
       [collection]="collections | collectionById:document.collectionId"
@@ -41,7 +42,7 @@
           <span *ngIf="entry.label"
                 class="text-attribute text-nowrap mt-1 align-self-end" [class.text-default-attribute]="entry.isDefault">{{entry.label}}:&nbsp;</span>
           <data-input-preview class="data-input-preview d-inline-block mt-1 text-truncate"
-                              [class.small-size]="config?.size === sizeType.S || config?.size === sizeType.M"
+                              [class.small-size]="currentSize === sizeType.S || currentSize === sizeType.M"
                               [dataValue]="entry.dataValue"
                               [cursor]="document | dataCursor:entry.attributeId"
                               [configuration]="configuration"
