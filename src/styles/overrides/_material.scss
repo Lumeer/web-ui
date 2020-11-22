@@ -115,6 +115,7 @@ button.mat-menu-item {
 .mat-menu-item {
   height: 30px !important;
   line-height: 1.2rem !important;
+  font-size: 15px !important;
 
   &:hover:not([disabled]) {
     background: rgba(0, 0, 0, 0.1);
@@ -132,6 +133,7 @@ button.mat-menu-item {
     background: $primary;
   }
 }
+
 .mat-menu-item-submenu-trigger.active:after,
 .mat-menu-item-submenu-trigger:active:after {
   color: white;

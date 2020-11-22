@@ -82,7 +82,15 @@ export function findResourceByQueryResource(
   if (attribute?.resourceType === AttributesResourceType.Collection) {
     return (collections || []).find(coll => coll.id === attribute?.resourceId);
   } else if (attribute?.resourceType === AttributesResourceType.LinkType) {
-    return (linkTypes || []).find(lt => lt.id === attribute?.resourceId);
+    const linkType = (linkTypes || []).find(lt => lt.id === attribute?.resourceId);
+    if (linkType) {
+      const linkTypeCollections = collections.filter(coll => linkType.collectionIds.includes(coll.id)) as [
+        Collection,
+        Collection
+      ];
+      return {...linkType, collections: linkTypeCollections};
+    }
+    return linkType;
   }
 
   return null;

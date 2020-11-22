@@ -1,4 +1,8 @@
-<i [style.color]="collection?.color" aria-hidden="true" class="{{collection?.icon}} fa-fw mr-1"></i>
+<icons-presenter *ngIf="resource | resourceIconsColors as iconsColors"
+                 class="mr-1"
+                 [colors]="iconsColors.colors"
+                 [icons]="iconsColors.icons">
+</icons-presenter>
 <data-input-preview class="font-weight-bold d-inline-block"
                     [dataValue]="title.dataValue"
                     [configuration]="configuration"
