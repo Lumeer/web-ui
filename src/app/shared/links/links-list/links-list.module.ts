@@ -40,6 +40,10 @@ import {DocumentHintsModule} from '../../document-hints/document-hints.module';
 import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
 import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
 import {DirectivesModule} from '../../directives/directives.module';
+import {LinksAccordeonComponent} from './links-accordeon.component';
+import {AccordionModule} from 'ngx-bootstrap/accordion';
+import {AsAttributeResourcePipe} from './pipes/as-attribute-resource.pipe';
+import {LinksCountPipe} from './pipes/links-count.pipe';
 
 @NgModule({
   declarations: [
@@ -53,6 +57,9 @@ import {DirectivesModule} from '../../directives/directives.module';
     LinksListHeaderMenuComponent,
     DocumentHintsColumnsPipe,
     CalculateHintsOffsetPipe,
+    LinksAccordeonComponent,
+    AsAttributeResourcePipe,
+    LinksCountPipe,
   ],
   imports: [
     CommonModule,
@@ -66,7 +73,8 @@ import {DirectivesModule} from '../../directives/directives.module';
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
     DocumentHintsModule,
+    AccordionModule,
   ],
-  exports: [LinksListComponent],
+  exports: [LinksListComponent, LinksAccordeonComponent],
 })
 export class LinksListModule {}

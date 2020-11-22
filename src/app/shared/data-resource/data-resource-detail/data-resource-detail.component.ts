@@ -38,7 +38,7 @@ import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {Attribute} from '../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Query} from '../../../core/store/navigation/query/query';
 import {Perspective} from '../../../view/perspectives/perspective';
@@ -51,7 +51,10 @@ import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {ResourceAttributeSettings} from '../../../core/store/views/view';
+import {ResourceAttributeSettings, ViewSettings} from '../../../core/store/views/view';
+import {DataRow} from '../../data/data-row.service';
+import {DetailTabType} from './detail-tab-type';
+import {ResourceType} from '../../../core/model/resource-type';
 
 @Component({
   selector: 'data-resource-detail',
@@ -84,16 +87,31 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   @Input()
   public attributeSettings: ResourceAttributeSettings[];
 
+  @Input()
+  public viewSettings: ViewSettings;
+
+  @Input()
+  public allowSelectDocument = true;
+
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
 
   @Output()
   public routingPerformed = new EventEmitter();
 
+  @Output()
+  public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
+
+  public dataRows: DataRow[] = [];
+
   public workspace$: Observable<Workspace>;
   public constraintData$: Observable<ConstraintData>;
 
   public resourceType: AttributesResourceType;
+  public readonly collectionResourceType = ResourceType.Collection;
+
+  public selectedTab: DetailTabType = DetailTabType.Detail;
+  public readonly detailTabType = DetailTabType;
 
   constructor(
     private i18n: I18n,
@@ -165,5 +183,9 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     } else {
       this.modalService.showAttributeFunction(attribute.id, null, this.resource.id);
     }
+  }
+
+  public onRowsChanged($event: DataRow[]) {
+    this.dataRows = $event;
   }
 }

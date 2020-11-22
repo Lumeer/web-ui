@@ -33,6 +33,8 @@ import {DataResourceDetailComponent} from './data-resource-detail/data-resource-
 import {DataResourceDataRowIconsComponent} from './data-resource-detail/data/row/icons/data-resource-data-row-icons.component';
 import {DataResourceDataRowComponent} from './data-resource-detail/data/row/data-resource-data-row.component';
 import {DirectivesModule} from '../directives/directives.module';
+import {DetailTabsComponent} from './data-resource-detail/detail-tabs/detail-tabs.component';
+import {LinksModule} from '../links/links.module';
 
 @NgModule({
   imports: [
@@ -46,6 +48,7 @@ import {DirectivesModule} from '../directives/directives.module';
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
     PresenterModule,
+    LinksModule,
   ],
   declarations: [
     DataResourceDetailComponent,
@@ -54,6 +57,7 @@ import {DirectivesModule} from '../directives/directives.module';
     DataResourceDataRowComponent,
     DataResourceDataRowIconsComponent,
     DefaultDataRowPipe,
+    DetailTabsComponent,
   ],
   exports: [DataResourceDetailComponent],
 })

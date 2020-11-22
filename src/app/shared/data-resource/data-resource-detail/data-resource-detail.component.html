@@ -1,4 +1,18 @@
-<data-resource-data [resource]="resource"
+<document-detail-header class="d-block mb-4"
+                        [resource]="resource"
+                        [dataResource]="dataResource"
+                        [resourceType]="resourceType"
+                        [constraintData]="constraintData$ | async"
+                        [permissions]="permissions"
+                        [workspace]="workspace$ | async"
+                        (switchToTable)="onSwitchToTable()"
+                        (remove)="onRemove()">
+</document-detail-header>
+
+<detail-tabs [activeTab]="selectedTab" (onTabSelect)="selectedTab = $event"></detail-tabs>
+
+<data-resource-data *ngIf="selectedTab === detailTabType.Detail"
+                    [resource]="resource"
                     [dataResource]="dataResource"
                     [resourceType]="resourceType"
                     [permissions]="permissions"
@@ -15,3 +29,23 @@
                     (switchToTable)="onSwitchToTable()"
                     (dataResourceChanged)="dataResourceChanged.emit($event)">
 </data-resource-data>
+
+<ng-container *ngIf="selectedTab === detailTabType.Links">
+  <div>
+    <!-- TODO ngIf resource is type Collection -->
+    <links-accordeon class="d-block"
+                *ngIf="resource && dataResource?.id"
+                [document]="dataResource"
+                [preventEventBubble]="preventEventBubble"
+                [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
+                [allowSelectDocument]="allowSelectDocument"
+                [collection]="resource"
+                [viewSettings]="viewSettings"
+                (documentSelect)="documentSelect.emit($event)">
+    </links-accordeon>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="selectedTab === detailTabType.Activity">
+  <p class="p-4 text-center" i18n="@@document.detail.activity.contact">Audit log is available in the <em>Enterprise edition</em>. Please <a href="https://www.lumeer.io/contact/" target="_blank">contact support</a>.</p>
+</ng-container>
