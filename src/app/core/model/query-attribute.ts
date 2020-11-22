@@ -83,7 +83,7 @@ export function findResourceByQueryResource(
     return (collections || []).find(coll => coll.id === attribute?.resourceId);
   } else if (attribute?.resourceType === AttributesResourceType.LinkType) {
     const linkType = (linkTypes || []).find(lt => lt.id === attribute?.resourceId);
-    if (linkType) {
+    if (linkType && linkType.collections?.length !== 2) {
       const linkTypeCollections = collections.filter(coll => linkType.collectionIds.includes(coll.id)) as [
         Collection,
         Collection
