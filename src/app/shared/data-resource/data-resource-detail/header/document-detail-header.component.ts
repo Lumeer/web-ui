@@ -43,6 +43,8 @@ import {DataRow} from '../../../data/data-row.service';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
 
 @Component({
   selector: 'document-detail-header',
@@ -60,9 +62,6 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   @Input()
   public resourceType: AttributesResourceType;
-
-  @Input()
-  public row: DataRow;
 
   @Input()
   public constraintData: ConstraintData;
@@ -90,6 +89,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public createdBy$: Observable<string>;
   public updatedBy$: Observable<string>;
 
+  public defaultAttribute: Attribute;
+  public defaultValue: any;
+
   constructor(private store$: Store<AppState>, private toggleService: DocumentFavoriteToggleService) {}
 
   public ngOnInit() {
@@ -103,6 +105,17 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
     }
     if (changes.resource) {
       this.subscribeToResource();
+    }
+
+    if (changes.resource || changes.dataResource) {
+      if (this.resourceType === AttributesResourceType.Collection) {
+        const id = getDefaultAttributeId(this.resource);
+        this.defaultAttribute = findAttribute(this.resource.attributes, id);
+        this.defaultValue = this.dataResource?.data?.[id];
+      } else {
+        this.defaultAttribute = null;
+        this.defaultValue = null;
+      }
     }
   }
 

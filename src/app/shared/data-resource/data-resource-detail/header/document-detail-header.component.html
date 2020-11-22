@@ -5,12 +5,12 @@
                      [colors]="data.iconColors.colors">
     </icons-presenter>
     <span>{{resource?.name}}</span>
-    <data-input-preview *ngIf="row?.value || row?.value === 0"
+    <data-input-preview *ngIf="defaultValue || defaultValue === 0"
                         class="flex-fill d-block main-data-input font-weight-bold"
                         [configuration]="configuration"
-                        [dataValue]="row?.value | dataValue:row?.attribute?.constraint:constraintData"
-                        [cursor]="dataResource | dataCursor:row?.attribute?.id"
-                        [constraint]="row?.attribute?.constraint">
+                        [dataValue]="defaultValue | dataValue:defaultAttribute?.constraint:constraintData"
+                        [cursor]="dataResource | dataCursor:defaultAttribute?.id"
+                        [constraint]="defaultAttribute?.constraint">
     </data-input-preview>
 
   </div>

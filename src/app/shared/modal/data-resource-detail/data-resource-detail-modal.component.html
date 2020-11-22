@@ -17,18 +17,11 @@
                           [permissions]="permissions$ | async"
                           [toolbarRef]="toolbarRef"
                           [attributeSettings]="data.viewSettings | resourceAttributesSettings:resourceType:data.resource.id"
+                          [viewSettings]="data.viewSettings"
                           (dataResourceChanged)="onDataResourceChanged($event)"
-                          (routingPerformed)="onClose()">
+                          (routingPerformed)="onClose()"
+                          (documentSelect)="selectCollectionAndDocument($event)">
     </data-resource-detail>
-    <links-list class="d-block mt-5"
-                *ngIf="resourceType === collectionResourceType && data.dataResource?.id"
-                [document]="data.dataResource"
-                [preventEventBubble]="true"
-                [ignoreSettingsOnReadPermission]="true"
-                [collection]="data.resource"
-                [viewSettings]="data.viewSettings"
-                (documentSelect)="selectCollectionAndDocument($event)">
-    </links-list>
   </div>
 
   <span class="button-cancel">
