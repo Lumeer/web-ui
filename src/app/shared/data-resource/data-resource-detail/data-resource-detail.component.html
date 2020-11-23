@@ -46,6 +46,11 @@
   </div>
 </ng-container>
 
+<ng-container *ngIf="selectedTab === detailTabType.Comments">
+  <new-comment></new-comment>
+  <comment-item></comment-item>
+</ng-container>
+
 <ng-container *ngIf="selectedTab === detailTabType.Activity">
   <p class="p-4 text-center" i18n="@@document.detail.activity.contact">Audit log is available in the <em>Enterprise edition</em>. Please <a href="https://www.lumeer.io/contact/" target="_blank">contact support</a>.</p>
 </ng-container>
