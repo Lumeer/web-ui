@@ -45,6 +45,8 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
 import {Attribute} from '../../../../core/store/collections/collection';
 import {findAttribute, getDefaultAttributeId} from '../../../../core/store/collections/collection.util';
+import {User} from '../../../../core/store/users/user';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'document-detail-header',
@@ -86,13 +88,27 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
 
   public resource$: Observable<AttributesResource>;
 
-  public createdBy$: Observable<string>;
-  public updatedBy$: Observable<string>;
+  public createdBy$: Observable<User>;
+  public updatedBy$: Observable<User>;
 
   public defaultAttribute: Attribute;
   public defaultValue: any;
 
-  constructor(private store$: Store<AppState>, private toggleService: DocumentFavoriteToggleService) {}
+  public createdOnMsg = '';
+  public createdByMsg = '';
+  public updatedOnMsg = '';
+  public updatedByMsg = '';
+
+  constructor(
+    private store$: Store<AppState>,
+    private toggleService: DocumentFavoriteToggleService,
+    private i18n: I18n
+  ) {
+    this.createdOnMsg = this.i18n({id: 'document.detail.header.createdOn', value: 'Created on'});
+    this.createdByMsg = this.i18n({id: 'document.detail.header.createdBy', value: 'Created by'});
+    this.updatedOnMsg = this.i18n({id: 'document.detail.header.updatedOn', value: 'Updated on'});
+    this.updatedByMsg = this.i18n({id: 'document.detail.header.updatedBy', value: 'Updated by'});
+  }
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
@@ -132,12 +148,28 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
       this.createdBy$ = this.store$.pipe(
         select(selectUserById((<DocumentModel>this.dataResource).createdBy)),
         filter(user => !!user),
-        map(user => user.name || user.email || 'Guest')
+        map(user => {
+          if (!user.name && !user.email) {
+            const newUser = {...user};
+            newUser.name = 'Guest';
+            newUser.email = 'aturing@lumeer.io';
+            return newUser;
+          }
+          return user;
+        })
       );
       this.updatedBy$ = this.store$.pipe(
         select(selectUserById((<DocumentModel>this.dataResource).updatedBy)),
         filter(user => !!user),
-        map(user => user.name || user.email || 'Guest')
+        map(user => {
+          if (!user.name && !user.email) {
+            const newUser = {...user};
+            newUser.name = 'Guest';
+            newUser.email = 'aturing@lumeer.io';
+            return newUser;
+          }
+          return user;
+        })
       );
     }
   }

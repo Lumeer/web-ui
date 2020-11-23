@@ -97,6 +97,7 @@ import {ViewsSelectItemsPipe} from './views-select-items.pipe';
 import {TruncateStringPipe} from './truncate-string.pipe';
 import {ColumnBackgroundPipe} from './collection-column-background.pipe';
 import {IsDateValidPipe} from './is-date-valid.pipe';
+import {FromNowPipe} from './from-now.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -177,6 +178,7 @@ import {IsDateValidPipe} from './is-date-valid.pipe';
     TruncateStringPipe,
     ColumnBackgroundPipe,
     IsDateValidPipe,
+    FromNowPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -257,6 +259,7 @@ import {IsDateValidPipe} from './is-date-valid.pipe';
     TruncateStringPipe,
     ColumnBackgroundPipe,
     IsDateValidPipe,
+    FromNowPipe,
   ],
 })
 export class PipesModule {}

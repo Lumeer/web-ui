@@ -1,4 +1,4 @@
-<div class="d-flex flex-column flex-lg-row">
+<div class="d-flex flex-column flex-lg-row" *ngIf="{createdBy: createdBy$ | async, updatedBy: updatedBy$ | async} as users">
   <div class="flex-grow-1 pr-lg-2 text-truncate" *ngIf="{iconColors : resource$ | async | resourceIconsColors} as data">
     <icons-presenter class="mr-2"
                      [icons]="data.iconColors.icons"
@@ -6,7 +6,7 @@
     </icons-presenter>
     <span>{{resource?.name}}</span>
     <data-input-preview *ngIf="defaultValue || defaultValue === 0"
-                        class="flex-fill d-block main-data-input font-weight-bold"
+                        class="flex-fill d-block main-data-input font-weight-bold mt-1"
                         [configuration]="configuration"
                         [dataValue]="defaultValue | dataValue:defaultAttribute?.constraint:constraintData"
                         [cursor]="dataResource | dataCursor:defaultAttribute?.id"
@@ -16,14 +16,17 @@
   </div>
 
   <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
-    <div class="small text-notice text-nowrap" *ngIf="resourceType === collectionResourceType">
-      <span i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
-      <span *ngIf="dataResource.creationDate | isDateValid"
-            i18n="@@document.detail.createdBy">Created on {{dataResource.creationDate | date : 'mediumDate'}}
-        by {{createdBy$ | async}}</span>
-      <span *ngIf="dataResource.updateDate | isDateValid"
-            i18n="@@document.detail.modifiedBy"><br/>Last modified on {{dataResource.updateDate | date : 'mediumDate'}}
-        by {{updatedBy$ | async}}</span>
+    <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates" *ngIf="resourceType === collectionResourceType">
+      <span class="mr-1" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
+      <span *ngIf="dataResource.creationDate | isDateValid">
+        <short-date [date]="dataResource.creationDate" format="ll" [tooltipText]="createdOnMsg + ' ' + (dataResource.creationDate | date:'medium')" icon="fa-file"></short-date>
+        <user-avatar class="ml-2" [email]="users.createdBy.email" [tooltipText]="createdByMsg + ' ' + users.createdBy.name" [avatarSize]="15"></user-avatar>
+      </span>
+      <span *ngIf="dataResource.updateDate | isDateValid">
+        <br/>
+        <short-date [date]="dataResource.updateDate" format="ll" [tooltipText]="updatedOnMsg + ' ' + (dataResource.updateDate | date:'medium')" icon="fa-pencil"></short-date>
+        <user-avatar class="ml-2" [email]="users.updatedBy.email" [tooltipText]="updatedByMsg + ' ' + users.updatedBy.name" [avatarSize]="15"></user-avatar>
+      </span>
     </div>
 
     <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">

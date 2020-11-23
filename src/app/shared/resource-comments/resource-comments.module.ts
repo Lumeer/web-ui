@@ -19,9 +19,24 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {UserAvatarComponent} from './user-avatar/user-avatar.component';
+import {GravatarModule} from 'ngx-gravatar';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {TooltipTextComponent} from './tooltip-text/tooltip-text.component';
+import {ShortDateComponent} from './short-date/short-date.component';
+import {PipesModule} from '../pipes/pipes.module';
+import {CommentItemComponent} from './comment-item/comment-item.component';
+import {NewCommentComponent} from './new-comment/new-comment.component';
 
 @NgModule({
-  declarations: [],
-  imports: [CommonModule],
+  declarations: [
+    UserAvatarComponent,
+    TooltipTextComponent,
+    ShortDateComponent,
+    CommentItemComponent,
+    NewCommentComponent,
+  ],
+  imports: [CommonModule, GravatarModule, TooltipModule, PipesModule],
+  exports: [CommentItemComponent, UserAvatarComponent, ShortDateComponent, NewCommentComponent],
 })
 export class ResourceCommentsModule {}

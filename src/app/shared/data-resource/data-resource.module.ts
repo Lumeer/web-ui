@@ -35,6 +35,7 @@ import {DataResourceDataRowComponent} from './data-resource-detail/data/row/data
 import {DirectivesModule} from '../directives/directives.module';
 import {DetailTabsComponent} from './data-resource-detail/detail-tabs/detail-tabs.component';
 import {LinksModule} from '../links/links.module';
+import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import {LinksModule} from '../links/links.module';
     AttributeFunctionModalModule,
     PresenterModule,
     LinksModule,
+    ResourceCommentsModule,
   ],
   declarations: [
     DataResourceDetailComponent,
