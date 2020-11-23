@@ -1,0 +1,16 @@
+@import '~src/styles/variables';
+@import '~src/styles/bootstrap_var';
+
+.new-comment {
+  display: flex;
+  flex-flow: column nowrap;
+  border-bottom: 1px dotted #ecf0f1;
+  padding: 1rem 0.25rem 1rem 0.25rem;
+}
+
+.editor {
+  border-radius: $border-radius-lg;
+  border: $border-width solid $border-color;
+  box-shadow: $box-shadow;
+  min-height: 1.5rem;
+}

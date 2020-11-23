@@ -1,0 +1,23 @@
+.comment-item {
+  border-bottom: 1px dotted #ecf0f1;
+  padding: 1rem 0.25rem 1rem 0.25rem;
+  display: grid;
+  grid-template-columns: auto min-content auto;
+  grid-template-rows: 1.75rem auto;
+  gap: 1px 1px;
+  grid-template-areas:
+    'author none controls'
+    'comment comment comment';
+}
+
+.author {
+  align-self: center;
+}
+
+.controls {
+  text-align: right;
+}
+
+.comment {
+  font-size: large;
+}
