@@ -85,7 +85,7 @@
     "js-base64": "^3.6.0",
     "jssha": "^3.1.2",
     "lodash": "^4.17.20",
-    "mapbox-gl": "^1.12.0",
+    "mapbox-gl": "^1.13.0",
     "mixpanel-browser": "^2.39.0",
     "moment": "^2.29.1",
     "ngx-bootstrap": "^6.2.0",
