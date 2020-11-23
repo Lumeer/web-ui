@@ -91,7 +91,7 @@
     "ngx-bootstrap": "^6.2.0",
     "ngx-color-picker": "^10.1.0",
     "ngx-contextmenu": "^5.4.0",
-    "ngx-device-detector": "^2.0.0",
+    "ngx-device-detector": "^2.0.1",
     "ngx-gravatar": "^10.0.0",
     "ngx-infinite-scroll": "^10.0.0",
     "ngx-quill": "^12.0.1",
