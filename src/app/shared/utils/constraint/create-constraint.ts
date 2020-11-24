@@ -61,7 +61,7 @@ export function createConstraint(type: string, config: any): Constraint {
     case ConstraintType.User:
       return new UserConstraint(config);
     case ConstraintType.Link:
-      return new LinkConstraint();
+      return new LinkConstraint(config);
     default:
       return new UnknownConstraint();
   }

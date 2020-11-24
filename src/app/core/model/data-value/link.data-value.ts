@@ -28,9 +28,12 @@ import {dataValuesMeetConditionByText, valueByConditionText} from './data-value.
 export class LinkDataValue implements DataValue {
   public readonly linkValue: string;
   public readonly titleValue: string;
-  public readonly config: LinkConstraintConfig = {};
 
-  constructor(public readonly value: string, public readonly inputValue?: string) {
+  constructor(
+    public readonly value: string,
+    public readonly config: LinkConstraintConfig,
+    public readonly inputValue?: string
+  ) {
     const {link, title} = parseLinkValue(inputValue || value || '');
     this.linkValue = link || '';
     this.titleValue = title || '';
@@ -65,7 +68,7 @@ export class LinkDataValue implements DataValue {
 
   public copy(newValue?: any): LinkDataValue {
     const value = newValue !== undefined ? newValue : this.value;
-    return new LinkDataValue(value);
+    return new LinkDataValue(value, this.config);
   }
 
   public increment(): DataValue {
@@ -81,7 +84,7 @@ export class LinkDataValue implements DataValue {
   }
 
   public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
-    const dataValues = (values || []).map(value => new LinkDataValue(value.value));
+    const dataValues = (values || []).map(value => new LinkDataValue(value.value, this.config));
     const formattedValue = this.format().toLowerCase().trim();
     const otherFormattedValues = dataValues.map(dataValue => dataValue.format().toLowerCase().trim());
     return dataValuesMeetConditionByText(condition, formattedValue, otherFormattedValues);
@@ -96,7 +99,7 @@ export class LinkDataValue implements DataValue {
   }
 
   public parseInput(inputValue: string): LinkDataValue {
-    return new LinkDataValue(inputValue, inputValue);
+    return new LinkDataValue(inputValue, this.config, inputValue);
   }
 
   public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {

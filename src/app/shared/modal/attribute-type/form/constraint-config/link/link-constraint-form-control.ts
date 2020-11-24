@@ -17,27 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {PresenterModule} from '../../presenter/presenter.module';
-import {TextEditorModalComponent} from './text-editor-modal.component';
-import {QuillModule} from 'ngx-quill';
-import {PipesModule} from '../../pipes/pipes.module';
-
-@NgModule({
-  declarations: [TextEditorModalComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ModalWrapperModule,
-    PresenterModule,
-    PipesModule,
-    QuillModule.forRoot(),
-  ],
-  exports: [TextEditorModalComponent],
-})
-export class TextEditorModalModule {}
+export enum LinkConstraintFormControl {
+  OpenInApp = 'openIpApp',
+}

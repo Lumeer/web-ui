@@ -21,18 +21,20 @@ import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
 import {QueryCondition} from '../../store/navigation/query/query';
 import {LinkDataValue} from '../data-value/link.data-value';
+import {LinkConstraintConfig} from '../data/constraint-config';
 
 export class LinkConstraint implements Constraint {
   public readonly type = ConstraintType.Link;
-  public readonly config = {};
   public readonly isTextRepresentation = false;
 
+  constructor(public readonly config: LinkConstraintConfig) {}
+
   public createDataValue(value: any): LinkDataValue {
-    return new LinkDataValue(value);
+    return new LinkDataValue(value, this.config);
   }
 
   public createInputDataValue(inputValue: string, value: any): LinkDataValue {
-    return new LinkDataValue(value, inputValue);
+    return new LinkDataValue(value, this.config, inputValue);
   }
 
   public conditions(): QueryCondition[] {

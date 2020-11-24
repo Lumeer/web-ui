@@ -144,7 +144,9 @@ export interface UserConstraintConfig {
   externalUsers: boolean;
 }
 
-export interface LinkConstraintConfig {}
+export interface LinkConstraintConfig {
+  openInApp?: boolean;
+}
 
 export type ConstraintConfig =
   | AddressConstraintConfig

@@ -5425,7 +5425,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} }</source>
+        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/permissions/aggregation-select-items.pipe.ts</context>
           <context context-type="linenumber">1</context>
@@ -6166,7 +6166,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="perspective.pivot.data.aggregation" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} }</source>
+        <source>{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context>
           <context context-type="linenumber">1</context>

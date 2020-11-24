@@ -19,25 +19,12 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-
+import {EmbeddedLinkModalComponent} from './embedded-link-modal.component';
 import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {PresenterModule} from '../../presenter/presenter.module';
-import {TextEditorModalComponent} from './text-editor-modal.component';
-import {QuillModule} from 'ngx-quill';
-import {PipesModule} from '../../pipes/pipes.module';
 
 @NgModule({
-  declarations: [TextEditorModalComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ModalWrapperModule,
-    PresenterModule,
-    PipesModule,
-    QuillModule.forRoot(),
-  ],
-  exports: [TextEditorModalComponent],
+  declarations: [EmbeddedLinkModalComponent],
+  imports: [CommonModule, ModalWrapperModule],
+  exports: [EmbeddedLinkModalComponent],
 })
-export class TextEditorModalModule {}
+export class EmbeddedLinkModalModule {}

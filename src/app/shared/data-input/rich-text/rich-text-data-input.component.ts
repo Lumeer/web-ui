@@ -42,7 +42,7 @@ import {ModalService} from '../../modal/modal.service';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {isNotNullOrUndefined, unescapeHtml} from '../../utils/common.utils';
+import {isNotNullOrUndefined, preventEvent, unescapeHtml} from '../../utils/common.utils';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
@@ -100,7 +100,6 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   private modalSubscription = new Subscription();
   private preventSave: boolean;
   private keyDownListener: (event: KeyboardEvent) => void;
-  private setFocus: boolean;
 
   public readonly modules = {
     toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
@@ -159,9 +158,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
   }
 
   public openTextEditor(event: MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    event.stopImmediatePropagation();
+    preventEvent(event);
 
     const content = this.text;
     this.preventSaveAndBlur();

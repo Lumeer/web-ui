@@ -25,16 +25,21 @@ import {
   Input,
   OnChanges,
   Output,
+  SecurityContext,
   SimpleChanges,
 } from '@angular/core';
 import {completeLinkValue, formatLinkValue, LinkDataValue} from '../../../core/model/data-value/link.data-value';
-import {DomSanitizer} from '@angular/platform-browser';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction} from '../data-input-save-action';
+import {preventEvent} from '../../utils/common.utils';
+import {ModalService} from '../../modal/modal.service';
+import {EmbeddedLinkModalComponent} from '../../modal/embedded-link/embedded-link-modal.component';
 
 @Component({
   selector: 'link-data-input',
   templateUrl: './link-data-input.component.html',
+  styleUrls: ['./link-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: {class: 'px-1 w-100 h-100 d-flex align-items-center'},
 })
@@ -64,10 +69,10 @@ export class LinkDataInputComponent implements OnChanges {
   public enterInvalid = new EventEmitter();
 
   public linkValue: string;
-  public completeLinkValue: any;
+  public completeLinkValue: SafeUrl;
   public titleValue: string;
 
-  constructor(public element: ElementRef, private domSanitizer: DomSanitizer) {}
+  constructor(public element: ElementRef, private domSanitizer: DomSanitizer, private modalService: ModalService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value && this.value) {
@@ -86,5 +91,15 @@ export class LinkDataInputComponent implements OnChanges {
     const newValue = this.value.parseInput(formattedValue);
     const action = data.enter ? DataInputSaveAction.Enter : DataInputSaveAction.Button;
     this.save.next({action, dataValue: newValue});
+  }
+
+  public onLinkClick(event: MouseEvent) {
+    preventEvent(event);
+
+    this.modalService.show(EmbeddedLinkModalComponent, {
+      keyboard: true,
+      class: 'modal-xxl modal-xxl-height',
+      initialState: {url: this.domSanitizer.bypassSecurityTrustResourceUrl(completeLinkValue(this.linkValue))},
+    });
   }
 }

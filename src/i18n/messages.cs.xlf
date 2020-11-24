@@ -3505,7 +3505,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="link.detail.unlink" datatype="html">
         <source>Unlink</source><target>Odpojit</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/header/document-detail-header.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit>
             <trans-unit id="document.detail.favorite.remove" datatype="html">
                 <source>Remove from favorites</source>
@@ -4289,7 +4289,7 @@
           <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.chart.config.aggregation.name" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} }</target>
+        <source>{VAR_SELECT, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median} }</source><target>{VAR_SELECT, select, sum {Suma} avg {Průměr} min {Minimum} max {Maximum} count {Počet} unique {Unikátní} median {Medián} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/pipes/permissions/aggregation-select-items.pipe.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="user.permission.humanName" datatype="html">
         <source>{VAR_SELECT, select, READ {Reader} MANAGE {Creator} WRITE {Author} EMPTY {No role assigned} }</source><target>{VAR_SELECT, select, READ {Čtenář} MANAGE {Tvůrce} WRITE {Autor} EMPTY {Bez role} }</target>
@@ -4456,7 +4456,7 @@
           <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit><trans-unit id="perspective.pivot.data.aggregation" datatype="html">
-        <source>{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} }</source><target>{VAR_SELECT, select, sum {Součet} min {Minimum z} max {Maximum z} avg {Průměr z} count {Počet} unique {Unikátních}}</target>
+        <source>{VAR_SELECT, select, sum {Sum of} min {Min of} max {Max of} avg {Average of} count {Count of} unique {Unique of} median {Median of} }</source><target>{VAR_SELECT, select, sum {Součet} min {Minimum z} max {Maximum z} avg {Průměr z} count {Počet} unique {Unikátních} median {Medián z}}</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/view/perspectives/pivot/wrapper/pivot-perspective-wrapper.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4754,7 +4754,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/search/documents/content/header/search-document-header.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="perspective.workflow.table.resize" datatype="html">
         <source>Resize table</source><target>Roztáhnout tabulku</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/workflow/content/tables/workflow-tables.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="workflow.table.empty" datatype="html">
         <source>
     There are no rows to display and you are not allowed to create any.

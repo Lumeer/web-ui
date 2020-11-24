@@ -33,6 +33,7 @@ export enum DataAggregationType {
   Avg = 'avg',
   Count = 'count',
   Unique = 'unique',
+  Median = 'median',
 }
 
 export function isValueAggregation(aggregation: DataAggregationType): boolean {
@@ -69,6 +70,8 @@ export function aggregateDataValues(
       return minInValues(nonNullValues, constraint, onlyNumeric);
     case DataAggregationType.Max:
       return maxInValues(nonNullValues, constraint, onlyNumeric);
+    case DataAggregationType.Median:
+      return medianValue(nonNullValues, constraint, onlyNumeric);
     case DataAggregationType.Count:
       return countValues(nonNullValues);
     case DataAggregationType.Unique:
@@ -78,7 +81,76 @@ export function aggregateDataValues(
   }
 }
 
-function sumValues(values: any[], constraint: Constraint, onlyNumeric): any {
+function medianValue(values: any[], constraint: Constraint, onlyNumeric: boolean): any {
+  if (!constraint) {
+    return medianInAnyValues(values, onlyNumeric);
+  }
+
+  switch (constraint.type) {
+    case ConstraintType.Number:
+    case ConstraintType.Percentage:
+    case ConstraintType.Duration:
+      return medianInNumericValues(values, onlyNumeric);
+    case ConstraintType.DateTime:
+      return medianInAnyValues(values, onlyNumeric);
+    default:
+      const formatted = formattedValues(values, constraint);
+      if (valuesAreNumeric(formatted)) {
+        return medianInNumericValues(formatted, onlyNumeric);
+      }
+      return medianInAnyValues(values, onlyNumeric);
+  }
+}
+
+function medianInNumericValues(values: any[], onlyNumeric: boolean): any {
+  const bigValues = transformToBigValues(values).sort((a, b) => a.cmp(b));
+  if (bigValues.length === 0) {
+    return onlyNumeric ? null : values[0];
+  } else if (bigValues.length === 1) {
+    return toNumber(bigValues[0].toFixed());
+  }
+
+  const middle = Math.floor(bigValues.length / 2);
+  if (bigValues.length % 2 === 0) {
+    return toNumber(
+      bigValues[middle]
+        .plus(bigValues[middle - 1])
+        .div(new Big(2))
+        .toFixed()
+    );
+  }
+  return toNumber(bigValues[middle].toFixed());
+}
+
+function medianInAnyValues(values: any[], onlyNumeric): any {
+  const nonZeroValues = values.filter(val => val !== 0 && val !== '0');
+  const containsOnlyPercentValues = nonZeroValues.length > 0 && nonZeroValues.every(val => isPercentageValue(val));
+  if (containsOnlyPercentValues && !onlyNumeric) {
+    const percentageNumericValues = mapPercentageValues(nonZeroValues);
+    return `${median(percentageNumericValues, onlyNumeric)}%`;
+  }
+
+  const numericValues = values.filter(value => isNumeric(value));
+  return median(numericValues, onlyNumeric);
+}
+
+function median(values: number[], onlyNumeric?: boolean): number {
+  if (values.length === 0) {
+    return onlyNumeric ? null : values[0] || 0;
+  } else if (values.length === 1) {
+    return values[0];
+  }
+  const valuesSorted = values.sort((a, b) => a - b);
+
+  const middle = Math.floor(values.length / 2);
+  if (valuesSorted.length % 2 === 0) {
+    return (valuesSorted[middle] + valuesSorted[middle - 1]) / 2;
+  }
+
+  return valuesSorted[middle];
+}
+
+function sumValues(values: any[], constraint: Constraint, onlyNumeric: boolean): any {
   if (!constraint) {
     return sumAnyValues(values, onlyNumeric);
   }
@@ -91,15 +163,16 @@ function sumValues(values: any[], constraint: Constraint, onlyNumeric): any {
     case ConstraintType.DateTime:
       return sumAnyValues(values, onlyNumeric);
     default:
-      if (formattedValuesAreNumeric(values, constraint)) {
-        return sumNumericValues(formattedValues(values, constraint), onlyNumeric);
+      const formatted = formattedValues(values, constraint);
+      if (valuesAreNumeric(formatted)) {
+        return sumNumericValues(formatted, onlyNumeric);
       }
       return sumAnyValues(values, onlyNumeric);
   }
 }
 
-function formattedValuesAreNumeric(values: any[], constraint: Constraint): boolean {
-  return formattedValues(values, constraint).every(value => isNumeric(value));
+function valuesAreNumeric(values: any[]): boolean {
+  return values.every(value => isNumeric(value));
 }
 
 function formattedValues(values: any[], constraint: Constraint): any[] {
@@ -162,8 +235,9 @@ function avgValues(values: any[], constraint: Constraint, onlyNumeric): any {
     case ConstraintType.DateTime:
       return avgNumericValues(values, onlyNumeric);
     default:
-      if (formattedValuesAreNumeric(values, constraint)) {
-        return avgNumericValues(formattedValues(values, constraint), onlyNumeric);
+      const formatted = formattedValues(values, constraint);
+      if (valuesAreNumeric(formatted)) {
+        return avgNumericValues(formatted, onlyNumeric);
       }
       return avgAnyValues(values, onlyNumeric);
   }
@@ -214,8 +288,9 @@ function minInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
     case ConstraintType.DateTime:
       return minInNumericValues(values, onlyNumeric);
     default:
-      if (formattedValuesAreNumeric(values, constraint)) {
-        return minInNumericValues(formattedValues(values, constraint), onlyNumeric);
+      const formatted = formattedValues(values, constraint);
+      if (valuesAreNumeric(formatted)) {
+        return minInNumericValues(formatted, onlyNumeric);
       }
       return minInAnyValues(values, onlyNumeric);
   }
@@ -250,8 +325,9 @@ function maxInValues(values: any[], constraint: Constraint, onlyNumeric: boolean
     case ConstraintType.DateTime:
       return maxInNumericValues(values, onlyNumeric);
     default:
-      if (formattedValuesAreNumeric(values, constraint)) {
-        return maxInNumericValues(formattedValues(values, constraint), onlyNumeric);
+      const formatted = formattedValues(values, constraint);
+      if (valuesAreNumeric(formatted)) {
+        return maxInNumericValues(formatted, onlyNumeric);
       }
       return maxInAnyValues(values, onlyNumeric);
   }

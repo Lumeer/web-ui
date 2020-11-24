@@ -46,6 +46,7 @@ import {AttributeTypeSelectComponent} from './form/select/attribute-type-select.
 import {SelectConstraintOptionsFormComponent} from './form/constraint-config/select/options/select-constraint-options-form.component';
 import {SelectModule} from '../../select/select.module';
 import {DirectivesModule} from '../../directives/directives.module';
+import {LinkConstraintConfigFormComponent} from './form/constraint-config/link/link-constraint-config-form.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import {DirectivesModule} from '../../directives/directives.module';
     AttributeTypeFormComponent,
     AttributeTypeSelectComponent,
     AttributeTypeModalComponent,
+    LinkConstraintConfigFormComponent,
   ],
   imports: [
     CommonModule,
