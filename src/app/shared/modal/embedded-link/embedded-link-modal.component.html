@@ -1,0 +1,15 @@
+<modal-wrapper
+  [dialogType]="dialogType.Primary"
+  [showHeader]="false"
+  (onClose)="hideDialog()"
+  [showSubmit]="false">
+
+  <div class="body h-100">
+    <iframe [src]="url" is="x-frame-bypass" class="w-100 h-100 border-0"></iframe>
+  </div>
+
+  <span class="button-cancel">
+      <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+  </span>
+
+</modal-wrapper>

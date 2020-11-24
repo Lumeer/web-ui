@@ -1,15 +1,17 @@
-<td>
+<td class="align-middle">
   <user-stamp [userName]="userName" [email]="email" [roles]="roles"></user-stamp>
 </td>
 
-<td>
+<td class="align-middle">
   <div class="text-truncate">{{email}}</div>
 </td>
 
-<td>
+<td class="align-middle">
   <div>
-    <i *ngFor="let role of viewResourceType | resourceRoles"
-       class="fas fa-fw {{role | roleIcon}} mx-1"
+    <i *ngFor="let role of viewResourceType | resourceRoles; let first = first"
+       class="fas fa-fw {{role | roleIcon}}"
+       [class.mx-1]="!first"
+       [class.mr-1]="first"
        [class.role-clickable]="changeRoles"
        [class.role-selected]="roles | includes:role"
        aria-hidden="true"

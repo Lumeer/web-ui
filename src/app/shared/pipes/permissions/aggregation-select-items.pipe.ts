@@ -36,7 +36,8 @@ export class AggregationSelectItemsPipe implements PipeTransform {
     return this.i18n(
       {
         id: 'perspective.chart.config.aggregation.name',
-        value: '{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique}}',
+        value:
+          '{type, select, sum {Sum} avg {Average} min {Minimum} max {Maximum} count {Count} unique {Unique} median {Median}}',
       },
       {type}
     );

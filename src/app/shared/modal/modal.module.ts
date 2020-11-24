@@ -36,6 +36,7 @@ import {VerifyEmailModalModule} from './verify-email/verify-email-modal.module';
 import {CreateProjectModalModule} from './create-project/create-project-modal.module';
 import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
+import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
 
 @NgModule({
   declarations: [],
@@ -58,6 +59,7 @@ import {ChooseOrganizationModalModule} from './choose-organization/choose-organi
     CreateProjectModalModule,
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
+    EmbeddedLinkModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -77,6 +79,7 @@ import {ChooseOrganizationModalModule} from './choose-organization/choose-organi
     CreateProjectModalModule,
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
+    EmbeddedLinkModalModule,
   ],
 })
 export class ModalModule {}

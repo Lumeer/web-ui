@@ -17,27 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {SafeResourceUrl} from '@angular/platform-browser';
+import {BsModalRef} from 'ngx-bootstrap/modal';
+import {DialogType} from '../dialog-type';
 
-import {ModalWrapperModule} from '../wrapper/modal-wrapper.module';
-import {PresenterModule} from '../../presenter/presenter.module';
-import {TextEditorModalComponent} from './text-editor-modal.component';
-import {QuillModule} from 'ngx-quill';
-import {PipesModule} from '../../pipes/pipes.module';
-
-@NgModule({
-  declarations: [TextEditorModalComponent],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    ModalWrapperModule,
-    PresenterModule,
-    PipesModule,
-    QuillModule.forRoot(),
-  ],
-  exports: [TextEditorModalComponent],
+@Component({
+  selector: 'embedded-link-modal',
+  templateUrl: './embedded-link-modal.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextEditorModalModule {}
+export class EmbeddedLinkModalComponent {
+  @Input()
+  public url: SafeResourceUrl;
+
+  public readonly dialogType = DialogType;
+
+  constructor(private bsModalRef: BsModalRef) {}
+
+  public hideDialog() {
+    this.bsModalRef.hide();
+  }
+}

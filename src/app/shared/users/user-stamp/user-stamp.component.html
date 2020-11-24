@@ -1,10 +1,10 @@
-<div class="d-flex flex-row user-box">
+<div class="user-box">
   <img ngxGravatar
        [email]="email"
        [size]="48"
-       class="mr-3">
-  <div class="flex-column align-self-center user-name">
-    <div *ngIf="userName; else noName" class="flex-nowrap">{{userName}}</div>
+       class="">
+  <div class="flex-column align-self-center user-name ml-3 text-truncate">
+    <div *ngIf="userName; else noName" class="flex-nowrap text-truncate">{{userName}}</div>
     <div class="text-muted">{{roles | roleHumanReadable}}</div>
   </div>
 </div>

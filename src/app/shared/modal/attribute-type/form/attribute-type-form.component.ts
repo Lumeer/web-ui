@@ -43,6 +43,7 @@ import {NumberConstraintFormControl} from './constraint-config/number/number-con
 import {escapeHtml, isNotNullOrUndefined} from '../../../utils/common.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {uniqueValues} from '../../../utils/array.utils';
+import {LinkConstraintFormControl} from './constraint-config/link/link-constraint-form-control';
 
 @Component({
   selector: 'attribute-type-form',
@@ -178,7 +179,9 @@ export class AttributeTypeFormComponent implements OnChanges {
           onlyIcon: !this.configForm.get(UserConstraintFormControl.OnlyIcon).value,
         };
       case ConstraintType.Link:
-        return {};
+        return {
+          openInApp: this.configForm.get(LinkConstraintFormControl.OpenInApp)?.value,
+        };
       default:
         return null;
     }

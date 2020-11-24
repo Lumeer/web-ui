@@ -79,8 +79,8 @@ export class PivotValueAttributeConfigComponent {
     const attribute: PivotAttribute = {...itemId, resourceId: resource.id, resourceType};
     const headerAttribute: PivotValueAttribute = {
       ...attribute,
-      aggregation: DataAggregationType.Sum,
-      valueType: PivotValueType.Default,
+      aggregation: this.pivotAttribute?.aggregation || DataAggregationType.Sum,
+      valueType: this.pivotAttribute?.valueType || PivotValueType.Default,
     };
     this.attributeSelect.emit(headerAttribute);
   }
