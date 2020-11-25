@@ -65,7 +65,7 @@ export class ApiResourceCommentService extends BaseService implements ResourceCo
   }
 
   private apiPrefix(workspace: Workspace, comment: Partial<ResourceCommentDto>): string {
-    return `${this.workspaceApiPrefix(workspace)}/comments/${comment.resourceType}/${comment.resourceId}`;
+    return `${this.workspaceApiPrefix(workspace)}/comments/${comment.resourceType.toLowerCase()}/${comment.resourceId}`;
   }
 
   private workspaceApiPrefix(workspace: Workspace): string {

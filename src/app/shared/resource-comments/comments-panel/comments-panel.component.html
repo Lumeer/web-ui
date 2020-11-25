@@ -1,0 +1,16 @@
+<new-comment [user]="user$ | async" [sending]="sending$ | async" (onNewComment)="newComment($event)"></new-comment>
+
+<ng-container *ngIf="{comments: comments$ | async} as data">
+  <ng-container *ngFor="let comment of data.comments;">
+    <comment-item [user]="user$ | async"
+                  [comment]="comment"
+                  (onRemove)="removeComment($event)"
+                  (onUpdate)="updateComment($event)">
+    </comment-item>
+  </ng-container>
+
+  <div *ngIf="!data.comments?.length" class="text-center p-4 font-italic" i18n="@@document.detail.comments.empty">
+    No comments yet. Write the first one!
+  </div>
+</ng-container>
+

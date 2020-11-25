@@ -17,24 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {DetailTabType} from '../detail-tab-type';
+import {Pipe, PipeTransform} from '@angular/core';
+import {ResourceType} from '../../core/model/resource-type';
+import {AttributesResourceType} from '../../core/model/resource';
 
-@Component({
-  selector: 'detail-tabs',
-  templateUrl: './detail-tabs.component.html',
-  styleUrls: ['./detail-tabs.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+@Pipe({
+  name: 'attributeResourceTypeToResourceType',
 })
-export class DetailTabsComponent {
-  @Input()
-  public activeTab: DetailTabType;
-
-  @Input()
-  public showLinks: boolean = true;
-
-  public readonly detailTabTypes = DetailTabType;
-
-  @Output()
-  public onTabSelect = new EventEmitter<DetailTabType>();
+export class AttributeResourceTypeToResourceTypePipe implements PipeTransform {
+  public transform(value: AttributesResourceType): ResourceType {
+    switch (value) {
+      case AttributesResourceType.Collection:
+        return ResourceType.Document;
+      case AttributesResourceType.LinkType:
+        return ResourceType.Link;
+      default:
+        return null;
+    }
+  }
 }

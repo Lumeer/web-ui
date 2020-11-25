@@ -27,6 +27,7 @@ import {ShortDateComponent} from './short-date/short-date.component';
 import {PipesModule} from '../pipes/pipes.module';
 import {CommentItemComponent} from './comment-item/comment-item.component';
 import {NewCommentComponent} from './new-comment/new-comment.component';
+import {CommentsPanelComponent} from './comments-panel/comments-panel.component';
 
 @NgModule({
   declarations: [
@@ -35,8 +36,9 @@ import {NewCommentComponent} from './new-comment/new-comment.component';
     ShortDateComponent,
     CommentItemComponent,
     NewCommentComponent,
+    CommentsPanelComponent,
   ],
   imports: [CommonModule, GravatarModule, TooltipModule, PipesModule],
-  exports: [CommentItemComponent, UserAvatarComponent, ShortDateComponent, NewCommentComponent],
+  exports: [CommentItemComponent, UserAvatarComponent, ShortDateComponent, NewCommentComponent, CommentsPanelComponent],
 })
 export class ResourceCommentsModule {}

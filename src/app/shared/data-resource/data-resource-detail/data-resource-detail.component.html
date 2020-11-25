@@ -9,7 +9,10 @@
                         (remove)="onRemove()">
 </document-detail-header>
 
-<detail-tabs [activeTab]="selectedTab" (onTabSelect)="selectedTab = $event"></detail-tabs>
+<detail-tabs [showLinks]="resourceType === collectionResourceType"
+             [activeTab]="selectedTab"
+             (onTabSelect)="selectedTab = $event">
+</detail-tabs>
 
 <data-resource-data *ngIf="selectedTab === detailTabType.Detail"
                     [resource]="resource"
@@ -30,9 +33,9 @@
                     (dataResourceChanged)="dataResourceChanged.emit($event)">
 </data-resource-data>
 
-<ng-container *ngIf="selectedTab === detailTabType.Links">
+<ng-container *ngIf="selectedTab === detailTabType.Links && resourceType === collectionResourceType">
   <div>
-    <!-- TODO ngIf resource is type Collection -->
+    <!-- TODO Create Link Button -->
     <links-accordeon class="d-block"
                 *ngIf="resource && dataResource?.id"
                 [document]="dataResource"
@@ -47,10 +50,13 @@
 </ng-container>
 
 <ng-container *ngIf="selectedTab === detailTabType.Comments">
-  <new-comment></new-comment>
-  <comment-item></comment-item>
+  <comments-panel *ngIf="resource && dataResource?.id"
+                  [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                  [resourceId]="dataResource.id">
+  </comments-panel>
 </ng-container>
 
 <ng-container *ngIf="selectedTab === detailTabType.Activity">
   <p class="p-4 text-center" i18n="@@document.detail.activity.contact">Audit log is available in the <em>Enterprise edition</em>. Please <a href="https://www.lumeer.io/contact/" target="_blank">contact support</a>.</p>
 </ng-container>
+

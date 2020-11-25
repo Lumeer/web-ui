@@ -31,11 +31,36 @@ export class ClipboardService {
     document.removeEventListener('copy', this.copyHandler);
   };
 
+  private pasteHandler = (e: ClipboardEvent) => {
+    e.clipboardData.setData('text/plain', this.stringToCopy);
+    e.preventDefault();
+    document.removeEventListener('paste', this.pasteHandler);
+  };
+
   public copy(value: string) {
     this.stringToCopy = value;
     document.addEventListener('copy', this.copyHandler);
     setTimeout(() => {
       document.execCommand('copy');
+    });
+  }
+
+  public paste(value: string) {
+    this.stringToCopy = value;
+    document.addEventListener('paste', this.pasteHandler);
+    setTimeout(() => {
+      document.execCommand('paste');
+    });
+  }
+
+  public copyPaste(value: string) {
+    this.stringToCopy = value;
+    document.addEventListener('copy', this.copyHandler);
+    setTimeout(() => {
+      document.execCommand('copy');
+      setTimeout(() => {
+        document.execCommand('paste');
+      }, 200);
     });
   }
 }

@@ -1,13 +1,41 @@
-<div class="new-comment">
+<div class="new-comment" *ngIf="{editing: editing$ | async, commentText: commentText$ | async} as data">
   <div class="editor">
-    <p class="text-muted font-italic">Write a new comment...</p>
+    <div [class.d-none]="data.editing || sending" class="comment-input" (click)="editComment()">
+      <p class="text-muted font-italic p-2" i18n="@@document.detail.comments.new.write">Write a new comment...</p>
+    </div>
+    <div [class.d-none]="!data.editing && !sending"
+         [contentEditable]="true"
+         class="comment-input editable"
+         #commentInput
+         (keyup)="updateCommentInput()"
+         (keydown)="onKeyDown($event)"
+         (blur)="updateCommentInput()"
+         (paste)="pastedContent($event)">
+    </div>
   </div>
-  <div class="controls">
-    <div class="author">
 
+  <div class="controls" *ngIf="data.editing">
+    <div class="author">
+      <ng-container *ngIf="!initialComment">
+        <span i18n="@@document.detail.comments.posting.user.title" class="mr-2 text-muted">Posting as</span>
+        <user-avatar [email]="user.email" [tooltipText]="user.name" [avatarSize]="15"></user-avatar>
+      </ng-container>
     </div>
     <div class="button">
-
+      <button (click)="cancelEditComment()"
+              type="button"
+              class="btn btn-sm btn-outline-secondary text-nowrap mr-2">
+        <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
+      </button>
+      <button (click)="sendComment()"
+              [attr.aria-disabled]="sending || (data.editing && !commentInput.innerText)"
+              [disabled]="sending || (data.editing && !commentInput.innerText)"
+              type="button"
+              class="btn btn-sm btn-success text-nowrap font-weight-bold">
+        <span *ngIf="sending" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
+        <i class="fal fa-check mr-1"></i><span i18n="@@button.send">Send</span>
+        <small class="small ml-1">{{macOS ? '⌘ ⏎' : 'Ctrl + ⏎'}}</small>
+      </button>
     </div>
   </div>
 </div>
