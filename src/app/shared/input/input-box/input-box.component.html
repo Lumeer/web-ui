@@ -23,6 +23,7 @@
        [attr.placeholder]="mPlaceholder"
        [attr.title]="title"
        (input)="onInterimNewValue(input.textContent)"
+       (paste)="pasteContent($event)"
        (keydown.enter)="onEnter(); input.blur()"
        (keydown.Escape)="input.textContent = mCurrentValue; input.blur()"
        (keydown)="onKeyDown($event)"
