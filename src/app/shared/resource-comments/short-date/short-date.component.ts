@@ -35,5 +35,8 @@ export class ShortDateComponent {
   public icon: string;
 
   @Input()
+  public placement: string;
+
+  @Input()
   public tooltipText: string;
 }

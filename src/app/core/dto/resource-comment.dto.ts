@@ -17,12 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ResourceType} from '../model/resource-type';
-
 export interface ResourceCommentDto {
   id: string;
   correlationId?: string;
-  resourceType: ResourceType;
+  resourceType: string;
   resourceId: string;
   creationDate?: number;
   updateDate?: number;

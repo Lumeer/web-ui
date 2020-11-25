@@ -54,7 +54,6 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {ResourceAttributeSettings, ViewSettings} from '../../../core/store/views/view';
 import {DataRow} from '../../data/data-row.service';
 import {DetailTabType} from './detail-tab-type';
-import {ResourceType} from '../../../core/model/resource-type';
 
 @Component({
   selector: 'data-resource-detail',
@@ -108,7 +107,7 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public constraintData$: Observable<ConstraintData>;
 
   public resourceType: AttributesResourceType;
-  public readonly collectionResourceType = ResourceType.Collection;
+  public readonly collectionResourceType = AttributesResourceType.Collection;
 
   public selectedTab: DetailTabType = DetailTabType.Detail;
   public readonly detailTabType = DetailTabType;

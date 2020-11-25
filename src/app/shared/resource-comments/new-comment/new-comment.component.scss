@@ -11,6 +11,22 @@
 .editor {
   border-radius: $border-radius-lg;
   border: $border-width solid $border-color;
-  box-shadow: $box-shadow;
-  min-height: 1.5rem;
+  min-height: 2.7rem;
+
+  p {
+    line-height: 1.7rem;
+  }
+}
+
+.comment-input.editable {
+  padding: 0.5rem;
+  min-height: inherit;
+  font-size: large;
+}
+
+.controls {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  padding: 0.5rem 0.25rem;
 }

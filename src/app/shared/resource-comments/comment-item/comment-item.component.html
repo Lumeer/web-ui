@@ -1,20 +1,56 @@
 <div class="comment-item">
-
   <div class="author text-muted small">
-    <user-avatar [avatarSize]="15" email="marvenec@gmail.com" tooltipText="Martin Večeřa" class="mr-2"></user-avatar>
-    <short-date icon="fa-file" [date]="date" tooltipText="Created by Martin Večeřa" format="ll" class="mr-3"></short-date>
-    <short-date icon="fa-pencil" [date]="date" tooltipText="Updated by Martin Večeřa" format="ll" class="mr-3"></short-date>
+    <user-avatar [avatarSize]="15"
+                 placement="top"
+                 [email]="comment?.authorEmail"
+                 [tooltipText]="createdByMsg + ' ' + comment?.authorName" class="mr-2">
+    </user-avatar>
+    <short-date icon="fa-file"
+                [date]="comment?.creationDate"
+                [tooltipText]="createdOnMsg + ' ' + (comment?.creationDate | date:'medium')"
+                placement="top"
+                format="ll"
+                class="mr-3">
+    </short-date>
+    <short-date *ngIf="comment?.updateDate"
+                icon="fa-pencil"
+                [date]="comment?.updateDate"
+                [tooltipText]="updatedOnMsg + ' ' + (comment?.updateDate | date:'medium')"
+                placement="top"
+                format="ll"
+                class="mr-3">
+    </short-date>
   </div>
 
-  <div class="none"></div>
+  <div *ngIf="!(editing$ | async)" class="none"></div>
 
-  <div class="controls">
-    <i class="fa fa-edit color-success mr-2 cursor-pointer"></i>
-    <i class="fa fa-trash color-danger cursor-pointer"></i>
+  <div *ngIf="!(editing$ | async)" class="controls">
+    <i *ngIf="user?.id === comment?.author"
+       tooltip="Edit"
+       i18n-tooltip="@@button.edit"
+       tooltipPlacement="top"
+       class="fa fa-edit color-success mr-2 cursor-pointer"
+       (click)="editComment(comment)">
+    </i>
+    <i *ngIf="user?.id === comment?.author"
+       tooltip="Remove"
+       i18n-tooltip="@@button.remove"
+       tooltipPlacement="top"
+       class="fa fa-trash color-danger cursor-pointer"
+       (click)="onRemove.emit(comment)">
+    </i>
   </div>
 
-  <div class="comment">
-    Super cool comment on this document, record, work item, no matter how you call it. It is here!
+  <div *ngIf="!(editing$ | async)" [innerHTML]="comment.comment | safeHtml" class="comment">
+  </div>
+
+  <div class="edit">
+    <new-comment *ngIf="editing$ | async"
+                 [user]="user"
+                 [initialComment]="comment"
+                 (onNewComment)="onUpdateComment($event)"
+                 (onCancel)="cancelEdit()" >
+    </new-comment>
   </div>
 
 </div>

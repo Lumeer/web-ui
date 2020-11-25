@@ -34,4 +34,7 @@ export class UserAvatarComponent {
 
   @Input()
   public avatarSize = USER_AVATAR_SIZE;
+
+  @Input()
+  public placement: string;
 }

@@ -98,6 +98,7 @@ import {TruncateStringPipe} from './truncate-string.pipe';
 import {ColumnBackgroundPipe} from './collection-column-background.pipe';
 import {IsDateValidPipe} from './is-date-valid.pipe';
 import {FromNowPipe} from './from-now.pipe';
+import {AttributeResourceTypeToResourceTypePipe} from './attribute-resource-type-to-resource-type.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
@@ -179,6 +180,7 @@ import {FromNowPipe} from './from-now.pipe';
     ColumnBackgroundPipe,
     IsDateValidPipe,
     FromNowPipe,
+    AttributeResourceTypeToResourceTypePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -260,6 +262,7 @@ import {FromNowPipe} from './from-now.pipe';
     ColumnBackgroundPipe,
     IsDateValidPipe,
     FromNowPipe,
+    AttributeResourceTypeToResourceTypePipe,
   ],
 })
 export class PipesModule {}

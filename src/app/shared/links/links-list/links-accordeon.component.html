@@ -1,5 +1,5 @@
 <ng-container *ngIf="{linkTypes: linkTypes$ | async, selectedLinkType: selectedLinkType$ | async} as data">
-  <ng-container *ngIf="data.linkTypes.length > 0">
+  <ng-container *ngIf="data.linkTypes.length > 0; else noLinkTypes">
   <accordion>
     <ng-container *ngFor="let linkType of data?.linkTypes; let idx = index;">
       <accordion-group panelClass="lmr-accordion" [isOpen]="linkType.id === data?.selectedLinkType?.id" (isOpenChange)="isOpenChanged(idx)">
@@ -34,24 +34,9 @@
       </accordion-group>
     </ng-container>
   </accordion>
-    <!--links-list-tabs
-      [linkTypes]="linkTypes"
-      [selectedLinkType]="selectedLinkType$ | async"
-      (select)="onSelectLink($event)">
-    </links-list-tabs>
-    <links-list-table
-      class="d-block mt-2"
-      [linkType]="selectedLinkType$ | async"
-      [document]="document"
-      [collection]="otherCollection$ | async"
-      [permissions]="permissions$ | async"
-      [query]="query$ | async"
-      [allowSelectDocument]="allowSelectDocument"
-      [preventEventBubble]="preventEventBubble"
-      [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
-      [viewSettings]="viewSettings"
-      (unLink)="unLinkDocument($event)"
-      (detail)="onSelectDocument($event)">
-    </links-list-table-->
   </ng-container>
 </ng-container>
+
+<ng-template #noLinkTypes>
+  <p class="p-4 text-center font-italic" i18n="@@document.detail.links.noLinks">There are no links.</p>
+</ng-template>

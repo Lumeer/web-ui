@@ -19,6 +19,7 @@
 
 import {ResourceCommentDto} from '../../dto/resource-comment.dto';
 import {ResourceCommentModel} from './resource-comment.model';
+import {resourceTypesMap} from '../../model/resource-type';
 
 export function convertResourceCommentDtoToModel(
   dto: ResourceCommentDto,
@@ -26,7 +27,7 @@ export function convertResourceCommentDtoToModel(
 ): ResourceCommentModel {
   return {
     id: dto.id,
-    resourceType: dto.resourceType,
+    resourceType: resourceTypesMap[dto.resourceType.toLowerCase()],
     resourceId: dto.resourceId,
     metaData: dto.metaData,
     creationDate: new Date(dto.creationDate),
@@ -45,7 +46,7 @@ export function convertResourceCommentModelToDto(
   return {
     id: model.id,
     correlationId: model.correlationId,
-    resourceType: model.resourceType,
+    resourceType: model.resourceType.toUpperCase(),
     resourceId: model.resourceId,
     metaData: model.metaData,
     comment: model.comment,

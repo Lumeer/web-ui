@@ -19,6 +19,9 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {User} from '../../../core/store/users/user';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'comment-item',
@@ -28,6 +31,21 @@ import {ResourceCommentModel} from '../../../core/store/resource-comments/resour
 })
 export class CommentItemComponent {
   @Input()
+  public user: User;
+
+  public editing$ = new BehaviorSubject<boolean>(false);
+
+  public createdOnMsg = '';
+  public createdByMsg = '';
+  public updatedOnMsg = '';
+
+  constructor(private i18n: I18n) {
+    this.createdOnMsg = this.i18n({id: 'document.detail.header.createdOn', value: 'Created on'});
+    this.createdByMsg = this.i18n({id: 'document.detail.header.createdBy', value: 'Created by'});
+    this.updatedOnMsg = this.i18n({id: 'document.detail.header.updatedOn', value: 'Updated on'});
+  }
+
+  @Input()
   public comment: ResourceCommentModel;
 
   @Output()
@@ -36,5 +54,16 @@ export class CommentItemComponent {
   @Output()
   public onUpdate = new EventEmitter<ResourceCommentModel>();
 
-  public date = new Date('2020-10-22T21:17:29+0000');
+  public editComment(comment: ResourceCommentModel) {
+    this.editing$.next(true);
+  }
+
+  public onUpdateComment($event: Partial<ResourceCommentModel>) {
+    this.editing$.next(false);
+    this.onUpdate.emit({...this.comment, ...$event});
+  }
+
+  public cancelEdit() {
+    this.editing$.next(false);
+  }
 }
