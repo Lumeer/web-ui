@@ -27,7 +27,7 @@
               [class.font-weight-bold]="button.bold"
               [class.border-left-0]="first"
               [class.border-right-0]="last"
-              (click)="onButtonClick(button)">
+              (click)="onButtonClick($event, button)">
         {{button.text}}
       </button>
     </div>
