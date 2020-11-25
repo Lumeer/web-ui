@@ -215,4 +215,10 @@ export class InputBoxComponent implements OnInit {
   public onEnter() {
     this.enter.emit();
   }
+
+  public pasteContent($event: ClipboardEvent) {
+    $event.preventDefault();
+    const data = $event.clipboardData.getData('text/plain').replace(/\n/g, '');
+    document.execCommand('insertText', false, data);
+  }
 }
