@@ -675,6 +675,7 @@ export class WorkflowTablesDataService {
         linkInstanceId: object.linkInstance?.id,
         height: currentRow?.height || TABLE_ROW_HEIGHT,
         correlationId: objectCorrelationId || id,
+        commentsCount: object.document ? object.document.commentsCount : object.linkInstance.commentsCount,
         documentMenuItems: [],
         linkMenuItems: [],
       };

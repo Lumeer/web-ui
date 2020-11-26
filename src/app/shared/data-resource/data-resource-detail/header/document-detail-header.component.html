@@ -17,7 +17,7 @@
 
   <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
     <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates" *ngIf="resourceType === collectionResourceType">
-      <span class="mr-1" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
+      <span (click)="versionClick.emit()" class="mr-1 text-success cursor-pointer" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
       <span *ngIf="dataResource.creationDate | isDateValid">
         <short-date [date]="dataResource.creationDate" format="ll" [tooltipText]="createdOnMsg + ' ' + (dataResource.creationDate | date:'medium')" icon="fa-file"></short-date>
         <user-avatar class="ml-2" [email]="users.createdBy.email" [tooltipText]="createdByMsg + ' ' + users.createdBy.name" [avatarSize]="15"></user-avatar>
@@ -33,6 +33,8 @@
       <i class="{{tableIcon}} mr-2 clickable"
          aria-hidden="true"
          *ngIf="permissions?.writeWithView"
+         tooltip="Switch to Table perspective"
+         i18n-tooltip="@@document.detail.switch.table"
          title="Switch to Table perspective"
          i18n-title="@@document.detail.switch.table"
          (click)="onSwitchToTable()"></i>
@@ -40,18 +42,24 @@
         <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
            title="Remove from favorites"
            i18n-title="@@document.detail.favorite.remove"
+           tooltip="Remove from favorites"
+           i18n-tooltip="@@document.detail.favorite.remove"
            (click)="onFavoriteToggle()"></i>
         <i *ngIf="!document.favorite"
            class="far fa-fw fa-star text-warning clickable mr-2"
            title="Add to favorites"
            i18n-title="@@document.detail.favorite.add"
+           tooltip="Add to favorites"
+           i18n-tooltip="@@document.detail.favorite.add"
            (click)="onFavoriteToggle()"></i>
       </ng-container>
-      <i class="fas fa-fw fa-trash text-danger clickable"
+      <i class="fal fa-fw fa-trash-alt text-danger clickable"
          aria-hidden="true"
          *ngIf="permissions?.writeWithView && resourceType === collectionResourceType"
          title="Remove Record"
          i18n-title="@@document.detail.remove"
+         tooltip="Remove Record"
+         i18n-tooltip="@@document.detail.remove"
          (click)="onRemove()"
       ></i>
       <i class="fas fa-fw fa-unlink text-warning clickable"
@@ -59,6 +67,8 @@
          *ngIf="permissions?.writeWithView  && resourceType !== collectionResourceType"
          title="Unlink"
          i18n-title="@@link.detail.unlink"
+         tooltip="Unlink"
+         i18n-tooltip="@@link.detail.unlink"
          (click)="onRemove()"
       ></i>
     </div>

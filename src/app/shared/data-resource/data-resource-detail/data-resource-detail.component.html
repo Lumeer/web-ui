@@ -6,32 +6,53 @@
                         [permissions]="permissions"
                         [workspace]="workspace$ | async"
                         (switchToTable)="onSwitchToTable()"
-                        (remove)="onRemove()">
+                        (remove)="onRemove()"
+                        (versionClick)="selectedTab = detailTabType.Activity">
 </document-detail-header>
 
 <detail-tabs [showLinks]="resourceType === collectionResourceType"
              [activeTab]="selectedTab"
+             [commentsCount]="commentsCount$ | async"
              (onTabSelect)="selectedTab = $event">
 </detail-tabs>
 
-<data-resource-data *ngIf="selectedTab === detailTabType.Detail"
-                    [resource]="resource"
-                    [dataResource]="dataResource"
-                    [resourceType]="resourceType"
+<ng-container *ngIf="selectedTab === detailTabType.Detail">
+  <data-resource-data [resource]="resource"
+                      [dataResource]="dataResource"
+                      [resourceType]="resourceType"
+                      [permissions]="permissions"
+                      [constraintData]="constraintData$ | async"
+                      [workspace]="workspace$ | async"
+                      [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
+                      [query]="query"
+                      [toolbarRef]="toolbarRef"
+                      [preventEventBubble]="preventEventBubble"
+                      [attributeSettings]="attributeSettings"
+                      (attributeTypeClick)="onAttributeTypeClick($event)"
+                      (attributeFunctionCLick)="onAttributeFunctionClick($event)"
+                      (removeDocument)="onRemove()"
+                      (switchToTable)="onSwitchToTable()"
+                      (dataResourceChanged)="dataResourceChanged.emit($event)">
+  </data-resource-data>
+  <div class="my-5">
+  </div>
+  <ng-container *ngIf="{commentsCount: commentsCount$ | async} as data">
+    <comments-panel *ngIf="resource && dataResource?.id"
+                    [maxCommentsCount]="1"
                     [permissions]="permissions"
-                    [constraintData]="constraintData$ | async"
-                    [workspace]="workspace$ | async"
-                    [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
-                    [query]="query"
-                    [toolbarRef]="toolbarRef"
-                    [preventEventBubble]="preventEventBubble"
-                    [attributeSettings]="attributeSettings"
-                    (attributeTypeClick)="onAttributeTypeClick($event)"
-                    (attributeFunctionCLick)="onAttributeFunctionClick($event)"
-                    (removeDocument)="onRemove()"
-                    (switchToTable)="onSwitchToTable()"
-                    (dataResourceChanged)="dataResourceChanged.emit($event)">
-</data-resource-data>
+                    [resourceType]="resourceType | attributeResourceTypeToResourceType"
+                    [resourceId]="dataResource.id"
+                    (newCommentClick)="editNewComment()">
+    </comments-panel>
+    <div *ngIf="data.commentsCount > 1">
+      <button class="btn btn-sm btn-success font-weight-bold my-3 mx-1"
+              i18n="@@document.detail.detail.comments.seeAll"
+              (click)="selectedTab = detailTabType.Comments">
+        See All {{data.commentsCount}} Comments &gt;
+      </button>
+    </div>
+  </ng-container>
+</ng-container>
 
 <ng-container *ngIf="selectedTab === detailTabType.Links && resourceType === collectionResourceType">
   <div>
@@ -51,8 +72,12 @@
 
 <ng-container *ngIf="selectedTab === detailTabType.Comments">
   <comments-panel *ngIf="resource && dataResource?.id"
+                  [permissions]="permissions"
                   [resourceType]="resourceType | attributeResourceTypeToResourceType"
-                  [resourceId]="dataResource.id">
+                  [resourceId]="dataResource.id"
+                  [startEditing]="startEditing"
+                  (onSaveComment)="startEditing = false"
+                  (onCancelComment)="startEditing = false">
   </comments-panel>
 </ng-container>
 
@@ -60,3 +85,4 @@
   <p class="p-4 text-center" i18n="@@document.detail.activity.contact">Audit log is available in the <em>Enterprise edition</em>. Please <a href="https://www.lumeer.io/contact/" target="_blank">contact support</a>.</p>
 </ng-container>
 
+<div class="spacer mb-5"></div>

@@ -28,6 +28,7 @@ export interface TableRow {
   data?: Record<string, any>; // columnId -> string
   linkInstanceId?: string;
   correlationId?: string;
+  commentsCount?: number;
   documentMenuItems: TableContextMenuItem[];
   linkMenuItems: TableContextMenuItem[];
 }

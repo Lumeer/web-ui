@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {ResourceType} from '../../../core/model/resource-type';
 import {AppState} from '../../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
@@ -31,6 +41,8 @@ import {generateId} from '../../utils/resource.utils';
 import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {take} from 'rxjs/operators';
 
 @Component({
   selector: 'comments-panel',
@@ -45,6 +57,26 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
   @Input()
   public resourceId: string;
 
+  @Input()
+  public maxCommentsCount: number;
+
+  @Input()
+  public permissions: AllowedPermissions;
+
+  @Input()
+  public startEditing: boolean = false;
+
+  @Output()
+  public newCommentClick = new EventEmitter();
+
+  @Output()
+  public onSaveComment = new EventEmitter();
+
+  @Output()
+  public onCancelComment = new EventEmitter();
+
+  public initialComment: ResourceCommentModel;
+
   public user$: Observable<User>;
 
   public comments$: Observable<ResourceCommentModel[]>;
@@ -55,6 +87,19 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
 
   public ngOnInit(): void {
     this.user$ = this.store$.pipe(select(selectCurrentUser));
+    if (this.startEditing) {
+      this.user$.pipe(take(1)).subscribe(user => {
+        this.initialComment = {
+          correlationId: generateId(),
+          comment: '',
+          author: user.id,
+          authorEmail: user.email,
+          authorName: user.name,
+          resourceType: this.resourceType,
+          resourceId: this.resourceId,
+        };
+      });
+    }
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
@@ -80,6 +125,8 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
         onSuccess: commentId => this.sending$.next(false),
       })
     );
+
+    this.onSaveComment.emit();
   }
 
   public removeComment(comment: ResourceCommentModel) {

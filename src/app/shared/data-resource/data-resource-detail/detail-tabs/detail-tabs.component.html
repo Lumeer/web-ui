@@ -24,9 +24,9 @@
        [class.active]="activeTab === detailTabTypes.Comments"
        title="Comments"
        i18n-title="@@document.detail.tabs.comments"
-       i18n="@@document.detail.tabs.comments"
        (click)="onTabSelect.emit(detailTabTypes.Comments)">
-      Comments
+      <span i18n="@@document.detail.tabs.comments">Comments</span>
+      <span class="small">{{commentsCount? ' (' + commentsCount + ')': ''}}</span>
     </a>
   </li>
   <li class="nav-item">

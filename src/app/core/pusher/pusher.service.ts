@@ -71,6 +71,7 @@ import {SequenceConverter} from '../store/sequences/sequence.converter';
 import {OrganizationService, ProjectService} from '../data-service';
 import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
 import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
+import {selectResourceCommentsDictionary} from '../store/resource-comments/resource-comments.state';
 
 @Injectable({
   providedIn: 'root',
@@ -756,11 +757,21 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('ResourceComment:remove', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(
-          new ResourceCommentsAction.DeleteSuccess({
-            commentId: data.id,
-          })
-        );
+        this.store$
+          .pipe(
+            select(selectResourceCommentsDictionary),
+            map(dict => dict[data.id]),
+            take(1)
+          )
+          .subscribe(comment => {
+            if (comment) {
+              this.store$.dispatch(
+                new ResourceCommentsAction.DeleteSuccess({
+                  comment,
+                })
+              );
+            }
+          });
       }
     });
   }
