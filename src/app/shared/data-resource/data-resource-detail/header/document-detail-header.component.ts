@@ -80,6 +80,9 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   @Output()
   public remove = new EventEmitter();
 
+  @Output()
+  public versionClick = new EventEmitter();
+
   public readonly tableIcon = perspectiveIconsMap[Perspective.Table];
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly collectionResourceType = AttributesResourceType.Collection;

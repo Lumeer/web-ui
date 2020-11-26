@@ -54,6 +54,12 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
   @Output()
   public onCancel = new EventEmitter();
 
+  @Output()
+  public onEdit = new EventEmitter();
+
+  @Input()
+  public bottomBorder = true;
+
   @Input()
   public sending: boolean = false;
 
@@ -63,25 +69,32 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
   @Input()
   public initialComment: ResourceCommentModel;
 
+  @Input()
+  public startEditing = false;
+
   @ViewChild('commentInput')
   public commentInput: ElementRef;
 
   public editing$ = new BehaviorSubject<boolean>(false);
   public commentText$ = new BehaviorSubject<string>('');
 
+  public progress = 0;
+
   public readonly macOS = isMacOS();
+
+  public readonly maxLength = 2048;
 
   private firstCheck = true;
 
   public ngOnInit() {
-    if (this.initialComment) {
+    if (this.initialComment || this.startEditing) {
       this.commentText$.next(this.initialComment.comment);
       this.editing$.next(true);
     }
   }
 
   public ngAfterViewChecked() {
-    if (this.initialComment && this.firstCheck) {
+    if ((this.initialComment || this.startEditing) && this.firstCheck) {
       this.editComment();
       this.firstCheck = false;
     }
@@ -94,9 +107,19 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
     }
   }
 
-  public editComment() {
+  private updateProgress(text: string) {
+    this.progress = text?.length ? (text.length / this.maxLength) * 100 : 0;
+  }
+
+  public editComment(pageSource?: boolean) {
+    if (pageSource) {
+      this.onEdit.emit();
+    }
+
     this.editing$.next(true);
-    this.commentInput.nativeElement.innerHTML = this.commentText$.getValue();
+    const text = this.commentText$.getValue();
+    this.updateProgress(text);
+    this.commentInput.nativeElement.innerHTML = text;
     setTimeout(() => {
       this.commentInput.nativeElement.focus();
     }, 200);
@@ -104,7 +127,8 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
 
   public updateCommentInput() {
     const originalText = this.commentInput.nativeElement.innerHTML.replace(/<div>/g, '<br/>').replace(/<\/div>/g, '');
-    const text = stripTextHtmlTags(originalText, true);
+    const text = stripTextHtmlTags(originalText, true).substr(0, this.maxLength);
+    this.updateProgress(text);
     this.commentText$.next(text);
 
     if (text !== originalText) {
@@ -121,7 +145,7 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
 
   public sendComment() {
     let comment: Partial<ResourceCommentModel>;
-    if (this.initialComment) {
+    if (this.initialComment && !this.startEditing) {
       comment = {...this.initialComment, updateDate: new Date(), comment: this.commentText$.getValue()};
     } else {
       comment = {
@@ -139,7 +163,18 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
 
   public onKeyDown(event: KeyboardEvent) {
     if (this.editing$.getValue()) {
-      this.updateCommentInput();
+      if (this.commentText$.getValue().length < this.maxLength) {
+        this.updateCommentInput();
+      } else {
+        if (
+          event.key.length === 1 ||
+          (event.key.length > 1 && /[^a-zA-Z0-9]/.test(event.key)) ||
+          event.key === 'Spacebar'
+        ) {
+          this.commentInput.nativeElement.innerHTML = this.commentText$.getValue();
+          event.preventDefault();
+        }
+      }
     }
 
     if (this.commentText$.getValue() && event.code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
@@ -154,6 +189,6 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
   public pastedContent($event: ClipboardEvent) {
     $event.preventDefault();
     const data = $event.clipboardData.getData('text/plain');
-    document.execCommand('insertText', false, data);
+    document.execCommand('insertText', false, data.substr(0, this.maxLength - this.commentText$.getValue().length));
   }
 }

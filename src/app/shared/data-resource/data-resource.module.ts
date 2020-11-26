@@ -36,6 +36,7 @@ import {DirectivesModule} from '../directives/directives.module';
 import {DetailTabsComponent} from './data-resource-detail/detail-tabs/detail-tabs.component';
 import {LinksModule} from '../links/links.module';
 import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
 
 @NgModule({
   imports: [
@@ -51,6 +52,7 @@ import {ResourceCommentsModule} from '../resource-comments/resource-comments.mod
     PresenterModule,
     LinksModule,
     ResourceCommentsModule,
+    TooltipModule,
   ],
   declarations: [
     DataResourceDetailComponent,

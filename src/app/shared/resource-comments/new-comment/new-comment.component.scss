@@ -4,8 +4,11 @@
 .new-comment {
   display: flex;
   flex-flow: column nowrap;
-  border-bottom: 1px dotted #ecf0f1;
   padding: 1rem 0.25rem 1rem 0.25rem;
+
+  &.bottom-border {
+    border-bottom: 1px dotted $gray-200;
+  }
 }
 
 .editor {

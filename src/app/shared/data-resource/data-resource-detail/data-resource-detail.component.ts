@@ -54,6 +54,9 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {ResourceAttributeSettings, ViewSettings} from '../../../core/store/views/view';
 import {DataRow} from '../../data/data-row.service';
 import {DetailTabType} from './detail-tab-type';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {filter, map} from 'rxjs/operators';
+import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 
 @Component({
   selector: 'data-resource-detail',
@@ -112,6 +115,10 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public selectedTab: DetailTabType = DetailTabType.Detail;
   public readonly detailTabType = DetailTabType;
 
+  public commentsCount$: Observable<number>;
+
+  public startEditing = false;
+
   constructor(
     private i18n: I18n,
     private store$: Store<AppState>,
@@ -131,6 +138,20 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     this.resourceType = getAttributesResourceType(this.resource);
+
+    if (this.resourceType === AttributesResourceType.Collection) {
+      this.commentsCount$ = this.store$.pipe(
+        select(selectDocumentById(this.dataResource.id)),
+        filter(doc => !!doc),
+        map(doc => doc.commentsCount)
+      );
+    } else if (this.resourceType === AttributesResourceType.LinkType) {
+      this.commentsCount$ = this.store$.pipe(
+        select(selectLinkInstanceById(this.dataResource.id)),
+        filter(link => !!link),
+        map(link => link.commentsCount)
+      );
+    }
   }
 
   public onRemove() {
@@ -186,5 +207,10 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
 
   public onRowsChanged($event: DataRow[]) {
     this.dataRows = $event;
+  }
+
+  public editNewComment() {
+    this.startEditing = true;
+    this.selectedTab = DetailTabType.Comments;
   }
 }

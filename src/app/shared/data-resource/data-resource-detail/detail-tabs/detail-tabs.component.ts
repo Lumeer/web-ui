@@ -33,6 +33,9 @@ export class DetailTabsComponent {
   @Input()
   public showLinks: boolean = true;
 
+  @Input()
+  public commentsCount: number;
+
   public readonly detailTabTypes = DetailTabType;
 
   @Output()

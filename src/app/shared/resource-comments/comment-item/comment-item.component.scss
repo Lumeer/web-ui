@@ -1,3 +1,5 @@
+@import '~src/styles/variables';
+
 .comment-item {
   border-bottom: 1px dotted #ecf0f1;
   padding: 0.5rem 0.25rem 0.5rem 0.25rem;
@@ -9,6 +11,10 @@
     'author none controls'
     'comment comment comment'
     'edit edit edit';
+
+  &:hover:not(.editing) {
+    background: lighten($success, 60%);
+  }
 }
 
 .author {

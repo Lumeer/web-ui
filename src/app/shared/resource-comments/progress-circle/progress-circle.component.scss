@@ -1,0 +1,19 @@
+@import '~src/styles/variables';
+
+circle {
+  transition: stroke-dashoffset 0.35s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+
+  &.circle-progress {
+    stroke: $success;
+
+    &.full {
+      stroke: $danger;
+    }
+  }
+
+  &.circle-background {
+    stroke: $light;
+  }
+}

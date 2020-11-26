@@ -28,6 +28,7 @@ import {PipesModule} from '../pipes/pipes.module';
 import {CommentItemComponent} from './comment-item/comment-item.component';
 import {NewCommentComponent} from './new-comment/new-comment.component';
 import {CommentsPanelComponent} from './comments-panel/comments-panel.component';
+import {ProgressCircleComponent} from './progress-circle/progress-circle.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {CommentsPanelComponent} from './comments-panel/comments-panel.component'
     CommentItemComponent,
     NewCommentComponent,
     CommentsPanelComponent,
+    ProgressCircleComponent,
   ],
   imports: [CommonModule, GravatarModule, TooltipModule, PipesModule],
   exports: [CommentItemComponent, UserAvatarComponent, ShortDateComponent, NewCommentComponent, CommentsPanelComponent],

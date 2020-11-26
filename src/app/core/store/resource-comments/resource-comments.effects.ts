@@ -29,6 +29,9 @@ import {ResourceCommentsAction, ResourceCommentsActionType} from './resource-com
 import {convertResourceCommentDtoToModel, convertResourceCommentModelToDto} from './resource-comment.converter';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {createCallbackActions} from '../store.utils';
+import {DocumentsAction} from '../documents/documents.action';
+import {ResourceType} from '../../model/resource-type';
+import {LinkInstancesAction} from '../link-instances/link-instances.action';
 
 @Injectable()
 export class ResourceCommentsEffects {
@@ -80,6 +83,18 @@ export class ResourceCommentsEffects {
   );
 
   @Effect()
+  public createSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<ResourceCommentsAction.CreateSuccess>(ResourceCommentsActionType.CREATE_SUCCESS),
+    map(action => {
+      if (action.payload.comment.resourceType === ResourceType.Document) {
+        return new DocumentsAction.GetByIds({documentsIds: [action.payload.comment.resourceId]});
+      } else {
+        return new LinkInstancesAction.GetByIds({linkInstancesIds: [action.payload.comment.resourceId]});
+      }
+    })
+  );
+
+  @Effect()
   public createFailure$: Observable<Action> = this.actions$.pipe(
     ofType<ResourceCommentsAction.CreateFailure>(ResourceCommentsActionType.CREATE_FAILURE),
     tap(action => console.error(action.payload.error)),
@@ -120,7 +135,7 @@ export class ResourceCommentsEffects {
       return this.resourceCommentService.removeComment(convertResourceCommentModelToDto(action.payload.comment)).pipe(
         map(() => action.payload),
         mergeMap(payload => {
-          const actions: Action[] = [new ResourceCommentsAction.DeleteSuccess({commentId: action.payload.comment.id})];
+          const actions: Action[] = [new ResourceCommentsAction.DeleteSuccess({comment: action.payload.comment})];
 
           if (payload.nextAction) {
             actions.push(payload.nextAction);
@@ -132,6 +147,18 @@ export class ResourceCommentsEffects {
           of(new ResourceCommentsAction.DeleteFailure({error, originalComment: action.payload.comment}))
         )
       );
+    })
+  );
+
+  @Effect()
+  public deleteSuccess$: Observable<Action> = this.actions$.pipe(
+    ofType<ResourceCommentsAction.DeleteSuccess>(ResourceCommentsActionType.DELETE_SUCCESS),
+    map(action => {
+      if (action.payload.comment.resourceType === ResourceType.Document) {
+        return new DocumentsAction.GetByIds({documentsIds: [action.payload.comment.resourceId]});
+      } else {
+        return new LinkInstancesAction.GetByIds({linkInstancesIds: [action.payload.comment.resourceId]});
+      }
     })
   );
 

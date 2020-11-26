@@ -119,7 +119,7 @@ export namespace ResourceCommentsAction {
   export class DeleteSuccess implements Action {
     public readonly type = ResourceCommentsActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {commentId: string}) {}
+    public constructor(public payload: {comment: ResourceCommentModel}) {}
   }
 
   export class DeleteFailure implements Action {
