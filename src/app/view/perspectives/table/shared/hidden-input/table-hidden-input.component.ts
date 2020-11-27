@@ -22,7 +22,7 @@ import {Actions, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, of, Subscription} from 'rxjs';
 import {filter, map, mergeMap, switchMap, take} from 'rxjs/operators';
-import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
+import {getTableRowCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
 import {
   selectTableColumn,
@@ -46,6 +46,7 @@ import {selectLinkTypeById} from '../../../../../core/store/link-types/link-type
 import {AttributesResource, DataResource} from '../../../../../core/model/resource';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {escapeHtml} from '../../../../../shared/utils/common.utils';
+import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
 
 @Component({
   selector: 'table-hidden-input',
@@ -111,6 +112,34 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
     }
 
     switch (event.code) {
+      case KeyCode.KeyQ:
+        if (event.altKey) {
+          this.store$.pipe(select(selectTableCursor), take(1)).subscribe(cursor => {
+            if (cursor?.partIndex > 0) event.preventDefault();
+            event.stopPropagation();
+            this.store$.dispatch(
+              new TablesAction.AddLinkedRows({
+                cursor: getTableRowCursor(cursor, 0),
+                linkedRows: [createEmptyTableRow()],
+              })
+            );
+          });
+        }
+        return;
+      case KeyCode.KeyA:
+        if (event.altKey) {
+          this.store$.pipe(select(selectTableCursor), take(1)).subscribe(cursor => {
+            if (cursor?.partIndex > 0) event.preventDefault();
+            event.stopPropagation();
+            this.store$.dispatch(
+              new TablesAction.AddLinkedRows({
+                cursor: getTableRowCursor(cursor, 1),
+                linkedRows: [createEmptyTableRow()],
+              })
+            );
+          });
+        }
+        return;
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.F2:
