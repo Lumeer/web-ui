@@ -29,6 +29,7 @@ export enum HeaderMenuId {
   Type = 'type',
   Function = 'function',
   Hide = 'hide',
+  Copy = 'copy',
   Displayed = 'displayed',
   Delete = 'delete',
   AddToRight = 'addToRight',
@@ -39,6 +40,7 @@ export enum HeaderMenuId {
 export enum RowMenuId {
   Edit = 'edit',
   Detail = 'detail',
+  Copy = 'copy',
   Delete = 'delete',
   Unlink = 'unlink',
 }
@@ -66,10 +68,21 @@ export class WorkflowTablesMenuService {
         id: RowMenuId.Detail,
         title: this.translateRowMenuItem(RowMenuId.Detail),
         disabled: !permissions?.read,
-        iconClass: 'fa fa-file-search',
+        iconClass: 'far fa-file-search',
         group: 0,
       });
+    }
 
+    items.push({
+      id: RowMenuId.Copy,
+      title: this.translateRowMenuItem(RowMenuId.Copy),
+      disabled: false,
+      iconClass: 'far fa-copy',
+      shortcut: this.macOS ? '⌘ C' : 'Ctrl + C',
+      group: 0,
+    });
+
+    if (row.documentId) {
       if (linked) {
         items.push({
           id: RowMenuId.Unlink,
@@ -98,6 +111,8 @@ export class WorkflowTablesMenuService {
         return this.i18n({id: 'table.body.row.edit', value: 'Edit value'});
       case RowMenuId.Detail:
         return this.i18n({id: 'table.body.row.show.detail', value: 'Show detail'});
+      case RowMenuId.Copy:
+        return this.i18n({id: 'table.body.row.copy.value', value: 'Copy value'});
       case RowMenuId.Delete:
         return this.i18n({id: 'remove.row', value: 'Remove row'});
       case RowMenuId.Unlink:
@@ -141,6 +156,14 @@ export class WorkflowTablesMenuService {
         }
       );
     }
+    items.push({
+      id: HeaderMenuId.Copy,
+      title: this.translateHeaderMenuItem(HeaderMenuId.Copy),
+      disabled: false,
+      iconClass: 'far fa-copy',
+      shortcut: this.macOS ? '⌘ C' : 'Ctrl + C',
+      group: 0,
+    });
 
     if (column.attribute?.id && !column.default && column.collectionId) {
       items.push({
@@ -211,6 +234,8 @@ export class WorkflowTablesMenuService {
         return this.i18n({id: 'table.header.menu.defaultAttribute', value: 'Set as displayed attribute'});
       case HeaderMenuId.Hide:
         return this.i18n({id: 'table.header.menu.hide', value: 'Hide column'});
+      case HeaderMenuId.Copy:
+        return this.i18n({id: 'table.header.menu.copy.name', value: 'Copy name'});
       case HeaderMenuId.Delete:
         return this.i18n({id: 'table.header.menu.remove', value: 'Delete column'});
       case HeaderMenuId.AddToRight:

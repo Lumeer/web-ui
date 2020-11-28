@@ -106,6 +106,9 @@ export class WorkflowTablesService {
       case RowMenuId.Detail:
         this.dataService.showRowDocumentDetail(row);
         break;
+      case RowMenuId.Copy:
+        this.dataService.copyRowValue(row, column);
+        break;
       case RowMenuId.Delete:
         this.dataService.removeRow(row, column);
         break;
@@ -144,6 +147,9 @@ export class WorkflowTablesService {
         break;
       case HeaderMenuId.Delete:
         this.deleteColumn(column);
+        break;
+      case HeaderMenuId.Copy:
+        this.dataService.copyColumnName(column);
         break;
       case HeaderMenuId.Displayed:
         this.setDisplayedAttribute(column);
@@ -331,5 +337,9 @@ export class WorkflowTablesService {
 
   public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {
     this.dataService.createOrUpdateLink(row, document);
+  }
+
+  public onCopy() {
+    this.dataService.copySelectedCell();
   }
 }

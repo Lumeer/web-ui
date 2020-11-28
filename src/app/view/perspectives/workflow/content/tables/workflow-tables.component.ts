@@ -213,7 +213,7 @@ export class WorkflowTablesComponent implements OnChanges {
   }
 
   private checkClickOutsideTables(event: Event) {
-    if (!this.tableComponents.some(component => component.table?.nativeElement.contains(event.target))) {
+    if (!this.tableComponents.some(component => component.containsElement(event.target))) {
       this.tablesService.resetSelection();
     }
   }
@@ -282,5 +282,9 @@ export class WorkflowTablesComponent implements OnChanges {
 
   public onRowLinkedDocumentSelect(data: {row: TableRow; document: DocumentModel}) {
     this.tablesService.onRowLinkedDocumentSelect(data.row, data.document);
+  }
+
+  public onCopy() {
+    this.tablesService.onCopy();
   }
 }

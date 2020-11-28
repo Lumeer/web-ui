@@ -1,7 +1,8 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
 
   <hidden-input (newInput)="onNewHiddenInput($event)"
-                class="position-fixed">
+                class="position-fixed"
+                (copy)="onCopy()">
   </hidden-input>
 
   <ng-container

@@ -5,18 +5,25 @@
     <div class="d-flex align-items-baseline">
       <i class="fa fa-fw fa-edit mr-1"
          aria-hidden="true"></i>
-      <span class="flex-grow-1"
-            i18n="@@table.body.row.edit">Edit value</span>
+      <span class="flex-grow-1" i18n="@@table.body.row.edit">Edit value</span>
       <small class="text-secondary ml-3">{{macOS ? '↩' : 'Enter'}}</small>
     </div>
   </ng-template>
 
   <ng-container *ngIf="created">
     <ng-template *ngIf="allowedPermissions?.read" contextMenuItem
-      (execute)="onDocumentDetail()">
+                 (execute)="onDocumentDetail()">
       <i class="far fa-fw fa-file-search mr-1"
          aria-hidden="true"></i>
       <span i18n="@@table.body.row.show.detail">Show detail</span>
+    </ng-template>
+    <ng-template contextMenuItem (execute)="onCopyValue()">
+      <div class="d-flex align-items-baseline">
+        <i class="far fa-fw fa-copy mr-1"
+           aria-hidden="true"></i>
+        <span class="flex-grow-1" i18n="@@table.body.row.copy.value">Copy value</span>
+        <small class="text-secondary ml-3">{{macOS ? '⌘ C' : 'Ctrl + C'}}</small>
+      </div>
     </ng-template>
     <ng-template contextMenuItem
                  divider="true">

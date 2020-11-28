@@ -20,30 +20,17 @@
 import {ChangeDetectionStrategy, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Actions, ofType} from '@ngrx/effects';
 import {select, Store} from '@ngrx/store';
-import {combineLatest, of, Subscription} from 'rxjs';
-import {filter, map, mergeMap, switchMap, take} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+import {filter, map, switchMap, take} from 'rxjs/operators';
 import {getTableRowCursor, TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {TablesAction, TablesActionType} from '../../../../../core/store/tables/tables.action';
-import {
-  selectTableColumn,
-  selectTableCursor,
-  selectTablePart,
-  selectTableRow,
-} from '../../../../../core/store/tables/tables.selector';
+import {selectTableCursor, selectTablePart} from '../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
 import {CollectionPermissionsPipe} from '../../../../../shared/pipes/permissions/collection-permissions.pipe';
 import {EDITABLE_EVENT} from '../../table-perspective.component';
 import {AppState} from '../../../../../core/store/app.state';
-import {selectDocumentById} from '../../../../../core/store/documents/documents.state';
-import {selectCollectionById} from '../../../../../core/store/collections/collections.state';
-import {findAttribute, findAttributeConstraint} from '../../../../../core/store/collections/collection.util';
-import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
-import {ClipboardService} from '../../../../../core/service/clipboard.service';
-import {selectLinkInstanceById} from '../../../../../core/store/link-instances/link-instances.state';
-import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
-import {AttributesResource, DataResource} from '../../../../../core/model/resource';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {escapeHtml} from '../../../../../shared/utils/common.utils';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
@@ -73,8 +60,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
   constructor(
     private actions$: Actions,
     private collectionPermissions: CollectionPermissionsPipe,
-    private store$: Store<AppState>,
-    private clipboardService: ClipboardService
+    private store$: Store<AppState>
   ) {}
 
   public ngOnInit() {
@@ -241,83 +227,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   private copyCell() {
     this.store$
-      .pipe(
-        select(selectTableCursor),
-        take(1),
-        mergeMap(cursor =>
-          combineLatest([
-            this.store$.pipe(select(selectTablePart(cursor))),
-            this.store$.pipe(select(selectTableRow(cursor))),
-            this.store$.pipe(select(selectTableColumn(cursor))),
-            of(cursor),
-          ])
-        ),
-        take(1)
-      )
-      .subscribe(([tablePart, tableRow, tableColumn, tableCursor]) => {
-        if (tableRow) {
-          const column = tablePart?.columns?.[tableCursor.columnIndex];
-          const attributeId = column?.attributeIds?.[0];
-          if (attributeId) {
-            if (tablePart.collectionId) {
-              this.copyDocumentValue(tableRow.documentId, tablePart.collectionId, attributeId);
-            } else if (tablePart.linkTypeId) {
-              this.copyLinkValue(tableRow.linkInstanceId, tablePart.linkTypeId, attributeId);
-            }
-          }
-        } else if (tableColumn) {
-          const attributeId = tableColumn.attributeIds && tableColumn.attributeIds[0];
-          if (tablePart.collectionId) {
-            this.copyCollectionAttribute(tablePart.collectionId, attributeId);
-          } else if (tablePart.linkTypeId) {
-            this.copyLinkTypeAttribute(tablePart.linkTypeId, attributeId);
-          }
-        }
-      });
-  }
-
-  private copyDocumentValue(documentId: string, collectionId: string, attributeId: string) {
-    combineLatest([
-      this.store$.pipe(select(selectDocumentById(documentId))),
-      this.store$.pipe(select(selectCollectionById(collectionId))),
-    ])
-      .pipe(take(1))
-      .subscribe(([document, collection]) => this.copyValue(document, collection, attributeId));
-  }
-
-  private copyLinkValue(linkInstanceId: string, linkTypeId: string, attributeId: string) {
-    combineLatest([
-      this.store$.pipe(select(selectLinkInstanceById(linkInstanceId))),
-      this.store$.pipe(select(selectLinkTypeById(linkTypeId))),
-    ])
-      .pipe(take(1))
-      .subscribe(([linkInstance, linkType]) => this.copyValue(linkInstance, linkType, attributeId));
-  }
-
-  private copyValue(dataResource: DataResource, attributesResource: AttributesResource, attributeId: string) {
-    const constraint = findAttributeConstraint(attributesResource && attributesResource.attributes, attributeId);
-    const value = (constraint || new UnknownConstraint())
-      .createDataValue(dataResource.data[attributeId], this.constraintData)
-      .editValue();
-    this.clipboardService.copy(value);
-  }
-
-  private copyCollectionAttribute(collectionId: string, attributeId: string) {
-    this.store$
-      .pipe(select(selectCollectionById(collectionId)), take(1))
-      .subscribe(collection => this.copyAttribute(collection, attributeId));
-  }
-
-  private copyLinkTypeAttribute(linkTypeId: string, attributeId: string) {
-    this.store$
-      .pipe(select(selectLinkTypeById(linkTypeId)), take(1))
-      .subscribe(linkType => this.copyAttribute(linkType, attributeId));
-  }
-
-  private copyAttribute(attributesResource: AttributesResource, attributeId: string) {
-    const attribute = findAttribute(attributesResource && attributesResource.attributes, attributeId);
-    if (attribute) {
-      this.clipboardService.copy(attribute.name);
-    }
+      .pipe(select(selectTableCursor), take(1))
+      .subscribe(cursor => this.store$.dispatch(new TablesAction.CopyValue({cursor})));
   }
 }

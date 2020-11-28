@@ -17,11 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {ContextMenuComponent} from 'ngx-contextmenu';
+import {isMacOS} from '../../../../../../../shared/utils/system.utils';
+import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../../../../../../core/store/app.state';
 
 @Component({
   selector: 'table-column-context-menu',
@@ -74,6 +78,10 @@ export class TableColumnContextMenuComponent {
   @ViewChild(ContextMenuComponent, {static: true})
   public contextMenu: ContextMenuComponent;
 
+  public readonly macOS = isMacOS();
+
+  public constructor(private store$: Store<AppState>) {}
+
   public addNextColumn() {
     this.add.emit(true);
   }
@@ -84,5 +92,9 @@ export class TableColumnContextMenuComponent {
 
   public onSort(descending: boolean) {
     // TODO
+  }
+
+  public onCopyValue() {
+    this.store$.dispatch(new TablesAction.CopyValue({cursor: this.cursor}));
   }
 }

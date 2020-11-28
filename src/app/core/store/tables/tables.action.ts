@@ -69,6 +69,7 @@ export enum TablesActionType {
   INDENT_ROW = '[Tables] Indent Row',
   OUTDENT_ROW = '[Tables] Outdent Row',
   TOGGLE_CHILD_ROWS = '[Tables] Toggle Child Rows',
+  COPY_VALUE = '[Tables] Copy Value',
 
   TOGGLE_LINKED_ROWS = '[Tables] Toggle Linked Rows',
 
@@ -348,6 +349,12 @@ export namespace TablesAction {
 
   export class OutdentRow implements Action {
     public readonly type = TablesActionType.OUTDENT_ROW;
+
+    public constructor(public payload: {cursor: TableBodyCursor}) {}
+  }
+
+  export class CopyValue implements Action {
+    public readonly type = TablesActionType.COPY_VALUE;
 
     public constructor(public payload: {cursor: TableBodyCursor}) {}
   }

@@ -54,6 +54,7 @@
     </table>
   </cdk-virtual-scroll-viewport>
   <table-new-row *ngIf="tableModel.newRow"
+                 #tableNewRow
                  [newRow]="tableModel.newRow"
                  [columnGroups]="data.columnGroups"
                  [scrollId]="scrollId"
