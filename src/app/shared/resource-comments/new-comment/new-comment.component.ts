@@ -23,7 +23,6 @@ import {
   Component,
   ElementRef,
   EventEmitter,
-  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -33,13 +32,12 @@ import {
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {isMacOS} from '../../utils/system.utils';
-import {KeyCode} from '../../key-code';
+import {isKeyPrintable, KeyCode} from '../../key-code';
 import {User} from '../../../core/store/users/user';
 import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
 import {generateId} from '../../utils/resource.utils';
-import {ClipboardService} from '../../../core/service/clipboard.service';
 import {stripTextHtmlTags} from '../../utils/data.utils';
-import {DomSanitizer} from '@angular/platform-browser';
+import DOMPurify from 'dompurify';
 
 @Component({
   selector: 'new-comment',
@@ -126,8 +124,8 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
   }
 
   public updateCommentInput() {
-    const originalText = this.commentInput.nativeElement.innerHTML.replace(/<div>/g, '<br/>').replace(/<\/div>/g, '');
-    const text = stripTextHtmlTags(originalText, true).substr(0, this.maxLength);
+    const originalText = this.commentInput.nativeElement.innerHTML.replace(/<div>/g, '<br>').replace(/<\/div>/g, '');
+    const text = DOMPurify.sanitize(stripTextHtmlTags(originalText, true)).substr(0, this.maxLength);
     this.updateProgress(text);
     this.commentText$.next(text);
 
@@ -166,11 +164,7 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
       if (this.commentText$.getValue().length < this.maxLength) {
         this.updateCommentInput();
       } else {
-        if (
-          event.key.length === 1 ||
-          (event.key.length > 1 && /[^a-zA-Z0-9]/.test(event.key)) ||
-          event.key === 'Spacebar'
-        ) {
+        if (isKeyPrintable(event)) {
           this.commentInput.nativeElement.innerHTML = this.commentText$.getValue();
           event.preventDefault();
         }

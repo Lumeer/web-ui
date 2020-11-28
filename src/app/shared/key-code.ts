@@ -80,5 +80,12 @@ export enum KeyCode {
 }
 
 export function isKeyPrintable(event: KeyboardEvent): boolean {
-  return event && event.key && event.key.length === 1;
+  return (
+    event &&
+    event.key &&
+    !event.altKey &&
+    !event.ctrlKey &&
+    !event.metaKey &&
+    (event.key.length === 1 || (event.key.length > 1 && /[^a-zA-Z0-9]/.test(event.key)) || event.code === KeyCode.Space)
+  );
 }

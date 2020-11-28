@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -112,12 +112,12 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public resourceType: AttributesResourceType;
   public readonly collectionResourceType = AttributesResourceType.Collection;
 
-  public selectedTab: DetailTabType = DetailTabType.Detail;
+  public selectedTab$ = new BehaviorSubject<DetailTabType>(DetailTabType.Detail);
   public readonly detailTabType = DetailTabType;
 
   public commentsCount$: Observable<number>;
 
-  public startEditing = false;
+  public startEditing$ = new BehaviorSubject<boolean>(false);
 
   constructor(
     private i18n: I18n,
@@ -210,7 +210,11 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   }
 
   public editNewComment() {
-    this.startEditing = true;
-    this.selectedTab = DetailTabType.Comments;
+    this.startEditing$.next(true);
+    this.selectedTab$.next(DetailTabType.Comments);
+  }
+
+  public selectTab(tab: DetailTabType) {
+    this.selectedTab$.next(tab);
   }
 }

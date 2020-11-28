@@ -42,7 +42,7 @@ import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {distinctUntilChanged, map, mergeMap, tap} from 'rxjs/operators';
-import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
+import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {deepObjectsEquals} from '../../utils/common.utils';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -111,16 +111,8 @@ export class LinksAccordeonComponent implements OnChanges, OnInit {
       this.store$.pipe(select(selectLinkTypesByCollectionId(this.collection.id))),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
-      tap(([linkTypes, _]) => this.openedGroups$.next(new Array(linkTypes.length))),
-      map(([linkTypes, collectionsMap]) =>
-        linkTypes.map(linkType => {
-          const collections: [Collection, Collection] = [
-            collectionsMap[linkType.collectionIds[0]],
-            collectionsMap[linkType.collectionIds[1]],
-          ];
-          return {...linkType, collections};
-        })
-      ),
+      tap(([linkTypes]) => this.openedGroups$.next(new Array(linkTypes.length))),
+      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap))),
       tap(linkTypes => this.initActiveLinkType(linkTypes))
     );
   }

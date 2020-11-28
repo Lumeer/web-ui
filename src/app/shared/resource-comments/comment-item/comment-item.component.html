@@ -42,7 +42,7 @@
     </i>
   </div>
 
-  <div *ngIf="!(editing$ | async)" [innerHTML]="comment.comment | safeHtml" class="comment">
+  <div *ngIf="!(editing$ | async)" [innerHTML]="comment.comment | stripHtml | safeHtml" class="comment">
   </div>
 
   <div class="edit">

@@ -2,7 +2,7 @@
   <new-comment *ngIf="permissions?.readWithView"
              [user]="user$ | async"
              [sending]="sending$ | async"
-             [initialComment]="initialComment"
+             [initialComment]="initialComment$ | async"
              [startEditing]="startEditing"
              [bottomBorder]="!maxCommentsCount || data.comments?.length > 0"
              (onNewComment)="newComment($event)"

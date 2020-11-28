@@ -153,10 +153,7 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
         filter(user => !!user),
         map(user => {
           if (!user.name && !user.email) {
-            const newUser = {...user};
-            newUser.name = 'Guest';
-            newUser.email = 'aturing@lumeer.io';
-            return newUser;
+            return {...user, name: 'Guest', email: 'aturing@lumeer.io'};
           }
           return user;
         })
@@ -166,10 +163,7 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
         filter(user => !!user),
         map(user => {
           if (!user.name && !user.email) {
-            const newUser = {...user};
-            newUser.name = 'Guest';
-            newUser.email = 'aturing@lumeer.io';
-            return newUser;
+            return {...user, name: 'Guest', email: 'aturing@lumeer.io'};
           }
           return user;
         })

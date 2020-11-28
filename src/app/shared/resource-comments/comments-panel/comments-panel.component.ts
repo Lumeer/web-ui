@@ -42,7 +42,7 @@ import {NotificationsAction} from '../../../core/store/notifications/notificatio
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {take} from 'rxjs/operators';
+import {map, take} from 'rxjs/operators';
 
 @Component({
   selector: 'comments-panel',
@@ -75,7 +75,7 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
   @Output()
   public onCancelComment = new EventEmitter();
 
-  public initialComment: ResourceCommentModel;
+  public initialComment$: Observable<ResourceCommentModel>;
 
   public user$: Observable<User>;
 
@@ -88,8 +88,9 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
   public ngOnInit(): void {
     this.user$ = this.store$.pipe(select(selectCurrentUser));
     if (this.startEditing) {
-      this.user$.pipe(take(1)).subscribe(user => {
-        this.initialComment = {
+      this.initialComment$ = this.user$.pipe(
+        take(1),
+        map(user => ({
           correlationId: generateId(),
           comment: '',
           author: user.id,
@@ -97,8 +98,8 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
           authorName: user.name,
           resourceType: this.resourceType,
           resourceId: this.resourceId,
-        };
-      });
+        }))
+      );
     }
   }
 
