@@ -541,17 +541,30 @@
         </context-group>
       </trans-unit><trans-unit id="document.detail.detail.comments.seeAll" datatype="html">
         <source>
-        See All <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> Comments &gt;
+        See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
+        <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> &gt;
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
+      </trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
+        <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
+        <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
       </trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
         <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit><trans-unit id="count.of" datatype="html">
         <source>of</source>

@@ -57,6 +57,7 @@ import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {filter, map} from 'rxjs/operators';
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'data-resource-detail',
@@ -118,6 +119,8 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public commentsCount$: Observable<number>;
 
   public startEditing$ = new BehaviorSubject<boolean>(false);
+
+  public contactUrl = environment.contactUrl;
 
   constructor(
     private i18n: I18n,

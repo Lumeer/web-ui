@@ -48,7 +48,8 @@
       <button class="btn btn-sm btn-success font-weight-bold my-3 mx-1"
               i18n="@@document.detail.detail.comments.seeAll"
               (click)="selectTab(detailTabType.Comments)">
-        See All {{data.commentsCount}} Comments &gt;
+        See {data.commentsCount, plural, =2 {All} =3 {All} =4 {All} other {All}} {{data.commentsCount}}
+        {data.commentsCount, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments}} &gt;
       </button>
     </div>
   </ng-container>
@@ -81,7 +82,7 @@
   </ng-container>
 
   <ng-container *ngIf="data.selectedTab === detailTabType.Activity">
-    <p class="p-4 text-center" i18n="@@document.detail.activity.contact">Audit log is available in the <em>Enterprise edition</em>. Please <a href="https://www.lumeer.io/contact/" target="_blank">contact support</a>.</p>
+    <p class="p-4 text-center" i18n="@@document.detail.activity.contact">Audit log is available in the <em>Enterprise edition</em>. Please <a href="{{contactUrl}}" target="_blank">contact support</a>.</p>
   </ng-container>
 
   <div class="spacer mb-5"></div>

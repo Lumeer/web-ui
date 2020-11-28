@@ -59,21 +59,32 @@
         </context-group>
       </trans-unit><trans-unit id="document.detail.detail.comments.seeAll" datatype="html">
         <source>
-        See All <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> Comments >
-      </source><target state="new">
-        See All <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/> Comments >
+        See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
+        <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> >
+      </source><target>
+        Zobrazit <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
+        <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> >
       </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-      </trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
-        <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</source><target state="new">Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</target>
+      </trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
+        <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</source><target>{VAR_PLURAL, plural, =2 {oba} =3 {všechny} =4 {všechny} other {všech} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">51</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
+      </trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
+        <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</source><target>{VAR_PLURAL, plural, =2 {komentáře} =3 {komentáře} =4 {komentáře} other {komentářů} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+      </trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
+        <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</source><target>Přehled aktivit je dostupný jen v <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise verzi<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Prosím <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>kontaktujte podporu<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
         <source>
             Use the cog icon
           </source><target>
@@ -559,7 +570,7 @@
           <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.link.openInApp.label" datatype="html">
-        <source>Open content inside dialog</source><target state="new">Open content inside dialog</target>
+        <source>Open content inside dialog</source><target>Otevřít obsah zde v aplikaci</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/link/link-constraint-config-form.component.html</context>
           <context context-type="linenumber">11</context>
@@ -801,7 +812,7 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="table.body.row.link.above" datatype="html">
-        <source>Link new row above</source><target state="new">Link new row above</target>
+        <source>Link new row above</source><target>Připojit nový řádek nad</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
           <context context-type="linenumber">29</context>
@@ -1848,7 +1859,7 @@
         <source>Enter attribute name</source><target>Zadejte název atributu</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/data/row/data-resource-data-row.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="document.detail.header.createdOn" datatype="html">
-        <source>Created on</source><target state="new">Created on</target>
+        <source>Created on</source><target>Vytvořeno</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/header/document-detail-header.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -1858,7 +1869,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.header.createdBy" datatype="html">
-        <source>Created by</source><target state="new">Created by</target>
+        <source>Created by</source><target>Vytvořil(a)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/header/document-detail-header.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -1868,7 +1879,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.header.updatedOn" datatype="html">
-        <source>Updated on</source><target state="new">Updated on</target>
+        <source>Updated on</source><target>Upraveno</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/header/document-detail-header.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -1878,7 +1889,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.header.updatedBy" datatype="html">
-        <source>Updated by</source><target state="new">Updated by</target>
+        <source>Updated by</source><target>Upravil(a)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/data-resource/data-resource-detail/header/document-detail-header.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -2980,13 +2991,13 @@
         <source>Remove</source><target>Smazat</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/resource-comments/comment-item/comment-item.component.html</context><context context-type="linenumber">37</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/post-it/header/post-it-header.component.html</context><context context-type="linenumber">21</context></context-group></trans-unit><trans-unit id="document.detail.comments.new.write" datatype="html">
-        <source>Write a new comment...</source><target state="new">Write a new comment...</target>
+        <source>Write a new comment...</source><target>Napište nový komentář...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.comments.posting.user.title" datatype="html">
-        <source>Posting as</source><target state="new">Posting as</target>
+        <source>Posting as</source><target>Přispíváte jako</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource-comments/new-comment/new-comment.component.html</context>
           <context context-type="linenumber">25</context>
@@ -2994,8 +3005,8 @@
       </trans-unit><trans-unit id="document.detail.comments.empty" datatype="html">
         <source>
     No comments yet. Write the first one!
-  </source><target state="new">
-    No comments yet. Write the first one!
+  </source><target>
+    Žádné komentáře. Napište první!
   </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource-comments/comments-panel/comments-panel.component.html</context>
@@ -3088,7 +3099,7 @@
                 <target>Přidat řádek nad</target>
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="table.body.row.link.below" datatype="html">
-        <source>Link new row below</source><target state="new">Link new row below</target>
+        <source>Link new row below</source><target>Připojit nový řádek pod</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
           <context context-type="linenumber">38</context>
@@ -3417,25 +3428,25 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="resourceComments.get.fail" datatype="html">
-        <source>Could not read comments</source><target state="new">Could not read comments</target>
+        <source>Could not read comments</source><target>Nemohu načíst komentáře</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="resourceComment.create.fail" datatype="html">
-        <source>Could not save the comment</source><target state="new">Could not save the comment</target>
+        <source>Could not save the comment</source><target>Nemohu uložit komentář</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="resourceComment.update.fail" datatype="html">
-        <source>Could not update the comment</source><target state="new">Could not update the comment</target>
+        <source>Could not update the comment</source><target>Nemohl jsem upravit komentář</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="resourceComment.delete.fail" datatype="html">
-        <source>Could not delete the comment</source><target state="new">Could not delete the comment</target>
+        <source>Could not delete the comment</source><target>Nemohl jsem smazat komentář</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/resource-comments/resource-comments.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -3679,7 +3690,7 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit><trans-unit id="button.edit" datatype="html">
-        <source>Edit</source><target state="new">Edit</target>
+        <source>Edit</source><target>Upravit</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/resource-comments/comment-item/comment-item.component.html</context>
           <context context-type="linenumber">30</context>
@@ -4099,13 +4110,13 @@
                 <target>Zdá se, že máte hodně prázných tabulek. To chcete? Navrhoval bych vyplnit jejich jména, nebo je smazat.</target>
 
             <context-group purpose="location"><context context-type="sourcefile">src/app/shared/post-it-collections/content/post-it-collections-content.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="document.detail.comments.commentRemove.title" datatype="html">
-        <source>Delete this comment?</source><target state="new">Delete this comment?</target>
+        <source>Delete this comment?</source><target>Smazat tento komentář?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource-comments/comments-panel/comments-panel.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.comments.commentRemove.message" datatype="html">
-        <source>Do you really want to delete this comment?</source><target state="new">Do you really want to delete this comment?</target>
+        <source>Do you really want to delete this comment?</source><target>Chcete opravdu smazat tento komentář?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/resource-comments/comments-panel/comments-panel.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -4671,7 +4682,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">29</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context><context context-type="linenumber">31</context></context-group></trans-unit><trans-unit id="document.detail.tabs.detail" datatype="html">
         <source>
       Detail
-    </source><target state="new">
+    </source><target>
       Detail
     </target>
         <context-group purpose="location">
@@ -4685,8 +4696,8 @@
       </trans-unit><trans-unit id="document.detail.tabs.links" datatype="html">
         <source>
       Links
-    </source><target state="new">
-      Links
+    </source><target>
+      Vazby
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/detail-tabs/detail-tabs.component.html</context>
@@ -4697,7 +4708,7 @@
           <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.tabs.comments" datatype="html">
-        <source>Comments</source><target state="new">Comments</target>
+        <source>Comments</source><target>Komentáře</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/detail-tabs/detail-tabs.component.html</context>
           <context context-type="linenumber">28</context>
@@ -4709,8 +4720,8 @@
       </trans-unit><trans-unit id="document.detail.tabs.activity" datatype="html">
         <source>
       Activity
-    </source><target state="new">
-      Activity
+    </source><target>
+      Aktivity
     </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/detail-tabs/detail-tabs.component.html</context>
@@ -5228,7 +5239,7 @@
 
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="document.detail.links.noLinks" datatype="html">
-        <source>There are no links.</source><target state="new">There are no links.</target>
+        <source>There are no links.</source><target>Nemáte žádné vazby.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/links/links-list/links-accordeon.component.html</context>
           <context context-type="linenumber">41</context>
