@@ -309,7 +309,10 @@ export class PivotTableConverter {
 
   private formatValueByConstraint(value: any, valueIndex: number): any {
     const constraint = this.data.valuesConstraints?.[valueIndex] || this.valueTypeInfo[valueIndex]?.defaultConstraint;
-    return constraint.createDataValue(value, this.constraintData).preview();
+    if (constraint) {
+      return constraint.createDataValue(value, this.constraintData).preview();
+    }
+    return value;
   }
 
   private fillCellsForGroupedRow(
