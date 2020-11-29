@@ -25,11 +25,12 @@ import {
   Input,
   OnChanges,
   OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {ResourceType} from '../../../../core/model/resource-type';
 import {AppState} from '../../../../core/store/app.state';
 import {Workspace} from '../../../../core/store/navigation/workspace';
@@ -39,13 +40,18 @@ import {ProjectsAction} from '../../../../core/store/projects/projects.action';
 import {Resource} from '../../../../core/model/resource';
 import {DropdownPosition} from '../../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../../dropdown/dropdown.component';
+import {User} from '../../../../core/store/users/user';
+import {Observable, of} from 'rxjs';
+import {selectCurrentUser} from '../../../../core/store/users/users.state';
+import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
+import {selectServiceLimitsByOrganizationId} from '../../../../core/store/organizations/service-limits/service-limits.state';
 
 @Component({
   selector: 'resource-menu',
   templateUrl: './resource-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ResourceMenuComponent implements OnChanges, OnDestroy {
+export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public type: ResourceType;
 
@@ -75,9 +81,16 @@ export class ResourceMenuComponent implements OnChanges, OnDestroy {
 
   public readonly dropdownPositions = [DropdownPosition.BottomStart];
 
+  public currentUser$: Observable<User>;
+  public serviceLimits$: Observable<ServiceLimits>;
+
   constructor(private store$: Store<AppState>) {}
 
-  public isOrganizationType(): boolean {
+  public ngOnInit() {
+    this.currentUser$ = this.store$.pipe(select(selectCurrentUser));
+  }
+
+  public get isOrganizationType(): boolean {
     return this.type === ResourceType.Organization;
   }
 
@@ -92,8 +105,14 @@ export class ResourceMenuComponent implements OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if (!this.isOrganizationType()) {
-      this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
+    if ((changes.resource || changes.resourceType) && !this.isOrganizationType) {
+      if (this.isOrganizationType) {
+        this.serviceLimits$ = of(null);
+      } else {
+        const project = <Project>this.resource;
+        this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByOrganizationId(project.organizationId)));
+        this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
+      }
     }
   }
 

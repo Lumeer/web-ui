@@ -1,4 +1,4 @@
-<ng-container *ngIf="organizations && organizations.length > 1">
+<ng-container *ngIf="type === resourceType.Organization && organizations?.length > 1">
   <div class="dropdown-divider"></div>
   <ng-container *ngFor="let organization of organizations">
     <a *ngIf="organization.id !== currentId" class="dropdown-item" (click)="selectResource(organization)">
@@ -8,7 +8,7 @@
   </ng-container>
 </ng-container>
 
-<ng-container *ngIf="projects && projects.length > 1">
+<ng-container *ngIf="type === resourceType.Project && projects?.length > 1">
   <div class="dropdown-divider"></div>
   <ng-container *ngFor="let project of projects">
     <a *ngIf="project.id !== currentId" class="dropdown-item" (click)="selectResource(project)">

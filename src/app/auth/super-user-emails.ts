@@ -17,4 +17,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const superUserEmails = ['support@lumeer.io', 'mvecera@lumeer.io', 'kubedo8@gmail.com', 'livoratom@gmail.com'];
+export const superUserEmails = ['support@lumeer.io', 'mvecera@lumeer.io', 'kubedo8@gmail.com'];
