@@ -20,6 +20,7 @@
 import {Component, ChangeDetectionStrategy, EventEmitter, Output, ViewChild, ElementRef} from '@angular/core';
 import {DataRowHiddenComponent} from '../../data/data-row-component';
 import {escapeHtml} from '../../utils/common.utils';
+import {KeyCode} from '../../key-code';
 
 @Component({
   selector: 'hidden-input',
@@ -29,6 +30,9 @@ import {escapeHtml} from '../../utils/common.utils';
 export class HiddenInputComponent implements DataRowHiddenComponent {
   @Output()
   public newInput = new EventEmitter<string>();
+
+  @Output()
+  public copy = new EventEmitter();
 
   @ViewChild('hiddenInput')
   public hiddenInput: ElementRef<HTMLInputElement>;
@@ -60,9 +64,13 @@ export class HiddenInputComponent implements DataRowHiddenComponent {
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    if (event.key === 'Dead') {
-      this.skipCompose = true;
-      return;
+    switch (event.code) {
+      case KeyCode.KeyC:
+        if (event.ctrlKey || event.metaKey) {
+          this.copy.emit();
+          return;
+        }
+        break;
     }
   }
 }

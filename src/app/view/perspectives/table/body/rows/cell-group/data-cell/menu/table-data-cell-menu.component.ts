@@ -231,4 +231,8 @@ export class TableDataCellMenuComponent implements OnChanges {
         .subscribe(linkType => this.modalService.showDataResourceDetail(this.linkInstance, linkType));
     }
   }
+
+  public onCopyValue() {
+    this.store$.dispatch(new TablesAction.CopyValue({cursor: this.cursor}));
+  }
 }

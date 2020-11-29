@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -102,6 +102,7 @@ import {TablesAction, TablesActionType} from './tables.action';
 import {
   selectMoveTableCursorDown,
   selectTableById,
+  selectTableColumn,
   selectTableCursor,
   selectTablePart,
   selectTableRow,
@@ -121,6 +122,7 @@ import {QueryParam} from '../navigation/query-param';
 import {selectTable} from './tables.state';
 import {AttributesResource} from '../../model/resource';
 import {selectViewQuery} from '../views/views.state';
+import {CopyValueService} from '../../service/copy-value.service';
 
 @Injectable()
 export class TablesEffects {
@@ -964,6 +966,42 @@ export class TablesEffects {
   );
 
   @Effect()
+  public copyValue$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.CopyValue>(TablesActionType.COPY_VALUE),
+    mergeMap(action =>
+      combineLatest([
+        this.store$.pipe(select(selectTablePart(action.payload.cursor))),
+        this.store$.pipe(select(selectTableRow(action.payload.cursor))),
+        this.store$.pipe(select(selectTableColumn(action.payload.cursor))),
+      ]).pipe(
+        take(1),
+        mergeMap(([tablePart, tableRow, tableColumn]) => {
+          const tableCursor = action.payload.cursor;
+          if (tableRow) {
+            const column = tablePart?.columns?.[tableCursor.columnIndex];
+            const attributeId = column?.attributeIds?.[0];
+            if (attributeId) {
+              if (tablePart.collectionId) {
+                this.copyValueService.copyDocumentValue(tableRow.documentId, tablePart.collectionId, attributeId);
+              } else if (tablePart.linkTypeId) {
+                this.copyValueService.copyLinkValue(tableRow.linkInstanceId, tablePart.linkTypeId, attributeId);
+              }
+            }
+          } else if (tableColumn) {
+            const attributeId = tableColumn.attributeIds && tableColumn.attributeIds[0];
+            if (tablePart.collectionId) {
+              this.copyValueService.copyCollectionAttribute(tablePart.collectionId, attributeId);
+            } else if (tablePart.linkTypeId) {
+              this.copyValueService.copyLinkTypeAttribute(tablePart.linkTypeId, attributeId);
+            }
+          }
+          return [];
+        })
+      )
+    )
+  );
+
+  @Effect()
   public moveRowUp$: Observable<Action> = this.actions$.pipe(
     ofType<TablesAction.MoveRowUp>(TablesActionType.MOVE_ROW_UP),
     mergeMap(action => {
@@ -1166,7 +1204,8 @@ export class TablesEffects {
   public constructor(
     private actions$: Actions,
     private collectionPermissionsPipe: CollectionPermissionsPipe,
-    private store$: Store<AppState>
+    private store$: Store<AppState>,
+    private copyValueService: CopyValueService
   ) {}
 
   private getLatestTable<A extends TablesAction.TableCursorAction>(

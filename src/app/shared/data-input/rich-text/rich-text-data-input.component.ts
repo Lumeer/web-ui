@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
@@ -198,6 +197,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     if (isMultiLine) {
       this.renderer.setStyle(editor.root, 'overflow-x', 'auto');
       editor.scrollingContainer.scrollTop = Number.MAX_SAFE_INTEGER;
+      editor.scrollingContainer.scrollLeft = Number.MAX_SAFE_INTEGER;
     } else {
       this.renderer.setStyle(editor.root, 'overflow-x', 'hidden');
       editor.scrollingContainer.scrollLeft = Number.MAX_SAFE_INTEGER;

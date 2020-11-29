@@ -50,10 +50,7 @@ import {
   isCollectionAttributeEditable,
   isLinkTypeAttributeEditable,
 } from '../../../../../../core/store/collections/collection.util';
-import {
-  createAttributesSettingsOrder,
-  resourceAttributeSettings,
-} from '../../../../../../shared/settings/settings.util';
+import {createAttributesSettingsOrder} from '../../../../../../shared/settings/settings.util';
 import {WorkflowTablesMenuService} from './workflow-tables-menu.service';
 import {generateAttributeName} from '../../../../../../shared/utils/attribute.utils';
 import {WorkflowTablesStateService} from './workflow-tables-state.service';
@@ -94,24 +91,24 @@ import {generateDocumentDataByResourceQuery} from '../../../../../../core/store/
 import {
   computeTableHeight,
   createAggregatedLinkingDocumentsIds,
+  createAggregatorAttributes,
   createColumnIdsMap,
   createEmptyNewRow,
   createLinkingCollectionId,
   createLinkTypeData,
   createPendingColumnValuesByRow,
-  createRowObjectsFromAggregated,
   createRowData,
-  PendingRowUpdate,
+  createRowObjectsFromAggregated,
   createRowValues,
   isWorkflowStemConfigGroupedByResourceType,
-  createAggregatorAttributes,
+  PendingRowUpdate,
   sortWorkflowTables,
 } from './workflow-utils';
 import {selectLinkInstanceById} from '../../../../../../core/store/link-instances/link-instances.state';
 import {getOtherDocumentIdFromLinkInstance} from '../../../../../../core/store/link-instances/link-instance.utils';
 import {Observable} from 'rxjs';
 import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
-import {settings} from 'cluster';
+import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -125,7 +122,8 @@ export class WorkflowTablesDataService {
     private stateService: WorkflowTablesStateService,
     private modalService: ModalService,
     private i18n: I18n,
-    private constraintItemsFormatter: SelectItemWithConstraintFormatter
+    private constraintItemsFormatter: SelectItemWithConstraintFormatter,
+    private copyValueService: CopyValueService
   ) {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
@@ -1207,5 +1205,43 @@ export class WorkflowTablesDataService {
       take(1),
       map(document => !!document)
     );
+  }
+
+  public copySelectedCell() {
+    if (!this.stateService.isSelected()) {
+      return;
+    }
+    const selectedCell = this.stateService.selectedCell;
+    const tableColumn = this.stateService.findTableColumn(selectedCell.tableId, selectedCell.columnId);
+    if (selectedCell.type === TableCellType.Header) {
+      this.copyColumnName(tableColumn);
+    } else if (selectedCell.type === TableCellType.Body) {
+      const row = this.stateService.findTableRow(selectedCell.tableId, selectedCell.rowId);
+      this.copyRowValue(row, tableColumn);
+    } else if (selectedCell.type === TableCellType.NewRow) {
+      const table = this.stateService.findTable(selectedCell.tableId);
+      this.copyNewRowValue(table.newRow, tableColumn);
+    }
+  }
+
+  public copyColumnName(column: TableColumn) {
+    this.copyValueService.copy(column.attribute?.name || column.name);
+  }
+
+  public copyRowValue(row: TableRow, column: TableColumn) {
+    if (row && column?.attribute) {
+      if (column.collectionId) {
+        this.copyValueService.copyDocumentValue(row.documentId, column.collectionId, column.attribute.id);
+      } else if (column.linkTypeId) {
+        this.copyValueService.copyLinkValue(row.linkInstanceId, column.linkTypeId, column.attribute.id);
+      }
+    }
+  }
+
+  public copyNewRowValue(row: TableNewRow, column: TableColumn) {
+    if (column) {
+      const value = row.data?.[column.id];
+      this.copyValueService.copy(value);
+    }
   }
 }

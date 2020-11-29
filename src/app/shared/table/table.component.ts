@@ -138,7 +138,10 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public hiddenInputComponent: HiddenInputComponent;
 
   @ViewChild('table', {read: ElementRef})
-  public table: ElementRef;
+  private table: ElementRef;
+
+  @ViewChild('tableNewRow', {read: ElementRef})
+  private tableNewRow: ElementRef;
 
   public scrollDisabled$ = new BehaviorSubject(false);
   public detailColumnId: string;
@@ -326,5 +329,16 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
 
   public onRowLinkedDocumentSelect(row: TableRow, document: DocumentModel) {
     this.rowLinkedDocumentSelect.emit({row, document});
+  }
+
+  public containsElement(element: any): boolean {
+    if (this.table.nativeElement.contains(element)) {
+      return true;
+    }
+    if (this.tableNewRow?.nativeElement.contains(element)) {
+      return true;
+    }
+
+    return false;
   }
 }
