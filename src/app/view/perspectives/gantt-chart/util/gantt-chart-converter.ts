@@ -337,7 +337,7 @@ export class GanttChartConverter {
         (stemConfig.progress &&
           progressDataResources.map(dataResource => dataResource.data[stemConfig.progress.attributeId])) ||
         [];
-      const dataAggregationType = (stemConfig.progress && stemConfig.progress.aggregation) || DataAggregationType.Avg;
+      const dataAggregationType = stemConfig.progress?.aggregation || DataAggregationType.Avg;
       const progressRaw = aggregateDataValues(dataAggregationType, progresses, progressConstraint, true);
       const progress = progressConstraint.createDataValue(progressRaw).format();
 

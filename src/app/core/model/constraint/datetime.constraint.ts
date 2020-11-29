@@ -22,6 +22,8 @@ import {ConstraintType} from '../data/constraint';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {QueryCondition} from '../../store/navigation/query/query';
+import {avgAnyValues, countValues, medianInAnyValues, sumAnyValues, uniqueValuesCount} from './aggregation';
+import {DataValue} from '../data-value';
 
 export class DateTimeConstraint implements Constraint {
   public readonly type = ConstraintType.DateTime;
@@ -50,5 +52,38 @@ export class DateTimeConstraint implements Constraint {
       QueryCondition.IsEmpty,
       QueryCondition.NotEmpty,
     ];
+  }
+
+  public avg(values: any[], onlyNumeric?: boolean): any {
+    return avgAnyValues(values, onlyNumeric);
+  }
+
+  public max(values: any[]): any {
+    return this.sortedValues(values, true)[0]?.serialize();
+  }
+
+  private sortedValues(values: any[], desc?: boolean): DataValue[] {
+    return values.map(value => this.createDataValue(value)).sort((a, b) => a.compareTo(b) * (desc ? -1 : 1));
+  }
+
+  public median(values: any[], onlyNumeric?: boolean): any {
+    // TODO
+    return medianInAnyValues(values, onlyNumeric);
+  }
+
+  public min(values: any[], onlyNumeric?: boolean): any {
+    return this.sortedValues(values)[0]?.serialize();
+  }
+
+  public sum(values: any[], onlyNumeric?: boolean): any {
+    return sumAnyValues(values, onlyNumeric);
+  }
+
+  public unique(values: any[]): any {
+    return uniqueValuesCount(values);
+  }
+
+  public count(values: any[]): number {
+    return countValues(values);
   }
 }

@@ -22,6 +22,15 @@ import {ConstraintData, ConstraintType} from '../data/constraint';
 import {UserConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {QueryCondition} from '../../store/navigation/query/query';
+import {
+  avgAnyValues,
+  countValues,
+  maxInAnyValues,
+  medianInAnyValues,
+  minInAnyValues,
+  sumAnyValues,
+  uniqueValuesCount,
+} from './aggregation';
 
 export class UserConstraint implements Constraint {
   public readonly type = ConstraintType.User;
@@ -46,5 +55,33 @@ export class UserConstraint implements Constraint {
       QueryCondition.IsEmpty,
       QueryCondition.NotEmpty,
     ];
+  }
+
+  public avg(values: any[], onlyNumeric?: boolean): any {
+    return avgAnyValues(values, onlyNumeric);
+  }
+
+  public max(values: any[], onlyNumeric?: boolean): any {
+    return maxInAnyValues(values, onlyNumeric);
+  }
+
+  public median(values: any[], onlyNumeric?: boolean): any {
+    return medianInAnyValues(values, onlyNumeric);
+  }
+
+  public min(values: any[], onlyNumeric?: boolean): any {
+    return minInAnyValues(values, onlyNumeric);
+  }
+
+  public sum(values: any[], onlyNumeric?: boolean): any {
+    return sumAnyValues(values, onlyNumeric);
+  }
+
+  public unique(values: any[]): any {
+    return uniqueValuesCount(values);
+  }
+
+  public count(values: any[]): number {
+    return countValues(values);
   }
 }

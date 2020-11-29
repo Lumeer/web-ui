@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue, DataValueAccumulator} from '../data-value';
+import {DataValue} from '../data-value';
 import {ConstraintData, ConstraintType} from '../data/constraint';
 import {ConstraintConfig} from '../data/constraint-config';
 import {QueryCondition} from '../../store/navigation/query/query';
@@ -51,22 +51,42 @@ export interface Constraint {
   /**
    * Calculates a sum of the given values.
    */
-  sum?(...values: (DataValue | DataValueAccumulator)[]): DataValueAccumulator;
+  sum(values: any[], onlyNumeric?: boolean): any;
 
   /**
    * Calculates an average of the given values.
    */
-  avg?(...values: (DataValue | DataValueAccumulator)[]): DataValueAccumulator;
+  avg(values: any[], onlyNumeric?: boolean): any;
 
   /**
    * Calculates a minimum of the given values.
    */
-  min?(...values: (DataValue | DataValueAccumulator)[]): DataValueAccumulator;
+  min(values: any[], onlyNumeric?: boolean): any;
 
   /**
    * Calculates a maximum of the given values.
    */
-  max?(...values: (DataValue | DataValueAccumulator)[]): DataValueAccumulator;
+  max(values: any[], onlyNumeric?: boolean): any;
+
+  /**
+   * Calculates a median of the given values.
+   */
+  median(values: any[], onlyNumeric?: boolean): any;
+
+  /**
+   * Calculates a median of the given values.
+   */
+  median(values: any[], onlyNumeric?: boolean): any;
+
+  /**
+   * Calculates a count of the given values.
+   */
+  count(values: any[]): number;
+
+  /**
+   * Calculates a unique count of the given values.
+   */
+  unique(values: any[]): number;
 
   /**
    * Supported conditions

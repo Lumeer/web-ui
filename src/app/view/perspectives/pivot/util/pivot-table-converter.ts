@@ -28,7 +28,11 @@ import {
   isNumeric,
   toNumber,
 } from '../../../../shared/utils/common.utils';
-import {aggregateDataValues, DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
+import {
+  aggregateDataValues,
+  DataAggregationType,
+  isValueAggregation,
+} from '../../../../shared/utils/data/data-aggregation';
 import {shadeColor} from '../../../../shared/utils/html-modifier';
 import {PivotData, PivotDataHeader, PivotStemData} from './pivot-data';
 import {PivotTable, PivotTableCell} from './pivot-table';
@@ -305,14 +309,10 @@ export class PivotTableConverter {
 
   private formatValueByConstraint(value: any, valueIndex: number): any {
     const constraint = this.data.valuesConstraints?.[valueIndex] || this.valueTypeInfo[valueIndex]?.defaultConstraint;
-    if (this.shouldFormatConstraint(constraint)) {
+    if (constraint) {
       return constraint.createDataValue(value, this.constraintData).preview();
     }
     return value;
-  }
-
-  private shouldFormatConstraint(constraint: Constraint): boolean {
-    return constraint && constraint.type !== ConstraintType.DateTime;
   }
 
   private fillCellsForGroupedRow(
@@ -325,7 +325,7 @@ export class PivotTableConverter {
       const columnIndexInCells = this.columnsTransformationArray[column];
       if (isNotNullOrUndefined(columnIndexInCells)) {
         const values = this.getGroupedValuesForRowsAndCols(rows, [column]);
-        const aggregatedValue = aggregateDataValues(DataAggregationType.Sum, values);
+        const aggregatedValue = aggregateDataValues(this.aggregationByColumns([column]), values);
         const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, rows, [column]);
         cells[rowIndexInCells][columnIndexInCells] = {
           value: String(formattedValue),
@@ -462,7 +462,7 @@ export class PivotTableConverter {
       const rowIndexInCells = this.rowsTransformationArray[row];
       if (isNotNullOrUndefined(rowIndexInCells)) {
         const values = this.getGroupedValuesForRowsAndCols([row], columns);
-        const aggregatedValue = aggregateDataValues(DataAggregationType.Sum, values);
+        const aggregatedValue = aggregateDataValues(this.aggregationByColumns(columns), values);
         const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, [row], columns);
         cells[rowIndexInCells][columnIndexInCells] = {
           value: String(formattedValue),
@@ -474,6 +474,12 @@ export class PivotTableConverter {
         };
       }
     }
+  }
+
+  private aggregationByColumns(columns: number[]): DataAggregationType {
+    const valueIndex = columns[0] % this.data.valueTitles.length;
+    const aggregation = this.data.valueAggregations?.[valueIndex];
+    return isValueAggregation(aggregation) ? aggregation : DataAggregationType.Sum;
   }
 
   private fillCellsForColumn(cells: PivotTableCell[][], column: number) {
@@ -516,7 +522,7 @@ export class PivotTableConverter {
               columnGroupsInfo[j].indexes
             );
             const values = this.getGroupedValuesForRowsAndCols(rowsIndexes, columnsIndexes);
-            const aggregatedValue = aggregateDataValues(DataAggregationType.Sum, values);
+            const aggregatedValue = aggregateDataValues(this.aggregationByColumns(columnsIndexes), values);
             const formattedValue = this.formatGroupedValueByValueType(aggregatedValue, rowsIndexes, columnsIndexes);
             cells[i][j] = {
               value: String(formattedValue),

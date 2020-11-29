@@ -345,6 +345,8 @@ export class PivotDataConverter {
         const {headers} = this.convertMapToPivotDataHeader({}, 0, [], valueColors, [], titles, allData.headers.length);
         allData.headers.push(...headers);
 
+        allData.aggregations = [...(valueAttributes || []).map(valueAttribute => valueAttribute.aggregation)];
+
         const values = (valueAttributes || []).map(valueAttribute => {
           const dataResources = this.findDataResourcesByPivotAttribute(valueAttribute);
           const attribute = this.findAttributeByPivotAttribute(valueAttribute);
@@ -353,7 +355,7 @@ export class PivotDataConverter {
         allData.values.push(...values);
         return allData;
       },
-      {titles: [], constraints: [], headers: [], values: [], valueTypes: []}
+      {titles: [], constraints: [], headers: [], values: [], valueTypes: [], aggregations: []}
     );
 
     return {
@@ -363,6 +365,7 @@ export class PivotDataConverter {
       values: [data.values],
       valuesConstraints: data.constraints,
       valueTypes: data.valueTypes,
+      valueAggregations: data.aggregations,
 
       rowShowSums: [],
       rowSorts: [],
@@ -396,14 +399,14 @@ export class PivotDataConverter {
       additionalData.rowAttributes
     );
 
-    const {titles, constraints} = this.createValueTitles(valueAttributes);
+    const {titles: valueTitles, constraints: valuesConstraints} = this.createValueTitles(valueAttributes);
     const columnData = this.convertMapToPivotDataHeader(
       aggregatedData.rowLevels > 0 ? aggregatedData.columnsMap : aggregatedData.map,
       aggregatedData.columnLevels,
       pivotColors.columns,
       pivotColors.values,
       additionalData.columnAttributes,
-      titles
+      valueTitles
     );
 
     const values = this.initValues(rowData.maxIndex + 1, columnData.maxIndex + 1);
@@ -411,15 +414,18 @@ export class PivotDataConverter {
       this.fillValues(values, rowData.headers, columnData.headers, valueAttributes, aggregatedData);
     }
 
+    const valueAggregations = (valueAttributes || []).map(valueAttribute => valueAttribute.aggregation);
+
     const hasAdditionalColumnLevel =
-      (aggregatedData.columnLevels === 0 && titles.length > 0) ||
-      (aggregatedData.columnLevels > 0 && titles.length > 1);
+      (aggregatedData.columnLevels === 0 && valueTitles.length > 0) ||
+      (aggregatedData.columnLevels > 0 && valueTitles.length > 1);
     return {
       rowHeaders: rowData.headers,
       columnHeaders: columnData.headers,
-      valueTitles: titles,
+      valueTitles,
       values,
-      valuesConstraints: constraints,
+      valuesConstraints,
+      valueAggregations,
 
       ...additionalData,
 
