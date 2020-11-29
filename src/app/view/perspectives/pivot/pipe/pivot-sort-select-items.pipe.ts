@@ -31,7 +31,7 @@ export class PivotSortSelectItemsPipe implements PipeTransform {
   public readonly summaryString: string;
 
   constructor(private i18n: I18n) {
-    this.summaryString = i18n({id: 'perspective.pivot.table.summary.total', value: 'Sum total'});
+    this.summaryString = i18n({id: 'perspective.pivot.table.summary.total', value: 'Summary'});
   }
 
   public transform(

@@ -19,7 +19,6 @@
 
 import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {PivotData} from '../../util/pivot-data';
-import {BehaviorSubject} from 'rxjs';
 import {PivotTable} from '../../util/pivot-table';
 import {PivotTableConverter} from '../../util/pivot-table-converter';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -50,7 +49,7 @@ export class PivotTableComponent implements OnChanges {
 
   constructor(private i18n: I18n) {
     const headerSummaryString = i18n({id: 'perspective.pivot.table.summary.header', value: 'Summary of'});
-    const summaryString = i18n({id: 'perspective.pivot.table.summary.total', value: 'Sum total'});
+    const summaryString = i18n({id: 'perspective.pivot.table.summary.total', value: 'Summary'});
     this.pivotTableConverter = new PivotTableConverter(headerSummaryString, summaryString);
   }
 

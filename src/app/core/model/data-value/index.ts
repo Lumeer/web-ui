@@ -129,10 +129,6 @@ export interface DataValue {
   valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any;
 }
 
-export class DataValueAccumulator {
-  constructor(public readonly count: number, public readonly result: DataValue) {}
-}
-
 export interface NumericDataValue extends DataValue {
   /**
    * Value stored as big number

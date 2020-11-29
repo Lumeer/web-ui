@@ -22,6 +22,15 @@ import {ConstraintData, ConstraintType} from '../data/constraint';
 import {DurationConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
 import {QueryCondition} from '../../store/navigation/query/query';
+import {
+  avgNumericValues,
+  countValues,
+  maxInNumericValues,
+  medianInNumericValues,
+  minInNumericValues,
+  sumNumericValues,
+  uniqueValuesCount,
+} from './aggregation';
 
 export class DurationConstraint implements Constraint {
   public readonly type = ConstraintType.Duration;
@@ -50,5 +59,33 @@ export class DurationConstraint implements Constraint {
       QueryCondition.IsEmpty,
       QueryCondition.NotEmpty,
     ];
+  }
+
+  public avg(values: any[], onlyNumeric?: boolean): any {
+    return avgNumericValues(values, onlyNumeric);
+  }
+
+  public max(values: any[], onlyNumeric?: boolean): any {
+    return maxInNumericValues(values, onlyNumeric);
+  }
+
+  public median(values: any[], onlyNumeric?: boolean): any {
+    return medianInNumericValues(values, onlyNumeric);
+  }
+
+  public min(values: any[], onlyNumeric?: boolean): any {
+    return minInNumericValues(values, onlyNumeric);
+  }
+
+  public sum(values: any[], onlyNumeric?: boolean): any {
+    return sumNumericValues(values, onlyNumeric);
+  }
+
+  public unique(values: any[]): any {
+    return uniqueValuesCount(values);
+  }
+
+  public count(values: any[]): number {
+    return countValues(values);
   }
 }

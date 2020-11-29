@@ -20,6 +20,7 @@
 import {Constraint} from '../../../../core/model/constraint';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {PivotSort, PivotValueType} from '../../../../core/store/pivots/pivot';
+import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
 
 export interface PivotData {
   data: PivotStemData[];
@@ -36,6 +37,7 @@ export interface PivotStemData {
   values: any[][];
   valuesConstraints?: Constraint[];
   valueTypes?: PivotValueType[];
+  valueAggregations?: DataAggregationType[];
 
   rowShowSums: boolean[];
   rowSorts?: PivotSort[];
