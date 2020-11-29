@@ -1,0 +1,35 @@
+@import '~src/styles/variables';
+@import '~src/styles/bootstrap_var';
+
+.new-comment {
+  display: flex;
+  flex-flow: column nowrap;
+  padding: 1rem 0.25rem 1rem 0.25rem;
+
+  &.bottom-border {
+    border-bottom: 1px dotted $gray-200;
+  }
+}
+
+.editor {
+  border-radius: $border-radius-lg;
+  border: $border-width solid $border-color;
+  min-height: 2.7rem;
+
+  p {
+    line-height: 1.7rem;
+  }
+}
+
+.comment-input.editable {
+  padding: 0.5rem;
+  min-height: inherit;
+  font-size: large;
+}
+
+.controls {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  padding: 0.5rem 0.25rem;
+}

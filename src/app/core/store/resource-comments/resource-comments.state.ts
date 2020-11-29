@@ -26,7 +26,7 @@ import {ResourceType} from '../../model/resource-type';
 export interface ResourceCommentsState extends EntityState<ResourceCommentModel> {}
 
 export const resourceCommentsAdapter = createEntityAdapter<ResourceCommentModel>({
-  selectId: comment => comment.correlationId || comment.id,
+  selectId: comment => comment.id || comment.correlationId,
 });
 
 export const initialResourceCommentsState: ResourceCommentsState = resourceCommentsAdapter.getInitialState({});
@@ -51,7 +51,7 @@ export const selectResourceCommentsByResource = (
   createSelector(selectAllResourceComments, comments => {
     const allComments = comments
       .filter(comment => comment.resourceType === resourceType && comment.resourceId === resourceId)
-      .sort((comment1, comment2) => (comment2.creationDate?.getTime() || 0) - (comment2.creationDate?.getTime() || 0));
+      .sort((comment1, comment2) => (comment2.creationDate?.getTime() || 0) - (comment1.creationDate?.getTime() || 0));
 
     if (pageStart || pageLength) {
       return allComments.slice(pageStart, pageStart + pageLength + 1);

@@ -20,6 +20,8 @@
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
 import {LinkInstance} from './link.instance';
+import {DocumentModel} from '../documents/document.model';
+import {documentsAdapter} from '../documents/documents.state';
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,
@@ -76,8 +78,26 @@ function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction
     const oldLinkInstance = state.entities[linkInstance.id];
     return !oldLinkInstance || isLinkInstanceNewer(linkInstance, oldLinkInstance);
   });
+  const filteredLinkInstanceIds = filteredLinkInstances.map(doc => doc.id);
 
-  return linkInstancesAdapter.upsertMany(filteredLinkInstances, newState);
+  const changedTransientProperties = action.payload.linkInstances.reduce<LinkInstance[]>((result, linkInstance) => {
+    const oldLinkInstances = state.entities[linkInstance.id];
+
+    if (!filteredLinkInstanceIds.includes(linkInstance.id) && isTransientModified(linkInstance, oldLinkInstances)) {
+      result.push({...oldLinkInstances, commentsCount: linkInstance.commentsCount});
+    }
+
+    return result;
+  }, []);
+
+  return linkInstancesAdapter.upsertMany([...filteredLinkInstances, ...changedTransientProperties], newState);
+}
+
+function isTransientModified(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {
+  return (
+    (linkInstance.commentsCount || linkInstance.commentsCount === 0) &&
+    oldLinkInstance.commentsCount !== linkInstance.commentsCount
+  );
 }
 
 function isLinkInstanceNewer(linkInstance: LinkInstance, oldLinkInstance: LinkInstance): boolean {
@@ -109,7 +129,13 @@ function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkIn
       },
       state
     );
+  } else if (isTransientModified(linkInstance, oldLinkInstance)) {
+    return linkInstancesAdapter.updateOne(
+      {id: linkInstance.id, changes: {commentsCount: linkInstance.commentsCount}},
+      state
+    );
   }
+
   return state;
 }
 

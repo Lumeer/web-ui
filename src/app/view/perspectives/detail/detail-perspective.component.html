@@ -13,13 +13,9 @@
       <data-resource-detail [resource]="data.selected.collection"
                             [dataResource]="data.selected.document"
                             [query]="data.query"
-                            [permissions]="collectionPermission$ | async">
+                            [permissions]="collectionPermission$ | async"
+                            (documentSelect)="selectCollectionAndDocument($event)">
       </data-resource-detail>
-      <links-list class="d-block mt-5"
-                  [document]="data.selected.document"
-                  [collection]="data.selected.collection"
-                  (documentSelect)="selectCollectionAndDocument($event)">
-      </links-list>
     </div>
 
   </ng-container>

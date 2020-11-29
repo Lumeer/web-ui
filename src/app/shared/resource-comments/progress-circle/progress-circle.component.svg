@@ -1,0 +1,24 @@
+<svg
+  [attr.height]="radius * 2"
+  [attr.width]="radius * 2"
+>
+  <circle
+    class="circle-background"
+    fill="transparent"
+    [attr.stroke-width]="stroke"
+    [attr.cx]="radius"
+    [attr.cy]="radius"
+    [attr.r]="normalizedRadius">
+  </circle>
+  <circle
+    class="circle-progress"
+    [class.full]="progress >= 100"
+    fill="transparent"
+    [attr.stroke-dasharray]="circumference + ' ' + circumference"
+    [style]="{strokeDashoffset: strokeDashOffset}"
+    [attr.stroke-width]="stroke"
+    [attr.cx]="radius"
+    [attr.cy]="radius"
+    [attr.r]="normalizedRadius">
+  </circle>
+</svg>

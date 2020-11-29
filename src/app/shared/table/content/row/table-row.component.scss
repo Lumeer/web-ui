@@ -15,24 +15,59 @@ td {
 
 :host.selected {
   background: lighten($success, 60%);
+
+  .detail-trigger {
+    background: lighten($success, 60%);
+  }
 }
 
 :host:hover {
   background: lighten($success, 60%);
 
-  .detail-trigger {
+  .detail-text {
     visibility: visible;
+    display: block;
+  }
+
+  .detail-trigger {
+    background: lighten($success, 60%);
   }
 }
 
-.detail-trigger {
+.detail-text {
   visibility: hidden;
+  display: none;
+}
+
+.detail-trigger {
+  background: white;
   display: flex;
   align-items: center;
   position: absolute;
-  background: lighten($success, 60%);
-  right: 1px;
+  right: 0px;
   top: 1px;
   height: calc(100% - 2px);
   z-index: 3;
+}
+
+span.comments-count {
+  font-size: 0.6rem;
+  padding: 0 3px;
+  color: white;
+  background-color: $success;
+  border-radius: 10px;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  line-height: 0.9rem;
+  min-width: 0.9rem;
+  text-align: center;
+}
+
+.fa-stack {
+  width: 20px;
+}
+
+.fa-stack-1x.fa-comment {
+  width: 0;
 }

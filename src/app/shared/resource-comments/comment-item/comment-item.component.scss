@@ -1,0 +1,36 @@
+@import '~src/styles/variables';
+
+.comment-item {
+  border-bottom: 1px dotted #ecf0f1;
+  padding: 0.5rem 0.25rem 0.5rem 0.25rem;
+  display: grid;
+  grid-template-columns: auto min-content auto;
+  grid-template-rows: auto auto auto;
+  gap: 1px 1px;
+  grid-template-areas:
+    'author none controls'
+    'comment comment comment'
+    'edit edit edit';
+
+  &:hover:not(.editing) {
+    background: lighten($success, 60%);
+  }
+}
+
+.author {
+  grid-area: author;
+  align-self: center;
+}
+
+.controls {
+  grid-area: controls;
+  text-align: right;
+}
+
+.comment {
+  grid-area: comment;
+}
+
+.edit {
+  grid-area: edit;
+}

@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -38,7 +38,7 @@ import {PerspectiveService} from '../../../core/service/perspective.service';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
-import {Attribute} from '../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {Query} from '../../../core/store/navigation/query/query';
 import {Perspective} from '../../../view/perspectives/perspective';
@@ -51,7 +51,13 @@ import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor
 import {getAttributesResourceType} from '../../utils/resource.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {ResourceAttributeSettings} from '../../../core/store/views/view';
+import {ResourceAttributeSettings, ViewSettings} from '../../../core/store/views/view';
+import {DataRow} from '../../data/data-row.service';
+import {DetailTabType} from './detail-tab-type';
+import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {filter, map} from 'rxjs/operators';
+import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {environment} from '../../../../environments/environment';
 
 @Component({
   selector: 'data-resource-detail',
@@ -84,16 +90,37 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   @Input()
   public attributeSettings: ResourceAttributeSettings[];
 
+  @Input()
+  public viewSettings: ViewSettings;
+
+  @Input()
+  public allowSelectDocument = true;
+
   @Output()
   public dataResourceChanged = new EventEmitter<DataResource>();
 
   @Output()
   public routingPerformed = new EventEmitter();
 
+  @Output()
+  public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
+
+  public dataRows: DataRow[] = [];
+
   public workspace$: Observable<Workspace>;
   public constraintData$: Observable<ConstraintData>;
 
   public resourceType: AttributesResourceType;
+  public readonly collectionResourceType = AttributesResourceType.Collection;
+
+  public selectedTab$ = new BehaviorSubject<DetailTabType>(DetailTabType.Detail);
+  public readonly detailTabType = DetailTabType;
+
+  public commentsCount$: Observable<number>;
+
+  public startEditing$ = new BehaviorSubject<boolean>(false);
+
+  public contactUrl = environment.contactUrl;
 
   constructor(
     private i18n: I18n,
@@ -114,6 +141,20 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
 
   public ngOnChanges(changes: SimpleChanges) {
     this.resourceType = getAttributesResourceType(this.resource);
+
+    if (this.resourceType === AttributesResourceType.Collection) {
+      this.commentsCount$ = this.store$.pipe(
+        select(selectDocumentById(this.dataResource.id)),
+        filter(doc => !!doc),
+        map(doc => doc.commentsCount)
+      );
+    } else if (this.resourceType === AttributesResourceType.LinkType) {
+      this.commentsCount$ = this.store$.pipe(
+        select(selectLinkInstanceById(this.dataResource.id)),
+        filter(link => !!link),
+        map(link => link.commentsCount)
+      );
+    }
   }
 
   public onRemove() {
@@ -165,5 +206,18 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     } else {
       this.modalService.showAttributeFunction(attribute.id, null, this.resource.id);
     }
+  }
+
+  public onRowsChanged($event: DataRow[]) {
+    this.dataRows = $event;
+  }
+
+  public editNewComment() {
+    this.startEditing$.next(true);
+    this.selectedTab$.next(DetailTabType.Comments);
+  }
+
+  public selectTab(tab: DetailTabType) {
+    this.selectedTab$.next(tab);
   }
 }

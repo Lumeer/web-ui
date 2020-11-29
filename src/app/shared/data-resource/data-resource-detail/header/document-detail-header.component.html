@@ -1,35 +1,40 @@
-<div class="d-flex flex-column flex-lg-row">
+<div class="d-flex flex-column flex-lg-row" *ngIf="{createdBy: createdBy$ | async, updatedBy: updatedBy$ | async} as users">
   <div class="flex-grow-1 pr-lg-2 text-truncate" *ngIf="{iconColors : resource$ | async | resourceIconsColors} as data">
     <icons-presenter class="mr-2"
                      [icons]="data.iconColors.icons"
                      [colors]="data.iconColors.colors">
     </icons-presenter>
     <span>{{resource?.name}}</span>
-    <data-input-preview *ngIf="row?.value || row?.value === 0"
-                        class="flex-fill d-block main-data-input font-weight-bold"
+    <data-input-preview *ngIf="defaultValue || defaultValue === 0"
+                        class="flex-fill d-block main-data-input font-weight-bold mt-1"
                         [configuration]="configuration"
-                        [dataValue]="row?.value | dataValue:row?.attribute?.constraint:constraintData"
-                        [cursor]="dataResource | dataCursor:row?.attribute?.id"
-                        [constraint]="row?.attribute?.constraint">
+                        [dataValue]="defaultValue | dataValue:defaultAttribute?.constraint:constraintData"
+                        [cursor]="dataResource | dataCursor:defaultAttribute?.id"
+                        [constraint]="defaultAttribute?.constraint">
     </data-input-preview>
 
   </div>
 
   <div class="flex-grow-1 flex-lg-grow-0 text-left text-lg-right mt-2 mt-lg-0" *ngIf="dataResource?.id">
-    <div class="small text-notice text-nowrap" *ngIf="resourceType === collectionResourceType">
-      <span i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
-      <span *ngIf="dataResource.creationDate | isDateValid"
-            i18n="@@document.detail.createdBy">Created on {{dataResource.creationDate | date : 'mediumDate'}}
-        by {{createdBy$ | async}}</span>
-      <span *ngIf="dataResource.updateDate | isDateValid"
-            i18n="@@document.detail.modifiedBy"><br/>Last modified on {{dataResource.updateDate | date : 'mediumDate'}}
-        by {{updatedBy$ | async}}</span>
+    <div class="small text-notice text-nowrap mb-2 pb-1 modification-dates" *ngIf="resourceType === collectionResourceType">
+      <span (click)="versionClick.emit()" class="mr-1 text-success cursor-pointer" i18n="@@document.detail.version">Version {{dataResource.dataVersion}}</span><br/>
+      <span *ngIf="dataResource.creationDate | isDateValid">
+        <short-date [date]="dataResource.creationDate" format="ll" [tooltipText]="createdOnMsg + ' ' + (dataResource.creationDate | date:'medium')" icon="fa-file"></short-date>
+        <user-avatar class="ml-2" [email]="users.createdBy.email" [tooltipText]="createdByMsg + ' ' + users.createdBy.name" [avatarSize]="15"></user-avatar>
+      </span>
+      <span *ngIf="dataResource.updateDate | isDateValid">
+        <br/>
+        <short-date [date]="dataResource.updateDate" format="ll" [tooltipText]="updatedOnMsg + ' ' + (dataResource.updateDate | date:'medium')" icon="fa-pencil"></short-date>
+        <user-avatar class="ml-2" [email]="users.updatedBy.email" [tooltipText]="updatedByMsg + ' ' + users.updatedBy.name" [avatarSize]="15"></user-avatar>
+      </span>
     </div>
 
     <div class="d-flex justify-content-start justify-content-lg-end mt-2 toolbar">
       <i class="{{tableIcon}} mr-2 clickable"
          aria-hidden="true"
          *ngIf="permissions?.writeWithView"
+         tooltip="Switch to Table perspective"
+         i18n-tooltip="@@document.detail.switch.table"
          title="Switch to Table perspective"
          i18n-title="@@document.detail.switch.table"
          (click)="onSwitchToTable()"></i>
@@ -37,18 +42,24 @@
         <i *ngIf="document.favorite" class="fas fa-fw fa-star text-warning clickable mr-2"
            title="Remove from favorites"
            i18n-title="@@document.detail.favorite.remove"
+           tooltip="Remove from favorites"
+           i18n-tooltip="@@document.detail.favorite.remove"
            (click)="onFavoriteToggle()"></i>
         <i *ngIf="!document.favorite"
            class="far fa-fw fa-star text-warning clickable mr-2"
            title="Add to favorites"
            i18n-title="@@document.detail.favorite.add"
+           tooltip="Add to favorites"
+           i18n-tooltip="@@document.detail.favorite.add"
            (click)="onFavoriteToggle()"></i>
       </ng-container>
-      <i class="fas fa-fw fa-trash text-danger clickable"
+      <i class="fal fa-fw fa-trash-alt text-danger clickable"
          aria-hidden="true"
          *ngIf="permissions?.writeWithView && resourceType === collectionResourceType"
          title="Remove Record"
          i18n-title="@@document.detail.remove"
+         tooltip="Remove Record"
+         i18n-tooltip="@@document.detail.remove"
          (click)="onRemove()"
       ></i>
       <i class="fas fa-fw fa-unlink text-warning clickable"
@@ -56,6 +67,8 @@
          *ngIf="permissions?.writeWithView  && resourceType !== collectionResourceType"
          title="Unlink"
          i18n-title="@@link.detail.unlink"
+         tooltip="Unlink"
+         i18n-tooltip="@@link.detail.unlink"
          (click)="onRemove()"
       ></i>
     </div>

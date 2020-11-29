@@ -43,9 +43,18 @@
         </div>
         <ng-container
           *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType !== constraintType.Text">{{data.dataValue | previewDataValue}}</ng-container>
-        <div class="detail-trigger small px-2 btn-link" *ngIf="group.column && group.column.id === detailColumnId"
+        <div class="detail-trigger small pl-1 pr-1" *ngIf="!data.editing && group.column && group.column.id === detailColumnId"
              (click)="onDetailClick($event)"
-             (dblclick)="$event.preventDefault(); $event.stopPropagation()">Detail&nbsp;>
+             (dblclick)="$event.preventDefault(); $event.stopPropagation()">
+          <span class="detail-text btn-link pl-1 mr-2">Detail&nbsp;&gt;</span>
+          <span *ngIf="row.commentsCount" [class.fa-stack]="row.commentsCount">
+            <i class="fal fa-comment text-success"
+               [class.fa-stack-1x]="row.commentsCount">
+            </i>
+            <span *ngIf="row.commentsCount" class="fa-stack-1x">
+              <span class="comments-count">{{row.commentsCount < 10 ? row.commentsCount : '9+'}}</span>
+            </span>
+          </span>
         </div>
       </td>
     </ng-container>

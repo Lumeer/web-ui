@@ -1,0 +1,42 @@
+<ng-container *ngIf="{linkTypes: linkTypes$ | async, selectedLinkType: selectedLinkType$ | async, openedGroups: openedGroups$ | async} as data">
+  <ng-container *ngIf="data.linkTypes.length > 0; else noLinkTypes">
+  <accordion>
+    <ng-container *ngFor="let linkType of data?.linkTypes; let idx = index;">
+      <accordion-group panelClass="lmr-accordion" [isOpen]="linkType.id === data?.selectedLinkType?.id" (isOpenChange)="isOpenChanged(idx)">
+        <div class="header-wrapper" accordion-heading *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
+          <div class="mr-2">
+            <i *ngIf="data.openedGroups[idx]" class="fas fa-caret-down"></i>
+            <i *ngIf="!(data.openedGroups[idx])" class="fas fa-caret-right"></i>
+          </div>
+          <icons-presenter class="d-block mr-1"
+                           [colors]="iconData.iconColors.colors"
+                           [icons]="iconData.iconColors.icons">
+          </icons-presenter>
+          <div class="font-weight-bold text-truncate" [title]="linkType.name">{{linkType.name}}</div>
+          <div class="small text-muted">{{document | linksCount:linkType | async}}</div>
+        </div>
+        <div>
+          <links-list-table
+            class="d-block mt-2"
+            [linkType]="data.selectedLinkType"
+            [document]="document"
+            [collection]="otherCollection$ | async"
+            [permissions]="permissions$ | async"
+            [query]="query$ | async"
+            [allowSelectDocument]="allowSelectDocument"
+            [preventEventBubble]="preventEventBubble"
+            [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
+            [viewSettings]="viewSettings"
+            (unLink)="unLinkDocument($event)"
+            (detail)="onSelectDocument($event)">
+          </links-list-table>
+        </div>
+      </accordion-group>
+    </ng-container>
+  </accordion>
+  </ng-container>
+</ng-container>
+
+<ng-template #noLinkTypes>
+  <p class="p-4 text-center font-italic" i18n="@@document.detail.links.noLinks">There are no links.</p>
+</ng-template>

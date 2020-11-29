@@ -21,6 +21,7 @@ import {DocumentModel} from './document.model';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {documentsAdapter, DocumentsState, initialDocumentsState} from './documents.state';
 import {getBaseCollectionIdsFromQuery} from '../navigation/query/query.util';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 export function documentsReducer(
   state: DocumentsState = initialDocumentsState,
@@ -153,8 +154,25 @@ function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess)
     const oldDocument = state.entities[document.id];
     return !oldDocument || isDocumentNewer(document, oldDocument);
   });
+  const filteredDocumentIds = filteredDocuments.map(doc => doc.id);
 
-  return documentsAdapter.upsertMany(filteredDocuments, queriesState);
+  const changedTransientProperties = action.payload.documents.reduce<DocumentModel[]>((result, document) => {
+    const oldDocument = state.entities[document.id];
+
+    if (!filteredDocumentIds.includes(document.id) && isTransientModified(document, oldDocument)) {
+      result.push({...oldDocument, commentsCount: document.commentsCount});
+    }
+
+    return result;
+  }, []);
+
+  return documentsAdapter.upsertMany([...filteredDocuments, ...changedTransientProperties], queriesState);
+}
+
+function isTransientModified(document: DocumentModel, oldDocument: DocumentModel): boolean {
+  return (
+    (document.commentsCount || document.commentsCount === 0) && oldDocument.commentsCount !== document.commentsCount
+  );
 }
 
 function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): DocumentsState {
@@ -164,7 +182,7 @@ function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): Do
   }
 
   if (isDocumentNewer(document, oldDocument)) {
-    if (!document.commentsCount && !!oldDocument.commentsCount) {
+    if (isNullOrUndefined(document.commentsCount) && isNotNullOrUndefined(oldDocument.commentsCount)) {
       document.commentsCount = oldDocument.commentsCount;
     }
     return documentsAdapter.upsertOne(document, state);
@@ -180,7 +198,10 @@ function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): Do
       },
       state
     );
+  } else if (isTransientModified(document, oldDocument)) {
+    return documentsAdapter.updateOne({id: document.id, changes: {commentsCount: document.commentsCount}}, state);
   }
+
   return state;
 }
 

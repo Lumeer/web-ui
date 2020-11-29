@@ -49,6 +49,7 @@ export interface EnvironmentVariables {
   logzioRegion: string;
   smartlookKey: string;
   mixpanelKey: string;
+  contactUrl: string;
 }
 
 const apiUrl = env['LUMEER_ENGINE'] || 'http://localhost:8080/lumeer-engine';
@@ -75,6 +76,7 @@ const logzioKey = env['LOGZIO_KEY'] || '';
 const logzioRegion = env['LOGZIO_REGION'] || 'eu';
 const smartlookKey = env['SMARTLOOK_KEY'] || '';
 const mixpanelKey = env['MIXPANEL_KEY'] || '';
+const contactUrl = locale === 'en' ? 'https://www.lumeer.io/contact/' : 'https://www.lumeer.io/cs/kontakt/';
 
 export const environmentVariables: EnvironmentVariables = {
   apiUrl,
@@ -101,4 +103,5 @@ export const environmentVariables: EnvironmentVariables = {
   logzioRegion,
   smartlookKey,
   mixpanelKey,
+  contactUrl,
 };

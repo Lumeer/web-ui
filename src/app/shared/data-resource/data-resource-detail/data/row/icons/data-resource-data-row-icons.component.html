@@ -1,8 +1,10 @@
 <ng-container *ngIf="permissions?.writeWithView">
-  <i class="fas fa-fw fa-trash text-danger mr-2 clickable text-danger button-remove"
+  <i class="fal fa-fw fa-trash-alt text-danger mr-2 clickable text-danger button-remove"
      aria-hidden="true"
      title="Remove Row"
      i18n-title="@@remove.row"
+     tooltip="Remove Row"
+     i18n-tooltip="@@remove.row"
      (click)="onDelete()">
   </i>
 </ng-container>
@@ -11,8 +13,10 @@
   <i class="fa fa-fw fa-shapes mr-2 clickable text-success button-config"
      aria-hidden="true"
      *ngIf="attributeData.manage"
-     i18n-title="@@document.detail.configure.constraint"
      title="Set Attribute Type"
+     i18n-title="@@document.detail.configure.constraint"
+     tooltip="Set Attribute Type"
+     i18n-tooltip="@@document.detail.configure.constraint"
      (click)="onAttributeType()">
   </i>
   <i *ngIf="!attributeData.manage" class="fa-fw fa fa-icon-none mr-2"
@@ -22,8 +26,10 @@
   <i class="fa fa-fw fa-function mr-2 clickable text-success button-function"
      aria-hidden="true"
      *ngIf="attributeData.manage"
-     i18n-title="@@document.detail.configure.function"
      title="Set Attribute Function"
+     i18n-title="@@document.detail.configure.function"
+     tooltip="Set Attribute Function"
+     i18n-tooltip="@@document.detail.configure.function"
      (click)="onAttributeFunction()">
   </i>
   <i *ngIf="!attributeData.manage" class="fa-fw fa fa-icon-none mr-2"
