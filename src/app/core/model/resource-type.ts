@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export const enum ResourceType {
+export enum ResourceType {
   Organization = 'organization',
   Project = 'project',
   Collection = 'collection',

@@ -1,4 +1,4 @@
-<ul *ngIf="{organization: organization$ | async, project: project$ | async} as data"
+<ul *ngIf="{organization: organization$ | async, project: project$ | async, organizations: organizations$ | async} as data"
     [style.height.px]="contentHeight"
     class="navbar navbar-triangle my-0 p-0 mr-3 flex-nowrap">
   <li class="nav-item dropdown">
@@ -18,7 +18,7 @@
                    [type]="organizationResourceType"
                    [resource]="data.organization"
                    [origin]="organizationElement"
-                   [organizations]="organizations$ | async"
+                   [organizations]="data.organizations"
                    [workspace]="workspace"
                    (onResourceSelect)="selectOrganization($event)"
                    (onNewResource)="createNewOrganization()">
@@ -43,6 +43,7 @@
                    [resource]="data.project"
                    [workspace]="workspace"
                    [projects]="projects$ | async"
+                   [organizations]="data.organizations"
                    [origin]="projectElement"
                    (onResourceSelect)="selectProject(data.organization, $event)"
                    (onNewResource)="createNewProject(data.organization)">

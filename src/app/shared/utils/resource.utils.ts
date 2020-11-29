@@ -45,6 +45,12 @@ export function userHasManageRoleInResource(user: User, resource: Resource): boo
   return userHasRoleInResource(user, resource, Role.Manage);
 }
 
+export function userHasRoleInProject(user: User, project: Project, organization: Organization, role: string): boolean {
+  return (
+    userHasRoleInResource(user, project, role) || (organization && userHasManageRoleInResource(user, organization))
+  );
+}
+
 export function userHasRoleInResource(user: User, resource: Resource, role: string): boolean {
   return userRolesInResource(user, resource).includes(role.toUpperCase());
 }

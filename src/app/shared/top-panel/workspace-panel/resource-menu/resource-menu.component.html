@@ -14,10 +14,12 @@
     <resource-list [currentId]="resource?.id"
                    [organizations]="organizations"
                    [projects]="projects"
+                   [type]="type"
                    (onResourceSelect)="selectResource($event)">
     </resource-list>
 
-    <ng-container *ngIf="(resource | canCreateResource:type:projects) | async">
+    <ng-container
+      *ngIf="resource | canCreateResource:type:organizations:projects:(currentUser$ | async):(serviceLimits$ | async)">
 
       <div class="dropdown-divider"></div>
 

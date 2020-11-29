@@ -24,7 +24,12 @@ import {map, mergeMap} from 'rxjs/operators';
 import {Resource} from '../../../core/model/resource';
 import {AppState} from '../../../core/store/app.state';
 import {selectCurrentUserForWorkspace} from '../../../core/store/users/users.state';
-import {userHasManageRoleInResource, userHasRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
+import {
+  userHasManageRoleInResource,
+  userHasRoleInProject,
+  userHasRoleInResource,
+  userIsManagerInWorkspace,
+} from '../../utils/resource.utils';
 import {selectWorkspaceModels} from '../../../core/store/common/common.selectors';
 import {ResourceType} from '../../../core/model/resource-type';
 
@@ -55,10 +60,7 @@ export class PermissionsPipe implements PipeTransform {
           map(models => {
             const {organization, project} = models;
             if (type === ResourceType.Project) {
-              return (
-                userHasRoleInResource(user, resource, role) ||
-                (organization && userHasManageRoleInResource(user, organization))
-              );
+              return userHasRoleInProject(user, project, organization, role);
             }
             const isManager = userIsManagerInWorkspace(user, organization, project);
             return isManager || userHasRoleInResource(user, resource, role);

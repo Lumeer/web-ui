@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Organization} from '../../../../../core/store/organizations/organization';
 import {Project} from '../../../../../core/store/projects/project';
+import {ResourceType} from '../../../../../core/model/resource-type';
 
 @Component({
   selector: 'resource-list',
@@ -37,8 +38,13 @@ export class ResourceListComponent {
   @Input()
   public projects: Project[];
 
+  @Input()
+  public type: ResourceType;
+
   @Output()
   public onResourceSelect = new EventEmitter<Project | Organization>();
+
+  public readonly resourceType = ResourceType;
 
   public selectResource(model: Project | Organization) {
     this.onResourceSelect.emit(model);
