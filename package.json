@@ -98,7 +98,7 @@
     "ngx-toastr": "^13.1.0",
     "numbro": "^2.3.2",
     "plotly.js": "^1.57.1",
-    "pusher-js": "^7.0.1",
+    "pusher-js": "^7.0.2",
     "quill": "^1.3.7",
     "rxjs": "~6.6.3",
     "smartlook-client": "^4.6.1",
