@@ -199,7 +199,7 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
         return;
     }
 
-    this.dropdown.onKeyDown(event);
+    this.dropdown?.onKeyDown(event);
   }
 
   private saveDataValue(dataValue: DataValue, event: KeyboardEvent) {

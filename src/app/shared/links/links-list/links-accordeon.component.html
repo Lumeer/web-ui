@@ -1,8 +1,8 @@
-<ng-container *ngIf="{linkTypes: linkTypes$ | async, selectedLinkType: selectedLinkType$ | async, openedGroups: openedGroups$ | async} as data">
-  <ng-container *ngIf="data.linkTypes.length > 0; else noLinkTypes">
+<ng-container *ngIf="{linkTypes: linkTypes$ | async, openedGroups: openedGroups$ | async} as data">
+  <ng-container *ngIf="data.linkTypes?.length > 0; else noLinkTypes">
   <accordion>
     <ng-container *ngFor="let linkType of data?.linkTypes; let idx = index;">
-      <accordion-group panelClass="lmr-accordion" [isOpen]="linkType.id === data?.selectedLinkType?.id" (isOpenChange)="isOpenChanged(idx)">
+      <accordion-group panelClass="lmr-accordion" [isOpen]="idx === 0" (isOpenChange)="isOpenChanged(idx)">
         <div class="header-wrapper" accordion-heading *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
           <div class="mr-2">
             <i *ngIf="data.openedGroups[idx]" class="fas fa-caret-down"></i>
@@ -17,11 +17,12 @@
         </div>
         <div>
           <links-list-table
+            *ngIf="{otherCollection: linkType | linkTypeOtherCollection:(collections$ | async):collection.id} as linkData"
             class="d-block mt-2"
-            [linkType]="data.selectedLinkType"
+            [linkType]="linkType"
             [document]="document"
-            [collection]="otherCollection$ | async"
-            [permissions]="permissions$ | async"
+            [collection]="linkData.otherCollection"
+            [permissions]="linkData.otherCollection | collectionPermissions | async"
             [query]="query$ | async"
             [allowSelectDocument]="allowSelectDocument"
             [preventEventBubble]="preventEventBubble"

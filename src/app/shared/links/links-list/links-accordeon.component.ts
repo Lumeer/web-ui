@@ -37,16 +37,15 @@ import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {Query} from '../../../core/store/navigation/query/query';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
-import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-permissions.pipe';
 import {selectViewQuery} from '../../../core/store/views/views.state';
-import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
-import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {distinctUntilChanged, map, mergeMap, tap} from 'rxjs/operators';
-import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
-import {deepObjectsEquals} from '../../utils/common.utils';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {selectAllCollections, selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
+import {map, tap} from 'rxjs/operators';
+import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
+import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {forEach} from '@angular-devkit/schematics';
 
 @Component({
   selector: 'links-accordeon',
@@ -54,7 +53,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
   styleUrls: ['./links-accordeon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksAccordeonComponent implements OnChanges, OnInit {
+export class LinksAccordeonComponent implements OnInit, OnChanges {
   @Input()
   public collection: Collection;
 
@@ -76,34 +75,24 @@ export class LinksAccordeonComponent implements OnChanges, OnInit {
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
 
-  public selectedLinkType$ = new BehaviorSubject<LinkType>(null);
-
   public linkTypes$: Observable<LinkType[]>;
-  public otherCollection$: Observable<Collection>;
+  public collections$: Observable<Collection[]>;
   public permissions$: Observable<AllowedPermissions>;
   public query$: Observable<Query>;
 
   public openedGroups$ = new BehaviorSubject<boolean[]>([]);
 
-  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
+    this.collections$ = this.store$.pipe(select(selectAllCollections));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (this.objectChanged(changes.collection)) {
       this.renewSubscriptions();
     }
-    if (this.objectChanged(changes.document)) {
-      this.selectedLinkType$.value && this.selectOtherCollection(this.selectedLinkType$.value);
-    }
-  }
-
-  public isOpenChanged(index: number) {
-    const opened = this.openedGroups$.getValue();
-    opened[index] = !opened[index];
-    this.openedGroups$.next(opened);
   }
 
   private renewSubscriptions() {
@@ -113,43 +102,7 @@ export class LinksAccordeonComponent implements OnChanges, OnInit {
     ]).pipe(
       tap(([linkTypes]) => this.openedGroups$.next(new Array(linkTypes.length))),
       map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap))),
-      tap(linkTypes => this.initActiveLinkType(linkTypes))
-    );
-  }
-
-  private objectChanged(change: SimpleChange): boolean {
-    return change && (!change.previousValue || change.previousValue.id !== change.currentValue?.id);
-  }
-
-  private initActiveLinkType(linkTypes: LinkType[]) {
-    let selectLinkType: LinkType;
-    if (this.selectedLinkType$.value) {
-      selectLinkType = linkTypes.find(linkType => linkType.id === this.selectedLinkType$.value.id);
-    }
-
-    this.onSelectLink(selectLinkType || linkTypes[0]);
-  }
-
-  public onSelectLink(linkType: LinkType) {
-    this.selectedLinkType$.next(linkType);
-    this.selectOtherCollection(linkType);
-
-    if (linkType) {
-      this.readData(linkType);
-    }
-  }
-
-  private selectOtherCollection(linkType: LinkType) {
-    this.otherCollection$ = this.store$.pipe(
-      select(selectCollectionsDictionary),
-      map(collectionsMap => {
-        const collectionId = getOtherLinkedCollectionId(linkType, this.document?.collectionId);
-        return collectionId && collectionsMap[collectionId];
-      })
-    );
-    this.permissions$ = this.otherCollection$.pipe(
-      mergeMap(collection => this.collectionPermissionsPipe.transform(collection)),
-      distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
+      tap(linkTypes => linkTypes.map(linkType => this.readData(linkType)))
     );
   }
 
@@ -161,6 +114,16 @@ export class LinksAccordeonComponent implements OnChanges, OnInit {
       const query: Query = {stems: [{collectionId: this.collection.id, linkTypeIds: [linkType.id]}]};
       this.store$.dispatch(new LinkInstancesAction.Get({query}));
     }
+  }
+
+  private objectChanged(change: SimpleChange): boolean {
+    return change && (!change.previousValue || change.previousValue.id !== change.currentValue?.id);
+  }
+
+  public isOpenChanged(index: number) {
+    const opened = this.openedGroups$.getValue();
+    opened[index] = !opened[index];
+    this.openedGroups$.next(opened);
   }
 
   public unLinkDocument(linkInstance: LinkInstance) {
