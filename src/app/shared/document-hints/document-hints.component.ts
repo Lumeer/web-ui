@@ -128,6 +128,8 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   private hintsCount = 0;
   private confirmedSelectedIndex: number;
 
+  private lastMouseTargetId: string;
+
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
@@ -327,6 +329,28 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   }
 
   public preventEvent(event: MouseEvent) {
+    this.lastMouseTargetId = this.parseTargetId(event);
     preventEvent(event);
+  }
+
+  private parseTargetId(event: MouseEvent): string {
+    const target = event?.target as HTMLElement;
+    const targetParts = target.id.split('-');
+
+    if (targetParts?.length > 2) {
+      return targetParts[1];
+    }
+
+    return null;
+  }
+
+  public tryUseDocument(event: MouseEvent, index: number, document: DocumentModel) {
+    preventEvent(event);
+
+    const target = this.parseTargetId(event);
+    if (target === this.lastMouseTargetId) {
+      this.onUseDocument(index, document);
+    }
+    this.lastMouseTargetId = null;
   }
 }

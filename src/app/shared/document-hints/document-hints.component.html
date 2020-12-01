@@ -15,11 +15,13 @@
         *ngFor="let doc of data.documents | reverseArrayByDropdownPosition:(dropdownPosition$ | async); index as documentIndex"
         [class.selected]="(selectedIndex$ | async) === documentIndex"
         (mousedown)="preventEvent($event)"
+        (mouseup)="tryUseDocument($event, documentIndex, doc)"
         (click)="preventEvent($event); onUseDocument(documentIndex, doc)"
         class="dropdown-item p-0 d-flex">
         <ng-container *ngFor="let column of columns">
           <div
             *ngIf="{value: (doc.data[column.attributeId] | dataValue : (data.collection | collectionAttribute : column.attributeId)?.constraint : constraintData) | previewDataValue} as state"
+            [id]="'hint-' + doc.id + '-' + column.attributeId"
             [class.font-weight-bold]="column.attributeId === attributeId"
             [style.width.px]="column.width"
             (click)="$event.preventDefault();"
