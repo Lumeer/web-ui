@@ -12,3 +12,7 @@
   width: min-content;
   border: 0.5px $gray-200 dotted;
 }
+
+::ng-deep div.cdk-virtual-scroll-content-wrapper {
+  padding-bottom: 0.6rem;
+}
