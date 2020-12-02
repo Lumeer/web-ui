@@ -13,10 +13,16 @@ td {
   margin: 0;
 }
 
+td.focused {
+  .detail-trigger {
+    right: 1px;
+  }
+}
+
 :host.selected {
   background: lighten($success, 60%);
 
-  .detail-trigger {
+  .detail-trigger.has-comments {
     background: lighten($success, 60%);
   }
 }
@@ -40,7 +46,10 @@ td {
 }
 
 .detail-trigger {
-  background: white;
+  &.has-comments {
+    background: white;
+  }
+
   display: flex;
   align-items: center;
   position: absolute;

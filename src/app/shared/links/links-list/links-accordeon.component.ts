@@ -136,4 +136,8 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {
     this.documentSelect.emit(data);
   }
+
+  public trackById(index: number, linkType: LinkType): string {
+    return linkType.id;
+  }
 }

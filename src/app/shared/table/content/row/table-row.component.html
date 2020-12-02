@@ -44,6 +44,7 @@
         <ng-container
           *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType !== constraintType.Text">{{data.dataValue | previewDataValue}}</ng-container>
         <div class="detail-trigger small pl-1 pr-1" *ngIf="!data.editing && group.column && group.column.id === detailColumnId"
+             [class.has-comments]="row.commentsCount"
              (click)="onDetailClick($event)"
              (dblclick)="$event.preventDefault(); $event.stopPropagation()">
           <span class="detail-text btn-link pl-1 mr-2">Detail&nbsp;&gt;</span>
