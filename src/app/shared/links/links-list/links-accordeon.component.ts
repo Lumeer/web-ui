@@ -80,7 +80,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public permissions$: Observable<AllowedPermissions>;
   public query$: Observable<Query>;
 
-  public openedGroups$ = new BehaviorSubject<boolean[]>([]);
+  public openedGroups$ = new BehaviorSubject<Map<string, boolean>>(new Map([]));
 
   public constructor(private store$: Store<AppState>) {}
 
@@ -90,7 +90,10 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.objectChanged(changes.collection)) {
+    if (
+      changes.collection &&
+      (!changes.collection.previousValue || changes.collection.currentValue?.id !== this.collection?.id)
+    ) {
       this.renewSubscriptions();
     }
   }
@@ -100,7 +103,11 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
       this.store$.pipe(select(selectLinkTypesByCollectionId(this.collection.id))),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
-      tap(([linkTypes]) => this.openedGroups$.next(new Array(linkTypes.length))),
+      tap(([linkTypes]) => {
+        if (linkTypes.length > 0 && !this.openedGroups$.getValue().has(linkTypes[0].id)) {
+          this.isOpenChanged(true, linkTypes[0].id);
+        }
+      }),
       map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap))),
       tap(linkTypes => linkTypes.map(linkType => this.readData(linkType)))
     );
@@ -116,13 +123,9 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
     }
   }
 
-  private objectChanged(change: SimpleChange): boolean {
-    return change && (!change.previousValue || change.previousValue.id !== change.currentValue?.id);
-  }
-
-  public isOpenChanged(index: number) {
-    const opened = this.openedGroups$.getValue();
-    opened[index] = !opened[index];
+  public isOpenChanged(state: boolean, index: string) {
+    const opened = new Map(this.openedGroups$.getValue());
+    opened.set(index, state);
     this.openedGroups$.next(opened);
   }
 
