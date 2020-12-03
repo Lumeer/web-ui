@@ -101,12 +101,12 @@ export class SvgImageMap {
     const _this = this;
     const drag = d3Drag
       .drag()
-      .on('start', function () {
+      .on('start', function (this, event) {
         const current = d3Select.select(this);
-        deltaX = +current.attr('x') - d3Select.event.x;
-        deltaY = +current.attr('y') - d3Select.event.y;
+        deltaX = +current.attr('x') - event.x;
+        deltaY = +current.attr('y') - event.y;
       })
-      .on('drag', function () {
+      .on('drag', function (this, event) {
         _this.hideMarkerPopup();
         const elementCenter = _this.getElementSize();
         const imageBounds = _this.computeImageRectangle();
@@ -115,8 +115,8 @@ export class SvgImageMap {
         const {x, y} = computeMarkerPosition(
           computeMarkerCoordinates(
             {
-              x: d3Select.event.x + deltaX,
-              y: d3Select.event.y + deltaY,
+              x: event.x + deltaX,
+              y: event.y + deltaY,
             },
             dragScale,
             dragPixelScale,
@@ -163,8 +163,8 @@ export class SvgImageMap {
           selectedMarker.remove();
         }
         selectedMarker = addMarkerToSvgContainer(svgMarkersContainer, marker, scale, x, y)
-          .on('dblclick', () => {
-            d3Select.event.stopPropagation();
+          .on('dblclick', event => {
+            event.stopPropagation();
             this.detail$.emit(marker);
           })
           .on('mouseenter', () => this.showMarkerPopup(marker))
@@ -306,11 +306,11 @@ export class SvgImageMap {
 
     this.zoom = d3Zoom
       .zoom()
-      .filter(() => {
-        if (d3Select.event.type === 'wheel') {
+      .filter(event => {
+        if (event.type === 'wheel') {
           return true;
         }
-        return !d3Select.event.ctrlKey && !d3Select.event.button;
+        return !event.ctrlKey && !event.button;
       })
       .extent([
         [0, 0],
@@ -320,8 +320,8 @@ export class SvgImageMap {
       .on('start', () => {
         this.mapDragging = true;
       })
-      .on('zoom', () => {
-        const transform = d3Select.event.transform;
+      .on('zoom', event => {
+        const transform = event.transform;
         const x = scaleImagePoint(transform.x);
         const y = scaleImagePoint(transform.y);
         const scale = scaleImagePoint(transform.k);
@@ -342,10 +342,10 @@ export class SvgImageMap {
             );
           });
       })
-      .on('end', () => {
+      .on('end', event => {
         this.mapDragging = false;
 
-        const transform = d3Select.event.transform;
+        const transform = event.transform;
         const x = scaleImagePoint(transform.x);
         const y = scaleImagePoint(transform.y);
         const scale = scaleImagePoint(transform.k);
