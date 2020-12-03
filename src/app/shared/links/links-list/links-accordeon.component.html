@@ -2,11 +2,11 @@
   <ng-container *ngIf="data.linkTypes?.length > 0; else noLinkTypes">
   <accordion>
     <ng-container *ngFor="let linkType of data?.linkTypes; trackBy:trackById let idx = index;">
-      <accordion-group panelClass="lmr-accordion" [isOpen]="data.openedGroups.get(linkType.id)" (isOpenChange)="isOpenChanged($event, linkType.id)">
+      <accordion-group panelClass="lmr-accordion" [isOpen]="data.openedGroups[linkType.id]" (isOpenChange)="isOpenChanged($event, linkType.id)">
         <div class="header-wrapper" accordion-heading *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
           <div class="mr-2">
-            <i *ngIf="data.openedGroups.get(linkType.id)" class="fas fa-caret-down"></i>
-            <i *ngIf="!(data.openedGroups.get(linkType.id))" class="fas fa-caret-right"></i>
+            <i *ngIf="data.openedGroups[linkType.id]" class="fas fa-caret-down"></i>
+            <i *ngIf="!(data.openedGroups[linkType.id])" class="fas fa-caret-right"></i>
           </div>
           <icons-presenter class="d-block mr-1"
                            [colors]="iconData.iconColors.colors"
@@ -19,7 +19,7 @@
           <links-list-table
             *ngIf="{otherCollection: linkType | linkTypeOtherCollection:(collections$ | async):collection.id} as linkData"
             class="d-block mt-2"
-            [visible]="data.openedGroups.get(linkType.id)"
+            [visible]="data.openedGroups[linkType.id]"
             [linkType]="linkType"
             [document]="document"
             [collection]="linkData.otherCollection"
