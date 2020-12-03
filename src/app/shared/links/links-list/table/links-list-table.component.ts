@@ -30,6 +30,7 @@ import {
   HostListener,
   EventEmitter,
   Output,
+  AfterViewChecked,
 } from '@angular/core';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
@@ -99,6 +100,9 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
   @Input()
   public viewSettings: ViewSettings;
 
+  @Input()
+  public visible: boolean;
+
   @ViewChild('tableWrapper')
   public tableWrapperComponent: ElementRef;
 
@@ -134,6 +138,10 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
     if (this.objectChanged(changes.linkType) || this.objectChanged(changes.document)) {
       this.rows$ = this.selectLinkRows$();
+    }
+
+    if (changes.visible) {
+      setTimeout(() => this.computeStickyColumnWidth());
     }
   }
 

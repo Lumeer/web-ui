@@ -80,7 +80,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public permissions$: Observable<AllowedPermissions>;
   public query$: Observable<Query>;
 
-  public openedGroups$ = new BehaviorSubject<Map<string, boolean>>(new Map([]));
+  public openedGroups$ = new BehaviorSubject<Record<string, boolean>>({});
 
   public constructor(private store$: Store<AppState>) {}
 
@@ -104,7 +104,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
       tap(([linkTypes]) => {
-        if (linkTypes.length > 0 && !this.openedGroups$.getValue().has(linkTypes[0].id)) {
+        if (linkTypes.length > 0 && !this.openedGroups$.getValue()[linkTypes[0].id]) {
           this.isOpenChanged(true, linkTypes[0].id);
         }
       }),
@@ -124,8 +124,8 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   }
 
   public isOpenChanged(state: boolean, index: string) {
-    const opened = new Map(this.openedGroups$.getValue());
-    opened.set(index, state);
+    const opened = {...this.openedGroups$.getValue()};
+    opened[index] = state;
     this.openedGroups$.next(opened);
   }
 
@@ -135,5 +135,9 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
 
   public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {
     this.documentSelect.emit(data);
+  }
+
+  public trackById(index: number, linkType: LinkType): string {
+    return linkType.id;
   }
 }
