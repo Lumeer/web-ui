@@ -34,7 +34,7 @@ import {
 import {LinkInstance} from '../../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
-import {deepObjectsEquals, isArray, isNotNullOrUndefined, objectsByIdMap} from '../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, objectsByIdMap} from '../../../../shared/utils/common.utils';
 import {generateId} from '../../../../shared/utils/resource.utils';
 import {SizeType} from '../../../../shared/slider/size/size-type';
 import {
