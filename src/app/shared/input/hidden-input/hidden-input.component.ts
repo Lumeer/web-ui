@@ -64,6 +64,10 @@ export class HiddenInputComponent implements DataRowHiddenComponent {
   }
 
   public onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Dead') {
+      this.skipCompose = true;
+      return;
+    }
     switch (event.code) {
       case KeyCode.KeyC:
         if (event.ctrlKey || event.metaKey) {

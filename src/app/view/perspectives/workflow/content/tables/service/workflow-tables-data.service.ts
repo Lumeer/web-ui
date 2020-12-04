@@ -80,7 +80,7 @@ import {
 import {WorkflowTable} from '../../../model/workflow-table';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {queryStemsAreSame} from '../../../../../../core/store/navigation/query/query.util';
-import {objectsByIdMap} from '../../../../../../shared/utils/common.utils';
+import {isArray, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
 import {
   selectWorkflowId,
@@ -140,7 +140,11 @@ export class WorkflowTablesDataService {
     const overrideConstraint =
       kanbanConstraint && this.constraintItemsFormatter.checkValidConstraintOverride(constraint, kanbanConstraint);
     const finalConstraint = overrideConstraint || constraint || new UnknownConstraint();
-    return finalConstraint.createDataValue(value, constraintData).serialize();
+    const serializedValue = finalConstraint.createDataValue(value, constraintData).serialize();
+    if (serializedValue && isArray(serializedValue)) {
+      return serializedValue[0]; // i.e. multiselect constraints (user, select) serialize value as array
+    }
+    return serializedValue;
   }
 
   public checkSettingsChange(viewSettings: ViewSettings) {

@@ -94,7 +94,7 @@ export class PiePlotMaker extends PlotMaker {
         colors.push(point.color);
       });
 
-    const data = {...dataStyle, labels, values};
+    const data = {...dataStyle, labels, values, name: set.name};
     if (this.shouldSetColors(colors)) {
       data.marker.colors = colors;
     }
