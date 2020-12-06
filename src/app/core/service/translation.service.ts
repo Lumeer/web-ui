@@ -20,7 +20,6 @@
 import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DurationUnit} from '../model/data/constraint-config';
-import {QueryCondition} from '../store/navigation/query/query';
 import {Constraint} from '../model/constraint';
 import {ConstraintType} from '../model/data/constraint';
 import {
@@ -29,6 +28,7 @@ import {
   UserConstraintConditionValue,
 } from '../model/data/constraint-condition';
 import {objectValues} from '../../shared/utils/common.utils';
+import {ConditionType} from '../model/attribute-filter';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +50,7 @@ export class TranslationService {
     );
   }
 
-  public translateQueryCondition(condition: QueryCondition, constraint: Constraint): string {
+  public translateQueryCondition(condition: ConditionType, constraint: Constraint): string {
     if (!constraint) {
       return this.translateConditionByText(condition);
     }
@@ -73,7 +73,7 @@ export class TranslationService {
     }
   }
 
-  private translateConditionByUserAndSelect(condition: QueryCondition): string {
+  private translateConditionByUserAndSelect(condition: ConditionType): string {
     return this.i18n(
       {
         id: 'query.filter.condition.constraint.select',
@@ -84,7 +84,7 @@ export class TranslationService {
     );
   }
 
-  private translateConditionByText(condition: QueryCondition): string {
+  private translateConditionByText(condition: ConditionType): string {
     return this.i18n(
       {
         id: 'query.filter.condition.constraint.text',
@@ -95,19 +95,19 @@ export class TranslationService {
     );
   }
 
-  private translateConditionByNumber(condition: QueryCondition): string {
+  private translateConditionByNumber(condition: ConditionType): string {
     switch (condition) {
-      case QueryCondition.Equals:
+      case ConditionType.Equals:
         return '=';
-      case QueryCondition.NotEquals:
+      case ConditionType.NotEquals:
         return '≠';
-      case QueryCondition.GreaterThan:
+      case ConditionType.GreaterThan:
         return '>';
-      case QueryCondition.GreaterThanEquals:
+      case ConditionType.GreaterThanEquals:
         return '≥';
-      case QueryCondition.LowerThan:
+      case ConditionType.LowerThan:
         return '<';
-      case QueryCondition.LowerThanEquals:
+      case ConditionType.LowerThanEquals:
         return '≤';
     }
 
@@ -121,7 +121,7 @@ export class TranslationService {
     );
   }
 
-  private translateConditionByDate(condition: QueryCondition): string {
+  private translateConditionByDate(condition: ConditionType): string {
     return this.i18n(
       {
         id: 'query.filter.condition.constraint.date',

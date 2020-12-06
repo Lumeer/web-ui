@@ -20,12 +20,9 @@
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
-import {
-  CollectionAttributeFilter,
-  QueryCondition,
-  QueryConditionValue,
-} from '../../../../../core/store/navigation/query/query';
+import {CollectionAttributeFilter} from '../../../../../core/store/navigation/query/query';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
+import {ConditionType, ConditionValue} from '../../../../../core/model/attribute-filter';
 
 export class AttributeQueryItem implements QueryItem {
   public type = QueryItemType.Attribute;
@@ -33,8 +30,8 @@ export class AttributeQueryItem implements QueryItem {
   public constructor(
     public collection: Collection,
     public attribute: Attribute,
-    public condition?: QueryCondition,
-    public conditionValues?: QueryConditionValue[],
+    public condition?: ConditionType,
+    public conditionValues?: ConditionValue[],
     public fromSuggestion?: boolean
   ) {}
 

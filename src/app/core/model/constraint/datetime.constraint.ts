@@ -21,9 +21,9 @@ import {DateTimeDataValue} from '../data-value/datetime.data-value';
 import {ConstraintType} from '../data/constraint';
 import {DateTimeConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
 import {avgAnyValues, countValues, medianInAnyValues, sumAnyValues, uniqueValuesCount} from './aggregation';
 import {DataValue} from '../data-value';
+import {ConditionType} from '../attribute-filter';
 
 export class DateTimeConstraint implements Constraint {
   public readonly type = ConstraintType.DateTime;
@@ -39,18 +39,18 @@ export class DateTimeConstraint implements Constraint {
     return new DateTimeDataValue(value, this.config, inputValue);
   }
 
-  public conditions(): QueryCondition[] {
+  public conditions(): ConditionType[] {
     return [
-      QueryCondition.Equals,
-      QueryCondition.NotEquals,
-      QueryCondition.GreaterThan,
-      QueryCondition.LowerThan,
-      QueryCondition.GreaterThanEquals,
-      QueryCondition.LowerThanEquals,
-      QueryCondition.Between,
-      QueryCondition.NotBetween,
-      QueryCondition.IsEmpty,
-      QueryCondition.NotEmpty,
+      ConditionType.Equals,
+      ConditionType.NotEquals,
+      ConditionType.GreaterThan,
+      ConditionType.LowerThan,
+      ConditionType.GreaterThanEquals,
+      ConditionType.LowerThanEquals,
+      ConditionType.Between,
+      ConditionType.NotBetween,
+      ConditionType.IsEmpty,
+      ConditionType.NotEmpty,
     ];
   }
 

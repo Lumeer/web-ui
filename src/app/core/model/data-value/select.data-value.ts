@@ -21,9 +21,9 @@ import {SelectConstraintConfig, SelectConstraintOption} from '../data/constraint
 import {DataValue} from './index';
 import {isArray, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {valueMeetFulltexts} from './data-value.utils';
 import {arrayIntersection} from '../../../shared/utils/array.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class SelectDataValue implements DataValue {
   public readonly options: SelectConstraintOption[];
@@ -122,32 +122,32 @@ export class SelectDataValue implements DataValue {
     return options[nextIndex];
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new SelectDataValue(value.value, this.config));
     const otherOptions = (dataValues.length > 0 && dataValues[0].options) || [];
 
     switch (condition) {
-      case QueryCondition.HasSome:
-      case QueryCondition.Equals:
+      case ConditionType.HasSome:
+      case ConditionType.Equals:
         return this.options.some(option => otherOptions.some(otherOption => otherOption.value === option.value));
-      case QueryCondition.HasNoneOf:
-      case QueryCondition.NotEquals:
+      case ConditionType.HasNoneOf:
+      case ConditionType.NotEquals:
         return this.options.every(option => otherOptions.every(otherOption => otherOption.value !== option.value));
-      case QueryCondition.In:
+      case ConditionType.In:
         return (
           this.options.length > 0 &&
           this.options.every(option => otherOptions.some(otherOption => otherOption.value === option.value))
         );
-      case QueryCondition.HasAll:
+      case ConditionType.HasAll:
         return (
           arrayIntersection(
             otherOptions.map(o => o.value),
             this.options.map(o => o.value)
           ).length === otherOptions.length
         );
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return this.options.length === 0 && this.format().trim().length === 0;
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return this.options.length > 0 || this.format().trim().length > 0;
       default:
         return false;
@@ -158,26 +158,26 @@ export class SelectDataValue implements DataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     const dataValues = (values || []).map(value => new SelectDataValue(value.value, this.config));
     const otherOptions = (dataValues.length > 0 && dataValues[0].options) || [];
 
     switch (condition) {
-      case QueryCondition.HasSome:
-      case QueryCondition.Equals:
-      case QueryCondition.In:
+      case ConditionType.HasSome:
+      case ConditionType.Equals:
+      case ConditionType.In:
         return otherOptions[0].value;
-      case QueryCondition.HasAll:
+      case ConditionType.HasAll:
         return values[0].value;
-      case QueryCondition.HasNoneOf:
-      case QueryCondition.NotEquals:
+      case ConditionType.HasNoneOf:
+      case ConditionType.NotEquals:
         const noneOptions = ((this.config && this.config.options) || []).filter(
           option => !otherOptions.some(otherOption => otherOption.value === option.value)
         );
         return noneOptions[0] && noneOptions[0].value;
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return '';
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return this.config && this.config.options[0] && this.config.options[0].value;
       default:
         return null;

@@ -19,9 +19,9 @@
 
 import {BooleanConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {valueByConditionText, valueMeetFulltexts} from './data-value.utils';
 import {unescapeHtml} from '../../../shared/utils/common.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
 
@@ -82,13 +82,13 @@ export class BooleanDataValue implements DataValue {
     return new BooleanDataValue(inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new BooleanDataValue(value.value));
     const otherBooleanValue = dataValues.length > 0 && dataValues[0].booleanValue;
     switch (condition) {
-      case QueryCondition.Equals:
+      case ConditionType.Equals:
         return this.booleanValue === otherBooleanValue;
-      case QueryCondition.NotEquals:
+      case ConditionType.NotEquals:
         return this.booleanValue !== otherBooleanValue;
       default:
         return false;
@@ -99,11 +99,11 @@ export class BooleanDataValue implements DataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     switch (condition) {
-      case QueryCondition.Equals:
+      case ConditionType.Equals:
         return values[0].value;
-      case QueryCondition.NotEquals:
+      case ConditionType.NotEquals:
         return !values[0].value;
       default:
         return null;

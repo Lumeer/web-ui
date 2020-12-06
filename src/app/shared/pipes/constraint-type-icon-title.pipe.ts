@@ -36,7 +36,7 @@ export class ConstraintTypeIconTitlePipe implements PipeTransform {
       {
         id: 'constraint.type.icon.title',
         value:
-          '{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color}}',
+          '{constraintType, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color}}',
       },
       {
         constraintType: constraint.type,

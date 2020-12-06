@@ -18,14 +18,14 @@
  */
 
 import {QueryItemType} from './query-item-type';
-import {QueryCondition, QueryConditionValue} from '../../../../../core/store/navigation/query/query';
+import {ConditionType, ConditionValue} from '../../../../../core/model/attribute-filter';
 
 export interface QueryItem {
   text: string;
   icons?: string[];
   colors?: string[];
-  condition?: QueryCondition;
-  conditionValues?: QueryConditionValue[];
+  condition?: ConditionType;
+  conditionValues?: ConditionValue[];
 
   value: string;
   type: QueryItemType;

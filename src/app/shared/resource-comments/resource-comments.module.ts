@@ -22,18 +22,16 @@ import {CommonModule} from '@angular/common';
 import {UserAvatarComponent} from './user-avatar/user-avatar.component';
 import {GravatarModule} from 'ngx-gravatar';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
-import {TooltipTextComponent} from './tooltip-text/tooltip-text.component';
-import {ShortDateComponent} from './short-date/short-date.component';
+import {ShortDateComponent} from './comment-item/short-date/short-date.component';
 import {PipesModule} from '../pipes/pipes.module';
 import {CommentItemComponent} from './comment-item/comment-item.component';
 import {NewCommentComponent} from './new-comment/new-comment.component';
-import {CommentsPanelComponent} from './comments-panel/comments-panel.component';
-import {ProgressCircleComponent} from './progress-circle/progress-circle.component';
+import {CommentsPanelComponent} from './comments-panel.component';
+import {ProgressCircleComponent} from './new-comment/progress-circle/progress-circle.component';
 
 @NgModule({
   declarations: [
     UserAvatarComponent,
-    TooltipTextComponent,
     ShortDateComponent,
     CommentItemComponent,
     NewCommentComponent,

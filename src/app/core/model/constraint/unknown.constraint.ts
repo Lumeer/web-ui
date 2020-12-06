@@ -20,7 +20,6 @@
 import {UnknownDataValue} from '../data-value/unknown.data-value';
 import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
 import {
   avgAnyValues,
   countValues,
@@ -30,11 +29,13 @@ import {
   sumAnyValues,
   uniqueValuesCount,
 } from './aggregation';
+import {ConditionType} from '../attribute-filter';
 
 export class UnknownConstraint implements Constraint {
   public readonly type = ConstraintType.Unknown;
   public readonly config = {};
   public readonly isTextRepresentation = true;
+  public readonly isDirectlyEditable = false;
 
   public createDataValue(value: any): UnknownDataValue {
     return new UnknownDataValue(value);
@@ -44,16 +45,16 @@ export class UnknownConstraint implements Constraint {
     return new UnknownDataValue(value, inputValue);
   }
 
-  public conditions(): QueryCondition[] {
+  public conditions(): ConditionType[] {
     return [
-      QueryCondition.Equals,
-      QueryCondition.NotEquals,
-      QueryCondition.Contains,
-      QueryCondition.NotContains,
-      QueryCondition.StartsWith,
-      QueryCondition.EndsWith,
-      QueryCondition.IsEmpty,
-      QueryCondition.NotEmpty,
+      ConditionType.Equals,
+      ConditionType.NotEquals,
+      ConditionType.Contains,
+      ConditionType.NotContains,
+      ConditionType.StartsWith,
+      ConditionType.EndsWith,
+      ConditionType.IsEmpty,
+      ConditionType.NotEmpty,
     ];
   }
 

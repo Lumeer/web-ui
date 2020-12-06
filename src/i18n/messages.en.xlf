@@ -4186,7 +4186,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="constraint.type.icon.title" datatype="html">
-        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</source><target state="final">{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</target>
+        <source>{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Action {Action} Boolean {Checkbox} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</source><target state="final">{VAR_SELECT, select, Text {Text} Number {Number} Address {Address} Boolean {Checkbox} Action {Action} Coordinates {Location} DateTime {Date and Time} Duration {Duration} Email {Email} Function {Function} Image {Image} Link {Link} Percentage {Percentage} Rating {Rating} Select {Selection} Tag {Tag} User {User selection} Color {Color} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/pipes/constraint-type-icon-title.pipe.ts</context>
           <context context-type="linenumber">1</context>

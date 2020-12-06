@@ -41,10 +41,10 @@ import {getBaseCollectionIdsFromQuery, queryConditionNumInputs} from '../store/n
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';
-import {QueryCondition, QueryConditionValue} from '../store/navigation/query/query';
 import {UnknownConstraint} from '../model/constraint/unknown.constraint';
 import {ConstraintType} from '../model/data/constraint';
 import {objectValues} from '../../shared/utils/common.utils';
+import {ConditionType, ConditionValue} from '../model/attribute-filter';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -624,12 +624,12 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
   }
 }
 
-function initialCondition(attribute: Attribute): QueryCondition {
+function initialCondition(attribute: Attribute): ConditionType {
   const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
   return constraint.conditions()[0];
 }
 
-function initialValues(condition: QueryCondition, attribute: Attribute): QueryConditionValue[] {
+function initialValues(condition: ConditionType, attribute: Attribute): ConditionValue[] {
   const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
   const numInputs = queryConditionNumInputs(condition);
   switch (constraint.type) {

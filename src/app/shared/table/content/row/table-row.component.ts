@@ -29,7 +29,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {columnConstraintType, TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
+import {TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
 import {DataValue} from '../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
@@ -120,6 +120,7 @@ export class TableRowComponent implements OnChanges {
     common: {allowRichText: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
+    action: {center: true},
   };
 
   public editedValue: DataValue;
@@ -176,7 +177,7 @@ export class TableRowComponent implements OnChanges {
   }
 
   private computeDirectEditValue(column: TableColumn): DataValue {
-    if (columnConstraintType(column) === ConstraintType.Boolean) {
+    if (isTableColumnDirectlyEditable(column)) {
       const constraint = column.attribute?.constraint as BooleanConstraint;
       return constraint.createDataValue(!this.columnValue(column));
     }

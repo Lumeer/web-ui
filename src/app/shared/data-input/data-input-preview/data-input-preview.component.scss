@@ -1,5 +1,5 @@
 :host::ng-deep {
-  & > * > * {
+  & > *:not(action-data-input) > * {
     padding: 0 !important;
   }
 

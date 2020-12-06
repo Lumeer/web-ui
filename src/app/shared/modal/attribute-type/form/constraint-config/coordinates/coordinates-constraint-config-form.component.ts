@@ -77,7 +77,7 @@ export class CoordinatesConstraintConfigFormComponent implements OnChanges {
   private createForm() {
     this.form.addControl(
       CoordinatesConstraintFormControl.Format,
-      new FormControl((this.config && this.config.format) || CoordinatesFormat.DecimalDegrees)
+      new FormControl(this.config?.format || CoordinatesFormat.DecimalDegrees)
     );
     this.form.addControl(
       CoordinatesConstraintFormControl.Precision,

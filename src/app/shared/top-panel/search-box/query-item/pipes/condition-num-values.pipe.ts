@@ -19,15 +19,15 @@
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
-import {QueryCondition} from '../../../../../core/store/navigation/query/query';
 import {queryConditionNumInputs} from '../../../../../core/store/navigation/query/query.util';
+import {ConditionType} from '../../../../../core/model/attribute-filter';
 
 @Pipe({
   name: 'conditionNumValues',
 })
 @Injectable()
 export class ConditionNumValuesPipe implements PipeTransform {
-  public transform(condition: QueryCondition): number {
+  public transform(condition: ConditionType): number {
     return queryConditionNumInputs(condition);
   }
 }

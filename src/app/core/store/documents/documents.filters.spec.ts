@@ -30,10 +30,11 @@ import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {filterDocumentsAndLinksByQuery} from './documents.filters';
 import {Collection} from '../collections/collection';
-import {Query, QueryCondition} from '../navigation/query/query';
+import {Query} from '../navigation/query/query';
 import {UserConstraintConditionValue} from '../../model/data/constraint-condition';
 import {ConstraintData} from '../../model/data/constraint';
 import {UserConstraint} from '../../model/constraint/user.constraint';
+import {ConditionType} from '../../model/attribute-filter';
 
 const documents: DocumentModel[] = [
   {
@@ -242,7 +243,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a1',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{value: 'IBM'}],
                 },
               ],
@@ -269,7 +270,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
@@ -296,7 +297,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
@@ -323,7 +324,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c2',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
@@ -350,7 +351,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c2',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
@@ -377,7 +378,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
@@ -406,7 +407,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
@@ -434,7 +435,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a1',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{value: 'IBM'}],
                 },
               ],
@@ -462,7 +463,7 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a1',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{value: 'Red Hat'}],
                 },
               ],
@@ -541,7 +542,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a100',
-              condition: QueryCondition.Equals,
+              condition: ConditionType.Equals,
               conditionValues: [{value: '-10'}],
             },
           ],
@@ -562,7 +563,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a100',
-              condition: QueryCondition.NotEquals,
+              condition: ConditionType.NotEquals,
               conditionValues: [{value: '-10'}],
             },
           ],
@@ -583,7 +584,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a100',
-              condition: QueryCondition.GreaterThan,
+              condition: ConditionType.GreaterThan,
               conditionValues: [{value: '40'}],
             },
           ],
@@ -604,7 +605,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a100',
-              condition: QueryCondition.LowerThanEquals,
+              condition: ConditionType.LowerThanEquals,
               conditionValues: [{value: '40'}],
             },
           ],
@@ -627,7 +628,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.Equals,
+              condition: ConditionType.Equals,
               conditionValues: [{value: '2019-04-06T00:00:00.000+0000'}],
             },
           ],
@@ -648,7 +649,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.NotEquals,
+              condition: ConditionType.NotEquals,
               conditionValues: [{value: '2019-04-06T00:00:00.000+0000'}],
             },
           ],
@@ -669,7 +670,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.LowerThan,
+              condition: ConditionType.LowerThan,
               conditionValues: [{value: '2019-04-06T00:00:00.000+0000'}],
             },
           ],
@@ -690,7 +691,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.GreaterThanEquals,
+              condition: ConditionType.GreaterThanEquals,
               conditionValues: [{value: '2019-04-06T00:00:00.000+0000'}],
             },
           ],
@@ -711,7 +712,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.GreaterThanEquals,
+              condition: ConditionType.GreaterThanEquals,
               conditionValues: [{value: 'bla bla bla'}],
             },
           ],

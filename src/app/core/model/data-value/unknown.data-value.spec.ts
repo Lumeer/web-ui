@@ -18,84 +18,84 @@
  */
 
 import {UnknownDataValue} from './unknown.data-value';
-import {QueryCondition} from '../../store/navigation/query/query';
+import {ConditionType} from '../attribute-filter';
 
 describe('UnknownDataValue', () => {
   describe('meet condition', () => {
     it('equals', () => {
       const compareDataValue = {value: 'hello'};
       const dataValue1 = new UnknownDataValue('hello');
-      expect(dataValue1.meetCondition(QueryCondition.Equals, [compareDataValue])).toBeTruthy();
+      expect(dataValue1.meetCondition(ConditionType.Equals, [compareDataValue])).toBeTruthy();
 
       const dataValue2 = new UnknownDataValue('HeLLo');
-      expect(dataValue2.meetCondition(QueryCondition.Equals, [compareDataValue])).toBeTruthy();
+      expect(dataValue2.meetCondition(ConditionType.Equals, [compareDataValue])).toBeTruthy();
 
       const dataValue3 = new UnknownDataValue('helllo');
-      expect(dataValue3.meetCondition(QueryCondition.Equals, [compareDataValue])).toBeFalsy();
+      expect(dataValue3.meetCondition(ConditionType.Equals, [compareDataValue])).toBeFalsy();
 
       const dataValue4 = new UnknownDataValue(null);
-      expect(dataValue4.meetCondition(QueryCondition.Equals, [{value: undefined}])).toBeTruthy();
+      expect(dataValue4.meetCondition(ConditionType.Equals, [{value: undefined}])).toBeTruthy();
     });
 
     it('not equals', () => {
       const compareDataValue = {value: 'hello'};
       const dataValue1 = new UnknownDataValue('hello');
-      expect(dataValue1.meetCondition(QueryCondition.NotEquals, [compareDataValue])).toBeFalsy();
+      expect(dataValue1.meetCondition(ConditionType.NotEquals, [compareDataValue])).toBeFalsy();
 
       const dataValue2 = new UnknownDataValue('HeLLo');
-      expect(dataValue2.meetCondition(QueryCondition.NotEquals, [compareDataValue])).toBeFalsy();
+      expect(dataValue2.meetCondition(ConditionType.NotEquals, [compareDataValue])).toBeFalsy();
 
       const dataValue3 = new UnknownDataValue('helllo');
-      expect(dataValue3.meetCondition(QueryCondition.NotEquals, [compareDataValue])).toBeTruthy();
+      expect(dataValue3.meetCondition(ConditionType.NotEquals, [compareDataValue])).toBeTruthy();
     });
 
     it('contains', () => {
       const compareDataValue = {value: 'lumeer'};
       const dataValue1 = new UnknownDataValue('klumEEr');
-      expect(dataValue1.meetCondition(QueryCondition.Contains, [compareDataValue])).toBeTruthy();
+      expect(dataValue1.meetCondition(ConditionType.Contains, [compareDataValue])).toBeTruthy();
 
       const dataValue2 = new UnknownDataValue('lumere');
-      expect(dataValue2.meetCondition(QueryCondition.Contains, [compareDataValue])).toBeFalsy();
+      expect(dataValue2.meetCondition(ConditionType.Contains, [compareDataValue])).toBeFalsy();
 
       const dataValue3 = new UnknownDataValue('one two three LUMEER is the best');
-      expect(dataValue3.meetCondition(QueryCondition.Contains, [compareDataValue])).toBeTruthy();
+      expect(dataValue3.meetCondition(ConditionType.Contains, [compareDataValue])).toBeTruthy();
     });
 
     it('starts with', () => {
       const compareDataValue = {value: 'slo'};
       const dataValue1 = new UnknownDataValue('SLOVAKIA');
-      expect(dataValue1.meetCondition(QueryCondition.StartsWith, [compareDataValue])).toBeTruthy();
+      expect(dataValue1.meetCondition(ConditionType.StartsWith, [compareDataValue])).toBeTruthy();
 
       const dataValue2 = new UnknownDataValue('saslova');
-      expect(dataValue2.meetCondition(QueryCondition.StartsWith, [compareDataValue])).toBeFalsy();
+      expect(dataValue2.meetCondition(ConditionType.StartsWith, [compareDataValue])).toBeFalsy();
 
       const dataValue3 = new UnknownDataValue('  slot');
-      expect(dataValue3.meetCondition(QueryCondition.StartsWith, [compareDataValue])).toBeTruthy();
+      expect(dataValue3.meetCondition(ConditionType.StartsWith, [compareDataValue])).toBeTruthy();
     });
 
     it('ends with', () => {
       const compareDataValue = {value: 'lala'};
       const dataValue1 = new UnknownDataValue('klala   ');
-      expect(dataValue1.meetCondition(QueryCondition.EndsWith, [compareDataValue])).toBeTruthy();
+      expect(dataValue1.meetCondition(ConditionType.EndsWith, [compareDataValue])).toBeTruthy();
 
       const dataValue2 = new UnknownDataValue('lalaka');
-      expect(dataValue2.meetCondition(QueryCondition.EndsWith, [compareDataValue])).toBeFalsy();
+      expect(dataValue2.meetCondition(ConditionType.EndsWith, [compareDataValue])).toBeFalsy();
     });
 
     it('is empty', () => {
       const dataValue1 = new UnknownDataValue('     ');
-      expect(dataValue1.meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
+      expect(dataValue1.meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
 
       const dataValue2 = new UnknownDataValue('  l  ');
-      expect(dataValue2.meetCondition(QueryCondition.IsEmpty, [])).toBeFalsy();
+      expect(dataValue2.meetCondition(ConditionType.IsEmpty, [])).toBeFalsy();
     });
 
     it('is not empty', () => {
       const dataValue1 = new UnknownDataValue('     ');
-      expect(dataValue1.meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
+      expect(dataValue1.meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
 
       const dataValue2 = new UnknownDataValue('  l  ');
-      expect(dataValue2.meetCondition(QueryCondition.NotEmpty, [])).toBeTruthy();
+      expect(dataValue2.meetCondition(ConditionType.NotEmpty, [])).toBeTruthy();
     });
   });
 

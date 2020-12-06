@@ -21,12 +21,9 @@ import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {QueryItem} from './query-item';
 import {QueryItemType} from './query-item-type';
 import {Attribute} from '../../../../../core/store/collections/collection';
-import {
-  LinkAttributeFilter,
-  QueryCondition,
-  QueryConditionValue,
-} from '../../../../../core/store/navigation/query/query';
+import {LinkAttributeFilter} from '../../../../../core/store/navigation/query/query';
 import {isNotNullOrUndefined} from '../../../../utils/common.utils';
+import {ConditionType, ConditionValue} from '../../../../../core/model/attribute-filter';
 
 export class LinkAttributeQueryItem implements QueryItem {
   public type = QueryItemType.LinkAttribute;
@@ -34,8 +31,8 @@ export class LinkAttributeQueryItem implements QueryItem {
   public constructor(
     public linkType: LinkType,
     public attribute: Attribute,
-    public condition?: QueryCondition,
-    public conditionValues?: QueryConditionValue[],
+    public condition?: ConditionType,
+    public conditionValues?: ConditionValue[],
     public fromSuggestion?: boolean
   ) {}
 

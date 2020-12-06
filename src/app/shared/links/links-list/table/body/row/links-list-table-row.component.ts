@@ -116,6 +116,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     common: {allowRichText: true, delaySaveAction: false},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
+    action: {center: true},
   };
 
   public columnEditing$ = new BehaviorSubject<number>(null);

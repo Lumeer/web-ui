@@ -20,7 +20,7 @@
 import {DataValue} from '../data-value';
 import {ConstraintData, ConstraintType} from '../data/constraint';
 import {ConstraintConfig} from '../data/constraint-config';
-import {QueryCondition} from '../../store/navigation/query/query';
+import {ConditionType} from '../attribute-filter';
 
 export interface Constraint {
   /**
@@ -37,6 +37,11 @@ export interface Constraint {
    * Determine if constraint is visualized simply by text in readonly mode.
    */
   isTextRepresentation: boolean;
+
+  /**
+   * Determine if constraint can be edited directly (i.e. on simple click).
+   */
+  isDirectlyEditable?: boolean;
 
   /**
    * Creates data value based on this constraint.
@@ -91,5 +96,5 @@ export interface Constraint {
   /**
    * Supported conditions
    */
-  conditions(): QueryCondition[];
+  conditions(): ConditionType[];
 }

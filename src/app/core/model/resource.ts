@@ -60,5 +60,5 @@ export type DataResourceData = Record<string, any>;
 export type DataResourceNewData = Record<string, {value: any; correlationId?: string}>;
 
 export type AttributesResource =
-  | Pick<Collection, 'id' | 'attributes' | 'name' | 'color' | 'icon'>
-  | Pick<LinkType, 'id' | 'attributes' | 'name' | 'collections'>;
+  | Pick<Collection, 'id' | 'attributes' | 'name' | 'rules' | 'color' | 'icon'>
+  | Pick<LinkType, 'id' | 'attributes' | 'name' | 'rules' | 'collections'>;

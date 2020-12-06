@@ -19,7 +19,6 @@
 
 import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
 import {LinkDataValue} from '../data-value/link.data-value';
 import {LinkConstraintConfig} from '../data/constraint-config';
 import {
@@ -31,6 +30,7 @@ import {
   sumAnyValues,
   uniqueValuesCount,
 } from './aggregation';
+import {ConditionType} from '../attribute-filter';
 
 export class LinkConstraint implements Constraint {
   public readonly type = ConstraintType.Link;
@@ -46,8 +46,8 @@ export class LinkConstraint implements Constraint {
     return new LinkDataValue(value, this.config, inputValue);
   }
 
-  public conditions(): QueryCondition[] {
-    return [QueryCondition.Equals, QueryCondition.NotEquals, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
+  public conditions(): ConditionType[] {
+    return [ConditionType.Equals, ConditionType.NotEquals, ConditionType.IsEmpty, ConditionType.NotEmpty];
   }
 
   public avg(values: any[], onlyNumeric?: boolean): any {

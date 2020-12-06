@@ -18,27 +18,27 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {QueryCondition} from '../../../../core/store/navigation/query/query';
 import {Constraint} from '../../../../core/model/constraint';
 import {ConstraintType} from '../../../../core/model/data/constraint';
+import {ConditionType} from '../../../../core/model/attribute-filter';
 
 @Pipe({
   name: 'conditionShouldBeItalic',
 })
 export class ConditionShouldBeItalicPipe implements PipeTransform {
-  public transform(condition: QueryCondition, constraint: Constraint): boolean {
+  public transform(condition: ConditionType, constraint: Constraint): boolean {
     if (
       condition &&
       constraint &&
       [ConstraintType.Number, ConstraintType.Percentage, ConstraintType.Duration].includes(constraint.type)
     ) {
       return ![
-        QueryCondition.Equals,
-        QueryCondition.NotEquals,
-        QueryCondition.GreaterThan,
-        QueryCondition.GreaterThanEquals,
-        QueryCondition.LowerThan,
-        QueryCondition.LowerThanEquals,
+        ConditionType.Equals,
+        ConditionType.NotEquals,
+        ConditionType.GreaterThan,
+        ConditionType.GreaterThanEquals,
+        ConditionType.LowerThan,
+        ConditionType.LowerThanEquals,
       ].includes(condition);
     }
     return true;

@@ -36,11 +36,11 @@ import {
   toNumber,
   unescapeHtml,
 } from '../../../shared/utils/common.utils';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
 import numbro from 'numbro';
 import languages from 'numbro/dist/languages.min';
 import {currentLocaleLanguageTag, LanguageTag} from '../data/language-tag';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class NumberDataValue implements NumericDataValue {
   public readonly bigNumber: Big;
@@ -169,7 +169,7 @@ export class NumberDataValue implements NumericDataValue {
     return new NumberDataValue(inputValue, this.config, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new NumberDataValue(value.value, this.config));
     const otherBigNumbers = dataValues.map(value => value.bigNumber);
     const otherValues = dataValues.map(value => value.value);
@@ -181,7 +181,7 @@ export class NumberDataValue implements NumericDataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     return valueByConditionNumber(this, condition, values, '19');
   }
 }

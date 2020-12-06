@@ -21,7 +21,7 @@ import {Pipe, PipeTransform, Injectable} from '@angular/core';
 
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {TranslationService} from '../../../../../core/service/translation.service';
-import {QueryCondition} from '../../../../../core/store/navigation/query/query';
+import {ConditionType} from '../../../../../core/model/attribute-filter';
 
 @Pipe({
   name: 'translateCondition',
@@ -30,7 +30,7 @@ import {QueryCondition} from '../../../../../core/store/navigation/query/query';
 export class TranslateConditionPipe implements PipeTransform {
   constructor(private translationService: TranslationService) {}
 
-  public transform(condition: QueryCondition, attribute: Attribute): string {
+  public transform(condition: ConditionType, attribute: Attribute): string {
     return this.translationService.translateQueryCondition(condition, attribute && attribute.constraint);
   }
 }

@@ -25,9 +25,9 @@ import {DataValue} from './index';
 import {isDateValid, isNotNullOrUndefined, isNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {ConstraintConditionValue, DateTimeConstraintConditionValue} from '../data/constraint-condition';
 import {valueMeetFulltexts} from './data-value.utils';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {createRange} from '../../../shared/utils/array.utils';
 import {queryConditionNumInputs} from '../../store/navigation/query/query.util';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class DateTimeDataValue implements DataValue {
   public readonly momentDate: moment.Moment;
@@ -165,7 +165,7 @@ export class DateTimeDataValue implements DataValue {
     return new DateTimeDataValue(inputValue, this.config, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const otherMomentValues = this.mapConditionValues(values);
     const momentDates = otherMomentValues
       .map(value => resetUnusedMomentPart(this.momentDate, value.format))
@@ -173,12 +173,12 @@ export class DateTimeDataValue implements DataValue {
 
     const otherMoment = otherMomentValues[0] && otherMomentValues[0].moment;
     if (!this.momentDate && !otherMoment) {
-      if (condition === QueryCondition.Equals) {
+      if (condition === ConditionType.Equals) {
         const otherValue = values[0] && values[0].value;
         return (!this.value && !otherValue) || this.value === otherValue;
       }
     } else if (!this.momentDate || !otherMoment) {
-      if (condition === QueryCondition.NotEquals) {
+      if (condition === ConditionType.NotEquals) {
         return true;
       }
     }
@@ -191,32 +191,32 @@ export class DateTimeDataValue implements DataValue {
     }
 
     switch (condition) {
-      case QueryCondition.Equals:
+      case ConditionType.Equals:
         return momentDates[0].isSame(otherMoment);
-      case QueryCondition.NotEquals:
+      case ConditionType.NotEquals:
         return !momentDates[0].isSame(otherMoment);
-      case QueryCondition.GreaterThan:
+      case ConditionType.GreaterThan:
         return momentDates[0].isAfter(otherMoment);
-      case QueryCondition.GreaterThanEquals:
+      case ConditionType.GreaterThanEquals:
         return momentDates[0].isSameOrAfter(otherMoment);
-      case QueryCondition.LowerThan:
+      case ConditionType.LowerThan:
         return momentDates[0].isBefore(otherMoment);
-      case QueryCondition.LowerThanEquals:
+      case ConditionType.LowerThanEquals:
         return momentDates[0].isSameOrBefore(otherMoment);
-      case QueryCondition.Between:
+      case ConditionType.Between:
         return momentDates[0].isSameOrAfter(otherMoment) && momentDates[1].isSameOrBefore(otherMomentValues[1].moment);
-      case QueryCondition.NotBetween:
+      case ConditionType.NotBetween:
         return momentDates[0].isBefore(otherMoment) || momentDates[1].isAfter(otherMomentValues[1].moment);
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return isNullOrUndefined(this.value) || String(this.value).trim().length === 0;
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return isNotNullOrUndefined(this.value) && String(this.value).trim().length > 0;
       default:
         return false;
     }
   }
 
-  private mapConditionValues(values: QueryConditionValue[]): {moment: moment.Moment; format: string}[] {
+  private mapConditionValues(values: ConditionValue[]): {moment: moment.Moment; format: string}[] {
     return (values || [])
       .map(value => {
         if (value.type) {
@@ -245,28 +245,28 @@ export class DateTimeDataValue implements DataValue {
     return valueMeetFulltexts(this.format(true), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     const dates = this.mapConditionValues(values).map(value => value.moment.toDate());
 
     switch (condition) {
-      case QueryCondition.Equals:
-      case QueryCondition.GreaterThanEquals:
-      case QueryCondition.LowerThanEquals:
+      case ConditionType.Equals:
+      case ConditionType.GreaterThanEquals:
+      case ConditionType.LowerThanEquals:
         return this.copy(dates[0]).serialize();
-      case QueryCondition.GreaterThan:
-      case QueryCondition.Between:
+      case ConditionType.GreaterThan:
+      case ConditionType.Between:
         if (dates[0] && dates[1] && dates[0].getTime() === dates[1].getTime()) {
           return this.copy(dates[0]).serialize();
         }
         return this.copy(dates[0]).increment().serialize();
-      case QueryCondition.LowerThan:
-      case QueryCondition.NotBetween:
+      case ConditionType.LowerThan:
+      case ConditionType.NotBetween:
         return this.copy(dates[0]).decrement().serialize();
-      case QueryCondition.NotEquals:
+      case ConditionType.NotEquals:
         return values[0].value || values[0].type ? '' : this.copy(new Date()).serialize();
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return '';
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return this.copy(new Date()).serialize();
       default:
         return null;

@@ -21,14 +21,7 @@ import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Va
 
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {
-  AttributeFilter,
-  CollectionAttributeFilter,
-  LinkAttributeFilter,
-  Query,
-  QueryCondition,
-  QueryStem,
-} from './query';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
 import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
@@ -44,6 +37,7 @@ import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
+import {AttributeFilter, ConditionType} from '../../../model/attribute-filter';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -111,13 +105,13 @@ function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
   return null;
 }
 
-export function queryConditionNumInputs(condition: QueryCondition): number {
+export function queryConditionNumInputs(condition: ConditionType): number {
   switch (condition) {
-    case QueryCondition.IsEmpty:
-    case QueryCondition.NotEmpty:
+    case ConditionType.IsEmpty:
+    case ConditionType.NotEmpty:
       return 0;
-    case QueryCondition.Between:
-    case QueryCondition.NotBetween:
+    case ConditionType.Between:
+    case ConditionType.NotBetween:
       return 2;
     default:
       return 1;

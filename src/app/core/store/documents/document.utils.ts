@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 import {Collection} from '../collections/collection';
-import {AttributeFilter, Query} from '../navigation/query/query';
+import {Query} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,
@@ -31,6 +31,7 @@ import {createRange} from '../../../shared/utils/array.utils';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
+import {AttributeFilter} from '../../model/attribute-filter';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -108,7 +109,7 @@ export function generateDocumentData(
     const dataValue = constraint.createDataValue(null, constraintData);
     const numInputs = queryConditionNumInputs(filter.condition);
     const allValuesDefined =
-      constraint.type === ConstraintType.Boolean ||
+      constraint.isDirectlyEditable ||
       createRange(0, numInputs).every(
         i =>
           filter.conditionValues[i] &&

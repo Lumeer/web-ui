@@ -18,9 +18,8 @@
  */
 
 import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType, TableModel} from './table-model';
-import {columnConstraintType, TableColumn, TableColumnGroup} from './table-column';
+import {columnConstraint, TableColumn, TableColumnGroup} from './table-column';
 import {TableRow} from './table-row';
-import {ConstraintType} from '../../../core/model/data/constraint';
 
 export function groupTableColumns(columns: TableColumn[]): TableColumnGroup[] {
   return (columns || []).reduce<TableColumnGroup[]>((array, column) => {
@@ -101,7 +100,7 @@ export function isTableCellEdited(
 }
 
 export function isTableColumnDirectlyEditable(column: TableColumn): boolean {
-  return columnConstraintType(column) === ConstraintType.Boolean;
+  return columnConstraint(column).isDirectlyEditable;
 }
 
 export function numberOfOtherColumnsBefore(index: number, columns: TableColumn[]): number {

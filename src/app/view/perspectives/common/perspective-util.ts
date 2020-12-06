@@ -59,7 +59,7 @@ function findBestDateInitialAttributes(
     }
 
     const dateAttributes = (attributesResourcesOrder[i].attributes || []).filter(
-      attribute => attribute.constraint && attribute.constraint.type === ConstraintType.DateTime
+      attribute => attribute.constraint?.type === ConstraintType.DateTime
     );
     if (dateAttributes.length >= 1) {
       return {index: i, startAttribute: dateAttributes[0], endAttribute: dateAttributes[1]};
