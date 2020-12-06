@@ -20,23 +20,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../core/store/collections/collection';
 import {SelectItemModel} from '../select/select-item/select-item.model';
+import {resourceAttributesSelectItems} from '../select/select-item.utils';
 
 @Pipe({
   name: 'attributesSelectItems',
 })
 export class AttributesSelectItemsPipe implements PipeTransform {
   public transform(collection: Collection): SelectItemModel[] {
-    if (collection) {
-      return collection.attributes.map(attribute => {
-        return {
-          id: attribute.id,
-          value: attribute.name,
-          icons: [collection.icon],
-          iconColors: [collection.color],
-        } as SelectItemModel;
-      });
-    } else {
-      return [];
-    }
+    return resourceAttributesSelectItems(collection);
   }
 }

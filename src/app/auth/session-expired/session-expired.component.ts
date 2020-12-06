@@ -19,16 +19,16 @@
 
 import {Location} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {BehaviorSubject, Observable, timer} from 'rxjs';
 import {map, take, tap} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AppState} from '../../core/store/app.state';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
-import {ModalService} from '../../shared/modal/modal.service';
 import {AuthService} from '../auth.service';
 import {SessionService} from '../session.service';
+import {ModalsAction} from '../../core/store/modals/modals.action';
 
 @Component({
   selector: 'session-expired',
@@ -47,14 +47,13 @@ export class SessionExpiredComponent implements OnInit {
     private location: Location,
     private route: ActivatedRoute,
     private store$: Store<AppState>,
-    private modalService: ModalService,
     private sessionService: SessionService,
     private authService: AuthService,
     private router: Router
   ) {}
 
   public ngOnInit() {
-    this.modalService.destroy();
+    this.store$.dispatch(new ModalsAction.Hide());
     this.bindAuthenticated();
     this.disableBackButton();
     this.clearStore();

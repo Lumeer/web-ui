@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
-
-import {queryConditionNumInputs} from '../../../../../core/store/navigation/query/query.util';
-import {ConditionType} from '../../../../../core/model/attribute-filter';
+import {Pipe, PipeTransform} from '@angular/core';
+import {deepObjectsEquals, isNullOrUndefined} from '../../../utils/common.utils';
 
 @Pipe({
-  name: 'conditionNumValues',
+  name: 'areIdsEqual',
 })
-@Injectable()
-export class ConditionNumValuesPipe implements PipeTransform {
-  public transform(condition: ConditionType): number {
-    return queryConditionNumInputs(condition);
+export class AreIdsEqualPipe implements PipeTransform {
+  public transform(firstId: any, secondId: any): boolean {
+    if (isNullOrUndefined(firstId) && isNullOrUndefined(secondId)) {
+      return true;
+    }
+    return deepObjectsEquals(firstId, secondId);
   }
 }

@@ -17,17 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {SelectItemModel} from './select-item.model';
-import {AreIdsEqualPipe} from './are-ids-equal.pipe';
+import {initialModalsState, ModalsState} from './modals.state';
+import {ModalsAction, ModalsActionType} from './modals.action';
 
-@Pipe({
-  name: 'getSelectItem',
-})
-export class GetSelectItemPipe implements PipeTransform {
-  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
-
-  public transform(id: any, items: SelectItemModel[]): SelectItemModel {
-    return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
+export function modalsReducer(state: ModalsState = initialModalsState, action: ModalsAction.All): ModalsState {
+  switch (action.type) {
+    case ModalsActionType.ADD:
+      return {...state, modalsIds: [...state.modalsIds, action.payload.modalId]};
+    case ModalsActionType.CLEAR:
+      return initialModalsState;
+    default:
+      return state;
   }
 }

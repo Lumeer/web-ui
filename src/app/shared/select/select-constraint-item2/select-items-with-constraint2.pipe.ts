@@ -34,7 +34,7 @@ export class SelectItemsWithConstraint2Pipe implements PipeTransform {
 
   public transform(
     attributesResources: AttributesResource[],
-    restrictedAttributes: {resourceIndex: number; attributeId: string}[]
+    restrictedAttributes: {resourceIndex: number; attributeId: string}[] = []
   ): SelectItem2Model[] {
     return (attributesResources || [])
       .reduce((selectItems, resource, index) => {

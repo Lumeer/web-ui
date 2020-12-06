@@ -26,7 +26,7 @@ export enum ActionConstraintFormControl {
   Filters = 'filters',
 }
 
-export enum ButtonConstraintFiltersFormControl {
+export enum ActionConstraintFiltersFormControl {
   Attribute = 'attribute',
   Operator = 'operator',
   Condition = 'condition',
