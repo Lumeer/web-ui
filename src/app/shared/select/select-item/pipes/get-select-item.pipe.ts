@@ -18,16 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {deepObjectsEquals, isNullOrUndefined} from '../../utils/common.utils';
+import {SelectItemModel} from '../select-item.model';
+import {AreIdsEqualPipe} from './are-ids-equal.pipe';
 
 @Pipe({
-  name: 'areIdsEqual',
+  name: 'getSelectItem',
 })
-export class AreIdsEqualPipe implements PipeTransform {
-  public transform(firstId: any, secondId: any): boolean {
-    if (isNullOrUndefined(firstId) && isNullOrUndefined(secondId)) {
-      return true;
-    }
-    return deepObjectsEquals(firstId, secondId);
+export class GetSelectItemPipe implements PipeTransform {
+  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
+
+  public transform(id: any, items: SelectItemModel[]): SelectItemModel {
+    return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
   }
 }

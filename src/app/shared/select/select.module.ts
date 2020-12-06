@@ -26,8 +26,8 @@ import {PipesModule} from '../pipes/pipes.module';
 import {SelectItemWithConstraint} from './select-constraint-item/select-item-with-constraint.component';
 import {SelectItemWithConstraintConfigPipe} from './select-constraint-item/select-items-with-constraint-config.pipe';
 import {SelectItemsWithConstraintPipe} from './select-constraint-item/select-items-with-constraint.pipe';
-import {AreIdsEqualPipe} from './select-item/are-ids-equal.pipe';
-import {GetSelectItemPipe} from './select-item/get-select-item.pipe';
+import {AreIdsEqualPipe} from './select-item/pipes/are-ids-equal.pipe';
+import {GetSelectItemPipe} from './select-item/pipes/get-select-item.pipe';
 
 import {SelectItemComponent} from './select-item/select-item.component';
 import {PresenterModule} from '../presenter/presenter.module';

@@ -43,7 +43,6 @@ import {AttributesResource, DataResource} from '../../core/model/resource';
 import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
 import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {ToastrService} from 'ngx-toastr';
 import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {NavigationExtras} from '@angular/router';
@@ -51,6 +50,7 @@ import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CreateProjectModalComponent} from './create-project/create-project-modal.component';
 import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
+import {ModalsAction} from '../../core/store/modals/modals.action';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -58,14 +58,7 @@ type Options = ModalOptions & {initialState: any};
   providedIn: 'root',
 })
 export class ModalService {
-  private modalRefs: BsModalRef[] = [];
-
-  constructor(
-    private store$: Store<AppState>,
-    private i18n: I18n,
-    private bsModalService: BsModalService,
-    private toastrService: ToastrService
-  ) {}
+  constructor(private store$: Store<AppState>, private i18n: I18n, private bsModalService: BsModalService) {}
 
   public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
@@ -161,7 +154,7 @@ export class ModalService {
   }
 
   private addModalRef(modalRef: BsModalRef): BsModalRef {
-    this.modalRefs.push(modalRef);
+    this.store$.dispatch(new ModalsAction.Add({modalId: modalRef.id}));
     return modalRef;
   }
 
@@ -251,10 +244,5 @@ export class ModalService {
       navigationExtras: extras,
     };
     return this.showStaticDialog(initialState, CopyProjectModalComponent, 'modal-lg');
-  }
-
-  public destroy() {
-    this.modalRefs.forEach(ref => ref?.hide());
-    this.toastrService.toasts.forEach(toast => toast.toastRef.close());
   }
 }

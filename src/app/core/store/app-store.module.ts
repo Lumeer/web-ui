@@ -77,6 +77,8 @@ import {viewSettingsReducer} from './view-settings/view-settings.reducer';
 import {workflowsReducer} from './workflows/workflows.reducer';
 import {resourceCommentsReducer} from './resource-comments/resource-comments.reducer';
 import {ResourceCommentsEffects} from './resource-comments/resource-comments.effects';
+import {modalsReducer} from './modals/modals.reducer';
+import {ModalsEffects} from './modals/modals.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -110,6 +112,7 @@ const reducers: ActionReducerMap<AppState> = {
   viewSettings: viewSettingsReducer,
   workflows: workflowsReducer,
   resourceComments: resourceCommentsReducer,
+  modals: modalsReducer,
 };
 
 const effects = [
@@ -136,6 +139,7 @@ const effects = [
   SequencesEffects,
   MapsEffects,
   ResourceCommentsEffects,
+  ModalsEffects,
 ];
 
 @NgModule({

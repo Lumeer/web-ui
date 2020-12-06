@@ -18,19 +18,15 @@
  */
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
-
-import {Attribute} from '../../../../../core/store/collections/collection';
-import {TranslationService} from '../../../../../core/service/translation.service';
-import {ConstraintConditionValue} from '../../../../../core/model/data/constraint-condition';
+import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {ConditionType} from '../../../../core/model/attribute-filter';
 
 @Pipe({
-  name: 'translateConditionValue',
+  name: 'conditionNumValues',
 })
 @Injectable()
-export class TranslateConditionValuePipe implements PipeTransform {
-  constructor(private translationService: TranslationService) {}
-
-  public transform(value: ConstraintConditionValue, attribute: Attribute): string {
-    return this.translationService.translateConstraintConditionValue(value, attribute?.constraint);
+export class ConditionNumValuesPipe implements PipeTransform {
+  public transform(condition: ConditionType): number {
+    return queryConditionNumInputs(condition);
   }
 }

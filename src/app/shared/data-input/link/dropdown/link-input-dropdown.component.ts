@@ -35,7 +35,7 @@ import {parseLinkValue} from '../../../../core/model/data-value/link.data-value'
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {isUrlValid} from '../../../utils/url.utils';
 import {Observable} from 'rxjs';
-import {distinctUntilChanged, map, startWith, tap} from 'rxjs/operators';
+import {distinctUntilChanged, map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'link-input-dropdown',

@@ -20,16 +20,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../core/store/collections/collection';
 import {SelectItemModel} from '../select/select-item/select-item.model';
+import {collectionSelectItems} from '../select/select-item.utils';
 
 @Pipe({
   name: 'collectionsSelectItems',
 })
 export class CollectionsSelectItemsPipe implements PipeTransform {
   public transform(collections: Collection[]): SelectItemModel[] {
-    return collections?.map(collection => this.collectionSelectItem(collection)) || [];
-  }
-
-  private collectionSelectItem(collection: Collection): SelectItemModel {
-    return {id: collection.id, value: collection.name, icons: [collection.icon], iconColors: [collection.color]};
+    return collectionSelectItems(collections);
   }
 }

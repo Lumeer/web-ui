@@ -17,17 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {AreIdsEqualPipe} from '../select-item/pipes/are-ids-equal.pipe';
-import {SelectDataItemModel} from './select-data-item.model';
+import {Pipe, PipeTransform, Injectable} from '@angular/core';
+import {TranslationService} from '../../../../core/service/translation.service';
+import {Attribute} from '../../../../core/store/collections/collection';
+import {ConstraintConditionValue} from '../../../../core/model/data/constraint-condition';
 
 @Pipe({
-  name: 'getSelectDataItem',
+  name: 'translateConditionValue',
 })
-export class GetSelectDataItemPipe implements PipeTransform {
-  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
+@Injectable()
+export class TranslateConditionValuePipe implements PipeTransform {
+  constructor(private translationService: TranslationService) {}
 
-  public transform(id: any, items: SelectDataItemModel[]): SelectDataItemModel {
-    return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
+  public transform(value: ConstraintConditionValue, attribute: Attribute): string {
+    return this.translationService.translateConstraintConditionValue(value, attribute?.constraint);
   }
 }

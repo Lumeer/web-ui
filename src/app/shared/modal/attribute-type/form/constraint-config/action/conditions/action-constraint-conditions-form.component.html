@@ -1,7 +1,12 @@
 <label i18n="@@constraint.action.conditions.label">Conditions</label>
 
-<div *ngFor="let group of form?.controls">
-  Here will be filter
+<div *ngFor="let group of form?.controls; let first = first">
+  <action-constraint-condition-form class="d-block"
+                                    [class.mt-1]="!first"
+                                    [form]="group"
+                                    [attributes]="resource?.attributes"
+                                    [attributeSelectItems]="attributeSelectItems">
+  </action-constraint-condition-form>
 </div>
 
 <button class="btn btn-link px-0 small d-block" (click)="onAddFilter()"><i class="fas fa-plus-circle mr-2"></i><span

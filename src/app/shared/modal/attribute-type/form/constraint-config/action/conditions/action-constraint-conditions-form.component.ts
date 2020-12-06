@@ -25,13 +25,14 @@ import {
   EquationOperator,
 } from '../../../../../../../core/model/attribute-filter';
 import {removeAllFormArrayControls} from '../../../../../../utils/form.utils';
-import {ButtonConstraintFiltersFormControl} from '../action-constraint-form-control';
+import {ActionConstraintFiltersFormControl} from '../action-constraint-form-control';
 import {AttributesResource} from '../../../../../../../core/model/resource';
+import {SelectItem2Model} from '../../../../../../select/select-item2/select-item2.model';
+import {resourceAttributesSelectItems} from '../../../../../../select/select-item.utils';
 
 @Component({
   selector: 'action-constraint-conditions-form',
   templateUrl: './action-constraint-conditions-form.component.html',
-  styleUrls: ['./action-constraint-conditions-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ActionConstraintConditionsFormComponent implements OnChanges {
@@ -44,10 +45,15 @@ export class ActionConstraintConditionsFormComponent implements OnChanges {
   @Input()
   public resource: AttributesResource;
 
+  public attributeSelectItems: SelectItem2Model[];
+
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.options) {
       this.resetForm();
       this.createForm();
+    }
+    if (changes.resource) {
+      this.attributeSelectItems = resourceAttributesSelectItems(this.resource);
     }
   }
 
@@ -67,10 +73,10 @@ export class ActionConstraintConditionsFormComponent implements OnChanges {
 
   private createFormGroup(operator: EquationOperator, filter?: AttributeFilter): FormGroup {
     return new FormGroup({
-      [ButtonConstraintFiltersFormControl.Attribute]: new FormControl(filter?.attributeId),
-      [ButtonConstraintFiltersFormControl.Condition]: new FormControl(filter?.condition),
-      [ButtonConstraintFiltersFormControl.ConditionValues]: new FormControl(filter?.conditionValues),
-      [ButtonConstraintFiltersFormControl.Operator]: new FormControl(operator),
+      [ActionConstraintFiltersFormControl.Attribute]: new FormControl(filter?.attributeId),
+      [ActionConstraintFiltersFormControl.Condition]: new FormControl(filter?.condition),
+      [ActionConstraintFiltersFormControl.ConditionValues]: new FormControl(filter?.conditionValues),
+      [ActionConstraintFiltersFormControl.Operator]: new FormControl(operator),
     });
   }
 

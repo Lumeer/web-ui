@@ -19,11 +19,17 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {FilterBuilderModule} from './filter-builder/filter-builder.module';
-import {FilterPreviewModule} from './filter-preview/filter-preview.module';
+import {FilterPreviewComponent} from './filter-preview.component';
+import {TranslateConditionPipe} from './pipes/translate-condition.pipe';
+import {TranslateConditionValuePipe} from './pipes/translate-condition-value.pipe';
+import {DataInputModule} from '../../data-input/data-input.module';
+import {FilterBuilderModule} from '../filter-builder/filter-builder.module';
+import {PipesModule} from '../../pipes/pipes.module';
+import {ConditionNumValuesPipe} from './pipes/condition-num-values.pipe';
 
 @NgModule({
-  imports: [CommonModule, FilterBuilderModule, FilterPreviewModule],
-  exports: [FilterBuilderModule, FilterPreviewModule],
+  declarations: [FilterPreviewComponent, TranslateConditionPipe, TranslateConditionValuePipe, ConditionNumValuesPipe],
+  imports: [CommonModule, DataInputModule, FilterBuilderModule, PipesModule],
+  exports: [FilterPreviewComponent],
 })
-export class BuilderModule {}
+export class FilterPreviewModule {}

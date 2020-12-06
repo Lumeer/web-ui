@@ -17,17 +17,28 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {AreIdsEqualPipe} from '../select-item/pipes/are-ids-equal.pipe';
-import {SelectDataItemModel} from './select-data-item.model';
+import {Action} from '@ngrx/store';
 
-@Pipe({
-  name: 'getSelectDataItem',
-})
-export class GetSelectDataItemPipe implements PipeTransform {
-  public constructor(private areIdsEqualPipe: AreIdsEqualPipe) {}
+export enum ModalsActionType {
+  ADD = '[Modals] Add',
+  HIDE = '[Modals] Hide',
+  CLEAR = '[Modals] Clear',
+}
 
-  public transform(id: any, items: SelectDataItemModel[]): SelectDataItemModel {
-    return items.find(item => this.areIdsEqualPipe.transform(id, item.id));
+export namespace ModalsAction {
+  export class Add implements Action {
+    public readonly type = ModalsActionType.ADD;
+
+    public constructor(public payload: {modalId: number}) {}
   }
+
+  export class Hide implements Action {
+    public readonly type = ModalsActionType.HIDE;
+  }
+
+  export class Clear implements Action {
+    public readonly type = ModalsActionType.CLEAR;
+  }
+
+  export type All = Add | Hide | Clear;
 }

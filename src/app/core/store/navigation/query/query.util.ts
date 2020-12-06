@@ -75,10 +75,10 @@ function queryItemConstraintType(queryItem: QueryItem): ConstraintType {
 
 function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
   return createRange(0, 2).map(index => {
-    const conditionValue = queryItem.conditionValues && queryItem.conditionValues?.[index];
+    const conditionValue = queryItem.conditionValues?.[index];
     return new FormGroup({
-      type: new FormControl(conditionValue && conditionValue.type),
-      value: new FormControl(conditionValue && conditionValue.value),
+      type: new FormControl(conditionValue?.type),
+      value: new FormControl(conditionValue?.value),
     });
   });
 }

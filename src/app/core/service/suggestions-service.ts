@@ -45,6 +45,7 @@ import {UnknownConstraint} from '../model/constraint/unknown.constraint';
 import {ConstraintType} from '../model/data/constraint';
 import {objectValues} from '../../shared/utils/common.utils';
 import {ConditionType, ConditionValue} from '../model/attribute-filter';
+import {initialConditionType, initialConditionValues} from '../model/data-value/data-value.utils';
 
 const lastUsedThreshold = 5;
 const mostUsedThreshold = 5;
@@ -599,8 +600,8 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       return new LinkQueryItem((<LinkTypeSuggestion>suggestion).linkType);
     case SuggestionType.Attribute:
       const attributeSuggestion = <AttributeSuggestion>suggestion;
-      const attributeCondition = initialCondition(attributeSuggestion.attribute);
-      const attributeValues = initialValues(attributeCondition, attributeSuggestion.attribute);
+      const attributeCondition = initialConditionType(attributeSuggestion.attribute.constraint);
+      const attributeValues = initialConditionValues(attributeCondition, attributeSuggestion.attribute.constraint);
       return new AttributeQueryItem(
         attributeSuggestion.collection,
         attributeSuggestion.attribute,
@@ -610,8 +611,8 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       );
     case SuggestionType.LinkAttribute:
       const linkSuggestion = <LinkAttributeSuggestion>suggestion;
-      const linkCondition = initialCondition(linkSuggestion.attribute);
-      const linkValues = initialValues(linkCondition, linkSuggestion.attribute);
+      const linkCondition = initialConditionType(linkSuggestion.attribute.constraint);
+      const linkValues = initialConditionValues(linkCondition, linkSuggestion.attribute.constraint);
       return new LinkAttributeQueryItem(
         linkSuggestion.linkType,
         linkSuggestion.attribute,
@@ -621,22 +622,6 @@ function suggestionToQueryItem(suggestion: ObjectSuggestion): QueryItem {
       );
     case SuggestionType.FullText:
       return new FulltextQueryItem((<FullTextSuggestion>suggestion).text);
-  }
-}
-
-function initialCondition(attribute: Attribute): ConditionType {
-  const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
-  return constraint.conditions()[0];
-}
-
-function initialValues(condition: ConditionType, attribute: Attribute): ConditionValue[] {
-  const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
-  const numInputs = queryConditionNumInputs(condition);
-  switch (constraint.type) {
-    case ConstraintType.Boolean:
-      return createRange(0, numInputs).map(() => ({value: true}));
-    default:
-      return createRange(0, numInputs).map(() => ({}));
   }
 }
 

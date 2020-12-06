@@ -49,6 +49,7 @@ import {initialPublicDataState, PublicDataState} from './public-data/public-data
 import {initialViewSettingsState, ViewSettingsState} from './view-settings/view-settings.state';
 import {initialWorkflowsState, WorkflowsState} from './workflows/workflow.state';
 import {initialResourceCommentsState, ResourceCommentsState} from './resource-comments/resource-comments.state';
+import {initialModalsState, ModalsState} from './modals/modals.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -82,6 +83,7 @@ export interface AppState {
   viewSettings: ViewSettingsState;
   workflows: WorkflowsState;
   resourceComments: ResourceCommentsState;
+  modals: ModalsState;
 }
 
 export function initialAppState(): AppState {
@@ -117,5 +119,6 @@ export function initialAppState(): AppState {
     viewSettings: initialViewSettingsState,
     workflows: initialWorkflowsState,
     resourceComments: initialResourceCommentsState,
+    modals: initialModalsState,
   };
 }

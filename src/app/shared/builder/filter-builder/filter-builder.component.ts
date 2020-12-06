@@ -78,6 +78,16 @@ export class FilterBuilderComponent implements OnInit {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
+  public toggle() {
+    if (this.dropdown) {
+      if (this.isOpen()) {
+        this.close();
+      } else {
+        this.open();
+      }
+    }
+  }
+
   public isOpen(): boolean {
     return this.dropdown?.isOpen();
   }

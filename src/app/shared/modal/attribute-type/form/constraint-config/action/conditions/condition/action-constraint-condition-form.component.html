@@ -1,0 +1,28 @@
+<div class="d-flex align-items-center form-control cursor-pointer px-0" #parentElement>
+
+  <select-item2 class="px-2"
+                [ngClass]="attributeIdControl.value ? 'mr-2' : 'flex-grow-1'"
+                [removable]="false"
+                [disabled]="false"
+                emptyValue="Select attribute"
+                [items]="attributeSelectItems"
+                (click)="$event.stopPropagation()"
+                [selectedPath]="[attributeIdControl.value]"
+                (selectPath)="onAttributeSelect($event)">
+  </select-item2>
+
+  <filter-preview *ngIf="attributeIdControl.value"
+                  [attribute]="attributes | findAttribute:attributeIdControl.value"
+                  [condition]="conditionControl.value"
+                  [conditionValues]="conditionValuesControl.value">
+  </filter-preview>
+
+  <filter-builder *ngIf="attributeIdControl.value"
+                  [origin]="parentElement"
+                  [condition]="conditionControl.value"
+                  [attribute]="attributes | findAttribute:attributeIdControl.value"
+                  [conditionValues]="conditionValuesControl.value"
+                  (valueChange)="onValueChange($event)">
+  </filter-builder>
+
+</div>
