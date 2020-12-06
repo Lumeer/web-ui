@@ -21,7 +21,6 @@ import {PercentageDataValue} from '../data-value/percentage.data-value';
 import {ConstraintType} from '../data/constraint';
 import {PercentageConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
 import {
   avgNumericValues,
   countValues,
@@ -31,6 +30,7 @@ import {
   sumNumericValues,
   uniqueValuesCount,
 } from './aggregation';
+import {ConditionType} from '../attribute-filter';
 
 export class PercentageConstraint implements Constraint {
   public readonly type = ConstraintType.Percentage;
@@ -46,18 +46,18 @@ export class PercentageConstraint implements Constraint {
     return new PercentageDataValue(value, this.config, inputValue);
   }
 
-  public conditions(): QueryCondition[] {
+  public conditions(): ConditionType[] {
     return [
-      QueryCondition.Equals,
-      QueryCondition.NotEquals,
-      QueryCondition.GreaterThan,
-      QueryCondition.LowerThan,
-      QueryCondition.GreaterThanEquals,
-      QueryCondition.LowerThanEquals,
-      QueryCondition.Between,
-      QueryCondition.NotBetween,
-      QueryCondition.IsEmpty,
-      QueryCondition.NotEmpty,
+      ConditionType.Equals,
+      ConditionType.NotEquals,
+      ConditionType.GreaterThan,
+      ConditionType.LowerThan,
+      ConditionType.GreaterThanEquals,
+      ConditionType.LowerThanEquals,
+      ConditionType.Between,
+      ConditionType.NotBetween,
+      ConditionType.IsEmpty,
+      ConditionType.NotEmpty,
     ];
   }
 

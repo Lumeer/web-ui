@@ -21,7 +21,6 @@ import {SelectDataValue} from '../data-value/select.data-value';
 import {ConstraintType} from '../data/constraint';
 import {SelectConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
 import {
   avgAnyValues,
   countValues,
@@ -31,6 +30,7 @@ import {
   sumAnyValues,
   uniqueValuesCount,
 } from './aggregation';
+import {ConditionType} from '../attribute-filter';
 
 export class SelectConstraint implements Constraint {
   public readonly type = ConstraintType.Select;
@@ -46,14 +46,14 @@ export class SelectConstraint implements Constraint {
     return new SelectDataValue(value, this.config, inputValue);
   }
 
-  public conditions(): QueryCondition[] {
+  public conditions(): ConditionType[] {
     return [
-      QueryCondition.HasSome,
-      QueryCondition.HasNoneOf,
-      QueryCondition.In,
-      QueryCondition.HasAll,
-      QueryCondition.IsEmpty,
-      QueryCondition.NotEmpty,
+      ConditionType.HasSome,
+      ConditionType.HasNoneOf,
+      ConditionType.In,
+      ConditionType.HasAll,
+      ConditionType.IsEmpty,
+      ConditionType.NotEmpty,
     ];
   }
 

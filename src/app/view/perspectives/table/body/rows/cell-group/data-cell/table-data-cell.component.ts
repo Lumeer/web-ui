@@ -157,6 +157,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     common: {allowRichText: true, delaySaveAction: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
+    action: {center: true},
   };
 
   private selectedSubscriptions = new Subscription();

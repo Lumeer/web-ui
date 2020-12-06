@@ -23,6 +23,7 @@ import {ConstraintConfig} from '../../../../../core/model/data/constraint-config
 import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {removeAllFormControls} from '../../../../utils/form.utils';
 import {Attribute} from '../../../../../core/store/collections/collection';
+import {AttributesResource} from '../../../../../core/model/resource';
 
 @Component({
   selector: 'constraint-config-form',
@@ -30,6 +31,9 @@ import {Attribute} from '../../../../../core/store/collections/collection';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConstraintConfigFormComponent implements OnChanges {
+  @Input()
+  public resource: AttributesResource;
+
   @Input()
   public config: ConstraintConfig;
 

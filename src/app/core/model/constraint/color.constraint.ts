@@ -21,7 +21,6 @@ import {ColorDataValue} from '../data-value/color.data-value';
 import {ConstraintType} from '../data/constraint';
 import {ColorConstraintConfig} from '../data/constraint-config';
 import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
 import {
   avgAnyValues,
   countValues,
@@ -31,6 +30,7 @@ import {
   sumAnyValues,
   uniqueValuesCount,
 } from './aggregation';
+import {ConditionType} from '../attribute-filter';
 
 export class ColorConstraint implements Constraint {
   public readonly type = ConstraintType.Color;
@@ -46,8 +46,8 @@ export class ColorConstraint implements Constraint {
     return new ColorDataValue(value, this.config, inputValue);
   }
 
-  public conditions(): QueryCondition[] {
-    return [QueryCondition.Equals, QueryCondition.NotEquals, QueryCondition.IsEmpty, QueryCondition.NotEmpty];
+  public conditions(): ConditionType[] {
+    return [ConditionType.Equals, ConditionType.NotEquals, ConditionType.IsEmpty, ConditionType.NotEmpty];
   }
 
   public avg(values: any[], onlyNumeric?: boolean): any {

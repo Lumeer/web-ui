@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../store/navigation/query/query';
 import {UserConstraintConfig} from '../data/constraint-config';
 import {UserDataValue} from './user.data-value';
 import {ConstraintData} from '../data/constraint';
 import {UserConstraintConditionValue} from '../data/constraint-condition';
+import {ConditionType} from '../attribute-filter';
 
 describe('UserDataValue', () => {
   const config: UserConstraintConfig = {
@@ -42,84 +42,79 @@ describe('UserDataValue', () => {
   describe('meet condition', () => {
     it('in', () => {
       expect(
-        new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasSome,
-          [{value: 'one@lmr.com'}]
-        )
+        new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(ConditionType.HasSome, [
+          {value: 'one@lmr.com'},
+        ])
       ).toBeTruthy();
       expect(
         new UserDataValue(
           ['one@lmr.com', 'two@lmr.com', 'three@lmr.com'],
           config,
           constraintData
-        ).meetCondition(QueryCondition.HasSome, [{value: ['two@lmr.com', 'three@lmr.com']}])
+        ).meetCondition(ConditionType.HasSome, [{value: ['two@lmr.com', 'three@lmr.com']}])
       ).toBeTruthy();
       expect(
         new UserDataValue(
           ['one@lmr.com', 'two@lmr.com', 'three@lmr.com'],
           config,
           constraintData
-        ).meetCondition(QueryCondition.HasSome, [{value: ['four@lmr.com']}])
+        ).meetCondition(ConditionType.HasSome, [{value: ['four@lmr.com']}])
       ).toBeFalsy();
       expect(
-        new UserDataValue(
-          ['one@lmr.com', 'other@lmr.com'],
-          config,
-          constraintData
-        ).meetCondition(QueryCondition.HasSome, [{value: ['lala@lmr.com', 'other@lmr.com']}])
+        new UserDataValue(['one@lmr.com', 'other@lmr.com'], config, constraintData).meetCondition(
+          ConditionType.HasSome,
+          [{value: ['lala@lmr.com', 'other@lmr.com']}]
+        )
       ).toBeTruthy();
       expect(
-        new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(
-          QueryCondition.HasSome,
-          [{type: UserConstraintConditionValue.CurrentUser}]
-        )
+        new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(ConditionType.HasSome, [
+          {type: UserConstraintConditionValue.CurrentUser},
+        ])
       ).toBeTruthy();
     });
 
     it('not in', () => {
       expect(
-        new UserDataValue(
-          ['one@lmr.com', 'two@lmr.com'],
-          config,
-          constraintData
-        ).meetCondition(QueryCondition.HasNoneOf, [{value: 'other@lmr.com'}])
+        new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(
+          ConditionType.HasNoneOf,
+          [{value: 'other@lmr.com'}]
+        )
       ).toBeTruthy();
       expect(
-        new UserDataValue(
-          ['one@lmr.com', 'two@lmr.com'],
-          config,
-          constraintData
-        ).meetCondition(QueryCondition.HasNoneOf, [{value: 'one@lmr.com'}])
+        new UserDataValue(['one@lmr.com', 'two@lmr.com'], config, constraintData).meetCondition(
+          ConditionType.HasNoneOf,
+          [{value: 'one@lmr.com'}]
+        )
       ).toBeFalsy();
       expect(
         new UserDataValue(
           ['one@lmr.com', 'two@lmr.com', 'three@lmr.com'],
           config,
           constraintData
-        ).meetCondition(QueryCondition.HasNoneOf, [{value: ['other@lmr.com', 'four@lmr.com', 'l@lmr.com']}])
+        ).meetCondition(ConditionType.HasNoneOf, [{value: ['other@lmr.com', 'four@lmr.com', 'l@lmr.com']}])
       ).toBeTruthy();
       expect(
         new UserDataValue(
           ['one@lmr.com', 'two@lmr.com', 'three@lmr.com'],
           config,
           constraintData
-        ).meetCondition(QueryCondition.HasNoneOf, [{type: UserConstraintConditionValue.CurrentUser}])
+        ).meetCondition(ConditionType.HasNoneOf, [{type: UserConstraintConditionValue.CurrentUser}])
       ).toBeFalsy();
     });
 
     it('is empty', () => {
-      expect(new UserDataValue('0', config, constraintData).meetCondition(QueryCondition.IsEmpty, [])).toBeFalsy();
-      expect(new UserDataValue('  ', config, constraintData).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
-      expect(new UserDataValue(null, config, constraintData).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
+      expect(new UserDataValue('0', config, constraintData).meetCondition(ConditionType.IsEmpty, [])).toBeFalsy();
+      expect(new UserDataValue('  ', config, constraintData).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
+      expect(new UserDataValue(null, config, constraintData).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
       expect(
-        new UserDataValue('some@lmr.com', config, constraintData).meetCondition(QueryCondition.IsEmpty, [])
+        new UserDataValue('some@lmr.com', config, constraintData).meetCondition(ConditionType.IsEmpty, [])
       ).toBeFalsy();
     });
 
     it('is not empty', () => {
-      expect(new UserDataValue(' 0', config, constraintData).meetCondition(QueryCondition.NotEmpty, [])).toBeTruthy();
-      expect(new UserDataValue(null, config, constraintData).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
-      expect(new UserDataValue('  ', config, constraintData).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
+      expect(new UserDataValue(' 0', config, constraintData).meetCondition(ConditionType.NotEmpty, [])).toBeTruthy();
+      expect(new UserDataValue(null, config, constraintData).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
+      expect(new UserDataValue('  ', config, constraintData).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
     });
   });
 

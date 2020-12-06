@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../store/navigation/query/query';
 import {CoordinatesConstraintConfig} from '../data/constraint-config';
 import {CoordinatesDataValue} from './coordinates.data-value';
+import {ConditionType} from '../attribute-filter';
 
 describe('CoordinatesDataValue', () => {
   const config: CoordinatesConstraintConfig = {precision: 3};
@@ -27,46 +27,46 @@ describe('CoordinatesDataValue', () => {
   describe('meet condition', () => {
     it('equals', () => {
       expect(
-        new CoordinatesDataValue('10', config).meetCondition(QueryCondition.Equals, [{value: '10,0'}])
+        new CoordinatesDataValue('10', config).meetCondition(ConditionType.Equals, [{value: '10,0'}])
       ).toBeTruthy();
-      expect(new CoordinatesDataValue('10,1', config).meetCondition(QueryCondition.Equals, [{value: '1'}])).toBeFalsy();
+      expect(new CoordinatesDataValue('10,1', config).meetCondition(ConditionType.Equals, [{value: '1'}])).toBeFalsy();
       expect(
-        new CoordinatesDataValue('10.12345', config).meetCondition(QueryCondition.Equals, [{value: '10.123'}])
+        new CoordinatesDataValue('10.12345', config).meetCondition(ConditionType.Equals, [{value: '10.123'}])
       ).toBeTruthy();
       expect(
-        new CoordinatesDataValue('20.99999,30.88888', config).meetCondition(QueryCondition.Equals, [
+        new CoordinatesDataValue('20.99999,30.88888', config).meetCondition(ConditionType.Equals, [
           {value: '21,30.889'},
         ])
       ).toBeTruthy();
       expect(
-        new CoordinatesDataValue('20,30', config).meetCondition(QueryCondition.Equals, [{value: '20,30.1'}])
+        new CoordinatesDataValue('20,30', config).meetCondition(ConditionType.Equals, [{value: '20,30.1'}])
       ).toBeFalsy();
     });
 
     it('not equals', () => {
       expect(
-        new CoordinatesDataValue('10.9999', config).meetCondition(QueryCondition.NotEquals, [{value: '10.999'}])
+        new CoordinatesDataValue('10.9999', config).meetCondition(ConditionType.NotEquals, [{value: '10.999'}])
       ).toBeTruthy();
       expect(
-        new CoordinatesDataValue('10', config).meetCondition(QueryCondition.NotEquals, [{value: '10,0'}])
+        new CoordinatesDataValue('10', config).meetCondition(ConditionType.NotEquals, [{value: '10,0'}])
       ).toBeFalsy();
       expect(
-        new CoordinatesDataValue('20,155', config).meetCondition(QueryCondition.NotEquals, [{value: '20.000,155.0006'}])
+        new CoordinatesDataValue('20,155', config).meetCondition(ConditionType.NotEquals, [{value: '20.000,155.0006'}])
       ).toBeTruthy();
       expect(
-        new CoordinatesDataValue('20,155', config).meetCondition(QueryCondition.NotEquals, [{value: '20.000,155.0004'}])
+        new CoordinatesDataValue('20,155', config).meetCondition(ConditionType.NotEquals, [{value: '20.000,155.0004'}])
       ).toBeFalsy();
     });
     it('is empty', () => {
-      expect(new CoordinatesDataValue('0', config).meetCondition(QueryCondition.IsEmpty, [])).toBeFalsy();
-      expect(new CoordinatesDataValue('  ', config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
-      expect(new CoordinatesDataValue(null, config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
+      expect(new CoordinatesDataValue('0', config).meetCondition(ConditionType.IsEmpty, [])).toBeFalsy();
+      expect(new CoordinatesDataValue('  ', config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
+      expect(new CoordinatesDataValue(null, config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
     });
 
     it('is not empty', () => {
-      expect(new CoordinatesDataValue(' 0', config).meetCondition(QueryCondition.NotEmpty, [])).toBeTruthy();
-      expect(new CoordinatesDataValue(null, config).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
-      expect(new CoordinatesDataValue('  ', config).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
+      expect(new CoordinatesDataValue(' 0', config).meetCondition(ConditionType.NotEmpty, [])).toBeTruthy();
+      expect(new CoordinatesDataValue(null, config).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
+      expect(new CoordinatesDataValue('  ', config).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
     });
   });
 

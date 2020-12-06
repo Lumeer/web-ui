@@ -25,16 +25,10 @@ import {
   LinkAttributeFilterDto,
   QueryStemDto,
 } from '../../../dto/query.dto';
-import {
-  AttributeFilter,
-  CollectionAttributeFilter,
-  LinkAttributeFilter,
-  Query,
-  QueryCondition,
-  QueryStem,
-} from './query';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {decodeQueryParam, encodeQueryParam} from '../query-param-encoding';
 import {prolongQuery, ShortenedQuery, shortenQuery} from './shortened-query';
+import {AttributeFilter, ConditionType} from '../../../model/attribute-filter';
 
 export function convertQueryDtoToModel(dto: QueryDto): Query {
   return {
@@ -174,30 +168,30 @@ function normalizeFilter<T extends AttributeFilter>(filter: T): T {
   };
 }
 
-const EqVariants = [QueryCondition.Equals, '=', '==', 'equals'];
-const NeqVariants = [QueryCondition.NotEquals, '!=', '!==', '<>', 'ne', 'nequals'];
-const LtVariants = [QueryCondition.LowerThan, '<'];
-const LteVariants = [QueryCondition.LowerThanEquals, '<='];
-const GtVariants = [QueryCondition.GreaterThan, '>'];
-const GteVariants = [QueryCondition.GreaterThanEquals, '>='];
+const EqVariants = [ConditionType.Equals, '=', '==', 'equals'];
+const NeqVariants = [ConditionType.NotEquals, '!=', '!==', '<>', 'ne', 'nequals'];
+const LtVariants = [ConditionType.LowerThan, '<'];
+const LteVariants = [ConditionType.LowerThanEquals, '<='];
+const GtVariants = [ConditionType.GreaterThan, '>'];
+const GteVariants = [ConditionType.GreaterThanEquals, '>='];
 
-function conditionFromString(condition: string): QueryCondition {
+function conditionFromString(condition: string): ConditionType {
   if (!condition) {
     return null;
   }
   const conditionLowerCase = condition.toLowerCase();
   if (EqVariants.includes(conditionLowerCase)) {
-    return QueryCondition.Equals;
+    return ConditionType.Equals;
   } else if (NeqVariants.includes(conditionLowerCase)) {
-    return QueryCondition.NotEquals;
+    return ConditionType.NotEquals;
   } else if (LtVariants.includes(conditionLowerCase)) {
-    return QueryCondition.LowerThan;
+    return ConditionType.LowerThan;
   } else if (LteVariants.includes(conditionLowerCase)) {
-    return QueryCondition.LowerThanEquals;
+    return ConditionType.LowerThanEquals;
   } else if (GtVariants.includes(conditionLowerCase)) {
-    return QueryCondition.GreaterThan;
+    return ConditionType.GreaterThan;
   } else if (GteVariants.includes(conditionLowerCase)) {
-    return QueryCondition.GreaterThanEquals;
+    return ConditionType.GreaterThanEquals;
   }
-  return condition as QueryCondition;
+  return condition as ConditionType;
 }

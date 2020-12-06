@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../../../core/store/navigation/query/query';
 import {ConstraintConditionValue} from '../../../../core/model/data/constraint-condition';
+import {ConditionType} from '../../../../core/model/attribute-filter';
 
-export interface QueryConditionItem {
-  value: QueryCondition;
+export interface ConditionItem {
+  value: ConditionType;
   title: string;
 }
 

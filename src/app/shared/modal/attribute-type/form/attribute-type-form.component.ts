@@ -44,6 +44,8 @@ import {escapeHtml, isNotNullOrUndefined} from '../../../utils/common.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {uniqueValues} from '../../../utils/array.utils';
 import {LinkConstraintFormControl} from './constraint-config/link/link-constraint-form-control';
+import {ActionConstraintFormControl} from './constraint-config/action/action-constraint-form-control';
+import {AttributesResource} from '../../../../core/model/resource';
 
 @Component({
   selector: 'attribute-type-form',
@@ -51,6 +53,9 @@ import {LinkConstraintFormControl} from './constraint-config/link/link-constrain
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeTypeFormComponent implements OnChanges {
+  @Input()
+  public resource: AttributesResource;
+
   @Input()
   public attribute: Attribute;
 
@@ -182,13 +187,20 @@ export class AttributeTypeFormComponent implements OnChanges {
         return {
           openInApp: this.configForm.get(LinkConstraintFormControl.OpenInApp)?.value,
         };
+      case ConstraintType.Action:
+        return {
+          title: this.configForm.get(ActionConstraintFormControl.Title).value,
+          icon: this.configForm.get(ActionConstraintFormControl.Icon).value,
+          background: this.configForm.get(ActionConstraintFormControl.Background).value,
+          rule: this.configForm.get(ActionConstraintFormControl.Rule).value,
+        };
       default:
         return null;
     }
   }
 
   private confirmAndSave(attribute: Attribute) {
-    if (attribute.constraint && attribute.constraint.type === ConstraintType.Select) {
+    if (attribute.constraint?.type === ConstraintType.Select) {
       this.confirmAndSaveSelect(attribute);
       return;
     }

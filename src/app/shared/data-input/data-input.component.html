@@ -157,6 +157,14 @@
                         class="w-100">
   </rich-text-data-input>
 
+  <action-data-input *ngSwitchCase="constraintType.Action"
+                     [readonly]="readonly"
+                     [value]="dataValue"
+                     [configuration]="configuration?.action"
+                     [cursor]="cursor"
+                     class="w-100">
+  </action-data-input>
+
   <text-data-input *ngSwitchDefault
                    [focus]="focus"
                    [readonly]="readonly"

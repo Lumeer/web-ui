@@ -17,37 +17,37 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../store/navigation/query/query';
 import {BooleanDataValue} from './boolean.data-value';
+import {ConditionType} from '../attribute-filter';
 
 describe('BooleanDataValue', () => {
   describe('meet condition', () => {
     it('equals', () => {
-      expect(new BooleanDataValue('true').meetCondition(QueryCondition.Equals, [{value: true}])).toBeTruthy();
+      expect(new BooleanDataValue('true').meetCondition(ConditionType.Equals, [{value: true}])).toBeTruthy();
 
-      expect(new BooleanDataValue(true).meetCondition(QueryCondition.Equals, [{value: true}])).toBeTruthy();
+      expect(new BooleanDataValue(true).meetCondition(ConditionType.Equals, [{value: true}])).toBeTruthy();
 
-      expect(new BooleanDataValue('').meetCondition(QueryCondition.Equals, [{value: true}])).toBeFalsy();
+      expect(new BooleanDataValue('').meetCondition(ConditionType.Equals, [{value: true}])).toBeFalsy();
 
-      expect(new BooleanDataValue('').meetCondition(QueryCondition.Equals, [{value: false}])).toBeTruthy();
+      expect(new BooleanDataValue('').meetCondition(ConditionType.Equals, [{value: false}])).toBeTruthy();
 
-      expect(new BooleanDataValue(null).meetCondition(QueryCondition.Equals, [{value: true}])).toBeFalsy();
+      expect(new BooleanDataValue(null).meetCondition(ConditionType.Equals, [{value: true}])).toBeFalsy();
 
-      expect(new BooleanDataValue(null).meetCondition(QueryCondition.Equals, [{value: false}])).toBeTruthy();
+      expect(new BooleanDataValue(null).meetCondition(ConditionType.Equals, [{value: false}])).toBeTruthy();
 
-      expect(new BooleanDataValue(undefined).meetCondition(QueryCondition.Equals, [{value: false}])).toBeTruthy();
+      expect(new BooleanDataValue(undefined).meetCondition(ConditionType.Equals, [{value: false}])).toBeTruthy();
 
-      expect(new BooleanDataValue(null).meetCondition(QueryCondition.Equals, [{value: undefined}])).toBeTruthy();
+      expect(new BooleanDataValue(null).meetCondition(ConditionType.Equals, [{value: undefined}])).toBeTruthy();
     });
 
     it('not equals', () => {
-      expect(new BooleanDataValue('true').meetCondition(QueryCondition.NotEquals, [{value: 'true'}])).toBeFalsy();
+      expect(new BooleanDataValue('true').meetCondition(ConditionType.NotEquals, [{value: 'true'}])).toBeFalsy();
 
-      expect(new BooleanDataValue(undefined).meetCondition(QueryCondition.NotEquals, [{value: false}])).toBeFalsy();
+      expect(new BooleanDataValue(undefined).meetCondition(ConditionType.NotEquals, [{value: false}])).toBeFalsy();
 
-      expect(new BooleanDataValue('true').meetCondition(QueryCondition.NotEquals, [{value: ''}])).toBeTruthy();
+      expect(new BooleanDataValue('true').meetCondition(ConditionType.NotEquals, [{value: ''}])).toBeTruthy();
 
-      expect(new BooleanDataValue('true').meetCondition(QueryCondition.NotEquals, [{value: false}])).toBeTruthy();
+      expect(new BooleanDataValue('true').meetCondition(ConditionType.NotEquals, [{value: false}])).toBeTruthy();
     });
   });
 

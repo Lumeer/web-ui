@@ -24,10 +24,10 @@ import {UserConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {isArray, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
 import {isEmailValid} from '../../../shared/utils/email.utils';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {valueMeetFulltexts} from './data-value.utils';
 import {UserConstraintConditionValue} from '../data/constraint-condition';
 import {arrayIntersection} from '../../../shared/utils/array.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class UserDataValue implements DataValue {
   public readonly users: User[];
@@ -134,39 +134,39 @@ export class UserDataValue implements DataValue {
     return new UserDataValue(inputValue, this.config, this.constraintData, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = values?.map(value => this.mapQueryConditionValue(value));
     const otherUsers = (dataValues.length > 0 && dataValues[0].users) || [];
 
     switch (condition) {
-      case QueryCondition.HasSome:
-      case QueryCondition.Equals:
+      case ConditionType.HasSome:
+      case ConditionType.Equals:
         return this.users.some(option => (otherUsers || []).some(otherOption => otherOption.email === option.email));
-      case QueryCondition.HasNoneOf:
-      case QueryCondition.NotEquals:
+      case ConditionType.HasNoneOf:
+      case ConditionType.NotEquals:
         return this.users.every(option => (otherUsers || []).every(otherOption => otherOption.email !== option.email));
-      case QueryCondition.In:
+      case ConditionType.In:
         return (
           this.users.length > 0 &&
           this.users.every(user => otherUsers.some(otherOption => otherOption.email === user.email))
         );
-      case QueryCondition.HasAll:
+      case ConditionType.HasAll:
         return (
           arrayIntersection(
             otherUsers.map(o => o.email),
             this.users.map(o => o.email)
           ).length === otherUsers.length
         );
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return this.users.length === 0 && this.format().trim().length === 0;
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return this.users.length > 0 || this.format().trim().length > 0;
       default:
         return false;
     }
   }
 
-  private mapQueryConditionValue(value: QueryConditionValue): UserDataValue {
+  private mapQueryConditionValue(value: ConditionValue): UserDataValue {
     if (value.type === UserConstraintConditionValue.CurrentUser) {
       const currentUser = this.constraintData?.currentUser;
       return new UserDataValue(currentUser && currentUser.email, this.config, this.constraintData);
@@ -178,26 +178,26 @@ export class UserDataValue implements DataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     const dataValues = values?.map(value => this.mapQueryConditionValue(value));
     const otherUsers = (dataValues.length > 0 && dataValues[0].users) || [];
 
     switch (condition) {
-      case QueryCondition.HasSome:
-      case QueryCondition.Equals:
-      case QueryCondition.In:
+      case ConditionType.HasSome:
+      case ConditionType.Equals:
+      case ConditionType.In:
         return otherUsers?.[0]?.email;
-      case QueryCondition.HasAll:
+      case ConditionType.HasAll:
         return values[0].value;
-      case QueryCondition.HasNoneOf:
-      case QueryCondition.NotEquals:
+      case ConditionType.HasNoneOf:
+      case ConditionType.NotEquals:
         const noneOptions = (this.constraintData?.users || []).filter(
           user => !otherUsers.some(otherUser => otherUser.email === user.email)
         );
         return noneOptions?.[0]?.email;
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return '';
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return this.constraintData?.users?.[0]?.email;
       default:
         return null;

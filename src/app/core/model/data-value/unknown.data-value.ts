@@ -20,8 +20,8 @@
 import {formatUnknownDataValue} from '../../../shared/utils/data.utils';
 import {DataValue} from './index';
 import {escapeHtml, isNotNullOrUndefined, isNumeric, toNumber, unescapeHtml} from '../../../shared/utils/common.utils';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueByConditionText, valueMeetFulltexts} from './data-value.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class UnknownDataValue implements DataValue {
   public readonly config: any = {};
@@ -84,7 +84,7 @@ export class UnknownDataValue implements DataValue {
     return new UnknownDataValue(inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new UnknownDataValue(value.value));
     const formattedValue = this.format().toLowerCase().trim();
     const otherFormattedValues = dataValues.map(dataValue => dataValue.format().toLowerCase().trim());
@@ -95,7 +95,7 @@ export class UnknownDataValue implements DataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     return valueByConditionText(condition, values[0] && values[0].value);
   }
 }

@@ -30,6 +30,7 @@ export interface ResourceCommentModel {
   authorEmail?: string;
   authorName?: string;
   comment?: string;
+  error?: any;
   metaData?: ResourceCommentModelMetaData;
 }
 

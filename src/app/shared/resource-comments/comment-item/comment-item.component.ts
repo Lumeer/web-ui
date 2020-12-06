@@ -33,6 +33,18 @@ export class CommentItemComponent {
   @Input()
   public user: User;
 
+  @Input()
+  public comment: ResourceCommentModel;
+
+  @Output()
+  public onRemove = new EventEmitter<ResourceCommentModel>();
+
+  @Output()
+  public onUpdate = new EventEmitter<ResourceCommentModel>();
+
+  @Output()
+  public onRefresh = new EventEmitter<ResourceCommentModel>();
+
   public editing$ = new BehaviorSubject<boolean>(false);
 
   public createdOnMsg = '';
@@ -44,15 +56,6 @@ export class CommentItemComponent {
     this.createdByMsg = this.i18n({id: 'document.detail.header.createdBy', value: 'Created by'});
     this.updatedOnMsg = this.i18n({id: 'document.detail.header.updatedOn', value: 'Updated on'});
   }
-
-  @Input()
-  public comment: ResourceCommentModel;
-
-  @Output()
-  public onRemove = new EventEmitter<ResourceCommentModel>();
-
-  @Output()
-  public onUpdate = new EventEmitter<ResourceCommentModel>();
 
   public editComment(comment: ResourceCommentModel) {
     this.editing$.next(true);

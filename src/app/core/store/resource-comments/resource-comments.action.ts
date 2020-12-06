@@ -36,6 +36,7 @@ export enum ResourceCommentsActionType {
   UPDATE_FAILURE = '[ResourceComments] Update :: Failure',
 
   DELETE = '[ResourceComments] Delete',
+  DELETE_UNINITIALIZED = '[ResourceComments] Delete Uninitialized',
   DELETE_SUCCESS = '[ResourceComments] Delete :: Success',
   DELETE_FAILURE = '[ResourceComments] Delete :: Failure',
 }
@@ -75,7 +76,6 @@ export namespace ResourceCommentsAction {
         comment: ResourceCommentModel;
         onSuccess?: (commentId: string) => void;
         onFailure?: () => void;
-        afterSuccess?: (commentId: string) => void;
       }
     ) {}
   }
@@ -116,6 +116,12 @@ export namespace ResourceCommentsAction {
     public constructor(public payload: {comment: ResourceCommentModel; nextAction?: Action}) {}
   }
 
+  export class DeleteUninitialized implements Action {
+    public readonly type = ResourceCommentsActionType.DELETE_UNINITIALIZED;
+
+    public constructor(public payload: {comment: ResourceCommentModel}) {}
+  }
+
   export class DeleteSuccess implements Action {
     public readonly type = ResourceCommentsActionType.DELETE_SUCCESS;
 
@@ -139,6 +145,7 @@ export namespace ResourceCommentsAction {
     | UpdateSuccess
     | UpdateFailure
     | Delete
+    | DeleteUninitialized
     | DeleteSuccess
     | DeleteFailure;
 }

@@ -22,6 +22,7 @@ export interface DataInputConfiguration {
   color?: ColorDataInputConfiguration;
   boolean?: BooleanDataInputConfiguration;
   user?: UserDataInputConfiguration;
+  action?: ActionDataInputConfiguration;
 }
 
 export interface CommonDataInputConfiguration {
@@ -39,6 +40,10 @@ export interface ColorDataInputConfiguration {
 
 export interface BooleanDataInputConfiguration {
   additionalLabel?: string;
+  center?: boolean;
+}
+
+export interface ActionDataInputConfiguration {
   center?: boolean;
 }
 

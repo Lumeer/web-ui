@@ -17,17 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+export enum ActionConstraintFormControl {
+  Title = 'title',
+  Icon = 'icon',
+  TitleUser = 'titleUser',
+  Background = 'background',
+  Rule = 'rule',
+  Filters = 'filters',
+}
 
-@Component({
-  selector: 'tooltip-text',
-  templateUrl: './tooltip-text.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class TooltipTextComponent {
-  @Input()
-  public text: string;
-
-  @Input()
-  public tooltipText: string;
+export enum ButtonConstraintFiltersFormControl {
+  Attribute = 'attribute',
+  Operator = 'operator',
+  Condition = 'condition',
+  ConditionValues = 'values',
 }

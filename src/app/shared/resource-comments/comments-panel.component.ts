@@ -18,7 +18,6 @@
  */
 
 import {
-  AfterViewChecked,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -28,20 +27,19 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {ResourceType} from '../../../core/model/resource-type';
-import {AppState} from '../../../core/store/app.state';
+import {ResourceType} from '../../core/model/resource-type';
+import {AppState} from '../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {User} from '../../../core/store/users/user';
-import {selectCurrentUser} from '../../../core/store/users/users.state';
-import {ResourceCommentsAction} from '../../../core/store/resource-comments/resource-comments.action';
-import {ResourceCommentModel} from '../../../core/store/resource-comments/resource-comment.model';
-import {selectResourceCommentsByResource} from '../../../core/store/resource-comments/resource-comments.state';
-import {generateId} from '../../utils/resource.utils';
-import {NotificationsAction} from '../../../core/store/notifications/notifications.action';
+import {Observable} from 'rxjs';
+import {User} from '../../core/store/users/user';
+import {selectCurrentUser} from '../../core/store/users/users.state';
+import {ResourceCommentsAction} from '../../core/store/resource-comments/resource-comments.action';
+import {ResourceCommentModel} from '../../core/store/resource-comments/resource-comment.model';
+import {selectResourceCommentsByResource} from '../../core/store/resource-comments/resource-comments.state';
+import {generateId} from '../utils/resource.utils';
+import {NotificationsAction} from '../../core/store/notifications/notifications.action';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {CollectionsAction} from '../../../core/store/collections/collections.action';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {map, take} from 'rxjs/operators';
 
 @Component({
@@ -81,8 +79,6 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
 
   public comments$: Observable<ResourceCommentModel[]>;
 
-  public sending$ = new BehaviorSubject<boolean>(false);
-
   public constructor(private store$: Store<AppState>, private i18n: I18n) {}
 
   public ngOnInit(): void {
@@ -119,21 +115,19 @@ export class CommentsPanelComponent implements OnInit, OnChanges {
       resourceId: this.resourceId,
     };
 
-    this.sending$.next(true);
-    this.store$.dispatch(
-      new ResourceCommentsAction.Create({
-        comment,
-        onSuccess: commentId => this.sending$.next(false),
-      })
-    );
+    this.store$.dispatch(new ResourceCommentsAction.Create({comment}));
 
     this.onSaveComment.emit();
   }
 
   public removeComment(comment: ResourceCommentModel) {
-    const removeAction = new ResourceCommentsAction.Delete({comment});
-    const confirmAction = this.createConfirmAction(removeAction);
-    this.store$.dispatch(confirmAction);
+    if (comment.id) {
+      const removeAction = new ResourceCommentsAction.Delete({comment});
+      const confirmAction = this.createConfirmAction(removeAction);
+      this.store$.dispatch(confirmAction);
+    } else {
+      this.store$.dispatch(new ResourceCommentsAction.DeleteUninitialized({comment}));
+    }
   }
 
   private createConfirmAction(action: Action): NotificationsAction.Confirm {

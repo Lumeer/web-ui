@@ -28,8 +28,8 @@ import {Address, AddressField} from '../../store/geocoding/address';
 import {ConstraintData} from '../data/constraint';
 import {AddressConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueByConditionText, valueMeetFulltexts} from './data-value.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class AddressDataValue implements DataValue {
   public readonly address: Address;
@@ -120,7 +120,7 @@ export class AddressDataValue implements DataValue {
     return new AddressDataValue(inputValue, this.config, this.constraintData, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new AddressDataValue(value.value, this.config, this.constraintData));
     const formattedValue = this.format().toLowerCase().trim();
     const otherFormattedValues = dataValues.map(dataValue => dataValue.format().toLowerCase().trim());
@@ -131,7 +131,7 @@ export class AddressDataValue implements DataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     return valueByConditionText(condition, values[0] && values[0].value);
   }
 }

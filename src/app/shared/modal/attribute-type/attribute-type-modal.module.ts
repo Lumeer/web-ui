@@ -47,6 +47,8 @@ import {SelectConstraintOptionsFormComponent} from './form/constraint-config/sel
 import {SelectModule} from '../../select/select.module';
 import {DirectivesModule} from '../../directives/directives.module';
 import {LinkConstraintConfigFormComponent} from './form/constraint-config/link/link-constraint-config-form.component';
+import {ActionConstraintConfigFormComponent} from './form/constraint-config/action/action-constraint-config-form.component';
+import {ActionConstraintConditionsFormComponent} from './form/constraint-config/action/conditions/action-constraint-conditions-form.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +70,8 @@ import {LinkConstraintConfigFormComponent} from './form/constraint-config/link/l
     AttributeTypeSelectComponent,
     AttributeTypeModalComponent,
     LinkConstraintConfigFormComponent,
+    ActionConstraintConfigFormComponent,
+    ActionConstraintConditionsFormComponent,
   ],
   imports: [
     CommonModule,

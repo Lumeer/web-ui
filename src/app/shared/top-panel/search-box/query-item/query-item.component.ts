@@ -37,7 +37,6 @@ import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
 import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
-import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
 import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 import {SelectConstraintConfig, UserConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
@@ -46,6 +45,7 @@ import {AttributeQueryItem} from './model/attribute.query-item';
 import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
 import {Attribute} from '../../../../core/store/collections/collection';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
+import {ConditionType, ConditionValue} from '../../../../core/model/attribute-filter';
 
 @Component({
   selector: 'query-item',
@@ -164,7 +164,7 @@ export class QueryItemComponent implements OnInit, OnChanges {
     }
   }
 
-  public onConditionChange(data: {condition: QueryCondition; values: QueryConditionValue[]}) {
+  public onConditionChange(data: {condition: ConditionType; values: ConditionValue[]}) {
     if (!this.queryItemForm) {
       return;
     }

@@ -1,17 +1,17 @@
 <div class="new-comment"
      [class.bottom-border]="bottomBorder"
-     *ngIf="{editing: editing$ | async, commentText: commentText$ | async} as data">
+     *ngIf="{editing: editing$ | async} as data">
   <div class="editor">
-    <div [class.d-none]="data.editing || sending" class="comment-input" (click)="editComment(true)">
+    <div [class.d-none]="data.editing" class="comment-input" (click)="editComment(true)">
       <p class="text-muted font-italic p-2 cursor-text" i18n="@@document.detail.comments.new.write">Write a new comment...</p>
     </div>
-    <div [class.d-none]="!data.editing && !sending"
+    <div [class.d-none]="!data.editing"
          [contentEditable]="true"
          class="comment-input editable"
          #commentInput
-         (keyup)="updateCommentInput()"
+         (input)="updateCommentInput(commentInput.innerHTML)"
          (keydown)="onKeyDown($event)"
-         (blur)="updateCommentInput()"
+         (blur)="updateCommentInput(commentInput.innerHTML)"
          (paste)="pastedContent($event)">
     </div>
     <div *ngIf="data.editing" class="float-right text-muted small font-italic p-1">
@@ -19,7 +19,7 @@
     </div>
   </div>
 
-  <div class="controls" *ngIf="data.editing || sending">
+  <div class="controls" *ngIf="data.editing">
     <div class="author">
       <ng-container *ngIf="!initialComment || startEditing">
         <span i18n="@@document.detail.comments.posting.user.title" class="mr-2 text-muted">Posting as</span>
@@ -33,11 +33,10 @@
         <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
       </button>
       <button (click)="sendComment()"
-              [attr.aria-disabled]="sending || (data.editing && !commentInput.innerText)"
-              [disabled]="sending || (data.editing && !commentInput.innerText)"
+              [attr.aria-disabled]="data.editing && !progress"
+              [disabled]="data.editing && !progress"
               type="button"
               class="btn btn-sm btn-success text-nowrap font-weight-bold">
-        <span *ngIf="sending" class="spinner-grow spinner-grow-sm mr-2" role="status" aria-hidden="true"></span>
         <i class="fal fa-check mr-1"></i><span i18n="@@button.save">Save</span>
         <small class="small ml-1">{{macOS ? '⌘ ⏎' : 'Ctrl + ⏎'}}</small>
       </button>

@@ -76,6 +76,7 @@ export class PreviewResultsTableComponent implements OnChanges, AfterViewInit {
     common: {inline: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
+    action: {center: true},
   };
 
   public page = 0;

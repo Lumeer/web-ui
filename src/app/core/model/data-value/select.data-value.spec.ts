@@ -17,9 +17,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../store/navigation/query/query';
 import {SelectConstraintConfig} from '../data/constraint-config';
 import {SelectDataValue} from './select.data-value';
+import {ConditionType} from '../attribute-filter';
 
 describe('SelectDataValue', () => {
   const config: SelectConstraintConfig = {
@@ -35,75 +35,73 @@ describe('SelectDataValue', () => {
 
   describe('meet condition', () => {
     it('has some', () => {
+      expect(new SelectDataValue(['0', '5'], config).meetCondition(ConditionType.HasSome, [{value: '0'}])).toBeTruthy();
+      expect(new SelectDataValue(['4', '5'], config).meetCondition(ConditionType.HasSome, [{value: '0'}])).toBeFalsy();
       expect(
-        new SelectDataValue(['0', '5'], config).meetCondition(QueryCondition.HasSome, [{value: '0'}])
-      ).toBeTruthy();
-      expect(new SelectDataValue(['4', '5'], config).meetCondition(QueryCondition.HasSome, [{value: '0'}])).toBeFalsy();
-      expect(
-        new SelectDataValue(['0', '1', '2', '3'], config).meetCondition(QueryCondition.HasSome, [
+        new SelectDataValue(['0', '1', '2', '3'], config).meetCondition(ConditionType.HasSome, [
           {value: ['0', '1', '2', '3', '4']},
         ])
       ).toBeTruthy();
-      expect(new SelectDataValue(['3', '1'], config).meetCondition(QueryCondition.HasSome, [{value: '0'}])).toBeFalsy();
+      expect(new SelectDataValue(['3', '1'], config).meetCondition(ConditionType.HasSome, [{value: '0'}])).toBeFalsy();
     });
 
     it('has none of ', () => {
       expect(
-        new SelectDataValue(['0', '1', '2'], config).meetCondition(QueryCondition.HasNoneOf, [{value: '3'}])
+        new SelectDataValue(['0', '1', '2'], config).meetCondition(ConditionType.HasNoneOf, [{value: '3'}])
       ).toBeTruthy();
       expect(
-        new SelectDataValue(['0', '1', '2'], config).meetCondition(QueryCondition.HasNoneOf, [{value: ['3', '4', '5']}])
+        new SelectDataValue(['0', '1', '2'], config).meetCondition(ConditionType.HasNoneOf, [{value: ['3', '4', '5']}])
       ).toBeTruthy();
       expect(
-        new SelectDataValue(['0', '1', '2', '3'], config).meetCondition(QueryCondition.HasNoneOf, [{value: ['0', '5']}])
+        new SelectDataValue(['0', '1', '2', '3'], config).meetCondition(ConditionType.HasNoneOf, [{value: ['0', '5']}])
       ).toBeFalsy();
       expect(
-        new SelectDataValue(['3', '1'], config).meetCondition(QueryCondition.HasNoneOf, [{value: '1'}])
+        new SelectDataValue(['3', '1'], config).meetCondition(ConditionType.HasNoneOf, [{value: '1'}])
       ).toBeFalsy();
     });
 
     it('in', () => {
       expect(
-        new SelectDataValue(['a'], config).meetCondition(QueryCondition.In, [{value: ['a', 'b', 'c']}])
+        new SelectDataValue(['a'], config).meetCondition(ConditionType.In, [{value: ['a', 'b', 'c']}])
       ).toBeTruthy();
       expect(
-        new SelectDataValue(['a', 'b'], config).meetCondition(QueryCondition.In, [{value: ['a', 'b', 'c']}])
+        new SelectDataValue(['a', 'b'], config).meetCondition(ConditionType.In, [{value: ['a', 'b', 'c']}])
       ).toBeTruthy();
       expect(
-        new SelectDataValue(['a', 'c', 'b'], config).meetCondition(QueryCondition.In, [{value: ['a', 'b', 'c']}])
+        new SelectDataValue(['a', 'c', 'b'], config).meetCondition(ConditionType.In, [{value: ['a', 'b', 'c']}])
       ).toBeTruthy();
       expect(
-        new SelectDataValue(['a', 'b', 'c', 'd'], config).meetCondition(QueryCondition.In, [{value: ['a', 'b', 'c']}])
+        new SelectDataValue(['a', 'b', 'c', 'd'], config).meetCondition(ConditionType.In, [{value: ['a', 'b', 'c']}])
       ).toBeFalsy();
     });
 
     it('has all', () => {
       expect(
-        new SelectDataValue(['a'], config).meetCondition(QueryCondition.HasAll, [{value: ['a', 'b', 'c']}])
+        new SelectDataValue(['a'], config).meetCondition(ConditionType.HasAll, [{value: ['a', 'b', 'c']}])
       ).toBeFalsy();
       expect(
-        new SelectDataValue(['a', 'b'], config).meetCondition(QueryCondition.HasAll, [{value: ['a', 'b', 'c']}])
+        new SelectDataValue(['a', 'b'], config).meetCondition(ConditionType.HasAll, [{value: ['a', 'b', 'c']}])
       ).toBeFalsy();
       expect(
-        new SelectDataValue(['a', 'c', 'b'], config).meetCondition(QueryCondition.HasAll, [{value: ['a', 'b', 'c']}])
+        new SelectDataValue(['a', 'c', 'b'], config).meetCondition(ConditionType.HasAll, [{value: ['a', 'b', 'c']}])
       ).toBeTruthy();
       expect(
-        new SelectDataValue(['a', 'b', 'c', 'd'], config).meetCondition(QueryCondition.HasAll, [
+        new SelectDataValue(['a', 'b', 'c', 'd'], config).meetCondition(ConditionType.HasAll, [
           {value: ['a', 'b', 'c']},
         ])
       ).toBeTruthy();
     });
 
     it('is empty', () => {
-      expect(new SelectDataValue('0', config).meetCondition(QueryCondition.IsEmpty, [])).toBeFalsy();
-      expect(new SelectDataValue('  ', config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
-      expect(new SelectDataValue(null, config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
+      expect(new SelectDataValue('0', config).meetCondition(ConditionType.IsEmpty, [])).toBeFalsy();
+      expect(new SelectDataValue('  ', config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
+      expect(new SelectDataValue(null, config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
     });
 
     it('is not empty', () => {
-      expect(new SelectDataValue(' 0', config).meetCondition(QueryCondition.NotEmpty, [])).toBeTruthy();
-      expect(new SelectDataValue(null, config).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
-      expect(new SelectDataValue('  ', config).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
+      expect(new SelectDataValue(' 0', config).meetCondition(ConditionType.NotEmpty, [])).toBeTruthy();
+      expect(new SelectDataValue(null, config).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
+      expect(new SelectDataValue('  ', config).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
     });
   });
 

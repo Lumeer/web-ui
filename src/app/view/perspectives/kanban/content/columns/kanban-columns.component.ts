@@ -33,7 +33,7 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {KanbanColumn, KanbanConfig, KanbanResource, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
-import {Query, QueryCondition, QueryStem} from '../../../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
@@ -71,6 +71,7 @@ import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
 import {ViewSettings} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {selectViewSettings} from '../../../../../core/store/view-settings/view-settings.state';
+import {ConditionType} from '../../../../../core/model/attribute-filter';
 
 @Component({
   selector: 'kanban-columns',
@@ -411,14 +412,14 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       filters.push({
         attributeId: kanbanAttribute.attributeId,
         collectionId: kanbanAttribute.resourceId,
-        condition: QueryCondition.Equals,
+        condition: ConditionType.Equals,
         conditionValues: [{value}],
       });
     } else {
       linkFilters.push({
         attributeId: kanbanAttribute.attributeId,
         linkTypeId: kanbanAttribute.resourceId,
-        condition: QueryCondition.Equals,
+        condition: ConditionType.Equals,
         conditionValues: [{value}],
       });
     }

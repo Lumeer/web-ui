@@ -25,12 +25,13 @@ import {LinkType} from '../link-types/link.type';
 import {LinkInstance} from '../link-instances/link.instance';
 import {escapeHtml, isNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
 import {ConstraintData} from '../../model/data/constraint';
-import {AttributeFilter, Query, QueryStem} from '../navigation/query/query';
+import {Query, QueryStem} from '../navigation/query/query';
 import {groupLinkInstancesByLinkTypes, mergeLinkInstances} from '../link-instances/link-instance.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {DataValue} from '../../model/data-value';
 import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
+import {AttributeFilter} from '../../model/attribute-filter';
 
 interface FilteredDataResources {
   allDocuments: DocumentModel[];

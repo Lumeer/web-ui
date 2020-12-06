@@ -131,7 +131,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     if (this.computationNotNecessary()) {
       return null;
     }
-    if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
+    if (this.constraint?.type === ConstraintType.Boolean) {
       return 16;
     }
 

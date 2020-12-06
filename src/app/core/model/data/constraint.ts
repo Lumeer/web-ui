@@ -27,6 +27,7 @@ export enum ConstraintType {
   Number = 'Number',
   Address = 'Address',
   Boolean = 'Boolean',
+  Action = 'Action',
   Coordinates = 'Coordinates',
   DateTime = 'DateTime',
   Duration = 'Duration',
@@ -43,6 +44,7 @@ export enum ConstraintType {
 }
 
 export const constraintTypesMap = {
+  [ConstraintType.Action]: ConstraintType.Action,
   [ConstraintType.Address]: ConstraintType.Address,
   [ConstraintType.Boolean]: ConstraintType.Boolean,
   [ConstraintType.Color]: ConstraintType.Color,
@@ -65,6 +67,7 @@ export const constraintTypesMap = {
 
 export const constraintIconsMap = {
   [ConstraintType.Address]: 'fas fa-map-marker-alt',
+  [ConstraintType.Action]: 'fas fa-running',
   [ConstraintType.Boolean]: 'fas fa-check-square',
   [ConstraintType.Color]: 'fas fa-palette',
   [ConstraintType.Coordinates]: 'fas fa-location-circle',
@@ -88,6 +91,7 @@ export function isConstraintTypeEnabled(type: string | ConstraintType): boolean 
   switch (type) {
     case ConstraintType.Address:
     case ConstraintType.Boolean:
+    case ConstraintType.Action:
     case ConstraintType.Color:
     case ConstraintType.Coordinates:
     case ConstraintType.DateTime:

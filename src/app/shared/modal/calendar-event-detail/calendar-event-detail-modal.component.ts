@@ -22,7 +22,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {AttributeFilter, Query} from '../../../core/store/navigation/query/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
 import {distinctUntilChanged, map, mergeMap, take, tap} from 'rxjs/operators';
 import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../core/store/calendars/calendar';
@@ -50,6 +50,7 @@ import {durationCountsMapToString} from '../../utils/constraint/duration-constra
 import {DurationConstraint} from '../../../core/model/constraint/duration.constraint';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {selectViewQuery} from '../../../core/store/views/views.state';
+import {AttributeFilter} from '../../../core/model/attribute-filter';
 
 const DEFAULT_EVENT_DURATION = 60;
 

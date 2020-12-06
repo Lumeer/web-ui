@@ -19,8 +19,8 @@
 
 import {DataValue} from './index';
 import {LinkConstraintConfig} from '../data/constraint-config';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueByConditionText} from './data-value.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 /*
  * Saved value is formatted as 'Link [Text]'
@@ -83,7 +83,7 @@ export class LinkDataValue implements DataValue {
     return !!this.linkValue;
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new LinkDataValue(value.value, this.config));
     const formattedValue = this.format().toLowerCase().trim();
     const otherFormattedValues = dataValues.map(dataValue => dataValue.format().toLowerCase().trim());
@@ -102,7 +102,7 @@ export class LinkDataValue implements DataValue {
     return new LinkDataValue(inputValue, this.config, inputValue);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     return valueByConditionText(condition, values?.[0]?.value);
   }
 }

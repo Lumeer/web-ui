@@ -49,7 +49,7 @@ export class AttributeTypeSelectComponent implements OnInit {
       .map(type => ({
         id: type,
         value: this.i18n(
-          '{type, select, Address {Address} Boolean {Checkbox} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User}}',
+          '{type, select, Address {Address} Boolean {Checkbox} Action {Action} Color {Color} Coordinates {Coordinates} DateTime {Date} FileAttachment {File attachment} Duration {Duration} None {None} Number {Number} Percentage {Percentage} Link {Link} Select {Selection} Text {Text} User {User}}',
           {type}
         ),
         icons: [constraintIconsMap[type]],

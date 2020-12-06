@@ -34,8 +34,8 @@ import {ConstraintData, DurationUnitsMap} from '../data/constraint';
 import {DurationConstraintConfig, DurationUnit} from '../data/constraint-config';
 import {NumericDataValue} from './index';
 import {escapeHtml, isNotNullOrUndefined, isNumeric, toNumber, unescapeHtml} from '../../../shared/utils/common.utils';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class DurationDataValue implements NumericDataValue {
   public bigNumber: Big;
@@ -141,7 +141,7 @@ export class DurationDataValue implements NumericDataValue {
     return new DurationDataValue(inputValue, this.config, this.constraintData, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(
       value => new DurationDataValue(value.value, this.config, this.constraintData)
     );
@@ -155,7 +155,7 @@ export class DurationDataValue implements NumericDataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     return valueByConditionNumber(this, condition, values, '19s');
   }
 }

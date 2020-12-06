@@ -48,7 +48,8 @@ export class IconChooseComponent {
 
   public scrollToSelection(): void {
     setTimeout(() => {
-      const elem = (document as any).getElementById(this.iconIdPipe.transform(this.icon, this.iconPickerId));
+      const elem =
+        this.icon && (document as any).getElementById(this.iconIdPipe.transform(this.icon, this.iconPickerId));
 
       if (elem) {
         elem.parentElement.parentElement.scrollTop = elem.offsetTop - elem.parentElement.offsetTop;
