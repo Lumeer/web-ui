@@ -129,7 +129,7 @@
     "@types/d3-zoom": "^2.0.0",
     "@types/d3-drag": "^2.0.0",
     "@types/d3-selection": "^2.0.0",
-    "@types/plotly.js": "^1.54.3",
+    "@types/plotly.js": "^1.54.4",
     "angular-http-server": "^1.9.0",
     "bundlesize": "^0.18.0",
     "codelyzer": "^6.0.1",
