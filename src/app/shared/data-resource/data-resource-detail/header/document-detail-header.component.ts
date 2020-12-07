@@ -39,7 +39,6 @@ import {Perspective, perspectiveIconsMap} from '../../../../view/perspectives/pe
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {DocumentFavoriteToggleService} from '../../../toggle/document-favorite-toggle.service';
 import {Workspace} from '../../../../core/store/navigation/workspace';
-import {DataRow} from '../../../data/data-row.service';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../core/model/resource';
 import {selectLinkTypeByIdWithCollections} from '../../../../core/store/link-types/link-types.state';
@@ -97,10 +96,10 @@ export class DocumentDetailHeaderComponent implements OnInit, OnChanges, OnDestr
   public defaultAttribute: Attribute;
   public defaultValue: any;
 
-  public createdOnMsg = '';
-  public createdByMsg = '';
-  public updatedOnMsg = '';
-  public updatedByMsg = '';
+  public readonly createdOnMsg;
+  public readonly createdByMsg;
+  public readonly updatedOnMsg;
+  public readonly updatedByMsg;
 
   constructor(
     private store$: Store<AppState>,
