@@ -115,7 +115,7 @@
     "@angular/compiler-cli": "^10.2.3",
     "@angular/language-service": "^10.2.3",
     "@compodoc/compodoc": "^1.1.11",
-    "@ngrx/schematics": "^10.0.1",
+    "@ngrx/schematics": "^10.1.0",
     "@sentry/cli": "^1.59.0",
     "@types/auth0-js": "^9.14.2",
     "@types/big.js": "^6.0.0",
