@@ -21,7 +21,7 @@ import {Query} from '../navigation/query/query';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,
-  queryConditionNumInputs,
+  conditionNumInputs,
 } from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
 import {ConstraintData, ConstraintType} from '../../model/data/constraint';
@@ -107,7 +107,7 @@ export function generateDocumentData(
     const attribute = findAttribute(attributesResource.attributes, filter.attributeId);
     const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
     const dataValue = constraint.createDataValue(null, constraintData);
-    const numInputs = queryConditionNumInputs(filter.condition);
+    const numInputs = conditionNumInputs(filter.condition);
     const allValuesDefined =
       constraint.isDirectlyEditable ||
       createRange(0, numInputs).every(

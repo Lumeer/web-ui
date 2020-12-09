@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform, Injectable} from '@angular/core';
-import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 import {ConditionType} from '../../../../core/model/attribute-filter';
 
 @Pipe({
@@ -27,6 +27,6 @@ import {ConditionType} from '../../../../core/model/attribute-filter';
 @Injectable()
 export class ConditionNumValuesPipe implements PipeTransform {
   public transform(condition: ConditionType): number {
-    return queryConditionNumInputs(condition);
+    return conditionNumInputs(condition);
   }
 }

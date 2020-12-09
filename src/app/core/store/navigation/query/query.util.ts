@@ -37,7 +37,7 @@ import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
-import {AttributeFilter, ConditionType} from '../../../model/attribute-filter';
+import {AttributeFilter, ConditionType, ConditionValue} from '../../../model/attribute-filter';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -92,20 +92,29 @@ function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
     return {emptyCondition: true};
   }
 
-  const everyValueDefined = createRange(0, queryConditionNumInputs(condition)).every(
-    index =>
-      conditionValue[index] &&
-      (conditionValue[index].type || conditionValue[index].value || constraintType === ConstraintType.Boolean)
-  );
-
-  if (!everyValueDefined) {
+  if (!areConditionValuesDefined(condition, conditionValue, constraintType)) {
     return {emptyValue: true};
   }
 
   return null;
 }
 
-export function queryConditionNumInputs(condition: ConditionType): number {
+export function areConditionValuesDefined(
+  condition: ConditionType,
+  conditionValues: ConditionValue[],
+  constraintType: ConstraintType
+): boolean {
+  return (
+    condition &&
+    createRange(0, conditionNumInputs(condition)).every(
+      index =>
+        conditionValues[index] &&
+        (conditionValues[index].type || conditionValues[index].value || constraintType === ConstraintType.Boolean)
+    )
+  );
+}
+
+export function conditionNumInputs(condition: ConditionType): number {
   switch (condition) {
     case ConditionType.IsEmpty:
     case ConditionType.NotEmpty:

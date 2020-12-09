@@ -37,7 +37,7 @@ import {LinkQueryItem} from '../../shared/top-panel/search-box/query-item/model/
 import {AttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/attribute.query-item';
 import {LinkAttributeQueryItem} from '../../shared/top-panel/search-box/query-item/model/link-attribute.query-item';
 import {arrayIntersection, createRange, flattenMatrix} from '../../shared/utils/array.utils';
-import {getBaseCollectionIdsFromQuery, queryConditionNumInputs} from '../store/navigation/query/query.util';
+import {getBaseCollectionIdsFromQuery, conditionNumInputs} from '../store/navigation/query/query.util';
 import {QueryItemType} from '../../shared/top-panel/search-box/query-item/model/query-item-type';
 import {getOtherLinkedCollectionId} from '../../shared/utils/link-type.utils';
 import {FulltextQueryItem} from '../../shared/top-panel/search-box/query-item/model/fulltext.query-item';

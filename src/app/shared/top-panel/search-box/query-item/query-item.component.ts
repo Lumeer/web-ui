@@ -37,7 +37,7 @@ import {AbstractControl, FormArray, FormGroup} from '@angular/forms';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {QueryItemType} from './model/query-item-type';
 import {FilterBuilderComponent} from '../../../builder/filter-builder/filter-builder.component';
-import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 import {SelectConstraintConfig, UserConstraintConfig} from '../../../../core/model/data/constraint-config';
 import {SelectConstraint} from '../../../../core/model/constraint/select.constraint';
 import {UserConstraint} from '../../../../core/model/constraint/user.constraint';
@@ -161,7 +161,7 @@ export class QueryItemComponent implements OnInit, OnChanges {
     if (!this.queryItemForm) {
       return;
     }
-    const numInputs = queryConditionNumInputs(data.condition);
+    const numInputs = conditionNumInputs(data.condition);
     this.queryItem.condition = data.condition;
     this.queryItem.conditionValues = (data.values || []).slice(0, numInputs);
     this.queryItemForm.patchValue({

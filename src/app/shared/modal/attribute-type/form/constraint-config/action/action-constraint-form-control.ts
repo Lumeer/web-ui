@@ -29,6 +29,7 @@ export enum ActionConstraintFormControl {
 export enum ActionConstraintFiltersFormControl {
   Attribute = 'attribute',
   Operator = 'operator',
+  ConstraintType = 'constraintType',
   Condition = 'condition',
   ConditionValues = 'values',
 }
