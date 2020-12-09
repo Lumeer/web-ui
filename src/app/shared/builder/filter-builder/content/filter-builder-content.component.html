@@ -32,7 +32,7 @@
   <div *ngFor="let item of conditionValueItems; let first = first; let row = index"
        class="px-2 py-1 dropdown-item cursor-pointer"
        [class.mt-2]="first"
-       [class.active]="selectedValues?.length && item.value === selectedValues[column].type"
+       [class.active]="selectedValues?.length && item.value === selectedValues[column]?.type"
        [class.focused]="focused?.column - 1 === column && focused?.row - 1 === row"
        (click)="onConditionValueSelect(item, column, row)">
     {{item.title}}

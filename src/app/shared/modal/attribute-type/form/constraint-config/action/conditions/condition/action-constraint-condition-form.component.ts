@@ -17,18 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild, HostListener} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {Attribute} from '../../../../../../../../core/store/collections/collection';
 import {ActionConstraintFiltersFormControl} from '../../action-constraint-form-control';
 import {SelectItem2Model} from '../../../../../../../select/select-item2/select-item2.model';
 import {FilterBuilderComponent} from '../../../../../../../builder/filter-builder/filter-builder.component';
-import {ConditionType, ConditionValue} from '../../../../../../../../core/model/attribute-filter';
+import {ConditionType, ConditionValue, EquationOperator} from '../../../../../../../../core/model/attribute-filter';
 import {findAttribute} from '../../../../../../../../core/store/collections/collection.util';
 import {
   initialConditionType,
   initialConditionValues,
 } from '../../../../../../../../core/model/data-value/data-value.utils';
+import {ConstraintType} from '../../../../../../../../core/model/data/constraint';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'action-constraint-condition-form',
@@ -46,11 +48,24 @@ export class ActionConstraintConditionFormComponent {
   @Input()
   public attributeSelectItems: SelectItem2Model[];
 
+  @Input()
+  public selectOperator: boolean;
+
+  @Output()
+  public remove = new EventEmitter();
+
+  @Output()
+  public operatorSelect = new EventEmitter<EquationOperator>();
+
   @ViewChild(FilterBuilderComponent)
   public filterBuilderComponent: FilterBuilderComponent;
 
   public get attributeIdControl(): AbstractControl {
     return this.form.controls[ActionConstraintFiltersFormControl.Attribute];
+  }
+
+  public get constraintTypeControl(): AbstractControl {
+    return this.form.controls[ActionConstraintFiltersFormControl.ConstraintType];
   }
 
   public get operatorControl(): AbstractControl {
@@ -65,10 +80,20 @@ export class ActionConstraintConditionFormComponent {
     return this.form.controls[ActionConstraintFiltersFormControl.ConditionValues];
   }
 
+  public operatorSelectItems: SelectItem2Model[];
+
+  constructor(private i18n: I18n) {
+    this.operatorSelectItems = [EquationOperator.And, EquationOperator.Or].map(operator => ({
+      id: operator,
+      value: i18n({id: 'equation.operator', value: '{operator, select, and {And} or {Or}}'}, {operator}),
+    }));
+  }
+
   public onAttributeSelect(items: SelectItem2Model[]) {
     const attribute = findAttribute(this.attributes, items[0]?.id);
     if (attribute && this.attributeIdControl.value !== attribute.id) {
       this.attributeIdControl.setValue(attribute.id);
+      this.constraintTypeControl.setValue(attribute.constraint?.type || ConstraintType.Unknown);
 
       const condition = initialConditionType(attribute.constraint);
       this.conditionControl.setValue(condition);
@@ -86,5 +111,14 @@ export class ActionConstraintConditionFormComponent {
   public onValueChange(data: {condition: ConditionType; values: ConditionValue[]}) {
     this.conditionControl.setValue(data.condition);
     this.conditionValuesControl.setValue(data.values);
+  }
+
+  public onRemove() {
+    this.remove.emit();
+  }
+
+  public onOperatorSelect(path: SelectItem2Model[]) {
+    const operator = path[0].id;
+    this.operatorSelect.emit(operator);
   }
 }

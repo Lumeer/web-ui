@@ -33,7 +33,7 @@ import {DataValue} from '../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
 import {BehaviorSubject} from 'rxjs';
-import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 import {createRange} from '../../../utils/array.utils';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {KeyCode} from '../../../key-code';
@@ -101,7 +101,7 @@ export class FilterBuilderContentComponent implements OnInit {
       this.dataValues = this.createDataValues();
     }
     if (changes.selectedCondition) {
-      this.numInputs = queryConditionNumInputs(this.selectedCondition);
+      this.numInputs = conditionNumInputs(this.selectedCondition);
       this.ngForIndexes = createRange(0, this.numInputs);
     }
   }

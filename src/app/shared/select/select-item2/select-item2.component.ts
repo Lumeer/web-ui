@@ -20,6 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
 import {SelectItem2Model} from './select-item2.model';
+import {preventEvent} from '../../utils/common.utils';
 
 @Component({
   selector: 'select-item2',
@@ -43,6 +44,9 @@ export class SelectItem2Component {
   @Input()
   public removable: boolean;
 
+  @Input()
+  public showAsLink = true;
+
   @Output()
   public selectPath = new EventEmitter<SelectItem2Model[]>();
 
@@ -57,8 +61,7 @@ export class SelectItem2Component {
   }
 
   public onRemove(event: any) {
-    event.preventDefault();
-    event.stopPropagation();
+    preventEvent(event);
     this.remove.emit();
   }
 }

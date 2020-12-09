@@ -1,7 +1,8 @@
 <ng-container *ngIf="{selectedItem: selectedPath | getSelectedItems:items } as data">
-  <button class="btn btn-link text-decoration-none px-0 d-flex align-items-center flex-nowrap w-100"
+  <button class="btn text-decoration-none px-0 d-flex align-items-center flex-nowrap w-100"
           type="button"
           [disabled]="disabled"
+          [class.btn-link]="showAsLink"
           [matMenuTriggerFor]="menu.childMenu"
           [ngClass]="disabled ? 'cursor-not-allowed' : 'cursor-pointer'">
 

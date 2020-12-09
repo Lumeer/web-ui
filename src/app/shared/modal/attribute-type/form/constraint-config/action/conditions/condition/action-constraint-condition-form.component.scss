@@ -1,0 +1,21 @@
+.operator-wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+
+  .operator {
+    border-right: 1px solid #ced4d9;
+  }
+}
+
+.simple-wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+}
+
+.wrapper {
+  .delete-icon {
+    padding: 0.75rem !important;
+  }
+}

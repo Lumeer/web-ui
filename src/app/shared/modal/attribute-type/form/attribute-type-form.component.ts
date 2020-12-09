@@ -44,8 +44,13 @@ import {escapeHtml, isNotNullOrUndefined} from '../../../utils/common.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {uniqueValues} from '../../../utils/array.utils';
 import {LinkConstraintFormControl} from './constraint-config/link/link-constraint-form-control';
-import {ActionConstraintFormControl} from './constraint-config/action/action-constraint-form-control';
+import {
+  ActionConstraintFiltersFormControl,
+  ActionConstraintFormControl,
+} from './constraint-config/action/action-constraint-form-control';
 import {AttributesResource} from '../../../../core/model/resource';
+import {AttributeFilterEquation, EquationOperator} from '../../../../core/model/attribute-filter';
+import {areConditionValuesDefined, conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 
 @Component({
   selector: 'attribute-type-form',
@@ -193,10 +198,29 @@ export class AttributeTypeFormComponent implements OnChanges {
           icon: this.configForm.get(ActionConstraintFormControl.Icon).value,
           background: this.configForm.get(ActionConstraintFormControl.Background).value,
           rule: this.configForm.get(ActionConstraintFormControl.Rule).value,
+          equation: this.createActionEquation(),
         };
       default:
         return null;
     }
+  }
+
+  private createActionEquation(): AttributeFilterEquation {
+    const filters = <{[key in ActionConstraintFiltersFormControl]: any}[]>(
+      this.configForm.get(ActionConstraintFormControl.Filters).value
+    );
+    const equations: AttributeFilterEquation[] = filters
+      ?.filter(fil => fil.attribute && areConditionValuesDefined(fil.condition, fil.values, fil.constraintType))
+      .map(fil => {
+        const numConditionValues = conditionNumInputs(fil.condition);
+        const conditionValues = fil.values?.slice(0, numConditionValues) || [];
+        return {
+          filter: {attributeId: fil.attribute, condition: fil.condition, conditionValues},
+          operator: fil.operator,
+        };
+      });
+    const operator = equations?.length === 1 ? EquationOperator.And : equations?.[0]?.operator;
+    return {equations, operator};
   }
 
   private confirmAndSave(attribute: Attribute) {

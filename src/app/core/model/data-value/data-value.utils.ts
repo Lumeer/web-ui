@@ -22,7 +22,7 @@ import {isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/com
 import {setCharAt} from '../../../shared/utils/string.utils';
 import {NumericDataValue} from './index';
 import {ConditionType, ConditionValue} from '../attribute-filter';
-import {queryConditionNumInputs} from '../../store/navigation/query/query.util';
+import {conditionNumInputs} from '../../store/navigation/query/query.util';
 import {ConstraintType} from '../data/constraint';
 import {createRange} from '../../../shared/utils/array.utils';
 import {Constraint} from '../constraint';
@@ -188,7 +188,7 @@ export function initialConditionType(constraint: Constraint): ConditionType {
 }
 
 export function initialConditionValues(condition: ConditionType, constraint: Constraint): ConditionValue[] {
-  const numInputs = queryConditionNumInputs(condition);
+  const numInputs = conditionNumInputs(condition);
   switch (constraint.type) {
     case ConstraintType.Boolean:
       return createRange(0, numInputs).map(() => ({value: true}));

@@ -1,28 +1,49 @@
-<div class="d-flex align-items-center form-control cursor-pointer px-0" #parentElement>
+<div class="form-control cursor-pointer p-0 h-auto wrapper" #parentElement
+     [ngClass]="selectOperator ? 'operator-wrapper' : 'simple-wrapper'">
 
-  <select-item2 class="px-2"
-                [ngClass]="attributeIdControl.value ? 'mr-2' : 'flex-grow-1'"
-                [removable]="false"
-                [disabled]="false"
-                emptyValue="Select attribute"
-                [items]="attributeSelectItems"
-                (click)="$event.stopPropagation()"
-                [selectedPath]="[attributeIdControl.value]"
-                (selectPath)="onAttributeSelect($event)">
-  </select-item2>
+  <div class="operator h-100 d-flex align-items-center" *ngIf="selectOperator">
 
-  <filter-preview *ngIf="attributeIdControl.value"
-                  [attribute]="attributes | findAttribute:attributeIdControl.value"
-                  [condition]="conditionControl.value"
-                  [conditionValues]="conditionValuesControl.value">
-  </filter-preview>
+    <select-item2 class="px-2 d-inline-block"
+                  [disabled]="false"
+                  [items]="operatorSelectItems"
+                  [showAsLink]="false"
+                  (click)="$event.stopPropagation()"
+                  [selectedPath]="[operatorControl.value]"
+                  (selectPath)="onOperatorSelect($event)">
+    </select-item2>
 
-  <filter-builder *ngIf="attributeIdControl.value"
-                  [origin]="parentElement"
-                  [condition]="conditionControl.value"
-                  [attribute]="attributes | findAttribute:attributeIdControl.value"
-                  [conditionValues]="conditionValuesControl.value"
-                  (valueChange)="onValueChange($event)">
-  </filter-builder>
+  </div>
+
+  <div class="d-flex flex-wrap align-items-center text-truncate">
+
+    <select-item2 class="pl-2 pr-1"
+                  [class.flex-grow-1]="!attributeIdControl.value"
+                  [removable]="false"
+                  [disabled]="false"
+                  emptyValue="Select attribute"
+                  [items]="attributeSelectItems"
+                  (click)="$event.stopPropagation()"
+                  [selectedPath]="[attributeIdControl.value]"
+                  (selectPath)="onAttributeSelect($event)">
+    </select-item2>
+
+    <filter-preview *ngIf="attributeIdControl.value"
+                    class="m-2"
+                    [attribute]="attributes | findAttribute:attributeIdControl.value"
+                    [condition]="conditionControl.value"
+                    [conditionValues]="conditionValuesControl.value">
+    </filter-preview>
+
+  </div>
+
+  <i class="fal fa-times p-2 delete-icon" (click)="onRemove()"></i>
 
 </div>
+
+<filter-builder *ngIf="attributeIdControl.value"
+                [origin]="parentElement"
+                [condition]="conditionControl.value"
+                [attribute]="attributes | findAttribute:attributeIdControl.value"
+                [conditionValues]="conditionValuesControl.value"
+                (valueChange)="onValueChange($event)">
+</filter-builder>

@@ -29,6 +29,9 @@ import {ActionConstraintFiltersFormControl} from '../action-constraint-form-cont
 import {AttributesResource} from '../../../../../../../core/model/resource';
 import {SelectItem2Model} from '../../../../../../select/select-item2/select-item2.model';
 import {resourceAttributesSelectItems} from '../../../../../../select/select-item.utils';
+import {findAttribute} from '../../../../../../../core/store/collections/collection.util';
+import {Attribute} from '../../../../../../../core/store/collections/collection';
+import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'action-constraint-conditions-form',
@@ -48,7 +51,7 @@ export class ActionConstraintConditionsFormComponent implements OnChanges {
   public attributeSelectItems: SelectItem2Model[];
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.options) {
+    if (changes.equation) {
       this.resetForm();
       this.createForm();
     }
@@ -63,17 +66,26 @@ export class ActionConstraintConditionsFormComponent implements OnChanges {
 
   private createForm() {
     const operator = this.equation.operator || EquationOperator.And;
-    this.equation.equations?.forEach(equation => this.form.push(this.createFormGroup(operator, equation.filter)));
+    this.equation.equations?.forEach(equation => {
+      const attribute = findAttribute(this.resource?.attributes, equation.filter?.attributeId);
+      if (attribute) {
+        this.form.push(this.createFormGroup(operator, attribute, equation.filter));
+      }
+    });
   }
 
   public onAddFilter() {
-    // TODO find operator
-    this.form.push(this.createFormGroup(EquationOperator.And));
+    const filters = <{operator: EquationOperator}[]>this.form.value;
+    const operator = filters?.find(fil => !!fil.operator)?.operator;
+    this.form.push(this.createFormGroup(operator || EquationOperator.And));
   }
 
-  private createFormGroup(operator: EquationOperator, filter?: AttributeFilter): FormGroup {
+  private createFormGroup(operator: EquationOperator, attribute?: Attribute, filter?: AttributeFilter): FormGroup {
     return new FormGroup({
-      [ActionConstraintFiltersFormControl.Attribute]: new FormControl(filter?.attributeId),
+      [ActionConstraintFiltersFormControl.Attribute]: new FormControl(attribute?.id),
+      [ActionConstraintFiltersFormControl.ConstraintType]: new FormControl(
+        attribute?.constraint?.type || ConstraintType.Unknown
+      ),
       [ActionConstraintFiltersFormControl.Condition]: new FormControl(filter?.condition),
       [ActionConstraintFiltersFormControl.ConditionValues]: new FormControl(filter?.conditionValues),
       [ActionConstraintFiltersFormControl.Operator]: new FormControl(operator),
@@ -82,5 +94,13 @@ export class ActionConstraintConditionsFormComponent implements OnChanges {
 
   public onRemoveFilter(index: number) {
     this.form.removeAt(index);
+  }
+
+  public onOperatorSelect(operator: EquationOperator) {
+    this.form.controls.forEach(control => {
+      control.patchValue({operator});
+      control.updateValueAndValidity();
+    });
+    this.form.updateValueAndValidity();
   }
 }

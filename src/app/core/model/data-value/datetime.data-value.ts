@@ -26,7 +26,7 @@ import {isDateValid, isNotNullOrUndefined, isNullOrUndefined, unescapeHtml} from
 import {ConstraintConditionValue, DateTimeConstraintConditionValue} from '../data/constraint-condition';
 import {valueMeetFulltexts} from './data-value.utils';
 import {createRange} from '../../../shared/utils/array.utils';
-import {queryConditionNumInputs} from '../../store/navigation/query/query.util';
+import {conditionNumInputs} from '../../store/navigation/query/query.util';
 import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class DateTimeDataValue implements DataValue {
@@ -183,7 +183,7 @@ export class DateTimeDataValue implements DataValue {
       }
     }
 
-    const allMomentDatesDefined = createRange(0, queryConditionNumInputs(condition)).every(
+    const allMomentDatesDefined = createRange(0, conditionNumInputs(condition)).every(
       index => momentDates[index] && otherMomentValues[index].moment
     );
     if (!allMomentDatesDefined) {
