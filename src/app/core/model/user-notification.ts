@@ -24,6 +24,14 @@ export enum UserNotificationType {
   ProjectShared = 'PROJECT_SHARED',
   CollectionShared = 'COLLECTION_SHARED',
   ViewShared = 'VIEW_SHARED',
+  TaskAssigned = 'TASK_ASSIGNED',
+  DueDateSoon = 'DUE_DATE_SOON',
+  PastDueDate = 'PAST_DUE_DATE',
+  StateUpdate = 'STATE_UPDATE',
+  TaskUpdated = 'TASK_UPDATED',
+  TaskRemoved = 'TASK_REMOVED',
+  TaskUnassigned = 'TASK_UNASSIGNED',
+  BulkAction = 'BULK_ACTION',
 }
 
 export const UserNotificationTypeMap = {
@@ -31,6 +39,14 @@ export const UserNotificationTypeMap = {
   [UserNotificationType.ProjectShared]: UserNotificationType.ProjectShared,
   [UserNotificationType.CollectionShared]: UserNotificationType.CollectionShared,
   [UserNotificationType.ViewShared]: UserNotificationType.ViewShared,
+  [UserNotificationType.TaskAssigned]: UserNotificationType.TaskAssigned,
+  [UserNotificationType.DueDateSoon]: UserNotificationType.DueDateSoon,
+  [UserNotificationType.PastDueDate]: UserNotificationType.PastDueDate,
+  [UserNotificationType.StateUpdate]: UserNotificationType.StateUpdate,
+  [UserNotificationType.TaskUpdated]: UserNotificationType.TaskUpdated,
+  [UserNotificationType.TaskRemoved]: UserNotificationType.TaskRemoved,
+  [UserNotificationType.TaskUnassigned]: UserNotificationType.TaskUnassigned,
+  [UserNotificationType.BulkAction]: UserNotificationType.BulkAction,
 };
 
 interface BasicUserNotification {
@@ -84,8 +100,152 @@ export interface ViewSharedUserNotification extends BasicUserNotification {
   viewPerspective: Perspective;
 }
 
+export interface TaskAssigned extends BasicUserNotification {
+  type: UserNotificationType.TaskAssigned;
+
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
+
+  documentId: string;
+}
+
+export interface DueDateSoon extends BasicUserNotification {
+  type: UserNotificationType.DueDateSoon;
+
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
+
+  documentId: string;
+}
+
+export interface PastDueDate extends BasicUserNotification {
+  type: UserNotificationType.PastDueDate;
+
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
+
+  documentId: string;
+}
+
+export interface StateUpdate extends BasicUserNotification {
+  type: UserNotificationType.StateUpdate;
+
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
+
+  documentId: string;
+}
+
+export interface TaskUpdated extends BasicUserNotification {
+  type: UserNotificationType.TaskUpdated;
+
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
+
+  documentId: string;
+}
+
+export interface TaskRemoved extends BasicUserNotification {
+  type: UserNotificationType.TaskRemoved;
+
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
+
+  documentId: string;
+}
+
+export interface TaskUnassigned extends BasicUserNotification {
+  type: UserNotificationType.TaskUnassigned;
+
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
+
+  documentId: string;
+}
+
+export interface BulkAction extends BasicUserNotification {
+  type: UserNotificationType.BulkAction;
+
+  organizationId: string;
+  projectId: string;
+  projectIcon: string;
+  projectColor: string;
+  projectCode: string;
+  projectName: string;
+  collectionId: string;
+  collectionIcon: string;
+  collectionColor: string;
+  collectionName: string;
+
+  documentId: string;
+}
+
 export type UserNotification =
   | OrganizationSharedUserNotification
   | ProjectSharedUserNotification
   | CollectionSharedUserNotification
-  | ViewSharedUserNotification;
+  | ViewSharedUserNotification
+  | TaskAssigned
+  | DueDateSoon
+  | PastDueDate
+  | StateUpdate
+  | TaskUpdated
+  | TaskRemoved
+  | TaskUnassigned
+  | BulkAction;
