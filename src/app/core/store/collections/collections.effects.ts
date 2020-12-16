@@ -556,6 +556,34 @@ export class CollectionsEffects {
     })
   );
 
+  @Effect()
+  public runRule$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.RunRule>(CollectionsActionType.RUN_RULE),
+    mergeMap(action => {
+      const {collectionId, ruleName} = action.payload;
+
+      return this.collectionService.runRule(collectionId, ruleName).pipe(
+        mergeMap(() => EMPTY),
+        catchError(error => {
+          return of(new CollectionsAction.RunRuleFailure({collectionId, ruleName, error}));
+        })
+      );
+    })
+  );
+
+  @Effect()
+  public runRuleFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.RunRuleFailure>(CollectionsActionType.RUN_RULE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({
+        id: 'collection.runRule.fail',
+        value: 'Could not run the selected rule for the whole table',
+      });
+      return new NotificationsAction.Error({message});
+    })
+  );
+
   constructor(
     private actions$: Actions,
     private store$: Store<AppState>,

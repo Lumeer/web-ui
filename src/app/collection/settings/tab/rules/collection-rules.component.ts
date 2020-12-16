@@ -48,7 +48,17 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
 
   public subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  private readonly runRuleTitle: string;
+  private readonly runRuleMessage: string;
+
+  constructor(private store$: Store<AppState>, private i18n: I18n) {
+    this.runRuleTitle = this.i18n({id: 'collection.config.tab.rules.run.title', value: 'Run the Rule'});
+    this.runRuleMessage = this.i18n({
+      id: 'collection.config.tab.rules.run.message',
+      value:
+        'Do you want to run the rule for all the rows in the table now? Please note that this might take significant time to complete.',
+    });
+  }
 
   public ngOnInit(): void {
     this.collection$ = this.store$.select(selectCollectionByWorkspace);
@@ -101,13 +111,32 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
       rules.push(rule);
     }
 
-    this.store$.dispatch(new CollectionsAction.Update({collection: {...collection, rules}}));
+    this.store$.dispatch(
+      new CollectionsAction.Update({
+        collection: {...collection, rules},
+        callback: () => {
+          if (rule.type === RuleType.AutoLink) {
+            this.store$.dispatch(this.getRunRuleConfirmation(collection.id, rule.name));
+          }
+        },
+      })
+    );
 
     if (index >= 0) {
       this.onCancelRuleEdit(idx);
     } else {
       this.onCancelNewRule(idx);
     }
+  }
+
+  private getRunRuleConfirmation(collectionId: string, ruleName: string): Action {
+    return new NotificationsAction.Confirm({
+      title: this.runRuleTitle,
+      message: this.runRuleMessage,
+      action: new CollectionsAction.RunRule({collectionId, ruleName}),
+      type: 'warning',
+      yesFirst: false,
+    });
   }
 
   public onCancelRuleEdit(idx: number) {

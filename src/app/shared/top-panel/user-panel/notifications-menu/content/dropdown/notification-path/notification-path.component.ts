@@ -20,7 +20,14 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   CollectionSharedUserNotification,
+  DueDateSoonUserNotification,
+  PastDueDateUserNotification,
   ProjectSharedUserNotification,
+  StateUpdateUserNotification,
+  TaskAssignedUserNotification,
+  TaskRemovedUserNotification,
+  TaskUnassignedUserNotification,
+  TaskUpdatedUserNotification,
   UserNotification,
   UserNotificationType,
   ViewSharedUserNotification,
@@ -41,6 +48,13 @@ export class NotificationPathComponent implements OnChanges {
   public projectSharedNotification: ProjectSharedUserNotification;
   public collectionSharedNotification: CollectionSharedUserNotification;
   public viewSharedNotification: ViewSharedUserNotification;
+  public taskAssignedNotification: TaskAssignedUserNotification;
+  public dueDateSoonNotification: DueDateSoonUserNotification;
+  public pastDueDateNotification: PastDueDateUserNotification;
+  public stateUpdateNotification: StateUpdateUserNotification;
+  public taskUpdatedNotification: TaskUpdatedUserNotification;
+  public taskRemovedNotification: TaskRemovedUserNotification;
+  public taskUnassignedNotification: TaskUnassignedUserNotification;
 
   @Input()
   public organizations: Dictionary<Organization>;
@@ -59,6 +73,27 @@ export class NotificationPathComponent implements OnChanges {
           break;
         case UserNotificationType.ViewShared:
           this.viewSharedNotification = changes.notification.currentValue;
+          break;
+        case UserNotificationType.TaskAssigned:
+          this.taskAssignedNotification = changes.notification.currentValue;
+          break;
+        case UserNotificationType.DueDateSoon:
+          this.dueDateSoonNotification = changes.notification.currentValue;
+          break;
+        case UserNotificationType.PastDueDate:
+          this.pastDueDateNotification = changes.notification.currentValue;
+          break;
+        case UserNotificationType.StateUpdate:
+          this.stateUpdateNotification = changes.notification.currentValue;
+          break;
+        case UserNotificationType.TaskUpdated:
+          this.taskUpdatedNotification = changes.notification.currentValue;
+          break;
+        case UserNotificationType.TaskRemoved:
+          this.taskRemovedNotification = changes.notification.currentValue;
+          break;
+        case UserNotificationType.TaskUnassigned:
+          this.taskUnassignedNotification = changes.notification.currentValue;
           break;
       }
     }

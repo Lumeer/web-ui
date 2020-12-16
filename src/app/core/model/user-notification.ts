@@ -100,7 +100,7 @@ export interface ViewSharedUserNotification extends BasicUserNotification {
   viewPerspective: Perspective;
 }
 
-export interface TaskAssigned extends BasicUserNotification {
+export interface TaskAssignedUserNotification extends BasicUserNotification {
   type: UserNotificationType.TaskAssigned;
 
   organizationId: string;
@@ -115,9 +115,18 @@ export interface TaskAssigned extends BasicUserNotification {
   collectionName: string;
 
   documentId: string;
+
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
 }
 
-export interface DueDateSoon extends BasicUserNotification {
+export interface DueDateSoonUserNotification extends BasicUserNotification {
   type: UserNotificationType.DueDateSoon;
 
   organizationId: string;
@@ -132,9 +141,18 @@ export interface DueDateSoon extends BasicUserNotification {
   collectionName: string;
 
   documentId: string;
+
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
 }
 
-export interface PastDueDate extends BasicUserNotification {
+export interface PastDueDateUserNotification extends BasicUserNotification {
   type: UserNotificationType.PastDueDate;
 
   organizationId: string;
@@ -149,9 +167,18 @@ export interface PastDueDate extends BasicUserNotification {
   collectionName: string;
 
   documentId: string;
+
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
 }
 
-export interface StateUpdate extends BasicUserNotification {
+export interface StateUpdateUserNotification extends BasicUserNotification {
   type: UserNotificationType.StateUpdate;
 
   organizationId: string;
@@ -166,9 +193,18 @@ export interface StateUpdate extends BasicUserNotification {
   collectionName: string;
 
   documentId: string;
+
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
 }
 
-export interface TaskUpdated extends BasicUserNotification {
+export interface TaskUpdatedUserNotification extends BasicUserNotification {
   type: UserNotificationType.TaskUpdated;
 
   organizationId: string;
@@ -183,9 +219,18 @@ export interface TaskUpdated extends BasicUserNotification {
   collectionName: string;
 
   documentId: string;
+
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
 }
 
-export interface TaskRemoved extends BasicUserNotification {
+export interface TaskRemovedUserNotification extends BasicUserNotification {
   type: UserNotificationType.TaskRemoved;
 
   organizationId: string;
@@ -200,9 +245,18 @@ export interface TaskRemoved extends BasicUserNotification {
   collectionName: string;
 
   documentId: string;
+
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
 }
 
-export interface TaskUnassigned extends BasicUserNotification {
+export interface TaskUnassignedUserNotification extends BasicUserNotification {
   type: UserNotificationType.TaskUnassigned;
 
   organizationId: string;
@@ -217,9 +271,18 @@ export interface TaskUnassigned extends BasicUserNotification {
   collectionName: string;
 
   documentId: string;
+
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
 }
 
-export interface BulkAction extends BasicUserNotification {
+export interface BulkActionUserNotification extends BasicUserNotification {
   type: UserNotificationType.BulkAction;
 
   organizationId: string;
@@ -241,11 +304,11 @@ export type UserNotification =
   | ProjectSharedUserNotification
   | CollectionSharedUserNotification
   | ViewSharedUserNotification
-  | TaskAssigned
-  | DueDateSoon
-  | PastDueDate
-  | StateUpdate
-  | TaskUpdated
-  | TaskRemoved
-  | TaskUnassigned
-  | BulkAction;
+  | TaskAssignedUserNotification
+  | DueDateSoonUserNotification
+  | PastDueDateUserNotification
+  | StateUpdateUserNotification
+  | TaskUpdatedUserNotification
+  | TaskRemovedUserNotification
+  | TaskUnassignedUserNotification
+  | BulkActionUserNotification;
