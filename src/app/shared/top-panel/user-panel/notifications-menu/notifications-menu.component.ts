@@ -29,6 +29,7 @@ import {
   TaskRemovedUserNotification,
   TaskUnassignedUserNotification,
   TaskUpdatedUserNotification,
+  TaskUserNotification,
   UserNotification,
   UserNotificationType,
   ViewSharedUserNotification,
@@ -201,16 +202,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  private navigateToTask(
-    notification:
-      | TaskAssignedUserNotification
-      | DueDateSoonUserNotification
-      | PastDueDateUserNotification
-      | StateUpdateUserNotification
-      | TaskUpdatedUserNotification
-      | TaskRemovedUserNotification
-      | TaskUnassignedUserNotification
-  ): void {
+  private navigateToTask(notification: TaskUserNotification): void {
     this.getOrganization(notification.organizationId, organization => {
       if (organization) {
         const query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});

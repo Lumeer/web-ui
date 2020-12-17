@@ -20,31 +20,7 @@
     <i [class]="perspectiveIcons[viewSharedNotification.viewPerspective]" [title]="viewSharedNotification.viewName"></i>
   </ng-container>
 
-  <ng-container *ngSwitchCase="notificationType.TaskAssigned">
-    <i [class]="taskAssignedNotification.collectionIcon" [title]="taskAssignedNotification.collectionName" [style.color]="taskAssignedNotification.collectionColor"></i>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.DueDateSoon">
-    <i [class]="dueDateSoonNotification.collectionIcon" [title]="dueDateSoonNotification.collectionName" [style.color]="dueDateSoonNotification.collectionColor"></i>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.PastDueDate">
-    <i [class]="pastDueDateNotification.collectionIcon" [title]="pastDueDateNotification.collectionName" [style.color]="pastDueDateNotification.collectionColor"></i>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.StateUpdate">
-    <i [class]="stateUpdateNotification.collectionIcon" [title]="stateUpdateNotification.collectionName" [style.color]="stateUpdateNotification.collectionColor"></i>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.TaskUpdated">
-    <i [class]="taskUpdatedNotification.collectionIcon" [title]="taskUpdatedNotification.collectionName" [style.color]="taskUpdatedNotification.collectionColor"></i>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.TaskRemoved">
-    <i [class]="taskRemovedNotification.collectionIcon" [title]="taskRemovedNotification.collectionName" [style.color]="taskRemovedNotification.collectionColor"></i>
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.TaskUnassigned">
-    <i [class]="taskUnassignedNotification.collectionIcon" [title]="taskUnassignedNotification.collectionName" [style.color]="taskUnassignedNotification.collectionColor"></i>
+  <ng-container *ngSwitchDefault>
+    <i [class]="taskNotification.collectionIcon" [title]="taskNotification.collectionName" [style.color]="taskNotification.collectionColor"></i>
   </ng-container>
 </ng-container>

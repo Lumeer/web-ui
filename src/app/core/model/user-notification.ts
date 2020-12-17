@@ -58,14 +58,11 @@ interface BasicUserNotification {
   deleting?: boolean;
 }
 
-export interface OrganizationSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.OrganizationShared;
+export interface OrganizationUserNotification extends BasicUserNotification {
   organizationId: string;
 }
 
-export interface ProjectSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.ProjectShared;
-  organizationId: string;
+export interface ProjectUserNotification extends OrganizationUserNotification {
   projectId: string;
   projectIcon: string;
   projectColor: string;
@@ -73,230 +70,80 @@ export interface ProjectSharedUserNotification extends BasicUserNotification {
   projectName: string;
 }
 
-export interface CollectionSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.CollectionShared;
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
+export interface CollectionUserNotification extends ProjectUserNotification {
   collectionId: string;
   collectionIcon: string;
   collectionColor: string;
   collectionName: string;
 }
 
-export interface ViewSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.ViewShared;
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
+export interface ViewUserNotification extends ProjectUserNotification {
   viewCode: string;
   viewName: string;
   viewPerspective: Perspective;
 }
 
-export interface TaskAssignedUserNotification extends BasicUserNotification {
+export interface DocumentUserNotification extends CollectionUserNotification {
+  documentId: string;
+}
+
+export interface TaskUserNotification extends DocumentUserNotification {
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
+}
+
+export interface OrganizationSharedUserNotification extends OrganizationUserNotification {
+  type: UserNotificationType.OrganizationShared;
+}
+
+export interface ProjectSharedUserNotification extends ProjectUserNotification {
+  type: UserNotificationType.ProjectShared;
+}
+
+export interface CollectionSharedUserNotification extends CollectionUserNotification {
+  type: UserNotificationType.CollectionShared;
+}
+
+export interface ViewSharedUserNotification extends ViewUserNotification {
+  type: UserNotificationType.ViewShared;
+}
+
+export interface TaskAssignedUserNotification extends TaskUserNotification {
   type: UserNotificationType.TaskAssigned;
-
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
-  collectionId: string;
-  collectionIcon: string;
-  collectionColor: string;
-  collectionName: string;
-
-  documentId: string;
-
-  taskName?: string;
-  taskNameAttribute?: string;
-  taskDueDate?: string;
-  taskState?: string;
-  taskCompleted?: string;
-  assignee?: string;
-  collectionQuery?: string;
-  documentCursor?: string;
 }
 
-export interface DueDateSoonUserNotification extends BasicUserNotification {
+export interface DueDateSoonUserNotification extends TaskUserNotification {
   type: UserNotificationType.DueDateSoon;
-
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
-  collectionId: string;
-  collectionIcon: string;
-  collectionColor: string;
-  collectionName: string;
-
-  documentId: string;
-
-  taskName?: string;
-  taskNameAttribute?: string;
-  taskDueDate?: string;
-  taskState?: string;
-  taskCompleted?: string;
-  assignee?: string;
-  collectionQuery?: string;
-  documentCursor?: string;
 }
 
-export interface PastDueDateUserNotification extends BasicUserNotification {
+export interface PastDueDateUserNotification extends TaskUserNotification {
   type: UserNotificationType.PastDueDate;
-
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
-  collectionId: string;
-  collectionIcon: string;
-  collectionColor: string;
-  collectionName: string;
-
-  documentId: string;
-
-  taskName?: string;
-  taskNameAttribute?: string;
-  taskDueDate?: string;
-  taskState?: string;
-  taskCompleted?: string;
-  assignee?: string;
-  collectionQuery?: string;
-  documentCursor?: string;
 }
 
-export interface StateUpdateUserNotification extends BasicUserNotification {
+export interface StateUpdateUserNotification extends TaskUserNotification {
   type: UserNotificationType.StateUpdate;
-
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
-  collectionId: string;
-  collectionIcon: string;
-  collectionColor: string;
-  collectionName: string;
-
-  documentId: string;
-
-  taskName?: string;
-  taskNameAttribute?: string;
-  taskDueDate?: string;
-  taskState?: string;
-  taskCompleted?: string;
-  assignee?: string;
-  collectionQuery?: string;
-  documentCursor?: string;
 }
 
-export interface TaskUpdatedUserNotification extends BasicUserNotification {
+export interface TaskUpdatedUserNotification extends TaskUserNotification {
   type: UserNotificationType.TaskUpdated;
-
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
-  collectionId: string;
-  collectionIcon: string;
-  collectionColor: string;
-  collectionName: string;
-
-  documentId: string;
-
-  taskName?: string;
-  taskNameAttribute?: string;
-  taskDueDate?: string;
-  taskState?: string;
-  taskCompleted?: string;
-  assignee?: string;
-  collectionQuery?: string;
-  documentCursor?: string;
 }
 
-export interface TaskRemovedUserNotification extends BasicUserNotification {
+export interface TaskRemovedUserNotification extends TaskUserNotification {
   type: UserNotificationType.TaskRemoved;
-
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
-  collectionId: string;
-  collectionIcon: string;
-  collectionColor: string;
-  collectionName: string;
-
-  documentId: string;
-
-  taskName?: string;
-  taskNameAttribute?: string;
-  taskDueDate?: string;
-  taskState?: string;
-  taskCompleted?: string;
-  assignee?: string;
-  collectionQuery?: string;
-  documentCursor?: string;
 }
 
-export interface TaskUnassignedUserNotification extends BasicUserNotification {
+export interface TaskUnassignedUserNotification extends TaskUserNotification {
   type: UserNotificationType.TaskUnassigned;
-
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
-  collectionId: string;
-  collectionIcon: string;
-  collectionColor: string;
-  collectionName: string;
-
-  documentId: string;
-
-  taskName?: string;
-  taskNameAttribute?: string;
-  taskDueDate?: string;
-  taskState?: string;
-  taskCompleted?: string;
-  assignee?: string;
-  collectionQuery?: string;
-  documentCursor?: string;
 }
 
-export interface BulkActionUserNotification extends BasicUserNotification {
+export interface BulkActionUserNotification extends DocumentUserNotification {
   type: UserNotificationType.BulkAction;
-
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
-  collectionId: string;
-  collectionIcon: string;
-  collectionColor: string;
-  collectionName: string;
-
-  documentId: string;
 }
 
 export type UserNotification =

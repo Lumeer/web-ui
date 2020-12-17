@@ -33,74 +33,14 @@
     <i [class]="perspectiveIcons[viewSharedNotification.viewPerspective]" class="mr-1" [title]="viewSharedNotification.viewName"></i>{{viewSharedNotification.viewName}}<!-- -->
   </ng-container>
 
-  <ng-container *ngSwitchCase="notificationType.TaskAssigned">
+  <ng-container *ngSwitchDefault>
     <ng-container *ngIf="organizations[notification.organizationId] as organization;">
       <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
       <i class="fas fa-chevron-right separator mx-1"></i>
     </ng-container>
-    <i [class]="taskAssignedNotification.projectIcon" class="mr-1" [style.color]="taskAssignedNotification.projectColor" [title]="taskAssignedNotification.projectName"></i>{{taskAssignedNotification.projectCode}}<!-- -->
+    <i [class]="taskNotification.projectIcon" class="mr-1" [style.color]="taskNotification.projectColor" [title]="taskNotification.projectName"></i>{{taskNotification.projectCode}}<!-- -->
     <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="taskAssignedNotification.collectionIcon" class="mr-1" [style.color]="taskAssignedNotification.collectionColor" [title]="taskAssignedNotification.collectionName"></i>{{taskAssignedNotification.collectionName}}<!-- -->
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.DueDateSoon">
-    <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
-      <i class="fas fa-chevron-right separator mx-1"></i>
-    </ng-container>
-    <i [class]="dueDateSoonNotification.projectIcon" class="mr-1" [style.color]="dueDateSoonNotification.projectColor" [title]="dueDateSoonNotification.projectName"></i>{{dueDateSoonNotification.projectCode}}<!-- -->
-    <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="dueDateSoonNotification.collectionIcon" class="mr-1" [style.color]="dueDateSoonNotification.collectionColor" [title]="dueDateSoonNotification.collectionName"></i>{{dueDateSoonNotification.collectionName}}<!-- -->
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.PastDueDate">
-    <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
-      <i class="fas fa-chevron-right separator mx-1"></i>
-    </ng-container>
-    <i [class]="pastDueDateNotification.projectIcon" class="mr-1" [style.color]="pastDueDateNotification.projectColor" [title]="pastDueDateNotification.projectName"></i>{{pastDueDateNotification.projectCode}}<!-- -->
-    <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="pastDueDateNotification.collectionIcon" class="mr-1" [style.color]="pastDueDateNotification.collectionColor" [title]="pastDueDateNotification.collectionName"></i>{{pastDueDateNotification.collectionName}}<!-- -->
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.StateUpdate">
-    <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
-      <i class="fas fa-chevron-right separator mx-1"></i>
-    </ng-container>
-    <i [class]="stateUpdateNotification.projectIcon" class="mr-1" [style.color]="stateUpdateNotification.projectColor" [title]="stateUpdateNotification.projectName"></i>{{stateUpdateNotification.projectCode}}<!-- -->
-    <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="stateUpdateNotification.collectionIcon" class="mr-1" [style.color]="stateUpdateNotification.collectionColor" [title]="stateUpdateNotification.collectionName"></i>{{stateUpdateNotification.collectionName}}<!-- -->
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.TaskUpdated">
-    <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
-      <i class="fas fa-chevron-right separator mx-1"></i>
-    </ng-container>
-    <i [class]="taskUpdatedNotification.projectIcon" class="mr-1" [style.color]="taskUpdatedNotification.projectColor" [title]="taskUpdatedNotification.projectName"></i>{{taskUpdatedNotification.projectCode}}<!-- -->
-    <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="taskUpdatedNotification.collectionIcon" class="mr-1" [style.color]="taskUpdatedNotification.collectionColor" [title]="taskUpdatedNotification.collectionName"></i>{{taskUpdatedNotification.collectionName}}<!-- -->
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.TaskRemoved">
-    <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
-      <i class="fas fa-chevron-right separator mx-1"></i>
-    </ng-container>
-    <i [class]="taskRemovedNotification.projectIcon" class="mr-1" [style.color]="taskRemovedNotification.projectColor" [title]="taskRemovedNotification.projectName"></i>{{taskRemovedNotification.projectCode}}<!-- -->
-    <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="taskRemovedNotification.collectionIcon" class="mr-1" [style.color]="taskRemovedNotification.collectionColor" [title]="taskRemovedNotification.collectionName"></i>{{taskRemovedNotification.collectionName}}<!-- -->
-  </ng-container>
-
-  <ng-container *ngSwitchCase="notificationType.TaskUnassigned">
-    <ng-container *ngIf="organizations[notification.organizationId] as organization;">
-      <i [class]="organization.icon" class="mr-1" [style.color]="organization.color" [title]="organization.name"></i>{{organization.code}}<!-- -->
-      <i class="fas fa-chevron-right separator mx-1"></i>
-    </ng-container>
-    <i [class]="taskUnassignedNotification.projectIcon" class="mr-1" [style.color]="taskUnassignedNotification.projectColor" [title]="taskUnassignedNotification.projectName"></i>{{taskUnassignedNotification.projectCode}}<!-- -->
-    <i class="fas fa-chevron-right separator mx-1"></i>
-    <i [class]="taskUnassignedNotification.collectionIcon" class="mr-1" [style.color]="taskUnassignedNotification.collectionColor" [title]="taskUnassignedNotification.collectionName"></i>{{taskUnassignedNotification.collectionName}}<!-- -->
+    <i [class]="taskNotification.collectionIcon" class="mr-1" [style.color]="taskNotification.collectionColor" [title]="taskNotification.collectionName"></i>{{taskNotification.collectionName}}<!-- -->
   </ng-container>
 
 </ng-container>
