@@ -26,7 +26,7 @@
           </span>
 
         <i class="fa-star mr-2 text-warning cursor-pointer hiding-icon"
-           *ngIf="view | permissions:viewType:roleRead | async"
+           *ngIf="permissions.read"
            (click)="$event.preventDefault(); onFavoriteToggle()"
            [class.always-visible]="view.favorite"
            title="{{ view.favorite ?  'Remove from favorites' : 'Add to favorites'}}"
@@ -35,7 +35,7 @@
            aria-hidden="true">
         </i>
 
-        <ng-container *ngIf="view | permissions:viewType:roleManage | async">
+        <ng-container *ngIf="permissions.manage">
           <i class="fas fa-fw fa-share-alt mr-2 text-success cursor-pointer"
              (click)="$event.preventDefault(); onShareClick()"
              title="Share" i18n-title="@@button.share"

@@ -1,0 +1,14 @@
+<label i18n="@@constraint.action.permissions.label">Required role</label>
+
+<div class="d-flex align-items-center">
+
+  <i *ngFor="let resourceRole of resourceType | resourceRoles"
+     class="fas fa-fw {{resourceRole | roleIcon}} mr-2"
+     [class.role-clickable]="true"
+     [class.role-selected]="resourceRole === role"
+     aria-hidden="true"
+     [title]="resourceRole | roleTitle"
+     (click)="selectRole(resourceRole)">
+  </i>
+
+</div>

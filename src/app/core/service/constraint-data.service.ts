@@ -22,16 +22,13 @@ import {Store} from '@ngrx/store';
 import {TranslationService} from './translation.service';
 import {ConstraintDataAction} from '../store/constraint-data/constraint-data.action';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ConstraintDataService {
-  constructor(private store$: Store<{}>, private translationService: TranslationService) {
-    this.initDurationUnitMap();
-  }
+  constructor(private store$: Store<{}>, private translationService: TranslationService) {}
 
-  private initDurationUnitMap() {
+  public init(): Promise<boolean> {
     const durationUnitsMap = this.translationService.createDurationUnitsMap();
     this.store$.dispatch(new ConstraintDataAction.InitDurationUnitsMap({durationUnitsMap}));
+    return Promise.resolve(true);
   }
 }

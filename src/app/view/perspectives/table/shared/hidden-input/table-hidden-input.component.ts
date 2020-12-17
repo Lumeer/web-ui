@@ -27,13 +27,13 @@ import {TablesAction, TablesActionType} from '../../../../../core/store/tables/t
 import {selectTableCursor, selectTablePart} from '../../../../../core/store/tables/tables.selector';
 import {Direction} from '../../../../../shared/direction';
 import {KeyCode} from '../../../../../shared/key-code';
-import {CollectionPermissionsPipe} from '../../../../../shared/pipes/permissions/collection-permissions.pipe';
 import {EDITABLE_EVENT} from '../../table-perspective.component';
 import {AppState} from '../../../../../core/store/app.state';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../../../core/store/constraint-data/constraint-data.state';
 import {escapeHtml} from '../../../../../shared/utils/common.utils';
 import {createEmptyTableRow} from '../../../../../core/store/tables/table.utils';
+import {selectCollectionPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'table-hidden-input',
@@ -57,11 +57,7 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
 
   private constraintData: ConstraintData;
 
-  constructor(
-    private actions$: Actions,
-    private collectionPermissions: CollectionPermissionsPipe,
-    private store$: Store<AppState>
-  ) {}
+  constructor(private actions$: Actions, private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.subscriptions.add(this.subscribeToTableCursorActions());
@@ -177,10 +173,10 @@ export class TableHiddenInputComponent implements OnInit, OnDestroy {
             select(selectTablePart(cursor)),
             take(1),
             filter(part => !!part),
-            switchMap(part => this.collectionPermissions.transform({id: part.collectionId, name: null})),
+            switchMap(part => this.store$.pipe(select(selectCollectionPermissions(part.collectionId)))),
             take(1),
             filter(() => !!cursor.rowPath),
-            map(permissions => [cursor, permissions && permissions.writeWithView])
+            map(permissions => [cursor, permissions?.writeWithView])
           )
         )
       )

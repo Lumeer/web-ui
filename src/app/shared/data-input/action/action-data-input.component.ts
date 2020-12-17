@@ -45,6 +45,9 @@ export class ActionDataInputComponent implements OnChanges {
   public center: boolean;
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.readonly && !this.readonly) {
+      // TODO
+    }
     if (changes.configuration) {
       this.center = this.configuration?.center;
     }

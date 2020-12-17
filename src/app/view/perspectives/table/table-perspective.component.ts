@@ -83,6 +83,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
+import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -113,7 +114,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
   public tableBody: TableBodyComponent;
 
   public embedded: boolean;
-  public currentView$: Observable<View>;
+  public canManageConfig$: Observable<boolean>;
   public table$ = new BehaviorSubject<TableModel>(null);
   public tableId$: Observable<string>;
 
@@ -137,7 +138,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
     this.subscriptions.add(this.subscribeToScrolling());
     this.subscriptions.add(this.subscribeToConfigChange());
 
-    this.currentView$ = this.store$.select(selectCurrentView);
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.tableId$ = this.store$.pipe(select(selectTableId));
   }
 

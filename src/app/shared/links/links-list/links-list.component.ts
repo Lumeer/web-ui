@@ -37,16 +37,16 @@ import {AppState} from '../../../core/store/app.state';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
-import {distinctUntilChanged, map, mergeMap, tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-permissions.pipe';
-import {deepObjectsEquals} from '../../utils/common.utils';
 import {ViewSettings} from '../../../core/store/views/view';
 import {selectViewQuery} from '../../../core/store/views/views.state';
+import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {objectChanged} from '../../utils/common.utils';
 
 @Component({
   selector: 'links-list',
@@ -82,17 +82,17 @@ export class LinksListComponent implements OnChanges, OnInit {
   public permissions$: Observable<AllowedPermissions>;
   public query$: Observable<Query>;
 
-  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.objectChanged(changes.collection)) {
+    if (objectChanged(changes.collection)) {
       this.renewSubscriptions();
     }
-    if (this.objectChanged(changes.document)) {
+    if (objectChanged(changes.document)) {
       this.selectedLinkType$.value && this.selectOtherCollection(this.selectedLinkType$.value);
     }
   }
@@ -115,10 +115,6 @@ export class LinksListComponent implements OnChanges, OnInit {
     );
   }
 
-  private objectChanged(change: SimpleChange): boolean {
-    return change && (!change.previousValue || change.previousValue.id !== change.currentValue?.id);
-  }
-
   private initActiveLinkType(linkTypes: LinkType[]) {
     let selectLinkType: LinkType;
     if (this.selectedLinkType$.value) {
@@ -138,17 +134,12 @@ export class LinksListComponent implements OnChanges, OnInit {
   }
 
   private selectOtherCollection(linkType: LinkType) {
+    const collectionId = getOtherLinkedCollectionId(linkType, this.document?.collectionId);
     this.otherCollection$ = this.store$.pipe(
       select(selectCollectionsDictionary),
-      map(collectionsMap => {
-        const collectionId = getOtherLinkedCollectionId(linkType, this.document?.collectionId);
-        return collectionId && collectionsMap[collectionId];
-      })
+      map(collectionsMap => collectionsMap[collectionId])
     );
-    this.permissions$ = this.otherCollection$.pipe(
-      mergeMap(collection => this.collectionPermissionsPipe.transform(collection)),
-      distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
-    );
+    this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(collectionId)));
   }
 
   private readData(linkType: LinkType) {

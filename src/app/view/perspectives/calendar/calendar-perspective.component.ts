@@ -19,24 +19,16 @@
 
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {BehaviorSubject, combineLatest, Observable, of, Subject, Subscription} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {
+  selectCanManageViewConfig,
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
-import {
-  distinctUntilChanged,
-  map,
-  mergeMap,
-  pairwise,
-  startWith,
-  switchMap,
-  take,
-  withLatestFrom,
-} from 'rxjs/operators';
+import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {View} from '../../../core/store/views/view';
 import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
@@ -46,8 +38,6 @@ import {CalendarConfig, DEFAULT_CALENDAR_ID} from '../../../core/store/calendars
 import {CalendarsAction} from '../../../core/store/calendars/calendars.action';
 import {Query} from '../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {checkOrTransformCalendarConfig} from './util/calendar-util';
@@ -56,6 +46,7 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'calendar',
@@ -69,7 +60,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public linkTypes$: Observable<LinkType[]>;
   public config$: Observable<CalendarConfig>;
-  public currentView$: Observable<View>;
+  public canManageConfig$: Observable<boolean>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public constraintData$: Observable<ConstraintData>;
 
@@ -79,7 +70,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private calendarId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initCalendar();
@@ -160,13 +151,10 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
-    this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 

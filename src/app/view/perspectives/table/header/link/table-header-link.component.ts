@@ -18,7 +18,7 @@
  */
 
 import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {selectLinkTypeByIdWithCollections} from '../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -26,6 +26,8 @@ import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
 import {getTableElement} from '../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {selectLinkTypePermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'table-header-link',
@@ -50,6 +52,7 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   public embedded: boolean;
 
   public linkType$: Observable<LinkType>;
+  public permissions$: Observable<AllowedPermissions>;
 
   public linkInfoWidth = 0;
 
@@ -58,6 +61,7 @@ export class TableHeaderLinkComponent implements OnChanges, AfterViewInit {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.part && this.part) {
       this.linkType$ = this.store$.select(selectLinkTypeByIdWithCollections(this.part.linkTypeId));
+      this.permissions$ = this.store$.pipe(select(selectLinkTypePermissions(this.part.linkTypeId)));
     }
   }
 

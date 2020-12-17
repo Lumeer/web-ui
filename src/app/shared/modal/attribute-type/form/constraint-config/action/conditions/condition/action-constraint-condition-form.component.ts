@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {AbstractControl, FormGroup} from '@angular/forms';
 import {Attribute} from '../../../../../../../../core/store/collections/collection';
 import {ActionConstraintFiltersFormControl} from '../../action-constraint-form-control';
@@ -31,6 +40,8 @@ import {
 } from '../../../../../../../../core/model/data-value/data-value.utils';
 import {ConstraintType} from '../../../../../../../../core/model/data/constraint';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {Observable} from 'rxjs';
+import {distinctUntilChanged, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'action-constraint-condition-form',
@@ -38,7 +49,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
   styleUrls: ['./action-constraint-condition-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ActionConstraintConditionFormComponent {
+export class ActionConstraintConditionFormComponent implements OnInit {
   @Input()
   public attributes: Attribute[];
 
@@ -82,11 +93,20 @@ export class ActionConstraintConditionFormComponent {
 
   public operatorSelectItems: SelectItem2Model[];
 
+  public operatorValue$: Observable<EquationOperator>;
+
   constructor(private i18n: I18n) {
     this.operatorSelectItems = [EquationOperator.And, EquationOperator.Or].map(operator => ({
       id: operator,
       value: i18n({id: 'equation.operator', value: '{operator, select, and {And} or {Or}}'}, {operator}),
     }));
+  }
+
+  public ngOnInit() {
+    this.operatorValue$ = this.operatorControl.valueChanges.pipe(
+      startWith(this.operatorControl.value),
+      distinctUntilChanged()
+    );
   }
 
   public onAttributeSelect(items: SelectItem2Model[]) {

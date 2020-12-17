@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
+import {APP_INITIALIZER, LOCALE_ID, NgModule, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -32,6 +32,9 @@ import {CoreModule} from './core/core.module';
 import {ViewModule} from './view/view.module';
 import {WorkspaceModule} from './workspace/workspace.module';
 import {SharedModule} from './shared/shared.module';
+import {ConstraintDataService} from './core/service/constraint-data.service';
+import {CurrencyFormatService} from './core/service/currency-format.service';
+import {PermissionsCheckService} from './core/service/permissions-check.service';
 
 declare const require; // Use the require method provided by webpack
 
@@ -75,6 +78,27 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
       useFactory: () => environment.i18nFormat,
     },
     I18n,
+    ConstraintDataService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (ds: ConstraintDataService) => () => ds.init(),
+      deps: [ConstraintDataService],
+      multi: true,
+    },
+    CurrencyFormatService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (ds: CurrencyFormatService) => () => ds.init(),
+      deps: [CurrencyFormatService],
+      multi: true,
+    },
+    PermissionsCheckService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (ds: PermissionsCheckService) => () => ds.init(),
+      deps: [PermissionsCheckService],
+      multi: true,
+    },
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent],

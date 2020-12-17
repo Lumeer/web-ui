@@ -24,6 +24,7 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
+  selectCanManageViewConfig,
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
@@ -49,7 +50,6 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ChartDataComponent} from './data/chart-data.component';
 import {ViewsAction} from '../../../core/store/views/views.action';
@@ -57,6 +57,7 @@ import {checkOrTransformChartConfig} from './visualizer/chart-util';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'chart-perspective',
@@ -71,7 +72,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   public collections$: Observable<Collection[]>;
   public linkTypes$: Observable<LinkType[]>;
   public config$: Observable<ChartConfig>;
-  public currentView$: Observable<View>;
+  public canManageConfig$: Observable<boolean>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public constraintData$: Observable<ConstraintData>;
@@ -82,7 +83,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private chartId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initChart();
@@ -166,13 +167,10 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
     );
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
 
     this.config$ = this.store$.pipe(select(selectChartConfig));
-    this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 

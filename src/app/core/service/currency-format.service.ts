@@ -22,7 +22,7 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import numbro from 'numbro';
 import NumbroLanguage = numbro.NumbroLanguage;
 import {environment} from '../../../environments/environment';
-import {LanguageTag} from '../../core/model/data/language-tag';
+import {LanguageTag} from '../model/data/language-tag';
 
 export interface Currency {
   symbol: string;
@@ -305,9 +305,7 @@ export const currencies: Record<string, Currency> = {
   },
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class CurrencyFormatService {
   private readonly abbreviations: string[];
   private readonly ordinals: string[];
@@ -315,8 +313,11 @@ export class CurrencyFormatService {
   public constructor(private i18n: I18n) {
     this.abbreviations = i18n({id: 'currency.abbreviations', value: 'k|m|b|t'}).split('|');
     this.ordinals = i18n({id: 'currency.ordinals', value: 'st|nd|rd|th'}).split('|');
+  }
 
+  public init(): Promise<boolean> {
     Object.values(LanguageTag).forEach(lang => numbro.registerLanguage(this.getNumbroLanguage(lang), false));
+    return Promise.resolve(true);
   }
 
   public ordinal(num: number): string {

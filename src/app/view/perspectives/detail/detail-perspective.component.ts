@@ -31,8 +31,6 @@ import {debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, ta
 import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectNavigation, selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {
   selectCollectionsByQueryWithoutLinks,
   selectDocumentsByCustomQuery,
@@ -45,6 +43,7 @@ import {
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {selectViewQuery} from '../../../core/store/views/views.state';
+import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'detail-perspective',
@@ -66,7 +65,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private selectionSubscription = new Subscription();
 
-  public constructor(private store$: Store<AppState>, private collectionPermissionsPipe: CollectionPermissionsPipe) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(
@@ -186,9 +185,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private select(selectedCollection: Collection, selectedDocument: DocumentModel, query?: Query) {
-    this.collectionPermission$ = this.collectionPermissionsPipe
-      .transform(selectedCollection)
-      .pipe(distinctUntilChanged((a, b) => deepObjectsEquals(a, b)));
+    this.collectionPermission$ = this.store$.pipe(select(selectCollectionPermissions(selectedCollection.id)));
 
     this.collectionSubscription.unsubscribe();
     this.collectionSubscription = combineLatest([

@@ -28,8 +28,5 @@
 
 
 <ng-template #noData>
-  <empty-data
-    [project]="project$ | async"
-    [query]="query">
-  </empty-data>
+  <empty-data [query]="query"></empty-data>
 </ng-template>

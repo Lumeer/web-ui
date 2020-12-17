@@ -29,7 +29,6 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
-import {Project} from '../../../core/store/projects/project';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {CollectionFavoriteToggleService} from '../../toggle/collection-favorite-toggle.service';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -37,7 +36,6 @@ import {Perspective} from '../../../view/perspectives/perspective';
 import {convertQueryModelToString} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
 import {QueryParam} from '../../../core/store/navigation/query-param';
-import {ResourceType} from '../../../core/model/resource-type';
 import {CollectionImportData} from './import-button/post-it-collection-import-button.component';
 import {safeGetRandomIcon} from '../../picker/icons';
 import * as Colors from '../../picker/colors';
@@ -51,6 +49,7 @@ import {take} from 'rxjs/operators';
 import {QueryAction} from '../../../core/model/query-action';
 import {SearchTab} from '../../../core/store/navigation/search-tab';
 import {environment} from '../../../../environments/environment';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 const UNCREATED_THRESHOLD = 5;
 
@@ -81,7 +80,7 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   public collections: Collection[];
 
   @Input()
-  public project: Project;
+  public projectPermissions: AllowedPermissions;
 
   @Input()
   public workspace: Workspace;
@@ -106,7 +105,6 @@ export class PostItCollectionsContentComponent implements OnInit, OnChanges, OnD
   public correlationIdsOrder = [];
 
   public readonly canImportCollection = !environment.publicView;
-  public readonly projectType = ResourceType.Project;
 
   private readonly colors = Colors.palette;
 

@@ -6,7 +6,7 @@
     editing: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
     <ng-container
-      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:group.column?.editable:data.editing as dataInputInfo">
+      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:mappedData:columnAttributes:group.column.permissions:data.editing:constraintData:group.column.editable as dataInputInfo">
       <td class="table-cell position-relative"
           [style.width.px]="group.width"
           [style.height.px]="row.height"

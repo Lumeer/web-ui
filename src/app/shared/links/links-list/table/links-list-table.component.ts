@@ -63,6 +63,7 @@ import {DocumentsAction} from '../../../../core/store/documents/documents.action
 import {selectConstraintData} from '../../../../core/store/constraint-data/constraint-data.state';
 import {ViewSettings} from '../../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../../settings/settings.util';
+import {objectChanged} from '../../../utils/common.utils';
 
 const columnWidth = 100;
 
@@ -136,17 +137,13 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
       this.mergeColumns();
     }
 
-    if (this.objectChanged(changes.linkType) || this.objectChanged(changes.document)) {
+    if (objectChanged(changes.linkType) || objectChanged(changes.document)) {
       this.rows$ = this.selectLinkRows$();
     }
 
     if (changes.visible) {
       setTimeout(() => this.computeStickyColumnWidth());
     }
-  }
-
-  private objectChanged(change: SimpleChange): boolean {
-    return change && (!change.previousValue || change.previousValue.id !== change.currentValue.id);
   }
 
   private mergeColumns() {

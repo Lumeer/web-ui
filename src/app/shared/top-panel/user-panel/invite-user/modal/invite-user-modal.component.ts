@@ -30,9 +30,11 @@ import {UsersAction} from '../../../../../core/store/users/users.action';
 import {User} from '../../../../../core/store/users/user';
 import {selectOrganizationByWorkspace} from '../../../../../core/store/organizations/organizations.state';
 import {selectProjectByWorkspace} from '../../../../../core/store/projects/projects.state';
-import {ResourceType} from '../../../../../core/model/resource-type';
-import {Organization} from '../../../../../core/store/organizations/organization';
-import {Project} from '../../../../../core/store/projects/project';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {
+  selectOrganizationPermissions,
+  selectProjectPermissions,
+} from '../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './invite-user-modal.component.html',
@@ -45,11 +47,8 @@ export class InviteUserModalComponent implements OnInit {
   public newUsers$ = new BehaviorSubject<string[]>([]);
   public existingUsers$: Observable<string[]>;
 
-  public organization$: Observable<Organization>;
-  public project$: Observable<Project>;
-
-  public readonly organizationType = ResourceType.Organization;
-  public readonly projectType = ResourceType.Project;
+  public organizationPermissions$: Observable<AllowedPermissions>;
+  public projectPermissions$: Observable<AllowedPermissions>;
 
   public accessType = InvitationType.JoinOnly;
 
@@ -65,8 +64,8 @@ export class InviteUserModalComponent implements OnInit {
       map(users => users.map(u => u.email))
     );
 
-    this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
-    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.organizationPermissions$ = this.store$.pipe(select(selectOrganizationPermissions));
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
   }
 
   public hideDialog() {

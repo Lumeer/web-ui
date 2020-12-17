@@ -198,6 +198,7 @@ export class AttributeTypeFormComponent implements OnChanges {
           icon: this.configForm.get(ActionConstraintFormControl.Icon).value,
           background: this.configForm.get(ActionConstraintFormControl.Background).value,
           rule: this.configForm.get(ActionConstraintFormControl.Rule).value,
+          role: this.configForm.get(ActionConstraintFormControl.Role).value,
           equation: this.createActionEquation(),
         };
       default:

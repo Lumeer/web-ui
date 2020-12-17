@@ -18,12 +18,7 @@
  */
 import {createSelector} from '@ngrx/store';
 import {isArraySubset, uniqueValues} from '../../../shared/utils/array.utils';
-import {
-  authorHasRoleInView,
-  sortResourcesByFavoriteAndLastUsed,
-  userHasRoleInResource,
-  userIsManagerInWorkspace,
-} from '../../../shared/utils/resource.utils';
+import {hasRoleByPermissions, sortResourcesByFavoriteAndLastUsed} from '../../../shared/utils/resource.utils';
 import {Role} from '../../model/role';
 import {filterCollectionsByQuery} from '../collections/collections.filters';
 import {selectAllCollections, selectCollectionsDictionary} from '../collections/collections.state';
@@ -39,11 +34,9 @@ import {
   getAllLinkTypeIdsFromQuery,
   queryWithoutLinks,
 } from '../navigation/query/query.util';
-import {selectCurrentUser} from '../users/users.state';
 import {View} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView, selectViewQuery} from '../views/views.state';
-import {selectWorkspaceModels} from './common.selectors';
 import {LinkInstance} from '../link-instances/link.instance';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {selectViewSettings} from '../view-settings/view-settings.state';
@@ -51,37 +44,11 @@ import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
 import {sortLinkInstances} from '../link-instances/link-instance.utils';
-
-export const selectCurrentUserIsManager = createSelector(
-  selectCurrentUser,
-  selectWorkspaceModels,
-  (user, workspace) => {
-    const {organization, project} = workspace;
-    return userIsManagerInWorkspace(user, organization, project);
-  }
-);
+import {selectCollectionsPermissions, selectViewsPermissions} from '../user-permissions/user-permissions.state';
 
 const selectCollectionsByPermission = (role: Role) =>
-  createSelector(
-    selectCurrentUserIsManager,
-    selectAllCollections,
-    selectAllLinkTypes,
-    selectCurrentView,
-    selectCurrentUser,
-    (isManager, collections, linkTypes, view, user) => {
-      if (isManager) {
-        return collections;
-      }
-      const collectionIdsFromView = view && getAllCollectionIdsFromQuery(view.query, linkTypes);
-      return collections.filter(
-        collection =>
-          userHasRoleInResource(user, collection, role) ||
-          (collectionIdsFromView &&
-            collectionIdsFromView.includes(collection.id) &&
-            userHasRoleInResource(user, view, role) &&
-            authorHasRoleInView(view, collection.id, role))
-      );
-    }
+  createSelector(selectCollectionsPermissions, selectAllCollections, (permissions, collections) =>
+    collections.filter(collection => hasRoleByPermissions(role, permissions[collection.id]))
   );
 
 export const selectCollectionsByReadPermission = selectCollectionsByPermission(Role.Read);
@@ -299,11 +266,14 @@ export const selectLinkTypesByCollectionId = (collectionId: string) =>
     linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId))
   );
 
-export const selectViewsByRead = createSelector(
-  selectAllViews,
-  selectCurrentUser,
-  selectCurrentUserIsManager,
-  (views, user, isManager) => (isManager && views) || views.filter(view => userHasRoleInResource(user, view, Role.Read))
+export const selectCanManageViewConfig = createSelector(
+  selectCurrentView,
+  selectViewsPermissions,
+  (view, permissions) => view && permissions?.[view.id]?.manage
+);
+
+export const selectViewsByRead = createSelector(selectAllViews, selectViewsPermissions, (views, permissions) =>
+  views.filter(view => permissions?.[view.id]?.read)
 );
 
 export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views): View[] =>

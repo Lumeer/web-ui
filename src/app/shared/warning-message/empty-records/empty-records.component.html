@@ -2,7 +2,7 @@
   <ng-container *ngIf="!(query | emptyQuery)">
 
     <empty-state
-      *ngIf="(query | singleCollectionQuery) && collections?.length === 1 && (collections[0] | collectionPermissions | async)?.writeWithView; else empty"
+      *ngIf="(query | singleCollectionQuery) && (hasWritePermission$ | async); else empty"
       [icon]="'fa fa-file-times'">
       <h3 i18n="@@search.records.empty.title">There are no Records yet!</h3>
       <div class="mb-3">

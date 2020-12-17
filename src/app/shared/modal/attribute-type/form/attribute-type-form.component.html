@@ -13,6 +13,7 @@
   <constraint-config-form [config]="attribute.constraint?.type === typeControl.value ? attribute.constraint?.config : null"
                           [form]="configForm"
                           [resource]="resource"
+                          [attribute]="attribute"
                           [type]="typeControl.value"
                           [uniqueValues]="uniqueValues"
                           class="d-block mt-3">

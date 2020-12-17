@@ -8,7 +8,7 @@
                            [constraintData]="constraintData$ | async"
                            [config]="config$ | async"
                            [dataLoaded]="dataLoaded$ | async"
-                           [currentView]="currentView$ | async"
+                           [canManageConfig]="canManageConfig$ | async"
                            [sidebarOpened]="sidebarOpened$ | async"
                            (configChange)="onConfigChange($event)"
                            (sidebarToggle)="onSidebarToggle()">

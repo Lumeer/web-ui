@@ -37,7 +37,6 @@ import {Query, QueryStem} from '../../../../../core/store/navigation/query/query
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {CollectionsPermissionsPipe} from '../../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -143,7 +142,6 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
   constructor(
     private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
     private modalService: ModalService,
     private toggleService: DocumentFavoriteToggleService,
     private i18n: I18n

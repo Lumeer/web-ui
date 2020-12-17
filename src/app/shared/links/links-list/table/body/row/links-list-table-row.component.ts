@@ -23,9 +23,11 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {LinkColumn} from '../../../model/link-column';
@@ -43,6 +45,7 @@ import {DataValue} from '../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
 import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
 import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
+import {Attribute} from '../../../../../../core/store/collections/collection';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -50,7 +53,7 @@ import {DataInputConfiguration} from '../../../../../data-input/data-input-confi
   styleUrls: ['./links-list-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy {
+export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy, OnChanges {
   @Input()
   public columns: LinkColumn[];
 
@@ -125,6 +128,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   public editedValue: DataValue;
   public subscriptions = new Subscription();
+  public attributes: Attribute[];
 
   constructor(public element: ElementRef) {}
 
@@ -145,6 +149,12 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
         .pipe(distinctUntilChanged())
         .subscribe(index => this.columnEdit.emit(index))
     );
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.columns) {
+      this.attributes = (this.columns || []).map(column => column.attribute).filter(attribute => !!attribute);
+    }
   }
 
   public endColumnEditing(column: number) {

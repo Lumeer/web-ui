@@ -33,8 +33,6 @@ import {selectAllViews, selectViewQuery, selectViewsLoaded} from '../../../../co
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
-import {Project} from '../../../../core/store/projects/project';
 
 @Component({
   templateUrl: './search-all.component.html',
@@ -42,7 +40,6 @@ import {Project} from '../../../../core/store/projects/project';
 })
 export class SearchAllComponent implements OnInit, OnDestroy {
   public dataLoaded$: Observable<boolean>;
-  public project$: Observable<Project>;
   public hasCollection$: Observable<boolean>;
   public hasDocument$: Observable<boolean>;
   public hasView$: Observable<boolean>;
@@ -62,8 +59,6 @@ export class SearchAllComponent implements OnInit, OnDestroy {
   }
 
   private subscribeDataInfo() {
-    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
-
     this.dataLoaded$ = combineLatest([
       this.store$.pipe(select(selectCollectionsLoaded)),
       this.store$.pipe(select(selectViewsLoaded)),

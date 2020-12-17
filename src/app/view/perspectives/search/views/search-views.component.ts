@@ -39,6 +39,8 @@ import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {Perspective} from '../../perspective';
 import {selectViewQuery} from '../../../../core/store/views/views.state';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'search-views',
@@ -54,6 +56,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
   public query$: Observable<Query>;
   public workspace$: Observable<Workspace>;
   public viewsConfig$: Observable<SearchViewsConfig>;
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
 
   private config: SearchConfig;
   private searchId: string;
@@ -70,6 +73,7 @@ export class SearchViewsComponent implements OnInit, OnDestroy {
       this.store$.pipe(select(selectAllLinkTypes)),
     ]).pipe(map(([collections, linkTypes]) => ({collections, linkTypes})));
     this.viewsConfig$ = this.selectViewsConfig$();
+    this.permissions$ = this.store$.pipe(select(selectViewsPermissions));
 
     this.subscribeSearchId();
   }

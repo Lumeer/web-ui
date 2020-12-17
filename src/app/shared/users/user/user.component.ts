@@ -27,7 +27,7 @@ import {NotificationService} from '../../../core/notifications/notification.serv
 @Component({
   selector: '[user]',
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss'],
+  styleUrls: ['../../../../styles/custom/_user-roles.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent {

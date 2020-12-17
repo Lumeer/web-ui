@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Workspace} from '../../../../core/store/navigation/workspace';
 import {convertQueryModelToString} from '../../../../core/store/navigation/query/query.converter';
@@ -25,6 +34,11 @@ import {Query} from '../../../../core/store/navigation/query/query';
 import {IconColorPickerComponent} from '../../../picker/icon-color/icon-color-picker.component';
 import {Router} from '@angular/router';
 import {Perspective} from '../../../../view/perspectives/perspective';
+import {AppState} from '../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Observable} from 'rxjs';
+import {selectCollectionPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'post-it-collection',
@@ -32,7 +46,7 @@ import {Perspective} from '../../../../view/perspectives/perspective';
   styleUrls: ['./post-it-collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PostItCollectionComponent {
+export class PostItCollectionComponent implements OnChanges {
   @Input()
   public collection: Collection;
 
@@ -60,7 +74,15 @@ export class PostItCollectionComponent {
   @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
-  constructor(private router: Router) {}
+  public permissions$: Observable<AllowedPermissions>;
+
+  constructor(private router: Router, private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collection) {
+      this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.collection?.id)));
+    }
+  }
 
   public onNameChanged(name: string) {
     if (name === '') {

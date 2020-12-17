@@ -45,6 +45,12 @@ import {Observable, of} from 'rxjs';
 import {selectCurrentUser} from '../../../../core/store/users/users.state';
 import {ServiceLimits} from '../../../../core/store/organizations/service-limits/service.limits';
 import {selectServiceLimitsByOrganizationId} from '../../../../core/store/organizations/service-limits/service-limits.state';
+import {objectChanged} from '../../../utils/common.utils';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {
+  selectOrganizationPermissions,
+  selectProjectPermissions,
+} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'resource-menu',
@@ -83,6 +89,7 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
 
   public currentUser$: Observable<User>;
   public serviceLimits$: Observable<ServiceLimits>;
+  public permissions$: Observable<AllowedPermissions>;
 
   constructor(private store$: Store<AppState>) {}
 
@@ -105,13 +112,15 @@ export class ResourceMenuComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnChanges(changes: SimpleChanges): void {
-    if ((changes.resource || changes.resourceType) && !this.isOrganizationType) {
+    if (objectChanged(changes.resource) || changes.resourceType) {
       if (this.isOrganizationType) {
         this.serviceLimits$ = of(null);
+        this.permissions$ = this.store$.pipe(select(selectOrganizationPermissions));
       } else {
         const project = <Project>this.resource;
         this.serviceLimits$ = this.store$.pipe(select(selectServiceLimitsByOrganizationId(project.organizationId)));
         this.store$.dispatch(new ProjectsAction.Get({organizationId: (this.resource as Project).organizationId}));
+        this.permissions$ = this.store$.pipe(select(selectProjectPermissions));
       }
     }
   }

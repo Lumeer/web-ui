@@ -7,8 +7,8 @@
   [showSecondarySubmit]="stage === 1"
   [submitDisabled]="!(newUsers$ | async) || (newUsers$ | async).length === 0"
   *ngIf="{
-      isOrganizationManager: (organization$ | async) | permissions:organizationType:'manage' | async,
-      isProjectManager: (project$ | async) | permissions:projectType:'manage' | async
+      isOrganizationManager: (organizationPermissions$ | async)?.manage,
+      isProjectManager: (projectPermissions$ | async)?.manage
     } as managers">
 
   <span class="title" i18n="@@inviteUser.dialog.title">Invite colleagues</span>

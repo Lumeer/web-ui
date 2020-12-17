@@ -40,16 +40,16 @@ import {
   preventEvent,
 } from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
-import {isTableColumnDirectlyEditable} from '../../model/table-utils';
+import {flattenTableColumnGroups} from '../../model/table-utils';
 import {TableMenuComponent} from '../common/menu/table-menu.component';
 import {isKeyPrintable, KeyCode} from '../../../key-code';
 import {Direction} from '../../../direction';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {Attribute} from '../../../../core/store/collections/collection';
 
 @Component({
   selector: '[table-row]',
@@ -125,6 +125,8 @@ export class TableRowComponent implements OnChanges {
 
   public editedValue: DataValue;
   public suggestedColumn: TableColumn;
+  public columnAttributes: Attribute[];
+  public mappedData: Record<string, any>;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
 
@@ -134,21 +136,35 @@ export class TableRowComponent implements OnChanges {
     if (changes.editedCell) {
       this.checkEdited();
     }
+    if (changes.columnGroups || changes.row) {
+      const data = this.retrieveAttributesAndMapData();
+      this.columnAttributes = data.attributes;
+      this.mappedData = data.data;
+    }
+  }
+
+  private retrieveAttributesAndMapData(): {attributes: Attribute[]; data: Record<string, any>} {
+    return flattenTableColumnGroups(this.columnGroups).reduce(
+      (data, column) => {
+        if (column.attribute) {
+          data.attributes.push(column.attribute);
+          // data in row is grouped by column id
+          data.data[column.attribute.id] = this.row?.data?.[column.id];
+        }
+        return data;
+      },
+      {attributes: [], data: {}}
+    );
   }
 
   private checkEdited() {
     if (this.isEditing()) {
       const column = this.columnById(this.editedCell.columnId);
       if (column?.editable) {
-        if (isTableColumnDirectlyEditable(column)) {
-          this.onNewValue(column, {action: DataInputSaveAction.Direct, dataValue: this.computeDirectEditValue(column)});
-          this.endSuggesting();
-        } else {
-          this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
-          if (column.collectionId) {
-            this.suggestedColumn = column;
-            this.suggesting$.next(this.editedValue);
-          }
+        this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
+        if (column.collectionId) {
+          this.suggestedColumn = column;
+          this.suggesting$.next(this.editedValue);
         }
       }
     } else {
@@ -174,15 +190,6 @@ export class TableRowComponent implements OnChanges {
 
   private columnById(columnId: string): TableColumn {
     return this.columnGroups.find(group => group.column?.id === columnId)?.column;
-  }
-
-  private computeDirectEditValue(column: TableColumn): DataValue {
-    if (isTableColumnDirectlyEditable(column)) {
-      const constraint = column.attribute?.constraint as BooleanConstraint;
-      return constraint.createDataValue(!this.columnValue(column));
-    }
-
-    return null;
   }
 
   private columnValue(column: TableColumn): any {

@@ -4,7 +4,7 @@
         [formGroup]="form"
         class="d-flex">
     <ng-container
-      *ngIf="{canManageConfig: currentView$ | async | canManageConfig | async} as data">
+      *ngIf="{canManageConfig: canManageConfig$ | async} as data">
       <div *ngIf="constraintData$ | async as constraintData"
            class="d-flex flex-wrap flex-grow-1 pb-1 pr-1"
            [style.width.px]="1"

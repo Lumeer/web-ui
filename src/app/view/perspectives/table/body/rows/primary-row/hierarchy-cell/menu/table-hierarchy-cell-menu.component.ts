@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {ContextMenuComponent} from 'ngx-contextmenu';
-import {combineLatest, Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
 import {
@@ -30,9 +30,8 @@ import {
 } from '../../../../../../../../core/store/tables/tables.selector';
 import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
 import {AllowedPermissions} from '../../../../../../../../core/model/allowed-permissions';
-import {CollectionPermissionsPipe} from '../../../../../../../../shared/pipes/permissions/collection-permissions.pipe';
-import {selectCollectionsDictionary} from '../../../../../../../../core/store/collections/collections.state';
-import {map, mergeMap} from 'rxjs/operators';
+import {mergeMap} from 'rxjs/operators';
+import {selectCollectionPermissions} from '../../../../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'table-hierarchy-cell-menu',
@@ -56,7 +55,7 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   public outdentable$: Observable<boolean>;
   public allowedPermissions$: Observable<AllowedPermissions>;
 
-  constructor(private store$: Store<{}>, private collectionPermissionPipe: CollectionPermissionsPipe) {}
+  constructor(private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -67,12 +66,9 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   }
 
   private selectAllowedPermissions$(): Observable<AllowedPermissions> {
-    return combineLatest([
-      this.store$.pipe(select(selectTableFirstCollectionId(this.cursor.tableId))),
-      this.store$.pipe(select(selectCollectionsDictionary)),
-    ]).pipe(
-      map(([collectionId, collectionsMap]) => collectionsMap[collectionId]),
-      mergeMap(collection => this.collectionPermissionPipe.transform(collection))
+    return this.store$.pipe(
+      select(selectTableFirstCollectionId(this.cursor.tableId)),
+      mergeMap(collectionId => this.store$.pipe(select(selectCollectionPermissions(collectionId))))
     );
   }
 

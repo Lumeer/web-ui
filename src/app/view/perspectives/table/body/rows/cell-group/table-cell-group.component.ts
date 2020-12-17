@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {filter, switchMap} from 'rxjs/operators';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
@@ -40,11 +40,16 @@ import {
   selectTablePart,
   selectTablePartLeafColumns,
 } from '../../../../../../core/store/tables/tables.selector';
-import {ConstraintData, DurationUnitsMap} from '../../../../../../core/model/data/constraint';
+import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
 import {selectViewQuery} from '../../../../../../core/store/views/views.state';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {
+  selectCollectionPermissions,
+  selectLinkTypePermissions,
+} from '../../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'table-cell-group',
@@ -67,14 +72,13 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   public query$: Observable<Query>;
   public constraintData$: Observable<ConstraintData>;
   public collections$: Observable<Collection[]>;
+  public permissions$: Observable<AllowedPermissions>;
 
   public columns$: Observable<TableConfigColumn[]>;
   public part$: Observable<TableConfigPart>;
   public selectedCursor$: Observable<TableCursor>;
 
   public table$: Observable<TableModel>;
-
-  public readonly durationUnitsMap: DurationUnitsMap;
 
   private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
   private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
@@ -86,6 +90,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.columns$ = this.bindColumns();
+    this.permissions$ = this.bindPermissions();
     this.documents$ = this.bindDocuments();
     this.linkInstances$ = this.bindLinkInstances();
     this.selectedCursor$ = this.bindSelectedCursor();
@@ -104,6 +109,25 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
 
   private bindColumns(): Observable<TableConfigColumn[]> {
     return this.cursor$.pipe(switchMap(cursor => this.store$.pipe(select(selectTablePartLeafColumns(cursor)))));
+  }
+
+  private bindPermissions(): Observable<AllowedPermissions> {
+    return this.cursor$.pipe(
+      filter(cursor => !!cursor),
+      switchMap(cursor =>
+        this.store$.pipe(
+          select(selectTablePart(cursor)),
+          switchMap(part => {
+            if (part?.collectionId) {
+              return this.store$.pipe(select(selectCollectionPermissions(part.collectionId)));
+            } else if (part?.linkTypeId) {
+              return this.store$.pipe(select(selectLinkTypePermissions(part.linkTypeId)));
+            }
+            return of({});
+          })
+        )
+      )
+    );
   }
 
   private bindDocuments(): Observable<DocumentModel[]> {
