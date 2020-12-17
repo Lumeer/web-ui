@@ -30,8 +30,6 @@ import {selectCollectionsLoaded} from '../../core/store/collections/collections.
 import {selectWorkspace} from '../../core/store/navigation/navigation.state';
 import {Workspace} from '../../core/store/navigation/workspace';
 import {NotificationsAction} from '../../core/store/notifications/notifications.action';
-import {Project} from '../../core/store/projects/project';
-import {selectProjectByWorkspace} from '../../core/store/projects/projects.state';
 import {queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {Router} from '@angular/router';
@@ -40,6 +38,8 @@ import {Query} from '../../core/store/navigation/query/query';
 import {CollectionImportData} from './content/import-button/post-it-collection-import-button.component';
 import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 import {selectViewQuery} from '../../core/store/views/views.state';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'post-it-collections',
@@ -51,7 +51,7 @@ export class PostItCollectionsComponent implements OnInit {
   public maxShown: number = -1;
 
   public collections$: Observable<Collection[]>;
-  public project$: Observable<Project>;
+  public projectPermissions$: Observable<AllowedPermissions>;
   public query$: Observable<Query>;
   public workspace$: Observable<Workspace>;
   public loaded$: Observable<boolean>;
@@ -65,7 +65,7 @@ export class PostItCollectionsComponent implements OnInit {
       select(selectCollectionsByQuery),
       map(collections => sortResourcesByFavoriteAndLastUsed<Collection>(collections))
     );
-    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
     this.query$ = this.store$.pipe(
       select(selectViewQuery),
       tap(query => (this.query = query))

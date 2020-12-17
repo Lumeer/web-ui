@@ -46,6 +46,7 @@ import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissi
 import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {forEach} from '@angular-devkit/schematics';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'links-accordeon',
@@ -77,7 +78,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
 
   public linkTypes$: Observable<LinkType[]>;
   public collections$: Observable<Collection[]>;
-  public permissions$: Observable<AllowedPermissions>;
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
 
   public openedGroups$ = new BehaviorSubject<Record<string, boolean>>({});
@@ -87,6 +88,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

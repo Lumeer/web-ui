@@ -24,17 +24,7 @@ import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
-import {
-  distinctUntilChanged,
-  map,
-  mergeMap,
-  pairwise,
-  startWith,
-  switchMap,
-  take,
-  tap,
-  withLatestFrom,
-} from 'rxjs/operators';
+import {map, mergeMap, pairwise, startWith, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/kanban.state';
 import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
 import {View} from '../../../core/store/views/view';
@@ -42,6 +32,7 @@ import {KanbansAction} from '../../../core/store/kanbans/kanbans.action';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {
+  selectCanManageViewConfig,
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
@@ -56,8 +47,7 @@ import {selectWorkspaceWithIds} from '../../../core/store/common/common.selector
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -65,7 +55,7 @@ import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 })
 export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<KanbanConfig>;
-  public currentView$: Observable<View>;
+  public canManageConfig$: Observable<boolean>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public linkTypes$: Observable<LinkType[]>;
   public collections$: Observable<Collection[]>;
@@ -77,7 +67,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private kanbanId: string;
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initKanban();
@@ -157,13 +147,10 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
-    this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
   }
 
   public ngOnDestroy() {

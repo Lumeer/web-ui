@@ -50,6 +50,7 @@ import {CollectionsAction} from '../../../../../../../core/store/collections/col
 import {
   selectAllCollections,
   selectCollectionAttributeById,
+  selectCollectionById,
 } from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {generateDocumentDataByResourceQuery} from '../../../../../../../core/store/documents/document.utils';
@@ -57,7 +58,10 @@ import {DocumentsAction} from '../../../../../../../core/store/documents/documen
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
-import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
+import {
+  selectLinkTypeAttributeById,
+  selectLinkTypeById,
+} from '../../../../../../../core/store/link-types/link-types.state';
 import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
@@ -75,7 +79,7 @@ import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {DataValue} from '../../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
@@ -148,6 +152,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public dataValue$: Observable<DataValue>;
 
   public attribute$: Observable<Attribute>;
+  public attributes$: Observable<Attribute[]>;
   public row$: Observable<TableConfigRow>;
 
   public editedValue: DataValue;
@@ -200,10 +205,18 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.attribute$ = this.store$.pipe(
         select(selectCollectionAttributeById(this.document.collectionId, this.column.attributeIds[0]))
       );
+      this.attributes$ = this.store$.pipe(
+        select(selectCollectionById(this.document.collectionId)),
+        map(collection => collection?.attributes)
+      );
     }
     if ((changes.column || changes.linkInstance) && this.column && this.linkInstance) {
       this.attribute$ = this.store$.pipe(
         select(selectLinkTypeAttributeById(this.linkInstance.linkTypeId, this.column.attributeIds[0]))
+      );
+      this.attributes$ = this.store$.pipe(
+        select(selectLinkTypeById(this.linkInstance.linkTypeId)),
+        map(linkType => linkType?.attributes)
       );
     }
     if (
@@ -228,10 +241,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.cursor && this.cursor) {
       this.row$ = this.store$.pipe(select(selectTableRow(this.cursor)));
     }
-    if (
-      this.cursor.partIndex > 1 &&
-      (this.objectChanged(changes.document) || this.objectChanged(changes.linkInstance))
-    ) {
+    if (this.cursor.partIndex > 1 && (objectChanged(changes.document) || objectChanged(changes.linkInstance))) {
       this.affectedSubscription.unsubscribe();
       this.affectedSubscription = this.subscribeToAffected();
     }
@@ -268,8 +278,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       .select(
         selectAffected({
           attributeId: this.column.attributeIds[0],
-          documentId: this.document && this.document.id,
-          linkInstanceId: this.linkInstance && this.linkInstance.id,
+          documentId: this.document?.id,
+          linkInstanceId: this.linkInstance?.id,
         })
       )
       .pipe(distinctUntilChanged(), withLatestFrom(this.editing$))
@@ -278,12 +288,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         // TODO run change detection in parent component some other way
         this.affect.emit();
       });
-  }
-
-  private objectChanged(change: SimpleChange): boolean {
-    return (
-      change && change.currentValue && (!change.previousValue || change.previousValue.id !== change.currentValue.id)
-    );
   }
 
   private checkSuggesting() {
@@ -357,10 +361,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private getValue(): any {
-    if (this.document && this.document.data) {
+    if (this.document?.data) {
       return this.document.data[this.column.attributeIds[0]];
     }
-    if (this.linkInstance && this.linkInstance.data) {
+    if (this.linkInstance.data) {
       return this.linkInstance.data[this.column.attributeIds[0]];
     }
     return '';

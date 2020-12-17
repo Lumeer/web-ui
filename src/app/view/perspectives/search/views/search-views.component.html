@@ -3,6 +3,7 @@
                       [views]="views$ | async"
                       [maxViews]="maxLines"
                       [query]="query$ | async"
+                      [permissions]="permissions$ | async"
                       [queryData]="queryData$ | async"
                       (configChange)="onConfigChange($event)"
                       (deleteView)="onDeleteView($event)">

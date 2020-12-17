@@ -29,6 +29,8 @@ import {RuleType} from '../../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {AttributesResource} from '../../../../../../core/model/resource';
 import {IconColorPickerComponent} from '../../../../../picker/icon-color/icon-color-picker.component';
+import {Role} from '../../../../../../core/model/role';
+import {Attribute} from '../../../../../../core/store/collections/collection';
 
 @Component({
   selector: 'action-constraint-config-form',
@@ -44,6 +46,9 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
 
   @Input()
   public resource: AttributesResource;
+
+  @Input()
+  public attribute: Attribute;
 
   @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
@@ -66,6 +71,10 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
 
   public get ruleControl(): FormControl {
     return <FormControl>this.form.controls[ActionConstraintFormControl.Rule];
+  }
+
+  public get roleControl(): FormControl {
+    return <FormControl>this.form.controls[ActionConstraintFormControl.Role];
   }
 
   public get titleUserControl(): FormControl {
@@ -106,9 +115,14 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   }
 
   private createForm() {
+    this.addPermissionsForm();
     this.addButtonForms();
     this.addRuleForm();
     this.addConditionsForm();
+  }
+
+  private addPermissionsForm() {
+    this.form.addControl(ActionConstraintFormControl.Role, new FormControl(this.config?.role || Role.Read));
   }
 
   private addButtonForms() {

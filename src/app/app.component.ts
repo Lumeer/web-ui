@@ -51,7 +51,7 @@ import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
 import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {parseQueryParams} from './core/store/navigation/query/query.util';
 import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core/store/projects/projects.state';
-import {CurrencyFormatService} from './shared/currency/currencies';
+import {CurrencyFormatService} from './core/service/currency-format.service';
 
 @Component({
   selector: 'lmr-app',
@@ -74,9 +74,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private sessionService: SessionService,
     private tooltipConfig: TooltipConfig,
     private localeService: BsLocaleService,
-    private constraintDataService: ConstraintDataService, // for init constraint data
-    public vcRef: ViewContainerRef, // for the ngx-color-picker
-    public currencyFormat: CurrencyFormatService // init numbro currency formats
+    public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer | Visual, easy project and team management'}));
 

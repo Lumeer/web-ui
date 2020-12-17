@@ -29,6 +29,7 @@ import {Perspective} from '../../../perspective';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
 import {ViewFavoriteToggleService} from '../../../../../shared/toggle/view-favorite-toggle.service';
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'search-views-content',
@@ -55,6 +56,9 @@ export class SearchViewsContentComponent implements OnInit, OnDestroy {
 
   @Input()
   public workspace: Workspace;
+
+  @Input()
+  public permissions: Record<string, AllowedPermissions>;
 
   @Output()
   public configChange = new EventEmitter<SearchViewsConfig>();

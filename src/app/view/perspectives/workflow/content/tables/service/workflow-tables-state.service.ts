@@ -537,7 +537,7 @@ function canEditCell(cell: TableCell, column: TableColumn): boolean {
     return false;
   }
   if (cell.type === TableCellType.Header) {
-    return column.manageable && !column.creating;
+    return column.permissions?.manageWithView && !column.creating;
   } else if (cell.type === TableCellType.Body || cell.type === TableCellType.NewRow) {
     return column.editable;
   }

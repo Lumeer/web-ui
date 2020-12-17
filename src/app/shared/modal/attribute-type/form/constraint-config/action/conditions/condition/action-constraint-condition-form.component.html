@@ -3,12 +3,12 @@
 
   <div class="operator h-100 d-flex align-items-center" *ngIf="selectOperator">
 
-    <select-item2 class="px-2 d-inline-block"
+    <select-item2 class="px-2 d-inline-flex h-100"
                   [disabled]="false"
                   [items]="operatorSelectItems"
                   [showAsLink]="false"
                   (click)="$event.stopPropagation()"
-                  [selectedPath]="[operatorControl.value]"
+                  [selectedPath]="[operatorValue$ | async]"
                   (selectPath)="onOperatorSelect($event)">
     </select-item2>
 

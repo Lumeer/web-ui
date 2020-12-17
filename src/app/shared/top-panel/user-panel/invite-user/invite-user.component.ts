@@ -28,8 +28,16 @@ import {ResourceType} from '../../../../core/model/resource-type';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {ModalService} from '../../../modal/modal.service';
+<<<<<<< HEAD
 import {selectUsersForWorkspace} from '../../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
+=======
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {
+  selectOrganizationPermissions,
+  selectProjectPermissions,
+} from '../../../../core/store/user-permissions/user-permissions.state';
+>>>>>>> Effective compute of permissions
 
 @Component({
   selector: 'invite-user',
@@ -41,8 +49,8 @@ export class InviteUserComponent {
   @Input()
   public mobile: boolean;
 
-  public organization$: Observable<Organization>;
-  public project$: Observable<Project>;
+  public organizationPermissions$: Observable<AllowedPermissions>;
+  public projectPermissions$: Observable<AllowedPermissions>;
 
   public projectUsers$: Observable<number>;
 
@@ -52,8 +60,8 @@ export class InviteUserComponent {
   constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
-    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.organizationPermissions$ = this.store$.pipe(select(selectOrganizationPermissions));
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
     this.projectUsers$ = this.store$.pipe(
       select(selectUsersForWorkspace),
       map(users => users?.length)

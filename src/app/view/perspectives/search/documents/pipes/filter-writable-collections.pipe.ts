@@ -19,27 +19,13 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {CollectionsPermissionsPipe} from '../../../../../shared/pipes/permissions/collections-permissions.pipe';
-import {map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Pipe({
   name: 'filterWritableCollections',
 })
 export class FilterWritableCollectionsPipe implements PipeTransform {
-  constructor(private collectionsPermissions: CollectionsPermissionsPipe) {}
-
-  public transform(collections: Collection[]): Observable<Collection[]> {
-    const collectionsMap = (collections || []).reduce((obj, coll) => ({...obj, [coll.id]: coll}), {});
-    return this.collectionsPermissions.transform(collections).pipe(
-      map(permissions =>
-        Object.entries(permissions).reduce<Collection[]>((arr, [key, permission]) => {
-          if (permission.writeWithView) {
-            arr.push(collectionsMap[key]);
-          }
-          return arr;
-        }, [])
-      )
-    );
+  public transform(collections: Collection[], permissions: Record<string, AllowedPermissions>): Collection[] {
+    return (collections || []).filter(collection => permissions?.[collection.id]?.writeWithView);
   }
 }

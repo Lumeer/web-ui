@@ -24,6 +24,7 @@ export interface AllowedPermissions {
   read?: boolean;
   write?: boolean;
   manage?: boolean;
+  share?: boolean;
 }
 
 export function mergeAllowedPermissions(a1: AllowedPermissions, a2: AllowedPermissions): AllowedPermissions {
@@ -38,5 +39,6 @@ export function mergeAllowedPermissions(a1: AllowedPermissions, a2: AllowedPermi
     readWithView: a1.readWithView && a2.readWithView,
     write: a1.write && a2.write,
     writeWithView: a1.writeWithView && a2.writeWithView,
+    share: a1.share && a2.share,
   };
 }

@@ -17,17 +17,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 
 import {Collection} from '../../../core/store/collections/collection';
 import {Query} from '../../../core/store/navigation/query/query';
+import {Observable, of} from 'rxjs';
+import {AppState} from '../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'empty-records',
   templateUrl: './empty-records.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptyRecordsComponent {
+export class EmptyRecordsComponent implements OnChanges {
   @Input()
   public query: Query;
 
@@ -36,4 +41,25 @@ export class EmptyRecordsComponent {
 
   @Input()
   public containsAnyDocument: boolean;
+
+  public hasWritePermission$: Observable<boolean>;
+
+  constructor(private store$: Store<AppState>) {}
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.collections) {
+      this.checkPermission();
+    }
+  }
+
+  private checkPermission() {
+    if (this.collections?.length === 1) {
+      this.hasWritePermission$ = this.store$.pipe(
+        select(selectCollectionPermissions(this.collections[0].id)),
+        map(permissions => permissions?.writeWithView)
+      );
+    } else {
+      this.hasWritePermission$ = of(false);
+    }
+  }
 }

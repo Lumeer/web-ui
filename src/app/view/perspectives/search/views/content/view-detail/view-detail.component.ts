@@ -35,8 +35,8 @@ import {QueryItem} from '../../../../../../shared/top-panel/search-box/query-ite
 import {QueryItemsConverter} from '../../../../../../shared/top-panel/search-box/query-item/query-items.converter';
 import {ResourceType} from '../../../../../../core/model/resource-type';
 import {SizeType} from '../../../../../../shared/slider/size/size-type';
-import {Role} from '../../../../../../core/model/role';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'view-detail',
@@ -54,6 +54,9 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   @Input()
   public viewSize: SizeType;
 
+  @Input()
+  public permissions: AllowedPermissions;
+
   @Output()
   public clicked = new EventEmitter();
 
@@ -66,8 +69,6 @@ export class ViewDetailComponent implements OnInit, OnChanges {
   public queryItems: QueryItem[] = [];
 
   public readonly viewType = ResourceType.View;
-  public readonly roleRead = Role.Read;
-  public readonly roleManage = Role.Manage;
   public readonly sizeType = SizeType;
 
   public constructor(private modalService: ModalService) {}

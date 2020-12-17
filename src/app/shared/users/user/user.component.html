@@ -16,7 +16,7 @@
 
 <td class="p-2 align-middle">
   <i *ngFor="let role of resourceType | resourceRoles"
-     class="fas fa-fw {{role | roleIcon}} mx-1"
+     class="fas fa-fw {{role | roleIcon}} mx-1 user-role"
      [class.role-clickable]="changeRoles"
      [class.role-selected]="userRoles | includes:role"
      aria-hidden="true"

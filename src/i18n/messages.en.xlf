@@ -4036,13 +4036,13 @@
       </trans-unit><trans-unit id="currency.abbreviations" datatype="html">
         <source>k|m|b|t</source><target state="final">k|m|b|t</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/currency/currencies.ts</context>
+          <context context-type="sourcefile">src/app/shared/currency/currency-format.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="currency.ordinals" datatype="html">
         <source>st|nd|rd|th</source><target state="final">st|nd|rd|th</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/currency/currencies.ts</context>
+          <context context-type="sourcefile">src/app/shared/currency/currency-format.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

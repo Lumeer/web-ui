@@ -48,13 +48,13 @@ import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {Collection} from '../../../core/store/collections/collection';
 import {ViewSettings} from '../../../core/store/views/view';
-import {LinkTypePermissionsPipe} from '../../pipes/permissions/link-type-permissions.pipe';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {CollectionPermissionsPipe} from '../../pipes/permissions/collection-permissions.pipe';
-import {distinctUntilChanged} from 'rxjs/operators';
-import {LinkType} from '../../../core/store/link-types/link.type';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectCollectionPermissions,
+  selectLinkTypePermissions,
+} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -100,9 +100,7 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   constructor(
     private store$: Store<AppState>,
     private bsModalRef: BsModalRef,
-    private bsModalService: BsModalService,
-    private collectionPermissionsPipe: CollectionPermissionsPipe,
-    private linkTypePermissionsPipe: LinkTypePermissionsPipe
+    private bsModalService: BsModalService
   ) {}
 
   public ngOnInit() {
@@ -160,9 +158,9 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
 
   private selectPermissions$(resource: AttributesResource): Observable<AllowedPermissions> {
     if (this.resourceType === AttributesResourceType.Collection) {
-      return this.collectionPermissionsPipe.transform(resource).pipe(distinctUntilChanged());
+      return this.store$.pipe(select(selectCollectionPermissions(resource.id)));
     }
-    return this.linkTypePermissionsPipe.transform(<LinkType>resource).pipe(distinctUntilChanged());
+    return this.store$.pipe(select(selectLinkTypePermissions(resource.id)));
   }
 
   public onSubmit() {

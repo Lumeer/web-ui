@@ -48,10 +48,7 @@
 </div>
 
 <ng-template #noData>
-  <empty-data
-    [project]="project$ | async"
-    [query]="query$ | async">
-  </empty-data>
+  <empty-data [query]="query$ | async"></empty-data>
 </ng-template>
 
 <ng-template #loading>

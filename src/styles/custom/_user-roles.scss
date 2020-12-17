@@ -1,6 +1,6 @@
-@import '../../../../styles/variables';
+@import '../variables';
 
-i {
+i.user-role {
   transition: all 0.25s ease;
 }
 
@@ -26,6 +26,6 @@ i {
   color: $success;
 }
 
-i:not(.role-selected):not(.role-clickable) {
+i.user-role:not(.role-selected):not(.role-clickable) {
   color: $secondary;
 }

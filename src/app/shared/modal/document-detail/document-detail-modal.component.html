@@ -14,7 +14,7 @@
                           [query]="query$ | async"
                           [preventEventBubble]="true"
                           [ignoreSettingsOnReadPermission]="true"
-                          [permissions]="data.collection | collectionPermissions | async"
+                          [permissions]="permissions$ | async"
                           [attributeSettings]="data.viewSettings | resourceAttributesSettings:resourceType:data.collection.id"
                           [toolbarRef]="toolbarRef"
                           [viewSettings]="data.viewSettings"

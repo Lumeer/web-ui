@@ -40,7 +40,6 @@ import {filter, map, throttleTime} from 'rxjs/operators';
 import {PivotData} from '../util/pivot-data';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DataAggregationType} from '../../../../shared/utils/data/data-aggregation';
-import {View} from '../../../../core/store/views/view';
 import {checkOrTransformPivotConfig} from '../util/pivot-util';
 import {SelectItemWithConstraintFormatter} from '../../../../shared/select/select-constraint-item/select-item-with-constraint-formatter.service';
 import {deepObjectsEquals} from '../../../../shared/utils/common.utils';
@@ -84,7 +83,7 @@ export class PivotPerspectiveWrapperComponent implements OnInit, OnChanges {
   public config: PivotConfig;
 
   @Input()
-  public currentView: View;
+  public canManageConfig: boolean;
 
   @Input()
   public sidebarOpened: boolean;

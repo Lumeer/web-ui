@@ -22,6 +22,7 @@ import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
 import {
+  selectCanManageViewConfig,
   selectCollectionsByQuery,
   selectDocumentsAndLinksByCustomQuery,
   selectLinkTypesInQuery,
@@ -46,8 +47,6 @@ import {DEFAULT_GANTT_CHART_ID, GanttChartConfig} from '../../../core/store/gant
 import {selectGanttChartById, selectGanttChartConfig} from '../../../core/store/gantt-charts/gantt-charts.state';
 import {GanttChartAction} from '../../../core/store/gantt-charts/gantt-charts.action';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
-import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -61,6 +60,7 @@ import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-in
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {viewAttributeSettingsSortDefined} from '../../../shared/settings/settings.util';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -73,7 +73,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public linkTypes$: Observable<LinkType[]>;
   public config$: Observable<GanttChartConfig>;
-  public currentView$: Observable<View>;
+  public canManageConfig$: Observable<boolean>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public constraintData$: Observable<ConstraintData>;
   public sortDefined$: Observable<boolean>;
@@ -85,11 +85,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(
-    private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private i18n: I18n
-  ) {}
+  constructor(private store$: Store<AppState>, private i18n: I18n) {}
 
   public ngOnInit() {
     this.initGanttChart();
@@ -174,11 +170,8 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
-    this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.dataLoaded$ = combineLatest([
       this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),

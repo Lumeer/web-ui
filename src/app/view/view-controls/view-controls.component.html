@@ -1,5 +1,5 @@
 <ng-container
-  *ngIf="{permissions: view | viewControlsInfo:name:(perspective$ | async) | async, viewChanged: viewChanged$ | async} as state">
+  *ngIf="{permissions: view | viewControlsInfo:(projectPermissions$ | async):(collectionsPermissions$ | async):(viewsPermissions$ | async):(linkTypes$ | async), viewChanged: viewChanged$ | async} as state">
   <ng-container
     *ngIf="{disabled: (saveLoading$ | async) || !(name && (!view.code || state.viewChanged) && state.permissions.canManage)} as buttonsData">
     <form class="view-controls-grid">

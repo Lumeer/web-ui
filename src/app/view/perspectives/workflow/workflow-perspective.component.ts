@@ -24,6 +24,7 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {
+  selectCanManageViewConfig,
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
@@ -32,9 +33,7 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {distinctUntilChanged, map, mergeMap, pairwise, startWith, switchMap, take, tap} from 'rxjs/operators';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -54,6 +53,7 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'workflow-perspective',
@@ -66,7 +66,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public dataLoaded$: Observable<boolean>;
   public linkTypes$: Observable<LinkType[]>;
-  public currentView$: Observable<View>;
+  public canManageConfig$: Observable<boolean>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public query$: Observable<Query>;
   public viewSettings$: Observable<ViewSettings>;
@@ -78,7 +78,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private workflowId: string;
 
-  constructor(private store$: Store<AppState>, private collectionsPermissionsPipe: CollectionsPermissionsPipe) {}
+  constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
     this.initWorkflow();
@@ -142,11 +142,8 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   public subscribeData() {
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collection => this.collectionsPermissionsPipe.transform(collection)),
-      distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
-    );
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.query$ = this.store$.pipe(
       select(selectViewQuery),

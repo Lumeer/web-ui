@@ -53,6 +53,7 @@ import {AttributesResource, AttributesResourceType, DataResource} from '../../..
 import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 import {ResourceAttributeSettings} from '../../../../core/store/views/view';
+import {objectChanged} from '../../../utils/common.utils';
 
 @Component({
   selector: 'data-resource-data',
@@ -179,16 +180,12 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   private shouldRefreshObservables(changes: SimpleChanges): boolean {
     if (this.resource && this.dataResource) {
       if (this.dataResource.id) {
-        return this.objectChanged(changes.resource) || this.objectChanged(changes.dataResource);
+        return objectChanged(changes.resource) || objectChanged(changes.dataResource);
       } else {
         return !!changes.resource || !!changes.dataResource;
       }
     }
     return false;
-  }
-
-  private objectChanged(change: SimpleChange): boolean {
-    return change && (!change.previousValue || change.previousValue.id !== change.currentValue.id);
   }
 
   public onNewKey(value: string, index: number) {

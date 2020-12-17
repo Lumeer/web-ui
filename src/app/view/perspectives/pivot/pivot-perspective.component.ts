@@ -40,6 +40,7 @@ import {selectPivotById, selectPivotConfig, selectPivotId} from '../../../core/s
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {
+  selectCanManageViewConfig,
   selectCollectionsByQuery,
   selectDocumentsAndLinksByQuerySorted,
   selectLinkTypesInQuery,
@@ -64,7 +65,7 @@ import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-in
 })
 export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   public config$: Observable<PivotConfig>;
-  public currentView$: Observable<View>;
+  public canManageConfig$: Observable<boolean>;
   public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
   public dataLoaded$: Observable<boolean>;
   public collections$: Observable<Collection[]>;
@@ -154,7 +155,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.config$ = this.store$.pipe(select(selectPivotConfig));
-    this.currentView$ = this.store$.pipe(select(selectCurrentView));
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));

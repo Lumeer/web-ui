@@ -5,7 +5,7 @@
                   [linkTypes]="linkTypes$ | async"
                   [documents]="data.documentsAndLinks.documents"
                   [constraintData]="constraintData$ | async"
-                  [canManageConfig]="currentView$ | async | canManageConfig | async"
+                  [canManageConfig]="canManageConfig$ | async"
                   [query]="query$ | async"
                   [permissions]="permissions$ | async"
                   [workspace]="workspace$ | async"

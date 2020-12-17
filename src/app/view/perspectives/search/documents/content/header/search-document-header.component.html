@@ -21,7 +21,7 @@
                         [configuration]="configuration"
                         [dataValue]="(defaultAttributeId && document?.data && document?.data[defaultAttributeId]) | dataValue:defaultConstraint: constraintData">
     </data-input-preview>
-    <div class="ml-auto text-nowrap" *ngIf="collection | permissions:collectionType:readRole | async">
+    <div class="ml-auto text-nowrap" *ngIf="permissions?.read">
       <span class="clickable ml-2 hiding-icon"
             (click)="$event.stopPropagation(); onToggleFavorite()"
             title="{{ document.favorite ?  'Remove from favorites' : 'Add to favorites'}}"

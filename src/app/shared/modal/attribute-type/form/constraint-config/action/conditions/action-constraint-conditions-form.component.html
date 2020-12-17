@@ -1,10 +1,10 @@
 <label i18n="@@constraint.action.conditions.label">Conditions</label>
 
-<div *ngFor="let group of form?.controls; let first = first; let index = index">
+<div *ngFor="let group of filtersArray?.controls; let first = first; let index = index">
   <action-constraint-condition-form class="d-block"
                                     [class.mt-1]="!first"
                                     [form]="group"
-                                    [selectOperator]="form.length > 1"
+                                    [selectOperator]="filtersArray.length > 1"
                                     [attributes]="resource?.attributes"
                                     [attributeSelectItems]="attributeSelectItems"
                                     (remove)="onRemoveFilter(index)"

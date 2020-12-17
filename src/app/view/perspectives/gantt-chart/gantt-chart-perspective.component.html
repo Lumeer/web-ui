@@ -1,7 +1,7 @@
 <ng-container *ngIf="query$ | async | perspectiveDisplayable:1; else notDisplayable">
 
   <ng-container *ngIf="{collections: collections$ | async,  config: config$ | async,
-  canManageConfig: currentView$ | async | canManageConfig | async, linkTypes: linkTypes$ | async,
+  canManageConfig: canManageConfig$ | async, linkTypes: linkTypes$ | async,
   query: query$ | async, documentsAndLinks: documentsAndLinks$ | async} as data">
 
     <collapsible-sidebar *ngIf="data.canManageConfig && data.config"

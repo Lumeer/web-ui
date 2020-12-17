@@ -30,8 +30,6 @@ import {map, mergeMap, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
 import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
-import {Project} from '../../../core/store/projects/project';
-import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 
 @Component({
@@ -48,7 +46,6 @@ export class InvalidQueryComponent implements OnInit {
 
   public collections$: Observable<Collection[]>;
   public hasCollection$: Observable<boolean>;
-  public project$: Observable<Project>;
   public query$: Observable<Query>;
   public stemsLength$: Observable<number>;
 
@@ -67,7 +64,6 @@ export class InvalidQueryComponent implements OnInit {
           : this.store$.pipe(select(selectCollectionsInQuery))
       )
     );
-    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.hasCollection$ = this.store$.pipe(
       select(selectCollectionsByReadPermission),

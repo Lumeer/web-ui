@@ -20,7 +20,7 @@
 import {NumberDataValue} from './number.data-value';
 import {NumberConstraintConfig} from '../data/constraint-config';
 import {LanguageTag} from '../data/language-tag';
-import {CurrencyFormatService} from '../../../shared/currency/currencies';
+import {CurrencyFormatService} from '../../service/currency-format.service';
 import {TestBed} from '@angular/core/testing';
 import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {environment} from '../../../../environments/environment';

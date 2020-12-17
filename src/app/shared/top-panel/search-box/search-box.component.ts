@@ -55,6 +55,7 @@ import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {Query} from '../../../core/store/navigation/query/query';
+import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 
 const allowAutomaticSubmission = true;
 
@@ -72,6 +73,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
   public constraintData$: Observable<ConstraintData>;
   public perspective$: Observable<Perspective>;
   public query$: Observable<Query>;
+  public canManageConfig$: Observable<boolean>;
 
   public queryItemsControl: FormArray;
 
@@ -95,6 +97,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.perspective$ = this.store$.pipe(select(selectPerspective));
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
   }
 
   private subscribeViewData() {

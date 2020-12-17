@@ -47,7 +47,6 @@ import {LogPipe} from './log.pipe';
 import {NativeDatePipe} from './native-date.pipe';
 import {PageEndIndexPipe} from './page-end-index.pipe';
 import {PageSlicePipe} from './page-slice.pipe';
-import {PermissionsPipesModule} from './permissions/permissions-pipes.module';
 import {PerspectiveIconPipe} from './perspective-icon.pipe';
 import {PrefixPipe} from './prefix.pipe';
 import {RemoveHtmlCommentsPipe} from './remove-html-comments.pipe';
@@ -64,7 +63,7 @@ import {SafeHtmlPipe} from './safe-html.pipe';
 import {EmailValidPipe} from './email/email-valid.pipe';
 import {UserByEmailPipe} from './email/user-by-email.pipe';
 import {UniqueEntitiesPipe} from './unique-entities.pipe';
-import {AggregationSelectItemsPipe} from './permissions/aggregation-select-items.pipe';
+import {AggregationSelectItemsPipe} from './aggregation-select-items.pipe';
 import {FindSelectItemByIdPipe} from './find-select-item-by-id.pipe';
 import {QueryStemAttributesResourcesPipe} from './query-stem-attributes-resources.pipe';
 import {SortPerspectivesPipe} from './sort-perspectives.pipe';
@@ -102,7 +101,7 @@ import {AttributeResourceTypeToResourceTypePipe} from './attribute-resource-type
 import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
 
 @NgModule({
-  imports: [CommonModule, DataPipesModule, PermissionsPipesModule],
+  imports: [CommonModule, DataPipesModule],
   declarations: [
     LightenColorPipe,
     IconsPipe,
@@ -209,7 +208,6 @@ import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
     PageEndIndexPipe,
     LogPipe,
     RemoveHtmlCommentsPipe,
-    PermissionsPipesModule,
     IsOrganizationTypePipe,
     CanChangeRolesPipe,
     DataPipesModule,

@@ -50,6 +50,7 @@ import {initialViewSettingsState, ViewSettingsState} from './view-settings/view-
 import {initialWorkflowsState, WorkflowsState} from './workflows/workflow.state';
 import {initialResourceCommentsState, ResourceCommentsState} from './resource-comments/resource-comments.state';
 import {initialModalsState, ModalsState} from './modals/modals.state';
+import {initialUserPermissionsState, UserPermissionsState} from './user-permissions/user-permissions.state';
 
 export interface AppState {
   collections: CollectionsState;
@@ -84,6 +85,7 @@ export interface AppState {
   workflows: WorkflowsState;
   resourceComments: ResourceCommentsState;
   modals: ModalsState;
+  userPermissions: UserPermissionsState;
 }
 
 export function initialAppState(): AppState {
@@ -120,5 +122,6 @@ export function initialAppState(): AppState {
     workflows: initialWorkflowsState,
     resourceComments: initialResourceCommentsState,
     modals: initialModalsState,
+    userPermissions: initialUserPermissionsState,
   };
 }

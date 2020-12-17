@@ -28,6 +28,7 @@ import {Role} from '../../../../../../core/model/role';
 import {findAttributeConstraint, getDefaultAttributeId} from '../../../../../../core/store/collections/collection.util';
 import {Constraint} from '../../../../../../core/model/constraint';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'search-document-header',
@@ -50,6 +51,9 @@ export class SearchDocumentHeaderComponent implements OnChanges {
 
   @Input()
   public size: SizeType;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output()
   public detail = new EventEmitter();

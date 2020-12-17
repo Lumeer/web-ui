@@ -61,6 +61,14 @@ import {environment} from '../../../environments/environment';
 import {objectValues} from '../../shared/utils/common.utils';
 import {selectViewSettingsChanged} from '../../core/store/view-settings/view-settings.state';
 import {ViewSettingsAction} from '../../core/store/view-settings/view-settings.action';
+import {LinkType} from '../../core/store/link-types/link.type';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
+import {
+  selectCollectionsPermissions,
+  selectProjectPermissions,
+  selectViewsPermissions,
+} from '../../core/store/user-permissions/user-permissions.state';
 
 export const PERSPECTIVE_CHOOSER_CLICK = 'perspectiveChooserClick';
 
@@ -93,6 +101,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
   public saveLoading$ = new BehaviorSubject(false);
   public nameChanged$ = new BehaviorSubject(false);
   public viewChanged$: Observable<boolean>;
+  public linkTypes$: Observable<LinkType[]>;
+  public projectPermissions$: Observable<AllowedPermissions>;
+  public collectionsPermissions$: Observable<Record<string, AllowedPermissions>>;
+  public viewsPermissions$: Observable<Record<string, AllowedPermissions>>;
 
   private configChanged: boolean;
   private queryChanged: boolean;
@@ -118,6 +130,10 @@ export class ViewControlsComponent implements OnInit, OnChanges, OnDestroy {
       select(selectPerspective),
       tap(perspective => (this.currentPerspective = perspective))
     );
+    this.linkTypes$ = this.store$.pipe(select(selectAllLinkTypes));
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
+    this.collectionsPermissions$ = this.store$.pipe(select(selectCollectionsPermissions));
+    this.viewsPermissions$ = this.store$.pipe(select(selectViewsPermissions));
   }
 
   private subscribeToWorkspace(): Subscription {

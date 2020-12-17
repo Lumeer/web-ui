@@ -52,6 +52,7 @@ import {ActionConstraintConditionsFormComponent} from './form/constraint-config/
 import {ActionConstraintConditionFormComponent} from './form/constraint-config/action/conditions/condition/action-constraint-condition-form.component';
 import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
+import {ActionConstraintPermissionsFormComponent} from './form/constraint-config/action/permissions/action-constraint-permissions-form.component';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.m
     ActionConstraintConfigFormComponent,
     ActionConstraintConditionsFormComponent,
     ActionConstraintConditionFormComponent,
+    ActionConstraintPermissionsFormComponent,
   ],
   imports: [
     CommonModule,

@@ -229,7 +229,11 @@ export class WorkflowTablesService {
 
   public newHiddenInput(value: string) {
     if (this.isSelected()) {
-      this.stateService.setEditedCell(this.stateService.selectedCell, value);
+      const selectedCell = this.stateService.selectedCell;
+      const column = this.stateService.findTableColumn(selectedCell.tableId, selectedCell.columnId);
+      if (!column.attribute?.constraint?.isDirectlyEditable) {
+        this.stateService.setEditedCell(this.stateService.selectedCell, value);
+      }
     }
   }
 

@@ -21,7 +21,12 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DataValue} from '../../../core/model/data-value';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
-import {ConstraintType} from '../../../core/model/data/constraint';
+import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {ActionConstraintConfig} from '../../../core/model/data/constraint-config';
+import {dataMeetsFilters} from '../../../core/store/documents/documents.filters';
+import {hasRoleByPermissions} from '../../utils/resource.utils';
+import {isNotNullOrUndefined} from '../../utils/common.utils';
 
 @Pipe({
   name: 'dataInputEditInfo',
@@ -30,19 +35,33 @@ export class DataInputEditInfoPipe implements PipeTransform {
   public transform(
     attribute: Attribute,
     dataValue: DataValue,
-    editable: boolean,
-    editing: boolean
+    data: Record<string, any>,
+    attributes: Attribute[],
+    permissions: AllowedPermissions,
+    editing: boolean,
+    constraintData: ConstraintData,
+    editable?: boolean
   ): {readonly: boolean; hasValue: boolean; showDataInput: boolean; additionalMargin: boolean; editing: boolean} {
     const constraint = attribute?.constraint || new UnknownConstraint();
     const asText = constraint.isTextRepresentation;
     const hasValue = dataValue && !!dataValue.format();
-    const readonly = !editable || !(editing || constraint.isDirectlyEditable);
+    const isEditable = isNotNullOrUndefined(editable) ? editable : permissions?.writeWithView;
+    let isReadonly;
+    if (constraint.type === ConstraintType.Action) {
+      const config = <ActionConstraintConfig>constraint.config;
+      const filters = config.equation?.equations?.map(eq => eq.filter) || [];
+      isReadonly =
+        !dataMeetsFilters(data, attributes, filters, constraintData, config.equation?.operator) ||
+        !hasRoleByPermissions(config.role, permissions);
+    } else {
+      isReadonly = !isEditable || !editing;
+    }
 
     const forceDataInput = [ConstraintType.Action, ConstraintType.Files].includes(constraint.type);
     return {
-      readonly,
+      readonly: isReadonly,
       hasValue,
-      showDataInput: forceDataInput || !readonly || (!asText && hasValue),
+      showDataInput: forceDataInput || !isReadonly || (!asText && hasValue),
       additionalMargin: constraint.type === ConstraintType.Select,
       editing,
     };

@@ -79,6 +79,7 @@ import {resourceCommentsReducer} from './resource-comments/resource-comments.red
 import {ResourceCommentsEffects} from './resource-comments/resource-comments.effects';
 import {modalsReducer} from './modals/modals.reducer';
 import {ModalsEffects} from './modals/modals.effects';
+import {userPermissionsReducer} from './user-permissions/user-permissions.reducer';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -113,6 +114,7 @@ const reducers: ActionReducerMap<AppState> = {
   workflows: workflowsReducer,
   resourceComments: resourceCommentsReducer,
   modals: modalsReducer,
+  userPermissions: userPermissionsReducer,
 };
 
 const effects = [

@@ -20,8 +20,6 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 import {Query} from '../../../core/store/navigation/query/query';
-import {Project} from '../../../core/store/projects/project';
-import {ResourceType} from '../../../core/model/resource-type';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectWorkspace} from '../../../core/store/navigation/navigation.state';
@@ -31,6 +29,9 @@ import {Workspace} from '../../../core/store/navigation/workspace';
 import {Perspective} from '../../../view/perspectives/perspective';
 import {SearchTab} from '../../../core/store/navigation/search-tab';
 import {QueryAction} from '../../../core/model/query-action';
+import {Observable} from 'rxjs';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {selectProjectPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'empty-data',
@@ -41,12 +42,13 @@ export class EmptyDataComponent {
   @Input()
   public query: Query;
 
-  @Input()
-  public project: Project;
+  public projectPermissions$: Observable<AllowedPermissions>;
 
-  public readonly projectType = ResourceType.Project;
+  constructor(public router: Router, private store$: Store<AppState>) {}
 
-  constructor(private store$: Store<AppState>, private router: Router) {}
+  public ngOnInit() {
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
+  }
 
   public onSwitchToCollectionsTab() {
     this.store$.pipe(select(selectWorkspace), take(1)).subscribe(workspace => this.switchToCollectionsTab(workspace));
