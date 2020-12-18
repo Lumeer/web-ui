@@ -634,3 +634,9 @@ ul.nav-tabs {
     transform: translateX(0.95rem);
   }
 }
+
+.badge-outline-success {
+  color: $success;
+  border: 1px solid $success;
+  background-color: white;
+}

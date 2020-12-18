@@ -21,3 +21,13 @@
 .modal-body {
   overflow-y: auto;
 }
+
+.btn-success {
+  &:focus,
+  &.focus {
+    &:not(:hover) {
+      background-color: $success;
+      border-color: $success;
+    }
+  }
+}

@@ -53,6 +53,10 @@ export class InviteUserModalComponent implements OnInit {
 
   public accessType = InvitationType.JoinOnly;
 
+  public readonly invitationType = InvitationType;
+
+  public stage = 0;
+
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit(): void {
@@ -70,6 +74,14 @@ export class InviteUserModalComponent implements OnInit {
   }
 
   public onSubmit() {
+    if (this.stage === 0) {
+      this.stage = 1;
+    } else {
+      this.finalSubmit();
+    }
+  }
+
+  public finalSubmit() {
     const selectedUsers = this.newUsers$.getValue();
 
     combineLatest([
@@ -115,5 +127,9 @@ export class InviteUserModalComponent implements OnInit {
   public onRemoveUser(user: string) {
     const users = this.newUsers$.getValue();
     this.newUsers$.next(users.filter(u => u !== user));
+  }
+
+  public onSecondarySubmit() {
+    this.stage = 0;
   }
 }
