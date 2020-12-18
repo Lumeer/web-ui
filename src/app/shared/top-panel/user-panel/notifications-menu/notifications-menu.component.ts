@@ -20,8 +20,16 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {
   CollectionSharedUserNotification,
+  DueDateSoonUserNotification,
   OrganizationSharedUserNotification,
+  PastDueDateUserNotification,
   ProjectSharedUserNotification,
+  StateUpdateUserNotification,
+  TaskAssignedUserNotification,
+  TaskRemovedUserNotification,
+  TaskUnassignedUserNotification,
+  TaskUpdatedUserNotification,
+  TaskUserNotification,
   UserNotification,
   UserNotificationType,
   ViewSharedUserNotification,
@@ -49,6 +57,7 @@ import {ValidNotificationFilterPipe} from './valid-notification-filter.pipe';
 import {selectWorkspaceModels} from '../../../../core/store/common/common.selectors';
 import {Perspective} from '../../../../view/perspectives/perspective';
 import {WorkspaceSelectService} from '../../../../core/service/workspace-select.service';
+import {convertViewCursorToString} from '../../../../core/store/navigation/view-cursor/view-cursor';
 
 @Component({
   selector: 'notifications-menu',
@@ -137,6 +146,14 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
         return this.navigateToCollection(notification);
       case UserNotificationType.ViewShared:
         return this.navigateToView(notification);
+      case UserNotificationType.TaskAssigned:
+      case UserNotificationType.DueDateSoon:
+      case UserNotificationType.PastDueDate:
+      case UserNotificationType.StateUpdate:
+      case UserNotificationType.TaskUpdated:
+      case UserNotificationType.TaskRemoved:
+      case UserNotificationType.TaskUnassigned:
+        return this.navigateToTask(notification);
     }
   }
 
@@ -180,6 +197,29 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
           }
         } else {
           this.router.navigate(path, {queryParams: {q: query}});
+        }
+      }
+    });
+  }
+
+  private navigateToTask(notification: TaskUserNotification): void {
+    this.getOrganization(notification.organizationId, organization => {
+      if (organization) {
+        const query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
+        const cursor = convertViewCursorToString({
+          collectionId: notification.collectionId,
+          documentId: notification.documentId,
+          attributeId: notification.taskNameAttribute,
+        });
+        const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Workflow];
+
+        if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
+          const buildUrl = this.router.createUrlTree(path, {queryParams: {q: query, c: cursor}}).toString();
+          if (!this.startsWithCurrentUrl(buildUrl)) {
+            this.router.navigate(path, {queryParams: {q: query, c: cursor}});
+          }
+        } else {
+          this.router.navigate(path, {queryParams: {q: query, c: cursor}});
         }
       }
     });

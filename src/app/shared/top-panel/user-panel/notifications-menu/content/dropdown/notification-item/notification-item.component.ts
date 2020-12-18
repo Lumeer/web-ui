@@ -43,8 +43,6 @@ export class NotificationItemComponent {
   @Output()
   public onRead = new EventEmitter<{notification: UserNotification; read: boolean}>();
 
-  public readonly notificationType = UserNotificationType;
-
   public emitOpen() {
     this.onOpen.emit(this.notification);
   }

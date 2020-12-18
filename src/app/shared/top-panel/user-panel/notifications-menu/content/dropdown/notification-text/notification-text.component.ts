@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {UserNotification, UserNotificationType} from '../../../../../../../core/model/user-notification';
 import {Dictionary} from '@ngrx/entity';
 import {Organization} from '../../../../../../../core/store/organizations/organization';
@@ -27,12 +27,33 @@ import {Organization} from '../../../../../../../core/store/organizations/organi
   templateUrl: './notification-text.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationTextComponent {
+export class NotificationTextComponent implements OnChanges {
   @Input()
   public notification: UserNotification;
 
   @Input()
   public organizations: Dictionary<Organization>;
 
+  public taskName: string;
+  public taskState: string;
+  public taskDueDate: string;
+
   public readonly notificationType = UserNotificationType;
+
+  public ngOnChanges(changes: SimpleChanges): void {
+    if (changes.notification && changes.notification.currentValue) {
+      switch (changes.notification.currentValue.type) {
+        case UserNotificationType.TaskAssigned:
+        case UserNotificationType.DueDateSoon:
+        case UserNotificationType.PastDueDate:
+        case UserNotificationType.StateUpdate:
+        case UserNotificationType.TaskUpdated:
+        case UserNotificationType.TaskRemoved:
+        case UserNotificationType.TaskUnassigned:
+          this.taskName = changes.notification.currentValue.taskName;
+          this.taskState = changes.notification.currentValue.taskState;
+          this.taskDueDate = changes.notification.currentValue.taskDueDate;
+      }
+    }
+  }
 }

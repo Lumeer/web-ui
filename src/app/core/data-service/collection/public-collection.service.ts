@@ -119,6 +119,10 @@ export class PublicCollectionService extends PublicPermissionService implements 
     return of(true);
   }
 
+  public runRule(collectionId: string, ruleName: string): Observable<any> {
+    return of(true);
+  }
+
   private apiPrefix(workspace?: Workspace): string {
     const organizationId = this.getOrCurrentOrganizationId(workspace);
     const projectId = this.getOrCurrentProjectId(workspace);

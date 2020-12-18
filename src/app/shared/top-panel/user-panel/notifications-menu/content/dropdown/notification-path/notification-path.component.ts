@@ -20,7 +20,15 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   CollectionSharedUserNotification,
+  DueDateSoonUserNotification,
+  PastDueDateUserNotification,
   ProjectSharedUserNotification,
+  StateUpdateUserNotification,
+  TaskAssignedUserNotification,
+  TaskRemovedUserNotification,
+  TaskUnassignedUserNotification,
+  TaskUpdatedUserNotification,
+  TaskUserNotification,
   UserNotification,
   UserNotificationType,
   ViewSharedUserNotification,
@@ -41,6 +49,7 @@ export class NotificationPathComponent implements OnChanges {
   public projectSharedNotification: ProjectSharedUserNotification;
   public collectionSharedNotification: CollectionSharedUserNotification;
   public viewSharedNotification: ViewSharedUserNotification;
+  public taskNotification: TaskUserNotification;
 
   @Input()
   public organizations: Dictionary<Organization>;
@@ -59,6 +68,15 @@ export class NotificationPathComponent implements OnChanges {
           break;
         case UserNotificationType.ViewShared:
           this.viewSharedNotification = changes.notification.currentValue;
+          break;
+        case UserNotificationType.TaskAssigned:
+        case UserNotificationType.DueDateSoon:
+        case UserNotificationType.PastDueDate:
+        case UserNotificationType.StateUpdate:
+        case UserNotificationType.TaskUpdated:
+        case UserNotificationType.TaskRemoved:
+        case UserNotificationType.TaskUnassigned:
+          this.taskNotification = changes.notification.currentValue;
           break;
       }
     }

@@ -92,6 +92,10 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
     });
   }
 
+  public runRule(collectionId: string, ruleName: string): Observable<any> {
+    return this.httpClient.post(`${this.apiPrefix()}/${collectionId}/rule/${ruleName}`, {});
+  }
+
   protected actualApiPrefix(workspace?: Workspace): string {
     const actualWorkspace = workspace || this.workspace;
     const collectionId = actualWorkspace.collectionId;

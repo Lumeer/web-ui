@@ -19,4 +19,8 @@
   <ng-container *ngSwitchCase="notificationType.ViewShared">
     <i [class]="perspectiveIcons[viewSharedNotification.viewPerspective]" [title]="viewSharedNotification.viewName"></i>
   </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    <i [class]="taskNotification.collectionIcon" [title]="taskNotification.collectionName" [style.color]="taskNotification.collectionColor"></i>
+  </ng-container>
 </ng-container>

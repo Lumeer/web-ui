@@ -78,6 +78,9 @@ export enum CollectionsActionType {
   CHANGE_PERMISSION_FAILURE = '[Collections] Change Permission :: Failure',
 
   CLEAR = '[Collections] Clear',
+
+  RUN_RULE = '[Collections] Run Rule',
+  RUN_RULE_FAILURE = '[Collections] Run Rule :: Failure',
 }
 
 export namespace CollectionsAction {
@@ -358,6 +361,18 @@ export namespace CollectionsAction {
     public readonly type = CollectionsActionType.CLEAR;
   }
 
+  export class RunRule implements Action {
+    public readonly type = CollectionsActionType.RUN_RULE;
+
+    public constructor(public payload: {collectionId: string; ruleName: string}) {}
+  }
+
+  export class RunRuleFailure implements Action {
+    public readonly type = CollectionsActionType.RUN_RULE_FAILURE;
+
+    public constructor(public payload: {collectionId: string; ruleName: string; error: any}) {}
+  }
+
   export type All =
     | Get
     | GetSingle
@@ -399,5 +414,7 @@ export namespace CollectionsAction {
     | ChangePermission
     | ChangePermissionSuccess
     | ChangePermissionFailure
-    | Clear;
+    | Clear
+    | RunRule
+    | RunRuleFailure;
 }

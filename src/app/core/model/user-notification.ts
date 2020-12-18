@@ -24,6 +24,14 @@ export enum UserNotificationType {
   ProjectShared = 'PROJECT_SHARED',
   CollectionShared = 'COLLECTION_SHARED',
   ViewShared = 'VIEW_SHARED',
+  TaskAssigned = 'TASK_ASSIGNED',
+  DueDateSoon = 'DUE_DATE_SOON',
+  PastDueDate = 'PAST_DUE_DATE',
+  StateUpdate = 'STATE_UPDATE',
+  TaskUpdated = 'TASK_UPDATED',
+  TaskRemoved = 'TASK_REMOVED',
+  TaskUnassigned = 'TASK_UNASSIGNED',
+  BulkAction = 'BULK_ACTION',
 }
 
 export const UserNotificationTypeMap = {
@@ -31,6 +39,14 @@ export const UserNotificationTypeMap = {
   [UserNotificationType.ProjectShared]: UserNotificationType.ProjectShared,
   [UserNotificationType.CollectionShared]: UserNotificationType.CollectionShared,
   [UserNotificationType.ViewShared]: UserNotificationType.ViewShared,
+  [UserNotificationType.TaskAssigned]: UserNotificationType.TaskAssigned,
+  [UserNotificationType.DueDateSoon]: UserNotificationType.DueDateSoon,
+  [UserNotificationType.PastDueDate]: UserNotificationType.PastDueDate,
+  [UserNotificationType.StateUpdate]: UserNotificationType.StateUpdate,
+  [UserNotificationType.TaskUpdated]: UserNotificationType.TaskUpdated,
+  [UserNotificationType.TaskRemoved]: UserNotificationType.TaskRemoved,
+  [UserNotificationType.TaskUnassigned]: UserNotificationType.TaskUnassigned,
+  [UserNotificationType.BulkAction]: UserNotificationType.BulkAction,
 };
 
 interface BasicUserNotification {
@@ -42,14 +58,11 @@ interface BasicUserNotification {
   deleting?: boolean;
 }
 
-export interface OrganizationSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.OrganizationShared;
+export interface OrganizationUserNotification extends BasicUserNotification {
   organizationId: string;
 }
 
-export interface ProjectSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.ProjectShared;
-  organizationId: string;
+export interface ProjectUserNotification extends OrganizationUserNotification {
   projectId: string;
   projectIcon: string;
   projectColor: string;
@@ -57,35 +70,92 @@ export interface ProjectSharedUserNotification extends BasicUserNotification {
   projectName: string;
 }
 
-export interface CollectionSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.CollectionShared;
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
+export interface CollectionUserNotification extends ProjectUserNotification {
   collectionId: string;
   collectionIcon: string;
   collectionColor: string;
   collectionName: string;
 }
 
-export interface ViewSharedUserNotification extends BasicUserNotification {
-  type: UserNotificationType.ViewShared;
-  organizationId: string;
-  projectId: string;
-  projectIcon: string;
-  projectColor: string;
-  projectCode: string;
-  projectName: string;
+export interface ViewUserNotification extends ProjectUserNotification {
   viewCode: string;
   viewName: string;
   viewPerspective: Perspective;
+}
+
+export interface DocumentUserNotification extends CollectionUserNotification {
+  documentId: string;
+}
+
+export interface TaskUserNotification extends DocumentUserNotification {
+  taskName?: string;
+  taskNameAttribute?: string;
+  taskDueDate?: string;
+  taskState?: string;
+  taskCompleted?: string;
+  assignee?: string;
+  collectionQuery?: string;
+  documentCursor?: string;
+}
+
+export interface OrganizationSharedUserNotification extends OrganizationUserNotification {
+  type: UserNotificationType.OrganizationShared;
+}
+
+export interface ProjectSharedUserNotification extends ProjectUserNotification {
+  type: UserNotificationType.ProjectShared;
+}
+
+export interface CollectionSharedUserNotification extends CollectionUserNotification {
+  type: UserNotificationType.CollectionShared;
+}
+
+export interface ViewSharedUserNotification extends ViewUserNotification {
+  type: UserNotificationType.ViewShared;
+}
+
+export interface TaskAssignedUserNotification extends TaskUserNotification {
+  type: UserNotificationType.TaskAssigned;
+}
+
+export interface DueDateSoonUserNotification extends TaskUserNotification {
+  type: UserNotificationType.DueDateSoon;
+}
+
+export interface PastDueDateUserNotification extends TaskUserNotification {
+  type: UserNotificationType.PastDueDate;
+}
+
+export interface StateUpdateUserNotification extends TaskUserNotification {
+  type: UserNotificationType.StateUpdate;
+}
+
+export interface TaskUpdatedUserNotification extends TaskUserNotification {
+  type: UserNotificationType.TaskUpdated;
+}
+
+export interface TaskRemovedUserNotification extends TaskUserNotification {
+  type: UserNotificationType.TaskRemoved;
+}
+
+export interface TaskUnassignedUserNotification extends TaskUserNotification {
+  type: UserNotificationType.TaskUnassigned;
+}
+
+export interface BulkActionUserNotification extends DocumentUserNotification {
+  type: UserNotificationType.BulkAction;
 }
 
 export type UserNotification =
   | OrganizationSharedUserNotification
   | ProjectSharedUserNotification
   | CollectionSharedUserNotification
-  | ViewSharedUserNotification;
+  | ViewSharedUserNotification
+  | TaskAssignedUserNotification
+  | DueDateSoonUserNotification
+  | PastDueDateUserNotification
+  | StateUpdateUserNotification
+  | TaskUpdatedUserNotification
+  | TaskRemovedUserNotification
+  | TaskUnassignedUserNotification
+  | BulkActionUserNotification;
