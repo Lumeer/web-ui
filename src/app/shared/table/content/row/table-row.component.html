@@ -6,14 +6,14 @@
     editing: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
     <ng-container
-      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:mappedData:columnAttributes:group.column.permissions:data.editing:constraintData:group.column.editable as dataInputInfo">
+      *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:group.column?.editable:data.editing as dataInputInfo">
       <td class="table-cell position-relative"
           [style.width.px]="group.width"
           [style.height.px]="row.height"
           [style.max-height.px]="row.height"
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
           [class.focused]="selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row"
-          [class.editing]="data.editing"
+          [class.editing]="data.editing && !group.column?.attribute?.constraint?.isDirectlyEditable"
           [class.affected]="editedCell | tableCellEdited:group.column:cellType:row: true"
           [class.cursor-pointer]="group.column?.editable"
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"

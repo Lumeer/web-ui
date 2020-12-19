@@ -22,7 +22,9 @@ import {ConstraintType} from '../../core/model/data/constraint';
 import {Attribute} from '../../core/store/collections/collection';
 
 const NO_HINTS_CONSTRAINT_TYPES = [
+  ConstraintType.Action,
   ConstraintType.Color,
+  ConstraintType.Boolean,
   ConstraintType.DateTime,
   ConstraintType.Select,
   ConstraintType.User,
@@ -34,7 +36,6 @@ const NO_HINTS_CONSTRAINT_TYPES = [
 })
 export class CanShowAttributeHintsPipe implements PipeTransform {
   public transform(attribute: Attribute): boolean {
-    const constraintType = attribute && attribute.constraint && attribute.constraint.type;
-    return !NO_HINTS_CONSTRAINT_TYPES.includes(constraintType);
+    return !NO_HINTS_CONSTRAINT_TYPES.includes(attribute?.constraint?.type);
   }
 }

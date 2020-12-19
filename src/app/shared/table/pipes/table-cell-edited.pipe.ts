@@ -34,9 +34,6 @@ export class TableCellEditedPipe implements PipeTransform {
     row?: TableRow,
     affected?: boolean
   ): boolean {
-    return (
-      isTableCellEdited(cell, column, type, row, affected) &&
-      (type !== TableCellType.Body || !isTableColumnDirectlyEditable(column))
-    );
+    return isTableCellEdited(cell, column, type, row, affected);
   }
 }

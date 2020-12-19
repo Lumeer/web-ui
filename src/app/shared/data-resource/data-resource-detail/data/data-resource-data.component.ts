@@ -131,7 +131,8 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
       () => 2,
       () => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
-      () => this.hiddenInputComponent
+      () => this.hiddenInputComponent,
+      (row, column) => this.dataRowService.rows$.value[row]?.attribute?.constraint?.isDirectlyEditable
     );
   }
 

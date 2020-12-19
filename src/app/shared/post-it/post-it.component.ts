@@ -122,7 +122,8 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
       () => 2,
       () => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
-      () => this.hiddenInputComponent
+      () => this.hiddenInputComponent,
+      (row, column) => this.dataRowService.rows$.value[row]?.attribute?.constraint?.isDirectlyEditable
     );
   }
 
