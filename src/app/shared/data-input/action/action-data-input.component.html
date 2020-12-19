@@ -1,5 +1,5 @@
 <button class="btn btn-sm small text-truncate mx-1" [style.background]="value.config.background"
-        [disabled]="readonly"
+        [disabled]="!(enabled$ | async)"
         [style.color]="value.config.background | contrastColor"
         (click)="onClick()">
   <ng-container><i [ngClass]="value.config.icon"></i>&nbsp;</ng-container>{{value.config.title}}

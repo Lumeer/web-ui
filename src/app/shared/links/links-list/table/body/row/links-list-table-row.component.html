@@ -7,14 +7,14 @@
           data: row.document?.data || row.linkInstance?.data || {}} as columnData"
         [style.width.px]="column.width"
         [class.focused]="columnData.focused"
-        [class.editing]="columnData.editing"
+        [class.editing]="columnData.editing && !column?.attribute?.constraint?.isDirectlyEditable"
         [class.affected]="!(attributeEditing?.documentId | isNullOrUndefined) &&
       (row.document?.id === attributeEditing?.documentId) &&
       (column.collectionId && column.attribute.id === attributeEditing?.attributeId)"
         (click)="onDataInputFocus(index, $event)"
         (dblclick)="onDataInputDblClick(index, $event)">
       <ng-container
-        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:columnData.data:attributes: permissions:columnData.editing:constraintData:column.editable as dataInputInfo">
+        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:column.editable:columnData.editing as dataInputInfo">
         <data-input *ngIf="column.linkTypeId"
                     [constraint]="column.attribute?.constraint"
                     [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id)"

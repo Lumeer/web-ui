@@ -269,7 +269,7 @@ export const selectLinkTypesByCollectionId = (collectionId: string) =>
 export const selectCanManageViewConfig = createSelector(
   selectCurrentView,
   selectViewsPermissions,
-  (view, permissions) => view && permissions?.[view.id]?.manage
+  (view, permissions) => !view || permissions?.[view.id]?.manage
 );
 
 export const selectViewsByRead = createSelector(selectAllViews, selectViewsPermissions, (views, permissions) =>

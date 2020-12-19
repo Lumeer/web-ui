@@ -18,7 +18,7 @@
                       [class.cursor-pointer]="!readonly"
                       (dblclick)="$event.stopPropagation()"
                       (valueChange)="onValueChange($event)"
-                      (save)="onSaveValue($event)"
+                      (save)="onSaveValueWithAction($event)"
                       class="w-100 px-1">
   </boolean-data-input>
 
@@ -159,6 +159,7 @@
 
   <action-data-input *ngSwitchCase="constraintType.Action"
                      [readonly]="readonly"
+                     [config]="constraint?.config"
                      [value]="dataValue"
                      [configuration]="configuration?.action"
                      [cursor]="cursor"

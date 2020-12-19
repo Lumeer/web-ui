@@ -114,7 +114,8 @@ export class LinksListTableBodyComponent implements OnInit, OnChanges {
       () => this.columns.length,
       () => this.rows.length + this.newRows$.value.length,
       () => this.tableRows.toArray(),
-      () => this.hiddenInputComponent
+      () => this.hiddenInputComponent,
+      (row, column) => this.columns[column]?.attribute?.constraint?.isDirectlyEditable
     );
   }
 

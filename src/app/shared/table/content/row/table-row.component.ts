@@ -43,13 +43,11 @@ import {ConstraintData, ConstraintType} from '../../../../core/model/data/constr
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
-import {flattenTableColumnGroups} from '../../model/table-utils';
 import {TableMenuComponent} from '../common/menu/table-menu.component';
 import {isKeyPrintable, KeyCode} from '../../../key-code';
 import {Direction} from '../../../direction';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
-import {Attribute} from '../../../../core/store/collections/collection';
 
 @Component({
   selector: '[table-row]',
@@ -125,8 +123,6 @@ export class TableRowComponent implements OnChanges {
 
   public editedValue: DataValue;
   public suggestedColumn: TableColumn;
-  public columnAttributes: Attribute[];
-  public mappedData: Record<string, any>;
 
   public suggesting$ = new BehaviorSubject<DataValue>(null);
 
@@ -136,25 +132,6 @@ export class TableRowComponent implements OnChanges {
     if (changes.editedCell) {
       this.checkEdited();
     }
-    if (changes.columnGroups || changes.row) {
-      const data = this.retrieveAttributesAndMapData();
-      this.columnAttributes = data.attributes;
-      this.mappedData = data.data;
-    }
-  }
-
-  private retrieveAttributesAndMapData(): {attributes: Attribute[]; data: Record<string, any>} {
-    return flattenTableColumnGroups(this.columnGroups).reduce(
-      (data, column) => {
-        if (column.attribute) {
-          data.attributes.push(column.attribute);
-          // data in row is grouped by column id
-          data.data[column.attribute.id] = this.row?.data?.[column.id];
-        }
-        return data;
-      },
-      {attributes: [], data: {}}
-    );
   }
 
   private checkEdited() {
@@ -167,7 +144,8 @@ export class TableRowComponent implements OnChanges {
           this.suggesting$.next(this.editedValue);
         }
       }
-    } else {
+    }
+    if (!this.suggestedColumn) {
       this.endSuggesting();
     }
   }
@@ -214,6 +192,10 @@ export class TableRowComponent implements OnChanges {
   }
 
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
+    if (!column.editable) {
+      return;
+    }
+
     const value = data.dataValue.serialize();
     const currentValue = this.columnValue(column);
     if (

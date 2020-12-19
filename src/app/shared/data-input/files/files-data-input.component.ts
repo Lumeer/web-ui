@@ -42,6 +42,7 @@ import {FileAttachmentsAction} from '../../../core/store/file-attachments/file-a
 import {selectFileAttachmentsByDataCursor} from '../../../core/store/file-attachments/file-attachments.state';
 import {DataCursor, isDataCursorEntityInitialized} from '../data-cursor';
 import {KeyCode} from '../../key-code';
+import {preventEvent} from '../../utils/common.utils';
 
 @Component({
   selector: 'files-data-input',
@@ -265,9 +266,7 @@ export class FilesDataInputComponent implements OnInit, OnChanges {
   }
 
   private onClick(event: KeyboardEvent) {
-    event.stopPropagation();
-    event.stopImmediatePropagation();
-    event.preventDefault();
+    preventEvent(event);
     this.hiddenInput.nativeElement.focus();
   }
 

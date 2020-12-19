@@ -23,15 +23,13 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import {LinkColumn} from '../../../model/link-column';
-import {ConstraintData, ConstraintType} from '../../../../../../core/model/data/constraint';
+import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {LinkRow} from '../../../model/link-row';
 import {DataRowComponent} from '../../../../../data/data-row-component';
 import {BehaviorSubject, Subscription} from 'rxjs';
@@ -43,9 +41,7 @@ import {isKeyPrintable, KeyCode} from '../../../../../key-code';
 import {Direction} from '../../../../../direction';
 import {DataValue} from '../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../core/model/constraint/unknown.constraint';
-import {BooleanConstraint} from '../../../../../../core/model/constraint/boolean.constraint';
 import {DataInputConfiguration} from '../../../../../data-input/data-input-configuration';
-import {Attribute} from '../../../../../../core/store/collections/collection';
 
 @Component({
   selector: '[links-list-table-row]',
@@ -53,7 +49,7 @@ import {Attribute} from '../../../../../../core/store/collections/collection';
   styleUrls: ['./links-list-table-row.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy, OnChanges {
+export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnDestroy {
   @Input()
   public columns: LinkColumn[];
 
@@ -114,9 +110,8 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
 
-  public readonly booleanConstraintType = ConstraintType.Boolean;
   public readonly configuration: DataInputConfiguration = {
-    common: {allowRichText: true, delaySaveAction: false},
+    common: {allowRichText: true, delaySaveAction: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
     action: {center: true},
@@ -128,7 +123,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
 
   public editedValue: DataValue;
   public subscriptions = new Subscription();
-  public attributes: Attribute[];
 
   constructor(public element: ElementRef) {}
 
@@ -151,12 +145,6 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     );
   }
 
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.columns) {
-      this.attributes = (this.columns || []).map(column => column.attribute).filter(attribute => !!attribute);
-    }
-  }
-
   public endColumnEditing(column: number) {
     if (this.columnEditing$.value === column) {
       this.endRowEditing();
@@ -175,21 +163,17 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   public startColumnEditing(column: number, value?: any): boolean {
     this.editedValue = null;
     if (this.isColumnEditable(column)) {
-      if (this.shouldDirectEditValue(column)) {
-        this.onNewValue(column, this.computeDirectEditValue(column));
-      } else {
-        this.editedValue = this.createDataValue(column, value, true);
-        this.suggesting$.next(this.editedValue);
-        this.columnEditing$.next(column);
-        return true;
-      }
+      this.editedValue = this.createDataValue(column, value, true);
+      this.suggesting$.next(this.editedValue);
+      this.columnEditing$.next(column);
+      return true;
     }
     return false;
   }
 
   private createDataValue(column: number, value?: any, typed?: boolean): DataValue {
     const attribute = this.columns[column].attribute;
-    const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+    const constraint = attribute?.constraint || new UnknownConstraint();
     if (typed) {
       return constraint.createInputDataValue(value, this.columnValue(column), this.constraintData);
     }
@@ -197,34 +181,16 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     return constraint.createDataValue(initialValue, this.constraintData);
   }
 
-  private shouldDirectEditValue(column: number): boolean {
-    return this.columnConstraintType(column) === ConstraintType.Boolean;
-  }
-
-  private columnConstraintType(column: number): ConstraintType {
-    const attribute = this.columns[column].attribute;
-    return attribute && attribute.constraint && attribute.constraint.type;
-  }
-
   private isColumnEditable(column: number): boolean {
-    return this.permissions && this.permissions.writeWithView && this.columns[column].editable;
-  }
-
-  private computeDirectEditValue(column: number): DataValue {
-    if (this.columnConstraintType(column) === ConstraintType.Boolean) {
-      const constraint = this.columns[column].attribute.constraint as BooleanConstraint;
-      return constraint.createDataValue(!this.columnValue(column));
-    }
-
-    return null;
+    return this.permissions?.writeWithView && this.columns[column].editable;
   }
 
   private columnValue(index: number): any {
     const column = this.columns[index];
-    if (column && column.collectionId) {
-      return ((this.row.linkInstance && this.row.document.data) || {})[column.attribute.id];
-    } else if (column && column.linkTypeId) {
-      return ((this.row.linkInstance && this.row.linkInstance.data) || {})[column.attribute.id];
+    if (column?.collectionId) {
+      return (this.row.document?.data || {})[column.attribute.id];
+    } else if (column?.linkTypeId) {
+      return (this.row.linkInstance?.data || {})[column.attribute.id];
     }
     return null;
   }
@@ -234,8 +200,12 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onNewValue(column: number, dataValue: DataValue) {
+    if (!this.columns?.[column]?.editable) {
+      return;
+    }
+
     this.editedValue = null;
-    if (this.suggestions && this.suggestions.isSelected()) {
+    if (this.suggestions?.isSelected()) {
       this.suggestions.useSelection();
     } else {
       this.saveData(column, dataValue);
