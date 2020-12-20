@@ -564,9 +564,7 @@ export class CollectionsEffects {
 
       return this.collectionService.runRule(collectionId, ruleName).pipe(
         mergeMap(() => EMPTY),
-        catchError(error => {
-          return of(new CollectionsAction.RunRuleFailure({collectionId, ruleName, error}));
-        })
+        catchError(error => of(new CollectionsAction.RunRuleFailure({error})))
       );
     })
   );

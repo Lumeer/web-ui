@@ -38,4 +38,6 @@ export abstract class LinkInstanceService {
   public abstract duplicateLinkInstances(
     linkInstanceDuplicate: LinkInstanceDuplicateDto
   ): Observable<LinkInstanceDto[]>;
+
+  public abstract runRule(linkTypeId: string, linkInstanceId: string, attributeId: string): Observable<any>;
 }

@@ -73,6 +73,9 @@ export enum DocumentsActionType {
 
   CLEAR = '[Documents] Clear',
   CLEAR_BY_COLLECTION = '[Documents] Clear by collection',
+
+  RUN_RULE = '[Documents] Run Rule',
+  RUN_RULE_FAILURE = '[Documents] Run Rule :: Failure',
 }
 
 export namespace DocumentsAction {
@@ -326,6 +329,18 @@ export namespace DocumentsAction {
     public constructor(public payload: {collectionId: string}) {}
   }
 
+  export class RunRule implements Action {
+    public readonly type = DocumentsActionType.RUN_RULE;
+
+    public constructor(public payload: {collectionId: string; documentId: string; attributeId: string}) {}
+  }
+
+  export class RunRuleFailure implements Action {
+    public readonly type = DocumentsActionType.RUN_RULE_FAILURE;
+
+    public constructor(public payload: {documentId: string; attributeId: string; error: any}) {}
+  }
+
   export type All =
     | Get
     | GetSingle
@@ -361,5 +376,7 @@ export namespace DocumentsAction {
     | DeleteFailure
     | DeleteConfirm
     | Clear
-    | ClearByCollection;
+    | ClearByCollection
+    | RunRule
+    | RunRuleFailure;
 }

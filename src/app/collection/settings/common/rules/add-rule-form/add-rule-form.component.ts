@@ -29,7 +29,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
+import {Rule, RuleConfiguration, RuleTiming, RuleType, ruleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -68,7 +68,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public onSaveRule = new EventEmitter<Rule>();
 
-  public readonly types = objectValues(RuleTypeMap);
+  public readonly types = objectValues(ruleTypeMap);
   public readonly typeItems: SelectItemModel[];
 
   public form: FormGroup;

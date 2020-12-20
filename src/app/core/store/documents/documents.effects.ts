@@ -579,6 +579,32 @@ export class DocumentsEffects {
     })
   );
 
+  @Effect()
+  public runRule$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.RunRule>(DocumentsActionType.RUN_RULE),
+    mergeMap(action => {
+      const {collectionId, documentId, attributeId} = action.payload;
+
+      return this.documentService.runRule(collectionId, documentId, attributeId).pipe(
+        mergeMap(() => EMPTY),
+        catchError(error => of(new DocumentsAction.RunRuleFailure({...action.payload, error})))
+      );
+    })
+  );
+
+  @Effect()
+  public runRuleFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.RunRuleFailure>(DocumentsActionType.RUN_RULE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({
+        id: 'dataResource.runRule.fail',
+        value: 'Could not run the selected rule',
+      });
+      return new NotificationsAction.Error({message});
+    })
+  );
+
   constructor(
     private actions$: Actions,
     private documentService: DocumentService,

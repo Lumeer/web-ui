@@ -40,6 +40,8 @@ import {selectLinkTypeById} from '../../../core/store/link-types/link-types.stat
 import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 
 @Component({
   selector: 'action-data-input',
@@ -87,7 +89,7 @@ export class ActionDataInputComponent implements OnChanges {
   }
 
   private bindEnabled$(): Observable<boolean> {
-    if (this.cursor.collectionId) {
+    if (this.cursor?.collectionId) {
       return combineLatest([
         this.store$.pipe(select(selectCollectionById(this.cursor.collectionId))),
         this.store$.pipe(select(selectDocumentById(this.cursor.documentId))),
@@ -100,17 +102,17 @@ export class ActionDataInputComponent implements OnChanges {
           this.checkEnabled(collection, document, permissions, config, constraintData)
         )
       );
-    } else if (this.cursor.linkTypeId) {
+    } else if (this.cursor?.linkTypeId) {
       return combineLatest([
         this.store$.pipe(select(selectLinkTypeById(this.cursor.linkTypeId))),
         this.store$.pipe(select(selectLinkInstanceById(this.cursor.linkInstanceId))),
-        this.store$.pipe(select(selectLinkTypePermissions(this.cursor.collectionId))),
+        this.store$.pipe(select(selectLinkTypePermissions(this.cursor.linkTypeId))),
         this.config$,
         this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([collection, document, permissions, config, constraintData]) =>
-          this.checkEnabled(collection, document, permissions, config, constraintData)
+        map(([linkType, linkInstance, permissions, config, constraintData]) =>
+          this.checkEnabled(linkType, linkInstance, permissions, config, constraintData)
         )
       );
     }
@@ -125,6 +127,9 @@ export class ActionDataInputComponent implements OnChanges {
     config: ActionConstraintConfig,
     constraintData?: ConstraintData
   ): boolean {
+    if (!resource || !dataResource) {
+      return false;
+    }
     const filters = config.equation?.equations?.map(eq => eq.filter) || [];
     return (
       dataMeetsFilters(dataResource?.data, resource?.attributes, filters, constraintData, config.equation?.operator) &&
@@ -133,8 +138,22 @@ export class ActionDataInputComponent implements OnChanges {
   }
 
   public onClick() {
-    if (this.cursor.collectionId) {
-      // TODO
+    if (this.cursor?.collectionId && this.cursor?.documentId) {
+      this.store$.dispatch(
+        new DocumentsAction.RunRule({
+          collectionId: this.cursor.collectionId,
+          documentId: this.cursor.documentId,
+          attributeId: this.cursor.attributeId,
+        })
+      );
+    } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
+      this.store$.dispatch(
+        new LinkInstancesAction.RunRule({
+          linkTypeId: this.cursor.linkTypeId,
+          linkInstanceId: this.cursor.linkInstanceId,
+          attributeId: this.cursor.attributeId,
+        })
+      );
     }
   }
 }

@@ -21,7 +21,7 @@ import {Action} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {CommonAction} from './common/common.action';
 import {RuleDto} from '../dto/rule.dto';
-import {Rule, RuleTimingMap, RuleTypeMap} from '../model/rule';
+import {Rule, ruleTimingMap, ruleTypeMap} from '../model/rule';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];
@@ -41,8 +41,8 @@ export function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
       name =>
         ({
           name: name,
-          type: RuleTypeMap[dto[name].type],
-          timing: RuleTimingMap[dto[name].timing],
+          type: ruleTypeMap[dto[name].type],
+          timing: ruleTimingMap[dto[name].timing],
           configuration: dto[name].configuration,
         } as Rule) // TODO avoid type casting
     )

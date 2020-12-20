@@ -29,7 +29,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChange,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -50,7 +49,6 @@ import {CollectionsAction} from '../../../../../../../core/store/collections/col
 import {
   selectAllCollections,
   selectCollectionAttributeById,
-  selectCollectionById,
 } from '../../../../../../../core/store/collections/collections.state';
 import {DocumentMetaData, DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {generateDocumentDataByResourceQuery} from '../../../../../../../core/store/documents/document.utils';
@@ -58,10 +56,7 @@ import {DocumentsAction} from '../../../../../../../core/store/documents/documen
 import {LinkInstancesAction} from '../../../../../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../../../../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
-import {
-  selectLinkTypeAttributeById,
-  selectLinkTypeById,
-} from '../../../../../../../core/store/link-types/link-types.state';
+import {selectLinkTypeAttributeById} from '../../../../../../../core/store/link-types/link-types.state';
 import {Query} from '../../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableConfigColumn, TableConfigRow, TableModel} from '../../../../../../../core/store/tables/table.model';
