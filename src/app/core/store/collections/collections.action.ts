@@ -370,7 +370,7 @@ export namespace CollectionsAction {
   export class RunRuleFailure implements Action {
     public readonly type = CollectionsActionType.RUN_RULE_FAILURE;
 
-    public constructor(public payload: {collectionId: string; ruleName: string; error: any}) {}
+    public constructor(public payload: {error: any}) {}
   }
 
   export type All =

@@ -27,6 +27,19 @@ import {DataCursor} from '../../data-input/data-cursor';
 })
 export class TableRowDataCursorPipe implements PipeTransform {
   public transform(row: TableRow, column: TableColumn): DataCursor {
-    return {...row, ...column, attributeId: column.attribute?.id};
+    if (column?.linkTypeId) {
+      return {
+        linkTypeId: column.linkTypeId,
+        linkInstanceId: row.linkInstanceId,
+        attributeId: column.attribute?.id,
+      };
+    } else if (column?.collectionId) {
+      return {
+        collectionId: column.collectionId,
+        documentId: row.documentId,
+        attributeId: column.attribute?.id,
+      };
+    }
+    return {};
   }
 }

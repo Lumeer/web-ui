@@ -62,6 +62,10 @@ export function documentsReducer(
       return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: false}}, state);
     case DocumentsActionType.REMOVE_FAVORITE_FAILURE:
       return documentsAdapter.updateOne({id: action.payload.documentId, changes: {favorite: true}}, state);
+    case DocumentsActionType.RUN_RULE:
+      return setRuleExecutionTime(state, action.payload.documentId, action.payload.attributeId, new Date().getTime());
+    case DocumentsActionType.RUN_RULE_FAILURE:
+      return setRuleExecutionTime(state, action.payload.documentId, action.payload.attributeId);
     case DocumentsActionType.CLEAR_BY_COLLECTION:
       return clearDocumentsAndQueries(action.payload.collectionId, state);
     case DocumentsActionType.CLEAR:
@@ -69,6 +73,21 @@ export function documentsReducer(
     default:
       return state;
   }
+}
+
+function setRuleExecutionTime(
+  state: DocumentsState,
+  documentId: string,
+  attributeId: string,
+  time?: number
+): DocumentsState {
+  const performedActions = {...state.performedActions};
+  if (time) {
+    performedActions[documentId] = {...(state.performedActions[documentId] || {}), [attributeId]: time};
+  } else {
+    delete performedActions?.[documentId]?.[attributeId];
+  }
+  return {...state, performedActions};
 }
 
 function clearDocumentsAndQueries(collectionId: string, state: DocumentsState): DocumentsState {

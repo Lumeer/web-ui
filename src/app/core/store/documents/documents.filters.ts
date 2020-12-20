@@ -293,7 +293,7 @@ export function createDataValuesMap(
     (map, attribute) => ({
       ...map,
       [attribute.id]: (attribute.constraint || new UnknownConstraint()).createDataValue(
-        data[attribute.id],
+        data?.[attribute.id],
         constraintData
       ),
     }),
@@ -311,6 +311,7 @@ export function dataMeetsFilters(
   const dataValues = createDataValuesMap(data, attributes, constraintData);
   if (operator === EquationOperator.Or) {
     return (
+      !filters ||
       filters.length === 0 ||
       filters.reduce((result, filter) => result || dataValuesMeetsFilters(dataValues, [filter]), false)
     );

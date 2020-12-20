@@ -69,6 +69,10 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
     return this.httpClient.post<LinkInstanceDto[]>(`${this.apiPrefix()}/duplicate`, linkInstanceDuplicate);
   }
 
+  public runRule(linkTypeId: string, linkInstanceId: string, attributeId: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiPrefix(linkTypeId, linkInstanceId)}/rule/${attributeId}`, {});
+  }
+
   private apiPrefix(linkTypeId?: string, linkInstanceId?: string): string {
     const suffix = (linkTypeId ? `/${linkTypeId}` : '') + (linkInstanceId ? `/${linkInstanceId}` : '');
 

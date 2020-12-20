@@ -52,6 +52,14 @@
                           [value]="(data.stringValues | join) | dataValue:data.constraint">
     </rich-text-data-input>
 
+    <action-data-input *ngSwitchCase="constraintType.Action"
+                       class="h-100"
+                       [config]="data.constraint?.config"
+                       [configuration]="actionConfiguration"
+                       [readonly]="true"
+                       [value]="values[0] | dataValue:data.constraint:constraintData">
+    </action-data-input>
+
     <ng-container *ngSwitchDefault>
       <ng-container *ngTemplateOutlet="defaultCollapsedCell"></ng-container>
     </ng-container>

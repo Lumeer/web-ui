@@ -125,6 +125,10 @@ export class ApiDocumentService extends BaseService implements DocumentService {
     );
   }
 
+  public runRule(collectionId: string, documentId: string, attributeId: string): Observable<any> {
+    return this.httpClient.post<any>(`${this.apiPrefix({collectionId})}/${documentId}/rule/${attributeId}`, {});
+  }
+
   private apiPrefix(workspace?: Workspace): string {
     const collectionId = this.getOrCurrentCollectionId(workspace);
 

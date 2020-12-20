@@ -33,13 +33,13 @@ export enum RuleTiming {
   All = 'ALL',
 }
 
-export const RuleTypeMap = {
+export const ruleTypeMap = {
   [RuleType.AutoLink]: RuleType.AutoLink,
   [RuleType.Blockly]: RuleType.Blockly,
   [RuleType.Zapier]: RuleType.Zapier,
 };
 
-export const RuleTimingMap = {
+export const ruleTimingMap = {
   [RuleTiming.Create]: RuleTiming.Create,
   [RuleTiming.Update]: RuleTiming.Update,
   [RuleTiming.CreateUpdate]: RuleTiming.CreateUpdate,
