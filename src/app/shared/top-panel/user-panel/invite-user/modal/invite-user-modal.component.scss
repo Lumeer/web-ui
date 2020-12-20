@@ -17,12 +17,17 @@ a.list-group-item {
   }
 }
 
-.header-container {
-  background-color: $primary;
-  color: $light;
-}
-
 .user {
   overflow: hidden;
   text-overflow: ellipsis;
+  vertical-align: bottom;
+
+  i.fa-times {
+    vertical-align: text-bottom;
+    transition: all 0.15s ease-in-out;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
 }

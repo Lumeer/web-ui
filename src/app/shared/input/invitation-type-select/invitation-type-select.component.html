@@ -1,34 +1,18 @@
-<div class="list-group">
+<div class="list-group list-group-horizontal py-3">
   <a class="list-group-item list-group-item-action" [class.active]="selectedInvitationType === invitationType.JoinOnly" (click)="setInvitationType(invitationType.JoinOnly)">
-    <span i18n="@@inviteUser.dialog.readOnlyNoAccess.title">Invite to project but do not share anything yet</span>
-    <small class="text-muted d-block">
-            <span i18n="@@inviteUser.dialog.readOnlyNoAccess.description1">
-              New colleagues can join the project, they won't see exiting tables and views.
-            </span>
-    </small>
+    <div class="text-center py-2"><i class="fa fa-2x fa-eye-slash"></i></div>
+    <div class="text-center py-2" i18n="@@inviteUser.dialog.readOnlyNoAccess.title2">Just Join</div>
   </a>
   <a class="list-group-item list-group-item-action" [class.active]="selectedInvitationType === invitationType.ReadOnly" (click)="setInvitationType(invitationType.ReadOnly)">
-    <span i18n="@@inviteUser.dialog.readOnly.title">Invite as read only</span>
-    <small class="text-muted d-block">
-            <span i18n="@@inviteUser.dialog.readOnly.description1">
-              New colleagues will see everything in the project, they cannot change anything.
-            </span>
-    </small>
+    <div class="text-center py-2"><i class="fa fa-2x fa-eye"></i></div>
+    <div class="text-center py-2" i18n="@@inviteUser.dialog.readOnly.title2">View</div>
   </a>
   <a class="list-group-item list-group-item-action" [class.active]="selectedInvitationType === invitationType.ReadWrite" (click)="setInvitationType(invitationType.ReadWrite)">
-    <span i18n="@@inviteUser.dialog.write.title">Invite for collaboration</span>
-    <small class="text-muted d-block">
-            <span i18n="@@inviteUser.dialog.write.description1">
-              New colleagues will see everything in the project and they will be able to change and add data.
-            </span>
-    </small>
+    <div class="text-center py-2"><i class="fa fa-2x fa-pencil"></i></div>
+    <div class="text-center py-2" i18n="@@inviteUser.dialog.write.title2">Collaborate</div>
   </a>
   <a class="list-group-item list-group-item-action" [class.active]="selectedInvitationType === invitationType.Manage" (click)="setInvitationType(invitationType.Manage)">
-    <span i18n="@@inviteUser.dialog.manage.title">Invite as managers</span>
-    <small class="text-muted d-block">
-            <span i18n="@@inviteUser.dialog.manage.description1">
-              You give your newly invited colleagues full control over the project. They can read, write and manage everything.
-            </span>
-    </small>
+    <div class="text-center py-2"><i class="fa fa-2x fa-cogs"></i></div>
+    <div class="text-center py-2" i18n="@@inviteUser.dialog.manage.title2">Create</div>
   </a>
 </div>

@@ -85,7 +85,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">93</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
@@ -477,61 +477,29 @@
           <context context-type="sourcefile">app/shared/tag/tag.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.title" datatype="html">
-        <source>Invite to project but do not share anything yet</source>
+      </trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.title2" datatype="html">
+        <source>Just Join</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">4</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.description1" datatype="html">
-        <source>
-              New colleagues can join the project, they won&apos;t see exiting tables and views.
-            </source>
+      </trans-unit><trans-unit id="inviteUser.dialog.readOnly.title2" datatype="html">
+        <source>View</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">8</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.readOnly.title" datatype="html">
-        <source>Invite as read only</source>
+      </trans-unit><trans-unit id="inviteUser.dialog.write.title2" datatype="html">
+        <source>Collaborate</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.readOnly.description1" datatype="html">
-        <source>
-              New colleagues will see everything in the project, they cannot change anything.
-            </source>
+      </trans-unit><trans-unit id="inviteUser.dialog.manage.title2" datatype="html">
+        <source>Create</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.write.title" datatype="html">
-        <source>Invite for collaboration</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.write.description1" datatype="html">
-        <source>
-              New colleagues will see everything in the project and they will be able to change and add data.
-            </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
-          <context context-type="linenumber">21</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.manage.title" datatype="html">
-        <source>Invite as managers</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.manage.description1" datatype="html">
-        <source>
-              You give your newly invited colleagues full control over the project. They can read, write and manage everything.
-            </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/input/invitation-type-select/invitation-type-select.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">16</context>
         </context-group>
       </trans-unit><trans-unit id="copyInputBox.clipboard.copy" datatype="html">
         <source>Copy to clipboard</source>
@@ -2097,43 +2065,76 @@
         <source>Invite colleagues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">12</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.userEmails.headline" datatype="html">
+        <source>Enter emails:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit><trans-unit id="inviteUser.dialog.userRights.headline" datatype="html">
         <source>Invited colleagues can:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.settings.description1" datatype="html">
-        <source>
-            Use the cog icon
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-      </trans-unit><trans-unit id="inviteUser.dialog.settings.description2" datatype="html">
-        <source>
-            next to the table, or the Share button to change access rights later (especially
-            for the newly created tables and views).
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
           <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.readOnlyNoAccess.description1" datatype="html">
+        <source>
+            New colleagues can join the project, they won&apos;t see exiting tables and views.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.readOnly.description1" datatype="html">
+        <source>
+            New colleagues will see everything in the project, they cannot change anything.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">69</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.write.description1" datatype="html">
+        <source>
+            New colleagues will see everything in the project and they will be able to change and add data.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit><trans-unit id="inviteUser.dialog.manage.description1" datatype="html">
+        <source>
+            You give your newly invited colleagues full control over the project. They can read, write and manage everything.
+          </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
+      </trans-unit><trans-unit id="button.previous" datatype="html">
+        <source>Previous</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">97</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.next" datatype="html">
+        <source>Next</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
       </trans-unit><trans-unit id="inviteUser.button.text" datatype="html">
         <source>Invite</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">105</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/invite-user.component.html</context>
@@ -5958,20 +5959,6 @@
       </trans-unit>
       <trans-unit id="button.onward" datatype="html">
         <source>Onward!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.next" datatype="html">
-        <source>Next</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.previous" datatype="html">
-        <source>Previous</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
           <context context-type="linenumber">1</context>

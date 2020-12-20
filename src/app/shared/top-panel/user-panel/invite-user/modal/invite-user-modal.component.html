@@ -3,6 +3,8 @@
   [dialogType]="dialogType.Success"
   (onClose)="hideDialog()"
   (onSubmit)="onSubmit()"
+  (onSecondarySubmit)="onSecondarySubmit()"
+  [showSecondarySubmit]="stage === 1"
   [submitDisabled]="!(newUsers$ | async) || (newUsers$ | async).length === 0"
   *ngIf="{
       isOrganizationManager: (organization$ | async) | permissions:organizationType:'manage' | async,
@@ -11,56 +13,67 @@
 
   <span class="title" i18n="@@inviteUser.dialog.title">Invite colleagues</span>
 
-  <div class="body">
+  <div class="body" *ngIf="newUsers$ | async as users">
 
     <ng-container *ngIf="managers.isOrganizationManager || managers.isProjectManager; else managerWarning">
 
-      <div class="header-container d-flex flex-column justify-content-center px-5 py-3">
-        <ng-container *ngIf="managers.isOrganizationManager; else projectManager">
-          <new-user [users]="newUsers$ | async"
-                    [existingUsers]="existingUsers$ | async"
-                    (userCreated)="onAddUser($event)">
-          </new-user>
-        </ng-container>
+      <div *ngIf="stage === 0" class="header-container d-flex flex-column justify-content-center p-3">
 
-        <ng-template #projectManager>
-          <ng-container *ngIf="managers.isProjectManager">
+        <div class="d-block p-2 text-success">
+          <h5 i18n="@@inviteUser.dialog.userEmails.headline">Enter emails:</h5>
+        </div>
+
+        <div [ngClass]="users?.length ? 'pb-3' : 'pb-5'">
+          <ng-container *ngIf="managers.isOrganizationManager; else projectManager">
             <new-user [users]="newUsers$ | async"
-                      [existingUsers]="[]"
-                      [allowedUsers]="existingUsers$ | async"
+                      [existingUsers]="existingUsers$ | async"
                       (userCreated)="onAddUser($event)">
             </new-user>
           </ng-container>
-        </ng-template>
 
-        <ng-container *ngIf="newUsers$ | async as users">
-          <div class="flex-row px-2 pb-2" *ngIf="users?.length">
-            <ng-container *ngFor="let user of users;">
-            <span class="badge badge-pill badge-success user mw-100 mt-1">
-              <i class="fas fa-times cursor-pointer mr-2" (click)="onRemoveUser(user)"></i>
-              <span class="user">{{user}}</span>
-            </span>
+          <ng-template #projectManager>
+            <ng-container *ngIf="managers.isProjectManager">
+              <new-user [users]="newUsers$ | async"
+                        [existingUsers]="[]"
+                        [allowedUsers]="existingUsers$ | async"
+                        (userCreated)="onAddUser($event)">
+              </new-user>
             </ng-container>
-          </div>
-        </ng-container>
+          </ng-template>
+
+          <ng-container>
+            <div class="flex-row px-2 pb-2" *ngIf="users?.length">
+              <ng-container *ngFor="let user of users;">
+              <span class="badge badge-pill badge-outline-success user mw-100 pl-2 pr-3 py-2 ml-2 mt-1">
+                <i class="fas fa-times cursor-pointer mr-2" (click)="onRemoveUser(user)"></i>
+                <span class="user">{{user}}</span>
+              </span>
+              </ng-container>
+            </div>
+          </ng-container>
+        </div>
 
       </div>
 
-      <div class="p-3">
+      <div *ngIf="stage === 1" class="p-3">
 
         <div class="d-block p-2 text-success">
           <h5 i18n="@@inviteUser.dialog.userRights.headline">Invited colleagues can:</h5>
         </div>
         <invitation-type-select [selectedInvitationType]="accessType" (onInvitationTypeSelect)="accessType = $event"></invitation-type-select>
 
-        <div class="d-block mt-3 px-3">
-          <span i18n="@@inviteUser.dialog.settings.description1">
-            Use the cog icon
+        <div class="d-block mt-3 px-3 pb-3">
+          <span *ngIf="accessType === invitationType.JoinOnly" i18n="@@inviteUser.dialog.readOnlyNoAccess.description1">
+            New colleagues can join the project, they won't see exiting tables and views.
           </span>
-          <i class="fas fa-cog text-success"></i>
-          <span i18n="@@inviteUser.dialog.settings.description2">
-            next to the table, or the Share button to change access rights later (especially
-            for the newly created tables and views).
+          <span *ngIf="accessType === invitationType.ReadOnly" i18n="@@inviteUser.dialog.readOnly.description1">
+            New colleagues will see everything in the project, they cannot change anything.
+          </span>
+          <span *ngIf="accessType === invitationType.ReadWrite" i18n="@@inviteUser.dialog.write.description1">
+            New colleagues will see everything in the project and they will be able to change and add data.
+          </span>
+          <span *ngIf="accessType === invitationType.Manage" i18n="@@inviteUser.dialog.manage.description1">
+            You give your newly invited colleagues full control over the project. They can read, write and manage everything.
           </span>
         </div>
 
@@ -80,8 +93,15 @@
       <i class="fal fa-times"></i>&nbsp;<span i18n="@@button.cancel">Cancel</span>
   </span>
 
-  <span class="button-submit">
-      <i class="far fa-check"></i>&nbsp;<span i18n="@@inviteUser.button.text">Invite</span>
+  <span *ngIf="stage === 1" class="button-secondary-submit">
+    <i class="fas fa-chevron-left"></i>&nbsp;<span i18n="@@button.previous">Previous</span>
   </span>
 
+  <span *ngIf="stage === 0" class="button-submit">
+    <i class="fas fa-chevron-right"></i>&nbsp;<span i18n="@@button.next">Next</span>
+  </span>
+
+  <span *ngIf="stage === 1" class="button-submit">
+    <i class="far fa-check"></i>&nbsp;<span i18n="@@inviteUser.button.text">Invite</span>
+  </span>
 </modal-wrapper>
