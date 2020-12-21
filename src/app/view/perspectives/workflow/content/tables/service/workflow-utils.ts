@@ -39,6 +39,8 @@ import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
 
+export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
+
 export interface PendingRowUpdate {
   row?: TableRow;
   newRow?: TableNewRow;

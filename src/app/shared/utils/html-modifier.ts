@@ -100,3 +100,13 @@ export function hex2rgba(hex: string, opacity: number): string {
 
   return 'rgba(' + r + ',' + g + ',' + b + ',' + opacity + ')';
 }
+
+export function clickedInsideElement(event: MouseEvent, tagName: string): boolean {
+  const paths = (event as any).path as HTMLElement[];
+  for (const element of paths) {
+    if (element?.tagName?.toUpperCase() === tagName.toUpperCase()) {
+      return true;
+    }
+  }
+  return false;
+}

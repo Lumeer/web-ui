@@ -223,8 +223,11 @@ export class WorkflowTablesService {
   }
 
   public resetSelection() {
-    this.dataService.resetSidebar();
     this.stateService.resetSelection();
+  }
+
+  public resetSidebar() {
+    this.dataService.resetSidebar();
   }
 
   public newHiddenInput(value: string) {
