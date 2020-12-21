@@ -47,10 +47,12 @@ describe('NumberDataValue', () => {
           provide: TRANSLATIONS_FORMAT,
           useFactory: () => environment.i18nFormat,
         },
+        CurrencyFormatService,
         I18n,
       ],
     });
     currencyService = TestBed.inject(CurrencyFormatService);
+    currencyService.init();
   });
 
   describe('meet condition', () => {

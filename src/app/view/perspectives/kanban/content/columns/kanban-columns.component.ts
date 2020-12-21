@@ -108,6 +108,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public permissions: Record<string, AllowedPermissions>;
 
   @Input()
+  public linkTypesPermissions: Record<string, AllowedPermissions>;
+
+  @Input()
   public query: Query;
 
   @Input()
@@ -440,6 +443,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       groupDocumentsByCollection(this.documents),
       this.linkTypes,
       groupLinkInstancesByLinkTypes(this.linkInstances),
+      this.permissions,
+      this.linkTypesPermissions,
       this.constraintData,
       stem,
       this.query?.fulltexts || []

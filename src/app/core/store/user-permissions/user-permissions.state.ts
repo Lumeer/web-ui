@@ -51,6 +51,12 @@ export const selectLinkTypesPermissions = createSelector(selectUserPermissionsSt
 export const selectLinkTypePermissions = (linkTypeId: string) =>
   createSelector(selectLinkTypesPermissions, linkTypes => linkTypes?.[linkTypeId] || {});
 
+export const selectResourcesPermissions = createSelector(
+  selectCollectionsPermissions,
+  selectLinkTypesPermissions,
+  (collections, linkTypes) => ({collections, linkTypes})
+);
+
 export const selectViewsPermissions = createSelector(selectUserPermissionsState, state => state.views);
 
 export const selectViewPermissions = (viewId: string) =>

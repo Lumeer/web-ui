@@ -8,6 +8,7 @@
                   [canManageConfig]="canManageConfig$ | async"
                   [query]="query$ | async"
                   [permissions]="permissions$ | async"
+                  [linkTypesPermissions]="linkTypesPermissions$ | async"
                   [workspace]="workspace$ | async"
                   [linkInstances]="data.documentsAndLinks.linkInstances"
                   (configChange)="onConfigChanged($event)">

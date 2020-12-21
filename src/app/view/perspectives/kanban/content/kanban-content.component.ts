@@ -101,6 +101,9 @@ export class KanbanContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public permissions: Record<string, AllowedPermissions>;
 
+  @Input()
+  public linkTypesPermissions: Record<string, AllowedPermissions>;
+
   @Output()
   public configChange = new EventEmitter<KanbanConfig>();
 

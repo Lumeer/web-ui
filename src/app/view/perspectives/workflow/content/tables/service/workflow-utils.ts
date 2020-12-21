@@ -37,6 +37,7 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
+import {objectValues} from '../../../../../../shared/utils/common.utils';
 
 export interface PendingRowUpdate {
   row?: TableRow;
@@ -99,7 +100,7 @@ export function createLinkTypeData(
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(
       stemConfig.stem,
       collections,
-      Object.values(linkTypesMap)
+      objectValues(linkTypesMap)
     );
     const resourceIndex = stemConfig.collection.resourceIndex;
     const linkIndex = resourceIndex + (resourceIndex < stemConfig.attribute?.resourceIndex ? 1 : -1);
@@ -175,7 +176,7 @@ export function createLinkingCollectionId(
     const attributesResourcesOrder = queryStemAttributesResourcesOrder(
       stemConfig.stem,
       collections,
-      Object.values(linkTypesMap)
+      objectValues(linkTypesMap)
     );
     const resourceIndex = stemConfig.collection.resourceIndex;
     const collectionIndex = resourceIndex + (resourceIndex < stemConfig.attribute?.resourceIndex ? 2 : -2);

@@ -118,6 +118,8 @@ export function conditionNumInputs(condition: ConditionType): number {
   switch (condition) {
     case ConditionType.IsEmpty:
     case ConditionType.NotEmpty:
+    case ConditionType.Enabled:
+    case ConditionType.Disabled:
       return 0;
     case ConditionType.Between:
     case ConditionType.NotBetween:

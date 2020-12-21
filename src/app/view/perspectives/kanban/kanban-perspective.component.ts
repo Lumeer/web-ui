@@ -47,7 +47,10 @@ import {selectWorkspaceWithIds} from '../../../core/store/common/common.selector
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {
+  selectCollectionsPermissions,
+  selectLinkTypesPermissions,
+} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -63,6 +66,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   public constraintData$: Observable<ConstraintData>;
   public workspace$: Observable<Workspace>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
+  public linkTypesPermissions$: Observable<Record<string, AllowedPermissions>>;
 
   private subscriptions = new Subscription();
   private kanbanId: string;
@@ -151,6 +155,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
+    this.linkTypesPermissions$ = this.store$.pipe(select(selectLinkTypesPermissions));
   }
 
   public ngOnDestroy() {
