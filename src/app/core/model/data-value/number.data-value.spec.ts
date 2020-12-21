@@ -30,7 +30,7 @@ import {ConditionType} from '../attribute-filter';
 describe('NumberDataValue', () => {
   const config: NumberConstraintConfig = {};
 
-  beforeAll(() => {
+  beforeEach(() => {
     let currencyService: CurrencyFormatService;
     TestBed.configureTestingModule({
       providers: [
