@@ -1,6 +1,7 @@
 <div class="row my-4">
   <div class="col">
-    <ul class="list-group" *ngIf="{collection: collection$ | async, rulesLimit: rulesCountLimit$ | async} as data">
+    <ul class="list-group"
+        *ngIf="{collection: collection$ | async, rulesLimit: rulesCountLimit$ | async, ruleNames: ruleNames$ | async, editingRules: editingRules$ | async} as data">
       <li
         *ngIf="!(data.collection?.rules)"
         no-rules
@@ -11,18 +12,18 @@
         *ngFor="let rule of data.collection?.rules; let idx = index; trackBy:trackByRuleName"
         class="list-group-item flex-column align-items-center">
         <add-rule-form
-          *ngIf="editingRules[rule.name]"
+          *ngIf="data.editingRules[rule.id]"
           [collection]="data.collection"
           [rule]="rule"
           [ruleIndex]="idx"
-          [ruleNames]="ruleNames"
+          [ruleNames]="data.ruleNames"
           [originalRuleName]="rule.name"
-          (onCancelNewRule)="onCancelRuleEdit($event)"
-          (onSaveRule)="onSaveRule(data.collection, idx, $event, rule.name)">
+          (onCancelNewRule)="onCancelRuleEdit(rule)"
+          (onSaveRule)="onSaveRule(data.collection, idx, $event)">
         </add-rule-form>
         <single-rule
-          *ngIf="!editingRules[rule.name]"
-          (onEdit)="editingRules[rule.name] = true"
+          *ngIf="!data.editingRules[rule.id]"
+          (onEdit)="onEditStart(rule)"
           (onDelete)="deleteRule(data.collection, rule)"
           [rule]="rule">
         </single-rule>
@@ -35,7 +36,7 @@
           [collection]="data.collection"
           [rule]="newRule"
           [ruleIndex]="idx"
-          [ruleNames]="ruleNames"
+          [ruleNames]="data.ruleNames"
           (onCancelNewRule)="onCancelNewRule($event)"
           (onSaveRule)="onSaveRule(data.collection, idx, $event)">
         </add-rule-form>

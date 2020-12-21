@@ -50,6 +50,7 @@ export const ruleTimingMap = {
 };
 
 interface BasicRule {
+  id?: string;
   name: string;
   type: RuleType;
   timing: RuleTiming;

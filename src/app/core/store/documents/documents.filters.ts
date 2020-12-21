@@ -309,14 +309,16 @@ export function dataMeetsFilters(
   operator: EquationOperator = EquationOperator.And
 ): boolean {
   const dataValues = createDataValuesMap(data, attributes, constraintData);
+  const attributeIds = (attributes || []).map(attribute => attribute.id);
+  const definedFilters = filters?.filter(fil => attributeIds.includes(fil.attributeId));
   if (operator === EquationOperator.Or) {
     return (
-      !filters ||
-      filters.length === 0 ||
-      filters.reduce((result, filter) => result || dataValuesMeetsFilters(dataValues, [filter]), false)
+      !definedFilters ||
+      definedFilters.length === 0 ||
+      definedFilters.reduce((result, filter) => result || dataValuesMeetsFilters(dataValues, [filter]), false)
     );
   }
-  return dataValuesMeetsFilters(dataValues, filters);
+  return dataValuesMeetsFilters(dataValues, definedFilters);
 }
 
 function dataValuesMeetsFilters(dataValues: Record<string, DataValue>, filters: AttributeFilter[]): boolean {

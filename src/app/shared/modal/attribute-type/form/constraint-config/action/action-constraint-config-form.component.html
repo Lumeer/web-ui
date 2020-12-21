@@ -1,4 +1,4 @@
-<div [formGroup]="form">
+<div [formGroup]="form" *ngIf="ruleSelectItems.length; else emptyRules">
 
   <div class="d-flex">
     <span class="text-muted" i18n="@@constraint.action.description">
@@ -36,30 +36,36 @@
            i18n="@@constraint.action.title.label">Button configuration</label>
     <input class="form-control"
            [formControlName]="formControlName.TitleUser"
-           i18n-placeholder="@@contraint.action.title.placeholder"
+           i18n-placeholder="@@constraint.action.title.placeholder"
            placeholder="Write custom title here"
            [id]="formControlName.TitleUser" type="text">
   </div>
 
+  <div class="d-flex align-items-center flex-column">
+
+    <span class="small mb-1" i18n="@@constraint.action.color.label">Click on the button to set icon and color</span>
+
+    <button class="btn text-truncate text-nowrap mw-100" [style.background]="colorControl.value"
+            #buttonElement (click)="togglePicker()"
+            [style.color]="colorControl.value | contrastColor">
+      <ng-container><i [ngClass]="iconControl.value"></i>&nbsp;</ng-container>
+      {{titleControl.value}}
+    </button>
+
+    <icon-color-picker [color]="colorControl.value"
+                       [icon]="iconControl.value"
+                       [origin]="buttonElement"
+                       (preview)="onIconColorChange($event)"
+                       (selected)="onIconColorChange($event)"
+                       (cancel)="onIconColorChange($event)">
+    </icon-color-picker>
+
+  </div>
 </div>
 
-<div class="d-flex align-items-center flex-column">
 
-  <span class="small mb-1" i18n="@@constraint.action.color.label">Click on the button to set icon and color</span>
-
-  <button class="btn text-truncate text-nowrap mw-100" [style.background]="colorControl.value"
-          #buttonElement (click)="togglePicker()"
-          [style.color]="colorControl.value | contrastColor">
-    <ng-container><i [ngClass]="iconControl.value"></i>&nbsp;</ng-container>
-    {{titleControl.value}}
-  </button>
-
-  <icon-color-picker [color]="colorControl.value"
-                     [icon]="iconControl.value"
-                     [origin]="buttonElement"
-                     (preview)="onIconColorChange($event)"
-                     (selected)="onIconColorChange($event)"
-                     (cancel)="onIconColorChange($event)">
-  </icon-color-picker>
-
-</div>
+<ng-template #emptyRules>
+  <action-constraint-config-empty [permissions]="permissions"
+                                  [resource]="resource">
+  </action-constraint-config-empty>
+</ng-template>

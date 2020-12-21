@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChange,
+  SimpleChanges,
+} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AddressConstraintFormControl} from './constraint-config/address/address-constraint-form-control';
@@ -51,6 +60,7 @@ import {
 import {AttributesResource} from '../../../../core/model/resource';
 import {AttributeFilterEquation, EquationOperator} from '../../../../core/model/attribute-filter';
 import {areConditionValuesDefined, conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'attribute-type-form',
@@ -70,6 +80,9 @@ export class AttributeTypeFormComponent implements OnChanges {
   @Input()
   public constraintData: ConstraintData;
 
+  @Input()
+  public permissions: AllowedPermissions;
+
   @Output()
   public attributeChange = new EventEmitter<Attribute>();
 
@@ -83,12 +96,19 @@ export class AttributeTypeFormComponent implements OnChanges {
   constructor(private i18n: I18n, private notificationService: NotificationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.attribute && this.attribute) {
+    if (this.attributeTypeChanges(changes.attribute) && this.attribute) {
       this.typeControl.setValue(this.attribute.constraint?.type || ConstraintType.Unknown);
     }
     if (changes.uniqueValues || changes.constraintData || changes.attribute) {
       this.uniqueValues = this.mapValues();
     }
+  }
+
+  private attributeTypeChanges(change: SimpleChange): boolean {
+    return (
+      change &&
+      (!change.previousValue || change.previousValue.constraint?.type !== change.currentValue?.constraint?.type)
+    );
   }
 
   private mapValues(): any[] {

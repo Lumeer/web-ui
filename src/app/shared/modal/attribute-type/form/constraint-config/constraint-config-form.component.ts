@@ -24,6 +24,7 @@ import {ConstraintType} from '../../../../../core/model/data/constraint';
 import {removeAllFormControls} from '../../../../utils/form.utils';
 import {Attribute} from '../../../../../core/store/collections/collection';
 import {AttributesResource} from '../../../../../core/model/resource';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'constraint-config-form',
@@ -48,6 +49,9 @@ export class ConstraintConfigFormComponent implements OnChanges {
 
   @Input()
   public uniqueValues: any[];
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   public readonly constraintTypes = ConstraintType;
 

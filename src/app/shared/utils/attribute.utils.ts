@@ -19,6 +19,8 @@
 
 import {ConstraintType} from '../../core/model/data/constraint';
 import {Attribute} from '../../core/store/collections/collection';
+import {Rule} from '../../core/model/rule';
+import {ActionConstraintConfig} from '../../core/model/data/constraint-config';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 
@@ -158,4 +160,14 @@ export function filterOutInvalidAttributeNameCharacters(lastName: string): strin
 export function filterUnusedAttributes(attributes: Attribute[], data: Record<string, any>): Attribute[] {
   const usedAttributesIds = Object.keys(data || {});
   return (attributes || []).filter(attribute => !usedAttributesIds.includes(attribute.id));
+}
+
+export function containsAttributeWithRule(attributes: Attribute[], rule: Rule): boolean {
+  return attributes?.some(attribute => {
+    if (attribute.constraint?.type === ConstraintType.Action) {
+      const config = <ActionConstraintConfig>attribute.constraint.config;
+      return config?.rule === rule.id;
+    }
+    return false;
+  });
 }
