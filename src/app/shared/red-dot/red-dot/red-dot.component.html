@@ -1,0 +1,29 @@
+<ng-template #tooltipTmpl let-view="view">
+  <div class="tooltip-section">
+    <div class="section-title d-flex flex-row justify-content-between  bg-light">
+      <div>
+        {{ view.title }}
+      </div>
+      <div class="dismiss">
+        <i class="fa fa-times cursor-pointer" (click)="pop.hide()"></i>
+      </div>
+    </div>
+    <div class="section-text">
+      <ng-content></ng-content>
+    </div>
+    <div *ngIf="view.footer" class="section-footer small text-muted">
+      {{ view.footer }}
+    </div>
+  </div>
+</ng-template>
+
+<div class="ring-container">
+  <div class="ringring"></div>
+  <div class="circle" triggers="mouseenter:click"
+       placement="auto"
+       #pop="bs-popover"
+       [popover]="tooltipTmpl"
+       [popoverContext]="{view: view}">
+  </div>
+</div>
+

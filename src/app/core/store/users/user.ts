@@ -19,6 +19,9 @@
 
 import {Group} from '../groups/group';
 import {PaymentStats} from '../organizations/payment/payment';
+import {UserNotificationType} from '../../model/user-notification';
+import {NotificationChannel} from '../../model/notification-channel';
+import {NotificationFrequency} from '../../model/notification-frequency';
 
 export interface User {
   id?: string;
@@ -36,6 +39,9 @@ export interface User {
   referrals?: PaymentStats;
   affiliatePartner?: boolean;
   emailVerified?: boolean;
+  notificationsLanguage?: string;
+  notifications?: NotificationSettings[];
+  hints?: UserHints;
 
   correlationId?: string;
 }
@@ -45,4 +51,18 @@ export interface DefaultWorkspace {
   organizationId: string;
   projectCode?: string;
   projectId: string;
+}
+
+export const enum UserHintsKeys {
+  applicationHints = 'applicationHints',
+}
+
+export interface UserHints {
+  applicationHints?: boolean;
+}
+
+export interface NotificationSettings {
+  notificationType?: UserNotificationType;
+  notificationChannel?: NotificationChannel;
+  notificationFrequency?: NotificationFrequency;
 }

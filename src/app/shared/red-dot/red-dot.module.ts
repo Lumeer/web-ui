@@ -17,19 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeDto} from './attribute.dto';
-import {ResourceDto} from './resource.dto';
-import {RuleDto} from './rule.dto';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RedDotComponent} from './red-dot/red-dot.component';
+import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {PopoverModule} from 'ngx-bootstrap/popover';
+import {HintComponent} from './hint/hint.component';
 
-export interface CollectionDto extends ResourceDto {
-  correlationId?: string;
-  attributes?: AttributeDto[];
-  defaultAttributeId?: string;
-  documentsCount?: number;
-  favorite?: boolean;
-  lastTimeUsed?: number;
-  rules?: Record<string, RuleDto>;
-  metaData?: CollectionMetaDataDto;
-}
-
-export type CollectionMetaDataDto = {[key: string]: any};
+@NgModule({
+  declarations: [RedDotComponent, HintComponent],
+  imports: [CommonModule, TooltipModule, PopoverModule.forRoot()],
+  exports: [RedDotComponent, HintComponent],
+})
+export class RedDotModule {}

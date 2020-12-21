@@ -46,6 +46,7 @@ import {BookmarksModule} from '../bookmarks/bookmarks.module';
 import {GravatarModule} from 'ngx-gravatar';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
 import {GetHelpModule} from '../get-help/get-help.module';
+import {RedDotModule} from '../red-dot/red-dot.module';
 
 @NgModule({
   imports: [
@@ -65,6 +66,7 @@ import {GetHelpModule} from '../get-help/get-help.module';
     GetHelpModule,
     GravatarModule,
     TooltipModule.forRoot(),
+    RedDotModule,
   ],
   declarations: [
     TopPanelComponent,

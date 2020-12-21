@@ -18,9 +18,10 @@
  */
 
 import {Action} from '@ngrx/store';
-import {DefaultWorkspace, User} from './user';
+import {DefaultWorkspace, User, UserHints} from './user';
 import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../organizations/payment/payment';
+import {UserHintsDto} from '../../dto/user.dto';
 
 export enum UsersActionType {
   GET = '[Users] Get',
@@ -62,6 +63,18 @@ export enum UsersActionType {
   REFERRALS = '[Users] Referrals',
   REFERRALS_SUCCESS = '[Users] Referrals :: Success',
   REFERRALS_FAILURE = '[Users] Referrals :: Failure',
+
+  GET_HINTS = '[User] Get Hints',
+  GET_HINTS_SUCCESS = '[User] Get Hints :: Success',
+  GET_HINTS_FAILURE = '[User] Get Hints :: Failure',
+
+  UPDATE_HINTS = '[User] Update Hints',
+  UPDATE_HINTS_SUCCESS = '[User] Update Hints :: Success',
+  UPDATE_HINTS_FAILURE = '[User] Update Hints :: Failure',
+
+  SET_HINT = '[User] Set Hint',
+  SET_HINT_SUCCESS = '[User] Set Hint :: Success',
+  SET_HINT_FAILURE = '[User] Set Hint :: Failure',
 }
 
 export namespace UsersAction {
@@ -229,6 +242,58 @@ export namespace UsersAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class GetHints implements Action {
+    public readonly type = UsersActionType.GET_HINTS;
+  }
+
+  export class GetHintsSuccess implements Action {
+    public readonly type = UsersActionType.GET_HINTS_SUCCESS;
+
+    public constructor(public payload: {hints: UserHintsDto}) {}
+  }
+
+  export class GetHintsFailure implements Action {
+    public readonly type = UsersActionType.GET_HINTS_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class UpdateHints implements Action {
+    public readonly type = UsersActionType.UPDATE_HINTS;
+
+    public constructor(public payload: {hints: UserHints}) {}
+  }
+
+  export class UpdateHintsSuccess implements Action {
+    public readonly type = UsersActionType.UPDATE_HINTS_SUCCESS;
+
+    public constructor(public payload: {hints: UserHints}) {}
+  }
+
+  export class UpdateHintsFailure implements Action {
+    public readonly type = UsersActionType.UPDATE_HINTS_FAILURE;
+
+    public constructor(public payload: {error: any; originalHints: UserHints}) {}
+  }
+
+  export class SetHint implements Action {
+    public readonly type = UsersActionType.SET_HINT;
+
+    public constructor(public payload: {hint: string; value: any}) {}
+  }
+
+  export class SetHintSuccess implements Action {
+    public readonly type = UsersActionType.SET_HINT_SUCCESS;
+
+    public constructor(public payload: {hints: UserHints}) {}
+  }
+
+  export class SetHintFailure implements Action {
+    public readonly type = UsersActionType.SET_HINT_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export type All =
     | Get
     | GetSuccess
@@ -257,5 +322,14 @@ export namespace UsersAction {
     | Clear
     | Referrals
     | ReferralsSuccess
-    | ReferralsFailure;
+    | ReferralsFailure
+    | GetHints
+    | GetHintsSuccess
+    | GetHintsFailure
+    | UpdateHints
+    | UpdateHintsSuccess
+    | UpdateHintsFailure
+    | SetHint
+    | SetHintSuccess
+    | SetHintFailure;
 }

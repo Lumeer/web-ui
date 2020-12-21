@@ -70,6 +70,9 @@ export class UserMenuDropdownComponent implements OnInit, OnDestroy {
   @Output()
   public affiliate = new EventEmitter();
 
+  @Output()
+  public hintsToggle = new EventEmitter<boolean>();
+
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
@@ -125,5 +128,9 @@ export class UserMenuDropdownComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy() {
     this.close();
+  }
+
+  public onHintsToggle(state: boolean) {
+    this.hintsToggle.emit(state);
   }
 }

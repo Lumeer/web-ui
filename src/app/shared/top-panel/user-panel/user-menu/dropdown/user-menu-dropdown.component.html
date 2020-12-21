@@ -47,6 +47,24 @@
            aria-hidden="true"></i>&nbsp;
         <span i18n="@@menu.applicationTour">Application Tour</span>
       </a>
+      <a *ngIf="currentUser.hints.applicationHints === false" (click)="onHintsToggle(true)"
+         class="dropdown-item"
+         title="Enable Hints"
+         i18n-title="@@menu.hintsEnable">
+        <i class="fad fa-fw fa-dot-circle"
+           data-fa-transform="left-4"
+           aria-hidden="true"></i>&nbsp;
+        <span i18n="@@menu.hintsEnable">Enable Hints</span>
+      </a>
+      <a *ngIf="currentUser.hints.applicationHints !== false" (click)="onHintsToggle(false)"
+         class="dropdown-item"
+         title="Disable Hints"
+         i18n-title="@@menu.hintsDisable">
+        <i class="fad fa-fw fa-dot-circle color-danger"
+           data-fa-transform="left-4"
+           aria-hidden="true"></i>&nbsp;
+        <span i18n="@@menu.hintsDisable">Disable Hints</span>
+      </a>
       <a (click)="onAffiliate()"
          class="dropdown-item"
          title="Affiliate Program"

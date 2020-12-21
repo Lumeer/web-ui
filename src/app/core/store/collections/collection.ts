@@ -49,9 +49,19 @@ export interface Collection extends Resource {
   documentsCount?: number;
 
   rules?: Rule[];
+
+  metaData?: CollectionMetadata;
 }
 
 export interface ImportedCollection {
   collection: Collection;
   data: string;
+}
+
+export interface CollectionMetadata {
+  dueDateAttributeId?: string;
+  assigneeAttributeId?: string;
+  stateAttributeId?: string;
+  finalStatesList?: string[];
+  observersAttributeId?: string;
 }

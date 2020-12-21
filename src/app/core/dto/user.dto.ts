@@ -18,6 +18,10 @@
  */
 
 import {DefaultWorkspaceDto} from './default-workspace.dto';
+import {NotificationSettings} from '../store/users/user';
+import {UserNotificationType} from '../model/user-notification';
+import {NotificationChannel} from '../model/notification-channel';
+import {NotificationFrequency} from '../model/notification-frequency';
 
 export interface UserDto {
   id?: string;
@@ -33,4 +37,15 @@ export interface UserDto {
   referral?: string;
   affiliatePartner?: boolean;
   emailVerified?: boolean;
+  notificationsLanguage?: string;
+  notifications?: NotificationSettingsDto[];
+  hints?: UserHintsDto;
+}
+
+export type UserHintsDto = {[key: string]: any};
+
+export interface NotificationSettingsDto {
+  notificationType?: string;
+  notificationChannel?: string;
+  notificationFrequency?: string;
 }

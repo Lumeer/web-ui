@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable, timer} from 'rxjs';
-import {User} from '../../../../core/store/users/user';
+import {User, UserHintsKeys} from '../../../../core/store/users/user';
 import {AuthService} from '../../../../auth/auth.service';
 import {AppState} from '../../../../core/store/app.state';
 import {selectUrl} from '../../../../core/store/navigation/navigation.state';
@@ -483,5 +483,9 @@ export class UserMenuComponent {
     if (this.userMenuComponent) {
       this.userMenuComponent.open();
     }
+  }
+
+  public onHintsToggle($event: boolean) {
+    this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.applicationHints, value: $event}));
   }
 }
