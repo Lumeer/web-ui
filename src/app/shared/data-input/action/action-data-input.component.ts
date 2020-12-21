@@ -31,15 +31,12 @@ import {DataCursor} from '../data-cursor';
 import {ActionDataValue} from '../../../core/model/data-value/action-data.value';
 import {ActionDataInputConfiguration} from '../data-input-configuration';
 import {ActionConstraintConfig} from '../../../core/model/data/constraint-config';
-import {dataMeetsFilters} from '../../../core/store/documents/documents.filters';
-import {hasRoleByPermissions} from '../../utils/resource.utils';
+import {createDataValuesMap, isActionButtonEnabled} from '../../../core/store/documents/documents.filters';
 import {BehaviorSubject, combineLatest, concat, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {selectDocumentActionExecutedTime, selectDocumentById} from '../../../core/store/documents/documents.state';
-import {AttributesResource, DataResource} from '../../../core/model/resource';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
@@ -50,11 +47,13 @@ import {
   selectLinkInstanceActionExecutedTime,
   selectLinkInstanceById,
 } from '../../../core/store/link-instances/link-instances.state';
-import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {preventEvent} from '../../utils/common.utils';
+import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
+import {AttributesResource, DataResource} from '../../../core/model/resource';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {ConstraintData} from '../../../core/model/data/constraint';
 
 const loadingTime = 2000;
 
@@ -183,14 +182,12 @@ export class ActionDataInputComponent implements OnChanges {
     if (!resource || !dataResource) {
       return false;
     }
-    const filters = config.equation?.equations?.map(eq => eq.filter) || [];
-    return (
-      dataMeetsFilters(dataResource?.data, resource?.attributes, filters, constraintData, config.equation?.operator) &&
-      hasRoleByPermissions(config.role, permissions)
-    );
+    const dataValues = createDataValuesMap(dataResource.data, resource.attributes, constraintData);
+    const attributesMap = objectsByIdMap(resource.attributes);
+    return isActionButtonEnabled(dataValues, attributesMap, permissions, config, constraintData);
   }
 
-  private onClick(event: MouseEvent) {
+  public onClick(event: MouseEvent) {
     preventEvent(event);
     this.runRule();
   }

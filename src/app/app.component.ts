@@ -40,7 +40,6 @@ import {selectServiceLimitsByWorkspace} from './core/store/organizations/service
 import {selectCurrentUser} from './core/store/users/users.state';
 import {hashUserId} from './shared/utils/system.utils';
 import {SessionService} from './auth/session.service';
-import {ConstraintDataService} from './core/service/constraint-data.service';
 import {TooltipConfig} from 'ngx-bootstrap/tooltip';
 import numbro from 'numbro';
 import csLanguage from 'numbro/languages/cs-CZ';
@@ -51,7 +50,6 @@ import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
 import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {parseQueryParams} from './core/store/navigation/query/query.util';
 import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core/store/projects/projects.state';
-import {CurrencyFormatService} from './core/service/currency-format.service';
 
 @Component({
   selector: 'lmr-app',

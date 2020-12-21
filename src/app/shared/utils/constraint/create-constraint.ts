@@ -33,7 +33,7 @@ import {UnknownConstraint} from '../../../core/model/constraint/unknown.constrai
 import {UserConstraint} from '../../../core/model/constraint/user.constraint';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {LinkConstraint} from '../../../core/model/constraint/link.constraint';
-import {ButtonConstraint} from '../../../core/model/constraint/button.constraint';
+import {ActionConstraint} from '../../../core/model/constraint/action.constraint';
 
 export function createConstraint(type: string, config: any): Constraint {
   switch (type) {
@@ -42,7 +42,7 @@ export function createConstraint(type: string, config: any): Constraint {
     case ConstraintType.Boolean:
       return new BooleanConstraint();
     case ConstraintType.Action:
-      return new ButtonConstraint(config);
+      return new ActionConstraint(config);
     case ConstraintType.Color:
       return new ColorConstraint(config);
     case ConstraintType.Coordinates:

@@ -23,15 +23,17 @@ import {queryIsEmptyExceptPagination, queryStemAttributesResourcesOrder} from '.
 import {Attribute, Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
 import {LinkInstance} from '../link-instances/link.instance';
-import {escapeHtml, isNullOrUndefined, objectValues} from '../../../shared/utils/common.utils';
-import {ConstraintData} from '../../model/data/constraint';
+import {escapeHtml, isNullOrUndefined, objectsByIdMap, objectValues} from '../../../shared/utils/common.utils';
+import {ConstraintData, ConstraintType} from '../../model/data/constraint';
 import {Query, QueryStem} from '../navigation/query/query';
 import {groupLinkInstancesByLinkTypes, mergeLinkInstances} from '../link-instances/link-instance.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
-import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
+import {getAttributesResourceType, hasRoleByPermissions} from '../../../shared/utils/resource.utils';
 import {DataValue} from '../../model/data-value';
 import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
-import {AttributeFilter, EquationOperator} from '../../model/attribute-filter';
+import {AttributeFilter, ConditionType, EquationOperator} from '../../model/attribute-filter';
+import {AllowedPermissions} from '../../model/allowed-permissions';
+import {ActionConstraintConfig} from '../../model/data/constraint-config';
 
 interface FilteredDataResources {
   allDocuments: DocumentModel[];
@@ -45,6 +47,7 @@ interface FilterPipeline {
   dataResources: DataResource[];
   filters: AttributeFilter[];
   fulltexts: string[];
+  permissions: AllowedPermissions;
 }
 
 export function filterDocumentsAndLinksByQuery(
@@ -53,6 +56,8 @@ export function filterDocumentsAndLinksByQuery(
   linkTypes: LinkType[],
   linkInstances: LinkInstance[],
   query: Query,
+  collectionsPermissions: Record<string, AllowedPermissions>,
+  linkTypePermissions: Record<string, AllowedPermissions>,
   constraintData: ConstraintData,
   includeChildren?: boolean
 ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} {
@@ -76,6 +81,8 @@ export function filterDocumentsAndLinksByQuery(
       documentsByCollections,
       linkTypes,
       linkInstancesByLinkTypes,
+      collectionsPermissions,
+      linkTypePermissions,
       constraintData,
       stem,
       query.fulltexts?.map(fullText => escapeHtml(fullText)),
@@ -93,6 +100,8 @@ export function filterDocumentsAndLinksByStem(
   documentsByCollections: Record<string, DocumentModel[]>,
   linkTypes: LinkType[],
   linkInstancesByLinkTypes: Record<string, LinkInstance[]>,
+  collectionsPermissions: Record<string, AllowedPermissions>,
+  linkTypePermissions: Record<string, AllowedPermissions>,
   constraintData: ConstraintData,
   stem: QueryStem,
   fulltexts: string[] = [],
@@ -116,8 +125,12 @@ export function filterDocumentsAndLinksByStem(
       type === AttributesResourceType.Collection
         ? documentsByCollections[resource.id] || []
         : linkInstancesByLinkTypes[resource.id] || [];
+    const permissions =
+      type === AttributesResourceType.Collection
+        ? collectionsPermissions?.[resource.id]
+        : linkTypePermissions?.[resource.id];
 
-    return {resource, fulltexts, filters, dataResources};
+    return {resource, fulltexts, filters, dataResources, permissions};
   });
 
   if (!pipeline[0]) {
@@ -125,9 +138,12 @@ export function filterDocumentsAndLinksByStem(
   }
 
   const pushedIds = [];
+  const attributesMap = objectsByIdMap(pipeline[0].resource?.attributes);
   for (const dataResource of pipeline[0].dataResources) {
     const dataValues = createDataValuesMap(dataResource.data, pipeline[0].resource?.attributes, constraintData);
-    if (dataValuesMeetsFilters(dataValues, pipeline[0].filters)) {
+    if (
+      dataValuesMeetsFilters2(dataValues, pipeline[0].filters, attributesMap, pipeline[0].permissions, constraintData)
+    ) {
       const searchDocuments = includeChildren
         ? getDocumentsWithChildren(dataResource as DocumentModel, pipeline[0].dataResources as DocumentModel[])
         : [dataResource as DocumentModel];
@@ -185,6 +201,7 @@ function checkAndFillDataResources(
           linkInstance.data,
           currentPipeline.resource?.attributes,
           currentPipeline.filters,
+          currentPipeline.permissions,
           constraintData
         )
     );
@@ -217,7 +234,13 @@ function checkAndFillDataResources(
     const linkedDocuments = documents.filter(
       document =>
         previousLink.documentIds.includes(document.id) &&
-        dataMeetsFilters(document.data, currentPipeline.resource?.attributes, currentPipeline.filters, constraintData)
+        dataMeetsFilters(
+          document.data,
+          currentPipeline.resource?.attributes,
+          currentPipeline.filters,
+          currentPipeline.permissions,
+          constraintData
+        )
     );
     if (linkedDocuments.length === 0 && containsAnyFilterInPipeline(pipeline, pipelineIndex)) {
       return false;
@@ -301,34 +324,94 @@ export function createDataValuesMap(
   );
 }
 
-export function dataMeetsFilters(
-  data: Record<string, any>,
-  attributes: Attribute[],
+function dataValuesMeetsFilters(
+  dataValues: Record<string, DataValue>,
+  attributesMap: Record<string, Attribute>,
   filters: AttributeFilter[],
+  permissions: AllowedPermissions,
   constraintData: ConstraintData,
   operator: EquationOperator = EquationOperator.And
 ): boolean {
-  const dataValues = createDataValuesMap(data, attributes, constraintData);
-  const attributeIds = (attributes || []).map(attribute => attribute.id);
-  const definedFilters = filters?.filter(fil => attributeIds.includes(fil.attributeId));
+  const definedFilters = filters?.filter(fil => !!attributesMap[fil.attributeId]);
   if (operator === EquationOperator.Or) {
     return (
       !definedFilters ||
       definedFilters.length === 0 ||
-      definedFilters.reduce((result, filter) => result || dataValuesMeetsFilters(dataValues, [filter]), false)
+      definedFilters.reduce(
+        (result, filter) =>
+          result || dataValuesMeetsFilters2(dataValues, [filter], attributesMap, permissions, constraintData),
+        false
+      )
     );
   }
-  return dataValuesMeetsFilters(dataValues, definedFilters);
+  return dataValuesMeetsFilters2(dataValues, definedFilters, attributesMap, permissions, constraintData);
 }
 
-function dataValuesMeetsFilters(dataValues: Record<string, DataValue>, filters: AttributeFilter[]): boolean {
+function dataMeetsFilters(
+  data: Record<string, any>,
+  attributes: Attribute[],
+  filters: AttributeFilter[],
+  permissions: AllowedPermissions,
+  constraintData: ConstraintData,
+  operator: EquationOperator = EquationOperator.And
+): boolean {
+  const dataValues = createDataValuesMap(data, attributes, constraintData);
+  const attributesMap = objectsByIdMap(attributes);
+  return dataValuesMeetsFilters(dataValues, attributesMap, filters, permissions, constraintData, operator);
+}
+
+function dataValuesMeetsFilters2(
+  dataValues: Record<string, DataValue>,
+  filters: AttributeFilter[],
+  attributesMap: Record<string, Attribute>,
+  permissions: AllowedPermissions,
+  constraintData?: ConstraintData
+): boolean {
   if (!filters || filters.length === 0) {
     return true;
   }
-  return filters.every(
-    filter =>
-      dataValues[filter.attributeId] &&
-      dataValues[filter.attributeId].meetCondition(filter.condition, filter.conditionValues)
+  return filters.every(filter => {
+    if (!dataValues[filter.attributeId]) {
+      return false;
+    }
+
+    const constraint = attributesMap[filter.attributeId]?.constraint;
+    const constraintType = constraint?.type || ConstraintType.Unknown;
+    switch (constraintType) {
+      case ConstraintType.Action:
+        const config = <ActionConstraintConfig>constraint.config;
+        if (filter.condition === ConditionType.Enabled) {
+          return isActionButtonEnabled(dataValues, attributesMap, permissions, config, constraintData);
+        } else if (filter.condition === ConditionType.Disabled) {
+          return !isActionButtonEnabled(dataValues, attributesMap, permissions, config, constraintData);
+        }
+        return false;
+      default:
+        return dataValues[filter.attributeId].meetCondition(filter.condition, filter.conditionValues);
+    }
+  });
+}
+
+export function isActionButtonEnabled(
+  dataValues: Record<string, DataValue>,
+  attributesMap: Record<string, Attribute>,
+  permissions: AllowedPermissions,
+  config: ActionConstraintConfig,
+  constraintData?: ConstraintData
+): boolean {
+  if (!dataValues || !attributesMap) {
+    return false;
+  }
+  const filters = config.equation?.equations?.map(eq => eq.filter) || [];
+  return (
+    dataValuesMeetsFilters(
+      dataValues,
+      attributesMap,
+      filters,
+      permissions,
+      constraintData,
+      config.equation?.operator
+    ) && hasRoleByPermissions(config.role, permissions)
   );
 }
 

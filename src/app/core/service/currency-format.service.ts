@@ -23,6 +23,7 @@ import numbro from 'numbro';
 import NumbroLanguage = numbro.NumbroLanguage;
 import {environment} from '../../../environments/environment';
 import {LanguageTag} from '../model/data/language-tag';
+import {objectValues} from '../../shared/utils/common.utils';
 
 export interface Currency {
   symbol: string;
@@ -316,7 +317,7 @@ export class CurrencyFormatService {
   }
 
   public init(): Promise<boolean> {
-    Object.values(LanguageTag).forEach(lang => numbro.registerLanguage(this.getNumbroLanguage(lang), false));
+    objectValues(LanguageTag).forEach(lang => numbro.registerLanguage(this.getNumbroLanguage(lang), false));
     return Promise.resolve(true);
   }
 

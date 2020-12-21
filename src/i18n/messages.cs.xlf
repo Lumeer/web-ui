@@ -840,7 +840,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">8</context></context-group></trans-unit><trans-unit id="table.body.row.show.detail" datatype="html">
         <source>Show detail</source><target>Zobrazit detail</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="table.body.row.copy.value" datatype="html">
         <source>Copy value</source><target>Kopírovat hodnotu</target>
         <context-group purpose="location">
@@ -849,7 +849,7 @@
         </context-group>
       </trans-unit><trans-unit id="table.body.row.link.above" datatype="html">
         <source>Link new row above</source><target>Připojit nový řádek nad</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="table.body.row.move-up" datatype="html">
         <source>Move up</source><target>Posunout nahoru</target>
 
@@ -3169,7 +3169,7 @@
 
             <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">38</context></context-group></trans-unit><trans-unit id="table.body.row.link.below" datatype="html">
         <source>Link new row below</source><target>Připojit nový řádek pod</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit>
             <trans-unit id="table.body.row.add.below" datatype="html">
                 <source>Add row below</source>
@@ -3267,7 +3267,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="query.filter.condition.constraint.text" datatype="html">
-        <source>{VAR_SELECT, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} }</source><target>{VAR_SELECT, select, eq {Je} neq {Není} contains {Obsahuje} notContains {Neobsahuje} startsWith {Začíná na} endsWith {Končí na} in {Je mezi} nin {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} }</target>
+        <source>{VAR_SELECT, select, eq {Is} neq {Is Not} contains {Contains} notContains {Does Not Contain} startsWith {Starts With} endsWith {Ends With} in {In} nin {Not In} empty {Is Empty} notEmpty {Is Not Empty} enabled {Is Enabled} disabled {Is Disabled} }</source><target>{VAR_SELECT, select, eq {Je} neq {Není} contains {Obsahuje} notContains {Neobsahuje} startsWith {Začíná na} endsWith {Končí na} in {Je mezi} nin {Není mezi} empty {Je prázdný} notEmpty {Není prázdný} enabled {Je povoleno} disabled {Není povoleno} }</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/service/translation.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -4252,10 +4252,10 @@
         </context-group>
       </trans-unit><trans-unit id="button.next" datatype="html">
         <source>Next</source><target>Další</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="button.previous" datatype="html">
         <source>Previous</source><target>Předchozí</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="menu.appTour.invocationError" datatype="html">
         <source>Could not invoke application tour because I did not find any recent project to work with. Go to a page with project content and try again please.</source><target>Nemohu spustit prohlídku aplikace, protože jsem nenalezl žádný projekt, na kterém by ji bylo možné ukázat. Přejděte na libovolnou stránku s obsahem projektu a zkuste to prosím znovu.</target>
         <context-group purpose="location">
@@ -5311,7 +5311,7 @@
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">55</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/preview-results/preview-results-table/preview-results-table.component.html</context><context context-type="linenumber">59</context></context-group></trans-unit><trans-unit id="document.detail.links.noLinks" datatype="html">
         <source>There are no links.</source><target>Nemáte žádné vazby.</target>
-        
+
       <context-group purpose="location"><context context-type="sourcefile">app/shared/links/links-list/links-accordeon.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="home" datatype="html">
         <source>Home</source><target>Domů</target>
         <context-group purpose="location">

@@ -55,6 +55,8 @@ export enum ConditionType {
   EndsWith = 'endsWith',
   IsEmpty = 'empty',
   NotEmpty = 'notEmpty',
+  Enabled = 'enabled',
+  Disabled = 'disabled',
 }
 
 export interface ConditionValue {

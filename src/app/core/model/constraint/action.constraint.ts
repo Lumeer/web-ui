@@ -32,7 +32,7 @@ import {ActionConstraintConfig} from '../data/constraint-config';
 import {ActionDataValue} from '../data-value/action-data.value';
 import {ConditionType} from '../attribute-filter';
 
-export class ButtonConstraint implements Constraint {
+export class ActionConstraint implements Constraint {
   public readonly type = ConstraintType.Action;
   public readonly isTextRepresentation = false;
   public readonly isDirectlyEditable = true;
@@ -48,7 +48,7 @@ export class ButtonConstraint implements Constraint {
   }
 
   public conditions(): ConditionType[] {
-    return [ConditionType.IsEmpty, ConditionType.NotEmpty];
+    return [ConditionType.Enabled, ConditionType.Disabled];
   }
 
   public avg(values: any[], onlyNumeric?: boolean): any {
