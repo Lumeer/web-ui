@@ -25,12 +25,13 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ActionConstraintFormControl} from './action-constraint-form-control';
 import {COLOR_SUCCESS} from '../../../../../../core/constants';
 import {Subscription} from 'rxjs';
-import {RuleType} from '../../../../../../core/model/rule';
+import {Rule, RuleType} from '../../../../../../core/model/rule';
 import {SelectItemModel} from '../../../../../select/select-item/select-item.model';
 import {AttributesResource} from '../../../../../../core/model/resource';
 import {IconColorPickerComponent} from '../../../../../picker/icon-color/icon-color-picker.component';
 import {Role} from '../../../../../../core/model/role';
 import {Attribute} from '../../../../../../core/store/collections/collection';
+import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'action-constraint-config-form',
@@ -50,6 +51,9 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   @Input()
   public attribute: Attribute;
 
+  @Input()
+  public permissions: AllowedPermissions;
+
   @ViewChild(IconColorPickerComponent)
   public iconColorDropdownComponent: IconColorPickerComponent;
 
@@ -57,6 +61,7 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   public readonly defaultTitle: string;
 
   public ruleSelectItems: SelectItemModel[];
+  public rules: Rule[];
 
   private savedColor: string;
   private subscription = new Subscription();
@@ -94,19 +99,22 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (changes.resource) {
+      this.createRuleItems();
+    }
     if (changes.config) {
       this.resetForm();
       this.createForm();
     }
-    if (changes.resource) {
-      this.createRuleItems();
-    }
   }
 
   private createRuleItems() {
-    this.ruleSelectItems = (this.resource?.rules || [])
-      .filter(rule => rule.type !== RuleType.AutoLink)
-      .map(rule => ({id: rule.name, value: rule.name}));
+    this.rules = (this.resource?.rules || []).filter(rule => rule.type !== RuleType.AutoLink);
+    this.ruleSelectItems = this.rules.map(rule => ({id: rule.id, value: rule.name}));
+
+    if (!this.getCurrentRule()) {
+      this.ruleControl?.setValue(null);
+    }
   }
 
   private resetForm() {
@@ -142,8 +150,14 @@ export class ActionConstraintConfigFormComponent implements OnChanges, OnDestroy
   }
 
   private addRuleForm() {
-    const rule = this.config?.rule && this.resource?.rules?.find(r => r.name === this.config.rule);
-    this.form.addControl(ActionConstraintFormControl.Rule, new FormControl(rule?.name, Validators.required));
+    this.form.addControl(
+      ActionConstraintFormControl.Rule,
+      new FormControl(this.getCurrentRule()?.id, Validators.required)
+    );
+  }
+
+  private getCurrentRule(): Rule {
+    return this.config?.rule && this.rules?.find(r => r.id === this.config.rule);
   }
 
   private addConditionsForm() {

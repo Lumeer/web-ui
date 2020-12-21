@@ -258,7 +258,7 @@ export namespace LinkInstancesAction {
   export class RunRuleFailure implements Action {
     public readonly type = LinkInstancesActionType.RUN_RULE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: {linkInstanceId: string; attributeId: string; error: any}) {}
   }
 
   export type All =

@@ -36,6 +36,11 @@ import {selectDocumentsByCollectionId} from '../../../core/store/documents/docum
 import {selectLinkInstancesByType} from '../../../core/store/link-instances/link-instances.state';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {
+  selectCollectionPermissions,
+  selectLinkTypePermissions,
+} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   templateUrl: './attribute-type-modal.component.html',
@@ -65,6 +70,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
   public dataValues$: Observable<any[]>;
   public formInvalid$ = new BehaviorSubject(true);
   public constraintData$: Observable<ConstraintData>;
+  public permissions$: Observable<AllowedPermissions>;
   public performingAction$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
@@ -82,6 +88,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
         select(selectDocumentsByCollectionId(this.collectionId)),
         map(documents => documents.map(document => document?.data[this.attributeId]))
       );
+      this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.collectionId)));
     } else if (this.linkTypeId) {
       this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
       this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType?.attributes, this.attributeId)));
@@ -89,6 +96,7 @@ export class AttributeTypeModalComponent implements OnInit, OnDestroy {
         select(selectLinkInstancesByType(this.linkTypeId)),
         map(links => links.map(link => link?.data[this.attributeId]))
       );
+      this.permissions$ = this.store$.pipe(select(selectLinkTypePermissions(this.linkTypeId)));
     }
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }

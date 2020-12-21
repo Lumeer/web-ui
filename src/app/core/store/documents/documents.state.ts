@@ -29,7 +29,7 @@ import {selectQuery} from '../navigation/navigation.state';
 export interface DocumentsState extends EntityState<DocumentModel> {
   pendingDataUpdates: Record<string, DataResourceData>; // key is correlationId
   queries: Query[];
-  performedActions: Record<string, Record<string, number>>;
+  actionExecutedTimes: Record<string, Record<string, number>>;
 }
 
 export const documentsAdapter = createEntityAdapter<DocumentModel>({selectId: document => document.id});
@@ -37,7 +37,7 @@ export const documentsAdapter = createEntityAdapter<DocumentModel>({selectId: do
 export const initialDocumentsState: DocumentsState = documentsAdapter.getInitialState({
   pendingDataUpdates: {},
   queries: [],
-  performedActions: {},
+  actionExecutedTimes: {},
 });
 
 export const selectDocumentsState = (state: AppState) => state.documents;
@@ -75,5 +75,5 @@ const selectPendingDocumentDataUpdates = createSelector(selectDocumentsState, st
 export const selectPendingDocumentDataUpdatesByCorrelationId = (correlationId: string) =>
   createSelector(selectPendingDocumentDataUpdates, pendingDataUpdates => pendingDataUpdates[correlationId]);
 
-export const selectDocumentActionPerformedTime = (documentId: string, attributeId: string) =>
-  createSelector(selectDocumentsState, state => state.performedActions?.[documentId]?.[attributeId]);
+export const selectDocumentActionExecutedTime = (documentId: string, attributeId: string) =>
+  createSelector(selectDocumentsState, state => state.actionExecutedTimes?.[documentId]?.[attributeId]);

@@ -369,7 +369,7 @@ export class LinkInstancesEffects {
 
       return this.linkInstanceService.runRule(linkTypeId, linkInstanceId, attributeId).pipe(
         mergeMap(() => EMPTY),
-        catchError(error => of(new LinkInstancesAction.RunRuleFailure({error})))
+        catchError(error => of(new LinkInstancesAction.RunRuleFailure({...action.payload, error})))
       );
     })
   );

@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {BlocklyRule, Rule, RuleTiming, RuleType} from '../../../../../core/model/rule';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
 import {filter, first, map} from 'rxjs/operators';
@@ -31,6 +31,7 @@ import {RouterAction} from '../../../../../core/store/router/router.action';
 import {LinkTypesAction} from '../../../../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../../../../core/store/notifications/notifications.action';
 import {selectLinkTypeById} from '../../../../../core/store/link-types/link-types.state';
+import {containsAttributeWithRule} from '../../../../../shared/utils/attribute.utils';
 
 @Component({
   selector: 'link-type-rules',
@@ -45,33 +46,24 @@ export class LinkTypeRulesComponent implements OnInit {
   @Output()
   public linkTypeUpdate = new EventEmitter<LinkType>();
 
-  public ruleNames = [];
-  public addingRules: Rule[] = [];
-  public editingRules: Record<string, boolean> = {};
   public rulesCountLimit$: Observable<number>;
-  private subscriptions = new Subscription();
+  public ruleNames$: Observable<string[]>;
+  public editingRules$ = new BehaviorSubject<Record<string, boolean>>({});
+
+  public addingRules: Rule[] = [];
 
   public constructor(private store$: Store<AppState>, private i18n: I18n) {}
 
   public ngOnInit(): void {
-    this.ruleNames = this.linkType.rules.map(r => r.name);
     this.rulesCountLimit$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
       filter(limits => !!limits),
       map(serviceLimits => serviceLimits.rulesPerCollection)
     );
-    this.subscriptions.add(
-      this.store$
-        .pipe(
-          select(selectLinkTypeById(this.linkType.id)),
-          map(linkType => linkType?.rules?.map(r => r.name))
-        )
-        .subscribe(ruleNames => (this.ruleNames = ruleNames))
+    this.ruleNames$ = this.store$.pipe(
+      select(selectLinkTypeById(this.linkType.id)),
+      map(linkType => linkType?.rules?.map(r => r.name) || [])
     );
-  }
-
-  public ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   public onNewRule(): void {
@@ -82,16 +74,25 @@ export class LinkTypeRulesComponent implements OnInit {
     this.addingRules.splice(index, 1);
   }
 
-  public onCancelRuleEdit(idx: number) {
-    this.editingRules[this.ruleNames[idx]] = false;
+  public onCancelRuleEdit(rule: Rule) {
+    this.setEditingRule(rule, false);
+  }
+
+  public onEditStart(rule: Rule) {
+    this.setEditingRule(rule, true);
+  }
+
+  private setEditingRule(rule: Rule, editing: boolean) {
+    const editingRules = {...this.editingRules$.value, [rule.id]: editing};
+    this.editingRules$.next(editingRules);
   }
 
   public trackByRuleName(index: number, rule: Rule): string {
-    return rule.name;
+    return rule.id || rule.name;
   }
 
-  public onSaveRule(linkType: LinkType, idx: number, rule: Rule, originalRuleName?: string) {
-    const index = linkType.rules.findIndex(r => r.name === (originalRuleName ? originalRuleName : rule.name));
+  public onSaveRule(linkType: LinkType, idx: number, rule: Rule) {
+    const index = linkType.rules.findIndex(r => r.id === rule.id);
 
     const rules = [...linkType.rules];
     if (index >= 0) {
@@ -103,7 +104,7 @@ export class LinkTypeRulesComponent implements OnInit {
     this.store$.dispatch(new LinkTypesAction.Update({linkType: {...linkType, rules}}));
 
     if (index >= 0) {
-      this.onCancelRuleEdit(idx);
+      this.onCancelRuleEdit(rule);
     } else {
       this.onCancelNewRule(idx);
     }
@@ -132,28 +133,36 @@ export class LinkTypeRulesComponent implements OnInit {
 
   public deleteRule(linkType: LinkType, rule: Rule) {
     const updatedRules = linkType.rules.slice();
-    const index = updatedRules.findIndex(r => r.name === rule.name);
+    const index = updatedRules.findIndex(r => r.id === rule.id);
 
     if (index >= 0) {
       updatedRules.splice(index, 1);
       const updatedCollection = {...linkType, rules: updatedRules};
 
-      this.showRemoveConfirm(updatedCollection);
+      this.showRemoveConfirm(updatedCollection, rule);
     }
   }
 
-  private showRemoveConfirm(linkType: LinkType) {
+  private showRemoveConfirm(linkType: LinkType, rule: Rule) {
     const updateAction = new LinkTypesAction.Update({linkType});
-    const confirmAction = this.createConfirmAction(updateAction);
+    const confirmAction = this.createConfirmAction(updateAction, containsAttributeWithRule(linkType.attributes, rule));
     this.store$.dispatch(confirmAction);
   }
 
-  private createConfirmAction(action: Action): NotificationsAction.Confirm {
+  private createConfirmAction(action: Action, isBeingUsed: boolean): NotificationsAction.Confirm {
     const title = this.i18n({id: 'collection.config.tab.rules.remove.title', value: 'Delete this rule?'});
-    const message = this.i18n({
+    let message = this.i18n({
       id: 'collection.config.tab.rules.remove.message',
       value: 'Do you really want to delete this rule?',
     });
+
+    if (isBeingUsed) {
+      const additionalMessage = this.i18n({
+        id: 'collection.config.tab.rules.remove.message.used',
+        value: 'It is used in attribute configuration.',
+      });
+      message = `${message} ${additionalMessage}`;
+    }
 
     return new NotificationsAction.Confirm({title, message, type: 'danger', action});
   }

@@ -4,6 +4,7 @@
                  [icons]="iconsColors.icons">
 </icons-presenter>
 <data-input-preview class="font-weight-bold d-inline-block"
+                    *ngIf="title.constraint?.type !== constraintType.Action"
                     [dataValue]="title.dataValue"
                     [configuration]="configuration"
                     [constraint]="title.constraint">

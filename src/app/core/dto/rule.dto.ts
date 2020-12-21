@@ -18,6 +18,7 @@
  */
 
 export interface RuleDto {
+  name: string;
   type: string;
   timing: string;
   configuration: Record<string, any>;

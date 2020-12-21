@@ -17,31 +17,46 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, HostBinding, OnChanges, SimpleChanges} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  HostBinding,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 import {DataCursor} from '../data-cursor';
 import {ActionDataValue} from '../../../core/model/data-value/action-data.value';
 import {ActionDataInputConfiguration} from '../data-input-configuration';
 import {ActionConstraintConfig} from '../../../core/model/data/constraint-config';
 import {dataMeetsFilters} from '../../../core/store/documents/documents.filters';
 import {hasRoleByPermissions} from '../../utils/resource.utils';
-import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
+import {BehaviorSubject, combineLatest, concat, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
+import {selectDocumentActionExecutedTime, selectDocumentById} from '../../../core/store/documents/documents.state';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
-import {filter, map} from 'rxjs/operators';
+import {delay, filter, map, switchMap, tap} from 'rxjs/operators';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
-import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {
+  selectLinkInstanceActionExecutedTime,
+  selectLinkInstanceById,
+} from '../../../core/store/link-instances/link-instances.state';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
+import {preventEvent} from '../../utils/common.utils';
+
+const loadingTime = 2000;
 
 @Component({
   selector: 'action-data-input',
@@ -65,31 +80,69 @@ export class ActionDataInputComponent implements OnChanges {
   @Input()
   public configuration: ActionDataInputConfiguration;
 
+  @Output()
+  public cancel = new EventEmitter();
+
   @HostBinding('class.justify-content-center')
   public center: boolean;
 
   public enabled$: Observable<boolean>;
+  public loading$: Observable<boolean>;
   public config$ = new BehaviorSubject<ActionConstraintConfig>(null);
+
+  private enabled: boolean;
+  private loading: boolean;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.readonly && !this.readonly) {
-      // TODO
+    if (changes.readonly && !this.readonly && this.enabled) {
+      if (this.enabled && !this.loading) {
+        this.runRule();
+      }
+      this.cancel.emit();
     }
     if (changes.configuration) {
       this.center = this.configuration?.center;
     }
     if (changes.cursor) {
-      this.enabled$ = this.bindEnabled$();
+      this.loading$ = this.bindLoading$().pipe(tap(loading => (this.loading = loading)));
+      this.enabled$ = this.bindEnabled$().pipe(tap(enabled => (this.enabled = enabled)));
     }
     if (changes.config) {
       this.config$.next(this.config);
     }
   }
 
+  private bindLoading$(): Observable<boolean> {
+    if (this.cursor?.collectionId && this.cursor?.documentId) {
+      return this.store$.pipe(
+        select(selectDocumentActionExecutedTime(this.cursor?.documentId, this.cursor?.attributeId)),
+        switchMap(executedTime => this.checkLoading(executedTime))
+      );
+    } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
+      return this.store$.pipe(
+        select(selectLinkInstanceActionExecutedTime(this.cursor?.linkInstanceId, this.cursor?.attributeId)),
+        switchMap(executedTime => this.checkLoading(executedTime))
+      );
+    }
+
+    return of(false);
+  }
+
+  private checkLoading(executedTime: number): Observable<boolean> {
+    if (!executedTime) {
+      return of(false);
+    }
+    const delayTime = Math.min(loadingTime - (new Date().getTime() - executedTime), loadingTime);
+    if (delayTime > 0) {
+      return concat(of(true), of(false).pipe(delay(delayTime)));
+    }
+    return of(false);
+  }
+
   private bindEnabled$(): Observable<boolean> {
-    if (this.cursor?.collectionId) {
+    if (this.cursor?.collectionId && this.cursor?.documentId) {
       return combineLatest([
         this.store$.pipe(select(selectCollectionById(this.cursor.collectionId))),
         this.store$.pipe(select(selectDocumentById(this.cursor.documentId))),
@@ -102,7 +155,7 @@ export class ActionDataInputComponent implements OnChanges {
           this.checkEnabled(collection, document, permissions, config, constraintData)
         )
       );
-    } else if (this.cursor?.linkTypeId) {
+    } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
       return combineLatest([
         this.store$.pipe(select(selectLinkTypeById(this.cursor.linkTypeId))),
         this.store$.pipe(select(selectLinkInstanceById(this.cursor.linkInstanceId))),
@@ -137,7 +190,12 @@ export class ActionDataInputComponent implements OnChanges {
     );
   }
 
-  public onClick() {
+  private onClick(event: MouseEvent) {
+    preventEvent(event);
+    this.runRule();
+  }
+
+  private runRule() {
     if (this.cursor?.collectionId && this.cursor?.documentId) {
       this.store$.dispatch(
         new DocumentsAction.RunRule({

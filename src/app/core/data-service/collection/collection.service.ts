@@ -47,5 +47,5 @@ export abstract class CollectionService extends PermissionService {
 
   public abstract removeAttribute(collectionId: string, id: string): Observable<any>;
 
-  public abstract runRule(collectionId: string, ruleName: string): Observable<any>;
+  public abstract runRule(collectionId: string, ruleId: string): Observable<any>;
 }

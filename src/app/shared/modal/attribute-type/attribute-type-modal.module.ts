@@ -53,6 +53,9 @@ import {ActionConstraintConditionFormComponent} from './form/constraint-config/a
 import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
 import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
 import {ActionConstraintPermissionsFormComponent} from './form/constraint-config/action/permissions/action-constraint-permissions-form.component';
+import {CollectionSettingsPathPipe} from './form/constraint-config/action/pipes/collection-settings-path.pipe';
+import {RouterModule} from '@angular/router';
+import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/action/empty/action-constraint-config-empty.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +81,8 @@ import {ActionConstraintPermissionsFormComponent} from './form/constraint-config
     ActionConstraintConditionsFormComponent,
     ActionConstraintConditionFormComponent,
     ActionConstraintPermissionsFormComponent,
+    CollectionSettingsPathPipe,
+    ActionConstraintConfigEmptyComponent,
   ],
   imports: [
     CommonModule,
@@ -93,6 +98,7 @@ import {ActionConstraintPermissionsFormComponent} from './form/constraint-config
     DirectivesModule,
     FilterPreviewModule,
     FilterBuilderModule,
+    RouterModule,
   ],
   exports: [AttributeTypeModalComponent],
 })

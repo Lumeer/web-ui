@@ -92,6 +92,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.form = this.fb.group({
+      id: this.rule.id,
       name: [this.rule.name, [Validators.required, this.usedNameValidator()]],
       timingCreate: this.hasCreate(this.rule.timing),
       timingUpdate: this.hasUpdate(this.rule.timing),
@@ -211,6 +212,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public getRuleFromForm(): Rule {
     return {
+      id: this.form.get('id').value,
       type: this.form.get('type').value,
       name: this.form.get('name').value,
       timing: this.toTiming(

@@ -20,8 +20,6 @@
 import {LinkInstancesAction, LinkInstancesActionType} from './link-instances.action';
 import {initialLinkInstancesState, linkInstancesAdapter, LinkInstancesState} from './link-instances.state';
 import {LinkInstance} from './link.instance';
-import {DocumentModel} from '../documents/document.model';
-import {documentsAdapter} from '../documents/documents.state';
 
 export function linkInstancesReducer(
   state: LinkInstancesState = initialLinkInstancesState,
@@ -50,6 +48,15 @@ export function linkInstancesReducer(
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.DUPLICATE_SUCCESS:
       return linkInstancesAdapter.upsertMany(action.payload.linkInstances, state);
+    case LinkInstancesActionType.RUN_RULE:
+      return setActionExecutionTime(
+        state,
+        action.payload.linkInstanceId,
+        action.payload.attributeId,
+        new Date().getTime()
+      );
+    case LinkInstancesActionType.RUN_RULE_FAILURE:
+      return setActionExecutionTime(state, action.payload.linkInstanceId, action.payload.attributeId);
     case LinkInstancesActionType.CLEAR_BY_LINK_TYPE:
       return linkInstancesAdapter.removeMany(
         linkInstance => linkInstance.linkTypeId === action.payload.linkTypeId,
@@ -60,6 +67,23 @@ export function linkInstancesReducer(
     default:
       return state;
   }
+}
+
+function setActionExecutionTime(
+  state: LinkInstancesState,
+  linkInstanceId: string,
+  attributeId: string,
+  time?: number
+): LinkInstancesState {
+  const performedActions = {...state.actionExecutedTimes};
+  if (time) {
+    performedActions[linkInstanceId] = {...(state.actionExecutedTimes[linkInstanceId] || {}), [attributeId]: time};
+  } else {
+    const linkExecutedTimes = {...performedActions?.[linkInstanceId]};
+    delete linkExecutedTimes?.[attributeId];
+    performedActions[linkInstanceId] = linkExecutedTimes;
+  }
+  return {...state, actionExecutedTimes: performedActions};
 }
 
 function updateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstance): LinkInstancesState {
