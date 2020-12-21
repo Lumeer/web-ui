@@ -203,7 +203,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public onDataKeyDown(event: KeyboardEvent) {
     if (this.preventEventBubble && event.key === KeyCode.Escape && !this.readonly) {
       event.stopPropagation();
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
     }
   }
 }
