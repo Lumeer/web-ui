@@ -163,14 +163,14 @@ export class AttributeFunctionModalComponent implements OnInit {
     }
   }
 
-  public switchEditable() {
-    this.editable$.next(!this.editable$.getValue());
-  }
-
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     if (event.code === KeyCode.Escape && !this.performingAction$.getValue()) {
       this.hideDialog();
     }
+  }
+
+  public onEditableChange(editable: boolean) {
+    this.editable$.next(editable);
   }
 }

@@ -55,17 +55,17 @@
   <div class="form-group">
     <label>Currency</label>
     <div class="form-control">
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency1" value="EUR" checked>
-        <label class="form-check-label" for="currency1">€ (EUR)</label>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input class="custom-control-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency1" value="EUR" checked>
+        <label class="custom-control-label" for="currency1">€ (EUR)</label>
       </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency2" value="USD">
-        <label class="form-check-label" for="currency2">$ (USD)</label>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input class="custom-control-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency2" value="USD">
+        <label class="custom-control-label" for="currency2">$ (USD)</label>
       </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency3" value="CZK">
-        <label class="form-check-label" for="currency3">Kč (CZK)</label>
+      <div class="custom-control custom-radio custom-control-inline">
+        <input class="custom-control-input" [(ngModel)]="currency" (change)="updatePrice()" type="radio" name="currency" id="currency3" value="CZK">
+        <label class="custom-control-label" for="currency3">Kč (CZK)</label>
       </div>
     </div>
   </div>
