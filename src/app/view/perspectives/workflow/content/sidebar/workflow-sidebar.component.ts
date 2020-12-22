@@ -27,9 +27,10 @@ import {AttributesResourceType} from '../../../../../core/model/resource';
 import {LinkInstancesAction} from '../../../../../core/store/link-instances/link-instances.action';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
+import {WORKFLOW_SIDEBAR_SELECTOR} from '../tables/service/workflow-utils';
 
 @Component({
-  selector: 'workflow-sidebar',
+  selector: WORKFLOW_SIDEBAR_SELECTOR,
   templateUrl: './workflow-sidebar.component.html',
   styleUrls: ['./workflow-sidebar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

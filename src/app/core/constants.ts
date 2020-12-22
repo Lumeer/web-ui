@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+export const APP_NAME_SELECTOR = 'lmr-app';
+
 export const DEFAULT_USER = 'aturing@lumeer.io';
 
 export const DEFAULT_ICON = 'fas fa-question-circle';

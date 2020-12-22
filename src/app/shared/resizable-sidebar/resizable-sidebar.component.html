@@ -5,7 +5,7 @@
   </div>
 
   <div *ngIf="opened" class="sidebar h-100 position-relative" [@enterAnimation]=""
-       [style.width]="width ? width + 'px' : 50 + 'vw'" (click)="$event.stopPropagation()">
+       [style.width]="width ? width + 'px' : 50 + 'vw'">
     <div class="resizer" horizontal-resizer
          (onResize)="widthChanged.emit($event)">
     </div>
@@ -13,6 +13,5 @@
       <ng-content select=".sidebar"></ng-content>
     </div>
   </div>
-
 
 </div>
