@@ -14,6 +14,7 @@
   <detail-tabs [showLinks]="resourceType === collectionResourceType"
                [activeTab]="data.selectedTab"
                [commentsCount]="data.commentsCount"
+               [linksCount]="linksCount$ | async"
                (onTabSelect)="selectTab($event)">
   </detail-tabs>
 

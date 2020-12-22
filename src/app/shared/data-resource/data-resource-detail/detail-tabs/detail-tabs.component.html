@@ -14,9 +14,9 @@
        [class.active]="activeTab === detailTabTypes.Links"
        title="Links"
        i18n-title="@@document.detail.tabs.links"
-       i18n="@@document.detail.tabs.links"
        (click)="onTabSelect.emit(detailTabTypes.Links)">
-      Links
+      <span i18n="@@document.detail.tabs.links">Links</span>
+      <span class="small">{{linksCount ? ' (' + linksCount + ')' : ''}}</span>
     </a>
   </li>
   <li class="nav-item">
@@ -26,7 +26,7 @@
        i18n-title="@@document.detail.tabs.comments"
        (click)="onTabSelect.emit(detailTabTypes.Comments)">
       <span i18n="@@document.detail.tabs.comments">Comments</span>
-      <span class="small">{{commentsCount? ' (' + commentsCount + ')': ''}}</span>
+      <span class="small">{{commentsCount ? ' (' + commentsCount + ')' : ''}}</span>
     </a>
   </li>
   <li class="nav-item">

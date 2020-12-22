@@ -30,7 +30,7 @@ import {
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {NotificationService} from '../../../core/notifications/notification.service';
@@ -56,7 +56,10 @@ import {DataRow} from '../../data/data-row.service';
 import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {filter, map} from 'rxjs/operators';
-import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
+import {
+  selectLinkInstanceById,
+  selectLinkInstancesByDocumentIds,
+} from '../../../core/store/link-instances/link-instances.state';
 import {environment} from '../../../../environments/environment';
 
 @Component({
@@ -117,6 +120,7 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   public readonly detailTabType = DetailTabType;
 
   public commentsCount$: Observable<number>;
+  public linksCount$: Observable<number>;
 
   public startEditing$ = new BehaviorSubject<boolean>(false);
 
@@ -148,12 +152,17 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
         filter(doc => !!doc),
         map(doc => doc.commentsCount)
       );
+      this.linksCount$ = this.store$.pipe(
+        select(selectLinkInstancesByDocumentIds([this.dataResource.id])),
+        map(links => links?.length || 0)
+      );
     } else if (this.resourceType === AttributesResourceType.LinkType) {
       this.commentsCount$ = this.store$.pipe(
         select(selectLinkInstanceById(this.dataResource.id)),
         filter(link => !!link),
         map(link => link.commentsCount)
       );
+      this.linksCount$ = of(null);
     }
   }
 
