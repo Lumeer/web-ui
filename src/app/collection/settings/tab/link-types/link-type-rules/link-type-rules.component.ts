@@ -159,7 +159,7 @@ export class LinkTypeRulesComponent implements OnInit {
     if (isBeingUsed) {
       const additionalMessage = this.i18n({
         id: 'collection.config.tab.rules.remove.message.used',
-        value: 'It is used in attribute configuration.',
+        value: 'This rule is being used in an action button.',
       });
       message = `${message} ${additionalMessage}`;
     }

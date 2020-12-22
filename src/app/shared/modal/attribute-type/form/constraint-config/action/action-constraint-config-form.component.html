@@ -2,11 +2,11 @@
 
   <div class="d-flex">
     <span class="text-muted" i18n="@@constraint.action.description">
-      Defines action that can be executed based on defined conditions.
+      An action button that executes a rule based on specified conditions.
     </span>
   </div>
 
-  <div class="form-group mt-3 mb-0">
+  <div class="form-group mt-4 mb-0">
     <label i18n="@@constraint.action.rule.label">Rule</label>
     <select-item class="w-100 d-block"
                  [selectedId]="ruleControl.value"
@@ -19,31 +19,31 @@
     </select-item>
   </div>
 
-  <action-constraint-permissions-form class="d-block mt-3"
+  <action-constraint-permissions-form class="d-block mt-4"
                                       [role]="roleControl.value"
                                       [roleControl]="roleControl">
   </action-constraint-permissions-form>
 
-  <action-constraint-conditions-form class="d-block mt-3"
+  <action-constraint-conditions-form class="d-block mt-4"
                                      [filtersArray]="filtersControl"
                                      [equation]="config?.equation"
                                      [resource]="resource"
                                      [attribute]="attribute">
   </action-constraint-conditions-form>
 
-  <div class="form-group mt-2">
+  <div class="form-group mt-4">
     <label [for]="formControlName.TitleUser"
-           i18n="@@constraint.action.title.label">Button configuration</label>
+           i18n="@@constraint.action.title.label">Button Design</label>
     <input class="form-control"
            [formControlName]="formControlName.TitleUser"
            i18n-placeholder="@@constraint.action.title.placeholder"
-           placeholder="Write custom title here"
+           placeholder="Enter button label..."
            [id]="formControlName.TitleUser" type="text">
   </div>
 
   <div class="d-flex align-items-center flex-column">
 
-    <span class="small mb-1" i18n="@@constraint.action.color.label">Click on the button to set icon and color</span>
+    <span class="small mb-1" i18n="@@constraint.action.color.label">Click on the button to set its icon and color</span>
 
     <button class="btn text-truncate text-nowrap mw-100" [style.background]="colorControl.value"
             #buttonElement (click)="togglePicker()"
