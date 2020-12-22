@@ -27,7 +27,10 @@ import {ModalService} from '../../../modal/modal.service';
 import {selectUsersForWorkspace} from '../../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
-import {selectOrganizationPermissions, selectProjectPermissions,} from '../../../../core/store/user-permissions/user-permissions.state';
+import {
+  selectOrganizationPermissions,
+  selectProjectPermissions,
+} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'invite-user',
@@ -41,7 +44,6 @@ export class InviteUserComponent {
 
   public organizationPermissions$: Observable<AllowedPermissions>;
   public projectPermissions$: Observable<AllowedPermissions>;
-
   public projectUsers$: Observable<number>;
 
   public readonly organizationType = ResourceType.Organization;
