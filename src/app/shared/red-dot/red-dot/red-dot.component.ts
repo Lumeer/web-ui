@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, ElementRef, Input, SimpleChanges, OnChanges} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
 @Component({
   selector: 'red-dot',
@@ -25,19 +25,10 @@ import {Component, OnInit, ChangeDetectionStrategy, ElementRef, Input, SimpleCha
   styleUrls: ['./red-dot.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RedDotComponent implements OnChanges {
+export class RedDotComponent {
   @Input()
   public title: string;
 
   @Input()
   public footer: string;
-
-  public view = {title: '', footer: ''};
-
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes.title || changes.footer) {
-      this.view.title = changes.title.currentValue;
-      this.view.footer = changes.footer.currentValue;
-    }
-  }
 }
