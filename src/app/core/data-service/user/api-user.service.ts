@@ -29,6 +29,7 @@ import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {FeedbackDto} from '../../dto/feedback.dto';
 import {environment} from '../../../../environments/environment';
+import {UserHintsDto} from '../../dto/user.dto';
 
 @Injectable()
 export class ApiUserService implements UserService {
@@ -105,6 +106,14 @@ export class ApiUserService implements UserService {
   public sendFeedback(message: string): Observable<void> {
     const feedback: FeedbackDto = {message};
     return this.httpClient.post<void>(`${this.usersApiPrefix()}/feedback`, feedback);
+  }
+
+  public getHints(): Observable<UserHintsDto> {
+    return this.httpClient.get<UserHintsDto>(`${this.usersApiPrefix()}/current/hints`);
+  }
+
+  public updateHints(hints: UserHintsDto): Observable<UserHintsDto> {
+    return this.httpClient.put(`${this.usersApiPrefix()}/current/hints`, hints);
   }
 
   private usersApiPrefix(): string {

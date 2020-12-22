@@ -1,0 +1,83 @@
+@import '~src/styles/variables';
+
+.ring-container {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  background-color: $danger;
+  border-radius: 50%;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
+.ringring {
+  border: 2px solid $danger;
+  border-radius: 25px;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  left: -5px;
+  top: -5px;
+  animation: pulsate 4s ease-out;
+  animation-iteration-count: infinite;
+  opacity: 0;
+}
+@keyframes pulsate {
+  0% {
+    transform: scale(0.1, 0.1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  20% {
+    transform: scale(1.2, 1.2);
+    opacity: 0;
+  }
+  21% {
+    transform: scale(0.1, 0.1);
+    opacity: 0;
+  }
+}
+
+.tooltip-section {
+  min-width: 200px;
+
+  .section-title {
+    font-size: 120%;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .dismiss {
+    color: $dark;
+    margin-left: 0.25rem;
+
+    i {
+      &:hover {
+        transform: scale(1.2, 1.2);
+      }
+
+      transition: all 0.15s ease-in-out;
+    }
+  }
+
+  .section-text {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .section-footer {
+    padding: 0 0.75rem 0.5rem;
+  }
+}
+
+::ng-deep {
+  .popover-body {
+    padding: 0;
+  }
+}

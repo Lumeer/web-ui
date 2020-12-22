@@ -27,6 +27,7 @@ import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {DEFAULT_USER} from '../../constants';
+import {UserHintsDto} from '../../dto/user.dto';
 
 @Injectable()
 export class PublicUserService implements UserService {
@@ -96,5 +97,13 @@ export class PublicUserService implements UserService {
 
   public sendFeedback(message: string): Observable<any> {
     return of(true);
+  }
+
+  public getHints(): Observable<UserHintsDto> {
+    return of({});
+  }
+
+  public updateHints(hints: UserHintsDto): Observable<UserHintsDto> {
+    return of({});
   }
 }

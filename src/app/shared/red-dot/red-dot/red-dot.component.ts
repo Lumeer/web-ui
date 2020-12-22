@@ -17,19 +17,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributeDto} from './attribute.dto';
-import {ResourceDto} from './resource.dto';
-import {RuleDto} from './rule.dto';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-export interface CollectionDto extends ResourceDto {
-  correlationId?: string;
-  attributes?: AttributeDto[];
-  defaultAttributeId?: string;
-  documentsCount?: number;
-  favorite?: boolean;
-  lastTimeUsed?: number;
-  rules?: Record<string, RuleDto>;
-  metaData?: CollectionMetaDataDto;
+@Component({
+  selector: 'red-dot',
+  templateUrl: './red-dot.component.html',
+  styleUrls: ['./red-dot.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class RedDotComponent {
+  @Input()
+  public title: string;
+
+  @Input()
+  public footer: string;
 }
-
-export type CollectionMetaDataDto = {[key: string]: any};

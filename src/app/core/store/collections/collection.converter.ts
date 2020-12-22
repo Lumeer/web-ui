@@ -50,6 +50,7 @@ export function convertCollectionDtoToModel(
     lastTimeUsed: new Date(dto.lastTimeUsed),
     version: dto.version,
     rules: convertRulesFromDto(dto.rules),
+    metaData: dto.metaData,
   };
 }
 
@@ -65,6 +66,7 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
     attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
     permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
     rules: convertRulesToDto(model.rules),
+    metaData: model.metaData,
   };
 }
 

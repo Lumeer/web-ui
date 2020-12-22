@@ -30,7 +30,13 @@ import {AppState} from '../app.state';
 import {CommonAction} from '../common/common.action';
 import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
-import {convertDefaultWorkspaceModelToDto, convertUserDtoToModel, convertUserModelToDto} from './user.converter';
+import {
+  convertDefaultWorkspaceModelToDto,
+  convertUserDtoToModel,
+  convertUserHintsDtoToModel,
+  convertUserHintsModelToDto,
+  convertUserModelToDto,
+} from './user.converter';
 import {UsersAction, UsersActionType} from './users.action';
 import {selectCurrentUser, selectUsersLoadedForOrganization} from './users.state';
 import {Angulartics2} from 'angulartics2';
@@ -369,6 +375,60 @@ export class UsersEffects {
     map(() => {
       const message = this.i18n({id: 'user.referrals.fail', value: 'Could not get your referrals at the moment'});
       return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public getHints$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.GetHints>(UsersActionType.GET_HINTS),
+    mergeMap(() => {
+      return this.userService.getHints().pipe(
+        map(dto => convertUserHintsDtoToModel(dto)),
+        map(hints => new UsersAction.GetHintsSuccess({hints: hints})),
+        catchError(error => of(new UsersAction.GetHintsFailure({error})))
+      );
+    })
+  );
+
+  @Effect()
+  public getHintsFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.GetHintsFailure>(UsersActionType.GET_HINTS_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public updateHints$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.UpdateHints>(UsersActionType.UPDATE_HINTS),
+    withLatestFrom(this.store$.select(selectCurrentUser)),
+    mergeMap(([action, user]) => {
+      return this.userService.updateHints(convertUserHintsModelToDto(action.payload.hints)).pipe(
+        map(dto => convertUserHintsDtoToModel(dto)),
+        map(hints => new UsersAction.UpdateHintsSuccess({hints: hints})),
+        catchError(error => of(new UsersAction.UpdateHintsFailure({error, originalHints: {...user.hints}})))
+      );
+    })
+  );
+
+  @Effect()
+  public updateHintsFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.UpdateHintsFailure>(UsersActionType.UPDATE_HINTS_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'user.update.fail', value: 'Could not update the user'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public setHint$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.SetHint>(UsersActionType.SET_HINT),
+    withLatestFrom(this.store$.select(selectCurrentUser)),
+    mergeMap(([action, user]) => {
+      return of(new UsersAction.UpdateHints({hints: {...user.hints, [action.payload.hint]: action.payload.value}}));
     })
   );
 

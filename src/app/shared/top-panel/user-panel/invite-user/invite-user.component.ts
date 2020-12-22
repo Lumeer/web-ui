@@ -28,6 +28,8 @@ import {ResourceType} from '../../../../core/model/resource-type';
 import {Organization} from '../../../../core/store/organizations/organization';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {ModalService} from '../../../modal/modal.service';
+import {selectUsersForWorkspace} from '../../../../core/store/users/users.state';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'invite-user',
@@ -42,6 +44,8 @@ export class InviteUserComponent {
   public organization$: Observable<Organization>;
   public project$: Observable<Project>;
 
+  public projectUsers$: Observable<number>;
+
   public readonly organizationType = ResourceType.Organization;
   public readonly projectType = ResourceType.Project;
 
@@ -50,6 +54,10 @@ export class InviteUserComponent {
   public ngOnInit() {
     this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
     this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.projectUsers$ = this.store$.pipe(
+      select(selectUsersForWorkspace),
+      map(users => users?.length)
+    );
   }
 
   public onInviteUser() {
