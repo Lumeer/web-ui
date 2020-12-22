@@ -29,7 +29,6 @@ import {
   OnDestroy,
   OnInit,
   Output,
-  SimpleChange,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -75,7 +74,7 @@ import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {deepObjectsEquals, isNotNullOrUndefined} from '../../../../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isNotNullOrUndefined, objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {DataValue} from '../../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
@@ -150,6 +149,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   public attribute$: Observable<Attribute>;
   public row$: Observable<TableConfigRow>;
 
+  public editable: boolean;
   public editedValue: DataValue;
 
   public readonly constraintType = ConstraintType;
@@ -157,6 +157,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     common: {allowRichText: true, delaySaveAction: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
+    action: {center: true},
   };
 
   private selectedSubscriptions = new Subscription();
@@ -177,21 +178,23 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private subscribeToEditing(): Subscription {
-    return this.editing$.pipe(skip(1), distinctUntilChanged()).subscribe(editing => {
-      this.edited = editing;
-      if (!editing) {
-        this.clearEditedAttribute();
-        this.editedValue = null;
-        this.checkSuggesting();
+    return this.editing$
+      .pipe(skip(1), distinctUntilChanged(), withLatestFrom(this.attribute$))
+      .subscribe(([editing, attribute]) => {
+        this.edited = editing && !attribute?.constraint?.isDirectlyEditable;
+        if (!editing) {
+          this.clearEditedAttribute();
+          this.editedValue = null;
+          this.checkSuggesting();
 
-        if (this.selected) {
-          // sets focus to hidden input
-          this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+          if (this.selected) {
+            // sets focus to hidden input
+            this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
+          }
+        } else {
+          this.setEditedAttribute();
         }
-      } else {
-        this.setEditedAttribute();
-      }
-    });
+      });
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -227,10 +230,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.cursor && this.cursor) {
       this.row$ = this.store$.pipe(select(selectTableRow(this.cursor)));
     }
-    if (
-      this.cursor.partIndex > 1 &&
-      (this.objectChanged(changes.document) || this.objectChanged(changes.linkInstance))
-    ) {
+    if (this.cursor.partIndex > 1 && (objectChanged(changes.document) || objectChanged(changes.linkInstance))) {
       this.affectedSubscription.unsubscribe();
       this.affectedSubscription = this.subscribeToAffected();
     }
@@ -239,6 +239,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         this.dataValue$ = this.createDataValue$();
       }
     }
+    this.editable = this.allowedPermissions?.writeWithView;
   }
 
   private createDataValue$(): Observable<DataValue> {
@@ -267,8 +268,8 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       .select(
         selectAffected({
           attributeId: this.column.attributeIds[0],
-          documentId: this.document && this.document.id,
-          linkInstanceId: this.linkInstance && this.linkInstance.id,
+          documentId: this.document?.id,
+          linkInstanceId: this.linkInstance?.id,
         })
       )
       .pipe(distinctUntilChanged(), withLatestFrom(this.editing$))
@@ -277,12 +278,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
         // TODO run change detection in parent component some other way
         this.affect.emit();
       });
-  }
-
-  private objectChanged(change: SimpleChange): boolean {
-    return (
-      change && change.currentValue && (!change.previousValue || change.previousValue.id !== change.currentValue.id)
-    );
   }
 
   private checkSuggesting() {
@@ -297,11 +292,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     return this.actions$
       .pipe(ofType<TablesAction.EditSelectedCell>(TablesActionType.EDIT_SELECTED_CELL), withLatestFrom(this.attribute$))
       .subscribe(([action, attribute]) => {
-        if (this.allowedPermissions && this.allowedPermissions.writeWithView && this.isAttributeEditable(attribute)) {
+        if (this.allowedPermissions?.writeWithView && this.isAttributeEditable(attribute)) {
           if (action.payload.clear) {
             this.startEditingAndClear();
           } else {
-            this.changeValue(action.payload.value, attribute);
+            this.startEditingAndChangeValue(action.payload.value, attribute);
           }
         }
       });
@@ -318,26 +313,17 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.editing$.next(true);
   }
 
-  private changeValue(value: string, attribute: Attribute) {
+  private startEditingAndChangeValue(value: string, attribute: Attribute) {
     if (isAttributeConstraintType(attribute, ConstraintType.Boolean)) {
-      this.switchCheckboxValue(value);
+      if (!value) {
+        this.editing$.next(true);
+      }
     } else {
-      this.startEditingAndChangeValue(value);
+      if (value) {
+        this.dataValue$ = this.createDataValueByValue$(value, true);
+      }
+      this.editing$.next(true);
     }
-  }
-
-  private switchCheckboxValue(value: string) {
-    // switch checkbox only if Enter or Space is pressed
-    if (!value || value === ' ') {
-      this.saveData(!this.getValue());
-    }
-  }
-
-  private startEditingAndChangeValue(value: string) {
-    if (value) {
-      this.dataValue$ = this.createDataValueByValue$(value, true);
-    }
-    this.editing$.next(true);
   }
 
   private subscribeToRemoveSelectedCell(): Subscription {
@@ -356,10 +342,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private getValue(): any {
-    if (this.document && this.document.data) {
+    if (this.document?.data) {
       return this.document.data[this.column.attributeIds[0]];
     }
-    if (this.linkInstance && this.linkInstance.data) {
+    if (this.linkInstance.data) {
       return this.linkInstance.data[this.column.attributeIds[0]];
     }
     return '';
@@ -756,6 +742,9 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onValueSave(dataValue: DataValue) {
+    if (!this.editable) {
+      return false;
+    }
     this.editedValue = null;
     if (isNotNullOrUndefined(dataValue)) {
       this.useSelectionOrSave(dataValue);

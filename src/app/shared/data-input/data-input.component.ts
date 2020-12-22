@@ -131,7 +131,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     if (this.computationNotNecessary()) {
       return null;
     }
-    if (this.constraint && this.constraint.type === ConstraintType.Boolean) {
+    if (this.constraint?.type === ConstraintType.Boolean) {
       return 16;
     }
 
@@ -151,15 +151,8 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   }
 
   private computationNotNecessary(): boolean {
-    const constraintType = this.constraint && this.constraint.type;
-    if (!constraintType) {
-      return false;
-    }
-    if ([ConstraintType.Select, ConstraintType.User].includes(constraintType)) {
-      return true;
-    }
-
-    return false;
+    const constraintType = this.constraint?.type;
+    return [ConstraintType.Select, ConstraintType.User].includes(constraintType);
   }
 
   private createTempElement(): HTMLElement {
@@ -210,7 +203,7 @@ export class DataInputComponent implements OnChanges, OnDestroy {
   public onDataKeyDown(event: KeyboardEvent) {
     if (this.preventEventBubble && event.key === KeyCode.Escape && !this.readonly) {
       event.stopPropagation();
-      event.stopImmediatePropagation();
+      // event.stopImmediatePropagation();
     }
   }
 }

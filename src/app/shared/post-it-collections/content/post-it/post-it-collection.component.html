@@ -1,5 +1,5 @@
 <div class="card post-it cursor-pointer"
-     *ngIf="collection | collectionPermissions | async as allowedPermissions"
+     *ngIf="permissions$ | async as allowedPermissions"
      [class.uninitialized]="!collection.id"
      [class.initialized]="collection.id"
      (click)="!$event.defaultPrevented && openCollection()">

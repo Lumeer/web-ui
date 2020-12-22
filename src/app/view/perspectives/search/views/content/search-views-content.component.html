@@ -7,6 +7,7 @@
                [view]="view"
                [queryData]="queryData"
                [viewSize]="config?.size || defaultSizeType"
+               [permissions]="permissions && permissions[view.id]"
                (delete)="onDeleteView(view)"
                (clicked)="showView(view)"
                (favoriteToggle)="onFavoriteToggle(view)">

@@ -22,9 +22,9 @@ import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {AttributeFilter, Query} from '../../../core/store/navigation/query/query';
+import {Query} from '../../../core/store/navigation/query/query';
 import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
-import {distinctUntilChanged, map, mergeMap, take, tap} from 'rxjs/operators';
+import {map, take, tap} from 'rxjs/operators';
 import {CalendarBar, CalendarConfig, CalendarStemConfig} from '../../../core/store/calendars/calendar';
 import {isAllDayEvent, isAllDayEventSingle} from '../../../view/perspectives/calendar/util/calendar-util';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
@@ -42,14 +42,15 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {findAttributeConstraint} from '../../../core/store/collections/collection.util';
-import {deepObjectsEquals, toNumber} from '../../utils/common.utils';
-import {CollectionsPermissionsPipe} from '../../pipes/permissions/collections-permissions.pipe';
+import {toNumber} from '../../utils/common.utils';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {ConstraintData, ConstraintType} from '../../../core/model/data/constraint';
 import {durationCountsMapToString} from '../../utils/constraint/duration-constraint.utils';
 import {DurationConstraint} from '../../../core/model/constraint/duration.constraint';
 import {generateDocumentData} from '../../../core/store/documents/document.utils';
 import {selectViewQuery} from '../../../core/store/views/views.state';
+import {AttributeFilter} from '../../../core/model/attribute-filter';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 const DEFAULT_EVENT_DURATION = 60;
 
@@ -92,20 +93,13 @@ export class CalendarEventDetailModalComponent implements OnInit {
   private currentResource: AttributesResource;
   private currentDataResource: DataResource;
 
-  constructor(
-    private store$: Store<AppState>,
-    private i18n: I18n,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe
-  ) {}
+  constructor(private store$: Store<AppState>, private i18n: I18n) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.collections$ = this.store$.pipe(select(selectAllCollections));
     this.linkTypes$ = this.store$.pipe(select(selectAllLinkTypes));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
 
     this.initResources();
   }

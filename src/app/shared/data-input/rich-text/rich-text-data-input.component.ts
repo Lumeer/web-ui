@@ -37,13 +37,13 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {TextEditorModalComponent} from '../../modal/text-editor/text-editor-modal.component';
 import {Subscription} from 'rxjs';
 import {KeyCode} from '../../key-code';
-import {ModalService} from '../../modal/modal.service';
 import {ContentChange, QuillEditorComponent} from 'ngx-quill';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {isNotNullOrUndefined, preventEvent, unescapeHtml} from '../../utils/common.utils';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {DataInputModalService} from '../data-input-modal.service';
 
 @Component({
   selector: 'rich-text-data-input',
@@ -104,7 +104,7 @@ export class RichTextDataInputComponent implements OnChanges, OnDestroy {
     toolbar: [['bold', 'italic', 'underline', 'strike', {script: 'sub'}, {script: 'super'}, 'clean']],
   };
 
-  constructor(private modalService: ModalService, private renderer: Renderer2, private element: ElementRef) {}
+  constructor(private modalService: DataInputModalService, private renderer: Renderer2, private element: ElementRef) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.focus) {

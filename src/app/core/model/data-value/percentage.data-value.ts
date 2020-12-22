@@ -30,8 +30,8 @@ import {
 } from '../../../shared/utils/data.utils';
 import {PercentageConstraintConfig} from '../data/constraint-config';
 import {NumericDataValue} from './index';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByNumber, valueByConditionNumber, valueMeetFulltexts} from './data-value.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class PercentageDataValue implements NumericDataValue {
   public readonly bigNumber: Big;
@@ -128,7 +128,7 @@ export class PercentageDataValue implements NumericDataValue {
     return new PercentageDataValue(inputValue, this.config, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new PercentageDataValue(value.value, this.config));
     const otherBigNumbers = dataValues.map(value => value.bigNumber);
     const otherValues = dataValues.map(value => value.value);
@@ -140,7 +140,7 @@ export class PercentageDataValue implements NumericDataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     return valueByConditionNumber(this, condition, values, '0.19', 100);
   }
 }

@@ -30,7 +30,7 @@
 </div>
 
 <div class="p-0 pl-1 d-flex flex-row flex-nowrap align-items-center justify-content-center"
-     *ngIf="row.attribute | dataInputEditInfo:dataValue:permissions?.writeWithView: (editing$ | async) as dataInputInfo"
+     *ngIf="row.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async) as dataInputInfo"
      (click)="onValueFocus()"
      (clickOutside)="onDataInputCancel()"
      [clickOutsideEnabled]="(valueFocused$ | async) || (editing$ | async)"
@@ -56,7 +56,7 @@
               (cancel)="onDataInputCancel()"
               (mousedown)="$event.stopPropagation(); $event.stopImmediatePropagation()"
               (valueChange)="onValueEdit($event)"
-              [class.editing]="editing$ | async"
+              [class.editing]="(editing$ | async) && !row.attribute?.constraint?.isDirectlyEditable"
               [class.value-focused]="valueFocused$ | async"
               [class.cursor-pointer]="!dataInputInfo.readonly"
               [class.read-only]="dataInputInfo.readonly">

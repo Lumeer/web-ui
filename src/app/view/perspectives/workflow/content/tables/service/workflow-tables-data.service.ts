@@ -555,7 +555,7 @@ export class WorkflowTablesDataService {
         color,
         default: attribute.id === defaultAttributeId,
         hidden: setting.hidden,
-        manageable: permissions?.manageWithView,
+        permissions: permissions,
         sort: setting.sort,
         menuItems: [],
       };
@@ -597,8 +597,8 @@ export class WorkflowTablesDataService {
         collectionId: isCollection ? resource.id : null,
         linkTypeId: isCollection ? null : resource.id,
         editable: true,
-        manageable: true,
         width: TABLE_COLUMN_WIDTH,
+        permissions,
         color,
         menuItems: [],
       };
@@ -627,7 +627,7 @@ export class WorkflowTablesDataService {
         name: generateAttributeName(columnNames),
         linkTypeId: linkType.id,
         editable: true,
-        manageable: true,
+        permissions,
         width: TABLE_COLUMN_WIDTH,
         color: null,
         menuItems: [],

@@ -30,10 +30,11 @@ import {User} from '../users/user';
 import {DocumentModel} from './document.model';
 import {filterDocumentsAndLinksByQuery} from './documents.filters';
 import {Collection} from '../collections/collection';
-import {Query, QueryCondition} from '../navigation/query/query';
+import {Query} from '../navigation/query/query';
 import {UserConstraintConditionValue} from '../../model/data/constraint-condition';
 import {ConstraintData} from '../../model/data/constraint';
 import {UserConstraint} from '../../model/constraint/user.constraint';
+import {ConditionType} from '../../model/attribute-filter';
 
 const documents: DocumentModel[] = [
   {
@@ -190,21 +191,21 @@ const constraintData: ConstraintData = {
 
 describe('Document filters', () => {
   it('should filter empty documents by undefined query', () => {
-    expect(filterDocumentsAndLinksByQuery([], [], [], [], undefined, undefined).documents).toEqual([]);
+    expect(filterDocumentsAndLinksByQuery([], [], [], [], undefined, {}, {}, undefined).documents).toEqual([]);
   });
 
   it('should filter empty documents by empty query', () => {
-    expect(filterDocumentsAndLinksByQuery([], [], [], [], {}, undefined).documents).toEqual([]);
+    expect(filterDocumentsAndLinksByQuery([], [], [], [], {}, {}, {}, undefined).documents).toEqual([]);
   });
 
   it('should not filter documents by empty query', () => {
-    expect(filterDocumentsAndLinksByQuery(documents, [], [], [], {}, undefined).documents).toEqual(documents);
+    expect(filterDocumentsAndLinksByQuery(documents, [], [], [], {}, {}, {}, undefined).documents).toEqual(documents);
   });
 
   it('should not filter documents by empty collections', () => {
-    expect(filterDocumentsAndLinksByQuery(documents, collections, [], [], {stems: []}, undefined).documents).toEqual(
-      documents
-    );
+    expect(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {stems: []}, {}, {}, undefined).documents
+    ).toEqual(documents);
   });
 
   it('should not filter documents by all collections', () => {
@@ -215,6 +216,8 @@ describe('Document filters', () => {
         [],
         [],
         {stems: [{collectionId: 'c1'}, {collectionId: 'c2'}]},
+        {},
+        {},
         undefined
       ).documents
     ).toEqual(documents);
@@ -222,7 +225,7 @@ describe('Document filters', () => {
 
   it('should filter documents by single collection', () => {
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], {stems: [{collectionId: 'c1'}]}, undefined)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {stems: [{collectionId: 'c1'}]}, {}, {}, undefined)
         .documents.length
     ).toBe(6);
   });
@@ -242,13 +245,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a1',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{value: 'IBM'}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         constraintData
       ).documents.map(document => document.id)
     ).toEqual(['d1']);
@@ -269,13 +274,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         {...constraintData, currentUser: null}
       ).documents.map(document => document.id)
     ).toEqual([]);
@@ -296,13 +303,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         constraintData
       ).documents.map(document => document.id)
     ).toEqual(['d2']);
@@ -323,13 +332,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c2',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         constraintData
       ).documents.map(document => document.id)
     ).toEqual([]);
@@ -350,13 +361,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c2',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         {...constraintData, currentUser: musicUser}
       ).documents.map(document => document.id)
     ).toEqual(['d7', 'd8']);
@@ -377,13 +390,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         constraintData,
         true
       ).documents.map(document => document.id)
@@ -406,13 +421,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a2',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{type: UserConstraintConditionValue.CurrentUser}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         constraintData,
         true
       ).documents.map(document => document.id)
@@ -434,13 +451,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a1',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{value: 'IBM'}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         undefined,
         true
       ).documents.map(document => document.id)
@@ -462,13 +481,15 @@ describe('Document filters', () => {
                 {
                   collectionId: 'c1',
                   attributeId: 'a1',
-                  condition: QueryCondition.Equals,
+                  condition: ConditionType.Equals,
                   conditionValues: [{value: 'Red Hat'}],
                 },
               ],
             },
           ],
         },
+        {},
+        {},
         undefined,
         true
       ).documents.map(document => document.id)
@@ -477,9 +498,16 @@ describe('Document filters', () => {
 
   it('should filter documents from both collections by fulltext', () => {
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['link']}, undefined).documents.map(
-        document => document.id
-      )
+      filterDocumentsAndLinksByQuery(
+        documents,
+        collections,
+        [],
+        [],
+        {fulltexts: ['link']},
+        {},
+        {},
+        undefined
+      ).documents.map(document => document.id)
     ).toEqual(['d6', 'd8']);
   });
 
@@ -491,6 +519,8 @@ describe('Document filters', () => {
         [],
         [],
         {stems: [{collectionId: 'c1'}], fulltexts: ['link']},
+        {},
+        {},
         undefined
       ).documents.map(document => document.id)
     ).toEqual(['d6']);
@@ -504,6 +534,8 @@ describe('Document filters', () => {
         [],
         [],
         {fulltexts: ['IBM']},
+        {},
+        {},
         undefined,
         true
       ).documents.map(document => document.id)
@@ -512,9 +544,16 @@ describe('Document filters', () => {
 
   it('should filter only matching document without children by fulltext', () => {
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['red']}, undefined).documents.map(
-        document => document.id
-      )
+      filterDocumentsAndLinksByQuery(
+        documents,
+        collections,
+        [],
+        [],
+        {fulltexts: ['red']},
+        {},
+        {},
+        undefined
+      ).documents.map(document => document.id)
     ).toEqual(['d2', 'd7']);
   });
 
@@ -526,6 +565,8 @@ describe('Document filters', () => {
         [],
         [],
         {fulltexts: ['red']},
+        {},
+        {},
         undefined,
         true
       ).documents.map(document => document.id)
@@ -541,7 +582,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a100',
-              condition: QueryCondition.Equals,
+              condition: ConditionType.Equals,
               conditionValues: [{value: '-10'}],
             },
           ],
@@ -549,7 +590,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual(['d3']);
@@ -562,7 +603,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a100',
-              condition: QueryCondition.NotEquals,
+              condition: ConditionType.NotEquals,
               conditionValues: [{value: '-10'}],
             },
           ],
@@ -570,7 +611,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual(['d1', 'd2', 'd4', 'd5', 'd6']);
@@ -583,7 +624,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a100',
-              condition: QueryCondition.GreaterThan,
+              condition: ConditionType.GreaterThan,
               conditionValues: [{value: '40'}],
             },
           ],
@@ -591,7 +632,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual(['d2', 'd4', 'd6']);
@@ -604,7 +645,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a100',
-              condition: QueryCondition.LowerThanEquals,
+              condition: ConditionType.LowerThanEquals,
               conditionValues: [{value: '40'}],
             },
           ],
@@ -612,7 +653,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual(['d1', 'd3']);
@@ -627,7 +668,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.Equals,
+              condition: ConditionType.Equals,
               conditionValues: [{value: '2019-04-06T00:00:00.000+0000'}],
             },
           ],
@@ -635,7 +676,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual(['d5']);
@@ -648,7 +689,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.NotEquals,
+              condition: ConditionType.NotEquals,
               conditionValues: [{value: '2019-04-06T00:00:00.000+0000'}],
             },
           ],
@@ -656,7 +697,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual(['d1', 'd2', 'd3', 'd4', 'd6']);
@@ -669,7 +710,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.LowerThan,
+              condition: ConditionType.LowerThan,
               conditionValues: [{value: '2019-04-06T00:00:00.000+0000'}],
             },
           ],
@@ -677,7 +718,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual(['d1', 'd2']);
@@ -690,7 +731,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.GreaterThanEquals,
+              condition: ConditionType.GreaterThanEquals,
               conditionValues: [{value: '2019-04-06T00:00:00.000+0000'}],
             },
           ],
@@ -698,7 +739,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual(['d3', 'd5', 'd6']);
@@ -711,7 +752,7 @@ describe('Document filters', () => {
             {
               collectionId: 'c1',
               attributeId: 'a101',
-              condition: QueryCondition.GreaterThanEquals,
+              condition: ConditionType.GreaterThanEquals,
               conditionValues: [{value: 'bla bla bla'}],
             },
           ],
@@ -719,7 +760,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
         document => document.id
       )
     ).toEqual([]);

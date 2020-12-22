@@ -361,6 +361,32 @@ export class LinkInstancesEffects {
     })
   );
 
+  @Effect()
+  public runRule$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.RunRule>(LinkInstancesActionType.RUN_RULE),
+    mergeMap(action => {
+      const {linkTypeId, linkInstanceId, attributeId} = action.payload;
+
+      return this.linkInstanceService.runRule(linkTypeId, linkInstanceId, attributeId).pipe(
+        mergeMap(() => EMPTY),
+        catchError(error => of(new LinkInstancesAction.RunRuleFailure({...action.payload, error})))
+      );
+    })
+  );
+
+  @Effect()
+  public runRuleFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkInstancesAction.RunRuleFailure>(LinkInstancesActionType.RUN_RULE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({
+        id: 'dataResource.runRule.fail',
+        value: 'Could not run the selected rule',
+      });
+      return new NotificationsAction.Error({message});
+    })
+  );
+
   constructor(
     private actions$: Actions,
     private i18n: I18n,

@@ -103,7 +103,7 @@ export class NotificationsEffects {
       const button: NotificationButton = {
         text: refreshButtonText,
         bold: true,
-        action: () => (window.location.href = '/'),
+        action: () => window.location.reload(),
       };
 
       this.notificationService.confirm(message, '', [button], 'warning');

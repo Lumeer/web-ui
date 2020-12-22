@@ -24,10 +24,9 @@ import {
   ElementRef,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
+  Renderer2,
   ViewChild,
 } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
@@ -38,6 +37,7 @@ import {ResourceCommentModel} from '../../../core/store/resource-comments/resour
 import {generateId} from '../../utils/resource.utils';
 import {stripTextHtmlTags} from '../../utils/data.utils';
 import DOMPurify from 'dompurify';
+import {preventEvent} from '../../utils/common.utils';
 
 @Component({
   selector: 'new-comment',
@@ -45,7 +45,7 @@ import DOMPurify from 'dompurify';
   styleUrls: ['./new-comment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked {
+export class NewCommentComponent implements OnInit, AfterViewChecked {
   @Output()
   public onNewComment = new EventEmitter<Partial<ResourceCommentModel>>();
 
@@ -57,9 +57,6 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
 
   @Input()
   public bottomBorder = true;
-
-  @Input()
-  public sending: boolean = false;
 
   @Input()
   public user: User;
@@ -74,19 +71,20 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
   public commentInput: ElementRef;
 
   public editing$ = new BehaviorSubject<boolean>(false);
-  public commentText$ = new BehaviorSubject<string>('');
 
   public progress = 0;
 
   public readonly macOS = isMacOS();
-
   public readonly maxLength = 2048;
 
   private firstCheck = true;
+  private commentText = '';
+
+  constructor(private _sourceRenderer: Renderer2) {}
 
   public ngOnInit() {
     if (this.initialComment || this.startEditing) {
-      this.commentText$.next(this.initialComment.comment);
+      this.commentText = this.initialComment.comment;
       this.editing$.next(true);
     }
   }
@@ -98,15 +96,21 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
     }
   }
 
-  public ngOnChanges(changes: SimpleChanges): void {
-    if (changes.sending && changes.sending.currentValue === false && changes.sending.previousValue === true) {
-      this.commentText$.next('');
-      this.commentInput.nativeElement.innerHTML = '';
+  private setComment(text: string, updateElement = true) {
+    this.commentText = text;
+    if (updateElement) {
+      this._sourceRenderer.setProperty(this.commentInput.nativeElement, 'innerHTML', text);
     }
+    this.updateProgress(text);
+  }
+
+  private resetComment() {
+    this.setComment('');
   }
 
   private updateProgress(text: string) {
-    this.progress = text?.length ? (text.length / this.maxLength) * 100 : 0;
+    const cleaned = cleanTextBeforeSave(text);
+    this.progress = cleaned?.length ? (cleaned.length / this.maxLength) * 100 : 0;
   }
 
   public editComment(pageSource?: boolean) {
@@ -115,63 +119,53 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
     }
 
     this.editing$.next(true);
-    const text = this.commentText$.getValue();
-    this.updateProgress(text);
-    this.commentInput.nativeElement.innerHTML = text;
+    this.setComment(this.commentText);
     setTimeout(() => {
       this.commentInput.nativeElement.focus();
     }, 200);
   }
 
-  public updateCommentInput() {
-    const originalText = this.commentInput.nativeElement.innerHTML.replace(/<div>/g, '<br>').replace(/<\/div>/g, '');
-    const text = DOMPurify.sanitize(stripTextHtmlTags(originalText, true)).substr(0, this.maxLength);
-    this.updateProgress(text);
-    this.commentText$.next(text);
+  public updateCommentInput(value: string) {
+    const originalText = value.replace(/<div>/g, '<br>').replace(/<\/div>/g, '');
 
-    if (text !== originalText) {
-      this.commentInput.nativeElement.innerHTML = text;
+    const text = DOMPurify.sanitize(stripTextHtmlTags(originalText, true)).substr(0, this.maxLength);
+    if (text !== this.commentText) {
+      this.setComment(text, text !== originalText);
     }
   }
 
   public cancelEditComment() {
     this.editing$.next(false);
-    this.commentText$.next('');
-    this.commentInput.nativeElement.innerHTML = '';
+    this.resetComment();
     this.onCancel.emit();
   }
 
   public sendComment() {
     let comment: Partial<ResourceCommentModel>;
     if (this.initialComment && !this.startEditing) {
-      comment = {...this.initialComment, updateDate: new Date(), comment: this.commentText$.getValue()};
+      comment = {...this.initialComment, updateDate: new Date(), comment: this.commentText};
     } else {
       comment = {
         correlationId: generateId(),
         creationDate: new Date(),
-        comment: this.commentText$.getValue(),
+        comment: cleanTextBeforeSave(this.commentText),
         author: this.user.id,
         authorName: this.user.name,
         authorEmail: this.user.email,
       };
     }
     this.onNewComment.emit(comment);
-    this.editing$.next(false);
+    this.resetComment();
   }
 
   public onKeyDown(event: KeyboardEvent) {
-    if (this.editing$.getValue()) {
-      if (this.commentText$.getValue().length < this.maxLength) {
-        this.updateCommentInput();
-      } else {
-        if (isKeyPrintable(event)) {
-          this.commentInput.nativeElement.innerHTML = this.commentText$.getValue();
-          event.preventDefault();
-        }
+    if (this.editing$.value) {
+      if (this.commentText.length >= this.maxLength && isKeyPrintable(event)) {
+        preventEvent(event);
       }
     }
 
-    if (this.commentText$.getValue() && event.code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
+    if (this.commentText && event.code === KeyCode.Enter && (event.metaKey || event.ctrlKey)) {
       this.sendComment();
     }
 
@@ -180,9 +174,25 @@ export class NewCommentComponent implements OnChanges, OnInit, AfterViewChecked 
     }
   }
 
-  public pastedContent($event: ClipboardEvent) {
-    $event.preventDefault();
-    const data = $event.clipboardData.getData('text/plain');
-    document.execCommand('insertText', false, data.substr(0, this.maxLength - this.commentText$.getValue().length));
+  public pastedContent(event: ClipboardEvent) {
+    event.preventDefault();
+    const data = event.clipboardData.getData('text/plain');
+    document.execCommand('insertText', false, data.substr(0, this.maxLength - this.commentText.length));
   }
+}
+
+function cleanTextBeforeSave(text: string): string {
+  let previousText = text || '';
+  let currentText = cleanText(text || '');
+  while (currentText !== previousText) {
+    previousText = currentText;
+    currentText = cleanText(currentText);
+  }
+  return currentText;
+}
+
+function cleanText(text: string): string {
+  const withoutNewLines = text.trim().replace(/^(<br\s*\/?>)*|(<br\s*\/?>)*$/gi, '');
+  const withoutSpaces = withoutNewLines.trim().replace(/^(&nbsp;\s*)*|(&nbsp;\s*)*$/gi, '');
+  return withoutSpaces.trim();
 }

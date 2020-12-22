@@ -40,21 +40,19 @@ import {selectServiceLimitsByWorkspace} from './core/store/organizations/service
 import {selectCurrentUser} from './core/store/users/users.state';
 import {hashUserId} from './shared/utils/system.utils';
 import {SessionService} from './auth/session.service';
-import {ConstraintDataService} from './core/service/constraint-data.service';
 import {TooltipConfig} from 'ngx-bootstrap/tooltip';
 import numbro from 'numbro';
 import csLanguage from 'numbro/languages/cs-CZ';
 import Cookies from 'js-cookie';
-import {LUMEER_REFERRAL} from './core/constants';
+import {APP_NAME_SELECTOR, LUMEER_REFERRAL} from './core/constants';
 import {UserActivityService} from './auth/user-activity.service';
 import {LanguageCode} from './shared/top-panel/user-panel/user-menu/language';
 import {BsLocaleService} from 'ngx-bootstrap/datepicker';
 import {parseQueryParams} from './core/store/navigation/query/query.util';
 import {selectProjectByWorkspace, selectProjectDismissedWarningIds} from './core/store/projects/projects.state';
-import {CurrencyFormatService} from './shared/currency/currencies';
 
 @Component({
-  selector: 'lmr-app',
+  selector: APP_NAME_SELECTOR,
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit, AfterViewInit {
@@ -74,9 +72,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     private sessionService: SessionService,
     private tooltipConfig: TooltipConfig,
     private localeService: BsLocaleService,
-    private constraintDataService: ConstraintDataService, // for init constraint data
-    public vcRef: ViewContainerRef, // for the ngx-color-picker
-    public currencyFormat: CurrencyFormatService // init numbro currency formats
+    public vcRef: ViewContainerRef // for the ngx-color-picker
   ) {
     this.title.setTitle(this.i18n({id: 'page.title', value: 'Lumeer | Visual, easy project and team management'}));
 

@@ -5,9 +5,10 @@
                   [linkTypes]="linkTypes$ | async"
                   [documents]="data.documentsAndLinks.documents"
                   [constraintData]="constraintData$ | async"
-                  [canManageConfig]="currentView$ | async | canManageConfig | async"
+                  [canManageConfig]="canManageConfig$ | async"
                   [query]="query$ | async"
                   [permissions]="permissions$ | async"
+                  [linkTypesPermissions]="linkTypesPermissions$ | async"
                   [workspace]="workspace$ | async"
                   [linkInstances]="data.documentsAndLinks.linkInstances"
                   (configChange)="onConfigChanged($event)">

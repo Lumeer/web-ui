@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of} from 'rxjs';
+import {combineLatest, Observable} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -34,7 +34,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import {Direction} from '../../../shared/direction';
-import {CollectionPermissionsPipe} from '../../../shared/pipes/permissions/collection-permissions.pipe';
 import {getArrayDifference} from '../../../shared/utils/array.utils';
 import {AppState} from '../app.state';
 import {Attribute, Collection} from '../collections/collection';
@@ -123,6 +122,7 @@ import {selectTable} from './tables.state';
 import {AttributesResource} from '../../model/resource';
 import {selectViewQuery} from '../views/views.state';
 import {CopyValueService} from '../../service/copy-value.service';
+import {selectCollectionPermissions} from '../user-permissions/user-permissions.state';
 
 @Injectable()
 export class TablesEffects {
@@ -631,9 +631,8 @@ export class TablesEffects {
           const {collectionId} = table.config.parts[0];
           const documentsByCollection = documents.filter(doc => doc.collectionId === collectionId);
           return this.store$.pipe(
-            select(selectCollectionById(collectionId)),
-            mergeMap(collection => this.collectionPermissionsPipe.transform(collection)),
-            map(permissions => permissions.write || permissions.writeWithView),
+            select(selectCollectionPermissions(collectionId)),
+            map(permissions => permissions?.writeWithView),
             distinctUntilChanged(),
             mergeMap(canCreateDocuments => {
               const {cursor} = action.payload;
@@ -1203,7 +1202,6 @@ export class TablesEffects {
 
   public constructor(
     private actions$: Actions,
-    private collectionPermissionsPipe: CollectionPermissionsPipe,
     private store$: Store<AppState>,
     private copyValueService: CopyValueService
   ) {}

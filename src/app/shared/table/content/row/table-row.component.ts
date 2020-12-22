@@ -29,7 +29,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {columnConstraintType, TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
+import {TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
 import {DataValue} from '../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
@@ -40,11 +40,9 @@ import {
   preventEvent,
 } from '../../../utils/common.utils';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {BooleanConstraint} from '../../../../core/model/constraint/boolean.constraint';
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
-import {isTableColumnDirectlyEditable} from '../../model/table-utils';
 import {TableMenuComponent} from '../common/menu/table-menu.component';
 import {isKeyPrintable, KeyCode} from '../../../key-code';
 import {Direction} from '../../../direction';
@@ -120,6 +118,7 @@ export class TableRowComponent implements OnChanges {
     common: {allowRichText: true},
     boolean: {center: true},
     user: {allowCenterOnlyIcon: true},
+    action: {center: true},
   };
 
   public editedValue: DataValue;
@@ -139,18 +138,14 @@ export class TableRowComponent implements OnChanges {
     if (this.isEditing()) {
       const column = this.columnById(this.editedCell.columnId);
       if (column?.editable) {
-        if (isTableColumnDirectlyEditable(column)) {
-          this.onNewValue(column, {action: DataInputSaveAction.Direct, dataValue: this.computeDirectEditValue(column)});
-          this.endSuggesting();
-        } else {
-          this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
-          if (column.collectionId) {
-            this.suggestedColumn = column;
-            this.suggesting$.next(this.editedValue);
-          }
+        this.editedValue = this.createDataValue(column, this.editedCell.inputValue, true);
+        if (column.collectionId) {
+          this.suggestedColumn = column;
+          this.suggesting$.next(this.editedValue);
         }
       }
-    } else {
+    }
+    if (!this.suggestedColumn) {
       this.endSuggesting();
     }
   }
@@ -175,15 +170,6 @@ export class TableRowComponent implements OnChanges {
     return this.columnGroups.find(group => group.column?.id === columnId)?.column;
   }
 
-  private computeDirectEditValue(column: TableColumn): DataValue {
-    if (columnConstraintType(column) === ConstraintType.Boolean) {
-      const constraint = column.attribute?.constraint as BooleanConstraint;
-      return constraint.createDataValue(!this.columnValue(column));
-    }
-
-    return null;
-  }
-
   private columnValue(column: TableColumn): any {
     if (column?.attribute) {
       if (column?.collectionId) {
@@ -206,6 +192,10 @@ export class TableRowComponent implements OnChanges {
   }
 
   private saveData(column: TableColumn, data: {action?: DataInputSaveAction; dataValue: DataValue}) {
+    if (!column.editable) {
+      return;
+    }
+
     const value = data.dataValue.serialize();
     const currentValue = this.columnValue(column);
     if (

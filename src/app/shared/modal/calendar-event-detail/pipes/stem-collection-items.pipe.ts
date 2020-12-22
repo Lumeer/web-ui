@@ -26,6 +26,7 @@ import {LinkType} from '../../../../core/store/link-types/link.type';
 import {objectsByIdMap} from '../../../utils/common.utils';
 import {CalendarConfig} from '../../../../core/store/calendars/calendar';
 import {calendarStemConfigIsWritable} from '../../../../view/perspectives/calendar/util/calendar-util';
+import {collectionSelectItem} from '../../../select/select-item.utils';
 
 @Pipe({
   name: 'stemCollectionsItems',
@@ -43,13 +44,9 @@ export class StemCollectionItemsPipe implements PipeTransform {
       const calendarStemConfig = config?.stemsConfigs?.[index];
       const collection = (collections || []).find(coll => coll.id === stem.collectionId);
       if (collection && calendarStemConfigIsWritable(calendarStemConfig, permissions, linkTypesMap)) {
-        models.push(this.collectionSelectItem(index, collection));
+        models.push(collectionSelectItem(collection, () => index));
       }
       return models;
     }, []);
-  }
-
-  private collectionSelectItem(index: number, collection: Collection): SelectItemModel {
-    return {id: index, value: collection.name, icons: [collection.icon], iconColors: [collection.color]};
   }
 }

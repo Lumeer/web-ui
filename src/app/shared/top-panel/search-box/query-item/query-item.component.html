@@ -20,24 +20,12 @@
     {{queryItem | queryItemText | truncate:30}}
   </span>
 
-  <div class="mr-1 d-inline-flex flex-grow-1 text-truncate text-nowrap align-items-center"
-       *ngIf="attribute">
-    <span [class.font-italic]="conditionControl?.value | conditionShouldBeItalic:attribute.constraint"
-          class="mx-1">{{conditionControl?.value | translateCondition:attribute}}</span>
-    <ng-container *ngFor="let control of conditionValuesControl?.controls; let index = index">
-      <ng-container
-        *ngIf="index < (conditionControl?.value | conditionNumValues) && control.get('type') as typeControl">
-        <span *ngIf="index > 0">,&nbsp;</span>
-        <data-input-preview *ngIf="!typeControl.value" [class.ml-1]="index === 0"
-                            [dataValue]="control.get('value').value | dataValue:attribute.constraint:constraintData"
-                            [configuration]="configuration"
-                            [constraint]="attribute.constraint">
-        </data-input-preview>
-        <span class="ml-1" [class.ml-1]="index === 0"
-              *ngIf="typeControl.value">{{typeControl.value | translateConditionValue:attribute}}</span>
-      </ng-container>
-    </ng-container>
-  </div>
+  <filter-preview class="mr-1  flex-grow-1" *ngIf="attribute"
+                  [attribute]="attribute"
+                  [constraintData]="constraintData"
+                  [condition]="conditionControl?.value"
+                  [conditionValues]="conditionValuesControl?.value">
+  </filter-preview>
 
   <i *ngIf="!readonly"
      (click)="onRemove()"

@@ -1,9 +1,8 @@
 <ng-container *ngIf="query | perspectiveDisplayable:1; else notDisplayable">
 
-  <ng-container *ngIf="{pivotData: pivotData$ | async,
-                      canManageConfig: currentView | canManageConfig | async} as data">
+  <ng-container *ngIf="{pivotData: pivotData$ | async} as data">
 
-    <collapsible-sidebar *ngIf="data.canManageConfig && config"
+    <collapsible-sidebar *ngIf="canManageConfig && config"
                          [collapsed]="!sidebarOpened"
                          (toggle)="onSidebarToggle()">
 

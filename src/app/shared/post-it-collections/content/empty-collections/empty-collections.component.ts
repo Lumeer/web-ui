@@ -17,25 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
-import {Project} from '../../../../core/store/projects/project';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {ResourceType} from '../../../../core/model/resource-type';
 import {CollectionImportData} from '../import-button/post-it-collection-import-button.component';
+import {AppState} from '../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {Observable} from 'rxjs';
+import {selectProjectPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'empty-collections',
   templateUrl: './empty-collections.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmptyCollectionsComponent {
+export class EmptyCollectionsComponent implements OnInit {
   @Input()
   public query: Query;
-
-  @Input()
-  public project: Project;
 
   @Output()
   public newCollection = new EventEmitter();
@@ -46,9 +46,13 @@ export class EmptyCollectionsComponent {
   @Output()
   public import = new EventEmitter<CollectionImportData>();
 
-  public readonly projectType = ResourceType.Project;
+  public projectPermissions$: Observable<AllowedPermissions>;
 
-  constructor(public i18n: I18n) {}
+  constructor(public i18n: I18n, private store$: Store<AppState>) {}
+
+  public ngOnInit() {
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
+  }
 
   public onNewCollection() {
     this.newCollection.emit();

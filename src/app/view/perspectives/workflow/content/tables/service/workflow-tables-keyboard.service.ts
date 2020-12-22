@@ -75,7 +75,11 @@ export class WorkflowTablesKeyboardService {
 
     preventEvent(event);
 
-    this.stateService.setEditedCell(this.stateService.selectedCell, '');
+    const selectedCell = this.stateService.selectedCell;
+    const column = this.stateService.findTableColumn(selectedCell.tableId, selectedCell.columnId);
+    if (!column.attribute?.constraint?.isDirectlyEditable) {
+      this.stateService.setEditedCell(this.stateService.selectedCell, '');
+    }
   }
 
   private onF2KeyDown(event: KeyboardEvent) {

@@ -20,7 +20,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {AutoLinkRule, Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
 import {Collection} from '../../../../core/store/collections/collection';
-import {Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
@@ -31,22 +31,20 @@ import {filter, first, map} from 'rxjs/operators';
 import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizations/service-limits/service-limits.state';
 import {RouterAction} from '../../../../core/store/router/router.action';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
+import {containsAttributeWithRule} from '../../../../shared/utils/attribute.utils';
 
 @Component({
   selector: 'collection-rules',
   templateUrl: './collection-rules.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionRulesComponent implements OnInit, OnDestroy {
+export class CollectionRulesComponent implements OnInit {
   public collection$: Observable<Collection>;
-
-  public ruleNames = [];
-
-  public addingRules: Rule[] = [];
-  public editingRules: Record<string, boolean> = {};
+  public ruleNames$: Observable<string[]>;
+  public editingRules$ = new BehaviorSubject<Record<string, boolean>>({});
   public rulesCountLimit$: Observable<number>;
 
-  public subscriptions = new Subscription();
+  public addingRules: Rule[] = [];
 
   private readonly runRuleTitle: string;
   private readonly runRuleMessage: string;
@@ -62,20 +60,12 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
     this.collection$ = this.store$.select(selectCollectionByWorkspace);
-    this.subscriptions.add(
-      this.collection$.pipe(filter(collection => !!collection && !!collection.rules)).subscribe(collection => {
-        this.ruleNames = collection.rules.map(r => r.name);
-      })
-    );
+    this.ruleNames$ = this.collection$.pipe(map(collection => collection?.rules.map(r => r.name) || []));
     this.rulesCountLimit$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
       filter(limits => !!limits),
       map(serviceLimits => serviceLimits.rulesPerCollection)
     );
-  }
-
-  public ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   public onNewRule(): void {
@@ -101,8 +91,8 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
     this.addingRules.splice(index, 1);
   }
 
-  public onSaveRule(collection: Collection, idx: number, rule: Rule, originalRuleName?: string) {
-    const index = collection.rules.findIndex(r => r.name === (originalRuleName ? originalRuleName : rule.name));
+  public onSaveRule(collection: Collection, idx: number, rule: Rule) {
+    const index = collection.rules.findIndex(r => r.id === rule.id);
 
     const rules = [...collection.rules];
     if (index >= 0) {
@@ -116,63 +106,83 @@ export class CollectionRulesComponent implements OnInit, OnDestroy {
         collection: {...collection, rules},
         callback: () => {
           if (rule.type === RuleType.AutoLink) {
-            this.store$.dispatch(this.getRunRuleConfirmation(collection.id, rule.name));
+            this.store$.dispatch(this.getRunRuleConfirmation(collection.id, rule.id));
           }
         },
       })
     );
 
     if (index >= 0) {
-      this.onCancelRuleEdit(idx);
+      this.onCancelRuleEdit(rule);
     } else {
       this.onCancelNewRule(idx);
     }
   }
 
-  private getRunRuleConfirmation(collectionId: string, ruleName: string): Action {
+  private getRunRuleConfirmation(collectionId: string, ruleId: string): Action {
     return new NotificationsAction.Confirm({
       title: this.runRuleTitle,
       message: this.runRuleMessage,
-      action: new CollectionsAction.RunRule({collectionId, ruleName}),
+      action: new CollectionsAction.RunRule({collectionId, ruleId}),
       type: 'warning',
       yesFirst: false,
     });
   }
 
-  public onCancelRuleEdit(idx: number) {
-    this.editingRules[this.ruleNames[idx]] = false;
+  public onCancelRuleEdit(rule: Rule) {
+    this.setEditingRule(rule, false);
   }
 
-  private showRemoveConfirm(collection: Collection) {
+  public onEditStart(rule: Rule) {
+    this.setEditingRule(rule, true);
+  }
+
+  private setEditingRule(rule: Rule, editing: boolean) {
+    const editingRules = {...this.editingRules$.value, [rule.id]: editing};
+    this.editingRules$.next(editingRules);
+  }
+
+  private showRemoveConfirm(collection: Collection, rule: Rule) {
     const updateAction = new CollectionsAction.Update({collection});
-    const confirmAction = this.createConfirmAction(updateAction);
+    const confirmAction = this.createConfirmAction(
+      updateAction,
+      containsAttributeWithRule(collection.attributes, rule)
+    );
     this.store$.dispatch(confirmAction);
   }
 
-  private createConfirmAction(action: Action): NotificationsAction.Confirm {
+  private createConfirmAction(action: Action, isBeingUsed: boolean): NotificationsAction.Confirm {
     const title = this.i18n({id: 'collection.config.tab.rules.remove.title', value: 'Delete this rule?'});
-    const message = this.i18n({
+    let message = this.i18n({
       id: 'collection.config.tab.rules.remove.message',
       value: 'Do you really want to delete this rule?',
     });
+
+    if (isBeingUsed) {
+      const additionalMessage = this.i18n({
+        id: 'collection.config.tab.rules.remove.message.used',
+        value: 'It is used in attribute configuration.',
+      });
+      message = `${message} ${additionalMessage}`;
+    }
 
     return new NotificationsAction.Confirm({title, message, type: 'danger', action});
   }
 
   public deleteRule(collection: Collection, rule: Rule) {
     const updatedRules = collection.rules.slice();
-    const index = updatedRules.findIndex(r => r.name === rule.name);
+    const index = updatedRules.findIndex(r => r.id === rule.id);
 
     if (index >= 0) {
       updatedRules.splice(index, 1);
       const updatedCollection = {...collection, rules: updatedRules};
 
-      this.showRemoveConfirm(updatedCollection);
+      this.showRemoveConfirm(updatedCollection, rule);
     }
   }
 
   public trackByRuleName(index: number, rule: Rule): string {
-    return rule.name;
+    return rule.id || rule.name;
   }
 
   public openServiceOrder() {

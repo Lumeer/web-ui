@@ -1,47 +1,53 @@
 <ng-container
   *ngIf="{columnFocused: columnFocused$ | async, columnEditing: columnEditing$ | async, readonly: !permissions.writeWithView} as data">
-  <td *ngFor="let column of columns; trackBy: trackByColumn; let index = index"
-      class="table-border"
-      [style.width.px]="column.width"
-      [class.focused]="data.columnFocused === index"
-      [class.editing]="data.columnEditing === index"
-      [class.affected]="!(attributeEditing?.documentId | isNullOrUndefined) &&
+  <ng-container *ngFor="let column of columns; trackBy: trackByColumn; let index = index">
+    <td class="table-border"
+        *ngIf="{dataValue: !(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : (column.linkTypeId ? row.linkInstance?.data || {} : row.document?.data || {})[column.attribute.id] | dataValue:column.attribute?.constraint:constraintData,
+          editing: data.columnEditing === index, focused: data.columnFocused === index} as columnData"
+        [style.width.px]="column.width"
+        [class.focused]="columnData.focused"
+        [class.editing]="columnData.editing && !column?.attribute?.constraint?.isDirectlyEditable"
+        [class.affected]="!(attributeEditing?.documentId | isNullOrUndefined) &&
       (row.document?.id === attributeEditing?.documentId) &&
       (column.collectionId && column.attribute.id === attributeEditing?.attributeId)"
-      (click)="onDataInputFocus(index, $event)"
-      (dblclick)="onDataInputDblClick(index, $event)">
-    <data-input *ngIf="column.linkTypeId"
-                [constraint]="column.attribute?.constraint"
-                [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id)"
-                [dataValue]="!(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : ((row.linkInstance?.data && row.linkInstance.data[column.attribute.id]) | dataValue:column.attribute?.constraint:constraintData)"
-                [focus]="true"
-                [preventEventBubble]="preventEventBubble"
-                [configuration]="configuration"
-                [readonly]="!column.editable || data.readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
-                [class.cursor-pointer]="!data.readonly && column.editable"
-                (save)="onNewValue(index, $event)"
-                (cancel)="onDataInputCancel(index)"
-                (enterInvalid)="onEnterInvalid()"
-                (clickOutside)="onDataInputCancel(index)">
-    </data-input>
+        (click)="onDataInputFocus(index, $event)"
+        (dblclick)="onDataInputDblClick(index, $event)">
+      <ng-container
+        *ngIf="column.attribute | dataInputEditInfo:columnData.dataValue:column.editable:columnData.editing as dataInputInfo">
+        <data-input *ngIf="column.linkTypeId"
+                    [constraint]="column.attribute?.constraint"
+                    [cursor]="row.linkInstance && (row.linkInstance | dataCursor : column.attribute.id)"
+                    [dataValue]="columnData.dataValue"
+                    [focus]="true"
+                    [preventEventBubble]="preventEventBubble"
+                    [configuration]="configuration"
+                    [readonly]="dataInputInfo.readonly"
+                    [class.cursor-pointer]="!data.readonly && column.editable"
+                    (save)="onNewValue(index, $event)"
+                    (cancel)="onDataInputCancel(index)"
+                    (enterInvalid)="onEnterInvalid()"
+                    (clickOutside)="onDataInputCancel(index)">
+        </data-input>
 
-    <data-input *ngIf="column.collectionId"
-                [constraint]="column.attribute.constraint"
-                [cursor]="row.document && (row.document | dataCursor : column.attribute.id)"
-                [dataValue]="!(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : ((row.document?.data && row.document.data[column.attribute.id]) | dataValue:column.attribute?.constraint:constraintData)"
-                [focus]="true"
-                [preventEventBubble]="preventEventBubble"
-                [configuration]="configuration"
-                [readonly]="!column.editable || data.readonly || !(data.columnEditing === index || column.attribute?.constraint?.type === booleanConstraintType)"
-                [class.cursor-pointer]="!data.readonly && column.editable"
-                (save)="onNewValue(index, $event)"
-                (keydown)="onDataInputKeyDown($event)"
-                (valueChange)="onValueChange(index, $event)"
-                (cancel)="onDataInputCancel(index)"
-                (clickOutside)="onDataInputCancel(index)"
-                (enterInvalid)="onEnterInvalid()">
-    </data-input>
-  </td>
+        <data-input *ngIf="column.collectionId"
+                    [constraint]="column.attribute.constraint"
+                    [cursor]="row.document && (row.document | dataCursor : column.attribute.id)"
+                    [dataValue]="columnData.dataValue"
+                    [focus]="true"
+                    [preventEventBubble]="preventEventBubble"
+                    [configuration]="configuration"
+                    [readonly]="dataInputInfo.readonly"
+                    [class.cursor-pointer]="!data.readonly && column.editable"
+                    (save)="onNewValue(index, $event)"
+                    (keydown)="onDataInputKeyDown($event)"
+                    (valueChange)="onValueChange(index, $event)"
+                    (cancel)="onDataInputCancel(index)"
+                    (clickOutside)="onDataInputCancel(index)"
+                    (enterInvalid)="onEnterInvalid()">
+        </data-input>
+      </ng-container>
+    </td>
+  </ng-container>
   <td class="fixed-column border-0" *ngIf="permissions?.read && permissions?.writeWithView">
     <div class="d-flex flex-nowrap flex-row h-100 align-items-center px-2">
       <i class="fas fa-file-search clickable mr-2"

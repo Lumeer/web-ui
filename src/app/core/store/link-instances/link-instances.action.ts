@@ -57,6 +57,9 @@ export enum LinkInstancesActionType {
 
   CLEAR = '[Link Instances] Clear',
   CLEAR_BY_LINK_TYPE = '[Link Instances] Clear By Link Type',
+
+  RUN_RULE = '[Link Instances] Run Rule',
+  RUN_RULE_FAILURE = '[Link Instances] Run Rule :: Failure',
 }
 
 export namespace LinkInstancesAction {
@@ -246,6 +249,18 @@ export namespace LinkInstancesAction {
     public constructor(public payload: {linkTypeId: string}) {}
   }
 
+  export class RunRule implements Action {
+    public readonly type = LinkInstancesActionType.RUN_RULE;
+
+    public constructor(public payload: {linkTypeId: string; linkInstanceId: string; attributeId: string}) {}
+  }
+
+  export class RunRuleFailure implements Action {
+    public readonly type = LinkInstancesActionType.RUN_RULE_FAILURE;
+
+    public constructor(public payload: {linkInstanceId: string; attributeId: string; error: any}) {}
+  }
+
   export type All =
     | Get
     | GetSingle
@@ -270,5 +285,7 @@ export namespace LinkInstancesAction {
     | Duplicate
     | DuplicateSuccess
     | Clear
-    | ClearByLinkType;
+    | ClearByLinkType
+    | RunRule
+    | RunRuleFailure;
 }

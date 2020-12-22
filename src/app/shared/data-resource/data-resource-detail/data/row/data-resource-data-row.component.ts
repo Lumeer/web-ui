@@ -18,17 +18,14 @@
  */
 
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   EventEmitter,
   HostBinding,
-  HostListener,
   Input,
   OnChanges,
   Output,
-  Renderer2,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -44,7 +41,6 @@ import {isNotNullOrUndefined} from '../../../../utils/common.utils';
 import {DataValue} from '../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
 import {DataResourceDataRowIconsComponent} from './icons/data-resource-data-row-icons.component';
-import {BooleanConstraint} from '../../../../../core/model/constraint/boolean.constraint';
 import {DataInputConfiguration} from '../../../../data-input/data-input-configuration';
 
 @Component({
@@ -111,7 +107,6 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   @HostBinding('class.value-focused')
   public valueFocused: boolean;
 
-  public readonly booleanConstraintType = ConstraintType.Boolean;
   public readonly configuration: DataInputConfiguration = {common: {allowRichText: true, delaySaveAction: true}};
 
   public placeholder: string;
@@ -122,6 +117,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   public editedValue: DataValue;
   public editing$ = new BehaviorSubject(false);
   public dataValue: DataValue;
+  public editable: boolean;
 
   public get constraintType(): ConstraintType {
     return this.row?.attribute?.constraint?.type;
@@ -136,12 +132,11 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
       this.keyDataValue = this.createKeyDataValue();
       this.dataValue = this.createDataValue();
     }
+    this.editable = this.isEditable();
   }
 
   private createKeyDataValue(value?: any): DataValue {
-    const initialValue = isNotNullOrUndefined(value)
-      ? value
-      : (this.row.attribute && this.row.attribute.name) || this.row.key;
+    const initialValue = isNotNullOrUndefined(value) ? value : this.row.attribute?.name || this.row.key;
     return new UnknownConstraint().createDataValue(initialValue);
   }
 
@@ -163,10 +158,14 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private getCurrentKey(): any {
-    return (this.row.attribute && this.row.attribute.name) || this.row.key;
+    return this.row.attribute?.name || this.row.key;
   }
 
   public onNewValue(dataValue: DataValue) {
+    if (!this.isEditable()) {
+      return;
+    }
+
     this.editedValue = null;
     const value = dataValue.serialize();
     if (value !== this.getCurrentValue()) {
@@ -231,32 +230,15 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   private startValueEditing(value?: any): boolean {
     this.editedValue = null;
     if (this.isEditable() && !this.editing$.value) {
-      if (this.shouldDirectEditValue()) {
-        this.onNewValue(this.computeDirectEditValue());
-      } else {
-        this.dataValue = this.createDataValue(value, true);
-        this.editing$.next(true);
-        return true;
-      }
+      this.dataValue = this.createDataValue(value, true);
+      this.editing$.next(true);
+      return true;
     }
     return false;
   }
 
-  private shouldDirectEditValue(): boolean {
-    return this.constraintType === ConstraintType.Boolean;
-  }
-
-  private computeDirectEditValue(): DataValue {
-    if (this.constraintType === ConstraintType.Boolean) {
-      const constraint = this.row.attribute.constraint as BooleanConstraint;
-      return constraint.createDataValue(!this.row.value);
-    }
-
-    return null;
-  }
-
   private isEditable(): boolean {
-    return this.permissions && this.permissions.writeWithView && !this.readonly;
+    return this.permissions?.writeWithView && !this.readonly;
   }
 
   public onKeyInputDblClick(event: MouseEvent) {

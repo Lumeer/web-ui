@@ -223,13 +223,20 @@ export class WorkflowTablesService {
   }
 
   public resetSelection() {
-    this.dataService.resetSidebar();
     this.stateService.resetSelection();
+  }
+
+  public resetSidebar() {
+    this.dataService.resetSidebar();
   }
 
   public newHiddenInput(value: string) {
     if (this.isSelected()) {
-      this.stateService.setEditedCell(this.stateService.selectedCell, value);
+      const selectedCell = this.stateService.selectedCell;
+      const column = this.stateService.findTableColumn(selectedCell.tableId, selectedCell.columnId);
+      if (!column.attribute?.constraint?.isDirectlyEditable) {
+        this.stateService.setEditedCell(this.stateService.selectedCell, value);
+      }
     }
   }
 

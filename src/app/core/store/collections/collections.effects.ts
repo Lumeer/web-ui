@@ -560,13 +560,11 @@ export class CollectionsEffects {
   public runRule$: Observable<Action> = this.actions$.pipe(
     ofType<CollectionsAction.RunRule>(CollectionsActionType.RUN_RULE),
     mergeMap(action => {
-      const {collectionId, ruleName} = action.payload;
+      const {collectionId, ruleId} = action.payload;
 
-      return this.collectionService.runRule(collectionId, ruleName).pipe(
+      return this.collectionService.runRule(collectionId, ruleId).pipe(
         mergeMap(() => EMPTY),
-        catchError(error => {
-          return of(new CollectionsAction.RunRuleFailure({collectionId, ruleName, error}));
-        })
+        catchError(error => of(new CollectionsAction.RunRuleFailure({error})))
       );
     })
   );

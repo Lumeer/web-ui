@@ -20,7 +20,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {Attribute} from '../../../core/store/collections/collection';
 import {DataValue} from '../../../core/model/data-value';
-import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {ConstraintType} from '../../../core/model/data/constraint';
 
@@ -33,18 +32,18 @@ export class DataInputEditInfoPipe implements PipeTransform {
     dataValue: DataValue,
     editable: boolean,
     editing: boolean
-  ): {readonly: boolean; hasValue: boolean; showDataInput: boolean; selectConstraint: boolean; editing: boolean} {
+  ): {readonly: boolean; hasValue: boolean; showDataInput: boolean; additionalMargin: boolean; editing: boolean} {
     const constraint = attribute?.constraint || new UnknownConstraint();
     const asText = constraint.isTextRepresentation;
     const hasValue = dataValue && !!dataValue.format();
-    const readonly = !editable || !(editing || constraint.type === ConstraintType.Boolean);
+    const readonly = !editable || !editing;
 
-    const forceDataInput = constraint.type === ConstraintType.Files;
+    const forceDataInput = [ConstraintType.Action, ConstraintType.Files].includes(constraint.type);
     return {
       readonly,
       hasValue,
       showDataInput: forceDataInput || !readonly || (!asText && hasValue),
-      selectConstraint: constraint.type === ConstraintType.Select,
+      additionalMargin: constraint.type === ConstraintType.Select,
       editing,
     };
   }

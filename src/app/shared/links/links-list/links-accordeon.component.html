@@ -1,41 +1,44 @@
-<ng-container *ngIf="{linkTypes: linkTypes$ | async, openedGroups: openedGroups$ | async} as data">
+<ng-container
+  *ngIf="{linkTypes: linkTypes$ | async, openedGroups: openedGroups$ | async, collections: collections$ | async, permissions: permissions$ | async} as data">
   <ng-container *ngIf="data.linkTypes?.length > 0; else noLinkTypes">
-  <accordion>
-    <ng-container *ngFor="let linkType of data?.linkTypes; trackBy:trackById let idx = index;">
-      <accordion-group panelClass="lmr-accordion" [isOpen]="data.openedGroups[linkType.id]" (isOpenChange)="isOpenChanged($event, linkType.id)">
-        <div class="header-wrapper" accordion-heading *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
-          <div class="mr-2">
-            <i *ngIf="data.openedGroups[linkType.id]" class="fas fa-caret-down"></i>
-            <i *ngIf="!(data.openedGroups[linkType.id])" class="fas fa-caret-right"></i>
+    <accordion>
+      <ng-container *ngFor="let linkType of data?.linkTypes; trackBy:trackById let idx = index;">
+        <accordion-group panelClass="lmr-accordion" [isOpen]="data.openedGroups[linkType.id]"
+                         (isOpenChange)="isOpenChanged($event, linkType.id)">
+          <div class="header-wrapper" accordion-heading
+               *ngIf="{iconColors: linkType | asAttributeResource | resourceIconsColors} as iconData">
+            <div class="mr-2">
+              <i *ngIf="data.openedGroups[linkType.id]" class="fas fa-caret-down"></i>
+              <i *ngIf="!(data.openedGroups[linkType.id])" class="fas fa-caret-right"></i>
+            </div>
+            <icons-presenter class="d-block mr-1"
+                             [colors]="iconData.iconColors.colors"
+                             [icons]="iconData.iconColors.icons">
+            </icons-presenter>
+            <div class="font-weight-bold text-truncate" [title]="linkType.name">{{linkType.name}}</div>
+            <div class="small text-muted">{{document | linksCount:linkType | async}}</div>
           </div>
-          <icons-presenter class="d-block mr-1"
-                           [colors]="iconData.iconColors.colors"
-                           [icons]="iconData.iconColors.icons">
-          </icons-presenter>
-          <div class="font-weight-bold text-truncate" [title]="linkType.name">{{linkType.name}}</div>
-          <div class="small text-muted">{{document | linksCount:linkType | async}}</div>
-        </div>
-        <div>
-          <links-list-table
-            *ngIf="{otherCollection: linkType | linkTypeOtherCollection:(collections$ | async):collection.id} as linkData"
-            class="d-block mt-2"
-            [visible]="data.openedGroups[linkType.id]"
-            [linkType]="linkType"
-            [document]="document"
-            [collection]="linkData.otherCollection"
-            [permissions]="linkData.otherCollection | collectionPermissions | async"
-            [query]="query$ | async"
-            [allowSelectDocument]="allowSelectDocument"
-            [preventEventBubble]="preventEventBubble"
-            [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
-            [viewSettings]="viewSettings"
-            (unLink)="unLinkDocument($event)"
-            (detail)="onSelectDocument($event)">
-          </links-list-table>
-        </div>
-      </accordion-group>
-    </ng-container>
-  </accordion>
+          <div>
+            <links-list-table
+              *ngIf="linkType | linkTypeOtherCollection:data.collections:collection.id as otherCollection"
+              class="d-block mt-2"
+              [visible]="data.openedGroups[linkType.id]"
+              [linkType]="linkType"
+              [document]="document"
+              [collection]="otherCollection"
+              [permissions]="data.permissions && data.permissions[otherCollection.id]"
+              [query]="query$ | async"
+              [allowSelectDocument]="allowSelectDocument"
+              [preventEventBubble]="preventEventBubble"
+              [ignoreSettingsOnReadPermission]="ignoreSettingsOnReadPermission"
+              [viewSettings]="viewSettings"
+              (unLink)="unLinkDocument($event)"
+              (detail)="onSelectDocument($event)">
+            </links-list-table>
+          </div>
+        </accordion-group>
+      </ng-container>
+    </accordion>
   </ng-container>
 </ng-container>
 

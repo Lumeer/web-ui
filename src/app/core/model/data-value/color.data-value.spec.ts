@@ -17,52 +17,52 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../store/navigation/query/query';
 import {ColorDataValue} from './color.data-value';
 import {ColorConstraintConfig} from '../data/constraint-config';
+import {ConditionType} from '../attribute-filter';
 
 describe('ColorDataValue', () => {
   const config: ColorConstraintConfig = {};
 
   describe('meet condition', () => {
     it('equals', () => {
-      expect(new ColorDataValue('red', config).meetCondition(QueryCondition.Equals, [{value: '#ff0000'}])).toBeTruthy();
-      expect(new ColorDataValue('red', config).meetCondition(QueryCondition.Equals, [{value: 'red'}])).toBeTruthy();
-      expect(new ColorDataValue('red', config).meetCondition(QueryCondition.Equals, [{value: '#ff0001'}])).toBeFalsy();
+      expect(new ColorDataValue('red', config).meetCondition(ConditionType.Equals, [{value: '#ff0000'}])).toBeTruthy();
+      expect(new ColorDataValue('red', config).meetCondition(ConditionType.Equals, [{value: 'red'}])).toBeTruthy();
+      expect(new ColorDataValue('red', config).meetCondition(ConditionType.Equals, [{value: '#ff0001'}])).toBeFalsy();
       expect(
-        new ColorDataValue('white', config).meetCondition(QueryCondition.Equals, [{value: '#ffffff'}])
+        new ColorDataValue('white', config).meetCondition(ConditionType.Equals, [{value: '#ffffff'}])
       ).toBeTruthy();
       expect(
-        new ColorDataValue('#000000', config).meetCondition(QueryCondition.Equals, [{value: 'black'}])
+        new ColorDataValue('#000000', config).meetCondition(ConditionType.Equals, [{value: 'black'}])
       ).toBeTruthy();
-      expect(new ColorDataValue('#000', config).meetCondition(QueryCondition.Equals, [{value: 'black'}])).toBeTruthy();
+      expect(new ColorDataValue('#000', config).meetCondition(ConditionType.Equals, [{value: 'black'}])).toBeTruthy();
     });
 
     it('not equals', () => {
       expect(
-        new ColorDataValue('red', config).meetCondition(QueryCondition.NotEquals, [{value: '#ff0001'}])
+        new ColorDataValue('red', config).meetCondition(ConditionType.NotEquals, [{value: '#ff0001'}])
       ).toBeTruthy();
       expect(
-        new ColorDataValue('red', config).meetCondition(QueryCondition.NotEquals, [{value: '#ff0000'}])
+        new ColorDataValue('red', config).meetCondition(ConditionType.NotEquals, [{value: '#ff0000'}])
       ).toBeFalsy();
       expect(
-        new ColorDataValue('white', config).meetCondition(QueryCondition.NotEquals, [{value: 'black'}])
+        new ColorDataValue('white', config).meetCondition(ConditionType.NotEquals, [{value: 'black'}])
       ).toBeTruthy();
       expect(
-        new ColorDataValue('white', config).meetCondition(QueryCondition.NotEquals, [{value: '#ffffffff'}])
+        new ColorDataValue('white', config).meetCondition(ConditionType.NotEquals, [{value: '#ffffffff'}])
       ).toBeTruthy();
     });
     it('is empty', () => {
-      expect(new ColorDataValue('     ', config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
-      expect(new ColorDataValue(' red ', config).meetCondition(QueryCondition.IsEmpty, [])).toBeFalsy();
-      expect(new ColorDataValue(null, config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
+      expect(new ColorDataValue('     ', config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
+      expect(new ColorDataValue(' red ', config).meetCondition(ConditionType.IsEmpty, [])).toBeFalsy();
+      expect(new ColorDataValue(null, config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
     });
 
     it('is not empty', () => {
-      expect(new ColorDataValue('#000000', config).meetCondition(QueryCondition.NotEmpty, [])).toBeTruthy();
-      expect(new ColorDataValue('red', config).meetCondition(QueryCondition.NotEmpty, [])).toBeTruthy();
-      expect(new ColorDataValue(null, config).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
-      expect(new ColorDataValue('  ', config).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
+      expect(new ColorDataValue('#000000', config).meetCondition(ConditionType.NotEmpty, [])).toBeTruthy();
+      expect(new ColorDataValue('red', config).meetCondition(ConditionType.NotEmpty, [])).toBeTruthy();
+      expect(new ColorDataValue(null, config).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
+      expect(new ColorDataValue('  ', config).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
     });
   });
 

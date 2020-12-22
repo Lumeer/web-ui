@@ -54,5 +54,11 @@
                      [value]="dataValue">
     </link-data-input>
 
+    <action-data-input *ngSwitchCase="constraintType.Action"
+                       [readonly]="true"
+                       [configuration]="configuration?.action"
+                       [value]="dataValue">
+    </action-data-input>
+
   </ng-container>
 </ng-template>

@@ -63,6 +63,7 @@ import {ConstraintClassPipe} from './pipes/constraint-class.pipe';
 import {SelectOptionsJoinedPipe} from './select/pipes/select-options-joined.pipe';
 import {LinkDataInputComponent} from './link/link-data-input.component';
 import {LinkInputDropdownComponent} from './link/dropdown/link-input-dropdown.component';
+import {ActionDataInputComponent} from './action/action-data-input.component';
 
 @NgModule({
   imports: [
@@ -114,6 +115,7 @@ import {LinkInputDropdownComponent} from './link/dropdown/link-input-dropdown.co
     SelectOptionsJoinedPipe,
     LinkDataInputComponent,
     LinkInputDropdownComponent,
+    ActionDataInputComponent,
   ],
   exports: [
     DataInputComponent,
@@ -127,6 +129,7 @@ import {LinkInputDropdownComponent} from './link/dropdown/link-input-dropdown.co
     RichTextDataInputComponent,
     ConstraintAsTextPipe,
     ConstraintClassPipe,
+    ActionDataInputComponent,
   ],
 })
 export class DataInputModule {}

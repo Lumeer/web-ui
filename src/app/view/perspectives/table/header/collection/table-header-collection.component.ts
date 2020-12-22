@@ -18,7 +18,7 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
-import {Store} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {AppState} from '../../../../../core/store/app.state';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -26,6 +26,8 @@ import {selectCollectionById} from '../../../../../core/store/collections/collec
 import {TableHeaderCursor} from '../../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../../core/store/tables/tables.action';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {selectCollectionPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'table-header-collection',
@@ -50,16 +52,18 @@ export class TableHeaderCollectionComponent implements OnChanges {
   public embedded: boolean;
 
   public collection$: Observable<Collection>;
+  public permissions$: Observable<AllowedPermissions>;
 
-  public constructor(private store: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.part && this.part) {
-      this.collection$ = this.store.select(selectCollectionById(this.part.collectionId));
+      this.collection$ = this.store$.select(selectCollectionById(this.part.collectionId));
+      this.permissions$ = this.store$.pipe(select(selectCollectionPermissions(this.part.collectionId)));
     }
   }
 
   public onCaptionClick() {
-    this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
+    this.store$.dispatch(new TablesAction.SetCursor({cursor: null}));
   }
 }

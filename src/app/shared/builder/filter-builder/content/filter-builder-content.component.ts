@@ -28,13 +28,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
-import {ConstraintConditionValueItem, QueryConditionItem} from '../model/query-condition-item';
+import {ConstraintConditionValueItem, ConditionItem} from '../model/condition-item';
 import {DataValue} from '../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {ConstraintData, ConstraintType} from '../../../../core/model/data/constraint';
-import {QueryCondition, QueryConditionValue} from '../../../../core/store/navigation/query/query';
 import {BehaviorSubject} from 'rxjs';
-import {queryConditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
 import {createRange} from '../../../utils/array.utils';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
 import {KeyCode} from '../../../key-code';
@@ -46,6 +45,7 @@ import {
 } from '../../../../core/model/data/constraint-condition';
 import {HiddenInputComponent} from '../../../input/hidden-input/hidden-input.component';
 import {objectValues} from '../../../utils/common.utils';
+import {ConditionType, ConditionValue} from '../../../../core/model/attribute-filter';
 
 @Component({
   selector: 'filter-builder-content',
@@ -58,16 +58,16 @@ export class FilterBuilderContentComponent implements OnInit {
   public attribute: Attribute;
 
   @Input()
-  public selectedValues: QueryConditionValue[];
+  public selectedValues: ConditionValue[];
 
   @Input()
-  public selectedCondition: QueryCondition;
+  public selectedCondition: ConditionType;
 
   @Input()
   public constraintData: ConstraintData;
 
   @Output()
-  public valueChange = new EventEmitter<{condition: QueryCondition; values: QueryConditionValue[]}>();
+  public valueChange = new EventEmitter<{condition: ConditionType; values: ConditionValue[]}>();
 
   @Output()
   public finishEditing = new EventEmitter();
@@ -84,7 +84,7 @@ export class FilterBuilderContentComponent implements OnInit {
   public ngForIndexes: number[];
   public focused: {column: number; row: number} = {column: 0, row: 0};
   public dataValues: DataValue[];
-  public conditionItems: QueryConditionItem[];
+  public conditionItems: ConditionItem[];
   public conditionValueItems: ConstraintConditionValueItem[];
 
   constructor(private translationService: TranslationService) {}
@@ -101,7 +101,7 @@ export class FilterBuilderContentComponent implements OnInit {
       this.dataValues = this.createDataValues();
     }
     if (changes.selectedCondition) {
-      this.numInputs = queryConditionNumInputs(this.selectedCondition);
+      this.numInputs = conditionNumInputs(this.selectedCondition);
       this.ngForIndexes = createRange(0, this.numInputs);
     }
   }
@@ -112,7 +112,7 @@ export class FilterBuilderContentComponent implements OnInit {
     this.conditionValueItems = this.createConditionValueItems(constraint);
   }
 
-  private createConditionItems(constraint: Constraint): QueryConditionItem[] {
+  private createConditionItems(constraint: Constraint): ConditionItem[] {
     return constraint.conditions().map(value => ({
       value,
       title: this.translationService.translateQueryCondition(value, constraint),
@@ -144,7 +144,7 @@ export class FilterBuilderContentComponent implements OnInit {
     });
   }
 
-  public onConditionSelect(item: QueryConditionItem, row: number) {
+  public onConditionSelect(item: ConditionItem, row: number) {
     this.selectCondition(item);
     this.focusCell(row, 0);
     this.endEditing();
@@ -155,7 +155,7 @@ export class FilterBuilderContentComponent implements OnInit {
     this.hiddenInputComponent?.focus();
   }
 
-  private selectCondition(item: QueryConditionItem) {
+  private selectCondition(item: ConditionItem) {
     this.valueChange.emit({condition: item.value, values: this.selectedValues});
   }
 
@@ -181,7 +181,7 @@ export class FilterBuilderContentComponent implements OnInit {
   }
 
   private selectConditionValue(item: ConstraintConditionValueItem, index: number) {
-    const value: QueryConditionValue = {type: item.value, value: null};
+    const value: ConditionValue = {type: item.value, value: null};
 
     const values = [...(this.selectedValues || [])];
     values[index] = value;
@@ -197,7 +197,7 @@ export class FilterBuilderContentComponent implements OnInit {
   }
 
   public onInputSave(dataValue: DataValue, column: number) {
-    const value: QueryConditionValue = {type: null, value: dataValue.serialize()};
+    const value: ConditionValue = {type: null, value: dataValue.serialize()};
 
     const values = [...(this.selectedValues || [])];
     values[column] = value;

@@ -163,4 +163,8 @@ export class PublicDocumentService extends BaseService implements DocumentServic
       }
     );
   }
+
+  public runRule(collectionId: string, documentId: string, attributeId: string): Observable<any> {
+    return of(true);
+  }
 }

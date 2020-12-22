@@ -20,23 +20,13 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {SelectItemModel} from '../select/select-item/select-item.model';
+import {linkTypesSelectItems} from '../select/select-item.utils';
 
 @Pipe({
   name: 'linkTypesSelectItems',
 })
 export class LinkTypesSelectItemsPipe implements PipeTransform {
   public transform(linkTypes: LinkType[]): SelectItemModel[] {
-    if (linkTypes) {
-      return linkTypes.map(linkType => {
-        return {
-          id: linkType.id,
-          value: linkType.name,
-          icons: [linkType.collections?.[0].icon, linkType.collections[1].icon],
-          iconColors: [linkType.collections[0].color, linkType.collections[1].color],
-        } as SelectItemModel;
-      });
-    } else {
-      return [];
-    }
+    return linkTypesSelectItems(linkTypes);
   }
 }

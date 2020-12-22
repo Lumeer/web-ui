@@ -9,7 +9,7 @@
   </table-data-cell-menu>
 
   <ng-container
-    *ngIf="data.attribute | dataInputEditInfo:data.dataValue:allowedPermissions?.writeWithView: (editing$ | async) as dataInputInfo">
+    *ngIf="data.attribute | dataInputEditInfo:data.dataValue:editable: (editing$ | async) as dataInputInfo">
 
     <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
          [innerHTML]="data.dataValue | previewDataValue | safeHtml"
@@ -21,6 +21,7 @@
     </div>
 
     <data-input *ngIf="dataInputInfo.showDataInput"
+                [style.width.px]="columnWidth"
                 [constraint]="data.attribute?.constraint"
                 [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
                 [dataValue]="data.dataValue"
@@ -32,8 +33,8 @@
                 (cancel)="onCancelEditing()"
                 (enterInvalid)="onEnterInvalid()"
                 class="d-block h-100"
-                [class.mr-1]="dataInputInfo.selectConstraint && !dataInputInfo.editing"
-                [class.ml-1]="dataInputInfo.selectConstraint && dataInputInfo.editing"
+                [class.mr-1]="dataInputInfo.additionalMargin && !dataInputInfo.editing"
+                [class.ml-1]="dataInputInfo.additionalMargin && dataInputInfo.editing"
                 [class.cursor-default]="!(data.attribute | attributeEditable:(document?.collectionId || linkInstance?.linkTypeId):allowedPermissions:query)"
                 data-test="table-data-input">
     </data-input>

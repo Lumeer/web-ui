@@ -31,7 +31,7 @@ export class DataCellLinkInstancePipe implements PipeTransform {
     partIndex: number,
     row: TableConfigRow
   ): LinkInstance {
-    if (linkInstances && linkInstances[0]) {
+    if (linkInstances?.[0]) {
       return linkInstances[0];
     }
 

@@ -47,6 +47,15 @@ import {SelectConstraintOptionsFormComponent} from './form/constraint-config/sel
 import {SelectModule} from '../../select/select.module';
 import {DirectivesModule} from '../../directives/directives.module';
 import {LinkConstraintConfigFormComponent} from './form/constraint-config/link/link-constraint-config-form.component';
+import {ActionConstraintConfigFormComponent} from './form/constraint-config/action/action-constraint-config-form.component';
+import {ActionConstraintConditionsFormComponent} from './form/constraint-config/action/conditions/action-constraint-conditions-form.component';
+import {ActionConstraintConditionFormComponent} from './form/constraint-config/action/conditions/condition/action-constraint-condition-form.component';
+import {FilterPreviewModule} from '../../builder/filter-preview/filter-preview.module';
+import {FilterBuilderModule} from '../../builder/filter-builder/filter-builder.module';
+import {ActionConstraintPermissionsFormComponent} from './form/constraint-config/action/permissions/action-constraint-permissions-form.component';
+import {CollectionSettingsPathPipe} from './form/constraint-config/action/pipes/collection-settings-path.pipe';
+import {RouterModule} from '@angular/router';
+import {ActionConstraintConfigEmptyComponent} from './form/constraint-config/action/empty/action-constraint-config-empty.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +77,12 @@ import {LinkConstraintConfigFormComponent} from './form/constraint-config/link/l
     AttributeTypeSelectComponent,
     AttributeTypeModalComponent,
     LinkConstraintConfigFormComponent,
+    ActionConstraintConfigFormComponent,
+    ActionConstraintConditionsFormComponent,
+    ActionConstraintConditionFormComponent,
+    ActionConstraintPermissionsFormComponent,
+    CollectionSettingsPathPipe,
+    ActionConstraintConfigEmptyComponent,
   ],
   imports: [
     CommonModule,
@@ -81,6 +96,9 @@ import {LinkConstraintConfigFormComponent} from './form/constraint-config/link/l
     PresenterModule,
     PipesModule,
     DirectivesModule,
+    FilterPreviewModule,
+    FilterBuilderModule,
+    RouterModule,
   ],
   exports: [AttributeTypeModalComponent],
 })

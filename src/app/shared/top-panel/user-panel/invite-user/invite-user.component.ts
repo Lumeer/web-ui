@@ -17,19 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 import {InviteUserModalComponent} from './modal/invite-user-modal.component';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectProjectByWorkspace} from '../../../../core/store/projects/projects.state';
 import {Observable} from 'rxjs';
-import {Project} from '../../../../core/store/projects/project';
 import {ResourceType} from '../../../../core/model/resource-type';
-import {Organization} from '../../../../core/store/organizations/organization';
-import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {ModalService} from '../../../modal/modal.service';
 import {selectUsersForWorkspace} from '../../../../core/store/users/users.state';
 import {map} from 'rxjs/operators';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
+import {
+  selectOrganizationPermissions,
+  selectProjectPermissions,
+} from '../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'invite-user',
@@ -41,9 +42,8 @@ export class InviteUserComponent {
   @Input()
   public mobile: boolean;
 
-  public organization$: Observable<Organization>;
-  public project$: Observable<Project>;
-
+  public organizationPermissions$: Observable<AllowedPermissions>;
+  public projectPermissions$: Observable<AllowedPermissions>;
   public projectUsers$: Observable<number>;
 
   public readonly organizationType = ResourceType.Organization;
@@ -52,8 +52,8 @@ export class InviteUserComponent {
   constructor(private modalService: ModalService, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.organization$ = this.store$.pipe(select(selectOrganizationByWorkspace));
-    this.project$ = this.store$.pipe(select(selectProjectByWorkspace));
+    this.organizationPermissions$ = this.store$.pipe(select(selectOrganizationPermissions));
+    this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));
     this.projectUsers$ = this.store$.pipe(
       select(selectUsersForWorkspace),
       map(users => users?.length)

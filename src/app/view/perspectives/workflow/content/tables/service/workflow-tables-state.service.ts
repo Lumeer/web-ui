@@ -32,7 +32,12 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {ViewSettings} from '../../../../../../core/store/views/view';
-import {deepObjectCopy, isNotNullOrUndefined, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
+import {
+  deepObjectCopy,
+  isNotNullOrUndefined,
+  objectsByIdMap,
+  objectValues,
+} from '../../../../../../shared/utils/common.utils';
 import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
 import {moveItemsInArray} from '../../../../../../shared/utils/array.utils';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
@@ -100,7 +105,7 @@ export class WorkflowTablesStateService {
   }
 
   public get collections(): Collection[] {
-    return Object.values(this.currentCollectionsMap || {});
+    return objectValues(this.currentCollectionsMap || {});
   }
 
   public get collectionsMap(): Record<string, Collection> {
@@ -108,7 +113,7 @@ export class WorkflowTablesStateService {
   }
 
   public get linkTypes(): LinkType[] {
-    return Object.values(this.currentLinkTypesMap || {});
+    return objectValues(this.currentLinkTypesMap || {});
   }
 
   public get linkTypesMap(): Record<string, LinkType> {
@@ -537,7 +542,7 @@ function canEditCell(cell: TableCell, column: TableColumn): boolean {
     return false;
   }
   if (cell.type === TableCellType.Header) {
-    return column.manageable && !column.creating;
+    return column.permissions?.manageWithView && !column.creating;
   } else if (cell.type === TableCellType.Body || cell.type === TableCellType.NewRow) {
     return column.editable;
   }

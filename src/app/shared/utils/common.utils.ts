@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+import {SimpleChange} from '@angular/core';
 import isEqual from 'lodash/isEqual';
 import escape from 'lodash/escape';
 import unescape from 'lodash/unescape';
@@ -217,4 +218,8 @@ export function computeElementPositionInParent(event: MouseEvent, parentTag: str
     element = element.offsetParent as HTMLElement;
   }
   return {x, y};
+}
+
+export function objectChanged(change: SimpleChange): boolean {
+  return change && (!change.previousValue || change.previousValue.id !== change.currentValue?.id);
 }

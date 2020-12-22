@@ -390,7 +390,7 @@ export class GanttChartTasksComponent implements OnInit, OnChanges {
   ) {
     const resource = this.getResourceById(model.resourceId, model.resourceType);
     const constraint = findAttributeConstraint(resource && resource.attributes, model.attributeId);
-    if (constraint && constraint.type === ConstraintType.Duration) {
+    if (constraint?.type === ConstraintType.Duration) {
       const start = moment(task.start, this.options && this.options.dateFormat);
       const end = moment(task.end, this.options && this.options.dateFormat);
 

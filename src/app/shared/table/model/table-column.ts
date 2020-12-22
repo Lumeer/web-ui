@@ -18,8 +18,10 @@
  */
 
 import {Attribute} from '../../../core/store/collections/collection';
-import {ConstraintType} from '../../../core/model/data/constraint';
 import {AttributeSortType} from '../../../core/store/views/view';
+import {Constraint} from '../../../core/model/constraint';
+import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
+import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 
 export interface TableColumnGroup {
   id: string;
@@ -43,7 +45,7 @@ export interface TableColumn {
   default?: boolean;
   hidden?: boolean;
   editable: boolean;
-  manageable?: boolean;
+  permissions: AllowedPermissions;
   sort?: AttributeSortType;
   menuItems: TableContextMenuItem[];
 }
@@ -57,6 +59,6 @@ export interface TableContextMenuItem {
   disabled: boolean;
 }
 
-export function columnConstraintType(column: TableColumn): ConstraintType {
-  return column.attribute?.constraint?.type || ConstraintType.Unknown;
+export function columnConstraint(column: TableColumn): Constraint {
+  return column.attribute?.constraint || new UnknownConstraint();
 }

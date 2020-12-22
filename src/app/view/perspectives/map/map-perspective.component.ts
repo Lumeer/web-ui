@@ -36,6 +36,7 @@ import {
 } from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
 import {
+  selectCanManageViewConfig,
   selectCollectionsByQuery,
   selectCollectionsInQuery,
   selectDocumentsAndLinksByQuerySorted,
@@ -64,13 +65,12 @@ import {checkOrTransformMapConfig} from '../../../core/store/maps/map-config.uti
 import {getBaseCollectionIdsFromQuery, mapPositionPathParams} from '../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {ConstraintDataService} from '../../../core/service/constraint-data.service';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {CollectionsPermissionsPipe} from '../../../shared/pipes/permissions/collections-permissions.pipe';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'map-perspective',
@@ -92,18 +92,12 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   public permissions$: Observable<Record<string, AllowedPermissions>>;
   public map$: Observable<MapModel>;
   public query$: Observable<Query>;
-  public currentView$: Observable<View>;
+  public canManageConfig$: Observable<boolean>;
   public sidebarOpened$ = new BehaviorSubject(false);
 
   private subscriptions = new Subscription();
 
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private constraintDataService: ConstraintDataService,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
-    private store$: Store<{}>
-  ) {}
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private store$: Store<{}>) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
@@ -112,11 +106,8 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
     this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.map$ = this.store$.pipe(select(selectMap));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.currentView$ = this.store$.pipe(select(selectCurrentView));
-    this.permissions$ = this.collections$.pipe(
-      mergeMap(collections => this.collectionsPermissionsPipe.transform(collections)),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
+    this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
 
     this.subscriptions.add(this.subscribeToConfig());
     this.subscriptions.add(this.subscribeToMapConfigPosition());

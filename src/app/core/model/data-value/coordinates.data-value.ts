@@ -23,8 +23,8 @@ import {formatCoordinates, parseCoordinates} from '../../../shared/utils/map/coo
 import {MapCoordinates} from '../../store/maps/map.model';
 import {CoordinatesConstraintConfig, CoordinatesFormat} from '../data/constraint-config';
 import {DataValue} from './index';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueMeetFulltexts} from './data-value.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class CoordinatesDataValue implements DataValue {
   public readonly coordinates: MapCoordinates;
@@ -94,7 +94,7 @@ export class CoordinatesDataValue implements DataValue {
     return new CoordinatesDataValue(inputValue, this.config, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new CoordinatesDataValue(value.value, this.config));
     const formattedValue = this.format().trim().toLowerCase();
     const otherFormattedValues = dataValues.map(dataValue => dataValue.format().trim().toLowerCase());
@@ -106,16 +106,16 @@ export class CoordinatesDataValue implements DataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     const exampleCoordinates = '49.2019854,16.4378783';
     switch (condition) {
-      case QueryCondition.Equals:
+      case ConditionType.Equals:
         return values[0].value;
-      case QueryCondition.NotEquals:
+      case ConditionType.NotEquals:
         return values[0].value ? '' : exampleCoordinates;
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return '';
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return exampleCoordinates;
       default:
         return '';

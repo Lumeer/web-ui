@@ -22,6 +22,7 @@ import {Router} from '@angular/router';
 import {ResourceType} from '../../../../../core/model/resource-type';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {Resource} from '../../../../../core/model/resource';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'resource-detail',
@@ -34,6 +35,9 @@ export class ResourceDetailComponent {
 
   @Input()
   public resource: Resource;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Input()
   public workspace: Workspace;

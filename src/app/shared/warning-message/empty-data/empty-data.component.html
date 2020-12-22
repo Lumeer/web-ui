@@ -5,7 +5,7 @@
       class="text-center"
       data-test="empty-project-header">Your project is empty!</h3>
 
-  <ng-container *ngIf="project | permissions:projectType:'write' | async; else noPermission">
+  <ng-container *ngIf="(projectPermissions$ | async)?.write; else noPermission">
     <div i18n="@@search.records.empty.subtitle"
          class="text-center mb-3">Go to the Tables tab and create your first table.
     </div>

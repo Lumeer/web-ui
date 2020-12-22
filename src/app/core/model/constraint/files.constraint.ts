@@ -20,7 +20,6 @@
 import {FilesDataValue} from '../data-value/files.data-value';
 import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
 import {
   avgAnyValues,
   countValues,
@@ -30,6 +29,7 @@ import {
   sumAnyValues,
   uniqueValuesCount,
 } from './aggregation';
+import {ConditionType} from '../attribute-filter';
 
 export class FilesConstraint implements Constraint {
   public readonly type = ConstraintType.Files;
@@ -44,8 +44,8 @@ export class FilesConstraint implements Constraint {
     return new FilesDataValue(value, this.config);
   }
 
-  public conditions(): QueryCondition[] {
-    return [QueryCondition.IsEmpty, QueryCondition.NotEmpty];
+  public conditions(): ConditionType[] {
+    return [ConditionType.IsEmpty, ConditionType.NotEmpty];
   }
 
   public avg(values: any[], onlyNumeric?: boolean): any {

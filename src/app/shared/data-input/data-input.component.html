@@ -18,7 +18,7 @@
                       [class.cursor-pointer]="!readonly"
                       (dblclick)="$event.stopPropagation()"
                       (valueChange)="onValueChange($event)"
-                      (save)="onSaveValue($event)"
+                      (save)="onSaveValueWithAction($event)"
                       class="w-100 px-1">
   </boolean-data-input>
 
@@ -156,6 +156,16 @@
                         (cancel)="onCancel()"
                         class="w-100">
   </rich-text-data-input>
+
+  <action-data-input *ngSwitchCase="constraintType.Action"
+                     [readonly]="readonly"
+                     [config]="constraint?.config"
+                     [value]="dataValue"
+                     [configuration]="configuration?.action"
+                     [cursor]="cursor"
+                     (cancel)="onCancel()"
+                     class="w-100">
+  </action-data-input>
 
   <text-data-input *ngSwitchDefault
                    [focus]="focus"

@@ -32,11 +32,11 @@ import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {Observable} from 'rxjs';
-import {QueryCondition, QueryConditionValue} from '../../../core/store/navigation/query/query';
 import {FilterBuilderContentComponent} from './content/filter-builder-content.component';
 import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {AppState} from '../../../core/store/app.state';
+import {ConditionType, ConditionValue} from '../../../core/model/attribute-filter';
 
 @Component({
   selector: 'filter-builder',
@@ -51,13 +51,13 @@ export class FilterBuilderComponent implements OnInit {
   public attribute: Attribute;
 
   @Input()
-  public conditionValues: QueryConditionValue[];
+  public conditionValues: ConditionValue[];
 
   @Input()
-  public condition: QueryCondition;
+  public condition: ConditionType;
 
   @Output()
-  public valueChange = new EventEmitter<{condition: QueryCondition; values: QueryConditionValue[]}>();
+  public valueChange = new EventEmitter<{condition: ConditionType; values: ConditionValue[]}>();
 
   @Output()
   public finishEditing = new EventEmitter();
@@ -78,6 +78,16 @@ export class FilterBuilderComponent implements OnInit {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
+  public toggle() {
+    if (this.dropdown) {
+      if (this.isOpen()) {
+        this.close();
+      } else {
+        this.open();
+      }
+    }
+  }
+
   public isOpen(): boolean {
     return this.dropdown?.isOpen();
   }
@@ -93,7 +103,7 @@ export class FilterBuilderComponent implements OnInit {
     this.dropdown?.close();
   }
 
-  public onValueChange(data: {condition: QueryCondition; values: QueryConditionValue[]}) {
+  public onValueChange(data: {condition: ConditionType; values: ConditionValue[]}) {
     this.valueChange.emit(data);
     setTimeout(() => this.dropdown.updatePosition());
   }

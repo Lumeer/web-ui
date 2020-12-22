@@ -17,7 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 import {User} from '../../../core/store/users/user';
 import {ResourceType} from '../../../core/model/resource-type';
@@ -27,11 +37,12 @@ import {Project} from '../../../core/store/projects/project';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {AppState} from '../../../core/store/app.state';
-import {Store, select} from '@ngrx/store';
+import {select, Store} from '@ngrx/store';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
-import {debounceTime, take, filter} from 'rxjs/operators';
-import {Subject, Subscription} from 'rxjs';
+import {debounceTime, filter, map, take} from 'rxjs/operators';
+import {Observable, of, Subject, Subscription} from 'rxjs';
 import {objectValues} from '../../utils/common.utils';
+import {selectOrganizationPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'user-list',
@@ -39,7 +50,7 @@ import {objectValues} from '../../utils/common.utils';
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit, OnDestroy {
+export class UserListComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public resourceType: ResourceType;
 
@@ -77,7 +88,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     workspace?: Workspace;
   }>();
 
-  public readonly resourceTypeOrganization = ResourceType.Organization;
+  public inheritedManagePermission$: Observable<boolean>;
 
   public searchString: string;
 
@@ -91,6 +102,23 @@ export class UserListComponent implements OnInit, OnDestroy {
   public ngOnInit() {
     this.selectInitialWorkspace();
     this.subscribeToRolesChange();
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.resource || changes.resourceType) {
+      this.checkRights();
+    }
+  }
+
+  private checkRights() {
+    if (this.resourceType === ResourceType.Organization) {
+      this.inheritedManagePermission$ = of(false);
+    } else {
+      this.inheritedManagePermission$ = this.store$.pipe(
+        select(selectOrganizationPermissions),
+        map(permissions => permissions?.manage)
+      );
+    }
   }
 
   private selectInitialWorkspace() {

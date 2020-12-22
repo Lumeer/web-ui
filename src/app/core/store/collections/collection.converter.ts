@@ -20,7 +20,7 @@
 import {CollectionDto} from '../../dto';
 import {RuleDto} from '../../dto/rule.dto';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
-import {Rule, RuleTimingMap, RuleTypeMap} from '../../model/rule';
+import {Rule, ruleTimingMap, ruleTypeMap} from '../../model/rule';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
 import {Collection, ImportedCollection} from './collection';

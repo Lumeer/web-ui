@@ -25,6 +25,7 @@ import {DataInputConfiguration} from '../../../../../../shared/data-input/data-i
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {findResourceByQueryResource} from '../../../../../../core/model/query-attribute';
 import {AttributesResource} from '../../../../../../core/model/resource';
+import {ConstraintType} from '../../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'workflow-table-title',
@@ -45,6 +46,7 @@ export class WorkflowTableTitleComponent implements OnChanges {
   public stemConfig: WorkflowStemConfig;
 
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
+  public readonly constraintType = ConstraintType;
 
   public resource: AttributesResource;
 

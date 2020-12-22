@@ -26,6 +26,32 @@ import {Permission} from '../../core/store/permissions/permissions';
 import {Project} from '../../core/store/projects/project';
 import {User} from '../../core/store/users/user';
 import {View} from '../../core/store/views/view';
+import {Collection} from '../../core/store/collections/collection';
+
+export function hasRoleByPermissions(role: Role, permissions: AllowedPermissions): boolean {
+  switch (role) {
+    case Role.Read:
+      return permissions?.readWithView;
+    case Role.Write:
+      return permissions?.writeWithView;
+    case Role.Manage:
+      return permissions?.manageWithView;
+    default:
+      return false;
+  }
+}
+
+export function managePermissions(): AllowedPermissions {
+  return {
+    read: true,
+    write: true,
+    manage: true,
+    share: true,
+    readWithView: true,
+    writeWithView: true,
+    manageWithView: true,
+  };
+}
 
 export function userCanReadWorkspace(user: User, organization: Organization, project: Project): boolean {
   if (userHasManageRoleInResource(user, organization)) {
@@ -53,6 +79,30 @@ export function userHasRoleInProject(user: User, project: Project, organization:
 
 export function userHasRoleInResource(user: User, resource: Resource, role: string): boolean {
   return userRolesInResource(user, resource).includes(role.toUpperCase());
+}
+
+export function userPermissionsInResource(user: User, resource: Resource): AllowedPermissions {
+  const resourceRoles = userRolesInResource(user, resource);
+  return {
+    read: resourceRoles.includes(Role.Read),
+    write: resourceRoles.includes(Role.Write),
+    manage: resourceRoles.includes(Role.Manage),
+    share: resourceRoles.includes(Role.Share),
+    readWithView: resourceRoles.includes(Role.Read),
+    writeWithView: resourceRoles.includes(Role.Write),
+    manageWithView: resourceRoles.includes(Role.Manage),
+  };
+}
+
+export function userPermissionsInCollectionByView(user: User, view: View, collection: Collection): AllowedPermissions {
+  const resourceRoles = userRolesInResource(user, view);
+  const authorRoles = authorRolesInView(view, collection.id);
+
+  const readWithView = resourceRoles.includes(Role.Read) && authorRoles.includes(Role.Read);
+  const writeWithView = resourceRoles.includes(Role.Write) && authorRoles.includes(Role.Write);
+  const manageWithView = resourceRoles.includes(Role.Manage) && authorRoles.includes(Role.Manage);
+
+  return {readWithView, writeWithView, manageWithView};
 }
 
 export function userRolesInResource(user: User, resource: Resource): string[] {

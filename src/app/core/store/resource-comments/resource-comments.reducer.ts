@@ -28,21 +28,24 @@ export function resourceCommentsReducer(
     case ResourceCommentsActionType.GET_SUCCESS:
       return resourceCommentsAdapter.upsertMany(action.payload.resourceComments, state);
     case ResourceCommentsActionType.CREATE:
-      return resourceCommentsAdapter.upsertOne(action.payload.comment, state);
+      return resourceCommentsAdapter.upsertOne({...action.payload.comment, error: undefined}, state);
     case ResourceCommentsActionType.CREATE_SUCCESS:
       const newComment = {...action.payload.comment};
       delete newComment.correlationId;
+      delete newComment.error;
       return resourceCommentsAdapter.upsertOne(
         newComment,
         resourceCommentsAdapter.removeOne(action.payload.comment.correlationId, state)
       );
     case ResourceCommentsActionType.CREATE_FAILURE:
-      return resourceCommentsAdapter.removeOne(action.payload.correlationId, state);
+      const currentComment = state.entities[action.payload.correlationId];
+      return resourceCommentsAdapter.upsertOne({...currentComment, error: action.payload.correlationId}, state);
     case ResourceCommentsActionType.UPDATE:
       return resourceCommentsAdapter.upsertOne(action.payload.comment, state);
     case ResourceCommentsActionType.UPDATE_FAILURE:
       return resourceCommentsAdapter.upsertOne(action.payload.originalComment, state);
     case ResourceCommentsActionType.DELETE:
+    case ResourceCommentsActionType.DELETE_UNINITIALIZED:
       return resourceCommentsAdapter.removeOne(
         action.payload.comment.correlationId || action.payload.comment.id,
         state

@@ -46,6 +46,11 @@ import {Organization} from '../../../../../core/store/organizations/organization
 import {Project} from '../../../../../core/store/projects/project';
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
+import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
+import {AppState} from '../../../../../core/store/app.state';
+import {Observable} from 'rxjs';
+import {select, Store} from '@ngrx/store';
+import {selectCollectionsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
   selector: 'search-documents-content',
@@ -89,15 +94,19 @@ export class SearchDocumentsContentComponent implements OnInit, OnChanges {
   public readonly sizeType = SizeType;
   public currentSize: SizeType;
 
+  public permissions$: Observable<Record<string, AllowedPermissions>>;
+
   constructor(
     private perspectiveService: PerspectiveService,
     private router: Router,
+    private store$: Store<AppState>,
     private toggleService: DocumentFavoriteToggleService,
     private modalService: ModalService
   ) {}
 
   public ngOnInit() {
     this.toggleService.setWorkspace(this.workspace);
+    this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
   }
 
   public ngOnChanges(changes: SimpleChanges) {

@@ -32,6 +32,7 @@ import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
 import {BehaviorSubject} from 'rxjs';
+import {preventEvent} from '../../utils/common.utils';
 
 @Component({
   selector: 'color-picker',
@@ -101,9 +102,20 @@ export class ColorPickerComponent {
     }
   }
 
+  public toggle() {
+    if (this.dropdown) {
+      if (this.dropdown.isOpen()) {
+        this.close();
+      } else {
+        this.open();
+      }
+    }
+  }
+
   @HostListener('document:keydown', ['$event'])
   public onKeyDown(event: KeyboardEvent) {
     if (event.code === KeyCode.Escape) {
+      preventEvent(event);
       this.onCancel();
     }
   }

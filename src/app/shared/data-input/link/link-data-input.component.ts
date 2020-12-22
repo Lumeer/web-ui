@@ -25,16 +25,15 @@ import {
   Input,
   OnChanges,
   Output,
-  SecurityContext,
   SimpleChanges,
 } from '@angular/core';
-import {completeLinkValue, formatLinkValue, LinkDataValue} from '../../../core/model/data-value/link.data-value';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {completeLinkValue, formatLinkValue, LinkDataValue} from '../../../core/model/data-value/link.data-value';
 import {CommonDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction} from '../data-input-save-action';
 import {preventEvent} from '../../utils/common.utils';
-import {ModalService} from '../../modal/modal.service';
 import {EmbeddedLinkModalComponent} from '../../modal/embedded-link/embedded-link-modal.component';
+import {DataInputModalService} from '../data-input-modal.service';
 
 @Component({
   selector: 'link-data-input',
@@ -72,7 +71,11 @@ export class LinkDataInputComponent implements OnChanges {
   public completeLinkValue: SafeUrl;
   public titleValue: string;
 
-  constructor(public element: ElementRef, private domSanitizer: DomSanitizer, private modalService: ModalService) {}
+  constructor(
+    public element: ElementRef,
+    private domSanitizer: DomSanitizer,
+    private modalService: DataInputModalService
+  ) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.value && this.value) {

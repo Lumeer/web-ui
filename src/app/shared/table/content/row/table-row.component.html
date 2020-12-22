@@ -3,8 +3,7 @@
   <ng-container
     *ngIf="{dataValue: group.column && (row.data[group.column.id] | dataValue:group.column?.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
-    editing: editedCell | tableCellEdited:group.column:cellType:row,
-    directlyEditable: group.column?.attribute?.constraint?.type === constraintType.Boolean} as data">
+    editing: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
     <ng-container
       *ngIf="group.column?.attribute | dataInputEditInfo:data.dataValue:group.column?.editable:data.editing as dataInputInfo">
@@ -14,7 +13,7 @@
           [style.max-height.px]="row.height"
           [ngClass]="dataInputInfo.showDataInput ? '' : 'text-pre overflow-hidden px-1 align-middle'"
           [class.focused]="selectedCell | tableBodyCellSelected:editedCell:group.column:cellType:row"
-          [class.editing]="data.editing"
+          [class.editing]="data.editing && !group.column?.attribute?.constraint?.isDirectlyEditable"
           [class.affected]="editedCell | tableCellEdited:group.column:cellType:row: true"
           [class.cursor-pointer]="group.column?.editable"
           [title]="dataInputInfo?.showDataInput && data.dataValue ? '' : (data.dataValue | formatDataValueTitle)"
@@ -30,7 +29,7 @@
           [style.max-height.px]="row.height - 1"
           [dataValue]="(editedValue | isNotNullOrUndefined) && data.editing ? editedValue : data.dataValue"
           [focus]="true"
-          [readonly]="!group.column.editable || !(data.editing || data.directlyEditable)"
+          [readonly]="dataInputInfo.readonly"
           [configuration]="configuration"
           (keydown)="onDataInputKeyDown($event)"
           (valueChange)="onValueChange($event)"

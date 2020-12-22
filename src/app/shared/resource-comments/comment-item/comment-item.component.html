@@ -1,11 +1,17 @@
 <div class="comment-item"
      [class.editing]="editing$ | async">
   <div class="author text-muted small">
-    <user-avatar [avatarSize]="15"
+    <user-avatar *ngIf="comment.id"
+                 [avatarSize]="15"
                  placement="top"
                  [email]="comment?.authorEmail"
                  [tooltipText]="createdByMsg + ' ' + comment?.authorName" class="mr-2">
     </user-avatar>
+    <span *ngIf="!comment.id && !comment.error" class="spinner-grow spinner-grow-sm mr-2 avatar-indicator" role="status"
+          aria-hidden="true"></span>
+    <i *ngIf="!comment.id && comment.error" class="fa fa-exclamation-circle text-danger mr-2 cursor-pointer avatar-indicator"
+       tooltip="I could not create the comment. Click here to try again."
+       i18n-tooltip="@@comment.item.create.fail" (click)="onRefresh.emit(comment)"></i>
     <short-date icon="fa-file"
                 [date]="comment?.creationDate"
                 [tooltipText]="createdOnMsg + ' ' + (comment?.creationDate | date:'medium')"
@@ -50,7 +56,7 @@
                  [user]="user"
                  [initialComment]="comment"
                  (onNewComment)="onUpdateComment($event)"
-                 (onCancel)="cancelEdit()" >
+                 (onCancel)="cancelEdit()">
     </new-comment>
   </div>
 

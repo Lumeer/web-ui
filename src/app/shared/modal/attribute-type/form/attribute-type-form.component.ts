@@ -17,7 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChange,
+  SimpleChanges,
+} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AddressConstraintFormControl} from './constraint-config/address/address-constraint-form-control';
@@ -44,6 +53,14 @@ import {escapeHtml, isNotNullOrUndefined} from '../../../utils/common.utils';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
 import {uniqueValues} from '../../../utils/array.utils';
 import {LinkConstraintFormControl} from './constraint-config/link/link-constraint-form-control';
+import {
+  ActionConstraintFiltersFormControl,
+  ActionConstraintFormControl,
+} from './constraint-config/action/action-constraint-form-control';
+import {AttributesResource} from '../../../../core/model/resource';
+import {AttributeFilterEquation, EquationOperator} from '../../../../core/model/attribute-filter';
+import {areConditionValuesDefined, conditionNumInputs} from '../../../../core/store/navigation/query/query.util';
+import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 
 @Component({
   selector: 'attribute-type-form',
@@ -52,6 +69,9 @@ import {LinkConstraintFormControl} from './constraint-config/link/link-constrain
 })
 export class AttributeTypeFormComponent implements OnChanges {
   @Input()
+  public resource: AttributesResource;
+
+  @Input()
   public attribute: Attribute;
 
   @Input()
@@ -59,6 +79,9 @@ export class AttributeTypeFormComponent implements OnChanges {
 
   @Input()
   public constraintData: ConstraintData;
+
+  @Input()
+  public permissions: AllowedPermissions;
 
   @Output()
   public attributeChange = new EventEmitter<Attribute>();
@@ -73,12 +96,19 @@ export class AttributeTypeFormComponent implements OnChanges {
   constructor(private i18n: I18n, private notificationService: NotificationService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.attribute && this.attribute) {
+    if (this.attributeTypeChanges(changes.attribute) && this.attribute) {
       this.typeControl.setValue(this.attribute.constraint?.type || ConstraintType.Unknown);
     }
     if (changes.uniqueValues || changes.constraintData || changes.attribute) {
       this.uniqueValues = this.mapValues();
     }
+  }
+
+  private attributeTypeChanges(change: SimpleChange): boolean {
+    return (
+      change &&
+      (!change.previousValue || change.previousValue.constraint?.type !== change.currentValue?.constraint?.type)
+    );
   }
 
   private mapValues(): any[] {
@@ -182,13 +212,40 @@ export class AttributeTypeFormComponent implements OnChanges {
         return {
           openInApp: this.configForm.get(LinkConstraintFormControl.OpenInApp)?.value,
         };
+      case ConstraintType.Action:
+        return {
+          title: this.configForm.get(ActionConstraintFormControl.Title).value,
+          icon: this.configForm.get(ActionConstraintFormControl.Icon).value,
+          background: this.configForm.get(ActionConstraintFormControl.Background).value,
+          rule: this.configForm.get(ActionConstraintFormControl.Rule).value,
+          role: this.configForm.get(ActionConstraintFormControl.Role).value,
+          equation: this.createActionEquation(),
+        };
       default:
         return null;
     }
   }
 
+  private createActionEquation(): AttributeFilterEquation {
+    const filters = <{[key in ActionConstraintFiltersFormControl]: any}[]>(
+      this.configForm.get(ActionConstraintFormControl.Filters).value
+    );
+    const equations: AttributeFilterEquation[] = filters
+      ?.filter(fil => fil.attribute && areConditionValuesDefined(fil.condition, fil.values, fil.constraintType))
+      .map(fil => {
+        const numConditionValues = conditionNumInputs(fil.condition);
+        const conditionValues = fil.values?.slice(0, numConditionValues) || [];
+        return {
+          filter: {attributeId: fil.attribute, condition: fil.condition, conditionValues},
+          operator: fil.operator,
+        };
+      });
+    const operator = equations?.length === 1 ? EquationOperator.And : equations?.[0]?.operator;
+    return {equations, operator};
+  }
+
   private confirmAndSave(attribute: Attribute) {
-    if (attribute.constraint && attribute.constraint.type === ConstraintType.Select) {
+    if (attribute.constraint?.type === ConstraintType.Select) {
       this.confirmAndSaveSelect(attribute);
       return;
     }

@@ -20,7 +20,6 @@
 import {BooleanDataValue} from '../data-value/boolean.data-value';
 import {ConstraintType} from '../data/constraint';
 import {Constraint} from './index';
-import {QueryCondition} from '../../store/navigation/query/query';
 import {
   avgAnyValues,
   countValues,
@@ -30,11 +29,13 @@ import {
   sumAnyValues,
   uniqueValuesCount,
 } from './aggregation';
+import {ConditionType} from '../attribute-filter';
 
 export class BooleanConstraint implements Constraint {
   public readonly type = ConstraintType.Boolean;
   public readonly config = {};
   public readonly isTextRepresentation = false;
+  public readonly isDirectlyEditable = true;
 
   public createDataValue(value: any): BooleanDataValue {
     return new BooleanDataValue(value);
@@ -44,8 +45,8 @@ export class BooleanConstraint implements Constraint {
     return new BooleanDataValue(value);
   }
 
-  public conditions(): QueryCondition[] {
-    return [QueryCondition.Equals, QueryCondition.NotEquals];
+  public conditions(): ConditionType[] {
+    return [ConditionType.Equals, ConditionType.NotEquals];
   }
 
   public avg(values: any[], onlyNumeric?: boolean): any {

@@ -19,88 +19,39 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 
-import {select, Store} from '@ngrx/store';
-import {combineLatest, Observable, of} from 'rxjs';
-import {map, mergeMap} from 'rxjs/operators';
-import {Role} from '../../core/model/role';
-import {AppState} from '../../core/store/app.state';
-import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../core/store/link-types/link-types.state';
-import {selectCurrentUser} from '../../core/store/users/users.state';
 import {View} from '../../core/store/views/view';
-import {userHasRoleInResource, userIsManagerInWorkspace} from '../../shared/utils/resource.utils';
-import {Perspective} from '../perspectives/perspective';
 import {getAllCollectionIdsFromQuery} from '../../core/store/navigation/query/query.util';
-import {ResourceType} from '../../core/model/resource-type';
-import {selectWorkspaceModels} from '../../core/store/common/common.selectors';
-import {ResourcePermissionsPipe} from '../../shared/pipes/permissions/resource-permissions.pipe';
-import {User} from '../../core/store/users/user';
+import {AllowedPermissions} from '../../core/model/allowed-permissions';
+import {LinkType} from '../../core/store/link-types/link.type';
 
 @Pipe({
   name: 'viewControlsInfo',
-  pure: false,
 })
 export class ViewControlsInfoPipe implements PipeTransform {
-  constructor(private permissionsPipe: ResourcePermissionsPipe, private store$: Store<AppState>) {}
-
   public transform(
-    view: View,
-    name: string,
-    perspective: Perspective
-  ): Observable<{canClone: boolean; canManage: boolean; canShare: boolean}> {
-    if (!view || !view.code) {
-      return this.canWriteInProject().pipe(map(canWrite => ({canClone: false, canManage: canWrite, canShare: false})));
+    currentView: View,
+    projectPermissions: AllowedPermissions,
+    collectionsPermissions: Record<string, AllowedPermissions>,
+    viewsPermissions: Record<string, AllowedPermissions>,
+    linkTypes: LinkType[]
+  ): {canClone: boolean; canManage: boolean; canShare: boolean} {
+    if (!currentView || !currentView.code) {
+      return {canClone: false, canManage: projectPermissions?.write, canShare: false};
     }
 
-    return combineLatest([
-      this.store$.pipe(select(selectCurrentUser)),
-      this.store$.pipe(select(selectWorkspaceModels)),
-    ]).pipe(
-      mergeMap(([currentUser, models]) => {
-        if (userIsManagerInWorkspace(currentUser, models.organization, models.project)) {
-          return of({canClone: true, canManage: true, canShare: true});
-        }
+    if (projectPermissions?.manage) {
+      return {canClone: true, canManage: true, canShare: true};
+    }
 
-        return combineLatest([
-          this.hasDirectAccessToView(view, currentUser),
-          this.permissionsPipe.transform(view, ResourceType.View),
-        ]).pipe(
-          map(([canClone, permissions]) => {
-            const canWriteInProject = userHasRoleInResource(currentUser, models.project, Role.Write);
-            return {
-              canClone: canClone && canWriteInProject,
-              canManage: permissions.manage,
-              canShare: permissions.share,
-            };
-          })
-        );
-      })
+    const hasDirectAccessToView = getAllCollectionIdsFromQuery(currentView.query, linkTypes).every(
+      collectionId => collectionsPermissions?.[collectionId]?.read
     );
-  }
 
-  private canWriteInProject(): Observable<boolean> {
-    return combineLatest([
-      this.store$.pipe(select(selectCurrentUser)),
-      this.store$.pipe(select(selectWorkspaceModels)),
-    ]).pipe(
-      map(
-        ([currentUser, models]) =>
-          userIsManagerInWorkspace(currentUser, models.organization, models.project) ||
-          userHasRoleInResource(currentUser, models.project, Role.Write)
-      )
-    );
-  }
-
-  private hasDirectAccessToView(view: View, currentUser: User): Observable<boolean> {
-    return combineLatest([
-      this.store$.pipe(select(selectAllLinkTypes)),
-      this.store$.pipe(select(selectCollectionsDictionary)),
-    ]).pipe(
-      map(([linkTypes, collectionsMap]) => {
-        return getAllCollectionIdsFromQuery(view.query, linkTypes)
-          .map(collectionId => collectionsMap[collectionId])
-          .every(collection => collection && userHasRoleInResource(currentUser, collection, Role.Read));
-      })
-    );
+    const viewPermissions = viewsPermissions?.[currentView.id];
+    return {
+      canClone: hasDirectAccessToView && projectPermissions?.write,
+      canManage: viewPermissions?.manage,
+      canShare: viewPermissions?.share,
+    };
   }
 }

@@ -25,9 +25,9 @@ import {validDataColors} from '../../../shared/utils/data/valid-data-colors';
 import {ColorConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {escapeHtml, isNotNullOrUndefined, unescapeHtml} from '../../../shared/utils/common.utils';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {dataValuesMeetConditionByText, valueMeetFulltexts} from './data-value.utils';
 import {saturated} from '../../../shared/picker/colors';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class ColorDataValue implements DataValue {
   public readonly hexCode: string;
@@ -109,7 +109,7 @@ export class ColorDataValue implements DataValue {
     return new ColorDataValue(inputValue, this.config, inputValue);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     const dataValues = (values || []).map(value => new ColorDataValue(value.value, this.config));
     const formattedValue = this.format().trim().toLowerCase();
     const otherFormattedValues = dataValues.map(dataValue => dataValue.format().trim().toLowerCase());
@@ -128,15 +128,15 @@ export class ColorDataValue implements DataValue {
     return (colorEntry && colorEntry[0]) || formattedValue;
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     switch (condition) {
-      case QueryCondition.Equals:
+      case ConditionType.Equals:
         return values[0].value;
-      case QueryCondition.NotEquals:
+      case ConditionType.NotEquals:
         return saturated.find(color => color !== values[0].value);
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return '';
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return '#00b388';
       default:
         return '';

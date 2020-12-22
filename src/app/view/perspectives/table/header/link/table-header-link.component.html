@@ -20,12 +20,11 @@
                      (removePart)="onRemovePart()"
                      class="d-block table-border-top table-border-right table-border-bottom">
     </table-link-info>
-    <table-column-group *ngIf="data.linkType | linkTypePermissions | async as allowedPermissions"
-                        [table]="table"
+    <table-column-group [table]="table"
                         [cursor]="cursor"
                         [columns]="part.columns"
                         [canManageConfig]="canManageConfig"
-                        [allowedPermissions]="allowedPermissions"
+                        [allowedPermissions]="permissions$ | async"
                         [linkType]="data.linkType"
                         [embedded]="embedded"
                         class="d-block table-border-top">

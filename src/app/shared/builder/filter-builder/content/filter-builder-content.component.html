@@ -16,14 +16,15 @@
 <div class="d-flex flex-column ml-3" *ngFor="let column of ngForIndexes">
   <div class="text-muted px-2" i18n="@@filter.builder.value">Choose Value</div>
   <data-input class="h-100 data-input mt-2 cursor-pointer"
+              *ngIf="attribute | dataInputEditInfo:dataValues[column]:true: ((editing$ | async) === column) as dataInputInfo"
               [class.data-input-border]="attribute.constraint?.type !== constraintType.Boolean"
               [class.data-input-padding]="attribute.constraint?.type !== constraintType.Color"
-              [class.editing]="attribute.constraint?.type !== constraintType.Boolean && (editing$ | async) === column"
+              [class.editing]="!attribute.constraint?.isDirectlyEditable && dataInputInfo.editing"
               [constraint]="attribute.constraint"
               [dataValue]="dataValues[column]"
               [configuration]="configuration"
               [focus]="true"
-              [readonly]="!(((editing$ | async) === column) || attribute.constraint?.type === constraintType.Boolean)"
+              [readonly]="dataInputInfo.readonly"
               (cancel)="onInputCancel(column)"
               (save)="onInputSave($event, column)"
               (keydown)="onDataInputKeyDown($event, column)"
@@ -32,7 +33,7 @@
   <div *ngFor="let item of conditionValueItems; let first = first; let row = index"
        class="px-2 py-1 dropdown-item cursor-pointer"
        [class.mt-2]="first"
-       [class.active]="selectedValues?.length && item.value === selectedValues[column].type"
+       [class.active]="selectedValues?.length && item.value === selectedValues[column]?.type"
        [class.focused]="focused?.column - 1 === column && focused?.row - 1 === row"
        (click)="onConditionValueSelect(item, column, row)">
     {{item.title}}

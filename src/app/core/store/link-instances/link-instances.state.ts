@@ -28,12 +28,14 @@ import {selectQuery} from '../navigation/navigation.state';
 
 export interface LinkInstancesState extends EntityState<LinkInstance> {
   queries: Query[];
+  actionExecutedTimes: Record<string, Record<string, number>>;
 }
 
 export const linkInstancesAdapter = createEntityAdapter<LinkInstance>();
 
 export const initialLinkInstancesState: LinkInstancesState = linkInstancesAdapter.getInitialState({
   queries: [],
+  actionExecutedTimes: {},
 });
 
 export const selectLinkInstancesState = (state: AppState) => state.linkInstances;
@@ -89,3 +91,6 @@ export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, docume
       linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
     )
   );
+
+export const selectLinkInstanceActionExecutedTime = (linkInstanceId: string, attributeId: string) =>
+  createSelector(selectLinkInstancesState, state => state.actionExecutedTimes?.[linkInstanceId]?.[attributeId]);

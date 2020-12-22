@@ -21,14 +21,7 @@ import {AbstractControl, FormArray, FormControl, FormGroup, ValidationErrors, Va
 
 import {QueryItem} from '../../../../shared/top-panel/search-box/query-item/model/query-item';
 import {QueryItemType} from '../../../../shared/top-panel/search-box/query-item/model/query-item-type';
-import {
-  AttributeFilter,
-  CollectionAttributeFilter,
-  LinkAttributeFilter,
-  Query,
-  QueryCondition,
-  QueryStem,
-} from './query';
+import {CollectionAttributeFilter, LinkAttributeFilter, Query, QueryStem} from './query';
 import {LinkType} from '../../link-types/link.type';
 import {createRange, isArraySubset, uniqueValues} from '../../../../shared/utils/array.utils';
 import {deepObjectsEquals, isNullOrUndefined} from '../../../../shared/utils/common.utils';
@@ -44,6 +37,7 @@ import {formatMapCoordinates} from '../../maps/map-coordinates';
 import {getAttributesResourceType} from '../../../../shared/utils/resource.utils';
 import {QueryAttribute, QueryResource} from '../../../model/query-attribute';
 import {COLOR_PRIMARY} from '../../../constants';
+import {AttributeFilter, ConditionType, ConditionValue} from '../../../model/attribute-filter';
 
 export function queryItemToForm(queryItem: QueryItem): AbstractControl {
   switch (queryItem.type) {
@@ -81,10 +75,10 @@ function queryItemConstraintType(queryItem: QueryItem): ConstraintType {
 
 function attributeConditionValuesForms(queryItem: QueryItem): FormGroup[] {
   return createRange(0, 2).map(index => {
-    const conditionValue = queryItem.conditionValues && queryItem.conditionValues?.[index];
+    const conditionValue = queryItem.conditionValues?.[index];
     return new FormGroup({
-      type: new FormControl(conditionValue && conditionValue.type),
-      value: new FormControl(conditionValue && conditionValue.value),
+      type: new FormControl(conditionValue?.type),
+      value: new FormControl(conditionValue?.value),
     });
   });
 }
@@ -98,26 +92,37 @@ function attributeQueryValidator(group: FormGroup): ValidationErrors | null {
     return {emptyCondition: true};
   }
 
-  const everyValueDefined = createRange(0, queryConditionNumInputs(condition)).every(
-    index =>
-      conditionValue[index] &&
-      (conditionValue[index].type || conditionValue[index].value || constraintType === ConstraintType.Boolean)
-  );
-
-  if (!everyValueDefined) {
+  if (!areConditionValuesDefined(condition, conditionValue, constraintType)) {
     return {emptyValue: true};
   }
 
   return null;
 }
 
-export function queryConditionNumInputs(condition: QueryCondition): number {
+export function areConditionValuesDefined(
+  condition: ConditionType,
+  conditionValues: ConditionValue[],
+  constraintType: ConstraintType
+): boolean {
+  return (
+    condition &&
+    createRange(0, conditionNumInputs(condition)).every(
+      index =>
+        conditionValues[index] &&
+        (conditionValues[index].type || conditionValues[index].value || constraintType === ConstraintType.Boolean)
+    )
+  );
+}
+
+export function conditionNumInputs(condition: ConditionType): number {
   switch (condition) {
-    case QueryCondition.IsEmpty:
-    case QueryCondition.NotEmpty:
+    case ConditionType.IsEmpty:
+    case ConditionType.NotEmpty:
+    case ConditionType.Enabled:
+    case ConditionType.Disabled:
       return 0;
-    case QueryCondition.Between:
-    case QueryCondition.NotBetween:
+    case ConditionType.Between:
+    case ConditionType.NotBetween:
       return 2;
     default:
       return 1;

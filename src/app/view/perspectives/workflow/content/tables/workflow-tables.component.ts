@@ -64,6 +64,9 @@ import {WorkflowConfig, WorkflowStemConfig} from '../../../../../core/store/work
 import {WorkflowTable} from '../../model/workflow-table';
 import {DataInputConfiguration} from '../../../../../shared/data-input/data-input-configuration';
 import {TableComponent} from '../../../../../shared/table/table.component';
+import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
+import {APP_NAME_SELECTOR} from '../../../../../core/constants';
+import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 
 @Component({
   selector: 'workflow-tables',
@@ -199,10 +202,6 @@ export class WorkflowTablesComponent implements OnChanges {
     this.tablesService.onCellDoubleClick(cell);
   }
 
-  public onClickOutsideTables(event: Event) {
-    this.checkClickOutsideTables(event);
-  }
-
   public onClickInsideTables(event: MouseEvent) {
     this.checkClickOutsideTables(event);
   }
@@ -212,9 +211,16 @@ export class WorkflowTablesComponent implements OnChanges {
     this.checkClickOutsideTables(event);
   }
 
-  private checkClickOutsideTables(event: Event) {
-    if (!this.tableComponents.some(component => component.containsElement(event.target))) {
+  private checkClickOutsideTables(event: MouseEvent) {
+    const isInsideApp = clickedInsideElement(event, APP_NAME_SELECTOR);
+    const isInsideTables = this.tableComponents.some(component => component.containsElement(event.target));
+    if (isInsideApp && !isInsideTables) {
       this.tablesService.resetSelection();
+    }
+
+    const isInsideSidebar = clickedInsideElement(event, WORKFLOW_SIDEBAR_SELECTOR);
+    if (isInsideApp && !isInsideTables && !isInsideSidebar) {
+      this.tablesService.resetSidebar();
     }
   }
 

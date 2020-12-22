@@ -28,7 +28,7 @@ import {AppState} from '../../core/store/app.state';
 import {UsersAction} from '../../core/store/users/users.action';
 import {selectCurrentUser} from '../../core/store/users/users.state';
 import {AuthService} from '../auth.service';
-import {ModalService} from '../../shared/modal/modal.service';
+import {ModalsAction} from '../../core/store/modals/modals.action';
 
 const termsOfServiceLinks = {
   cs: 'https://www.lumeer.io/cs/vseobecne-obchodni-podminky/',
@@ -69,15 +69,10 @@ export class AgreementComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  public constructor(
-    private authService: AuthService,
-    private router: Router,
-    private store$: Store<AppState>,
-    private modalService: ModalService
-  ) {}
+  public constructor(private authService: AuthService, private router: Router, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.modalService.destroy();
+    this.store$.dispatch(new ModalsAction.Hide());
     this.subscriptions.add(
       this.store$
         .select(selectCurrentUser)

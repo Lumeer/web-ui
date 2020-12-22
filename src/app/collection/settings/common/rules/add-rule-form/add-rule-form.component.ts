@@ -29,7 +29,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import {AbstractControl, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {Rule, RuleConfiguration, RuleTiming, RuleType, RuleTypeMap} from '../../../../../core/model/rule';
+import {Rule, RuleConfiguration, RuleTiming, RuleType, ruleTypeMap} from '../../../../../core/model/rule';
 import {Subscription} from 'rxjs';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {I18n} from '@ngx-translate/i18n-polyfill';
@@ -68,7 +68,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
   @Output()
   public onSaveRule = new EventEmitter<Rule>();
 
-  public readonly types = objectValues(RuleTypeMap);
+  public readonly types = objectValues(ruleTypeMap);
   public readonly typeItems: SelectItemModel[];
 
   public form: FormGroup;
@@ -92,6 +92,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public ngOnInit() {
     this.form = this.fb.group({
+      id: this.rule.id,
       name: [this.rule.name, [Validators.required, this.usedNameValidator()]],
       timingCreate: this.hasCreate(this.rule.timing),
       timingUpdate: this.hasUpdate(this.rule.timing),
@@ -211,6 +212,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
 
   public getRuleFromForm(): Rule {
     return {
+      id: this.form.get('id').value,
       type: this.form.get('type').value,
       name: this.form.get('name').value,
       timing: this.toTiming(

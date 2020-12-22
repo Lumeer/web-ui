@@ -24,12 +24,16 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
 import {DataValue} from '../../../core/model/data-value';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {DataInputSaveAction} from '../data-input-save-action';
+import {preventEvent} from '../../utils/common.utils';
 
 @Component({
   selector: 'boolean-data-input',
@@ -37,7 +41,7 @@ import {ConstraintType} from '../../../core/model/data/constraint';
   styleUrls: ['./boolean-data-input.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BooleanDataInputComponent implements OnChanges {
+export class BooleanDataInputComponent implements OnChanges, OnInit, OnDestroy {
   @Input()
   public indeterminate: boolean;
 
@@ -54,7 +58,7 @@ export class BooleanDataInputComponent implements OnChanges {
   public valueChange = new EventEmitter<DataValue>();
 
   @Output()
-  public save = new EventEmitter<DataValue>();
+  public save = new EventEmitter<{dataValue: DataValue; action: DataInputSaveAction}>();
 
   @Output()
   public onFocus = new EventEmitter<any>();
@@ -67,14 +71,18 @@ export class BooleanDataInputComponent implements OnChanges {
 
   constructor(private element: ElementRef) {}
 
+  public ngOnInit() {
+    this.addClickListener();
+  }
+
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.readonly) {
-      if (this.readonly) {
-        this.removeClickListener();
-      } else {
-        this.addClickListener();
-      }
+    if (changes.readonly && !this.readonly) {
+      this.toggleValue(DataInputSaveAction.Direct);
     }
+  }
+
+  public ngOnDestroy() {
+    this.removeClickListener();
   }
 
   private addClickListener() {
@@ -92,8 +100,13 @@ export class BooleanDataInputComponent implements OnChanges {
   }
 
   private onClick(event: MouseEvent) {
+    preventEvent(event);
+    this.toggleValue();
+  }
+
+  private toggleValue(action?: DataInputSaveAction) {
     const dataValue = this.value.copy(!this.value.serialize());
-    this.save.emit(dataValue);
+    this.save.emit({dataValue, action});
   }
 
   public onDivClick(event: MouseEvent) {

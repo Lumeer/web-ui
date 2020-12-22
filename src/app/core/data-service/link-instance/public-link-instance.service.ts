@@ -117,4 +117,8 @@ export class PublicLinkInstanceService extends BaseService implements LinkInstan
       }
     );
   }
+
+  public runRule(linkTypeId: string, linkInstanceId: string, attributeId: string): Observable<any> {
+    return of(true);
+  }
 }

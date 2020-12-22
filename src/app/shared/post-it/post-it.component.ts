@@ -52,6 +52,7 @@ import {LinkInstancesAction} from '../../core/store/link-instances/link-instance
 import {PostItLayoutType} from './post-it-layout-type';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
 import {fromEvent, Subscription} from 'rxjs';
+import {objectChanged} from '../utils/common.utils';
 
 export interface PostItTag {
   title: string;
@@ -121,7 +122,8 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
       () => 2,
       () => this.dataRowService.rows$.value.length,
       () => this.rows.toArray(),
-      () => this.hiddenInputComponent
+      () => this.hiddenInputComponent,
+      (row, column) => this.dataRowService.rows$.value[row]?.attribute?.constraint?.isDirectlyEditable
     );
   }
 
@@ -133,7 +135,7 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (this.objectChanged(changes.resource) || this.objectChanged(changes.dataResource)) {
+    if (objectChanged(changes.resource) || objectChanged(changes.dataResource)) {
       if (this.resource && this.dataResource) {
         this.dataRowService.init(this.resource, this.dataResource, this.attributesSettings);
       }
@@ -146,10 +148,6 @@ export class PostItComponent implements OnInit, OnDestroy, OnChanges {
     if (changes.resource || changes.dataResource) {
       this.unusedAttributes = filterUnusedAttributes(this.resource?.attributes, this.dataResource?.data);
     }
-  }
-
-  private objectChanged(change: SimpleChange): boolean {
-    return change && (!change.previousValue || change.previousValue.id !== change.currentValue.id);
   }
 
   public onNewKey(value: string, index: number) {

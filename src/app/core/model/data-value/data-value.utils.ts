@@ -18,52 +18,52 @@
  */
 
 import Big from 'big.js';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {isNotNullOrUndefined, isNullOrUndefined} from '../../../shared/utils/common.utils';
 import {setCharAt} from '../../../shared/utils/string.utils';
 import {NumericDataValue} from './index';
+import {ConditionType, ConditionValue} from '../attribute-filter';
+import {conditionNumInputs} from '../../store/navigation/query/query.util';
+import {ConstraintType} from '../data/constraint';
+import {createRange} from '../../../shared/utils/array.utils';
+import {Constraint} from '../constraint';
 
-export function dataValuesMeetConditionByText(
-  condition: QueryCondition,
-  value: string,
-  otherValues: string[]
-): boolean {
+export function dataValuesMeetConditionByText(condition: ConditionType, value: string, otherValues: string[]): boolean {
   switch (condition) {
-    case QueryCondition.Equals:
+    case ConditionType.Equals:
       return value === otherValues[0];
-    case QueryCondition.NotEquals:
+    case ConditionType.NotEquals:
       return value !== otherValues[0];
-    case QueryCondition.Contains:
+    case ConditionType.Contains:
       return value.includes(otherValues[0]);
-    case QueryCondition.NotContains:
+    case ConditionType.NotContains:
       return !value.includes(otherValues[0]);
-    case QueryCondition.StartsWith:
+    case ConditionType.StartsWith:
       return value.startsWith(otherValues[0]);
-    case QueryCondition.EndsWith:
+    case ConditionType.EndsWith:
       return value.endsWith(otherValues[0]);
-    case QueryCondition.IsEmpty:
+    case ConditionType.IsEmpty:
       return value.length === 0;
-    case QueryCondition.NotEmpty:
+    case ConditionType.NotEmpty:
       return value.length > 0;
     default:
       return false;
   }
 }
 
-export function valueByConditionText(condition: QueryCondition, value: any): any {
+export function valueByConditionText(condition: ConditionType, value: any): any {
   switch (condition) {
-    case QueryCondition.Equals:
-    case QueryCondition.Contains:
-    case QueryCondition.StartsWith:
-    case QueryCondition.EndsWith:
+    case ConditionType.Equals:
+    case ConditionType.Contains:
+    case ConditionType.StartsWith:
+    case ConditionType.EndsWith:
       return value;
-    case QueryCondition.NotEquals:
+    case ConditionType.NotEquals:
       return value ? '' : 'a';
-    case QueryCondition.NotContains:
+    case ConditionType.NotContains:
       return createValueNotIncludes(value);
-    case QueryCondition.NotEmpty:
+    case ConditionType.NotEmpty:
       return 'a';
-    case QueryCondition.IsEmpty:
+    case ConditionType.IsEmpty:
       return '';
     default:
       return '';
@@ -89,46 +89,46 @@ function createValueNotIncludes(value: string): string {
 }
 
 export function dataValuesMeetConditionByNumber(
-  condition: QueryCondition,
+  condition: ConditionType,
   big: Big,
   otherBigNumbers: Big[],
   value: any,
   otherValues: any[]
 ): boolean {
   if (!big && !otherBigNumbers[0]) {
-    if (condition === QueryCondition.Equals) {
+    if (condition === ConditionType.Equals) {
       return (!value && !otherValues[0]) || value === otherValues[0];
     }
   } else if (!big || !otherBigNumbers[0]) {
-    if (condition === QueryCondition.NotEquals) {
+    if (condition === ConditionType.NotEquals) {
       return true;
     }
   }
 
   switch (condition) {
-    case QueryCondition.Equals:
+    case ConditionType.Equals:
       return big && otherBigNumbers[0] && big.eq(otherBigNumbers[0]);
-    case QueryCondition.NotEquals:
+    case ConditionType.NotEquals:
       return big && otherBigNumbers[0] && !big.eq(otherBigNumbers[0]);
-    case QueryCondition.GreaterThan:
+    case ConditionType.GreaterThan:
       return big && otherBigNumbers[0] && big.gt(otherBigNumbers[0]);
-    case QueryCondition.GreaterThanEquals:
+    case ConditionType.GreaterThanEquals:
       return big && otherBigNumbers[0] && big.gte(otherBigNumbers[0]);
-    case QueryCondition.LowerThan:
+    case ConditionType.LowerThan:
       return big && otherBigNumbers[0] && big.lt(otherBigNumbers[0]);
-    case QueryCondition.LowerThanEquals:
+    case ConditionType.LowerThanEquals:
       return big && otherBigNumbers[0] && big.lte(otherBigNumbers[0]);
-    case QueryCondition.Between:
+    case ConditionType.Between:
       return (
         big && otherBigNumbers[0] && otherBigNumbers[1] && big.gte(otherBigNumbers[0]) && big.lte(otherBigNumbers[1])
       );
-    case QueryCondition.NotBetween:
+    case ConditionType.NotBetween:
       return (
         big && otherBigNumbers[0] && otherBigNumbers[1] && (big.lt(otherBigNumbers[0]) || big.gt(otherBigNumbers[1]))
       );
-    case QueryCondition.IsEmpty:
+    case ConditionType.IsEmpty:
       return isNullOrUndefined(value) || String(value).trim().length === 0;
-    case QueryCondition.NotEmpty:
+    case ConditionType.NotEmpty:
       return isNotNullOrUndefined(value) && String(value).trim().length > 0;
     default:
       return false;
@@ -137,24 +137,24 @@ export function dataValuesMeetConditionByNumber(
 
 export function valueByConditionNumber(
   dataValue: NumericDataValue,
-  condition: QueryCondition,
-  values: QueryConditionValue[],
+  condition: ConditionType,
+  values: ConditionValue[],
   exampleValue: any,
   divider = 1
 ): any {
   switch (condition) {
-    case QueryCondition.Equals:
-    case QueryCondition.GreaterThanEquals:
-    case QueryCondition.LowerThanEquals:
+    case ConditionType.Equals:
+    case ConditionType.GreaterThanEquals:
+    case ConditionType.LowerThanEquals:
       return values[0].value;
-    case QueryCondition.NotEquals:
+    case ConditionType.NotEquals:
       return values[0].value ? '' : exampleValue;
-    case QueryCondition.LowerThan:
-    case QueryCondition.NotBetween:
+    case ConditionType.LowerThan:
+    case ConditionType.NotBetween:
       return dataValue.copy(values[0].value).decrement().serialize();
-    case QueryCondition.GreaterThan:
+    case ConditionType.GreaterThan:
       return dataValue.copy(values[0].value).increment().serialize();
-    case QueryCondition.Between:
+    case ConditionType.Between:
       const firstValue = (<NumericDataValue>dataValue.copy(values[0].value)).bigNumber;
       const secondValue = (<NumericDataValue>dataValue.copy(values[1].value)).bigNumber;
       if (firstValue && secondValue) {
@@ -167,9 +167,9 @@ export function valueByConditionNumber(
         return dataValue.copy(bigValue.toFixed()).serialize();
       }
       return values[0].value || values[1].value;
-    case QueryCondition.IsEmpty:
+    case ConditionType.IsEmpty:
       return '';
-    case QueryCondition.NotEmpty:
+    case ConditionType.NotEmpty:
       return exampleValue;
     default:
       return '';
@@ -181,4 +181,18 @@ export function valueMeetFulltexts(value: string, fulltexts: string[]): boolean 
   return (fulltexts || [])
     .map(fulltext => fulltext.toLowerCase().trim())
     .every(fulltext => formattedValue.includes(fulltext));
+}
+
+export function initialConditionType(constraint: Constraint): ConditionType {
+  return constraint.conditions()[0];
+}
+
+export function initialConditionValues(condition: ConditionType, constraint: Constraint): ConditionValue[] {
+  const numInputs = conditionNumInputs(condition);
+  switch (constraint.type) {
+    case ConstraintType.Boolean:
+      return createRange(0, numInputs).map(() => ({value: true}));
+    default:
+      return createRange(0, numInputs).map(() => ({}));
+  }
 }

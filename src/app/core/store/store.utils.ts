@@ -21,7 +21,8 @@ import {Action} from '@ngrx/store';
 import {from, Observable} from 'rxjs';
 import {CommonAction} from './common/common.action';
 import {RuleDto} from '../dto/rule.dto';
-import {Rule, RuleTimingMap, RuleTypeMap} from '../model/rule';
+import {Rule, ruleTimingMap, ruleTypeMap} from '../model/rule';
+import {generateCorrelationId} from '../../shared/utils/resource.utils';
 
 export function createCallbackActions<T>(callback: (result: T) => void, result?: T): Action[] {
   return callback ? [new CommonAction.ExecuteCallback({callback: () => callback(result)})] : [];
@@ -38,13 +39,14 @@ export function emitErrorActions(error: any, onFailure?: (error: any) => void): 
 export function convertRulesFromDto(dto: Record<string, RuleDto>): Rule[] {
   return Object.keys(dto || {})
     .map<Rule>(
-      name =>
+      id =>
         ({
-          name: name,
-          type: RuleTypeMap[dto[name].type],
-          timing: RuleTimingMap[dto[name].timing],
-          configuration: dto[name].configuration,
-        } as Rule) // TODO avoid type casting
+          id,
+          name: dto[id].name,
+          type: ruleTypeMap[dto[id].type],
+          timing: ruleTimingMap[dto[id].timing],
+          configuration: dto[id].configuration,
+        } as Rule)
     )
     .sort((a, b) => a.name.localeCompare(b.name));
 }
@@ -55,7 +57,8 @@ export function convertRulesToDto(model: Rule[]): Record<string, RuleDto> {
   }
 
   return model.reduce((result, rule) => {
-    result[rule.name] = {
+    result[rule.id || generateCorrelationId()] = {
+      name: rule.name,
       type: rule.type,
       timing: rule.timing,
       configuration: rule.configuration,

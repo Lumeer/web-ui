@@ -17,20 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {QueryCondition} from '../../store/navigation/query/query';
 import {NumberDataValue} from './number.data-value';
 import {NumberConstraintConfig} from '../data/constraint-config';
 import {LanguageTag} from '../data/language-tag';
-import {CurrencyFormatService} from '../../../shared/currency/currencies';
+import {CurrencyFormatService} from '../../service/currency-format.service';
 import {TestBed} from '@angular/core/testing';
 import {LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT} from '@angular/core';
 import {environment} from '../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {ConditionType} from '../attribute-filter';
 
 describe('NumberDataValue', () => {
   const config: NumberConstraintConfig = {};
 
-  beforeAll(() => {
+  beforeEach(() => {
     let currencyService: CurrencyFormatService;
     TestBed.configureTestingModule({
       providers: [
@@ -47,125 +47,127 @@ describe('NumberDataValue', () => {
           provide: TRANSLATIONS_FORMAT,
           useFactory: () => environment.i18nFormat,
         },
+        CurrencyFormatService,
         I18n,
       ],
     });
     currencyService = TestBed.inject(CurrencyFormatService);
+    currencyService.init();
   });
 
   describe('meet condition', () => {
     it('equals', () => {
-      expect(new NumberDataValue('20', config).meetCondition(QueryCondition.Equals, [{value: 20}])).toBeTruthy();
+      expect(new NumberDataValue('20', config).meetCondition(ConditionType.Equals, [{value: 20}])).toBeTruthy();
 
-      expect(new NumberDataValue('20.000', config).meetCondition(QueryCondition.Equals, [{value: 20}])).toBeTruthy();
+      expect(new NumberDataValue('20.000', config).meetCondition(ConditionType.Equals, [{value: 20}])).toBeTruthy();
 
-      expect(new NumberDataValue('20.01', config).meetCondition(QueryCondition.Equals, [{value: 20}])).toBeFalsy();
+      expect(new NumberDataValue('20.01', config).meetCondition(ConditionType.Equals, [{value: 20}])).toBeFalsy();
 
-      expect(new NumberDataValue('', config).meetCondition(QueryCondition.Equals, [{value: null}])).toBeTruthy();
+      expect(new NumberDataValue('', config).meetCondition(ConditionType.Equals, [{value: null}])).toBeTruthy();
 
-      expect(new NumberDataValue(undefined, config).meetCondition(QueryCondition.Equals, [{value: null}])).toBeTruthy();
+      expect(new NumberDataValue(undefined, config).meetCondition(ConditionType.Equals, [{value: null}])).toBeTruthy();
 
-      expect(new NumberDataValue('10', config).meetCondition(QueryCondition.Equals, [{value: '5'}])).toBeFalsy();
+      expect(new NumberDataValue('10', config).meetCondition(ConditionType.Equals, [{value: '5'}])).toBeFalsy();
     });
 
     it('not equals', () => {
-      expect(new NumberDataValue('20', config).meetCondition(QueryCondition.NotEquals, [{value: 20}])).toBeFalsy();
+      expect(new NumberDataValue('20', config).meetCondition(ConditionType.NotEquals, [{value: 20}])).toBeFalsy();
 
       expect(
-        new NumberDataValue(undefined, config).meetCondition(QueryCondition.NotEquals, [{value: null}])
+        new NumberDataValue(undefined, config).meetCondition(ConditionType.NotEquals, [{value: null}])
       ).toBeFalsy();
 
-      expect(new NumberDataValue(10, config).meetCondition(QueryCondition.NotEquals, [{value: null}])).toBeTruthy();
+      expect(new NumberDataValue(10, config).meetCondition(ConditionType.NotEquals, [{value: null}])).toBeTruthy();
 
-      expect(new NumberDataValue(10.001, config).meetCondition(QueryCondition.NotEquals, [{value: '10'}])).toBeTruthy();
+      expect(new NumberDataValue(10.001, config).meetCondition(ConditionType.NotEquals, [{value: '10'}])).toBeTruthy();
     });
 
     it('greater than', () => {
-      expect(new NumberDataValue('20', config).meetCondition(QueryCondition.GreaterThan, [{value: 20}])).toBeFalsy();
+      expect(new NumberDataValue('20', config).meetCondition(ConditionType.GreaterThan, [{value: 20}])).toBeFalsy();
 
       expect(
-        new NumberDataValue('20', config).meetCondition(QueryCondition.GreaterThanEquals, [{value: 20}])
+        new NumberDataValue('20', config).meetCondition(ConditionType.GreaterThanEquals, [{value: 20}])
       ).toBeTruthy();
 
-      expect(new NumberDataValue(10, config).meetCondition(QueryCondition.GreaterThan, [{value: null}])).toBeFalsy();
+      expect(new NumberDataValue(10, config).meetCondition(ConditionType.GreaterThan, [{value: null}])).toBeFalsy();
 
-      expect(new NumberDataValue(null, config).meetCondition(QueryCondition.GreaterThan, [{value: null}])).toBeFalsy();
+      expect(new NumberDataValue(null, config).meetCondition(ConditionType.GreaterThan, [{value: null}])).toBeFalsy();
 
-      expect(new NumberDataValue(null, config).meetCondition(QueryCondition.GreaterThan, [{value: 10}])).toBeFalsy();
+      expect(new NumberDataValue(null, config).meetCondition(ConditionType.GreaterThan, [{value: 10}])).toBeFalsy();
 
-      expect(new NumberDataValue(10, config).meetCondition(QueryCondition.GreaterThan, [{value: 15}])).toBeFalsy();
+      expect(new NumberDataValue(10, config).meetCondition(ConditionType.GreaterThan, [{value: 15}])).toBeFalsy();
     });
 
     it('lower than', () => {
-      expect(new NumberDataValue('20', config).meetCondition(QueryCondition.LowerThan, [{value: 20}])).toBeFalsy();
+      expect(new NumberDataValue('20', config).meetCondition(ConditionType.LowerThan, [{value: 20}])).toBeFalsy();
 
       expect(
-        new NumberDataValue('20', config).meetCondition(QueryCondition.LowerThanEquals, [{value: 20}])
+        new NumberDataValue('20', config).meetCondition(ConditionType.LowerThanEquals, [{value: 20}])
       ).toBeTruthy();
 
-      expect(new NumberDataValue(10, config).meetCondition(QueryCondition.LowerThan, [{value: null}])).toBeFalsy();
+      expect(new NumberDataValue(10, config).meetCondition(ConditionType.LowerThan, [{value: null}])).toBeFalsy();
 
-      expect(new NumberDataValue(null, config).meetCondition(QueryCondition.LowerThan, [{value: null}])).toBeFalsy();
+      expect(new NumberDataValue(null, config).meetCondition(ConditionType.LowerThan, [{value: null}])).toBeFalsy();
 
-      expect(new NumberDataValue(null, config).meetCondition(QueryCondition.LowerThan, [{value: 10}])).toBeFalsy();
+      expect(new NumberDataValue(null, config).meetCondition(ConditionType.LowerThan, [{value: 10}])).toBeFalsy();
 
-      expect(new NumberDataValue(10, config).meetCondition(QueryCondition.LowerThan, [{value: 15}])).toBeTruthy();
+      expect(new NumberDataValue(10, config).meetCondition(ConditionType.LowerThan, [{value: 15}])).toBeTruthy();
     });
 
     it('between', () => {
       expect(
-        new NumberDataValue('20', config).meetCondition(QueryCondition.Between, [{value: 20}, {value: 20}])
+        new NumberDataValue('20', config).meetCondition(ConditionType.Between, [{value: 20}, {value: 20}])
       ).toBeTruthy();
 
       expect(
-        new NumberDataValue('20', config).meetCondition(QueryCondition.Between, [{value: 20}, {value: 17}])
+        new NumberDataValue('20', config).meetCondition(ConditionType.Between, [{value: 20}, {value: 17}])
       ).toBeFalsy();
 
       expect(
-        new NumberDataValue('20', config).meetCondition(QueryCondition.Between, [{value: 10}, {value: 30}])
+        new NumberDataValue('20', config).meetCondition(ConditionType.Between, [{value: 10}, {value: 30}])
       ).toBeTruthy();
 
       expect(
-        new NumberDataValue('20', config).meetCondition(QueryCondition.Between, [{value: 100}, {value: 120}])
+        new NumberDataValue('20', config).meetCondition(ConditionType.Between, [{value: 100}, {value: 120}])
       ).toBeFalsy();
 
       expect(
-        new NumberDataValue(null, config).meetCondition(QueryCondition.Between, [{value: 20}, {value: 25}])
+        new NumberDataValue(null, config).meetCondition(ConditionType.Between, [{value: 20}, {value: 25}])
       ).toBeFalsy();
     });
 
     it('not between', () => {
       expect(
-        new NumberDataValue('20', config).meetCondition(QueryCondition.NotBetween, [{value: 20}, {value: 20}])
+        new NumberDataValue('20', config).meetCondition(ConditionType.NotBetween, [{value: 20}, {value: 20}])
       ).toBeFalsy();
 
       expect(
-        new NumberDataValue('20', config).meetCondition(QueryCondition.NotBetween, [{value: 30}, {value: 50}])
+        new NumberDataValue('20', config).meetCondition(ConditionType.NotBetween, [{value: 30}, {value: 50}])
       ).toBeTruthy();
 
       expect(
-        new NumberDataValue('10', config).meetCondition(QueryCondition.NotBetween, [{value: 0}, {value: 30}])
+        new NumberDataValue('10', config).meetCondition(ConditionType.NotBetween, [{value: 0}, {value: 30}])
       ).toBeFalsy();
 
       expect(
-        new NumberDataValue(null, config).meetCondition(QueryCondition.NotBetween, [{value: 30}, {value: 50}])
+        new NumberDataValue(null, config).meetCondition(ConditionType.NotBetween, [{value: 30}, {value: 50}])
       ).toBeFalsy();
     });
 
     it('is empty', () => {
-      expect(new NumberDataValue('', config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
+      expect(new NumberDataValue('', config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
 
-      expect(new NumberDataValue('10', config).meetCondition(QueryCondition.IsEmpty, [])).toBeFalsy();
+      expect(new NumberDataValue('10', config).meetCondition(ConditionType.IsEmpty, [])).toBeFalsy();
 
-      expect(new NumberDataValue(null, config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
+      expect(new NumberDataValue(null, config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
 
-      expect(new NumberDataValue(undefined, config).meetCondition(QueryCondition.IsEmpty, [])).toBeTruthy();
+      expect(new NumberDataValue(undefined, config).meetCondition(ConditionType.IsEmpty, [])).toBeTruthy();
     });
 
     it('is not empty', () => {
-      expect(new NumberDataValue('', config).meetCondition(QueryCondition.NotEmpty, [])).toBeFalsy();
+      expect(new NumberDataValue('', config).meetCondition(ConditionType.NotEmpty, [])).toBeFalsy();
 
-      expect(new NumberDataValue('10', config).meetCondition(QueryCondition.NotEmpty, [])).toBeTruthy();
+      expect(new NumberDataValue('10', config).meetCondition(ConditionType.NotEmpty, [])).toBeTruthy();
     });
   });
 

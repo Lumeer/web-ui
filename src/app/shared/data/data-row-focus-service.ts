@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {isNotNullOrUndefined, isNullOrUndefined} from '../utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined, preventEvent} from '../utils/common.utils';
 import {KeyCode} from '../key-code';
 import {DataRowComponent, DataRowHiddenComponent} from './data-row-component';
 
@@ -39,7 +39,8 @@ export class DataRowFocusService {
     private numColumns: () => number,
     private numRows: () => number,
     private rows: () => DataRowComponent[],
-    private hiddenComponent?: () => DataRowHiddenComponent
+    private hiddenComponent?: () => DataRowHiddenComponent,
+    private isDirectlyEditable?: (row: number, column: number) => boolean
   ) {}
 
   public onKeyDown(event: KeyboardEvent, lockPosition: PositionLock = {column: false, row: false}) {
@@ -214,15 +215,19 @@ export class DataRowFocusService {
   }
 
   private onEnterKeyDown(event: KeyboardEvent) {
-    event.preventDefault();
-    event.stopPropagation();
+    preventEvent(event);
 
     if (this.isEditing()) {
       const {newRow, newColumn} = this.computeMoveOffset(0, 1, this.edited);
       this.emitFocus(newRow, newColumn);
     } else if (this.isFocusing()) {
       const focused = {...this.focused};
-      this.resetFocus();
+      if (this.isDirectlyEditable?.(this.focused.row, this.focused.column)) {
+        const {newRow, newColumn} = this.computeMoveOffset(0, 1, this.focused);
+        this.emitFocus(newRow, newColumn);
+      } else {
+        this.resetFocus();
+      }
       this.emitEdit(focused.row, focused.column);
     }
   }
@@ -230,7 +235,6 @@ export class DataRowFocusService {
   private onF2KeyDown(event: KeyboardEvent) {
     if (this.isFocusing()) {
       const focused = {...this.focused};
-      this.resetFocus();
       this.emitEdit(focused.row, focused.column);
     } else if (this.isEditing()) {
       const edited = {...this.edited};
@@ -244,8 +248,7 @@ export class DataRowFocusService {
       return;
     }
 
-    event.preventDefault();
-    event.stopPropagation();
+    preventEvent(event);
 
     const focused = {...this.focused};
     this.resetFocus();

@@ -19,9 +19,9 @@
 
 import {FilesConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import {valueMeetFulltexts} from './data-value.utils';
 import {escapeHtml, unescapeHtml} from '../../../shared/utils/common.utils';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class FilesDataValue implements DataValue {
   constructor(public readonly value: any, public readonly config: FilesConstraintConfig) {}
@@ -71,11 +71,11 @@ export class FilesDataValue implements DataValue {
     return new FilesDataValue(inputValue, this.config);
   }
 
-  public meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean {
+  public meetCondition(condition: ConditionType, values: ConditionValue[]): boolean {
     switch (condition) {
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return !this.value;
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return this.value;
       default:
         return false;
@@ -86,11 +86,11 @@ export class FilesDataValue implements DataValue {
     return valueMeetFulltexts(this.format(), fulltexts);
   }
 
-  public valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any {
+  public valueByCondition(condition: ConditionType, values: ConditionValue[]): any {
     switch (condition) {
-      case QueryCondition.IsEmpty:
+      case ConditionType.IsEmpty:
         return '';
-      case QueryCondition.NotEmpty:
+      case ConditionType.NotEmpty:
         return 'a';
     }
   }

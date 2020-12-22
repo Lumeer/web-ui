@@ -18,7 +18,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {AreIdsEqualPipe} from '../select-item/are-ids-equal.pipe';
+import {AreIdsEqualPipe} from '../select-item/pipes/are-ids-equal.pipe';
 import {SelectDataItemModel} from './select-data-item.model';
 
 @Pipe({

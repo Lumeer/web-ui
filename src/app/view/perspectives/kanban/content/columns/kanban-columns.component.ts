@@ -33,11 +33,10 @@ import {Collection} from '../../../../../core/store/collections/collection';
 import {KanbanColumn, KanbanConfig, KanbanResource, KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
-import {Query, QueryCondition, QueryStem} from '../../../../../core/store/navigation/query/query';
+import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {findLastItem, isArray, isNotNullOrUndefined} from '../../../../../shared/utils/common.utils';
-import {CollectionsPermissionsPipe} from '../../../../../shared/pipes/permissions/collections-permissions.pipe';
 import {DRAG_DELAY} from '../../../../../core/constants';
 import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
@@ -71,6 +70,7 @@ import {createRangeInclusive} from '../../../../../shared/utils/array.utils';
 import {ViewSettings} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {selectViewSettings} from '../../../../../core/store/view-settings/view-settings.state';
+import {ConditionType} from '../../../../../core/model/attribute-filter';
 
 @Component({
   selector: 'kanban-columns',
@@ -108,6 +108,9 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   public permissions: Record<string, AllowedPermissions>;
 
   @Input()
+  public linkTypesPermissions: Record<string, AllowedPermissions>;
+
+  @Input()
   public query: Query;
 
   @Input()
@@ -142,7 +145,6 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
 
   constructor(
     private store$: Store<AppState>,
-    private collectionsPermissionsPipe: CollectionsPermissionsPipe,
     private modalService: ModalService,
     private toggleService: DocumentFavoriteToggleService,
     private i18n: I18n
@@ -411,14 +413,14 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       filters.push({
         attributeId: kanbanAttribute.attributeId,
         collectionId: kanbanAttribute.resourceId,
-        condition: QueryCondition.Equals,
+        condition: ConditionType.Equals,
         conditionValues: [{value}],
       });
     } else {
       linkFilters.push({
         attributeId: kanbanAttribute.attributeId,
         linkTypeId: kanbanAttribute.resourceId,
-        condition: QueryCondition.Equals,
+        condition: ConditionType.Equals,
         conditionValues: [{value}],
       });
     }
@@ -441,6 +443,8 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
       groupDocumentsByCollection(this.documents),
       this.linkTypes,
       groupLinkInstancesByLinkTypes(this.linkInstances),
+      this.permissions,
+      this.linkTypesPermissions,
       this.constraintData,
       stem,
       this.query?.fulltexts || []

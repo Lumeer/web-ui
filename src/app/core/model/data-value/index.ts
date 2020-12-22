@@ -19,8 +19,8 @@
 
 import {ConstraintData} from '../data/constraint';
 import {ConstraintConfig} from '../data/constraint-config';
-import {QueryCondition, QueryConditionValue} from '../../store/navigation/query/query';
 import Big from 'big.js';
+import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export interface DataValue {
   /**
@@ -116,7 +116,7 @@ export interface DataValue {
   /**
    * Check if the value meet specific condition and values
    */
-  meetCondition(condition: QueryCondition, values: QueryConditionValue[]): boolean;
+  meetCondition(condition: ConditionType, values: ConditionValue[]): boolean;
 
   /**
    * Check if the value meet all provided fulltexts
@@ -126,7 +126,7 @@ export interface DataValue {
   /**
    * Create value that meets condition
    */
-  valueByCondition(condition: QueryCondition, values: QueryConditionValue[]): any;
+  valueByCondition(condition: ConditionType, values: ConditionValue[]): any;
 }
 
 export interface NumericDataValue extends DataValue {

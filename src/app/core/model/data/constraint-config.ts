@@ -21,6 +21,8 @@ import Big from 'big.js';
 import {AddressField} from '../../store/geocoding/address';
 import {palette} from '../../../shared/picker/colors';
 import {LanguageTag} from './language-tag';
+import {AttributeFilterEquation} from '../attribute-filter';
+import {Role} from '../role';
 
 export interface AddressConstraintConfig {
   fields: AddressField[];
@@ -148,7 +150,17 @@ export interface LinkConstraintConfig {
   openInApp?: boolean;
 }
 
+export interface ActionConstraintConfig {
+  equation: AttributeFilterEquation;
+  rule: string;
+  background: string;
+  title: string;
+  icon: string;
+  role: Role;
+}
+
 export type ConstraintConfig =
+  | ActionConstraintConfig
   | AddressConstraintConfig
   | CoordinatesConstraintConfig
   | DateTimeConstraintConfig
