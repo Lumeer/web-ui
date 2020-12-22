@@ -23,9 +23,9 @@
   <div class="body p-4" *ngIf="data.attribute; else noAttribute">
     <div class="d-flex pb-1">
       <div class="flex-grow-1 text-right">
-        <div class="form-check mr-3 d-inline-block" (click)="switchEditable()">
-          <input class="form-check-input" type="checkbox" [checked]="editable$ | async" id="editable">
-          <label class="form-check-label" for="editable" i18n="@@dialog.attribute.function.editable">
+        <div class="custom-control custom-checkbox mr-3 d-inline-block">
+          <input class="custom-control-input" type="checkbox" [checked]="editable$ | async" (change)="onEditableChange($event.target.checked)" id="editable">
+          <label class="custom-control-label" for="editable" i18n="@@dialog.attribute.function.editable">
             Allow manual value overwrite
           </label>
         </div>

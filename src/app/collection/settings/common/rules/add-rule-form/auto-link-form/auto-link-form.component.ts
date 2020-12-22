@@ -35,12 +35,11 @@ export class AutoLinkFormComponent implements OnInit {
   @Input()
   public form: FormGroup;
 
-  public selectedLinkType: LinkType;
-
-  public linkedCollection: Collection;
-
   @Input()
   public linkTypes: LinkType[];
+
+  public selectedLinkType: LinkType;
+  public linkedCollection: Collection;
 
   public attribute1Empty: string;
   public attribute2Empty: string = '';

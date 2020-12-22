@@ -14,7 +14,7 @@ $agreement-width: 350px;
   width: $agreement-width;
 }
 
-label > *::after {
+.space-after::after {
   content: '\2009';
 }
 

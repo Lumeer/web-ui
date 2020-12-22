@@ -246,16 +246,7 @@ export class AddRuleFormComponent implements OnInit, OnChanges, OnDestroy {
           return {required: ['attribute1', 'attribute2', 'linkType']};
         }
       }
-
-      if (
-        form.get('timingCreate').value ||
-        form.get('timingUpdate').value ||
-        (form.get('type').value !== RuleType.AutoLink && form.get('timingDelete').value)
-      ) {
-        return null;
-      } else {
-        return {invalidTiming: 'At least one value must be set'};
-      }
+      return null;
     };
   }
 

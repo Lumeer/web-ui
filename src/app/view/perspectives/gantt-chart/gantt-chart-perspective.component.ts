@@ -24,7 +24,7 @@ import {Collection} from '../../../core/store/collections/collection';
 import {
   selectCanManageViewConfig,
   selectCollectionsByQuery,
-  selectDocumentsAndLinksByCustomQuery,
+  selectDocumentsAndLinksByCustomQuerySorted,
   selectLinkTypesInQuery,
 } from '../../../core/store/common/permissions.selectors';
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
@@ -156,7 +156,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
       this.query$.next(query);
       this.fetchData(query);
-      this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByCustomQuery(query, false, true)));
+      this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByCustomQuerySorted(query, true)));
     });
     this.subscriptions.add(subscription);
   }

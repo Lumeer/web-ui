@@ -4,47 +4,53 @@
     </lumeer-logo>
   </div>
   <div class="card-body">
-    <p *ngIf="stage === 0" i18n="@@agreement.welcome.message">Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</p>
-    <p *ngIf="stage === 1" i18n="@@agreement.welcome.newsletterCheck">By skipping the Newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</p>
+    <p *ngIf="stage === 0" i18n="@@agreement.welcome.message">Welcome to Lumeer! This is your first login. Please accept
+      the terms and subscribe to our Newsletter before using the application. Thank you!</p>
+    <p *ngIf="stage === 1" i18n="@@agreement.welcome.newsletterCheck">By skipping the Newsletter, you miss a lot of
+      valuable information, free ebooks and guides. Are you sure you want to continue?</p>
     <form [formGroup]="form"
           (submit)="onSubmit()">
-      <div [class.d-none]="stage !== 0" class="form-group form-check">
-        <input [formControlName]="agreementName"
-               [id]="agreementName"
-               [name]="agreementName"
-               class="form-check-input"
-               type="checkbox">
-        <label [for]="agreementName"
-               class="form-check-label">
-          <span i18n="@@label.terms.start">I have read</span>
-          <a [href]="termsOfServiceLink"
-             i18n="@@termsOfService"
-             target="_blank">Terms of Service</a>
-          <span i18n="@@and">and</span>
-          <a [href]="privacyPolicyLink"
-             i18n="@@privacyPolicy"
-             target="_blank">Privacy Policy</a>
-          <span i18n="@@label.terms.end">and I agree to them.</span>
-        </label>
+      <div [class.d-none]="stage !== 0" class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input [formControlName]="agreementName"
+                 [id]="agreementName"
+                 [name]="agreementName"
+                 class="custom-control-input"
+                 type="checkbox">
+          <label [for]="agreementName"
+                 class="custom-control-label">
+            <span class="space-after" i18n="@@label.terms.start">I have read</span>
+            <a [href]="termsOfServiceLink"
+               i18n="@@termsOfService" class="space-after"
+               target="_blank">Terms of Service</a>
+            <span class="space-after" i18n="@@and">and</span>
+            <a [href]="privacyPolicyLink"
+               i18n="@@privacyPolicy" class="space-after"
+               target="_blank">Privacy Policy</a>
+            <span i18n="@@label.terms.end">and I agree to them.</span>
+          </label>
+        </div>
       </div>
-      <div class="form-group form-check">
-        <input [formControlName]="newsletterName"
-             [id]="newsletterName"
-             [name]="newsletterName"
-             class="form-check-input"
-             type="checkbox">
-        <label [for]="newsletterName"
-               class="form-check-label">
-          <span [class.d-none]="stage === 0" i18n="@@label.newsletter.secondChance">Please subscribe me to the Newsletter with all its benefits!<br/></span>
-          <span [class.d-none]="stage !== 0" i18n="@@label.newsletter.start">Send me free ebooks and materials on:<br/></span>
-          <span [class.d-none]="stage !== 0" i18n="@@label.newsletter.end">increasing <strong>revenue</strong>, saving <strong>time</strong>, improving <strong>communication</strong> and <strong>efficiency</strong> via a Newsletter.<br/></span>
-          <span class="small" i18n="@@label.newsletter.termsStart">See </span>
-          <a [href]="dataProcessingAgreementLink"
-             class="small"
-             i18n="@@dpa"
-             target="_blank">Data Processing Agreement</a>
-          <span class="small" i18n="@@label.newsletter.termsEnd">.</span>
-        </label>
+      <div class="form-group">
+        <div class="custom-control custom-checkbox">
+          <input [formControlName]="newsletterName"
+                 [id]="newsletterName"
+                 [name]="newsletterName"
+                 class="custom-control-input"
+                 type="checkbox">
+          <label [for]="newsletterName"
+                 class="custom-control-label">
+            <span [class.d-none]="stage === 0" i18n="@@label.newsletter.secondChance">Please subscribe me to the Newsletter with all its benefits!<br/></span>
+            <span [class.d-none]="stage !== 0"
+                  i18n="@@label.newsletter.start">Send me free ebooks and materials on:<br/></span>
+            <span [class.d-none]="stage !== 0"
+                  i18n="@@label.newsletter.end">increasing <strong>revenue</strong>, saving <strong>time</strong>, improving <strong>communication</strong> and <strong>efficiency</strong> via a Newsletter.<br/></span>
+            <span class="small" i18n="@@label.newsletter.termsStart">See </span>
+            <a [href]="dataProcessingAgreementLink"
+               class="small" i18n="@@dpa" target="_blank">Data Processing Agreement</a>
+            <span class="small" i18n="@@label.newsletter.termsEnd">.</span>
+          </label>
+        </div>
       </div>
       <button [disabled]="form.invalid || loading"
               class="btn btn-success"

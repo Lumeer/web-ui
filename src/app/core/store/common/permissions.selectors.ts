@@ -148,55 +148,59 @@ export const selectDocumentsAndLinksByQuery = createSelector(
     )
 );
 
-export const selectDocumentsAndLinksByQuerySorted = createSelector(
-  selectDocumentsByReadPermission,
-  selectCollectionsByReadPermission,
-  selectAllLinkTypes,
-  selectAllLinkInstances,
-  selectViewQuery,
-  selectViewSettings,
-  selectResourcesPermissions,
-  selectConstraintData,
-  (
-    documents,
-    collections,
-    linkTypes,
-    linkInstances,
-    query,
-    viewSettings,
-    permissions,
-    constraintData
-  ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} => {
-    const data = filterDocumentsAndLinksByQuery(
+export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query, includeChildren?: boolean) =>
+  createSelector(
+    selectDocumentsByReadPermission,
+    selectCollectionsByReadPermission,
+    selectAllLinkTypes,
+    selectAllLinkInstances,
+    selectViewQuery,
+    selectViewSettings,
+    selectResourcesPermissions,
+    selectConstraintData,
+    (
       documents,
       collections,
       linkTypes,
       linkInstances,
       query,
-      permissions.collections,
-      permissions.linkTypes,
+      viewSettings,
+      permissions,
       constraintData
-    );
-    const collectionsMap = objectsByIdMap(collections);
-    const linkTypesMap = objectsByIdMap(linkTypes);
-    return {
-      documents: sortDataResourcesByViewSettings(
-        data.documents,
-        collectionsMap,
-        AttributesResourceType.Collection,
-        viewSettings,
-        constraintData
-      ),
-      linkInstances: sortDataResourcesByViewSettings(
-        data.linkInstances,
-        linkTypesMap,
-        AttributesResourceType.LinkType,
-        viewSettings,
-        constraintData
-      ),
-    };
-  }
-);
+    ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} => {
+      const data = filterDocumentsAndLinksByQuery(
+        documents,
+        collections,
+        linkTypes,
+        linkInstances,
+        inputQuery || query,
+        permissions.collections,
+        permissions.linkTypes,
+        constraintData,
+        includeChildren
+      );
+      const collectionsMap = objectsByIdMap(collections);
+      const linkTypesMap = objectsByIdMap(linkTypes);
+      return {
+        documents: sortDataResourcesByViewSettings(
+          data.documents,
+          collectionsMap,
+          AttributesResourceType.Collection,
+          viewSettings,
+          constraintData
+        ),
+        linkInstances: sortDataResourcesByViewSettings(
+          data.linkInstances,
+          linkTypesMap,
+          AttributesResourceType.LinkType,
+          viewSettings,
+          constraintData
+        ),
+      };
+    }
+  );
+
+export const selectDocumentsAndLinksByQuerySorted = selectDocumentsAndLinksByCustomQuerySorted();
 
 export const selectDocumentsByQuery = createSelector(
   selectDocumentsAndLinksByQuery,
