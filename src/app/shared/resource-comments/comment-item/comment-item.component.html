@@ -10,7 +10,7 @@
     <span *ngIf="!comment.id && !comment.error" class="spinner-grow spinner-grow-sm mr-2 avatar-indicator" role="status"
           aria-hidden="true"></span>
     <i *ngIf="!comment.id && comment.error" class="fa fa-exclamation-circle text-danger mr-2 cursor-pointer avatar-indicator"
-       tooltip="Creation failed. Click here to sync again."
+       tooltip="I could not create the comment. Click here to try again."
        i18n-tooltip="@@comment.item.create.fail" (click)="onRefresh.emit(comment)"></i>
     <short-date icon="fa-file"
                 [date]="comment?.creationDate"
