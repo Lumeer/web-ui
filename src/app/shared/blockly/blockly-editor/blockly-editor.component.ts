@@ -72,6 +72,7 @@ const GET_LINK_ATTRIBUTE = 'get_link_attribute';
 const SET_LINK_ATTRIBUTE = 'set_link_attribute';
 const GET_LINK_DOCUMENT = 'get_link_document';
 const VARIABLES_GET_PREFIX = 'variables_get_';
+const VARIABLES_SET = 'variables_set';
 const UNKNOWN = 'unknown';
 const STATEMENT_CONTAINER = 'statement_container';
 const VALUE_CONTAINER = 'value_container';
@@ -775,7 +776,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       },
     };
     Blockly.JavaScript[DATE_NOW] = function (block) {
-      const code = '(+(new Date()))';
+      const code = '((new Date()).toISOString())';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };
@@ -1266,6 +1267,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           }
         }
       }
+
+      // might be a change of assigned variable
+      if (block.type === VARIABLES_SET) {
+        this.checkVariablesType(changeEvent);
+      }
     }
 
     if (changeEvent.newParentId) {
@@ -1351,6 +1357,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           this.setLinkDocumentOutputType(parentBlock, block);
         }
       }
+
+      // might be a connection of document to a variable
+      if (parentBlock.type === VARIABLES_SET) {
+        this.checkVariablesType(changeEvent);
+      }
     } else if (changeEvent.oldParentId) {
       // reset output type and disconnect when linked document is removed
       const block = workspace.getBlockById(changeEvent.blockId);
@@ -1399,6 +1410,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             parentBlock.setOutput(true, UNKNOWN);
             this.resetOptions(parentBlock, 'COLLECTION');
           }
+
+          // might be a disconnection of document from variable
+          if (parentBlock.type === VARIABLES_SET) {
+            this.checkVariablesType(changeEvent);
+          }
         }
       }
     }
@@ -1406,6 +1422,50 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     // render new state
     this.generateXml();
     this.generateJs();
+  }
+
+  private checkVariablesType(changeEvent) {
+    const workspace = this.workspace;
+
+    const blocks = workspace.getBlocksByType(VARIABLES_SET);
+
+    (blocks || []).forEach(block => {
+      const children = block.getChildren();
+      const idx = (children || []).findIndex(
+        child => child.type?.startsWith(VARIABLES_GET_PREFIX) && child.type?.endsWith(DOCUMENT_VAR_SUFFIX)
+      );
+
+      if (idx >= 0) {
+        if (block.inputList?.length > 0 && block.inputList[0].fieldRow?.length > 1) {
+          const variable = block.inputList[0].fieldRow[1].getVariable();
+          if (variable) {
+            const [, , collectionId] = children[idx].type.split('_');
+            this.updateVariableType(workspace, variable, collectionId + DOCUMENT_VAR_SUFFIX);
+            block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+          }
+        }
+      } else {
+        if (block.inputList?.length > 0 && block.inputList[0].fieldRow?.length > 1) {
+          const variable = block.inputList[0].fieldRow[1].getVariable();
+          if (variable && variable.type !== '' && variable.type?.endsWith(DOCUMENT_VAR_SUFFIX)) {
+            workspace.getBlocksByType(VARIABLES_GET_PREFIX + variable.type).forEach(innerBlock => {
+              if (innerBlock.inputList?.length > 0 && innerBlock.inputList[0].fieldRow?.length > 2) {
+                const innerVariable = innerBlock.inputList[0].fieldRow[2].getVariable();
+                if (innerVariable.getId() === variable.getId()) {
+                  if (innerBlock.outputConnection) {
+                    this.tryDisconnect(innerBlock, innerBlock.outputConnection);
+                  }
+                  setTimeout(() => innerBlock.dispose());
+                }
+              }
+            });
+
+            this.updateVariableType(workspace, variable, '');
+            block.inputList[0].fieldRow[1].variableTypes = [''];
+          }
+        }
+      }
+    });
   }
 
   private resetOptions(block: any, field: string): void {
