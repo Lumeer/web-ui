@@ -17,17 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Collection} from '../../core/store/collections/collection';
-import {SelectItemModel} from '../select/select-item/select-item.model';
-import {resourceAttributesSelectItems} from '../select/select-item.utils';
-import {ConstraintType} from '../../core/model/data/constraint';
-
-@Pipe({
-  name: 'attributesSelectItems',
-})
-export class AttributesSelectItemsPipe implements PipeTransform {
-  public transform(collection: Collection, type?: ConstraintType): SelectItemModel[] {
-    return resourceAttributesSelectItems(collection, type);
-  }
+export enum TaskPurposeFormControl {
+  Assignee = 'assignee',
+  DueDate = 'dueDate',
+  Observers = 'observers',
+  State = 'state',
+  StateList = 'stateList',
 }

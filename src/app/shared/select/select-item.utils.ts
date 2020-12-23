@@ -22,6 +22,7 @@ import {SelectItemModel} from './select-item/select-item.model';
 import {LinkType} from '../../core/store/link-types/link.type';
 import {AttributesResource, AttributesResourceType} from '../../core/model/resource';
 import {getAttributesResourceType} from '../utils/resource.utils';
+import {ConstraintType} from '../../core/model/data/constraint';
 
 export function collectionSelectItems(collections: Collection[], id?: (Collection) => any): SelectItemModel[] {
   return collections?.map(collection => collectionSelectItem(collection, id)) || [];
@@ -51,23 +52,29 @@ export function linkTypesSelectItems(linkTypes: LinkType[], id?: any): SelectIte
 
 export function resourceAttributesSelectItems(
   resource: AttributesResource,
+  type?: ConstraintType,
   id?: (Attribute) => any
 ): SelectItemModel[] {
+  const attributes = type
+    ? resource?.attributes.filter(attribute => attribute.constraint?.type === type)
+    : resource?.attributes;
   if (getAttributesResourceType(resource) === AttributesResourceType.Collection) {
     const collection = <Collection>resource;
     return (
-      resource?.attributes.map(attribute => {
-        return {
-          id: id?.(attribute) || attribute.id,
-          value: attribute.name,
-          icons: [collection.icon],
-          iconColors: [collection.color],
-        };
-      }) || []
+      attributes
+        ?.filter(attribute => !type || attribute?.constraint?.type === type)
+        .map(attribute => {
+          return {
+            id: id?.(attribute) || attribute.id,
+            value: attribute.name,
+            icons: [collection.icon],
+            iconColors: [collection.color],
+          };
+        }) || []
     );
   } else {
     const linkType = <LinkType>resource;
-    return resource?.attributes.map(attribute => {
+    return attributes?.map(attribute => {
       return {
         id: id?.(attribute) || attribute.id,
         value: attribute.name,
