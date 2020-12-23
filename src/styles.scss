@@ -282,6 +282,11 @@ typeahead-container {
   }
 }
 
+.form-control.multiline {
+  height: auto;
+  min-height: calc(1.5em + 0.75rem + 2px);
+}
+
 modal-container {
   overflow-y: unset !important;
 

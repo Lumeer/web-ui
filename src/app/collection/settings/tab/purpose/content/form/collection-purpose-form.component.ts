@@ -21,6 +21,7 @@ import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} fro
 import {FormGroup} from '@angular/forms';
 import {Collection, CollectionPurposeType} from '../../../../../../core/store/collections/collection';
 import {removeAllFormControls} from '../../../../../../shared/utils/form.utils';
+import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'collection-purpose-form',
@@ -36,6 +37,9 @@ export class CollectionPurposeFormComponent implements OnChanges {
 
   @Input()
   public collection: Collection;
+
+  @Input()
+  public documents: DocumentModel[];
 
   public readonly purposeType = CollectionPurposeType;
 

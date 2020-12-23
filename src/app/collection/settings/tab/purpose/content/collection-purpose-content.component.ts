@@ -17,27 +17,55 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, SimpleChange, SimpleChanges, OnChanges} from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  SimpleChange,
+  SimpleChanges,
+  OnChanges,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
-import {Collection, CollectionPurposeType} from '../../../../../core/store/collections/collection';
+import {
+  Collection,
+  CollectionPurpose,
+  CollectionPurposeMetadata,
+  collectionPurposesMap,
+  CollectionPurposeType,
+} from '../../../../../core/store/collections/collection';
+import {TaskPurposeFormControl} from './form/tasks/task-purpose-form-control';
+import {Subscription} from 'rxjs';
+import {UpdatePurposeService} from './update-purpose.service';
+import {deepObjectsEquals} from '../../../../../shared/utils/common.utils';
+import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
 @Component({
   selector: 'collection-purpose-content',
   templateUrl: './collection-purpose-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [UpdatePurposeService],
 })
-export class CollectionPurposeContentComponent implements OnChanges {
+export class CollectionPurposeContentComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public collection: Collection;
 
   @Input()
   public workspace: Workspace;
 
+  @Input()
+  public documents: DocumentModel[];
+
   public form = new FormGroup({
     type: new FormControl(),
     metaData: new FormGroup({}),
   });
+
+  private subscriptions = new Subscription();
+
+  constructor(private updatePurposeService: UpdatePurposeService) {}
 
   public get typeControl(): AbstractControl {
     return this.form.get('type');
@@ -45,6 +73,21 @@ export class CollectionPurposeContentComponent implements OnChanges {
 
   public get metaDataForm(): AbstractControl {
     return this.form.get('metaData');
+  }
+
+  public ngOnInit() {
+    this.subscribeFormChanges();
+
+    this.updatePurposeService.setWorkspace(this.workspace);
+  }
+
+  private subscribeFormChanges() {
+    this.subscriptions.add(
+      this.form.valueChanges.subscribe(() => {
+        const purpose = this.createPurpose();
+        this.updatePurposeService.set(this.collection.id, purpose, this.collection);
+      })
+    );
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -57,5 +100,30 @@ export class CollectionPurposeContentComponent implements OnChanges {
     return (
       change && (!change.previousValue || change.previousValue.purpose?.type !== change.currentValue?.purpose?.type)
     );
+  }
+
+  private createPurpose(): CollectionPurpose {
+    const type = collectionPurposesMap[this.typeControl.value] || CollectionPurposeType.None;
+    return {type, metaData: this.createPurposeMetadata(type)};
+  }
+
+  private createPurposeMetadata(type: CollectionPurposeType): CollectionPurposeMetadata {
+    switch (type) {
+      case CollectionPurposeType.Tasks:
+        const stateAttributeId = this.metaDataForm.get(TaskPurposeFormControl.State)?.value;
+        return {
+          assigneeAttributeId: this.metaDataForm.get(TaskPurposeFormControl.Assignee)?.value,
+          dueDateAttributeId: this.metaDataForm.get(TaskPurposeFormControl.DueDate)?.value,
+          stateAttributeId,
+          finalStatesList: stateAttributeId ? this.metaDataForm.get(TaskPurposeFormControl.StateList)?.value : [],
+          observersAttributeId: this.metaDataForm.get(TaskPurposeFormControl.Observers)?.value,
+        };
+      default:
+        return {};
+    }
+  }
+
+  public ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 }

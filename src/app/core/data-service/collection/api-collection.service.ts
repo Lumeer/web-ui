@@ -29,6 +29,7 @@ import {AttributeDto, CollectionDto} from '../../dto';
 import {ApiPermissionService} from '../common/api-permission.service';
 import {Workspace} from '../../store/navigation/workspace';
 import {environment} from '../../../../environments/environment';
+import {CollectionPurposeDto} from '../../dto/collection.dto';
 
 @Injectable()
 export class ApiCollectionService extends ApiPermissionService implements CollectionService {
@@ -42,6 +43,14 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
 
   public updateCollection(collection: CollectionDto): Observable<CollectionDto> {
     return this.httpClient.put<CollectionDto>(`${this.apiPrefix()}/${collection.id}`, collection);
+  }
+
+  public updatePurpose(
+    collectionId: string,
+    purpose: CollectionPurposeDto,
+    workspace?: Workspace
+  ): Observable<CollectionDto> {
+    return this.httpClient.put<CollectionDto>(`${this.apiPrefix(workspace)}/${collectionId}/purpose`, purpose);
   }
 
   public removeCollection(collectionId: string): Observable<string> {

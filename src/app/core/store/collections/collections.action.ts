@@ -19,7 +19,7 @@
 
 import {Action} from '@ngrx/store';
 import {Permission, PermissionType} from '../permissions/permissions';
-import {Attribute, Collection, ImportedCollection} from './collection';
+import {Attribute, Collection, CollectionPurpose, ImportedCollection} from './collection';
 import {Workspace} from '../navigation/workspace';
 import {DocumentsAction} from '../documents/documents.action';
 
@@ -40,6 +40,10 @@ export enum CollectionsActionType {
   UPDATE = '[Collections] Update',
   UPDATE_SUCCESS = '[Collections] Update :: Success',
   UPDATE_FAILURE = '[Collections] Update :: Failure',
+
+  UPDATE_PURPOSE = '[Collections] Update Purpose',
+  UPDATE_PURPOSE_SUCCESS = '[Collections] Update Purpose :: Success',
+  UPDATE_PURPOSE_FAILURE = '[Collections] Update Purpose :: Failure',
 
   DELETE = '[Collections] Delete',
   DELETE_SUCCESS = '[Collections] Delete :: Success',
@@ -164,6 +168,24 @@ export namespace CollectionsAction {
 
   export class UpdateFailure implements Action {
     public readonly type = CollectionsActionType.UPDATE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class UpdatePurpose implements Action {
+    public readonly type = CollectionsActionType.UPDATE_PURPOSE;
+
+    public constructor(public payload: {collectionId: string; purpose: CollectionPurpose; workspace: Workspace}) {}
+  }
+
+  export class UpdatePurposeSuccess implements Action {
+    public readonly type = CollectionsActionType.UPDATE_PURPOSE_SUCCESS;
+
+    public constructor(public payload: {collection: Collection}) {}
+  }
+
+  export class UpdatePurposeFailure implements Action {
+    public readonly type = CollectionsActionType.UPDATE_PURPOSE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
@@ -387,6 +409,9 @@ export namespace CollectionsAction {
     | Update
     | UpdateSuccess
     | UpdateFailure
+    | UpdatePurpose
+    | UpdatePurposeSuccess
+    | UpdatePurposeFailure
     | Delete
     | DeleteSuccess
     | DeleteFailure

@@ -38,7 +38,7 @@ import {OptionsDropdownComponent} from '../../dropdown/options/options-dropdown.
 import {uniqueValues} from '../../utils/array.utils';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
-import {CommonDataInputConfiguration} from '../data-input-configuration';
+import {CommonDataInputConfiguration, SelectDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
 
 @Component({
@@ -55,7 +55,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   public readonly: boolean;
 
   @Input()
-  public configuration: CommonDataInputConfiguration;
+  public configuration: SelectDataInputConfiguration;
+
+  @Input()
+  public commonConfiguration: CommonDataInputConfiguration;
 
   @Input()
   public value: SelectDataValue;
@@ -172,7 +175,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
           this.preventSaveAndBlur();
 
           const action = keyboardEventInputSaveAction(event);
-          if (this.configuration?.delaySaveAction) {
+          if (this.commonConfiguration?.delaySaveAction) {
             // needs to be executed after parent event handlers
             setTimeout(() => this.saveValue(action, selectedOption));
           } else {
@@ -209,6 +212,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       }
     }
     this.resetSearchInput();
+
+    const optionValues = uniqueValues(this.selectedOptions.map(selectedOption => selectedOption.value));
+    const dataValue = this.value.copy(optionValues);
+    this.valueChange.emit(dataValue);
   }
 
   public onInput() {

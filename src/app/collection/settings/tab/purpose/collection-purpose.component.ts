@@ -21,7 +21,7 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../../core/store/collections/collection';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
-import {filter} from 'rxjs/operators';
+import {filter, take} from 'rxjs/operators';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';

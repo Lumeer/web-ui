@@ -138,7 +138,7 @@ export class FilterBuilderContentComponent implements OnInit {
 
   private createDataValues(): DataValue[] {
     return (this.selectedValues || []).map(selectedValue => {
-      const value = selectedValue && selectedValue.value;
+      const value = selectedValue?.value;
       const constraint = this.attribute?.constraint || new UnknownConstraint();
       return constraint.createDataValue(value || '', this.constraintData);
     });

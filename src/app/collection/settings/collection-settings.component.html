@@ -28,6 +28,14 @@
 
     <ul class="nav nav-tabs px-5">
       <li role="presentation" class="nav-item">
+        <a [routerLink]="['purpose']"
+           routerLinkActive="active"
+           class="nav-link"
+           i18n="@@collection.config.tab.purpose">
+          Purpose
+        </a>
+      </li>
+      <li role="presentation" class="nav-item">
         <a [routerLink]="['attributes']"
            routerLinkActive="active"
            class="nav-link"
@@ -57,14 +65,6 @@
            class="nav-link"
            i18n="@@collection.config.tab.permissions">
           Users
-        </a>
-      </li>
-      <li role="presentation" class="nav-item">
-        <a [routerLink]="['purpose']"
-           routerLinkActive="active"
-           class="nav-link"
-           i18n="@@collection.config.tab.purpose">
-          Purpose
         </a>
       </li>
     </ul>

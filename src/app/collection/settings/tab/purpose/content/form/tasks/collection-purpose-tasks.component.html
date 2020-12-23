@@ -1,11 +1,11 @@
 <div [formGroup]="form">
 
-  <div class="form-group row m-0 mt-4">
+  <div class="form-group row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.assignee.label">
       Assignee
     </label>
-    <select-item class="col-sm-12 col-md-6 col-lg-4 px-0"
-                 [items]="collection | attributesSelectItems:constraintType.User"
+    <select-item class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0"
+                 [items]="collection | attributesSelectItems"
                  [removable]="true"
                  emptyValue="Select assignee"
                  i18n-emptyValue="@@collections.tab.purpose.assignee.select"
@@ -15,11 +15,11 @@
     </select-item>
   </div>
 
-  <div class="form-group row m-0 mt-4">
+  <div class="form-group row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.dueDate.label">
       Due Date
     </label>
-    <select-item class="col-sm-12 col-md-6 col-lg-4 px-0"
+    <select-item class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0"
                  [items]="collection | attributesSelectItems:constraintType.DateTime"
                  [removable]="true"
                  emptyValue="Select due date"
@@ -30,12 +30,12 @@
     </select-item>
   </div>
 
-  <div class="form-group row m-0 mt-4">
+  <div class="form-group row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.state.label">
       State
     </label>
-    <select-item class="col-sm-12 col-md-6 col-lg-4 px-0"
-                 [items]="collection | attributesSelectItems:constraintType.Select"
+    <select-item class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0"
+                 [items]="collection | attributesSelectItems"
                  [removable]="true"
                  emptyValue="Select state"
                  i18n-emptyValue="@@collections.tab.purpose.state.select"
@@ -45,12 +45,30 @@
     </select-item>
   </div>
 
-  <div class="form-group row m-0 mt-4">
+  <div class="form-group row m-0 mt-3"
+       *ngIf="collection?.attributes | stateListConstraint:stateControl.value:(documents$ | async):(constraintData$ | async) as stateConstraint">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.stateList.label">
+      Done states
+    </label>
+    <data-input class="col-sm-12 col-md-6 col-lg-5 col-xl-4 p-0 form-control multiline"
+                [dataValue]="stateList$ | async | dataValue:stateConstraint"
+                [focus]="true"
+                [configuration]="dataInputConfiguration"
+                [readonly]="!(stateListEditing$ | async)"
+                [constraint]="stateConstraint"
+                (click)="$event.preventDefault(); setStateListEditing(true)"
+                (valueChange)="onStateListChange($event)"
+                (save)="onStateListSave($event)"
+                (cancel)="setStateListCancel()">
+    </data-input>
+  </div>
+
+  <div class="form-group row m-0 mt-3">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.observer.label">
       Observer
     </label>
-    <select-item class="col-sm-12 col-md-6 col-lg-4 px-0"
-                 [items]="collection | attributesSelectItems:constraintType.User"
+    <select-item class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0"
+                 [items]="collection | attributesSelectItems"
                  [removable]="true"
                  emptyValue="Select observer"
                  i18n-emptyValue="@@collections.tab.purpose.observer.select"
