@@ -40,7 +40,7 @@
                  emptyValue="Select state"
                  i18n-emptyValue="@@collections.tab.purpose.state.select"
                  [selectedId]="stateControl.value"
-                 (select)="stateControl.patchValue($event)"
+                 (select)="stateControl.patchValue($event); stateListControl.patchValue([]);"
                  (remove)="stateControl.patchValue(null)">
     </select-item>
   </div>
