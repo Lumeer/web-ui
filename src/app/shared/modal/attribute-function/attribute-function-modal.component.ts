@@ -21,7 +21,6 @@ import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@
 import {BehaviorSubject, Observable} from 'rxjs';
 import {findAttribute} from '../../../core/store/collections/collection.util';
 import {BLOCKLY_VALUE_TOOLBOX} from '../../blockly/blockly-editor/blockly-editor-toolbox';
-import {MasterBlockType} from '../../blockly/blockly-editor/blockly-editor.component';
 import {RuleVariable} from '../../blockly/rule-variable-type';
 import {Attribute, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -37,6 +36,7 @@ import {LinkTypesAction} from '../../../core/store/link-types/link-types.action'
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {KeyCode} from '../../key-code';
 import {DialogType} from '../dialog-type';
+import {MasterBlockType} from '../../blockly/blockly-editor/blockly-utils';
 
 @Component({
   selector: 'attribute-function-dialog',
