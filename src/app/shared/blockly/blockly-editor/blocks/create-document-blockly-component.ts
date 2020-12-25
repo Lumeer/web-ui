@@ -20,10 +20,22 @@
 import {BlocklyComponent} from './blockly-component';
 import {COLOR_GREEN} from '../../../../core/constants';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class CreateDocumentBlocklyComponent extends BlocklyComponent {
+  private tooltip: string;
+
+  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
+    super(blocklyUtils, i18n);
+
+    this.tooltip = i18n({
+      id: 'blockly.tooltip.createDocumentBlock',
+      value: 'Creates a new record. Assign it to a variable to change its attributes.',
+    });
+  }
+
   public getVisibility(): MasterBlockType[] {
     return [MasterBlockType.Function];
   }
@@ -35,7 +47,7 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
       init: function () {
         this.jsonInit({
           type: BlocklyUtils.CREATE_DOCUMENT,
-          message0: 'create document in %1', //'%{BKY_BLOCK_CREATE_DOCUMENT}', //"create document in %1",
+          message0: '%{BKY_BLOCK_CREATE_DOCUMENT}', // create record in %1,
           args0: [
             {
               type: 'field_dropdown',
@@ -47,7 +59,7 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
           ],
           output: '',
           colour: COLOR_GREEN,
-          tooltip: '',
+          tooltip: this_.tooltip,
           helpUrl: '',
         });
       },
@@ -80,6 +92,8 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
         changeEvent.name === 'COLLECTION_ID'
       ) {
         block.outputConnection.check_ = changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+
+        this.blocklyUtils.checkVariablesType(changeEvent, workspace);
       }
     }
   }

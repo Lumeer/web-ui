@@ -21,10 +21,22 @@ import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {uniqueValues} from '../../../utils/array.utils';
 import {COLOR_GREEN} from '../../../../core/constants';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class SetAttributeBlocklyComponent extends BlocklyComponent {
+  private tooltip: string;
+
+  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
+    super(blocklyUtils, i18n);
+
+    this.tooltip = i18n({
+      id: 'blockly.tooltip.setAttributeBlock',
+      value: 'Sets the value of an attribute in the given record.',
+    });
+  }
+
   public getVisibility(): MasterBlockType[] {
     return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
   }
@@ -63,6 +75,7 @@ export class SetAttributeBlocklyComponent extends BlocklyComponent {
           previousStatement: null,
           nextStatement: null,
           colour: COLOR_GREEN,
+          tooltip: this_.tooltip,
         });
       },
     };

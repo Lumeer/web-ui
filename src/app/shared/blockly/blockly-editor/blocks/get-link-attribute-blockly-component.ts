@@ -20,10 +20,22 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_PRIMARY} from '../../../../core/constants';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class GetLinkAttributeBlocklyComponent extends BlocklyComponent {
+  private tooltip: string;
+
+  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
+    super(blocklyUtils, i18n);
+
+    this.tooltip = i18n({
+      id: 'blockly.tooltip.getLinkAttributeBlock',
+      value: 'Gets the value of an attribute in the given link.',
+    });
+  }
+
   public getVisibility(): MasterBlockType[] {
     return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
   }
@@ -49,7 +61,7 @@ export class GetLinkAttributeBlocklyComponent extends BlocklyComponent {
           ],
           output: '',
           colour: COLOR_PRIMARY,
-          tooltip: '',
+          tooltip: this_.tooltip,
           helpUrl: '',
         });
       },

@@ -20,15 +20,29 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_PINK} from '../../../../core/constants';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class CurrentDateBlocklyComponent extends BlocklyComponent {
+  private tooltip: string;
+
+  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
+    super(blocklyUtils, i18n);
+
+    this.tooltip = i18n({
+      id: 'blockly.tooltip.currentDateBlock',
+      value: 'Gets current date as object for further function calls.',
+    });
+  }
+
   public getVisibility(): MasterBlockType[] {
     return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
   }
 
   public registerBlock(workspace: any): void {
+    const this_ = this;
+
     Blockly.Blocks[BlocklyUtils.CURRENT_DATE] = {
       init: function () {
         this.jsonInit({
@@ -36,7 +50,7 @@ export class CurrentDateBlocklyComponent extends BlocklyComponent {
           message0: '%{BKY_BLOCK_CURRENT_DATE}', // current date
           output: '',
           colour: COLOR_PINK,
-          tooltip: '',
+          tooltip: this_.tooltip,
           helpUrl: '',
         });
       },

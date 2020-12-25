@@ -20,15 +20,29 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_RED} from '../../../../core/constants';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class ForEachDocumentArrayBlocklyComponent extends BlocklyComponent {
+  private tooltip: string;
+
+  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
+    super(blocklyUtils, i18n);
+
+    this.tooltip = i18n({
+      id: 'blockly.tooltip.forEachDocumentBlock',
+      value: 'Loops over all records in the given list.',
+    });
+  }
+
   public getVisibility(): MasterBlockType[] {
     return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
   }
 
   public registerBlock(workspace: any): void {
+    const this_ = this;
+
     Blockly.Blocks[BlocklyUtils.FOREACH_DOCUMENT_ARRAY] = {
       init: function () {
         this.jsonInit({
@@ -56,6 +70,7 @@ export class ForEachDocumentArrayBlocklyComponent extends BlocklyComponent {
           previousStatement: null,
           nextStatement: null,
           colour: COLOR_RED,
+          tooltip: this_.tooltip,
         });
       },
     };

@@ -324,6 +324,7 @@ export class BlocklyUtils {
           child.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)
       );
 
+      // search for all variable setters connected to document variables and set the variable type accordingly
       if (idx >= 0) {
         if (block.inputList?.length > 0 && block.inputList[0].fieldRow?.length > 1) {
           const variable = block.inputList[0].fieldRow[1].getVariable();
@@ -334,24 +335,56 @@ export class BlocklyUtils {
           }
         }
       } else {
-        if (block.inputList?.length > 0 && block.inputList[0].fieldRow?.length > 1) {
-          const variable = block.inputList[0].fieldRow[1].getVariable();
-          if (variable && variable.type !== '' && variable.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
-            workspace.getBlocksByType(BlocklyUtils.VARIABLES_GET_PREFIX + variable.type).forEach(innerBlock => {
-              if (innerBlock.inputList?.length > 0 && innerBlock.inputList[0].fieldRow?.length > 2) {
-                const innerVariable = innerBlock.inputList[0].fieldRow[2].getVariable();
-                if (innerVariable.getId() === variable.getId()) {
-                  if (innerBlock.outputConnection) {
-                    this.tryDisconnect(innerBlock, innerBlock.outputConnection);
-                  }
-                  setTimeout(() => innerBlock.dispose());
-                }
-              }
-            });
+        // search for all variable setters connected to CREATE_DOCUMENT blocks with changed variable type
+        const idx2 = (children || []).findIndex(child => child.type === BlocklyUtils.CREATE_DOCUMENT);
 
-            this.updateVariableType(workspace, variable, '');
-            block.inputList[0].fieldRow[1].variableTypes = [''];
+        if (idx2 >= 0 && children[idx2].outputConnection?.check_?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+          const variable = block.inputList[0].fieldRow[1].getVariable();
+          if (variable) {
+            const [collectionId] = children[idx2].outputConnection.check_.split('_');
+
+            if (variable.type !== collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX) {
+              // disconnect and dispose all variable getters because they now have wrong name, color and icon
+              this.forEachVariableGetter(workspace, variable, innerBlock => {
+                if (innerBlock.outputConnection) {
+                  this.tryDisconnect(innerBlock, innerBlock.outputConnection);
+                }
+
+                setTimeout(() => innerBlock.dispose());
+              });
+
+              // update variable type
+              this.updateVariableType(workspace, variable, collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX);
+              block.inputList[0].fieldRow[1].variableTypes = [variable.type];
+            }
           }
+        } else {
+          // search for all variable setters with no childs and existing variable type, then reset the variable type
+          if (block.inputList?.length > 0 && block.inputList[0].fieldRow?.length > 1) {
+            const variable = block.inputList[0].fieldRow[1].getVariable();
+            if (variable && variable.type !== '' && variable.type?.endsWith(BlocklyUtils.DOCUMENT_VAR_SUFFIX)) {
+              this.forEachVariableGetter(workspace, variable, innerBlock => {
+                if (innerBlock.outputConnection) {
+                  this.tryDisconnect(innerBlock, innerBlock.outputConnection);
+                }
+                setTimeout(() => innerBlock.dispose());
+              });
+
+              this.updateVariableType(workspace, variable, '');
+              block.inputList[0].fieldRow[1].variableTypes = [''];
+            }
+          }
+        }
+      }
+    });
+  }
+
+  public forEachVariableGetter(workspace, variable, fce: (block) => void) {
+    workspace.getBlocksByType(BlocklyUtils.VARIABLES_GET_PREFIX + variable.type).forEach(innerBlock => {
+      if (innerBlock.inputList?.length > 0 && innerBlock.inputList[0].fieldRow?.length > 2) {
+        const innerVariable = innerBlock.inputList[0].fieldRow[2].getVariable();
+        if (innerVariable.getId() === variable.getId()) {
+          fce(innerBlock);
         }
       }
     });

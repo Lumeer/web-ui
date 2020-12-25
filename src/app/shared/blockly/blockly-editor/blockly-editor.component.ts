@@ -59,6 +59,7 @@ import {DateNowBlocklyComponent} from './blocks/date-now-blockly-component';
 import {SequenceBlocklyComponent} from './blocks/sequence-blockly-component';
 import {MsToUnitBlocklyComponent} from './blocks/ms-to-unit-blockly-component';
 import {CurrentUserBlocklyComponent} from './blocks/current-user-blockly-component';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
@@ -117,6 +118,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     private contrastColorPipe: ContrastColorPipe,
     private blocklyService: BlocklyService,
     private renderer2: Renderer2,
+    private i18n: I18n,
     @Inject(DOCUMENT) private document
   ) {}
 
@@ -127,23 +129,23 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       this.blocklyUtils.setLumeerVariable(lumeerVar);
     }
     this.blocklyUtils.registerComponents([
-      new CreateDocumentBlocklyComponent(this.blocklyUtils),
-      new ForEachDocumentArrayBlocklyComponent(this.blocklyUtils),
-      new ForEachLinkArrayBlocklyComponent(this.blocklyUtils),
-      new GetAttributeBlocklyComponent(this.blocklyUtils),
-      new SetAttributeBlocklyComponent(this.blocklyUtils),
-      new GetLinkAttributeBlocklyComponent(this.blocklyUtils),
-      new SetLinkAttributeBlocklyComponent(this.blocklyUtils),
-      new GetLinkDocumentBlocklyComponent(this.blocklyUtils),
-      new DateToMsBlocklyComponent(this.blocklyUtils),
-      new MsToDateBlocklyComponent(this.blocklyUtils),
-      new DateNowBlocklyComponent(this.blocklyUtils),
-      new CurrentDateBlocklyComponent(this.blocklyUtils),
-      new ParseDateBlocklyComponent(this.blocklyUtils),
-      new FormatDateBlocklyComponent(this.blocklyUtils),
-      new CurrentUserBlocklyComponent(this.blocklyUtils),
-      new MsToUnitBlocklyComponent(this.blocklyUtils),
-      new SequenceBlocklyComponent(this.blocklyUtils),
+      new CreateDocumentBlocklyComponent(this.blocklyUtils, this.i18n),
+      new ForEachDocumentArrayBlocklyComponent(this.blocklyUtils, this.i18n),
+      new ForEachLinkArrayBlocklyComponent(this.blocklyUtils, this.i18n),
+      new GetAttributeBlocklyComponent(this.blocklyUtils, this.i18n),
+      new SetAttributeBlocklyComponent(this.blocklyUtils, this.i18n),
+      new GetLinkAttributeBlocklyComponent(this.blocklyUtils, this.i18n),
+      new SetLinkAttributeBlocklyComponent(this.blocklyUtils, this.i18n),
+      new GetLinkDocumentBlocklyComponent(this.blocklyUtils, this.i18n),
+      new DateToMsBlocklyComponent(this.blocklyUtils, this.i18n),
+      new MsToDateBlocklyComponent(this.blocklyUtils, this.i18n),
+      new DateNowBlocklyComponent(this.blocklyUtils, this.i18n),
+      new CurrentDateBlocklyComponent(this.blocklyUtils, this.i18n),
+      new ParseDateBlocklyComponent(this.blocklyUtils, this.i18n),
+      new FormatDateBlocklyComponent(this.blocklyUtils, this.i18n),
+      new CurrentUserBlocklyComponent(this.blocklyUtils, this.i18n),
+      new MsToUnitBlocklyComponent(this.blocklyUtils, this.i18n),
+      new SequenceBlocklyComponent(this.blocklyUtils, this.i18n),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
@@ -374,7 +376,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
             '\n' +
             lumeerVar +
             '.setDocumentAttribute(' +
-            'thisDocument' +
+            'thisRecord' +
             ", '" +
             this_.attribute.id +
             "', " +
@@ -727,8 +729,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
     if (this.blocklyUtils.emptyJs(js)) {
       js = '';
     } else {
-      if (this.masterType === MasterBlockType.Value && js.indexOf('var thisDocument;') < 0) {
-        js = 'var thisDocument;\n' + js;
+      if (this.masterType === MasterBlockType.Value && js.indexOf('var thisRecord;') < 0) {
+        js = 'var thisRecord;\n' + js;
       }
 
       if (this.masterType === MasterBlockType.Link && js.indexOf('var thisLink;') < 0) {

@@ -20,10 +20,22 @@
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
 import {COLOR_CYAN} from '../../../../core/constants';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
 export class SequenceBlocklyComponent extends BlocklyComponent {
+  private tooltip: string;
+
+  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
+    super(blocklyUtils, i18n);
+
+    this.tooltip = i18n({
+      id: 'blockly.tooltip.sequenceBlock',
+      value: 'Gets another value from the given sequence alignet to the given number of digits.',
+    });
+  }
+
   public getVisibility(): MasterBlockType[] {
     return [MasterBlockType.Function, MasterBlockType.Link, MasterBlockType.Value];
   }
@@ -52,7 +64,7 @@ export class SequenceBlocklyComponent extends BlocklyComponent {
           ],
           output: 'String',
           colour: COLOR_CYAN,
-          tooltip: '',
+          tooltip: this_.tooltip,
           helpUrl: '',
         });
       },

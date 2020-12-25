@@ -17,11 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Collection} from '../../../../core/store/collections/collection';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
+import {I18n} from '@ngx-translate/i18n-polyfill';
 
 export abstract class BlocklyComponent {
-  public constructor(public blocklyUtils: BlocklyUtils) {}
+  public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {}
 
   public abstract getVisibility(): MasterBlockType[];
 
