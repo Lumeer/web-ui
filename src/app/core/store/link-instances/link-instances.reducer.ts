@@ -131,31 +131,32 @@ function isLinkInstanceNewer(linkInstance: LinkInstance, oldLinkInstance: LinkIn
 }
 
 function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkInstance): LinkInstancesState {
-  const oldLinkInstance = state.entities[linkInstance.id];
+  const newLinkInstance = {...linkInstance};
+  const oldLinkInstance = state.entities[newLinkInstance.id];
   if (!oldLinkInstance) {
-    return linkInstancesAdapter.addOne(linkInstance, state);
+    return linkInstancesAdapter.addOne(newLinkInstance, state);
   }
 
-  if (isLinkInstanceNewer(linkInstance, oldLinkInstance)) {
-    if (!linkInstance.commentsCount && !!oldLinkInstance.commentsCount) {
-      linkInstance.commentsCount = oldLinkInstance.commentsCount;
+  if (isLinkInstanceNewer(newLinkInstance, oldLinkInstance)) {
+    if (!newLinkInstance.commentsCount && !!oldLinkInstance.commentsCount) {
+      newLinkInstance.commentsCount = oldLinkInstance.commentsCount;
     }
-    return linkInstancesAdapter.upsertOne(linkInstance, state);
-  } else if (isModifiedLater(linkInstance, oldLinkInstance)) {
+    return linkInstancesAdapter.upsertOne(newLinkInstance, state);
+  } else if (isModifiedLater(newLinkInstance, oldLinkInstance)) {
     return linkInstancesAdapter.updateOne(
       {
-        id: linkInstance.id,
+        id: newLinkInstance.id,
         changes: {
-          updateDate: linkInstance.updateDate,
-          updatedBy: linkInstance.updatedBy,
-          commentsCount: linkInstance.commentsCount || oldLinkInstance.commentsCount,
+          updateDate: newLinkInstance.updateDate,
+          updatedBy: newLinkInstance.updatedBy,
+          commentsCount: newLinkInstance.commentsCount || oldLinkInstance.commentsCount,
         },
       },
       state
     );
-  } else if (isTransientModified(linkInstance, oldLinkInstance)) {
+  } else if (isTransientModified(newLinkInstance, oldLinkInstance)) {
     return linkInstancesAdapter.updateOne(
-      {id: linkInstance.id, changes: {commentsCount: linkInstance.commentsCount}},
+      {id: newLinkInstance.id, changes: {commentsCount: newLinkInstance.commentsCount}},
       state
     );
   }
