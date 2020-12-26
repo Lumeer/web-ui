@@ -32,7 +32,7 @@ export class MsToUnitBlocklyComponent extends BlocklyComponent {
 
     this.tooltip = i18n({
       id: 'blockly.tooltip.msToUnitBlock',
-      value: 'Converts time in milliseconds to the given time unit.',
+      value: 'Converts time in milliseconds or a duration attribute to the given time unit.',
     });
   }
 

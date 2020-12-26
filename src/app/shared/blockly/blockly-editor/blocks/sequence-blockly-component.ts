@@ -32,7 +32,7 @@ export class SequenceBlocklyComponent extends BlocklyComponent {
 
     this.tooltip = i18n({
       id: 'blockly.tooltip.sequenceBlock',
-      value: 'Gets another value from the given sequence alignet to the given number of digits.',
+      value: 'Gets another value from the given sequence aligned to the given number of digits.',
     });
   }
 
