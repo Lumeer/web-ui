@@ -59,26 +59,17 @@
         Zobrazit <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
         <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> >
       </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</source><target>{VAR_PLURAL, plural, =2 {oba} =3 {všechny} =4 {všechny} other {všech} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</source><target>{VAR_PLURAL, plural, =2 {komentáře} =3 {komentáře} =4 {komentáře} other {komentářů} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
         <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</source><target>Přehled aktivit je dostupný jen v <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise verzi<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Prosím <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>kontaktujte podporu<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source><target>Pouze správce organizace nebo projektu může pozvat kolegy. Prosím požádejte je.</target>
         <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/invite-user/modal/invite-user-modal.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="inviteUser.button.text" datatype="html">
@@ -153,43 +144,43 @@
         <source>A new view has been shared with you.</source><target>Máte přístup k novému pohledu.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="userNotifications.taskAssigned" datatype="html">
-        <source>A task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> with due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/> has been assigned to you.</source><target>Byl Vám přidělen úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> s termínem dokončení <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</target>
+        <source>A task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> has been assigned to you.</source><target>Byl Vám přidělen úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> s termínem dokončení <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.dueDateSoon" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/> soon.</source><target>Úkolu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se blíží termín dokončení <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date soon – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source><target>Úkolu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se blíží termín dokončení <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.pastDueDate" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</source><target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> je již po termínu dokončení <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source><target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> je již po termínu dokončení <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.stateUpdate" datatype="html">
-        <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="INTERPOLATION_1" equiv-text="{{taskState}}"/>.</source><target>Stav úkolu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se změnil na <x id="INTERPOLATION_1" equiv-text="{{taskState}}"/>.</target>
+        <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="INTERPOLATION" equiv-text="{{taskState}}"/>.</source><target>Stav úkolu <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> se změnil na <x id="INTERPOLATION_1" equiv-text="{{taskState}}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskUpdated" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</source><target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl upraven.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</source><target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl upraven.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskRemoved" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</source><target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl odstraněn.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</source><target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> byl odstraněn.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskUnassigned" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source><target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> Vám byl odebrán.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source><target>Úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> Vám byl odebrán.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">53</context>
@@ -248,21 +239,21 @@
         </source>
                 <target>Atributy</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
         <source>
           Rules
         </source><target>
           Pravidla
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit>
             <trans-unit id="collection.config.tab.permissions" datatype="html">
                 <source>
           Users
         </source>
                 <target>Uživatelé</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit>
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit>
 
 
 
@@ -1569,7 +1560,13 @@
                     <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
                     <context context-type="linenumber">1</context>
                 </context-group>
-            </trans-unit>
+            </trans-unit><trans-unit id="collection.update.purpose.fail" datatype="html">
+        <source>Could not update table purpose</source><target>Napodařilo se změnit účel tabulky</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
             <trans-unit id="collection.delete.fail" datatype="html">
                 <source>Could not delete table</source>
                 <target>Tabulku nelze smazat</target>
@@ -2204,7 +2201,17 @@
                 <source>Number of records</source>
                 <target>Počet záznamů</target>
 
-            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.settings.tableId" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.config.tab.purpose" datatype="html">
+        <source>
+          Purpose
+        </source><target>
+          Účel
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.settings.tableId" datatype="html">
         <source>Table ID:</source><target>ID tabulky:</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit>
@@ -2237,6 +2244,90 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context>
           <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.type.label" datatype="html">
+        <source>
+      Purpose
+    </source><target>
+      Účel
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/collection-purpose-content.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.assignee.label" datatype="html">
+        <source>
+      Assignee
+    </source><target>
+      Zodpovědná osoba
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.assignee.select" datatype="html">
+        <source>Select assignee attribute</source><target>Atribut se zodpovědnou osobou</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.dueDate.label" datatype="html">
+        <source>
+      Due Date
+    </source><target>
+      Termín
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.dueDate.select" datatype="html">
+        <source>Select due date attribute</source><target>Atribut s termínem</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.state.label" datatype="html">
+        <source>
+      State
+    </source><target>
+      Stav
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.state.select" datatype="html">
+        <source>Select state attribute</source><target>Atribut se stavem</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.stateList.label" datatype="html">
+        <source>
+      Done states
+    </source><target>
+      Dokončené stavy
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.observer.label" datatype="html">
+        <source>
+      Observer
+    </source><target>
+      Pozorovatel
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.observer.select" datatype="html">
+        <source>Select observer attribute</source><target>Atribut s pozorovatelem</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
             <trans-unit id="collection.tab.attributes.attribute.default" datatype="html">
@@ -2762,16 +2853,13 @@
         </source><target>
           Obrázek, který se použije v okně při vytváření kopie projektu.
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
         <source>
         Allowed Domains
       </source><target>Dostupné z domén</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains.help" datatype="html">
         <source>
           Domains allowed to embed this project. E.g. www.lumeer.io, acme.com.
           Enter * to allow embedding into any web page.
@@ -2779,14 +2867,11 @@
           Seznam webových adres, kde bude možné tento projekt vložit do stránky.
           Např. www.lumeer.io, acme.com. Zadejte * pro povolení všech adres.
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
         <source>Relative Date</source><target>Relativní datum</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate.help" datatype="html">
         <source>
           When anyone creates a copy of this project, all date values will be shifted.
           The shift is determined as a difference between today and the date specified here.
@@ -2796,19 +2881,16 @@
           Posun se určí jako rozdíl dnešního data a toho zde zadaného. Žádný posun se neprovede,
           pokud necháte pole prázdné.
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
         <source>
         Open with view
       </source><target>Otevřít s pohledem</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
         <source>Select view</source><target>Výberte pohled</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.help" datatype="html">
         <source>
           The view that opens when the project is first loaded in the project creation dialog or embedded view.
           Leave empty for the default home page.
@@ -2816,20 +2898,17 @@
           Pohled, který se zobrazí, když se projekt načte v okně pro vytváření nového projektu nebo při vložení do webové stránky.
           Pokud zůstane prázdné, použije se domovská obrazovka.
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">82</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
         <source>Tags</source><target>Značky</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.topPanel" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.topPanel" datatype="html">
         <source>Top panel</source><target>Horní panel s nabídkou</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.showTopPanel" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.showTopPanel" datatype="html">
         <source>Show application controls (the upper panel)</source><target>Zobrazit ovládací panel aplikace (horní panel na stránce)</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="0f6ae2b3123ad5e28ac81cd30a8504ffdbf802a7" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="0f6ae2b3123ad5e28ac81cd30a8504ffdbf802a7" datatype="html">
         <source>Remove tag</source><target>Odstranit značku</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/tags/project-template-tags.component.html</context>
@@ -4865,9 +4944,7 @@
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.tabs.links" datatype="html">
-        <source>
-      Links
-    </source><target>
+        <source>Links</source><target>
       Vazby
     </target>
         <context-group purpose="location">
@@ -5033,61 +5110,51 @@
         <source>Undo changes</source><target>Vrátit změny</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/view/view-controls/view-controls.component.html</context><context context-type="linenumber">96</context></context-group></trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
-        <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
+        <source>Welcome to Lumeer! This is your first login. Please accept
+      the terms and subscribe to our Newsletter before using the application. Thank you!</source><target>Lumeer Vás vítá! Toto je Vaše první přihlášení. Než budete pokračovat, odsouhlaste prosím obchodní podmínky a přihlaste se k odběru Novinek. Děkujeme!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="agreement.welcome.newsletterCheck" datatype="html">
-        <source>By skipping the Newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</source><target>Vynecháním odběru novinek přijdete o spoustu cenných informací, elektronických knih a příruček zdarma. Skutečně chcete pokračovat?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.terms.start" datatype="html">
+        <source>By skipping the Newsletter, you miss a lot of
+      valuable information, free ebooks and guides. Are you sure you want to continue?</source><target>Vynecháním odběru novinek přijdete o spoustu cenných informací, elektronických knih a příruček zdarma. Skutečně chcete pokračovat?</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source><target>Přečetl(a) jsem si</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
         <source>Terms of Service</source><target>Všeobecné obchodní podmínky</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="and" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="and" datatype="html">
         <source>and</source><target>a</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
         <source>Privacy Policy</source><target>Zásady ochrany osobních údajů</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
         <source>and I agree to them.</source><target>a souhlasím s nimi.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="label.newsletter.secondChance" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="label.newsletter.secondChance" datatype="html">
         <source>Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source><target>Přihlaste mě prosím k odběru novinek se všemi výhodami!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
         <source>Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source><target>Zasílejte mi informace a materiály zdarma o:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source><target>Zpracováním osobních údajů</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="label.newsletter.termsEnd" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="label.newsletter.termsEnd" datatype="html">
         <source>.</source><target>.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.newsletter.end" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="label.newsletter.end" datatype="html">
         <source>increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source>
         <target>zvyšování <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>zisků<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, úspoře <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>času<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, zlepšování <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>komunikace<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> a <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efektivity<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> díky odběru novinek.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="label.newsletter.termsStart" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="label.newsletter.termsStart" datatype="html">
         <source>See </source><target>Souhlasím se </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit><trans-unit id="button.continue" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source><target>Pokračovat</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="currentUser.get.fail" datatype="html">
         <source>Could not get user details</source><target>Nepodařilo se načíst nastavení uživatele</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/users/users.effects.ts</context>
@@ -5476,7 +5543,7 @@
           Propojení
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
         <source>Link Type</source><target>Typ vazby</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
@@ -5559,6 +5626,13 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="178fe1547e5de6489102db434ecb5e103b1af48c" datatype="html">
+        <source>{VAR_SELECT, select, None {Generic} Tasks {Tasks} }</source>
+        <target>{VAR_SELECT, select, None {Obecná} Tasks {Úkoly} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.run.title" datatype="html">

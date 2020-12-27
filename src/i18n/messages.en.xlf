@@ -273,62 +273,54 @@
         </context-group>
         <note priority="1" from="description">auth.redirect</note>
       </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
-        <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source><target state="final">Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</target>
+        <source>Welcome to Lumeer! This is your first login. Please accept
+      the terms and subscribe to our Newsletter before using the application. Thank you!</source><target state="final">Welcome to Lumeer! This is your first login. Please accept
+      the terms and subscribe to our Newsletter before using the application. Thank you!</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">7</context></context-group></trans-unit><trans-unit id="agreement.welcome.newsletterCheck" datatype="html">
-        <source>By skipping the Newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</source><target state="final">By skipping the Newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">8</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.terms.start" datatype="html">
+        <source>By skipping the Newsletter, you miss a lot of
+      valuable information, free ebooks and guides. Are you sure you want to continue?</source><target state="final">By skipping the Newsletter, you miss a lot of
+      valuable information, free ebooks and guides. Are you sure you want to continue?</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">9</context></context-group></trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source><target state="final">I have read</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">19</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="termsOfService" datatype="html">
         <source>Terms of Service</source><target state="final">Terms of Service</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="and" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">25</context></context-group></trans-unit><trans-unit id="and" datatype="html">
         <source>and</source><target state="final">and</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="privacyPolicy" datatype="html">
         <source>Privacy Policy</source><target state="final">Privacy Policy</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">26</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="label.terms.end" datatype="html">
         <source>and I agree to them.</source><target state="final">and I agree to them.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">27</context></context-group></trans-unit><trans-unit id="label.newsletter.secondChance" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="label.newsletter.secondChance" datatype="html">
         <source>Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source><target state="final">Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">43</context></context-group></trans-unit><trans-unit id="label.newsletter.start" datatype="html">
         <source>Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source><target state="final">Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source><target state="final">Data Processing Agreement</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="label.newsletter.termsEnd" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="label.newsletter.termsEnd" datatype="html">
         <source>.</source><target state="final">.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-      </trans-unit><trans-unit id="label.newsletter.end" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="label.newsletter.end" datatype="html">
         <source>increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></source>
         <target state="final">increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong>"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong>"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/>"/></target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">40</context></context-group></trans-unit><trans-unit id="label.newsletter.termsStart" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">47</context></context-group></trans-unit><trans-unit id="label.newsletter.termsStart" datatype="html">
         <source>See </source><target state="final">See </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit><trans-unit id="button.continue" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source><target state="final">Continue</target>
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">53</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="session.expired.message" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/auth/agreement/agreement.component.html</context><context context-type="linenumber">59</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="session.expired.message" datatype="html">
         <source>
       You have been inactive for <x id="INTERPOLATION" equiv-text="{{sessionTimeout}}"/> minutes and the application logged out for security reasons.
       Click Continue to log in again.
@@ -511,11 +503,7 @@
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.tabs.links" datatype="html">
-        <source>
-      Links
-    </source><target state="final">
-      Links
-    </target>
+        <source>Links</source><target state="final">Links</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/detail-tabs/detail-tabs.component.html</context>
           <context context-type="linenumber">18</context>
@@ -661,26 +649,17 @@
         See <x id="ICU" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> <x id="INTERPOLATION" equiv-text="{{data.commentsCount}}"/>
         <x id="ICU_1" equiv-text="{data.commentsCount, plural, =2 {...} =3 {...} =4 {...} other {...}}"/> >
       </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">51</context></context-group></trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</source><target state="final">{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">52</context></context-group></trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</source><target state="final">{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
         <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</source><target state="final">Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a>"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a>"/>.</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context><context context-type="linenumber">86</context></context-group></trans-unit><trans-unit id="772d30d692c1d8078c7da41e2b539746404e94c9" datatype="html">
         <source>Only organization and project managers can invite colleagues, please ask them.</source><target state="final">Only organization and project managers can invite colleagues, please ask them.</target>
 
         <note priority="1" from="description">inviteUser.dialog.managerWarning</note>
@@ -756,43 +735,43 @@
         <source>A new view has been shared with you.</source><target state="final">A new view has been shared with you.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="userNotifications.taskAssigned" datatype="html">
-        <source>A task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> with due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/> has been assigned to you.</source><target state="final">A task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> with due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/> has been assigned to you.</target>
+        <source>A task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> has been assigned to you.</source><target state="final">A task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span>"/>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span>"/> has been assigned to you.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.dueDateSoon" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/> soon.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/> soon.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date soon – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has due date soon – <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.pastDueDate" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION_1" equiv-text="{{taskDueDate}}"/>.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> is past due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.stateUpdate" datatype="html">
-        <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="INTERPOLATION_1" equiv-text="{{taskState}}"/>.</source><target state="final">The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="INTERPOLATION_1" equiv-text="{{taskState}}"/>.</target>
+        <source>The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="INTERPOLATION" equiv-text="{{taskState}}"/>.</source><target state="final">The state of task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated to <x id="INTERPOLATION" equiv-text="{{taskState}}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskUpdated" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been updated.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskRemoved" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been removed.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskUnassigned" datatype="html">
-        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="INTERPOLATION" equiv-text="{{taskName}}"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</target>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</source><target state="final">The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> has been unassigned from you.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">53</context>
@@ -938,7 +917,17 @@
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="collection.settings.records.count" datatype="html">
         <source>Number of records</source><target state="final">Number of records</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.settings.tableId" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">18</context></context-group></trans-unit><trans-unit id="collection.config.tab.purpose" datatype="html">
+        <source>
+          Purpose
+        </source><target state="final">
+          Purpose
+        </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.settings.tableId" datatype="html">
         <source>Table ID:</source><target state="final">Table ID:</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/collection/settings/collection-settings.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="collection.config.tab.attributes" datatype="html">
@@ -948,21 +937,21 @@
           Attributes
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">34</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collection.config.tab.rules" datatype="html">
         <source>
           Rules
         </source><target state="final">
           Rules
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="collection.config.tab.permissions" datatype="html">
         <source>
           Users
         </source><target state="final">
           Users
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">66</context></context-group></trans-unit><trans-unit id="collections.tab.attributes.new.header" datatype="html">
         <source>Add a new attribute</source><target state="final">Add a new attribute</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context><context context-type="linenumber">2</context></context-group></trans-unit><trans-unit id="collection.tab.attributes.attribute.add" datatype="html">
@@ -977,6 +966,90 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context>
           <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.type.label" datatype="html">
+        <source>
+      Purpose
+    </source><target state="final">
+      Purpose
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/collection-purpose-content.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.assignee.label" datatype="html">
+        <source>
+      Assignee
+    </source><target state="final">
+      Assignee
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.assignee.select" datatype="html">
+        <source>Select assignee attribute</source><target state="final">Select assignee attribute</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.dueDate.label" datatype="html">
+        <source>
+      Due Date
+    </source><target state="final">
+      Due Date
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.dueDate.select" datatype="html">
+        <source>Select due date attribute</source><target state="final">Select due date attribute</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.state.label" datatype="html">
+        <source>
+      State
+    </source><target state="final">
+      State
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.state.select" datatype="html">
+        <source>Select state attribute</source><target state="final">Select state attribute</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.stateList.label" datatype="html">
+        <source>
+      Done states
+    </source><target state="final">
+      Done states
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.observer.label" datatype="html">
+        <source>
+      Observer
+    </source><target state="final">
+      Observer
+    </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.observer.select" datatype="html">
+        <source>Select observer attribute</source><target state="final">Select observer attribute</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.attributes.header" datatype="html">
         <source>Existing attributes</source><target state="final">Existing attributes</target>
@@ -2432,18 +2505,15 @@
         </source><target state="final">
           An image used to represent the project in the project creation dialog.
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">31</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">33</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains" datatype="html">
         <source>
         Allowed Domains
       </source><target state="final">
         Allowed Domains
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">39</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">41</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.allowedDomains.help" datatype="html">
         <source>
           Domains allowed to embed this project. E.g. www.lumeer.io, acme.com.
           Enter * to allow embedding into any web page.
@@ -2451,14 +2521,11 @@
           Domains allowed to embed this project. E.g. www.lumeer.io, acme.com.
           Enter * to allow embedding into any web page.
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">44</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">48</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate" datatype="html">
         <source>Relative Date</source><target state="final">Relative Date</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">53</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">57</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.relativeDate.help" datatype="html">
         <source>
           When anyone creates a copy of this project, all date values will be shifted.
           The shift is determined as a difference between today and the date specified here.
@@ -2468,21 +2535,18 @@
           The shift is determined as a difference between today and the date specified here.
           No shift is made when left empty.
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">64</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView" datatype="html">
         <source>
         Open with view
       </source><target state="final">
         Open with view
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">67</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">73</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.empty" datatype="html">
         <source>Select view</source><target state="final">Select view</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">74</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.help" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">80</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.defaultView.help" datatype="html">
         <source>
           The view that opens when the project is first loaded in the project creation dialog or embedded view.
           Leave empty for the default home page.
@@ -2490,20 +2554,17 @@
           The view that opens when the project is first loaded in the project creation dialog or embedded view.
           Leave empty for the default home page.
         </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context>
-          <context context-type="linenumber">82</context>
-        </context-group>
-      </trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">88</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.tags" datatype="html">
         <source>Tags</source><target state="final">Tags</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.topPanel" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">97</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.topPanel" datatype="html">
         <source>Top panel</source><target state="final">Top panel</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">101</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.showTopPanel" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">109</context></context-group></trans-unit><trans-unit id="projects.tab.template.metadata.showTopPanel" datatype="html">
         <source>Show application controls (the upper panel)</source><target state="final">Show application controls (the upper panel)</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">110</context></context-group></trans-unit><trans-unit id="0f6ae2b3123ad5e28ac81cd30a8504ffdbf802a7" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/workspace/project/template/metadata/project-template-metadata.component.html</context><context context-type="linenumber">118</context></context-group></trans-unit><trans-unit id="0f6ae2b3123ad5e28ac81cd30a8504ffdbf802a7" datatype="html">
         <source>Remove tag</source><target state="final">Remove tag</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/workspace/project/template/metadata/tags/project-template-tags.component.html</context>
@@ -3556,6 +3617,12 @@
       </trans-unit>
       <trans-unit id="collection.update.fail" datatype="html">
         <source>Could not update table</source><target state="final">Could not update table</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.update.purpose.fail" datatype="html">
+        <source>Could not update table purpose</source><target state="final">Could not update table purpose</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
           <context context-type="linenumber">1</context>
@@ -5045,7 +5112,7 @@
           Link Types
         </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">50</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/collection-settings.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
         <source>Link Type</source><target state="final">Link Type</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/link-types/collection-link-types.component.html</context>
@@ -5127,6 +5194,12 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/collection/settings/tab/rules/collection-rules.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="178fe1547e5de6489102db434ecb5e103b1af48c" datatype="html">
+        <source>{VAR_SELECT, select, None {Generic} Tasks {Tasks} }</source><target state="final">{VAR_SELECT, select, None {Generic} Tasks {Tasks} }</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.run.title" datatype="html">

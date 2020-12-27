@@ -46,7 +46,7 @@ export class CollectionPurposeSelectComponent implements OnInit {
   private createSelectItems(): SelectItemModel[] {
     const result: SelectItemModel[] = objectValues(CollectionPurposeType).map(type => ({
       id: type,
-      value: this.i18n('{type, select, None {None} Tasks {Tasks}}', {type}),
+      value: this.i18n('{type, select, None {Generic} Tasks {Tasks}}', {type}),
       icons: [collectionPurposesIcons[type]],
     }));
 

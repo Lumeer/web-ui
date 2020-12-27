@@ -254,7 +254,7 @@ export class CollectionsEffects {
     ofType<CollectionsAction.UpdatePurposeFailure>(CollectionsActionType.UPDATE_PURPOSE_FAILURE),
     tap(action => console.error(action.payload.error)),
     map(() => {
-      const message = this.i18n({id: 'collection.update.purpose.fail', value: 'Could not update purpose'});
+      const message = this.i18n({id: 'collection.update.purpose.fail', value: 'Could not update table purpose'});
       return new NotificationsAction.Error({message});
     })
   );
