@@ -96,7 +96,7 @@ export class WorkflowTablesMenuService {
           id: RowMenuId.Delete,
           title: this.translateRowMenuItem(RowMenuId.Delete),
           disabled: !permissions?.writeWithView,
-          iconClass: 'fa fa-trash text-danger',
+          iconClass: 'far fa-trash-alt text-danger',
           group: 1,
         });
       }
@@ -215,7 +215,7 @@ export class WorkflowTablesMenuService {
       id: HeaderMenuId.Delete,
       title: this.translateHeaderMenuItem(HeaderMenuId.Delete),
       disabled: !permissions?.manageWithView,
-      iconClass: 'fa fa-trash text-danger',
+      iconClass: 'far fa-trash-alt text-danger',
       group: 3,
     });
 

@@ -20,12 +20,12 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskAssigned">
-    <span class="trail" i18n="@@userNotifications.taskAssigned">A task <em [innerHTML]="taskName"></em> with due date {{taskDueDate}} has been assigned to you.</span><br/>
+    <span class="trail" i18n="@@userNotifications.taskAssigned">A task <em [innerHTML]="taskName"></em> <span *ngIf="taskDueDate">with due date {{taskDueDate}}</span> has been assigned to you.</span><br/>
     <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.DueDateSoon">
-    <span class="trail" i18n="@@userNotifications.dueDateSoon">The task <em [innerHTML]="taskName"></em> has due date soon {{taskDueDate}}.</span><br/>
+    <span class="trail" i18n="@@userNotifications.dueDateSoon">The task <em [innerHTML]="taskName"></em> has due date soon ({{taskDueDate}}).</span><br/>
     <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
   </ng-container>
 
