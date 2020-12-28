@@ -35,6 +35,7 @@ import {SharedModule} from './shared/shared.module';
 import {ConstraintDataService} from './core/service/constraint-data.service';
 import {CurrencyFormatService} from './core/service/currency-format.service';
 import {PermissionsCheckService} from './core/service/permissions-check.service';
+import {AppIdService} from './core/service/app-id.service';
 
 declare const require; // Use the require method provided by webpack
 
@@ -97,6 +98,13 @@ export const angularticsSettings: Partial<Angulartics2Settings> = {
       provide: APP_INITIALIZER,
       useFactory: (ds: PermissionsCheckService) => () => ds.init(),
       deps: [PermissionsCheckService],
+      multi: true,
+    },
+    AppIdService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (ds: AppIdService) => () => ds.init(),
+      deps: [AppIdService],
       multi: true,
     },
   ],

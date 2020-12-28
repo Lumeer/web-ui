@@ -23,7 +23,7 @@ import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {from, Observable, of} from 'rxjs';
+import {EMPTY, from, Observable, of} from 'rxjs';
 import {catchError, concatMap, filter, map, mergeMap, tap, withLatestFrom} from 'rxjs/operators';
 import {UserService} from '../../data-service';
 import {AppState} from '../app.state';
@@ -43,6 +43,7 @@ import {Angulartics2} from 'angulartics2';
 import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
 import {OrganizationsAction} from '../organizations/organizations.action';
+import {isNullOrUndefined} from '../../../shared/utils/common.utils';
 
 @Injectable()
 export class UsersEffects {
@@ -428,7 +429,11 @@ export class UsersEffects {
     ofType<UsersAction.SetHint>(UsersActionType.SET_HINT),
     withLatestFrom(this.store$.select(selectCurrentUser)),
     mergeMap(([action, user]) => {
-      return of(new UsersAction.UpdateHints({hints: {...user.hints, [action.payload.hint]: action.payload.value}}));
+      if (isNullOrUndefined(user.hints) || user.hints[action.payload.hint] !== action.payload.value) {
+        return of(new UsersAction.UpdateHints({hints: {...user.hints, [action.payload.hint]: action.payload.value}}));
+      } else {
+        return EMPTY;
+      }
     })
   );
 
