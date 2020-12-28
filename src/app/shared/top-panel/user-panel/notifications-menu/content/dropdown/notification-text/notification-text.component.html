@@ -16,7 +16,9 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskAssigned">
-    <span class="trail" i18n="@@userNotifications.taskAssigned">A task <em [innerHTML]="taskName"></em> <span *ngIf="taskDueDate">with due date {{taskDueDate}}</span> has been assigned to you.</span>
+    <span class="trail" i18n="@@userNotifications.taskAssignedPrefix">A task <em [innerHTML]="taskName"></em> </span>
+    <span class="trail" i18n="@@userNotifications.taskAssignedMiddle" *ngIf="taskDueDate">with due date {{taskDueDate}} </span>
+    <span class="trail" i18n="@@userNotifications.taskAssignedSuffix" >has been assigned to you.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.DueDateSoon">
@@ -28,11 +30,14 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.DueDateChanged">
-    <span class="trail" i18n="@@userNotifications.dueDateChanged">The task <em [innerHTML]="taskName"></em> has a new due date – {{taskDueDate}}.</span>
+    <span class="trail" i18n="@@userNotifications.dueDateChangedPrefix">The task <em [innerHTML]="taskName"></em> has a changed due date</span>
+    <span class="trail" i18n="@@userNotifications.dueDateChangedMiddle" *ngIf="taskDueDate"> – {{taskDueDate}}</span>
+    <span class="trail" i18n="@@userNotifications.dueDateChangedNoDate" *ngIf="!taskDueDate"> – no due date set</span>
+    <span class="trail" i18n="@@userNotifications.dueDateChangedSuffix">.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.StateUpdate">
-    <span class="trail" i18n="@@userNotifications.stateUpdate">The state of task <em [innerHTML]="taskName"></em> has been updated to {{taskState}}.</span>
+    <span class="trail" i18n="@@userNotifications.stateUpdate">The state of task <em [innerHTML]="taskName"></em> has been updated to <em>{{taskState}}</em>.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskUpdated">
