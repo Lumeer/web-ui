@@ -1,56 +1,49 @@
 <ng-container [ngSwitch]="notification.type">
   <ng-container *ngSwitchCase="notificationType.OrganizationShared">
-    <span i18n="@@userNotifications.organizationShared">A new organization has been shared with you.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span i18n="@@userNotifications.organizationShared">A new organization has been shared with you.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.ProjectShared">
-    <span class="trail" i18n="@@userNotifications.projectShared">A new project has been shared with you.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.projectShared">A new project has been shared with you.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.CollectionShared">
-    <span class="trail" i18n="@@userNotifications.collectionShared">A new table has been shared with you.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.collectionShared">A new table has been shared with you.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.ViewShared">
-    <span class="trail" i18n="@@userNotifications.viewShared">A new view has been shared with you.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.viewShared">A new view has been shared with you.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskAssigned">
-    <span class="trail" i18n="@@userNotifications.taskAssigned">A task <em [innerHTML]="taskName"></em> <span *ngIf="taskDueDate">with due date {{taskDueDate}}</span> has been assigned to you.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.taskAssigned">A task <em [innerHTML]="taskName"></em> <span *ngIf="taskDueDate">with due date {{taskDueDate}}</span> has been assigned to you.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.DueDateSoon">
-    <span class="trail" i18n="@@userNotifications.dueDateSoon">The task <em [innerHTML]="taskName"></em> has due date soon – {{taskDueDate}}.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.dueDateSoon">The task <em [innerHTML]="taskName"></em> has due date soon – {{taskDueDate}}.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.PastDueDate">
-    <span class="trail" i18n="@@userNotifications.pastDueDate">The task <em [innerHTML]="taskName"></em> is past due date {{taskDueDate}}.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.pastDueDate">The task <em [innerHTML]="taskName"></em> is past due date {{taskDueDate}}.</span>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="notificationType.DueDateChanged">
+    <span class="trail" i18n="@@userNotifications.dueDateChanged">The task <em [innerHTML]="taskName"></em> has a new due date – {{taskDueDate}}.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.StateUpdate">
-    <span class="trail" i18n="@@userNotifications.stateUpdate">The state of task <em [innerHTML]="taskName"></em> has been updated to {{taskState}}.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.stateUpdate">The state of task <em [innerHTML]="taskName"></em> has been updated to {{taskState}}.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskUpdated">
-    <span class="trail" i18n="@@userNotifications.taskUpdated">The task <em [innerHTML]="taskName"></em> has been updated.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.taskUpdated">The task <em [innerHTML]="taskName"></em> has been updated.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskRemoved">
-    <span class="trail" i18n="@@userNotifications.taskRemoved">The task <em [innerHTML]="taskName"></em> has been removed.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.taskRemoved">The task <em [innerHTML]="taskName"></em> has been removed.</span>
   </ng-container>
 
   <ng-container *ngSwitchCase="notificationType.TaskUnassigned">
-    <span class="trail" i18n="@@userNotifications.taskUnassigned">The task <em [innerHTML]="taskName"></em> has been unassigned from you.</span><br/>
-    <span i18n="@@userNotifications.clickHere">Click here to open it!</span>
+    <span class="trail" i18n="@@userNotifications.taskUnassigned">The task <em [innerHTML]="taskName"></em> has been unassigned from you.</span>
   </ng-container>
 </ng-container>

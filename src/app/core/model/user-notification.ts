@@ -32,6 +32,7 @@ export enum UserNotificationType {
   TaskRemoved = 'TASK_REMOVED',
   TaskUnassigned = 'TASK_UNASSIGNED',
   BulkAction = 'BULK_ACTION',
+  DueDateChanged = 'DUE_DATE_CHANGED',
 }
 
 export const UserNotificationTypeMap = {
@@ -47,6 +48,7 @@ export const UserNotificationTypeMap = {
   [UserNotificationType.TaskRemoved]: UserNotificationType.TaskRemoved,
   [UserNotificationType.TaskUnassigned]: UserNotificationType.TaskUnassigned,
   [UserNotificationType.BulkAction]: UserNotificationType.BulkAction,
+  [UserNotificationType.DueDateChanged]: UserNotificationType.DueDateChanged,
 };
 
 interface BasicUserNotification {
@@ -126,6 +128,10 @@ export interface PastDueDateUserNotification extends TaskUserNotification {
   type: UserNotificationType.PastDueDate;
 }
 
+export interface DueDateChangedUserNotification extends TaskUserNotification {
+  type: UserNotificationType.DueDateChanged;
+}
+
 export interface StateUpdateUserNotification extends TaskUserNotification {
   type: UserNotificationType.StateUpdate;
 }
@@ -154,6 +160,7 @@ export type UserNotification =
   | TaskAssignedUserNotification
   | DueDateSoonUserNotification
   | PastDueDateUserNotification
+  | DueDateChangedUserNotification
   | StateUpdateUserNotification
   | TaskUpdatedUserNotification
   | TaskRemovedUserNotification

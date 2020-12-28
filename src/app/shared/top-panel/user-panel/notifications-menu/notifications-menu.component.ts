@@ -149,6 +149,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
       case UserNotificationType.TaskAssigned:
       case UserNotificationType.DueDateSoon:
       case UserNotificationType.PastDueDate:
+      case UserNotificationType.DueDateChanged:
       case UserNotificationType.StateUpdate:
       case UserNotificationType.TaskUpdated:
       case UserNotificationType.TaskRemoved:

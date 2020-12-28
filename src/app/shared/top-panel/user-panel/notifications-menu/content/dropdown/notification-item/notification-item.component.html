@@ -1,5 +1,5 @@
 <div class="notification-grid-container dropdown-item cursor-pointer" (click)="emitOpen()">
-  <div class="date small text-muted">{{notification.createdAt | date:'shortDate' }}</div>
+  <div class="date small text-muted">{{notification.createdAt | date:'short' }}</div>
   <div class="controls">
     <i *ngIf="notification.read"
        (click)="emitRead($event, false)"
