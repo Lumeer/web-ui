@@ -30,10 +30,11 @@ import {LinkInstanceDto} from '../../dto';
 import {LinkInstanceDuplicateDto} from '../../dto/link-instance.dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {environment} from '../../../../environments/environment';
+import {AppIdService} from '../../service/app-id.service';
 
 @Injectable()
 export class ApiLinkInstanceService extends BaseService implements LinkInstanceService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(private httpClient: HttpClient, protected store$: Store<AppState>, private appId: AppIdService) {
     super(store$);
   }
 
@@ -70,7 +71,8 @@ export class ApiLinkInstanceService extends BaseService implements LinkInstanceS
   }
 
   public runRule(linkTypeId: string, linkInstanceId: string, attributeId: string): Observable<any> {
-    return this.httpClient.post<any>(`${this.apiPrefix(linkTypeId, linkInstanceId)}/rule/${attributeId}`, {});
+    const options = {headers: {correlation_id: this.appId.getAppId()}};
+    return this.httpClient.post<any>(`${this.apiPrefix(linkTypeId, linkInstanceId)}/rule/${attributeId}`, {}, options);
   }
 
   private apiPrefix(linkTypeId?: string, linkInstanceId?: string): string {
