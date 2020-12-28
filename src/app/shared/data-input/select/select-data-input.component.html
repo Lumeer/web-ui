@@ -1,4 +1,5 @@
 <div class="d-flex align-items-center h-100 p-1" #wrapperElement
+     [class.flex-wrap]="configuration?.wrapItems"
      [title]="selectedOptions | selectOptionsJoined | unescapeHtml"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
 
@@ -6,9 +7,10 @@
 
     <ng-container *ngFor="let option of selectedOptions; trackBy: trackByOption; let first = first">
         <span class="d-inline-block px-2 py-1 tag text-nowrap"
+              [class.m-1]="configuration?.wrapItems"
               [style.background]="option.background"
               [style.color]="option.background | contrastColor"
-              [class.invalid-value]="!configuration?.skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions?.length)"
+              [class.invalid-value]="!commonConfiguration?.skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions?.length)"
               [spellcheck]="false"
               [innerHTML]="option.displayValue || option.value"
               [class.ml-2]="!first">
@@ -27,7 +29,10 @@
            [class.ml-1]="selectedOptions?.length > 0"
            [spellcheck]="false"
            [ngClass]="inputClass"
-           class="border-0 w-100 h-100 bg-transparent select-input"
+           autoSizeInput
+           [class.w-100]="!configuration?.wrapItems"
+           [class.h-100]="!configuration?.wrapItems"
+           class="border-0 bg-transparent select-input"
            type="text">
 
     <options-dropdown [options]="dropdownOptions | filterDropdownOptions:text"

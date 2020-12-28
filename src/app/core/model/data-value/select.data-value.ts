@@ -43,7 +43,7 @@ export class SelectDataValue implements DataValue {
 
     if (this.options.length) {
       return this.options
-        .map(option => (this.config && this.config.displayValues ? option.displayValue || option.value : option.value))
+        .map(option => (this.config?.displayValues ? option.displayValue || option.value : option.value))
         .join(', ');
     }
     return formatUnknownDataValue(this.value);
@@ -62,7 +62,7 @@ export class SelectDataValue implements DataValue {
   }
 
   public serialize(): any {
-    if (this.config && this.config.multi) {
+    if (this.config?.multi) {
       return this.options.map(option => option.value);
     }
     return this.options.length > 0 ? this.options[0].value : null;
@@ -98,10 +98,8 @@ export class SelectDataValue implements DataValue {
       return 0;
     }
     const {options} = this.config;
-    const thisIndex = options.findIndex(option => this.options[0] && this.options[0].value === option.value);
-    const otherIndex = options.findIndex(
-      option => otherValue.options[0] && otherValue.options[0].value === option.value
-    );
+    const thisIndex = options.findIndex(option => this.options[0]?.value === option.value);
+    const otherIndex = options.findIndex(option => otherValue.options[0]?.value === option.value);
 
     return thisIndex - otherIndex;
   }
@@ -171,14 +169,14 @@ export class SelectDataValue implements DataValue {
         return values[0].value;
       case ConditionType.HasNoneOf:
       case ConditionType.NotEquals:
-        const noneOptions = ((this.config && this.config.options) || []).filter(
+        const noneOptions = (this.config?.options || []).filter(
           option => !otherOptions.some(otherOption => otherOption.value === option.value)
         );
         return noneOptions[0] && noneOptions[0].value;
       case ConditionType.IsEmpty:
         return '';
       case ConditionType.NotEmpty:
-        return this.config && this.config.options[0] && this.config.options[0].value;
+        return this.config?.options?.[0]?.value;
       default:
         return null;
     }
@@ -186,16 +184,15 @@ export class SelectDataValue implements DataValue {
 }
 
 function findOptionsByValue(config: SelectConstraintConfig, value: any): SelectConstraintOption[] {
-  const options = (config && config.options) || [];
+  const options = config?.options || [];
   const values: any[] = (isArray(value) ? value : [value]).filter(
     val => isNotNullOrUndefined(val) && String(val).trim()
   );
-  const displayValues = config && config.displayValues;
   return values
     .map(val => {
       const option = options.find(opt => String(opt.value) === String(val));
       if (option) {
-        return {...option, displayValue: displayValues ? option.displayValue : option.value};
+        return {...option, displayValue: config?.displayValues ? option.displayValue : option.value};
       }
 
       return {value: val, displayValue: val};

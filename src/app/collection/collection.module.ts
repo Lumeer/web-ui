@@ -43,9 +43,16 @@ import {HasDeletePipe} from './settings/common/rules/single-rule/has-delete.pipe
 import {AddCollectionAttributeComponent} from './settings/tab/attributes/add/add-collection-attribute.component';
 import {CollectionAttributesTableComponent} from './settings/tab/attributes/table/collection-attributes-table.component';
 import {LinkTypeRulesComponent} from './settings/tab/link-types/link-type-rules/link-type-rules.component';
+import {CollectionPurposeComponent} from './settings/tab/purpose/collection-purpose.component';
+import {CollectionPurposeContentComponent} from './settings/tab/purpose/content/collection-purpose-content.component';
+import {CollectionPurposeSelectComponent} from './settings/tab/purpose/content/select/collection-purpose-select.component';
+import {CollectionPurposeFormComponent} from './settings/tab/purpose/content/form/collection-purpose-form.component';
+import {CollectionPurposeTasksComponent} from './settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component';
+import {DataInputModule} from '../shared/data-input/data-input.module';
+import {StateListConstraintPipe} from './settings/tab/purpose/content/form/tasks/pipes/state-list-constraint.pipe';
 
 @NgModule({
-  imports: [SharedModule, CollectionRoutingModule, UsersModule],
+  imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule],
   declarations: [
     AttributeFilterPipe,
     LinkTypeFilterPipe,
@@ -67,6 +74,12 @@ import {LinkTypeRulesComponent} from './settings/tab/link-types/link-type-rules/
     AddCollectionAttributeComponent,
     CollectionAttributesTableComponent,
     LinkTypeRulesComponent,
+    CollectionPurposeComponent,
+    CollectionPurposeContentComponent,
+    CollectionPurposeSelectComponent,
+    CollectionPurposeFormComponent,
+    CollectionPurposeTasksComponent,
+    StateListConstraintPipe,
   ],
   providers: [CollectionSettingsGuard],
 })

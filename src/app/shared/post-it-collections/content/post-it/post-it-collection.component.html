@@ -78,7 +78,7 @@
            i18n-title="@@collection.button.configure"
            class="rounded-left"
            *ngIf="allowedPermissions.manage"
-           [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id, 'attributes']">
+           [routerLink]="['/o', workspace?.organizationCode, 'p', workspace?.projectCode, 'c', collection.id, 'purpose']">
           <i class="fas fa-fw fa-cog"
              aria-hidden="true">
           </i>
@@ -91,7 +91,7 @@
          class="text-danger rounded-left"
          title="Delete Table"
          i18n-title="@@collection.button.remove">
-        <i class="fas fa-fw fa-trash"
+        <i class="far fa-fw fa-trash-alt"
            aria-hidden="true">
         </i>
       </a>

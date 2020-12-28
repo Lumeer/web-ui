@@ -50,15 +50,36 @@ export interface Collection extends Resource {
 
   rules?: Rule[];
 
-  metaData?: CollectionMetadata;
+  purpose?: CollectionPurpose;
 }
+
+export interface CollectionPurpose {
+  type: CollectionPurposeType;
+  metaData: Partial<CollectionPurposeMetadata>;
+}
+
+export enum CollectionPurposeType {
+  None = 'None',
+  Tasks = 'Tasks',
+}
+
+export const collectionPurposesIcons: Record<string, string> = {
+  [CollectionPurposeType.None]: 'fal fa-table',
+  [CollectionPurposeType.Tasks]: 'fas fa-tasks',
+};
+
+export const collectionPurposesMap: Record<string, CollectionPurposeType> = {
+  [CollectionPurposeType.Tasks]: CollectionPurposeType.Tasks,
+};
 
 export interface ImportedCollection {
   collection: Collection;
   data: string;
 }
 
-export interface CollectionMetadata {
+export type CollectionPurposeMetadata = TaskPurposeMetadata;
+
+export interface TaskPurposeMetadata {
   dueDateAttributeId?: string;
   assigneeAttributeId?: string;
   stateAttributeId?: string;

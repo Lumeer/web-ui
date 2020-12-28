@@ -31,6 +31,8 @@ export interface ViewCursor {
   documentId?: string;
   linkInstanceId?: string;
   attributeId?: string;
+  sidebar?: boolean;
+  value?: any;
 }
 
 export function convertViewCursorToString(cursor: ViewCursor): string {

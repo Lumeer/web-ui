@@ -46,6 +46,7 @@ export class NotificationTextComponent implements OnChanges {
         case UserNotificationType.TaskAssigned:
         case UserNotificationType.DueDateSoon:
         case UserNotificationType.PastDueDate:
+        case UserNotificationType.DueDateChanged:
         case UserNotificationType.StateUpdate:
         case UserNotificationType.TaskUpdated:
         case UserNotificationType.TaskRemoved:

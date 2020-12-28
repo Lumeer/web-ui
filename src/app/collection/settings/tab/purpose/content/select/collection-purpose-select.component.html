@@ -1,0 +1,14 @@
+<div class="list-group list-group-horizontal py-3">
+  <a *ngFor="let item of items" class="list-group-item list-group-item-action" [class.active]="type === item.id" (click)="onSelect(item.id)">
+    <div class="text-center py-2"><i class="fa-2x" [ngClass]="item.icons[0]"></i></div>
+    <div class="text-center py-2">{{item.value}}</div>
+  </a>
+</div>
+
+<div *ngIf="type === types.None" i18n="@@collections.tab.purpose.description.generic">
+  A generic table to store any type of information you might have. The possibilities are limitless.
+</div>
+
+<div *ngIf="type === types.Tasks" i18n="@@collections.tab.purpose.description.tasks">
+  This table stores tasks. There are assignees, due dates, and states. Lumeer automatically notifies people about important changes.
+</div>

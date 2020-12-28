@@ -80,19 +80,19 @@ export function isTableCellEdited(
     return false;
   }
 
+  const tableCondition = affected ? editedCell.tableId !== column.tableId : editedCell.tableId === column.tableId;
   switch (type) {
     case TableCellType.Header:
-      const headerCondition = affected ? editedCell.tableId !== column.tableId : editedCell.tableId === column.tableId;
-      return editedCell.columnId === column.id && headerCondition;
+      return editedCell.columnId === column.id && tableCondition;
     case TableCellType.NewRow:
       return editedCell.columnId === column.id && editedCell.tableId === column.tableId;
     case TableCellType.Body:
       const bodyCondition =
         editedCell.columnId === column.id && (affected ? editedCell.rowId !== row?.id : editedCell.rowId === row?.id);
       if (column.collectionId) {
-        return editedCell.documentId === row?.documentId && bodyCondition;
+        return editedCell.documentId === row?.documentId && bodyCondition && tableCondition;
       } else {
-        return editedCell.linkId === row?.linkInstanceId && bodyCondition;
+        return editedCell.linkId === row?.linkInstanceId && bodyCondition && tableCondition;
       }
     default:
       return false;

@@ -197,30 +197,31 @@ function isTransientModified(document: DocumentModel, oldDocument: DocumentModel
 }
 
 function addOrUpdateDocument(state: DocumentsState, document: DocumentModel): DocumentsState {
-  const oldDocument = state.entities[document.id];
+  const newDocument = {...document};
+  const oldDocument = state.entities[newDocument.id];
   if (!oldDocument) {
-    return documentsAdapter.addOne(document, state);
+    return documentsAdapter.addOne(newDocument, state);
   }
 
-  if (isDocumentNewer(document, oldDocument)) {
-    if (isNullOrUndefined(document.commentsCount) && isNotNullOrUndefined(oldDocument.commentsCount)) {
-      document.commentsCount = oldDocument.commentsCount;
+  if (isDocumentNewer(newDocument, oldDocument)) {
+    if (isNullOrUndefined(newDocument.commentsCount) && isNotNullOrUndefined(oldDocument.commentsCount)) {
+      newDocument.commentsCount = oldDocument.commentsCount;
     }
-    return documentsAdapter.upsertOne(document, state);
-  } else if (isModifiedLater(document, oldDocument)) {
+    return documentsAdapter.upsertOne(newDocument, state);
+  } else if (isModifiedLater(newDocument, oldDocument)) {
     return documentsAdapter.updateOne(
       {
-        id: document.id,
+        id: newDocument.id,
         changes: {
-          updateDate: document.updateDate,
-          updatedBy: document.updatedBy,
-          commentsCount: document.commentsCount || oldDocument.commentsCount,
+          updateDate: newDocument.updateDate,
+          updatedBy: newDocument.updatedBy,
+          commentsCount: newDocument.commentsCount || oldDocument.commentsCount,
         },
       },
       state
     );
-  } else if (isTransientModified(document, oldDocument)) {
-    return documentsAdapter.updateOne({id: document.id, changes: {commentsCount: document.commentsCount}}, state);
+  } else if (isTransientModified(newDocument, oldDocument)) {
+    return documentsAdapter.updateOne({id: newDocument.id, changes: {commentsCount: newDocument.commentsCount}}, state);
   }
 
   return state;

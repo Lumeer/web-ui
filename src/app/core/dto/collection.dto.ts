@@ -29,7 +29,10 @@ export interface CollectionDto extends ResourceDto {
   favorite?: boolean;
   lastTimeUsed?: number;
   rules?: Record<string, RuleDto>;
-  metaData?: CollectionMetaDataDto;
+  purpose?: CollectionPurposeDto;
 }
 
-export type CollectionMetaDataDto = {[key: string]: any};
+export interface CollectionPurposeDto {
+  type: string;
+  metaData: any;
+}

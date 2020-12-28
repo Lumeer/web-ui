@@ -44,6 +44,7 @@ import {Attribute, Collection} from './collection';
 import {
   convertCollectionDtoToModel,
   convertCollectionModelToDto,
+  convertCollectionPurposeModelToDto,
   convertImportedCollectionModelToDto,
 } from './collection.converter';
 import {CollectionsAction, CollectionsActionType} from './collections.action';
@@ -231,6 +232,29 @@ export class CollectionsEffects {
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.update.fail', value: 'Could not update table'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public updatePurpose$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.UpdatePurpose>(CollectionsActionType.UPDATE_PURPOSE),
+    mergeMap(action => {
+      const purposeDto = convertCollectionPurposeModelToDto(action.payload.purpose);
+      return this.collectionService.updatePurpose(action.payload.collectionId, purposeDto).pipe(
+        map((dto: CollectionDto) => convertCollectionDtoToModel(dto)),
+        map(collection => new CollectionsAction.UpdatePurposeSuccess({collection})),
+        catchError(error => of(new CollectionsAction.UpdatePurposeFailure({error})))
+      );
+    })
+  );
+
+  @Effect()
+  public updatePurposeFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.UpdatePurposeFailure>(CollectionsActionType.UPDATE_PURPOSE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'collection.update.purpose.fail', value: 'Could not update table purpose'});
       return new NotificationsAction.Error({message});
     })
   );

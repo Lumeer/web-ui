@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, OnChanges, SimpleChanges} from '@angular/core';
 import {Project, TemplateMetadata} from '../../../../core/store/projects/project';
 import {View} from '../../../../core/store/views/view';
-import {AbstractControl, FormBuilder, FormGroup} from '@angular/forms';
+import {AbstractControl, FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {QueryData} from '../../../../shared/top-panel/search-box/util/query-data';
 import {Subscription} from 'rxjs';
 import {UpdateProjectService} from '../update-project.service';
@@ -28,6 +28,7 @@ import {Workspace} from '../../../../core/store/navigation/workspace';
 import {BsDatepickerConfig} from 'ngx-bootstrap/datepicker';
 import * as moment from 'moment';
 import {PublicScriptType} from './script/public-script-type';
+import {removeAllFormArrayControls} from '../../../../shared/utils/form.utils';
 
 @Component({
   selector: 'project-template-metadata',
@@ -36,7 +37,7 @@ import {PublicScriptType} from './script/public-script-type';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UpdateProjectService],
 })
-export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
+export class ProjectTemplateMetadataComponent implements OnInit, OnChanges, OnDestroy {
   @Input()
   public project: Project;
 
@@ -56,6 +57,7 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
   };
 
   public formGroup: FormGroup;
+  public editingControl: string;
 
   private subscriptions = new Subscription();
 
@@ -73,6 +75,10 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
     return <FormGroup>this.formGroup.controls.script;
   }
 
+  public get tagsFormArray(): FormArray {
+    return <FormArray>this.metadataFormGroup.controls.tags;
+  }
+
   public get defaultViewControl(): AbstractControl {
     return this.metadataFormGroup.controls.defaultView;
   }
@@ -82,6 +88,26 @@ export class ProjectTemplateMetadataComponent implements OnInit, OnDestroy {
     this.subscribeValueChanges();
 
     this.updateProjectService.setWorkspace(this.workspace);
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.project) {
+      this.updateForm();
+    }
+  }
+
+  private updateForm() {
+    const metadata = {...this.project?.templateMetadata};
+    if (metadata && this.formGroup) {
+      if (this.editingControl) {
+        delete metadata[this.editingControl];
+      }
+      this.metadataFormGroup.patchValue(metadata, {emitEvent: false});
+      if (metadata.tags) {
+        removeAllFormArrayControls(this.tagsFormArray);
+        metadata.tags.forEach(tag => this.tagsFormArray.push(new FormControl(tag)));
+      }
+    }
   }
 
   private createForm() {

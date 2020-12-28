@@ -126,8 +126,8 @@ function convertDateTimeConstraintConfigModelToDto(config: Partial<DateTimeConst
 function convertNumberConstraintConfigModelToDto(config: Partial<NumberConstraintConfig> | any): any {
   return {
     ...config,
-    minValue: config.minValue && config.minValue.toFixed(),
-    maxValue: config.maxValue && config.maxValue.toFixed(),
+    minValue: config.minValue?.toFixed(),
+    maxValue: config.maxValue?.toFixed(),
   };
 }
 

@@ -21,11 +21,9 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {createEntityAdapter, EntityState} from '@ngrx/entity';
 import {DEFAULT_WORKFLOW_ID, Workflow} from './workflow';
-import {selectWorkspace} from '../navigation/navigation.state';
+import {selectViewCursor, selectWorkspace} from '../navigation/navigation.state';
 
-export interface WorkflowsState extends EntityState<Workflow> {
-  selectedDocumentId?: string;
-}
+export interface WorkflowsState extends EntityState<Workflow> {}
 
 export const workflowsAdapter = createEntityAdapter<Workflow>({selectId: workflow => workflow.id});
 
@@ -38,7 +36,9 @@ export const selectWorkflowsDictionary = createSelector(
 );
 export const selectWorkflowById = id => createSelector(selectWorkflowsDictionary, workflows => workflows[id]);
 
-export const selectWorkflowSelectedDocumentId = createSelector(selectWorkflowsState, state => state.selectedDocumentId);
+export const selectWorkflowSelectedDocumentId = createSelector(selectViewCursor, cursor =>
+  cursor?.sidebar ? cursor.documentId : null
+);
 
 export const selectWorkflowId = createSelector(
   selectWorkspace,

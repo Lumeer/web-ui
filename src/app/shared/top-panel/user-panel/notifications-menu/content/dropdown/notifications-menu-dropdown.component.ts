@@ -27,7 +27,7 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import {UserNotification, UserNotificationType} from '../../../../../../core/model/user-notification';
+import {UserNotification} from '../../../../../../core/model/user-notification';
 import {Dictionary} from '@ngrx/entity';
 import {Organization} from '../../../../../../core/store/organizations/organization';
 import {DropdownPosition} from '../../../../../dropdown/dropdown-position';
@@ -70,7 +70,6 @@ export class NotificationsMenuDropdownComponent implements OnDestroy {
   @ViewChild(DropdownComponent)
   public dropdown: DropdownComponent;
 
-  public readonly notificationType = UserNotificationType;
   public readonly dropdownPositions = [DropdownPosition.BottomEnd];
 
   public toggleUnreadFilter(event: MouseEvent): void {
@@ -88,18 +87,15 @@ export class NotificationsMenuDropdownComponent implements OnDestroy {
 
   public navigateToTarget(notification: UserNotification) {
     this.clickNotification.next(notification);
+    this.close();
   }
 
   public open() {
-    if (this.dropdown) {
-      this.dropdown.open();
-    }
+    this.dropdown?.open();
   }
 
   public close() {
-    if (this.dropdown) {
-      this.dropdown.close();
-    }
+    this.dropdown?.close();
   }
 
   public ngOnDestroy() {

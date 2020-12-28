@@ -1,0 +1,104 @@
+<div [formGroup]="form">
+
+  <div class="form-group row m-0 mt-3">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.assignee.label">
+      Assignee
+    </label>
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <select-item [items]="collection | attributesSelectItems"
+                   [removable]="true"
+                   emptyValue="Select assignee attribute"
+                   i18n-emptyValue="@@collections.tab.purpose.assignee.select"
+                   [selectedId]="assigneeControl.value"
+                   (select)="assigneeControl.patchValue($event)"
+                   (remove)="assigneeControl.patchValue(null)">
+      </select-item>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.assignee.help">
+        Which attribute specifies who the assignee is? Works best with the <em>User</em> attribute type.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row m-0 mt-3">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.dueDate.label">
+      Due Date
+    </label>
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <select-item [items]="collection | attributesSelectItems:constraintType.DateTime"
+                   [removable]="true"
+                   emptyValue="Select due date attribute"
+                   i18n-emptyValue="@@collections.tab.purpose.dueDate.select"
+                   [selectedId]="dueDateControl.value"
+                   (select)="dueDateControl.patchValue($event)"
+                   (remove)="dueDateControl.patchValue(null)">
+      </select-item>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.dueDate.help">
+        Which attribute specifies the due date of a task? Works only with the <em>Date</em> attribute type.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row m-0 mt-3">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.state.label">
+      State
+    </label>
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <select-item class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0"
+                   [items]="collection | attributesSelectItems"
+                   [removable]="true"
+                   emptyValue="Select state attribute"
+                   i18n-emptyValue="@@collections.tab.purpose.state.select"
+                   [selectedId]="stateControl.value"
+                   (select)="stateControl.patchValue($event); stateListControl.patchValue([]);"
+                   (remove)="stateControl.patchValue(null)">
+      </select-item>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.state.help">
+        Which attribute specifies the state of a task? Works best with the <em>Selection</em> attribute type.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row m-0 mt-3"
+       *ngIf="collection?.attributes | stateListConstraint:stateControl.value:(documents$ | async):(constraintData$ | async) as stateConstraint">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.stateList.label">
+      Done States
+    </label>
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <data-input class="p-0 form-control multiline"
+                  [dataValue]="stateList$ | async | dataValue:stateConstraint"
+                  [focus]="true"
+                  [configuration]="dataInputConfiguration"
+                  [readonly]="!(stateListEditing$ | async)"
+                  [constraint]="stateConstraint"
+                  (click)="$event.preventDefault(); setStateListEditing(true)"
+                  (valueChange)="onStateListChange($event)"
+                  (save)="onStateListSave($event)"
+                  (cancel)="setStateListCancel()">
+      </data-input>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.stateList.help">
+        Which states are considered final? That means no further notifications about the task will be sent.
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group row m-0 mt-3">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.observer.label">
+      Observer
+    </label>
+    <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
+      <select-item [items]="collection | attributesSelectItems"
+                   [removable]="true"
+                   emptyValue="Select observer attribute"
+                   i18n-emptyValue="@@collections.tab.purpose.observer.select"
+                   [selectedId]="observersControl.value"
+                   (select)="observersControl.patchValue($event)"
+                   (remove)="observersControl.patchValue(null)">
+      </select-item>
+      <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.observer.help">
+        Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <em>User</em> attribute type.
+      </div>
+    </div>
+  </div>
+
+
+</div>

@@ -20,15 +20,8 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {
   CollectionSharedUserNotification,
-  DueDateSoonUserNotification,
   OrganizationSharedUserNotification,
-  PastDueDateUserNotification,
   ProjectSharedUserNotification,
-  StateUpdateUserNotification,
-  TaskAssignedUserNotification,
-  TaskRemovedUserNotification,
-  TaskUnassignedUserNotification,
-  TaskUpdatedUserNotification,
   TaskUserNotification,
   UserNotification,
   UserNotificationType,
@@ -125,8 +118,10 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   }
 
   private setNotificationRead(notification: UserNotification, read: boolean) {
-    const userNotification = {...notification, read};
-    this.store$.dispatch(new UserNotificationsAction.Update({userNotification}));
+    if (notification.read !== read) {
+      const userNotification = {...notification, read};
+      this.store$.dispatch(new UserNotificationsAction.Update({userNotification}));
+    }
   }
 
   public toggleUnreadFilter() {
@@ -149,6 +144,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
       case UserNotificationType.TaskAssigned:
       case UserNotificationType.DueDateSoon:
       case UserNotificationType.PastDueDate:
+      case UserNotificationType.DueDateChanged:
       case UserNotificationType.StateUpdate:
       case UserNotificationType.TaskUpdated:
       case UserNotificationType.TaskRemoved:
@@ -202,15 +198,11 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
     });
   }
 
-  private navigateToTask(notification: TaskUserNotification): void {
+  private navigateToTask(notification: TaskUserNotification) {
     this.getOrganization(notification.organizationId, organization => {
       if (organization) {
         const query = convertQueryModelToString({stems: [{collectionId: notification.collectionId}]});
-        const cursor = convertViewCursorToString({
-          collectionId: notification.collectionId,
-          documentId: notification.documentId,
-          attributeId: notification.taskNameAttribute,
-        });
+        const cursor = notification.documentCursor;
         const path = ['w', organization.code, notification.projectCode, 'view', Perspective.Workflow];
 
         if (this.isCurrentWorkspace(notification.organizationId, notification.projectId)) {
@@ -226,7 +218,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   }
 
   private startsWithCurrentUrl(url: string): boolean {
-    return this.currentUrl && this.currentUrl.startsWith(url);
+    return this.currentUrl?.startsWith(url);
   }
 
   private getOrganization(id: string, action: (Organization) => void) {

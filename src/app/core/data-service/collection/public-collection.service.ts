@@ -36,6 +36,7 @@ import {Role} from '../../model/role';
 import {selectCollectionById} from '../../store/collections/collections.state';
 import {convertCollectionModelToDto} from '../../store/collections/collection.converter';
 import {selectPublicProject} from '../../store/projects/projects.state';
+import {CollectionPurposeDto} from '../../dto/collection.dto';
 
 @Injectable()
 export class PublicCollectionService extends PublicPermissionService implements CollectionService {
@@ -54,8 +55,22 @@ export class PublicCollectionService extends PublicPermissionService implements 
   public updateCollection(dto: CollectionDto): Observable<CollectionDto> {
     return this.store$.pipe(
       select(selectCollectionById(dto.id)),
-      map(collection => ({...convertCollectionModelToDto(collection), ...dto})),
-      map(collection => ({...collection, version: (collection.version || 0) + 1})),
+      map(collection => ({...convertCollectionModelToDto(collection), ...dto, version: (collection.version || 0) + 1})),
+      take(1),
+      mergeMap(collection =>
+        this.isProjectWritable$().pipe(map(editable => setCollectionPermissions(collection, editable)))
+      )
+    );
+  }
+
+  public updatePurpose(collectionId: string, purpose: CollectionPurposeDto): Observable<CollectionDto> {
+    return this.store$.pipe(
+      select(selectCollectionById(collectionId)),
+      map(collection => ({
+        ...convertCollectionModelToDto(collection),
+        purpose,
+        version: (collection.version || 0) + 1,
+      })),
       take(1),
       mergeMap(collection =>
         this.isProjectWritable$().pipe(map(editable => setCollectionPermissions(collection, editable)))

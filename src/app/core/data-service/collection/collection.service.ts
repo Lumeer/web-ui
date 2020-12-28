@@ -21,11 +21,18 @@ import {Observable} from 'rxjs';
 import {AttributeDto, CollectionDto} from '../../dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {PermissionService} from '../common/permission.service';
+import {CollectionPurposeDto} from '../../dto/collection.dto';
 
 export abstract class CollectionService extends PermissionService {
   public abstract createCollection(collection: CollectionDto): Observable<CollectionDto>;
 
   public abstract updateCollection(collection: CollectionDto): Observable<CollectionDto>;
+
+  public abstract updatePurpose(
+    collectionId: string,
+    purpose: CollectionPurposeDto,
+    workspace?: Workspace
+  ): Observable<CollectionDto>;
 
   public abstract removeCollection(collectionId: string): Observable<string>;
 

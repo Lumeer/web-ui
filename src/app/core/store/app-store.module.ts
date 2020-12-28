@@ -80,6 +80,7 @@ import {ResourceCommentsEffects} from './resource-comments/resource-comments.eff
 import {modalsReducer} from './modals/modals.reducer';
 import {ModalsEffects} from './modals/modals.effects';
 import {userPermissionsReducer} from './user-permissions/user-permissions.reducer';
+import {WorkflowsEffects} from './workflows/workflows.effects';
 
 const reducers: ActionReducerMap<AppState> = {
   collections: collectionsReducer,
@@ -142,6 +143,7 @@ const effects = [
   MapsEffects,
   ResourceCommentsEffects,
   ModalsEffects,
+  WorkflowsEffects,
 ];
 
 @NgModule({

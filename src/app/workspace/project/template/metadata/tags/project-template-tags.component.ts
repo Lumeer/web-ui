@@ -17,9 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {FormArray, FormControl, FormGroup} from '@angular/forms';
 import {KeyCode} from '../../../../../shared/key-code';
+import {KanbanStemConfig} from '../../../../../core/store/kanbans/kanban';
+import {Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'project-template-tags',
@@ -27,11 +30,19 @@ import {KeyCode} from '../../../../../shared/key-code';
   styleUrls: ['./project-template-tags.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectTemplateTagsComponent {
+export class ProjectTemplateTagsComponent implements OnInit {
   @Input()
   public formGroup: FormGroup;
 
+  @Output()
+  public focus = new EventEmitter();
+
+  @Output()
+  public blur = new EventEmitter();
+
   public text = '';
+
+  public tags$: Observable<string[]>;
 
   public get tagsControl(): FormArray {
     return <FormArray>this.formGroup.controls.tags;
@@ -39,6 +50,13 @@ export class ProjectTemplateTagsComponent {
 
   public get tags(): string[] {
     return this.tagsControl.value;
+  }
+
+  public ngOnInit() {
+    this.tags$ = this.tagsControl.valueChanges.pipe(
+      startWith(this.tagsControl.value),
+      map(() => this.tagsControl.value)
+    );
   }
 
   public onInput(event: Event) {

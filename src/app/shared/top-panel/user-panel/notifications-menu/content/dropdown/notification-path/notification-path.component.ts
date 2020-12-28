@@ -20,14 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {
   CollectionSharedUserNotification,
-  DueDateSoonUserNotification,
-  PastDueDateUserNotification,
   ProjectSharedUserNotification,
-  StateUpdateUserNotification,
-  TaskAssignedUserNotification,
-  TaskRemovedUserNotification,
-  TaskUnassignedUserNotification,
-  TaskUpdatedUserNotification,
   TaskUserNotification,
   UserNotification,
   UserNotificationType,
@@ -72,6 +65,7 @@ export class NotificationPathComponent implements OnChanges {
         case UserNotificationType.TaskAssigned:
         case UserNotificationType.DueDateSoon:
         case UserNotificationType.PastDueDate:
+        case UserNotificationType.DueDateChanged:
         case UserNotificationType.StateUpdate:
         case UserNotificationType.TaskUpdated:
         case UserNotificationType.TaskRemoved:

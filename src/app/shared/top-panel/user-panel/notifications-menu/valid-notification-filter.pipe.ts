@@ -27,7 +27,7 @@ import {UserNotification, UserNotificationType} from '../../../../core/model/use
   providedIn: 'root',
 })
 export class ValidNotificationFilterPipe implements PipeTransform {
-  public transform(value: UserNotification[], args?: any): UserNotification[] {
+  public transform(value: UserNotification[]): UserNotification[] {
     return value.filter(notification => this.isValid(notification));
   }
 
@@ -41,6 +41,15 @@ export class ValidNotificationFilterPipe implements PipeTransform {
         return !!notification.collectionId && !!notification.projectId && !!notification.organizationId;
       case UserNotificationType.ViewShared:
         return !!notification.viewCode && !!notification.projectId && !!notification.organizationId;
+      case UserNotificationType.DueDateSoon:
+      case UserNotificationType.TaskAssigned:
+      case UserNotificationType.TaskUnassigned:
+      case UserNotificationType.PastDueDate:
+      case UserNotificationType.DueDateChanged:
+      case UserNotificationType.StateUpdate:
+      case UserNotificationType.TaskRemoved:
+      case UserNotificationType.TaskUpdated:
+        return !!notification.collectionId && !!notification.projectId && !!notification.organizationId;
       default:
         return false;
     }

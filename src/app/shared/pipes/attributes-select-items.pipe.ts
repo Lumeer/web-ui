@@ -21,12 +21,13 @@ import {Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../core/store/collections/collection';
 import {SelectItemModel} from '../select/select-item/select-item.model';
 import {resourceAttributesSelectItems} from '../select/select-item.utils';
+import {ConstraintType} from '../../core/model/data/constraint';
 
 @Pipe({
   name: 'attributesSelectItems',
 })
 export class AttributesSelectItemsPipe implements PipeTransform {
-  public transform(collection: Collection): SelectItemModel[] {
-    return resourceAttributesSelectItems(collection);
+  public transform(collection: Collection, type?: ConstraintType): SelectItemModel[] {
+    return resourceAttributesSelectItems(collection, type);
   }
 }

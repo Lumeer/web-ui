@@ -23,6 +23,7 @@ export interface DataInputConfiguration {
   boolean?: BooleanDataInputConfiguration;
   user?: UserDataInputConfiguration;
   action?: ActionDataInputConfiguration;
+  select?: SelectDataInputConfiguration;
 }
 
 export interface CommonDataInputConfiguration {
@@ -49,4 +50,8 @@ export interface ActionDataInputConfiguration {
 
 export interface UserDataInputConfiguration {
   allowCenterOnlyIcon?: boolean;
+}
+
+export interface SelectDataInputConfiguration {
+  wrapItems?: boolean;
 }

@@ -18,13 +18,18 @@
  */
 
 import {CollectionDto} from '../../dto';
-import {RuleDto} from '../../dto/rule.dto';
 import {ImportedCollectionDto} from '../../dto/imported-collection.dto';
-import {Rule, ruleTimingMap, ruleTypeMap} from '../../model/rule';
 import {PermissionsConverter} from '../permissions/permissions.converter';
 import {convertAttributeDtoToModel, convertAttributeModelToDto} from './attribute.converter';
-import {Collection, ImportedCollection} from './collection';
+import {
+  Collection,
+  CollectionPurpose,
+  collectionPurposesMap,
+  CollectionPurposeType,
+  ImportedCollection,
+} from './collection';
 import {convertRulesFromDto, convertRulesToDto} from '../store.utils';
+import {CollectionPurposeDto} from '../../dto/collection.dto';
 
 export function convertCollectionDtoToModel(
   dto: CollectionDto,
@@ -50,7 +55,10 @@ export function convertCollectionDtoToModel(
     lastTimeUsed: new Date(dto.lastTimeUsed),
     version: dto.version,
     rules: convertRulesFromDto(dto.rules),
-    metaData: dto.metaData,
+    purpose: {
+      type: collectionPurposesMap[dto.purpose?.type] || CollectionPurposeType.None,
+      metaData: dto.purpose?.metaData || {},
+    },
   };
 }
 
@@ -66,7 +74,7 @@ export function convertCollectionModelToDto(model: Collection): CollectionDto {
     attributes: model.attributes ? model.attributes.map(convertAttributeModelToDto) : [],
     permissions: model.permissions ? PermissionsConverter.toDto(model.permissions) : null,
     rules: convertRulesToDto(model.rules),
-    metaData: model.metaData,
+    purpose: convertCollectionPurposeModelToDto(model.purpose),
   };
 }
 
@@ -75,4 +83,8 @@ export function convertImportedCollectionModelToDto(model: ImportedCollection): 
     collection: convertCollectionModelToDto(model.collection),
     data: model.data,
   };
+}
+
+export function convertCollectionPurposeModelToDto(model: CollectionPurpose): CollectionPurposeDto {
+  return model;
 }
