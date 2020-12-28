@@ -30,11 +30,10 @@ import {ApiPermissionService} from '../common/api-permission.service';
 import {Workspace} from '../../store/navigation/workspace';
 import {environment} from '../../../../environments/environment';
 import {CollectionPurposeDto} from '../../dto/collection.dto';
-import {AppIdService} from '../../service/app-id.service';
 
 @Injectable()
 export class ApiCollectionService extends ApiPermissionService implements CollectionService {
-  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>, private appId: AppIdService) {
+  constructor(protected httpClient: HttpClient, protected store$: Store<AppState>) {
     super(httpClient, store$);
   }
 
@@ -103,8 +102,7 @@ export class ApiCollectionService extends ApiPermissionService implements Collec
   }
 
   public runRule(collectionId: string, ruleId: string): Observable<any> {
-    const options = {headers: {correlation_id: this.appId.getAppId()}};
-    return this.httpClient.post(`${this.apiPrefix()}/${collectionId}/rule/${ruleId}`, {}, options);
+    return this.httpClient.post(`${this.apiPrefix()}/${collectionId}/rule/${ruleId}`, {});
   }
 
   protected actualApiPrefix(workspace?: Workspace): string {
