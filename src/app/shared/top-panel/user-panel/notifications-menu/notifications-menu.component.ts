@@ -118,8 +118,10 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   }
 
   private setNotificationRead(notification: UserNotification, read: boolean) {
-    const userNotification = {...notification, read};
-    this.store$.dispatch(new UserNotificationsAction.Update({userNotification}));
+    if (notification.read !== read) {
+      const userNotification = {...notification, read};
+      this.store$.dispatch(new UserNotificationsAction.Update({userNotification}));
+    }
   }
 
   public toggleUnreadFilter() {
@@ -216,7 +218,7 @@ export class NotificationsMenuComponent implements OnInit, OnDestroy {
   }
 
   private startsWithCurrentUrl(url: string): boolean {
-    return this.currentUrl && this.currentUrl.startsWith(url);
+    return this.currentUrl?.startsWith(url);
   }
 
   private getOrganization(id: string, action: (Organization) => void) {
