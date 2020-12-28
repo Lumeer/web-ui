@@ -26,7 +26,7 @@ import {queryAttributePermissions} from '../../../../../../core/model/query-attr
 import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
 import {uniqueValues} from '../../../../../../shared/utils/array.utils';
-import {TABLE_ROW_HEIGHT} from '../../../../../../shared/table/model/table-model';
+import {TABLE_ROW_HEIGHT, TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
 import {generateId} from '../../../../../../shared/utils/resource.utils';
 import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
@@ -38,6 +38,8 @@ import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/da
 import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
+import {QueryStem} from '../../../../../../core/store/navigation/query/query';
+import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
@@ -118,6 +120,10 @@ export function createLinkTypeData(
     return {linkType, permissions: linkTypePermissions};
   }
   return {};
+}
+
+export function workflowTableId(stem: QueryStem, value?: string): string {
+  return [stem.collectionId, ...(stem.linkTypeIds || []), value || ''].join('');
 }
 
 export function isLinkedOrGroupedConfig(stemConfig: WorkflowStemConfig): boolean {
@@ -313,4 +319,48 @@ export function sortWorkflowTables(
   }
 
   return tables;
+}
+
+export function workflowCellToViewCursor(cell: TableCell, column: TableColumn): ViewCursor {
+  if (cell?.type === TableCellType.Body) {
+    return {
+      documentId: cell.documentId,
+      linkInstanceId: cell.linkId,
+      collectionId: column?.collectionId,
+      linkTypeId: column?.linkTypeId,
+      attributeId: column?.attribute?.id,
+      value: column?.tableId || cell?.tableId,
+    };
+  }
+
+  return null;
+}
+
+export function viewCursorToWorkflowCell(cursor: ViewCursor, tables: TableModel[]): TableCell {
+  let table: TableModel;
+  if (cursor.value) {
+    table = tables.find(t => t.id === cursor.value);
+  }
+  if (!table && cursor.collectionId) {
+    table = tables.find(
+      t => t.collectionId === cursor.collectionId && t.rows.some(r => r.documentId === cursor.documentId)
+    );
+  }
+
+  if (table) {
+    const row = cursor.documentId && table.rows.find(r => r.documentId === cursor.documentId);
+    const column = cursor.attributeId && table.columns.find(c => c.attribute?.id === cursor.attributeId);
+    if (row && column) {
+      return {
+        type: TableCellType.Body,
+        documentId: cursor.documentId,
+        linkId: cursor.linkInstanceId,
+        rowId: row.id,
+        tableId: table.id,
+        columnId: column.id,
+      };
+    }
+  }
+
+  return null;
 }

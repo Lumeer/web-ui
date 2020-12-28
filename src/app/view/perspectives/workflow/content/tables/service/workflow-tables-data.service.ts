@@ -31,7 +31,7 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {DocumentsAction} from '../../../../../../core/store/documents/documents.action';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../../../../core/store/link-instances/link-instances.action';
-import {map, mergeMap, take} from 'rxjs/operators';
+import {distinctUntilChanged, filter, map, mergeMap, skip, take} from 'rxjs/operators';
 import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
@@ -80,7 +80,7 @@ import {
 import {WorkflowTable} from '../../../model/workflow-table';
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {queryStemsAreSame} from '../../../../../../core/store/navigation/query/query.util';
-import {isArray, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
+import {deepObjectsEquals, isArray, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
 import {
   selectWorkflowId,
@@ -103,12 +103,15 @@ import {
   isWorkflowStemConfigGroupedByResourceType,
   PendingRowUpdate,
   sortWorkflowTables,
+  viewCursorToWorkflowCell,
+  workflowTableId,
 } from './workflow-utils';
 import {selectLinkInstanceById} from '../../../../../../core/store/link-instances/link-instances.state';
 import {getOtherDocumentIdFromLinkInstance} from '../../../../../../core/store/link-instances/link-instance.utils';
 import {Observable} from 'rxjs';
 import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
+import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 
 @Injectable()
 export class WorkflowTablesDataService {
@@ -128,6 +131,15 @@ export class WorkflowTablesDataService {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
     );
+    this.stateService.selectedCell$
+      .pipe(
+        skip(1),
+        distinctUntilChanged((a, b) => deepObjectsEquals(a, b))
+      )
+      .subscribe(cell => {
+        const column = cell && this.stateService.findTableColumn(cell.tableId, cell.columnId);
+        this.store$.dispatch(new WorkflowsAction.SetSelectedCell({cell, column}));
+      });
   }
 
   private formatWorkflowValue(
@@ -208,6 +220,7 @@ export class WorkflowTablesDataService {
     );
     actions.forEach(action => this.store$.dispatch(action));
     this.stateService.setTables(tables);
+    this.checkInitialSelection(tables);
   }
 
   public createTablesAndSyncActions(
@@ -300,7 +313,7 @@ export class WorkflowTablesDataService {
         if (aggregatedData.items.length) {
           for (const aggregatedDataItem of aggregatedData.items) {
             const title = aggregatedDataItem.value?.toString() || '';
-            const tableId = collection.id + title;
+            const tableId = workflowTableId(stemConfig.stem, title);
             const titleDataValue = constraint.createDataValue(title, constraintData);
             const titleDataResources = aggregatedDataItem.dataResources;
             for (const childItem of aggregatedDataItem.children || []) {
@@ -357,7 +370,7 @@ export class WorkflowTablesDataService {
             }
           }
         } else {
-          const tableId = collection.id;
+          const tableId = workflowTableId(stemConfig.stem);
 
           const {rows, newRow} = this.createRows(
             tableId,
@@ -887,8 +900,9 @@ export class WorkflowTablesDataService {
     }
   }
 
-  public showRowDocumentDetail(row: TableRow) {
-    this.store$.dispatch(new WorkflowsAction.SetOpenedDocument({documentId: row.documentId}));
+  public showRowDocumentDetail(row: TableRow, cell?: TableCell) {
+    const column = cell && this.stateService.findTableColumn(cell.tableId, cell.columnId);
+    this.store$.dispatch(new WorkflowsAction.SetOpenedDocument({documentId: row.documentId, cell, column}));
   }
 
   public showAttributeType(column: TableColumn) {
@@ -1196,8 +1210,11 @@ export class WorkflowTablesDataService {
       if (opened) {
         const row = this.stateService.findTableRow(cell.tableId, cell.rowId);
         if (row) {
-          this.showRowDocumentDetail(row);
+          this.showRowDocumentDetail(row, cell);
         }
+        this.stateService.setSelectedCell({...cell});
+      } else {
+        this.stateService.setSelectedCell({...cell});
       }
     });
   }
@@ -1247,5 +1264,22 @@ export class WorkflowTablesDataService {
       const value = row.data?.[column.id];
       this.copyValueService.copy(value);
     }
+  }
+
+  private checkInitialSelection(tables: WorkflowTable[]) {
+    this.store$
+      .pipe(
+        select(selectViewCursor),
+        take(1),
+        filter(cursor => !!cursor)
+      )
+      .subscribe(cursor => {
+        if (!this.stateService.isSelected() && !this.stateService.isEditing()) {
+          const cell = viewCursorToWorkflowCell(cursor, tables);
+          if (cell) {
+            this.stateService.setSelectedCell(cell);
+          }
+        }
+      });
   }
 }

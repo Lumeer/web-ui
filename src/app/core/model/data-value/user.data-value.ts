@@ -86,7 +86,7 @@ export class UserDataValue implements DataValue {
       return this.users.map(user => user.email);
     }
 
-    return this.users?.[0]?.email;
+    return this.users?.[0]?.email || null;
   }
 
   public isValid(ignoreConfig?: boolean): boolean {

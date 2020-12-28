@@ -1155,7 +1155,7 @@ export class TablesEffects {
     mergeMap(action => {
       const {cursor} = action.payload;
       return this.store$.pipe(
-        select(selectTableById(cursor && cursor.tableId)),
+        select(selectTableById(cursor?.tableId)),
         take(1),
         map(table => new NavigationAction.SetViewCursor({cursor: createViewCursorFromTableCursor(cursor, table)}))
       );

@@ -21,16 +21,24 @@ import {ViewCursor} from './view-cursor';
 
 export interface ShortenedViewCursor {
   c?: string; // collectionId
+  t?: string; // linkTypeId
   d?: string; // documentId
+  l?: string; // linkInstanceId
   a?: string; // attributeId
+  s?: boolean; // sidebar
+  v?: any; // value
 }
 
 export function shortenViewCursor(cursor: ViewCursor): ShortenedViewCursor {
   return (
     cursor && {
       c: cursor.collectionId,
+      t: cursor.linkTypeId,
       d: cursor.documentId,
+      l: cursor.linkInstanceId,
       a: cursor.attributeId,
+      s: cursor.sidebar,
+      v: cursor.value,
     }
   );
 }
@@ -39,8 +47,12 @@ export function prolongViewCursor(cursor: ShortenedViewCursor): ViewCursor {
   return (
     cursor && {
       collectionId: cursor.c,
+      linkTypeId: cursor.t,
       documentId: cursor.d,
       attributeId: cursor.a,
+      linkInstanceId: cursor.l,
+      sidebar: cursor.s,
+      value: cursor.v,
     }
   );
 }

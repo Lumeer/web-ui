@@ -102,10 +102,12 @@ export function hex2rgba(hex: string, opacity: number): string {
 }
 
 export function clickedInsideElement(event: MouseEvent, tagName: string): boolean {
-  const paths = (event as any).path as HTMLElement[];
-  for (const element of paths) {
-    if (element?.tagName?.toUpperCase() === tagName.toUpperCase()) {
-      return true;
+  const paths = (<any>event).path as HTMLElement[];
+  if (paths) {
+    for (const element of paths) {
+      if (element?.tagName?.toUpperCase() === tagName.toUpperCase()) {
+        return true;
+      }
     }
   }
   return false;

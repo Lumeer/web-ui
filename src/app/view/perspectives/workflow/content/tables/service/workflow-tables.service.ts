@@ -104,7 +104,7 @@ export class WorkflowTablesService {
         });
         break;
       case RowMenuId.Detail:
-        this.dataService.showRowDocumentDetail(row);
+        this.onRowDetail(row);
         break;
       case RowMenuId.Copy:
         this.dataService.copyRowValue(row, column);
@@ -120,6 +120,7 @@ export class WorkflowTablesService {
 
   public onRowDetail(row: TableRow) {
     this.dataService.showRowDocumentDetail(row);
+    this.stateService.resetSelectedCell();
   }
 
   public onColumnHiddenMenuSelected(columns: TableColumn[]) {
@@ -272,7 +273,6 @@ export class WorkflowTablesService {
   }
 
   public onCellClick(cell: TableCell) {
-    this.stateService.setSelectedCell({...cell});
     this.dataService.onCellClick(cell);
   }
 

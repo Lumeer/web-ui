@@ -40,10 +40,6 @@ export function workflowsReducer(
         {id: action.payload.workflowId, changes: {config: action.payload.config}},
         state
       );
-    case WorkflowsActionType.RESET_OPENED_DOCUMENT:
-      return {...state, selectedDocumentId: undefined};
-    case WorkflowsActionType.SET_OPENED_DOCUMENT:
-      return {...state, selectedDocumentId: action.payload.documentId};
     case WorkflowsActionType.CLEAR:
       return initialWorkflowsState;
     default:

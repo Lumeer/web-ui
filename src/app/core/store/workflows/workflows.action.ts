@@ -20,6 +20,8 @@
 import {Action} from '@ngrx/store';
 import {Workflow, WorkflowConfig} from './workflow';
 import {QueryStem} from '../navigation/query/query';
+import {TableCell} from '../../../shared/table/model/table-model';
+import {TableColumn} from '../../../shared/table/model/table-column';
 
 export enum WorkflowsActionType {
   ADD_KANBAN = '[Workflow] Add workflow',
@@ -30,6 +32,7 @@ export enum WorkflowsActionType {
   SET_TABLE_HEIGHT = '[Workflow] Set table height',
   SET_OPENED_DOCUMENT = '[Workflow] Set opened document',
   RESET_OPENED_DOCUMENT = '[Workflow] Reset opened document',
+  SET_SELECTED_CELL = '[Workflow] Set selected cell',
 
   CLEAR = '[Workflow] Clear',
 }
@@ -78,7 +81,13 @@ export namespace WorkflowsAction {
   export class SetOpenedDocument implements Action {
     public readonly type = WorkflowsActionType.SET_OPENED_DOCUMENT;
 
-    public constructor(public payload: {documentId: string}) {}
+    public constructor(public payload: {documentId: string; cell?: TableCell; column?: TableColumn}) {}
+  }
+
+  export class SetSelectedCell implements Action {
+    public readonly type = WorkflowsActionType.SET_SELECTED_CELL;
+
+    public constructor(public payload: {cell?: TableCell; column?: TableColumn}) {}
   }
 
   export class ResetOpenedDocument implements Action {
