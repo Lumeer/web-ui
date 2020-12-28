@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {SelectItemModel} from '../../../../../../shared/select/select-item/select-item.model';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
@@ -26,6 +26,7 @@ import {collectionPurposesIcons, CollectionPurposeType} from '../../../../../../
 @Component({
   selector: 'collection-purpose-select',
   templateUrl: './collection-purpose-select.component.html',
+  styleUrls: ['collection-purpose-select.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionPurposeSelectComponent implements OnInit {
@@ -34,6 +35,8 @@ export class CollectionPurposeSelectComponent implements OnInit {
 
   @Output()
   public typeChange = new EventEmitter<CollectionPurposeType>();
+
+  public readonly types = CollectionPurposeType;
 
   public items: SelectItemModel[];
 

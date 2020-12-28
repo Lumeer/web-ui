@@ -977,15 +977,37 @@
           <context context-type="sourcefile">app/collection/settings/tab/attributes/add/add-collection-attribute.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.type.label" datatype="html">
-        <source>
-      Purpose
-    </source><target state="final">
-      Purpose
-    </target>
+      </trans-unit><trans-unit id="collections.tab.purpose.heading" datatype="html">
+        <source>What best describes your intentions?</source><target state="final">What best describes your intentions?</target>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/collection-purpose-content.component.html</context>
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/collection-purpose.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.subHeading" datatype="html">
+        <source>Lumeer provides you most help when he understands what do you plan to store in the table.</source><target state="final">Lumeer provides you most help when he understands what do you plan to store in the table.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/collection-purpose.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.description.generic" datatype="html">
+        <source>
+  A generic table to store any type of information you might have. The possibilities are limitless.
+</source><target state="final">
+  A generic table to store any type of information you might have. The possibilities are limitless.
+</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.description.tasks" datatype="html">
+        <source>
+  This table stores tasks. There are assignees, due dates, and states. Lumeer automatically notifies people about important changes.
+</source><target state="final">
+  This table stores tasks. There are assignees, due dates, and states. Lumeer automatically notifies people about important changes.
+</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/select/collection-purpose-select.component.html</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.purpose.assignee.label" datatype="html">
         <source>
@@ -1003,21 +1025,35 @@
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
+      </trans-unit><trans-unit id="collections.tab.purpose.assignee.help" datatype="html">
+        <source>
+        Which attribute specifies who the assignee is? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
+      </source><target state="final">
+        Which attribute specifies who the assignee is? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
+      </target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
       </trans-unit><trans-unit id="collections.tab.purpose.dueDate.label" datatype="html">
         <source>
       Due Date
     </source><target state="final">
       Due Date
     </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">19</context>
-        </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.dueDate.select" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">23</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.dueDate.select" datatype="html">
         <source>Select due date attribute</source><target state="final">Select due date attribute</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">29</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.dueDate.help" datatype="html">
+        <source>
+        Which attribute specifies the due date of a task? Works only with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Date<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
+      </source><target state="final">
+        Which attribute specifies the due date of a task? Works only with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Date<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
+      </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.purpose.state.label" datatype="html">
         <source>
@@ -1025,25 +1061,36 @@
     </source><target state="final">
       State
     </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.state.select" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">42</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.state.select" datatype="html">
         <source>Select state attribute</source><target state="final">Select state attribute</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.state.help" datatype="html">
+        <source>
+        Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
+      </source><target state="final">
+        Which attribute specifies the state of a task? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>Selection<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
+      </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.purpose.stateList.label" datatype="html">
         <source>
-      Done states
+      Done States
     </source><target state="final">
-      Done states
+      Done States
     </target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">63</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.stateList.help" datatype="html">
+        <source>
+        Which states are considered final? That means no further notifications about the task will be sent.
+      </source><target state="final">
+        Which states are considered final? That means no further notifications about the task will be sent.
+      </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.purpose.observer.label" datatype="html">
         <source>
@@ -1051,15 +1098,19 @@
     </source><target state="final">
       Observer
     </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-      </trans-unit><trans-unit id="collections.tab.purpose.observer.select" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">85</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.select" datatype="html">
         <source>Select observer attribute</source><target state="final">Select observer attribute</target>
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="collections.tab.purpose.observer.help" datatype="html">
+        <source>
+        Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
+      </source><target state="final">
+        Which attribute specifies who, in addition to the assignee, should be notified about the tasks updates? Works best with the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/>User<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> attribute type.
+      </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">97</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.attributes.header" datatype="html">
         <source>Existing attributes</source><target state="final">Existing attributes</target>

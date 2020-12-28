@@ -64,7 +64,7 @@ export enum CollectionPurposeType {
 }
 
 export const collectionPurposesIcons: Record<string, string> = {
-  [CollectionPurposeType.None]: 'fas fa-times',
+  [CollectionPurposeType.None]: 'fal fa-table',
   [CollectionPurposeType.Tasks]: 'fas fa-tasks',
 };
 

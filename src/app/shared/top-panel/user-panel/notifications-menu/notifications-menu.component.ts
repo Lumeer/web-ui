@@ -20,15 +20,8 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {
   CollectionSharedUserNotification,
-  DueDateSoonUserNotification,
   OrganizationSharedUserNotification,
-  PastDueDateUserNotification,
   ProjectSharedUserNotification,
-  StateUpdateUserNotification,
-  TaskAssignedUserNotification,
-  TaskRemovedUserNotification,
-  TaskUnassignedUserNotification,
-  TaskUpdatedUserNotification,
   TaskUserNotification,
   UserNotification,
   UserNotificationType,

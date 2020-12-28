@@ -1,7 +1,7 @@
 <form [formGroup]="form">
-  <div class="form-group row m-0 mt-4">
-    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.type.label">
-      Purpose
+  <div class="form-group row m-0 mb-4">
+    <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label">
+      &nbsp;
     </label>
     <collection-purpose-select class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0" [type]="typeControl.value"
                                (typeChange)="typeControl.setValue($event)">

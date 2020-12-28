@@ -20,14 +20,7 @@
 import {ChangeDetectionStrategy, Component, Input, SimpleChanges} from '@angular/core';
 import {
   CollectionSharedUserNotification,
-  DueDateSoonUserNotification,
-  PastDueDateUserNotification,
   ProjectSharedUserNotification,
-  StateUpdateUserNotification,
-  TaskAssignedUserNotification,
-  TaskRemovedUserNotification,
-  TaskUnassignedUserNotification,
-  TaskUpdatedUserNotification,
   TaskUserNotification,
   UserNotification,
   UserNotificationType,
