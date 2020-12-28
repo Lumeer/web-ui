@@ -100,8 +100,8 @@ export class BlocklyFormComponent implements OnInit {
     this.linkTypes$ = this.store$.select(selectAllLinkTypes);
     if (this.collection) {
       this.variables = [
-        {name: 'oldDocument', collectionId: this.collection.id},
-        {name: 'newDocument', collectionId: this.collection.id},
+        {name: 'oldRecord', collectionId: this.collection.id},
+        {name: 'newRecord', collectionId: this.collection.id},
       ];
     }
     if (this.linkType) {

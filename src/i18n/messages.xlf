@@ -208,24 +208,6 @@
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-      </trans-unit><trans-unit id="message.loading" datatype="html">
-        <source>Loading...</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
-          <context context-type="linenumber">58</context>
-        </context-group>
       </trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
         <source>Blockly Source Code</source>
         <context-group purpose="location">
@@ -514,25 +496,25 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="4608931d14dacf46c6e70c357d1bb3f9e62b6043" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {All} =3 {All} =4 {All} other {All} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit><trans-unit id="69f13ce4389d17c6a63e46717c0692901221b2eb" datatype="html">
         <source>{VAR_PLURAL, plural, =2 {Comments} =3 {Comments} =4 {Comments} other {Comments} }</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.activity.contact" datatype="html">
         <source>Audit log is available in the <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em&gt;"/>Enterprise edition<x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em&gt;"/>. Please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact support<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data-resource-detail.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit><trans-unit id="count.of" datatype="html">
         <source>of</source>
@@ -660,6 +642,24 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/public-project-message/public-project-message.component.html</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="message.loading" datatype="html">
+        <source>Loading...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-editor/blockly-editor.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/loading-indicator/loading-indicator.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/create-project/templates/empty/empty-templates.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/search/all/search-all.component.html</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit><trans-unit id="button.help" datatype="html">
         <source>Help</source>
@@ -966,88 +966,90 @@
         </context-group>
         <note priority="1" from="description">auth.redirect</note>
       </trans-unit><trans-unit id="agreement.welcome.message" datatype="html">
-        <source>Welcome to Lumeer! This is your first login. Please accept the terms and subscribe to our Newsletter before using the application. Thank you!</source>
+        <source>Welcome to Lumeer! This is your first login. Please accept
+      the terms and subscribe to our Newsletter before using the application. Thank you!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
       </trans-unit><trans-unit id="agreement.welcome.newsletterCheck" datatype="html">
-        <source>By skipping the Newsletter, you miss a lot of valuable information, free ebooks and guides. Are you sure you want to continue?</source>
+        <source>By skipping the Newsletter, you miss a lot of
+      valuable information, free ebooks and guides. Are you sure you want to continue?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">8</context>
+          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="label.terms.start" datatype="html">
         <source>I have read</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit><trans-unit id="termsOfService" datatype="html">
         <source>Terms of Service</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit><trans-unit id="and" datatype="html">
         <source>and</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">26</context>
         </context-group>
       </trans-unit><trans-unit id="privacyPolicy" datatype="html">
         <source>Privacy Policy</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">29</context>
         </context-group>
       </trans-unit><trans-unit id="label.terms.end" datatype="html">
         <source>and I agree to them.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="label.newsletter.secondChance" datatype="html">
         <source>Please subscribe me to the Newsletter with all its benefits!<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit><trans-unit id="label.newsletter.start" datatype="html">
         <source>Send me free ebooks and materials on:<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="label.newsletter.end" datatype="html">
         <source>increasing <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>revenue<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, saving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>time<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, improving <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>communication<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>efficiency<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> via a Newsletter.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit><trans-unit id="label.newsletter.termsStart" datatype="html">
         <source>See </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit><trans-unit id="dpa" datatype="html">
         <source>Data Processing Agreement</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">50</context>
         </context-group>
       </trans-unit><trans-unit id="label.newsletter.termsEnd" datatype="html">
         <source>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit><trans-unit id="button.continue" datatype="html">
         <source>Continue</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/agreement/agreement.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/auth/session-expired/session-expired.component.html</context>
@@ -1343,9 +1345,7 @@
           <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.tabs.links" datatype="html">
-        <source>
-      Links
-    </source>
+        <source>Links</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/detail-tabs/detail-tabs.component.html</context>
           <context context-type="linenumber">18</context>
@@ -5671,6 +5671,122 @@
         <source>Could not remove the view from favorites</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/views/views.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.createDocumentBlock" datatype="html">
+        <source>Creates a new record. Assign it to a variable to change its attributes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
+        <source>Gets current date as object for further function calls.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/current-date-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.createUserBlock" datatype="html">
+        <source>Get current user email.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/current-user-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.dateNowBlock" datatype="html">
+        <source>Gets current date as ISO string for storage in date/time attributes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-now-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.dateToMsBlock" datatype="html">
+        <source>Converts date object to milliseconds since epoch (Unix time).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-to-ms-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.forEachDocumentBlock" datatype="html">
+        <source>Loops over all records in the given list.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/for-each-document-array-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.forEachLinkBlock" datatype="html">
+        <source>Loops over all links in the given list.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/for-each-link-array-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.formatDateBlock" datatype="html">
+        <source>Formats time in milliseconds since epoch (Unix time) using the given format string a locale. Results in a string.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/format-date-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.getAttributeBlock" datatype="html">
+        <source>Gets the value of an attribute in the given record.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.getLinkAttributeBlock" datatype="html">
+        <source>Gets the value of an attribute in the given link.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.msToDateBlock" datatype="html">
+        <source>Converts milliseconds since epoch (Unix time) to an ISO date string suitable for storing in a date/time attributes.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/ms-to-date-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.msToUnitBlock" datatype="html">
+        <source>Converts time in milliseconds or a duration attribute to the given time unit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/ms-to-unit-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.parseDateBlock" datatype="html">
+        <source>Parses a string date using given format returning milliseconds since epoch (Unix time).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/parse-date-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.sequenceBlock" datatype="html">
+        <source>Gets another value from the given sequence aligned to the given number of digits.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/sequence-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.setAttributeBlock" datatype="html">
+        <source>Sets the value of an attribute in the given record.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/set-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.setLinkAttributeBlock" datatype="html">
+        <source>Sets the value of an attribute in the given link.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/set-link-attribute-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
