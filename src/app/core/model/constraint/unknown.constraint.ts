@@ -34,8 +34,7 @@ import {ConditionType} from '../attribute-filter';
 export class UnknownConstraint implements Constraint {
   public readonly type = ConstraintType.Unknown;
   public readonly config = {};
-  public readonly isTextRepresentation = true;
-  public readonly isDirectlyEditable = false;
+  public readonly allowEditFunction = true;
 
   public createDataValue(value: any): UnknownDataValue {
     return new UnknownDataValue(value);

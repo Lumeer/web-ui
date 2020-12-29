@@ -19,7 +19,7 @@
           [ruleNames]="data.ruleNames"
           [originalRuleName]="rule.name"
           (onCancelNewRule)="onCancelRuleEdit(rule)"
-          (onSaveRule)="onSaveRule(data.collection, idx, $event)">
+          (onSaveRule)="onSaveRule(data.collection, $event)">
         </add-rule-form>
         <single-rule
           *ngIf="!data.editingRules[rule.id]"
@@ -38,7 +38,7 @@
           [ruleIndex]="idx"
           [ruleNames]="data.ruleNames"
           (onCancelNewRule)="onCancelNewRule($event)"
-          (onSaveRule)="onSaveRule(data.collection, idx, $event)">
+          (onSaveRule)="onSaveRule(data.collection, $event)">
         </add-rule-form>
       </li>
 

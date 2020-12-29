@@ -51,6 +51,8 @@ import {CreateProjectModalComponent} from './create-project/create-project-modal
 import {CopyProjectModalComponent} from './copy-project/copy-project-modal.component';
 import {OrganizationsAction} from '../../core/store/organizations/organizations.action';
 import {ModalsAction} from '../../core/store/modals/modals.action';
+import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
+import {findAttribute} from '../../core/store/collections/collection.util';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -166,10 +168,12 @@ export class ModalService {
     combineLatest([this.store$.pipe(select(selectServiceLimitsByWorkspace)), attributesResourceObservable])
       .pipe(first())
       .subscribe(([limits, attributesResource]) => {
-        const functions = (attributesResource.attributes || []).filter(
-          attr => attr.id !== attributeId && !!attr.function?.js
-        ).length;
-        if (limits?.functionsPerCollection !== -1 && functions >= limits?.functionsPerCollection) {
+        const functions = (attributesResource.attributes || []).filter(attr => attributeHasFunction(attr)).length;
+        const hasAnyFunction = attributeHasAnyFunction(
+          findAttribute(attributesResource?.attributes, attributeId),
+          attributesResource?.rules
+        );
+        if (!hasAnyFunction && limits?.functionsPerCollection !== -1 && functions >= limits?.functionsPerCollection) {
           this.notifyFunctionsLimit();
         } else {
           this.showAttributeFunctionDialog(attributeId, collectionId, linkTypeId);

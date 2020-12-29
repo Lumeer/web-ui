@@ -30,8 +30,8 @@ export function linkTypesReducer(
     case LinkTypesActionType.GET_SUCCESS:
       return addLinkTypes(state, action.payload.linkTypes);
     case LinkTypesActionType.CREATE_SUCCESS:
-      return addOrUpdateLinkType(state, action.payload.linkType);
     case LinkTypesActionType.UPDATE_SUCCESS:
+    case LinkTypesActionType.UPSERT_RULE_SUCCESS:
       return addOrUpdateLinkType(state, action.payload.linkType);
     case LinkTypesActionType.UPDATE_INTERNAL:
       return updateLinkType(state, action.payload.linkType);

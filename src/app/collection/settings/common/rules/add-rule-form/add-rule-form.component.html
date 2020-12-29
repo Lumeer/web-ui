@@ -49,6 +49,7 @@
         </div>
         <select-item class="d-inline-block ml-3"
                      [items]="typeItems"
+                     [fitParent]="false"
                      [selectedId]="typeControl.value"
                      (select)="typeControl.setValue($event)"
                      [removable]="false">

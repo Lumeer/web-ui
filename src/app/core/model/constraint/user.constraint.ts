@@ -34,7 +34,7 @@ import {ConditionType} from '../attribute-filter';
 
 export class UserConstraint implements Constraint {
   public readonly type = ConstraintType.User;
-  public readonly isTextRepresentation = false;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: UserConstraintConfig) {}
 

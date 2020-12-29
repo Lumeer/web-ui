@@ -39,7 +39,7 @@ import {
 } from './constraint-config/select/select-constraint.utils';
 import {UserConstraintFormControl} from './constraint-config/user/user-constraint-form-control';
 import {DurationConstraintFormControl} from './constraint-config/duration/duration-constraint-form-control';
-import {Attribute} from '../../../../core/store/collections/collection';
+import {Attribute, AttributeFunction} from '../../../../core/store/collections/collection';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Constraint} from '../../../../core/model/constraint';
 import {createConstraint} from '../../../utils/constraint/create-constraint';
@@ -134,7 +134,8 @@ export class AttributeTypeFormComponent implements OnChanges {
     const type = constraintTypesMap[this.typeControl.value];
     const config = this.createConstraintConfig(type);
     const constraint: Constraint = type ? createConstraint(type, config) : null;
-    return {...this.attribute, constraint};
+    const attributeFunction: AttributeFunction = constraint.allowEditFunction ? this.attribute?.function : null;
+    return {...this.attribute, constraint, function: attributeFunction};
   }
 
   private createConstraintConfig(type: ConstraintType): ConstraintConfig {

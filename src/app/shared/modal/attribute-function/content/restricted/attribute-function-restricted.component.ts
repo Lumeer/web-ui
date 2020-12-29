@@ -17,16 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Attribute} from '../../core/store/collections/collection';
-import {attributeHasFunction, attributeHasRuleFunction} from '../utils/attribute.utils';
-import {Rule} from '../../core/model/rule';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 
-@Pipe({
-  name: 'attributeFunctionDefined',
+@Component({
+  selector: 'attribute-function-restricted',
+  templateUrl: './attribute-function-restricted.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AttributeFunctionDefinedPipe implements PipeTransform {
-  public transform(attribute: Attribute, rules?: Rule[]): boolean {
-    return attributeHasFunction(attribute) || attributeHasRuleFunction(attribute, rules);
-  }
-}
+export class AttributeFunctionRestrictedComponent {}

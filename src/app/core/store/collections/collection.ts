@@ -40,6 +40,8 @@ export interface AttributeFunction {
   errorReport?: string;
   timestamp?: number;
   editable?: boolean;
+  dryRun?: boolean;
+  dryRunResult?: string;
 }
 
 export interface Collection extends Resource {

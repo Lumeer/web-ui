@@ -34,7 +34,7 @@ import {ConditionType} from '../attribute-filter';
 
 export class LinkConstraint implements Constraint {
   public readonly type = ConstraintType.Link;
-  public readonly isTextRepresentation = false;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: LinkConstraintConfig) {}
 

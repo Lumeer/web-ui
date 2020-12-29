@@ -35,6 +35,7 @@ import {ConditionType} from '../attribute-filter';
 export class AddressConstraint implements Constraint {
   public readonly type = ConstraintType.Address;
   public readonly isTextRepresentation = true;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: AddressConstraintConfig) {}
 

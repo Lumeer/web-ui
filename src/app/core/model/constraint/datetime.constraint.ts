@@ -28,6 +28,7 @@ import {ConditionType} from '../attribute-filter';
 export class DateTimeConstraint implements Constraint {
   public readonly type = ConstraintType.DateTime;
   public readonly isTextRepresentation = true;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: DateTimeConstraintConfig) {}
 

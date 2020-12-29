@@ -35,6 +35,7 @@ import {ConditionType} from '../attribute-filter';
 export class DurationConstraint implements Constraint {
   public readonly type = ConstraintType.Duration;
   public readonly isTextRepresentation = true;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: DurationConstraintConfig) {}
 

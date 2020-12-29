@@ -1,70 +1,28 @@
 <modal-wrapper
-  *ngIf="{collection: collection$ | async, linkType: linkType$ | async,  attribute: attribute$ | async} as data"
+  *ngIf="{collection: collection$ | async, linkType: linkType$ | async,  attribute: attribute$ | async, function: attributeFunction$ | async} as data"
   [dialogType]="dialogType.Primary"
   [performingAction]="performingAction$ | async"
   [customHeader]="true"
-  [showSubmit]="!!data.attribute"
+  [showSubmit]="data.attribute?.constraint?.allowEditFunction || !!data.function"
   (onSubmit)="onSubmit(data.attribute)"
   (onClose)="hideDialog()">
 
-  <div class="custom-header p-3 bg-success text-white w-100 rounded-top">
-    <h5 class="modal-title break-all">
-      <span i18n="@@dialog.attribute.function.title">Configure function of</span>
-      <icons-presenter
-        *ngIf="(data.collection || data.linkType) | resourceIconsColors as iconColors"
-        class="ml-2"
-        [colors]="iconColors.colors"
-        [icons]="iconColors.icons">
-      </icons-presenter>
-      <span class="ml-1">{{data.attribute?.name}}</span>
-    </h5>
-  </div>
+  <attribute-function-header class="custom-header p-0 d-block w-100"
+                             [resource]="data.collection || data.linkType"
+                             [attribute]="data.attribute">
+  </attribute-function-header>
 
-  <div class="body p-4" *ngIf="data.attribute; else noAttribute">
-    <div class="d-flex pb-1">
-      <div class="flex-grow-1 text-right">
-        <div class="custom-control custom-checkbox mr-3 d-inline-block">
-          <input class="custom-control-input" type="checkbox" [checked]="editable$ | async" (change)="onEditableChange($event.target.checked)" id="editable">
-          <label class="custom-control-label" for="editable" i18n="@@dialog.attribute.function.editable">
-            Allow manual value overwrite
-          </label>
-        </div>
-        <blockly-debugger-remote
-          (displayEvent)="display($event)"
-          [displayButtons]="debugButtons">
-        </blockly-debugger-remote>
-      </div>
-    </div>
-    <blockly-debugger
-      (displayEvent)="display($event)"
-      [blocklyJs]="js"
-      [blocklyResultTimestamp]="data.attribute.function?.timestamp"
-      [blocklyError]="data.attribute.function?.errorReport"
-      [displayDebug]="displayDebug">
-    </blockly-debugger>
-
-    <blockly-editor
-      (onJsUpdate)="onJsUpdate($event)"
-      (onXmlUpdate)="onXmlUpdate($event)"
-      [toolbox]="valueToolbox"
-      [masterType]="data.collection ? masterValueType : masterLinkType"
-      [collections]="collections$ | async"
-      [linkTypes]="linkTypes$ | async"
-      [variables]="variables"
-      [attribute]="data.attribute"
-      [thisCollectionId]="data.collection?.id"
-      [thisLinkTypeId]="data.linkType?.id"
-      [xml]="data.attribute.function?.xml">
-    </blockly-editor>
-  </div>
+  <attribute-function-content class="body d-block p-4"
+                              [linkTypes]="linkTypes$ | async"
+                              [collections]="collections$ | async"
+                              [form]="form"
+                              [attributeFunction]="data.function"
+                              [collection]="data.collection"
+                              [linkType]="data.linkType"
+                              [attribute]="data.attribute">
+  </attribute-function-content>
 
   <span class="button-cancel" i18n="@@button.cancel">Cancel</span>
   <span class="button-submit" i18n="@@button.save">Save</span>
 
 </modal-wrapper>
-
-<ng-template #noAttribute>
-  <div class="body p-4">
-    <h4 class="text-danger text-center my-5" i18n="@@resource.attribute.deleted">Such an attribute does not exist.</h4>
-  </div>
-</ng-template>

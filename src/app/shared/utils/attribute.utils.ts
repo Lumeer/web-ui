@@ -18,11 +18,46 @@
  */
 
 import {ConstraintType} from '../../core/model/data/constraint';
-import {Attribute} from '../../core/store/collections/collection';
-import {Rule} from '../../core/model/rule';
+import {Attribute, AttributeFunction} from '../../core/store/collections/collection';
+import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
 import {ActionConstraintConfig} from '../../core/model/data/constraint-config';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
+
+export function attributeHasAnyFunction(attribute: Attribute, rules?: Rule[]): boolean {
+  return attributeHasFunction(attribute) || attributeHasRuleFunction(attribute, rules);
+}
+
+export function attributeHasFunction(attribute: Attribute): boolean {
+  return attribute?.constraint?.allowEditFunction && attribute?.function?.js?.length > 0;
+}
+
+export function attributeHasRuleFunction(attribute: Attribute, rules?: Rule[]): boolean {
+  return !!attributeRuleFunction(attribute, rules);
+}
+
+export function attributeRuleFunction(attribute: Attribute, rules?: Rule[]): AttributeFunction {
+  const rule = <BlocklyRule>findAttributeRule(attribute, rules, RuleType.Blockly);
+  if (rule?.configuration) {
+    return {
+      js: rule.configuration.blocklyJs,
+      xml: rule.configuration.blocklyXml,
+      errorReport: rule.configuration.blocklyError,
+      timestamp: rule.configuration.blocklyResultTimestamp,
+      dryRun: rule.configuration.blocklyDryRun,
+      dryRunResult: rule.configuration.blocklyDryRunResult,
+    };
+  }
+  return null;
+}
+
+export function findAttributeRule(attribute: Attribute, rules: Rule[], type: RuleType = RuleType.Blockly): Rule {
+  if (attribute?.constraint?.type === ConstraintType.Action) {
+    const config = <ActionConstraintConfig>attribute.constraint.config;
+    return (rules || []).find(r => r.id === config?.rule && r.type === type);
+  }
+  return null;
+}
 
 export function findAttributeById(attributes: Attribute[], attributeId: string): Attribute {
   return (attributes || []).find(attribute => attribute.id === attributeId);

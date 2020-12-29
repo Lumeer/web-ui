@@ -34,7 +34,7 @@ import {ConditionType} from '../attribute-filter';
 
 export class SelectConstraint implements Constraint {
   public readonly type = ConstraintType.Select;
-  public readonly isTextRepresentation = false;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: SelectConstraintConfig) {}
 

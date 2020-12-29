@@ -1,0 +1,19 @@
+<ng-container *ngIf="attributeFunction || attribute?.constraint?.allowEditFunction; else noFunction">
+  <attribute-function-blockly [attribute]="attribute"
+                              [attributeFunction]="attributeFunction"
+                              [collection]="collection"
+                              [linkType]="linkType"
+                              [form]="form"
+                              [collections]="collections"
+                              [linkTypes]="linkTypes">
+  </attribute-function-blockly>
+</ng-container>
+
+<ng-template #noFunction>
+  <attribute-function-restricted *ngIf="attribute; else noAttribute">
+  </attribute-function-restricted>
+</ng-template>
+
+<ng-template #noAttribute>
+  <attribute-function-empty></attribute-function-empty>
+</ng-template>

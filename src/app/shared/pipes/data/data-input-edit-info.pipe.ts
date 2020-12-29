@@ -22,6 +22,7 @@ import {Attribute} from '../../../core/store/collections/collection';
 import {DataValue} from '../../../core/model/data-value';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {ConstraintType} from '../../../core/model/data/constraint';
+import {Constraint} from '../../../core/model/constraint';
 
 @Pipe({
   name: 'dataInputEditInfo',
@@ -33,7 +34,7 @@ export class DataInputEditInfoPipe implements PipeTransform {
     editable: boolean,
     editing: boolean
   ): {readonly: boolean; hasValue: boolean; showDataInput: boolean; additionalMargin: boolean; editing: boolean} {
-    const constraint = attribute?.constraint || new UnknownConstraint();
+    const constraint: Constraint = attribute?.constraint || new UnknownConstraint();
     const asText = constraint.isTextRepresentation;
     const hasValue = dataValue && !!dataValue.format();
     const readonly = !editable || !editing;

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
 import {Observable} from 'rxjs';
@@ -30,6 +30,7 @@ import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
 import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
+import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
 
 @Component({
   selector: 'blockly-form',
@@ -49,21 +50,14 @@ export class BlocklyFormComponent implements OnInit {
   @Input()
   public form: FormGroup;
 
-  public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
-
   public collections$: Observable<Collection[]>;
-
   public linkTypes$: Observable<LinkType[]>;
 
   public variables: RuleVariable[];
+  public displayDebug: BlocklyDebugDisplay = BlocklyDebugDisplay.DisplayNone;
 
-  public functionToolbox = BLOCKLY_FUNCTION_TOOLBOX;
-
-  public debugButtons: BlocklyDebugDisplay[] = [
-    BlocklyDebugDisplay.DisplayJs,
-    BlocklyDebugDisplay.DisplayError,
-    BlocklyDebugDisplay.DisplayLog,
-  ];
+  public readonly functionToolbox = BLOCKLY_FUNCTION_TOOLBOX;
+  public readonly debugButtons = BLOCKLY_FUNCTION_BUTTONS;
 
   public constructor(private store$: Store<AppState>) {}
 

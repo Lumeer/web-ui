@@ -34,7 +34,7 @@ import {ConditionType} from '../attribute-filter';
 
 export class ColorConstraint implements Constraint {
   public readonly type = ConstraintType.Color;
-  public readonly isTextRepresentation = false;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: ColorConstraintConfig) {}
 

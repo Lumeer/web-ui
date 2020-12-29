@@ -207,20 +207,11 @@ export class CollectionsEffects {
     mergeMap(([action, collections]) => {
       const collectionDto = convertCollectionModelToDto(action.payload.collection);
       const oldCollection = collections[collectionDto.id];
-      const correlationId = oldCollection && oldCollection.correlationId;
+      const {callback} = action.payload;
 
       return this.collectionService.updateCollection(collectionDto).pipe(
-        map((dto: CollectionDto) => convertCollectionDtoToModel(dto, correlationId)),
-        mergeMap(collection => {
-          const actions: Action[] = [new CollectionsAction.UpdateSuccess({collection})];
-
-          const {callback} = action.payload;
-          if (callback) {
-            actions.push(new CommonAction.ExecuteCallback({callback: () => callback()}));
-          }
-
-          return actions;
-        }),
+        map((dto: CollectionDto) => convertCollectionDtoToModel(dto, oldCollection?.correlationId)),
+        mergeMap(collection => [new CollectionsAction.UpdateSuccess({collection}), ...createCallbackActions(callback)]),
         catchError(error => of(new CollectionsAction.UpdateFailure({error})))
       );
     })
@@ -232,6 +223,46 @@ export class CollectionsEffects {
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'collection.update.fail', value: 'Could not update table'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public upsertRule$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.UpsertRule>(CollectionsActionType.UPSERT_RULE),
+    withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
+    mergeMap(([action, collections]) => {
+      const {collectionId, rule, onSuccess, onFailure} = action.payload;
+      const oldCollection = collections[collectionId];
+
+      const index = oldCollection.rules?.findIndex(r => r.id === rule.id);
+
+      const rules = [...(oldCollection.rules || [])];
+      if (index >= 0) {
+        rules.splice(index, 1, rule);
+      } else {
+        rules.push(rule);
+      }
+
+      const collectionDto = convertCollectionModelToDto({...oldCollection, rules});
+
+      return this.collectionService.updateCollection(collectionDto).pipe(
+        map((dto: CollectionDto) => convertCollectionDtoToModel(dto, oldCollection?.correlationId)),
+        mergeMap(collection => [
+          new CollectionsAction.UpsertRuleSuccess({collection}),
+          ...createCallbackActions(onSuccess),
+        ]),
+        catchError(error => of(new CollectionsAction.UpsertRuleFailure({error}), ...createCallbackActions(onFailure)))
+      );
+    })
+  );
+
+  @Effect()
+  public upsertRuleFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<CollectionsAction.UpdateFailure>(CollectionsActionType.UPDATE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'resource.rule.update.fail', value: 'Could not save rule'});
       return new NotificationsAction.Error({message});
     })
   );

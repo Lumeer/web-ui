@@ -34,7 +34,6 @@ import {ConditionType} from '../attribute-filter';
 
 export class ActionConstraint implements Constraint {
   public readonly type = ConstraintType.Action;
-  public readonly isTextRepresentation = false;
   public readonly isDirectlyEditable = true;
 
   constructor(public readonly config: ActionConstraintConfig) {}
