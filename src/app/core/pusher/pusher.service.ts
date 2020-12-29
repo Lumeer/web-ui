@@ -72,6 +72,10 @@ import {OrganizationService, ProjectService} from '../data-service';
 import {ResourceCommentsAction} from '../store/resource-comments/resource-comments.action';
 import {convertResourceCommentDtoToModel} from '../store/resource-comments/resource-comment.converter';
 import {selectResourceCommentsDictionary} from '../store/resource-comments/resource-comments.state';
+import {NotificationService} from '../notifications/notification.service';
+import {AppIdService} from '../service/app-id.service';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {NotificationButton} from '../notifications/notification-button';
 
 @Injectable({
   providedIn: 'root',
@@ -83,12 +87,23 @@ export class PusherService implements OnDestroy {
   private currentProject: Project;
   private user: User;
 
+  private userNotificationTitle: string;
+  private dismissButton: NotificationButton;
+
   constructor(
     private store$: Store<AppState>,
     private authService: AuthService,
     private organizationService: OrganizationService,
-    private projectService: ProjectService
-  ) {}
+    private projectService: ProjectService,
+    private notificationService: NotificationService,
+    private appId: AppIdService,
+    private i18n: I18n
+  ) {
+    this.userNotificationTitle = i18n({id: 'rules.blockly.action.message', value: 'Action Message'});
+
+    const dismiss = i18n({id: 'button.dismiss', value: 'Dismiss'});
+    this.dismissButton = {text: dismiss, bold: true};
+  }
 
   public init(): void {
     if (environment.auth) {
@@ -136,6 +151,7 @@ export class PusherService implements OnDestroy {
     this.bindFavoriteEvents();
     this.bindUserEvents();
     this.bindSequenceEvents();
+    this.bindUserMessageEvents();
     this.bindTemplateEvents();
   }
 
@@ -706,6 +722,50 @@ export class PusherService implements OnDestroy {
             id: data.id,
           })
         );
+      }
+    });
+  }
+
+  private bindUserMessageEvents() {
+    this.channel.bind('UserMessage:create', data => {
+      if (this.isCurrentWorkspace(data)) {
+        if (data.correlationId === this.appId.getAppId()) {
+          switch (data.object?.type) {
+            case 'SUCCESS':
+              this.notificationService.confirm(
+                data.object?.message,
+                this.userNotificationTitle,
+                [this.dismissButton],
+                'success'
+              );
+              break;
+            case 'INFO':
+              this.notificationService.confirm(
+                data.object?.message,
+                this.userNotificationTitle,
+                [this.dismissButton],
+                'info'
+              );
+              break;
+            case 'WARNING':
+              this.notificationService.confirm(
+                data.object?.message,
+                this.userNotificationTitle,
+                [this.dismissButton],
+                'warning'
+              );
+              break;
+            case 'ERROR':
+            default:
+              this.notificationService.confirm(
+                data.object?.message,
+                this.userNotificationTitle,
+                [this.dismissButton],
+                'error'
+              );
+              break;
+          }
+        }
       }
     });
   }

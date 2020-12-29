@@ -65,15 +65,20 @@ export class BlocklyUtils {
   public static readonly VALUE_CONTAINER = 'value_container';
   public static readonly LINK_CONTAINER = 'link_container';
   public static readonly SEQUENCE_BLOCK = 'sequence_block';
+  public static readonly SHOW_MESSAGE = 'show_message';
   public static readonly MS_TO_DATE = 'ms_to_date';
   public static readonly DATE_TO_MS = 'date_to_ms';
   public static readonly DATE_NOW = 'date_now';
+  public static readonly DATE_NOW_MS = 'date_now_ms';
   public static readonly MS_TO_UNIT = 'ms_to_unit';
   public static readonly PARSE_DATE = 'parse_date';
   public static readonly FORMAT_DATE = 'format_date';
   public static readonly CURRENT_DATE = 'current_date';
   public static readonly CURRENT_USER = 'current_user';
+  public static readonly CURRENT_LOCALE = 'current_locale';
   public static readonly CREATE_DOCUMENT = 'CREATE_DOCUMENT';
+  public static readonly CREATE_DOCUMENTS_LIMIT = 25;
+  public static readonly SHOW_MESSAGES_LIMIT = 5;
 
   private components: BlocklyComponent[] = [];
 

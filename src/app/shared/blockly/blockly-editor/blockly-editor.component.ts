@@ -60,6 +60,9 @@ import {SequenceBlocklyComponent} from './blocks/sequence-blockly-component';
 import {MsToUnitBlocklyComponent} from './blocks/ms-to-unit-blockly-component';
 import {CurrentUserBlocklyComponent} from './blocks/current-user-blockly-component';
 import {I18n} from '@ngx-translate/i18n-polyfill';
+import {DateNowMsBlocklyComponent} from './blocks/date-now-ms-blockly-component';
+import {CurrentLocaleBlocklyComponent} from './blocks/current-locale-blockly-component';
+import {ShowMessageBlocklyComponent} from './blocks/show-message-blockly-component';
 
 declare var Blockly: any;
 
@@ -140,12 +143,15 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new DateToMsBlocklyComponent(this.blocklyUtils, this.i18n),
       new MsToDateBlocklyComponent(this.blocklyUtils, this.i18n),
       new DateNowBlocklyComponent(this.blocklyUtils, this.i18n),
+      new DateNowMsBlocklyComponent(this.blocklyUtils, this.i18n),
       new CurrentDateBlocklyComponent(this.blocklyUtils, this.i18n),
       new ParseDateBlocklyComponent(this.blocklyUtils, this.i18n),
       new FormatDateBlocklyComponent(this.blocklyUtils, this.i18n),
       new CurrentUserBlocklyComponent(this.blocklyUtils, this.i18n),
+      new CurrentLocaleBlocklyComponent(this.blocklyUtils, this.i18n),
       new MsToUnitBlocklyComponent(this.blocklyUtils, this.i18n),
       new SequenceBlocklyComponent(this.blocklyUtils, this.i18n),
+      new ShowMessageBlocklyComponent(this.blocklyUtils, this.i18n),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
