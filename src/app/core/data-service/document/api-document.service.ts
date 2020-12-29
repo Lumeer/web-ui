@@ -29,10 +29,11 @@ import {DocumentDto, LinkInstanceDto} from '../../dto';
 import {DocumentMetaDataDto} from '../../dto/document.dto';
 import {Workspace} from '../../store/navigation/workspace';
 import {environment} from '../../../../environments/environment';
+import {AppIdService} from '../../service/app-id.service';
 
 @Injectable()
 export class ApiDocumentService extends BaseService implements DocumentService {
-  constructor(private httpClient: HttpClient, protected store$: Store<AppState>) {
+  constructor(private httpClient: HttpClient, protected store$: Store<AppState>, private appId: AppIdService) {
     super(store$);
   }
 
@@ -126,7 +127,12 @@ export class ApiDocumentService extends BaseService implements DocumentService {
   }
 
   public runRule(collectionId: string, documentId: string, attributeId: string): Observable<any> {
-    return this.httpClient.post<any>(`${this.apiPrefix({collectionId})}/${documentId}/rule/${attributeId}`, {});
+    const options = {headers: {correlation_id: this.appId.getAppId()}};
+    return this.httpClient.post<any>(
+      `${this.apiPrefix({collectionId})}/${documentId}/rule/${attributeId}`,
+      {},
+      options
+    );
   }
 
   private apiPrefix(workspace?: Workspace): string {

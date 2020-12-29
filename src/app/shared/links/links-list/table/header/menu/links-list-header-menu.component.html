@@ -14,7 +14,8 @@
     [enabled]="permissions?.manageWithView"
     (execute)="attributeFunction.emit()">
     <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>&nbsp;
-    <span i18n="@@table.header.menu.editFunction">Edit function...</span>
+    <span *ngIf="attribute?.constraint?.type !== type.Action" i18n="@@table.header.menu.editFunction">Edit function...</span>
+    <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editRule">Edit rule...</span>
   </ng-template>
 
 </context-menu>

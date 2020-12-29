@@ -20,6 +20,8 @@
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, ViewChild} from '@angular/core';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {ContextMenuComponent} from 'ngx-contextmenu';
+import {Attribute} from '../../../../../../core/store/collections/collection';
+import {ConstraintType} from '../../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'links-list-header-menu',
@@ -30,6 +32,9 @@ export class LinksListHeaderMenuComponent {
   @Input()
   public permissions: AllowedPermissions;
 
+  @Input()
+  public attribute: Attribute;
+
   @Output()
   public attributeType = new EventEmitter();
 
@@ -38,4 +43,6 @@ export class LinksListHeaderMenuComponent {
 
   @ViewChild(ContextMenuComponent, {static: true})
   public contextMenu: ContextMenuComponent;
+
+  public readonly type = ConstraintType;
 }

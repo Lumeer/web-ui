@@ -26,6 +26,7 @@ import {isMacOS} from '../../../../../../../shared/utils/system.utils';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../../../../../../core/store/app.state';
+import {ConstraintType} from '../../../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'table-column-context-menu',
@@ -79,6 +80,8 @@ export class TableColumnContextMenuComponent {
   public contextMenu: ContextMenuComponent;
 
   public readonly macOS = isMacOS();
+
+  public readonly type = ConstraintType;
 
   public constructor(private store$: Store<AppState>) {}
 

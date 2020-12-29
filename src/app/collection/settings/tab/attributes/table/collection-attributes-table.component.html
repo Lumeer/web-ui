@@ -64,14 +64,21 @@
     <td class="text-right align-middle">
       <div class="d-flex align-items-center justify-content-end">
         <i class="fa-fw cursor-pointer mr-2"
-           [ngClass]="attribute.constraint?.type !== constraintType.Unknown ? 'text-success ' + (attribute?.constraint | constraintTypeIcon) : 'text-primary fa fa-shapes'"
+           [ngClass]="attribute.constraint?.type !== constraintType.Unknown ? 'text-success ' + (attribute?.constraint | constraintTypeIcon) : 'text-primary far fa-shapes'"
            (click)="onAttributeType(attribute)"
            [title]="attribute.constraint | constraintTypeIconTitle">
         </i>
-        <i class="fa fa-fw fa-function cursor-pointer mr-2"
-           [ngClass]="(attribute | attributeFunctionDefined:collection.rules) ? 'text-success' : 'text-primary'"
+        <i *ngIf="attribute?.constraint?.type !== type.Action"
+           class="fa-fw fa-function cursor-pointer mr-2"
+           [ngClass]="(attribute | attributeFunctionDefined:collection.rules) ? 'fa text-success' : 'far text-primary'"
            (click)="onAttributeFunction(attribute)"
            title="Edit function..." i18n-title="@@table.header.menu.editFunction">
+        </i>
+        <i *ngIf="attribute?.constraint?.type === type.Action"
+           class="fa-fw fa-function cursor-pointer mr-2"
+           [ngClass]="(attribute | attributeFunctionDefined:collection.rules) ? 'fa text-success' : 'far text-primary'"
+           (click)="onAttributeFunction(attribute)"
+           title="Edit rule..." i18n-title="@@table.header.menu.editRule">
         </i>
         <i class="far fa-fw fa-trash-alt text-danger cursor-pointer mr-1"
            (click)="onDeleteAttribute(attribute)"

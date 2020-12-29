@@ -33,7 +33,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/create-link/create-link-modal.component.html</context>
@@ -89,7 +89,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit><trans-unit id="button.select" datatype="html">
         <source>
@@ -172,7 +172,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/date-time/picker/date-time-picker.component.html</context>
@@ -205,100 +205,8 @@
           <context context-type="linenumber">45</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
-        <source>Blockly Source Code</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.blockly.debugger.debug" datatype="html">
-        <source>For debugging purposes by advanced users only.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.blockly.debugger.noCode" datatype="html">
-        <source>No code generated yet.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.blockly.debugger.dryRun" datatype="html">
-        <source>Dry Run Results</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">13</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.blockly.debugger.timestamp" datatype="html">
-        <source>Timestamp:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.blockly.debugger.noResults" datatype="html">
-        <source>No dry run results yet.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">22</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.blockly.debugger.error" datatype="html">
-        <source>Error Report</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit><trans-unit id="shared.blockly.debugger.noError" datatype="html">
-        <source>No error recorded.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit><trans-unit id="button.close" datatype="html">
-        <source>Close</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
-        <source>Configure function of</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit><trans-unit id="dialog.attribute.function.editable" datatype="html">
-        <source>
-            Allow manual value overwrite
-          </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/attribute-function/attribute-function-modal.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="sourcefile">app/shared/modal/attribute-function/content/empty/attribute-function-empty.component.html</context>
+          <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="link.new.dialog.title" datatype="html">
         <source>Create new link</source>
@@ -339,6 +247,24 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/search/views/content/view-detail/view-detail.component.html</context>
           <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit><trans-unit id="button.close" datatype="html">
+        <source>Close</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/data-resource-detail/data-resource-detail-modal.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/document-detail/document-detail-modal.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/referrals-overview/referrals-overview-modal.component.html</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit><trans-unit id="modal.kanban.chooseDocument.title" datatype="html">
         <source>Choose a record</source>
@@ -642,6 +568,66 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/warning-message/public-project-message/public-project-message.component.html</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.source" datatype="html">
+        <source>Blockly Source Code</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.debug" datatype="html">
+        <source>For debugging purposes by advanced users only.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.noCode" datatype="html">
+        <source>No code generated yet.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.dryRun" datatype="html">
+        <source>Dry Run Results</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.timestamp" datatype="html">
+        <source>Timestamp:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.noResults" datatype="html">
+        <source>No dry run results yet.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.error" datatype="html">
+        <source>Error Report</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit><trans-unit id="shared.blockly.debugger.noError" datatype="html">
+        <source>No error recorded.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/blockly/blockly-debugger/blockly-debugger.component.html</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit><trans-unit id="message.loading" datatype="html">
         <source>Loading...</source>
@@ -1312,8 +1298,8 @@
           <context context-type="sourcefile">app/view/perspectives/table/body/rows/cell-group/data-cell/menu/table-data-cell-menu.component.html</context>
           <context context-type="linenumber">139</context>
         </context-group>
-      </trans-unit><trans-unit id="document.detail.configure.constraint" datatype="html">
-        <source>Set Attribute Type</source>
+      </trans-unit><trans-unit id="table.header.menu.changeType" datatype="html">
+        <source>Attribute type...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">16</context>
@@ -1322,8 +1308,16 @@
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-      </trans-unit><trans-unit id="document.detail.configure.function" datatype="html">
-        <source>Set Attribute Function</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.header.menu.editFunction" datatype="html">
+        <source>Edit function...</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">29</context>
@@ -1331,6 +1325,40 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
           <context context-type="linenumber">31</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit><trans-unit id="table.header.menu.editRule" datatype="html">
+        <source>Edit rule...</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/data-resource/data-resource-detail/data/row/icons/data-resource-data-row-icons.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
+          <context context-type="linenumber">81</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
+          <context context-type="linenumber">48</context>
         </context-group>
       </trans-unit><trans-unit id="document.detail.tabs.detail" datatype="html">
         <source>
@@ -1940,26 +1968,43 @@
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-      </trans-unit><trans-unit id="table.header.menu.changeType" datatype="html">
-        <source>Attribute type...
-    </source>
+      </trans-unit><trans-unit id="dialog.attribute.function.title" datatype="html">
+        <source>Edit Function of</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
+          <context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.attribute.function.rule.title" datatype="html">
+        <source>Edit Rule</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-function/header/attribute-function-header.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.attribute.function.restricted" datatype="html">
+        <source>Could not edit function for selected attribute.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-function/content/restricted/attribute-function-restricted.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="dialog.attribute.function.editable" datatype="html">
+        <source>
+        Allow manual value overwrite
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
+        <source>
+        Dry Run
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-function/content/blockly/attribute-function-blockly.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">9</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-      </trans-unit><trans-unit id="table.header.menu.editFunction" datatype="html">
-        <source>Edit function...</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/links/links-list/table/header/menu/links-list-header-menu.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.column.settings" datatype="html">
         <source>Column settings...</source>
@@ -2836,7 +2881,7 @@
         <source>Remove Attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">85</context>
         </context-group>
       </trans-unit><trans-unit id="collection.tab.attributes.none" datatype="html">
         <source>There are no attributes
@@ -2844,7 +2889,7 @@
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/tab/attributes/table/collection-attributes-table.component.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit><trans-unit id="collections.tab.linkTypes.name" datatype="html">
         <source>Link Type</source>
@@ -3008,13 +3053,13 @@
         <source>Save Changes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">86</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.rule.add" datatype="html">
         <source>Add Rule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/add-rule-form.component.html</context>
-          <context context-type="linenumber">89</context>
+          <context context-type="linenumber">90</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.autoLink.linkType" datatype="html">
         <source>
@@ -3051,14 +3096,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
           <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit><trans-unit id="collection.config.tab.rules.blockly.dryRun" datatype="html">
-        <source>
-          Dry Run
-        </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/collection/settings/common/rules/add-rule-form/blockly-form/blockly-form.component.html</context>
-          <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit><trans-unit id="collection.config.tab.rules.empty" datatype="html">
         <source>
@@ -4016,43 +4053,43 @@
         <source>Copy name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">53</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.defaultAttribute" datatype="html">
         <source>Set as displayed attribute</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">67</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.add.column.next" datatype="html">
         <source>Add column right</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.add.column.previous" datatype="html">
         <source>Add column left</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.split" datatype="html">
         <source>Split column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.hide" datatype="html">
         <source>Hide column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.menu.remove" datatype="html">
         <source>Delete column</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/view/perspectives/table/header/column-group/single-column/context-menu/table-column-context-menu.component.html</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit><trans-unit id="table.header.add-button" datatype="html">
         <source>Link table</source>
@@ -5066,6 +5103,28 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="rules.blockly.action.message" datatype="html">
+        <source>Action Message</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="button.dismiss" datatype="html">
+        <source>Dismiss</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="template.create.error" datatype="html">
         <source>I am sorry, something went wrong.</source>
         <context-group purpose="location">
@@ -5193,6 +5252,17 @@
         <source>Could not update table</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="resource.rule.update.fail" datatype="html">
+        <source>Could not save rule</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/collections/collections.effects.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5818,14 +5888,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="blockly.tooltip.createDocumentBlock" datatype="html">
-        <source>Creates a new record. Assign it to a variable to change its attributes.</source>
+      <trans-unit id="blockly.tooltip.createDocumentBlock2" datatype="html">
+        <source>Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to <x id="INTERPOLATION" equiv-text="{{limit}}"/> documents can be created within a single sequence of rules and functions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/create-document-blockly-component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5836,7 +5902,14 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="blockly.tooltip.createUserBlock" datatype="html">
+      <trans-unit id="blockly.tooltip.currentLocaleBlock" datatype="html">
+        <source>Get current user language code (e.g. en).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/current-locale-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.currentUserBlock" datatype="html">
         <source>Get current user email.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/current-user-blockly-component.ts</context>
@@ -5847,6 +5920,13 @@
         <source>Gets current date as ISO string for storage in date/time attributes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-now-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.dateNowMsBlock" datatype="html">
+        <source>Gets current date in milliseconds since epoch (Unix time).</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-now-ms-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5892,6 +5972,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="blockly.tooltip.createDocumentBlock" datatype="html">
+        <source>Gets a record linked to the given document via the selected link.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="blockly.tooltip.msToDateBlock" datatype="html">
         <source>Converts milliseconds since epoch (Unix time) to an ISO date string suitable for storing in a date/time attributes.</source>
         <context-group purpose="location">
@@ -5931,6 +6018,20 @@
         <source>Sets the value of an attribute in the given link.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/set-link-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.showMessageBlock" datatype="html">
+        <source>Show a message to the user. Works only when the rule is initiated via an Action button. At most <x id="INTERPOLATION" equiv-text="{{limit}}"/> messages can be shown from a single rule and function sequence execution to prevent interface clogging.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.dropdown.values.showMessageBlock" datatype="html">
+        <source>success,info,warning,error</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/show-message-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -6374,17 +6475,6 @@
         <source>Could not send feedback.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.dismiss" datatype="html">
-        <source>Dismiss</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>

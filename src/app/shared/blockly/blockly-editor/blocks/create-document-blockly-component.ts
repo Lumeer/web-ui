@@ -30,10 +30,14 @@ export class CreateDocumentBlocklyComponent extends BlocklyComponent {
   public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
     super(blocklyUtils, i18n);
 
-    this.tooltip = i18n({
-      id: 'blockly.tooltip.createDocumentBlock',
-      value: 'Creates a new record. Assign it to a variable to change its attributes.',
-    });
+    this.tooltip = i18n(
+      {
+        id: 'blockly.tooltip.createDocumentBlock2',
+        value:
+          'Creates a new record. Assign it to a variable to change its attributes. To prevent endless loops, only up to {{limit}} documents can be created within a single sequence of rules and functions.',
+      },
+      {limit: BlocklyUtils.CREATE_DOCUMENTS_LIMIT}
+    );
   }
 
   public getVisibility(): MasterBlockType[] {

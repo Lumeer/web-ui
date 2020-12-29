@@ -19,18 +19,21 @@
 
 import {BlocklyComponent} from './blockly-component';
 import {BlocklyUtils, MasterBlockType} from '../blockly-utils';
-import {COLOR_CYAN} from '../../../../core/constants';
+import {COLOR_PINK} from '../../../../core/constants';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
-export class CurrentUserBlocklyComponent extends BlocklyComponent {
+export class DateNowMsBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
     super(blocklyUtils, i18n);
 
-    this.tooltip = i18n({id: 'blockly.tooltip.currentUserBlock', value: 'Get current user email.'});
+    this.tooltip = i18n({
+      id: 'blockly.tooltip.dateNowMsBlock',
+      value: 'Gets current date in milliseconds since epoch (Unix time).',
+    });
   }
 
   public getVisibility(): MasterBlockType[] {
@@ -40,20 +43,20 @@ export class CurrentUserBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any): void {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.CURRENT_USER] = {
+    Blockly.Blocks[BlocklyUtils.DATE_NOW_MS] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.CURRENT_USER,
-          message0: '%{BKY_BLOCK_CURRENT_USER}', // current user
+          type: BlocklyUtils.DATE_NOW_MS,
+          message0: '%{BKY_BLOCK_DATE_NOW_MS}', // now
           output: '',
-          colour: COLOR_CYAN,
-          tooltip: '',
+          colour: COLOR_PINK,
+          tooltip: this_.tooltip,
           helpUrl: '',
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.CURRENT_USER] = function (block) {
-      const code = this_.blocklyUtils.getLumeerVariable() + '.getCurrentUser()';
+    Blockly.JavaScript[BlocklyUtils.DATE_NOW_MS] = function (block) {
+      const code = '(+(new Date()))';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

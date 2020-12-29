@@ -28,6 +28,7 @@
       </ng-container>
     </div>
     <links-list-header-menu [permissions]="permissions"
+                            [attribute]="column?.attribute"
                             (attributeFunction)="onAttributeFunction(index)"
                             (attributeType)="onAttributeType(index)">
     </links-list-header-menu>
