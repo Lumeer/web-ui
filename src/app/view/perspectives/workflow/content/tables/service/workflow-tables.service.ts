@@ -144,6 +144,7 @@ export class WorkflowTablesService {
         this.dataService.showAttributeType(column);
         break;
       case HeaderMenuId.Function:
+      case HeaderMenuId.Rule:
         this.dataService.showAttributeFunction(column);
         break;
       case HeaderMenuId.Delete:

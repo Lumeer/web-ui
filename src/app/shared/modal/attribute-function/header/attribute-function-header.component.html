@@ -1,6 +1,6 @@
 <div class="p-3 bg-success text-white w-100 rounded-top">
   <h5 class="modal-title break-all" *ngIf="!rule">
-    <span i18n="@@dialog.attribute.function.title">Configure function of</span>
+    <span i18n="@@dialog.attribute.function.title">Edit Function of</span>
     <icons-presenter
       *ngIf="resource | resourceIconsColors as iconColors"
       class="ml-2"
@@ -11,7 +11,7 @@
   </h5>
 
   <h5 class="modal-title break-all" *ngIf="rule">
-    <span i18n="@@dialog.attribute.function.rule.title">Configure rule</span>
+    <span i18n="@@dialog.attribute.function.rule.title">Edit Rule</span>
     <span class="ml-1">{{rule.name}}</span>
   </h5>
 </div>

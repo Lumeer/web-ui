@@ -20,6 +20,7 @@
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ElementRef} from '@angular/core';
 import {DataRow} from '../../../../../data/data-row.service';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
+import {ConstraintType} from '../../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'data-resource-data-row-icons',
@@ -41,6 +42,8 @@ export class DataResourceDataRowIconsComponent {
 
   @Output()
   public delete = new EventEmitter();
+
+  public readonly type = ConstraintType;
 
   public onDelete() {
     this.delete.emit();

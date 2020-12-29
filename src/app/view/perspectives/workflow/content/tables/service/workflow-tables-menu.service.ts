@@ -23,6 +23,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {TableColumn, TableContextMenuItem} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {isMacOS} from '../../../../../../shared/utils/system.utils';
+import {ConstraintType} from '../../../../../../core/model/data/constraint';
 
 export enum HeaderMenuId {
   Edit = 'edit',
@@ -35,6 +36,7 @@ export enum HeaderMenuId {
   AddToRight = 'addToRight',
   AddToLeft = 'addToLeft',
   AddLinkColumn = 'addLinkColumn',
+  Rule = 'rule',
 }
 
 export enum RowMenuId {
@@ -149,7 +151,9 @@ export class WorkflowTablesMenuService {
         },
         {
           id: HeaderMenuId.Function,
-          title: this.translateHeaderMenuItem(HeaderMenuId.Function),
+          title: this.translateHeaderMenuItem(
+            column.attribute?.constraint?.type === ConstraintType.Action ? HeaderMenuId.Rule : HeaderMenuId.Function
+          ),
           disabled: !permissions?.manageWithView,
           iconClass: 'fa fa-function',
           group: 0,
@@ -230,6 +234,8 @@ export class WorkflowTablesMenuService {
         return this.i18n({id: 'table.header.menu.changeType', value: 'Attribute type...'});
       case HeaderMenuId.Function:
         return this.i18n({id: 'table.header.menu.editFunction', value: 'Edit function...'});
+      case HeaderMenuId.Rule:
+        return this.i18n({id: 'table.header.menu.editRule', value: 'Edit rule...'});
       case HeaderMenuId.Displayed:
         return this.i18n({id: 'table.header.menu.defaultAttribute', value: 'Set as displayed attribute'});
       case HeaderMenuId.Hide:

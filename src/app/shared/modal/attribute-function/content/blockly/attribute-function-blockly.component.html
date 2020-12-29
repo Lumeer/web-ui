@@ -1,4 +1,4 @@
-<div class="d-flex pb-1">
+<div class="d-flex pb-2">
   <div class="flex-grow-1 text-right">
     <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="isFunction">
       <input class="custom-control-input" type="checkbox" [checked]="editableControl.value"
@@ -20,7 +20,7 @@
     </blockly-debugger-remote>
   </div>
 </div>
-<blockly-debugger class="d-block p-3"
+<blockly-debugger class="d-block"
                   (displayEvent)="onDisplay($event)"
                   [blocklyJs]="jsControl.value"
                   [blocklyResultTimestamp]="attributeFunction?.timestamp"

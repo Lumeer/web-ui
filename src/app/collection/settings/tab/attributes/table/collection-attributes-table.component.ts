@@ -64,6 +64,8 @@ export class CollectionAttributesTableComponent {
 
   public searchString: string;
 
+  public readonly type = ConstraintType;
+
   public setDefaultAttribute(attribute: Attribute) {
     this.setDefault.emit(attribute);
   }
