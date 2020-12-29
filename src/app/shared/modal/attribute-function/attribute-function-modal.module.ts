@@ -26,9 +26,21 @@ import {PipesModule} from '../../pipes/pipes.module';
 import {PresenterModule} from '../../presenter/presenter.module';
 import {AttributeFunctionModalComponent} from './attribute-function-modal.component';
 import {BlocklyModule} from '../../blockly/blockly.module';
+import {AttributeFunctionHeaderComponent} from './header/attribute-function-header.component';
+import {AttributeFunctionContentComponent} from './content/attribute-function-content.component';
+import {AttributeFunctionEmptyComponent} from './content/empty/attribute-function-empty.component';
+import {AttributeFunctionRestrictedComponent} from './content/restricted/attribute-function-restricted.component';
+import {AttributeFunctionBlocklyComponent} from './content/blockly/attribute-function-blockly.component';
 
 @NgModule({
-  declarations: [AttributeFunctionModalComponent],
+  declarations: [
+    AttributeFunctionModalComponent,
+    AttributeFunctionHeaderComponent,
+    AttributeFunctionContentComponent,
+    AttributeFunctionEmptyComponent,
+    AttributeFunctionRestrictedComponent,
+    AttributeFunctionBlocklyComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,

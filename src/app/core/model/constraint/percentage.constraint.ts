@@ -35,6 +35,7 @@ import {ConditionType} from '../attribute-filter';
 export class PercentageConstraint implements Constraint {
   public readonly type = ConstraintType.Percentage;
   public readonly isTextRepresentation = true;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: PercentageConstraintConfig) {}
 

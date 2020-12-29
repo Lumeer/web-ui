@@ -25,6 +25,7 @@ import {isArray, isNotNullOrUndefined} from '../../utils/common.utils';
 import {RuleVariable} from '../rule-variable-type';
 import {shadeColor} from '../../utils/html-modifier';
 import {BlocklyComponent} from './blocks/blockly-component';
+import {BlocklyDebugDisplay} from '../blockly-debugger/blockly-debugger.component';
 
 declare var Blockly: any;
 
@@ -33,6 +34,14 @@ export const enum MasterBlockType {
   Value = 'Value',
   Link = 'Link',
 }
+
+export const BLOCKLY_VALUE_BUTTONS = [BlocklyDebugDisplay.DisplayJs, BlocklyDebugDisplay.DisplayError];
+
+export const BLOCKLY_FUNCTION_BUTTONS = [
+  BlocklyDebugDisplay.DisplayJs,
+  BlocklyDebugDisplay.DisplayError,
+  BlocklyDebugDisplay.DisplayLog,
+];
 
 export class BlocklyUtils {
   public static readonly DOCUMENT_VAR_SUFFIX = '_document';

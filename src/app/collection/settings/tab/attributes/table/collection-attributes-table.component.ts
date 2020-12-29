@@ -29,6 +29,7 @@ import {
 } from '@angular/core';
 import {Attribute, Collection} from '../../../../../core/store/collections/collection';
 import {InputBoxComponent} from '../../../../../shared/input/input-box/input-box.component';
+import {ConstraintType} from '../../../../../core/model/data/constraint';
 
 @Component({
   selector: 'collection-attributes-table',
@@ -47,13 +48,21 @@ export class CollectionAttributesTableComponent {
   public delete = new EventEmitter<Attribute>();
 
   @Output()
+  public function = new EventEmitter<Attribute>();
+
+  @Output()
+  public attributeType = new EventEmitter<Attribute>();
+
+  @Output()
   public rename = new EventEmitter<{attribute: Attribute; newName: string}>();
 
   @ViewChildren('attributeNameInput')
   public attributesInputs: QueryList<InputBoxComponent>;
 
+  public readonly inputRegex = /\./g;
+  public readonly constraintType = ConstraintType;
+
   public searchString: string;
-  public inputRegex = /\./g;
 
   public setDefaultAttribute(attribute: Attribute) {
     this.setDefault.emit(attribute);
@@ -86,5 +95,13 @@ export class CollectionAttributesTableComponent {
 
   private attributeExist(name: string, excludeId: string): boolean {
     return (this.collection?.attributes || []).some(attribute => attribute.id !== excludeId && attribute.name === name);
+  }
+
+  public onAttributeFunction(attribute: Attribute) {
+    this.function.emit(attribute);
+  }
+
+  public onAttributeType(attribute: Attribute) {
+    this.attributeType.emit(attribute);
   }
 }

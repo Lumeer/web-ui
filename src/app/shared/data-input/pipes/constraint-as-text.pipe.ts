@@ -26,6 +26,6 @@ import {UnknownConstraint} from '../../../core/model/constraint/unknown.constrai
 })
 export class ConstraintAsTextPipe implements PipeTransform {
   public transform(constraint: Constraint): boolean {
-    return (constraint || new UnknownConstraint()).isTextRepresentation;
+    return (<Constraint>(constraint || new UnknownConstraint())).isTextRepresentation;
   }
 }

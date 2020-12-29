@@ -17,19 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Pipe, PipeTransform, Injectable} from '@angular/core';
-
+import {Component, ChangeDetectionStrategy, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Attribute} from '../../../../core/store/collections/collection';
+import {AttributesResource} from '../../../../core/model/resource';
+import {Rule} from '../../../../core/model/rule';
+import {findAttributeRule} from '../../../utils/attribute.utils';
 
-@Pipe({
-  name: 'attributeFilter',
+@Component({
+  selector: 'attribute-function-header',
+  templateUrl: './attribute-function-header.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-@Injectable()
-export class AttributeFilterPipe implements PipeTransform {
-  public transform(attributes: Attribute[], value: string): Attribute[] {
-    if (!attributes || !value) {
-      return attributes;
-    }
-    return attributes.filter(attr => attr.name.toLowerCase().includes(value.toLocaleLowerCase()));
+export class AttributeFunctionHeaderComponent implements OnChanges {
+  @Input()
+  public resource: AttributesResource;
+
+  @Input()
+  public attribute: Attribute;
+
+  public rule: Rule;
+
+  public ngOnChanges(changes: SimpleChanges) {
+    this.rule = findAttributeRule(this.attribute, this.resource?.rules);
   }
 }

@@ -34,6 +34,7 @@ export function collectionsReducer(
     case CollectionsActionType.IMPORT_SUCCESS:
     case CollectionsActionType.UPDATE_SUCCESS:
     case CollectionsActionType.UPDATE_PURPOSE_SUCCESS:
+    case CollectionsActionType.UPSERT_RULE_SUCCESS:
       return addOrUpdateCollection(state, action.payload.collection);
     case CollectionsActionType.ADD_FAVORITE_SUCCESS:
       return collectionsAdapter.updateOne({id: action.payload.collectionId, changes: {favorite: true}}, state);

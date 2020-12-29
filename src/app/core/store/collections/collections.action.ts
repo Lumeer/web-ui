@@ -22,6 +22,7 @@ import {Permission, PermissionType} from '../permissions/permissions';
 import {Attribute, Collection, CollectionPurpose, ImportedCollection} from './collection';
 import {Workspace} from '../navigation/workspace';
 import {DocumentsAction} from '../documents/documents.action';
+import {Rule} from '../../model/rule';
 
 export enum CollectionsActionType {
   GET = '[Collections] Get',
@@ -40,6 +41,10 @@ export enum CollectionsActionType {
   UPDATE = '[Collections] Update',
   UPDATE_SUCCESS = '[Collections] Update :: Success',
   UPDATE_FAILURE = '[Collections] Update :: Failure',
+
+  UPSERT_RULE = '[Collections] Upsert Rule',
+  UPSERT_RULE_SUCCESS = '[Collections] Upsert Rule :: Success',
+  UPSERT_RULE_FAILURE = '[Collections] Upsert Rule :: Failure',
 
   UPDATE_PURPOSE = '[Collections] Update Purpose',
   UPDATE_PURPOSE_SUCCESS = '[Collections] Update Purpose :: Success',
@@ -186,6 +191,26 @@ export namespace CollectionsAction {
 
   export class UpdatePurposeFailure implements Action {
     public readonly type = CollectionsActionType.UPDATE_PURPOSE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
+  export class UpsertRule implements Action {
+    public readonly type = CollectionsActionType.UPSERT_RULE;
+
+    public constructor(
+      public payload: {collectionId: string; rule: Rule; onSuccess?: () => void; onFailure?: () => void}
+    ) {}
+  }
+
+  export class UpsertRuleSuccess implements Action {
+    public readonly type = CollectionsActionType.UPSERT_RULE_SUCCESS;
+
+    public constructor(public payload: {collection: Collection}) {}
+  }
+
+  export class UpsertRuleFailure implements Action {
+    public readonly type = CollectionsActionType.UPSERT_RULE_FAILURE;
 
     public constructor(public payload: {error: any}) {}
   }
@@ -409,6 +434,9 @@ export namespace CollectionsAction {
     | Update
     | UpdateSuccess
     | UpdateFailure
+    | UpsertRule
+    | UpsertRuleSuccess
+    | UpsertRuleFailure
     | UpdatePurpose
     | UpdatePurposeSuccess
     | UpdatePurposeFailure

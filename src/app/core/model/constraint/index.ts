@@ -36,12 +36,17 @@ export interface Constraint {
   /**
    * Determine if constraint is visualized simply by text in readonly mode.
    */
-  isTextRepresentation: boolean;
+  isTextRepresentation?: boolean;
 
   /**
    * Determine if constraint can be edited directly (i.e. on simple click).
    */
   isDirectlyEditable?: boolean;
+
+  /**
+   * Determine if constraint can contain and end function.
+   */
+  allowEditFunction?: boolean;
 
   /**
    * Creates data value based on this constraint.

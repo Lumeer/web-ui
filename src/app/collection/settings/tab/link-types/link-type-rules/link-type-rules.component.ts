@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {BlocklyRule, Rule, RuleTiming, RuleType} from '../../../../../core/model/rule';
+import {Rule, RuleTiming, RuleType} from '../../../../../core/model/rule';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {selectServiceLimitsByWorkspace} from '../../../../../core/store/organizations/service-limits/service-limits.state';
@@ -92,17 +92,9 @@ export class LinkTypeRulesComponent implements OnInit {
   }
 
   public onSaveRule(linkType: LinkType, idx: number, rule: Rule) {
+    this.store$.dispatch(new LinkTypesAction.UpsertRule({linkTypeId: linkType.id, rule}));
+
     const index = linkType.rules.findIndex(r => r.id === rule.id);
-
-    const rules = [...linkType.rules];
-    if (index >= 0) {
-      rules.splice(index, 1, rule);
-    } else {
-      rules.push(rule);
-    }
-
-    this.store$.dispatch(new LinkTypesAction.Update({linkType: {...linkType, rules}}));
-
     if (index >= 0) {
       this.onCancelRuleEdit(rule);
     } else {
@@ -114,7 +106,7 @@ export class LinkTypeRulesComponent implements OnInit {
     const count = (this.linkType.rules?.length || 0) + 1;
     const rulePrefix = this.i18n({id: 'collection.config.tab.rules.newRule.prefix', value: 'Rule'});
 
-    const blocklyRule: BlocklyRule = {
+    return {
       name: rulePrefix + ' ' + count,
       timing: RuleTiming.All,
       type: RuleType.Blockly,
@@ -127,8 +119,6 @@ export class LinkTypeRulesComponent implements OnInit {
         blocklyResultTimestamp: 0,
       },
     };
-
-    return blocklyRule;
   }
 
   public deleteRule(linkType: LinkType, rule: Rule) {

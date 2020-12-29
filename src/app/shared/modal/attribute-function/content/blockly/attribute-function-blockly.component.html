@@ -1,0 +1,44 @@
+<div class="d-flex pb-1">
+  <div class="flex-grow-1 text-right">
+    <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="isFunction">
+      <input class="custom-control-input" type="checkbox" [checked]="editableControl.value"
+             (change)="editableControl.patchValue($event.target.checked)" id="editable">
+      <label class="custom-control-label" for="editable" i18n="@@dialog.attribute.function.editable">
+        Allow manual value overwrite
+      </label>
+    </div>
+    <div class="custom-control custom-checkbox mr-3 d-inline-block" *ngIf="!isFunction">
+      <input class="custom-control-input" type="checkbox" [checked]="dryRunControl.value"
+             (change)="dryRunControl.patchValue($event.target.checked)" id="dryRun">
+      <label class="custom-control-label" for="dryRun" i18n="@@collection.config.tab.rules.blockly.dryRun">
+        Dry Run
+      </label>
+    </div>
+    <blockly-debugger-remote
+      (displayEvent)="onDisplay($event)"
+      [displayButtons]="debugButtons">
+    </blockly-debugger-remote>
+  </div>
+</div>
+<blockly-debugger class="d-block p-3"
+                  (displayEvent)="onDisplay($event)"
+                  [blocklyJs]="jsControl.value"
+                  [blocklyResultTimestamp]="attributeFunction?.timestamp"
+                  [blocklyError]="attributeFunction?.errorReport"
+                  [blocklyDryRunResult]="attributeFunction?.dryRunResult"
+                  [displayDebug]="displayControl.value">
+</blockly-debugger>
+
+<blockly-editor
+  (onJsUpdate)="onJsUpdate($event)"
+  (onXmlUpdate)="onXmlUpdate($event)"
+  [toolbox]="toolbox"
+  [masterType]="masterType"
+  [collections]="collections"
+  [linkTypes]="linkTypes"
+  [variables]="variables"
+  [attribute]="attribute"
+  [thisCollectionId]="collection?.id"
+  [thisLinkTypeId]="linkType?.id"
+  [xml]="attributeFunction?.xml">
+</blockly-editor>

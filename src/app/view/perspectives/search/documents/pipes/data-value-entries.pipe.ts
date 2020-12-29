@@ -42,7 +42,7 @@ export class DataValueEntriesPipe implements PipeTransform {
     const expanded = config && (config.size === SizeType.XL || (config.expandedIds || []).includes(document.id));
     const defaultAttributeId = getDefaultAttributeId(collection);
     return (collection.attributes || []).reduce((array, attribute) => {
-      const constraint = attribute.constraint || new UnknownConstraint();
+      const constraint: Constraint = attribute.constraint || new UnknownConstraint();
       const dataValue = constraint.createDataValue(document.data[attribute.id], constraintData);
       if (expanded || constraint.isDirectlyEditable || !!dataValue.format()) {
         const label = expanded ? attribute.name : null;

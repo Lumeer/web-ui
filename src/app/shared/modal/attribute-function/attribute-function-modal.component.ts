@@ -18,17 +18,14 @@
  */
 
 import {ChangeDetectionStrategy, Component, HostListener, Input, OnInit} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, combineLatest, Observable} from 'rxjs';
 import {findAttribute} from '../../../core/store/collections/collection.util';
-import {BLOCKLY_VALUE_TOOLBOX} from '../../blockly/blockly-editor/blockly-editor-toolbox';
-import {RuleVariable} from '../../blockly/rule-variable-type';
-import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {Attribute, AttributeFunction, Collection} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {BlocklyDebugDisplay} from '../../blockly/blockly-debugger/blockly-debugger.component';
 import {select, Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
 import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
-import {first, map} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/link-types.state';
@@ -36,12 +33,14 @@ import {LinkTypesAction} from '../../../core/store/link-types/link-types.action'
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {KeyCode} from '../../key-code';
 import {DialogType} from '../dialog-type';
-import {MasterBlockType} from '../../blockly/blockly-editor/blockly-utils';
+import {FormControl, FormGroup} from '@angular/forms';
+import {AttributesResource} from '../../../core/model/resource';
+import {attributeHasFunction, attributeRuleFunction, findAttributeRule} from '../../utils/attribute.utils';
+import {BlocklyRule, Rule} from '../../../core/model/rule';
 
 @Component({
   selector: 'attribute-function-dialog',
   templateUrl: './attribute-function-modal.component.html',
-  styleUrls: ['./attribute-function-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AttributeFunctionModalComponent implements OnInit {
@@ -54,26 +53,25 @@ export class AttributeFunctionModalComponent implements OnInit {
   @Input()
   public attributeId: string;
 
-  public readonly valueToolbox = BLOCKLY_VALUE_TOOLBOX;
-  public readonly masterValueType = MasterBlockType.Value;
-  public readonly masterLinkType = MasterBlockType.Link;
   public readonly dialogType = DialogType;
 
   public collections$: Observable<Collection[]>;
   public collection$: Observable<Collection>;
   public attribute$: Observable<Attribute>;
+  public attributeFunction$: Observable<AttributeFunction>;
   public linkTypes$: Observable<LinkType[]>;
   public linkType$: Observable<LinkType>;
 
   public performingAction$ = new BehaviorSubject(false);
 
-  public variables: RuleVariable[];
-  public displayDebug: BlocklyDebugDisplay;
-  public debugButtons: BlocklyDebugDisplay[] = [BlocklyDebugDisplay.DisplayJs, BlocklyDebugDisplay.DisplayError];
-
-  public js: string = '';
-  private xml: string = '';
-  public editable$ = new BehaviorSubject<boolean>(undefined);
+  public form: FormGroup = new FormGroup({
+    js: new FormControl(),
+    xml: new FormControl(),
+    editable: new FormControl(),
+    display: new FormControl(),
+    dryRun: new FormControl(),
+  });
+  public resource: AttributesResource;
 
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
@@ -81,34 +79,49 @@ export class AttributeFunctionModalComponent implements OnInit {
     this.collections$ = this.store$.select(selectAllCollections);
 
     if (this.collectionId) {
-      this.collection$ = this.store$.pipe(select(selectCollectionById(this.collectionId)));
+      this.collection$ = this.store$.pipe(
+        select(selectCollectionById(this.collectionId)),
+        tap(collection => (this.resource = collection))
+      );
       this.attribute$ = this.collection$.pipe(
         map(collection => findAttribute(collection?.attributes, this.attributeId))
       );
       this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByCollectionId(this.collectionId)));
-      this.variables = [{name: 'thisRecord', collectionId: this.collectionId} as RuleVariable];
+      this.attributeFunction$ = combineLatest([this.attribute$, this.collection$]).pipe(
+        map(([attribute, collection]) => mapAttributeFunction(attribute, collection))
+      );
     } else if (this.linkTypeId) {
-      this.linkType$ = this.store$.pipe(select(selectLinkTypeByIdWithCollections(this.linkTypeId)));
+      this.linkType$ = this.store$.pipe(
+        select(selectLinkTypeByIdWithCollections(this.linkTypeId)),
+        tap(linkType => (this.resource = linkType))
+      );
       this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType?.attributes, this.attributeId)));
       this.linkTypes$ = this.linkType$.pipe(map(linkType => [linkType]));
-      this.variables = [{name: 'thisLink', linkTypeId: this.linkTypeId} as RuleVariable];
+      this.attributeFunction$ = combineLatest([this.attribute$, this.linkType$]).pipe(
+        map(([attribute, linkType]) => mapAttributeFunction(attribute, linkType))
+      );
     }
-
-    this.attribute$
-      .pipe(first())
-      .subscribe(attribute => this.editable$.next(attribute.function ? attribute.function.editable : false));
   }
 
-  public onAttributeChange(attribute: Attribute) {
+  private onAttributeChange(attribute: Attribute) {
+    const newAttribute = {
+      ...attribute,
+      function: {
+        ...attribute.function,
+        js: this.form.value.js,
+        xml: this.form.value.xml,
+        editable: this.form.value.ditable,
+      },
+    };
     if (this.collectionId) {
-      this.updateCollectionAttribute(this.collectionId, attribute);
+      this.updateCollectionAttribute(this.collectionId, newAttribute);
     }
     if (this.linkTypeId) {
-      this.updateLinkTypeAttribute(this.linkTypeId, attribute);
+      this.updateLinkTypeAttribute(this.linkTypeId, newAttribute);
     }
   }
 
-  public updateCollectionAttribute(collectionId: string, attribute: Attribute) {
+  private updateCollectionAttribute(collectionId: string, attribute: Attribute) {
     this.performingAction$.next(true);
     this.store$.dispatch(
       new CollectionsAction.ChangeAttribute({
@@ -140,27 +153,54 @@ export class AttributeFunctionModalComponent implements OnInit {
   }
 
   public onSubmit(attribute: Attribute) {
-    const newAttribute = {
-      ...attribute,
-      function: {...attribute.function, js: this.js, xml: this.xml, editable: this.editable$.getValue()},
-    };
-    this.onAttributeChange(newAttribute);
-  }
-
-  public onJsUpdate(jsCode: string) {
-    this.js = jsCode;
-  }
-
-  public onXmlUpdate(xmlCode: string) {
-    this.xml = xmlCode;
-  }
-
-  public display(type: BlocklyDebugDisplay) {
-    if (type !== BlocklyDebugDisplay.DisplayNone && this.displayDebug === type) {
-      this.display(BlocklyDebugDisplay.DisplayNone);
+    if (attributeHasFunction(attribute) || attribute.constraint?.allowEditFunction) {
+      this.onAttributeChange(attribute);
     } else {
-      this.displayDebug = type;
+      this.onRuleChange(attribute);
     }
+  }
+
+  private onRuleChange(attribute: Attribute) {
+    const rule = <BlocklyRule>findAttributeRule(attribute, this.resource?.rules);
+    const newRule = {
+      ...rule,
+      configuration: {
+        ...rule.configuration,
+        blocklyJs: this.form.value.js,
+        blocklyXml: this.form.value.xml,
+        blocklyDryRun: this.form.value.dryRun,
+      },
+    };
+
+    if (this.collectionId) {
+      this.updateCollectionRule(this.collectionId, newRule);
+    } else if (this.linkTypeId) {
+      this.updateLinkTypeRule(this.linkTypeId, newRule);
+    }
+  }
+
+  private updateCollectionRule(collectionId: string, rule: Rule) {
+    this.performingAction$.next(true);
+    this.store$.dispatch(
+      new CollectionsAction.UpsertRule({
+        collectionId,
+        rule,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
+  }
+
+  private updateLinkTypeRule(linkTypeId: string, rule: Rule) {
+    this.performingAction$.next(true);
+    this.store$.dispatch(
+      new LinkTypesAction.UpsertRule({
+        linkTypeId,
+        rule,
+        onSuccess: () => this.hideDialog(),
+        onFailure: () => this.performingAction$.next(false),
+      })
+    );
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -169,8 +209,11 @@ export class AttributeFunctionModalComponent implements OnInit {
       this.hideDialog();
     }
   }
+}
 
-  public onEditableChange(editable: boolean) {
-    this.editable$.next(editable);
+function mapAttributeFunction(attribute: Attribute, resource: AttributesResource): AttributeFunction {
+  if (!attribute || !resource) {
+    return null;
   }
+  return attributeHasFunction(attribute) ? attribute.function : attributeRuleFunction(attribute, resource?.rules);
 }

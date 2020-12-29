@@ -28,6 +28,7 @@ import {Attribute, Collection} from '../../../../core/store/collections/collecti
 import {CollectionsAction} from '../../../../core/store/collections/collections.action';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
 import {CollectionAttributesTableComponent} from './table/collection-attributes-table.component';
+import {ModalService} from '../../../../shared/modal/modal.service';
 
 @Component({
   templateUrl: './collection-attributes.component.html',
@@ -41,7 +42,12 @@ export class CollectionAttributesComponent implements OnInit {
 
   private collection: Collection;
 
-  constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>) {}
+  constructor(
+    private i18n: I18n,
+    private notificationService: NotificationService,
+    private modalService: ModalService,
+    private store$: Store<AppState>
+  ) {}
 
   public ngOnInit(): void {
     this.collection$ = this.store$.pipe(
@@ -103,5 +109,13 @@ export class CollectionAttributesComponent implements OnInit {
     this.store$.dispatch(
       new CollectionsAction.RemoveAttribute({collectionId: this.collection.id, attributeId: attribute.id})
     );
+  }
+
+  public onAttributeFunction(attribute: Attribute) {
+    this.modalService.showAttributeFunction(attribute.id, this.collection.id);
+  }
+
+  public onAttributeType(attribute: Attribute) {
+    this.modalService.showAttributeType(attribute.id, this.collection.id);
   }
 }

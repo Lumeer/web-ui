@@ -130,6 +130,43 @@ export class LinkTypesEffects {
   );
 
   @Effect()
+  public upsertRule$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.UpsertRule>(LinkTypesActionType.UPSERT_RULE),
+    withLatestFrom(this.store$.pipe(select(selectLinkTypesDictionary))),
+    mergeMap(([action, linkTypesMap]) => {
+      const {linkTypeId, rule, onSuccess, onFailure} = action.payload;
+      const oldLinkType = linkTypesMap[linkTypeId];
+
+      const index = oldLinkType.rules?.findIndex(r => r.id === rule.id);
+
+      const rules = [...(oldLinkType.rules || [])];
+      if (index >= 0) {
+        rules.splice(index, 1, rule);
+      } else {
+        rules.push(rule);
+      }
+
+      const linkTypeDto = convertLinkTypeModelToDto({...oldLinkType, rules});
+
+      return this.linkTypeService.updateLinkType(linkTypeId, linkTypeDto).pipe(
+        map((dto: LinkTypeDto) => convertLinkTypeDtoToModel(dto, oldLinkType?.correlationId)),
+        mergeMap(linkType => [new LinkTypesAction.UpsertRuleSuccess({linkType}), ...createCallbackActions(onSuccess)]),
+        catchError(error => of(new LinkTypesAction.UpsertRuleFailure({error}), ...createCallbackActions(onFailure)))
+      );
+    })
+  );
+
+  @Effect()
+  public upsertRuleFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<LinkTypesAction.UpdateFailure>(LinkTypesActionType.UPDATE_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({id: 'resource.rule.update.fail', value: 'Could not save rule'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
   public delete$: Observable<Action> = this.actions$.pipe(
     ofType<LinkTypesAction.Delete>(LinkTypesActionType.DELETE),
     mergeMap(action =>

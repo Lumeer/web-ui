@@ -32,6 +32,7 @@ import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
 import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {AttributeFilter} from '../../model/attribute-filter';
+import {Constraint} from '../../model/constraint';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -105,7 +106,7 @@ export function generateDocumentData(
 
   (filters || []).forEach(filter => {
     const attribute = findAttribute(attributesResource.attributes, filter.attributeId);
-    const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+    const constraint: Constraint = attribute?.constraint || new UnknownConstraint();
     const dataValue = constraint.createDataValue(null, constraintData);
     const numInputs = conditionNumInputs(filter.condition);
     const allValuesDefined =

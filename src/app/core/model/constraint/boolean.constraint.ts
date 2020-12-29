@@ -34,8 +34,8 @@ import {ConditionType} from '../attribute-filter';
 export class BooleanConstraint implements Constraint {
   public readonly type = ConstraintType.Boolean;
   public readonly config = {};
-  public readonly isTextRepresentation = false;
   public readonly isDirectlyEditable = true;
+  public readonly allowEditFunction = true;
 
   public createDataValue(value: any): BooleanDataValue {
     return new BooleanDataValue(value);

@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AutoLinkRule, Rule, RuleTiming, RuleType} from '../../../../core/model/rule';
 import {Collection} from '../../../../core/store/collections/collection';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Action, select, Store} from '@ngrx/store';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionByWorkspace} from '../../../../core/store/collections/collections.state';
@@ -91,20 +91,12 @@ export class CollectionRulesComponent implements OnInit {
     this.addingRules.splice(index, 1);
   }
 
-  public onSaveRule(collection: Collection, idx: number, rule: Rule) {
-    const index = collection.rules.findIndex(r => r.id === rule.id);
-
-    const rules = [...collection.rules];
-    if (index >= 0) {
-      rules.splice(index, 1, rule);
-    } else {
-      rules.push(rule);
-    }
-
+  public onSaveRule(collection: Collection, rule: Rule) {
     this.store$.dispatch(
-      new CollectionsAction.Update({
-        collection: {...collection, rules},
-        callback: () => {
+      new CollectionsAction.UpsertRule({
+        collectionId: collection.id,
+        rule,
+        onSuccess: () => {
           if (rule.type === RuleType.AutoLink) {
             this.store$.dispatch(this.getRunRuleConfirmation(collection.id, rule.id));
           }
@@ -112,10 +104,11 @@ export class CollectionRulesComponent implements OnInit {
       })
     );
 
+    const index = collection.rules.findIndex(r => r.id === rule.id);
     if (index >= 0) {
       this.onCancelRuleEdit(rule);
     } else {
-      this.onCancelNewRule(idx);
+      this.onCancelNewRule(index);
     }
   }
 

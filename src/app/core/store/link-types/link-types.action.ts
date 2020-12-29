@@ -22,6 +22,7 @@ import {Attribute} from '../collections/collection';
 import {LinkType} from './link.type';
 import {Workspace} from '../navigation/workspace';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
+import {Rule} from '../../model/rule';
 
 export enum LinkTypesActionType {
   GET = '[Link Types] Get',
@@ -37,6 +38,10 @@ export enum LinkTypesActionType {
   UPDATE_INTERNAL = '[Link Types] Update Internal',
   UPDATE_SUCCESS = '[Link Types] Update :: Success',
   UPDATE_FAILURE = '[Link Types] Update :: Failure',
+
+  UPSERT_RULE = '[Link Types] Upsert Rule',
+  UPSERT_RULE_SUCCESS = '[Link Types] Upsert Rule :: Success',
+  UPSERT_RULE_FAILURE = '[Link Types] Upsert Rule :: Failure',
 
   DELETE = '[Link Types] Delete',
   DELETE_SUCCESS = '[Link Types] Delete :: Success',
@@ -204,6 +209,26 @@ export namespace LinkTypesAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class UpsertRule implements Action {
+    public readonly type = LinkTypesActionType.UPSERT_RULE;
+
+    public constructor(
+      public payload: {linkTypeId: string; rule: Rule; onSuccess?: () => void; onFailure?: () => void}
+    ) {}
+  }
+
+  export class UpsertRuleSuccess implements Action {
+    public readonly type = LinkTypesActionType.UPSERT_RULE_SUCCESS;
+
+    public constructor(public payload: {linkType: LinkType}) {}
+  }
+
+  export class UpsertRuleFailure implements Action {
+    public readonly type = LinkTypesActionType.UPSERT_RULE_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class RenameAttribute implements Action {
     public readonly type = LinkTypesActionType.RENAME_ATTRIBUTE;
 
@@ -263,6 +288,9 @@ export namespace LinkTypesAction {
     | UpdateInternal
     | UpdateSuccess
     | UpdateFailure
+    | UpsertRule
+    | UpsertRuleSuccess
+    | UpsertRuleFailure
     | Delete
     | DeleteSuccess
     | DeleteFailure

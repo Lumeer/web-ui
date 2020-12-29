@@ -71,7 +71,7 @@ export class BlocklyDebuggerComponent implements OnInit {
   }
 
   public display(type: BlocklyDebugDisplay, event?: Event) {
-    event && event.stopPropagation();
+    event?.stopPropagation();
     this.displayEvent.emit(type);
   }
 

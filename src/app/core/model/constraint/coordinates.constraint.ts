@@ -28,6 +28,7 @@ import {ConditionType} from '../attribute-filter';
 export class CoordinatesConstraint implements Constraint {
   public readonly type = ConstraintType.Coordinates;
   public readonly isTextRepresentation = true;
+  public readonly allowEditFunction = true;
 
   constructor(public readonly config: CoordinatesConstraintConfig) {}
 
