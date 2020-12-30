@@ -1,0 +1,13 @@
+<div class="notification d-flex align-items-center cursor-pointer" *ngFor="let group of notificationsGroups"
+     (click)="switchElement.click()">
+  <div class="flex-grow-1 py-2 d-flex flex-column">
+    <div
+      i18n="@@user.notification.settings.title">{group, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated}}</div>
+    <div class="text-muted small">Some description</div>
+  </div>
+
+  <label class="switch">
+    <input type="checkbox" #switchElement (change)="onCheckedChange(group, $event.target.checked)">
+    <span class="slider round" (click)="$event.stopPropagation()"></span>
+  </label>
+</div>

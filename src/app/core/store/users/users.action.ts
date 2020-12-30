@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {DefaultWorkspace, User, UserHints} from './user';
+import {DefaultWorkspace, NotificationsSettings, User, UserHints} from './user';
 import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../organizations/payment/payment';
 import {UserHintsDto} from '../../dto/user.dto';
@@ -68,6 +68,10 @@ export enum UsersActionType {
   GET_HINTS_SUCCESS = '[User] Get Hints :: Success',
   GET_HINTS_FAILURE = '[User] Get Hints :: Failure',
 
+  UPDATE_NOTIFICATIONS = '[User] Update Notifications',
+  UPDATE_NOTIFICATIONS_SUCCESS = '[User] Update Notifications :: Success',
+  UPDATE_NOTIFICATIONS_FAILURE = '[User] Update Notifications :: Failure',
+
   UPDATE_HINTS = '[User] Update Hints',
   UPDATE_HINTS_SUCCESS = '[User] Update Hints :: Success',
   UPDATE_HINTS_FAILURE = '[User] Update Hints :: Failure',
@@ -81,25 +85,29 @@ export namespace UsersAction {
   export class Get implements Action {
     public readonly type = UsersActionType.GET;
 
-    public constructor(public payload: {organizationId: string}) {}
+    public constructor(public payload: { organizationId: string }) {
+    }
   }
 
   export class GetSuccess implements Action {
     public readonly type = UsersActionType.GET_SUCCESS;
 
-    public constructor(public payload: {organizationId: string; users: User[]}) {}
+    public constructor(public payload: { organizationId: string; users: User[] }) {
+    }
   }
 
   export class GetCurrentUser implements Action {
     public readonly type = UsersActionType.GET_CURRENT_USER;
 
-    public constructor(public payload: {onSuccess?: () => void; onFailure?: () => void} = {}) {}
+    public constructor(public payload: { onSuccess?: () => void; onFailure?: () => void } = {}) {
+    }
   }
 
   export class ResendVerificationEmail implements Action {
     public readonly type = UsersActionType.RESEND_VERIFICATION_EMAIL;
 
-    public constructor(public payload: {onSuccess?: () => void; onFailure?: () => void} = {}) {}
+    public constructor(public payload: { onSuccess?: () => void; onFailure?: () => void } = {}) {
+    }
   }
 
   export class GetCurrentUserWithLastLogin implements Action {
@@ -109,117 +117,136 @@ export namespace UsersAction {
   export class GetCurrentUserSuccess implements Action {
     public readonly type = UsersActionType.GET_CURRENT_USER_SUCCESS;
 
-    public constructor(public payload: {user: User}) {}
+    public constructor(public payload: { user: User }) {
+    }
   }
 
   export class PatchCurrentUser implements Action {
     public readonly type = UsersActionType.PATCH_CURRENT_USER;
 
-    public constructor(public payload: {user: Partial<User>; onSuccess?: () => void; onFailure?: () => void}) {}
+    public constructor(public payload: { user: Partial<User>; onSuccess?: () => void; onFailure?: () => void }) {
+    }
   }
 
   export class SaveDefaultWorkspace implements Action {
     public readonly type = UsersActionType.SAVE_DEFAULT_WORKSPACE;
 
-    public constructor(public payload: {defaultWorkspace: DefaultWorkspace}) {}
+    public constructor(public payload: { defaultWorkspace: DefaultWorkspace }) {
+    }
   }
 
   export class SaveDefaultWorkspaceSuccess implements Action {
     public readonly type = UsersActionType.SAVE_DEFAULT_WORKSPACE_SUCCESS;
 
-    public constructor(public payload: {user: User; defaultWorkspace: DefaultWorkspace}) {}
+    public constructor(public payload: { user: User; defaultWorkspace: DefaultWorkspace }) {
+    }
   }
 
   export class SaveDefaultWorkspaceFailure implements Action {
     public readonly type = UsersActionType.SAVE_DEFAULT_WORKSPACE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class GetFailure implements Action {
     public readonly type = UsersActionType.GET_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class Create implements Action {
     public readonly type = UsersActionType.CREATE;
 
-    public constructor(public payload: {organizationId: string; user: User}) {}
+    public constructor(public payload: { organizationId: string; user: User }) {
+    }
   }
 
   export class CreateSuccess implements Action {
     public readonly type = UsersActionType.CREATE_SUCCESS;
 
-    public constructor(public payload: {user: User}) {}
+    public constructor(public payload: { user: User }) {
+    }
   }
 
   export class CreateFailure implements Action {
     public readonly type = UsersActionType.CREATE_FAILURE;
 
-    public constructor(public payload: {error: any; organizationId: string}) {}
+    public constructor(public payload: { error: any; organizationId: string }) {
+    }
   }
 
   export class InviteUsers implements Action {
     public readonly type = UsersActionType.INVITE;
 
     public constructor(
-      public payload: {organizationId: string; projectId: string; users: User[]; invitationType?: InvitationType}
-    ) {}
+      public payload: { organizationId: string; projectId: string; users: User[]; invitationType?: InvitationType }
+    ) {
+    }
   }
 
   export class InviteSuccess implements Action {
     public readonly type = UsersActionType.INVITE_SUCCESS;
 
-    public constructor(public payload: {users: User[]}) {}
+    public constructor(public payload: { users: User[] }) {
+    }
   }
 
   export class InviteFailure implements Action {
     public readonly type = UsersActionType.INVITE_FAILURE;
 
-    public constructor(public payload: {error: any; organizationId: string; projectId: string}) {}
+    public constructor(public payload: { error: any; organizationId: string; projectId: string }) {
+    }
   }
 
   export class Update implements Action {
     public readonly type = UsersActionType.UPDATE;
 
-    public constructor(public payload: {organizationId: string; user: User}) {}
+    public constructor(public payload: { organizationId: string; user: User }) {
+    }
   }
 
   export class UpdateSuccess implements Action {
     public readonly type = UsersActionType.UPDATE_SUCCESS;
 
-    public constructor(public payload: {user: User}) {}
+    public constructor(public payload: { user: User }) {
+    }
   }
 
   export class UpdateFailure implements Action {
     public readonly type = UsersActionType.UPDATE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class Delete implements Action {
     public readonly type = UsersActionType.DELETE;
 
-    public constructor(public payload: {organizationId: string; userId: string}) {}
+    public constructor(public payload: { organizationId: string; userId: string }) {
+    }
   }
 
   export class DeleteSuccess implements Action {
     public readonly type = UsersActionType.DELETE_SUCCESS;
 
-    public constructor(public payload: {userId: string}) {}
+    public constructor(public payload: { userId: string }) {
+    }
   }
 
   export class DeleteFailure implements Action {
     public readonly type = UsersActionType.DELETE_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class SetPending implements Action {
     public readonly type = UsersActionType.SET_PENDING;
 
-    public constructor(public payload: {pending: boolean}) {}
+    public constructor(public payload: { pending: boolean }) {
+    }
   }
 
   export class Clear implements Action {
@@ -233,13 +260,15 @@ export namespace UsersAction {
   export class ReferralsSuccess implements Action {
     public readonly type = UsersActionType.REFERRALS_SUCCESS;
 
-    public constructor(public payload: {referrals: PaymentStats}) {}
+    public constructor(public payload: { referrals: PaymentStats }) {
+    }
   }
 
   export class ReferralsFailure implements Action {
     public readonly type = UsersActionType.REFERRALS_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class GetHints implements Action {
@@ -249,49 +278,78 @@ export namespace UsersAction {
   export class GetHintsSuccess implements Action {
     public readonly type = UsersActionType.GET_HINTS_SUCCESS;
 
-    public constructor(public payload: {hints: UserHintsDto}) {}
+    public constructor(public payload: { hints: UserHintsDto }) {
+    }
   }
 
   export class GetHintsFailure implements Action {
     public readonly type = UsersActionType.GET_HINTS_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
+  }
+
+  export class UpdateNotifications implements Action {
+    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS;
+
+    public constructor(public payload: { notifications: NotificationsSettings, onSuccess?: () => void; onFailure?: () => void }) {
+    }
+  }
+
+  export class UpdateNotificationsSuccess implements Action {
+    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS_SUCCESS;
+
+    public constructor(public payload: { user: User }) {
+    }
+  }
+
+  export class UpdateNotificationsFailure implements Action {
+    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS_FAILURE;
+
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export class UpdateHints implements Action {
     public readonly type = UsersActionType.UPDATE_HINTS;
 
-    public constructor(public payload: {hints: UserHints}) {}
+    public constructor(public payload: { hints: UserHints }) {
+    }
   }
 
   export class UpdateHintsSuccess implements Action {
     public readonly type = UsersActionType.UPDATE_HINTS_SUCCESS;
 
-    public constructor(public payload: {hints: UserHints}) {}
+    public constructor(public payload: { hints: UserHints }) {
+    }
   }
 
   export class UpdateHintsFailure implements Action {
     public readonly type = UsersActionType.UPDATE_HINTS_FAILURE;
 
-    public constructor(public payload: {error: any; originalHints: UserHints}) {}
+    public constructor(public payload: { error: any; originalHints: UserHints }) {
+    }
   }
 
   export class SetHint implements Action {
     public readonly type = UsersActionType.SET_HINT;
 
-    public constructor(public payload: {hint: string; value: any}) {}
+    public constructor(public payload: { hint: string; value: any }) {
+    }
   }
 
   export class SetHintSuccess implements Action {
     public readonly type = UsersActionType.SET_HINT_SUCCESS;
 
-    public constructor(public payload: {hints: UserHints}) {}
+    public constructor(public payload: { hints: UserHints }) {
+    }
   }
 
   export class SetHintFailure implements Action {
     public readonly type = UsersActionType.SET_HINT_FAILURE;
 
-    public constructor(public payload: {error: any}) {}
+    public constructor(public payload: { error: any }) {
+    }
   }
 
   export type All =
@@ -329,6 +387,9 @@ export namespace UsersAction {
     | UpdateHints
     | UpdateHintsSuccess
     | UpdateHintsFailure
+    | UpdateNotifications
+    | UpdateNotificationsSuccess
+    | UpdateNotificationsFailure
     | SetHint
     | SetHintSuccess
     | SetHintFailure;

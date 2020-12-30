@@ -71,6 +71,9 @@ export class UserMenuDropdownComponent implements OnInit, OnDestroy {
   public affiliate = new EventEmitter();
 
   @Output()
+  public notificationSettings = new EventEmitter();
+
+  @Output()
   public hintsToggle = new EventEmitter<boolean>();
 
   @ViewChild(DropdownComponent)
@@ -132,5 +135,10 @@ export class UserMenuDropdownComponent implements OnInit, OnDestroy {
 
   public onHintsToggle(state: boolean) {
     this.hintsToggle.emit(state);
+  }
+
+  public onNotificationSettings() {
+    this.notificationSettings.emit();
+    this.close();
   }
 }

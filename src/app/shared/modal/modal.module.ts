@@ -37,6 +37,7 @@ import {CreateProjectModalModule} from './create-project/create-project-modal.mo
 import {CopyProjectModalModule} from './copy-project/copy-project-modal.module';
 import {ChooseOrganizationModalModule} from './choose-organization/choose-organization-modal.module';
 import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.module';
+import {NotificationSettingsModalModule} from './notification-settings/notification-settings-modal.module';
 
 @NgModule({
   declarations: [],
@@ -60,6 +61,7 @@ import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.modul
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
+    NotificationSettingsModalModule,
   ],
   exports: [
     ModalWrapperModule,
@@ -80,6 +82,7 @@ import {EmbeddedLinkModalModule} from './embedded-link/embedded-link-modal.modul
     CopyProjectModalModule,
     ChooseOrganizationModalModule,
     EmbeddedLinkModalModule,
+    NotificationSettingsModalModule,
   ],
 })
 export class ModalModule {}
