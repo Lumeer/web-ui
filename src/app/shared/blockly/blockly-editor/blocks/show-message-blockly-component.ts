@@ -83,7 +83,7 @@ export class ShowMessageBlocklyComponent extends BlocklyComponent {
       const value_message = Blockly.JavaScript.valueToCode(block, 'MESSAGE', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
       const code =
-        this_.blocklyUtils.getLumeerVariable() + ".showMessage('" + message_type + "', " + value_message + ')';
+        this_.blocklyUtils.getLumeerVariable() + ".showMessage('" + message_type + "', " + value_message + ');\n';
 
       return code;
     };
