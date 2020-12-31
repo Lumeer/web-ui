@@ -31,6 +31,10 @@ import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type'
 import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
+import {
+  selectCollectionsByWritePermission,
+  selectLinkTypesByWritePermission,
+} from '../../../../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'blockly-form',
@@ -90,8 +94,8 @@ export class BlocklyFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.collections$ = this.store$.select(selectAllCollections);
-    this.linkTypes$ = this.store$.select(selectAllLinkTypes);
+    this.collections$ = this.store$.select(selectCollectionsByWritePermission);
+    this.linkTypes$ = this.store$.select(selectLinkTypesByWritePermission);
     if (this.collection) {
       this.variables = [
         {name: 'oldRecord', collectionId: this.collection.id},

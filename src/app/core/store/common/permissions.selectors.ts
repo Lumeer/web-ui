@@ -288,6 +288,15 @@ export const selectLinkTypesByReadPermission = createSelector(
   }
 );
 
+export const selectLinkTypesByWritePermission = createSelector(
+  selectAllLinkTypes,
+  selectCollectionsByWritePermission,
+  (linkTypes, collections) => {
+    const allowedCollectionIds = collections.map(collection => collection.id);
+    return linkTypes.filter(linkType => isArraySubset(allowedCollectionIds, linkType.collectionIds));
+  }
+);
+
 export const selectLinkTypesInQuery = createSelector(
   selectLinkTypesByReadPermission,
   selectViewQuery,
