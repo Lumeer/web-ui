@@ -17,34 +17,96 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-import {Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter} from '@angular/core';
-import {User} from '../../../core/store/users/user';
-import {UserNotificationGroupType} from '../../../core/model/user-notification';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {NotificationSettings, User} from '../../../core/store/users/user';
+import {UserNotificationGroupType, userNotificationGroupTypes} from '../../../core/model/user-notification';
+import {NotificationChannel} from '../../../core/model/notification-channel';
+import {NotificationFrequency} from '../../../core/model/notification-frequency';
+import {I18n} from '@ngx-translate/i18n-polyfill';
+import {SelectItem2Model} from '../../select/select-item2/select-item2.model';
+import {LanguageCode} from '../../top-panel/user-panel/user-menu/language';
 
 @Component({
   selector: 'notification-settings',
   templateUrl: './notification-settings.component.html',
   styleUrls: ['./notification-settings.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NotificationSettingsComponent implements OnInit {
-
   @Input()
   public user: User;
 
   @Output()
-  public settingsChange =new EventEmitter<{type: UserNotificationGroupType}>();
+  public settingsChange = new EventEmitter<NotificationSettings[]>();
 
-  public notificationsGroups = Object.values(UserNotificationGroupType);
+  @Output()
+  public languageChange = new EventEmitter<LanguageCode>();
 
-  constructor() {
+  public notificationsGroups: UserNotificationGroupType[] = Object.values(UserNotificationGroupType);
+  public notificationsGroupsValues: Record<string, boolean>;
+  public language: LanguageCode;
+  public languageSelectItems: SelectItem2Model[];
+
+  constructor(private i18n: I18n) {
+    this.languageSelectItems = [
+      {id: LanguageCode.EN, icons: ['flag-icon flag-icon-gb'], value: i18n({id: 'language.english', value: 'English'})},
+      {id: LanguageCode.CZ, icons: ['flag-icon flag-icon-cz'], value: i18n({id: 'language.czech', value: 'Czech'})},
+    ];
   }
 
   public ngOnInit() {
+    this.notificationsGroupsValues = convertSettingsToGroups(
+      this.user?.notifications?.settings,
+      NotificationChannel.Email
+    );
+    this.language = <LanguageCode>this.user.notifications?.language || LanguageCode.EN;
   }
 
   public onCheckedChange(group: UserNotificationGroupType, checked: boolean) {
-
+    this.notificationsGroupsValues[group] = checked;
+    const emailSettings = convertGroupsToSettings(this.notificationsGroupsValues, NotificationChannel.Email);
+    const otherSettings =
+      this.user?.notifications?.settings?.filter(
+        setting => setting.notificationChannel !== NotificationChannel.Email
+      ) || [];
+    this.settingsChange.emit([...emailSettings, ...otherSettings]);
   }
+
+  public onLanguageSelect(model: SelectItem2Model[]) {
+    this.language = model[0].id;
+    this.languageChange.emit(this.language);
+  }
+}
+
+function convertSettingsToGroups(
+  settings: NotificationSettings[],
+  channel: NotificationChannel
+): Record<string, boolean> {
+  return Object.values(UserNotificationGroupType).reduce((map, group) => {
+    const notificationTypes = userNotificationGroupTypes[group] || [];
+    const notification = settings?.find(
+      n => notificationTypes.includes(n.notificationType) && n.notificationChannel === channel
+    );
+    map[group] = !!notification;
+    return map;
+  }, {});
+}
+
+function convertGroupsToSettings(
+  settings: Record<string, boolean>,
+  notificationChannel: NotificationChannel
+): NotificationSettings[] {
+  return Object.keys(settings || []).reduce<NotificationSettings[]>((array, group) => {
+    if (settings[group]) {
+      const notificationTypes = userNotificationGroupTypes[group] || [];
+      array.push(
+        ...notificationTypes.map(notificationType => ({
+          notificationType,
+          notificationChannel,
+          notificationFrequency: NotificationFrequency.Immediately,
+        }))
+      );
+    }
+    return array;
+  }, []);
 }

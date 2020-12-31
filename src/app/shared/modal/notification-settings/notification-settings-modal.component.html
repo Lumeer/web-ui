@@ -6,7 +6,9 @@
   <span class="title" i18n="@@modal.notification.settings.title">Email notification settings</span>
 
   <div class="body p-3">
-    <notification-settings [user]="user$ | async">
+    <notification-settings [user]="user$ | async"
+                           (settingsChange)="onSettingsChange($event)"
+                           (languageChange)="onLanguageChange($event)">
     </notification-settings>
   </div>
 

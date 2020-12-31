@@ -20,11 +20,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NotificationSettingsComponent} from './notification-settings/notification-settings.component';
+import {SelectModule} from '../select/select.module';
 
 @NgModule({
   declarations: [NotificationSettingsComponent],
-  imports: [CommonModule],
-  exports: [NotificationSettingsComponent]
+  imports: [CommonModule, SelectModule],
+  exports: [NotificationSettingsComponent],
 })
-export class UserSettingsModule {
-}
+export class UserSettingsModule {}
