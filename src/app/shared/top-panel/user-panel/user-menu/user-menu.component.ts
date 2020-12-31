@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {select, Store} from '@ngrx/store';
@@ -39,12 +39,12 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationsAction} from '../../../../core/store/notifications/notifications.action';
 import PatchCurrentUser = UsersAction.PatchCurrentUser;
 import {selectAllViews} from '../../../../core/store/views/views.state';
-import {UserMenuDropdownComponent} from './dropdown/user-menu-dropdown.component';
 import {UserFeedbackModalComponent} from './user-feedback-modal/user-feedback-modal.component';
 import {ModalService} from '../../../modal/modal.service';
 import {Perspective} from '../../../../view/perspectives/perspective';
 import {SearchTab} from '../../../../core/store/navigation/search-tab';
 import {ReferralsOverviewModalComponent} from '../../../modal/referrals-overview/referrals-overview-modal.component';
+import {NotificationSettingsModalComponent} from '../../../modal/notification-settings/notification-settings-modal.component';
 
 @Component({
   selector: 'user-menu',
@@ -64,9 +64,6 @@ export class UserMenuComponent {
 
   @Output()
   public toggleControls = new EventEmitter();
-
-  @ViewChild(UserMenuDropdownComponent)
-  public userMenuComponent: UserMenuDropdownComponent;
 
   public currentUser$: Observable<User>;
   public url$: Observable<string>;
@@ -138,27 +135,23 @@ export class UserMenuComponent {
     this.store$.dispatch(new ServiceLimitsAction.GetAll());
     this.freePlan$ = this.store$.pipe(
       select(selectServiceLimitsByWorkspace),
-      map(serviceLimits => serviceLimits && serviceLimits.serviceLevel === ServiceLevelType.FREE)
+      map(serviceLimits => serviceLimits?.serviceLevel === ServiceLevelType.FREE)
     );
   }
 
   public goToOrganizationDetail() {
-    if (this.workspace && this.workspace.organizationCode) {
+    if (this.workspace?.organizationCode) {
       this.router.navigate(['o', this.workspace.organizationCode, 'detail']);
     }
   }
 
   public onFeedbackClick() {
-    this.userMenuComponent.close();
-
     const config = {initialState: {}, keyboard: false};
     config['backdrop'] = 'static';
     this.modalService.show(UserFeedbackModalComponent, config);
   }
 
   public onAffiliateClick() {
-    this.userMenuComponent.close();
-
     const config = {initialState: {}, keyboard: true};
     config['backdrop'] = 'static';
     this.modalService.show(ReferralsOverviewModalComponent, config);
@@ -191,10 +184,8 @@ export class UserMenuComponent {
             first()
           )
           .subscribe(user => {
-            const organizationCode =
-              this.workspace.organizationCode || (user.defaultWorkspace && user.defaultWorkspace.organizationCode);
-            const projectCode =
-              this.workspace.projectCode || (user.defaultWorkspace && user.defaultWorkspace.projectCode);
+            const organizationCode = this.workspace.organizationCode || user.defaultWorkspace?.organizationCode;
+            const projectCode = this.workspace.projectCode || user.defaultWorkspace?.projectCode;
 
             if (organizationCode && projectCode) {
               this.router
@@ -479,13 +470,13 @@ export class UserMenuComponent {
     }
   }
 
-  public onMenuClick() {
-    if (this.userMenuComponent) {
-      this.userMenuComponent.open();
-    }
-  }
-
   public onHintsToggle($event: boolean) {
     this.store$.dispatch(new UsersAction.SetHint({hint: UserHintsKeys.applicationHints, value: $event}));
+  }
+
+  public onNotificationSettings() {
+    const config = {initialState: {}, keyboard: true};
+    config['backdrop'] = 'static';
+    this.modalService.show(NotificationSettingsModalComponent, config);
   }
 }

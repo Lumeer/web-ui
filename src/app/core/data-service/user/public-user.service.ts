@@ -27,7 +27,8 @@ import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
 import {DEFAULT_USER} from '../../constants';
-import {UserHintsDto} from '../../dto/user.dto';
+import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
+import {map} from 'rxjs/operators';
 
 @Injectable()
 export class PublicUserService implements UserService {
@@ -105,5 +106,9 @@ export class PublicUserService implements UserService {
 
   public updateHints(hints: UserHintsDto): Observable<UserHintsDto> {
     return of({});
+  }
+
+  public updateNotifications(notifications: NotificationsSettingsDto): Observable<UserDto> {
+    return this.getCurrentUser().pipe(map(user => ({...user, notifications})));
   }
 }

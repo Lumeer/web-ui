@@ -18,9 +18,9 @@
  */
 
 import {UserDto} from '../../dto';
-import {DefaultWorkspace, NotificationSettings, User, UserHints} from './user';
+import {DefaultWorkspace, NotificationsSettings, User, UserHints} from './user';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
-import {NotificationSettingsDto, UserHintsDto} from '../../dto/user.dto';
+import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
 import {UserNotificationTypeMap} from '../../model/user-notification';
 import {NotificationFrequencyMap} from '../../model/notification-frequency';
 import {NotificationChannelMap} from '../../model/notification-channel';
@@ -58,7 +58,6 @@ export function convertUserDtoToModel(dto: UserDto): User {
     referral: dto.referral,
     affiliatePartner: dto.affiliatePartner,
     emailVerified: dto.emailVerified,
-    notificationsLanguage: dto.notificationsLanguage,
     notifications: convertNotificationsFromDto(dto.notifications),
     hints: convertUserHintsDtoToModel(dto.hints),
   };
@@ -76,18 +75,27 @@ export function convertUserModelToDto(user: Partial<User>): UserDto {
     referral: user.referral,
     affiliatePartner: user.affiliatePartner,
     emailVerified: user.emailVerified,
-    notifications: user.notifications,
-    notificationsLanguage: user.notificationsLanguage,
+    notifications: convertNotificationsToDto(user.notifications),
     hints: convertUserHintsModelToDto(user.hints),
   };
 }
 
-function convertNotificationsFromDto(notifications: NotificationSettingsDto[]): NotificationSettings[] {
-  return (notifications || []).map(notification => ({
+export function convertNotificationsFromDto(notifications: NotificationsSettingsDto): NotificationsSettings {
+  const settings = (notifications?.settings || []).map(notification => ({
     notificationType: UserNotificationTypeMap[notification.notificationType],
     notificationFrequency: NotificationFrequencyMap[notification.notificationFrequency],
     notificationChannel: NotificationChannelMap[notification.notificationChannel],
   }));
+  return {settings, language: notifications?.language};
+}
+
+export function convertNotificationsToDto(notifications: NotificationsSettings): NotificationsSettingsDto {
+  const settings = (notifications?.settings || []).map(notification => ({
+    notificationType: notification.notificationType?.toString(),
+    notificationFrequency: notification.notificationFrequency?.toString(),
+    notificationChannel: notification.notificationChannel?.toString(),
+  }));
+  return {settings, language: notifications?.language};
 }
 
 export function convertUserHintsModelToDto(hints: UserHints): UserHintsDto {

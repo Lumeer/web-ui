@@ -39,8 +39,7 @@ export interface User {
   referrals?: PaymentStats;
   affiliatePartner?: boolean;
   emailVerified?: boolean;
-  notificationsLanguage?: string;
-  notifications?: NotificationSettings[];
+  notifications?: NotificationsSettings;
   hints?: UserHints;
 
   correlationId?: string;
@@ -59,6 +58,11 @@ export const enum UserHintsKeys {
 
 export interface UserHints {
   applicationHints?: boolean;
+}
+
+export interface NotificationsSettings {
+  settings?: NotificationSettings[];
+  language?: string;
 }
 
 export interface NotificationSettings {

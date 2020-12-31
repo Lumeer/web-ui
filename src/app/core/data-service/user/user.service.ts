@@ -22,7 +22,7 @@ import {UserDto} from '../../dto';
 import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../../store/organizations/payment/payment';
 import {DefaultWorkspaceDto} from '../../dto/default-workspace.dto';
-import {UserHintsDto} from '../../dto/user.dto';
+import {NotificationsSettingsDto, UserHintsDto} from '../../dto/user.dto';
 
 export abstract class UserService {
   public abstract createUser(organizationId: string, user: UserDto): Observable<UserDto>;
@@ -59,4 +59,6 @@ export abstract class UserService {
   public abstract getHints(): Observable<UserHintsDto>;
 
   public abstract updateHints(hints: UserHintsDto): Observable<UserHintsDto>;
+
+  public abstract updateNotifications(notifications: NotificationsSettingsDto): Observable<UserDto>;
 }

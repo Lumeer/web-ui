@@ -3,14 +3,14 @@
      placement="bottom"
      class="ml-2 cursor-pointer"
      data-tour="user-menu"
-     (click)="onMenuClick()" #origin>
+     (click)="dropdown.open()" #origin>
   <img *ngIf="userEmail; else userIcon"
        ngxGravatar
        [email]="userEmail"
        [size]="30">
 </div>
 
-<user-menu-dropdown [origin]="origin"
+<user-menu-dropdown [origin]="origin" #dropdown
                     [currentUser]="currentUser$ | async"
                     [freePlan]="freePlan$ | async"
                     [url]="url$ | async"
@@ -18,8 +18,9 @@
                     (logout)="onLogoutClick()"
                     (organizationDetail)="goToOrganizationDetail()"
                     (startTour)="onStartTour()"
+                    (notificationSettings)="onNotificationSettings()"
                     (affiliate)="onAffiliateClick()"
-(hintsToggle)="onHintsToggle($event)">
+                    (hintsToggle)="onHintsToggle($event)">
 </user-menu-dropdown>
 
 <ng-template #userIcon>

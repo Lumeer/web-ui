@@ -57,6 +57,8 @@ export function usersReducer(state: UsersState = initialUsersState, action: User
       return {...state, currentUser: {...state.currentUser, referrals: action.payload.referrals}};
     case UsersActionType.GET_HINTS_SUCCESS:
       return {...state, currentUser: {...state.currentUser, hints: action.payload.hints}};
+    case UsersActionType.UPDATE_NOTIFICATIONS_SUCCESS:
+      return {...state, currentUser: action.payload.user};
     case UsersActionType.UPDATE_HINTS:
       return {...state, currentUser: {...state.currentUser, hints: action.payload.hints}};
     case UsersActionType.UPDATE_HINTS_FAILURE:

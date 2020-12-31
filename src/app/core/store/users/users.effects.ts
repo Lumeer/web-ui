@@ -32,6 +32,7 @@ import {NotificationsAction} from '../notifications/notifications.action';
 import {selectOrganizationsDictionary} from '../organizations/organizations.state';
 import {
   convertDefaultWorkspaceModelToDto,
+  convertNotificationsToDto,
   convertUserDtoToModel,
   convertUserHintsDtoToModel,
   convertUserHintsModelToDto,
@@ -44,6 +45,7 @@ import {environment} from '../../../../environments/environment';
 import mixpanel from 'mixpanel-browser';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {isNullOrUndefined} from '../../../shared/utils/common.utils';
+import {createCallbackActions} from '../store.utils';
 
 @Injectable()
 export class UsersEffects {
@@ -337,7 +339,7 @@ export class UsersEffects {
       return this.userService.saveDefaultWorkspace(defaultWorkspaceDto).pipe(
         withLatestFrom(this.store$.select(selectCurrentUser)),
         map(
-          ([result, user]) =>
+          ([, user]) =>
             new UsersAction.SaveDefaultWorkspaceSuccess({
               user,
               defaultWorkspace: action.payload.defaultWorkspace,
@@ -385,7 +387,7 @@ export class UsersEffects {
     mergeMap(() => {
       return this.userService.getHints().pipe(
         map(dto => convertUserHintsDtoToModel(dto)),
-        map(hints => new UsersAction.GetHintsSuccess({hints: hints})),
+        map(hints => new UsersAction.GetHintsSuccess({hints})),
         catchError(error => of(new UsersAction.GetHintsFailure({error})))
       );
     })
@@ -397,6 +399,34 @@ export class UsersEffects {
     tap(action => console.error(action.payload.error)),
     map(() => {
       const message = this.i18n({id: 'currentUser.get.fail', value: 'Could not get user details'});
+      return new NotificationsAction.Error({message});
+    })
+  );
+
+  @Effect()
+  public updateNotifications$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.UpdateNotifications>(UsersActionType.UPDATE_NOTIFICATIONS),
+    mergeMap(action => {
+      const {notifications, onSuccess, onFailure} = action.payload;
+      return this.userService.updateNotifications(convertNotificationsToDto(notifications)).pipe(
+        map(dto => convertUserDtoToModel(dto)),
+        mergeMap(user => [new UsersAction.UpdateNotificationsSuccess({user}), ...createCallbackActions(onSuccess)]),
+        catchError(error =>
+          of(new UsersAction.UpdateNotificationsFailure({error}), ...createCallbackActions(onFailure))
+        )
+      );
+    })
+  );
+
+  @Effect()
+  public updateNotificationsFailure$: Observable<Action> = this.actions$.pipe(
+    ofType<UsersAction.UpdateNotificationsFailure>(UsersActionType.UPDATE_NOTIFICATIONS_FAILURE),
+    tap(action => console.error(action.payload.error)),
+    map(() => {
+      const message = this.i18n({
+        id: 'user.update.notifications.fail',
+        value: 'Could not update notifications settings',
+      });
       return new NotificationsAction.Error({message});
     })
   );
