@@ -24,10 +24,13 @@ import {Attribute, AttributeFunction, Collection} from '../../../core/store/coll
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {select, Store} from '@ngrx/store';
 import {BsModalRef} from 'ngx-bootstrap/modal';
-import {selectAllCollections, selectCollectionById} from '../../../core/store/collections/collections.state';
+import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {map, tap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
-import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
+import {
+  selectCollectionsByReadPermission,
+  selectLinkTypesByCollectionId,
+} from '../../../core/store/common/permissions.selectors';
 import {selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/link-types.state';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
@@ -76,7 +79,7 @@ export class AttributeFunctionModalComponent implements OnInit {
   constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.select(selectAllCollections);
+    this.collections$ = this.store$.select(selectCollectionsByReadPermission);
 
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(
