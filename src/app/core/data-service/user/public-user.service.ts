@@ -109,8 +109,6 @@ export class PublicUserService implements UserService {
   }
 
   public updateNotifications(notifications: NotificationsSettingsDto): Observable<UserDto> {
-    return this.getCurrentUser().pipe(
-      map(user => ({...user, notifications}))
-    );
+    return this.getCurrentUser().pipe(map(user => ({...user, notifications})));
   }
 }
