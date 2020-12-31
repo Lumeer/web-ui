@@ -18,7 +18,7 @@
  */
 
 import {Action} from '@ngrx/store';
-import {DefaultWorkspace, User, UserHints} from './user';
+import {DefaultWorkspace, NotificationsSettings, User, UserHints} from './user';
 import {InvitationType} from '../../model/invitation-type';
 import {PaymentStats} from '../organizations/payment/payment';
 import {UserHintsDto} from '../../dto/user.dto';
@@ -67,6 +67,10 @@ export enum UsersActionType {
   GET_HINTS = '[User] Get Hints',
   GET_HINTS_SUCCESS = '[User] Get Hints :: Success',
   GET_HINTS_FAILURE = '[User] Get Hints :: Failure',
+
+  UPDATE_NOTIFICATIONS = '[User] Update Notifications',
+  UPDATE_NOTIFICATIONS_SUCCESS = '[User] Update Notifications :: Success',
+  UPDATE_NOTIFICATIONS_FAILURE = '[User] Update Notifications :: Failure',
 
   UPDATE_HINTS = '[User] Update Hints',
   UPDATE_HINTS_SUCCESS = '[User] Update Hints :: Success',
@@ -258,6 +262,26 @@ export namespace UsersAction {
     public constructor(public payload: {error: any}) {}
   }
 
+  export class UpdateNotifications implements Action {
+    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS;
+
+    public constructor(
+      public payload: {notifications: NotificationsSettings; onSuccess?: () => void; onFailure?: () => void}
+    ) {}
+  }
+
+  export class UpdateNotificationsSuccess implements Action {
+    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS_SUCCESS;
+
+    public constructor(public payload: {user: User}) {}
+  }
+
+  export class UpdateNotificationsFailure implements Action {
+    public readonly type = UsersActionType.UPDATE_NOTIFICATIONS_FAILURE;
+
+    public constructor(public payload: {error: any}) {}
+  }
+
   export class UpdateHints implements Action {
     public readonly type = UsersActionType.UPDATE_HINTS;
 
@@ -329,6 +353,9 @@ export namespace UsersAction {
     | UpdateHints
     | UpdateHintsSuccess
     | UpdateHintsFailure
+    | UpdateNotifications
+    | UpdateNotificationsSuccess
+    | UpdateNotificationsFailure
     | SetHint
     | SetHintSuccess
     | SetHintFailure;

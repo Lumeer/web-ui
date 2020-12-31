@@ -1,0 +1,24 @@
+<div class="d-flex align-items-center">
+  <div class="flex-grow-1 py-2" i18n="@@user.notification.settings.language">Notifications language</div>
+  <select-item2 [removable]="false"
+                [items]="languageSelectItems"
+                [showAsLink]="false"
+                [selectedPath]="[language]"
+                (selectPath)="onLanguageSelect($event)">
+  </select-item2>
+</div>
+
+<div class="notification d-flex align-items-center cursor-pointer" *ngFor="let group of notificationsGroups"
+     (click)="switchElement.click()">
+  <div class="flex-grow-1 py-2 d-flex flex-column">
+    <div
+      i18n="@@user.notification.settings.title">{group, select, ResourceShared {Resource Shared} DueDateChanged {Due Date Changed} TaskAssigned {Task Assigned} TaskUpdated {Task Updated} TaskRemoved {Task Removed} StateUpdated {State Updated}}</div>
+    <div class="text-muted small" i18n="@@user.notification.settings.description">{group, select, ResourceShared {Organization, Project, View or Table shared} DueDateChanged {} TaskAssigned {Task assigned or unassigned} TaskUpdated {Data of task updated} TaskRemoved {} StateUpdated {}}</div>
+  </div>
+
+  <label class="switch">
+    <input type="checkbox" #switchElement [checked]="notificationsGroupsValues[group]"
+           (change)="onCheckedChange(group, $event.target.checked)">
+    <span class="slider round" (click)="$event.stopPropagation()"></span>
+  </label>
+</div>

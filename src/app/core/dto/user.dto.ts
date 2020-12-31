@@ -37,12 +37,16 @@ export interface UserDto {
   referral?: string;
   affiliatePartner?: boolean;
   emailVerified?: boolean;
-  notificationsLanguage?: string;
-  notifications?: NotificationSettingsDto[];
+  notifications?: NotificationsSettingsDto;
   hints?: UserHintsDto;
 }
 
 export type UserHintsDto = {[key: string]: any};
+
+export interface NotificationsSettingsDto {
+  settings?: NotificationSettingsDto[];
+  language?: string;
+}
 
 export interface NotificationSettingsDto {
   notificationType?: string;

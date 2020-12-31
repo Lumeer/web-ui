@@ -51,6 +51,29 @@ export const UserNotificationTypeMap = {
   [UserNotificationType.DueDateChanged]: UserNotificationType.DueDateChanged,
 };
 
+export enum UserNotificationGroupType {
+  ResourceShared = 'ResourceShared',
+  TaskAssigned = 'TaskAssigned',
+  TaskUpdated = 'TaskUpdated',
+  TaskRemoved = 'TaskRemoved',
+  DueDateChanged = 'DueDateChanged',
+  StateUpdated = 'StateUpdated',
+}
+
+export const userNotificationGroupTypes: Record<UserNotificationGroupType, UserNotificationType[]> = {
+  [UserNotificationGroupType.ResourceShared]: [
+    UserNotificationType.OrganizationShared,
+    UserNotificationType.ProjectShared,
+    UserNotificationType.CollectionShared,
+    UserNotificationType.ViewShared,
+  ],
+  [UserNotificationGroupType.TaskAssigned]: [UserNotificationType.TaskAssigned, UserNotificationType.TaskUnassigned],
+  [UserNotificationGroupType.DueDateChanged]: [UserNotificationType.DueDateSoon, UserNotificationType.PastDueDate],
+  [UserNotificationGroupType.TaskUpdated]: [UserNotificationType.TaskUpdated],
+  [UserNotificationGroupType.TaskRemoved]: [UserNotificationType.TaskRemoved],
+  [UserNotificationGroupType.StateUpdated]: [UserNotificationType.StateUpdate],
+};
+
 interface BasicUserNotification {
   id?: string;
   userId: string;
