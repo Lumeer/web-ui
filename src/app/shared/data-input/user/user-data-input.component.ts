@@ -42,6 +42,7 @@ import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration, UserDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'user-data-input',
@@ -91,7 +92,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
 
   public name: string = '';
   public users: User[];
-  public selectedUsers: User[];
+  public selectedUsers$ = new BehaviorSubject<User[]>([]);
   public multi: boolean;
 
   private setFocus: boolean;
@@ -108,8 +109,8 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocus = true;
     }
     if (changes.value && this.value) {
+      this.selectedUsers$.next(this.value.users || []);
       this.users = this.bindUsers();
-      this.selectedUsers = this.value.users;
       this.multi = this.value.config?.multi;
       this.name = this.value.inputValue || '';
     }
@@ -138,7 +139,9 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private bindUsers(): User[] {
-    return (this.value && this.value.constraintData && this.value.constraintData.users) || [];
+    const users = [...(this.value?.constraintData?.users || [])];
+    users.push(...(this.value?.users || []).filter(user => !users.some(u => u.email === user.email)));
+    return users;
   }
 
   public ngAfterViewChecked() {
@@ -187,8 +190,8 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
         this.cancel.emit();
         return;
       case KeyCode.Backspace:
-        if (!this.name && this.multi && this.selectedUsers.length > 0) {
-          this.selectedUsers = this.selectedUsers.slice(0, this.selectedUsers.length - 1);
+        if (!this.name && this.multi && this.selectedUsers$.value.length > 0) {
+          this.selectedUsers$.next(this.selectedUsers$.value.slice(0, this.selectedUsers$.value.length - 1));
         }
         return;
     }
@@ -197,12 +200,12 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private toggleOption(option: DropdownOption) {
-    if (this.selectedUsers.some(o => o.email === option.value)) {
-      this.selectedUsers = this.selectedUsers.filter(o => o.email !== option.value);
+    if (this.selectedUsers$.value.some(o => o.email === option.value)) {
+      this.selectedUsers$.next(this.selectedUsers$.value.filter(o => o.email !== option.value));
     } else {
       const selectUser = (this.users || []).find(o => o.email === option.value);
       if (selectUser) {
-        this.selectedUsers = [...this.selectedUsers, selectUser];
+        this.selectedUsers$.next([...this.selectedUsers$.value, selectUser]);
         setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
       }
     }
@@ -214,7 +217,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
     if (this.multi) {
       const selectedUser = activeOption && this.users.find(option => option.email === activeOption.value);
       if (selectedUser || !this.value.config.externalUsers || !inputIsEmail) {
-        const options = [...this.selectedUsers, selectedUser].filter(option => !!option);
+        const options = [...this.selectedUsers$.value, selectedUser].filter(option => !!option);
         const emails = uniqueValues(options.map(option => option.email));
         const dataValue = this.value.copy(emails);
         this.save.emit({action, dataValue});
@@ -230,7 +233,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       inputIsEmail
     ) {
       if (this.multi) {
-        const emails = uniqueValues([...this.selectedUsers.map(option => option.email), this.name.trim()]);
+        const emails = uniqueValues([...this.selectedUsers$.value.map(option => option.email), this.name.trim()]);
         this.save.emit({action, dataValue: this.value.copy(emails)});
       } else {
         this.save.emit({action, dataValue: this.value.parseInput(this.name)});

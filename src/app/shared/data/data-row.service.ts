@@ -33,7 +33,6 @@ import {isNotNullOrUndefined} from '../utils/common.utils';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {deepArrayEquals} from '../utils/array.utils';
 import {findAttributeByName} from '../utils/attribute.utils';
-import {skip} from 'rxjs/operators';
 import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../core/model/resource';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
@@ -109,13 +108,13 @@ export class DataRowService {
       ? this.store$.pipe(select(selectDocumentById(this.dataResource.id)))
       : of(this.dataResource);
     this.subscriptions.add(
-      combineLatest([documentObservable, this.store$.pipe(select(selectCollectionById(this.resource.id)))])
-        .pipe(skip(1))
-        .subscribe(([document, collection]) => {
+      combineLatest([documentObservable, this.store$.pipe(select(selectCollectionById(this.resource.id)))]).subscribe(
+        ([document, collection]) => {
           this.dataResource = document;
           this.resource = collection;
           this.refreshRows();
-        })
+        }
+      )
     );
   }
 
@@ -124,13 +123,13 @@ export class DataRowService {
       ? this.store$.pipe(select(selectLinkInstanceById(this.dataResource.id)))
       : of(this.dataResource);
     this.subscriptions.add(
-      combineLatest([linkInstanceObservable, this.store$.pipe(select(selectLinkTypeById(this.resource.id)))])
-        .pipe(skip(1))
-        .subscribe(([document, collection]) => {
+      combineLatest([linkInstanceObservable, this.store$.pipe(select(selectLinkTypeById(this.resource.id)))]).subscribe(
+        ([document, collection]) => {
           this.dataResource = document;
           this.resource = collection;
           this.refreshRows();
-        })
+        }
+      )
     );
   }
 
