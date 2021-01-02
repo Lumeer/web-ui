@@ -138,7 +138,7 @@
         <source>A new view has been shared with you.</source><target>Máte přístup k novému pohledu.</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context><context context-type="linenumber">15</context></context-group></trans-unit><trans-unit id="userNotifications.taskAssignedPrefix" datatype="html">
-        <source>A task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> </source>
+        <source>The task <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> </source>
         <target>Byl Vám přidělen nový úkol <x id="START_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;em>"/><x id="CLOSE_EMPHASISED_TEXT" ctype="x-em" equiv-text="&lt;/em>"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
@@ -146,13 +146,13 @@
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskAssignedMiddle" datatype="html">
         <source>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
-        <target>s termínem dokončení <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/></target>
+        <target>s termínem dokončení <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskAssignedSuffix" datatype="html">
-        <source>has been assigned to you.</source><target>.</target>
+        <source> has been assigned to you.</source><target>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">21</context>
