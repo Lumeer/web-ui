@@ -34,8 +34,7 @@ import {SelectConstraintOptionsFormControl} from '../select-constraint-form-cont
 import {moveFormArrayItem, removeAllFormArrayControls} from '../../../../../../utils/form.utils';
 import {ColorPickerComponent} from '../../../../../../picker/color/color-picker.component';
 import {unescapeHtml} from '../../../../../../utils/common.utils';
-
-const MAX_PREDEFINED_VALUES = 100;
+import {DataValue} from '../../../../../../../core/model/data-value';
 
 @Component({
   selector: 'select-constraint-options-form',
@@ -54,7 +53,7 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   public options: SelectConstraintOption[];
 
   @Input()
-  public uniqueValues: any[];
+  public dataValues: DataValue[];
 
   @ViewChildren('valueInput')
   public valueInputs: QueryList<ElementRef<HTMLInputElement>>;
@@ -82,7 +81,7 @@ export class SelectConstraintOptionsFormComponent implements OnChanges {
   private createForm() {
     const options: SelectConstraintOption[] = this.options?.length
       ? this.options
-      : (this.uniqueValues || []).slice(0, MAX_PREDEFINED_VALUES).map(value => ({value}));
+      : (this.dataValues || []).map(dataValue => ({value: dataValue.format()}));
     options.map((option, index) => this.createOptionForm(index, option)).forEach(form => this.form.push(form));
     const optionsLength = options.length;
     this.form.push(this.createOptionForm(optionsLength));

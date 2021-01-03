@@ -40,6 +40,7 @@ import {ConstraintType} from '../../../core/model/data/constraint';
 import {constraintTypeClass} from '../pipes/constraint-class.pipe';
 import {CommonDataInputConfiguration, SelectDataInputConfiguration} from '../data-input-configuration';
 import {DataInputSaveAction, keyboardEventInputSaveAction} from '../data-input-save-action';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'select-data-input',
@@ -87,7 +88,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   public readonly inputClass = constraintTypeClass(ConstraintType.Select);
 
   public dropdownOptions: DropdownOption[] = [];
-  public selectedOptions: SelectConstraintOption[] = [];
+  public selectedOptions$ = new BehaviorSubject<SelectConstraintOption[]>([]);
 
   public multi: boolean;
   public text = '';
@@ -107,7 +108,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     }
     if (changes.value && this.value) {
       this.dropdownOptions = this.createDropdownOptions(this.value.config);
-      this.selectedOptions = this.value.options;
+      this.selectedOptions$.next(this.value.options || []);
       this.text = this.value.inputValue || '';
       this.multi = this.value.config?.multi;
     }
@@ -190,8 +191,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
         this.cancel.emit();
         return;
       case KeyCode.Backspace:
-        if (!this.text && this.multi && this.selectedOptions.length > 0) {
-          this.selectedOptions = this.selectedOptions.slice(0, this.selectedOptions.length - 1);
+        if (!this.text && this.multi && this.selectedOptions$.value.length > 0) {
+          this.selectedOptions$.next(this.selectedOptions$.value.slice(0, this.selectedOptions$.value.length - 1));
         }
         return;
     }
@@ -200,20 +201,20 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private toggleOption(option: DropdownOption) {
-    if (this.selectedOptions.some(o => o.value === option.value)) {
-      this.selectedOptions = this.selectedOptions.filter(o => o.value !== option.value);
+    if (this.selectedOptions$.value.some(o => o.value === option.value)) {
+      this.selectedOptions$.next(this.selectedOptions$.value.filter(o => o.value !== option.value));
     } else {
       const selectOption = (this.value.config.options || []).find(o => o.value === option.value);
       if (selectOption) {
         const displayValues = this.value.config.displayValues;
         const newOption = displayValues ? selectOption : {...selectOption, displayValue: selectOption.value};
-        this.selectedOptions = [...this.selectedOptions, newOption];
+        this.selectedOptions$.next([...this.selectedOptions$.value, newOption]);
         setTimeout(() => (this.wrapperElement.nativeElement.scrollLeft = Number.MAX_SAFE_INTEGER));
       }
     }
     this.resetSearchInput();
 
-    const optionValues = uniqueValues(this.selectedOptions.map(selectedOption => selectedOption.value));
+    const optionValues = uniqueValues(this.selectedOptions$.value.map(selectedOption => selectedOption.value));
     const dataValue = this.value.copy(optionValues);
     this.valueChange.emit(dataValue);
   }
@@ -227,7 +228,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
     if (this.multi) {
       const selectedOption =
         activeOption && this.value.config.options.find(option => option.value === activeOption.value);
-      const options = [...this.selectedOptions, selectedOption].filter(option => !!option);
+      const options = [...this.selectedOptions$.value, selectedOption].filter(option => !!option);
       const optionValues = uniqueValues(options.map(option => option.value));
       const dataValue = this.value.copy(optionValues);
       this.save.emit({action, dataValue});

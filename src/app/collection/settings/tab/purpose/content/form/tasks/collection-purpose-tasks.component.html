@@ -59,17 +59,17 @@
   </div>
 
   <div class="form-group row m-0 mt-3"
-       *ngIf="collection?.attributes | stateListConstraint:stateControl.value:(documents$ | async):(constraintData$ | async) as stateConstraint">
+       *ngIf="collection?.attributes | stateListConstraint:stateControl.value:(documents$ | async):(constraintData$ | async) as stateConstraintData">
     <label class="col-sm-12 col-md-3 px-0 col-lg-2 col-form-label" i18n="@@collections.tab.purpose.stateList.label">
       Done States
     </label>
     <div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 px-0">
-      <data-input class="p-0 form-control multiline"
-                  [dataValue]="stateList$ | async | dataValue:stateConstraint"
+      <data-input class="py-0 px-1 form-control multiline d-flex align-items-center cursor-pointer"
+                  [dataValue]="stateList$ | async | dataValue:stateConstraintData.constraint:stateConstraintData.constraintData"
                   [focus]="true"
                   [configuration]="dataInputConfiguration"
                   [readonly]="!(stateListEditing$ | async)"
-                  [constraint]="stateConstraint"
+                  [constraint]="stateConstraintData.constraint"
                   (click)="$event.preventDefault(); setStateListEditing(true)"
                   (valueChange)="onStateListChange($event)"
                   (save)="onStateListSave($event)"

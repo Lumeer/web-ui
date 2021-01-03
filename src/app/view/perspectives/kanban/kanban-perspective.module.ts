@@ -40,7 +40,6 @@ import {DropdownModule} from '../../../shared/dropdown/dropdown.module';
 import {PresenterModule} from '../../../shared/presenter/presenter.module';
 import {KanbanDueDateSelectItemsPipe} from './pipes/kanban-due-date-select-items.pipe';
 import {KanbanDueHoursTagPipe} from './pipes/kanban-due-hours-tag.pipe';
-import {KanbanColumnTitlesPipe} from './pipes/kanban-column-titles.pipe';
 import {KanbanSelectDataItemsPipe} from './pipes/kanban-select-data-items.pipe';
 import {KanbanAggregationConfigComponent} from './content/config/stem/aggregation/kanban-aggregation-config.component';
 import {KanbanValueTypeSelectItemsPipe} from './pipes/kanban-value-type-select-items.pipe';
@@ -66,7 +65,6 @@ import {FilterKanbanCardsByPagePipe} from './pipes/filter-kanban-cards-by-page.p
     IsAnyKanbanAttributeSelectedPipe,
     KanbanDueDateSelectItemsPipe,
     KanbanDueHoursTagPipe,
-    KanbanColumnTitlesPipe,
     KanbanSelectDataItemsPipe,
     KanbanAggregationConfigComponent,
     KanbanValueTypeSelectItemsPipe,

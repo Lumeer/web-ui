@@ -19,7 +19,7 @@
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Constraint} from '../../../../../../core/model/constraint';
-import {Collection} from '../../../../../../core/store/collections/collection';
+import {Attribute, Collection} from '../../../../../../core/store/collections/collection';
 import {KanbanAttribute, KanbanResource, KanbanStemConfig} from '../../../../../../core/store/kanbans/kanban';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {SelectItemWithConstraintId} from '../../../../../../shared/select/select-constraint-item/select-item-with-constraint.component';
@@ -27,8 +27,18 @@ import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {getAttributesResourceType} from '../../../../../../shared/utils/resource.utils';
-import {AttributesResource} from '../../../../../../core/model/resource';
+import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../../core/model/resource';
 import {QueryResource} from '../../../../../../core/model/query-attribute';
+import {findAttribute} from '../../../../../../core/store/collections/collection.util';
+import {ConstraintData} from '../../../../../../core/model/data/constraint';
+import {BehaviorSubject, Observable, of} from 'rxjs';
+import {AppState} from '../../../../../../core/store/app.state';
+import {select, Store} from '@ngrx/store';
+import {selectDocumentsByCollectionId} from '../../../../../../core/store/documents/documents.state';
+import {selectLinkInstancesByType} from '../../../../../../core/store/link-instances/link-instances.state';
+import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
+import {DataValue} from '../../../../../../core/model/data-value';
+import {isArray} from '../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'kanban-stem-config',
@@ -49,7 +59,7 @@ export class KanbanStemConfigComponent implements OnChanges {
   public stem: QueryStem;
 
   @Input()
-  public columnTitles: any[];
+  public constraintData: ConstraintData;
 
   @Output()
   public configChange = new EventEmitter<{config: KanbanStemConfig; shouldRebuildConfig: boolean}>();
@@ -58,25 +68,42 @@ export class KanbanStemConfigComponent implements OnChanges {
   public readonly emptyValueString: string;
   public readonly emptyResourceString: string;
   public readonly dueDateEmptyValueString: string;
-  public readonly doneAttributeEmptyValueString: string;
-  public readonly doneAttributeString: string;
+  public readonly dataInputConfiguration: DataInputConfiguration = {select: {wrapItems: true}};
 
   public attributesResourcesOrder: AttributesResource[];
+  public attribute: Attribute;
+  public attributeResource: AttributesResource;
+  public dataResources$: Observable<DataResource[]>;
+  public doneTitlesEditing$ = new BehaviorSubject(false);
 
-  constructor(private i18n: I18n) {
+  constructor(private i18n: I18n, private store$: Store<AppState>) {
     this.emptyResourceString = i18n({id: 'kanban.config.collection.resource.empty', value: 'Select table or link'});
     this.emptyValueString = i18n({id: 'kanban.config.collection.attribute.empty', value: 'Select attribute'});
     this.dueDateEmptyValueString = i18n({id: 'kanban.config.collection.dueDate.empty', value: 'Select due date'});
-    this.doneAttributeEmptyValueString = i18n({
-      id: 'kanban.config.collection.doneAttribute.empty',
-      value: 'Select done state',
-    });
-    this.doneAttributeString = i18n({id: 'kanban.config.collection.doneAttribute', value: 'Done state'});
   }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.stem || changes.collections || changes.linkTypes) {
       this.attributesResourcesOrder = queryStemAttributesResourcesOrder(this.stem, this.collections, this.linkTypes);
+    }
+    if (changes.config || changes.collections || changes.linkTypes) {
+      this.bindData();
+    }
+  }
+
+  private bindData() {
+    this.attributeResource =
+      this.config.attribute && this.attributesResourcesOrder[this.config.attribute.resourceIndex];
+    this.attribute =
+      this.config.attribute && findAttribute(this.attributeResource?.attributes, this.config.attribute.attributeId);
+    if (this.attributeResource) {
+      if (this.config.attribute.resourceType === AttributesResourceType.Collection) {
+        this.dataResources$ = this.store$.pipe(select(selectDocumentsByCollectionId(this.attributeResource.id)));
+      } else {
+        this.dataResources$ = this.store$.pipe(select(selectLinkInstancesByType(this.attributeResource.id)));
+      }
+    } else {
+      this.dataResources$ = of([]);
     }
   }
 
@@ -99,26 +126,6 @@ export class KanbanStemConfigComponent implements OnChanges {
 
   public onDueDateRemoved() {
     this.onConfigChange({...this.config, dueDate: null}, false);
-  }
-
-  public onDoneColumnRemoved(index: number) {
-    const newTitles = [
-      ...(this.config.doneColumnTitles.slice(0, index) || []),
-      ...(this.config.doneColumnTitles.slice(index + 1) || []),
-    ];
-    const doneColumnTitles = newTitles.length ? newTitles : undefined;
-    this.onConfigChange({...this.config, doneColumnTitles}, false);
-  }
-
-  public onDoneColumnSelected(selectId: string, index: number) {
-    if (index === -1) {
-      const newTitles = [...(this.config.doneColumnTitles || []), selectId];
-      this.onConfigChange({...this.config, doneColumnTitles: newTitles}, false);
-    } else {
-      const doneColumnTitles = [...this.config.doneColumnTitles];
-      doneColumnTitles.splice(index, 1, selectId);
-      this.onConfigChange({...this.config, doneColumnTitles}, false);
-    }
   }
 
   private configElementSelected(selectId: SelectItemWithConstraintId, element: string) {
@@ -166,5 +173,18 @@ export class KanbanStemConfigComponent implements OnChanges {
 
   public onResourceRemoved() {
     this.onConfigChange({...this.config, resource: null});
+  }
+
+  public doneTitlesEditing(editing: boolean) {
+    this.doneTitlesEditing$.next(editing);
+  }
+
+  public onDoneTitlesChange(dataValue: DataValue) {
+    const serializedValue = dataValue.serialize();
+    this.doneTitlesEditing(false);
+    this.onConfigChange({
+      ...this.config,
+      doneColumnTitles: isArray(serializedValue) ? serializedValue : [serializedValue],
+    });
   }
 }

@@ -18,15 +18,57 @@
  */
 
 import {QueryStem} from '../../../core/store/navigation/query/query';
-import {Attribute, Collection} from '../../../core/store/collections/collection';
+import {Attribute, Collection, CollectionPurposeType} from '../../../core/store/collections/collection';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {GanttChartStemConfig} from '../../../core/store/gantt-charts/gantt-chart';
 import {queryStemAttributesResourcesOrder} from '../../../core/store/navigation/query/query.util';
 import {findAttribute, getDefaultAttributeId} from '../../../core/store/collections/collection.util';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {AttributesResource, AttributesResourceType} from '../../../core/model/resource';
 import {ConstraintType} from '../../../core/model/data/constraint';
 import {QueryAttribute} from '../../../core/model/query-attribute';
+
+export function createDefaultTaskPurposeConfig(
+  stem: QueryStem,
+  collections: Collection[],
+  linkTypes: LinkType[]
+): {dueDate?: QueryAttribute; assignee?: QueryAttribute; state?: QueryAttribute; stateList?: any[]} {
+  const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
+  for (let i = 0; i < (attributesResourcesOrder || []).length; i++) {
+    const resourceType = AttributesResourceType.Collection;
+    if (getAttributesResourceType(attributesResourcesOrder[i]) !== resourceType) {
+      continue;
+    }
+
+    const collection = <Collection>attributesResourcesOrder[i];
+    const purpose = collection?.purpose;
+    if (purpose?.type === CollectionPurposeType.Tasks) {
+      const assigneeAttribute = findAttribute(collection.attributes, purpose.metaData?.assigneeAttributeId);
+      const stateAttribute = findAttribute(collection.attributes, purpose.metaData?.stateAttributeId);
+      const dueDateAttribute = findAttribute(collection.attributes, purpose.metaData?.dueDateAttributeId);
+
+      const assignee = assigneeAttribute && {
+        attributeId: assigneeAttribute.id,
+        resourceId: collection.id,
+        resourceType,
+        resourceIndex: i,
+      };
+      const state = stateAttribute && {
+        attributeId: stateAttribute.id,
+        resourceId: collection.id,
+        resourceType,
+        resourceIndex: i,
+      };
+      const dueDate = dueDateAttribute && {
+        attributeId: dueDateAttribute.id,
+        resourceId: collection.id,
+        resourceType,
+        resourceIndex: i,
+      };
+      return {assignee, state, dueDate, stateList: purpose.metaData?.finalStatesList};
+    }
+  }
+  return {};
+}
 
 export function createDefaultNameAndDateRangeConfig(
   stem: QueryStem,

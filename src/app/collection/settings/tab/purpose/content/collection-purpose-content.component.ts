@@ -39,7 +39,6 @@ import {
 import {TaskPurposeFormControl} from './form/tasks/task-purpose-form-control';
 import {Subscription} from 'rxjs';
 import {UpdatePurposeService} from './update-purpose.service';
-import {deepObjectsEquals} from '../../../../../shared/utils/common.utils';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 
 @Component({
@@ -124,6 +123,7 @@ export class CollectionPurposeContentComponent implements OnInit, OnChanges, OnD
   }
 
   public ngOnDestroy() {
+    this.updatePurposeService.onDestroy();
     this.subscriptions.unsubscribe();
   }
 }

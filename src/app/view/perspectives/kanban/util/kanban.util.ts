@@ -39,6 +39,7 @@ import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.
 import {SizeType} from '../../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {createDefaultTaskPurposeConfig} from '../../common/perspective-util';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
   if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
@@ -82,7 +83,7 @@ export function checkOrTransformKanbanConfig(
   linkTypes: LinkType[]
 ): KanbanConfig {
   if (!config) {
-    return createDefaultConfig(query);
+    return createDefaultConfig(query, collections, linkTypes);
   }
 
   return {
@@ -116,33 +117,24 @@ function checkOrTransformKanbanStemConfig(
   collections: Collection[],
   linkTypes: LinkType[]
 ): KanbanStemConfig {
-  if (!stemConfig || !stemConfig.attribute) {
-    return createDefaultKanbanStemConfig(stem);
+  if (!stemConfig) {
+    return createDefaultKanbanStemConfig(stem, collections, linkTypes);
   }
 
-  const result: KanbanStemConfig = {
-    attribute: null,
-    stem,
-    dueDate: null,
-    doneColumnTitles: stemConfig.doneColumnTitles,
-    aggregation: null,
-  };
   const attributesResourcesOrder = queryStemAttributesResourcesOrder(stem, collections, linkTypes);
-
-  result.attribute = checkOrTransformQueryAttribute(stemConfig.attribute, attributesResourcesOrder);
-  result.aggregation = checkOrTransformQueryAttribute(stemConfig.aggregation, attributesResourcesOrder);
-  result.resource = checkOrTransformQueryResource(stemConfig.resource, attributesResourcesOrder);
-
-  if (stemConfig.dueDate) {
-    result.dueDate = checkOrTransformQueryAttribute(stemConfig.dueDate, attributesResourcesOrder);
-  }
-
-  return result;
+  return {
+    attribute: checkOrTransformQueryAttribute(stemConfig.attribute, attributesResourcesOrder),
+    stem,
+    dueDate: checkOrTransformQueryAttribute(stemConfig.dueDate, attributesResourcesOrder),
+    doneColumnTitles: stemConfig.doneColumnTitles,
+    aggregation: checkOrTransformQueryAttribute(stemConfig.aggregation, attributesResourcesOrder),
+    resource: checkOrTransformQueryResource(stemConfig.resource, attributesResourcesOrder),
+  };
 }
 
-function createDefaultConfig(query: Query): KanbanConfig {
-  const stems = (query && query.stems) || [];
-  const stemsConfigs = stems.map(stem => createDefaultKanbanStemConfig(stem));
+function createDefaultConfig(query: Query, collections: Collection[], linkTypes: LinkType[]): KanbanConfig {
+  const stems = query?.stems || [];
+  const stemsConfigs = stems.map(stem => createDefaultKanbanStemConfig(stem, collections, linkTypes));
   return {
     columns: [],
     stemsConfigs,
@@ -152,7 +144,21 @@ function createDefaultConfig(query: Query): KanbanConfig {
   };
 }
 
-export function createDefaultKanbanStemConfig(stem?: QueryStem): KanbanStemConfig {
+export function createDefaultKanbanStemConfig(
+  stem?: QueryStem,
+  collections?: Collection[],
+  linkTypes?: LinkType[]
+): KanbanStemConfig {
+  if (stem && collections && linkTypes) {
+    const {state: attribute, dueDate, stateList: doneColumnTitles} = createDefaultTaskPurposeConfig(
+      stem,
+      collections,
+      linkTypes
+    );
+    if (attribute) {
+      return {attribute, stem, dueDate, doneColumnTitles};
+    }
+  }
   return {attribute: null, stem, dueDate: null, doneColumnTitles: []};
 }
 

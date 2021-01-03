@@ -3,8 +3,8 @@
                     [stem]="stem"
                     [config]="config?.stemsConfigs && config?.stemsConfigs[index] || defaultStemConfig"
                     [collections]="collections"
-                    [columnTitles]="config | kanbanColumnTitles:config?.stemsConfigs[index]?.attribute"
                     [linkTypes]="linkTypes"
+                    [constraintData]="constraintData"
                     (configChange)="onConfigChange($event, stem, index)">
 </kanban-stem-config>
 
@@ -16,7 +16,7 @@
   </kanban-aggregation-config>
 </ng-container>
 
-<ng-container *ngIf="visible && config | isAnyKanbanAttributeSelected">
+<ng-container *ngIf="visible && (config | isAnyKanbanAttributeSelected)">
   <h6 class="mt-4 font-weight-bold" i18n="@@perspective.kanban.config.column.size">Column size</h6>
   <size-slider class="d-block w-100" [defaultSize]="config?.columnSize"
                (newSize)="onColumnSizeChanged($event)">

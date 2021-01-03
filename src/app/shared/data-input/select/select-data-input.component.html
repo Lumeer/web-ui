@@ -1,4 +1,5 @@
 <div class="d-flex align-items-center h-100 p-1" #wrapperElement
+     *ngIf="selectedOptions$ | async as selectedOptions"
      [class.flex-wrap]="configuration?.wrapItems"
      [title]="selectedOptions | selectOptionsJoined | unescapeHtml"
      [ngClass]="readonly || !multi ? 'overflow-hidden w-100' : 'invisible-scroll-y'">
@@ -13,7 +14,7 @@
               [class.invalid-value]="!commonConfiguration?.skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions?.length)"
               [spellcheck]="false"
               [innerHTML]="option.displayValue || option.value"
-              [class.ml-2]="!first">
+              [class.ml-2]="!first && !configuration?.wrapItems">
         </span>
     </ng-container>
 

@@ -125,7 +125,7 @@ export class PostItCollectionComponent implements OnChanges {
 
   public openCollection() {
     if (this.collection?.id) {
-      this.router.navigate([this.workspacePath(), 'view', Perspective.Workflow], {
+      this.router.navigate([this.workspacePath(), 'view', Perspective.Table], {
         queryParams: {q: this.queryForCollectionDocuments()},
       });
     }

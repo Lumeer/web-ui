@@ -165,7 +165,7 @@ function checkOrTransformGanttStemConfig(
   };
 }
 
-export function createDefaultGanttChartConfig(
+function createDefaultGanttChartConfig(
   query: Query,
   collections: Collection[],
   linkTypes: LinkType[]
