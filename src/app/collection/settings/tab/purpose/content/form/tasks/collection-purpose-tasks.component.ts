@@ -145,7 +145,7 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   public onStateListSave(dataValue: DataValue) {
     const serializedValue = dataValue.serialize();
     this.stateListControl.patchValue(isArray(serializedValue) ? serializedValue : [serializedValue]);
-    this.stateListEditing$.next(false);
+    this.setStateListEditing(false);
   }
 
   public setStateListEditing(editing: boolean) {
@@ -154,7 +154,8 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
 
   public onStateListChange(dataValue: DataValue) {
     if (isNullOrUndefined(dataValue.inputValue)) {
-      this.stateListControl.patchValue(dataValue.serialize());
+      const serializedValue = dataValue.serialize();
+      this.stateListControl.patchValue(isArray(serializedValue) ? serializedValue : [serializedValue]);
     }
   }
 

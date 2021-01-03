@@ -99,6 +99,7 @@ import {IsDateValidPipe} from './is-date-valid.pipe';
 import {FromNowPipe} from './from-now.pipe';
 import {AttributeResourceTypeToResourceTypePipe} from './attribute-resource-type-to-resource-type.pipe';
 import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
+import {StateListConstraintPipe} from './state-list-constraint.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule],
@@ -182,6 +183,7 @@ import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
     FromNowPipe,
     AttributeResourceTypeToResourceTypePipe,
     LinkTypeOtherCollectionPipe,
+    StateListConstraintPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -264,6 +266,7 @@ import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
     FromNowPipe,
     AttributeResourceTypeToResourceTypePipe,
     LinkTypeOtherCollectionPipe,
+    StateListConstraintPipe,
   ],
 })
 export class PipesModule {}

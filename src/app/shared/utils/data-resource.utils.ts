@@ -98,7 +98,7 @@ export function createSuggestionDataValues<T extends DataValue>(
 ): T[] {
   const dataValuesMap: Record<string, T> = {};
   let count = 0;
-  for (let i = 0; i < Math.min((dataResources || []).length, SUGGESTION_MAX_ROWS); i++) {
+  outerLoop: for (let i = 0; i < Math.min((dataResources || []).length, SUGGESTION_MAX_ROWS); i++) {
     const dataResource = dataResources[i];
     const value = dataResource.data?.[attributeId];
 
@@ -112,9 +112,9 @@ export function createSuggestionDataValues<T extends DataValue>(
         }
         dataValuesMap[formattedValue] = dataValue;
       }
-    }
-    if (count >= SUGGESTION_MAX_VALUES) {
-      break;
+      if (count >= SUGGESTION_MAX_VALUES) {
+        break outerLoop;
+      }
     }
   }
 

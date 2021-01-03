@@ -49,7 +49,6 @@ import {CollectionPurposeSelectComponent} from './settings/tab/purpose/content/s
 import {CollectionPurposeFormComponent} from './settings/tab/purpose/content/form/collection-purpose-form.component';
 import {CollectionPurposeTasksComponent} from './settings/tab/purpose/content/form/tasks/collection-purpose-tasks.component';
 import {DataInputModule} from '../shared/data-input/data-input.module';
-import {StateListConstraintPipe} from './settings/tab/purpose/content/form/tasks/pipes/state-list-constraint.pipe';
 
 @NgModule({
   imports: [SharedModule, CollectionRoutingModule, UsersModule, DataInputModule],
@@ -79,7 +78,6 @@ import {StateListConstraintPipe} from './settings/tab/purpose/content/form/tasks
     CollectionPurposeSelectComponent,
     CollectionPurposeFormComponent,
     CollectionPurposeTasksComponent,
-    StateListConstraintPipe,
   ],
   providers: [CollectionSettingsGuard],
 })

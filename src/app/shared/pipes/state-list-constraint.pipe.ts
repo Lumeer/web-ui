@@ -18,22 +18,22 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {Constraint} from '../../../../../../../../core/model/constraint';
-import {Attribute} from '../../../../../../../../core/store/collections/collection';
-import {findAttributeConstraint} from '../../../../../../../../core/store/collections/collection.util';
-import {ConstraintData, ConstraintType} from '../../../../../../../../core/model/data/constraint';
+import {findAttributeConstraint} from '../../core/store/collections/collection.util';
+import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
+import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
+import {Constraint} from '../../core/model/constraint';
+import {DataResource} from '../../core/model/resource';
+import {Attribute} from '../../core/store/collections/collection';
 import {
   SelectConstraintConfig,
   SelectConstraintOption,
   UserConstraintConfig,
-} from '../../../../../../../../core/model/data/constraint-config';
-import {SelectConstraint} from '../../../../../../../../core/model/constraint/select.constraint';
-import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
-import {UnknownConstraint} from '../../../../../../../../core/model/constraint/unknown.constraint';
-import {UserConstraint} from '../../../../../../../../core/model/constraint/user.constraint';
-import {UserDataValue} from '../../../../../../../../core/model/data-value/user.data-value';
-import {BooleanConstraint} from '../../../../../../../../core/model/constraint/boolean.constraint';
-import {createSuggestionDataValues} from '../../../../../../../../shared/utils/data-resource.utils';
+} from '../../core/model/data/constraint-config';
+import {SelectConstraint} from '../../core/model/constraint/select.constraint';
+import {createSuggestionDataValues} from '../utils/data-resource.utils';
+import {UserDataValue} from '../../core/model/data-value/user.data-value';
+import {UserConstraint} from '../../core/model/constraint/user.constraint';
+import {BooleanConstraint} from '../../core/model/constraint/boolean.constraint';
 
 @Pipe({
   name: 'stateListConstraint',
@@ -42,7 +42,7 @@ export class StateListConstraintPipe implements PipeTransform {
   public transform(
     attributes: Attribute[],
     attributeId: string,
-    documents: DocumentModel[],
+    dataResources: DataResource[],
     constraintData: ConstraintData
   ): {constraint: Constraint; constraintData: ConstraintData} {
     if (!attributeId) {
@@ -55,7 +55,7 @@ export class StateListConstraintPipe implements PipeTransform {
     } else if (constraint?.type === ConstraintType.User) {
       const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
       const userDataValues = createSuggestionDataValues<UserDataValue>(
-        documents,
+        dataResources,
         attributeId,
         constraint,
         constraintData
@@ -71,7 +71,7 @@ export class StateListConstraintPipe implements PipeTransform {
     }
 
     const options: SelectConstraintOption[] = createSuggestionDataValues(
-      documents,
+      dataResources,
       attributeId,
       constraint,
       constraintData
