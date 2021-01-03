@@ -31,7 +31,7 @@
 
   <select-constraint-options-form [displayValues]="displayValuesControl.value"
                                   [form]="optionsForm"
-                                  [uniqueValues]="uniqueValues"
+                                  [dataValues]="dataValues$ | async"
                                   [options]="config?.options">
   </select-constraint-options-form>
 </div>

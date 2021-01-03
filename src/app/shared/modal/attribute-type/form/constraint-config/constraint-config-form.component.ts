@@ -48,9 +48,6 @@ export class ConstraintConfigFormComponent implements OnChanges {
   public attribute: Attribute;
 
   @Input()
-  public uniqueValues: any[];
-
-  @Input()
   public permissions: AllowedPermissions;
 
   public readonly constraintTypes = ConstraintType;

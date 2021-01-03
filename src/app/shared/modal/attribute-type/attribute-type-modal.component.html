@@ -28,8 +28,6 @@
                          [resource]="data.collection || data.linkType"
                          [permissions]="permissions$ | async"
                          [attribute]="data.attribute"
-                         [dataValues]="dataValues$ | async"
-                         [constraintData]="constraintData$ | async"
                          (attributeChange)="onAttributeChange($event)">
     </attribute-type-form>
 

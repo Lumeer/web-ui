@@ -24,6 +24,9 @@ import {AttributeSortType, ViewSettings} from '../../core/store/views/view';
 import {ConstraintData} from '../../core/model/data/constraint';
 import {createAttributesMap} from '../../core/store/collections/collection.util';
 import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
+import {DataValue} from '../../core/model/data-value';
+import {Constraint} from '../../core/model/constraint';
+import {isArray, objectValues} from './common.utils';
 
 export function sortDataResourcesByViewSettings<T extends DataResource>(
   dataResources: T[],
@@ -81,4 +84,39 @@ export function groupDataResourceByResource<T extends DataResource>(
     return <any>groupDocumentsByCollection(<any>dataResources);
   }
   return <any>groupLinkInstancesByLinkTypes(<any>dataResources);
+}
+
+const SUGGESTION_MAX_ROWS = 10240;
+const SUGGESTION_MAX_VALUES = 128;
+
+export function createSuggestionDataValues<T extends DataValue>(
+  dataResources: DataResource[],
+  attributeId: string,
+  constraint: Constraint,
+  constraintData: ConstraintData,
+  flatten: boolean = true
+): T[] {
+  const dataValuesMap: Record<string, T> = {};
+  let count = 0;
+  for (let i = 0; i < Math.min((dataResources || []).length, SUGGESTION_MAX_ROWS); i++) {
+    const dataResource = dataResources[i];
+    const value = dataResource.data?.[attributeId];
+
+    const values = flatten && isArray(value) ? value : [value];
+    for (const val of values) {
+      const dataValue = <T>constraint.createDataValue(val, constraintData);
+      const formattedValue = dataValue.format().trim();
+      if (formattedValue) {
+        if (!dataValuesMap[formattedValue]) {
+          count++;
+        }
+        dataValuesMap[formattedValue] = dataValue;
+      }
+    }
+    if (count >= SUGGESTION_MAX_VALUES) {
+      break;
+    }
+  }
+
+  return objectValues(dataValuesMap).sort((a, b) => a.format().localeCompare(b.format()));
 }

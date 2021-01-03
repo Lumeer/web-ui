@@ -27,7 +27,6 @@ import {
   OnInit,
   Output,
   QueryList,
-  SimpleChange,
   SimpleChanges,
   ViewChild,
   ViewChildren,

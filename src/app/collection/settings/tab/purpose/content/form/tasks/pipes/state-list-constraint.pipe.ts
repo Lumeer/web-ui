@@ -29,13 +29,11 @@ import {
 } from '../../../../../../../../core/model/data/constraint-config';
 import {SelectConstraint} from '../../../../../../../../core/model/constraint/select.constraint';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
-import {uniqueValues} from '../../../../../../../../shared/utils/array.utils';
 import {UnknownConstraint} from '../../../../../../../../core/model/constraint/unknown.constraint';
-import {isArray} from '../../../../../../../../shared/utils/common.utils';
 import {UserConstraint} from '../../../../../../../../core/model/constraint/user.constraint';
-import {DataValue} from '../../../../../../../../core/model/data-value';
 import {UserDataValue} from '../../../../../../../../core/model/data-value/user.data-value';
 import {BooleanConstraint} from '../../../../../../../../core/model/constraint/boolean.constraint';
+import {createSuggestionDataValues} from '../../../../../../../../shared/utils/data-resource.utils';
 
 @Pipe({
   name: 'stateListConstraint',
@@ -56,7 +54,12 @@ export class StateListConstraintPipe implements PipeTransform {
       return {constraint: new SelectConstraint(selectConfig), constraintData};
     } else if (constraint?.type === ConstraintType.User) {
       const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
-      const userDataValues = createDataValues<UserDataValue>(documents, attributeId, constraint, constraintData, true);
+      const userDataValues = createSuggestionDataValues<UserDataValue>(
+        documents,
+        attributeId,
+        constraint,
+        constraintData
+      );
       const users = [...(constraintData?.users || [])];
       userDataValues.forEach(dataValue => {
         users.push(...(dataValue?.users || []).filter(user => !users.some(u => u.email === user.email)));
@@ -67,35 +70,16 @@ export class StateListConstraintPipe implements PipeTransform {
       return {constraint: new BooleanConstraint(), constraintData};
     }
 
-    const dataValues = createDataValues(documents, attributeId, constraint, constraintData, true);
-
-    const options: SelectConstraintOption[] = dataValues
-      .map(value => ({
-        value: value.serialize(),
-        displayValue: value.format(),
-      }))
-      .filter(option => !!option.displayValue);
+    const options: SelectConstraintOption[] = createSuggestionDataValues(
+      documents,
+      attributeId,
+      constraint,
+      constraintData
+    ).map(value => ({
+      value: value.serialize(),
+      displayValue: value.format(),
+    }));
 
     return {constraint: new SelectConstraint({displayValues: true, multi: true, options}), constraintData};
   }
-}
-
-function createDataValues<T extends DataValue>(
-  documents: DocumentModel[],
-  attributeId: string,
-  constraint: Constraint,
-  constraintData: ConstraintData,
-  flatten: boolean
-): T[] {
-  const values = documents.reduce((data, document) => {
-    const value = document.data?.[attributeId];
-    if (flatten && isArray(value)) {
-      data.push(...value);
-    } else {
-      data.push(value);
-    }
-    return data;
-  }, []);
-
-  return uniqueValues(values).map(value => <T>constraint.createDataValue(value, constraintData));
 }
