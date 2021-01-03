@@ -137,12 +137,9 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public ngOnInit() {
-    const subscription = this.dataRowService.rows$.subscribe(rows => {
+    const subscription = this.dataRowService.rows$.subscribe(() => {
       const currentDataResource = this.getCurrentDataResource();
-      const unusedAttributes = filterUnusedAttributes(
-        this.resource && this.resource.attributes,
-        currentDataResource && currentDataResource.data
-      );
+      const unusedAttributes = filterUnusedAttributes(this.resource?.attributes, currentDataResource?.data);
       this.unusedAttributes$.next(unusedAttributes);
       this.dataResourceChanged.emit(currentDataResource);
     });
@@ -261,7 +258,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
         return d;
       }, {});
 
-    const currentAttributeNames = (this.resource && this.resource.attributes).map(attr => attr.name);
+    const currentAttributeNames = (this.resource?.attributes || []).map(attr => attr.name);
     const newData = rows
       .filter(row => row.key && (!row.attribute || !row.attribute.id) && !currentAttributeNames.includes(row.key))
       .reduce(

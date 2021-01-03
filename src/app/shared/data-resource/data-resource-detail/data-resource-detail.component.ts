@@ -52,7 +52,6 @@ import {getAttributesResourceType} from '../../utils/resource.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {ResourceAttributeSettings, ViewSettings} from '../../../core/store/views/view';
-import {DataRow} from '../../data/data-row.service';
 import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {filter, map} from 'rxjs/operators';
@@ -107,8 +106,6 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
 
   @Output()
   public documentSelect = new EventEmitter<{collection: Collection; document: DocumentModel}>();
-
-  public dataRows: DataRow[] = [];
 
   public workspace$: Observable<Workspace>;
   public constraintData$: Observable<ConstraintData>;
@@ -215,10 +212,6 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     } else {
       this.modalService.showAttributeFunction(attribute.id, null, this.resource.id);
     }
-  }
-
-  public onRowsChanged($event: DataRow[]) {
-    this.dataRows = $event;
   }
 
   public editNewComment() {
