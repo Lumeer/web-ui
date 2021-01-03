@@ -1966,7 +1966,7 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.action.empty.subtitle" datatype="html">
         <source>Navigate to Table settings and create something
-      beautiful! Keep in mind that Auto Link rules cannot be used in an action.
+      beautiful! Keep in mind that Automated Link rules cannot be used in an action.
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/action/empty/action-constraint-config-empty.component.html</context>
@@ -2291,7 +2291,7 @@
           <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit><trans-unit id="menu.notification.settings" datatype="html">
-        <source>Notification Settings</source>
+        <source>Email Notifications</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
           <context context-type="linenumber">39</context>

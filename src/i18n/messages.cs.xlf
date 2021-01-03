@@ -711,7 +711,7 @@
         </context-group>
       </trans-unit><trans-unit id="constraint.action.empty.subtitle" datatype="html">
         <source>Navigate to Table settings and create something
-      beautiful! Keep in mind that Auto Link rules cannot be used in an action.
+      beautiful! Keep in mind that Automated Link rules cannot be used in an action.
     </source><target>Přepněte se do nastavení tabulky a vytvořte něco pěkného! 
     Pamatujte, že Auto Link pravidla nelze použít v akcích.
     </target>
@@ -5184,7 +5184,7 @@
         <source>English</source><target>Angličtina</target>
 
       <context-group purpose="location"><context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context><context context-type="linenumber">30</context></context-group></trans-unit><trans-unit id="menu.notification.settings" datatype="html">
-        <source>Notification Settings</source><target state="new">Notification Settings</target>
+        <source>Email Notifications</source><target>Emailová upozornění</target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/user-menu/dropdown/user-menu-dropdown.component.html</context>
           <context context-type="linenumber">39</context>
