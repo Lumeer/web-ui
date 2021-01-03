@@ -17,9 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {Observable} from 'rxjs';
 import {filter, map} from 'rxjs/operators';
 import {AppState} from '../../../../../../core/store/app.state';
@@ -47,14 +46,11 @@ export class TableHiddenColumnComponent implements OnChanges {
   @Input()
   public column: TableConfigColumn;
 
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenuComponent: ContextMenuComponent;
-
   public collection$: Observable<Collection>;
   public linkType$: Observable<LinkType>;
   public hiddenAttributes$: Observable<Attribute[]>;
 
-  public constructor(private contextMenuService: ContextMenuService, private store: Store<AppState>) {}
+  public constructor(private store: Store<AppState>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     const part = this.table.config.parts[this.cursor.partIndex];
@@ -86,23 +82,9 @@ export class TableHiddenColumnComponent implements OnChanges {
     }
   }
 
-  public onClick(event: MouseEvent) {
-    this.showContextMenu(event);
-    event.stopPropagation();
-  }
-
   public onMouseDown(event: MouseEvent) {
     this.store.dispatch(new TablesAction.SetCursor({cursor: null}));
     event.stopPropagation();
-  }
-
-  private showContextMenu(event: MouseEvent) {
-    this.contextMenuService.show.next({
-      anchorElement: null,
-      contextMenu: this.contextMenuComponent,
-      event,
-      item: null,
-    });
   }
 
   public onShowSingleColumn(attribute: Attribute) {

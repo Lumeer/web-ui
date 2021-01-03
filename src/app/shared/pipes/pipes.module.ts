@@ -93,13 +93,13 @@ import {IdToReferencePipe} from './id-to-reference.pipe';
 import {FindAttributePipe} from './find-attribute.pipe';
 import {IsNotNullOrUndefinedPipe} from './is-not-null-or-undefined.pipe';
 import {ViewsSelectItemsPipe} from './views-select-items.pipe';
-import {TruncateStringPipe} from './truncate-string.pipe';
 import {ColumnBackgroundPipe} from './collection-column-background.pipe';
 import {IsDateValidPipe} from './is-date-valid.pipe';
 import {FromNowPipe} from './from-now.pipe';
 import {AttributeResourceTypeToResourceTypePipe} from './attribute-resource-type-to-resource-type.pipe';
 import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
 import {StateListConstraintPipe} from './state-list-constraint.pipe';
+import {TruncatePipe} from './truncate.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule],
@@ -177,13 +177,13 @@ import {StateListConstraintPipe} from './state-list-constraint.pipe';
     FindAttributePipe,
     IsNotNullOrUndefinedPipe,
     ViewsSelectItemsPipe,
-    TruncateStringPipe,
     ColumnBackgroundPipe,
     IsDateValidPipe,
     FromNowPipe,
     AttributeResourceTypeToResourceTypePipe,
     LinkTypeOtherCollectionPipe,
     StateListConstraintPipe,
+    TruncatePipe,
   ],
   exports: [
     LightenColorPipe,
@@ -260,13 +260,13 @@ import {StateListConstraintPipe} from './state-list-constraint.pipe';
     FindAttributePipe,
     IsNotNullOrUndefinedPipe,
     ViewsSelectItemsPipe,
-    TruncateStringPipe,
     ColumnBackgroundPipe,
     IsDateValidPipe,
     FromNowPipe,
     AttributeResourceTypeToResourceTypePipe,
     LinkTypeOtherCollectionPipe,
     StateListConstraintPipe,
+    TruncatePipe,
   ],
 })
 export class PipesModule {}

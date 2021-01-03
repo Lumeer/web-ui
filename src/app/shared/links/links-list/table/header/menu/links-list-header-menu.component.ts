@@ -18,8 +18,8 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, ViewChild} from '@angular/core';
+import {MatMenuTrigger} from '@angular/material/menu';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
-import {ContextMenuComponent} from 'ngx-contextmenu';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {ConstraintType} from '../../../../../../core/model/data/constraint';
 
@@ -41,8 +41,16 @@ export class LinksListHeaderMenuComponent {
   @Output()
   public attributeFunction = new EventEmitter();
 
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenu: ContextMenuComponent;
+  @ViewChild(MatMenuTrigger)
+  public contextMenu: MatMenuTrigger;
 
   public readonly type = ConstraintType;
+
+  public contextMenuPosition = {x: 0, y: 0};
+
+  public open(x: number, y: number) {
+    this.contextMenuPosition = {x, y};
+    this.contextMenu.menu.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
 }

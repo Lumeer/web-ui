@@ -1,26 +1,34 @@
-<context-menu
-  [disabled]="(!(indentable$ | async) && !(outdentable$ | async)) || !canManageConfig || !(allowedPermissions$ | async)?.writeWithView">
-  <!-- TODO add collapse/expand menu items -->
-  <ng-template *ngIf="indentable$ | async"
-               (execute)="onIndent()"
-               contextMenuItem>
-    <div class="d-flex align-items-baseline">
-      <i class="fa fa-fw fa-indent mr-1"
-         aria-hidden="true"></i>
-      <span class="flex-grow-1"
-            i18n="@@table.body.row.indent">Indent</span>
-      <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ →' : 'Shift + Alt + →'}}</small>
-    </div>
+<div class="position-absolute"
+     *ngIf="((indentable$ | async) || (outdentable$ | async)) && (canManageConfig || (allowedPermissions$ | async)?.writeWithView)"
+     [style.left.px]="contextMenuPosition.x"
+     [style.top.px]="contextMenuPosition.y"
+     [matMenuTriggerFor]="contextMenu">
+</div>
+
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent>
+    <!-- TODO add collapse/expand menu items -->
+    <button *ngIf="indentable$ | async"
+            (click)="onIndent()"
+            mat-menu-item>
+      <div class="d-flex align-items-baseline">
+        <i class="fa fa-fw fa-indent mr-1"
+           aria-hidden="true"></i>
+        <span class="flex-grow-1"
+              i18n="@@table.body.row.indent">Indent</span>
+        <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ →' : 'Shift + Alt + →'}}</small>
+      </div>
+    </button>
+    <button *ngIf="outdentable$ | async"
+            (click)="onOutdent()"
+            mat-menu-item>
+      <div class="d-flex align-items-baseline">
+        <i class="fa fa-fw fa-outdent mr-1"
+           aria-hidden="true"></i>
+        <span class="flex-grow-1"
+              i18n="@@table.body.row.outdent">Outdent</span>
+        <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
+      </div>
+    </button>
   </ng-template>
-  <ng-template *ngIf="outdentable$ | async"
-               (execute)="onOutdent()"
-               contextMenuItem>
-    <div class="d-flex align-items-baseline">
-      <i class="fa fa-fw fa-outdent mr-1"
-         aria-hidden="true"></i>
-      <span class="flex-grow-1"
-            i18n="@@table.body.row.outdent">Outdent</span>
-      <small class="text-secondary ml-3">{{macOS ? '⇧ ⌥ ←' : 'Shift + Alt + ←'}}</small>
-    </div>
-  </ng-template>
-</context-menu>
+</mat-menu>

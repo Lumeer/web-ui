@@ -33,7 +33,6 @@ import {DataInputModule} from '../../data-input/data-input.module';
 import {LinksListTableRowComponent} from './table/body/row/links-list-table-row.component';
 import {InputModule} from '../../input/input.module';
 import {LinksListHeaderMenuComponent} from './table/header/menu/links-list-header-menu.component';
-import {ContextMenuModule} from 'ngx-contextmenu';
 import {AttributeTypeModalModule} from '../../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../../modal/attribute-function/attribute-function-modal.module';
 import {DocumentHintsModule} from '../../document-hints/document-hints.module';
@@ -44,6 +43,7 @@ import {LinksAccordeonComponent} from './links-accordeon.component';
 import {AccordionModule} from 'ngx-bootstrap/accordion';
 import {AsAttributeResourcePipe} from './pipes/as-attribute-resource.pipe';
 import {LinksCountPipe} from './pipes/links-count.pipe';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -69,11 +69,11 @@ import {LinksCountPipe} from './pipes/links-count.pipe';
     DataInputModule,
     InputModule,
     DirectivesModule,
-    ContextMenuModule,
     AttributeTypeModalModule,
     AttributeFunctionModalModule,
     DocumentHintsModule,
     AccordionModule,
+    MatMenuModule,
   ],
   exports: [LinksListComponent, LinksAccordeonComponent],
 })

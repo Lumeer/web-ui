@@ -17,7 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Output, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild} from '@angular/core';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'table-collapsed-cell-menu',
@@ -29,6 +30,14 @@ export class TableCollapsedCellMenuComponent {
   @Output()
   public expand = new EventEmitter();
 
-  @ViewChild('contextMenu', {static: true})
-  public contextMenu: ElementRef;
+  @ViewChild(MatMenuTrigger)
+  public contextMenu: MatMenuTrigger;
+
+  public contextMenuPosition = {x: 0, y: 0};
+
+  public open(x: number, y: number) {
+    this.contextMenuPosition = {x, y};
+    this.contextMenu.menu.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
 }

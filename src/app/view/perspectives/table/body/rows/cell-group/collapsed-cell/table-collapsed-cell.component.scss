@@ -2,6 +2,7 @@
 
 :host {
   display: block;
+  position: relative;
   line-height: $table-min-row-height;
   min-height: $table-min-row-height;
 }
@@ -15,7 +16,7 @@
 .selected {
   @extend %highlighted;
   outline: $table-outline-selected solid 2px;
-  box-shadow: 0px 0px 4px $secondary;
+  box-shadow: 0 0 4px $secondary;
 }
 
 .affected {

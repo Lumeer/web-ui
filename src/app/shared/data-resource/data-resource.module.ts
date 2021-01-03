@@ -19,24 +19,26 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import {MatMenuModule} from '@angular/material/menu';
 import {InputModule} from '../input/input.module';
 import {PipesModule} from '../pipes/pipes.module';
 import {DataInputModule} from '../data-input/data-input.module';
-import {DocumentDetailHeaderComponent} from './data-resource-detail/header/document-detail-header.component';
+import {DocumentDetailHeaderComponent} from './detail/header/document-detail-header.component';
 import {AttributeTypeModalModule} from '../modal/attribute-type/attribute-type-modal.module';
 import {AttributeFunctionModalModule} from '../modal/attribute-function/attribute-function-modal.module';
 import {ColorPickerModule} from 'ngx-color-picker';
-import {DefaultDataRowPipe} from './data-resource-detail/header/default-data-row.pipe';
+import {DefaultDataRowPipe} from './detail/header/default-data-row.pipe';
 import {PresenterModule} from '../presenter/presenter.module';
-import {DataResourceDataComponent} from './data-resource-detail/data/data-resource-data.component';
-import {DataResourceDetailComponent} from './data-resource-detail/data-resource-detail.component';
-import {DataResourceDataRowIconsComponent} from './data-resource-detail/data/row/icons/data-resource-data-row-icons.component';
-import {DataResourceDataRowComponent} from './data-resource-detail/data/row/data-resource-data-row.component';
+import {DataResourceDataComponent} from './detail/data/data-resource-data.component';
+import {DataResourceDetailComponent} from './detail/data-resource-detail.component';
+import {DataResourceDataRowIconsComponent} from './detail/data/row/icons/data-resource-data-row-icons.component';
+import {DataResourceDataRowComponent} from './detail/data/row/data-resource-data-row.component';
 import {DirectivesModule} from '../directives/directives.module';
-import {DetailTabsComponent} from './data-resource-detail/detail-tabs/detail-tabs.component';
+import {DetailTabsComponent} from './detail/detail-tabs/detail-tabs.component';
 import {LinksModule} from '../links/links.module';
 import {ResourceCommentsModule} from '../resource-comments/resource-comments.module';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
+import {LinksToolbarComponent} from './detail/links-toolbar/links-toolbar.component';
 
 @NgModule({
   imports: [
@@ -53,6 +55,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     LinksModule,
     ResourceCommentsModule,
     TooltipModule,
+    MatMenuModule,
   ],
   declarations: [
     DataResourceDetailComponent,
@@ -62,6 +65,7 @@ import {TooltipModule} from 'ngx-bootstrap/tooltip';
     DataResourceDataRowIconsComponent,
     DefaultDataRowPipe,
     DetailTabsComponent,
+    LinksToolbarComponent,
   ],
   exports: [DataResourceDetailComponent],
 })

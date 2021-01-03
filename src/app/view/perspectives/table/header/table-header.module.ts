@@ -19,8 +19,8 @@
 
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {NgModule} from '@angular/core';
+import {MatMenuModule} from '@angular/material/menu';
 import {ResizableModule} from 'angular-resizable-element';
-import {ContextMenuModule} from 'ngx-contextmenu';
 import {SharedModule} from '../../../../shared/shared.module';
 import {TableRowGroupHeaderComponent} from '../body/row-group/header/table-row-group-header.component';
 import {TableSharedModule} from '../shared/table-shared.module';
@@ -40,7 +40,7 @@ import {TableHeaderLinkComponent} from './link/table-header-link.component';
 import {TableHeaderComponent} from './table-header.component';
 
 @NgModule({
-  imports: [ContextMenuModule, DragDropModule, ResizableModule, SharedModule, TableSharedModule],
+  imports: [DragDropModule, ResizableModule, SharedModule, TableSharedModule, MatMenuModule],
   declarations: [
     TableAttributeSuggestionsComponent,
     TableCaptionComponent,

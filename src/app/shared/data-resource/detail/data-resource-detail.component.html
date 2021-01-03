@@ -57,7 +57,7 @@
 
   <ng-container *ngIf="data.selectedTab === detailTabType.Links && resourceType === collectionResourceType">
     <div>
-      <!-- TODO Create Link Button -->
+      <links-toolbar [collection]="resource"></links-toolbar>
       <links-accordeon class="d-block"
                   *ngIf="resource && dataResource?.id"
                   [document]="dataResource"

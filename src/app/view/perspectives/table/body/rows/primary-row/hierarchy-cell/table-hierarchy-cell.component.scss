@@ -1,8 +1,9 @@
 @import '~src/styles/variables';
 
 :host {
-  //cursor: pointer;
+  cursor: pointer;
   display: block;
+  position: relative;
   line-height: $table-min-row-height;
 }
 

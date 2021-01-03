@@ -5,74 +5,60 @@
         i18n-title="@@table.header.add-button"
         aria-haspopup="true"
         aria-expanded="false"
-        (click)="onButtonClick($event)">
+        [matMenuTriggerFor]="contextMenu">
   <i class="far fa-plus"></i>
 </button>
 
-<context-menu *ngIf="{collections: collections$ | async, linkTypes: linkTypes$ | async, lastCol: parts | lastColumn} as data"
-              (open)="onOpen()"
-              (close)="onClose()">
-  <ng-template *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)"
-               contextMenuItem
-               (execute)="onAddColumn()">
-    <icons-presenter [colors]="['#000']"
-                     [icons]="['fas fa-plus-circle']"
-                     class="mr-1">
-    </icons-presenter>
-    <span i18n="@@table.header.menu.add.column">
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent
+               *ngIf="{collections: collections$ | async, linkTypes: linkTypes$ | async, lastCol: parts | lastColumn} as data">
+    <button *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)"
+            mat-menu-item
+            (click)="onAddColumn()">
+      <icons-presenter [colors]="['#000']"
+                       [icons]="['fas fa-plus-circle']"
+                       class="mr-1">
+      </icons-presenter>
+      <span i18n="@@table.header.menu.add.column">
       Add a new column
     </span>
-  </ng-template>
-  <ng-template *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)"
-               contextMenuItem
-               [divider]="true">
-  </ng-template>
+    </button>
+    <hr class="my-2" *ngIf="!data.lastCol || (data.lastCol?.attributeIds?.length > 0 && data.collections?.length > 0)">
 
-  <ng-template *ngIf="data.linkTypes && data.linkTypes.length > 0"
-               contextMenuItem
-               [enabled]="false"
-               [passive]="true">
-    <small class="cursor-not-allowed"
+    <small *ngIf="data.linkTypes && data.linkTypes.length > 0"
+           class="text-muted mx-3 pb-2"
            i18n="@@table.header.suggestion.link.existing">Use existing link
     </small>
-  </ng-template>
 
-  <ng-template *ngFor="let linkType of data.linkTypes"
-               contextMenuItem
-               (execute)="onUseLinkType(linkType[0])">
-    <icons-presenter [colors]="[linkType[1]?.color, linkType[2]?.color]"
-                     [icons]="[linkType[1]?.icon, linkType[2]?.icon]"
-                     class="mr-1">
-    </icons-presenter>
-    <span [title]="linkType[0]?.name"
-          data-test="table-header-add-linktype-option">
+    <button *ngFor="let linkType of data.linkTypes"
+            mat-menu-item
+            (click)="onUseLinkType(linkType[0])">
+      <icons-presenter [colors]="[linkType[1]?.color, linkType[2]?.color]"
+                       [icons]="[linkType[1]?.icon, linkType[2]?.icon]"
+                       class="mr-1">
+      </icons-presenter>
+      <span [title]="linkType[0]?.name"
+            data-test="table-header-add-linktype-option">
       {{linkType[0]?.name | truncate:20}}
     </span>
-  </ng-template>
+    </button>
 
-  <ng-template *ngIf="data.collections && data.collections.length > 0 && data.linkTypes && data.linkTypes.length > 0"
-               contextMenuItem
-               [divider]="true">
-  </ng-template>
-
-  <ng-template *ngIf="data.collections && data.collections.length > 0"
-               contextMenuItem
-               [enabled]="false"
-               [passive]="true">
-    <small class="cursor-not-allowed"
+    <hr class="my-2"
+        *ngIf="data.collections && data.collections.length > 0 && data.linkTypes && data.linkTypes.length > 0">
+    <small *ngIf="data.collections && data.collections.length > 0" class="text-muted mx-3 pb-2"
            i18n="@@create.new.link">Create new link
     </small>
-  </ng-template>
-  <ng-template *ngFor="let collection of data.collections"
-               contextMenuItem
-               (execute)="onUseCollection(collection)">
-    <icons-presenter [colors]="[collection.color]"
-                     [icons]="[collection.icon]"
-                     class="mx-2">
-    </icons-presenter>
-    <span [title]="collection.name"
-          data-test="table-header-add-collection-option">
+    <button *ngFor="let collection of data.collections"
+            mat-menu-item
+            (click)="onUseCollection(collection)">
+      <icons-presenter [colors]="[collection.color]"
+                       [icons]="[collection.icon]"
+                       class="mx-2">
+      </icons-presenter>
+      <span [title]="collection.name"
+            data-test="table-header-add-collection-option">
       {{collection.name | truncate:20}}
-    </span>
+      </span>
+    </button>
   </ng-template>
-</context-menu>
+</mat-menu>

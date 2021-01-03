@@ -25,7 +25,6 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChange,
   SimpleChanges,
 } from '@angular/core';
 import {Collection} from '../../../core/store/collections/collection';
@@ -45,7 +44,6 @@ import {map, tap} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {forEach} from '@angular-devkit/schematics';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({

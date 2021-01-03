@@ -21,7 +21,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ContextMenuModule} from 'ngx-contextmenu';
+import {MatMenuModule} from '@angular/material/menu';
 import {GravatarModule} from 'ngx-gravatar';
 import {DataInputModule} from '../../../../shared/data-input/data-input.module';
 import {PickerModule} from '../../../../shared/picker/picker.module';
@@ -59,12 +59,12 @@ import {CreateCombinedUserValuePipe} from './rows/cell-group/collapsed-cell/user
     SharedModule,
     PickerModule,
     PipesModule,
-    ContextMenuModule,
     TablePipesModule,
     TableSharedModule,
     DataInputModule,
     ScrollingModule,
     GravatarModule,
+    MatMenuModule,
   ],
   declarations: [
     TableBodyComponent,

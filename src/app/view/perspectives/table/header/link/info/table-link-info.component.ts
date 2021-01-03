@@ -29,11 +29,11 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {TableHeaderCursor} from '../../../../../../core/store/tables/table-cursor';
 import {getTableElement} from '../../../../../../core/store/tables/table.utils';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'table-link-info',
@@ -72,10 +72,8 @@ export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
   @ViewChild('linkMenu', {static: true})
   public linkMenu: ElementRef;
 
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenuComponent: ContextMenuComponent;
-
-  constructor(private contextMenuService: ContextMenuService) {}
+  @ViewChild(MatMenuTrigger)
+  public trigger: MatMenuTrigger;
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.hidden) {
@@ -103,17 +101,7 @@ export class TableLinkInfoComponent implements OnChanges, AfterViewInit {
     }
   }
 
-  public onClick(event: MouseEvent) {
-    this.showContextMenu(event);
-    event.stopPropagation();
-  }
-
-  private showContextMenu(event: MouseEvent) {
-    this.contextMenuService.show.next({
-      anchorElement: null,
-      contextMenu: this.contextMenuComponent,
-      event,
-      item: null,
-    });
+  public onContextMenu() {
+    this.trigger.openMenu();
   }
 }

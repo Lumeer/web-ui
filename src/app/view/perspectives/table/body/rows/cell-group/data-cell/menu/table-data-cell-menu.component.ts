@@ -28,7 +28,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
-import {ContextMenuComponent} from 'ngx-contextmenu';
 import {combineLatest, Observable} from 'rxjs';
 import {first, map, take} from 'rxjs/operators';
 import {isMacOS} from '../../../../../../../../shared/utils/system.utils';
@@ -53,6 +52,7 @@ import {Direction} from '../../../../../../../../shared/direction';
 import {selectCollectionById} from '../../../../../../../../core/store/collections/collections.state';
 import {ModalService} from '../../../../../../../../shared/modal/modal.service';
 import {selectLinkTypeById} from '../../../../../../../../core/store/link-types/link-types.state';
+import {MatMenuTrigger} from '@angular/material/menu';
 
 @Component({
   selector: 'table-data-cell-menu',
@@ -78,12 +78,13 @@ export class TableDataCellMenuComponent implements OnChanges {
   @Output()
   public edit = new EventEmitter();
 
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenu: ContextMenuComponent;
+  @ViewChild(MatMenuTrigger)
+  public contextMenu: MatMenuTrigger;
 
   public readonly macOS = isMacOS();
 
   public created: boolean;
+  public contextMenuPosition = {x: 0, y: 0};
 
   public indentable$: Observable<boolean>;
   public outdentable$: Observable<boolean>;
@@ -91,6 +92,12 @@ export class TableDataCellMenuComponent implements OnChanges {
   public tableParts$: Observable<TableConfigPart[]>;
 
   public constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+
+  public open(x: number, y: number) {
+    this.contextMenuPosition = {x, y};
+    this.contextMenu.menu.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.document && this.document) {

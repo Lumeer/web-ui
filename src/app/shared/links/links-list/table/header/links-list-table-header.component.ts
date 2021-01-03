@@ -28,11 +28,11 @@ import {
   Output,
   EventEmitter,
 } from '@angular/core';
-import {LinkColumn} from '../../model/link-column';
 import {CdkDragEnd, CdkDragMove} from '@angular/cdk/drag-drop';
+import {LinkColumn} from '../../model/link-column';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {LinksListHeaderMenuComponent} from './menu/links-list-header-menu.component';
-import {ContextMenuService} from 'ngx-contextmenu';
+import {computeElementPositionInParent} from '../../../../utils/common.utils';
 
 const columnMinWidth = 30;
 
@@ -67,7 +67,7 @@ export class LinksListTableHeaderComponent {
   @ViewChildren(LinksListHeaderMenuComponent)
   public headerMenuElements: QueryList<LinksListHeaderMenuComponent>;
 
-  constructor(private renderer: Renderer2, private contextMenuService: ContextMenuService) {}
+  constructor(private renderer: Renderer2) {}
 
   public trackByColumn(index: number, column: LinkColumn): string {
     return `${column.collectionId || column.linkTypeId}:${column.attribute.id}`;
@@ -100,11 +100,8 @@ export class LinksListTableHeaderComponent {
   public onContextMenu(column: number, event: MouseEvent) {
     const menuElement = this.headerMenuElements.toArray()[column];
     if (menuElement) {
-      this.contextMenuService.show.next({
-        contextMenu: menuElement.contextMenu,
-        event,
-        item: null,
-      });
+      const {x, y} = computeElementPositionInParent(event, 'th');
+      menuElement.open(x, y);
     }
 
     event.preventDefault();

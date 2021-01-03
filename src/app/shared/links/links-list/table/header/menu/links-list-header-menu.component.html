@@ -1,21 +1,28 @@
-<context-menu #contextMenu>
-  <ng-template
-    contextMenuItem
-    [enabled]="permissions?.manageWithView"
-    (execute)="attributeType.emit()">
-    <i class="fa fa-fw fa-shapes mr-1"
-       aria-hidden="true">
-    </i>&nbsp;
-    <span i18n="@@table.header.menu.changeType">Attribute type...
+<div class="position-absolute"
+     [style.left.px]="contextMenuPosition.x"
+     [style.top.px]="contextMenuPosition.y"
+     [matMenuTriggerFor]="contextMenu">
+</div>
+<mat-menu #contextMenu>
+  <ng-template matMenuContent>
+    <button
+      mat-menu-item
+      [disabled]="!permissions?.manageWithView"
+      (click)="attributeType.emit()">
+      <i class="fa fa-fw fa-shapes mr-1"
+         aria-hidden="true">
+      </i>&nbsp;
+      <span i18n="@@table.header.menu.changeType">Attribute type...
     </span>
+    </button>
+    <button
+      mat-menu-item
+      [disabled]="!permissions?.manageWithView"
+      (click)="attributeFunction.emit()">
+      <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>&nbsp;
+      <span *ngIf="attribute?.constraint?.type !== type.Action"
+            i18n="@@table.header.menu.editFunction">Edit function...</span>
+      <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editRule">Edit rule...</span>
+    </button>
   </ng-template>
-  <ng-template
-    contextMenuItem
-    [enabled]="permissions?.manageWithView"
-    (execute)="attributeFunction.emit()">
-    <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>&nbsp;
-    <span *ngIf="attribute?.constraint?.type !== type.Action" i18n="@@table.header.menu.editFunction">Edit function...</span>
-    <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editRule">Edit rule...</span>
-  </ng-template>
-
-</context-menu>
+</mat-menu>
