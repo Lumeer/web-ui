@@ -25,11 +25,17 @@ import {ConstraintData, ConstraintType} from '../../../../../../../../core/model
 import {
   SelectConstraintConfig,
   SelectConstraintOption,
+  UserConstraintConfig,
 } from '../../../../../../../../core/model/data/constraint-config';
 import {SelectConstraint} from '../../../../../../../../core/model/constraint/select.constraint';
 import {DocumentModel} from '../../../../../../../../core/store/documents/document.model';
 import {uniqueValues} from '../../../../../../../../shared/utils/array.utils';
 import {UnknownConstraint} from '../../../../../../../../core/model/constraint/unknown.constraint';
+import {isArray} from '../../../../../../../../shared/utils/common.utils';
+import {UserConstraint} from '../../../../../../../../core/model/constraint/user.constraint';
+import {DataValue} from '../../../../../../../../core/model/data-value';
+import {UserDataValue} from '../../../../../../../../core/model/data-value/user.data-value';
+import {BooleanConstraint} from '../../../../../../../../core/model/constraint/boolean.constraint';
 
 @Pipe({
   name: 'stateListConstraint',
@@ -40,19 +46,28 @@ export class StateListConstraintPipe implements PipeTransform {
     attributeId: string,
     documents: DocumentModel[],
     constraintData: ConstraintData
-  ): Constraint {
+  ): {constraint: Constraint; constraintData: ConstraintData} {
     if (!attributeId) {
       return null;
     }
     const constraint = findAttributeConstraint(attributes, attributeId) || new UnknownConstraint();
     if (constraint?.type === ConstraintType.Select) {
       const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
-      return new SelectConstraint(selectConfig);
+      return {constraint: new SelectConstraint(selectConfig), constraintData};
+    } else if (constraint?.type === ConstraintType.User) {
+      const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
+      const userDataValues = createDataValues<UserDataValue>(documents, attributeId, constraint, constraintData, true);
+      const users = [...(constraintData?.users || [])];
+      userDataValues.forEach(dataValue => {
+        users.push(...(dataValue?.users || []).filter(user => !users.some(u => u.email === user.email)));
+      });
+
+      return {constraint: new UserConstraint(userConfig), constraintData: {...constraintData, users}};
+    } else if (constraint?.type === ConstraintType.Boolean) {
+      return {constraint: new BooleanConstraint(), constraintData};
     }
 
-    const dataValues = uniqueValues(documents.map(document => document.data?.[attributeId])).map(value =>
-      constraint.createDataValue(value, constraintData)
-    );
+    const dataValues = createDataValues(documents, attributeId, constraint, constraintData, true);
 
     const options: SelectConstraintOption[] = dataValues
       .map(value => ({
@@ -61,6 +76,26 @@ export class StateListConstraintPipe implements PipeTransform {
       }))
       .filter(option => !!option.displayValue);
 
-    return new SelectConstraint({displayValues: true, multi: true, options});
+    return {constraint: new SelectConstraint({displayValues: true, multi: true, options}), constraintData};
   }
+}
+
+function createDataValues<T extends DataValue>(
+  documents: DocumentModel[],
+  attributeId: string,
+  constraint: Constraint,
+  constraintData: ConstraintData,
+  flatten: boolean
+): T[] {
+  const values = documents.reduce((data, document) => {
+    const value = document.data?.[attributeId];
+    if (flatten && isArray(value)) {
+      data.push(...value);
+    } else {
+      data.push(value);
+    }
+    return data;
+  }, []);
+
+  return uniqueValues(values).map(value => <T>constraint.createDataValue(value, constraintData));
 }

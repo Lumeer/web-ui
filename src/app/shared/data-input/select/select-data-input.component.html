@@ -13,7 +13,7 @@
               [class.invalid-value]="!commonConfiguration?.skipValidation && !(option | selectOptionIsValid:value.config:selectedOptions?.length)"
               [spellcheck]="false"
               [innerHTML]="option.displayValue || option.value"
-              [class.ml-2]="!first">
+              [class.ml-2]="!first && !configuration?.wrapItems">
         </span>
     </ng-container>
 

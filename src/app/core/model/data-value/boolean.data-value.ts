@@ -20,7 +20,7 @@
 import {BooleanConstraintConfig} from '../data/constraint-config';
 import {DataValue} from './index';
 import {valueByConditionText, valueMeetFulltexts} from './data-value.utils';
-import {unescapeHtml} from '../../../shared/utils/common.utils';
+import {isArray, unescapeHtml} from '../../../shared/utils/common.utils';
 import {ConditionType, ConditionValue} from '../attribute-filter';
 
 const truthyValues = [true, 'true', 'yes', 'ja', 'ano', 'áno', 'sí', 'si', 'sim', 'да', '是', 'はい', 'vâng', 'כן'];
@@ -30,7 +30,10 @@ export class BooleanDataValue implements DataValue {
   public readonly booleanValue: boolean;
 
   constructor(public readonly value: any) {
-    this.booleanValue = truthyValues.includes(typeof value === 'string' ? value.toLocaleLowerCase() : value);
+    this.value = isArray(value) ? value.every(val => !!val) : value;
+    this.booleanValue = truthyValues.includes(
+      typeof this.value === 'string' ? this.value.toLocaleLowerCase() : this.value
+    );
   }
 
   public format(): string {

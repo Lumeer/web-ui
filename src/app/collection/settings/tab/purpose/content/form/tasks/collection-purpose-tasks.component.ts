@@ -30,7 +30,7 @@ import {DataInputConfiguration} from '../../../../../../../shared/data-input/dat
 import {DocumentModel} from '../../../../../../../core/store/documents/document.model';
 import {AppState} from '../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {isNullOrUndefined, objectChanged} from '../../../../../../../shared/utils/common.utils';
+import {isArray, isNullOrUndefined, objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
 import {selectDocumentsByCollectionId} from '../../../../../../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
@@ -39,7 +39,6 @@ import {map, startWith} from 'rxjs/operators';
 @Component({
   selector: 'collection-purpose-tasks',
   templateUrl: './collection-purpose-tasks.component.html',
-  styleUrls: ['./collection-purpose-tasks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
@@ -144,7 +143,8 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   }
 
   public onStateListSave(dataValue: DataValue) {
-    this.stateListControl.patchValue(dataValue.serialize());
+    const serializedValue = dataValue.serialize();
+    this.stateListControl.patchValue(isArray(serializedValue) ? serializedValue : [serializedValue]);
     this.stateListEditing$.next(false);
   }
 
