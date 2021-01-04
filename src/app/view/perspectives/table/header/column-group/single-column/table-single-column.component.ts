@@ -30,7 +30,6 @@ import {
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, switchMap, take} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
@@ -58,12 +57,14 @@ import {AttributeNameChangedPipe} from '../../../shared/pipes/attribute-name-cha
 import {TableAttributeSuggestionsComponent} from './attribute-suggestions/table-attribute-suggestions.component';
 import {TableColumnContextMenuComponent} from './context-menu/table-column-context-menu.component';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
+import {computeElementPositionInParent, preventEvent} from '../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'table-single-column',
   templateUrl: './table-single-column.component.html',
   styleUrls: ['./table-single-column.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {class: 'position-relative'},
 })
 export class TableSingleColumnComponent implements OnInit, OnChanges {
   @Input()
@@ -116,7 +117,6 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
     private actions$: Actions,
     private attributeNameChangedPipe: AttributeNameChangedPipe,
     private changeDetector: ChangeDetectorRef,
-    private contextMenuService: ContextMenuService,
     private modalService: ModalService,
     private i18n: I18n,
     private store$: Store<AppState>
@@ -440,9 +440,9 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
 
     switch (event.code) {
       case KeyCode.ArrowDown:
-        return this.suggestions && this.suggestions.moveSelection(Direction.Down);
+        return this.suggestions?.moveSelection(Direction.Down);
       case KeyCode.ArrowUp:
-        return this.suggestions && this.suggestions.moveSelection(Direction.Up);
+        return this.suggestions?.moveSelection(Direction.Up);
       case KeyCode.Tab:
         return this.store$.dispatch(
           new TablesAction.MoveCursor({direction: event.shiftKey ? Direction.Left : Direction.Right})
@@ -455,17 +455,9 @@ export class TableSingleColumnComponent implements OnInit, OnChanges {
   }
 
   public onContextMenu(event: MouseEvent) {
-    if (!this.contextMenuComponent) {
-      return;
-    }
+    const {x, y} = computeElementPositionInParent(event, 'table-single-column');
+    this.contextMenuComponent?.open(x, y);
 
-    this.contextMenuService.show.next({
-      contextMenu: this.contextMenuComponent.contextMenu,
-      event,
-      item: null,
-    });
-
-    event.preventDefault();
-    event.stopPropagation();
+    preventEvent(event);
   }
 }

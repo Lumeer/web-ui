@@ -1,11 +1,11 @@
 <table-collapsed-cell-menu (expand)="onExpand()"></table-collapsed-cell-menu>
 
 <div *ngIf="{stringValues: stringValues$ | async, constraint: constraint$ | async} as data"
-     [contextMenu]="menuComponent?.contextMenu"
      [class.affected]="affected$ | async"
      [class.selected]="selected"
      [style.cursor]="'default'"
      (mousedown)="onMouseDown()"
+     (contextmenu)="onContextMenu($event)"
      class="h-100 w-100 text-nowrap overflow-hidden">
 
   <ng-container *ngIf="data.constraint; else defaultCollapsedCell"

@@ -38,6 +38,7 @@ import {
   ActionDataInputConfiguration,
   UserDataInputConfiguration,
 } from '../../../../../../../shared/data-input/data-input-configuration';
+import {computeElementPositionInParent, preventEvent} from '../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'table-collapsed-cell',
@@ -169,5 +170,12 @@ export class TableCollapsedCellComponent implements OnInit, OnChanges {
     if (!this.selected) {
       this.store$.dispatch(new TablesAction.SetCursor({cursor: this.cursor}));
     }
+  }
+
+  public onContextMenu(event: MouseEvent) {
+    const {x, y} = computeElementPositionInParent(event, 'table-collapsed-cell');
+    this.menuComponent?.open(x, y);
+
+    preventEvent(event);
   }
 }

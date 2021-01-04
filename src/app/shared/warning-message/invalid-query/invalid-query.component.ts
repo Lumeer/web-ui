@@ -31,6 +31,7 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {selectViewQuery} from '../../../core/store/views/views.state';
+import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
 
 @Component({
   selector: 'invalid-query',
@@ -62,7 +63,8 @@ export class InvalidQueryComponent implements OnInit {
         queryIsEmptyExceptPagination(query)
           ? this.store$.pipe(select(selectCollectionsByReadPermission))
           : this.store$.pipe(select(selectCollectionsInQuery))
-      )
+      ),
+      map(collections => sortResourcesByFavoriteAndLastUsed(collections))
     );
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.hasCollection$ = this.store$.pipe(

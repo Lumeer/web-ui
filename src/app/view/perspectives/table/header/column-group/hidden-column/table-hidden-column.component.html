@@ -1,23 +1,22 @@
-<div [contextMenu]="contextMenu"
-     [style.background]="(collection$ | async)?.color | columnBackground"
+<div [style.background]="(collection$ | async)?.color | columnBackground"
      [style.width.px]="column | columnWidth:true"
-     (click)="onClick($event)"
      (mousedown)="onMouseDown($event)"
+     [matMenuTriggerFor]="contextMenu"
      title="Show hidden columns" i18n-title="@@table.header.show.hidden.columns"
      class="table-border-right table-border-bottom text-center h-100 cell">
   <i class="fas fa-ellipsis-v text-secondary"></i>
 </div>
 
-<context-menu #contextMenu>
-  <ng-template *ngFor="let attribute of hiddenAttributes$ | async"
-               (execute)="onShowSingleColumn(attribute)"
-               contextMenuItem>
+<mat-menu #contextMenu="matMenu">
+  <button *ngFor="let attribute of hiddenAttributes$ | async"
+               (click)="onShowSingleColumn(attribute)"
+               mat-menu-item>
     <span>{{attribute | attributeLastName}}</span>
     <small class="text-secondary pl-1">({{attribute.name}})</small>
-  </ng-template>
-  <ng-template *ngIf="column.attributeIds.length > 1"
-               (execute)="onShowAllColumns()"
-               contextMenuItem>
+  </button>
+  <button *ngIf="column.attributeIds.length > 1"
+               (click)="onShowAllColumns()"
+               mat-menu-item>
     <span i18n="@@table.header.show.all">All columns</span>
-  </ng-template>
-</context-menu>
+  </button>
+</mat-menu>

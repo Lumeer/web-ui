@@ -25,7 +25,6 @@ import {IsAttributeItemPipe} from './is-attribute-item.pipe';
 import {IsCollectionItemPipe} from './is-collection-item.pipe';
 import {QueryItemBackgroundPipe} from './query-item-background';
 import {QueryItemBorderPipe} from './query-item-border';
-import {TruncatePipe} from './truncate.pipe';
 import {QueryItemTextPipe} from './query-item-text.pipe';
 import {QueryItemAttributePipe} from './query-item-attribute.pipe';
 import {QueryItemFormPipe} from './query-item-form.pipe';
@@ -39,7 +38,6 @@ import {QueryItemFormPipe} from './query-item-form.pipe';
     QueryItemBackgroundPipe,
     QueryItemBorderPipe,
     QueryItemTextPipe,
-    TruncatePipe,
     QueryItemAttributePipe,
     QueryItemFormPipe,
   ],
@@ -50,7 +48,6 @@ import {QueryItemFormPipe} from './query-item-form.pipe';
     QueryItemBackgroundPipe,
     QueryItemBorderPipe,
     QueryItemTextPipe,
-    TruncatePipe,
     QueryItemAttributePipe,
     QueryItemFormPipe,
   ],

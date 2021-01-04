@@ -1,6 +1,6 @@
 <tr>
   <th *ngFor="let column of columns; trackBy:trackByColumn; let index = index"
-      class="sticky-header table-border-left table-border-top table-border-right border-bottom-0"
+      class="sticky-header table-border-left table-border-top table-border-right border-bottom-0 position-relative"
       [style.background-color]="column.color && (column.color | lightenColor:0.5) || 'white'"
       [style.font-weight]="column.bold ? 'bold' : 'normal'"
       [style.width.px]="column.width"

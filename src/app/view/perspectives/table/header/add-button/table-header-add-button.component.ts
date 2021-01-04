@@ -26,7 +26,6 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
@@ -45,12 +44,10 @@ import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../core/store/link-types/link.type';
-import {ContextMenuComponent, ContextMenuService} from 'ngx-contextmenu';
 import {ModalService} from '../../../../../shared/modal/modal.service';
 import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 import {selectViewQuery} from '../../../../../core/store/views/views.state';
-
-const ITEMS_LIMIT = 15;
+import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'table-header-add-button',
@@ -68,21 +65,11 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   @Output()
   public addColumn = new EventEmitter();
 
-  @ViewChild(ContextMenuComponent)
-  public contextMenuComponent: ContextMenuComponent;
-
   public collections$: Observable<Collection[]>;
   public collection$: Observable<Collection>;
   public linkTypes$: Observable<[LinkType, Collection, Collection][]>;
 
-  private menuShown: boolean;
-
-  constructor(
-    private contextMenuService: ContextMenuService,
-    private modalService: ModalService,
-    private element: ElementRef,
-    private store$: Store<{}>
-  ) {}
+  constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<{}>) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -93,19 +80,17 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   private bindCollections(cursor: TableBodyCursor) {
     this.collections$ = combineLatest([
-      this.store$.pipe(select(selectCollectionsByReadPermission)),
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
       this.store$.pipe(select(selectCollectionsByWritePermission)),
     ]).pipe(
-      map(([collections, lastCollectionId, writableCollections]) => {
+      map(([lastCollectionId, writableCollections]) => {
         const writableCollectionIds = writableCollections.map(collection => collection.id);
         if (!writableCollectionIds.includes(lastCollectionId)) {
           return [];
         }
 
-        return collections
-          .filter(collection => collection.id !== lastCollectionId && writableCollectionIds.includes(collection.id))
-          .slice(0, ITEMS_LIMIT);
+        const filteredCollections = writableCollections.filter(collection => collection.id !== lastCollectionId);
+        return sortResourcesByFavoriteAndLastUsed(filteredCollections);
       })
     );
   }
@@ -122,7 +107,6 @@ export class TableHeaderAddButtonComponent implements OnChanges {
         return linkTypes
           .filter(linkType => !linkTypeIds.includes(linkType.id))
           .filter(linkType => linkType.collectionIds.some(id => id === lastCollectionId))
-          .slice(0, ITEMS_LIMIT)
           .map<[LinkType, Collection, Collection]>(linkType => {
             return [linkType, collectionsMap[linkType.collectionIds[0]], collectionsMap[linkType.collectionIds[1]]];
           });
@@ -150,37 +134,5 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   public onAddColumn() {
     this.addColumn.emit();
-  }
-
-  public onButtonClick(event: MouseEvent) {
-    if (this.menuShown) {
-      this.closeMenu();
-    } else {
-      this.showMenu(event);
-    }
-
-    event.stopPropagation();
-  }
-
-  private showMenu(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    this.contextMenuService.show.next({
-      anchorElement: target.firstChild ? target : target.parentElement,
-      contextMenu: this.contextMenuComponent,
-      event,
-      item: null,
-    });
-  }
-
-  private closeMenu() {
-    document.dispatchEvent(new Event('click'));
-  }
-
-  public onOpen() {
-    this.menuShown = true;
-  }
-
-  public onClose() {
-    this.menuShown = false;
   }
 }

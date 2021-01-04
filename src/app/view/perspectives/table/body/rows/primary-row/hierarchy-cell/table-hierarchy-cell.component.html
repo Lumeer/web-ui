@@ -1,4 +1,5 @@
-<div [contextMenu]="contextMenuComponent?.contextMenu"
+<div (contextmenu)="onContextMenu($event)"
+     (click)="onContextMenu($event)"
      class="text-nowrap">
   <i *ngFor="let space of spacesBefore"
      class="fal fa-fw fa-ellipsis-v text-secondary align-middle">

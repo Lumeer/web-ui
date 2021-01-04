@@ -18,10 +18,10 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {MatMenuTrigger} from '@angular/material/menu';
 import {Attribute} from '../../../../../../../core/store/collections/collection';
 import {TableHeaderCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
-import {ContextMenuComponent} from 'ngx-contextmenu';
 import {isMacOS} from '../../../../../../../shared/utils/system.utils';
 import {TablesAction} from '../../../../../../../core/store/tables/tables.action';
 import {Store} from '@ngrx/store';
@@ -76,12 +76,13 @@ export class TableColumnContextMenuComponent {
   @Output()
   public functionEdit = new EventEmitter();
 
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenu: ContextMenuComponent;
+  @ViewChild(MatMenuTrigger)
+  public contextMenu: MatMenuTrigger;
 
   public readonly macOS = isMacOS();
-
   public readonly type = ConstraintType;
+
+  public contextMenuPosition = {x: 0, y: 0};
 
   public constructor(private store$: Store<AppState>) {}
 
@@ -99,5 +100,11 @@ export class TableColumnContextMenuComponent {
 
   public onCopyValue() {
     this.store$.dispatch(new TablesAction.CopyValue({cursor: this.cursor}));
+  }
+
+  public open(x: number, y: number) {
+    this.contextMenuPosition = {x, y};
+    this.contextMenu.menu.focusFirstItem('mouse');
+    this.contextMenu.openMenu();
   }
 }

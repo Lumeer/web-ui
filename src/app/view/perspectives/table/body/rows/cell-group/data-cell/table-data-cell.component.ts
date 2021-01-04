@@ -35,7 +35,6 @@ import {
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {ContextMenuService} from 'ngx-contextmenu';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {distinctUntilChanged, first, map, skip, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
@@ -74,7 +73,13 @@ import {isKeyPrintable, KeyCode} from '../../../../../../../shared/key-code';
 import {isAttributeConstraintType} from '../../../../../../../shared/utils/attribute.utils';
 import {EDITABLE_EVENT} from '../../../../table-perspective.component';
 import {TableDataCellMenuComponent} from './menu/table-data-cell-menu.component';
-import {deepObjectsEquals, isNotNullOrUndefined, objectChanged} from '../../../../../../../shared/utils/common.utils';
+import {
+  computeElementPositionInParent,
+  deepObjectsEquals,
+  isNotNullOrUndefined,
+  objectChanged,
+  preventEvent,
+} from '../../../../../../../shared/utils/common.utils';
 import {DataValue} from '../../../../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
@@ -166,7 +171,6 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public constructor(
     private actions$: Actions,
-    private contextMenuService: ContextMenuService,
     public element: ElementRef,
     private i18n: I18n,
     private notificationService: NotificationService,
@@ -352,7 +356,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private isEntityInitialized(): boolean {
-    return !!(this.document && this.document.id) || !!(this.linkInstance && this.linkInstance.id);
+    return !!this.document?.id || !!this.linkInstance?.id;
   }
 
   public ngOnDestroy() {
@@ -373,7 +377,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     if (!this.editing$.getValue()) {
       event.preventDefault();
       this.attribute$.pipe(first()).subscribe(attribute => {
-        if (this.allowedPermissions && this.allowedPermissions.writeWithView && this.isAttributeEditable(attribute)) {
+        if (this.allowedPermissions?.writeWithView && this.isAttributeEditable(attribute)) {
           this.editing$.next(true);
         }
       });
@@ -391,14 +395,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private showContextMenu(event: MouseEvent) {
-    if (this.menuComponent) {
-      this.contextMenuService.show.next({
-        anchorElement: null,
-        contextMenu: this.menuComponent.contextMenu,
-        event,
-        item: null,
-      });
-    }
+    const {x, y} = computeElementPositionInParent(event, 'table-data-cell');
+    this.menuComponent?.open(x, y);
+
+    preventEvent(event);
   }
 
   private useSelectionOrSave(dataValue: DataValue) {

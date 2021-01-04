@@ -16,20 +16,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import {Injectable, Pipe, PipeTransform} from '@angular/core';
+
+import {Pipe, PipeTransform} from '@angular/core';
+import {truncate} from '../utils/string.utils';
 
 @Pipe({
-  name: 'truncateString',
+  name: 'truncate',
 })
-@Injectable({
-  providedIn: 'root',
-})
-export class TruncateStringPipe implements PipeTransform {
-  public transform(value: String, length: number): String {
-    if (value && value.length > length) {
-      return value.slice(0, length) + '…';
-    }
-
-    return value;
+export class TruncatePipe implements PipeTransform {
+  public transform(value: string, limit: number): any {
+    return truncate(value, limit);
   }
 }

@@ -18,8 +18,8 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {MatMenuTrigger} from '@angular/material/menu';
 import {select, Store} from '@ngrx/store';
-import {ContextMenuComponent} from 'ngx-contextmenu';
 import {Observable} from 'rxjs';
 import {TableBodyCursor} from '../../../../../../../../core/store/tables/table-cursor';
 import {TablesAction} from '../../../../../../../../core/store/tables/tables.action';
@@ -36,7 +36,6 @@ import {selectCollectionPermissions} from '../../../../../../../../core/store/us
 @Component({
   selector: 'table-hierarchy-cell-menu',
   templateUrl: './table-hierarchy-cell-menu.component.html',
-  styleUrls: ['./table-hierarchy-cell-menu.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableHierarchyCellMenuComponent implements OnChanges {
@@ -46,9 +45,10 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   @Input()
   public canManageConfig: boolean;
 
-  @ViewChild(ContextMenuComponent, {static: true})
-  public contextMenu: ContextMenuComponent;
+  @ViewChild(MatMenuTrigger)
+  public contextMenu: MatMenuTrigger;
 
+  public contextMenuPosition = {x: 0, y: 0};
   public readonly macOS = isMacOS();
 
   public indentable$: Observable<boolean>;
@@ -56,6 +56,12 @@ export class TableHierarchyCellMenuComponent implements OnChanges {
   public allowedPermissions$: Observable<AllowedPermissions>;
 
   constructor(private store$: Store<{}>) {}
+
+  public open(x: number, y: number) {
+    this.contextMenuPosition = {x, y};
+    this.contextMenu?.menu.focusFirstItem('mouse');
+    this.contextMenu?.openMenu();
+  }
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {

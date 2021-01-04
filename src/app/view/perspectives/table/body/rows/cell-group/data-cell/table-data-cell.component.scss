@@ -3,6 +3,7 @@
 
 :host {
   display: block;
+  position: relative;
   line-height: $table-min-row-height;
   min-height: $table-min-row-height;
   transition: box-shadow 0.15s ease-in-out;

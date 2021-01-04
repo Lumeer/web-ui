@@ -30,6 +30,7 @@ import {
 } from '@angular/core';
 import {TableBodyCursor} from '../../../../../../../core/store/tables/table-cursor';
 import {TableHierarchyCellMenuComponent} from './menu/table-hierarchy-cell-menu.component';
+import {computeElementPositionInParent, preventEvent} from '../../../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'table-hierarchy-cell',
@@ -78,5 +79,12 @@ export class TableHierarchyCellComponent implements OnChanges {
     if (this.collapsible) {
       this.toggle.emit();
     }
+  }
+
+  public onContextMenu(event: MouseEvent) {
+    const {x, y} = computeElementPositionInParent(event, 'table-hierarchy-cell');
+    this.contextMenuComponent?.open(x, y);
+
+    preventEvent(event);
   }
 }

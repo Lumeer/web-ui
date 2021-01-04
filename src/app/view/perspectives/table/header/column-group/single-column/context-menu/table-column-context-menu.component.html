@@ -1,118 +1,120 @@
-<context-menu #contextMenu>
-  <ng-template *ngIf="false && cursor.partIndex === 0"
-               [enabled]="canManageConfig"
-               contextMenuItem
-               (execute)="onSort(false)">
-    <i class="fa fa-fw fa-sort-alpha-down mr-1"
-       aria-hidden="true">
-    </i>
-    <span i18n="@@table.header.menu.sort.ascending">Sort ascending</span>
-  </ng-template>
-  <ng-template *ngIf="false && cursor.partIndex === 0"
-               [enabled]="canManageConfig"
-               contextMenuItem
-               (execute)="onSort(true)">
-    <i class="fa fa-fw fa-sort-alpha-up mr-1"
-       aria-hidden="true">
-    </i>
-    <span i18n="@@table.header.menu.sort.descending">Sort descending</span>
-  </ng-template>
-  <ng-template *ngIf="false && cursor.partIndex === 0"
-               contextMenuItem
-               divider="true"></ng-template>
-  <ng-template contextMenuItem
-               [enabled]="allowedPermissions?.manageWithView"
-               (execute)="edit.emit()">
-    <i class="fa fa-fw fa-edit mr-1"
-       aria-hidden="true">
-    </i>
-    <span data-test="table-column-menu-edit-name"
-          i18n="@@table.header.menu.edit">Edit name</span>
-  </ng-template>
-  <ng-template *ngIf="attribute.id"
-               contextMenuItem
-               [enabled]="allowedPermissions?.manageWithView"
-               (execute)="configure.emit()">
-    <i class="fa fa-fw fa-shapes mr-1"
-       aria-hidden="true">
-    </i>
-    <span data-test="table-column-menu-change-constraint"
-          i18n="@@table.header.menu.changeType">Attribute type...</span>
-  </ng-template>
-  <ng-template *ngIf="attribute.id"
-               contextMenuItem
-               [enabled]="allowedPermissions?.manageWithView"
-               (execute)="functionEdit.emit()">
-    <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>
-    <span *ngIf="attribute?.constraint?.type !== type.Action" i18n="@@table.header.menu.editFunction">Edit function...</span>
-    <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editRule">Edit rule...</span>
-  </ng-template>
-  <ng-template contextMenuItem (execute)="onCopyValue()">
-    <div class="d-flex align-items-baseline">
-      <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
-      <span class="flex-grow-1" i18n="@@table.header.menu.copy.name">Copy name</span>
-      <small class="text-secondary ml-3">{{macOS ? '⌘ C' : 'Ctrl + C'}}</small>
-    </div>
-  </ng-template>
-  <ng-container *ngIf="attribute.id && !defaultAttribute">
-    <ng-template contextMenuItem
-                 divider="true">
-    </ng-template>
-    <ng-template contextMenuItem
-                 [enabled]="allowedPermissions?.manageWithView"
-                 (execute)="setDefaultAttribute.emit()">
-      <i class="fa fa-fw fa-check-square mr-1"
+<div class="position-absolute"
+     [style.left.px]="contextMenuPosition.x"
+     [style.top.px]="contextMenuPosition.y"
+     [matMenuTriggerFor]="contextMenu">
+</div>
+<mat-menu #contextMenu="matMenu">
+  <ng-template matMenuContent>
+    <button *ngIf="false && cursor.partIndex === 0"
+            [disabled]="!canManageConfig"
+            mat-menu-item
+            (click)="onSort(false)">
+      <i class="fa fa-fw fa-sort-alpha-down mr-1"
          aria-hidden="true">
       </i>
-      <span i18n="@@table.header.menu.defaultAttribute">Set as displayed attribute</span>
-    </ng-template>
-  </ng-container>
-  <ng-template contextMenuItem
-               divider="true"></ng-template>
-  <ng-template (execute)="addNextColumn()"
-               [enabled]="allowedPermissions?.manageWithView"
-               contextMenuItem>
-    <i class="fa fa-fw fa-arrow-alt-circle-right mr-1"
-       aria-hidden="true">
-    </i>
-    <span data-test="table-column-menu-add-right"
-          i18n="@@table.header.menu.add.column.next">Add column right</span>
+      <span i18n="@@table.header.menu.sort.ascending">Sort ascending</span>
+    </button>
+    <button *ngIf="false && cursor.partIndex === 0"
+            [disabled]="!canManageConfig"
+            mat-menu-item
+            (click)="onSort(true)">
+      <i class="fa fa-fw fa-sort-alpha-up mr-1"
+         aria-hidden="true">
+      </i>
+      <span i18n="@@table.header.menu.sort.descending">Sort descending</span>
+    </button>
+    <hr class="my-2" *ngIf="false && cursor.partIndex === 0">
+    <button mat-menu-item
+            [disabled]="!allowedPermissions?.manageWithView"
+            (click)="edit.emit()"
+            data-test="table-column-menu-edit-name">
+      <i class="fa fa-fw fa-edit mr-1"
+         aria-hidden="true">
+      </i>
+      <span i18n="@@table.header.menu.edit">Edit name</span>
+    </button>
+    <button *ngIf="attribute.id"
+            mat-menu-item
+            [disabled]="!allowedPermissions?.manageWithView"
+            (click)="configure.emit()"
+            data-test="table-column-menu-change-constraint">
+      <i class="fa fa-fw fa-shapes mr-1"
+         aria-hidden="true">
+      </i>
+      <span i18n="@@table.header.menu.changeType">Attribute type...</span>
+    </button>
+    <button *ngIf="attribute.id"
+            mat-menu-item
+            [disabled]="!allowedPermissions?.manageWithView"
+            (click)="functionEdit.emit()">
+      <i class="fa fa-fw fa-function mr-1" aria-hidden="true"></i>
+      <span *ngIf="attribute?.constraint?.type !== type.Action"
+            i18n="@@table.header.menu.editFunction">Edit function...</span>
+      <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editRule">Edit rule...</span>
+    </button>
+    <button mat-menu-item (click)="onCopyValue()">
+      <div class="d-flex align-items-baseline">
+        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <span class="flex-grow-1" i18n="@@table.header.menu.copy.name">Copy name</span>
+        <small class="text-secondary ml-3">{{macOS ? '⌘ C' : 'Ctrl + C'}}</small>
+      </div>
+    </button>
+    <ng-container *ngIf="attribute.id && !defaultAttribute">
+      <hr class="my-2">
+      <button mat-menu-item
+              [disabled]="!allowedPermissions?.manageWithView"
+              (click)="setDefaultAttribute.emit()">
+        <i class="fa fa-fw fa-check-square mr-1"
+           aria-hidden="true">
+        </i>
+        <span i18n="@@table.header.menu.defaultAttribute">Set as displayed attribute</span>
+      </button>
+    </ng-container>
+    <hr class="my-2">
+    <button (click)="addNextColumn()"
+            [disabled]="!allowedPermissions?.manageWithView"
+            mat-menu-item
+            data-test="table-column-menu-add-right">
+      <i class="fa fa-fw fa-arrow-alt-circle-right mr-1"
+         aria-hidden="true">
+      </i>
+      <span i18n="@@table.header.menu.add.column.next">Add column right</span>
+    </button>
+    <button (click)="addPreviousColumn()"
+            [disabled]="!allowedPermissions?.manageWithView"
+            mat-menu-item
+            data-test="table-column-menu-add-left">
+      <i class="fa fa-fw fa-arrow-alt-circle-left mr-1"
+         aria-hidden="true">
+      </i>
+      <span i18n="@@table.header.menu.add.column.previous">Add column left</span>
+    </button>
+    <hr class="my-2">
+    <button *ngIf="false && leaf && attribute.id"
+            [disabled]="!allowedPermissions?.writeWithView"
+            (click)="split.emit()"
+            mat-menu-item>
+      <i class="fa fa-fw fa-columns text-warning mr-1"
+         aria-hidden="true">
+      </i>
+      <span i18n="@@table.header.menu.split">Split column</span>
+    </button>
+    <button *ngIf="attribute.id"
+            [disabled]="!canManageConfig"
+            mat-menu-item
+            (click)="hide.emit()">
+      <i class="fa fa-fw fa-eye-slash mr-1"
+         aria-hidden="true">
+      </i>
+      <span i18n="@@table.header.menu.hide">Hide column</span>
+    </button>
+    <button (click)="remove.emit()"
+            [disabled]="!allowedPermissions?.manageWithView"
+            mat-menu-item>
+      <i class="far fa-fw fa-trash-alt text-danger mr-1"
+         aria-hidden="true">
+      </i>
+      <span i18n="@@table.header.menu.remove">Delete column</span>
+    </button>
   </ng-template>
-  <ng-template (execute)="addPreviousColumn()"
-               [enabled]="allowedPermissions?.manageWithView"
-               contextMenuItem>
-    <i class="fa fa-fw fa-arrow-alt-circle-left mr-1"
-       aria-hidden="true">
-    </i>
-    <span data-test="table-column-menu-add-left"
-          i18n="@@table.header.menu.add.column.previous">Add column left</span>
-  </ng-template>
-  <ng-template contextMenuItem
-               divider="true"></ng-template>
-  <ng-template *ngIf="false && leaf && attribute.id"
-               [enabled]="allowedPermissions?.writeWithView"
-               (execute)="split.emit()"
-               contextMenuItem>
-    <i class="fa fa-fw fa-columns text-warning mr-1"
-       aria-hidden="true">
-    </i>
-    <span i18n="@@table.header.menu.split">Split column</span>
-  </ng-template>
-  <ng-template *ngIf="attribute.id"
-               [enabled]="canManageConfig"
-               contextMenuItem
-               (execute)="hide.emit()">
-    <i class="fa fa-fw fa-eye-slash mr-1"
-       aria-hidden="true">
-    </i>
-    <span i18n="@@table.header.menu.hide">Hide column</span>
-  </ng-template>
-  <ng-template (execute)="remove.emit()"
-               [enabled]="allowedPermissions?.manageWithView"
-               contextMenuItem>
-    <i class="far fa-fw fa-trash-alt text-danger mr-1"
-       aria-hidden="true">
-    </i>
-    <span i18n="@@table.header.menu.remove">Delete column</span>
-  </ng-template>
-</context-menu>
+</mat-menu>
