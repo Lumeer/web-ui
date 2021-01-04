@@ -20,7 +20,7 @@ describe('Table perspective :: Columns', () => {
 
     // add new column left
     cy.get('[data-test="table-column-input"]').first().trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-add-left"]').click();
+    cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 3);
@@ -43,7 +43,8 @@ describe('Table perspective :: Columns', () => {
       .first()
       .should('have.value', 'First')
       .trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-add-right"]').click();
+    cy.get('[data-test="table-column-menu-add-right"]').click({force: true});
+    cy.get('body').click();
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
@@ -51,12 +52,13 @@ describe('Table perspective :: Columns', () => {
 
     // add new column as the last one
     cy.get('[data-test="table-column-input"]').last().should('have.value', 'A').trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-add-right"]').click();
+    cy.get('[data-test="table-column-menu-add-right"]').click({force: true});
+    cy.get('body').click();
     cy.get('[data-test="table-column-input"]').should('have.length', 5);
 
     // rename last column
     cy.get('[data-test="table-column-input"]').last().should('have.value', 'C').trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-edit-name"]').click();
+    cy.get('[data-test="table-column-menu-edit-name"]').click({force: true});
     cy.focused().trigger('keydown', {code: 'Enter'});
     cy.wait('@createAttribute').its('status').should('eq', 200);
 
@@ -114,7 +116,7 @@ describe('Table perspective :: Columns', () => {
 
     // add new column left in first table
     cy.get('[data-test="table-column-input"]').first().trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-add-left"]').click();
+    cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 4);
@@ -134,7 +136,7 @@ describe('Table perspective :: Columns', () => {
       .last()
       .should('have.value', 'A')
       .trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-add-left"]').click();
+    cy.get('[data-test="table-column-menu-add-left"]').click({force: true});
 
     // verify column count and names
     cy.get('[data-test="table-column-input"]').should('have.length', 5);

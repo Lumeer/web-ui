@@ -26,22 +26,22 @@
     <hr class="my-2" *ngIf="false && cursor.partIndex === 0">
     <button mat-menu-item
             [disabled]="!allowedPermissions?.manageWithView"
-            (click)="edit.emit()">
+            (click)="edit.emit()"
+            data-test="table-column-menu-edit-name">
       <i class="fa fa-fw fa-edit mr-1"
          aria-hidden="true">
       </i>
-      <span data-test="table-column-menu-edit-name"
-            i18n="@@table.header.menu.edit">Edit name</span>
+      <span i18n="@@table.header.menu.edit">Edit name</span>
     </button>
     <button *ngIf="attribute.id"
             mat-menu-item
             [disabled]="!allowedPermissions?.manageWithView"
-            (click)="configure.emit()">
+            (click)="configure.emit()"
+            data-test="table-column-menu-change-constraint">
       <i class="fa fa-fw fa-shapes mr-1"
          aria-hidden="true">
       </i>
-      <span data-test="table-column-menu-change-constraint"
-            i18n="@@table.header.menu.changeType">Attribute type...</span>
+      <span i18n="@@table.header.menu.changeType">Attribute type...</span>
     </button>
     <button *ngIf="attribute.id"
             mat-menu-item
@@ -73,21 +73,21 @@
     <hr class="my-2">
     <button (click)="addNextColumn()"
             [disabled]="!allowedPermissions?.manageWithView"
-            mat-menu-item>
+            mat-menu-item
+            data-test="table-column-menu-add-right">
       <i class="fa fa-fw fa-arrow-alt-circle-right mr-1"
          aria-hidden="true">
       </i>
-      <span data-test="table-column-menu-add-right"
-            i18n="@@table.header.menu.add.column.next">Add column right</span>
+      <span i18n="@@table.header.menu.add.column.next">Add column right</span>
     </button>
     <button (click)="addPreviousColumn()"
             [disabled]="!allowedPermissions?.manageWithView"
-            mat-menu-item>
+            mat-menu-item
+            data-test="table-column-menu-add-left">
       <i class="fa fa-fw fa-arrow-alt-circle-left mr-1"
          aria-hidden="true">
       </i>
-      <span data-test="table-column-menu-add-left"
-            i18n="@@table.header.menu.add.column.previous">Add column left</span>
+      <span i18n="@@table.header.menu.add.column.previous">Add column left</span>
     </button>
     <hr class="my-2">
     <button *ngIf="false && leaf && attribute.id"
