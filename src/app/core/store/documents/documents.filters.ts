@@ -75,6 +75,7 @@ export function filterDocumentsAndLinksByQuery(
   const documentsByCollections = groupDocumentsByCollection(documents);
   const linkInstancesByLinkTypes = groupLinkInstancesByLinkTypes(linkInstances);
 
+  const escapedFulltexts = query.fulltexts?.map(fullText => escapeHtml(fullText));
   stems.forEach(stem => {
     const {allDocuments, allLinkInstances} = filterDocumentsAndLinksByStem(
       collections,
@@ -85,7 +86,7 @@ export function filterDocumentsAndLinksByQuery(
       linkTypePermissions,
       constraintData,
       stem,
-      query.fulltexts?.map(fullText => escapeHtml(fullText)),
+      escapedFulltexts,
       includeChildren
     );
     documentsByStems = mergeDocuments(documentsByStems, allDocuments);
@@ -137,7 +138,7 @@ export function filterDocumentsAndLinksByStem(
     return filtered;
   }
 
-  const pushedIds = [];
+  const pushedIds = new Set();
   const attributesMap = objectsByIdMap(pipeline[0].resource?.attributes);
   for (const dataResource of pipeline[0].dataResources) {
     const dataValues = createDataValuesMap(dataResource.data, pipeline[0].resource?.attributes, constraintData);
@@ -149,7 +150,7 @@ export function filterDocumentsAndLinksByStem(
         : [dataResource as DocumentModel];
       for (const document of searchDocuments) {
         if (
-          !pushedIds.includes(document.id) &&
+          !pushedIds.has(document.id) &&
           checkAndFillDataResources(
             document,
             pipeline,
@@ -159,7 +160,7 @@ export function filterDocumentsAndLinksByStem(
             !pipeline[0].fulltexts.length || dataValuesMeetsFulltexts(dataValues, pipeline[0].fulltexts)
           )
         ) {
-          pushedIds.push(document.id);
+          pushedIds.add(document.id);
           filtered.allDocuments.push(<DocumentModel>document);
           pushToMatrix(filtered.pipelineDocuments, document, 0);
         }

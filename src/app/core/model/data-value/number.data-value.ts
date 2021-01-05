@@ -43,6 +43,7 @@ import {currentLocaleLanguageTag, LanguageTag} from '../data/language-tag';
 import {ConditionType, ConditionValue} from '../attribute-filter';
 
 export class NumberDataValue implements NumericDataValue {
+  private static languages: LanguageTag[] = [];
   public readonly bigNumber: Big;
 
   constructor(
@@ -92,8 +93,11 @@ export class NumberDataValue implements NumericDataValue {
   }
 
   private setLanguage(tag: LanguageTag) {
-    if (!numbro.languages()[tag]) {
-      numbro.registerLanguage(languages[tag]);
+    if (NumberDataValue.languages.indexOf(tag) < 0) {
+      if (!numbro.languages()[tag]) {
+        numbro.registerLanguage(languages[tag]);
+      }
+      NumberDataValue.languages.push(tag);
     }
     if (numbro.language() !== tag) {
       numbro.setLanguage(tag);
