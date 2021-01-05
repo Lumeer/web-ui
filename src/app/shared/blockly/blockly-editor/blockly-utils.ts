@@ -490,6 +490,7 @@ export class BlocklyUtils {
     }
 
     const xmls = this.components
+      .filter(component => component.getVisibility().includes(this.masterType))
       .map(component => component.getDocumentVariablesXml(workspace))
       .filter(xml => isNotNullOrUndefined(xml));
     if (xmls?.length > 0) {
