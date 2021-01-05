@@ -34,6 +34,7 @@ import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 import {AttributeFilter, ConditionType, EquationOperator} from '../../model/attribute-filter';
 import {AllowedPermissions} from '../../model/allowed-permissions';
 import {ActionConstraintConfig} from '../../model/data/constraint-config';
+import {filterAttributesByFilters} from '../../../shared/utils/attribute.utils';
 
 interface FilteredDataResources {
   allDocuments: DocumentModel[];
@@ -140,8 +141,9 @@ export function filterDocumentsAndLinksByStem(
 
   const pushedIds = new Set();
   const attributesMap = objectsByIdMap(pipeline[0].resource?.attributes);
+  const attributes = filterAttributesByFilters(pipeline[0].resource?.attributes, pipeline[0].filters);
   for (const dataResource of pipeline[0].dataResources) {
-    const dataValues = createDataValuesMap(dataResource.data, pipeline[0].resource?.attributes, constraintData);
+    const dataValues = createDataValuesMap(dataResource.data, attributes, constraintData);
     if (
       dataValuesMeetsFilters2(dataValues, pipeline[0].filters, attributesMap, pipeline[0].permissions, constraintData)
     ) {
@@ -211,8 +213,9 @@ function checkAndFillDataResources(
     }
 
     let someLinkPassed = (!currentPipeline.fulltexts.length || fulltextFound) && linkedLinks.length === 0;
+    const attributes = filterAttributesByFilters(currentPipeline.resource?.attributes, currentPipeline.filters);
     for (const linkedLink of linkedLinks) {
-      const dataValues = createDataValuesMap(linkedLink.data, currentPipeline.resource?.attributes, constraintData);
+      const dataValues = createDataValuesMap(linkedLink.data, attributes, constraintData);
       if (
         checkAndFillDataResources(
           linkedLink,
@@ -248,8 +251,9 @@ function checkAndFillDataResources(
     }
 
     let someDocumentPassed = (!currentPipeline.fulltexts.length || fulltextFound) && linkedDocuments.length === 0;
+    const attributes = filterAttributesByFilters(currentPipeline.resource?.attributes, currentPipeline.filters);
     for (const linkedDocument of linkedDocuments) {
-      const dataValues = createDataValuesMap(linkedDocument.data, currentPipeline.resource?.attributes, constraintData);
+      const dataValues = createDataValuesMap(linkedDocument.data, attributes, constraintData);
       if (
         checkAndFillDataResources(
           linkedDocument,
@@ -356,7 +360,8 @@ function dataMeetsFilters(
   constraintData: ConstraintData,
   operator: EquationOperator = EquationOperator.And
 ): boolean {
-  const dataValues = createDataValuesMap(data, attributes, constraintData);
+  const filteredAttributes = filterAttributesByFilters(attributes, filters);
+  const dataValues = createDataValuesMap(data, filteredAttributes, constraintData);
   const attributesMap = objectsByIdMap(attributes);
   return dataValuesMeetsFilters(dataValues, attributesMap, filters, permissions, constraintData, operator);
 }

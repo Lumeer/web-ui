@@ -21,6 +21,7 @@ import {ConstraintType} from '../../core/model/data/constraint';
 import {Attribute, AttributeFunction} from '../../core/store/collections/collection';
 import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
 import {ActionConstraintConfig} from '../../core/model/data/constraint-config';
+import {AttributeFilter} from '../../core/model/attribute-filter';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 
@@ -205,4 +206,9 @@ export function containsAttributeWithRule(attributes: Attribute[], rule: Rule): 
     }
     return false;
   });
+}
+
+export function filterAttributesByFilters(attributes: Attribute[], filters: AttributeFilter[]): Attribute[] {
+  const attributeIds = new Set(filters?.map(filter => filter.attributeId) || []);
+  return attributes?.filter(attribute => attributeIds.has(attribute.id));
 }
