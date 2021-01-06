@@ -24,7 +24,7 @@ import {
   conditionNumInputs,
 } from '../navigation/query/query.util';
 import {DocumentModel} from './document.model';
-import {ConstraintData, ConstraintType} from '../../model/data/constraint';
+import {ConstraintData} from '../../model/data/constraint';
 import {findAttribute} from '../collections/collection.util';
 import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 import {createRange} from '../../../shared/utils/array.utils';
@@ -60,8 +60,11 @@ export function sortDocumentsByFavoriteAndLastUsed(documents: DocumentModel[]): 
 }
 
 export function mergeDocuments(documentsA: DocumentModel[], documentsB: DocumentModel[]): DocumentModel[] {
-  const documentsAIds = documentsA.map(collection => collection.id);
-  const documentsBToAdd = documentsB.filter(collection => !documentsAIds.includes(collection.id));
+  if (documentsA.length === 0 || documentsB.length === 0) {
+    return documentsA.length > 0 ? documentsA : documentsB;
+  }
+  const documentsAIds = new Set(documentsA.map(collection => collection.id));
+  const documentsBToAdd = documentsB.filter(collection => !documentsAIds.has(collection.id));
   return documentsA.concat(documentsBToAdd);
 }
 

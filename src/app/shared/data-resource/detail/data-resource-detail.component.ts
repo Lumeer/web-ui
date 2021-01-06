@@ -54,12 +54,15 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {ResourceAttributeSettings, ViewSettings} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
 import {selectDocumentById} from '../../../core/store/documents/documents.state';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 import {
   selectLinkInstanceById,
   selectLinkInstancesByDocumentIds,
 } from '../../../core/store/link-instances/link-instances.state';
 import {environment} from '../../../../environments/environment';
+import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
+import {objectChanged} from '../../utils/common.utils';
+import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 
 @Component({
   selector: 'data-resource-detail',
@@ -141,6 +144,12 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
   }
 
   public ngOnChanges(changes: SimpleChanges) {
+    if (objectChanged(changes.resource) || objectChanged(changes.dataResource)) {
+      this.bindData();
+    }
+  }
+
+  private bindData() {
     this.resourceType = getAttributesResourceType(this.resource);
 
     if (this.resourceType === AttributesResourceType.Collection) {
@@ -153,6 +162,9 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
         select(selectLinkInstancesByDocumentIds([this.dataResource.id])),
         map(links => links?.length || 0)
       );
+      this.store$
+        .pipe(select(selectLinkTypesByCollectionId(this.resource.id)), take(1))
+        .subscribe(linkTypes => linkTypes.forEach(linkType => this.readLinkTypeData(linkType)));
     } else if (this.resourceType === AttributesResourceType.LinkType) {
       this.commentsCount$ = this.store$.pipe(
         select(selectLinkInstanceById(this.dataResource.id)),
@@ -161,6 +173,14 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
       );
       this.linksCount$ = of(null);
     }
+  }
+
+  private readLinkTypeData(linkType: LinkType) {
+    const otherCollectionId = getOtherLinkedCollectionId(linkType, this.resource.id);
+    const documentsQuery: Query = {stems: [{collectionId: otherCollectionId}]};
+    this.store$.dispatch(new DocumentsAction.Get({query: documentsQuery}));
+    const query: Query = {stems: [{collectionId: this.resource.id, linkTypeIds: [linkType.id]}]};
+    this.store$.dispatch(new LinkInstancesAction.Get({query}));
   }
 
   public onRemove() {

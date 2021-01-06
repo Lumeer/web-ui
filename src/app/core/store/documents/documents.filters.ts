@@ -48,6 +48,7 @@ interface FilterPipeline {
   dataResources: DataResource[];
   filters: AttributeFilter[];
   fulltexts: string[];
+  attributes: Attribute[];
   permissions: AllowedPermissions;
 }
 
@@ -132,7 +133,9 @@ export function filterDocumentsAndLinksByStem(
         ? collectionsPermissions?.[resource.id]
         : linkTypePermissions?.[resource.id];
 
-    return {resource, fulltexts, filters, dataResources, permissions};
+    const attributes = filterAttributesByFilters(resource.attributes, filters);
+
+    return {resource, fulltexts, filters, dataResources, permissions, attributes};
   });
 
   if (!pipeline[0]) {
@@ -141,11 +144,10 @@ export function filterDocumentsAndLinksByStem(
 
   const pushedIds = new Set();
   const attributesMap = objectsByIdMap(pipeline[0].resource?.attributes);
-  const attributes = filterAttributesByFilters(pipeline[0].resource?.attributes, pipeline[0].filters);
   for (const dataResource of pipeline[0].dataResources) {
-    const dataValues = createDataValuesMap(dataResource.data, attributes, constraintData);
+    const dataValues = createDataValuesMap(dataResource.data, pipeline[0].attributes, constraintData);
     if (
-      dataValuesMeetsFilters2(dataValues, pipeline[0].filters, attributesMap, pipeline[0].permissions, constraintData)
+      dataValuesMeetsFilters(dataValues, pipeline[0].filters, attributesMap, pipeline[0].permissions, constraintData)
     ) {
       const searchDocuments = includeChildren
         ? getDocumentsWithChildren(dataResource as DocumentModel, pipeline[0].dataResources as DocumentModel[])
@@ -159,7 +161,13 @@ export function filterDocumentsAndLinksByStem(
             filtered,
             constraintData,
             1,
-            !pipeline[0].fulltexts.length || dataValuesMeetsFulltexts(dataValues, pipeline[0].fulltexts)
+            !pipeline[0].fulltexts.length ||
+              dataMeetsFulltexts(
+                dataResource.data,
+                pipeline[0].fulltexts,
+                pipeline[0].resource?.attributes,
+                constraintData
+              )
           )
         ) {
           pushedIds.add(document.id);
@@ -202,7 +210,7 @@ function checkAndFillDataResources(
         linkInstance.documentIds.includes(previousDocument.id) &&
         dataMeetsFilters(
           linkInstance.data,
-          currentPipeline.resource?.attributes,
+          currentPipeline.attributes,
           currentPipeline.filters,
           currentPipeline.permissions,
           constraintData
@@ -213,9 +221,7 @@ function checkAndFillDataResources(
     }
 
     let someLinkPassed = (!currentPipeline.fulltexts.length || fulltextFound) && linkedLinks.length === 0;
-    const attributes = filterAttributesByFilters(currentPipeline.resource?.attributes, currentPipeline.filters);
     for (const linkedLink of linkedLinks) {
-      const dataValues = createDataValuesMap(linkedLink.data, attributes, constraintData);
       if (
         checkAndFillDataResources(
           linkedLink,
@@ -223,7 +229,13 @@ function checkAndFillDataResources(
           filtered,
           constraintData,
           pipelineIndex + 1,
-          fulltextFound || dataValuesMeetsFulltexts(dataValues, currentPipeline.fulltexts)
+          fulltextFound ||
+            dataMeetsFulltexts(
+              linkedLink.data,
+              currentPipeline.fulltexts,
+              currentPipeline.resource?.attributes,
+              constraintData
+            )
         )
       ) {
         someLinkPassed = true;
@@ -240,7 +252,7 @@ function checkAndFillDataResources(
         previousLink.documentIds.includes(document.id) &&
         dataMeetsFilters(
           document.data,
-          currentPipeline.resource?.attributes,
+          currentPipeline.attributes,
           currentPipeline.filters,
           currentPipeline.permissions,
           constraintData
@@ -251,9 +263,7 @@ function checkAndFillDataResources(
     }
 
     let someDocumentPassed = (!currentPipeline.fulltexts.length || fulltextFound) && linkedDocuments.length === 0;
-    const attributes = filterAttributesByFilters(currentPipeline.resource?.attributes, currentPipeline.filters);
     for (const linkedDocument of linkedDocuments) {
-      const dataValues = createDataValuesMap(linkedDocument.data, attributes, constraintData);
       if (
         checkAndFillDataResources(
           linkedDocument,
@@ -261,7 +271,13 @@ function checkAndFillDataResources(
           filtered,
           constraintData,
           pipelineIndex + 1,
-          fulltextFound || dataValuesMeetsFulltexts(dataValues, currentPipeline.fulltexts)
+          fulltextFound ||
+            dataMeetsFulltexts(
+              linkedDocument.data,
+              currentPipeline.fulltexts,
+              currentPipeline.resource?.attributes,
+              constraintData
+            )
         )
       ) {
         someDocumentPassed = true;
@@ -304,8 +320,7 @@ export function someDocumentMeetFulltexts(
   constraintData: ConstraintData
 ): boolean {
   for (const document of documents) {
-    const dataValues = createDataValuesMap(document.data, collection?.attributes, constraintData);
-    if (dataValuesMeetsFulltexts(dataValues, fulltexts)) {
+    if (dataMeetsFulltexts(document.data, fulltexts, collection?.attributes, constraintData)) {
       return true;
     }
   }
@@ -329,7 +344,7 @@ export function createDataValuesMap(
   );
 }
 
-function dataValuesMeetsFilters(
+function dataValuesMeetsFiltersWithOperator(
   dataValues: Record<string, DataValue>,
   attributesMap: Record<string, Attribute>,
   filters: AttributeFilter[],
@@ -344,12 +359,12 @@ function dataValuesMeetsFilters(
       definedFilters.length === 0 ||
       definedFilters.reduce(
         (result, filter) =>
-          result || dataValuesMeetsFilters2(dataValues, [filter], attributesMap, permissions, constraintData),
+          result || dataValuesMeetsFilters(dataValues, [filter], attributesMap, permissions, constraintData),
         false
       )
     );
   }
-  return dataValuesMeetsFilters2(dataValues, definedFilters, attributesMap, permissions, constraintData);
+  return dataValuesMeetsFilters(dataValues, definedFilters, attributesMap, permissions, constraintData);
 }
 
 function dataMeetsFilters(
@@ -360,13 +375,18 @@ function dataMeetsFilters(
   constraintData: ConstraintData,
   operator: EquationOperator = EquationOperator.And
 ): boolean {
-  const filteredAttributes = filterAttributesByFilters(attributes, filters);
-  const dataValues = createDataValuesMap(data, filteredAttributes, constraintData);
-  const attributesMap = objectsByIdMap(attributes);
-  return dataValuesMeetsFilters(dataValues, attributesMap, filters, permissions, constraintData, operator);
+  const dataValues = createDataValuesMap(data, attributes, constraintData);
+  return dataValuesMeetsFiltersWithOperator(
+    dataValues,
+    objectsByIdMap(attributes),
+    filters,
+    permissions,
+    constraintData,
+    operator
+  );
 }
 
-function dataValuesMeetsFilters2(
+function dataValuesMeetsFilters(
   dataValues: Record<string, DataValue>,
   filters: AttributeFilter[],
   attributesMap: Record<string, Attribute>,
@@ -410,7 +430,7 @@ export function isActionButtonEnabled(
   }
   const filters = config.equation?.equations?.map(eq => eq.filter) || [];
   return (
-    dataValuesMeetsFilters(
+    dataValuesMeetsFiltersWithOperator(
       dataValues,
       attributesMap,
       filters,
@@ -421,11 +441,17 @@ export function isActionButtonEnabled(
   );
 }
 
-function dataValuesMeetsFulltexts(dataValues: Record<string, DataValue>, fulltexts: string[]): boolean {
+function dataMeetsFulltexts(
+  data: Record<string, any>,
+  fulltexts: string[],
+  attributes: Attribute[],
+  constraintData: ConstraintData
+): boolean {
   if (!fulltexts || fulltexts.length === 0) {
     return true;
   }
 
+  const dataValues = createDataValuesMap(data, attributes, constraintData);
   return fulltexts.some(fulltext => objectValues(dataValues).some(dataValue => dataValue.meetFullTexts([fulltext])));
 }
 

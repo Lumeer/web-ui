@@ -22,9 +22,10 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {LinkInstance} from './link.instance';
 import {Query} from '../navigation/query/query';
-import {sortLinkInstances} from './link-instance.utils';
+import {isLinkInstanceValid, sortLinkInstances} from './link-instance.utils';
 import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
 import {selectQuery} from '../navigation/navigation.state';
+import {selectDocumentsDictionary} from '../documents/documents.state';
 
 export interface LinkInstancesState extends EntityState<LinkInstance> {
   queries: Query[];
@@ -74,9 +75,11 @@ export const selectLinkInstancesByIds = (ids: string[]) =>
   );
 
 export const selectLinkInstancesByDocumentIds = (documentIds: string[]) =>
-  createSelector(selectAllLinkInstances, linkInstances =>
+  createSelector(selectAllLinkInstances, selectDocumentsDictionary, (linkInstances, documentsMap) =>
     sortLinkInstances(
-      linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
+      linkInstances.filter(linkInstance =>
+        linkInstance.documentIds.some(id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap))
+      )
     )
   );
 
@@ -86,9 +89,11 @@ export const selectLinkInstancesByType = (linkTypeId: string) =>
   );
 
 export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, documentIds: string[]) =>
-  createSelector(selectLinkInstancesByType(linkTypeId), linkInstances =>
+  createSelector(selectLinkInstancesByType(linkTypeId), selectDocumentsDictionary, (linkInstances, documentsMap) =>
     sortLinkInstances(
-      linkInstances.filter(linkInstance => linkInstance.documentIds.some(id => documentIds.includes(id)))
+      linkInstances.filter(linkInstance =>
+        linkInstance.documentIds.some(id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap))
+      )
     )
   );
 

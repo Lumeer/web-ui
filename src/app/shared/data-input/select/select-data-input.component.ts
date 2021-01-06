@@ -107,8 +107,8 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       this.setFocus = true;
     }
     if (changes.value && this.value) {
-      this.dropdownOptions = this.createDropdownOptions(this.value.config);
       this.selectedOptions$.next(this.value.options || []);
+      this.dropdownOptions = this.createDropdownOptions(this.value.config);
       this.text = this.value.inputValue || '';
       this.multi = this.value.config?.multi;
     }
@@ -137,7 +137,10 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
   }
 
   private createDropdownOptions(config: SelectConstraintConfig): DropdownOption[] {
-    return ((config && config.options) || []).map(option => ({
+    const options = [...(config?.options || [])];
+    const optionsValues = new Set(options.map(option => option.value));
+    options.push(...(this.value?.options || []).filter(option => !optionsValues.has(option.value)));
+    return options.map(option => ({
       ...option,
       value: option.value,
       displayValue: config.displayValues ? option.displayValue || option.value : option.value,

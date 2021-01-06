@@ -17,6 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import {Injectable} from '@angular/core';
 import {AppState} from '../../../../../../core/store/app.state';
 import {Action, select, Store} from '@ngrx/store';
 import {ModalService} from '../../../../../../shared/modal/modal.service';
@@ -25,7 +26,6 @@ import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {CollectionsAction} from '../../../../../../core/store/collections/collections.action';
 import {LinkTypesAction} from '../../../../../../core/store/link-types/link-types.action';
 import {NotificationsAction} from '../../../../../../core/store/notifications/notifications.action';
-import {Injectable} from '@angular/core';
 import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {DocumentsAction} from '../../../../../../core/store/documents/documents.action';
@@ -112,11 +112,13 @@ import {Observable} from 'rxjs';
 import {selectDocumentById} from '../../../../../../core/store/documents/documents.state';
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
+import {selectCurrentView} from '../../../../../../core/store/views/views.state';
 
 @Injectable()
 export class WorkflowTablesDataService {
   private pendingColumnValues: Record<string, PendingRowUpdate[]> = {};
   private pendingCorrelationIds: string[] = [];
+  private isViewActive: boolean;
   private dataAggregator: DataAggregator;
 
   constructor(
@@ -131,6 +133,7 @@ export class WorkflowTablesDataService {
     this.dataAggregator = new DataAggregator((value, constraint, data, aggregatorAttribute) =>
       this.formatWorkflowValue(value, constraint, data, aggregatorAttribute)
     );
+    this.store$.pipe(select(selectCurrentView)).subscribe(view => (this.isViewActive = !!view));
     this.stateService.selectedCell$
       .pipe(
         skip(1),
@@ -603,7 +606,12 @@ export class WorkflowTablesDataService {
       columnNames.push(column.name || column.attribute?.name);
     }
 
-    if (isCollection && permissions.manageWithView && !attributeColumns.some(column => !column.attribute)) {
+    if (
+      !this.isViewActive &&
+      isCollection &&
+      permissions.manageWithView &&
+      !attributeColumns.some(column => !column.attribute)
+    ) {
       const lastColumn: TableColumn = {
         id: generateId(),
         name: generateAttributeName(columnNames),

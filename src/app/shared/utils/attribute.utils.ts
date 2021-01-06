@@ -20,8 +20,15 @@
 import {ConstraintType} from '../../core/model/data/constraint';
 import {Attribute, AttributeFunction} from '../../core/store/collections/collection';
 import {BlocklyRule, Rule, RuleType} from '../../core/model/rule';
-import {ActionConstraintConfig} from '../../core/model/data/constraint-config';
+import {
+  ActionConstraintConfig,
+  SelectConstraintConfig,
+  UserConstraintConfig,
+} from '../../core/model/data/constraint-config';
 import {AttributeFilter} from '../../core/model/attribute-filter';
+import {objectsByIdMap, objectValues} from './common.utils';
+import {SelectConstraint} from '../../core/model/constraint/select.constraint';
+import {UserConstraint} from '../../core/model/constraint/user.constraint';
 
 export const FORBIDDEN_ATTRIBUTE_NAME_CHARACTERS = ['.'];
 
@@ -185,7 +192,7 @@ export function filterOutAttributeAndChildren(attributes: Attribute[], oldAttrib
 }
 
 export function isAttributeConstraintType(attribute: Attribute, type: ConstraintType): boolean {
-  return attribute && attribute.constraint && attribute.constraint.type === type;
+  return attribute?.constraint?.type === type;
 }
 
 export function filterOutInvalidAttributeNameCharacters(lastName: string): string {
@@ -209,6 +216,47 @@ export function containsAttributeWithRule(attributes: Attribute[], rule: Rule): 
 }
 
 export function filterAttributesByFilters(attributes: Attribute[], filters: AttributeFilter[]): Attribute[] {
-  const attributeIds = new Set(filters?.map(filter => filter.attributeId) || []);
-  return attributes?.filter(attribute => attributeIds.has(attribute.id));
+  const attributesMap = objectsByIdMap(attributes);
+  return uniqueAttributes(
+    (filters || []).reduce((attrs, filter) => {
+      const attribute = attributesMap[filter.attributeId];
+      if (attribute) {
+        attrs.push(attribute);
+      }
+      if (attribute?.constraint?.type === ConstraintType.Action) {
+        const config = <ActionConstraintConfig>attribute.constraint.config;
+        const configFilters = config?.equation?.equations?.map(eq => eq.filter) || [];
+        attrs.push(
+          ...configFilters
+            .filter(configFilter => !!attributesMap[configFilter.attributeId])
+            .map(configFilter => attributesMap[configFilter.attributeId])
+        );
+      }
+      return attrs;
+    }, [])
+  );
+}
+
+export function uniqueAttributes(attributes: Attribute[]): Attribute[] {
+  return objectValues(objectsByIdMap(attributes));
+}
+
+export function modifyAttributeForQueryFilter(attribute: Attribute): Attribute {
+  if (!attribute?.constraint) {
+    return attribute;
+  }
+
+  const constraint = attribute.constraint;
+  switch (constraint.type) {
+    case ConstraintType.Select:
+      const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
+      const selectConstraint = new SelectConstraint(selectConfig);
+      return {...attribute, constraint: selectConstraint};
+    case ConstraintType.User:
+      const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
+      const userConstraint = new UserConstraint(userConfig);
+      return {...attribute, constraint: userConstraint};
+    default:
+      return attribute;
+  }
 }

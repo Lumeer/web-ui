@@ -45,6 +45,7 @@ import {AttributeQueryItem} from './model/attribute.query-item';
 import {LinkAttributeQueryItem} from './model/link-attribute.query-item';
 import {Attribute} from '../../../../core/store/collections/collection';
 import {ConditionType, ConditionValue} from '../../../../core/model/attribute-filter';
+import {modifyAttributeForQueryFilter} from '../../../utils/attribute.utils';
 
 @Component({
   selector: 'query-item',
@@ -100,25 +101,9 @@ export class QueryItemComponent implements OnInit, OnChanges {
   }
 
   private createAndModifyConstraint(): Attribute {
-    const attribute =
-      (<AttributeQueryItem>this.queryItem).attribute || (<LinkAttributeQueryItem>this.queryItem).attribute;
-    if (!attribute || !attribute.constraint) {
-      return attribute;
-    }
-
-    const constraint = attribute.constraint;
-    switch (constraint.type) {
-      case ConstraintType.Select:
-        const selectConfig = <SelectConstraintConfig>{...constraint.config, multi: true};
-        const selectConstraint = new SelectConstraint(selectConfig);
-        return {...attribute, constraint: selectConstraint};
-      case ConstraintType.User:
-        const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
-        const userConstraint = new UserConstraint(userConfig);
-        return {...attribute, constraint: userConstraint};
-      default:
-        return attribute;
-    }
+    return modifyAttributeForQueryFilter(
+      (<AttributeQueryItem>this.queryItem)?.attribute || (<LinkAttributeQueryItem>this.queryItem)?.attribute
+    );
   }
 
   public ngOnInit() {

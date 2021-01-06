@@ -18,6 +18,13 @@
  */
 
 import {LinkInstance} from './link.instance';
+import {DocumentModel} from '../documents/document.model';
+
+export function isLinkInstanceValid(linkInstance: LinkInstance, documentsMap: Record<string, DocumentModel>): boolean {
+  return (
+    linkInstance.documentIds?.length === 2 && linkInstance.documentIds.every(documentId => !!documentsMap[documentId])
+  );
+}
 
 export function isDocumentInLinkInstance(linkInstance: LinkInstance, documentId: string): boolean {
   return linkInstance.documentIds.some(id => id === documentId);
@@ -33,8 +40,11 @@ export function getOtherDocumentIdFromLinkInstance(linkInstance: LinkInstance, .
 }
 
 export function mergeLinkInstances(linkInstancesA: LinkInstance[], linkInstancesB: LinkInstance[]): LinkInstance[] {
-  const documentsAIds = linkInstancesA.map(collection => collection.id);
-  const documentsBToAdd = linkInstancesB.filter(collection => !documentsAIds.includes(collection.id));
+  if (linkInstancesA.length === 0 || linkInstancesB.length === 0) {
+    return linkInstancesA.length > 0 ? linkInstancesA : linkInstancesB;
+  }
+  const documentsAIds = new Set(linkInstancesA.map(collection => collection.id));
+  const documentsBToAdd = linkInstancesB.filter(collection => !documentsAIds.has(collection.id));
   return linkInstancesA.concat(documentsBToAdd);
 }
 
