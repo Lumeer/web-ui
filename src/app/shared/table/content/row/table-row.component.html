@@ -37,11 +37,9 @@
           (cancel)="onDataInputCancel(group.column)">
         </data-input>
         <div class="d-flex align-items-center html-input"
-             *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType === constraintType.Text"
+             *ngIf="group.column && !dataInputInfo.showDataInput"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
-        <ng-container
-          *ngIf="group.column && !dataInputInfo.showDataInput && data.constraintType !== constraintType.Text">{{data.dataValue | previewDataValue}}</ng-container>
         <div class="detail-trigger small pl-1 pr-1" *ngIf="!data.editing && group.column && group.column.id === detailColumnId"
              [class.has-comments]="row.commentsCount"
              (click)="onDetailClick($event)"

@@ -42,8 +42,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {map, tap} from 'rxjs/operators';
 import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
-import {getOtherLinkedCollectionId, mapLinkTypeCollections} from '../../utils/link-type.utils';
-import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 
 @Component({
@@ -108,19 +107,8 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
           this.isOpenChanged(true, linkTypes[0].id);
         }
       }),
-      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap))),
-      tap(linkTypes => linkTypes.map(linkType => this.readData(linkType)))
+      map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
     );
-  }
-
-  private readData(linkType: LinkType) {
-    if (linkType) {
-      const otherCollectionId = getOtherLinkedCollectionId(linkType, this.collection.id);
-      const documentsQuery: Query = {stems: [{collectionId: otherCollectionId}]};
-      this.store$.dispatch(new DocumentsAction.Get({query: documentsQuery}));
-      const query: Query = {stems: [{collectionId: this.collection.id, linkTypeIds: [linkType.id]}]};
-      this.store$.dispatch(new LinkInstancesAction.Get({query}));
-    }
   }
 
   public isOpenChanged(state: boolean, index: string) {

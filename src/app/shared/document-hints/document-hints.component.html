@@ -25,7 +25,7 @@
             [class.font-weight-bold]="column.attributeId === attributeId"
             [style.width.px]="column.width"
             (click)="$event.preventDefault();"
-            [innerHtml]="column.hidden ? '' : (column.attributeId === attributeId ? (state.value | highlightText: (filter$ | async)) : state.value)"
+            [innerHtml]="column.hidden ? '' : (column.attributeId === attributeId ? (state.value | highlightText: (filter$ | async)) : state.value) | safeHtml"
             [title]="column.hidden ? '' : state.value"
             class="text-truncate cursor-default p-1"
             data-test="document-hint">

@@ -23,14 +23,12 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  SimpleChange,
   ViewChild,
   ElementRef,
   AfterViewInit,
   HostListener,
   EventEmitter,
   Output,
-  AfterViewChecked,
 } from '@angular/core';
 import {LinkType} from '../../../../core/store/link-types/link.type';
 import {DocumentModel} from '../../../../core/store/documents/document.model';

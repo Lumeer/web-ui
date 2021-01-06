@@ -29,7 +29,7 @@
 
     <filter-preview *ngIf="attributeIdControl.value"
                     class="m-2"
-                    [attribute]="attributes | findAttribute:attributeIdControl.value"
+                    [attribute]="attributes | findAttribute:attributeIdControl.value | modifyAttributeForQueryFilter"
                     [condition]="conditionControl.value"
                     [conditionValues]="conditionValuesControl.value">
     </filter-preview>
@@ -43,7 +43,7 @@
 <filter-builder *ngIf="attributeIdControl.value"
                 [origin]="parentElement"
                 [condition]="conditionControl.value"
-                [attribute]="attributes | findAttribute:attributeIdControl.value"
+                [attribute]="attributes | findAttribute:attributeIdControl.value | modifyAttributeForQueryFilter"
                 [conditionValues]="conditionValuesControl.value"
                 (valueChange)="onValueChange($event)">
 </filter-builder>

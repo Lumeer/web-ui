@@ -54,6 +54,7 @@ import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {ConstraintData} from '../../../core/model/data/constraint';
+import {filterAttributesByFilters} from '../../utils/attribute.utils';
 
 const loadingTime = 2000;
 
@@ -182,7 +183,12 @@ export class ActionDataInputComponent implements OnChanges {
     if (!resource || !dataResource) {
       return false;
     }
-    const dataValues = createDataValuesMap(dataResource.data, resource.attributes, constraintData);
+    const filters = config.equation?.equations?.map(eq => eq.filter) || [];
+    const dataValues = createDataValuesMap(
+      dataResource.data,
+      filterAttributesByFilters(resource.attributes, filters),
+      constraintData
+    );
     const attributesMap = objectsByIdMap(resource.attributes);
     return isActionButtonEnabled(dataValues, attributesMap, permissions, config, constraintData);
   }
