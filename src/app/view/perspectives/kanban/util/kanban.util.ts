@@ -38,10 +38,26 @@ import {
 import {normalizeQueryStem} from '../../../../core/store/navigation/query/query.converter';
 import {SizeType} from '../../../../shared/slider/size/size-type';
 import {PostItLayoutType} from '../../../../shared/post-it/post-it-layout-type';
-import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../../../shared/utils/common.utils';
 import {createDefaultTaskPurposeConfig} from '../../common/perspective-util';
 
 export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: KanbanConfig): boolean {
+  if (isNullOrUndefined(viewConfig) && isNullOrUndefined(currentConfig)) {
+    return false;
+  }
+
+  if (isNullOrUndefined(viewConfig) !== isNullOrUndefined(currentConfig)) {
+    return true;
+  }
+
+  if (
+    viewConfig.cardLayout !== currentConfig.cardLayout ||
+    viewConfig.columnSize !== currentConfig.columnSize ||
+    viewConfig.aggregation !== currentConfig.aggregation
+  ) {
+    return true;
+  }
+
   if (stemConfigsChanged(viewConfig.stemsConfigs || [], currentConfig.stemsConfigs || [])) {
     return true;
   }
@@ -54,8 +70,8 @@ export function isKanbanConfigChanged(viewConfig: KanbanConfig, currentConfig: K
       }
 
       const currentColumn = (currentConfig.columns || [])[index];
-      return kanbanColumnsChanged(column, currentColumn);
-    }) || kanbanColumnsChanged(viewConfig.otherColumn, currentConfig.otherColumn)
+      return kanbanColumnChanged(column, currentColumn);
+    }) || kanbanColumnChanged(viewConfig.otherColumn, currentConfig.otherColumn)
   );
 }
 
@@ -72,7 +88,7 @@ function stemConfigsChanged(viewStemsConfigs: KanbanStemConfig[], currentStemsCo
   return !areArraysSame(normalizedViewStemsConfigs, normalizedCurrentStemsConfigs);
 }
 
-function kanbanColumnsChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {
+function kanbanColumnChanged(column1: KanbanColumn, column2: KanbanColumn): boolean {
   return column1?.title !== column2?.title || column1?.width !== column2?.width;
 }
 
