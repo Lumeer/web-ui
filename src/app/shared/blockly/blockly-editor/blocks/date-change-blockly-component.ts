@@ -67,9 +67,8 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
               ],
             },
             {
-              type: 'field_number',
+              type: 'input_value',
               name: 'COUNT',
-              value: 1,
             },
             {
               type: 'field_dropdown',
@@ -89,6 +88,7 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
               name: 'DATE',
             },
           ],
+          inputsInline: true,
           output: null,
           colour: COLOR_PINK,
           tooltip: this_.tooltip,
@@ -98,13 +98,13 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
     Blockly.JavaScript[BlocklyUtils.DATE_CHANGE] = function (block) {
       const unit = block.getFieldValue('UNIT');
       const op = block.getFieldValue('OP');
-      const count = block.getFieldValue('COUNT');
+      const count = Blockly.JavaScript.valueToCode(block, 'COUNT', Blockly.JavaScript.ORDER_ATOMIC) || null;
       const input_date = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
       let code = '/** MomentJs **/ ';
 
       if (op === 'add' || op === 'subtract') {
-        code += 'moment(' + input_date + ').' + op + '(' + count + ", '" + unit + "').toDate()";
+        code += 'moment(' + input_date + ').' + op + '((' + count + "), '" + unit + "').toDate()";
       } else {
         code += 'moment(' + input_date + ').' + unit + '(' + count + ').toDate()';
       }

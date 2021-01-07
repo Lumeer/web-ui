@@ -702,7 +702,11 @@ export class BlocklyUtils {
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_iso"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
-    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_change"></block></xml>').firstChild);
+    xmlList.push(
+      Blockly.Xml.textToDom(
+        '<xml><block type="date_change"><value name="COUNT"><shadow type="math_number"><field name="NUM">1</field></shadow></value></block></xml>'
+      ).firstChild
+    );
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="current_date"></block></xml>').firstChild);
