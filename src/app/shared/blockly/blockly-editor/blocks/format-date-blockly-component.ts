@@ -33,7 +33,7 @@ export class FormatDateBlocklyComponent extends BlocklyComponent {
     this.tooltip = i18n({
       id: 'blockly.tooltip.formatDateBlock',
       value:
-        'Formats time in milliseconds since epoch (Unix time) using the given format string a locale. Results in a string.',
+        'Formats time either in date object or in milliseconds since epoch (Unix time) using the given format string and locale. Results in a string.',
     });
   }
 

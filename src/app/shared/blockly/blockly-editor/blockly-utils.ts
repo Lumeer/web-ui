@@ -66,7 +66,9 @@ export class BlocklyUtils {
   public static readonly LINK_CONTAINER = 'link_container';
   public static readonly SEQUENCE_BLOCK = 'sequence_block';
   public static readonly SHOW_MESSAGE = 'show_message';
+  public static readonly DATE_CHANGE = 'date_change';
   public static readonly MS_TO_DATE = 'ms_to_date';
+  public static readonly DATE_TO_ISO = 'date_to_iso';
   public static readonly DATE_TO_MS = 'date_to_ms';
   public static readonly DATE_NOW = 'date_now';
   public static readonly DATE_NOW_MS = 'date_now_ms';
@@ -697,9 +699,12 @@ export class BlocklyUtils {
   public registerDates(workspace): any[] {
     const xmlList = [];
 
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_iso"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_change"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now"></block></xml>').firstChild);
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="current_date"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_unit"></block></xml>').firstChild);
     xmlList.push(

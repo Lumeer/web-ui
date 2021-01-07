@@ -24,15 +24,15 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 
 declare var Blockly: any;
 
-export class DateNowMsBlocklyComponent extends BlocklyComponent {
+export class DateToIsoBlocklyComponent extends BlocklyComponent {
   private tooltip: string;
 
   public constructor(public blocklyUtils: BlocklyUtils, public i18n: I18n) {
     super(blocklyUtils, i18n);
 
     this.tooltip = i18n({
-      id: 'blockly.tooltip.dateNowMsBlock',
-      value: 'Gets current date in milliseconds since epoch (Unix time).',
+      id: 'blockly.tooltip.dateToIsoBlock',
+      value: 'Converts a date object to an ISO date string suitable for storing in a date/time attributes.',
     });
   }
 
@@ -43,11 +43,17 @@ export class DateNowMsBlocklyComponent extends BlocklyComponent {
   public registerBlock(workspace: any): void {
     const this_ = this;
 
-    Blockly.Blocks[BlocklyUtils.DATE_NOW_MS] = {
+    Blockly.Blocks[BlocklyUtils.DATE_TO_ISO] = {
       init: function () {
         this.jsonInit({
-          type: BlocklyUtils.DATE_NOW_MS,
-          message0: '%{BKY_BLOCK_DATE_NOW_MS}', // now (ms) %1
+          type: BlocklyUtils.DATE_TO_ISO,
+          message0: '%{BKY_BLOCK_DATE_TO_ISO}', // date to ISO %1
+          args0: [
+            {
+              type: 'input_value',
+              name: 'DATE',
+            },
+          ],
           output: '',
           colour: COLOR_PINK,
           tooltip: this_.tooltip,
@@ -55,8 +61,14 @@ export class DateNowMsBlocklyComponent extends BlocklyComponent {
         });
       },
     };
-    Blockly.JavaScript[BlocklyUtils.DATE_NOW_MS] = function (block) {
-      const code = '(+(new Date()))';
+    Blockly.JavaScript[BlocklyUtils.DATE_TO_ISO] = function (block) {
+      const argument0 = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ASSIGNMENT) || null;
+
+      if (!argument0) {
+        return '';
+      }
+
+      const code = '(' + argument0 + ').toISOString()';
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
     };

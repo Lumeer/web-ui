@@ -63,6 +63,8 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {DateNowMsBlocklyComponent} from './blocks/date-now-ms-blockly-component';
 import {CurrentLocaleBlocklyComponent} from './blocks/current-locale-blockly-component';
 import {ShowMessageBlocklyComponent} from './blocks/show-message-blockly-component';
+import {DateToIsoBlocklyComponent} from './blocks/date-to-iso-blockly-component';
+import {DateChangeBlocklyComponent} from './blocks/date-change-blockly-component';
 
 declare var Blockly: any;
 
@@ -140,8 +142,10 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new GetLinkAttributeBlocklyComponent(this.blocklyUtils, this.i18n),
       new SetLinkAttributeBlocklyComponent(this.blocklyUtils, this.i18n),
       new GetLinkDocumentBlocklyComponent(this.blocklyUtils, this.i18n),
+      new DateChangeBlocklyComponent(this.blocklyUtils, this.i18n),
       new DateToMsBlocklyComponent(this.blocklyUtils, this.i18n),
       new MsToDateBlocklyComponent(this.blocklyUtils, this.i18n),
+      new DateToIsoBlocklyComponent(this.blocklyUtils, this.i18n),
       new DateNowBlocklyComponent(this.blocklyUtils, this.i18n),
       new DateNowMsBlocklyComponent(this.blocklyUtils, this.i18n),
       new CurrentDateBlocklyComponent(this.blocklyUtils, this.i18n),
