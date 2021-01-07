@@ -113,7 +113,7 @@ export class AttributeFunctionModalComponent implements OnInit {
         ...attribute.function,
         js: this.form.value.js,
         xml: this.form.value.xml,
-        editable: this.form.value.ditable,
+        editable: this.form.value.editable,
       },
     };
     if (this.collectionId) {
