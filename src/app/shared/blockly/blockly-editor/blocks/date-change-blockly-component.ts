@@ -106,7 +106,12 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
       if (op === 'add' || op === 'subtract') {
         code += 'moment(' + input_date + ').' + op + '((' + count + "), '" + unit + "').toDate()";
       } else {
-        code += 'moment(' + input_date + ').' + unit + '(' + count + ').toDate()';
+        if (unit === 'days') {
+          code += 'moment(' + input_date + ').date((' + count + ') - 1).toDate()';
+        } else {
+          const fce = unit.substring(0, unit.length - 1);
+          code += 'moment(' + input_date + ').' + fce + '(' + count + ').toDate()';
+        }
       }
 
       return [code, Blockly.JavaScript.ORDER_FUNCTION_CALL];
