@@ -282,7 +282,7 @@ export class LinkInstancesEffects {
         ),
         mergeMap(linkInstance =>
           this.linkInstanceService.deleteLinkInstance(action.payload.linkInstanceId).pipe(
-            mergeMap(() => EMPTY),
+            mergeMap(() => (action.payload.nextAction ? of(action.payload.nextAction) : EMPTY)),
             catchError(error => of(new LinkInstancesAction.DeleteFailure({error, linkInstance})))
           )
         )

@@ -392,7 +392,7 @@ export class PusherService implements OnDestroy {
       )
       .subscribe(collection => {
         if (!collection) {
-          this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId}]}}));
+          this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId}]}, silent: true}));
         }
       });
   }

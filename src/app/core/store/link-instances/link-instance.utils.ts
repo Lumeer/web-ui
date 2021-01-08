@@ -27,7 +27,7 @@ export function isLinkInstanceValid(linkInstance: LinkInstance, documentsMap: Re
 }
 
 export function isDocumentInLinkInstance(linkInstance: LinkInstance, documentId: string): boolean {
-  return linkInstance.documentIds.some(id => id === documentId);
+  return linkInstance.documentIds?.some(id => id === documentId);
 }
 
 export function findLinkInstanceByDocumentId(linkInstances: LinkInstance[], documentId: string): LinkInstance {

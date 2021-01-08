@@ -82,7 +82,7 @@ export namespace DocumentsAction {
   export class Get implements Action {
     public readonly type = DocumentsActionType.GET;
 
-    public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean}) {}
+    public constructor(public payload: {query: Query; workspace?: Workspace; force?: boolean; silent?: boolean}) {}
   }
 
   export class GetSingle implements Action {

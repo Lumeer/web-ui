@@ -32,7 +32,7 @@ export class HiddenInputComponent implements DataRowHiddenComponent {
   public newInput = new EventEmitter<string>();
 
   @Output()
-  public copy = new EventEmitter();
+  public onCopy = new EventEmitter();
 
   @ViewChild('hiddenInput')
   public hiddenInput: ElementRef<HTMLInputElement>;
@@ -71,7 +71,7 @@ export class HiddenInputComponent implements DataRowHiddenComponent {
     switch (event.code) {
       case KeyCode.KeyC:
         if (event.ctrlKey || event.metaKey) {
-          this.copy.emit();
+          this.onCopy.emit();
           return;
         }
         break;

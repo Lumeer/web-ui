@@ -32,6 +32,7 @@ import {selectServiceLimitsByWorkspace} from '../../../../core/store/organizatio
 import {RouterAction} from '../../../../core/store/router/router.action';
 import {selectOrganizationByWorkspace} from '../../../../core/store/organizations/organizations.state';
 import {containsAttributeWithRule} from '../../../../shared/utils/attribute.utils';
+import {generateId} from '../../../../shared/utils/resource.utils';
 
 @Component({
   selector: 'collection-rules',
@@ -74,6 +75,7 @@ export class CollectionRulesComponent implements OnInit {
 
   private getEmptyRule(): AutoLinkRule {
     return {
+      id: generateId(),
       name: 'New Rule Name',
       type: RuleType.AutoLink,
       timing: RuleTiming.All,
