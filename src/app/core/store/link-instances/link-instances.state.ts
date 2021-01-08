@@ -78,7 +78,9 @@ export const selectLinkInstancesByDocumentIds = (documentIds: string[]) =>
   createSelector(selectAllLinkInstances, selectDocumentsDictionary, (linkInstances, documentsMap) =>
     sortLinkInstances(
       linkInstances.filter(linkInstance =>
-        linkInstance.documentIds.some(id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap))
+        linkInstance.documentIds?.some(
+          id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
+        )
       )
     )
   );
@@ -92,7 +94,9 @@ export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, docume
   createSelector(selectLinkInstancesByType(linkTypeId), selectDocumentsDictionary, (linkInstances, documentsMap) =>
     sortLinkInstances(
       linkInstances.filter(linkInstance =>
-        linkInstance.documentIds.some(id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap))
+        linkInstance.documentIds?.some(
+          id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
+        )
       )
     )
   );

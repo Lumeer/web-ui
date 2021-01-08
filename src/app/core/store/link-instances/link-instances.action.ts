@@ -197,13 +197,13 @@ export namespace LinkInstancesAction {
   export class Delete implements Action {
     public readonly type = LinkInstancesActionType.DELETE;
 
-    public constructor(public payload: {linkInstanceId: string}) {}
+    public constructor(public payload: {linkInstanceId: string; nextAction?: Action}) {}
   }
 
   export class DeleteConfirm implements Action {
     public readonly type = LinkInstancesActionType.DELETE_CONFIRM;
 
-    public constructor(public payload: {linkInstanceId: string}) {}
+    public constructor(public payload: {linkInstanceId: string; nextAction?: Action}) {}
   }
 
   export class DeleteSuccess implements Action {

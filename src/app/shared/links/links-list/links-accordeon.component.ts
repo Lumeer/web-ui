@@ -118,7 +118,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
   }
 
   public unLinkDocument(linkInstance: LinkInstance) {
-    this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId: linkInstance.id}));
+    this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId: linkInstance.id}));
   }
 
   public onSelectDocument(data: {collection: Collection; document: DocumentModel}) {

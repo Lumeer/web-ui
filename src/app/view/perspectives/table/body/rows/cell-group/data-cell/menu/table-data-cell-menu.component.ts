@@ -200,8 +200,8 @@ export class TableDataCellMenuComponent implements OnChanges {
         map(row => row.linkInstanceId)
       )
       .subscribe(linkInstanceId => {
-        this.store$.dispatch(new LinkInstancesAction.Delete({linkInstanceId}));
-        this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+        const nextAction = new TablesAction.RemoveRow({cursor: this.cursor});
+        this.store$.dispatch(new LinkInstancesAction.DeleteConfirm({linkInstanceId, nextAction}));
       });
   }
 

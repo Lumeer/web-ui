@@ -30,9 +30,9 @@ export class ShareViewCopyComponent {
   public viewShareUrl: string;
 
   @Output()
-  public copy = new EventEmitter();
+  public onCopy = new EventEmitter();
 
   public onCopyClick() {
-    this.copy.emit();
+    this.onCopy.emit();
   }
 }
