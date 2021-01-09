@@ -38,9 +38,7 @@ import {View} from '../views/view';
 import {filterViewsByQuery} from '../views/view.filters';
 import {selectAllViews, selectCurrentView, selectViewQuery} from '../views/views.state';
 import {LinkInstance} from '../link-instances/link.instance';
-import {selectConstraintData} from '../constraint-data/constraint-data.state';
 import {selectViewSettings} from '../view-settings/view-settings.state';
-import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {AttributesResourceType} from '../../model/resource';
 import {sortDataResourcesByViewSettings} from '../../../shared/utils/data-resource.utils';
 import {sortLinkInstances} from '../link-instances/link-instance.utils';
@@ -64,9 +62,7 @@ export const selectCollectionsByQuery = createSelector(
   selectAllDocuments,
   selectAllLinkTypes,
   selectViewQuery,
-  selectConstraintData,
-  (collections, documents, linkTypes, query, constraintData) =>
-    filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
+  (collections, documents, linkTypes, query) => filterCollectionsByQuery(collections, documents, linkTypes, query)
 );
 
 export const selectCollectionsByQueryWithoutLinks = createSelector(
@@ -74,9 +70,8 @@ export const selectCollectionsByQueryWithoutLinks = createSelector(
   selectAllDocuments,
   selectAllLinkTypes,
   selectViewQuery,
-  selectConstraintData,
-  (collections, documents, linkTypes, query, constraintData) =>
-    filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query), constraintData)
+  (collections, documents, linkTypes, query) =>
+    filterCollectionsByQuery(collections, documents, linkTypes, queryWithoutLinks(query))
 );
 
 export const selectCollectionsInQuery = createSelector(
@@ -103,9 +98,7 @@ export const selectCollectionsByCustomQuery = (query: Query) =>
     selectCollectionsByReadPermission,
     selectAllDocuments,
     selectAllLinkTypes,
-    selectConstraintData,
-    (collections, documents, linkTypes, constraintData) =>
-      filterCollectionsByQuery(collections, documents, linkTypes, query, constraintData)
+    (collections, documents, linkTypes) => filterCollectionsByQuery(collections, documents, linkTypes, query)
   );
 
 export const selectDocumentsByReadPermission = createSelector(
@@ -125,7 +118,6 @@ export const selectDocumentsAndLinksByQuery = createSelector(
   selectViewQuery,
   selectViewSettings,
   selectResourcesPermissions,
-  selectConstraintData,
   (
     documents,
     collections,
@@ -133,8 +125,7 @@ export const selectDocumentsAndLinksByQuery = createSelector(
     linkInstances,
     query,
     viewSettings,
-    permissions,
-    constraintData
+    permissions
   ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} =>
     filterDocumentsAndLinksByQuery(
       documents,
@@ -143,8 +134,7 @@ export const selectDocumentsAndLinksByQuery = createSelector(
       linkInstances,
       query,
       permissions.collections,
-      permissions.linkTypes,
-      constraintData
+      permissions.linkTypes
     )
 );
 
@@ -157,7 +147,6 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query, i
     selectViewQuery,
     selectViewSettings,
     selectResourcesPermissions,
-    selectConstraintData,
     (
       documents,
       collections,
@@ -165,8 +154,7 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query, i
       linkInstances,
       query,
       viewSettings,
-      permissions,
-      constraintData
+      permissions
     ): {documents: DocumentModel[]; linkInstances: LinkInstance[]} => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
@@ -176,25 +164,14 @@ export const selectDocumentsAndLinksByCustomQuerySorted = (inputQuery?: Query, i
         inputQuery || query,
         permissions.collections,
         permissions.linkTypes,
-        constraintData,
         includeChildren
       );
-      const collectionsMap = objectsByIdMap(collections);
-      const linkTypesMap = objectsByIdMap(linkTypes);
       return {
-        documents: sortDataResourcesByViewSettings(
-          data.documents,
-          collectionsMap,
-          AttributesResourceType.Collection,
-          viewSettings,
-          constraintData
-        ),
+        documents: sortDataResourcesByViewSettings(data.documents, AttributesResourceType.Collection, viewSettings),
         linkInstances: sortDataResourcesByViewSettings(
           data.linkInstances,
-          linkTypesMap,
           AttributesResourceType.LinkType,
-          viewSettings,
-          constraintData
+          viewSettings
         ),
       };
     }
@@ -209,17 +186,9 @@ export const selectDocumentsByQuery = createSelector(
 
 export const selectDocumentsByQuerySorted = createSelector(
   selectDocumentsByQuery,
-  selectCollectionsDictionary,
   selectViewSettings,
-  selectConstraintData,
-  (documents, collectionsMap, viewSettings, constraintData) =>
-    sortDataResourcesByViewSettings(
-      documents,
-      collectionsMap,
-      AttributesResourceType.Collection,
-      viewSettings,
-      constraintData
-    )
+  (documents, viewSettings) =>
+    sortDataResourcesByViewSettings(documents, AttributesResourceType.Collection, viewSettings)
 );
 
 export const selectDocumentsByQueryIncludingChildren = createSelector(
@@ -229,8 +198,7 @@ export const selectDocumentsByQueryIncludingChildren = createSelector(
   selectAllLinkInstances,
   selectViewQuery,
   selectResourcesPermissions,
-  selectConstraintData,
-  (documents, collections, linkTypes, linkInstances, query, permissions, constraintData): DocumentModel[] =>
+  (documents, collections, linkTypes, linkInstances, query, permissions): DocumentModel[] =>
     sortDocumentsByCreationDate(
       filterDocumentsAndLinksByQuery(
         documents,
@@ -240,7 +208,6 @@ export const selectDocumentsByQueryIncludingChildren = createSelector(
         query,
         permissions.collections,
         permissions.linkTypes,
-        constraintData,
         true
       ).documents
     )
@@ -256,8 +223,7 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
     selectAllLinkTypes,
     selectAllLinkInstances,
     selectResourcesPermissions,
-    selectConstraintData,
-    (documents, collections, linkTypes, linkInstances, permissions, constraintData) => {
+    (documents, collections, linkTypes, linkInstances, permissions) => {
       const data = filterDocumentsAndLinksByQuery(
         documents,
         collections,
@@ -266,7 +232,6 @@ export const selectDocumentsAndLinksByCustomQuery = (query: Query, desc?: boolea
         query,
         permissions.collections,
         permissions.linkTypes,
-        constraintData,
         includeChildren
       );
       return {

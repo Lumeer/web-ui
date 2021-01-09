@@ -40,13 +40,14 @@ import {resourceAttributeSettings} from '../../../../../../shared/settings/setti
 import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
+import {DataValue} from '../../../../../../core/model/data-value';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
 export interface PendingRowUpdate {
   row?: TableRow;
   newRow?: TableNewRow;
-  value: any;
+  value: DataValue;
 }
 
 export function computeTableHeight(numberOfRows: number, newRow?: TableNewRow): number {
@@ -217,16 +218,13 @@ export function createRowObjectsFromAggregated(
   item: AggregatedDataItem,
   collectionsMap: Record<string, Collection>,
   linkInstancesMap: Record<string, LinkInstance>,
-  viewSettings: ViewSettings,
-  constraintData: ConstraintData
+  viewSettings: ViewSettings
 ): {document: DocumentModel; linkInstance?: LinkInstance}[] {
   const documents = <DocumentModel[]>item.dataResources || [];
   const sortedDocuments = sortDataResourcesByViewSettings<DocumentModel>(
     documents,
-    collectionsMap,
     AttributesResourceType.Collection,
-    viewSettings,
-    constraintData
+    viewSettings
   );
   return sortedDocuments.reduce(
     (rowData, document) => {
@@ -256,7 +254,10 @@ export function createRowObjectsFromAggregated(
   ).data;
 }
 
-export function createRowValues(data: Record<string, any>, columnIdsMap: Record<string, string>): Record<string, any> {
+export function createRowValues(
+  data: Record<string, DataValue>,
+  columnIdsMap: Record<string, string>
+): Record<string, any> {
   return Object.keys(data || {}).reduce((rowData, attributeId) => {
     if (columnIdsMap[attributeId]) {
       rowData[columnIdsMap[attributeId]] = data[attributeId];

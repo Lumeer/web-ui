@@ -35,7 +35,7 @@ import {
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
-import {filter, throttle, throttleTime} from 'rxjs/operators';
+import {filter, throttleTime} from 'rxjs/operators';
 import {TableNewRow, TableRow} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';

@@ -1,4 +1,4 @@
-<ng-container *ngIf="{attribute: attribute$ | async, dataValue: dataValue$ | async} as data">
+<ng-container *ngIf="{attribute: attribute$ | async} as data">
   <table-data-cell-menu *ngIf="selected"
                         [cursor]="cursor"
                         [document]="document"
@@ -9,14 +9,14 @@
   </table-data-cell-menu>
 
   <ng-container
-    *ngIf="data.attribute | dataInputEditInfo:data.dataValue:editable: (editing$ | async) as dataInputInfo">
+    *ngIf="data.attribute | dataInputEditInfo:dataValue:editable: (editing$ | async) as dataInputInfo">
 
     <div *ngIf="!dataInputInfo.showDataInput && dataInputInfo.hasValue"
-         [innerHTML]="data.dataValue | previewDataValue | safeHtml"
+         [innerHTML]="dataValue | previewDataValue | safeHtml"
          class="text-pre overflow-hidden mx-1 align-middle"
-         [title]="data.dataValue | formatDataValueTitle"
+         [title]="dataValue | formatDataValueTitle"
          [ngClass]="data.attribute?.constraint | constraintClass"
-         [class.invalid-value]="!(data.dataValue | isDataValueValid)"
+         [class.invalid-value]="!(dataValue | isDataValueValid)"
          readonly data-test="table-data-input">
     </div>
 
@@ -24,7 +24,7 @@
                 [style.width.px]="columnWidth"
                 [constraint]="data.attribute?.constraint"
                 [cursor]="(document || linkInstance) | dataCursor : data.attribute?.id"
-                [dataValue]="data.dataValue"
+                [dataValue]="dataValue"
                 [focus]="true"
                 [configuration]="configuration"
                 [readonly]="dataInputInfo.readonly"

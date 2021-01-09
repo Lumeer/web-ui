@@ -330,8 +330,7 @@ export class WorkflowTablesDataService {
                   childItem,
                   collectionsMap,
                   linkInstancesMap,
-                  viewSettings,
-                  constraintData
+                  viewSettings
                 ),
                 linkColumnIdsMap,
                 columnIdsMap,
@@ -683,8 +682,8 @@ export class WorkflowTablesDataService {
       const objectId = object.linkInstance?.id || object.document.id;
       const objectCorrelationId = object.linkInstance?.correlationId || object.document.correlationId;
       const currentRow = rowsMap[objectCorrelationId || objectId] || rowsMap[objectId];
-      const documentData = createRowValues(object.document.data, columnIdsMap);
-      const linkData = createRowValues(object.linkInstance?.data, linkColumnIdsMap);
+      const documentData = createRowValues(object.document.dataValues, columnIdsMap);
+      const linkData = createRowValues(object.linkInstance?.dataValues, linkColumnIdsMap);
       const isNewlyCreatedRow = this.pendingCorrelationIds.includes(objectCorrelationId);
       const pendingData = isNewlyCreatedRow
         ? pendingColumnValuesByRow[objectCorrelationId]
@@ -1269,7 +1268,7 @@ export class WorkflowTablesDataService {
 
   public copyNewRowValue(row: TableNewRow, column: TableColumn) {
     if (column) {
-      const value = row.data?.[column.id];
+      const value = row.data?.[column.id]?.editValue();
       this.copyValueService.copy(value);
     }
   }

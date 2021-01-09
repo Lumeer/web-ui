@@ -30,7 +30,6 @@ import {ConstraintType} from '../../model/data/constraint';
 import {AppState} from '../app.state';
 import {hasAttributeType} from '../collections/collection.util';
 import {selectCollectionById, selectCollectionsDictionary} from '../collections/collections.state';
-import {CommonAction} from '../common/common.action';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {convertLinkInstanceDtoToModel, convertLinkInstanceModelToDto} from '../link-instances/link-instance.converter';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
@@ -52,6 +51,8 @@ import {queryWithoutFilters} from '../navigation/query/query.util';
 import {CollectionService, DocumentService, LinkInstanceService, SearchService} from '../../data-service';
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {objectValues} from '../../../shared/utils/common.utils';
+import {selectConstraintData} from '../constraint-data/constraint-data.state';
+import {convertDataResourceDataValues} from '../../../shared/utils/data-resource.utils';
 
 @Injectable()
 export class DocumentsEffects {
@@ -64,13 +65,20 @@ export class DocumentsEffects {
         action.payload.force ||
         !queries.find(query => areQueriesEqual(query, queryWithoutFilters(action.payload.query)))
     ),
-    mergeMap(([action]) => {
+    map(([action]) => action),
+    mergeMap(action => {
       const query = queryWithoutFilters(action.payload.query);
       const queryDto = convertQueryModelToDto(query);
       const savedQuery = action.payload.silent ? undefined : query;
 
       return this.searchService.searchDocuments(queryDto, action.payload.workspace).pipe(
-        map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
+        withLatestFrom(
+          this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectConstraintData))
+        ),
+        map(([dtos, collectionsMap, constraintData]) =>
+          dtos.map(dto => convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData))
+        ),
         map(documents => new DocumentsAction.GetSuccess({documents, query: savedQuery})),
         catchError(error => of(new DocumentsAction.GetFailure({error})))
       );
@@ -82,7 +90,11 @@ export class DocumentsEffects {
     ofType<DocumentsAction.GetSingle>(DocumentsActionType.GET_SINGLE),
     mergeMap(action =>
       this.documentService.getDocument(action.payload.collectionId, action.payload.documentId).pipe(
-        map(dto => convertDocumentDtoToModel(dto)),
+        withLatestFrom(this.store$.pipe(select(selectCollectionsDictionary))),
+        withLatestFrom(this.store$.pipe(select(selectConstraintData))),
+        map(([[dto, collectionsMap], constraintData]) =>
+          convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData)
+        ),
         map(document => new DocumentsAction.GetSuccess({documents: [document]})),
         catchError(() => EMPTY)
       )
@@ -92,9 +104,16 @@ export class DocumentsEffects {
   @Effect()
   public getByIds$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.GetByIds>(DocumentsActionType.GET_BY_IDS),
+
     mergeMap(action =>
       this.documentService.getDocuments(action.payload.documentsIds).pipe(
-        map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto))),
+        withLatestFrom(
+          this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectConstraintData))
+        ),
+        map(([dtos, collectionsMap, constraintData]) =>
+          dtos.map(dto => convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData))
+        ),
         map(documents => new DocumentsAction.GetSuccess({documents})),
         catchError(() => EMPTY)
       )
@@ -120,11 +139,23 @@ export class DocumentsEffects {
         select(selectPendingDocumentDataUpdatesByCorrelationId(correlationId)),
         take(1),
         filter(pendingDataUpdates => !pendingDataUpdates || Object.keys(pendingDataUpdates).length === 0),
+
         mergeMap(() => {
           const documentDto = convertDocumentModelToDto(action.payload.document);
 
           return this.documentService.createDocument(documentDto).pipe(
-            map(dto => convertDocumentDtoToModel(dto, correlationId)),
+            withLatestFrom(
+              this.store$.pipe(select(selectCollectionsDictionary)),
+              this.store$.pipe(select(selectConstraintData))
+            ),
+            map(([dto, collectionsMap, constraintData]) =>
+              convertDocumentDtoToModel(
+                dto,
+                collectionsMap[dto.collectionId]?.attributes,
+                constraintData,
+                correlationId
+              )
+            ),
             mergeMap(document => {
               return [
                 ...createCallbackActions(action.payload.onSuccess, document.id),
@@ -165,7 +196,13 @@ export class DocumentsEffects {
       const documentDto = convertDocumentModelToDto(document);
 
       return this.documentService.createDocument(documentDto).pipe(
-        map(dto => convertDocumentDtoToModel(dto)),
+        withLatestFrom(
+          this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectConstraintData))
+        ),
+        map(([dto, collectionsMap, constraintData]) =>
+          convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData)
+        ),
         mergeMap(newDocument => {
           const linkInstance: LinkInstance = {
             ...preparedLinkInstance,
@@ -232,8 +269,14 @@ export class DocumentsEffects {
       const linkInstancesDtos = linkInstances.map(link => convertLinkInstanceModelToDto(link));
 
       return this.documentService.createChain(documentsDtos, linkInstancesDtos).pipe(
-        mergeMap(({documents: documentDtos, linkInstances: linkDtos}) => {
-          const newDocuments = documentDtos.map(dto => convertDocumentDtoToModel(dto));
+        withLatestFrom(
+          this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectConstraintData))
+        ),
+        mergeMap(([{documents: documentDtos, linkInstances: linkDtos}, collectionsMap, constraintData]) => {
+          const newDocuments = documentDtos.map(dto =>
+            convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData)
+          );
           const newLinks = linkDtos.map(dto => convertLinkInstanceDtoToModel(dto));
           return [
             new DocumentsAction.CreateChainSuccess({documents: newDocuments}),
@@ -256,7 +299,13 @@ export class DocumentsEffects {
         mergeMap(originalDocument => {
           const documentDto = convertDocumentModelToDto(action.payload.document);
           return this.documentService.patchDocument(collectionId, documentId, documentDto).pipe(
-            map(dto => convertDocumentDtoToModel(dto)),
+            withLatestFrom(
+              this.store$.pipe(select(selectCollectionsDictionary)),
+              this.store$.pipe(select(selectConstraintData))
+            ),
+            map(([dto, collectionsMap, constraintData]) =>
+              convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData)
+            ),
             map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
             catchError(error => of(new DocumentsAction.UpdateFailure({error})))
           );
@@ -271,7 +320,15 @@ export class DocumentsEffects {
     mergeMap(action => {
       const {collectionId, documentIds, correlationId, onSuccess, onFailure} = action.payload;
       return this.documentService.duplicateDocuments(collectionId, documentIds, correlationId).pipe(
-        map(dtos => dtos.map(dto => convertDocumentDtoToModel(dto, correlationId))),
+        withLatestFrom(
+          this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectConstraintData))
+        ),
+        map(([dtos, collectionsMap, constraintData]) =>
+          dtos.map(dto =>
+            convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData, correlationId)
+          )
+        ),
         mergeMap(documents => [
           new DocumentsAction.DuplicateSuccess({documents}),
           ...createCallbackActions(onSuccess, documents),
@@ -393,10 +450,21 @@ export class DocumentsEffects {
   @Effect()
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA),
-    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
-    mergeMap(([action, documents]) => {
-      const originalDocument = documents[action.payload.document.id];
-      return of(new DocumentsAction.UpdateDataInternal({...action.payload, originalDocument}));
+    withLatestFrom(
+      this.store$.pipe(select(selectDocumentsDictionary)),
+      this.store$.pipe(select(selectCollectionsDictionary)),
+      this.store$.pipe(select(selectConstraintData))
+    ),
+    mergeMap(([action, documents, collectionsMap, constraintData]) => {
+      const {document} = action.payload;
+      const originalDocument = documents[document.id];
+      const dataValues = convertDataResourceDataValues(
+        document.data,
+        collectionsMap[document.collectionId]?.attributes,
+        constraintData
+      );
+      const updateDocument = {...document, dataValues};
+      return of(new DocumentsAction.UpdateDataInternal({document: updateDocument, originalDocument}));
     })
   );
 
@@ -407,7 +475,13 @@ export class DocumentsEffects {
       const originalDocument = action.payload.originalDocument;
       const documentDto = convertDocumentModelToDto(action.payload.document);
       return this.documentService.updateDocumentData(documentDto).pipe(
-        map(dto => convertDocumentDtoToModel(dto)),
+        withLatestFrom(
+          this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectConstraintData))
+        ),
+        map(([dto, collectionsMap, constraintData]) =>
+          convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData)
+        ),
         map(document => new DocumentsAction.UpdateSuccess({document, originalDocument})),
         catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
       );
@@ -417,10 +491,44 @@ export class DocumentsEffects {
   @Effect()
   public patchData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA),
-    withLatestFrom(this.store$.pipe(select(selectDocumentsDictionary))),
-    mergeMap(([action, documents]) => {
-      const originalDocument = documents[action.payload.document.id];
-      return of(new DocumentsAction.PatchDataInternal({...action.payload, originalDocument}));
+    withLatestFrom(
+      this.store$.pipe(select(selectDocumentsDictionary)),
+      this.store$.pipe(select(selectCollectionsDictionary)),
+      this.store$.pipe(select(selectConstraintData))
+    ),
+    mergeMap(([action, documents, collectionsMap, constraintData]) => {
+      const {document} = action.payload;
+      const originalDocument = documents[document.id];
+      const patchAttributeIds = Object.keys(document.data);
+      const attributes = collectionsMap[document.collectionId]?.attributes?.filter(attribute =>
+        patchAttributeIds.includes(attribute.id)
+      );
+      const dataValues = convertDataResourceDataValues(document.data, attributes, constraintData);
+      const updateDocument = {...document, dataValues};
+      return of(new DocumentsAction.PatchDataInternal({document: updateDocument, originalDocument}));
+    })
+  );
+
+  @Effect()
+  public patchDataInternal$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.PatchDataInternal>(DocumentsActionType.PATCH_DATA_INTERNAL),
+    mergeMap(action => {
+      const originalDocument = action.payload.originalDocument;
+      const documentDto = convertDocumentModelToDto(action.payload.document);
+      return this.documentService.patchDocumentData(documentDto).pipe(
+        withLatestFrom(
+          this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectConstraintData))
+        ),
+        map(([dto, collectionsMap, constraintData]) =>
+          convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData)
+        ),
+        mergeMap(document => [
+          new DocumentsAction.UpdateSuccess({document, originalDocument}),
+          new DocumentsAction.CheckDataHint({document: action.payload.document}),
+        ]),
+        catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
+      );
     })
   );
 
@@ -449,23 +557,6 @@ export class DocumentsEffects {
   );
 
   @Effect()
-  public patchDataInternal$: Observable<Action> = this.actions$.pipe(
-    ofType<DocumentsAction.PatchDataInternal>(DocumentsActionType.PATCH_DATA_INTERNAL),
-    mergeMap(action => {
-      const originalDocument = action.payload.originalDocument;
-      const documentDto = convertDocumentModelToDto(action.payload.document);
-      return this.documentService.patchDocumentData(documentDto).pipe(
-        map(dto => convertDocumentDtoToModel(dto)),
-        mergeMap(document => [
-          new DocumentsAction.UpdateSuccess({document, originalDocument}),
-          new DocumentsAction.CheckDataHint({document: action.payload.document}),
-        ]),
-        catchError(error => of(new DocumentsAction.UpdateFailure({error, originalDocument})))
-      );
-    })
-  );
-
-  @Effect()
   public patchDataPending$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchDataPending>(DocumentsActionType.PATCH_DATA_PENDING),
     mergeMap(action => {
@@ -483,25 +574,25 @@ export class DocumentsEffects {
   public patchMetaData$: Observable<Action> = this.actions$.pipe(
     ofType<DocumentsAction.PatchMetaData>(DocumentsActionType.PATCH_META_DATA),
     mergeMap(action => {
-      const {collectionId, documentId, metaData} = action.payload;
-      return this.store$.pipe(
-        select(selectDocumentById(documentId)),
-        take(1),
-        mergeMap(originalDocument => {
-          return this.documentService.patchDocumentMetaData(collectionId, documentId, metaData).pipe(
-            mergeMap(dto => {
-              const document = {...convertDocumentDtoToModel(dto), data: originalDocument.data};
-              const actions: Action[] = [new DocumentsAction.UpdateSuccess({document, originalDocument})];
+      const {collectionId, documentId, metaData, onSuccess} = action.payload;
 
-              if (action.payload.onSuccess) {
-                actions.push(new CommonAction.ExecuteCallback({callback: () => action.payload.onSuccess(document)}));
-              }
-
-              return actions;
+      return this.documentService.patchDocumentMetaData(collectionId, documentId, metaData).pipe(
+        withLatestFrom(this.store$.pipe(select(selectDocumentById(documentId)))),
+        mergeMap(([dto, originalDocument]) => {
+          const document = {
+            ...convertDocumentDtoToModel(dto, [], null),
+            data: originalDocument.data,
+            dataValues: originalDocument.dataValues,
+          };
+          return [
+            new DocumentsAction.UpdateSuccess({
+              document,
+              originalDocument,
             }),
-            catchError(error => of(new DocumentsAction.UpdateFailure({error})))
-          );
-        })
+            ...createCallbackActions(onSuccess, document),
+          ];
+        }),
+        catchError(error => of(new DocumentsAction.UpdateFailure({error})))
       );
     })
   );
@@ -511,22 +602,22 @@ export class DocumentsEffects {
     ofType<DocumentsAction.UpdateMetaData>(DocumentsActionType.UPDATE_META_DATA),
     mergeMap(action => {
       const {document} = action.payload;
-      return this.store$.pipe(
-        select(selectDocumentById(document.id)),
-        take(1),
-        mergeMap(originalDocument => {
-          const documentDto = convertDocumentModelToDto(document);
-          return this.documentService.updateDocumentMetaData(documentDto).pipe(
-            map(
-              dto =>
-                new DocumentsAction.UpdateSuccess({
-                  document: convertDocumentDtoToModel(dto),
-                  originalDocument,
-                })
-            ),
-            catchError(error => of(new DocumentsAction.UpdateFailure({error})))
-          );
-        })
+
+      const documentDto = convertDocumentModelToDto(document);
+      return this.documentService.updateDocumentMetaData(documentDto).pipe(
+        withLatestFrom(this.store$.pipe(select(selectDocumentById(document.id)))),
+        map(
+          ([dto, originalDocument]) =>
+            new DocumentsAction.UpdateSuccess({
+              document: {
+                ...convertDocumentDtoToModel(dto, [], null),
+                data: originalDocument.data,
+                dataValues: originalDocument.dataValues,
+              },
+              originalDocument,
+            })
+        ),
+        catchError(error => of(new DocumentsAction.UpdateFailure({error})))
       );
     })
   );

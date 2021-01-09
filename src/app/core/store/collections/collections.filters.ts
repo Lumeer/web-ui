@@ -24,15 +24,13 @@ import {groupDocumentsByCollection} from '../documents/document.utils';
 import {Query} from '../navigation/query/query';
 import {LinkType} from '../link-types/link.type';
 import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
-import {ConstraintData} from '../../model/data/constraint';
 import {someDocumentMeetFulltexts} from '../documents/documents.filters';
 
 export function filterCollectionsByQuery(
   collections: Collection[],
   documents: DocumentModel[],
   linkTypes: LinkType[],
-  query: Query,
-  constraintData: ConstraintData
+  query: Query
 ): Collection[] {
   const filteredCollections = (collections || []).filter(collection => collection && typeof collection === 'object');
   if (!query || queryIsEmptyExceptPagination(query)) {
@@ -44,12 +42,7 @@ export function filterCollectionsByQuery(
     .map(id => (filteredCollections || []).find(coll => coll.id === id))
     .filter(collection => !!collection);
 
-  const collectionsByFullTexts = filterCollectionsByFulltexts(
-    filteredCollections,
-    documents,
-    query.fulltexts,
-    constraintData
-  );
+  const collectionsByFullTexts = filterCollectionsByFulltexts(filteredCollections, documents, query.fulltexts);
 
   return mergeCollections(collectionsByIds, collectionsByFullTexts);
 }
@@ -57,8 +50,7 @@ export function filterCollectionsByQuery(
 function filterCollectionsByFulltexts(
   collections: Collection[],
   documents: DocumentModel[],
-  fulltexts: string[],
-  constraintData: ConstraintData
+  fulltexts: string[]
 ): Collection[] {
   if (!fulltexts || fulltexts.length === 0) {
     return [];
@@ -69,8 +61,7 @@ function filterCollectionsByFulltexts(
   return collections.filter(collection => {
     const documentByCollections = documentsByCollectionsMap[collection.id] || [];
     return (
-      collectionMeetFulltexts(collection, fulltexts) ||
-      someDocumentMeetFulltexts(documentByCollections, collection, fulltexts, constraintData)
+      collectionMeetFulltexts(collection, fulltexts) || someDocumentMeetFulltexts(documentByCollections, fulltexts)
     );
   });
 }

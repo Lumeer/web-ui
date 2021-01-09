@@ -160,17 +160,19 @@ export class TableRowComponent implements OnChanges {
   private createDataValue(column: TableColumn, value?: any, typed?: boolean): DataValue {
     const constraint = column.attribute?.constraint || new UnknownConstraint();
     if (typed) {
-      return constraint.createInputDataValue(value, this.columnValue(column), this.constraintData);
+      return constraint.createInputDataValue(value, this.columnValue(column)?.serialize(), this.constraintData);
     }
-    const initialValue = isNotNullOrUndefined(value) ? value : this.columnValue(column);
-    return constraint.createDataValue(initialValue, this.constraintData);
+    if (isNotNullOrUndefined(value)) {
+      return constraint.createDataValue(value, this.constraintData);
+    }
+    return this.columnValue(column);
   }
 
   private columnById(columnId: string): TableColumn {
     return this.columnGroups.find(group => group.column?.id === columnId)?.column;
   }
 
-  private columnValue(column: TableColumn): any {
+  private columnValue(column: TableColumn): DataValue {
     if (column?.attribute) {
       if (column?.collectionId) {
         return this.row.data?.[column.id];

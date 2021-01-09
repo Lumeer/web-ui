@@ -20,6 +20,7 @@
 import {Permissions} from '../store/permissions/permissions';
 import {Collection} from '../store/collections/collection';
 import {LinkType} from '../store/link-types/link.type';
+import {DataValue} from './data-value';
 
 export interface Resource {
   id?: string;
@@ -46,6 +47,7 @@ export interface DataResource {
   id?: string;
   data: DataResourceData;
   newData?: DataResourceNewData;
+  dataValues?: DataResourceDataValues;
 
   creationDate?: Date;
   updateDate?: Date;
@@ -57,6 +59,7 @@ export interface DataResource {
 }
 
 export type DataResourceData = Record<string, any>;
+export type DataResourceDataValues = Record<string, DataValue>;
 export type DataResourceNewData = Record<string, {value: any; correlationId?: string}>;
 
 export type AttributesResource =

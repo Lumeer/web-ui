@@ -17,23 +17,25 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {AttributesResource, AttributesResourceType, DataResource} from '../../core/model/resource';
+import {
+  AttributesResourceType,
+  DataResource,
+  DataResourceData,
+  DataResourceDataValues,
+} from '../../core/model/resource';
 import {groupDocumentsByCollection} from '../../core/store/documents/document.utils';
 import {groupLinkInstancesByLinkTypes} from '../../core/store/link-instances/link-instance.utils';
 import {AttributeSortType, ViewSettings} from '../../core/store/views/view';
 import {ConstraintData} from '../../core/model/data/constraint';
-import {createAttributesMap} from '../../core/store/collections/collection.util';
-import {UnknownConstraint} from '../../core/model/constraint/unknown.constraint';
 import {DataValue} from '../../core/model/data-value';
 import {Constraint} from '../../core/model/constraint';
 import {isArray, objectValues} from './common.utils';
+import {Attribute} from '../../core/store/collections/collection';
 
 export function sortDataResourcesByViewSettings<T extends DataResource>(
   dataResources: T[],
-  resourcesMap: Record<string, AttributesResource>,
   type: AttributesResourceType,
   viewSettings: ViewSettings,
-  constraintData: ConstraintData,
   sortDesc?: boolean
 ): T[] {
   const dataResourcesByResource = groupDataResourceByResource(dataResources, type);
@@ -47,17 +49,13 @@ export function sortDataResourcesByViewSettings<T extends DataResource>(
   for (const resourceId of Object.keys(dataResourcesByResource)) {
     const sortSettings = (resourcesSettings?.[resourceId] || []).filter(setting => !!setting.sort);
     const currentDataResources = dataResourcesByResource[resourceId];
-    const attributesMap = createAttributesMap(resourcesMap[resourceId].attributes);
 
     if (sortSettings.length) {
       const sortedDataResources = currentDataResources.sort((a, b) => {
         for (const sortSetting of sortSettings) {
           const ascending = sortSetting.sort === AttributeSortType.Ascending;
-          const constraint = attributesMap[sortSetting.attributeId]?.constraint || new UnknownConstraint();
           const compare =
-            constraint
-              .createDataValue(a.data?.[sortSetting.attributeId], constraintData)
-              .compareTo(constraint.createDataValue(b.data?.[sortSetting.attributeId], constraintData)) *
+            a.dataValues?.[sortSetting.attributeId].compareTo(b.dataValues?.[sortSetting.attributeId]) *
             (ascending ? 1 : -1);
           if (compare !== 0) {
             return compare;
@@ -93,18 +91,18 @@ export function createSuggestionDataValues<T extends DataValue>(
   dataResources: DataResource[],
   attributeId: string,
   constraint: Constraint,
-  constraintData: ConstraintData,
   flatten: boolean = true
 ): T[] {
   const dataValuesMap: Record<string, T> = {};
   let count = 0;
   outerLoop: for (let i = 0; i < Math.min((dataResources || []).length, SUGGESTION_MAX_ROWS); i++) {
     const dataResource = dataResources[i];
-    const value = dataResource.data?.[attributeId];
+    const dataResourceDataValue = dataResource.dataValues?.[attributeId];
+    const value = dataResourceDataValue.serialize();
 
     const values = flatten && isArray(value) ? value : [value];
     for (const val of values) {
-      const dataValue = <T>constraint.createDataValue(val, constraintData);
+      const dataValue = <T>constraint.createDataValue(val, dataResourceDataValue?.constraintData);
       const formattedValue = dataValue.format().trim();
       if (formattedValue) {
         if (!dataValuesMap[formattedValue]) {
@@ -119,4 +117,18 @@ export function createSuggestionDataValues<T extends DataValue>(
   }
 
   return objectValues(dataValuesMap).sort((a, b) => a.format().localeCompare(b.format()));
+}
+
+export function convertDataResourceDataValues(
+  data: DataResourceData,
+  attributes: Attribute[],
+  constraintData: ConstraintData
+): DataResourceDataValues {
+  return (attributes || []).reduce(
+    (values, attribute) => ({
+      ...values,
+      [attribute.id]: attribute.constraint?.createDataValue(data[attribute.id], constraintData),
+    }),
+    {}
+  );
 }

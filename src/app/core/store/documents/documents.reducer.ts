@@ -149,6 +149,10 @@ function patchData(state: DocumentsState, action: DocumentsAction.PatchDataInter
         ...originalDocument.data,
         ...action.payload.document.data,
       },
+      dataValues: {
+        ...originalDocument.dataValues,
+        ...action.payload.document.dataValues,
+      },
       dataVersion: originalDocument.dataVersion + 1,
     },
     state

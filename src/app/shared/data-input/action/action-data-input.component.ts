@@ -31,7 +31,7 @@ import {DataCursor} from '../data-cursor';
 import {ActionDataValue} from '../../../core/model/data-value/action-data.value';
 import {ActionDataInputConfiguration} from '../data-input-configuration';
 import {ActionConstraintConfig} from '../../../core/model/data/constraint-config';
-import {createDataValuesMap, isActionButtonEnabled} from '../../../core/store/documents/documents.filters';
+import {isActionButtonEnabled} from '../../../core/store/documents/documents.filters';
 import {BehaviorSubject, combineLatest, concat, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
@@ -47,14 +47,11 @@ import {
   selectLinkInstanceActionExecutedTime,
   selectLinkInstanceById,
 } from '../../../core/store/link-instances/link-instances.state';
-import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {ConstraintData} from '../../../core/model/data/constraint';
-import {filterAttributesByFilters} from '../../utils/attribute.utils';
 
 const loadingTime = 2000;
 
@@ -148,11 +145,10 @@ export class ActionDataInputComponent implements OnChanges {
         this.store$.pipe(select(selectDocumentById(this.cursor.documentId))),
         this.store$.pipe(select(selectCollectionPermissions(this.cursor.collectionId))),
         this.config$,
-        this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([collection, document, permissions, config, constraintData]) =>
-          this.checkEnabled(collection, document, permissions, config, constraintData)
+        map(([collection, document, permissions, config]) =>
+          this.checkEnabled(collection, document, permissions, config)
         )
       );
     } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
@@ -161,11 +157,10 @@ export class ActionDataInputComponent implements OnChanges {
         this.store$.pipe(select(selectLinkInstanceById(this.cursor.linkInstanceId))),
         this.store$.pipe(select(selectLinkTypePermissions(this.cursor.linkTypeId))),
         this.config$,
-        this.store$.pipe(select(selectConstraintData)),
       ]).pipe(
         filter(([, , , config]) => !!config),
-        map(([linkType, linkInstance, permissions, config, constraintData]) =>
-          this.checkEnabled(linkType, linkInstance, permissions, config, constraintData)
+        map(([linkType, linkInstance, permissions, config]) =>
+          this.checkEnabled(linkType, linkInstance, permissions, config)
         )
       );
     }
@@ -177,20 +172,13 @@ export class ActionDataInputComponent implements OnChanges {
     resource: AttributesResource,
     dataResource: DataResource,
     permissions: AllowedPermissions,
-    config: ActionConstraintConfig,
-    constraintData?: ConstraintData
+    config: ActionConstraintConfig
   ): boolean {
     if (!resource || !dataResource) {
       return false;
     }
-    const filters = config.equation?.equations?.map(eq => eq.filter) || [];
-    const dataValues = createDataValuesMap(
-      dataResource.data,
-      filterAttributesByFilters(resource.attributes, filters),
-      constraintData
-    );
     const attributesMap = objectsByIdMap(resource.attributes);
-    return isActionButtonEnabled(dataValues, attributesMap, permissions, config, constraintData);
+    return isActionButtonEnabled(dataResource.dataValues, attributesMap, permissions, config);
   }
 
   public onClick(event: MouseEvent) {

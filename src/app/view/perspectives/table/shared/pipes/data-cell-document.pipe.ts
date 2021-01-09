@@ -24,6 +24,7 @@ import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
+import {convertDataResourceDataValues} from '../../../../../shared/utils/data-resource.utils';
 
 @Pipe({
   name: 'dataCellDocument',
@@ -46,10 +47,13 @@ export class DataCellDocumentPipe implements PipeTransform {
       return null;
     }
 
+    const data = partIndex === 0 ? generateDocumentDataByQuery(query, collections, constraintData, false) : {};
+    const collection = collections?.find(coll => coll.id === part.collectionId);
     return {
       collectionId: part.collectionId,
       correlationId: row.correlationId,
-      data: partIndex === 0 ? generateDocumentDataByQuery(query, collections, constraintData, false) : {},
+      data,
+      dataValues: convertDataResourceDataValues(data, collection.attributes, constraintData),
     };
   }
 }
