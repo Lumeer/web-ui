@@ -24,6 +24,7 @@ import NumbroLanguage = numbro.NumbroLanguage;
 import {environment} from '../../../environments/environment';
 import {LanguageTag} from '../model/data/language-tag';
 import {objectValues} from '../../shared/utils/common.utils';
+import * as moment from 'moment';
 
 export interface Currency {
   symbol: string;
@@ -317,8 +318,17 @@ export class CurrencyFormatService {
   }
 
   public init(): Promise<boolean> {
+    this.initMoment();
     objectValues(LanguageTag).forEach(lang => numbro.registerLanguage(this.getNumbroLanguage(lang), false));
     return Promise.resolve(true);
+  }
+
+  private initMoment() {
+    // due to error in from-now.pipe in late initialization of moment
+    moment.localeData().longDateFormat('l');
+    moment.localeData().longDateFormat('ll');
+    moment.localeData().longDateFormat('lll');
+    moment.localeData().longDateFormat('llll');
   }
 
   public ordinal(num: number): string {

@@ -268,11 +268,15 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private checkSuggesting() {
-    if (this.cursor.partIndex < 2) {
+    if (!this.canSuggest()) {
       return;
     }
 
     this.suggesting$.next(!this.isEntityInitialized() || !this.editedValue);
+  }
+
+  private canSuggest(): boolean {
+    return this.cursor.partIndex >= 2;
   }
 
   private subscribeToEditSelectedCell(): Subscription {
@@ -297,6 +301,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   private startEditingAndClear() {
     this.dataValue = this.createDataValueByTyped('');
     this.editing$.next(true);
+    this.suggesting$.next(false);
   }
 
   private startEditingAndChangeValue(value: string, attribute: Attribute) {
@@ -307,6 +312,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       if (value) {
         this.dataValue = this.createDataValueByTyped(value);
+        if (this.canSuggest()) {
+          this.editedValue = this.dataValue;
+          this.suggesting$.next(true);
+        }
       }
       this.editing$.next(true);
     }
@@ -720,7 +729,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.editedValue = dataValue;
 
     if (this.cursor.partIndex > 1) {
-      this.suggesting$.next(true);
+      this.suggesting$.next(!!dataValue.format());
     }
   }
 

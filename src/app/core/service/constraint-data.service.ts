@@ -27,6 +27,7 @@ import {User} from '../store/users/user';
 import {isNullOrUndefined, objectsByIdMap} from '../../shared/utils/common.utils';
 import {DocumentsAction} from '../store/documents/documents.action';
 import {LinkInstancesAction} from '../store/link-instances/link-instances.action';
+import * as moment from 'moment';
 
 @Injectable()
 export class ConstraintDataService {

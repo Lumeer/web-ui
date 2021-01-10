@@ -92,6 +92,7 @@ import {
   findTableRow,
   getAttributeIdFromColumn,
   initializeExistingTableColumns,
+  isTablePartEmpty,
   mergeHiddenColumns,
   resizeLastColumnChild,
   splitColumnPath,
@@ -239,10 +240,12 @@ export class TablesEffects {
                     stems: [{collectionId: collection.id, linkTypeIds: [linkType.id]}],
                   };
 
+                  const removeColumnActions = isTablePartEmpty(table.config.parts[lastPartIndex])
+                    ? []
+                    : [new TablesAction.RemoveEmptyColumns({cursor: {tableId: table.id, partIndex: lastPartIndex}})];
+
                   return [
-                    new TablesAction.RemoveEmptyColumns({
-                      cursor: {tableId: table.id, partIndex: lastPartIndex},
-                    }),
+                    ...removeColumnActions,
                     new TablesAction.AddPart({
                       tableId: table.id,
                       parts: [linkTypePart, collectionPart],
