@@ -39,7 +39,8 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
     });
     this.units = i18n({
       id: 'blockly.dropdown.units.dateChangeBlock',
-      value: 'second(s),minute(s),hour(s),day(s),month(s),quarter(s),year(s)',
+      value:
+        'second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)',
     }).split(',');
     this.ops = i18n({id: 'blockly.dropdown.ops.dateChangeBlock', value: 'add,subtract,set'}).split(',');
   }
@@ -79,8 +80,11 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
                 [this_.units[2], 'hours'],
                 [this_.units[3], 'days'],
                 [this_.units[4], 'months'],
-                [this_.units[5], 'quarters'],
-                [this_.units[6], 'years'],
+                [this_.units[5], 'sticky_months'],
+                [this_.units[6], 'quarters'],
+                [this_.units[7], 'sticky_quarters'],
+                [this_.units[8], 'years'],
+                [this_.units[9], 'sticky_years'],
               ],
             },
             {
@@ -96,21 +100,38 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
       },
     };
     Blockly.JavaScript[BlocklyUtils.DATE_CHANGE] = function (block) {
-      const unit = block.getFieldValue('UNIT');
-      const op = block.getFieldValue('OP');
+      let tmpDateVar = '';
+      let unit: string = block.getFieldValue('UNIT');
+      const op: string = block.getFieldValue('OP');
       const count = Blockly.JavaScript.valueToCode(block, 'COUNT', Blockly.JavaScript.ORDER_ATOMIC) || null;
       const input_date = Blockly.JavaScript.valueToCode(block, 'DATE', Blockly.JavaScript.ORDER_ATOMIC) || null;
 
       let code = '/** MomentJs **/ ';
+      let sticky = false;
+
+      if (unit.startsWith('sticky_')) {
+        sticky = true;
+        unit = unit.substring(7);
+        tmpDateVar = Blockly.JavaScript.variableDB_.getDistinctName('lumeer_date_tmp', Blockly.Variables.NAME_TYPE);
+      }
 
       if (op === 'add' || op === 'subtract') {
-        code += 'moment(' + input_date + ').' + op + '((' + count + "), '" + unit + "').toDate()";
+        if (sticky) {
+          // (l = moment(startdate)).daysInMonth() === l.date() ? l.add(3, 'months').endOf('months') : l.add(3, 'months')
+          code += `((${tmpDateVar} = moment(${input_date})).daysInMonth() === ${tmpDateVar}.date() ? ${tmpDateVar}.add((${count}), '${unit}').endOf('${unit}') : ${tmpDateVar}.add((${count}), '${unit}')).toDate()`;
+        } else {
+          code += `moment(${input_date}).${op}((${count}), '${unit}').toDate()`;
+        }
       } else {
         if (unit === 'days') {
-          code += 'moment(' + input_date + ').date((' + count + ') - 1).toDate()';
+          code += `moment(${input_date}).date((${count}) - 1).toDate()`;
         } else {
           const fce = unit.substring(0, unit.length - 1);
-          code += 'moment(' + input_date + ').' + fce + '(' + count + ').toDate()';
+          if (sticky) {
+            code += `((${tmpDateVar} = moment(${input_date})).daysInMonth() === ${tmpDateVar}.date() ? ${tmpDateVar}.${fce}(${count}).endOf('${unit}') : ${tmpDateVar}.${fce}(${count})).toDate()`;
+          } else {
+            code += `moment(${input_date}).${fce}(${count}).toDate()`;
+          }
         }
       }
 

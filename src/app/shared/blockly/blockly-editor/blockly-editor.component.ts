@@ -65,6 +65,8 @@ import {CurrentLocaleBlocklyComponent} from './blocks/current-locale-blockly-com
 import {ShowMessageBlocklyComponent} from './blocks/show-message-blockly-component';
 import {DateToIsoBlocklyComponent} from './blocks/date-to-iso-blockly-component';
 import {DateChangeBlocklyComponent} from './blocks/date-change-blockly-component';
+import {IsEmptyBlocklyComponent} from './blocks/is-empty-blockly-component';
+import {IsNotEmptyBlocklyComponent} from './blocks/is-not-empty-blockly-component';
 
 declare var Blockly: any;
 
@@ -156,6 +158,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new MsToUnitBlocklyComponent(this.blocklyUtils, this.i18n),
       new SequenceBlocklyComponent(this.blocklyUtils, this.i18n),
       new ShowMessageBlocklyComponent(this.blocklyUtils, this.i18n),
+      new IsEmptyBlocklyComponent(this.blocklyUtils, this.i18n),
+      new IsNotEmptyBlocklyComponent(this.blocklyUtils, this.i18n),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));

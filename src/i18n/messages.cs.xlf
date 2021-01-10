@@ -145,8 +145,8 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskAssignedMiddle" datatype="html">
-        <source>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
-        <target>s termínem dokončení <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </target>
+        <source> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
+        <target> s termínem dokončení <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">20</context>
@@ -5429,7 +5429,19 @@
         <target>Vytvoří nový záznam. Uložte ho do proměnné, abyste jej mohli dál měnit.</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="blockly.tooltip.isEmpty" datatype="html">
+        <source>Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</source><target state="new">Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-empty-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isNotEmpty" datatype="html">
+        <source>Returns true if the input is neither of null, undefined, empty string, array, object or an array containing an empty value.</source><target state="new">Returns true if the input is neither of null, undefined, empty string, array, object or an array containing an empty value.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-not-empty-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
         <source>Gets current date as object for further function calls.</source>
         <target>Vrátí aktuální datum a čas k použití v dalších funkcích.</target>
         <context-group purpose="location">
@@ -5457,7 +5469,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>second(s),minute(s),hour(s),day(s),month(s),quarter(s),year(s)</source><target>sekund(y),minut(y),hodin(y),dn(ů/y),měsíc(e/ů),kvartál(y/ů),roky/let</target>
+        <source>second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
+        <target>sekund(y),minut(y),hodin(y),dn(ů/y),měsíc(e/ů),měsíc(e/ů) (držet konec měsíce),kvartál(y/ů),kvartál(y/ů) (držet konec měsíce),roky/let,roky/let (držet konec měsíce)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context>
           <context context-type="linenumber">1</context>

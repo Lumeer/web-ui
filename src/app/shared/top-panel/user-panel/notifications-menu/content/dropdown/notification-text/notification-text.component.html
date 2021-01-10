@@ -17,7 +17,7 @@
 
   <ng-container *ngSwitchCase="notificationType.TaskAssigned">
     <span class="trail" i18n="@@userNotifications.taskAssignedPrefix">The task <em [innerHTML]="taskName"></em> </span>
-    <span class="trail" i18n="@@userNotifications.taskAssignedMiddle" *ngIf="taskDueDate">with due date {{taskDueDate}} </span>
+    <span class="trail" i18n="@@userNotifications.taskAssignedMiddle" *ngIf="taskDueDate"> with due date {{taskDueDate}} </span>
     <span class="trail" i18n="@@userNotifications.taskAssignedSuffix"> has been assigned to you.</span>
   </ng-container>
 

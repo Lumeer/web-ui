@@ -79,6 +79,8 @@ export class BlocklyUtils {
   public static readonly CURRENT_USER = 'current_user';
   public static readonly CURRENT_LOCALE = 'current_locale';
   public static readonly CREATE_DOCUMENT = 'create_document';
+  public static readonly IS_EMPTY = 'is_empty';
+  public static readonly IS_NOT_EMPTY = 'is_not_empty';
   public static readonly CREATE_DOCUMENTS_LIMIT = 25;
   public static readonly SHOW_MESSAGES_LIMIT = 5;
 

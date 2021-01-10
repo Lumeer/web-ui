@@ -711,7 +711,7 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskAssignedMiddle" datatype="html">
-        <source>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source><target state="final">with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </target>
+        <source> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source><target state="final"> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">20</context>
@@ -4294,7 +4294,19 @@
         <source>Gets a record linked to the given document via the selected link.</source><target state="final">Gets a record linked to the given document via the selected link.</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="blockly.tooltip.isEmpty" datatype="html">
+        <source>Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</source><target state="final">Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-empty-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isNotEmpty" datatype="html">
+        <source>Returns true if the input is neither of null, undefined, empty string, array, object or an array containing an empty value.</source><target state="final">Returns true if the input is neither of null, undefined, empty string, array, object or an array containing an empty value.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-not-empty-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
         <source>Gets current date as object for further function calls.</source><target state="final">Gets current date as object for further function calls.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/current-date-blockly-component.ts</context>
@@ -4319,7 +4331,7 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>second(s),minute(s),hour(s),day(s),month(s),quarter(s),year(s)</source><target state="final">second(s),minute(s),hour(s),day(s),month(s),quarter(s),year(s)</target>
+        <source>second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source><target state="final">second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context>
           <context context-type="linenumber">1</context>

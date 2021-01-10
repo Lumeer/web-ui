@@ -2528,7 +2528,7 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskAssignedMiddle" datatype="html">
-        <source>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
+        <source> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">20</context>
@@ -5987,7 +5987,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>second(s),minute(s),hour(s),day(s),month(s),quarter(s),year(s)</source>
+        <source>second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6067,6 +6067,20 @@
         <source>Gets a record linked to the given document via the selected link.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.isEmpty" datatype="html">
+        <source>Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-empty-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.isNotEmpty" datatype="html">
+        <source>Returns true if the input is neither of null, undefined, empty string, array, object or an array containing an empty value.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-not-empty-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
