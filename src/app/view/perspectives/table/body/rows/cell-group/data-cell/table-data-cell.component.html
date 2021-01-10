@@ -47,7 +47,6 @@
       *ngIf="{row: row$ | async, columns: table | documentHintColumns:cursor:canManageConfig} as hintsData"
       [attributeId]="column.attributeIds[0]"
       [collectionId]="(table | part:cursor)?.collectionId"
-      [constraintData]="constraintData"
       [columns]="hintsData.columns"
       [excludedDocumentIds]="document && document.id ? [document.id] : []"
       [linkedDocumentId]="(table | previousLinkedRow:cursor)?.documentId"

@@ -24,7 +24,7 @@ import {TableConfigPart, TableConfigRow} from '../../../../../core/store/tables/
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {Collection} from '../../../../../core/store/collections/collection';
-import {convertDataResourceDataValues} from '../../../../../shared/utils/data-resource.utils';
+import {convertDataToDataValues} from '../../../../../shared/utils/data-resource.utils';
 
 @Pipe({
   name: 'dataCellDocument',
@@ -53,7 +53,7 @@ export class DataCellDocumentPipe implements PipeTransform {
       collectionId: part.collectionId,
       correlationId: row.correlationId,
       data,
-      dataValues: convertDataResourceDataValues(data, collection.attributes, constraintData),
+      dataValues: convertDataToDataValues(data, collection.attributes, constraintData),
     };
   }
 }

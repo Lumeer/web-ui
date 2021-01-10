@@ -28,82 +28,88 @@ import {KanbanConverter} from './kanban-converter';
 import {environment} from '../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AttributesResourceType} from '../../../../core/model/resource';
-
-const documents: DocumentModel[] = [
-  {
-    collectionId: 'C1',
-    id: 'D1',
-    data: {a1: 'Sport', a2: 3},
-  },
-  {
-    collectionId: 'C1',
-    id: 'D2',
-    data: {a1: 'Dance', a2: 7},
-  },
-  {
-    collectionId: 'C1',
-    id: 'D3',
-    data: {a1: 'Glass', a2: 44},
-  },
-  {
-    collectionId: 'C1',
-    id: 'D4',
-    data: {a1: 'Sport', a2: 0},
-  },
-  {
-    collectionId: 'C1',
-    id: 'D5',
-    data: {a1: 'Glass', a2: 7},
-  },
-  {
-    collectionId: 'C2',
-    id: 'D6',
-    data: {a1: 'Dance', a2: 3},
-  },
-  {
-    collectionId: 'C2',
-    id: 'D7',
-    data: {a1: 'LMR', a2: 7},
-  },
-  {
-    collectionId: 'C2',
-    id: 'D8',
-    data: {a1: 'Glass', a2: 44},
-  },
-  {
-    collectionId: 'C2',
-    id: 'D9',
-    data: {a1: 'Sport', a2: 0},
-  },
-  {
-    collectionId: 'C2',
-    id: 'D10',
-    data: {a1: 'LMR', a2: 7},
-  },
-  {
-    collectionId: 'C3',
-    id: 'D11',
-    data: {a1: 'Glass', a2: 7},
-  },
-];
+import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
+import {convertDataResourcesDataValuesByResource} from '../../../../shared/utils/data-resource.utils';
 
 const collections: Collection[] = [
   {
     id: 'C1',
     name: 'collection',
-    attributes: [{id: 'a1', name: 'Lala'}],
+    attributes: [{id: 'a1', name: 'Lala', constraint: new UnknownConstraint()}],
   },
   {
     id: 'C2',
     name: 'collection',
-    attributes: [{id: 'a1', name: 'Lalo'}],
+    attributes: [{id: 'a1', name: 'Lalo', constraint: new UnknownConstraint()}],
   },
   {
     id: 'C3',
     name: 'collection',
-    attributes: [{id: 'a1', name: 'Lale'}],
+    attributes: [{id: 'a1', name: 'Lale', constraint: new UnknownConstraint()}],
   },
 ];
+
+const documents: DocumentModel[] = convertDataResourcesDataValuesByResource(
+  [
+    {
+      collectionId: 'C1',
+      id: 'D1',
+      data: {a1: 'Sport', a2: 3},
+    },
+    {
+      collectionId: 'C1',
+      id: 'D2',
+      data: {a1: 'Dance', a2: 7},
+    },
+    {
+      collectionId: 'C1',
+      id: 'D3',
+      data: {a1: 'Glass', a2: 44},
+    },
+    {
+      collectionId: 'C1',
+      id: 'D4',
+      data: {a1: 'Sport', a2: 0},
+    },
+    {
+      collectionId: 'C1',
+      id: 'D5',
+      data: {a1: 'Glass', a2: 7},
+    },
+    {
+      collectionId: 'C2',
+      id: 'D6',
+      data: {a1: 'Dance', a2: 3},
+    },
+    {
+      collectionId: 'C2',
+      id: 'D7',
+      data: {a1: 'LMR', a2: 7},
+    },
+    {
+      collectionId: 'C2',
+      id: 'D8',
+      data: {a1: 'Glass', a2: 44},
+    },
+    {
+      collectionId: 'C2',
+      id: 'D9',
+      data: {a1: 'Sport', a2: 0},
+    },
+    {
+      collectionId: 'C2',
+      id: 'D10',
+      data: {a1: 'LMR', a2: 7},
+    },
+    {
+      collectionId: 'C3',
+      id: 'D11',
+      data: {a1: 'Glass', a2: 7},
+    },
+  ],
+  collections,
+  null
+);
 
 describe('Kanban converter', () => {
   let constraintReadableFormatter: SelectItemWithConstraintFormatter;

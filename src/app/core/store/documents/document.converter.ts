@@ -23,7 +23,7 @@ import {Attribute} from '../collections/collection';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
 import {ConstraintData} from '../../model/data/constraint';
 import {DataResourceData, DataResourceDataValues} from '../../model/resource';
-import {convertDataResourceDataValues} from '../../../shared/utils/data-resource.utils';
+import {convertDataToDataValues} from '../../../shared/utils/data-resource.utils';
 
 export function convertDocumentDtoToModel(
   dto: DocumentDto,
@@ -38,7 +38,7 @@ export function convertDocumentDtoToModel(
     id: dto.id,
     collectionId: dto.collectionId,
     data,
-    dataValues: convertDataResourceDataValues(data, attributes, constraintData),
+    dataValues: convertDataToDataValues(data, attributes, constraintData),
     metaData: dto.metaData,
     favorite: dto.favorite,
     creationDate: new Date(dto.creationDate),

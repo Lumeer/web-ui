@@ -20,11 +20,12 @@
 import {Collection} from './collection';
 import {DocumentModel} from '../documents/document.model';
 import {mergeCollections} from './collection.util';
-import {groupDocumentsByCollection} from '../documents/document.utils';
 import {Query} from '../navigation/query/query';
 import {LinkType} from '../link-types/link.type';
 import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
 import {someDocumentMeetFulltexts} from '../documents/documents.filters';
+import {groupDataResourceByResource} from '../../../shared/utils/data-resource.utils';
+import {AttributesResourceType} from '../../model/resource';
 
 export function filterCollectionsByQuery(
   collections: Collection[],
@@ -56,7 +57,7 @@ function filterCollectionsByFulltexts(
     return [];
   }
 
-  const documentsByCollectionsMap = groupDocumentsByCollection(documents);
+  const documentsByCollectionsMap = groupDataResourceByResource(documents, AttributesResourceType.Collection);
 
   return collections.filter(collection => {
     const documentByCollections = documentsByCollectionsMap[collection.id] || [];

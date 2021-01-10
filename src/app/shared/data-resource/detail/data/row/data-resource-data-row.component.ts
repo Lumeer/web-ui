@@ -75,7 +75,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   public editableKey = false;
 
   @Output()
-  public newValue = new EventEmitter<any>();
+  public newValue = new EventEmitter<DataValue>();
 
   @Output()
   public newKey = new EventEmitter<string>();
@@ -130,7 +130,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.row && this.row) {
       this.keyDataValue = this.createKeyDataValue();
-      this.dataValue = this.createDataValue();
+      this.dataValue = this.getCurrentValue();
     }
     this.editable = this.isEditable();
   }
@@ -140,13 +140,15 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
     return new UnknownConstraint().createDataValue(initialValue);
   }
 
-  private createDataValue(value?: any, typed?: boolean): DataValue {
-    const constraint = (this.row.attribute && this.row.attribute.constraint) || new UnknownConstraint();
+  private createDataValue(value: any, typed: boolean): DataValue {
+    const constraint = this.row.attribute?.constraint || new UnknownConstraint();
     if (typed) {
-      return constraint.createInputDataValue(value, this.row.value, this.constraintData);
+      return constraint.createInputDataValue(value, this.getCurrentValue()?.serialize(), this.constraintData);
     }
-    const initialValue = isNotNullOrUndefined(value) ? value : this.row.value;
-    return constraint.createDataValue(initialValue, this.constraintData);
+    if (isNotNullOrUndefined(value)) {
+      return constraint.createDataValue(value, this.constraintData);
+    }
+    return this.getCurrentValue();
   }
 
   public onNewKey(dataValue: DataValue) {
@@ -167,14 +169,13 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
     }
 
     this.editedValue = null;
-    const value = dataValue.serialize();
-    if (value !== this.getCurrentValue()) {
-      this.newValue.emit(value);
+    if (dataValue.compareTo(this.getCurrentValue())) {
+      this.newValue.emit(dataValue);
     }
     this.onDataInputCancel();
   }
 
-  private getCurrentValue(): any {
+  private getCurrentValue(): DataValue {
     return this.row.value;
   }
 
@@ -191,7 +192,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   public onDataInputCancel() {
-    this.dataValue = this.createDataValue();
+    this.dataValue = this.getCurrentValue();
     this.resetFocusAndEdit.emit(1);
   }
 
@@ -269,7 +270,7 @@ export class DataResourceDataRowComponent implements DataRowComponent, OnChanges
   }
 
   private isManageable(): boolean {
-    return this.permissions && this.permissions.manageWithView;
+    return this.permissions?.manageWithView;
   }
 
   public focusColumn(column: number) {

@@ -19,7 +19,7 @@
                         [constraint]="defaultConstraint"
                         [cursor]="document | dataCursor:defaultAttributeId"
                         [configuration]="configuration"
-                        [dataValue]="(defaultAttributeId && document?.data && document?.data[defaultAttributeId]) | dataValue:defaultConstraint: constraintData">
+                        [dataValue]="defaultAttributeId && document?.dataValues && document?.dataValues[defaultAttributeId]">
     </data-input-preview>
     <div class="ml-auto text-nowrap" *ngIf="permissions?.read">
       <span class="clickable ml-2 hiding-icon"

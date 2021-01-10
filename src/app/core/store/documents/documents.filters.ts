@@ -18,7 +18,7 @@
  */
 
 import {DocumentModel} from './document.model';
-import {groupDocumentsByCollection, mergeDocuments} from './document.utils';
+import {mergeDocuments} from './document.utils';
 import {queryIsEmptyExceptPagination, queryStemAttributesResourcesOrder} from '../navigation/query/query.util';
 import {Attribute, Collection} from '../collections/collection';
 import {LinkType} from '../link-types/link.type';
@@ -26,7 +26,7 @@ import {LinkInstance} from '../link-instances/link.instance';
 import {escapeHtml, isNullOrUndefined, objectsByIdMap, objectValues} from '../../../shared/utils/common.utils';
 import {ConstraintType} from '../../model/data/constraint';
 import {Query, QueryStem} from '../navigation/query/query';
-import {groupLinkInstancesByLinkTypes, mergeLinkInstances} from '../link-instances/link-instance.utils';
+import {mergeLinkInstances} from '../link-instances/link-instance.utils';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
 import {getAttributesResourceType, hasRoleByPermissions} from '../../../shared/utils/resource.utils';
 import {DataValue} from '../../model/data-value';
@@ -34,6 +34,7 @@ import {AttributeFilter, ConditionType, EquationOperator} from '../../model/attr
 import {AllowedPermissions} from '../../model/allowed-permissions';
 import {ActionConstraintConfig} from '../../model/data/constraint-config';
 import {filterAttributesByFilters} from '../../../shared/utils/attribute.utils';
+import {groupDataResourceByResource} from '../../../shared/utils/data-resource.utils';
 
 interface FilteredDataResources {
   allDocuments: DocumentModel[];
@@ -72,8 +73,8 @@ export function filterDocumentsAndLinksByQuery(
     (query.stems || []).length > 0
       ? [...query.stems]
       : (collections || []).map(collection => ({collectionId: collection.id}));
-  const documentsByCollections = groupDocumentsByCollection(documents);
-  const linkInstancesByLinkTypes = groupLinkInstancesByLinkTypes(linkInstances);
+  const documentsByCollections = groupDataResourceByResource(documents, AttributesResourceType.Collection);
+  const linkInstancesByLinkTypes = groupDataResourceByResource(linkInstances, AttributesResourceType.LinkType);
 
   const escapedFulltexts = query.fulltexts?.map(fullText => escapeHtml(fullText));
   stems.forEach(stem => {

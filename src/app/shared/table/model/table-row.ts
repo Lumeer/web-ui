@@ -26,7 +26,7 @@ export interface TableRow {
   height: number;
   creating?: boolean;
   documentId?: string;
-  data?: Record<string, DataValue>; // columnId -> DataValue
+  dataValues?: Record<string, DataValue>; // columnId -> DataValue
   linkInstanceId?: string;
   correlationId?: string;
   commentsCount?: number;

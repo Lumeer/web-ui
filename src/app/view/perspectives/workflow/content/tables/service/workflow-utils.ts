@@ -23,7 +23,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
-import {AttributesResourceType} from '../../../../../../core/model/resource';
+import {AttributesResourceType, DataResourceData, DataResourceDataValues} from '../../../../../../core/model/resource';
 import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
 import {uniqueValues} from '../../../../../../shared/utils/array.utils';
 import {TABLE_ROW_HEIGHT, TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
@@ -32,9 +32,11 @@ import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
-import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
+import {
+  convertDataValuesToData,
+  sortDataResourcesByViewSettings,
+} from '../../../../../../shared/utils/data-resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
@@ -47,7 +49,7 @@ export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 export interface PendingRowUpdate {
   row?: TableRow;
   newRow?: TableNewRow;
-  value: DataValue;
+  dataValue: DataValue;
 }
 
 export function computeTableHeight(numberOfRows: number, newRow?: TableNewRow): number {
@@ -60,8 +62,22 @@ export function createRowData(
   columns: TableColumn[],
   pendingColumnValues: Record<string, PendingRowUpdate[]>,
   overrideColumn?: TableColumn,
-  value?: any
-): {data: Record<string, any>; linkData: Record<string, any>} {
+  value?: DataValue
+): {data: DataResourceData; linkData: DataResourceData} {
+  const {dataValues, linkDataValues} = createRowDataValues(row, columns, pendingColumnValues, overrideColumn, value);
+  return {
+    data: convertDataValuesToData(dataValues),
+    linkData: convertDataValuesToData(linkDataValues),
+  };
+}
+
+export function createRowDataValues(
+  row: TableRow,
+  columns: TableColumn[],
+  pendingColumnValues: Record<string, PendingRowUpdate[]>,
+  overrideColumn?: TableColumn,
+  dataValue?: DataValue
+): {dataValues: DataResourceDataValues; linkDataValues: DataResourceDataValues} {
   return columns.reduce(
     (result, column) => {
       if (column.attribute) {
@@ -69,16 +85,16 @@ export function createRowData(
           pending => (pending.row || pending.newRow).id === row.id
         );
         const currentValue =
-          pendingRowUpdate?.value || (overrideColumn?.id === column.id ? value : row.data[column.id]);
+          pendingRowUpdate?.dataValue || (overrideColumn?.id === column.id ? dataValue : row.dataValues[column.id]);
         if (column.collectionId) {
-          result.data[column.attribute.id] = currentValue;
+          result.dataValues[column.attribute.id] = currentValue;
         } else if (column.linkTypeId) {
-          result.linkData[column.attribute.id] = currentValue;
+          result.linkDataValues[column.attribute.id] = currentValue;
         }
       }
       return result;
     },
-    {data: {}, linkData: {}}
+    {dataValues: {}, linkDataValues: {}}
   );
 }
 
@@ -87,7 +103,7 @@ export function createEmptyNewRow(tableId: string): TableNewRow {
   return {
     id,
     tableId,
-    data: null,
+    dataValues: null,
     correlationId: id,
     height: TABLE_ROW_HEIGHT,
     documentMenuItems: [],
@@ -254,13 +270,13 @@ export function createRowObjectsFromAggregated(
   ).data;
 }
 
-export function createRowValues(
-  data: Record<string, DataValue>,
+export function mapRowDataValues(
+  dataValues: Record<string, DataValue>,
   columnIdsMap: Record<string, string>
-): Record<string, any> {
-  return Object.keys(data || {}).reduce((rowData, attributeId) => {
+): DataResourceDataValues {
+  return Object.keys(dataValues || {}).reduce((rowData, attributeId) => {
     if (columnIdsMap[attributeId]) {
-      rowData[columnIdsMap[attributeId]] = data[attributeId];
+      rowData[columnIdsMap[attributeId]] = dataValues?.[attributeId];
     }
     return rowData;
   }, {});
@@ -275,7 +291,9 @@ export function createColumnIdsMap(columns: TableColumn[]): Record<string, strin
   }, {});
 }
 
-export function createPendingColumnValuesByRow(pendingValues: Record<string, PendingRowUpdate[]>): Record<string, any> {
+export function createPendingColumnDataValuesByRow(
+  pendingValues: Record<string, PendingRowUpdate[]>
+): DataResourceDataValues {
   return Object.keys(pendingValues).reduce((result, columnId) => {
     const updates = pendingValues[columnId];
     for (const update of updates) {
@@ -283,7 +301,7 @@ export function createPendingColumnValuesByRow(pendingValues: Record<string, Pen
       if (!result[row.id]) {
         result[row.id] = {};
       }
-      result[row.id][columnId] = update.value;
+      result[row.id][columnId] = update.dataValue;
     }
     return result;
   }, {});

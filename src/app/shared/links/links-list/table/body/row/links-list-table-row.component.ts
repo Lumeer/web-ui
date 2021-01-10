@@ -175,22 +175,24 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
     const attribute = this.columns[column].attribute;
     const constraint = attribute?.constraint || new UnknownConstraint();
     if (typed) {
-      return constraint.createInputDataValue(value, this.columnValue(column), this.constraintData);
+      return constraint.createInputDataValue(value, this.columnValue(column)?.serialize(), this.constraintData);
     }
-    const initialValue = isNotNullOrUndefined(value) ? value : this.columnValue(column);
-    return constraint.createDataValue(initialValue, this.constraintData);
+    if (isNotNullOrUndefined(value)) {
+      return constraint.createDataValue(value, this.constraintData);
+    }
+    return this.columnValue(column);
   }
 
   private isColumnEditable(column: number): boolean {
     return this.permissions?.writeWithView && this.columns[column].editable;
   }
 
-  private columnValue(index: number): any {
+  private columnValue(index: number): DataValue {
     const column = this.columns[index];
     if (column?.collectionId) {
-      return (this.row.document?.data || {})[column.attribute.id];
+      return (this.row.document?.dataValues || {})[column.attribute.id];
     } else if (column?.linkTypeId) {
-      return (this.row.linkInstance?.data || {})[column.attribute.id];
+      return (this.row.linkInstance?.dataValues || {})[column.attribute.id];
     }
     return null;
   }
@@ -218,7 +220,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
       this.createNewLink(column, dataValue);
     } else {
       const value = dataValue.serialize();
-      const currentValue = this.columnValue(column);
+      const currentValue = this.columnValue(column)?.serialize();
       if (currentValue !== value) {
         this.newValue.emit({column, value});
       }

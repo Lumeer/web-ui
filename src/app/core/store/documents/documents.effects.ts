@@ -42,6 +42,7 @@ import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertDocumentDtoToModel, convertDocumentModelToDto} from './document.converter';
 import {DocumentsAction, DocumentsActionType} from './documents.action';
 import {
+  selectAllDocuments,
   selectDocumentById,
   selectDocumentsDictionary,
   selectDocumentsQueries,
@@ -52,7 +53,13 @@ import {CollectionService, DocumentService, LinkInstanceService, SearchService} 
 import {OrganizationsAction} from '../organizations/organizations.action';
 import {objectValues} from '../../../shared/utils/common.utils';
 import {selectConstraintData} from '../constraint-data/constraint-data.state';
-import {convertDataResourceDataValues} from '../../../shared/utils/data-resource.utils';
+import {
+  convertDataResourcesDataValues,
+  convertDataToDataValues,
+  groupDataResourceByResource,
+} from '../../../shared/utils/data-resource.utils';
+import {selectLinkTypesDictionary} from '../link-types/link-types.state';
+import {AttributesResourceType} from '../../model/resource';
 
 @Injectable()
 export class DocumentsEffects {
@@ -210,7 +217,13 @@ export class DocumentsEffects {
           };
           const linkInstanceDto = convertLinkInstanceModelToDto(linkInstance);
           return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
-            map(dto => convertLinkInstanceDtoToModel(dto)),
+            withLatestFrom(
+              this.store$.pipe(select(selectCollectionsDictionary)),
+              this.store$.pipe(select(selectConstraintData))
+            ),
+            map(([dto, linkTypesMap, constraintData]) =>
+              convertLinkInstanceDtoToModel(dto, linkTypesMap[dto.linkTypeId]?.attributes, constraintData)
+            ),
             mergeMap(newLink => [
               ...createCallbackActions(onSuccess, {documentId: newDocument.id, linkInstanceId: newLink.id}),
               new DocumentsAction.CreateSuccess({document: newDocument}),
@@ -271,18 +284,23 @@ export class DocumentsEffects {
       return this.documentService.createChain(documentsDtos, linkInstancesDtos).pipe(
         withLatestFrom(
           this.store$.pipe(select(selectCollectionsDictionary)),
+          this.store$.pipe(select(selectLinkTypesDictionary)),
           this.store$.pipe(select(selectConstraintData))
         ),
-        mergeMap(([{documents: documentDtos, linkInstances: linkDtos}, collectionsMap, constraintData]) => {
-          const newDocuments = documentDtos.map(dto =>
-            convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData)
-          );
-          const newLinks = linkDtos.map(dto => convertLinkInstanceDtoToModel(dto));
-          return [
-            new DocumentsAction.CreateChainSuccess({documents: newDocuments}),
-            new LinkInstancesAction.CreateMultipleSuccess({linkInstances: newLinks}),
-          ];
-        }),
+        mergeMap(
+          ([{documents: documentDtos, linkInstances: linkDtos}, collectionsMap, linkTypesMap, constraintData]) => {
+            const newDocuments = documentDtos.map(dto =>
+              convertDocumentDtoToModel(dto, collectionsMap[dto.collectionId]?.attributes, constraintData)
+            );
+            const newLinks = linkDtos.map(dto =>
+              convertLinkInstanceDtoToModel(dto, linkTypesMap[dto.linkTypeId]?.attributes, constraintData)
+            );
+            return [
+              new DocumentsAction.CreateChainSuccess({documents: newDocuments}),
+              new LinkInstancesAction.CreateMultipleSuccess({linkInstances: newLinks}),
+            ];
+          }
+        ),
         catchError(() => of(new NotificationsAction.Error({message: failureMessage})))
       );
     })
@@ -458,7 +476,7 @@ export class DocumentsEffects {
     mergeMap(([action, documents, collectionsMap, constraintData]) => {
       const {document} = action.payload;
       const originalDocument = documents[document.id];
-      const dataValues = convertDataResourceDataValues(
+      const dataValues = convertDataToDataValues(
         document.data,
         collectionsMap[document.collectionId]?.attributes,
         constraintData
@@ -503,7 +521,7 @@ export class DocumentsEffects {
       const attributes = collectionsMap[document.collectionId]?.attributes?.filter(attribute =>
         patchAttributeIds.includes(attribute.id)
       );
-      const dataValues = convertDataResourceDataValues(document.data, attributes, constraintData);
+      const dataValues = convertDataToDataValues(document.data, attributes, constraintData);
       const updateDocument = {...document, dataValues};
       return of(new DocumentsAction.PatchDataInternal({document: updateDocument, originalDocument}));
     })
@@ -575,24 +593,28 @@ export class DocumentsEffects {
     ofType<DocumentsAction.PatchMetaData>(DocumentsActionType.PATCH_META_DATA),
     mergeMap(action => {
       const {collectionId, documentId, metaData, onSuccess} = action.payload;
-
-      return this.documentService.patchDocumentMetaData(collectionId, documentId, metaData).pipe(
-        withLatestFrom(this.store$.pipe(select(selectDocumentById(documentId)))),
-        mergeMap(([dto, originalDocument]) => {
-          const document = {
-            ...convertDocumentDtoToModel(dto, [], null),
-            data: originalDocument.data,
-            dataValues: originalDocument.dataValues,
-          };
-          return [
-            new DocumentsAction.UpdateSuccess({
-              document,
-              originalDocument,
+      return this.store$.pipe(
+        select(selectDocumentById(documentId)),
+        take(1),
+        mergeMap(originalDocument => {
+          return this.documentService.patchDocumentMetaData(collectionId, documentId, metaData).pipe(
+            mergeMap(dto => {
+              const document = {
+                ...convertDocumentDtoToModel(dto, [], null),
+                data: originalDocument.data,
+                dataValues: originalDocument.dataValues,
+              };
+              return [
+                new DocumentsAction.UpdateSuccess({
+                  document,
+                  originalDocument,
+                }),
+                ...createCallbackActions(onSuccess, document),
+              ];
             }),
-            ...createCallbackActions(onSuccess, document),
-          ];
-        }),
-        catchError(error => of(new DocumentsAction.UpdateFailure({error})))
+            catchError(error => of(new DocumentsAction.UpdateFailure({error})))
+          );
+        })
       );
     })
   );
@@ -602,23 +624,66 @@ export class DocumentsEffects {
     ofType<DocumentsAction.UpdateMetaData>(DocumentsActionType.UPDATE_META_DATA),
     mergeMap(action => {
       const {document} = action.payload;
-
-      const documentDto = convertDocumentModelToDto(document);
-      return this.documentService.updateDocumentMetaData(documentDto).pipe(
-        withLatestFrom(this.store$.pipe(select(selectDocumentById(document.id)))),
-        map(
-          ([dto, originalDocument]) =>
-            new DocumentsAction.UpdateSuccess({
-              document: {
-                ...convertDocumentDtoToModel(dto, [], null),
-                data: originalDocument.data,
-                dataValues: originalDocument.dataValues,
-              },
-              originalDocument,
-            })
-        ),
-        catchError(error => of(new DocumentsAction.UpdateFailure({error})))
+      return this.store$.pipe(
+        select(selectDocumentById(document.id)),
+        take(1),
+        mergeMap(originalDocument => {
+          const documentDto = convertDocumentModelToDto(document);
+          return this.documentService.updateDocumentMetaData(documentDto).pipe(
+            map(
+              dto =>
+                new DocumentsAction.UpdateSuccess({
+                  document: {
+                    ...convertDocumentDtoToModel(dto, [], null),
+                    data: originalDocument.data,
+                    dataValues: originalDocument.dataValues,
+                  },
+                  originalDocument,
+                })
+            ),
+            catchError(error => of(new DocumentsAction.UpdateFailure({error})))
+          );
+        })
       );
+    })
+  );
+
+  @Effect()
+  public updateDataValues$: Observable<Action> = this.actions$.pipe(
+    ofType<DocumentsAction.TransformDataValues>(DocumentsActionType.TRANSFORM_DATA_VALUES),
+    withLatestFrom(
+      this.store$.pipe(select(selectAllDocuments)),
+      this.store$.pipe(select(selectCollectionsDictionary)),
+      this.store$.pipe(select(selectConstraintData))
+    ),
+    map(([action, documents, collectionsMap, constraintData]) => {
+      const {collectionAttributesMap} = action.payload;
+      const documentsByCollection = groupDataResourceByResource(documents, AttributesResourceType.Collection);
+      const updatedDocuments = [];
+      if (collectionAttributesMap) {
+        Object.keys(collectionAttributesMap).forEach(collectionId => {
+          const collection = collectionsMap[collectionId];
+          const attributesIds = collectionAttributesMap[collectionId];
+          const attributes = attributesIds?.length
+            ? collection?.attributes.filter(attribute => attributesIds.includes(attribute.id))
+            : collection?.attributes;
+          updatedDocuments.push(
+            ...convertDataResourcesDataValues(documentsByCollection[collectionId], attributes, constraintData)
+          );
+        });
+      } else {
+        objectValues(collectionsMap).forEach(collection => {
+          updatedDocuments.push(
+            ...convertDataResourcesDataValues(
+              documentsByCollection[collection.id],
+              collection.attributes,
+              constraintData
+            )
+          );
+        });
+      }
+
+      return new DocumentsAction.UpdateDataValues({documents: updatedDocuments});
     })
   );
 

@@ -19,8 +19,16 @@
 
 import {LinkInstanceDto} from '../../dto';
 import {LinkInstance} from './link.instance';
+import {convertDataToDataValues} from '../../../shared/utils/data-resource.utils';
+import {Attribute} from '../collections/collection';
+import {ConstraintData} from '../../model/data/constraint';
 
-export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto, correlationId?: string): LinkInstance {
+export function convertLinkInstanceDtoToModel(
+  dto: LinkInstanceDto,
+  attributes: Attribute[],
+  constraintData: ConstraintData,
+  correlationId?: string
+): LinkInstance {
   const data = {...dto.data};
   delete data['_id'];
 
@@ -30,6 +38,7 @@ export function convertLinkInstanceDtoToModel(dto: LinkInstanceDto, correlationI
     linkTypeId: dto.linkTypeId,
     documentIds: dto.documentIds,
     data,
+    dataValues: convertDataToDataValues(data, attributes, constraintData),
     dataVersion: dto.dataVersion,
     creationDate: new Date(dto.creationDate),
     updateDate: dto.updateDate ? new Date(dto.updateDate) : null,

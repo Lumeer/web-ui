@@ -46,6 +46,7 @@ import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {deepObjectsEquals} from '../../../../../../shared/utils/common.utils';
+import {DataValue} from '../../../../../../core/model/data-value';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -203,14 +204,14 @@ export class WorkflowTablesService {
   public onRowNewValue(
     row: TableRow,
     column: TableColumn,
-    value: any,
+    dataValue: DataValue,
     action: DataInputSaveAction,
     cellType: TableCellType
   ) {
     if (row.documentId) {
-      this.dataService.saveRowNewValue(row, column, value);
+      this.dataService.saveRowNewValue(row, column, dataValue);
     } else if (cellType === TableCellType.NewRow) {
-      this.dataService.createNewDocument(<TableNewRow>row, column, value);
+      this.dataService.createNewDocument(<TableNewRow>row, column, dataValue);
     }
 
     const cell: TableCell = {

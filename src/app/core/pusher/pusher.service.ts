@@ -544,11 +544,20 @@ export class PusherService implements OnDestroy {
   private bindLinkInstanceEvents() {
     this.channel.bind('LinkInstance:create', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$.dispatch(
-          new LinkInstancesAction.CreateSuccess({
-            linkInstance: convertLinkInstanceDtoToModel(data.object, data.correlationId),
-          })
-        );
+        combineLatest([
+          this.store$.pipe(select(selectLinkTypesDictionary)),
+          this.store$.pipe(select(selectConstraintData)),
+        ])
+          .pipe(take(1))
+          .subscribe(([linkTypesMap, constraintData]) => {
+            const linkInstance = convertLinkInstanceDtoToModel(
+              data.object,
+              linkTypesMap[data.object.linkTypeId]?.attributes,
+              constraintData,
+              data.correlationId
+            );
+            this.store$.dispatch(new LinkInstancesAction.CreateSuccess({linkInstance}));
+          });
       }
     });
     this.channel.bind('LinkInstance:create:ALT', data => {
@@ -558,12 +567,24 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('LinkInstance:update', data => {
       if (this.isCurrentWorkspace(data)) {
-        const linkInstance = convertLinkInstanceDtoToModel(data.object, data.correlationId);
         this.store$
-          .pipe(select(selectLinkInstanceById(linkInstance.id)), take(1))
-          .subscribe(originalLinkInstance =>
-            this.store$.dispatch(new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}))
-          );
+          .pipe(
+            select(selectLinkInstanceById(data.object.id)),
+            take(1),
+            withLatestFrom(
+              this.store$.pipe(select(selectLinkTypesDictionary)),
+              this.store$.pipe(select(selectConstraintData))
+            )
+          )
+          .subscribe(([originalLinkInstance, linkTypesMap, constraintData]) => {
+            const linkInstance = convertLinkInstanceDtoToModel(
+              data.object,
+              linkTypesMap[data.object.linkTypeId]?.attributes,
+              constraintData,
+              data.correlationId
+            );
+            this.store$.dispatch(new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}));
+          });
       }
     });
     this.channel.bind('LinkInstance:update:ALT', data => {

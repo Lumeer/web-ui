@@ -99,7 +99,7 @@ export class TableRowComponent implements OnChanges {
   public onDoubleClick = new EventEmitter<string>();
 
   @Output()
-  public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
+  public newValue = new EventEmitter<{columnId: string; dataValue: DataValue; action: DataInputSaveAction}>();
 
   @Output()
   public linkedDocumentSelect = new EventEmitter<DocumentModel>();
@@ -175,9 +175,9 @@ export class TableRowComponent implements OnChanges {
   private columnValue(column: TableColumn): DataValue {
     if (column?.attribute) {
       if (column?.collectionId) {
-        return this.row.data?.[column.id];
+        return this.row.dataValues?.[column.id];
       } else if (column?.linkTypeId) {
-        return this.row.data?.[column.id];
+        return this.row.dataValues?.[column.id];
       }
     }
     return null;
@@ -206,7 +206,7 @@ export class TableRowComponent implements OnChanges {
     ) {
       this.onDataInputCancel(column, data.action);
     } else {
-      this.newValue.emit({columnId: column.id, value, action: data.action});
+      this.newValue.emit({columnId: column.id, dataValue: data.dataValue, action: data.action});
     }
   }
 

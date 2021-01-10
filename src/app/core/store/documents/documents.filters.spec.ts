@@ -37,7 +37,10 @@ import {UserConstraint} from '../../model/constraint/user.constraint';
 import {ConditionType} from '../../model/attribute-filter';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
 import {objectsByIdMap} from '../../../shared/utils/common.utils';
-import {convertDataResourceDataValues} from '../../../shared/utils/data-resource.utils';
+import {
+  convertDataResourcesDataValuesByResource,
+  convertDataToDataValues,
+} from '../../../shared/utils/data-resource.utils';
 import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 
 const collections: Collection[] = [
@@ -80,7 +83,7 @@ const constraintData: ConstraintData = {
   currentUser: turingUser,
 };
 
-const documents: DocumentModel[] = convertDataResourcesDataValues(
+const documents: DocumentModel[] = convertDataResourcesDataValuesByResource(
   [
     {
       collectionId: 'c1',
@@ -182,7 +185,7 @@ const linkTypes: LinkType[] = [
   },
 ];
 
-const linkInstances: LinkInstance[] = convertDataResourcesDataValues(
+const linkInstances: LinkInstance[] = convertDataResourcesDataValuesByResource(
   [
     {
       id: 'li1',
@@ -200,25 +203,6 @@ const linkInstances: LinkInstance[] = convertDataResourcesDataValues(
   linkTypes,
   constraintData
 );
-
-function convertDataResourcesDataValues<T extends DataResource>(
-  dataResources: T[],
-  attributesResources: AttributesResource[],
-  constraintData: ConstraintData,
-  type = AttributesResourceType.Collection
-): T[] {
-  const attributesResourcesMap = objectsByIdMap(attributesResources);
-  return dataResources.map(dataResource => {
-    const resource =
-      type === AttributesResourceType.Collection
-        ? attributesResourcesMap[(<any>dataResource).collectionId]
-        : attributesResourcesMap[(<any>dataResource).linkTypeId];
-    return {
-      ...dataResource,
-      dataValues: convertDataResourceDataValues(dataResource.data, resource?.attributes, constraintData),
-    };
-  });
-}
 
 describe('Document filters', () => {
   it('should filter empty documents by undefined query', () => {
@@ -292,7 +276,7 @@ describe('Document filters', () => {
   it('should filter by attribute value with userEmail() function and not existing user', () => {
     expect(
       filterDocumentsAndLinksByQuery(
-        convertDataResourcesDataValues(documents, collections, {...constraintData, currentUser: null}),
+        convertDataResourcesDataValuesByResource(documents, collections, {...constraintData, currentUser: null}),
         collections,
         [],
         [],
@@ -376,7 +360,7 @@ describe('Document filters', () => {
   it('should filter two documents by attribute value with userEmail() function', () => {
     expect(
       filterDocumentsAndLinksByQuery(
-        convertDataResourcesDataValues(documents, collections, {...constraintData, currentUser: musicUser}),
+        convertDataResourcesDataValuesByResource(documents, collections, {...constraintData, currentUser: musicUser}),
         collections,
         [],
         [],
