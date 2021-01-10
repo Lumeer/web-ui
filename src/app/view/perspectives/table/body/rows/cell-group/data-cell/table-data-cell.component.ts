@@ -329,10 +329,10 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private getValue(): DataValue {
     if (this.document?.dataValues) {
-      return this.document.dataValues[this.column.attributeIds[0]];
+      return this.document.dataValues[this.column.attributeIds[0]] || new UnknownDataValue('');
     }
     if (this.linkInstance?.dataValues) {
-      return this.linkInstance.dataValues[this.column.attributeIds[0]];
+      return this.linkInstance.dataValues[this.column.attributeIds[0]] || new UnknownDataValue('');
     }
     return new UnknownDataValue('');
   }
