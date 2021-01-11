@@ -243,7 +243,7 @@ describe('Table perspective :: Constraints', () => {
       .first()
       .should('have.value', 'Name')
       .trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-change-constraint"]').click();
+    cy.get('[data-test="table-column-menu-change-constraint"]').click({force: true});
 
     cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
@@ -269,7 +269,7 @@ describe('Table perspective :: Constraints', () => {
       .eq(1)
       .should('have.value', 'Active')
       .trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-change-constraint"]').click();
+    cy.get('[data-test="table-column-menu-change-constraint"]').click({force: true});
 
     cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
@@ -297,7 +297,7 @@ describe('Table perspective :: Constraints', () => {
       .eq(2)
       .should('have.value', 'First flight')
       .trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-change-constraint"]').click();
+    cy.get('[data-test="table-column-menu-change-constraint"]').click({force: true});
 
     cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');
@@ -365,7 +365,7 @@ describe('Table perspective :: Constraints', () => {
       .eq(3)
       .should('have.value', 'Number of flights')
       .trigger('contextmenu', {force: true});
-    cy.get('[data-test="table-column-menu-change-constraint"]').click();
+    cy.get('[data-test="table-column-menu-change-constraint"]').click({force: true});
 
     cy.waitForModalShown();
     cy.get('[data-test="attribute-type-dialog"]').should('be.visible');

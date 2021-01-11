@@ -51,13 +51,3 @@ export function mergeLinkInstances(linkInstancesA: LinkInstance[], linkInstances
 export function sortLinkInstances(linkInstances: LinkInstance[]): LinkInstance[] {
   return [...(linkInstances || [])].sort((a, b) => a.id.localeCompare(b.id));
 }
-
-export function groupLinkInstancesByLinkTypes(linkInstances: LinkInstance[]): Record<string, LinkInstance[]> {
-  return (linkInstances || []).reduce((map, document) => {
-    if (!map[document.linkTypeId]) {
-      map[document.linkTypeId] = [];
-    }
-    map[document.linkTypeId].push(document);
-    return map;
-  }, {});
-}

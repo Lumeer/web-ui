@@ -35,7 +35,7 @@ import {
 import {BehaviorSubject, Subject, Subscription} from 'rxjs';
 import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
 import {CdkScrollable, ScrollDispatcher} from '@angular/cdk/overlay';
-import {filter, throttle, throttleTime} from 'rxjs/operators';
+import {filter, throttleTime} from 'rxjs/operators';
 import {TableNewRow, TableRow} from './model/table-row';
 import {HiddenInputComponent} from '../input/hidden-input/hidden-input.component';
 import {TableRowComponent} from './content/row/table-row.component';
@@ -46,6 +46,7 @@ import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn, TableContextMenuItem} from './model/table-column';
 import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
+import {DataValue} from '../../core/model/data-value';
 
 @Component({
   selector: 'lmr-table',
@@ -106,7 +107,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public rowNewValue = new EventEmitter<{
     row: TableRow;
     column: TableColumn;
-    value: any;
+    dataValue: DataValue;
     action: DataInputSaveAction;
     cellType: TableCellType;
   }>();
@@ -226,14 +227,17 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     return row.id;
   }
 
-  public onBodyRowNewValue(row: TableRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
+  public onBodyRowNewValue(row: TableRow, data: {columnId: string; dataValue: DataValue; action: DataInputSaveAction}) {
     const column = this.tableModel?.columns?.find(col => col.id === data.columnId);
     if (row && column) {
       this.rowNewValue.emit({...data, row, column, cellType: TableCellType.Body});
     }
   }
 
-  public onNewRowNewValue(row: TableNewRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
+  public onNewRowNewValue(
+    row: TableNewRow,
+    data: {columnId: string; dataValue: DataValue; action: DataInputSaveAction}
+  ) {
     const column = this.tableModel?.columns?.find(col => col.id === data.columnId);
     if (row && column) {
       this.rowNewValue.emit({...data, row, column, cellType: TableCellType.NewRow});

@@ -54,12 +54,7 @@ export class StateListConstraintPipe implements PipeTransform {
       return {constraint: new SelectConstraint(selectConfig), constraintData};
     } else if (constraint?.type === ConstraintType.User) {
       const userConfig = <UserConstraintConfig>{...constraint.config, multi: true};
-      const userDataValues = createSuggestionDataValues<UserDataValue>(
-        dataResources,
-        attributeId,
-        constraint,
-        constraintData
-      );
+      const userDataValues = createSuggestionDataValues<UserDataValue>(dataResources, attributeId, constraint);
       const users = [...(constraintData?.users || [])];
       userDataValues.forEach(dataValue => {
         users.push(...(dataValue?.users || []).filter(user => !users.some(u => u.email === user.email)));
@@ -70,15 +65,12 @@ export class StateListConstraintPipe implements PipeTransform {
       return {constraint: new BooleanConstraint(), constraintData};
     }
 
-    const options: SelectConstraintOption[] = createSuggestionDataValues(
-      dataResources,
-      attributeId,
-      constraint,
-      constraintData
-    ).map(value => ({
-      value: value.serialize(),
-      displayValue: value.format(),
-    }));
+    const options: SelectConstraintOption[] = createSuggestionDataValues(dataResources, attributeId, constraint).map(
+      value => ({
+        value: value.serialize(),
+        displayValue: value.format(),
+      })
+    );
 
     return {constraint: new SelectConstraint({displayValues: true, multi: true, options}), constraintData};
   }

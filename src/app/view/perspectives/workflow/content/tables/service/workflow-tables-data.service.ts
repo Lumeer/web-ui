@@ -78,7 +78,12 @@ import {
   queryAttributePermissions,
 } from '../../../../../../core/model/query-attribute';
 import {WorkflowTable} from '../../../model/workflow-table';
-import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
+import {
+  AttributesResource,
+  AttributesResourceType,
+  DataResourceData,
+  DataResourceDataValues,
+} from '../../../../../../core/model/resource';
 import {queryStemsAreSame} from '../../../../../../core/store/navigation/query/query.util';
 import {deepObjectsEquals, isArray, objectsByIdMap} from '../../../../../../shared/utils/common.utils';
 import {groupTableColumns, numberOfOtherColumnsBefore} from '../../../../../../shared/table/model/table-utils';
@@ -87,7 +92,7 @@ import {
   selectWorkflowSelectedDocumentId,
 } from '../../../../../../core/store/workflows/workflow.state';
 import {WorkflowsAction} from '../../../../../../core/store/workflows/workflows.action';
-import {generateDocumentDataByResourceQuery} from '../../../../../../core/store/documents/document.utils';
+import {generateDocumentDataValuesByResourceQuery} from '../../../../../../core/store/documents/document.utils';
 import {
   computeTableHeight,
   createAggregatedLinkingDocumentsIds,
@@ -96,10 +101,10 @@ import {
   createEmptyNewRow,
   createLinkingCollectionId,
   createLinkTypeData,
-  createPendingColumnValuesByRow,
+  createPendingColumnDataValuesByRow,
   createRowData,
   createRowObjectsFromAggregated,
-  createRowValues,
+  mapRowDataValues,
   isWorkflowStemConfigGroupedByResourceType,
   PendingRowUpdate,
   sortWorkflowTables,
@@ -113,12 +118,14 @@ import {selectDocumentById} from '../../../../../../core/store/documents/documen
 import {CopyValueService} from '../../../../../../core/service/copy-value.service';
 import {selectViewCursor} from '../../../../../../core/store/navigation/navigation.state';
 import {selectCurrentView} from '../../../../../../core/store/views/views.state';
+import {DataValue} from '../../../../../../core/model/data-value';
 
 @Injectable()
 export class WorkflowTablesDataService {
   private pendingColumnValues: Record<string, PendingRowUpdate[]> = {};
   private pendingCorrelationIds: string[] = [];
   private isViewActive: boolean;
+  private initialCellSelected: boolean;
   private dataAggregator: DataAggregator;
 
   constructor(
@@ -310,7 +317,7 @@ export class WorkflowTablesDataService {
         );
         const isGroupedByLink = isWorkflowStemConfigGroupedByResourceType(stemConfig, AttributesResourceType.LinkType);
         const linkingCollectionId = createLinkingCollectionId(stemConfig, collections, linkTypesMap);
-        const newRowData = this.createNewRowData(collection, linkType, columnIdsMap, linkColumnIdsMap);
+        const newRowData = this.createNewRowDataValues(collection, linkType, columnIdsMap, linkColumnIdsMap);
 
         const tables = [];
         if (aggregatedData.items.length) {
@@ -330,8 +337,7 @@ export class WorkflowTablesDataService {
                   childItem,
                   collectionsMap,
                   linkInstancesMap,
-                  viewSettings,
-                  constraintData
+                  viewSettings
                 ),
                 linkColumnIdsMap,
                 columnIdsMap,
@@ -341,8 +347,8 @@ export class WorkflowTablesDataService {
 
               const newRowDataAggregated = {
                 ...newRowData,
-                ...createRowValues(isGroupedByCollection ? {[attribute.id]: title} : {}, columnIdsMap),
-                ...createRowValues(isGroupedByLink ? {[attribute.id]: title} : {}, linkColumnIdsMap),
+                ...mapRowDataValues(isGroupedByCollection ? {[attribute.id]: title} : {}, columnIdsMap),
+                ...mapRowDataValues(isGroupedByLink ? {[attribute.id]: title} : {}, linkColumnIdsMap),
               };
 
               const tableSettings = stemTableSettings?.find(tab => tab.value === title);
@@ -363,7 +369,13 @@ export class WorkflowTablesDataService {
                 minHeight: computeTableHeight(Math.min(rows.length, 1), newRow),
                 height: tableSettings?.height || computeTableHeight(Math.min(rows.length, 5), newRow),
                 width: columnsWidth + 1, // + 1 for border
-                newRow: newRow ? {...newRow, tableId, data: newRow.data || newRowDataAggregated} : undefined,
+                newRow: newRow
+                  ? {
+                      ...newRow,
+                      tableId,
+                      dataValues: newRow.dataValues || newRowDataAggregated,
+                    }
+                  : undefined,
                 newRowData,
                 linkingDocumentIds:
                   !linkingCollectionId && createAggregatedLinkingDocumentsIds(aggregatedDataItem, childItem),
@@ -398,7 +410,7 @@ export class WorkflowTablesDataService {
             minHeight: height,
             height,
             width: columnsWidth + 1, // + 1 for border
-            newRow: newRow ? {...newRow, tableId, data: newRow.data || newRowData} : undefined,
+            newRow: newRow ? {...newRow, tableId, dataValues: newRow.dataValues || newRowData} : undefined,
             newRowData,
             linkingCollectionId,
           };
@@ -414,20 +426,20 @@ export class WorkflowTablesDataService {
     );
   }
 
-  private createNewRowData(
+  private createNewRowDataValues(
     collection: Collection,
     linkType: LinkType,
     collectionColumnsMap: Record<string, string>,
     linkColumnsMap: Record<string, string>
-  ): Record<string, any> {
+  ): DataResourceDataValues {
     const query = this.stateService.query;
     const constraintData = this.stateService.constraintData;
-    const documentData = generateDocumentDataByResourceQuery(collection, query, constraintData);
-    const linkData = linkType ? generateDocumentDataByResourceQuery(linkType, query, constraintData) : {};
+    const documentDataValues = generateDocumentDataValuesByResourceQuery(collection, query, constraintData);
+    const linkDataValues = linkType ? generateDocumentDataValuesByResourceQuery(linkType, query, constraintData) : {};
 
     return {
-      ...createRowValues(documentData, collectionColumnsMap),
-      ...createRowValues(linkData, linkColumnsMap),
+      ...mapRowDataValues(documentDataValues, collectionColumnsMap),
+      ...mapRowDataValues(linkDataValues, linkColumnsMap),
     };
   }
 
@@ -677,14 +689,14 @@ export class WorkflowTablesDataService {
       {}
     );
 
-    const pendingColumnValuesByRow = createPendingColumnValuesByRow(this.pendingColumnValues);
+    const pendingColumnValuesByRow = createPendingColumnDataValuesByRow(this.pendingColumnValues);
 
     const rows = data.map(object => {
       const objectId = object.linkInstance?.id || object.document.id;
       const objectCorrelationId = object.linkInstance?.correlationId || object.document.correlationId;
       const currentRow = rowsMap[objectCorrelationId || objectId] || rowsMap[objectId];
-      const documentData = createRowValues(object.document.data, columnIdsMap);
-      const linkData = createRowValues(object.linkInstance?.data, linkColumnIdsMap);
+      const documentData = mapRowDataValues(object.document.dataValues, columnIdsMap);
+      const linkData = mapRowDataValues(object.linkInstance?.dataValues, linkColumnIdsMap);
       const isNewlyCreatedRow = this.pendingCorrelationIds.includes(objectCorrelationId);
       const pendingData = isNewlyCreatedRow
         ? pendingColumnValuesByRow[objectCorrelationId]
@@ -693,7 +705,7 @@ export class WorkflowTablesDataService {
       const row: TableRow = {
         id,
         tableId,
-        data: {...documentData, ...linkData, ...pendingData},
+        dataValues: {...documentData, ...linkData, ...pendingData},
         documentId: object.document.id,
         linkInstanceId: object.linkInstance?.id,
         height: currentRow?.height || TABLE_ROW_HEIGHT,
@@ -714,7 +726,7 @@ export class WorkflowTablesDataService {
       if (newRowSynced) {
         newRow = createEmptyNewRow(tableId);
       } else if (currentNewRow) {
-        newRow = {...currentNewRow, data: currentNewRow?.creating ? currentNewRow.data : null};
+        newRow = {...currentNewRow, dataValues: currentNewRow?.creating ? currentNewRow.dataValues : null};
       } else {
         newRow = createEmptyNewRow(tableId);
       }
@@ -863,16 +875,16 @@ export class WorkflowTablesDataService {
     for (const update of this.pendingColumnValues[column.id] || []) {
       if (update.row) {
         const freshRow = this.stateService?.findTableRow(update.row.tableId, update.row.id) || update.row;
-        this.patchColumnData(freshRow, newColumn, update.value);
+        this.patchColumnData(freshRow, newColumn, update.dataValue);
         deleteRows.push(freshRow.id);
       } else if (update.newRow) {
         const rowInBody = this.stateService?.findTableRow(update.newRow.tableId, update.newRow.id);
         if (rowInBody) {
-          this.patchColumnData(rowInBody, newColumn, update.value);
+          this.patchColumnData(rowInBody, newColumn, update.dataValue);
           deleteRows.push(rowInBody.id);
         } else {
           const freshRow = this.stateService?.findTable(update.newRow.tableId)?.newRow || update.newRow;
-          this.createDocument(freshRow, newColumn, update.value);
+          this.createDocument(freshRow, newColumn, update.dataValue);
         }
       }
     }
@@ -970,12 +982,12 @@ export class WorkflowTablesDataService {
     );
   }
 
-  public saveRowNewValue(row: TableRow, column: TableColumn, value: any) {
+  public saveRowNewValue(row: TableRow, column: TableColumn, dataValue: DataValue) {
     if (column.attribute) {
-      this.patchColumnData(row, column, value);
+      this.patchColumnData(row, column, dataValue);
     } else {
-      this.stateService.setRowValue(row, column, value);
-      this.setPendingRowValue(row, column, value);
+      this.stateService.setRowValue(row, column, dataValue);
+      this.setPendingRowValue(row, column, dataValue);
 
       if (!this.isColumnCreating(column)) {
         this.createAttribute(column, column.name);
@@ -983,12 +995,12 @@ export class WorkflowTablesDataService {
     }
   }
 
-  public createNewDocument(row: TableNewRow, column: TableColumn, value: any) {
+  public createNewDocument(row: TableNewRow, column: TableColumn, dataValue: DataValue) {
     if (column.attribute) {
-      this.createDocument(row, column, value);
+      this.createDocument(row, column, dataValue);
     } else {
-      this.stateService.setNewRowValue(column, value);
-      this.setPendingNewRowValue(row, column, value);
+      this.stateService.setNewRowValue(column, dataValue);
+      this.setPendingNewRowValue(row, column, dataValue);
 
       if (!this.isColumnCreating(column)) {
         this.createAttribute(column, column.name);
@@ -996,18 +1008,18 @@ export class WorkflowTablesDataService {
     }
   }
 
-  private createDocument(row: TableNewRow, column: TableColumn, value: any) {
+  private createDocument(row: TableNewRow, column: TableColumn, dataValue: DataValue) {
     if (this.isRowCreating(row)) {
-      this.stateService.setNewRowValue(column, value);
-      this.setPendingNewRowValue(row, column, value);
+      this.stateService.setNewRowValue(column, dataValue);
+      this.setPendingNewRowValue(row, column, dataValue);
       return;
     }
 
-    this.stateService.startRowCreatingWithValue(row, column, value);
+    this.stateService.startRowCreatingWithValue(row, column, dataValue);
     this.pendingCorrelationIds.push(row.correlationId || row.id);
 
     const table = this.stateService.findTable(row.tableId);
-    const {data, linkData} = createRowData(row, table?.columns || [], this.pendingColumnValues, column, value);
+    const {data, linkData} = createRowData(row, table?.columns || [], this.pendingColumnValues, column, dataValue);
     const document: DocumentModel = {
       correlationId: row.id,
       collectionId: table.collectionId,
@@ -1058,8 +1070,8 @@ export class WorkflowTablesDataService {
         );
       });
     } else {
-      const newRowData = {...row.data, ...this.mapDocumentData(table?.columns || [], document)};
-      this.stateService.startRowCreating(row, newRowData, document.id);
+      const newRowDataValues = {...row.dataValues, ...this.mapDocumentDataValues(table?.columns || [], document)};
+      this.stateService.startRowCreating(row, newRowDataValues, document.id);
       const newRow = <TableNewRow>row;
       const linkInstance: LinkInstance = {
         data: linkData,
@@ -1081,16 +1093,16 @@ export class WorkflowTablesDataService {
     this.checkSelectedOnRowUpdated(row, documentId, linkInstanceId);
   }
 
-  private mapDocumentData(columns: TableColumn[], document: DocumentModel): Record<string, any> {
+  private mapDocumentDataValues(columns: TableColumn[], document: DocumentModel): DataResourceDataValues {
     return columns.reduce((data, column) => {
       if (column.collectionId && column.attribute) {
-        data[column.id] = document.data?.[column.attribute.id];
+        data[column.id] = document.dataValues?.[column.attribute.id];
       }
       return data;
     }, {});
   }
 
-  private onRowCreated(row: TableNewRow, data: Record<string, any>, documentId: string, linkInstanceId?: string) {
+  private onRowCreated(row: TableNewRow, data: DataResourceData, documentId: string, linkInstanceId?: string) {
     const columns = this.stateService.findTableColumns(row.tableId);
     const patchData: Record<string, any> = {};
     const patchLinkData: Record<string, any> = {};
@@ -1107,10 +1119,10 @@ export class WorkflowTablesDataService {
         if (!usedAttributeIds.includes(column.attribute.id)) {
           if (column.collectionId) {
             collectionId = column.collectionId;
-            patchData[column.attribute.id] = columnUpdate.value;
+            patchData[column.attribute.id] = columnUpdate.dataValue;
           } else if (column.linkTypeId) {
             linkTypeId = column.linkTypeId;
-            patchLinkData[column.attribute.id] = columnUpdate.value;
+            patchLinkData[column.attribute.id] = columnUpdate.dataValue;
           }
         }
       }
@@ -1138,28 +1150,28 @@ export class WorkflowTablesDataService {
     }
   }
 
-  private setPendingRowValue(row: TableRow, column: TableColumn, value: any) {
+  private setPendingRowValue(row: TableRow, column: TableColumn, dataValue: DataValue) {
     this.pendingColumnValues[column.id] = this.pendingColumnValues[column.id] || [];
     const rowUpdate = this.pendingColumnValues[column.id].find(update => update.row?.id === row.id);
     if (rowUpdate) {
-      rowUpdate.value = value;
+      rowUpdate.dataValue = dataValue;
     } else {
-      this.pendingColumnValues[column.id].push({row, value});
+      this.pendingColumnValues[column.id].push({row, dataValue});
     }
   }
 
-  private setPendingNewRowValue(newRow: TableNewRow, column: TableColumn, value: any) {
+  private setPendingNewRowValue(newRow: TableNewRow, column: TableColumn, dataValue: DataValue) {
     this.pendingColumnValues[column.id] = this.pendingColumnValues[column.id] || [];
     const rowUpdate = this.pendingColumnValues[column.id].find(update => update.newRow?.id === newRow.id);
     if (rowUpdate) {
-      rowUpdate.value = value;
+      rowUpdate.dataValue = dataValue;
     } else {
-      this.pendingColumnValues[column.id].push({newRow, value});
+      this.pendingColumnValues[column.id].push({newRow, dataValue});
     }
   }
 
-  private patchColumnData(row: TableRow, column: TableColumn, value: any) {
-    const patchData = {[column.attribute.id]: value};
+  private patchColumnData(row: TableRow, column: TableColumn, dataValue: DataValue) {
+    const patchData = {[column.attribute.id]: dataValue?.serialize()};
     this.patchData(row, patchData, column.collectionId, column.linkTypeId);
   }
 
@@ -1269,12 +1281,15 @@ export class WorkflowTablesDataService {
 
   public copyNewRowValue(row: TableNewRow, column: TableColumn) {
     if (column) {
-      const value = row.data?.[column.id];
+      const value = row.dataValues?.[column.id]?.editValue();
       this.copyValueService.copy(value);
     }
   }
 
   private checkInitialSelection(tables: WorkflowTable[]) {
+    if (this.initialCellSelected) {
+      return;
+    }
     this.store$
       .pipe(
         select(selectViewCursor),
@@ -1285,7 +1300,8 @@ export class WorkflowTablesDataService {
         if (!this.stateService.isSelected() && !this.stateService.isEditing()) {
           const cell = viewCursorToWorkflowCell(cursor, tables);
           if (cell) {
-            this.stateService.setSelectedCell(cell);
+            this.initialCellSelected = true;
+            this.stateService.setSelectedCellWithDelay(cell);
           }
         }
       });

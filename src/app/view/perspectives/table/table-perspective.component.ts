@@ -84,6 +84,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
+import {isTablePartEmpty} from '../../../core/store/tables/table.utils';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -248,14 +249,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    const empty = !table.config.parts[0].columns.find(
-      column =>
-        [TableColumnType.COMPOUND, TableColumnType.HIDDEN].includes(column.type) &&
-        column.attributeIds &&
-        column.attributeIds.length > 0
-    );
-
-    if (empty) {
+    if (isTablePartEmpty(table.config.parts[0]) && !isTablePartEmpty(table.config.parts[2])) {
       this.store$.dispatch(
         new TablesAction.SwitchParts({
           cursor: {
@@ -272,7 +266,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         select(selectTable),
         filter(table => !!table?.config && table.id === DEFAULT_TABLE_ID),
-        switchMap(table => this.waitForDataLoaded$().pipe(map(() => table))),
+        switchMap(table => this.waitForDataLoaded$(null, 'here').pipe(map(() => table))),
         debounceTime(1000),
         withLatestFrom(this.selectCurrentDefaultViewConfig$())
       )
@@ -290,7 +284,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private waitForDataLoaded$(query?: Query): Observable<boolean> {
+  private waitForDataLoaded$(query?: Query, value?: string): Observable<boolean> {
     if (query) {
       this.fetchData(query);
     }

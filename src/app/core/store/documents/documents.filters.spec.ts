@@ -35,102 +35,20 @@ import {UserConstraintConditionValue} from '../../model/data/constraint-conditio
 import {ConstraintData} from '../../model/data/constraint';
 import {UserConstraint} from '../../model/constraint/user.constraint';
 import {ConditionType} from '../../model/attribute-filter';
-
-const documents: DocumentModel[] = [
-  {
-    collectionId: 'c1',
-    id: 'd1',
-    data: {
-      a1: 'IBM',
-      a2: 'Lala',
-      a100: '40',
-      a101: '2019-04-01T00:00:00.000+0000',
-    },
-  },
-  {
-    collectionId: 'c1',
-    id: 'd2',
-    data: {
-      a1: 'Red Hat',
-      a2: 'aturing@lumeer.io',
-      a100: '100',
-      a101: '2019-04-02T00:00:00.000+0000',
-    },
-    metaData: {
-      parentId: 'd1',
-    },
-  },
-  {
-    collectionId: 'c1',
-    id: 'd3',
-    data: {
-      a1: 'JBoss',
-      a2: 'Lala',
-      a100: '-10',
-      a101: '2019-04-10T00:00:00.000+0000',
-    },
-    metaData: {
-      parentId: 'd2',
-    },
-  },
-  {
-    collectionId: 'c1',
-    id: 'd4',
-    data: {
-      a1: 'SoftLayer',
-      a2: 'Lala',
-      a100: '55',
-    },
-    metaData: {
-      parentId: 'd1',
-    },
-  },
-  {
-    collectionId: 'c1',
-    id: 'd5',
-    data: {
-      a1: 'Microsoft',
-      a2: 'Lala',
-      a101: '2019-04-06T00:00:00.000+0000',
-    },
-  },
-  {
-    collectionId: 'c1',
-    id: 'd6',
-    data: {
-      a1: 'LinkedIn',
-      a2: 'Lala',
-      a100: '98',
-      a101: '2019-04-11T00:00:00.000+0000',
-    },
-    metaData: {
-      parentId: 'd5',
-    },
-  },
-  {
-    collectionId: 'c2',
-    id: 'd7',
-    data: {
-      a1: 'Red Hot Chili Peppers',
-      a2: 'music@lumeer.io',
-    },
-  },
-  {
-    collectionId: 'c2',
-    id: 'd8',
-    data: {
-      a1: 'Linkin Park',
-      a2: 'music@lumeer.io',
-    },
-  },
-];
+import {AttributesResource, AttributesResourceType, DataResource} from '../../model/resource';
+import {objectsByIdMap} from '../../../shared/utils/common.utils';
+import {
+  convertDataResourcesDataValuesByResource,
+  convertDataToDataValues,
+} from '../../../shared/utils/data-resource.utils';
+import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 
 const collections: Collection[] = [
   {
     id: 'c1',
     name: 'collection',
     attributes: [
-      {id: 'a1', name: 'a1'},
+      {id: 'a1', name: 'a1', constraint: new UnknownConstraint()},
       {id: 'a2', name: 'a2', constraint: new UserConstraint({} as UserConstraintConfig)},
       {id: 'a100', name: 'a100', constraint: new NumberConstraint({} as NumberConstraintConfig)},
       {id: 'a101', name: 'a101', constraint: new DateTimeConstraint({} as DateTimeConstraintConfig)},
@@ -140,7 +58,7 @@ const collections: Collection[] = [
     id: 'c2',
     name: 'collection',
     attributes: [
-      {id: 'a1', name: 'a1'},
+      {id: 'a1', name: 'a1', constraint: new UnknownConstraint()},
       {
         id: 'a2',
         name: 'a2',
@@ -160,6 +78,104 @@ const musicUser: User = {
   groupsMap: {},
 };
 
+const constraintData: ConstraintData = {
+  users: [turingUser, musicUser],
+  currentUser: turingUser,
+};
+
+const documents: DocumentModel[] = convertDataResourcesDataValuesByResource(
+  [
+    {
+      collectionId: 'c1',
+      id: 'd1',
+      data: {
+        a1: 'IBM',
+        a2: 'Lala',
+        a100: '40',
+        a101: '2019-04-01T00:00:00.000+0000',
+      },
+    },
+    {
+      collectionId: 'c1',
+      id: 'd2',
+      data: {
+        a1: 'Red Hat',
+        a2: 'aturing@lumeer.io',
+        a100: '100',
+        a101: '2019-04-02T00:00:00.000+0000',
+      },
+      metaData: {
+        parentId: 'd1',
+      },
+    },
+    {
+      collectionId: 'c1',
+      id: 'd3',
+      data: {
+        a1: 'JBoss',
+        a2: 'Lala',
+        a100: '-10',
+        a101: '2019-04-10T00:00:00.000+0000',
+      },
+      metaData: {
+        parentId: 'd2',
+      },
+    },
+    {
+      collectionId: 'c1',
+      id: 'd4',
+      data: {
+        a1: 'SoftLayer',
+        a2: 'Lala',
+        a100: '55',
+      },
+      metaData: {
+        parentId: 'd1',
+      },
+    },
+    {
+      collectionId: 'c1',
+      id: 'd5',
+      data: {
+        a1: 'Microsoft',
+        a2: 'Lala',
+        a101: '2019-04-06T00:00:00.000+0000',
+      },
+    },
+    {
+      collectionId: 'c1',
+      id: 'd6',
+      data: {
+        a1: 'LinkedIn',
+        a2: 'Lala',
+        a100: '98',
+        a101: '2019-04-11T00:00:00.000+0000',
+      },
+      metaData: {
+        parentId: 'd5',
+      },
+    },
+    {
+      collectionId: 'c2',
+      id: 'd7',
+      data: {
+        a1: 'Red Hot Chili Peppers',
+        a2: 'music@lumeer.io',
+      },
+    },
+    {
+      collectionId: 'c2',
+      id: 'd8',
+      data: {
+        a1: 'Linkin Park',
+        a2: 'music@lumeer.io',
+      },
+    },
+  ],
+  collections,
+  constraintData
+);
+
 const linkTypes: LinkType[] = [
   {
     id: 'lt1',
@@ -169,25 +185,24 @@ const linkTypes: LinkType[] = [
   },
 ];
 
-const linkInstances: LinkInstance[] = [
-  {
-    id: 'li1',
-    linkTypeId: 'lt1',
-    documentIds: ['d2', 'd7'],
-    data: {},
-  },
-  {
-    id: 'li2',
-    linkTypeId: 'lt1',
-    documentIds: ['d3', 'd8'],
-    data: {},
-  },
-];
-
-const constraintData: ConstraintData = {
-  users: [turingUser, musicUser],
-  currentUser: turingUser,
-};
+const linkInstances: LinkInstance[] = convertDataResourcesDataValuesByResource(
+  [
+    {
+      id: 'li1',
+      linkTypeId: 'lt1',
+      documentIds: ['d2', 'd7'],
+      data: {},
+    },
+    {
+      id: 'li2',
+      linkTypeId: 'lt1',
+      documentIds: ['d3', 'd8'],
+      data: {},
+    },
+  ],
+  linkTypes,
+  constraintData
+);
 
 describe('Document filters', () => {
   it('should filter empty documents by undefined query', () => {
@@ -253,8 +268,7 @@ describe('Document filters', () => {
           ],
         },
         {},
-        {},
-        constraintData
+        {}
       ).documents.map(document => document.id)
     ).toEqual(['d1']);
   });
@@ -262,7 +276,7 @@ describe('Document filters', () => {
   it('should filter by attribute value with userEmail() function and not existing user', () => {
     expect(
       filterDocumentsAndLinksByQuery(
-        documents,
+        convertDataResourcesDataValuesByResource(documents, collections, {...constraintData, currentUser: null}),
         collections,
         [],
         [],
@@ -282,8 +296,7 @@ describe('Document filters', () => {
           ],
         },
         {},
-        {},
-        {...constraintData, currentUser: null}
+        {}
       ).documents.map(document => document.id)
     ).toEqual([]);
   });
@@ -311,8 +324,7 @@ describe('Document filters', () => {
           ],
         },
         {},
-        {},
-        constraintData
+        {}
       ).documents.map(document => document.id)
     ).toEqual(['d2']);
   });
@@ -340,8 +352,7 @@ describe('Document filters', () => {
           ],
         },
         {},
-        {},
-        constraintData
+        {}
       ).documents.map(document => document.id)
     ).toEqual([]);
   });
@@ -349,7 +360,7 @@ describe('Document filters', () => {
   it('should filter two documents by attribute value with userEmail() function', () => {
     expect(
       filterDocumentsAndLinksByQuery(
-        documents,
+        convertDataResourcesDataValuesByResource(documents, collections, {...constraintData, currentUser: musicUser}),
         collections,
         [],
         [],
@@ -369,8 +380,7 @@ describe('Document filters', () => {
           ],
         },
         {},
-        {},
-        {...constraintData, currentUser: musicUser}
+        {}
       ).documents.map(document => document.id)
     ).toEqual(['d7', 'd8']);
   });
@@ -399,7 +409,6 @@ describe('Document filters', () => {
         },
         {},
         {},
-        constraintData,
         true
       ).documents.map(document => document.id)
     ).toEqual(['d2', 'd3']);
@@ -430,7 +439,6 @@ describe('Document filters', () => {
         },
         {},
         {},
-        constraintData,
         true
       ).documents.map(document => document.id)
     ).toEqual(['d7', 'd2', 'd8', 'd3']);
@@ -460,7 +468,6 @@ describe('Document filters', () => {
         },
         {},
         {},
-        undefined,
         true
       ).documents.map(document => document.id)
     ).toEqual(['d1', 'd2', 'd3', 'd4']);
@@ -490,7 +497,6 @@ describe('Document filters', () => {
         },
         {},
         {},
-        undefined,
         true
       ).documents.map(document => document.id)
     ).toEqual(['d2', 'd3']);
@@ -528,48 +534,25 @@ describe('Document filters', () => {
 
   it('should filter children together with parent document by fulltext', () => {
     expect(
-      filterDocumentsAndLinksByQuery(
-        documents,
-        collections,
-        [],
-        [],
-        {fulltexts: ['IBM']},
-        {},
-        {},
-        undefined,
-        true
-      ).documents.map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['IBM']}, {}, {}, true).documents.map(
+        document => document.id
+      )
     ).toEqual(['d1', 'd2', 'd3', 'd4']);
   });
 
   it('should filter only matching document without children by fulltext', () => {
     expect(
-      filterDocumentsAndLinksByQuery(
-        documents,
-        collections,
-        [],
-        [],
-        {fulltexts: ['red']},
-        {},
-        {},
-        undefined
-      ).documents.map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['red']}, {}, {}).documents.map(
+        document => document.id
+      )
     ).toEqual(['d2', 'd7']);
   });
 
   it('should filter children together with nested parent document by fulltext', () => {
     expect(
-      filterDocumentsAndLinksByQuery(
-        documents,
-        collections,
-        [],
-        [],
-        {fulltexts: ['red']},
-        {},
-        {},
-        undefined,
-        true
-      ).documents.map(document => document.id)
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], {fulltexts: ['red']}, {}, {}, true).documents.map(
+        document => document.id
+      )
     ).toEqual(['d2', 'd3', 'd7']);
   });
 
@@ -590,7 +573,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual(['d3']);
@@ -611,7 +594,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual(['d1', 'd2', 'd4', 'd5', 'd6']);
@@ -632,7 +615,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual(['d2', 'd4', 'd6']);
@@ -653,7 +636,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual(['d1', 'd3']);
@@ -676,7 +659,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual(['d5']);
@@ -697,7 +680,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual(['d1', 'd2', 'd3', 'd4', 'd6']);
@@ -718,7 +701,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual(['d1', 'd2']);
@@ -739,7 +722,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual(['d3', 'd5', 'd6']);
@@ -760,7 +743,7 @@ describe('Document filters', () => {
       ],
     };
     expect(
-      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, undefined, false).documents.map(
+      filterDocumentsAndLinksByQuery(documents, collections, [], [], query, {}, {}, false).documents.map(
         document => document.id
       )
     ).toEqual([]);

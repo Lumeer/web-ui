@@ -42,7 +42,7 @@ import {ConstraintData, ConstraintType} from '../../../../../core/model/data/con
 import {LinkType} from '../../../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../../../core/store/link-instances/link.instance';
 import {filterDocumentsAndLinksByStem} from '../../../../../core/store/documents/documents.filters';
-import {generateDocumentData, groupDocumentsByCollection} from '../../../../../core/store/documents/document.utils';
+import {generateDocumentData} from '../../../../../core/store/documents/document.utils';
 import {
   getQueryFiltersForCollection,
   getQueryFiltersForLinkType,
@@ -57,7 +57,6 @@ import {Constraint} from '../../../../../core/model/constraint';
 import {generateCorrelationId, getAttributesResourceType} from '../../../../../shared/utils/resource.utils';
 import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
 import {ModalService} from '../../../../../shared/modal/modal.service';
-import {groupLinkInstancesByLinkTypes} from '../../../../../core/store/link-instances/link-instance.utils';
 import {KanbanCard, KanbanCreateResource, KanbanData, KanbanDataColumn} from '../../util/kanban-data';
 import {AllowedPermissions} from '../../../../../core/model/allowed-permissions';
 import {AttributesResource, AttributesResourceType, DataResource} from '../../../../../core/model/resource';
@@ -71,6 +70,7 @@ import {ViewSettings} from '../../../../../core/store/views/view';
 import {Observable} from 'rxjs';
 import {selectViewSettings} from '../../../../../core/store/view-settings/view-settings.state';
 import {ConditionType} from '../../../../../core/model/attribute-filter';
+import {groupDataResourceByResource} from '../../../../../shared/utils/data-resource.utils';
 
 @Component({
   selector: 'kanban-columns',
@@ -440,12 +440,11 @@ export class KanbanColumnsComponent implements OnInit, OnDestroy {
   private getPipelineDocuments(pipelineIndex: number, stem: QueryStem): DocumentModel[] {
     const {pipelineDocuments} = filterDocumentsAndLinksByStem(
       this.collections,
-      groupDocumentsByCollection(this.documents),
+      groupDataResourceByResource(this.documents, AttributesResourceType.Collection),
       this.linkTypes,
-      groupLinkInstancesByLinkTypes(this.linkInstances),
+      groupDataResourceByResource(this.linkInstances, AttributesResourceType.LinkType),
       this.permissions,
       this.linkTypesPermissions,
-      this.constraintData,
       stem,
       this.query?.fulltexts || []
     );

@@ -18,6 +18,7 @@
  */
 
 import {TableContextMenuItem} from './table-column';
+import {DataValue} from '../../../core/model/data-value';
 
 export interface TableRow {
   id: string;
@@ -25,7 +26,7 @@ export interface TableRow {
   height: number;
   creating?: boolean;
   documentId?: string;
-  data?: Record<string, any>; // columnId -> string
+  dataValues?: Record<string, DataValue>; // columnId -> DataValue
   linkInstanceId?: string;
   correlationId?: string;
   commentsCount?: number;

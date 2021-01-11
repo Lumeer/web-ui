@@ -110,7 +110,7 @@ export class SelectDataValue implements DataValue {
   }
 
   public parseInput(inputValue: string): SelectDataValue {
-    return new SelectDataValue(inputValue, this.config, inputValue);
+    return new SelectDataValue(this.value, this.config, inputValue);
   }
 
   private shiftOption(indexDelta: number, option: SelectConstraintOption): SelectConstraintOption {
