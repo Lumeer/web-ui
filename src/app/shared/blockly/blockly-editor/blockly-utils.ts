@@ -236,6 +236,12 @@ export class BlocklyUtils {
           }
         }
       }
+
+      // create document output check
+      if (block.type === BlocklyUtils.CREATE_DOCUMENT) {
+        const collectionId = block.inputList[0]?.fieldRow[1]?.value_;
+        block.outputConnection.check_ = collectionId + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
+      }
     });
   }
 
