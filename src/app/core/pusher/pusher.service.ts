@@ -88,8 +88,8 @@ export class PusherService implements OnDestroy {
   private currentProject: Project;
   private user: User;
 
-  private readonly userNotificationTitle: string;
-  private readonly dismissButton: NotificationButton;
+  private userNotificationTitle: {success: string; info: string; warning: string; error: string};
+  private dismissButton: NotificationButton;
 
   constructor(
     private store$: Store<AppState>,
@@ -100,10 +100,15 @@ export class PusherService implements OnDestroy {
     private appId: AppIdService,
     private i18n: I18n
   ) {
-    this.userNotificationTitle = i18n({id: 'rules.blockly.action.message', value: 'Action Message'});
+    this.userNotificationTitle = {
+      success: i18n({id: 'rules.blockly.action.message.success', value: 'Success'}),
+      info: i18n({id: 'rules.blockly.action.message.info', value: 'Information'}),
+      warning: i18n({id: 'rules.blockly.action.message.warning', value: 'Warning'}),
+      error: i18n({id: 'rules.blockly.action.message.error', value: 'Error'}),
+    };
 
-    const dismiss = i18n({id: 'button.dismiss', value: 'Dismiss'});
-    this.dismissButton = {text: dismiss, bold: true};
+    const okBtn = i18n({id: 'button.ok', value: 'OK'});
+    this.dismissButton = {text: okBtn, bold: true};
   }
 
   public init(): void {
@@ -781,7 +786,7 @@ export class PusherService implements OnDestroy {
             case 'SUCCESS':
               this.notificationService.confirm(
                 data.object?.message,
-                this.userNotificationTitle,
+                this.userNotificationTitle.success,
                 [this.dismissButton],
                 'success'
               );
@@ -789,7 +794,7 @@ export class PusherService implements OnDestroy {
             case 'INFO':
               this.notificationService.confirm(
                 data.object?.message,
-                this.userNotificationTitle,
+                this.userNotificationTitle.info,
                 [this.dismissButton],
                 'info'
               );
@@ -797,7 +802,7 @@ export class PusherService implements OnDestroy {
             case 'WARNING':
               this.notificationService.confirm(
                 data.object?.message,
-                this.userNotificationTitle,
+                this.userNotificationTitle.warning,
                 [this.dismissButton],
                 'warning'
               );
@@ -806,7 +811,7 @@ export class PusherService implements OnDestroy {
             default:
               this.notificationService.confirm(
                 data.object?.message,
-                this.userNotificationTitle,
+                this.userNotificationTitle.error,
                 [this.dismissButton],
                 'error'
               );
