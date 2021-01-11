@@ -37,12 +37,12 @@ import {GetSelectDataItemPipe} from './select-data-item/get-select-data-item.pip
 import {DataDropdownModule} from '../data-dropdown/data-dropdown.module';
 import {SelectCollectionComponent} from './select-collection/select-collection.component';
 import {SelectItem2Component} from './select-item2/select-item2.component';
-import {MatMenuModule} from '@angular/material/menu';
 import {SelectItemRowComponent} from './select-item/row/select-item-row.component';
 import {SelectItemWithConstraint2Component} from './select-constraint-item2/select-item-with-constraint2.component';
 import {SelectItemsWithConstraint2Pipe} from './select-constraint-item2/select-items-with-constraint2.pipe';
-import {SelectItemMenuComponent} from './select-item2/menu/select-item-menu.component';
 import {GetSelectedItemsPipe} from './select-item2/get-selected-items.pipe';
+import {MenuModule} from '../menu/menu.module';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
   imports: [
@@ -54,6 +54,7 @@ import {GetSelectedItemsPipe} from './select-item2/get-selected-items.pipe';
     DropdownModule,
     DataInputModule,
     DataDropdownModule,
+    MenuModule,
     MatMenuModule,
   ],
   declarations: [
@@ -71,7 +72,6 @@ import {GetSelectedItemsPipe} from './select-item2/get-selected-items.pipe';
     GetSelectDataItemPipe,
     SelectCollectionComponent,
     SelectItemRowComponent,
-    SelectItemMenuComponent,
   ],
   providers: [AreIdsEqualPipe],
   exports: [

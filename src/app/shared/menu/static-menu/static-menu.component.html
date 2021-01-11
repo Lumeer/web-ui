@@ -1,0 +1,9 @@
+<div class="position-absolute"
+     [style.left.px]="contextMenuPosition.x"
+     [style.top.px]="contextMenuPosition.y"
+     [matMenuTriggerFor]="selectMenu.childMenu">
+</div>
+<lmr-menu #selectMenu [menuItems]="items"
+          (itemSelected)="onSelected($event)"
+          (pathSelected)="onPathSelected($event)">
+</lmr-menu>

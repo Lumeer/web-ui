@@ -29,13 +29,14 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
+import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {LinksListHeaderMenuComponent} from '../../../links/links-list/table/header/menu/links-list-header-menu.component';
 import {CdkDragDrop, CdkDragMove} from '@angular/cdk/drag-drop';
 import {BehaviorSubject} from 'rxjs';
 import {EditedTableCell, SelectedTableCell, TABLE_ROW_HEIGHT, TableCellType} from '../../model/table-model';
 import {AttributeSortType} from '../../../../core/store/views/view';
 import {computeElementPositionInParent} from '../../../utils/common.utils';
+import {MenuItem} from '../../../menu/model/menu-item';
 
 @Component({
   selector: '[table-header]',
@@ -72,7 +73,7 @@ export class TableHeaderComponent implements OnChanges {
   public onCancel = new EventEmitter<string>();
 
   @Output()
-  public menuSelected = new EventEmitter<{column: TableColumn; item: TableContextMenuItem}>();
+  public menuSelected = new EventEmitter<{column: TableColumn; item: MenuItem}>();
 
   @Output()
   public hiddenMenuSelected = new EventEmitter<TableColumn[]>();
@@ -214,7 +215,7 @@ export class TableHeaderComponent implements OnChanges {
     }
   }
 
-  public onMenuSelected(column: TableColumn, item: TableContextMenuItem) {
+  public onMenuSelected(column: TableColumn, item: MenuItem) {
     if (column) {
       this.menuSelected.emit({column, item});
     }

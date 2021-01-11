@@ -18,23 +18,16 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TableContextMenuItem} from '../model/table-column';
+import {deepObjectsEquals, isNullOrUndefined} from '../utils/common.utils';
 
 @Pipe({
-  name: 'groupTableMenuItems',
+  name: 'areObjectsEqual',
 })
-export class GroupTableMenuItemsPipe implements PipeTransform {
-  public transform(items: TableContextMenuItem[]): {group: number; items: TableContextMenuItem[]}[] {
-    return (items || [])
-      .reduce((array, item) => {
-        const element = array.find(elem => elem.group === item.group);
-        if (element) {
-          element.items.push(item);
-        } else {
-          array.push({group: item.group, items: [item]});
-        }
-        return array;
-      }, [])
-      .sort((a, b) => a.group - b.group);
+export class AreObjectsEqualPipe implements PipeTransform {
+  public transform(firstId: any, secondId: any): boolean {
+    if (isNullOrUndefined(firstId) && isNullOrUndefined(secondId)) {
+      return true;
+    }
+    return deepObjectsEquals(firstId, secondId);
   }
 }

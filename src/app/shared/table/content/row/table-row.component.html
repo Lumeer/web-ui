@@ -40,7 +40,8 @@
              *ngIf="group.column && !dataInputInfo.showDataInput"
              [innerHTML]="data.dataValue | previewDataValue | safeHtml">
         </div>
-        <div class="detail-trigger small pl-1 pr-1" *ngIf="!data.editing && group.column && group.column.id === detailColumnId"
+        <div class="detail-trigger small pl-1 pr-1"
+             *ngIf="!data.editing && group.column && group.column.id === detailColumnId"
              [class.has-comments]="row.commentsCount"
              (click)="onDetailClick($event)"
              (dblclick)="$event.preventDefault(); $event.stopPropagation()">
@@ -58,7 +59,7 @@
     </ng-container>
   </ng-container>
 </ng-container>
-<table-menu #tableMenu (selected)="onMenuSelected(row, tableMenu.id, $event)"></table-menu>
+<lmr-static-menu #tableMenu (itemSelected)="onMenuSelected(row, tableMenu.id, $event)"></lmr-static-menu>
 <document-hints
   *ngIf="suggestedColumn?.attribute && (suggestedColumn?.attribute | canShowAttributeHints) && (row.linkInstanceId ||  linkedDocumentId)"
   [attributeId]="suggestedColumn?.attribute?.id"

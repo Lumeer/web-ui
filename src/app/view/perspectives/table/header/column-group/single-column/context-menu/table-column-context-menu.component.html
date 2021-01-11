@@ -52,11 +52,11 @@
             i18n="@@table.header.menu.editFunction">Edit function...</span>
       <span *ngIf="attribute?.constraint?.type === type.Action" i18n="@@table.header.menu.editRule">Edit rule...</span>
     </button>
-    <button mat-menu-item (click)="onCopyValue()">
+    <hr class="my-2">
+    <button mat-menu-item class="prevent-click" [matMenuTriggerFor]="copyMenu">
       <div class="d-flex align-items-baseline">
         <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
-        <span class="flex-grow-1" i18n="@@table.header.menu.copy.name">Copy name</span>
-        <small class="text-secondary ml-3">{{macOS ? '⌘ C' : 'Ctrl + C'}}</small>
+        <span class="flex-grow-1" i18n="@@copy">Copy</span>
       </div>
     </button>
     <ng-container *ngIf="attribute.id && !defaultAttribute">
@@ -115,6 +115,30 @@
          aria-hidden="true">
       </i>
       <span i18n="@@table.header.menu.remove">Delete column</span>
+    </button>
+  </ng-template>
+</mat-menu>
+
+<mat-menu #copyMenu="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item (click)="onCopyName()">
+      <div class="d-flex align-items-baseline">
+        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <span class="flex-grow-1" i18n="@@resource.attribute.name">Attribute name</span>
+        <small class="text-secondary ml-3">{{macOS ? '⌘ C' : 'Ctrl + C'}}</small>
+      </div>
+    </button>
+    <button mat-menu-item (click)="onCopyValues()">
+      <div class="d-flex align-items-baseline">
+        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <span class="flex-grow-1" i18n="@@table.header.menu.copy.values">Row values</span>
+      </div>
+    </button>
+    <button mat-menu-item (click)="onCopyValues(true)">
+      <div class="d-flex align-items-baseline">
+        <i class="far fa-fw fa-copy mr-1" aria-hidden="true"></i>
+        <span class="flex-grow-1" i18n="@@table.header.menu.copy.values.unique">Row unique values</span>
+      </div>
     </button>
   </ng-template>
 </mat-menu>

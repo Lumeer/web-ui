@@ -17,8 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {TableContextMenuItem} from './table-column';
 import {DataValue} from '../../../core/model/data-value';
+import {MenuItem} from '../../menu/model/menu-item';
 
 export interface TableRow {
   id: string;
@@ -30,8 +30,8 @@ export interface TableRow {
   linkInstanceId?: string;
   correlationId?: string;
   commentsCount?: number;
-  documentMenuItems: TableContextMenuItem[];
-  linkMenuItems: TableContextMenuItem[];
+  documentMenuItems: MenuItem[];
+  linkMenuItems: MenuItem[];
 }
 
 export interface TableNewRow extends TableRow {

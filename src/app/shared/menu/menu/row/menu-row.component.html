@@ -1,0 +1,9 @@
+<icons-presenter *ngIf="menuItem.icons && menuItem.iconColors"
+                 class="d-block mr-2"
+                 [colors]="menuItem.iconColors"
+                 [icons]="menuItem.icons">
+</icons-presenter>
+<i *ngIf="menuItem.icons && !menuItem.iconColors && menuItem.icons.length === 1"
+   class="fa-fw mr-2 {{menuItem.icons[0]}}"></i>
+<span class="text-nowrap flex-grow-1 text-left text-truncate" [title]="menuItem.title">{{menuItem.title}}</span>
+<small *ngIf="menuItem.shortcut" class="text-secondary ml-3">{{menuItem.shortcut}}</small>

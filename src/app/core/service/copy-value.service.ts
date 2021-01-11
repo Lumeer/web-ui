@@ -28,6 +28,8 @@ import {selectLinkTypeById} from '../store/link-types/link-types.state';
 import {AttributesResource} from '../model/resource';
 import {findAttribute} from '../store/collections/collection.util';
 import {ClipboardService} from './clipboard.service';
+import {isArray, isNotNullOrUndefined} from '../../shared/utils/common.utils';
+import {DataValue} from '../model/data-value';
 
 @Injectable({providedIn: 'root'})
 export class CopyValueService {
@@ -47,6 +49,37 @@ export class CopyValueService {
 
   public copy(value: string) {
     this.clipboardService.copy(value);
+  }
+
+  public copyDataValues(dataValues: DataValue[], unique?: boolean) {
+    const {values} = dataValues.reduce(
+      (data, dataValue) => {
+        const serialized = dataValue.serialize();
+
+        const checkAndAddValue = (currentDataValue: DataValue) => {
+          const formatted = currentDataValue.format();
+          if (
+            (!unique || !data.usedValues.has(formatted)) &&
+            isNotNullOrUndefined(formatted) &&
+            formatted?.trim() !== ''
+          ) {
+            data.values.push(formatted);
+            data.usedValues.add(formatted);
+          }
+        };
+
+        if (isArray(serialized)) {
+          for (const value of serialized) {
+            checkAndAddValue(dataValue.copy(value));
+          }
+        } else {
+          checkAndAddValue(dataValue);
+        }
+        return data;
+      },
+      {values: [], usedValues: new Set()}
+    );
+    this.clipboardService.copy(values.join(', '));
   }
 
   public copyCollectionAttribute(collectionId: string, attributeId: string) {

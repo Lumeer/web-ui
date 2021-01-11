@@ -2,7 +2,7 @@
   *ngIf="{columnFocused: columnFocused$ | async, columnEditing: columnEditing$ | async, readonly: !permissions.writeWithView} as data">
   <ng-container *ngFor="let column of columns; trackBy: trackByColumn; let index = index">
     <td class="table-border"
-        *ngIf="{dataValue: !(editedValue | isNullOrUndefined) && data.columnEditing === index ? editedValue : (column.linkTypeId ? row.linkInstance?.dataValues || {} : row.document?.dataValues || {})[column.attribute.id],
+        *ngIf="{dataValue: (editedValue | isNotNullOrUndefined) && data.columnEditing === index ? editedValue : (column.linkTypeId ? row.linkInstance?.dataValues || {} : row.document?.dataValues || {})[column.attribute.id],
           editing: data.columnEditing === index, focused: data.columnFocused === index} as columnData"
         [style.width.px]="column.width"
         [class.focused]="columnData.focused"

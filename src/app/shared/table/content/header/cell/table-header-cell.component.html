@@ -3,10 +3,10 @@
        (contextmenu)="onContextMenu($event)">
 
     <div *ngIf="column.attribute"
-      class="position-relative cursor-pointer sort-wrapper d-flex align-items-center h-100"
-      title="Toggle sort" i18n-title="@@table.header.column.sort.toggle"
-      [style.width.px]="14" (click)="onSortToggle($event)"
-      (dblclick)="$event.stopPropagation(); $event.preventDefault()">
+         class="position-relative cursor-pointer sort-wrapper d-flex align-items-center h-100"
+         title="Toggle sort" i18n-title="@@table.header.column.sort.toggle"
+         [style.width.px]="14" (click)="onSortToggle($event)"
+         (dblclick)="$event.stopPropagation(); $event.preventDefault()">
       <i class="fas fa-sort-up position-absolute"
          [class.text-muted]="!column.sort || column.sort !== sortType.Ascending">
       </i>
@@ -45,10 +45,10 @@
       </div>
     </ng-container>
   </div>
-  <table-menu *ngIf="column.menuItems?.length"
-              [items]="column.menuItems"
-              (selected)="menuSelected.emit($event)">
-  </table-menu>
+  <lmr-static-menu *ngIf="column.menuItems?.length"
+                   [items]="column.menuItems"
+                   (itemSelected)="menuSelected.emit($event)">
+  </lmr-static-menu>
 </ng-container>
 
 <ng-template #hiddenContent>

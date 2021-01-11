@@ -17,25 +17,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Output, EventEmitter, ViewChild, Input} from '@angular/core';
-import {TableContextMenuItem} from '../../../model/table-column';
+import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from '@angular/material/menu';
-import {preventEvent} from '../../../../utils/common.utils';
+import {MenuItem} from '../model/menu-item';
 
 @Component({
-  selector: 'table-menu',
-  templateUrl: './table-menu.component.html',
+  selector: 'lmr-static-menu',
+  templateUrl: './static-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableMenuComponent {
+export class StaticMenuComponent {
   @Input()
   public id: string;
 
   @Input()
-  public items: TableContextMenuItem[];
+  public items: MenuItem[];
 
   @Output()
-  public selected = new EventEmitter<TableContextMenuItem>();
+  public itemSelected = new EventEmitter<MenuItem>();
+
+  @Output()
+  public pathSelected = new EventEmitter<MenuItem[]>();
 
   @ViewChild(MatMenuTrigger)
   public contextMenu: MatMenuTrigger;
@@ -48,9 +50,13 @@ export class TableMenuComponent {
     this.contextMenu.openMenu();
   }
 
-  public onClick(event: MouseEvent, item: TableContextMenuItem) {
-    preventEvent(event);
+  public onSelected(item: MenuItem) {
     this.contextMenu.closeMenu();
-    this.selected.emit(item);
+    this.itemSelected.emit(item);
+  }
+
+  public onPathSelected(path: MenuItem[]) {
+    this.contextMenu.closeMenu();
+    this.pathSelected.emit(path);
   }
 }

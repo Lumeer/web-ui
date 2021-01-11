@@ -102,6 +102,9 @@ export class DataInputComponent implements OnChanges, OnDestroy {
     if (changes.constraint || changes.configuration) {
       this.notNullConstraintType = this.createConstraintType();
     }
+    if (changes.dataValue) {
+      this.dataValue = this.dataValue || this.constraint?.createDataValue('');
+    }
   }
 
   private createConstraintType(): ConstraintType {

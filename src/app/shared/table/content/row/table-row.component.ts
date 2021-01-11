@@ -29,7 +29,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import {DataInputConfiguration} from '../../../data-input/data-input-configuration';
-import {TableColumn, TableColumnGroup, TableContextMenuItem} from '../../model/table-column';
+import {TableColumn, TableColumnGroup} from '../../model/table-column';
 import {TableRow} from '../../model/table-row';
 import {DataValue} from '../../../../core/model/data-value';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
@@ -43,11 +43,12 @@ import {ConstraintData, ConstraintType} from '../../../../core/model/data/constr
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../../model/table-model';
 import {BehaviorSubject} from 'rxjs';
 import {DataInputSaveAction} from '../../../data-input/data-input-save-action';
-import {TableMenuComponent} from '../common/menu/table-menu.component';
 import {isKeyPrintable, KeyCode} from '../../../key-code';
 import {Direction} from '../../../direction';
 import {DocumentHintsComponent} from '../../../document-hints/document-hints.component';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
+import {MenuItem} from '../../../menu/model/menu-item';
+import {StaticMenuComponent} from '../../../menu/static-menu/static-menu.component';
 
 @Component({
   selector: '[table-row]',
@@ -105,10 +106,10 @@ export class TableRowComponent implements OnChanges {
   public linkedDocumentSelect = new EventEmitter<DocumentModel>();
 
   @Output()
-  public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: TableContextMenuItem}>();
+  public menuSelected = new EventEmitter<{row: TableRow; column: TableColumn; item: MenuItem}>();
 
-  @ViewChild(TableMenuComponent)
-  public tableMenuComponent: TableMenuComponent;
+  @ViewChild(StaticMenuComponent)
+  public menuComponent: StaticMenuComponent;
 
   @ViewChild(DocumentHintsComponent)
   public suggestions: DocumentHintsComponent;
@@ -249,17 +250,17 @@ export class TableRowComponent implements OnChanges {
     const columnIndex = this.columnGroups?.findIndex(group => group.column?.id === columnId);
     const column = this.columnGroups[columnIndex]?.column;
     if (column) {
-      this.tableMenuComponent.id = columnId;
-      this.tableMenuComponent.items = column.collectionId ? this.row.documentMenuItems : this.row.linkMenuItems;
+      this.menuComponent.id = columnId;
+      this.menuComponent.items = column.collectionId ? this.row.documentMenuItems : this.row.linkMenuItems;
 
       const {x, y} = computeElementPositionInParent(event, 'table');
-      this.tableMenuComponent.open(x, y);
+      this.menuComponent.open(x, y);
     }
 
     preventEvent(event);
   }
 
-  public onMenuSelected(row: TableRow, columnId: string, item: TableContextMenuItem) {
+  public onMenuSelected(row: TableRow, columnId: string, item: MenuItem) {
     const column = this.columnGroups?.find(group => group.column?.id === columnId)?.column;
     if (column) {
       this.menuSelected.emit({row, column, item});

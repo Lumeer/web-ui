@@ -17,11 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
-  id: any;
-  value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
-  disabled?: boolean;
-  shortcut?: string;
+import {Component, ChangeDetectionStrategy, Input} from '@angular/core';
+import {MenuItem} from '../../model/menu-item';
+
+@Component({
+  selector: 'menu-row',
+  templateUrl: './menu-row.component.html',
+  styleUrls: ['./menu-row.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MenuRowComponent {
+  @Input()
+  public menuItem: MenuItem;
 }

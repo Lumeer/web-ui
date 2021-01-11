@@ -118,25 +118,34 @@ button.mat-menu-item {
   font-size: 15px !important;
 
   &:hover:not([disabled]) {
-    background: rgba(0, 0, 0, 0.1);
     color: $primary;
+    background: rgba(0, 0, 0, 0.1);
   }
 
-  &.active,
-  &:active {
-    background: $primary !important;
+  &.active:not(.prevent-click),
+  &:active:not(.prevent-click) {
     color: white !important;
+    background: $primary !important;
   }
 
   &.active:hover {
     color: $success !important;
     background: $primary;
   }
+
+  &.prevent-click {
+    color: $primary;
+    background: white !important;
+  }
 }
 
-.mat-menu-item-submenu-trigger.active:after,
-.mat-menu-item-submenu-trigger:active:after {
+.mat-menu-item-submenu-trigger.active:after:not(.prevent-click),
+.mat-menu-item-submenu-trigger:active:after:not(.prevent-click) {
   color: white;
+}
+
+.mat-menu-ripple.mat-ripple {
+  visibility: hidden;
 }
 
 .mat-menu-panel {

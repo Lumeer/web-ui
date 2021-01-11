@@ -100,6 +100,7 @@ import {AttributeResourceTypeToResourceTypePipe} from './attribute-resource-type
 import {LinkTypeOtherCollectionPipe} from './link-type-other-collection.pipe';
 import {StateListConstraintPipe} from './state-list-constraint.pipe';
 import {TruncatePipe} from './truncate.pipe';
+import {AreObjectsEqualPipe} from './are-objects-equal.pipe';
 
 @NgModule({
   imports: [CommonModule, DataPipesModule],
@@ -184,6 +185,7 @@ import {TruncatePipe} from './truncate.pipe';
     LinkTypeOtherCollectionPipe,
     StateListConstraintPipe,
     TruncatePipe,
+    AreObjectsEqualPipe,
   ],
   exports: [
     LightenColorPipe,
@@ -267,6 +269,7 @@ import {TruncatePipe} from './truncate.pipe';
     LinkTypeOtherCollectionPipe,
     StateListConstraintPipe,
     TruncatePipe,
+    AreObjectsEqualPipe,
   ],
 })
 export class PipesModule {}

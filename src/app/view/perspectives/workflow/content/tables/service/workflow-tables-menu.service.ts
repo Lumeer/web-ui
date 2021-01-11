@@ -20,10 +20,11 @@
 import {Injectable} from '@angular/core';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
-import {TableColumn, TableContextMenuItem} from '../../../../../../shared/table/model/table-column';
+import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableRow} from '../../../../../../shared/table/model/table-row';
 import {isMacOS} from '../../../../../../shared/utils/system.utils';
 import {ConstraintType} from '../../../../../../core/model/data/constraint';
+import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 
 export enum HeaderMenuId {
   Edit = 'edit',
@@ -31,6 +32,9 @@ export enum HeaderMenuId {
   Function = 'function',
   Hide = 'hide',
   Copy = 'copy',
+  CopyName = 'copyName',
+  CopyValues = 'copyValues',
+  CopyValuesUnique = 'copyValuesUnique',
   Displayed = 'displayed',
   Delete = 'delete',
   AddToRight = 'addToRight',
@@ -53,13 +57,13 @@ export class WorkflowTablesMenuService {
 
   constructor(private i18n: I18n) {}
 
-  public createRowMenu(permissions: AllowedPermissions, row: TableRow, linked?: boolean): TableContextMenuItem[] {
-    const items: TableContextMenuItem[] = [
+  public createRowMenu(permissions: AllowedPermissions, row: TableRow, linked?: boolean): MenuItem[] {
+    const items: MenuItem[] = [
       {
         id: RowMenuId.Edit,
         title: this.translateRowMenuItem(RowMenuId.Edit),
         disabled: !permissions?.manageWithView,
-        iconClass: 'fa fa-edit',
+        icons: ['fa fa-edit'],
         shortcut: this.macOS ? '↩' : 'Enter',
         group: 0,
       },
@@ -70,7 +74,7 @@ export class WorkflowTablesMenuService {
         id: RowMenuId.Detail,
         title: this.translateRowMenuItem(RowMenuId.Detail),
         disabled: !permissions?.read,
-        iconClass: 'far fa-file-search',
+        icons: ['far fa-file-search'],
         group: 0,
       });
     }
@@ -79,7 +83,7 @@ export class WorkflowTablesMenuService {
       id: RowMenuId.Copy,
       title: this.translateRowMenuItem(RowMenuId.Copy),
       disabled: false,
-      iconClass: 'far fa-copy',
+      icons: ['far fa-copy'],
       shortcut: this.macOS ? '⌘ C' : 'Ctrl + C',
       group: 0,
     });
@@ -90,7 +94,7 @@ export class WorkflowTablesMenuService {
           id: RowMenuId.Unlink,
           title: this.translateRowMenuItem(RowMenuId.Unlink),
           disabled: !permissions?.writeWithView,
-          iconClass: 'fa fa-unlink text-warning',
+          icons: ['fa fa-unlink text-warning'],
           group: 1,
         });
       } else {
@@ -98,7 +102,7 @@ export class WorkflowTablesMenuService {
           id: RowMenuId.Delete,
           title: this.translateRowMenuItem(RowMenuId.Delete),
           disabled: !permissions?.writeWithView,
-          iconClass: 'far fa-trash-alt text-danger',
+          icons: ['far fa-trash-alt text-danger'],
           group: 1,
         });
       }
@@ -129,13 +133,13 @@ export class WorkflowTablesMenuService {
     column: TableColumn,
     configurable: boolean,
     otherPermissions?: AllowedPermissions
-  ): TableContextMenuItem[] {
-    const items: TableContextMenuItem[] = [
+  ): MenuItem[] {
+    const items: MenuItem[] = [
       {
         id: HeaderMenuId.Edit,
         title: this.translateHeaderMenuItem(HeaderMenuId.Edit),
         disabled: !permissions?.manageWithView,
-        iconClass: 'fa fa-edit',
+        icons: ['fa fa-edit'],
         group: 0,
       },
     ];
@@ -146,7 +150,7 @@ export class WorkflowTablesMenuService {
           id: HeaderMenuId.Type,
           title: this.translateHeaderMenuItem(HeaderMenuId.Type),
           disabled: !permissions?.manageWithView,
-          iconClass: 'fa fa-shapes',
+          icons: ['fa fa-shapes'],
           group: 0,
         },
         {
@@ -155,7 +159,7 @@ export class WorkflowTablesMenuService {
             column.attribute?.constraint?.type === ConstraintType.Action ? HeaderMenuId.Rule : HeaderMenuId.Function
           ),
           disabled: !permissions?.manageWithView,
-          iconClass: 'fa fa-function',
+          icons: ['fa fa-function'],
           group: 0,
         }
       );
@@ -164,9 +168,26 @@ export class WorkflowTablesMenuService {
       id: HeaderMenuId.Copy,
       title: this.translateHeaderMenuItem(HeaderMenuId.Copy),
       disabled: false,
-      iconClass: 'far fa-copy',
-      shortcut: this.macOS ? '⌘ C' : 'Ctrl + C',
-      group: 0,
+      icons: ['far fa-copy'],
+      selectDisabled: true,
+      children: [
+        {
+          id: HeaderMenuId.CopyName,
+          title: this.translateHeaderMenuItem(HeaderMenuId.CopyName),
+          disabled: false,
+          shortcut: this.macOS ? '⌘ C' : 'Ctrl + C',
+        },
+        {
+          id: HeaderMenuId.CopyValues,
+          title: this.translateHeaderMenuItem(HeaderMenuId.CopyValues),
+          disabled: false,
+        },
+        {
+          id: HeaderMenuId.CopyValuesUnique,
+          title: this.translateHeaderMenuItem(HeaderMenuId.CopyValuesUnique),
+          disabled: false,
+        },
+      ],
     });
 
     if (column.attribute?.id && !column.default && column.collectionId) {
@@ -174,7 +195,7 @@ export class WorkflowTablesMenuService {
         id: HeaderMenuId.Displayed,
         title: this.translateHeaderMenuItem(HeaderMenuId.Displayed),
         disabled: !permissions?.manageWithView,
-        iconClass: 'fa fa-check-square',
+        icons: ['fa fa-check-square'],
         group: 1,
       });
     }
@@ -183,7 +204,7 @@ export class WorkflowTablesMenuService {
       id: HeaderMenuId.AddToLeft,
       title: this.translateHeaderMenuItem(HeaderMenuId.AddToLeft),
       disabled: !permissions?.manageWithView,
-      iconClass: 'fa fa-arrow-alt-circle-left',
+      icons: ['fa fa-arrow-alt-circle-left'],
       group: 2,
     });
 
@@ -191,7 +212,7 @@ export class WorkflowTablesMenuService {
       id: HeaderMenuId.AddToRight,
       title: this.translateHeaderMenuItem(HeaderMenuId.AddToRight),
       disabled: !permissions?.manageWithView,
-      iconClass: 'fa fa-arrow-alt-circle-right',
+      icons: ['fa fa-arrow-alt-circle-right'],
       group: 2,
     });
 
@@ -200,7 +221,7 @@ export class WorkflowTablesMenuService {
         id: HeaderMenuId.AddLinkColumn,
         title: this.translateHeaderMenuItem(HeaderMenuId.AddLinkColumn),
         disabled: false,
-        iconClass: 'fa fa-link',
+        icons: ['fa fa-link'],
         group: 2,
       });
     }
@@ -210,7 +231,7 @@ export class WorkflowTablesMenuService {
         id: HeaderMenuId.Hide,
         title: this.translateHeaderMenuItem(HeaderMenuId.Hide),
         disabled: !configurable,
-        iconClass: 'fa fa-eye-slash',
+        icons: ['fa fa-eye-slash'],
         group: 3,
       });
     }
@@ -219,7 +240,7 @@ export class WorkflowTablesMenuService {
       id: HeaderMenuId.Delete,
       title: this.translateHeaderMenuItem(HeaderMenuId.Delete),
       disabled: !permissions?.manageWithView,
-      iconClass: 'far fa-trash-alt text-danger',
+      icons: ['far fa-trash-alt text-danger'],
       group: 3,
     });
 
@@ -241,7 +262,13 @@ export class WorkflowTablesMenuService {
       case HeaderMenuId.Hide:
         return this.i18n({id: 'table.header.menu.hide', value: 'Hide column'});
       case HeaderMenuId.Copy:
-        return this.i18n({id: 'table.header.menu.copy.name', value: 'Copy name'});
+        return this.i18n({id: 'copy', value: 'Copy'});
+      case HeaderMenuId.CopyName:
+        return this.i18n({id: 'resource.attribute.name', value: 'Attribute name'});
+      case HeaderMenuId.CopyValues:
+        return this.i18n({id: 'table.header.menu.copy.values', value: 'Row values'});
+      case HeaderMenuId.CopyValuesUnique:
+        return this.i18n({id: 'table.header.menu.copy.values.unique', value: 'Row unique values'});
       case HeaderMenuId.Delete:
         return this.i18n({id: 'table.header.menu.remove', value: 'Delete column'});
       case HeaderMenuId.AddToRight:

@@ -17,11 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
-  id: any;
-  value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
-  disabled?: boolean;
-  shortcut?: string;
-}
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {MenuComponent} from './menu/menu.component';
+import {MenuRowComponent} from './menu/row/menu-row.component';
+import {PresenterModule} from '../presenter/presenter.module';
+import {MatMenuModule} from '@angular/material/menu';
+import {PipesModule} from '../pipes/pipes.module';
+import {GroupMenuItemsPipe} from './menu/pipes/group-menu-items.pipe';
+import {StaticMenuComponent} from './static-menu/static-menu.component';
+
+@NgModule({
+  declarations: [MenuComponent, MenuRowComponent, GroupMenuItemsPipe, StaticMenuComponent],
+  imports: [CommonModule, PresenterModule, MatMenuModule, PipesModule],
+  exports: [MenuComponent, StaticMenuComponent],
+})
+export class MenuModule {}
