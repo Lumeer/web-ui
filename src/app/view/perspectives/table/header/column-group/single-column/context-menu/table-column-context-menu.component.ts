@@ -98,8 +98,12 @@ export class TableColumnContextMenuComponent {
     // TODO
   }
 
-  public onCopyValue() {
+  public onCopyName() {
     this.store$.dispatch(new TablesAction.CopyValue({cursor: this.cursor}));
+  }
+
+  public onCopyValues(unique?: boolean) {
+    this.store$.dispatch(new TablesAction.CopyRowValues({cursor: this.cursor, unique}));
   }
 
   public open(x: number, y: number) {

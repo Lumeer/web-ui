@@ -1,0 +1,40 @@
+<mat-menu #childMenu="matMenu">
+  <ng-template matMenuContent>
+    <ng-container *ngFor="let group of menuItems | groupMenuItems; let last = last">
+
+      <ng-container *ngFor="let child of group.items">
+
+        <ng-container *ngIf="child.children?.length > 0">
+          <ng-container *ngIf="{selected: selectedItem?.id | areObjectsEqual:child.id} as data">
+            <button mat-menu-item [matMenuTriggerFor]="menu.childMenu"
+                    [class.active]="data.selected"
+                    [class.prevent-click]="child.selectDisabled"
+                    [disabled]="child.disabled"
+                    [disableRipple]="true"
+                    (click)="onSelect(child, $event)">
+              <menu-row [menuItem]="child"></menu-row>
+            </button>
+            <lmr-menu #menu [menuItems]="child.children"
+                      (pathSelected)="onSelectChild(child, $event)"
+                      [selectedItem]="data.selected && selectedItem?.children && selectedItem?.children[0]">
+            </lmr-menu>
+          </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="!child.children || child.children.length === 0">
+          <button mat-menu-item
+                  [class.active]="selectedItem?.id | areObjectsEqual:child.id"
+                  [class.prevent-click]="child.selectDisabled"
+                  [disabled]="child.disabled"
+                  [disableRipple]="true"
+                  (click)="onSelect(child, $event)">
+            <menu-row [menuItem]="child"></menu-row>
+          </button>
+        </ng-container>
+      </ng-container>
+
+      <hr *ngIf="!last" class="my-2">
+    </ng-container>
+
+  </ng-template>
+</mat-menu>

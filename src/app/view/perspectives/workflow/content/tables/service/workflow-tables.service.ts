@@ -31,7 +31,7 @@ import {DocumentModel} from '../../../../../../core/store/documents/document.mod
 import {AllowedPermissions} from '../../../../../../core/model/allowed-permissions';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
-import {TableColumn, TableContextMenuItem} from '../../../../../../shared/table/model/table-column';
+import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-row';
 import {DataRowHiddenComponent} from '../../../../../../shared/data/data-row-component';
 import {distinctUntilChanged, skip} from 'rxjs/operators';
@@ -47,6 +47,7 @@ import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {deepObjectsEquals} from '../../../../../../shared/utils/common.utils';
 import {DataValue} from '../../../../../../core/model/data-value';
+import {MenuItem} from '../../../../../../shared/menu/model/menu-item';
 
 @Injectable()
 export class WorkflowTablesService {
@@ -90,7 +91,7 @@ export class WorkflowTablesService {
   public onRowMenuSelected(
     row: TableRow,
     column: TableColumn,
-    item: TableContextMenuItem,
+    item: MenuItem,
     type: TableCellType = TableCellType.Body
   ) {
     switch (item.id) {
@@ -132,7 +133,7 @@ export class WorkflowTablesService {
     this.dataService.changeSort(column, sort);
   }
 
-  public onColumnMenuSelected(column: TableColumn, item: TableContextMenuItem) {
+  public onColumnMenuSelected(column: TableColumn, item: MenuItem) {
     switch (item.id) {
       case HeaderMenuId.Edit:
         this.stateService.setEditedCell({
@@ -151,8 +152,14 @@ export class WorkflowTablesService {
       case HeaderMenuId.Delete:
         this.deleteColumn(column);
         break;
-      case HeaderMenuId.Copy:
+      case HeaderMenuId.CopyName:
         this.dataService.copyColumnName(column);
+        break;
+      case HeaderMenuId.CopyValues:
+        this.dataService.copyColumnValues(column);
+        break;
+      case HeaderMenuId.CopyValuesUnique:
+        this.dataService.copyColumnValues(column, true);
         break;
       case HeaderMenuId.Displayed:
         this.setDisplayedAttribute(column);

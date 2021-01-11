@@ -18,11 +18,12 @@
  */
 
 import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
-import {TableColumn, TableContextMenuItem} from '../../../model/table-column';
-import {TableMenuComponent} from '../../common/menu/table-menu.component';
+import {TableColumn} from '../../../model/table-column';
 import {computeElementPositionInParent, preventEvent} from '../../../../utils/common.utils';
 import {TableHeaderHiddenMenuComponent} from './hidden-menu/table-header-hidden-menu.component';
 import {AttributeSortType} from '../../../../../core/store/views/view';
+import {MenuItem} from '../../../../menu/model/menu-item';
+import {StaticMenuComponent} from '../../../../menu/static-menu/static-menu.component';
 
 @Component({
   selector: 'table-header-cell',
@@ -60,13 +61,13 @@ export class TableHeaderCellComponent {
   public sortChanged = new EventEmitter<AttributeSortType | null>();
 
   @Output()
-  public menuSelected = new EventEmitter<TableContextMenuItem>();
+  public menuSelected = new EventEmitter<MenuItem>();
 
   @Output()
   public hiddenMenuSelected = new EventEmitter<TableColumn[]>();
 
-  @ViewChild(TableMenuComponent)
-  public contextMenuComponent: TableMenuComponent;
+  @ViewChild(StaticMenuComponent)
+  public menuComponent: StaticMenuComponent;
 
   @ViewChild(TableHeaderHiddenMenuComponent)
   public hiddenMenuComponent: TableHeaderHiddenMenuComponent;
@@ -86,7 +87,7 @@ export class TableHeaderCellComponent {
   public onContextMenu(event: MouseEvent) {
     if (!this.column?.hidden && this.column.menuItems?.length) {
       const {x, y} = computeElementPositionInParent(event, 'table-header-cell');
-      this.contextMenuComponent?.open(x, y);
+      this.menuComponent?.open(x, y);
 
       preventEvent(event);
     }

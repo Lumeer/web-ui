@@ -17,10 +17,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {MatMenuTrigger} from '@angular/material/menu';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, SimpleChanges} from '@angular/core';
 import {SelectItem2Model} from './select-item2.model';
 import {preventEvent} from '../../utils/common.utils';
+import {MenuItem} from '../../menu/model/menu-item';
+import {convertMenuItemsPath} from '../../menu/model/menu-utils';
 
 @Component({
   selector: 'select-item2',
@@ -53,8 +54,17 @@ export class SelectItem2Component {
   @Output()
   public remove = new EventEmitter();
 
-  @ViewChild(MatMenuTrigger)
-  public contextMenu: MatMenuTrigger;
+  public menuItems: MenuItem[];
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes.items) {
+      this.menuItems = this.mapMenuItems(this.items);
+    }
+  }
+
+  private mapMenuItems(items: SelectItem2Model[]): MenuItem[] {
+    return (items || []).map(item => ({...item, title: item.value, children: this.mapMenuItems(item.children)}));
+  }
 
   public onSelect(items: SelectItem2Model[]) {
     this.selectPath.emit(items);
@@ -63,5 +73,12 @@ export class SelectItem2Component {
   public onRemove(event: any) {
     preventEvent(event);
     this.remove.emit();
+  }
+
+  public onSelected(menuItemsPath: MenuItem[]) {
+    const path = convertMenuItemsPath<SelectItem2Model>(menuItemsPath, this.items);
+    if (path.length) {
+      this.selectPath.emit(path);
+    }
   }
 }

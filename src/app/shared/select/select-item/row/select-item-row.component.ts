@@ -43,7 +43,7 @@ export class SelectItemRowComponent implements OnChanges {
   @Output()
   public remove = new EventEmitter();
 
-  public onRemove(event: any) {
+  public onRemove(event: MouseEvent) {
     preventEvent(event);
     this.remove.emit();
   }

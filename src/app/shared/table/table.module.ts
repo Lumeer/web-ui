@@ -39,8 +39,6 @@ import {TableCellEditedPipe} from './pipes/table-cell-edited.pipe';
 import {TableBodyCellSelectedPipe} from './pipes/table-body-cell-selected.pipe';
 import {TableHeaderInputComponent} from './content/header/cell/input/table-header-input.component';
 import {TableHeaderCellComponent} from './content/header/cell/table-header-cell.component';
-import {TableMenuComponent} from './content/common/menu/table-menu.component';
-import {GroupTableMenuItemsPipe} from './pipes/group-table-menu-items.pipe';
 import {TableHeaderHiddenComponent} from './content/header/cell/hidden/table-header-hidden.component';
 import {GroupTableColumnsPipe} from './pipes/group-table-columns.pipe';
 import {TableHeaderHiddenMenuComponent} from './content/header/cell/hidden-menu/table-header-hidden-menu.component';
@@ -51,6 +49,7 @@ import {DocumentHintsModule} from '../document-hints/document-hints.module';
 import {DocumentHintsColumnsPipe} from './pipes/document-hints-columns.pipe';
 import {CalculateHintsOffsetPipe} from './pipes/calculate-hints-offset.pipe';
 import {DirectivesModule} from '../directives/directives.module';
+import {MenuModule} from '../menu/menu.module';
 
 @NgModule({
   declarations: [
@@ -67,8 +66,6 @@ import {DirectivesModule} from '../directives/directives.module';
     TableBodyCellSelectedPipe,
     TableHeaderInputComponent,
     TableHeaderCellComponent,
-    TableMenuComponent,
-    GroupTableMenuItemsPipe,
     TableHeaderHiddenComponent,
     GroupTableColumnsPipe,
     TableHeaderHiddenMenuComponent,
@@ -88,6 +85,7 @@ import {DirectivesModule} from '../directives/directives.module';
     ResizableSidebarModule,
     MatMenuModule,
     DocumentHintsModule,
+    MenuModule,
   ],
   exports: [TableComponent],
 })

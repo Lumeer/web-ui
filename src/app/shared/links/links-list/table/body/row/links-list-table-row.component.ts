@@ -152,6 +152,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public endRowEditing() {
+    this.editedValue = null;
     this.suggesting$.next(null);
     this.columnEditing$.next(null);
   }
@@ -247,6 +248,7 @@ export class LinksListTableRowComponent implements DataRowComponent, OnInit, OnD
   }
 
   public onDataInputCancel(column: number) {
+    this.editedValue = null;
     this.resetFocusAndEdit.emit(column);
   }
 

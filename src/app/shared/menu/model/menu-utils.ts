@@ -17,11 +17,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
-  id: any;
-  value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
-  disabled?: boolean;
-  shortcut?: string;
+import {MenuItem} from './menu-item';
+import {deepObjectsEquals} from '../../utils/common.utils';
+
+export function convertMenuItemsPath<T extends {id: any; children?: T[]}>(menuItemsPath: MenuItem[], items: T[]): T[] {
+  const path = [];
+  let currentItems = items || [];
+  for (const menuItem of menuItemsPath) {
+    const item = currentItems.find(i => deepObjectsEquals(i.id, menuItem.id));
+    if (item) {
+      path.push(item);
+      currentItems = item.children || [];
+    }
+  }
+
+  return path;
 }

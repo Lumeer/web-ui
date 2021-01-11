@@ -17,11 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
-  id: any;
-  value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
-  disabled?: boolean;
-  shortcut?: string;
+import {Pipe, PipeTransform} from '@angular/core';
+import {MenuItem} from '../../model/menu-item';
+
+@Pipe({
+  name: 'groupMenuItems',
+})
+export class GroupMenuItemsPipe implements PipeTransform {
+  public transform(items: MenuItem[]): {group: number; items: MenuItem[]}[] {
+    return (items || [])
+      .reduce((array, item) => {
+        const element = array.find(elem => elem.group === item.group);
+        if (element) {
+          element.items.push(item);
+        } else {
+          array.push({group: item.group, items: [item]});
+        }
+        return array;
+      }, [])
+      .sort((a, b) => a.group - b.group);
+  }
 }

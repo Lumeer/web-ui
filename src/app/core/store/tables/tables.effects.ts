@@ -20,7 +20,7 @@
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
-import {combineLatest, Observable} from 'rxjs';
+import {combineLatest, EMPTY, Observable} from 'rxjs';
 import {
   concatMap,
   debounceTime,
@@ -44,6 +44,7 @@ import {
   selectCollectionsLoaded,
 } from '../collections/collections.state';
 import {
+  selectDocumentsAndLinksByQuery,
   selectDocumentsByCustomQuery,
   selectDocumentsByQuery,
   selectDocumentsByQueryIncludingChildrenAndIds,
@@ -120,7 +121,7 @@ import {
 import {findLinkedTableRows, findTableRowsIncludingCollapsed, isLastTableRowInitialized} from './utils/table-row.utils';
 import {QueryParam} from '../navigation/query-param';
 import {selectTable} from './tables.state';
-import {AttributesResource} from '../../model/resource';
+import {AttributesResource, DataResource} from '../../model/resource';
 import {selectViewQuery} from '../views/views.state';
 import {CopyValueService} from '../../service/copy-value.service';
 import {selectCollectionPermissions} from '../user-permissions/user-permissions.state';
@@ -990,14 +991,49 @@ export class TablesEffects {
               }
             }
           } else if (tableColumn) {
-            const attributeId = tableColumn.attributeIds && tableColumn.attributeIds[0];
+            const attributeId = tableColumn.attributeIds?.[0];
             if (tablePart.collectionId) {
               this.copyValueService.copyCollectionAttribute(tablePart.collectionId, attributeId);
             } else if (tablePart.linkTypeId) {
               this.copyValueService.copyLinkTypeAttribute(tablePart.linkTypeId, attributeId);
             }
           }
-          return [];
+          return EMPTY;
+        })
+      )
+    )
+  );
+
+  @Effect({dispatch: false})
+  public copyRowValues$: Observable<Action> = this.actions$.pipe(
+    ofType<TablesAction.CopyRowValues>(TablesActionType.COPY_ROW_VALUES),
+    mergeMap(action =>
+      combineLatest([
+        this.store$.pipe(select(selectTablePart(action.payload.cursor))),
+        this.store$.pipe(select(selectTableColumn(action.payload.cursor))),
+      ]).pipe(
+        take(1),
+        mergeMap(([tablePart, tableColumn]) => {
+          if (tableColumn) {
+            const attributeId = tableColumn.attributeIds?.[0];
+            return this.store$.pipe(
+              select(selectDocumentsAndLinksByQuery),
+              map(({documents, linkInstances}) => {
+                if (tablePart.collectionId) {
+                  return documents.filter(document => document.collectionId === tablePart.collectionId);
+                } else if (tablePart.linkTypeId) {
+                  return linkInstances.filter(link => link.linkTypeId === tablePart.linkTypeId);
+                }
+                return [];
+              }),
+              take(1),
+              mergeMap((dataResources: DataResource[]) => {
+                const dataValues = dataResources.map(dataResource => dataResource.dataValues?.[attributeId]);
+                this.copyValueService.copyDataValues(dataValues, action.payload.unique);
+                return EMPTY;
+              })
+            );
+          }
         })
       )
     )

@@ -26,7 +26,6 @@ import {
   HostListener,
   ViewChildren,
   QueryList,
-  ElementRef,
   ViewChild,
   EventEmitter,
   Output,
@@ -49,11 +48,11 @@ import {ConstraintData} from '../../../../../core/model/data/constraint';
 import {AppState} from '../../../../../core/store/app.state';
 import {Store} from '@ngrx/store';
 import {distinctUntilChanged} from 'rxjs/operators';
-import {deepObjectsEquals, preventEvent} from '../../../../../shared/utils/common.utils';
+import {deepObjectsEquals} from '../../../../../shared/utils/common.utils';
 import {HiddenInputComponent} from '../../../../../shared/input/hidden-input/hidden-input.component';
 import {DataInputSaveAction} from '../../../../../shared/data-input/data-input-save-action';
 import {TableRow} from '../../../../../shared/table/model/table-row';
-import {TableColumn, TableContextMenuItem} from '../../../../../shared/table/model/table-column';
+import {TableColumn} from '../../../../../shared/table/model/table-column';
 import {WorkflowTablesMenuService} from './service/workflow-tables-menu.service';
 import {WorkflowTablesDataService} from './service/workflow-tables-data.service';
 import {WorkflowTablesStateService} from './service/workflow-tables-state.service';
@@ -68,6 +67,7 @@ import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
 import {APP_NAME_SELECTOR} from '../../../../../core/constants';
 import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
 import {DataValue} from '../../../../../core/model/data-value';
+import {MenuItem} from '../../../../../shared/menu/model/menu-item';
 
 @Component({
   selector: 'workflow-tables',
@@ -247,16 +247,11 @@ export class WorkflowTablesComponent implements OnChanges {
     this.tablesService.onColumnRename(data.column, data.name);
   }
 
-  public onColumnMenuSelected(data: {column: TableColumn; item: TableContextMenuItem}) {
+  public onColumnMenuSelected(data: {column: TableColumn; item: MenuItem}) {
     this.tablesService.onColumnMenuSelected(data.column, data.item);
   }
 
-  public onRowMenuSelected(data: {
-    row: TableRow;
-    column: TableColumn;
-    item: TableContextMenuItem;
-    cellType: TableCellType;
-  }) {
+  public onRowMenuSelected(data: {row: TableRow; column: TableColumn; item: MenuItem; cellType: TableCellType}) {
     this.tablesService.onRowMenuSelected(data.row, data.column, data.item, data.cellType);
   }
 

@@ -17,11 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface SelectItemModel {
+export interface MenuItem {
   id: any;
-  value: string;
-  icons?: [string, string?];
-  iconColors?: [string, string?];
-  disabled?: boolean;
+  title: string;
+  icons?: string[];
+  iconColors?: string[];
+  group?: number;
   shortcut?: string;
+  disabled?: boolean;
+  selectDisabled?: boolean;
+  children?: MenuItem[];
 }

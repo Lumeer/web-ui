@@ -23,7 +23,8 @@
     <i class="fas fa-caret-down empty-text"></i>
   </ng-template>
 
-  <select-item-menu #menu [items]="items" (select)="onSelect($event)"
-                    [selectedItem]="data.selectedItem">
-  </select-item-menu>
+  <lmr-menu #menu [menuItems]="menuItems"
+            (pathSelected)="onSelected($event)"
+            [selectedItem]="data.selectedItem">
+  </lmr-menu>
 </ng-container>

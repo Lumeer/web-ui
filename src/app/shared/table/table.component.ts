@@ -43,10 +43,11 @@ import {ConstraintData, ConstraintType} from '../../core/model/data/constraint';
 import {EditedTableCell, SelectedTableCell, TableCell, TableCellType, TableModel} from './model/table-model';
 import {TableScrollService} from './service/table-scroll.service';
 import {DataInputSaveAction} from '../data-input/data-input-save-action';
-import {TableColumn, TableContextMenuItem} from './model/table-column';
+import {TableColumn} from './model/table-column';
 import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {DataValue} from '../../core/model/data-value';
+import {MenuItem} from '../menu/model/menu-item';
 
 @Component({
   selector: 'lmr-table',
@@ -86,7 +87,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public columnRename = new EventEmitter<{column: TableColumn; name: string}>();
 
   @Output()
-  public columnMenuSelected = new EventEmitter<{column: TableColumn; item: TableContextMenuItem}>();
+  public columnMenuSelected = new EventEmitter<{column: TableColumn; item: MenuItem}>();
 
   @Output()
   public columnHiddenMenuSelected = new EventEmitter<TableColumn[]>();
@@ -125,7 +126,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public rowMenuSelected = new EventEmitter<{
     row: TableRow;
     column: TableColumn;
-    item: TableContextMenuItem;
+    item: MenuItem;
     cellType: TableCellType;
   }>();
 
@@ -323,11 +324,11 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     this.scrollCheckSubject.next();
   }
 
-  public onBodyMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
+  public onBodyMenuSelected(data: {row: TableRow; column: TableColumn; item: MenuItem}) {
     this.rowMenuSelected.emit({...data, cellType: TableCellType.Body});
   }
 
-  public onNewRowMenuSelected(data: {row: TableRow; column: TableColumn; item: TableContextMenuItem}) {
+  public onNewRowMenuSelected(data: {row: TableRow; column: TableColumn; item: MenuItem}) {
     this.rowMenuSelected.emit({...data, cellType: TableCellType.NewRow});
   }
 

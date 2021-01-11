@@ -17,33 +17,43 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, ViewChild, Output, EventEmitter} from '@angular/core';
+import {Component, ChangeDetectionStrategy, Input, EventEmitter, Output, ViewChild} from '@angular/core';
 import {MatMenu} from '@angular/material/menu';
-import {SelectItem2Model} from '../select-item2.model';
+import {MenuItem} from '../model/menu-item';
+import {preventEvent} from '../../utils/common.utils';
 
 @Component({
-  selector: 'select-item-menu',
-  templateUrl: './select-item-menu.component.html',
+  selector: 'lmr-menu',
+  templateUrl: './menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SelectItemMenuComponent {
+export class MenuComponent {
   @Input()
-  public items: SelectItem2Model[];
+  public menuItems: MenuItem[];
 
   @Input()
-  public selectedItem: SelectItem2Model;
+  public selectedItem: MenuItem;
 
   @Output()
-  public select = new EventEmitter<SelectItem2Model[]>();
+  public itemSelected = new EventEmitter<MenuItem>();
+
+  @Output()
+  public pathSelected = new EventEmitter<MenuItem[]>();
 
   @ViewChild('childMenu', {static: true})
   public childMenu: MatMenu;
 
-  public onSelect(item: SelectItem2Model) {
-    this.select.emit([item]);
+  public onSelect(item: MenuItem, event: MouseEvent) {
+    if (item.selectDisabled) {
+      preventEvent(event);
+    } else {
+      this.itemSelected.emit(item);
+      this.pathSelected.emit([item]);
+    }
   }
 
-  public onSelectChild(item: SelectItem2Model, path: SelectItem2Model[]) {
-    this.select.emit([item, ...path]);
+  public onSelectChild(item: MenuItem, path: MenuItem[]) {
+    this.itemSelected.emit(path[path.length - 1]);
+    this.pathSelected.emit([item, ...path]);
   }
 }

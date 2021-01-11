@@ -57,6 +57,7 @@ import {TableModule} from './table/table.module';
 import {ResizableSidebarModule} from './resizable-sidebar/resizable-sidebar.module';
 import {ResourceCommentsModule} from './resource-comments/resource-comments.module';
 import {RedDotModule} from './red-dot/red-dot.module';
+import {MenuModule} from './menu/menu.module';
 
 @NgModule({
   imports: [
@@ -94,6 +95,7 @@ import {RedDotModule} from './red-dot/red-dot.module';
     ResizableSidebarModule,
     ResourceCommentsModule,
     RedDotModule,
+    MenuModule,
   ],
   declarations: [PerspectiveDirective, ResourceHeaderComponent, LoadingIndicatorComponent, TourComponent],
   exports: [
@@ -136,6 +138,7 @@ import {RedDotModule} from './red-dot/red-dot.module';
     ResizableSidebarModule,
     ResourceCommentsModule,
     RedDotModule,
+    MenuModule,
   ],
 })
 export class SharedModule {}

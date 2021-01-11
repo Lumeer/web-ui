@@ -22,6 +22,7 @@ import {AttributeSortType} from '../../../core/store/views/view';
 import {Constraint} from '../../../core/model/constraint';
 import {UnknownConstraint} from '../../../core/model/constraint/unknown.constraint';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {MenuItem} from '../../menu/model/menu-item';
 
 export interface TableColumnGroup {
   id: string;
@@ -47,16 +48,7 @@ export interface TableColumn {
   editable: boolean;
   permissions: AllowedPermissions;
   sort?: AttributeSortType;
-  menuItems: TableContextMenuItem[];
-}
-
-export interface TableContextMenuItem {
-  id: string;
-  title: string;
-  iconClass: string;
-  group: number;
-  shortcut?: string;
-  disabled: boolean;
+  menuItems: MenuItem[];
 }
 
 export function columnConstraint(column: TableColumn): Constraint {
