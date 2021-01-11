@@ -145,8 +145,8 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskAssignedMiddle" datatype="html">
-        <source>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
-        <target>s termínem dokončení <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </target>
+        <source> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
+        <target> s termínem dokončení <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </target>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">20</context>
@@ -1856,8 +1856,26 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message" datatype="html">
-        <source>Action Message</source><target>Zpráva z akce</target>
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/notifications/notification.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/user-hint/user-hint.service.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="rules.blockly.action.message.success" datatype="html">
+        <source>Success</source><target>Úspěch</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="rules.blockly.action.message.info" datatype="html">
+        <source>Information</source><target>Informace</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="rules.blockly.action.message.warning" datatype="html">
+        <source>Warning</source><target>Upozornění</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="rules.blockly.action.message.error" datatype="html">
+        <source>Error</source><target>Chyba</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
           <context context-type="linenumber">1</context>
@@ -3663,7 +3681,7 @@
 
 
 
-            <context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="lumeer.advice" datatype="html">
+            <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="lumeer.advice" datatype="html">
         <source>Lumeer's Advice</source><target>Lumeer radí</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
@@ -4513,7 +4531,7 @@
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/invite-user/modal/new-user/new-user.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="button.dismiss" datatype="html">
         <source>Dismiss</source><target>Ukončit</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="button.onward" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context><context context-type="linenumber">1</context></context-group><context-group purpose="location"><context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="button.onward" datatype="html">
         <source>Onward!</source><target>Vzhůru do toho!</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
@@ -5429,7 +5447,21 @@
         <target>Vytvoří nový záznam. Uložte ho do proměnné, abyste jej mohli dál měnit.</target>
         
         
-      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="blockly.tooltip.isEmpty" datatype="html">
+        <source>Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</source>
+        <target>Vrátí true pokud je vstup null, undefined, prázdný řetězec, prázdné pole, prázdný objekt or nebo pole s jednou prázdnou hodnotou.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-empty-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isNotEmpty" datatype="html">
+        <source>Returns true if the input is neither of null, undefined, empty string, array, object or an array containing an empty value.</source>
+        <target>Vrátí true pokud vstup není null, undefined, prázdný řetězec, prázdné pole, prázdný objekt or nebo pole s jednou prázdnou hodnotou.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-not-empty-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
         <source>Gets current date as object for further function calls.</source>
         <target>Vrátí aktuální datum a čas k použití v dalších funkcích.</target>
         <context-group purpose="location">
@@ -5457,7 +5489,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>second(s),minute(s),hour(s),day(s),month(s),quarter(s),year(s)</source><target>sekund(y),minut(y),hodin(y),dn(ů/y),měsíc(e/ů),kvartál(y/ů),roky/let</target>
+        <source>second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
+        <target>sekund(y),minut(y),hodin(y),dn(ů/y),měsíc(e/ů),měsíc(e/ů) (držet konec měsíce),kvartál(y/ů),kvartál(y/ů) (držet konec měsíce),roky/let,roky/let (držet konec měsíce)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context>
           <context context-type="linenumber">1</context>

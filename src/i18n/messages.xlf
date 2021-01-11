@@ -2528,7 +2528,7 @@
           <context context-type="linenumber">19</context>
         </context-group>
       </trans-unit><trans-unit id="userNotifications.taskAssignedMiddle" datatype="html">
-        <source>with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
+        <source> with due date <x id="INTERPOLATION" equiv-text="{{taskDueDate}}"/> </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/top-panel/user-panel/notifications-menu/content/dropdown/notification-text/notification-text.component.html</context>
           <context context-type="linenumber">20</context>
@@ -5159,25 +5159,42 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="rules.blockly.action.message" datatype="html">
-        <source>Action Message</source>
+      <trans-unit id="rules.blockly.action.message.success" datatype="html">
+        <source>Success</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="button.dismiss" datatype="html">
-        <source>Dismiss</source>
+      <trans-unit id="rules.blockly.action.message.info" datatype="html">
+        <source>Information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rules.blockly.action.message.warning" datatype="html">
+        <source>Warning</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="rules.blockly.action.message.error" datatype="html">
+        <source>Error</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="button.ok" datatype="html">
+        <source>OK</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/pusher/pusher.service.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context>
+          <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5561,13 +5578,6 @@
         <source>Could not delete the link type</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-types/link-types.effects.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="button.ok" datatype="html">
-        <source>OK</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/core/store/notifications/notifications.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -5987,7 +5997,7 @@
         </context-group>
       </trans-unit>
       <trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>second(s),minute(s),hour(s),day(s),month(s),quarter(s),year(s)</source>
+        <source>second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6067,6 +6077,20 @@
         <source>Gets a record linked to the given document via the selected link.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/get-link-document-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.isEmpty" datatype="html">
+        <source>Returns true if the input is null, undefined, empty string, array, object or an array containing an empty value.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-empty-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="blockly.tooltip.isNotEmpty" datatype="html">
+        <source>Returns true if the input is neither of null, undefined, empty string, array, object or an array containing an empty value.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-not-empty-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
@@ -6566,6 +6590,17 @@
         <source>Could not send feedback.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-feedback-modal/user-feedback-modal.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="button.dismiss" datatype="html">
+        <source>Dismiss</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/top-panel/user-panel/user-menu/user-menu.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/tour/tour.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
