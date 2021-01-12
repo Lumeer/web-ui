@@ -157,7 +157,7 @@ const effects = [
     }),
     EffectsModule.forRoot(effects),
     environment.storeDevtools
-      ? StoreDevtoolsModule.instrument({maxAge: 150, name: `Lumeer NgRx Store (${location.hostname})`})
+      ? StoreDevtoolsModule.instrument({maxAge: 50, name: `Lumeer NgRx Store (${location.hostname})`})
       : [],
   ],
   declarations: [],
