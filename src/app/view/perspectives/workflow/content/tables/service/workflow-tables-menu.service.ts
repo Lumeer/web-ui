@@ -264,11 +264,11 @@ export class WorkflowTablesMenuService {
       case HeaderMenuId.Copy:
         return this.i18n({id: 'copy', value: 'Copy'});
       case HeaderMenuId.CopyName:
-        return this.i18n({id: 'resource.attribute.name', value: 'Attribute name'});
+        return this.i18n({id: 'resource.attribute.name', value: 'Copy column name'});
       case HeaderMenuId.CopyValues:
-        return this.i18n({id: 'table.header.menu.copy.values', value: 'Row values'});
+        return this.i18n({id: 'table.header.menu.copy.values', value: 'Copy all column values'});
       case HeaderMenuId.CopyValuesUnique:
-        return this.i18n({id: 'table.header.menu.copy.values.unique', value: 'Row unique values'});
+        return this.i18n({id: 'table.header.menu.copy.values.unique', value: 'Copy unique column values'});
       case HeaderMenuId.Delete:
         return this.i18n({id: 'table.header.menu.remove', value: 'Delete column'});
       case HeaderMenuId.AddToRight:
