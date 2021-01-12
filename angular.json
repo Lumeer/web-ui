@@ -248,7 +248,8 @@
             "baseHref": "/ui/",
             "browserTarget": "lumeer:build",
             "port": 7000,
-            "progress": true
+            "progress": true,
+            "sourceMap": true
           },
           "configurations": {
             "cs": {
