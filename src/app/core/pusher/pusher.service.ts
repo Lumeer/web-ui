@@ -158,6 +158,7 @@ export class PusherService implements OnDestroy {
     this.bindSequenceEvents();
     this.bindUserMessageEvents();
     this.bindTemplateEvents();
+    this.bindResourceCommentEvents();
   }
 
   private bindOrganizationEvents() {

@@ -32,8 +32,10 @@ import {UnknownConstraint} from '../model/constraint/unknown.constraint';
 import {ClipboardService} from './clipboard.service';
 import {isArray, isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {DataValue} from '../model/data-value';
-import {ConstraintData} from '../model/data/constraint';
+import {ConstraintData, ConstraintType} from '../model/data/constraint';
 import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
+import {Constraint} from '../model/constraint';
+import {UserDataValue} from '../model/data-value/user.data-value';
 
 @Injectable({providedIn: 'root'})
 export class CopyValueService {
@@ -69,7 +71,7 @@ export class CopyValueService {
     attributeId: string,
     constraintData: ConstraintData
   ) {
-    const constraint = findAttributeConstraint(attributesResource && attributesResource.attributes, attributeId);
+    const constraint = findAttributeConstraint(attributesResource?.attributes, attributeId);
     const value = (constraint || new UnknownConstraint())
       .createDataValue(dataResource.data[attributeId], constraintData)
       .editValue();
@@ -80,13 +82,13 @@ export class CopyValueService {
     this.clipboardService.copy(value);
   }
 
-  public copyDataValues(dataValues: DataValue[], unique?: boolean) {
+  public copyDataValues(dataValues: DataValue[], constraint: Constraint, unique?: boolean) {
     const {values} = dataValues.reduce(
       (data, dataValue) => {
         const serialized = dataValue.serialize();
 
         const checkAndAddValue = (currentDataValue: DataValue) => {
-          const formatted = currentDataValue.format();
+          const formatted = this.formatDataValueForCopy(currentDataValue, constraint);
           if (
             (!unique || !data.usedValues.has(formatted)) &&
             isNotNullOrUndefined(formatted) &&
@@ -109,6 +111,15 @@ export class CopyValueService {
       {values: [], usedValues: new Set()}
     );
     this.clipboardService.copy(values.join(', '));
+  }
+
+  private formatDataValueForCopy(dataValue: DataValue, constraint: Constraint): string {
+    switch (constraint.type) {
+      case ConstraintType.User:
+        return (<UserDataValue>dataValue).format(true);
+      default:
+        return dataValue.format();
+    }
   }
 
   public copyCollectionAttribute(collectionId: string, attributeId: string) {

@@ -1259,8 +1259,11 @@ export class WorkflowTablesDataService {
 
   public copyColumnValues(column: TableColumn, unique?: boolean) {
     const table = this.stateService.findTableByColumn(column);
-    const dataValues = table?.rows?.map(row => row.dataValues?.[column.id]);
-    this.copyValueService.copyDataValues(dataValues, unique);
+    const constraint = column.attribute.constraint;
+    const dataValues = table?.rows?.map(row =>
+      constraint.createDataValue(row.data?.[column.id], this.stateService.constraintData)
+    );
+    this.copyValueService.copyDataValues(dataValues, constraint, unique);
   }
 
   public copyRowValue(row: TableRow, column: TableColumn) {

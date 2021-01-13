@@ -124,6 +124,9 @@ import {AttributesResource, DataResource} from '../../model/resource';
 import {selectViewQuery} from '../views/views.state';
 import {CopyValueService} from '../../service/copy-value.service';
 import {selectCollectionPermissions} from '../user-permissions/user-permissions.state';
+import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
+import {selectConstraintData} from '../constraint-data/constraint-data.state';
+import {findAttributeConstraint} from '../collections/collection.util';
 
 @Injectable()
 export class TablesEffects {
@@ -240,10 +243,12 @@ export class TablesEffects {
                     stems: [{collectionId: collection.id, linkTypeIds: [linkType.id]}],
                   };
 
+                  const removeColumnActions = isTablePartEmpty(table.config.parts[lastPartIndex])
+                    ? []
+                    : [new TablesAction.RemoveEmptyColumns({cursor: {tableId: table.id, partIndex: lastPartIndex}})];
+
                   return [
-                    new TablesAction.RemoveEmptyColumns({
-                      cursor: {tableId: table.id, partIndex: lastPartIndex},
-                    }),
+                    ...removeColumnActions,
                     new TablesAction.AddPart({
                       tableId: table.id,
                       parts: [linkTypePart, collectionPart],
@@ -1015,18 +1020,30 @@ export class TablesEffects {
             const attributeId = tableColumn.attributeIds?.[0];
             return this.store$.pipe(
               select(selectDocumentsAndLinksByQuery),
-              map(({documents, linkInstances}) => {
+              withLatestFrom(
+                this.store$.pipe(select(selectCollectionsDictionary)),
+                this.store$.pipe(select(selectLinkTypesDictionary)),
+                this.store$.pipe(select(selectConstraintData))
+              ),
+              map(([{documents, linkInstances}, collectionsMap, linkTypesMap, constraintData]) => {
+                let dataValues = [];
+                let constraint = null;
                 if (tablePart.collectionId) {
-                  return documents.filter(document => document.collectionId === tablePart.collectionId);
+                  constraint = findAttributeConstraint(collectionsMap[tablePart.collectionId]?.attributes, attributeId);
+                  dataValues = documents
+                    .filter(document => document.collectionId === tablePart.collectionId)
+                    .map(document => constraint?.createDataValue(document.data?.[attributeId], constraintData));
                 } else if (tablePart.linkTypeId) {
-                  return linkInstances.filter(link => link.linkTypeId === tablePart.linkTypeId);
+                  constraint = findAttributeConstraint(linkTypesMap[tablePart.linkTypeId]?.attributes, attributeId);
+                  dataValues = linkInstances
+                    .filter(link => link.linkTypeId === tablePart.linkTypeId)
+                    .map(linkInstance => constraint?.createDataValue(linkInstance.data?.[attributeId], constraintData));
                 }
-                return [];
+                return {dataValues, constraint};
               }),
               take(1),
-              mergeMap((dataResources: DataResource[]) => {
-                const dataValues = dataResources.map(dataResource => dataResource.dataValues?.[attributeId]);
-                this.copyValueService.copyDataValues(dataValues, action.payload.unique);
+              mergeMap(({dataValues, constraint}) => {
+                this.copyValueService.copyDataValues(dataValues, constraint, action.payload.unique);
                 return EMPTY;
               })
             );
