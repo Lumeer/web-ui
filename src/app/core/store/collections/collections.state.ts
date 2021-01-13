@@ -36,6 +36,7 @@ export const initialCollectionsState: CollectionsState = collectionsAdapter.getI
 export const selectCollectionsState = (state: AppState) => state.collections;
 
 export const selectAllCollections = createSelector(selectCollectionsState, collectionsAdapter.getSelectors().selectAll);
+
 export const selectCollectionsDictionary = createSelector(
   selectCollectionsState,
   collectionsAdapter.getSelectors().selectEntities
@@ -49,7 +50,7 @@ export const selectCollectionByWorkspace = createSelector(
   selectCollectionsDictionary,
   selectWorkspace,
   (collections, workspace) => {
-    return workspace && workspace.collectionId ? collections[workspace.collectionId] : null;
+    return workspace?.collectionId ? collections[workspace.collectionId] : null;
   }
 );
 
@@ -62,15 +63,11 @@ export const selectCollectionsByIds = (ids: string[]) =>
   );
 
 export const selectCollectionAttributeById = (collectionId: string, attributeId: string) => {
-  return createSelector(
-    selectCollectionById(collectionId),
-    collection => collection && collection.attributes.find(attr => attr.id === attributeId)
+  return createSelector(selectCollectionById(collectionId), collection =>
+    collection?.attributes.find(attr => attr.id === attributeId)
   );
 };
 
 export const selectCollectionAttributeConstraint = (collectionId: string, attributeId: string) => {
-  return createSelector(
-    selectCollectionAttributeById(collectionId, attributeId),
-    attribute => attribute && attribute.constraint
-  );
+  return createSelector(selectCollectionAttributeById(collectionId, attributeId), attribute => attribute?.constraint);
 };

@@ -22,10 +22,9 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {AppState} from '../../../../../../core/store/app.state';
-import {DocumentModel} from '../../../../../../core/store/documents/document.model';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {selectAllDocuments} from '../../../../../../core/store/documents/documents.state';
+import {selectDocumentsCount} from '../../../../../../core/store/documents/documents.state';
 
 @Component({
   selector: 'empty-documents',
@@ -42,12 +41,12 @@ export class EmptyDocumentsComponent implements OnInit {
   @Output()
   public tablePerspective = new EventEmitter();
 
-  public allDocuments$: Observable<DocumentModel[]>;
+  public documentsCount$: Observable<number>;
 
   constructor(private store$: Store<AppState>) {}
 
   public ngOnInit() {
-    this.allDocuments$ = this.store$.pipe(select(selectAllDocuments));
+    this.documentsCount$ = this.store$.pipe(select(selectDocumentsCount));
   }
 
   public onSwitchToTablePerspective() {

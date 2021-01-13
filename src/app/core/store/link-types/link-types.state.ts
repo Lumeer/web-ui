@@ -22,7 +22,6 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {LinkType} from './link.type';
 import {selectCollectionsDictionary} from '../collections/collections.state';
-import {Collection} from '../collections/collection';
 import {mapLinkTypeCollections} from '../../../shared/utils/link-type.utils';
 
 export interface LinkTypesState extends EntityState<LinkType> {
@@ -38,6 +37,7 @@ export const initialLinkTypesState: LinkTypesState = linkTypesAdapter.getInitial
 export const selectLinkTypesState = (state: AppState) => state.linkTypes;
 
 export const selectAllLinkTypes = createSelector(selectLinkTypesState, linkTypesAdapter.getSelectors().selectAll);
+
 export const selectLinkTypesDictionary = createSelector(
   selectLinkTypesState,
   linkTypesAdapter.getSelectors().selectEntities

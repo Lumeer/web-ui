@@ -47,6 +47,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'calendar',
@@ -70,7 +71,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private calendarId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.initCalendar();
@@ -148,7 +149,7 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$();
     this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
