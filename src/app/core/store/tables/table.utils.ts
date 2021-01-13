@@ -775,12 +775,3 @@ export function filterTableRowsByDepth(
       return {...row, linkedRows: filterTableRowsByDepth(row.linkedRows, depth - 1, allowedDocumentIds)};
     });
 }
-
-export function isTablePartEmpty(part: TableConfigPart): boolean {
-  return !part.columns.some(
-    column =>
-      [TableColumnType.COMPOUND, TableColumnType.HIDDEN].includes(column.type) &&
-      column.attributeIds &&
-      column.attributeIds.length > 0
-  );
-}

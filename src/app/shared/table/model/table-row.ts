@@ -17,7 +17,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {DataValue} from '../../../core/model/data-value';
 import {MenuItem} from '../../menu/model/menu-item';
 
 export interface TableRow {
@@ -26,7 +25,7 @@ export interface TableRow {
   height: number;
   creating?: boolean;
   documentId?: string;
-  dataValues?: Record<string, DataValue>; // columnId -> DataValue
+  data?: Record<string, any>; // columnId -> string
   linkInstanceId?: string;
   correlationId?: string;
   commentsCount?: number;

@@ -42,8 +42,34 @@ import {environment} from '../../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ChartDataConverter} from './chart-data-converter';
 import {ChartDataSet, ChartPoint} from './chart-data';
-import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
-import {convertDataResourcesDataValuesByResource} from '../../../../../shared/utils/data-resource.utils';
+
+const documents: DocumentModel[] = [
+  {
+    collectionId: 'C1',
+    id: 'D1',
+    data: {a1: 'Sport', a2: 3, a3: 'Mama'},
+  },
+  {
+    collectionId: 'C1',
+    id: 'D2',
+    data: {a1: 'Dance', a2: 7, a3: 'Salt'},
+  },
+  {
+    collectionId: 'C1',
+    id: 'D3',
+    data: {a1: 'Glass', a2: 44},
+  },
+  {
+    collectionId: 'C1',
+    id: 'D4',
+    data: {a1: 'Sport', a2: 0, a3: 'Dendo'},
+  },
+  {
+    collectionId: 'C1',
+    id: 'D5',
+    data: {a1: 'Glass', a2: 7, a3: 'Vibes'},
+  },
+];
 
 const collections: Collection[] = [
   {
@@ -51,44 +77,12 @@ const collections: Collection[] = [
     name: 'collection',
     color: '#ffffff',
     attributes: [
-      {id: 'a1', name: 'Lala', constraint: new UnknownConstraint()},
-      {id: 'a2', name: 'Kala', constraint: new UnknownConstraint()},
-      {id: 'a3', name: 'Sala', constraint: new UnknownConstraint()},
+      {id: 'a1', name: 'Lala'},
+      {id: 'a2', name: 'Kala'},
+      {id: 'a3', name: 'Sala'},
     ],
   },
 ];
-
-const documents: DocumentModel[] = convertDataResourcesDataValuesByResource(
-  [
-    {
-      collectionId: 'C1',
-      id: 'D1',
-      data: {a1: 'Sport', a2: 3, a3: 'Mama'},
-    },
-    {
-      collectionId: 'C1',
-      id: 'D2',
-      data: {a1: 'Dance', a2: 7, a3: 'Salt'},
-    },
-    {
-      collectionId: 'C1',
-      id: 'D3',
-      data: {a1: 'Glass', a2: 44},
-    },
-    {
-      collectionId: 'C1',
-      id: 'D4',
-      data: {a1: 'Sport', a2: 0, a3: 'Dendo'},
-    },
-    {
-      collectionId: 'C1',
-      id: 'D5',
-      data: {a1: 'Glass', a2: 7, a3: 'Vibes'},
-    },
-  ],
-  collections,
-  null
-);
 
 const permissions: Record<string, AllowedPermissions> = {C1: {writeWithView: true}};
 
@@ -340,6 +334,105 @@ describe('Chart data converter single collection', () => {
   });
 });
 
+const documents2 = [
+  ...documents,
+  {
+    collectionId: 'C1',
+    id: 'D6',
+    data: {a1: 'Lmr', a2: 90},
+  },
+  {
+    collectionId: 'C2',
+    id: 'D21',
+    data: {a1: 'Min', a2: 8},
+  },
+  {
+    collectionId: 'C2',
+    id: 'D22',
+    data: {a1: 'Max', a2: 333},
+  },
+  {
+    collectionId: 'C2',
+    id: 'D23',
+    data: {a1: 'Avg', a2: 8},
+  },
+  {
+    collectionId: 'C2',
+    id: 'D24',
+    data: {a1: 'Sum', a2: 54},
+  },
+  {
+    collectionId: 'C2',
+    id: 'D25',
+    data: {a1: 'Dem', a2: 312},
+  },
+  {
+    collectionId: 'C2',
+    id: 'D26',
+    data: {a1: 'Lep', a2: 1},
+  },
+  {
+    collectionId: 'C3',
+    id: 'D31',
+    data: {a1: 'Abc', a2: 8},
+  },
+  {
+    collectionId: 'C3',
+    id: 'D32',
+    data: {a1: 'Ant', a2: 333},
+  },
+  {
+    collectionId: 'C3',
+    id: 'D33',
+    data: {a1: 'Ask', a2: 8},
+  },
+  {
+    collectionId: 'C3',
+    id: 'D34',
+    data: {a1: 'Ara', a2: 54},
+  },
+  {
+    collectionId: 'C3',
+    id: 'D35',
+    data: {a1: 'And', a2: 312},
+  },
+  {
+    collectionId: 'C3',
+    id: 'D36',
+    data: {a1: 'As', a2: 1},
+  },
+  {
+    collectionId: 'C4',
+    id: 'D41',
+    data: {a1: 'Zet', a2: 8},
+  },
+  {
+    collectionId: 'C4',
+    id: 'D42',
+    data: {a1: 'Zem', a2: 333},
+  },
+  {
+    collectionId: 'C4',
+    id: 'D43',
+    data: {a1: 'Zas', a2: 8},
+  },
+  {
+    collectionId: 'C4',
+    id: 'D44',
+    data: {a1: 'Zoro', a2: 54},
+  },
+  {
+    collectionId: 'C4',
+    id: 'D45',
+    data: {a1: 'Zlom', a2: 312},
+  },
+  {
+    collectionId: 'C4',
+    id: 'D46',
+    data: {a1: 'Zino', a2: 1},
+  },
+];
+
 const collections2 = [
   ...collections,
   {
@@ -347,9 +440,9 @@ const collections2 = [
     name: 'collection2',
     color: '#bcbcbc',
     attributes: [
-      {id: 'a1', name: 'a1', constraint: new UnknownConstraint()},
-      {id: 'a2', name: 'a2', constraint: new UnknownConstraint()},
-      {id: 'a3', name: 'a3', constraint: new UnknownConstraint()},
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+      {id: 'a3', name: 'a3'},
     ],
   },
   {
@@ -357,9 +450,9 @@ const collections2 = [
     name: 'collection3',
     color: '#aabb44',
     attributes: [
-      {id: 'a1', name: 'a1', constraint: new UnknownConstraint()},
-      {id: 'a2', name: 'a2', constraint: new UnknownConstraint()},
-      {id: 'a3', name: 'a3', constraint: new UnknownConstraint()},
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+      {id: 'a3', name: 'a3'},
     ],
   },
   {
@@ -367,115 +460,12 @@ const collections2 = [
     name: 'collection4',
     color: '#123456',
     attributes: [
-      {id: 'a1', name: 'a1', constraint: new UnknownConstraint()},
-      {id: 'a2', name: 'a2', constraint: new UnknownConstraint()},
-      {id: 'a3', name: 'a3', constraint: new UnknownConstraint()},
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
+      {id: 'a3', name: 'a3'},
     ],
   },
 ];
-
-const documents2 = convertDataResourcesDataValuesByResource(
-  [
-    ...documents,
-    {
-      collectionId: 'C1',
-      id: 'D6',
-      data: {a1: 'Lmr', a2: 90},
-    },
-    {
-      collectionId: 'C2',
-      id: 'D21',
-      data: {a1: 'Min', a2: 8},
-    },
-    {
-      collectionId: 'C2',
-      id: 'D22',
-      data: {a1: 'Max', a2: 333},
-    },
-    {
-      collectionId: 'C2',
-      id: 'D23',
-      data: {a1: 'Avg', a2: 8},
-    },
-    {
-      collectionId: 'C2',
-      id: 'D24',
-      data: {a1: 'Sum', a2: 54},
-    },
-    {
-      collectionId: 'C2',
-      id: 'D25',
-      data: {a1: 'Dem', a2: 312},
-    },
-    {
-      collectionId: 'C2',
-      id: 'D26',
-      data: {a1: 'Lep', a2: 1},
-    },
-    {
-      collectionId: 'C3',
-      id: 'D31',
-      data: {a1: 'Abc', a2: 8},
-    },
-    {
-      collectionId: 'C3',
-      id: 'D32',
-      data: {a1: 'Ant', a2: 333},
-    },
-    {
-      collectionId: 'C3',
-      id: 'D33',
-      data: {a1: 'Ask', a2: 8},
-    },
-    {
-      collectionId: 'C3',
-      id: 'D34',
-      data: {a1: 'Ara', a2: 54},
-    },
-    {
-      collectionId: 'C3',
-      id: 'D35',
-      data: {a1: 'And', a2: 312},
-    },
-    {
-      collectionId: 'C3',
-      id: 'D36',
-      data: {a1: 'As', a2: 1},
-    },
-    {
-      collectionId: 'C4',
-      id: 'D41',
-      data: {a1: 'Zet', a2: 8},
-    },
-    {
-      collectionId: 'C4',
-      id: 'D42',
-      data: {a1: 'Zem', a2: 333},
-    },
-    {
-      collectionId: 'C4',
-      id: 'D43',
-      data: {a1: 'Zas', a2: 8},
-    },
-    {
-      collectionId: 'C4',
-      id: 'D44',
-      data: {a1: 'Zoro', a2: 54},
-    },
-    {
-      collectionId: 'C4',
-      id: 'D45',
-      data: {a1: 'Zlom', a2: 312},
-    },
-    {
-      collectionId: 'C4',
-      id: 'D46',
-      data: {a1: 'Zino', a2: 1},
-    },
-  ],
-  collections2,
-  null
-);
 
 const permissions2 = {
   ...permissions,
@@ -490,8 +480,8 @@ const linkTypes2: LinkType[] = [
     name: 'LinkType1',
     collectionIds: ['C1', 'C2'],
     attributes: [
-      {id: 'a1', name: 'a1', constraint: new UnknownConstraint()},
-      {id: 'a2', name: 'a2', constraint: new UnknownConstraint()},
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
     ],
   },
   {
@@ -499,8 +489,8 @@ const linkTypes2: LinkType[] = [
     name: 'LinkType2',
     collectionIds: ['C2', 'C3'],
     attributes: [
-      {id: 'a1', name: 'a1', constraint: new UnknownConstraint()},
-      {id: 'a2', name: 'a2', constraint: new UnknownConstraint()},
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
     ],
   },
   {
@@ -508,229 +498,224 @@ const linkTypes2: LinkType[] = [
     name: 'LinkType3',
     collectionIds: ['C3', 'C4'],
     attributes: [
-      {id: 'a1', name: 'a1', constraint: new UnknownConstraint()},
-      {id: 'a2', name: 'a2', constraint: new UnknownConstraint()},
+      {id: 'a1', name: 'a1'},
+      {id: 'a2', name: 'a2'},
     ],
   },
 ];
 
-const linkInstances2: LinkInstance[] = convertDataResourcesDataValuesByResource(
-  [
-    {
-      id: 'l1',
-      linkTypeId: 'LT1',
-      documentIds: ['D1', 'D21'],
-      data: {a1: 'Lmx', a2: 30},
-    },
-    {
-      id: 'l2',
-      linkTypeId: 'LT1',
-      documentIds: ['D1', 'D22'],
-      data: {a1: 'Lmp', a2: 20},
-    },
-    {
-      id: 'l3',
-      linkTypeId: 'LT1',
-      documentIds: ['D2', 'D23'],
-      data: {a1: 'Lpr', a2: 80},
-    },
-    {
-      id: 'l4',
-      linkTypeId: 'LT1',
-      documentIds: ['D3', 'D24'],
-      data: {a1: 'Lxx', a2: 10},
-    },
-    {
-      id: 'l5',
-      linkTypeId: 'LT1',
-      documentIds: ['D3', 'D23'],
-      data: {a1: 'Lll', a2: 30},
-    },
-    {
-      id: 'l6',
-      linkTypeId: 'LT1',
-      documentIds: ['D4', 'D26'],
-      data: {a1: 'Lop', a2: 100},
-    },
-    {
-      id: 'l7',
-      linkTypeId: 'LT1',
-      documentIds: ['D4', 'D23'],
-      data: {a1: 'Los', a2: 310},
-    },
-    {
-      id: 'l8',
-      linkTypeId: 'LT1',
-      documentIds: ['D4', 'D22'],
-      data: {a1: 'Lqq', a2: 70},
-    },
-    {
-      id: 'l9',
-      linkTypeId: 'LT1',
-      documentIds: ['D5', 'D24'],
-      data: {a1: 'Lss', a2: 90},
-    },
-    {
-      id: 'l10',
-      linkTypeId: 'LT1',
-      documentIds: ['D5', 'D22'],
-      data: {a1: 'Ldd', a2: 304},
-    },
-    {
-      id: 'l11',
-      linkTypeId: 'LT1',
-      documentIds: ['D6', 'D21'],
-      data: {a1: 'Lee', a2: 330},
-    },
-    {
-      id: 'l12',
-      linkTypeId: 'LT1',
-      documentIds: ['D6', 'D26'],
-      data: {a1: 'Loo', a2: 3},
-    },
-    {
-      id: 'l13',
-      linkTypeId: 'LT2',
-      documentIds: ['D21', 'D33'],
-      data: {a1: 'Lzz', a2: 430},
-    },
-    {
-      id: 'l14',
-      linkTypeId: 'LT2',
-      documentIds: ['D21', 'D32'],
-      data: {a1: 'Ltt', a2: 220},
-    },
-    {
-      id: 'l15',
-      linkTypeId: 'LT2',
-      documentIds: ['D22', 'D31'],
-      data: {a1: 'Lff', a2: 3440},
-    },
-    {
-      id: 'l16',
-      linkTypeId: 'LT2',
-      documentIds: ['D22', 'D35'],
-      data: {a1: 'L11', a2: 350},
-    },
-    {
-      id: 'l17',
-      linkTypeId: 'LT2',
-      documentIds: ['D23', 'D34'],
-      data: {a1: 'Les', a2: 65},
-    },
-    {
-      id: 'l18',
-      linkTypeId: 'LT2',
-      documentIds: ['D23', 'D36'],
-      data: {a1: 'Lhg', a2: 55},
-    },
-    {
-      id: 'l19',
-      linkTypeId: 'LT2',
-      documentIds: ['D24', 'D32'],
-      data: {a1: 'Lss', a2: 220},
-    },
-    {
-      id: 'l20',
-      linkTypeId: 'LT2',
-      documentIds: ['D24', 'D33'],
-      data: {a1: 'Lmm', a2: 99},
-    },
-    {
-      id: 'l21',
-      linkTypeId: 'LT2',
-      documentIds: ['D25', 'D34'],
-      data: {a1: 'Llg', a2: 81},
-    },
-    {
-      id: 'l22',
-      linkTypeId: 'LT2',
-      documentIds: ['D26', 'D31'],
-      data: {a1: 'Lrr', a2: 61},
-    },
-    {
-      id: 'l23',
-      linkTypeId: 'LT2',
-      documentIds: ['D26', 'D35'],
-      data: {a1: 'Lcx', a2: 39},
-    },
-    {
-      id: 'l24',
-      linkTypeId: 'LT2',
-      documentIds: ['D26', 'D33'],
-      data: {a1: 'Lrf', a2: 92},
-    },
-    {
-      id: 'l25',
-      linkTypeId: 'LT3',
-      documentIds: ['D31', 'D42'],
-      data: {a1: 'Len', a2: 45},
-    },
-    {
-      id: 'l26',
-      linkTypeId: 'LT3',
-      documentIds: ['D31', 'D43'],
-      data: {a1: 'Lsa', a2: 65},
-    },
-    {
-      id: 'l27',
-      linkTypeId: 'LT3',
-      documentIds: ['D32', 'D45'],
-      data: {a1: 'Las', a2: 96},
-    },
-    {
-      id: 'l28',
-      linkTypeId: 'LT3',
-      documentIds: ['D33', 'D41'],
-      data: {a1: 'Lmx', a2: 30},
-    },
-    {
-      id: 'l29',
-      linkTypeId: 'LT3',
-      documentIds: ['D33', 'D46'],
-      data: {a1: 'Lkq', a2: 651},
-    },
-    {
-      id: 'l30',
-      linkTypeId: 'LT3',
-      documentIds: ['D34', 'D43'],
-      data: {a1: 'Ler', a2: 34},
-    },
-    {
-      id: 'l31',
-      linkTypeId: 'LT3',
-      documentIds: ['D34', 'D44'],
-      data: {a1: 'Lww', a2: 67},
-    },
-    {
-      id: 'l32',
-      linkTypeId: 'LT3',
-      documentIds: ['D34', 'D45'],
-      data: {a1: 'Lvb', a2: 11},
-    },
-    {
-      id: 'l33',
-      linkTypeId: 'LT3',
-      documentIds: ['D35', 'D41'],
-      data: {a1: 'Lbo', a2: 77},
-    },
-    {
-      id: 'l34',
-      linkTypeId: 'LT3',
-      documentIds: ['D35', 'D46'],
-      data: {a1: 'Lwl', a2: 83},
-    },
-    {
-      id: 'l35',
-      linkTypeId: 'LT3',
-      documentIds: ['D36', 'D44'],
-      data: {a1: 'Lmy', a2: 19},
-    },
-  ],
-  linkTypes2,
-  null,
-  AttributesResourceType.LinkType
-);
+const linkInstances2: LinkInstance[] = [
+  {
+    id: 'l1',
+    linkTypeId: 'LT1',
+    documentIds: ['D1', 'D21'],
+    data: {a1: 'Lmx', a2: 30},
+  },
+  {
+    id: 'l2',
+    linkTypeId: 'LT1',
+    documentIds: ['D1', 'D22'],
+    data: {a1: 'Lmp', a2: 20},
+  },
+  {
+    id: 'l3',
+    linkTypeId: 'LT1',
+    documentIds: ['D2', 'D23'],
+    data: {a1: 'Lpr', a2: 80},
+  },
+  {
+    id: 'l4',
+    linkTypeId: 'LT1',
+    documentIds: ['D3', 'D24'],
+    data: {a1: 'Lxx', a2: 10},
+  },
+  {
+    id: 'l5',
+    linkTypeId: 'LT1',
+    documentIds: ['D3', 'D23'],
+    data: {a1: 'Lll', a2: 30},
+  },
+  {
+    id: 'l6',
+    linkTypeId: 'LT1',
+    documentIds: ['D4', 'D26'],
+    data: {a1: 'Lop', a2: 100},
+  },
+  {
+    id: 'l7',
+    linkTypeId: 'LT1',
+    documentIds: ['D4', 'D23'],
+    data: {a1: 'Los', a2: 310},
+  },
+  {
+    id: 'l8',
+    linkTypeId: 'LT1',
+    documentIds: ['D4', 'D22'],
+    data: {a1: 'Lqq', a2: 70},
+  },
+  {
+    id: 'l9',
+    linkTypeId: 'LT1',
+    documentIds: ['D5', 'D24'],
+    data: {a1: 'Lss', a2: 90},
+  },
+  {
+    id: 'l10',
+    linkTypeId: 'LT1',
+    documentIds: ['D5', 'D22'],
+    data: {a1: 'Ldd', a2: 304},
+  },
+  {
+    id: 'l11',
+    linkTypeId: 'LT1',
+    documentIds: ['D6', 'D21'],
+    data: {a1: 'Lee', a2: 330},
+  },
+  {
+    id: 'l12',
+    linkTypeId: 'LT1',
+    documentIds: ['D6', 'D26'],
+    data: {a1: 'Loo', a2: 3},
+  },
+  {
+    id: 'l13',
+    linkTypeId: 'LT2',
+    documentIds: ['D21', 'D33'],
+    data: {a1: 'Lzz', a2: 430},
+  },
+  {
+    id: 'l14',
+    linkTypeId: 'LT2',
+    documentIds: ['D21', 'D32'],
+    data: {a1: 'Ltt', a2: 220},
+  },
+  {
+    id: 'l15',
+    linkTypeId: 'LT2',
+    documentIds: ['D22', 'D31'],
+    data: {a1: 'Lff', a2: 3440},
+  },
+  {
+    id: 'l16',
+    linkTypeId: 'LT2',
+    documentIds: ['D22', 'D35'],
+    data: {a1: 'L11', a2: 350},
+  },
+  {
+    id: 'l17',
+    linkTypeId: 'LT2',
+    documentIds: ['D23', 'D34'],
+    data: {a1: 'Les', a2: 65},
+  },
+  {
+    id: 'l18',
+    linkTypeId: 'LT2',
+    documentIds: ['D23', 'D36'],
+    data: {a1: 'Lhg', a2: 55},
+  },
+  {
+    id: 'l19',
+    linkTypeId: 'LT2',
+    documentIds: ['D24', 'D32'],
+    data: {a1: 'Lss', a2: 220},
+  },
+  {
+    id: 'l20',
+    linkTypeId: 'LT2',
+    documentIds: ['D24', 'D33'],
+    data: {a1: 'Lmm', a2: 99},
+  },
+  {
+    id: 'l21',
+    linkTypeId: 'LT2',
+    documentIds: ['D25', 'D34'],
+    data: {a1: 'Llg', a2: 81},
+  },
+  {
+    id: 'l22',
+    linkTypeId: 'LT2',
+    documentIds: ['D26', 'D31'],
+    data: {a1: 'Lrr', a2: 61},
+  },
+  {
+    id: 'l23',
+    linkTypeId: 'LT2',
+    documentIds: ['D26', 'D35'],
+    data: {a1: 'Lcx', a2: 39},
+  },
+  {
+    id: 'l24',
+    linkTypeId: 'LT2',
+    documentIds: ['D26', 'D33'],
+    data: {a1: 'Lrf', a2: 92},
+  },
+  {
+    id: 'l25',
+    linkTypeId: 'LT3',
+    documentIds: ['D31', 'D42'],
+    data: {a1: 'Len', a2: 45},
+  },
+  {
+    id: 'l26',
+    linkTypeId: 'LT3',
+    documentIds: ['D31', 'D43'],
+    data: {a1: 'Lsa', a2: 65},
+  },
+  {
+    id: 'l27',
+    linkTypeId: 'LT3',
+    documentIds: ['D32', 'D45'],
+    data: {a1: 'Las', a2: 96},
+  },
+  {
+    id: 'l28',
+    linkTypeId: 'LT3',
+    documentIds: ['D33', 'D41'],
+    data: {a1: 'Lmx', a2: 30},
+  },
+  {
+    id: 'l29',
+    linkTypeId: 'LT3',
+    documentIds: ['D33', 'D46'],
+    data: {a1: 'Lkq', a2: 651},
+  },
+  {
+    id: 'l30',
+    linkTypeId: 'LT3',
+    documentIds: ['D34', 'D43'],
+    data: {a1: 'Ler', a2: 34},
+  },
+  {
+    id: 'l31',
+    linkTypeId: 'LT3',
+    documentIds: ['D34', 'D44'],
+    data: {a1: 'Lww', a2: 67},
+  },
+  {
+    id: 'l32',
+    linkTypeId: 'LT3',
+    documentIds: ['D34', 'D45'],
+    data: {a1: 'Lvb', a2: 11},
+  },
+  {
+    id: 'l33',
+    linkTypeId: 'LT3',
+    documentIds: ['D35', 'D41'],
+    data: {a1: 'Lbo', a2: 77},
+  },
+  {
+    id: 'l34',
+    linkTypeId: 'LT3',
+    documentIds: ['D35', 'D46'],
+    data: {a1: 'Lwl', a2: 83},
+  },
+  {
+    id: 'l35',
+    linkTypeId: 'LT3',
+    documentIds: ['D36', 'D44'],
+    data: {a1: 'Lmy', a2: 19},
+  },
+];
 
 const query2: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 
@@ -1203,7 +1188,7 @@ describe('Chart data converter linked collections', () => {
 
   it('should return data with percentage constraint', () => {
     const collections3 = [
-      {id: 'C1', name: 'C1', color: '', attributes: [{id: 'a1', name: 'Xxx', constraint: new UnknownConstraint()}]},
+      {id: 'C1', name: 'C1', color: '', attributes: [{id: 'a1', name: 'Xxx'}]},
       {
         id: 'C2',
         name: 'C2',
@@ -1212,46 +1197,33 @@ describe('Chart data converter linked collections', () => {
       },
     ];
     const linkTypes3: LinkType[] = [{id: 'LT1', name: 'LinkType1', collectionIds: ['C1', 'C2'], attributes: []}];
-    const documentsC1 = convertDataResourcesDataValuesByResource(
-      [
-        {collectionId: 'C1', id: 'D1', data: {a1: 'Martin'}},
-        {collectionId: 'C1', id: 'D2', data: {a1: 'Kubo'}},
-        {collectionId: 'C1', id: 'D3', data: {a1: 'Tomas'}},
-      ],
-      collections3,
-      null
-    );
-    const documentsC2 = convertDataResourcesDataValuesByResource(
-      [
-        {collectionId: 'C2', id: 'D21', data: {a1: '0.1'}},
-        {collectionId: 'C2', id: 'D22', data: {a1: '0.3'}},
-        {collectionId: 'C2', id: 'D23', data: {a1: '0.5'}},
-        {collectionId: 'C2', id: 'D24', data: {a1: '0.4'}},
-        {collectionId: 'C2', id: 'D25', data: {a1: '0.8'}},
-        {collectionId: 'C2', id: 'D26', data: {a1: '0.1'}},
-        {collectionId: 'C2', id: 'D27', data: {a1: '0.2'}},
-        {collectionId: 'C2', id: 'D28', data: {a1: '0.3'}},
-        {collectionId: 'C2', id: 'D29', data: {a1: '0.4'}},
-      ],
-      collections3,
-      null
-    );
-    const linkInstances3: LinkInstance[] = convertDataResourcesDataValuesByResource(
-      [
-        {id: 'l1', linkTypeId: 'LT1', documentIds: ['D1', 'D21'], data: {}},
-        {id: 'l2', linkTypeId: 'LT1', documentIds: ['D1', 'D22'], data: {}},
-        {id: 'l3', linkTypeId: 'LT1', documentIds: ['D1', 'D23'], data: {}},
-        {id: 'l4', linkTypeId: 'LT1', documentIds: ['D2', 'D24'], data: {}},
-        {id: 'l5', linkTypeId: 'LT1', documentIds: ['D2', 'D25'], data: {}},
-        {id: 'l6', linkTypeId: 'LT1', documentIds: ['D3', 'D26'], data: {}},
-        {id: 'l7', linkTypeId: 'LT1', documentIds: ['D3', 'D27'], data: {}},
-        {id: 'l8', linkTypeId: 'LT1', documentIds: ['D3', 'D28'], data: {}},
-        {id: 'l9', linkTypeId: 'LT1', documentIds: ['D3', 'D29'], data: {}},
-      ],
-      linkTypes3,
-      null,
-      AttributesResourceType.LinkType
-    );
+    const documentsC1 = [
+      {collectionId: 'C1', id: 'D1', data: {a1: 'Martin'}},
+      {collectionId: 'C1', id: 'D2', data: {a1: 'Kubo'}},
+      {collectionId: 'C1', id: 'D3', data: {a1: 'Tomas'}},
+    ];
+    const documentsC2 = [
+      {collectionId: 'C2', id: 'D21', data: {a1: '0.1'}},
+      {collectionId: 'C2', id: 'D22', data: {a1: '0.3'}},
+      {collectionId: 'C2', id: 'D23', data: {a1: '0.5'}},
+      {collectionId: 'C2', id: 'D24', data: {a1: '0.4'}},
+      {collectionId: 'C2', id: 'D25', data: {a1: '0.8'}},
+      {collectionId: 'C2', id: 'D26', data: {a1: '0.1'}},
+      {collectionId: 'C2', id: 'D27', data: {a1: '0.2'}},
+      {collectionId: 'C2', id: 'D28', data: {a1: '0.3'}},
+      {collectionId: 'C2', id: 'D29', data: {a1: '0.4'}},
+    ];
+    const linkInstances3: LinkInstance[] = [
+      {id: 'l1', linkTypeId: 'LT1', documentIds: ['D1', 'D21'], data: {}},
+      {id: 'l2', linkTypeId: 'LT1', documentIds: ['D1', 'D22'], data: {}},
+      {id: 'l3', linkTypeId: 'LT1', documentIds: ['D1', 'D23'], data: {}},
+      {id: 'l4', linkTypeId: 'LT1', documentIds: ['D2', 'D24'], data: {}},
+      {id: 'l5', linkTypeId: 'LT1', documentIds: ['D2', 'D25'], data: {}},
+      {id: 'l6', linkTypeId: 'LT1', documentIds: ['D3', 'D26'], data: {}},
+      {id: 'l7', linkTypeId: 'LT1', documentIds: ['D3', 'D27'], data: {}},
+      {id: 'l8', linkTypeId: 'LT1', documentIds: ['D3', 'D28'], data: {}},
+      {id: 'l9', linkTypeId: 'LT1', documentIds: ['D3', 'D29'], data: {}},
+    ];
     const query3: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1']}]};
     const permissions3: Record<string, AllowedPermissions> = {C1: {writeWithView: true}, C2: {writeWithView: true}};
 

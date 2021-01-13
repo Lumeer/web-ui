@@ -19,18 +19,8 @@
 
 import {DocumentDto} from '../../dto';
 import {DocumentModel} from './document.model';
-import {Attribute} from '../collections/collection';
-import {objectsByIdMap} from '../../../shared/utils/common.utils';
-import {ConstraintData} from '../../model/data/constraint';
-import {DataResourceData, DataResourceDataValues} from '../../model/resource';
-import {convertDataToDataValues} from '../../../shared/utils/data-resource.utils';
 
-export function convertDocumentDtoToModel(
-  dto: DocumentDto,
-  attributes: Attribute[],
-  constraintData: ConstraintData,
-  correlationId?: string
-): DocumentModel {
+export function convertDocumentDtoToModel(dto: DocumentDto, correlationId?: string): DocumentModel {
   const data = {...dto.data};
   delete data['_id'];
 
@@ -38,7 +28,6 @@ export function convertDocumentDtoToModel(
     id: dto.id,
     collectionId: dto.collectionId,
     data,
-    dataValues: convertDataToDataValues(data, attributes, constraintData),
     metaData: dto.metaData,
     favorite: dto.favorite,
     creationDate: new Date(dto.creationDate),

@@ -681,7 +681,7 @@ export class DataAggregator {
   }
 
   private getValues(object: DataResource, attributeId: string): any[] {
-    const value = object.dataValues?.[attributeId]?.serialize();
+    const value = object.data[attributeId];
     if (isNullOrUndefined(value)) {
       return [''];
     }
@@ -739,20 +739,17 @@ function createDataMap(
     const linkInstanceObjectData: LinkInstance = {
       id: linkInstance.id,
       data: linkInstance.data,
-      dataValues: linkInstance.dataValues,
       documentIds: [document1.id, document2.id],
       linkTypeId: linkInstance.linkTypeId,
     };
     const document1ObjectData: DocumentModel = {
       id: document1.id,
       data: document1.data,
-      dataValues: document1.dataValues,
       collectionId: document1.collectionId,
     };
     const document2ObjectData: DocumentModel = {
       id: document2.id,
       data: document2.data,
-      dataValues: document2.dataValues,
       collectionId: document2.collectionId,
     };
 

@@ -27,12 +27,13 @@ import {minimumValuesCountValidator} from '../../../../../../core/validators/min
 import {AttributesResource, AttributesResourceType} from '../../../../../../core/model/resource';
 import {Attribute} from '../../../../../../core/store/collections/collection';
 import {DataValue} from '../../../../../../core/model/data-value';
-import {Observable, of} from 'rxjs';
+import {combineLatest, Observable, of} from 'rxjs';
 import {getAttributesResourceType} from '../../../../../utils/resource.utils';
 import {select, Store} from '@ngrx/store';
 import {selectDocumentsByCollectionId} from '../../../../../../core/store/documents/documents.state';
 import {AppState} from '../../../../../../core/store/app.state';
 import {selectLinkInstancesByType} from '../../../../../../core/store/link-instances/link-instances.state';
+import {selectConstraintData} from '../../../../../../core/store/constraint-data/constraint-data.state';
 import {createSuggestionDataValues} from '../../../../../utils/data-resource.utils';
 import {map} from 'rxjs/operators';
 
@@ -73,17 +74,23 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
   private bindDataValues$(): Observable<DataValue[]> {
     if (this.resource) {
       if (getAttributesResourceType(this.resource) === AttributesResourceType.Collection) {
-        this.store$
-          .pipe(select(selectDocumentsByCollectionId(this.resource.id)))
-          .pipe(map(documents => createSuggestionDataValues(documents, this.attribute.id, this.attribute.constraint)));
+        return combineLatest([
+          this.store$.pipe(select(selectConstraintData)),
+          this.store$.pipe(select(selectDocumentsByCollectionId(this.resource.id))),
+        ]).pipe(
+          map(([constraintData, documents]) =>
+            createSuggestionDataValues(documents, this.attribute.id, this.attribute.constraint, constraintData)
+          )
+        );
       } else if (getAttributesResourceType(this.resource) === AttributesResourceType.LinkType) {
-        this.store$
-          .pipe(select(selectLinkInstancesByType(this.resource.id)))
-          .pipe(
-            map(linkInstances =>
-              createSuggestionDataValues(linkInstances, this.attribute.id, this.attribute.constraint)
-            )
-          );
+        return combineLatest([
+          this.store$.pipe(select(selectConstraintData)),
+          this.store$.pipe(select(selectLinkInstancesByType(this.resource.id))),
+        ]).pipe(
+          map(([constraintData, linkInstances]) =>
+            createSuggestionDataValues(linkInstances, this.attribute.id, this.attribute.constraint, constraintData)
+          )
+        );
       }
     }
     return of([]);

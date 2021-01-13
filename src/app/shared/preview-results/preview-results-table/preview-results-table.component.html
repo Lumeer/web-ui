@@ -42,7 +42,7 @@
           <data-input-preview [constraint]="attr.constraint"
                               [configuration]="configuration"
                               [cursor]="document | dataCursor : attr.id"
-                              [dataValue]="document.dataValues[attr.id]">
+                              [dataValue]="document.data[attr.id] | dataValue:attr.constraint:constraintData">
           </data-input-preview>
         </td>
       </tr>

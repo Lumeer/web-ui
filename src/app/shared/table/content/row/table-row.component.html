@@ -1,7 +1,7 @@
 <ng-container *ngFor="let group of columnGroups; let index = index; trackBy: trackByColumn">
 
   <ng-container
-    *ngIf="{dataValue: row.dataValues[group.column?.id],
+    *ngIf="{dataValue: group.column && (row.data[group.column.id] | dataValue:group.column?.attribute?.constraint:constraintData),
     constraintType: group.column?.attribute?.constraint?.type,
     editing: editedCell | tableCellEdited:group.column:cellType:row} as data">
 
@@ -73,6 +73,7 @@
   [linkInstanceId]="row.linkInstanceId"
   [linkTypeId]="linkTypeId"
   [createLinkDirectly]="false"
+  [constraintData]="constraintData"
   [origin]="element"
   (useHint)="onUseHint($event)">
 </document-hints>

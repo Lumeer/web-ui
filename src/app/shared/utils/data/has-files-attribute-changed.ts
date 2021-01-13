@@ -28,12 +28,17 @@ export function hasFilesAttributeChanged(
   entity: DocumentModel | LinkInstance,
   previousEntity: DocumentModel | LinkInstance
 ): boolean {
-  const filesAttributeIds =
-    parent?.attributes || [].filter(attr => attr.constraint?.type === ConstraintType.Files).map(attr => attr.id);
+  const filesAttributeIds = ((parent && parent.attributes) || [])
+    .filter(attr => attr.constraint && attr.constraint.type === ConstraintType.Files)
+    .map(attr => attr.id);
 
   if (filesAttributeIds.length === 0) {
     return false;
   }
 
-  return filesAttributeIds.some(attrId => (entity.data?.[attrId] || '') !== (previousEntity.data?.[attrId] || ''));
+  return filesAttributeIds.some(
+    attrId =>
+      ((entity && entity.data && entity.data[attrId]) || '') !==
+      ((previousEntity && previousEntity.data && previousEntity.data[attrId]) || '')
+  );
 }

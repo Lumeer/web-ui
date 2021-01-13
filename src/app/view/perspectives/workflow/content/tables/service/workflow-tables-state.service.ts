@@ -47,9 +47,8 @@ import {WorkflowConfig} from '../../../../../../core/store/workflows/workflow';
 import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
-import {AttributesResourceType, DataResourceDataValues} from '../../../../../../core/model/resource';
+import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {tableHasNewRowPresented} from '../../../../../../shared/table/model/table-utils';
-import {DataValue} from '../../../../../../core/model/data-value';
 
 @Injectable()
 export class WorkflowTablesStateService {
@@ -405,12 +404,12 @@ export class WorkflowTablesStateService {
     this.setTables(newTables);
   }
 
-  public setRowValue(row: TableRow, column: TableColumn, value: DataValue) {
-    this.setRowProperty(column.tableId, row, {[`dataValues.${column.id}`]: value});
+  public setRowValue(row: TableRow, column: TableColumn, value: any) {
+    this.setRowProperty(column.tableId, row, {[`data.${column.id}`]: value});
   }
 
-  public setNewRowValue(column: TableColumn, value: DataValue) {
-    this.setNewRowProperty(column.tableId, {[`dataValues.${column.id}`]: value});
+  public setNewRowValue(column: TableColumn, value: any) {
+    this.setNewRowProperty(column.tableId, {[`data.${column.id}`]: value});
   }
 
   public removeRow(row: TableRow) {
@@ -441,11 +440,11 @@ export class WorkflowTablesStateService {
   }
 
   public startRowCreatingWithValue(row: TableRow, column: TableColumn, value: any) {
-    this.setNewRowProperty(row.tableId, {creating: true, [`dataValues.${column.id}`]: value});
+    this.setNewRowProperty(row.tableId, {creating: true, [`data.${column.id}`]: value});
   }
 
-  public startRowCreating(row: TableRow, dataValues: DataResourceDataValues, documentId: string) {
-    this.setNewRowProperty(row.tableId, {creating: true, dataValues, documentId});
+  public startRowCreating(row: TableRow, data: Record<string, any>, documentId: string) {
+    this.setNewRowProperty(row.tableId, {creating: true, data, documentId});
   }
 
   public endRowCreating(row: TableRow) {

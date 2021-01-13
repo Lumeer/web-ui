@@ -50,8 +50,6 @@ export function documentsReducer(
       return addOrUpdateDocument(state, action.payload.document);
     case DocumentsActionType.UPDATE_FAILURE:
       return revertDocument(state, action.payload.originalDocument);
-    case DocumentsActionType.UPDATE_DATA_VALUES:
-      return updateDataValues(state, action);
     case DocumentsActionType.DELETE_SUCCESS:
       return documentsAdapter.removeOne(action.payload.documentId, state);
     case DocumentsActionType.DUPLICATE_SUCCESS:
@@ -151,10 +149,6 @@ function patchData(state: DocumentsState, action: DocumentsAction.PatchDataInter
         ...originalDocument.data,
         ...action.payload.document.data,
       },
-      dataValues: {
-        ...originalDocument.dataValues,
-        ...action.payload.document.dataValues,
-      },
       dataVersion: originalDocument.dataVersion + 1,
     },
     state
@@ -181,12 +175,12 @@ function addDocuments(state: DocumentsState, action: DocumentsAction.GetSuccess)
     const oldDocument = state.entities[document.id];
     return !oldDocument || isDocumentNewer(document, oldDocument);
   });
-  const filteredDocumentIds = new Set(filteredDocuments.map(doc => doc.id));
+  const filteredDocumentIds = filteredDocuments.map(doc => doc.id);
 
   const changedTransientProperties = action.payload.documents.reduce<DocumentModel[]>((result, document) => {
     const oldDocument = state.entities[document.id];
 
-    if (!filteredDocumentIds.has(document.id) && isTransientModified(document, oldDocument)) {
+    if (!filteredDocumentIds.includes(document.id) && isTransientModified(document, oldDocument)) {
       result.push({...oldDocument, commentsCount: document.commentsCount});
     }
 
@@ -255,17 +249,4 @@ function isModifiedLater(document: DocumentModel, oldDocument: DocumentModel): b
   return (
     document.updateDate && (!oldDocument.updateDate || document.updateDate.getTime() > oldDocument.updateDate.getTime())
   );
-}
-
-function updateDataValues(state: DocumentsState, action: DocumentsAction.UpdateDataValues): DocumentsState {
-  const updateDocuments = action.payload.documents.reduce((documents, document) => {
-    const oldDocument = state.entities[document.id];
-    if (oldDocument) {
-      documents.push({...oldDocument, dataValues: document.dataValues});
-    }
-
-    return documents;
-  }, []);
-
-  return documentsAdapter.upsertMany(updateDocuments, state);
 }

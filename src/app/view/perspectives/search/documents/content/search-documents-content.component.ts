@@ -27,7 +27,6 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
-import {Router} from '@angular/router';
 import {QueryParam} from '../../../../../core/store/navigation/query-param';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {defaultSizeType, SearchDocumentsConfig} from '../../../../../core/store/searches/search';
@@ -37,6 +36,7 @@ import {Query} from '../../../../../core/store/navigation/query/query';
 import {Workspace} from '../../../../../core/store/navigation/workspace';
 import {SizeType} from '../../../../../shared/slider/size/size-type';
 import {PerspectiveService} from '../../../../../core/service/perspective.service';
+import {Router} from '@angular/router';
 import {Perspective} from '../../../perspective';
 import {SearchTab} from '../../../../../core/store/navigation/search-tab';
 import {convertQueryModelToString} from '../../../../../core/store/navigation/query/query.converter';
@@ -51,7 +51,6 @@ import {AppState} from '../../../../../core/store/app.state';
 import {Observable} from 'rxjs';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionsPermissions} from '../../../../../core/store/user-permissions/user-permissions.state';
-import {objectsByIdMap} from '../../../../../shared/utils/common.utils';
 
 @Component({
   selector: 'search-documents-content',
@@ -94,7 +93,6 @@ export class SearchDocumentsContentComponent implements OnInit, OnChanges {
   public readonly configuration: DataInputConfiguration = {color: {limitWidth: true}};
   public readonly sizeType = SizeType;
   public currentSize: SizeType;
-  public collectionsMap: Record<string, Collection>;
 
   public permissions$: Observable<Record<string, AllowedPermissions>>;
 
@@ -114,9 +112,6 @@ export class SearchDocumentsContentComponent implements OnInit, OnChanges {
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
       this.currentSize = this.config?.size || defaultSizeType;
-    }
-    if (changes.collections) {
-      this.collectionsMap = objectsByIdMap(this.collections);
     }
   }
 
@@ -139,11 +134,11 @@ export class SearchDocumentsContentComponent implements OnInit, OnChanges {
   }
 
   private isDocumentExplicitlyExpanded(document: DocumentModel): boolean {
-    return (this.config?.expandedIds || []).includes(document.id);
+    return ((this.config && this.config.expandedIds) || []).includes(document.id);
   }
 
   public toggleDocument(document: DocumentModel) {
-    const expandedIds = this.config?.expandedIds || [];
+    const expandedIds = (this.config && this.config.expandedIds) || [];
     const newExpandedIds = this.isDocumentExplicitlyExpanded(document)
       ? expandedIds.filter(id => id !== document.id)
       : [...expandedIds, document.id];

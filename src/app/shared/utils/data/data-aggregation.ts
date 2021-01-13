@@ -47,7 +47,7 @@ export function aggregateDataResources(
     return null;
   }
 
-  const values = (dataResources || []).map(resource => resource.dataValues?.[attribute.id]?.serialize());
+  const values = (dataResources || []).map(resource => resource.data[attribute.id]);
   return aggregateDataValues(aggregation, values, attribute.constraint, onlyNumeric);
 }
 

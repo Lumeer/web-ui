@@ -33,68 +33,216 @@ import {SelectItemWithConstraintFormatter} from '../../../../shared/select/selec
 import {environment} from '../../../../../environments/environment';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {UnknownConstraint} from '../../../../core/model/constraint/unknown.constraint';
-import {convertDataResourcesDataValuesByResource} from '../../../../shared/utils/data-resource.utils';
+
+const documents: DocumentModel[] = [
+  {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},
+  {collectionId: 'C1', id: 'D2', data: {a1: 'abc'}},
+  {collectionId: 'C1', id: 'D3', data: {a1: 'def'}},
+
+  {collectionId: 'C2', id: 'D21', data: {a1: 'a'}},
+  {collectionId: 'C2', id: 'D22', data: {a1: 'c'}},
+  {collectionId: 'C2', id: 'D23', data: {a1: 'a'}},
+  {collectionId: 'C2', id: 'D24', data: {a1: 'b'}},
+  {collectionId: 'C2', id: 'D25', data: {a1: 'b'}},
+  {collectionId: 'C2', id: 'D26', data: {a1: 'c'}},
+
+  {collectionId: 'C3', id: 'D31', data: {a1: 'xyz'}},
+  {collectionId: 'C3', id: 'D32', data: {a1: 'xyz'}},
+  {collectionId: 'C3', id: 'D33', data: {a1: 'vuw'}},
+  {collectionId: 'C3', id: 'D34', data: {a1: 'vuw'}},
+  {collectionId: 'C3', id: 'D35', data: {a1: 'vuw'}},
+  {collectionId: 'C3', id: 'D35', data: {a1: 'vuw'}},
+  {collectionId: 'C3', id: 'D36', data: {a1: 'xyz'}},
+
+  {collectionId: 'C4', id: 'D41', data: {a1: 2, a2: 3}},
+  {collectionId: 'C4', id: 'D42', data: {a1: 4, a2: 0}},
+  {collectionId: 'C4', id: 'D43', data: {a1: 6, a2: -10}},
+  {collectionId: 'C4', id: 'D44', data: {a1: 1, a2: 3}},
+  {collectionId: 'C4', id: 'D45', data: {a1: null, a2: 1}},
+  {collectionId: 'C4', id: 'D46', data: {a1: 2, a2: null}},
+  {collectionId: 'C4', id: 'D47', data: {}},
+  {collectionId: 'C4', id: 'D48', data: {a1: 20, a2: 7}},
+  {collectionId: 'C4', id: 'D49', data: {a1: 11, a2: 9}},
+];
 
 const collections: Collection[] = [
   {
     id: 'C1',
     name: 'collection',
-    attributes: [{id: 'a1', name: 'Aaa', constraint: new UnknownConstraint()}],
+    attributes: [{id: 'a1', name: 'Aaa'}],
   },
   {
     id: 'C2',
     name: 'collection2',
-    attributes: [{id: 'a1', name: 'Bbb', constraint: new UnknownConstraint()}],
+    attributes: [{id: 'a1', name: 'Bbb'}],
   },
   {
     id: 'C3',
     name: 'collection3',
-    attributes: [{id: 'a1', name: 'Ccc', constraint: new UnknownConstraint()}],
+    attributes: [{id: 'a1', name: 'Ccc'}],
   },
   {
     id: 'C4',
     name: 'collection4',
     attributes: [
-      {id: 'a1', name: 'Ddd', constraint: new UnknownConstraint()},
-      {id: 'a2', name: 'Eee', constraint: new UnknownConstraint()},
+      {id: 'a1', name: 'Ddd'},
+      {id: 'a2', name: 'Eee'},
     ],
   },
 ];
 
-const documents: DocumentModel[] = convertDataResourcesDataValuesByResource(
-  [
-    {collectionId: 'C1', id: 'D1', data: {a1: 'abc'}},
-    {collectionId: 'C1', id: 'D2', data: {a1: 'abc'}},
-    {collectionId: 'C1', id: 'D3', data: {a1: 'def'}},
-
-    {collectionId: 'C2', id: 'D21', data: {a1: 'a'}},
-    {collectionId: 'C2', id: 'D22', data: {a1: 'c'}},
-    {collectionId: 'C2', id: 'D23', data: {a1: 'a'}},
-    {collectionId: 'C2', id: 'D24', data: {a1: 'b'}},
-    {collectionId: 'C2', id: 'D25', data: {a1: 'b'}},
-    {collectionId: 'C2', id: 'D26', data: {a1: 'c'}},
-
-    {collectionId: 'C3', id: 'D31', data: {a1: 'xyz'}},
-    {collectionId: 'C3', id: 'D32', data: {a1: 'xyz'}},
-    {collectionId: 'C3', id: 'D33', data: {a1: 'vuw'}},
-    {collectionId: 'C3', id: 'D34', data: {a1: 'vuw'}},
-    {collectionId: 'C3', id: 'D35', data: {a1: 'vuw'}},
-    {collectionId: 'C3', id: 'D35', data: {a1: 'vuw'}},
-    {collectionId: 'C3', id: 'D36', data: {a1: 'xyz'}},
-
-    {collectionId: 'C4', id: 'D41', data: {a1: 2, a2: 3}},
-    {collectionId: 'C4', id: 'D42', data: {a1: 4, a2: 0}},
-    {collectionId: 'C4', id: 'D43', data: {a1: 6, a2: -10}},
-    {collectionId: 'C4', id: 'D44', data: {a1: 1, a2: 3}},
-    {collectionId: 'C4', id: 'D45', data: {a1: null, a2: 1}},
-    {collectionId: 'C4', id: 'D46', data: {a1: 2, a2: null}},
-    {collectionId: 'C4', id: 'D47', data: {}},
-    {collectionId: 'C4', id: 'D48', data: {a1: 20, a2: 7}},
-    {collectionId: 'C4', id: 'D49', data: {a1: 11, a2: 9}},
-  ],
-  collections,
-  null
-);
+const linkInstances: LinkInstance[] = [
+  {
+    id: 'l121',
+    linkTypeId: 'LT1',
+    documentIds: ['D1', 'D21'],
+    data: {},
+  },
+  {
+    id: 'l122',
+    linkTypeId: 'LT1',
+    documentIds: ['D1', 'D22'],
+    data: {},
+  },
+  {
+    id: 'l123',
+    linkTypeId: 'LT1',
+    documentIds: ['D2', 'D23'],
+    data: {},
+  },
+  {
+    id: 'l124',
+    linkTypeId: 'LT1',
+    documentIds: ['D2', 'D24'],
+    data: {},
+  },
+  {
+    id: 'l125',
+    linkTypeId: 'LT1',
+    documentIds: ['D2', 'D25'],
+    data: {},
+  },
+  {
+    id: 'l126',
+    linkTypeId: 'LT1',
+    documentIds: ['D3', 'D26'],
+    data: {},
+  },
+  {
+    id: 'l2131',
+    linkTypeId: 'LT2',
+    documentIds: ['D21', 'D31'],
+    data: {},
+  },
+  {
+    id: 'l2232',
+    linkTypeId: 'LT2',
+    documentIds: ['D22', 'D32'],
+    data: {},
+  },
+  {
+    id: 'l2233',
+    linkTypeId: 'LT2',
+    documentIds: ['D22', 'D33'],
+    data: {},
+  },
+  {
+    id: 'l2334',
+    linkTypeId: 'LT2',
+    documentIds: ['D23', 'D34'],
+    data: {},
+  },
+  {
+    id: 'l2434',
+    linkTypeId: 'LT2',
+    documentIds: ['D24', 'D34'],
+    data: {},
+  },
+  {
+    id: 'l2534',
+    linkTypeId: 'LT2',
+    documentIds: ['D25', 'D34'],
+    data: {},
+  },
+  {
+    id: 'l2535',
+    linkTypeId: 'LT2',
+    documentIds: ['D25', 'D35'],
+    data: {},
+  },
+  {
+    id: 'l2636',
+    linkTypeId: 'LT2',
+    documentIds: ['D26', 'D36'],
+    data: {},
+  },
+  {
+    id: 'l3141',
+    linkTypeId: 'LT3',
+    documentIds: ['D31', 'D41'],
+    data: {},
+  },
+  {
+    id: 'l3241',
+    linkTypeId: 'LT3',
+    documentIds: ['D32', 'D41'],
+    data: {},
+  },
+  {
+    id: 'l3242',
+    linkTypeId: 'LT3',
+    documentIds: ['D32', 'D42'],
+    data: {},
+  },
+  {
+    id: 'l3342',
+    linkTypeId: 'LT3',
+    documentIds: ['D33', 'D43'],
+    data: {},
+  },
+  {
+    id: 'l3443',
+    linkTypeId: 'LT3',
+    documentIds: ['D34', 'D43'],
+    data: {},
+  },
+  {
+    id: 'l3444',
+    linkTypeId: 'LT3',
+    documentIds: ['D34', 'D44'],
+    data: {},
+  },
+  {
+    id: 'l3545',
+    linkTypeId: 'LT3',
+    documentIds: ['D35', 'D45'],
+    data: {},
+  },
+  {
+    id: 'l3546',
+    linkTypeId: 'LT3',
+    documentIds: ['D35', 'D46'],
+    data: {},
+  },
+  {
+    id: 'l3647',
+    linkTypeId: 'LT3',
+    documentIds: ['D36', 'D47'],
+    data: {},
+  },
+  {
+    id: 'l3648',
+    linkTypeId: 'LT3',
+    documentIds: ['D36', 'D48'],
+    data: {},
+  },
+  {
+    id: 'l3649',
+    linkTypeId: 'LT3',
+    documentIds: ['D36', 'D49'],
+    data: {},
+  },
+];
 
 const linkTypes: LinkType[] = [
   {
@@ -116,164 +264,6 @@ const linkTypes: LinkType[] = [
     attributes: [],
   },
 ];
-
-const linkInstances: LinkInstance[] = convertDataResourcesDataValuesByResource(
-  [
-    {
-      id: 'l121',
-      linkTypeId: 'LT1',
-      documentIds: ['D1', 'D21'],
-      data: {},
-    },
-    {
-      id: 'l122',
-      linkTypeId: 'LT1',
-      documentIds: ['D1', 'D22'],
-      data: {},
-    },
-    {
-      id: 'l123',
-      linkTypeId: 'LT1',
-      documentIds: ['D2', 'D23'],
-      data: {},
-    },
-    {
-      id: 'l124',
-      linkTypeId: 'LT1',
-      documentIds: ['D2', 'D24'],
-      data: {},
-    },
-    {
-      id: 'l125',
-      linkTypeId: 'LT1',
-      documentIds: ['D2', 'D25'],
-      data: {},
-    },
-    {
-      id: 'l126',
-      linkTypeId: 'LT1',
-      documentIds: ['D3', 'D26'],
-      data: {},
-    },
-    {
-      id: 'l2131',
-      linkTypeId: 'LT2',
-      documentIds: ['D21', 'D31'],
-      data: {},
-    },
-    {
-      id: 'l2232',
-      linkTypeId: 'LT2',
-      documentIds: ['D22', 'D32'],
-      data: {},
-    },
-    {
-      id: 'l2233',
-      linkTypeId: 'LT2',
-      documentIds: ['D22', 'D33'],
-      data: {},
-    },
-    {
-      id: 'l2334',
-      linkTypeId: 'LT2',
-      documentIds: ['D23', 'D34'],
-      data: {},
-    },
-    {
-      id: 'l2434',
-      linkTypeId: 'LT2',
-      documentIds: ['D24', 'D34'],
-      data: {},
-    },
-    {
-      id: 'l2534',
-      linkTypeId: 'LT2',
-      documentIds: ['D25', 'D34'],
-      data: {},
-    },
-    {
-      id: 'l2535',
-      linkTypeId: 'LT2',
-      documentIds: ['D25', 'D35'],
-      data: {},
-    },
-    {
-      id: 'l2636',
-      linkTypeId: 'LT2',
-      documentIds: ['D26', 'D36'],
-      data: {},
-    },
-    {
-      id: 'l3141',
-      linkTypeId: 'LT3',
-      documentIds: ['D31', 'D41'],
-      data: {},
-    },
-    {
-      id: 'l3241',
-      linkTypeId: 'LT3',
-      documentIds: ['D32', 'D41'],
-      data: {},
-    },
-    {
-      id: 'l3242',
-      linkTypeId: 'LT3',
-      documentIds: ['D32', 'D42'],
-      data: {},
-    },
-    {
-      id: 'l3342',
-      linkTypeId: 'LT3',
-      documentIds: ['D33', 'D43'],
-      data: {},
-    },
-    {
-      id: 'l3443',
-      linkTypeId: 'LT3',
-      documentIds: ['D34', 'D43'],
-      data: {},
-    },
-    {
-      id: 'l3444',
-      linkTypeId: 'LT3',
-      documentIds: ['D34', 'D44'],
-      data: {},
-    },
-    {
-      id: 'l3545',
-      linkTypeId: 'LT3',
-      documentIds: ['D35', 'D45'],
-      data: {},
-    },
-    {
-      id: 'l3546',
-      linkTypeId: 'LT3',
-      documentIds: ['D35', 'D46'],
-      data: {},
-    },
-    {
-      id: 'l3647',
-      linkTypeId: 'LT3',
-      documentIds: ['D36', 'D47'],
-      data: {},
-    },
-    {
-      id: 'l3648',
-      linkTypeId: 'LT3',
-      documentIds: ['D36', 'D48'],
-      data: {},
-    },
-    {
-      id: 'l3649',
-      linkTypeId: 'LT3',
-      documentIds: ['D36', 'D49'],
-      data: {},
-    },
-  ],
-  linkTypes,
-  null,
-  AttributesResourceType.LinkType
-);
 
 const query: Query = {stems: [{collectionId: 'C1', linkTypeIds: ['LT1', 'LT2', 'LT3']}]};
 

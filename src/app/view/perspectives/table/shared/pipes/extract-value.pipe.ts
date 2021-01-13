@@ -27,7 +27,7 @@ import {TableConfigColumn} from '../../../../../core/store/tables/table.model';
 })
 export class ExtractValuePipe implements PipeTransform {
   public transform(entity: DocumentModel | LinkInstance, column: TableConfigColumn): string {
-    if (entity?.data) {
+    if (entity && entity.data) {
       return entity.data[column.attributeIds[0]];
     }
     return '';

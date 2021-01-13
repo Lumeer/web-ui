@@ -20,31 +20,60 @@
 import {Injectable} from '@angular/core';
 import {AppState} from '../store/app.state';
 import {select, Store} from '@ngrx/store';
+import {combineLatest} from 'rxjs';
 import {selectDocumentById} from '../store/documents/documents.state';
 import {selectCollectionById} from '../store/collections/collections.state';
 import {take} from 'rxjs/operators';
 import {selectLinkInstanceById} from '../store/link-instances/link-instances.state';
 import {selectLinkTypeById} from '../store/link-types/link-types.state';
-import {AttributesResource} from '../model/resource';
-import {findAttribute} from '../store/collections/collection.util';
+import {AttributesResource, DataResource} from '../model/resource';
+import {findAttribute, findAttributeConstraint} from '../store/collections/collection.util';
+import {UnknownConstraint} from '../model/constraint/unknown.constraint';
 import {ClipboardService} from './clipboard.service';
 import {isArray, isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {DataValue} from '../model/data-value';
+import {ConstraintData} from '../model/data/constraint';
+import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
 
 @Injectable({providedIn: 'root'})
 export class CopyValueService {
   constructor(private store$: Store<AppState>, private clipboardService: ClipboardService) {}
 
   public copyDocumentValue(documentId: string, collectionId: string, attributeId: string) {
-    this.store$
-      .pipe(select(selectDocumentById(documentId)), take(1))
-      .subscribe(document => this.copy(document.dataValues?.[attributeId]?.editValue()));
+    combineLatest([
+      this.store$.pipe(select(selectDocumentById(documentId))),
+      this.store$.pipe(select(selectCollectionById(collectionId))),
+      this.store$.pipe(select(selectConstraintData)),
+    ])
+      .pipe(take(1))
+      .subscribe(([document, collection, constraintData]) =>
+        this.copyValue(document, collection, attributeId, constraintData)
+      );
   }
 
   public copyLinkValue(linkInstanceId: string, linkTypeId: string, attributeId: string) {
-    this.store$
-      .pipe(select(selectLinkInstanceById(linkInstanceId)), take(1))
-      .subscribe(linkInstance => this.copy(linkInstance.dataValues?.[attributeId]?.editValue()));
+    combineLatest([
+      this.store$.pipe(select(selectLinkInstanceById(linkInstanceId))),
+      this.store$.pipe(select(selectLinkTypeById(linkTypeId))),
+      this.store$.pipe(select(selectConstraintData)),
+    ])
+      .pipe(take(1))
+      .subscribe(([linkInstance, linkType, constraintData]) =>
+        this.copyValue(linkInstance, linkType, attributeId, constraintData)
+      );
+  }
+
+  private copyValue(
+    dataResource: DataResource,
+    attributesResource: AttributesResource,
+    attributeId: string,
+    constraintData: ConstraintData
+  ) {
+    const constraint = findAttributeConstraint(attributesResource && attributesResource.attributes, attributeId);
+    const value = (constraint || new UnknownConstraint())
+      .createDataValue(dataResource.data[attributeId], constraintData)
+      .editValue();
+    this.copy(value);
   }
 
   public copy(value: string) {
@@ -95,7 +124,7 @@ export class CopyValueService {
   }
 
   private copyAttribute(attributesResource: AttributesResource, attributeId: string) {
-    const attribute = findAttribute(attributesResource?.attributes, attributeId);
+    const attribute = findAttribute(attributesResource && attributesResource.attributes, attributeId);
     if (attribute) {
       this.copy(attribute.name);
     }

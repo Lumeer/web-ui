@@ -18,11 +18,13 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
+import {ConstraintData, ConstraintType} from '../../../../../core/model/data/constraint';
 import {DocumentModel} from '../../../../../core/store/documents/document.model';
 import {Collection} from '../../../../../core/store/collections/collection';
 import {SizeType} from '../../../../../shared/slider/size/size-type';
 import {SearchDocumentsConfig} from '../../../../../core/store/searches/search';
 import {DataValue} from '../../../../../core/model/data-value';
+import {UnknownConstraint} from '../../../../../core/model/constraint/unknown.constraint';
 import {Constraint} from '../../../../../core/model/constraint';
 import {getDefaultAttributeId} from '../../../../../core/store/collections/collection.util';
 
@@ -32,21 +34,23 @@ import {getDefaultAttributeId} from '../../../../../core/store/collections/colle
 export class DataValueEntriesPipe implements PipeTransform {
   public transform(
     document: DocumentModel,
-    collectionsMap: Record<string, Collection>,
+    collections: Collection[],
+    constraintData: ConstraintData,
     config: SearchDocumentsConfig
   ): {label?: string; attributeId: string; isDefault?: boolean; dataValue: DataValue; constraint: Constraint}[] {
-    const collection = collectionsMap?.[document.collectionId];
+    const collection = (collections || []).find(coll => coll.id === document.collectionId);
     const expanded = config && (config.size === SizeType.XL || (config.expandedIds || []).includes(document.id));
     const defaultAttributeId = getDefaultAttributeId(collection);
     return (collection.attributes || []).reduce((array, attribute) => {
-      const dataValue = document.dataValues?.[attribute.id];
-      if (expanded || attribute.constraint?.isDirectlyEditable || !!dataValue.format()) {
+      const constraint: Constraint = attribute.constraint || new UnknownConstraint();
+      const dataValue = constraint.createDataValue(document.data[attribute.id], constraintData);
+      if (expanded || constraint.isDirectlyEditable || !!dataValue.format()) {
         const label = expanded ? attribute.name : null;
         array.push({
           label,
           dataValue,
           attributeId: attribute.id,
-          constraint: attribute.constraint,
+          constraint,
           isDefault: defaultAttributeId === attribute.id,
         });
       }
