@@ -100,7 +100,7 @@ export class DateTimeDataValue implements DataValue {
   }
 
   private isValidMomentDate(): boolean {
-    return this.momentDate?.isValid();
+    return this.momentDate && this.momentDate.isValid();
   }
 
   private isWithinRange(): boolean {

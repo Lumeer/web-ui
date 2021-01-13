@@ -57,13 +57,13 @@ export class UserDataValue implements DataValue {
       .filter(user => !!user);
   }
 
-  public format(): string {
+  public format(preferEmail?: boolean): string {
     if (isNotNullOrUndefined(this.inputValue)) {
       return this.inputValue;
     }
 
     if (this.users.length) {
-      return this.users.map(user => user.name || user.email).join(', ');
+      return this.users.map(user => (preferEmail ? user.email || user.name : user.name || user.email)).join(', ');
     }
 
     return formatUnknownDataValue(this.value);

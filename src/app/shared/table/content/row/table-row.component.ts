@@ -100,7 +100,7 @@ export class TableRowComponent implements OnChanges {
   public onDoubleClick = new EventEmitter<string>();
 
   @Output()
-  public newValue = new EventEmitter<{columnId: string; dataValue: DataValue; action: DataInputSaveAction}>();
+  public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
 
   @Output()
   public linkedDocumentSelect = new EventEmitter<DocumentModel>();
@@ -161,24 +161,22 @@ export class TableRowComponent implements OnChanges {
   private createDataValue(column: TableColumn, value?: any, typed?: boolean): DataValue {
     const constraint = column.attribute?.constraint || new UnknownConstraint();
     if (typed) {
-      return constraint.createInputDataValue(value, this.columnValue(column)?.serialize(), this.constraintData);
+      return constraint.createInputDataValue(value, this.columnValue(column), this.constraintData);
     }
-    if (isNotNullOrUndefined(value)) {
-      return constraint.createDataValue(value, this.constraintData);
-    }
-    return this.columnValue(column);
+    const initialValue = isNotNullOrUndefined(value) ? value : this.columnValue(column);
+    return constraint.createDataValue(initialValue, this.constraintData);
   }
 
   private columnById(columnId: string): TableColumn {
     return this.columnGroups.find(group => group.column?.id === columnId)?.column;
   }
 
-  private columnValue(column: TableColumn): DataValue {
+  private columnValue(column: TableColumn): any {
     if (column?.attribute) {
       if (column?.collectionId) {
-        return this.row.dataValues?.[column.id];
+        return this.row.data?.[column.id];
       } else if (column?.linkTypeId) {
-        return this.row.dataValues?.[column.id];
+        return this.row.data?.[column.id];
       }
     }
     return null;
@@ -207,7 +205,7 @@ export class TableRowComponent implements OnChanges {
     ) {
       this.onDataInputCancel(column, data.action);
     } else {
-      this.newValue.emit({columnId: column.id, dataValue: data.dataValue, action: data.action});
+      this.newValue.emit({columnId: column.id, value, action: data.action});
     }
   }
 

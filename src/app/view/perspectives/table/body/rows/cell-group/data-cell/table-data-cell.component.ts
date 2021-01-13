@@ -35,8 +35,8 @@ import {
 import {Actions, ofType} from '@ngrx/effects';
 import {Action, select, Store} from '@ngrx/store';
 import {I18n} from '@ngx-translate/i18n-polyfill';
-import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
-import {distinctUntilChanged, first, map, skip, take, withLatestFrom} from 'rxjs/operators';
+import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
+import {distinctUntilChanged, first, map, skip, take, tap, withLatestFrom} from 'rxjs/operators';
 import {AllowedPermissions} from '../../../../../../../core/model/allowed-permissions';
 import {UnknownDataValue} from '../../../../../../../core/model/data-value/unknown.data-value';
 import {ConstraintData, ConstraintType} from '../../../../../../../core/model/data/constraint';
@@ -81,6 +81,7 @@ import {
   preventEvent,
 } from '../../../../../../../shared/utils/common.utils';
 import {DataValue} from '../../../../../../../core/model/data-value';
+import {UnknownConstraint} from '../../../../../../../core/model/constraint/unknown.constraint';
 import {DataInputConfiguration} from '../../../../../../../shared/data-input/data-input-configuration';
 import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
 
@@ -148,13 +149,13 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   public editing$ = new BehaviorSubject(false);
   public suggesting$ = new BehaviorSubject(false);
+  public dataValue$: Observable<DataValue>;
 
   public attribute$: Observable<Attribute>;
   public row$: Observable<TableConfigRow>;
 
   public editable: boolean;
   public editedValue: DataValue;
-  public dataValue: DataValue;
 
   public readonly constraintType = ConstraintType;
   public readonly configuration: DataInputConfiguration = {
@@ -237,17 +238,33 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       this.affectedSubscription.unsubscribe();
       this.affectedSubscription = this.subscribeToAffected();
     }
-    if (changes.column || changes.document || changes.linkInstance) {
+    if (changes.column || changes.document || changes.linkInstance || changes.constraintData) {
       if (!this.editing$.value) {
-        this.dataValue = this.getValue();
+        this.dataValue$ = this.createDataValue$();
       }
     }
     this.editable = this.allowedPermissions?.writeWithView;
   }
 
-  private createDataValueByTyped(inputValue: string): DataValue {
-    const value = this.getValue();
-    return value ? value.parseInput(inputValue) : new UnknownDataValue(value);
+  private createDataValue$(): Observable<DataValue> {
+    return this.createDataValueByValue$(this.getValue());
+  }
+
+  private createDataValueByValue$(value: any, typed?: boolean): Observable<DataValue> {
+    if (this.attribute$) {
+      return this.attribute$.pipe(
+        map(attribute => {
+          const constraint = (attribute && attribute.constraint) || new UnknownConstraint();
+          if (typed) {
+            return constraint.createInputDataValue(value, this.getValue(), this.constraintData);
+          }
+          return constraint.createDataValue(value, this.constraintData);
+        }),
+        tap(dataValue => typed && (this.editedValue = dataValue)),
+        take(typed ? 1 : Number.MAX_SAFE_INTEGER)
+      );
+    }
+    return of(new UnknownDataValue(value));
   }
 
   private subscribeToAffected(): Subscription {
@@ -268,15 +285,11 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private checkSuggesting() {
-    if (!this.canSuggest()) {
+    if (this.cursor.partIndex < 2) {
       return;
     }
 
     this.suggesting$.next(!this.isEntityInitialized() || !this.editedValue);
-  }
-
-  private canSuggest(): boolean {
-    return this.cursor.partIndex >= 2;
   }
 
   private subscribeToEditSelectedCell(): Subscription {
@@ -294,14 +307,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private isAttributeEditable(attribute: Attribute): boolean {
-    const parentId = this.document?.collectionId || this.linkInstance?.linkTypeId;
+    const parentId =
+      (this.document && this.document.collectionId) || (this.linkInstance && this.linkInstance.linkTypeId);
     return isAttributeEditableWithQuery(attribute, parentId, this.allowedPermissions, this.query);
   }
 
   private startEditingAndClear() {
-    this.dataValue = this.createDataValueByTyped('');
+    this.dataValue$ = this.createDataValueByValue$('', true);
     this.editing$.next(true);
-    this.suggesting$.next(false);
   }
 
   private startEditingAndChangeValue(value: string, attribute: Attribute) {
@@ -311,11 +324,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       }
     } else {
       if (value) {
-        this.dataValue = this.createDataValueByTyped(value);
-        if (this.canSuggest()) {
-          this.editedValue = this.dataValue;
-          this.suggesting$.next(true);
-        }
+        this.dataValue$ = this.createDataValueByValue$(value, true);
       }
       this.editing$.next(true);
     }
@@ -336,14 +345,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private getValue(): DataValue {
-    if (this.document?.dataValues) {
-      return this.document.dataValues[this.column.attributeIds[0]] || new UnknownDataValue('');
+  private getValue(): any {
+    if (this.document?.data) {
+      return this.document.data[this.column.attributeIds[0]];
     }
-    if (this.linkInstance?.dataValues) {
-      return this.linkInstance.dataValues[this.column.attributeIds[0]] || new UnknownDataValue('');
+    if (this.linkInstance.data) {
+      return this.linkInstance.data[this.column.attributeIds[0]];
     }
-    return new UnknownDataValue('');
+    return '';
   }
 
   private isEntityInitialized(): boolean {
@@ -441,15 +450,14 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private clearEditedAttribute() {
-    this.dataValue = this.getValue();
+    this.dataValue$ = this.createDataValue$();
     if (this.document && this.document.id) {
       this.store$.dispatch(new TablesAction.SetEditedAttribute({editedAttribute: null}));
     }
   }
 
   private saveData(value: any) {
-    const previousSerialized = this.getValue()?.serialize();
-    const previousValue = previousSerialized || previousSerialized === 0 ? previousSerialized : '';
+    const previousValue = this.getValue() || this.getValue() === 0 ? this.getValue() : '';
     if (deepObjectsEquals(previousValue, value) || (!value && !this.isEntityInitialized())) {
       return;
     }
@@ -729,7 +737,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
     this.editedValue = dataValue;
 
     if (this.cursor.partIndex > 1) {
-      this.suggesting$.next(!!dataValue.format());
+      this.suggesting$.next(true);
     }
   }
 
@@ -745,7 +753,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   public onCancelEditing() {
-    this.dataValue = this.getValue();
+    this.dataValue$ = this.createDataValue$();
     this.editing$.next(false);
   }
 

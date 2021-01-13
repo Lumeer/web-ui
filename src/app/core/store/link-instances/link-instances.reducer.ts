@@ -42,8 +42,6 @@ export function linkInstancesReducer(
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.UPDATE_FAILURE:
       return revertLinkInstance(state, action.payload.originalLinkInstance);
-    case LinkInstancesActionType.UPDATE_DATA_VALUES:
-      return updateDataValues(state, action);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
     case LinkInstancesActionType.DELETE_FAILURE:
@@ -167,22 +165,17 @@ function addOrUpdateLinkInstance(state: LinkInstancesState, linkInstance: LinkIn
 }
 
 function patchData(state: LinkInstancesState, action: LinkInstancesAction.PatchDataInternal) {
-  const {linkInstance, originalLinkInstance} = action.payload;
+  const {linkInstanceId, data} = action.payload;
+
+  const linkInstance = state.entities[linkInstanceId];
+  if (!linkInstance) {
+    return state;
+  }
 
   return linkInstancesAdapter.updateOne(
     {
-      id: linkInstance.id,
-      changes: {
-        data: {
-          ...originalLinkInstance.data,
-          ...linkInstance.data,
-        },
-        dataValues: {
-          ...originalLinkInstance.dataValues,
-          ...linkInstance.dataValues,
-        },
-        dataVersion: (linkInstance.dataVersion || 0) + 1,
-      },
+      id: linkInstanceId,
+      changes: {data: {...linkInstance.data, ...data}, dataVersion: (linkInstance.dataVersion || 0) + 1},
     },
     state
   );
@@ -197,17 +190,4 @@ function isModifiedLater(linkInstance: LinkInstance, oldLinkInstance: LinkInstan
     linkInstance.updateDate &&
     (!oldLinkInstance.updateDate || linkInstance.updateDate.getTime() > oldLinkInstance.updateDate.getTime())
   );
-}
-
-function updateDataValues(state: LinkInstancesState, action: LinkInstancesAction.UpdateDataValues) {
-  const updateDocuments = action.payload.linkInstances.reduce((linkInstances, linkInstance) => {
-    const oldDocument = state.entities[linkInstance.id];
-    if (oldDocument) {
-      linkInstances.push({...oldDocument, dataValues: linkInstance.dataValues});
-    }
-
-    return linkInstances;
-  }, []);
-
-  return linkInstancesAdapter.upsertMany(updateDocuments, state);
 }

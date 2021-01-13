@@ -18,17 +18,17 @@
  */
 
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostListener,
   Input,
   OnChanges,
-  SimpleChanges,
-  HostListener,
-  ViewChildren,
-  QueryList,
-  ViewChild,
-  EventEmitter,
   Output,
+  QueryList,
+  SimpleChanges,
+  ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import {Query} from '../../../../../core/store/navigation/query/query';
 import {Collection} from '../../../../../core/store/collections/collection';
@@ -66,7 +66,6 @@ import {TableComponent} from '../../../../../shared/table/table.component';
 import {clickedInsideElement} from '../../../../../shared/utils/html-modifier';
 import {APP_NAME_SELECTOR} from '../../../../../core/constants';
 import {WORKFLOW_SIDEBAR_SELECTOR} from './service/workflow-utils';
-import {DataValue} from '../../../../../core/model/data-value';
 import {MenuItem} from '../../../../../shared/menu/model/menu-item';
 
 @Component({
@@ -236,11 +235,11 @@ export class WorkflowTablesComponent implements OnChanges {
   public onRowNewValue(data: {
     row: TableRow;
     column: TableColumn;
-    dataValue: DataValue;
+    value: any;
     action: DataInputSaveAction;
     cellType: TableCellType;
   }) {
-    this.tablesService.onRowNewValue(data.row, data.column, data.dataValue, data.action, data.cellType);
+    this.tablesService.onRowNewValue(data.row, data.column, data.value, data.action, data.cellType);
   }
 
   public onColumnRename(data: {column: TableColumn; name: string}) {

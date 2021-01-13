@@ -20,7 +20,7 @@
         class="dropdown-item p-0 d-flex">
         <ng-container *ngFor="let column of columns">
           <div
-            *ngIf="{value: doc.dataValues[column.attributeId] | previewDataValue} as state"
+            *ngIf="{value: (doc.data[column.attributeId] | dataValue : (data.collection | collectionAttribute : column.attributeId)?.constraint : constraintData) | previewDataValue} as state"
             [id]="'hint-' + doc.id + '-' + column.attributeId"
             [class.font-weight-bold]="column.attributeId === attributeId"
             [style.width.px]="column.width"

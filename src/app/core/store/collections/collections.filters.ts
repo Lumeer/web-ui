@@ -20,18 +20,19 @@
 import {Collection} from './collection';
 import {DocumentModel} from '../documents/document.model';
 import {mergeCollections} from './collection.util';
+import {groupDocumentsByCollection} from '../documents/document.utils';
 import {Query} from '../navigation/query/query';
 import {LinkType} from '../link-types/link.type';
 import {getAllCollectionIdsFromQuery, queryIsEmptyExceptPagination} from '../navigation/query/query.util';
+import {ConstraintData} from '../../model/data/constraint';
 import {someDocumentMeetFulltexts} from '../documents/documents.filters';
-import {groupDataResourceByResource} from '../../../shared/utils/data-resource.utils';
-import {AttributesResourceType} from '../../model/resource';
 
 export function filterCollectionsByQuery(
   collections: Collection[],
   documents: DocumentModel[],
   linkTypes: LinkType[],
-  query: Query
+  query: Query,
+  constraintData: ConstraintData
 ): Collection[] {
   const filteredCollections = (collections || []).filter(collection => collection && typeof collection === 'object');
   if (!query || queryIsEmptyExceptPagination(query)) {
@@ -43,7 +44,12 @@ export function filterCollectionsByQuery(
     .map(id => (filteredCollections || []).find(coll => coll.id === id))
     .filter(collection => !!collection);
 
-  const collectionsByFullTexts = filterCollectionsByFulltexts(filteredCollections, documents, query.fulltexts);
+  const collectionsByFullTexts = filterCollectionsByFulltexts(
+    filteredCollections,
+    documents,
+    query.fulltexts,
+    constraintData
+  );
 
   return mergeCollections(collectionsByIds, collectionsByFullTexts);
 }
@@ -51,18 +57,20 @@ export function filterCollectionsByQuery(
 function filterCollectionsByFulltexts(
   collections: Collection[],
   documents: DocumentModel[],
-  fulltexts: string[]
+  fulltexts: string[],
+  constraintData: ConstraintData
 ): Collection[] {
   if (!fulltexts || fulltexts.length === 0) {
     return [];
   }
 
-  const documentsByCollectionsMap = groupDataResourceByResource(documents, AttributesResourceType.Collection);
+  const documentsByCollectionsMap = groupDocumentsByCollection(documents);
 
   return collections.filter(collection => {
     const documentByCollections = documentsByCollectionsMap[collection.id] || [];
     return (
-      collectionMeetFulltexts(collection, fulltexts) || someDocumentMeetFulltexts(documentByCollections, fulltexts)
+      collectionMeetFulltexts(collection, fulltexts) ||
+      someDocumentMeetFulltexts(documentByCollections, collection, fulltexts, constraintData)
     );
   });
 }

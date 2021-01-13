@@ -23,7 +23,7 @@ import {AllowedPermissions} from '../../../../../../core/model/allowed-permissio
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {queryStemAttributesResourcesOrder} from '../../../../../../core/store/navigation/query/query.util';
 import {queryAttributePermissions} from '../../../../../../core/model/query-attribute';
-import {AttributesResourceType, DataResourceData, DataResourceDataValues} from '../../../../../../core/model/resource';
+import {AttributesResourceType} from '../../../../../../core/model/resource';
 import {AggregatedDataItem, DataAggregatorAttribute} from '../../../../../../shared/utils/data/data-aggregator';
 import {uniqueValues} from '../../../../../../shared/utils/array.utils';
 import {TABLE_ROW_HEIGHT, TableCell, TableCellType, TableModel} from '../../../../../../shared/table/model/table-model';
@@ -32,24 +32,21 @@ import {TableNewRow, TableRow} from '../../../../../../shared/table/model/table-
 import {TableColumn} from '../../../../../../shared/table/model/table-column';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {AttributeSortType, ViewSettings} from '../../../../../../core/store/views/view';
+import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {
-  convertDataValuesToData,
-  sortDataResourcesByViewSettings,
-} from '../../../../../../shared/utils/data-resource.utils';
+import {sortDataResourcesByViewSettings} from '../../../../../../shared/utils/data-resource.utils';
 import {WorkflowTable} from '../../../model/workflow-table';
 import {resourceAttributeSettings} from '../../../../../../shared/settings/settings.util';
 import {objectValues} from '../../../../../../shared/utils/common.utils';
 import {QueryStem} from '../../../../../../core/store/navigation/query/query';
 import {ViewCursor} from '../../../../../../core/store/navigation/view-cursor/view-cursor';
-import {DataValue} from '../../../../../../core/model/data-value';
 
 export const WORKFLOW_SIDEBAR_SELECTOR = 'workflow-sidebar';
 
 export interface PendingRowUpdate {
   row?: TableRow;
   newRow?: TableNewRow;
-  dataValue: DataValue;
+  value: any;
 }
 
 export function computeTableHeight(numberOfRows: number, newRow?: TableNewRow): number {
@@ -62,22 +59,8 @@ export function createRowData(
   columns: TableColumn[],
   pendingColumnValues: Record<string, PendingRowUpdate[]>,
   overrideColumn?: TableColumn,
-  value?: DataValue
-): {data: DataResourceData; linkData: DataResourceData} {
-  const {dataValues, linkDataValues} = createRowDataValues(row, columns, pendingColumnValues, overrideColumn, value);
-  return {
-    data: convertDataValuesToData(dataValues),
-    linkData: convertDataValuesToData(linkDataValues),
-  };
-}
-
-export function createRowDataValues(
-  row: TableRow,
-  columns: TableColumn[],
-  pendingColumnValues: Record<string, PendingRowUpdate[]>,
-  overrideColumn?: TableColumn,
-  dataValue?: DataValue
-): {dataValues: DataResourceDataValues; linkDataValues: DataResourceDataValues} {
+  value?: any
+): {data: Record<string, any>; linkData: Record<string, any>} {
   return columns.reduce(
     (result, column) => {
       if (column.attribute) {
@@ -85,16 +68,16 @@ export function createRowDataValues(
           pending => (pending.row || pending.newRow).id === row.id
         );
         const currentValue =
-          pendingRowUpdate?.dataValue || (overrideColumn?.id === column.id ? dataValue : row.dataValues[column.id]);
+          pendingRowUpdate?.value || (overrideColumn?.id === column.id ? value : row.data[column.id]);
         if (column.collectionId) {
-          result.dataValues[column.attribute.id] = currentValue;
+          result.data[column.attribute.id] = currentValue;
         } else if (column.linkTypeId) {
-          result.linkDataValues[column.attribute.id] = currentValue;
+          result.linkData[column.attribute.id] = currentValue;
         }
       }
       return result;
     },
-    {dataValues: {}, linkDataValues: {}}
+    {data: {}, linkData: {}}
   );
 }
 
@@ -103,7 +86,7 @@ export function createEmptyNewRow(tableId: string): TableNewRow {
   return {
     id,
     tableId,
-    dataValues: null,
+    data: null,
     correlationId: id,
     height: TABLE_ROW_HEIGHT,
     documentMenuItems: [],
@@ -234,13 +217,16 @@ export function createRowObjectsFromAggregated(
   item: AggregatedDataItem,
   collectionsMap: Record<string, Collection>,
   linkInstancesMap: Record<string, LinkInstance>,
-  viewSettings: ViewSettings
+  viewSettings: ViewSettings,
+  constraintData: ConstraintData
 ): {document: DocumentModel; linkInstance?: LinkInstance}[] {
   const documents = <DocumentModel[]>item.dataResources || [];
   const sortedDocuments = sortDataResourcesByViewSettings<DocumentModel>(
     documents,
+    collectionsMap,
     AttributesResourceType.Collection,
-    viewSettings
+    viewSettings,
+    constraintData
   );
   return sortedDocuments.reduce(
     (rowData, document) => {
@@ -270,13 +256,10 @@ export function createRowObjectsFromAggregated(
   ).data;
 }
 
-export function mapRowDataValues(
-  dataValues: Record<string, DataValue>,
-  columnIdsMap: Record<string, string>
-): DataResourceDataValues {
-  return Object.keys(dataValues || {}).reduce((rowData, attributeId) => {
+export function createRowValues(data: Record<string, any>, columnIdsMap: Record<string, string>): Record<string, any> {
+  return Object.keys(data || {}).reduce((rowData, attributeId) => {
     if (columnIdsMap[attributeId]) {
-      rowData[columnIdsMap[attributeId]] = dataValues?.[attributeId];
+      rowData[columnIdsMap[attributeId]] = data[attributeId];
     }
     return rowData;
   }, {});
@@ -291,9 +274,7 @@ export function createColumnIdsMap(columns: TableColumn[]): Record<string, strin
   }, {});
 }
 
-export function createPendingColumnDataValuesByRow(
-  pendingValues: Record<string, PendingRowUpdate[]>
-): DataResourceDataValues {
+export function createPendingColumnValuesByRow(pendingValues: Record<string, PendingRowUpdate[]>): Record<string, any> {
   return Object.keys(pendingValues).reduce((result, columnId) => {
     const updates = pendingValues[columnId];
     for (const update of updates) {
@@ -301,7 +282,7 @@ export function createPendingColumnDataValuesByRow(
       if (!result[row.id]) {
         result[row.id] = {};
       }
-      result[row.id][columnId] = update.dataValue;
+      result[row.id][columnId] = update.value;
     }
     return result;
   }, {});

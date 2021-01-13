@@ -46,7 +46,6 @@ import {DataInputSaveAction} from '../data-input/data-input-save-action';
 import {TableColumn} from './model/table-column';
 import {AttributeSortType} from '../../core/store/views/view';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {DataValue} from '../../core/model/data-value';
 import {MenuItem} from '../menu/model/menu-item';
 
 @Component({
@@ -108,7 +107,7 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
   public rowNewValue = new EventEmitter<{
     row: TableRow;
     column: TableColumn;
-    dataValue: DataValue;
+    value: any;
     action: DataInputSaveAction;
     cellType: TableCellType;
   }>();
@@ -228,17 +227,14 @@ export class TableComponent implements OnInit, OnChanges, OnDestroy {
     return row.id;
   }
 
-  public onBodyRowNewValue(row: TableRow, data: {columnId: string; dataValue: DataValue; action: DataInputSaveAction}) {
+  public onBodyRowNewValue(row: TableRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
     const column = this.tableModel?.columns?.find(col => col.id === data.columnId);
     if (row && column) {
       this.rowNewValue.emit({...data, row, column, cellType: TableCellType.Body});
     }
   }
 
-  public onNewRowNewValue(
-    row: TableNewRow,
-    data: {columnId: string; dataValue: DataValue; action: DataInputSaveAction}
-  ) {
+  public onNewRowNewValue(row: TableNewRow, data: {columnId: string; value: any; action: DataInputSaveAction}) {
     const column = this.tableModel?.columns?.find(col => col.id === data.columnId);
     if (row && column) {
       this.rowNewValue.emit({...data, row, column, cellType: TableCellType.NewRow});

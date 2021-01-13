@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
 import {EditedTableCell, SelectedTableCell, TableCellType} from '../model/table-model';
 import {TableColumn, TableColumnGroup} from '../model/table-column';
 import {ConstraintData} from '../../../core/model/data/constraint';
@@ -25,7 +25,6 @@ import {DataInputSaveAction} from '../../data-input/data-input-save-action';
 import {TableNewRow, TableRow} from '../model/table-row';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {CdkScrollable} from '@angular/cdk/scrolling';
-import {DataValue} from '../../../core/model/data-value';
 import {MenuItem} from '../../menu/model/menu-item';
 
 @Component({
@@ -75,7 +74,7 @@ export class TableNewRowComponent {
   public onCancel = new EventEmitter<string>();
 
   @Output()
-  public newValue = new EventEmitter<{columnId: string; dataValue: DataValue; action: DataInputSaveAction}>();
+  public newValue = new EventEmitter<{columnId: string; value: any; action: DataInputSaveAction}>();
 
   @Output()
   public linkedDocumentSelect = new EventEmitter<DocumentModel>();

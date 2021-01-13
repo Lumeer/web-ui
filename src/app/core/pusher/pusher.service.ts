@@ -20,7 +20,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {select, Store} from '@ngrx/store';
 import Pusher from 'pusher-js';
-import {combineLatest, of, timer} from 'rxjs';
+import {of, timer} from 'rxjs';
 import {catchError, filter, first, map, take, tap, withLatestFrom} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {AuthService} from '../../auth/auth.service';
@@ -76,7 +76,6 @@ import {NotificationService} from '../notifications/notification.service';
 import {AppIdService} from '../service/app-id.service';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationButton} from '../notifications/notification-button';
-import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
 
 @Injectable({
   providedIn: 'root',
@@ -159,6 +158,7 @@ export class PusherService implements OnDestroy {
     this.bindSequenceEvents();
     this.bindUserMessageEvents();
     this.bindTemplateEvents();
+    this.bindResourceCommentEvents();
   }
 
   private bindOrganizationEvents() {
@@ -454,20 +454,9 @@ export class PusherService implements OnDestroy {
   private bindDocumentEvents() {
     this.channel.bind('Document:create', data => {
       if (this.isCurrentWorkspace(data)) {
-        combineLatest([
-          this.store$.pipe(select(selectCollectionsDictionary)),
-          this.store$.pipe(select(selectConstraintData)),
-        ])
-          .pipe(take(1))
-          .subscribe(([collectionsMap, constraintData]) => {
-            const document = convertDocumentDtoToModel(
-              data.object,
-              collectionsMap[data.object.collectionId]?.attributes,
-              constraintData,
-              data.correlationId
-            );
-            this.store$.dispatch(new DocumentsAction.CreateSuccess({document}));
-          });
+        this.store$.dispatch(
+          new DocumentsAction.CreateSuccess({document: convertDocumentDtoToModel(data.object, data.correlationId)})
+        );
       }
     });
     this.channel.bind('Document:create:ALT', data => {
@@ -477,29 +466,15 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('Document:update', data => {
       if (this.isCurrentWorkspace(data)) {
-        this.store$
-          .pipe(
-            select(selectDocumentById(data.object.id)),
-            take(1),
-            withLatestFrom(
-              this.store$.pipe(select(selectCollectionsDictionary)),
-              this.store$.pipe(select(selectConstraintData))
-            )
+        const document = convertDocumentDtoToModel(data.object, data.correlationId);
+        this.store$.pipe(select(selectDocumentById(document.id)), take(1)).subscribe(originalDocument =>
+          this.store$.dispatch(
+            new DocumentsAction.UpdateSuccess({
+              document,
+              originalDocument,
+            })
           )
-          .subscribe(([originalDocument, collectionsMap, constraintData]) => {
-            const document = convertDocumentDtoToModel(
-              data.object,
-              collectionsMap[data.object.collectionId]?.attributes,
-              constraintData,
-              data.correlationId
-            );
-            this.store$.dispatch(
-              new DocumentsAction.UpdateSuccess({
-                document,
-                originalDocument,
-              })
-            );
-          });
+        );
       }
     });
     this.channel.bind('Document:update:ALT', data => {
@@ -549,20 +524,11 @@ export class PusherService implements OnDestroy {
   private bindLinkInstanceEvents() {
     this.channel.bind('LinkInstance:create', data => {
       if (this.isCurrentWorkspace(data)) {
-        combineLatest([
-          this.store$.pipe(select(selectLinkTypesDictionary)),
-          this.store$.pipe(select(selectConstraintData)),
-        ])
-          .pipe(take(1))
-          .subscribe(([linkTypesMap, constraintData]) => {
-            const linkInstance = convertLinkInstanceDtoToModel(
-              data.object,
-              linkTypesMap[data.object.linkTypeId]?.attributes,
-              constraintData,
-              data.correlationId
-            );
-            this.store$.dispatch(new LinkInstancesAction.CreateSuccess({linkInstance}));
-          });
+        this.store$.dispatch(
+          new LinkInstancesAction.CreateSuccess({
+            linkInstance: convertLinkInstanceDtoToModel(data.object, data.correlationId),
+          })
+        );
       }
     });
     this.channel.bind('LinkInstance:create:ALT', data => {
@@ -572,24 +538,12 @@ export class PusherService implements OnDestroy {
     });
     this.channel.bind('LinkInstance:update', data => {
       if (this.isCurrentWorkspace(data)) {
+        const linkInstance = convertLinkInstanceDtoToModel(data.object, data.correlationId);
         this.store$
-          .pipe(
-            select(selectLinkInstanceById(data.object.id)),
-            take(1),
-            withLatestFrom(
-              this.store$.pipe(select(selectLinkTypesDictionary)),
-              this.store$.pipe(select(selectConstraintData))
-            )
-          )
-          .subscribe(([originalLinkInstance, linkTypesMap, constraintData]) => {
-            const linkInstance = convertLinkInstanceDtoToModel(
-              data.object,
-              linkTypesMap[data.object.linkTypeId]?.attributes,
-              constraintData,
-              data.correlationId
-            );
-            this.store$.dispatch(new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}));
-          });
+          .pipe(select(selectLinkInstanceById(linkInstance.id)), take(1))
+          .subscribe(originalLinkInstance =>
+            this.store$.dispatch(new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance}))
+          );
       }
     });
     this.channel.bind('LinkInstance:update:ALT', data => {

@@ -29,17 +29,10 @@ import {findAttribute} from '../collections/collection.util';
 import {UnknownConstraint} from '../../model/constraint/unknown.constraint';
 import {createRange} from '../../../shared/utils/array.utils';
 import {isNotNullOrUndefined} from '../../../shared/utils/common.utils';
-import {
-  AttributesResource,
-  AttributesResourceType,
-  DataResourceData,
-  DataResourceDataValues,
-} from '../../model/resource';
+import {AttributesResource, AttributesResourceType, DataResourceData} from '../../model/resource';
 import {getAttributesResourceType} from '../../../shared/utils/resource.utils';
 import {AttributeFilter} from '../../model/attribute-filter';
 import {Constraint} from '../../model/constraint';
-import {UnknownDataValue} from '../../model/data-value/unknown.data-value';
-import {convertDataValuesToData} from '../../../shared/utils/data-resource.utils';
 
 export function sortDocumentsByCreationDate(documents: DocumentModel[], sortDesc?: boolean): DocumentModel[] {
   return [...documents].sort((a, b) => {
@@ -88,18 +81,28 @@ export function uniqueDocuments(documents: DocumentModel[]): DocumentModel[] {
   ).documents;
 }
 
-export function generateDocumentDataValues(
+export function groupDocumentsByCollection(documents: DocumentModel[]): Record<string, DocumentModel[]> {
+  return (documents || []).reduce((map, document) => {
+    if (!map[document.collectionId]) {
+      map[document.collectionId] = [];
+    }
+    map[document.collectionId].push(document);
+    return map;
+  }, {});
+}
+
+export function generateDocumentData(
   attributesResource: AttributesResource,
   filters: AttributeFilter[],
   constraintData: ConstraintData,
   setupAllAttributes = true
-): DataResourceDataValues {
+): Record<string, any> {
   if (!attributesResource) {
     return {};
   }
-  const dataValues = setupAllAttributes
+  const data = setupAllAttributes
     ? attributesResource.attributes.reduce((acc, attr) => {
-        acc[attr.id] = new UnknownDataValue('');
+        acc[attr.id] = '';
         return acc;
       }, {})
     : {};
@@ -117,36 +120,10 @@ export function generateDocumentDataValues(
           (filter.conditionValues[i].type || isNotNullOrUndefined(filter.conditionValues[i].value))
       );
     if (allValuesDefined) {
-      const value = dataValue.valueByCondition(filter.condition, filter.conditionValues);
-      dataValues[filter.attributeId] = constraint.createDataValue(value, constraintData);
+      data[filter.attributeId] = dataValue.valueByCondition(filter.condition, filter.conditionValues);
     }
   });
-  return dataValues;
-}
-
-export function generateDocumentData(
-  attributesResource: AttributesResource,
-  filters: AttributeFilter[],
-  constraintData: ConstraintData,
-  setupAllAttributes = true
-): DataResourceData {
-  return convertDataValuesToData(
-    generateDocumentDataValues(attributesResource, filters, constraintData, setupAllAttributes)
-  );
-}
-
-export function generateDocumentDataValuesByQuery(
-  query: Query,
-  collections: Collection[],
-  constraintData: ConstraintData,
-  setupAllAttributes = true
-): DataResourceDataValues {
-  const collectionId = query?.stems?.[0].collectionId;
-  const collection = collectionId && (collections || []).find(coll => coll.id === collectionId);
-  if (collection) {
-    return generateDocumentDataValuesByResourceQuery(collection, query, constraintData, setupAllAttributes);
-  }
-  return {};
+  return data;
 }
 
 export function generateDocumentDataByQuery(
@@ -154,25 +131,13 @@ export function generateDocumentDataByQuery(
   collections: Collection[],
   constraintData: ConstraintData,
   setupAllAttributes = true
-): DataResourceData {
-  return convertDataValuesToData(
-    generateDocumentDataValuesByQuery(query, collections, constraintData, setupAllAttributes)
-  );
-}
-
-export function generateDocumentDataValuesByResourceQuery(
-  attributesResource: AttributesResource,
-  query: Query,
-  constraintData: ConstraintData,
-  setupAllAttributes = true
-): DataResourceDataValues {
-  const resourceType = getAttributesResourceType(attributesResource);
-  const queryFilters =
-    resourceType === AttributesResourceType.Collection
-      ? getQueryFiltersForCollection(query, attributesResource.id)
-      : getQueryFiltersForLinkType(query, attributesResource.id);
-
-  return generateDocumentDataValues(attributesResource, queryFilters, constraintData, setupAllAttributes);
+): Record<string, any> {
+  const collectionId = query && query.stems && query.stems.length > 0 && query.stems[0].collectionId;
+  const collection = collectionId && (collections || []).find(coll => coll.id === collectionId);
+  if (collection) {
+    return generateDocumentDataByResourceQuery(collection, query, constraintData, setupAllAttributes);
+  }
+  return {};
 }
 
 export function generateDocumentDataByResourceQuery(
@@ -181,9 +146,13 @@ export function generateDocumentDataByResourceQuery(
   constraintData: ConstraintData,
   setupAllAttributes = true
 ): DataResourceData {
-  return convertDataValuesToData(
-    generateDocumentDataValuesByResourceQuery(attributesResource, query, constraintData, setupAllAttributes)
-  );
+  const resourceType = getAttributesResourceType(attributesResource);
+  const queryFilters =
+    resourceType === AttributesResourceType.Collection
+      ? getQueryFiltersForCollection(query, attributesResource.id)
+      : getQueryFiltersForLinkType(query, attributesResource.id);
+
+  return generateDocumentData(attributesResource, queryFilters, constraintData, setupAllAttributes);
 }
 
 export function calculateDocumentHierarchyLevel(

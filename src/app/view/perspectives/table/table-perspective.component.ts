@@ -84,7 +84,7 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
-import {isTablePartEmpty} from '../../../core/store/tables/table.utils';
+import {isTablePartEmpty} from '../../../shared/table/model/table-utils';
 
 export const EDITABLE_EVENT = 'editableEvent';
 
@@ -266,7 +266,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         select(selectTable),
         filter(table => !!table?.config && table.id === DEFAULT_TABLE_ID),
-        switchMap(table => this.waitForDataLoaded$(null, 'here').pipe(map(() => table))),
+        switchMap(table => this.waitForDataLoaded$().pipe(map(() => table))),
         debounceTime(1000),
         withLatestFrom(this.selectCurrentDefaultViewConfig$())
       )
@@ -284,7 +284,7 @@ export class TablePerspectiveComponent implements OnInit, OnChanges, OnDestroy {
       });
   }
 
-  private waitForDataLoaded$(query?: Query, value?: string): Observable<boolean> {
+  private waitForDataLoaded$(query?: Query): Observable<boolean> {
     if (query) {
       this.fetchData(query);
     }

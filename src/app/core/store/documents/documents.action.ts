@@ -53,9 +53,6 @@ export enum DocumentsActionType {
   PATCH_DATA_INTERNAL = '[Documents] Patch Data Internal',
   PATCH_DATA_PENDING = '[Documents] Patch Data Pending',
 
-  TRANSFORM_DATA_VALUES = '[Documents] Transform Data Values',
-  UPDATE_DATA_VALUES = '[Documents] Update Data Values',
-
   CHECK_DATA_HINT = '[Documents] Check Data Hint',
 
   UPDATE_META_DATA = '[Documents] Update Meta Data',
@@ -228,18 +225,6 @@ export namespace DocumentsAction {
     public constructor(public payload: {document: DocumentModel; originalDocument?: DocumentModel}) {}
   }
 
-  export class TransformDataValues implements Action {
-    public readonly type = DocumentsActionType.TRANSFORM_DATA_VALUES;
-
-    public constructor(public payload: {collectionAttributesMap?: Record<string, string[]>}) {}
-  }
-
-  export class UpdateDataValues implements Action {
-    public readonly type = DocumentsActionType.UPDATE_DATA_VALUES;
-
-    public constructor(public payload: {documents: DocumentModel[]}) {}
-  }
-
   export class CheckDataHint implements Action {
     public readonly type = DocumentsActionType.CHECK_DATA_HINT;
 
@@ -386,8 +371,6 @@ export namespace DocumentsAction {
     | PatchMetaData
     | UpdateSuccess
     | UpdateFailure
-    | TransformDataValues
-    | UpdateDataValues
     | Delete
     | DeleteSuccess
     | DeleteFailure

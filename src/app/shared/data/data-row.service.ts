@@ -33,13 +33,7 @@ import {isNotNullOrUndefined} from '../utils/common.utils';
 import {CollectionsAction} from '../../core/store/collections/collections.action';
 import {deepArrayEquals} from '../utils/array.utils';
 import {findAttributeByName} from '../utils/attribute.utils';
-import {
-  AttributesResource,
-  AttributesResourceType,
-  DataResource,
-  DataResourceData,
-  DataResourceDataValues,
-} from '../../core/model/resource';
+import {AttributesResource, AttributesResourceType, DataResource, DataResourceData} from '../../core/model/resource';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
 import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {DocumentModel} from '../../core/store/documents/document.model';
@@ -48,14 +42,12 @@ import {LinkInstance} from '../../core/store/link-instances/link.instance';
 import {LinkTypesAction} from '../../core/store/link-types/link-types.action';
 import {ResourceAttributeSettings} from '../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
-import {DataValue} from '../../core/model/data-value';
-import {UnknownDataValue} from '../../core/model/data-value/unknown.data-value';
 
 export interface DataRow {
   id: string;
   attribute?: Attribute;
   key?: string;
-  value: DataValue;
+  value: any;
   isDefault?: boolean;
   creating?: boolean;
 }
@@ -143,20 +135,20 @@ export class DataRowService {
 
   public createDataRows(): DataRow[] {
     const defaultAttributeId = this.isCollectionResource ? getDefaultAttributeId(this.resource) : null;
-    const dataValues = this.dataResource?.dataValues || {};
+    const data = this.dataResource?.data || {};
 
     return createAttributesSettingsOrder(this.resource?.attributes, this.settingsOrder)
       .filter(setting => !setting.hidden)
       .map(setting => findAttribute(this.resource?.attributes, setting.attributeId))
-      .map(attribute => this.createDataRow(attribute, dataValues, defaultAttributeId));
+      .map(attribute => this.createDataRow(attribute, data, defaultAttributeId));
   }
 
-  private createDataRow(attribute: Attribute, dataValues: DataResourceDataValues, defaultAttributeId: string): DataRow {
+  private createDataRow(attribute: Attribute, data: DataResourceData, defaultAttributeId: string): DataRow {
     return {
       id: attribute.id,
       attribute,
       isDefault: attribute.id === defaultAttributeId,
-      value: dataValues[attribute.id],
+      value: data[attribute.id],
     };
   }
 
@@ -181,7 +173,7 @@ export class DataRowService {
   }
 
   public addRow() {
-    const newRow: DataRow = {id: generateCorrelationId(), key: '', value: new UnknownDataValue('')};
+    const newRow: DataRow = {id: generateCorrelationId(), key: '', value: ''};
     this.emitRows([...this.rows$.value, newRow]);
   }
 
@@ -220,7 +212,7 @@ export class DataRowService {
     this.emitRows(rows);
   }
 
-  public updateRow(index: number, key?: string, value?: DataValue) {
+  public updateRow(index: number, key?: string, value?: any) {
     const row = this.rows$.value[index];
     if (row) {
       if ((key || '').trim().length > 0) {
@@ -258,7 +250,7 @@ export class DataRowService {
       if (row.attribute) {
         delete data[row.attribute.id];
       }
-      data[attribute.id] = isNotNullOrUndefined(row.value) ? row.value.serialize() : '';
+      data[attribute.id] = isNotNullOrUndefined(row.value) ? row.value : '';
       const newDataResource = {...this.dataResource, data};
       if (this.isCollectionResource) {
         this.store$.dispatch(new DocumentsAction.UpdateData({document: <DocumentModel>newDataResource}));
@@ -269,13 +261,13 @@ export class DataRowService {
   }
 
   private updateNewAttribute(row: DataRow, index: number, name: string) {
-    const value = isNotNullOrUndefined(row.value) ? row.value.serialize() : '';
+    const value = isNotNullOrUndefined(row.value) ? row.value : '';
     const newAttribute = {name, constraint: row.attribute?.constraint};
     const rows = [...this.rows$.value];
-    const newRow: DataRow = {
+    const newRow = {
       attribute: newAttribute,
       key: name,
-      value: row.value || new UnknownDataValue(''),
+      value,
       id: generateCorrelationId(),
       isDefault: false,
       creating: true,
@@ -310,15 +302,15 @@ export class DataRowService {
     }
   }
 
-  private updateValue(row: DataRow, index: number, value: DataValue) {
+  private updateValue(row: DataRow, index: number, value: any) {
     this.updateNewValue(row, index, value);
     if (!this.isNewDataResource && row.attribute) {
       this.updateExistingValue(row, value);
     }
   }
 
-  private updateExistingValue(row: DataRow, value: DataValue) {
-    const patchData = {[row.attribute.id]: value?.serialize()};
+  private updateExistingValue(row: DataRow, value: any) {
+    const patchData = {[row.attribute.id]: value};
     const dataResource = {...this.dataResource, data: patchData};
     if (this.isCollectionResource) {
       this.store$.dispatch(new DocumentsAction.PatchData({document: <DocumentModel>dataResource}));
@@ -327,7 +319,7 @@ export class DataRowService {
     }
   }
 
-  private updateNewValue(row: DataRow, index: number, value: DataValue) {
+  private updateNewValue(row: DataRow, index: number, value: any) {
     const newRow = {...row, value};
     const rows = [...this.rows$.value];
     rows[index] = newRow;

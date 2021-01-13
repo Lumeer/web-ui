@@ -103,6 +103,9 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
   public origin: ElementRef | HTMLElement;
 
   @Input()
+  public constraintData: ConstraintData;
+
+  @Input()
   public createLinkDirectly = true;
 
   @Output()
@@ -150,18 +153,33 @@ export class DocumentHintsComponent implements OnInit, OnChanges, AfterViewInit,
       stems: [{collectionId: this.collectionId}],
     };
 
-    this.documents$ = this.store$.select(selectDocumentsByCustomQuery(query, true)).pipe(
-      mergeMap(documents =>
+    const documents$ = this.store$
+      .select(selectDocumentsByCustomQuery(query, true))
+      .pipe(
+        map(documents =>
+          documents.filter(
+            document => document.data[this.attributeId] && !this.excludedDocumentIds.includes(document.id)
+          )
+        )
+      );
+
+    this.documents$ = combineLatest([documents$, this.collection$]).pipe(
+      mergeMap(([documents, collection]) =>
         this.filter$.pipe(
           map(typedValue => escapeHtml(stripTextHtmlTags(String(typedValue || ''), false).toLowerCase())),
-          map(typedValue =>
-            documents
+          map(typedValue => {
+            const constraint =
+              findAttributeConstraint(collection?.attributes, this.attributeId) || new UnknownConstraint();
+            return documents
               .filter(document => {
-                const formattedValue = document.dataValues?.[this.attributeId]?.format() || '';
+                const value = document.data[this.attributeId];
+                const formattedValue = isNotNullOrUndefined(value)
+                  ? constraint.createDataValue(value, this.constraintData).format()
+                  : '';
                 return stripTextHtmlTags(String(formattedValue), false).toLowerCase().includes(typedValue);
               })
-              .slice(0, this.limit)
-          ),
+              .slice(0, this.limit);
+          }),
           tap(hints => (this.hintsCount = hints.length))
         )
       )

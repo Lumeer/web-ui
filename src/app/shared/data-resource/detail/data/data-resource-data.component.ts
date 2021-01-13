@@ -28,6 +28,7 @@ import {
   OnInit,
   Output,
   QueryList,
+  SimpleChange,
   SimpleChanges,
   TemplateRef,
   ViewChild,
@@ -53,7 +54,6 @@ import {selectLinkTypeById} from '../../../../core/store/link-types/link-types.s
 import {selectLinkInstanceById} from '../../../../core/store/link-instances/link-instances.state';
 import {ResourceAttributeSettings} from '../../../../core/store/views/view';
 import {objectChanged} from '../../../utils/common.utils';
-import {DataValue} from '../../../../core/model/data-value';
 
 @Component({
   selector: 'data-resource-data',
@@ -190,7 +190,7 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
     this.dataRowService.updateRow(index, value);
   }
 
-  public onNewValue(value: DataValue, row: DataRow, index: number) {
+  public onNewValue(value: any, row: DataRow, index: number) {
     this.dataRowService.updateRow(index, null, value);
   }
 
@@ -248,16 +248,23 @@ export class DataResourceDataComponent implements OnInit, OnChanges, OnDestroy {
     const rows = this.dataRowService.rows$.value;
 
     const data = rows
-      .filter(row => row.attribute?.id)
-      .reduce((d, row) => ({...d, [row.attribute.id]: row.value?.serialize()}), {});
+      .filter(row => row.attribute && row.attribute.id)
+      .reduce((d, row) => {
+        if (row.attribute.constraint) {
+          d[row.attribute.id] = row.attribute.constraint.createDataValue(row.value, this.constraintData).serialize();
+        } else {
+          d[row.attribute.id] = row.value;
+        }
+        return d;
+      }, {});
 
     const currentAttributeNames = (this.resource?.attributes || []).map(attr => attr.name);
     const newData = rows
-      .filter(row => row.key && !row.attribute?.id && !currentAttributeNames.includes(row.key))
+      .filter(row => row.key && (!row.attribute || !row.attribute.id) && !currentAttributeNames.includes(row.key))
       .reduce(
         (d, row) => ({
           ...d,
-          [row.key]: row.value?.serialize(),
+          [row.key]: row.value,
         }),
         {}
       );

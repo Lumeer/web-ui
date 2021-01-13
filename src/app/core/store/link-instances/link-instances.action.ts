@@ -42,9 +42,6 @@ export enum LinkInstancesActionType {
   PATCH_DATA = '[Link Instances] Patch Data',
   PATCH_DATA_INTERNAL = '[Link Instances] Patch Data :: Internal',
 
-  TRANSFORM_DATA_VALUES = '[Link Instances] Transform Data Values',
-  UPDATE_DATA_VALUES = '[Link Instances] Update Data Values',
-
   UPDATE_SUCCESS = '[Link Instances] Update :: Success',
   UPDATE_FAILURE = '[Link Instances] Update :: Failure',
 
@@ -136,7 +133,7 @@ export namespace LinkInstancesAction {
   export class PatchDataInternal implements Action {
     public readonly type = LinkInstancesActionType.PATCH_DATA_INTERNAL;
 
-    public constructor(public payload: {linkInstance: LinkInstance; originalLinkInstance?: LinkInstance}) {}
+    public constructor(public payload: {linkInstanceId: string; data: Record<string, any>}) {}
   }
 
   export class UpdateData implements Action {
@@ -195,18 +192,6 @@ export namespace LinkInstancesAction {
         afterSuccess?: () => void;
       }
     ) {}
-  }
-
-  export class TransformDataValues implements Action {
-    public readonly type = LinkInstancesActionType.TRANSFORM_DATA_VALUES;
-
-    public constructor(public payload: {linkTypeAttributesMap?: Record<string, string[]>}) {}
-  }
-
-  export class UpdateDataValues implements Action {
-    public readonly type = LinkInstancesActionType.UPDATE_DATA_VALUES;
-
-    public constructor(public payload: {linkInstances: LinkInstance[]}) {}
   }
 
   export class Delete implements Action {
@@ -293,8 +278,6 @@ export namespace LinkInstancesAction {
     | UpdateInternal
     | UpdateSuccess
     | UpdateFailure
-    | TransformDataValues
-    | UpdateDataValues
     | Delete
     | DeleteConfirm
     | DeleteSuccess

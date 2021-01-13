@@ -20,6 +20,7 @@
 import {TABLE_HIDDEN_COLUMN_WIDTH, TableCell, TableCellType, TableModel} from './table-model';
 import {columnConstraint, TableColumn, TableColumnGroup} from './table-column';
 import {TableRow} from './table-row';
+import {TableColumnType, TableConfigPart} from '../../../core/store/tables/table.model';
 
 export function groupTableColumns(columns: TableColumn[]): TableColumnGroup[] {
   return (columns || []).reduce<TableColumnGroup[]>((array, column) => {
@@ -113,4 +114,13 @@ export function numberOfOtherColumnsBefore(index: number, columns: TableColumn[]
 
 export function tableHasNewRowPresented(table: TableModel): boolean {
   return table.newRow?.initialized;
+}
+
+export function isTablePartEmpty(part: TableConfigPart): boolean {
+  return !part.columns.some(
+    column =>
+      [TableColumnType.COMPOUND, TableColumnType.HIDDEN].includes(column.type) &&
+      column.attributeIds &&
+      column.attributeIds.length > 0
+  );
 }
