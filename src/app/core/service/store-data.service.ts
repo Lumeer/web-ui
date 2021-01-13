@@ -59,65 +59,92 @@ import {mapLinkTypeCollections} from '../../shared/utils/link-type.utils';
 import {Actions, ofType} from '@ngrx/effects';
 import {DocumentsAction, DocumentsActionType} from '../store/documents/documents.action';
 import {LinkInstancesAction, LinkInstancesActionType} from '../store/link-instances/link-instances.action';
+import {CollectionsAction, CollectionsActionType} from '../store/collections/collections.action';
+import {LinkTypesAction, LinkTypesActionType} from '../store/link-types/link-types.action';
+
+// first key is resourceId (collection/linkType), the send one is dataResourceId (documentId,linkInstanceId)
+type DataResourceCache = Record<string, Record<string, DataResourceDataValues>>;
 
 @Injectable({
   providedIn: 'root',
 })
 export class StoreDataService {
-  private documentsCache: Record<string, DataResourceDataValues> = {};
-  private linksCache: Record<string, DataResourceDataValues> = {};
+  private documentsCache: DataResourceCache = {};
+  private linksCache: DataResourceCache = {};
 
   constructor(public store$: Store<AppState>, private actions$: Actions) {
 
     this.actions$
       .pipe(ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA))
-      .subscribe(action => {
-        delete this.documentsCache[action.payload.document.id];
-      });
+      .subscribe(action => this.clearDocumentCache(action.payload.document));
 
     this.actions$
       .pipe(ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA))
-      .subscribe(action => {
-        delete this.documentsCache[action.payload.document.id];
-      });
+      .subscribe(action => this.clearDocumentCache(action.payload.document));
 
     this.actions$
       .pipe(ofType<DocumentsAction.UpdateSuccess>(DocumentsActionType.UPDATE_SUCCESS))
-      .subscribe(action => {
-        delete this.documentsCache[action.payload.document.id];
-      });
+      .subscribe(action => this.clearDocumentCache(action.payload.document));
 
     this.actions$
       .pipe(ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE))
-      .subscribe(action => {
-        delete this.documentsCache[action.payload.originalDocument.id];
-      });
+      .subscribe(action => this.clearDocumentCache(action.payload.originalDocument));
 
     this.actions$
       .pipe(ofType<LinkInstancesAction.PatchData>(LinkInstancesActionType.PATCH_DATA))
-      .subscribe(action => {
-        delete this.linksCache[action.payload.linkInstance.id];
-      });
+      .subscribe(action => this.clearLinkCache(action.payload.linkInstance));
 
     this.actions$
       .pipe(ofType<LinkInstancesAction.UpdateData>(LinkInstancesActionType.UPDATE_DATA))
-      .subscribe(action => {
-        delete this.linksCache[action.payload.linkInstance.id];
-      });
+      .subscribe(action => this.clearLinkCache(action.payload.linkInstance));
 
     this.actions$
       .pipe(ofType<LinkInstancesAction.UpdateSuccess>(LinkInstancesActionType.UPDATE_SUCCESS))
-      .subscribe(action => {
-        delete this.linksCache[action.payload.linkInstance.id];
-      });
+      .subscribe(action => this.clearLinkCache(action.payload.linkInstance));
 
     this.actions$
       .pipe(ofType<LinkInstancesAction.UpdateFailure>(LinkInstancesActionType.UPDATE_FAILURE))
-      .subscribe(action => {
-        delete this.linksCache[action.payload.originalLinkInstance.id];
-      });
+      .subscribe(action => this.clearLinkCache(action.payload.originalLinkInstance));
 
+    this.actions$
+      .pipe(ofType<CollectionsAction.CreateAttributesSuccess>(CollectionsActionType.CREATE_ATTRIBUTES_SUCCESS))
+      .subscribe(action => this.clearCollectionCache(action.payload.collectionId));
 
+    this.actions$
+      .pipe(ofType<CollectionsAction.DeleteSuccess>(CollectionsActionType.DELETE_SUCCESS))
+      .subscribe(action => this.clearCollectionCache(action.payload.collectionId));
+
+    this.actions$
+      .pipe(ofType<CollectionsAction.ChangeAttributeSuccess>(CollectionsActionType.CHANGE_ATTRIBUTE_SUCCESS))
+      .subscribe(action => this.clearCollectionCache(action.payload.collectionId));
+
+    this.actions$
+      .pipe(ofType<LinkTypesAction.CreateAttributesSuccess>(LinkTypesActionType.CREATE_ATTRIBUTES_SUCCESS))
+      .subscribe(action => this.clearLinkTypeCache(action.payload.linkTypeId));
+
+    this.actions$
+      .pipe(ofType<LinkTypesAction.UpdateAttributeSuccess>(LinkTypesActionType.UPDATE_ATTRIBUTE_SUCCESS))
+      .subscribe(action => this.clearLinkTypeCache(action.payload.linkTypeId));
+
+    this.actions$
+      .pipe(ofType<LinkTypesAction.DeleteSuccess>(LinkTypesActionType.DELETE_SUCCESS))
+      .subscribe(action => this.clearLinkTypeCache(action.payload.linkTypeId));
+  }
+
+  private clearDocumentCache(document: DocumentModel) {
+    delete this.documentsCache[document.collectionId]?.[document.id];
+  }
+
+  private clearCollectionCache(collectionId: string) {
+    delete this.documentsCache[collectionId];
+  }
+
+  private clearLinkCache(linkInstance: LinkInstance) {
+    delete this.linksCache[linkInstance.linkTypeId]?.[linkInstance.id];
+  }
+
+  private clearLinkTypeCache(linkTypeId: string) {
+    delete this.linksCache[linkTypeId];
   }
 
   public selectCollectionsByReadPermission$(): Observable<Collection[]> {
@@ -560,14 +587,18 @@ export class StoreDataService {
     collectionsMap: Record<string, Collection>,
     constraintData: ConstraintData
   ): DocumentModel {
-    if (!this.documentsCache[document.id]) {
-      this.documentsCache[document.id] = convertDataToDataValues(
+
+    if (!this.documentsCache[document.collectionId]) {
+      this.documentsCache[document.collectionId] = {};
+    }
+    if (!this.documentsCache[document.collectionId][document.id]) {
+      this.documentsCache[document.collectionId][document.id] = convertDataToDataValues(
         document.data,
         collectionsMap[document.collectionId]?.attributes,
         constraintData
       );
     }
-    return {...document, dataValues: this.documentsCache[document.id]};
+    return {...document, dataValues: this.documentsCache[document.collectionId][document.id]};
   }
 
   private mapLinkInstances(
@@ -589,13 +620,16 @@ export class StoreDataService {
     linkTypesMap: Record<string, LinkType>,
     constraintData: ConstraintData
   ): LinkInstance {
-    if (!this.linksCache[linkInstance.id]) {
-      this.linksCache[linkInstance.id] = convertDataToDataValues(
+    if (!this.linksCache[linkInstance.linkTypeId]) {
+      this.linksCache[linkInstance.linkTypeId] = {};
+    }
+    if (!this.linksCache[linkInstance.linkTypeId][linkInstance.id]) {
+      this.linksCache[linkInstance.linkTypeId][linkInstance.id] = convertDataToDataValues(
         linkInstance.data,
         linkTypesMap[linkInstance.linkTypeId]?.attributes,
         constraintData
       );
     }
-    return {...linkInstance, dataValues: this.linksCache[linkInstance.id]};
+    return {...linkInstance, dataValues: this.linksCache[linkInstance.linkTypeId][linkInstance.id]};
   }
 }
