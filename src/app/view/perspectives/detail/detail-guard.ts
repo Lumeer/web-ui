@@ -19,35 +19,30 @@
 
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, Resolve, RouterStateSnapshot} from '@angular/router';
-import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {filter, mergeMap, take, tap} from 'rxjs/operators';
 import {WorkspaceService} from '../../../workspace/workspace.service';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {AppState} from '../../../core/store/app.state';
 import {Organization} from '../../../core/store/organizations/organization';
 import {Project} from '../../../core/store/projects/project';
 import {QueryParam} from '../../../core/store/navigation/query-param';
 import {convertStringToViewCursor, ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {convertQueryStringToModel} from '../../../core/store/navigation/query/query.converter';
 import {Query} from '../../../core/store/navigation/query/query';
-import {
-  selectCollectionsByCustomQuery,
-  selectDocumentsByCustomQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {filterStemsForCollection} from '../../../core/store/navigation/query/query.util';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Injectable()
 export class DetailGuard implements Resolve<DocumentModel[]> {
-  public constructor(private store$: Store<AppState>, private workspaceService: WorkspaceService) {}
+  public constructor(private storeDataService: StoreDataService, private workspaceService: WorkspaceService) {}
 
   public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<DocumentModel[]> {
-    const parentRoute = route.parent && route.parent.parent;
+    const parentRoute = route.parent?.parent;
 
-    const organizationCode = parentRoute && parentRoute.paramMap.get('organizationCode');
-    const projectCode = parentRoute && parentRoute.paramMap.get('projectCode');
+    const organizationCode = parentRoute?.paramMap.get('organizationCode');
+    const projectCode = parentRoute?.paramMap.get('projectCode');
 
     if (!organizationCode || !projectCode) {
       return of([]);
@@ -70,24 +65,21 @@ export class DetailGuard implements Resolve<DocumentModel[]> {
     cursor: ViewCursor,
     query: Query
   ): Observable<DocumentModel[]> {
-    return this.store$.pipe(
-      select(selectCollectionsByCustomQuery(query)),
+    return this.storeDataService.selectCollectionsByCustomQuery$(query).pipe(
       mergeMap(collections => {
         const selectedCollection =
-          (cursor && (collections || []).find(coll => coll.id === cursor.collectionId)) ||
-          (collections && collections[0]);
+          (cursor && (collections || []).find(coll => coll.id === cursor.collectionId)) || collections?.[0];
         if (selectedCollection) {
           const collectionQuery = filterStemsForCollection(selectedCollection.id, query);
-          return this.store$.pipe(
-            select(selectQueryDocumentsLoaded(collectionQuery)),
+          return this.storeDataService.select$(selectQueryDocumentsLoaded(collectionQuery)).pipe(
             tap(loaded => {
               if (!loaded) {
                 const workspace = {organizationId: organization.id, projectId: project.id};
-                this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery, workspace}));
+                this.storeDataService.store$.dispatch(new DocumentsAction.Get({query: collectionQuery, workspace}));
               }
             }),
             filter(loaded => loaded),
-            mergeMap(() => this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery))))
+            mergeMap(() => this.storeDataService.selectDocumentsByCustomQuery$(collectionQuery))
           );
         }
         return of([]);

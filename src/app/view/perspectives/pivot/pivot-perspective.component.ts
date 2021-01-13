@@ -35,16 +35,15 @@ import {
   take,
   withLatestFrom,
 } from 'rxjs/operators';
-import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectCanManageViewConfig,
+  selectCurrentView,
+  selectSidebarOpened,
+  selectViewQuery
+} from '../../../core/store/views/views.state';
 import {selectPivotById, selectPivotConfig, selectPivotId} from '../../../core/store/pivots/pivots.state';
 import {DEFAULT_PIVOT_ID, PivotConfig} from '../../../core/store/pivots/pivot';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {PivotsAction} from '../../../core/store/pivots/pivots.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -56,6 +55,7 @@ import {selectConstraintData} from '../../../core/store/constraint-data/constrai
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'pivot-perspective',
@@ -77,7 +77,7 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.initPivot();
@@ -122,8 +122,8 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
   private checkPivotConfig(config: PivotConfig): Observable<PivotConfig> {
     return combineLatest([
       this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
+      this.storeDataService.selectCollectionsByQuery$(),
+      this.storeDataService.selectLinkTypesInQuery$(),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformPivotConfig(config, query, collections, linkTypes))
@@ -157,9 +157,9 @@ export class PivotPerspectiveComponent implements OnInit, OnDestroy {
     this.config$ = this.store$.pipe(select(selectPivotConfig));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$();
+    this.linkTypes$ =this.storeDataService.selectLinkTypesInQuery$();
+    this.documentsAndLinks$ = this.storeDataService.selectDocumentsAndLinksByQuerySorted$();
     this.dataLoaded$ = combineLatest([
       this.store$.pipe(select(selectCurrentQueryDocumentsLoaded)),
       this.store$.pipe(select(selectCurrentQueryLinkInstancesLoaded)),

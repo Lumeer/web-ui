@@ -45,14 +45,12 @@ import {ConstraintData} from '../../../../core/model/data/constraint';
 import {LinkRow} from '../model/link-row';
 import {AppState} from '../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
 import {map, mergeMap} from 'rxjs/operators';
 import {
   getOtherLinkedDocumentId,
   getOtherLinkedDocumentIds,
   LinkInstance,
 } from '../../../../core/store/link-instances/link.instance';
-import {selectDocumentsByIds} from '../../../../core/store/documents/documents.state';
 import {ModalService} from '../../../modal/modal.service';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
@@ -62,6 +60,7 @@ import {selectConstraintData} from '../../../../core/store/constraint-data/const
 import {ViewSettings} from '../../../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../../../settings/settings.util';
 import {objectChanged} from '../../../utils/common.utils';
+import {StoreDataService} from '../../../../core/service/store-data.service';
 
 const columnWidth = 100;
 
@@ -118,7 +117,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   private stickyColumnWidth: number;
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {
+  constructor(private store$: Store<AppState>, private modalService: ModalService, private storeDataService: StoreDataService) {
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }
 
@@ -198,8 +197,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   private selectLinkRows$(): Observable<LinkRow[]> {
     if (this.linkType && this.document) {
-      return this.store$.pipe(
-        select(selectLinkInstancesByTypeAndDocuments(this.linkType.id, [this.document.id])),
+      return this.storeDataService.selectLinkInstancesByTypeAndDocumentIds$(this.linkType.id, [this.document.id]).pipe(
         mergeMap(linkInstances => this.getLinkRowsForLinkInstances(linkInstances))
       );
     }
@@ -209,8 +207,7 @@ export class LinksListTableComponent implements OnChanges, AfterViewInit {
 
   private getLinkRowsForLinkInstances(linkInstances: LinkInstance[]): Observable<LinkRow[]> {
     const documentsIds = getOtherLinkedDocumentIds(linkInstances, this.document.id);
-    return this.store$.pipe(
-      select(selectDocumentsByIds(documentsIds)),
+    return this.storeDataService.selectDocumentsByIds$(documentsIds).pipe(
       map(documents => {
         return linkInstances.reduce((rows, linkInstance) => {
           const otherDocumentId = getOtherLinkedDocumentId(linkInstance, this.document.id);

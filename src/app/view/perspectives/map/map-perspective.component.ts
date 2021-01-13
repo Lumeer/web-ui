@@ -35,13 +35,6 @@ import {
   withLatestFrom,
 } from 'rxjs/operators';
 import {Collection} from '../../../core/store/collections/collection';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectCollectionsInQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {DEFAULT_MAP_CONFIG, MapConfig, MapModel, MapPosition} from '../../../core/store/maps/map.model';
 import {MapsAction} from '../../../core/store/maps/maps.action';
@@ -51,6 +44,7 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/view';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {
+  selectCanManageViewConfig,
   selectCurrentView,
   selectDefaultViewConfig,
   selectDefaultViewConfigSnapshot,
@@ -71,6 +65,7 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'map-perspective',
@@ -86,7 +81,7 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   public mapContentComponent: MapContentComponent;
 
   public collections$: Observable<Collection[]>;
-  public documentsAndLinks$: Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}>;
+  public documentsAndLinks$: Observable<{ documents: DocumentModel[]; linkInstances: LinkInstance[] }>;
   public linkTypes$: Observable<LinkType[]>;
   public constraintData$: Observable<ConstraintData>;
   public permissions$: Observable<Record<string, AllowedPermissions>>;
@@ -97,13 +92,14 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private activatedRoute: ActivatedRoute, private router: Router, private store$: Store<{}>) {}
+  constructor(private activatedRoute: ActivatedRoute, private router: Router, private store$: Store<{}>, private storeDataService: StoreDataService) {
+  }
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$();
+    this.linkTypes$ = this.storeDataService.selectLinkTypesInQuery$();
+    this.documentsAndLinks$ = this.storeDataService.selectDocumentsAndLinksByQuerySorted$();
     this.map$ = this.store$.pipe(select(selectMap));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
@@ -140,14 +136,14 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
           view ? this.subscribeToView(previousView, view) : this.subscribeToDefault()
         )
       )
-      .subscribe(({mapId, config}: {mapId?: string; config?: MapConfig}) => {
+      .subscribe(({mapId, config}: { mapId?: string; config?: MapConfig }) => {
         if (mapId) {
           this.store$.dispatch(new MapsAction.CreateMap({mapId, config}));
         }
       });
   }
 
-  private subscribeToView(previousView: View, view: View): Observable<{mapId?: string; config?: MapConfig}> {
+  private subscribeToView(previousView: View, view: View): Observable<{ mapId?: string; config?: MapConfig }> {
     const mapId = view.code;
     return this.store$.pipe(
       select(selectMapById(mapId)),
@@ -170,15 +166,15 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
   private checkMapConfig(config: MapConfig): Observable<MapConfig> {
     return combineLatest([
       this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
+      this.storeDataService.selectCollectionsByQuery$(),
+      this.storeDataService.selectLinkTypesInQuery$(),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformMapConfig(config, query, collections, linkTypes))
     );
   }
 
-  private subscribeToDefault(): Observable<{mapId?: string; config?: MapConfig}> {
+  private subscribeToDefault(): Observable<{ mapId?: string; config?: MapConfig }> {
     const mapId = DEFAULT_MAP_ID;
     return this.store$.pipe(
       select(selectViewQuery),
@@ -224,8 +220,8 @@ export class MapPerspectiveComponent implements OnInit, OnDestroy {
         select(selectMap),
         debounceTime(1000),
         filter(mapEntity => !!mapEntity),
-        withLatestFrom(this.store$.pipe(select(selectCollectionsInQuery)), this.selectCurrentDefaultViewConfig$()),
-        filter(([, collections]) => collections.length > 0)
+        withLatestFrom(this.storeDataService.selectCollectionsInQuery$(), this.selectCurrentDefaultViewConfig$()),
+        filter(([, collections,]) => collections.length > 0)
       )
       .subscribe(([mapEntity, collections, currentViewConfig]) => {
         if (mapEntity.id === DEFAULT_MAP_ID && mapEntity.config?.position) {

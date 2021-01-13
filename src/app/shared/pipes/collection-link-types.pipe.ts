@@ -21,22 +21,22 @@ import {Injectable, Pipe, PipeTransform} from '@angular/core';
 import {Collection} from '../../core/store/collections/collection';
 import {combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../core/store/link-types/link.type';
-import {selectLinkTypesByCollectionId} from '../../core/store/common/permissions.selectors';
 import {selectCollectionsDictionary} from '../../core/store/collections/collections.state';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
+import {StoreDataService} from '../../core/service/store-data.service';
 
 @Pipe({
   name: 'collectionLinkTypes',
 })
 @Injectable()
 export class CollectionLinkTypesPipe implements PipeTransform {
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public transform(collectionId: string): Observable<LinkType[]> {
     return combineLatest([
-      this.store$.pipe(select(selectLinkTypesByCollectionId(collectionId))),
+      this.storeDataService.selectLinkTypesByCollectionId$(collectionId),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
       map(([linkTypes, collectionsMap]) =>

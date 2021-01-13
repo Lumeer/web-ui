@@ -23,7 +23,7 @@ import {AppState} from '../../../core/store/app.state';
 import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
+import {selectCanManageViewConfig, selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
 import {map, mergeMap, pairwise, startWith, switchMap, take, tap, withLatestFrom} from 'rxjs/operators';
 import {selectKanbanById, selectKanbanConfig} from '../../../core/store/kanbans/kanban.state';
 import {DEFAULT_KANBAN_ID, KanbanConfig} from '../../../core/store/kanbans/kanban';
@@ -31,12 +31,6 @@ import {View} from '../../../core/store/views/view';
 import {KanbansAction} from '../../../core/store/kanbans/kanbans.action';
 import {Collection} from '../../../core/store/collections/collection';
 import {DocumentModel} from '../../../core/store/documents/document.model';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {checkOrTransformKanbanConfig} from './util/kanban.util';
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {LinkType} from '../../../core/store/link-types/link.type';
@@ -51,6 +45,7 @@ import {
   selectCollectionsPermissions,
   selectLinkTypesPermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   templateUrl: './kanban-perspective.component.html',
@@ -71,7 +66,7 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private kanbanId: string;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.initKanban();
@@ -116,8 +111,8 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   private checkKanbanConfig(config: KanbanConfig): Observable<KanbanConfig> {
     return combineLatest([
       this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
+      this.storeDataService.selectCollectionsByQuery$(),
+      this.storeDataService.selectLinkTypesInQuery$(),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformKanbanConfig(config, query, collections, linkTypes))
@@ -147,9 +142,9 @@ export class KanbanPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$();
+    this.linkTypes$ =this.storeDataService.selectLinkTypesInQuery$();
+    this.documentsAndLinks$ = this.storeDataService.selectDocumentsAndLinksByQuerySorted$();
     this.config$ = this.store$.pipe(select(selectKanbanConfig));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));

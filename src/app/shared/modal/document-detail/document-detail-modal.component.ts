@@ -39,7 +39,6 @@ import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {KeyCode} from '../../key-code';
 import {ViewSettings} from '../../../core/store/views/view';
@@ -48,6 +47,7 @@ import {selectViewSettings} from '../../../core/store/view-settings/view-setting
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
 import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'document-detail-modal',
@@ -88,7 +88,8 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
   constructor(
     private store$: Store<AppState>,
     private bsModalRef: BsModalRef,
-    private bsModalService: BsModalService
+    private bsModalService: BsModalService,
+    private storeDataService: StoreDataService
   ) {}
 
   public ngOnInit() {
@@ -114,7 +115,7 @@ export class DocumentDetailModalComponent implements OnInit, OnChanges, OnDestro
     this.dataExistSubscription.unsubscribe();
     this.dataExistSubscription = combineLatest([
       (collection.id && this.store$.pipe(select(selectCollectionById(collection.id)))) || of(true),
-      (document.id && this.store$.pipe(select(selectDocumentById(document.id)))) || of(true),
+      (document.id && this.storeDataService.selectDocumentById$(document.id)) || of(true),
     ]).subscribe(([currentCollection, currentDocument]) => {
       if (!currentCollection || !currentDocument) {
         this.hideDialog();

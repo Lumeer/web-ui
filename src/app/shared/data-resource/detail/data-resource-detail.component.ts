@@ -53,16 +53,11 @@ import {LinkInstancesAction} from '../../../core/store/link-instances/link-insta
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {ResourceAttributeSettings, ViewSettings} from '../../../core/store/views/view';
 import {DetailTabType} from './detail-tab-type';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {filter, map, take} from 'rxjs/operators';
-import {
-  selectLinkInstanceById,
-  selectLinkInstancesByDocumentIds,
-} from '../../../core/store/link-instances/link-instances.state';
 import {environment} from '../../../../environments/environment';
 import {getOtherLinkedCollectionId} from '../../utils/link-type.utils';
 import {objectChanged} from '../../utils/common.utils';
-import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'data-resource-detail',
@@ -131,7 +126,8 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     private store$: Store<AppState>,
     private notificationService: NotificationService,
     private perspectiveService: PerspectiveService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private storeDataService: StoreDataService
   ) {}
 
   public get isCollection(): boolean {
@@ -153,21 +149,17 @@ export class DataResourceDetailComponent implements OnInit, OnChanges {
     this.resourceType = getAttributesResourceType(this.resource);
 
     if (this.resourceType === AttributesResourceType.Collection) {
-      this.commentsCount$ = this.store$.pipe(
-        select(selectDocumentById(this.dataResource.id)),
+      this.commentsCount$ = this.storeDataService.selectDocumentById$(this.dataResource.id).pipe(
         filter(doc => !!doc),
         map(doc => doc.commentsCount)
       );
-      this.linksCount$ = this.store$.pipe(
-        select(selectLinkInstancesByDocumentIds([this.dataResource.id])),
+      this.linksCount$ = this.storeDataService.selectLinkInstancesByDocumentIds$([this.dataResource.id]).pipe(
         map(links => links?.length || 0)
       );
-      this.store$
-        .pipe(select(selectLinkTypesByCollectionId(this.resource.id)), take(1))
+      this.storeDataService.selectLinkTypesByCollectionId$(this.resource.id).pipe(take(1))
         .subscribe(linkTypes => linkTypes.forEach(linkType => this.readLinkTypeData(linkType)));
     } else if (this.resourceType === AttributesResourceType.LinkType) {
-      this.commentsCount$ = this.store$.pipe(
-        select(selectLinkInstanceById(this.dataResource.id)),
+      this.commentsCount$ = this.storeDataService.selectLinkInstanceById$(this.dataResource.id).pipe(
         filter(link => !!link),
         map(link => link.commentsCount)
       );

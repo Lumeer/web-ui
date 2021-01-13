@@ -23,8 +23,8 @@ import {AttributesResourceType, DataResourceDataValues} from '../model/resource'
 import {select, Store} from '@ngrx/store';
 import {DocumentModel} from '../store/documents/document.model';
 import {selectAllDocuments, selectDocumentsDictionary} from '../store/documents/documents.state';
-import {forkJoin, Observable, of} from 'rxjs';
-import {map, withLatestFrom} from 'rxjs/operators';
+import {combineLatest, Observable, of} from 'rxjs';
+import {map, tap, withLatestFrom} from 'rxjs/operators';
 import {selectAllCollections, selectCollectionsDictionary} from '../store/collections/collections.state';
 import {selectConstraintData} from '../store/constraint-data/constraint-data.state';
 import {Collection} from '../store/collections/collection';
@@ -35,11 +35,6 @@ import {selectAllLinkTypes, selectLinkTypesDictionary} from '../store/link-types
 import {selectViewQuery} from '../store/views/views.state';
 import {filterCollectionsByQuery} from '../store/collections/collections.filters';
 import {
-  selectCollectionsByReadPermission,
-  selectDocumentsAndLinksByQuery,
-  selectLinkTypesByReadPermission,
-} from '../store/common/permissions.selectors';
-import {
   getAllCollectionIdsFromQuery,
   getAllLinkTypeIdsFromQuery,
   queryWithoutLinks,
@@ -47,7 +42,6 @@ import {
 import {Role} from '../model/role';
 import {
   selectCollectionsPermissions,
-  selectLinkTypePermissions,
   selectLinkTypesPermissions,
   selectResourcesPermissions,
 } from '../store/user-permissions/user-permissions.state';
@@ -61,15 +55,70 @@ import {selectViewSettings} from '../store/view-settings/view-settings.state';
 import {LinkType} from '../store/link-types/link.type';
 import {sortDocumentsByCreationDate} from '../store/documents/document.utils';
 import {isLinkInstanceValid, sortLinkInstances} from '../store/link-instances/link-instance.utils';
+import {mapLinkTypeCollections} from '../../shared/utils/link-type.utils';
+import {Actions, ofType} from '@ngrx/effects';
+import {DocumentsAction, DocumentsActionType} from '../store/documents/documents.action';
+import {LinkInstancesAction, LinkInstancesActionType} from '../store/link-instances/link-instances.action';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StoreDataService {
-  private documentsCache: Record<string, DataResourceDataValues>;
-  private linksCache: Record<string, DataResourceDataValues>;
+  private documentsCache: Record<string, DataResourceDataValues> = {};
+  private linksCache: Record<string, DataResourceDataValues> = {};
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(public store$: Store<AppState>, private actions$: Actions) {
+
+    this.actions$
+      .pipe(ofType<DocumentsAction.PatchData>(DocumentsActionType.PATCH_DATA))
+      .subscribe(action => {
+        delete this.documentsCache[action.payload.document.id];
+      });
+
+    this.actions$
+      .pipe(ofType<DocumentsAction.UpdateData>(DocumentsActionType.UPDATE_DATA))
+      .subscribe(action => {
+        delete this.documentsCache[action.payload.document.id];
+      });
+
+    this.actions$
+      .pipe(ofType<DocumentsAction.UpdateSuccess>(DocumentsActionType.UPDATE_SUCCESS))
+      .subscribe(action => {
+        delete this.documentsCache[action.payload.document.id];
+      });
+
+    this.actions$
+      .pipe(ofType<DocumentsAction.UpdateFailure>(DocumentsActionType.UPDATE_FAILURE))
+      .subscribe(action => {
+        delete this.documentsCache[action.payload.originalDocument.id];
+      });
+
+    this.actions$
+      .pipe(ofType<LinkInstancesAction.PatchData>(LinkInstancesActionType.PATCH_DATA))
+      .subscribe(action => {
+        delete this.linksCache[action.payload.linkInstance.id];
+      });
+
+    this.actions$
+      .pipe(ofType<LinkInstancesAction.UpdateData>(LinkInstancesActionType.UPDATE_DATA))
+      .subscribe(action => {
+        delete this.linksCache[action.payload.linkInstance.id];
+      });
+
+    this.actions$
+      .pipe(ofType<LinkInstancesAction.UpdateSuccess>(LinkInstancesActionType.UPDATE_SUCCESS))
+      .subscribe(action => {
+        delete this.linksCache[action.payload.linkInstance.id];
+      });
+
+    this.actions$
+      .pipe(ofType<LinkInstancesAction.UpdateFailure>(LinkInstancesActionType.UPDATE_FAILURE))
+      .subscribe(action => {
+        delete this.linksCache[action.payload.originalLinkInstance.id];
+      });
+
+
+  }
 
   public selectCollectionsByReadPermission$(): Observable<Collection[]> {
     return this.selectCollectionsByPermission$(Role.Read);
@@ -80,7 +129,7 @@ export class StoreDataService {
   }
 
   private selectCollectionsByPermission$(role: Role): Observable<Collection[]> {
-    return forkJoin([this.select$(selectCollectionsPermissions), this.select$(selectAllCollections)]).pipe(
+    return combineLatest([this.select$(selectCollectionsPermissions), this.select$(selectAllCollections)]).pipe(
       map(([permissions, collections]) =>
         collections.filter(collection => hasRoleByPermissions(role, permissions[collection.id]))
       )
@@ -88,7 +137,7 @@ export class StoreDataService {
   }
 
   public selectCollectionsByQuery$(excludeLinks?: boolean): Observable<Collection[]> {
-    return forkJoin([
+    return combineLatest([
       this.selectCollectionsByReadPermission$(),
       this.select$(selectAllDocuments),
       this.select$(selectAllLinkTypes),
@@ -116,7 +165,7 @@ export class StoreDataService {
   }
 
   public selectCollectionsByCustomQuery$(query: Query): Observable<Collection[]> {
-    return forkJoin([
+    return combineLatest([
       this.selectCollectionsByReadPermission$(),
       query?.fulltexts?.length ? this.select$(selectAllDocuments) : of<DocumentModel[]>([]), // documents are used only for full text search
       this.select$(selectAllLinkTypes),
@@ -133,7 +182,7 @@ export class StoreDataService {
   }
 
   public selectCollectionsInQuery$(): Observable<Collection[]> {
-    return forkJoin([this.select$(selectCollectionsDictionary), this.select$(selectViewQuery)]).pipe(
+    return combineLatest([this.select$(selectCollectionsDictionary), this.select$(selectViewQuery)]).pipe(
       map(([collectionsMap, query]) => {
         const collectionIds = uniqueValues(query?.stems?.map(stem => stem.collectionId) || []);
         return collectionIds.map(id => collectionsMap[id]).filter(collection => !!collection);
@@ -142,7 +191,7 @@ export class StoreDataService {
   }
 
   public selectCollectionsByStems$(): Observable<Collection[]> {
-    return forkJoin([
+    return combineLatest([
       this.select$(selectCollectionsDictionary),
       this.select$(selectAllLinkTypes),
       this.select$(selectViewQuery),
@@ -163,7 +212,7 @@ export class StoreDataService {
   }
 
   private selectLinkTypesByPermission$(role: Role): Observable<LinkType[]> {
-    return forkJoin([this.select$(selectLinkTypesPermissions), this.select$(selectAllLinkTypes)]).pipe(
+    return combineLatest([this.select$(selectLinkTypesPermissions), this.select$(selectAllLinkTypes)]).pipe(
       map(([permissions, linkTypes]) =>
         linkTypes.filter(linkType => hasRoleByPermissions(role, permissions[linkType.id]))
       )
@@ -171,7 +220,7 @@ export class StoreDataService {
   }
 
   public selectLinkTypesInQuery$(): Observable<LinkType[]> {
-    return forkJoin([this.selectLinkTypesByReadPermission$(), this.select$(selectViewQuery)]).pipe(
+    return combineLatest([this.selectLinkTypesByReadPermission$(), this.select$(selectViewQuery)]).pipe(
       map(([linkTypes, query]) => {
         const linkTypesIdsInQuery = getAllLinkTypeIdsFromQuery(query);
         return linkTypes.filter(linkType => linkTypesIdsInQuery.includes(linkType.id));
@@ -180,17 +229,29 @@ export class StoreDataService {
   }
 
   public selectLinkTypesByCollectionId$(collectionId: string): Observable<LinkType[]> {
-    return this.select$(selectLinkTypesByReadPermission).pipe(
+    return this.selectLinkTypesByReadPermission$().pipe(
       map(linkTypes => linkTypes.filter(linkType => linkType.collectionIds.includes(collectionId)))
+    );
+  }
+
+  public selectLinkTypeByIdWithCollections$(linkTypeId: string): Observable<LinkType> {
+    return combineLatest([
+      this.select$(selectLinkTypesDictionary),
+      this.select$(selectCollectionsDictionary),
+    ]).pipe(
+      map(([linkTypesMap, collectionsMap]) => {
+        const linkType = linkTypesMap[linkTypeId];
+        return linkType ? mapLinkTypeCollections(linkType, collectionsMap) : linkType;
+      })
     );
   }
 
   public selectDocumentsByReadPermission$(ids?: string[]): Observable<DocumentModel[]> {
     const idsSet = ids ? new Set(ids) : null;
-    return forkJoin([this.select$(selectAllDocuments), this.select$(selectCollectionsByReadPermission)]).pipe(
+    return combineLatest([this.select$(selectAllDocuments), this.selectCollectionsByReadPermission$()]).pipe(
       withLatestFrom(
-        this.store$.pipe(select(selectCollectionsDictionary)),
-        this.store$.pipe(select(selectConstraintData))
+        this.select$(selectCollectionsDictionary),
+        this.select$(selectConstraintData)
       ),
       map(([[documents, collections], collectionsMap, constraintData]) => {
         const allowedCollectionIds = new Set(collections.map(collection => collection.id));
@@ -204,8 +265,8 @@ export class StoreDataService {
     );
   }
 
-  public selectDocumentsAndLinksByQuery$(): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return forkJoin([
+  public selectDocumentsAndLinksByQuery$(): Observable<{ documents: DocumentModel[]; linkInstances: LinkInstance[] }> {
+    return combineLatest([
       this.selectDocumentsByReadPermission$(),
       this.selectCollectionsByReadPermission$(),
       this.select$(selectAllLinkTypes),
@@ -231,20 +292,22 @@ export class StoreDataService {
     documents: DocumentModel[];
     linkInstances: LinkInstance[];
   }> {
-    return this.selectDocumentsAndLinksByCustomQuerySorted$();
+    return this.selectDocumentsAndLinksByCustomQuerySorted$().pipe(
+      tap(data => console.log(data))
+    );
   }
 
   public selectDocumentsAndLinksByCustomQuerySorted$(
     inputQuery?: Query,
     includeChildren?: boolean
-  ): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return forkJoin([
+  ): Observable<{ documents: DocumentModel[]; linkInstances: LinkInstance[] }> {
+    return combineLatest([
       this.selectDocumentsByReadPermission$(),
       this.selectCollectionsByReadPermission$(),
       this.select$(selectAllLinkTypes),
       this.selectAllLinkInstances$(),
       this.select$(selectViewQuery),
-      forkJoin([this.select$(selectResourcesPermissions), this.select$(selectViewSettings)]),
+      combineLatest([this.select$(selectResourcesPermissions), this.select$(selectViewSettings)]),
     ]).pipe(
       map(([documents, collections, linkTypes, linkInstances, query, [permissions, viewSettings]]) => {
         const data = filterDocumentsAndLinksByQuery(
@@ -274,7 +337,7 @@ export class StoreDataService {
   }
 
   public selectDocumentsByQuerySorted$(): Observable<DocumentModel[]> {
-    return forkJoin([this.selectDocumentsByQuery$(), this.select$(selectViewSettings)]).pipe(
+    return combineLatest([this.selectDocumentsByQuery$(), this.select$(selectViewSettings)]).pipe(
       map(([documents, viewSettings]) =>
         sortDataResourcesByViewSettings(documents, AttributesResourceType.Collection, viewSettings)
       )
@@ -282,7 +345,7 @@ export class StoreDataService {
   }
 
   public selectDocumentsByQueryIncludingChildren$(ids?: string[]): Observable<DocumentModel[]> {
-    return forkJoin([
+    return combineLatest([
       this.selectDocumentsByReadPermission$(ids),
       this.selectCollectionsByReadPermission$(),
       this.select$(selectAllLinkTypes),
@@ -311,8 +374,8 @@ export class StoreDataService {
     query: Query,
     desc?: boolean,
     includeChildren?: boolean
-  ): Observable<{documents: DocumentModel[]; linkInstances: LinkInstance[]}> {
-    return forkJoin([
+  ): Observable<{ documents: DocumentModel[]; linkInstances: LinkInstance[] }> {
+    return combineLatest([
       this.selectDocumentsByReadPermission$(),
       this.selectCollectionsByReadPermission$(),
       this.select$(selectAllLinkTypes),
@@ -378,7 +441,7 @@ export class StoreDataService {
     );
   }
 
-  public selectDocumentsById$(id: string): Observable<DocumentModel> {
+  public selectDocumentById$(id: string): Observable<DocumentModel> {
     return this.select$(selectDocumentsDictionary).pipe(
       map(documentsMap => documentsMap[id]),
       withLatestFrom(
@@ -397,7 +460,7 @@ export class StoreDataService {
     );
   }
 
-  public selectLinkInstanceByIds$(ids: string[]): Observable<LinkInstance[]> {
+  public selectLinkInstancesByIds$(ids: string[]): Observable<LinkInstance[]> {
     return this.mapLinkInstances$(
       this.select$(selectLinkInstancesDictionary).pipe(
         map(linkInstancesMap => (ids || []).map(id => linkInstancesMap[id]).filter(doc => doc))
@@ -405,7 +468,7 @@ export class StoreDataService {
     );
   }
 
-  public selectLinkInstanceByIds(id: string): Observable<LinkInstance> {
+  public selectLinkInstanceById$(id: string): Observable<LinkInstance> {
     return this.select$(selectLinkInstancesDictionary).pipe(
       map(linkInstancesMap => linkInstancesMap[id]),
       withLatestFrom(
@@ -429,7 +492,7 @@ export class StoreDataService {
   public selectLinkInstancesByDocumentIds$(documentIds: string[]): Observable<LinkInstance[]> {
     const documentIdsSet = new Set(documentIds);
     return this.mapLinkInstances$(
-      forkJoin([this.select$(selectAllLinkInstances), this.select$(selectDocumentsDictionary)]).pipe(
+      combineLatest([this.select$(selectAllLinkInstances), this.select$(selectDocumentsDictionary)]).pipe(
         map(([linkInstances, documentsMap]) =>
           linkInstances.filter(linkInstance =>
             linkInstance.documentIds?.some(
@@ -447,7 +510,7 @@ export class StoreDataService {
   ): Observable<LinkInstance[]> {
     const documentIdsSet = new Set(documentIds);
     return this.mapLinkInstances$(
-      forkJoin([this.select$(selectAllLinkInstances), this.select$(selectDocumentsDictionary)]).pipe(
+      combineLatest([this.select$(selectAllLinkInstances), this.select$(selectDocumentsDictionary)]).pipe(
         map(([linkInstances, documentsMap]) =>
           linkInstances.filter(linkInstance =>
             linkInstance.documentIds?.some(
@@ -474,7 +537,7 @@ export class StoreDataService {
     );
   }
 
-  private select$<T>(selector: Selector<AppState, T>): Observable<T> {
+  public select$<T>(selector: Selector<AppState, T>): Observable<T> {
     return this.store$.pipe(select(selector));
   }
 

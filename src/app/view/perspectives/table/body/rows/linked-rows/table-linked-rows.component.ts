@@ -18,15 +18,15 @@
  */
 
 import {ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
-import {select, Store} from '@ngrx/store';
+import {Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, Subject, Subscription} from 'rxjs';
 import {debounceTime, distinctUntilChanged, filter, map, switchMap, tap} from 'rxjs/operators';
-import {selectLinkInstancesByDocumentIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {TableBodyCursor} from '../../../../../../core/store/tables/table-cursor';
 import {TableConfigRow} from '../../../../../../core/store/tables/table.model';
 import {createEmptyTableRow} from '../../../../../../core/store/tables/table.utils';
 import {TablesAction} from '../../../../../../core/store/tables/tables.action';
+import {StoreDataService} from '../../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'table-linked-rows',
@@ -55,7 +55,7 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
   private syncSubject$ = new Subject<TableBodyCursor>();
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<{}>) {}
+  constructor(private store$: Store<{}>,  private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.linkedRows$ = this.bindLinkedRows();
@@ -92,8 +92,7 @@ export class TableLinkedRowsComponent implements OnInit, OnChanges, OnDestroy {
           allLinkedRows.push(...row.linkedRows);
           return allLinkedRows;
         }, []);
-        return this.store$.pipe(
-          select(selectLinkInstancesByDocumentIds(documentIds)),
+        return this.storeDataService.selectLinkInstancesByDocumentIds$(documentIds).pipe(
           map(linkInstances => filterRowsByExistingLinkInstance(linkedRows, linkInstances)),
           distinctUntilChanged(),
           tap(() => this.syncSubject$.next(cursor))

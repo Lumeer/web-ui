@@ -23,15 +23,8 @@ import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
 import {
-  distinctUntilChanged,
   map,
   mergeMap,
   pairwise,
@@ -43,14 +36,18 @@ import {
 import {ChartConfig, DEFAULT_CHART_ID} from '../../../core/store/charts/chart';
 import {selectChartById, selectChartConfig} from '../../../core/store/charts/charts.state';
 import {View} from '../../../core/store/views/view';
-import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectCanManageViewConfig,
+  selectCurrentView,
+  selectSidebarOpened,
+  selectViewQuery
+} from '../../../core/store/views/views.state';
 import {ChartAction} from '../../../core/store/charts/charts.action';
 import {Query} from '../../../core/store/navigation/query/query';
 import {LinkType} from '../../../core/store/link-types/link.type';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {deepObjectsEquals} from '../../../shared/utils/common.utils';
 import {ChartDataComponent} from './data/chart-data.component';
 import {ViewsAction} from '../../../core/store/views/views.action';
 import {checkOrTransformChartConfig} from './visualizer/chart-util';
@@ -58,6 +55,7 @@ import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'chart-perspective',
@@ -83,7 +81,7 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private chartId: string;
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.initChart();
@@ -142,8 +140,8 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   private checkChartConfig(config: ChartConfig): Observable<ChartConfig> {
     return combineLatest([
       this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
+      this.storeDataService.selectCollectionsByQuery$(),
+      this.storeDataService.selectLinkTypesInQuery$(),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformChartConfig(config, query, collections, linkTypes))
@@ -161,12 +159,9 @@ export class ChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.documentsAndLinks$ = this.store$.pipe(
-      select(selectDocumentsAndLinksByQuerySorted),
-      distinctUntilChanged((x, y) => deepObjectsEquals(x, y))
-    );
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
+    this.documentsAndLinks$ = this.storeDataService.selectDocumentsAndLinksByQuerySorted$();
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$();
+    this.linkTypes$ = this.storeDataService.selectLinkTypesInQuery$();
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
 
     this.config$ = this.store$.pipe(select(selectChartConfig));

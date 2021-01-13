@@ -33,12 +33,11 @@ import {findAttribute} from '../../../../../../core/store/collections/collection
 import {ConstraintData} from '../../../../../../core/model/data/constraint';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AppState} from '../../../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectDocumentsByCollectionId} from '../../../../../../core/store/documents/documents.state';
-import {selectLinkInstancesByType} from '../../../../../../core/store/link-instances/link-instances.state';
+import {Store} from '@ngrx/store';
 import {DataInputConfiguration} from '../../../../../../shared/data-input/data-input-configuration';
 import {DataValue} from '../../../../../../core/model/data-value';
 import {isArray} from '../../../../../../shared/utils/common.utils';
+import {StoreDataService} from '../../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'kanban-stem-config',
@@ -76,7 +75,7 @@ export class KanbanStemConfigComponent implements OnChanges {
   public dataResources$: Observable<DataResource[]>;
   public doneTitlesEditing$ = new BehaviorSubject(false);
 
-  constructor(private i18n: I18n, private store$: Store<AppState>) {
+  constructor(private i18n: I18n, private store$: Store<AppState>, private storeDataService: StoreDataService) {
     this.emptyResourceString = i18n({id: 'kanban.config.collection.resource.empty', value: 'Select table or link'});
     this.emptyValueString = i18n({id: 'kanban.config.collection.attribute.empty', value: 'Select attribute'});
     this.dueDateEmptyValueString = i18n({id: 'kanban.config.collection.dueDate.empty', value: 'Select due date'});
@@ -98,9 +97,9 @@ export class KanbanStemConfigComponent implements OnChanges {
       this.config.attribute && findAttribute(this.attributeResource?.attributes, this.config.attribute.attributeId);
     if (this.attributeResource) {
       if (this.config.attribute.resourceType === AttributesResourceType.Collection) {
-        this.dataResources$ = this.store$.pipe(select(selectDocumentsByCollectionId(this.attributeResource.id)));
+        this.dataResources$ = this.storeDataService.selectDocumentsByCollectionId$(this.attributeResource.id);
       } else {
-        this.dataResources$ = this.store$.pipe(select(selectLinkInstancesByType(this.attributeResource.id)));
+        this.dataResources$ = this.storeDataService.selectLinkInstancesByLinkTypeId$(this.attributeResource.id);
       }
     } else {
       this.dataResources$ = of([]);

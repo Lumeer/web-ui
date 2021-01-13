@@ -28,14 +28,14 @@ import {
   SimpleChange,
   SimpleChanges,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {TableHeaderCursor} from '../../../../core/store/tables/table-cursor';
 import {TableConfigPart, TableModel} from '../../../../core/store/tables/table.model';
 import {TablesAction} from '../../../../core/store/tables/tables.action';
-import {selectCollectionsByReadPermission} from '../../../../core/store/common/permissions.selectors';
+import {StoreDataService} from '../../../../core/service/store-data.service';
 
 @Component({
   selector: 'table-header',
@@ -57,16 +57,15 @@ export class TableHeaderComponent implements OnInit, OnChanges {
   public hasCollectionToLink$: Observable<boolean>;
   public cursor: TableHeaderCursor;
 
-  public constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>) {}
+  public constructor(private element: ElementRef<HTMLElement>, private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.bindCollectionHasToLink();
   }
 
   private bindCollectionHasToLink() {
-    this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
-      map(collections => collections.length > 1)
+    this.hasCollectionToLink$ = this.storeDataService.selectCollectionsByReadPermission$().pipe(
+      map(collections => collections?.length > 1)
     );
   }
 

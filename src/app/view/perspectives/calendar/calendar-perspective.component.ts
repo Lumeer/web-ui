@@ -21,16 +21,15 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {select, Store} from '@ngrx/store';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../core/store/collections/collection';
 import {map, mergeMap, pairwise, startWith, switchMap, take, withLatestFrom} from 'rxjs/operators';
 import {View} from '../../../core/store/views/view';
-import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectCanManageViewConfig,
+  selectCurrentView,
+  selectSidebarOpened,
+  selectViewQuery
+} from '../../../core/store/views/views.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {AppState} from '../../../core/store/app.state';
 import {selectCalendarById, selectCalendarConfig} from '../../../core/store/calendars/calendars.state';
@@ -117,8 +116,8 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
   private checkCalendarConfig(config: CalendarConfig): Observable<CalendarConfig> {
     return combineLatest([
       this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
+      this.storeDataService.selectCollectionsByQuery$(),
+      this.storeDataService.selectLinkTypesInQuery$(),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformCalendarConfig(config, query, collections, linkTypes))
@@ -150,11 +149,11 @@ export class CalendarPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscribeData() {
     this.collections$ = this.storeDataService.selectCollectionsByQuery$();
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
+    this.linkTypes$ = this.storeDataService.selectLinkTypesInQuery$();
+    this.documentsAndLinks$ = this.storeDataService.selectDocumentsAndLinksByQuerySorted$();
     this.config$ = this.store$.pipe(select(selectCalendarConfig));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
     this.constraintData$ = this.store$.pipe(select(selectConstraintData));
   }

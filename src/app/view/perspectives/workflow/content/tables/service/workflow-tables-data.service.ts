@@ -1240,6 +1240,7 @@ export class WorkflowTablesDataService {
   }
 
   private selectSidebarOpened$(): Observable<boolean> {
+    // TODO better check
     return this.store$.pipe(
       select(selectWorkflowSelectedDocumentId),
       mergeMap(documentId => this.store$.pipe(select(selectDocumentById(documentId)))),

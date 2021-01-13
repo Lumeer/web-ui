@@ -18,32 +18,27 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AppState} from '../store/app.state';
-import {select, Store} from '@ngrx/store';
-import {selectDocumentById} from '../store/documents/documents.state';
 import {selectCollectionById} from '../store/collections/collections.state';
 import {take} from 'rxjs/operators';
-import {selectLinkInstanceById} from '../store/link-instances/link-instances.state';
 import {selectLinkTypeById} from '../store/link-types/link-types.state';
 import {AttributesResource} from '../model/resource';
 import {findAttribute} from '../store/collections/collection.util';
 import {ClipboardService} from './clipboard.service';
 import {isArray, isNotNullOrUndefined} from '../../shared/utils/common.utils';
 import {DataValue} from '../model/data-value';
+import {StoreDataService} from './store-data.service';
 
 @Injectable({providedIn: 'root'})
 export class CopyValueService {
-  constructor(private store$: Store<AppState>, private clipboardService: ClipboardService) {}
+  constructor(private storeDataService: StoreDataService, private clipboardService: ClipboardService) {}
 
   public copyDocumentValue(documentId: string, collectionId: string, attributeId: string) {
-    this.store$
-      .pipe(select(selectDocumentById(documentId)), take(1))
+    this.storeDataService.selectDocumentById$(documentId).pipe(take(1))
       .subscribe(document => this.copy(document.dataValues?.[attributeId]?.editValue()));
   }
 
   public copyLinkValue(linkInstanceId: string, linkTypeId: string, attributeId: string) {
-    this.store$
-      .pipe(select(selectLinkInstanceById(linkInstanceId)), take(1))
+    this.storeDataService.selectLinkInstanceById$(linkInstanceId).pipe(take(1))
       .subscribe(linkInstance => this.copy(linkInstance.dataValues?.[attributeId]?.editValue()));
   }
 
@@ -83,14 +78,12 @@ export class CopyValueService {
   }
 
   public copyCollectionAttribute(collectionId: string, attributeId: string) {
-    this.store$
-      .pipe(select(selectCollectionById(collectionId)), take(1))
+    this.storeDataService.select$(selectCollectionById(collectionId)).pipe(take(1))
       .subscribe(collection => this.copyAttribute(collection, attributeId));
   }
 
   public copyLinkTypeAttribute(linkTypeId: string, attributeId: string) {
-    this.store$
-      .pipe(select(selectLinkTypeById(linkTypeId)), take(1))
+    this.storeDataService.select$(selectLinkTypeById(linkTypeId)).pipe(take(1))
       .subscribe(linkType => this.copyAttribute(linkType, attributeId));
   }
 

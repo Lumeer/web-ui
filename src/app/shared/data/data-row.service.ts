@@ -24,7 +24,6 @@ import {select, Store} from '@ngrx/store';
 import {AppState} from '../../core/store/app.state';
 import {I18n} from '@ngx-translate/i18n-polyfill';
 import {NotificationService} from '../../core/notifications/notification.service';
-import {selectDocumentById} from '../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../core/store/collections/collections.state';
 import {generateCorrelationId, getAttributesResourceType} from '../utils/resource.utils';
 import {DocumentsAction} from '../../core/store/documents/documents.action';
@@ -37,11 +36,9 @@ import {
   AttributesResource,
   AttributesResourceType,
   DataResource,
-  DataResourceData,
   DataResourceDataValues,
 } from '../../core/model/resource';
 import {selectLinkTypeById} from '../../core/store/link-types/link-types.state';
-import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {LinkInstancesAction} from '../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../core/store/link-instances/link.instance';
@@ -50,6 +47,7 @@ import {ResourceAttributeSettings} from '../../core/store/views/view';
 import {createAttributesSettingsOrder} from '../settings/settings.util';
 import {DataValue} from '../../core/model/data-value';
 import {UnknownDataValue} from '../../core/model/data-value/unknown.data-value';
+import {StoreDataService} from '../../core/service/store-data.service';
 
 export interface DataRow {
   id: string;
@@ -71,7 +69,7 @@ export class DataRowService {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n, private notificationService: NotificationService) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService, private i18n: I18n, private notificationService: NotificationService) {}
 
   public get isCollectionResource(): boolean {
     return this.resourceType === AttributesResourceType.Collection;
@@ -113,7 +111,7 @@ export class DataRowService {
 
   private subscribeCollectionAndDocument() {
     const documentObservable = !this.isNewDataResource
-      ? this.store$.pipe(select(selectDocumentById(this.dataResource.id)))
+      ? this.storeDataService.selectDocumentById$(this.dataResource.id)
       : of(this.dataResource);
     this.subscriptions.add(
       combineLatest([documentObservable, this.store$.pipe(select(selectCollectionById(this.resource.id)))]).subscribe(
@@ -128,7 +126,7 @@ export class DataRowService {
 
   private subscribeLinkTypeAndLink() {
     const linkInstanceObservable = !this.isNewDataResource
-      ? this.store$.pipe(select(selectLinkInstanceById(this.dataResource.id)))
+      ? this.storeDataService.selectLinkInstanceById$(this.dataResource.id)
       : of(this.dataResource);
     this.subscriptions.add(
       combineLatest([linkInstanceObservable, this.store$.pipe(select(selectLinkTypeById(this.resource.id)))]).subscribe(

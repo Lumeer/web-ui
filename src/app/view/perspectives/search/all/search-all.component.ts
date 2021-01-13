@@ -23,16 +23,17 @@ import {BehaviorSubject, combineLatest, Observable, Subscription} from 'rxjs';
 import {distinctUntilChanged, filter, map, switchMap} from 'rxjs/operators';
 import {AppState} from '../../../../core/store/app.state';
 import {selectCollectionsLoaded} from '../../../../core/store/collections/collections.state';
-import {
-  selectCollectionsByQuery,
-  selectDocumentsByQuery,
-  selectViewsByQuery,
-} from '../../../../core/store/common/permissions.selectors';
 import {selectWorkspace} from '../../../../core/store/navigation/navigation.state';
-import {selectAllViews, selectViewQuery, selectViewsLoaded} from '../../../../core/store/views/views.state';
+import {
+  selectAllViews,
+  selectViewQuery,
+  selectViewsByQuery,
+  selectViewsLoaded
+} from '../../../../core/store/views/views.state';
 import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/documents/documents.state';
 import {DocumentsAction} from '../../../../core/store/documents/documents.action';
 import {Query} from '../../../../core/store/navigation/query/query';
+import {StoreDataService} from '../../../../core/service/store-data.service';
 
 @Component({
   templateUrl: './search-all.component.html',
@@ -48,7 +49,7 @@ export class SearchAllComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.subscribeDataInfo();
@@ -80,24 +81,22 @@ export class SearchAllComponent implements OnInit, OnDestroy {
       });
     this.subscriptions.add(navigationSubscription);
 
-    this.hasCollection$ = this.store$.pipe(
-      select(selectCollectionsByQuery),
-      map(collections => collections && collections.length > 0)
+    this.hasCollection$ = this.storeDataService.selectCollectionsByQuery$().pipe(
+      map(collections => collections?.length > 0)
     );
 
     this.hasView$ = this.store$.pipe(
       select(selectViewsByQuery),
-      map(views => views && views.length > 0)
+      map(views => views?.length > 0)
     );
 
     this.hasAnyView$ = this.store$.pipe(
       select(selectAllViews),
-      map(views => views && views.length > 0)
+      map(views => views?.length > 0)
     );
 
-    this.hasDocument$ = this.store$.pipe(
-      select(selectDocumentsByQuery),
-      map(documents => documents && documents.length > 0)
+    this.hasDocument$ = this.storeDataService.selectDocumentsByQuery$().pipe(
+      map(documents => documents?.length > 0)
     );
   }
 

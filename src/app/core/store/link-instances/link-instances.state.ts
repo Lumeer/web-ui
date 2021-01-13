@@ -22,10 +22,9 @@ import {createSelector} from '@ngrx/store';
 import {AppState} from '../app.state';
 import {LinkInstance} from './link.instance';
 import {Query} from '../navigation/query/query';
-import {isLinkInstanceValid, sortLinkInstances} from './link-instance.utils';
+import {sortLinkInstances} from './link-instance.utils';
 import {areQueriesEqualExceptFiltersAndPagination} from '../navigation/query/query.helper';
 import {selectQuery} from '../navigation/navigation.state';
-import {selectDocumentsDictionary} from '../documents/documents.state';
 
 export interface LinkInstancesState extends EntityState<LinkInstance> {
   queries: Query[];
@@ -72,33 +71,6 @@ export const selectLinkInstanceById = (id: string) =>
 export const selectLinkInstancesByIds = (ids: string[]) =>
   createSelector(selectLinkInstancesDictionary, linkInstancesMap =>
     sortLinkInstances(ids.map(id => linkInstancesMap[id]).filter(linkInstance => !!linkInstance))
-  );
-
-export const selectLinkInstancesByDocumentIds = (documentIds: string[]) =>
-  createSelector(selectAllLinkInstances, selectDocumentsDictionary, (linkInstances, documentsMap) =>
-    sortLinkInstances(
-      linkInstances.filter(linkInstance =>
-        linkInstance.documentIds?.some(
-          id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
-        )
-      )
-    )
-  );
-
-export const selectLinkInstancesByType = (linkTypeId: string) =>
-  createSelector(selectAllLinkInstances, linkInstances =>
-    sortLinkInstances(linkInstances.filter(linkInstance => linkInstance.linkTypeId === linkTypeId))
-  );
-
-export const selectLinkInstancesByTypeAndDocuments = (linkTypeId: string, documentIds: string[]) =>
-  createSelector(selectLinkInstancesByType(linkTypeId), selectDocumentsDictionary, (linkInstances, documentsMap) =>
-    sortLinkInstances(
-      linkInstances.filter(linkInstance =>
-        linkInstance.documentIds?.some(
-          id => documentIds.includes(id) && isLinkInstanceValid(linkInstance, documentsMap)
-        )
-      )
-    )
   );
 
 export const selectLinkInstanceActionExecutedTime = (linkInstanceId: string, attributeId: string) =>

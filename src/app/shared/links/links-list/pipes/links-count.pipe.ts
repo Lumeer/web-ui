@@ -19,22 +19,19 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {LinkType} from '../../../../core/store/link-types/link.type';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {selectLinkInstancesByTypeAndDocuments} from '../../../../core/store/link-instances/link-instances.state';
 import {DocumentModel} from '../../../../core/store/documents/document.model';
 import {map} from 'rxjs/operators';
+import {StoreDataService} from '../../../../core/service/store-data.service';
 
 @Pipe({
   name: 'linksCount',
 })
 export class LinksCountPipe implements PipeTransform {
-  constructor(private store$: Store<AppState>) {}
+  constructor(private storeDataService: StoreDataService) {}
 
   public transform(document: DocumentModel, linkType: LinkType): Observable<number> {
-    return this.store$.pipe(
-      select(selectLinkInstancesByTypeAndDocuments(linkType.id, [document.id])),
+    return this.storeDataService.selectLinkInstancesByTypeAndDocumentIds$(linkType.id, [document.id]).pipe(
       map(instances => instances?.length || 0)
     );
   }

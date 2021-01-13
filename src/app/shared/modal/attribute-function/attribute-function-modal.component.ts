@@ -27,11 +27,6 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {map, tap} from 'rxjs/operators';
 import {AppState} from '../../../core/store/app.state';
-import {
-  selectCollectionsByReadPermission,
-  selectLinkTypesByCollectionId,
-} from '../../../core/store/common/permissions.selectors';
-import {selectLinkTypeByIdWithCollections} from '../../../core/store/link-types/link-types.state';
 import {LinkTypesAction} from '../../../core/store/link-types/link-types.action';
 import {CollectionsAction} from '../../../core/store/collections/collections.action';
 import {KeyCode} from '../../key-code';
@@ -40,6 +35,7 @@ import {FormControl, FormGroup} from '@angular/forms';
 import {AttributesResource} from '../../../core/model/resource';
 import {attributeHasFunction, attributeRuleFunction, findAttributeRule} from '../../utils/attribute.utils';
 import {BlocklyRule, Rule} from '../../../core/model/rule';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'attribute-function-dialog',
@@ -76,10 +72,10 @@ export class AttributeFunctionModalComponent implements OnInit {
   });
   public resource: AttributesResource;
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.select(selectCollectionsByReadPermission);
+    this.collections$ =  this.storeDataService.selectCollectionsByReadPermission$();
 
     if (this.collectionId) {
       this.collection$ = this.store$.pipe(
@@ -89,13 +85,12 @@ export class AttributeFunctionModalComponent implements OnInit {
       this.attribute$ = this.collection$.pipe(
         map(collection => findAttribute(collection?.attributes, this.attributeId))
       );
-      this.linkTypes$ = this.store$.pipe(select(selectLinkTypesByCollectionId(this.collectionId)));
+      this.linkTypes$ = this.storeDataService.selectLinkTypesByCollectionId$(this.collectionId);
       this.attributeFunction$ = combineLatest([this.attribute$, this.collection$]).pipe(
         map(([attribute, collection]) => mapAttributeFunction(attribute, collection))
       );
     } else if (this.linkTypeId) {
-      this.linkType$ = this.store$.pipe(
-        select(selectLinkTypeByIdWithCollections(this.linkTypeId)),
+      this.linkType$ = this.storeDataService.selectLinkTypeByIdWithCollections$(this.linkTypeId).pipe(
         tap(linkType => (this.resource = linkType))
       );
       this.attribute$ = this.linkType$.pipe(map(linkType => findAttribute(linkType?.attributes, this.attributeId)));

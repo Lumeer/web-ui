@@ -30,10 +30,10 @@ import {
   selectCollectionsDictionary,
 } from '../../../../core/store/collections/collections.state';
 import {filter, map, mergeMap} from 'rxjs/operators';
-import {selectLinkTypesByCollectionId} from '../../../../core/store/common/permissions.selectors';
 import {Collection} from '../../../../core/store/collections/collection';
 import {LinkTypesAction} from '../../../../core/store/link-types/link-types.action';
 import {isNotNullOrUndefined} from '../../../../shared/utils/common.utils';
+import {StoreDataService} from '../../../../core/service/store-data.service';
 
 @Component({
   templateUrl: './collection-link-types.component.html',
@@ -45,7 +45,7 @@ export class CollectionLinkTypesComponent implements OnInit {
   public collection$: Observable<Collection>;
   public searchString$ = new BehaviorSubject<string>('');
 
-  constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>) {}
+  constructor(private i18n: I18n, private notificationService: NotificationService, private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.subscribeData();
@@ -64,7 +64,7 @@ export class CollectionLinkTypesComponent implements OnInit {
 
   private selectLinkTypesForCollection(collectionId: string): Observable<LinkType[]> {
     return combineLatest([
-      this.store$.pipe(select(selectLinkTypesByCollectionId(collectionId))),
+      this.storeDataService.selectLinkTypesByCollectionId$(collectionId),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
       map(([linkTypes, collectionsMap]) =>

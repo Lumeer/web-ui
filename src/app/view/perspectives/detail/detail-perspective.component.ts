@@ -28,13 +28,9 @@ import {Query} from '../../../core/store/navigation/query/query';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
 import {debounceTime, distinctUntilChanged, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
-import {selectDocumentById, selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
+import {selectQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectNavigation, selectViewCursor} from '../../../core/store/navigation/navigation.state';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
-import {
-  selectCollectionsByQueryWithoutLinks,
-  selectDocumentsByCustomQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {
   filterStemsForCollection,
   isNavigatingToOtherWorkspace,
@@ -44,6 +40,7 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {ViewCursor} from '../../../core/store/navigation/view-cursor/view-cursor';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'detail-perspective',
@@ -65,7 +62,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private selectionSubscription = new Subscription();
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(
@@ -77,9 +74,9 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
 
   private initSelection() {
     this.selectionSubscription = combineLatest([
-      this.store$.pipe(select(selectCollectionsByQueryWithoutLinks)),
-      this.store$.pipe(select(selectNavigation)),
-      this.store$.pipe(select(selectViewCursor)),
+      this.storeDataService.selectCollectionsByQuery$(true),
+      this.storeDataService.select$(selectNavigation),
+      this.storeDataService.select$(selectViewCursor),
     ])
       .pipe(
         switchMap(([collections, navigation, cursor]) => {
@@ -89,8 +86,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
           if (selectedCollection) {
             const collectionQuery = filterStemsForCollection(selectedCollection.id, navigation && navigation.query);
             this.store$.dispatch(new DocumentsAction.Get({query: collectionQuery}));
-            return this.store$.pipe(
-              select(selectDocumentsByCustomQuery(collectionQuery)),
+            return this.storeDataService.selectDocumentsByCustomQuery$(collectionQuery).pipe(
               map(documents => {
                 const document =
                   (cursor && (documents || []).find(doc => doc.id === cursor.documentId)) ||
@@ -160,9 +156,8 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
             }),
             filter(loaded => loaded),
             mergeMap(() =>
-              this.store$.pipe(
-                select(selectDocumentsByCustomQuery(collectionQuery)),
-                map(documents => documents && documents[0])
+              this.storeDataService.selectDocumentsByCustomQuery$(collectionQuery).pipe(
+                map(documents => documents?.[0])
               )
             )
           );
@@ -190,7 +185,7 @@ export class DetailPerspectiveComponent implements OnInit, OnDestroy {
     this.collectionSubscription.unsubscribe();
     this.collectionSubscription = combineLatest([
       this.store$.pipe(select(selectCollectionById(selectedCollection.id))),
-      selectedDocument ? this.store$.pipe(select(selectDocumentById(selectedDocument.id))) : of(null),
+      selectedDocument ? this.storeDataService.selectDocumentById$(selectedDocument.id) : of(null),
     ]).subscribe(([collection, document]) => {
       if (collection) {
         this.selected$.next({collection, document});

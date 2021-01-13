@@ -42,8 +42,6 @@ export function linkInstancesReducer(
       return addOrUpdateLinkInstance(state, action.payload.linkInstance);
     case LinkInstancesActionType.UPDATE_FAILURE:
       return revertLinkInstance(state, action.payload.originalLinkInstance);
-    case LinkInstancesActionType.UPDATE_DATA_VALUES:
-      return updateDataValues(state, action);
     case LinkInstancesActionType.DELETE_SUCCESS:
       return linkInstancesAdapter.removeOne(action.payload.linkInstanceId, state);
     case LinkInstancesActionType.DELETE_FAILURE:
@@ -110,7 +108,7 @@ function addLinkInstances(state: LinkInstancesState, action: LinkInstancesAction
     const oldLinkInstances = state.entities[linkInstance.id];
 
     if (!filteredLinkInstanceIds.includes(linkInstance.id) && isTransientModified(linkInstance, oldLinkInstances)) {
-      result.push({...oldLinkInstances, commentsCount: linkInstance.commentsCount});
+      result.push({...oldLinkInstances, commentsCount: linkInstance.commentsCount, dataValues: undefined});
     }
 
     return result;
@@ -177,10 +175,6 @@ function patchData(state: LinkInstancesState, action: LinkInstancesAction.PatchD
           ...originalLinkInstance.data,
           ...linkInstance.data,
         },
-        dataValues: {
-          ...originalLinkInstance.dataValues,
-          ...linkInstance.dataValues,
-        },
         dataVersion: (linkInstance.dataVersion || 0) + 1,
       },
     },
@@ -197,17 +191,4 @@ function isModifiedLater(linkInstance: LinkInstance, oldLinkInstance: LinkInstan
     linkInstance.updateDate &&
     (!oldLinkInstance.updateDate || linkInstance.updateDate.getTime() > oldLinkInstance.updateDate.getTime())
   );
-}
-
-function updateDataValues(state: LinkInstancesState, action: LinkInstancesAction.UpdateDataValues) {
-  const updateDocuments = action.payload.linkInstances.reduce((linkInstances, linkInstance) => {
-    const oldDocument = state.entities[linkInstance.id];
-    if (oldDocument) {
-      linkInstances.push({...oldDocument, dataValues: linkInstance.dataValues});
-    }
-
-    return linkInstances;
-  }, []);
-
-  return linkInstancesAdapter.upsertMany(updateDocuments, state);
 }

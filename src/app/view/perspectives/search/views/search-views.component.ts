@@ -32,13 +32,12 @@ import {I18n} from '@ngx-translate/i18n-polyfill';
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {NotificationService} from '../../../../core/notifications/notification.service';
 import {Query} from '../../../../core/store/navigation/query/query';
-import {selectViewsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {DEFAULT_SEARCH_ID, SearchConfig, SearchViewsConfig} from '../../../../core/store/searches/search';
 import {selectSearchConfig, selectSearchId} from '../../../../core/store/searches/searches.state';
 import {SearchesAction} from '../../../../core/store/searches/searches.action';
 import {selectWorkspaceWithIds} from '../../../../core/store/common/common.selectors';
 import {Perspective} from '../../perspective';
-import {selectViewQuery} from '../../../../core/store/views/views.state';
+import {selectViewQuery, selectViewsByQuery} from '../../../../core/store/views/views.state';
 import {AllowedPermissions} from '../../../../core/model/allowed-permissions';
 import {selectViewsPermissions} from '../../../../core/store/user-permissions/user-permissions.state';
 

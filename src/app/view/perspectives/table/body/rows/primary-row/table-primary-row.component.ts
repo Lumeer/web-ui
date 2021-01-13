@@ -41,7 +41,7 @@ import {
   selectTablePart,
   selectTableRowWithHierarchyLevel,
 } from '../../../../../../core/store/tables/tables.selector';
-import {selectCollectionsByReadPermission} from '../../../../../../core/store/common/permissions.selectors';
+import {StoreDataService} from '../../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'table-primary-row',
@@ -73,16 +73,15 @@ export class TablePrimaryRowComponent implements OnInit, OnChanges {
   public part$: Observable<TableConfigPart>;
   public hasCollectionToLink$: Observable<boolean>;
 
-  constructor(private element: ElementRef, private store$: Store<{}>) {}
+  constructor(private element: ElementRef, private store$: Store<{}>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.bindCollectionHasToLink();
   }
 
   private bindCollectionHasToLink() {
-    this.hasCollectionToLink$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
-      map(collections => collections.length > 1)
+    this.hasCollectionToLink$ = this.storeDataService.selectCollectionsByReadPermission$().pipe(
+      map(collections => collections?.length > 1)
     );
   }
 

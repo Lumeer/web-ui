@@ -25,13 +25,13 @@ import {catchError, map, mergeMap, take, withLatestFrom} from 'rxjs/operators';
 import {FileAttachmentDto} from '../../dto/file-attachment.dto';
 import {CommonAction} from '../common/common.action';
 import {selectWorkspaceWithIds} from '../common/common.selectors';
-import {selectCollectionsByCustomQuery} from '../common/permissions.selectors';
 import {getAllLinkTypeIdsFromQuery} from '../navigation/query/query.util';
 import {createCallbackActions, emitErrorActions} from '../store.utils';
 import {convertFileAttachmentDtoToModel, convertFileAttachmentModelToDto} from './file-attachment.converter';
 import {FileAttachmentsAction, FileAttachmentsActionType} from './file-attachments.action';
 import {AttachmentsService} from '../../data-service';
 import {createFileApiPath, FileApiPath} from '../../data-service/attachments/attachments.service';
+import {StoreDataService} from '../../service/store-data.service';
 
 @Injectable()
 export class FileAttachmentsEffects {
@@ -91,8 +91,7 @@ export class FileAttachmentsEffects {
     mergeMap(action => {
       const {query} = action.payload;
 
-      return this.store$.pipe(
-        select(selectCollectionsByCustomQuery(query)),
+      return this.storeDataService.selectCollectionsByCustomQuery$(query).pipe(
         take(1),
         mergeMap(collections => {
           const collectionIds = collections.map(collection => collection.id);
@@ -146,5 +145,5 @@ export class FileAttachmentsEffects {
     return this.attachmentsService.getFilesByLinkType(path);
   }
 
-  constructor(private actions$: Actions, private attachmentsService: AttachmentsService, private store$: Store<{}>) {}
+  constructor(private actions$: Actions, private attachmentsService: AttachmentsService, private store$: Store<{}>, private storeDataService: StoreDataService) {}
 }

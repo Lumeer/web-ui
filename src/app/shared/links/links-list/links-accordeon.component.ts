@@ -41,9 +41,9 @@ import {selectAllCollections, selectCollectionsDictionary} from '../../../core/s
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {map, tap} from 'rxjs/operators';
-import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'links-accordeon',
@@ -80,7 +80,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
 
   public openedGroups$ = new BehaviorSubject<Record<string, boolean>>({});
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
@@ -99,7 +99,7 @@ export class LinksAccordeonComponent implements OnInit, OnChanges {
 
   private renewSubscriptions() {
     this.linkTypes$ = combineLatest([
-      this.store$.pipe(select(selectLinkTypesByCollectionId(this.collection.id))),
+      this.storeDataService.selectLinkTypesByCollectionId$(this.collection.id),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
       tap(([linkTypes]) => {

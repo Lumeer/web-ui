@@ -39,9 +39,7 @@ import {AppState} from '../../../core/store/app.state';
 import {BsModalRef, BsModalService} from 'ngx-bootstrap/modal';
 import {DialogType} from '../dialog-type';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {selectDocumentById} from '../../../core/store/documents/documents.state';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
-import {selectLinkInstanceById} from '../../../core/store/link-instances/link-instances.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
@@ -55,6 +53,7 @@ import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'data-resource-detail-modal',
@@ -100,7 +99,8 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
   constructor(
     private store$: Store<AppState>,
     private bsModalRef: BsModalRef,
-    private bsModalService: BsModalService
+    private bsModalService: BsModalService,
+    private storeDataService: StoreDataService
   ) {}
 
   public ngOnInit() {
@@ -151,9 +151,9 @@ export class DataResourceDetailModalComponent implements OnInit, OnChanges {
 
   private selectDataResource$(id: string): Observable<DataResource> {
     if (this.resourceType === AttributesResourceType.Collection) {
-      return this.store$.pipe(select(selectDocumentById(id)));
+      return this.storeDataService.selectDocumentById$(id);
     }
-    return this.store$.pipe(select(selectLinkInstanceById(id)));
+    return this.storeDataService.selectLinkInstanceById$(id);
   }
 
   private selectPermissions$(resource: AttributesResource): Observable<AllowedPermissions> {

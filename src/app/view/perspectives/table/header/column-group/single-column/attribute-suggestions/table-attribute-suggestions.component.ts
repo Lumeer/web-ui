@@ -42,7 +42,6 @@ import {
   selectCollectionsByIds,
   selectCollectionsDictionary,
 } from '../../../../../../../core/store/collections/collections.state';
-import {selectLinkTypesByCollectionId} from '../../../../../../../core/store/common/permissions.selectors';
 import {LinkTypeHelper} from '../../../../../../../core/store/link-types/link-type.helper';
 import {LinkTypesAction} from '../../../../../../../core/store/link-types/link-types.action';
 import {LinkType} from '../../../../../../../core/store/link-types/link.type';
@@ -57,6 +56,7 @@ import {DropdownComponent} from '../../../../../../../shared/dropdown/dropdown.c
 import {extractAttributeLastName, findAttributeByName} from '../../../../../../../shared/utils/attribute.utils';
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
 import {selectViewQuery} from '../../../../../../../core/store/views/views.state';
+import {StoreDataService} from '../../../../../../../core/service/store-data.service';
 
 interface LinkedAttribute {
   linkType?: LinkType;
@@ -121,7 +121,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
 
   public selectedIndex$ = new BehaviorSubject(-1);
 
-  public constructor(private modalService: ModalService, private store$: Store<AppState>) {}
+  public constructor(private modalService: ModalService, private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit(): void {
     this.linkedAttributes$ = this.bindLinkedAttributes();
@@ -231,7 +231,7 @@ export class TableAttributeSuggestionsComponent implements OnInit, OnChanges, Af
       filter(([collection]) => !!collection),
       switchMap(([collection, lastName]) =>
         combineLatest([
-          this.store$.select(selectLinkTypesByCollectionId(collection.id)),
+          this.storeDataService.selectLinkTypesByCollectionId$(collection.id),
           this.store$.select(selectCollectionsDictionary),
           this.store$.select(selectViewQuery),
         ]).pipe(

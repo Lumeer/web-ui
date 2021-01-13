@@ -43,8 +43,6 @@ import {AttributesResource, DataResource} from '../../core/model/resource';
 import {DataResourceDetailModalComponent} from './data-resource-detail/data-resource-detail-modal.component';
 import {ChooseLinkDocumentModalComponent} from './choose-link-document/choose-link-document-modal.component';
 import {DocumentModel} from '../../core/store/documents/document.model';
-import {selectDocumentById} from '../../core/store/documents/documents.state';
-import {selectLinkInstanceById} from '../../core/store/link-instances/link-instances.state';
 import {NavigationExtras} from '@angular/router';
 import {ProjectsAction} from '../../core/store/projects/projects.action';
 import {CreateProjectModalComponent} from './create-project/create-project-modal.component';
@@ -53,6 +51,7 @@ import {OrganizationsAction} from '../../core/store/organizations/organizations.
 import {ModalsAction} from '../../core/store/modals/modals.action';
 import {attributeHasAnyFunction, attributeHasFunction} from '../utils/attribute.utils';
 import {findAttribute} from '../../core/store/collections/collection.util';
+import {StoreDataService} from '../../core/service/store-data.service';
 
 type Options = ModalOptions & {initialState: any};
 
@@ -60,7 +59,7 @@ type Options = ModalOptions & {initialState: any};
   providedIn: 'root',
 })
 export class ModalService {
-  constructor(private store$: Store<AppState>, private i18n: I18n, private bsModalService: BsModalService) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService, private i18n: I18n, private bsModalService: BsModalService) {}
 
   public show(content: string | TemplateRef<any> | any, config?: Options): BsModalRef {
     return this.addModalRef(this.bsModalService.show(content, config));
@@ -80,9 +79,7 @@ export class ModalService {
   }
 
   public showDocumentDetail(id: string) {
-    this.store$
-      .pipe(
-        select(selectDocumentById(id)),
+    this.storeDataService.selectDocumentById$(id).pipe(
         mergeMap(document =>
           this.store$.pipe(
             select(selectCollectionById(document?.collectionId)),
@@ -99,9 +96,7 @@ export class ModalService {
   }
 
   public showLinkInstanceDetail(id: string) {
-    this.store$
-      .pipe(
-        select(selectLinkInstanceById(id)),
+    this.storeDataService.selectLinkInstanceById$(id).pipe(
         mergeMap(linkInstance =>
           this.store$.pipe(
             select(selectLinkTypeById(linkInstance?.linkTypeId)),

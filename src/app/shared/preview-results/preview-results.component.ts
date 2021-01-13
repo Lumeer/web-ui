@@ -27,20 +27,15 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import {select, Store} from '@ngrx/store';
 import {Observable, of} from 'rxjs';
 import {ConstraintData} from '../../core/model/data/constraint';
-import {AppState} from '../../core/store/app.state';
 import {Collection} from '../../core/store/collections/collection';
-import {
-  selectCollectionsByQueryWithoutLinks,
-  selectDocumentsByCustomQuery,
-} from '../../core/store/common/permissions.selectors';
 import {DocumentModel} from '../../core/store/documents/document.model';
 import {Query} from '../../core/store/navigation/query/query';
 import {filterStemsForCollection} from '../../core/store/navigation/query/query.util';
 import {selectQueryDocumentsLoaded} from '../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../core/store/constraint-data/constraint-data.state';
+import {StoreDataService} from '../../core/service/store-data.service';
 
 @Component({
   selector: 'preview-results',
@@ -68,15 +63,15 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   public constraintData$: Observable<ConstraintData>;
   public loaded$: Observable<boolean>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor( private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.subscribeData();
   }
 
   private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQueryWithoutLinks));
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$(true);
+    this.constraintData$ = this.storeDataService.select$(selectConstraintData);
   }
 
   public ngOnChanges(changes: SimpleChanges) {
@@ -88,8 +83,8 @@ export class PreviewResultsComponent implements OnInit, OnChanges {
   private subscribeToDocuments() {
     if (this.selectedCollection && this.query) {
       const collectionQuery = filterStemsForCollection(this.selectedCollection.id, this.query);
-      this.documents$ = this.store$.pipe(select(selectDocumentsByCustomQuery(collectionQuery)));
-      this.loaded$ = this.store$.pipe(select(selectQueryDocumentsLoaded(collectionQuery)));
+      this.documents$ = this.storeDataService.selectDocumentsByCustomQuery$(collectionQuery);
+      this.loaded$ = this.storeDataService.select$(selectQueryDocumentsLoaded(collectionQuery));
     } else {
       this.documents$ = of([]);
       this.loaded$ = of(true);

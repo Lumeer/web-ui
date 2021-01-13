@@ -32,9 +32,9 @@ import {AppState} from '../../../../../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {isArray, isNullOrUndefined, objectChanged} from '../../../../../../../shared/utils/common.utils';
 import {DocumentsAction} from '../../../../../../../core/store/documents/documents.action';
-import {selectDocumentsByCollectionId} from '../../../../../../../core/store/documents/documents.state';
 import {selectConstraintData} from '../../../../../../../core/store/constraint-data/constraint-data.state';
 import {map, startWith} from 'rxjs/operators';
+import {StoreDataService} from '../../../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'collection-purpose-tasks',
@@ -61,7 +61,7 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
   public documents$: Observable<DocumentModel[]>;
   public constraintData$: Observable<ConstraintData>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public get assigneeControl(): AbstractControl {
     return this.form.get(TaskPurposeFormControl.Assignee);
@@ -118,7 +118,7 @@ export class CollectionPurposeTasksComponent implements OnInit, OnChanges {
 
   private updateData() {
     this.store$.dispatch(new DocumentsAction.Get({query: {stems: [{collectionId: this.collection.id}]}}));
-    this.documents$ = this.store$.pipe(select(selectDocumentsByCollectionId(this.collection.id)));
+    this.documents$ = this.storeDataService.selectDocumentsByCollectionId$(this.collection.id);
   }
 
   private resetForm() {

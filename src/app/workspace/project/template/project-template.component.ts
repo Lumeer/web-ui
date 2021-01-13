@@ -24,13 +24,13 @@ import {View} from '../../../core/store/views/view';
 import {combineLatest, Observable} from 'rxjs';
 import {Project} from '../../../core/store/projects/project';
 import {selectProjectByWorkspace} from '../../../core/store/projects/projects.state';
-import {selectViewsByReadSorted} from '../../../core/store/common/permissions.selectors';
 import {selectAllCollections} from '../../../core/store/collections/collections.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
 import {map} from 'rxjs/operators';
 import {QueryData} from '../../../shared/top-panel/search-box/util/query-data';
 import {Workspace} from '../../../core/store/navigation/workspace';
 import {selectWorkspaceWithIds} from '../../../core/store/common/common.selectors';
+import {selectViewsByReadSorted} from '../../../core/store/views/views.state';
 
 @Component({
   selector: 'project-template',

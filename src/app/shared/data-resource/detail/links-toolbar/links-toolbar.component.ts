@@ -18,13 +18,11 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core';
-import {AppState} from '../../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
-import {selectCollectionsByWritePermission} from '../../../../core/store/common/permissions.selectors';
 import {map} from 'rxjs/operators';
 import {ModalService} from '../../../modal/modal.service';
+import {StoreDataService} from '../../../../core/service/store-data.service';
 
 @Component({
   selector: 'links-toolbar',
@@ -38,11 +36,10 @@ export class LinksToolbarComponent implements OnInit {
 
   public writableCollections$: Observable<Collection[]>;
 
-  constructor(private store$: Store<AppState>, private modalService: ModalService) {}
+  constructor(private storeDataService: StoreDataService, private modalService: ModalService) {}
 
   public ngOnInit() {
-    this.writableCollections$ = this.store$.pipe(
-      select(selectCollectionsByWritePermission),
+    this.writableCollections$ = this.storeDataService.selectCollectionsByWritePermission$().pipe(
       map(writableCollections => {
         if (!writableCollections.some(collection => collection.id === this.collection?.id)) {
           return [];

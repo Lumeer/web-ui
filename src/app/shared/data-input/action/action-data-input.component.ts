@@ -36,22 +36,20 @@ import {BehaviorSubject, combineLatest, concat, Observable, of} from 'rxjs';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {selectCollectionById} from '../../../core/store/collections/collections.state';
-import {selectDocumentActionExecutedTime, selectDocumentById} from '../../../core/store/documents/documents.state';
+import {selectDocumentActionExecutedTime} from '../../../core/store/documents/documents.state';
 import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../core/store/user-permissions/user-permissions.state';
 import {delay, filter, map, switchMap, tap} from 'rxjs/operators';
 import {selectLinkTypeById} from '../../../core/store/link-types/link-types.state';
-import {
-  selectLinkInstanceActionExecutedTime,
-  selectLinkInstanceById,
-} from '../../../core/store/link-instances/link-instances.state';
+import {selectLinkInstanceActionExecutedTime} from '../../../core/store/link-instances/link-instances.state';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {objectsByIdMap, preventEvent} from '../../utils/common.utils';
 import {AttributesResource, DataResource} from '../../../core/model/resource';
 import {AllowedPermissions} from '../../../core/model/allowed-permissions';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 const loadingTime = 2000;
 
@@ -90,7 +88,7 @@ export class ActionDataInputComponent implements OnChanges {
   private enabled: boolean;
   private loading: boolean;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.readonly && !this.readonly && this.enabled) {
@@ -142,7 +140,7 @@ export class ActionDataInputComponent implements OnChanges {
     if (this.cursor?.collectionId && this.cursor?.documentId) {
       return combineLatest([
         this.store$.pipe(select(selectCollectionById(this.cursor.collectionId))),
-        this.store$.pipe(select(selectDocumentById(this.cursor.documentId))),
+        this.storeDataService.selectDocumentById$(this.cursor.documentId),
         this.store$.pipe(select(selectCollectionPermissions(this.cursor.collectionId))),
         this.config$,
       ]).pipe(
@@ -154,7 +152,7 @@ export class ActionDataInputComponent implements OnChanges {
     } else if (this.cursor?.linkTypeId && this.cursor?.linkInstanceId) {
       return combineLatest([
         this.store$.pipe(select(selectLinkTypeById(this.cursor.linkTypeId))),
-        this.store$.pipe(select(selectLinkInstanceById(this.cursor.linkInstanceId))),
+        this.storeDataService.selectLinkInstanceById$(this.cursor.linkInstanceId),
         this.store$.pipe(select(selectLinkTypePermissions(this.cursor.linkTypeId))),
         this.config$,
       ]).pipe(

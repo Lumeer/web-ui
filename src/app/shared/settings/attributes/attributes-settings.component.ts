@@ -18,18 +18,16 @@
  */
 
 import {Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output} from '@angular/core';
-import {AppState} from '../../../core/store/app.state';
-import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
 import {combineLatest, Observable} from 'rxjs';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {selectCollectionsByStems, selectLinkTypesInQuery} from '../../../core/store/common/permissions.selectors';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {mapLinkTypeCollections} from '../../utils/link-type.utils';
 import {map} from 'rxjs/operators';
 import {AttributesSettings} from '../../../core/store/views/view';
 import {Query} from '../../../core/store/navigation/query/query';
 import {selectViewQuery} from '../../../core/store/views/views.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'attributes-settings',
@@ -47,14 +45,14 @@ export class AttributesSettingsComponent implements OnInit {
   public linkTypes$: Observable<LinkType[]>;
   public query$: Observable<Query>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
-    this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByStems));
+    this.query$ = this.storeDataService.select$(selectViewQuery);
+    this.collections$ = this.storeDataService.selectCollectionsByStems$();
     this.linkTypes$ = combineLatest([
-      this.store$.pipe(select(selectLinkTypesInQuery)),
-      this.store$.pipe(select(selectCollectionsDictionary)),
+      this.storeDataService.selectLinkTypesInQuery$(),
+      this.storeDataService.select$(selectCollectionsDictionary),
     ]).pipe(
       map(([linkTypes, collectionsMap]) => linkTypes.map(linkType => mapLinkTypeCollections(linkType, collectionsMap)))
     );

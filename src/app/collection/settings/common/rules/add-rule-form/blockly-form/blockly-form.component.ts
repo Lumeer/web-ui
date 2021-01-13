@@ -22,19 +22,12 @@ import {FormGroup} from '@angular/forms';
 import {BlocklyRuleConfiguration} from '../../../../../../core/model/rule';
 import {Observable} from 'rxjs';
 import {Collection} from '../../../../../../core/store/collections/collection';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../../../../../core/store/app.state';
-import {selectAllCollections} from '../../../../../../core/store/collections/collections.state';
-import {selectAllLinkTypes} from '../../../../../../core/store/link-types/link-types.state';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
 import {RuleVariable} from '../../../../../../shared/blockly/rule-variable-type';
 import {BLOCKLY_FUNCTION_TOOLBOX} from '../../../../../../shared/blockly/blockly-editor/blockly-editor-toolbox';
 import {BlocklyDebugDisplay} from '../../../../../../shared/blockly/blockly-debugger/blockly-debugger.component';
 import {BLOCKLY_FUNCTION_BUTTONS} from '../../../../../../shared/blockly/blockly-editor/blockly-utils';
-import {
-  selectCollectionsByWritePermission,
-  selectLinkTypesByWritePermission,
-} from '../../../../../../core/store/common/permissions.selectors';
+import {StoreDataService} from '../../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'blockly-form',
@@ -63,7 +56,7 @@ export class BlocklyFormComponent implements OnInit {
   public readonly functionToolbox = BLOCKLY_FUNCTION_TOOLBOX;
   public readonly debugButtons = BLOCKLY_FUNCTION_BUTTONS;
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private storeDataService: StoreDataService) {}
 
   public get blocklyXml(): string {
     return this.form.get('blocklyXml').value;
@@ -94,8 +87,8 @@ export class BlocklyFormComponent implements OnInit {
   }
 
   public ngOnInit(): void {
-    this.collections$ = this.store$.select(selectCollectionsByWritePermission);
-    this.linkTypes$ = this.store$.select(selectLinkTypesByWritePermission);
+    this.collections$ = this.storeDataService.selectCollectionsByWritePermission$();
+    this.linkTypes$ = this.storeDataService.selectLinkTypesByWritePermission$();
     if (this.collection) {
       this.variables = [
         {name: 'oldRecord', collectionId: this.collection.id},

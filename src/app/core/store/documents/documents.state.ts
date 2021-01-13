@@ -70,9 +70,6 @@ export const selectDocumentById = (id: string) =>
 export const selectDocumentsByIds = (ids: string[]) =>
   createSelector(selectDocumentsDictionary, documentsMap => (ids || []).map(id => documentsMap[id]).filter(doc => doc));
 
-export const selectDocumentsByCollectionId = (collectionId: string) =>
-  createSelector(selectAllDocuments, documents => documents.filter(doc => doc.collectionId === collectionId));
-
 const selectPendingDocumentDataUpdates = createSelector(selectDocumentsState, state => state.pendingDataUpdates);
 
 export const selectPendingDocumentDataUpdatesByCorrelationId = (correlationId: string) =>

@@ -32,7 +32,6 @@ import {select, Store} from '@ngrx/store';
 import {combineLatest, Observable} from 'rxjs';
 import {debounceTime, delay, filter, map, mergeMap, switchMap, take, tap} from 'rxjs/operators';
 import {AppState} from '../../../../../core/store/app.state';
-import {selectDocumentsByCustomQuery} from '../../../../../core/store/common/permissions.selectors';
 import {DocumentsAction} from '../../../../../core/store/documents/documents.action';
 import {Query, QueryStem} from '../../../../../core/store/navigation/query/query';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
@@ -45,8 +44,8 @@ import {LinkInstancesAction} from '../../../../../core/store/link-instances/link
 import {selectQueryLinkInstancesLoaded} from '../../../../../core/store/link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../../../../../core/store/link-types/link-types.state';
 import {getAllCollectionIdsFromQuery} from '../../../../../core/store/navigation/query/query.util';
-import * as Constants from 'constants';
 import {TABLE_ROW_MIN_HEIGHT} from '../../../../../core/constants';
+import {StoreDataService} from '../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'table-rows',
@@ -72,7 +71,7 @@ export class TableRowsComponent implements OnChanges {
 
   public readonly tableRowHeight = TABLE_ROW_MIN_HEIGHT;
 
-  public constructor(public element: ElementRef, private store$: Store<AppState>) {}
+  public constructor(public element: ElementRef, private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.query) {
@@ -86,8 +85,7 @@ export class TableRowsComponent implements OnChanges {
   private bindRows(cursor: TableBodyCursor, query: Query) {
     this.rows$ = combineLatest([
       this.store$.pipe(select(selectTableRows(cursor.tableId))),
-      this.store$.pipe(
-        select(selectDocumentsByCustomQuery(query, false, true)),
+      this.storeDataService.selectDocumentsByCustomQuery$(query, false, true).pipe(
         map(documents => new Set(documents.filter(document => document.id).map(document => document.id)))
       ),
     ]).pipe(

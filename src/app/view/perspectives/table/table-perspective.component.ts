@@ -55,10 +55,11 @@ import {TablesAction} from '../../../core/store/tables/tables.action';
 import {selectTableById, selectTableConfigById, selectTableCursor} from '../../../core/store/tables/tables.selector';
 import {DefaultViewConfig, View, ViewConfig} from '../../../core/store/views/view';
 import {
-  selectCurrentView,
-  selectDefaultViewConfig,
-  selectDefaultViewConfigSnapshot,
-  selectViewQuery,
+    selectCanManageViewConfig,
+    selectCurrentView,
+    selectDefaultViewConfig,
+    selectDefaultViewConfigSnapshot,
+    selectViewQuery,
 } from '../../../core/store/views/views.state';
 import {Direction} from '../../../shared/direction';
 import {isKeyPrintable, KeyCode} from '../../../shared/key-code';
@@ -83,7 +84,6 @@ import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {selectAllLinkTypes} from '../../../core/store/link-types/link-types.state';
-import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 import {isTablePartEmpty} from '../../../core/store/tables/table.utils';
 
 export const EDITABLE_EVENT = 'editableEvent';

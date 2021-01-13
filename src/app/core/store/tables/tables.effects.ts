@@ -43,22 +43,13 @@ import {
   selectCollectionsDictionary,
   selectCollectionsLoaded,
 } from '../collections/collections.state';
-import {
-  selectDocumentsAndLinksByQuery,
-  selectDocumentsByCustomQuery,
-  selectDocumentsByQuery,
-  selectDocumentsByQueryIncludingChildrenAndIds,
-} from '../common/permissions.selectors';
 import {DocumentModel} from '../documents/document.model';
 import {DocumentsAction} from '../documents/documents.action';
 import {selectDocumentsDictionary} from '../documents/documents.state';
 import {FileAttachmentsAction} from '../file-attachments/file-attachments.action';
 import {getOtherDocumentIdFromLinkInstance} from '../link-instances/link-instance.utils';
 import {LinkInstancesAction} from '../link-instances/link-instances.action';
-import {
-  selectLinkInstancesByTypeAndDocuments,
-  selectLinkInstancesDictionary,
-} from '../link-instances/link-instances.state';
+import {selectLinkInstancesDictionary,} from '../link-instances/link-instances.state';
 import {LinkTypeHelper} from '../link-types/link-type.helper';
 import {LinkTypesAction} from '../link-types/link-types.action';
 import {selectLinkTypeById, selectLinkTypesDictionary, selectLinkTypesLoaded} from '../link-types/link-types.state';
@@ -125,6 +116,7 @@ import {AttributesResource, DataResource} from '../../model/resource';
 import {selectViewQuery} from '../views/views.state';
 import {CopyValueService} from '../../service/copy-value.service';
 import {selectCollectionPermissions} from '../user-permissions/user-permissions.state';
+import {StoreDataService} from '../../service/store-data.service';
 
 @Injectable()
 export class TablesEffects {
@@ -143,7 +135,7 @@ export class TablesEffects {
         filter(loaded => loaded),
         mergeMap(() => this.store$.select(selectLinkTypesDictionary))
       ),
-      this.store$.pipe(select(selectDocumentsByQuery)),
+      this.storeDataService.selectDocumentsByQuery$(),
       this.store$.pipe(select(selectViewCode))
     ),
     mergeMap(([action, collectionsMap, linkTypesMap, documents, viewCode]) => {
@@ -625,7 +617,7 @@ export class TablesEffects {
     switchMap(action =>
       combineLatest([
         this.store$.pipe(select(selectTableById(action.payload.cursor.tableId))),
-        this.store$.pipe(select(selectDocumentsByCustomQuery(action.payload.query, false, true))),
+        this.storeDataService.selectDocumentsByCustomQuery$(action.payload.query, false, true),
         this.store$.pipe(select(selectMoveTableCursorDown)),
         this.store$.pipe(select(selectTableCursor)),
       ]).pipe(
@@ -729,8 +721,7 @@ export class TablesEffects {
             return [];
           }
 
-          return this.store$.pipe(
-            select(selectLinkInstancesByTypeAndDocuments(part.linkTypeId, rowDocumentIds)),
+          return this.storeDataService.selectLinkInstancesByTypeAndDocumentIds$(part.linkTypeId, rowDocumentIds).pipe(
             take(1),
             mergeMap(linkInstances => {
               const documentIds = linkInstances.reduce((ids, linkInstance) => {
@@ -740,8 +731,7 @@ export class TablesEffects {
                 }
                 return ids;
               }, []);
-              return this.store$.pipe(
-                select(selectDocumentsByQueryIncludingChildrenAndIds(documentIds)),
+              return this.storeDataService.selectDocumentsByQueryIncludingChildren$(documentIds).pipe(
                 take(1),
                 map(documents =>
                   documents.map(document => {
@@ -1016,8 +1006,7 @@ export class TablesEffects {
         mergeMap(([tablePart, tableColumn]) => {
           if (tableColumn) {
             const attributeId = tableColumn.attributeIds?.[0];
-            return this.store$.pipe(
-              select(selectDocumentsAndLinksByQuery),
+            return this.storeDataService.selectDocumentsAndLinksByQuery$().pipe(
               map(({documents, linkInstances}) => {
                 if (tablePart.collectionId) {
                   return documents.filter(document => document.collectionId === tablePart.collectionId);
@@ -1242,7 +1231,8 @@ export class TablesEffects {
   public constructor(
     private actions$: Actions,
     private store$: Store<AppState>,
-    private copyValueService: CopyValueService
+    private copyValueService: CopyValueService,
+    private storeDataService: StoreDataService,
   ) {}
 
   private getLatestTable<A extends TablesAction.TableCursorAction>(

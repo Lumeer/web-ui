@@ -22,16 +22,13 @@ import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
 import {Collection} from '../../../core/store/collections/collection';
 import {Observable} from 'rxjs';
-import {
-  selectCollectionsByReadPermission,
-  selectCollectionsInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {map, mergeMap, take} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
 import {queryIsEmptyExceptPagination} from '../../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../utils/resource.utils';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'invalid-query',
@@ -50,7 +47,7 @@ export class InvalidQueryComponent implements OnInit {
   public query$: Observable<Query>;
   public stemsLength$: Observable<number>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.stemsLength$ = this.store$.pipe(
@@ -61,14 +58,13 @@ export class InvalidQueryComponent implements OnInit {
       select(selectViewQuery),
       mergeMap(query =>
         queryIsEmptyExceptPagination(query)
-          ? this.store$.pipe(select(selectCollectionsByReadPermission))
-          : this.store$.pipe(select(selectCollectionsInQuery))
+          ? this.storeDataService.selectCollectionsByReadPermission$()
+          :  this.storeDataService.selectCollectionsInQuery$()
       ),
       map(collections => sortResourcesByFavoriteAndLastUsed(collections))
     );
     this.query$ = this.store$.pipe(select(selectViewQuery));
-    this.hasCollection$ = this.store$.pipe(
-      select(selectCollectionsByReadPermission),
+    this.hasCollection$ = this.storeDataService.selectCollectionsByReadPermission$().pipe(
       map(collections => collections?.length > 0)
     );
   }

@@ -24,16 +24,13 @@ import {BsModalRef} from 'ngx-bootstrap/modal';
 import {Collection} from '../../../core/store/collections/collection';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {ConstraintData} from '../../../core/model/data/constraint';
-import {select, Store} from '@ngrx/store';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
-import {AppState} from '../../../core/store/app.state';
-import {selectDocumentsByIds} from '../../../core/store/documents/documents.state';
 import {mergeMap, tap} from 'rxjs/operators';
 import {selectCollectionsByIds} from '../../../core/store/collections/collections.state';
 import {uniqueValues} from '../../utils/array.utils';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
-import {selectDocumentsByCustomQuery} from '../../../core/store/common/permissions.selectors';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   templateUrl: './choose-link-document-modal.component.html',
@@ -59,23 +56,21 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
 
   private documents: DocumentModel[];
 
-  constructor(private bsModalRef: BsModalRef, private store$: Store<AppState>) {}
+  constructor(private bsModalRef: BsModalRef, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
-    this.constraintData$ = this.store$.pipe(select(selectConstraintData));
+    this.constraintData$ = this.storeDataService.select$(selectConstraintData);
     if (this.collectionId) {
       const query: Query = {stems: [{collectionId: this.collectionId}]};
-      this.store$.dispatch(new DocumentsAction.Get({query}));
-      this.documents$ = this.store$.pipe(
-        select(selectDocumentsByCustomQuery(query)),
+      this.storeDataService.store$.dispatch(new DocumentsAction.Get({query}));
+      this.documents$ = this.storeDataService.selectDocumentsByCustomQuery$(query).pipe(
         tap(documents => {
           this.documents = documents;
           this.checkSelectedDocument(documents);
         })
       );
     } else {
-      this.documents$ = this.store$.pipe(
-        select(selectDocumentsByIds(this.documentIds)),
+      this.documents$ = this.storeDataService.selectDocumentsByIds$(this.documentIds).pipe(
         tap(documents => {
           this.documents = documents;
           this.checkSelectedDocument(documents);
@@ -90,7 +85,7 @@ export class ChooseLinkDocumentModalComponent implements OnInit {
 
   private selectCollectionsByDocuments$(documents: DocumentModel[]): Observable<Collection[]> {
     const collectionIds = (documents || []).map(document => document.collectionId);
-    return this.store$.pipe(select(selectCollectionsByIds(uniqueValues(collectionIds))));
+    return this.storeDataService.select$(selectCollectionsByIds(uniqueValues(collectionIds)));
   }
 
   private checkSelectedDocument(documents: DocumentModel[]) {

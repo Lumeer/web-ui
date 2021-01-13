@@ -38,8 +38,10 @@ import {isViewConfigChanged} from './view.utils';
 import {selectSearchConfig} from '../searches/searches.state';
 import {selectWorkflowConfig} from '../workflows/workflow.state';
 import {selectCurrentUser} from '../users/users.state';
-import {userHasManageRoleInResource} from '../../../shared/utils/resource.utils';
+import {sortResourcesByFavoriteAndLastUsed, userHasManageRoleInResource} from '../../../shared/utils/resource.utils';
 import {isQuerySubset} from '../navigation/query/query.util';
+import {selectViewsPermissions} from '../user-permissions/user-permissions.state';
+import {filterViewsByQuery} from './view.filters';
 
 export interface ViewsState extends EntityState<View> {
   loaded: boolean;
@@ -197,3 +199,18 @@ export const selectDefaultViewConfigs = (perspective: Perspective, keys: string[
   });
 
 export const selectDefaultViewConfigsLoaded = createSelector(selectViewsState, state => state.defaultConfigsLoaded);
+
+export const selectCanManageViewConfig = createSelector(
+    selectCurrentView,
+    selectViewsPermissions,
+    (view, permissions) => !view || permissions?.[view.id]?.manage
+);
+export const selectViewsByRead = createSelector(selectAllViews, selectViewsPermissions, (views, permissions) =>
+    views.filter(view => permissions?.[view.id]?.read)
+);
+export const selectViewsByReadSorted = createSelector(selectViewsByRead, (views): View[] =>
+    sortResourcesByFavoriteAndLastUsed<View>(views)
+);
+export const selectViewsByQuery = createSelector(selectViewsByRead, selectViewQuery, (views, query): View[] =>
+    sortResourcesByFavoriteAndLastUsed<View>(filterViewsByQuery(views, query))
+);

@@ -25,16 +25,15 @@ import {filter, first, map, pairwise, startWith, switchMap, take} from 'rxjs/ope
 import {NotificationService} from '../core/notifications/notification.service';
 import {FileAttachmentsService} from '../core/service/file-attachments.service';
 import {AppState} from '../core/store/app.state';
-import {selectViewsByRead} from '../core/store/common/permissions.selectors';
 import {NavigationState, selectNavigation, selectPerspective} from '../core/store/navigation/navigation.state';
 import {View} from '../core/store/views/view';
 import {createPerspectiveSaveConfig} from '../core/store/views/view.utils';
 import {ViewsAction} from '../core/store/views/views.action';
 import {
-  selectCurrentView,
-  selectPerspectiveConfig,
-  selectViewByCode,
-  selectViewQuery,
+    selectCurrentView,
+    selectPerspectiveConfig,
+    selectViewByCode,
+    selectViewQuery, selectViewsByRead,
 } from '../core/store/views/views.state';
 import {ViewControlsComponent} from './view-controls/view-controls.component';
 import {ViewSettingsService} from '../core/service/view-settings.service';

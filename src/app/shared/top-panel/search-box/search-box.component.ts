@@ -43,7 +43,7 @@ import {FormArray, FormBuilder, FormGroup} from '@angular/forms';
 import {queryItemToForm} from '../../../core/store/navigation/query/query.util';
 import {selectAllUsers, selectCurrentUser} from '../../../core/store/users/users.state';
 import {User} from '../../../core/store/users/user';
-import {selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
+import {selectCanManageViewConfig, selectCurrentView, selectViewQuery} from '../../../core/store/views/views.state';
 import {userHasManageRoleInResource, userIsManagerInWorkspace} from '../../utils/resource.utils';
 import {NavigationAction} from '../../../core/store/navigation/navigation.action';
 import {Organization} from '../../../core/store/organizations/organization';
@@ -55,7 +55,6 @@ import {areQueriesEqual} from '../../../core/store/navigation/query/query.helper
 import {ConstraintData} from '../../../core/model/data/constraint';
 import {selectConstraintData} from '../../../core/store/constraint-data/constraint-data.state';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectCanManageViewConfig} from '../../../core/store/common/permissions.selectors';
 
 const allowAutomaticSubmission = true;
 

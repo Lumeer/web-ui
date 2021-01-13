@@ -33,13 +33,13 @@ import {NotificationsAction} from '../../core/store/notifications/notifications.
 import {queryIsNotEmpty} from '../../core/store/navigation/query/query.util';
 import {NavigationAction} from '../../core/store/navigation/navigation.action';
 import {Router} from '@angular/router';
-import {selectCollectionsByQuery} from '../../core/store/common/permissions.selectors';
 import {Query} from '../../core/store/navigation/query/query';
 import {CollectionImportData} from './content/import-button/post-it-collection-import-button.component';
 import {sortResourcesByFavoriteAndLastUsed} from '../utils/resource.utils';
 import {selectViewQuery} from '../../core/store/views/views.state';
 import {AllowedPermissions} from '../../core/model/allowed-permissions';
 import {selectProjectPermissions} from '../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../core/service/store-data.service';
 
 @Component({
   selector: 'post-it-collections',
@@ -58,11 +58,10 @@ export class PostItCollectionsComponent implements OnInit {
 
   private query: Query;
 
-  constructor(private i18n: I18n, private router: Router, private store$: Store<AppState>) {}
+  constructor(private i18n: I18n, private router: Router, private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
-    this.collections$ = this.store$.pipe(
-      select(selectCollectionsByQuery),
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$().pipe(
       map(collections => sortResourcesByFavoriteAndLastUsed<Collection>(collections))
     );
     this.projectPermissions$ = this.store$.pipe(select(selectProjectPermissions));

@@ -29,7 +29,6 @@ import {selectCurrentQueryDocumentsLoaded} from '../../../../core/store/document
 import {User} from '../../../../core/store/users/user';
 import {selectAllUsers} from '../../../../core/store/users/users.state';
 import {Collection} from '../../../../core/store/collections/collection';
-import {selectCollectionsByQuery, selectDocumentsByQuery} from '../../../../core/store/common/permissions.selectors';
 import {Query} from '../../../../core/store/navigation/query/query';
 import {ConstraintData} from '../../../../core/model/data/constraint';
 import {DEFAULT_SEARCH_ID, SearchConfig, SearchDocumentsConfig} from '../../../../core/store/searches/search';
@@ -48,6 +47,7 @@ import {queryWithoutFilters} from '../../../../core/store/navigation/query/query
 import {ViewsAction} from '../../../../core/store/views/views.action';
 import {Perspective} from '../../perspective';
 import {selectViewQuery} from '../../../../core/store/views/views.state';
+import {StoreDataService} from '../../../../core/service/store-data.service';
 
 const PAGE_SIZE = 40;
 
@@ -77,11 +77,11 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private page$ = new BehaviorSubject<number>(0);
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.users$ = this.store$.pipe(select(selectAllUsers));
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
+    this.collections$ =  this.storeDataService.selectCollectionsByQuery$();
     this.loaded$ = this.store$.pipe(select(selectCurrentQueryDocumentsLoaded));
     this.query$ = this.store$.pipe(select(selectViewQuery));
     this.workspace$ = this.store$.pipe(select(selectWorkspaceWithIds));
@@ -109,8 +109,7 @@ export class SearchDocumentsComponent implements OnInit, OnDestroy {
 
   private subscribeDocuments$(): Observable<DocumentModel[]> {
     const pageObservable = this.page$.asObservable();
-    return this.store$.pipe(
-      select(selectDocumentsByQuery),
+    return  this.storeDataService.selectDocumentsByQuery$().pipe(
       map(documents => sortDocumentsByFavoriteAndLastUsed(documents)),
       mergeMap(documents =>
         pageObservable.pipe(

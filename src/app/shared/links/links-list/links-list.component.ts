@@ -24,7 +24,6 @@ import {
   Output,
   EventEmitter,
   SimpleChanges,
-  SimpleChange,
   OnChanges,
   OnInit,
 } from '@angular/core';
@@ -35,7 +34,6 @@ import {LinkType} from '../../../core/store/link-types/link.type';
 import {select, Store} from '@ngrx/store';
 import {AppState} from '../../../core/store/app.state';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
-import {selectLinkTypesByCollectionId} from '../../../core/store/common/permissions.selectors';
 import {selectCollectionsDictionary} from '../../../core/store/collections/collections.state';
 import {map, tap} from 'rxjs/operators';
 import {Query} from '../../../core/store/navigation/query/query';
@@ -47,6 +45,7 @@ import {ViewSettings} from '../../../core/store/views/view';
 import {selectViewQuery} from '../../../core/store/views/views.state';
 import {selectCollectionPermissions} from '../../../core/store/user-permissions/user-permissions.state';
 import {objectChanged} from '../../utils/common.utils';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'links-list',
@@ -82,7 +81,7 @@ export class LinksListComponent implements OnChanges, OnInit {
   public permissions$: Observable<AllowedPermissions>;
   public query$: Observable<Query>;
 
-  public constructor(private store$: Store<AppState>) {}
+  public constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
@@ -99,7 +98,7 @@ export class LinksListComponent implements OnChanges, OnInit {
 
   private renewSubscriptions() {
     this.linkTypes$ = combineLatest([
-      this.store$.pipe(select(selectLinkTypesByCollectionId(this.collection.id))),
+      this.storeDataService.selectLinkTypesByCollectionId$(this.collection.id),
       this.store$.pipe(select(selectCollectionsDictionary)),
     ]).pipe(
       map(([linkTypes, collectionsMap]) =>

@@ -21,15 +21,14 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of, Subscription} from 'rxjs';
 import {Collection} from '../../../core/store/collections/collection';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByCustomQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {DocumentMetaData, DocumentModel} from '../../../core/store/documents/document.model';
 import {Query} from '../../../core/store/navigation/query/query';
-import {selectCurrentView, selectSidebarOpened, selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectCanManageViewConfig,
+  selectCurrentView,
+  selectSidebarOpened,
+  selectViewQuery
+} from '../../../core/store/views/views.state';
 import {
   distinctUntilChanged,
   map,
@@ -61,6 +60,7 @@ import {preferViewConfigUpdate} from '../../../core/store/views/view.utils';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {viewAttributeSettingsSortDefined} from '../../../shared/settings/settings.util';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'gantt-chart-perspective',
@@ -85,7 +85,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
 
   private subscriptions = new Subscription();
 
-  constructor(private store$: Store<AppState>, private i18n: I18n) {}
+  constructor(private store$: Store<AppState>, private i18n: I18n, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.initGanttChart();
@@ -134,8 +134,8 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   private checkGanttConfig(config: GanttChartConfig): Observable<GanttChartConfig> {
     return combineLatest([
       this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
+      this.storeDataService.selectCollectionsByQuery$(),
+      this.storeDataService.selectLinkTypesInQuery$(),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformGanttConfig(config, query, collections, linkTypes))
@@ -156,7 +156,7 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
     const subscription = this.store$.pipe(select(selectViewQuery)).subscribe(query => {
       this.query$.next(query);
       this.fetchData(query);
-      this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByCustomQuerySorted(query, true)));
+      this.documentsAndLinks$ = this.storeDataService.selectDocumentsAndLinksByCustomQuerySorted$(query, true);
     });
     this.subscriptions.add(subscription);
   }
@@ -167,8 +167,8 @@ export class GanttChartPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   private subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$();
+    this.linkTypes$ = this.storeDataService.selectLinkTypesInQuery$();
     this.config$ = this.store$.pipe(select(selectGanttChartConfig));
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));

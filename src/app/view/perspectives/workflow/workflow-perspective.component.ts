@@ -23,12 +23,6 @@ import {combineLatest, Observable, of, Subscription} from 'rxjs';
 import {DocumentModel} from '../../../core/store/documents/document.model';
 import {AppState} from '../../../core/store/app.state';
 import {select, Store} from '@ngrx/store';
-import {
-  selectCanManageViewConfig,
-  selectCollectionsByQuery,
-  selectDocumentsAndLinksByQuerySorted,
-  selectLinkTypesInQuery,
-} from '../../../core/store/common/permissions.selectors';
 import {Query} from '../../../core/store/navigation/query/query';
 import {DocumentsAction} from '../../../core/store/documents/documents.action';
 import {LinkInstancesAction} from '../../../core/store/link-instances/link-instances.action';
@@ -38,7 +32,12 @@ import {View, ViewSettings} from '../../../core/store/views/view';
 import {selectViewSettings} from '../../../core/store/view-settings/view-settings.state';
 import {LinkInstance} from '../../../core/store/link-instances/link.instance';
 import {LinkType} from '../../../core/store/link-types/link.type';
-import {selectCurrentView, selectPanelWidth, selectViewQuery} from '../../../core/store/views/views.state';
+import {
+  selectCanManageViewConfig,
+  selectCurrentView,
+  selectPanelWidth,
+  selectViewQuery
+} from '../../../core/store/views/views.state';
 import {DEFAULT_WORKFLOW_ID, WorkflowConfig} from '../../../core/store/workflows/workflow';
 import {
   selectWorkflowById,
@@ -54,6 +53,7 @@ import {ViewsAction} from '../../../core/store/views/views.action';
 import {selectCurrentQueryDocumentsLoaded} from '../../../core/store/documents/documents.state';
 import {selectCurrentQueryLinkInstancesLoaded} from '../../../core/store/link-instances/link-instances.state';
 import {selectCollectionsPermissions} from '../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../core/service/store-data.service';
 
 @Component({
   selector: 'workflow-perspective',
@@ -78,7 +78,7 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
   private workflowId: string;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private store$: Store<AppState>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.initWorkflow();
@@ -122,8 +122,8 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   private checkWorkflowConfig(config: WorkflowConfig): Observable<WorkflowConfig> {
     return combineLatest([
       this.store$.pipe(select(selectViewQuery)),
-      this.store$.pipe(select(selectCollectionsByQuery)),
-      this.store$.pipe(select(selectLinkTypesInQuery)),
+      this.storeDataService.selectCollectionsByQuery$(),
+      this.storeDataService.selectLinkTypesInQuery$(),
     ]).pipe(
       take(1),
       map(([query, collections, linkTypes]) => checkOrTransformWorkflowConfig(config, query, collections, linkTypes))
@@ -140,11 +140,11 @@ export class WorkflowPerspectiveComponent implements OnInit, OnDestroy {
   }
 
   public subscribeData() {
-    this.collections$ = this.store$.pipe(select(selectCollectionsByQuery));
-    this.linkTypes$ = this.store$.pipe(select(selectLinkTypesInQuery));
+    this.collections$ = this.storeDataService.selectCollectionsByQuery$();
+    this.linkTypes$ = this.storeDataService.selectLinkTypesInQuery$();
     this.canManageConfig$ = this.store$.pipe(select(selectCanManageViewConfig));
     this.permissions$ = this.store$.pipe(select(selectCollectionsPermissions));
-    this.documentsAndLinks$ = this.store$.pipe(select(selectDocumentsAndLinksByQuerySorted));
+    this.documentsAndLinks$ = this.storeDataService.selectDocumentsAndLinksByQuerySorted$();
     this.query$ = this.store$.pipe(
       select(selectViewQuery),
       tap(query => this.fetchData(query))

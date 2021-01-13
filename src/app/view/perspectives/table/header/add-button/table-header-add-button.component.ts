@@ -34,11 +34,6 @@ import {
   selectCollectionsByIds,
   selectCollectionsDictionary,
 } from '../../../../../core/store/collections/collections.state';
-import {
-  selectCollectionsByReadPermission,
-  selectCollectionsByWritePermission,
-  selectLinkTypesByReadPermission,
-} from '../../../../../core/store/common/permissions.selectors';
 import {NavigationAction} from '../../../../../core/store/navigation/navigation.action';
 import {TableBodyCursor} from '../../../../../core/store/tables/table-cursor';
 import {selectTableLastCollectionId} from '../../../../../core/store/tables/tables.selector';
@@ -48,6 +43,7 @@ import {ModalService} from '../../../../../shared/modal/modal.service';
 import {TableConfigPart} from '../../../../../core/store/tables/table.model';
 import {selectViewQuery} from '../../../../../core/store/views/views.state';
 import {sortResourcesByFavoriteAndLastUsed} from '../../../../../shared/utils/resource.utils';
+import {StoreDataService} from '../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'table-header-add-button',
@@ -69,7 +65,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   public collection$: Observable<Collection>;
   public linkTypes$: Observable<[LinkType, Collection, Collection][]>;
 
-  constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<{}>) {}
+  constructor(private modalService: ModalService, private element: ElementRef, private store$: Store<{}>, private storeDataService: StoreDataService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.cursor && this.cursor) {
@@ -81,7 +77,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
   private bindCollections(cursor: TableBodyCursor) {
     this.collections$ = combineLatest([
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),
-      this.store$.pipe(select(selectCollectionsByWritePermission)),
+      this.storeDataService.selectCollectionsByWritePermission$(),
     ]).pipe(
       map(([lastCollectionId, writableCollections]) => {
         const writableCollectionIds = writableCollections.map(collection => collection.id);
@@ -97,7 +93,7 @@ export class TableHeaderAddButtonComponent implements OnChanges {
 
   private bindLinkTypes(cursor: TableBodyCursor) {
     this.linkTypes$ = combineLatest([
-      this.store$.pipe(select(selectLinkTypesByReadPermission)),
+      this.storeDataService.selectLinkTypesByReadPermission$(),
       this.store$.pipe(select(selectCollectionsDictionary)),
       this.store$.pipe(select(selectViewQuery)),
       this.store$.pipe(select(selectTableLastCollectionId(cursor.tableId))),

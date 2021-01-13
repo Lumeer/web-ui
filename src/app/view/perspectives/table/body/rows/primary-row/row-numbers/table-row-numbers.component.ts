@@ -39,8 +39,8 @@ import {countLinkedRows, getTableElement} from '../../../../../../../core/store/
 import {TableRowNumberService} from '../../../../table-row-number.service';
 import {ResizeObserverEntry, ResizeObserver} from '../../../../../../../shared/resize-observer';
 import {ModalService} from '../../../../../../../shared/modal/modal.service';
-import {selectDocumentById} from '../../../../../../../core/store/documents/documents.state';
 import {selectCollectionById} from '../../../../../../../core/store/collections/collections.state';
+import {StoreDataService} from '../../../../../../../core/service/store-data.service';
 
 declare let ResizeObserver: ResizeObserver;
 
@@ -71,7 +71,8 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
     private element: ElementRef,
     private store$: Store<{}>,
     private tableRowsService: TableRowNumberService,
-    private modalService: ModalService
+    private modalService: ModalService,
+    private storeDataService: StoreDataService
   ) {}
 
   public ngOnInit() {
@@ -148,9 +149,7 @@ export class TableRowNumbersComponent implements OnInit, OnChanges, AfterViewIni
   }
 
   public onNumberClick() {
-    this.store$
-      .pipe(
-        select(selectDocumentById(this.row?.documentId)),
+    this.storeDataService.selectDocumentById$(this.row?.documentId).pipe(
         mergeMap(document =>
           this.store$.pipe(
             select(selectCollectionById(document?.collectionId)),

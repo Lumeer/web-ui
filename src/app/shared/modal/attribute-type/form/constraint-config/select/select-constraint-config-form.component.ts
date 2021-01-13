@@ -29,12 +29,9 @@ import {Attribute} from '../../../../../../core/store/collections/collection';
 import {DataValue} from '../../../../../../core/model/data-value';
 import {Observable, of} from 'rxjs';
 import {getAttributesResourceType} from '../../../../../utils/resource.utils';
-import {select, Store} from '@ngrx/store';
-import {selectDocumentsByCollectionId} from '../../../../../../core/store/documents/documents.state';
-import {AppState} from '../../../../../../core/store/app.state';
-import {selectLinkInstancesByType} from '../../../../../../core/store/link-instances/link-instances.state';
 import {createSuggestionDataValues} from '../../../../../utils/data-resource.utils';
 import {map} from 'rxjs/operators';
+import {StoreDataService} from '../../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'select-constraint-config-form',
@@ -58,7 +55,7 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
 
   public dataValues$: Observable<DataValue[]>;
 
-  constructor(private store$: Store<AppState>) {}
+  constructor(private storeDataService: StoreDataService) {}
 
   public ngOnChanges(changes: SimpleChanges) {
     if (changes.config) {
@@ -73,12 +70,10 @@ export class SelectConstraintConfigFormComponent implements OnChanges {
   private bindDataValues$(): Observable<DataValue[]> {
     if (this.resource) {
       if (getAttributesResourceType(this.resource) === AttributesResourceType.Collection) {
-        this.store$
-          .pipe(select(selectDocumentsByCollectionId(this.resource.id)))
+        this.storeDataService.selectDocumentsByCollectionId$(this.resource.id)
           .pipe(map(documents => createSuggestionDataValues(documents, this.attribute.id, this.attribute.constraint)));
       } else if (getAttributesResourceType(this.resource) === AttributesResourceType.LinkType) {
-        this.store$
-          .pipe(select(selectLinkInstancesByType(this.resource.id)))
+        this.storeDataService.selectLinkInstancesByLinkTypeId$(this.resource.id)
           .pipe(
             map(linkInstances =>
               createSuggestionDataValues(linkInstances, this.attribute.id, this.attribute.constraint)

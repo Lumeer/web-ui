@@ -22,8 +22,6 @@ import {select, Store} from '@ngrx/store';
 import {BehaviorSubject, combineLatest, Observable, of} from 'rxjs';
 import {filter, switchMap} from 'rxjs/operators';
 import {DocumentModel} from '../../../../../../core/store/documents/document.model';
-import {selectDocumentsByIds} from '../../../../../../core/store/documents/documents.state';
-import {selectLinkInstancesByIds} from '../../../../../../core/store/link-instances/link-instances.state';
 import {LinkInstance} from '../../../../../../core/store/link-instances/link.instance';
 import {Query} from '../../../../../../core/store/navigation/query/query';
 import {TableBodyCursor, TableCursor} from '../../../../../../core/store/tables/table-cursor';
@@ -50,6 +48,7 @@ import {
   selectCollectionPermissions,
   selectLinkTypePermissions,
 } from '../../../../../../core/store/user-permissions/user-permissions.state';
+import {StoreDataService} from '../../../../../../core/service/store-data.service';
 
 @Component({
   selector: 'table-cell-group',
@@ -83,7 +82,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
   private cursor$ = new BehaviorSubject<TableBodyCursor>(null);
   private rows$ = new BehaviorSubject<TableConfigRow[]>([]);
 
-  public constructor(private store$: Store<{}>) {}
+  public constructor(private store$: Store<{}>, private storeDataService: StoreDataService) {}
 
   public ngOnInit() {
     this.query$ = this.store$.pipe(select(selectViewQuery));
@@ -139,7 +138,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
           filter(part => part && !!part.collectionId),
           switchMap(() => {
             const documentIds = rows.map(row => row.documentId);
-            return this.store$.pipe(select(selectDocumentsByIds(documentIds)));
+            return this.storeDataService.selectDocumentsByIds$(documentIds);
           })
         )
       )
@@ -155,7 +154,7 @@ export class TableCellGroupComponent implements OnChanges, OnInit {
           filter(part => part && !!part.linkTypeId),
           switchMap(() => {
             const linkInstanceIds = rows.map(row => row.linkInstanceId);
-            return this.store$.pipe(select(selectLinkInstancesByIds(linkInstanceIds)));
+            return this.storeDataService.selectLinkInstancesByIds$(linkInstanceIds);
           })
         )
       )

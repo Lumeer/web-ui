@@ -65,13 +65,7 @@ export class LinkInstancesEffects {
     mergeMap(([action]) => {
       const query = queryWithoutFilters(action.payload.query);
       return this.searchService.searchLinkInstances(convertQueryModelToDto(query)).pipe(
-        withLatestFrom(
-          this.store$.pipe(select(selectLinkTypesDictionary)),
-          this.store$.pipe(select(selectConstraintData))
-        ),
-        map(([dtos, linkTypesMap, constraintData]) =>
-          dtos.map(dto => convertLinkInstanceDtoToModel(dto, linkTypesMap[dto.linkTypeId]?.attributes, constraintData))
-        ),
+        map((dtos) => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
         map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances, query})),
         catchError(error => of(new LinkInstancesAction.GetFailure({error})))
       );
@@ -83,13 +77,7 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.GetSingle>(LinkInstancesActionType.GET_SINGLE),
     mergeMap(action =>
       this.linkInstanceService.getLinkInstance(action.payload.linkTypeId, action.payload.linkInstanceId).pipe(
-        withLatestFrom(
-          this.store$.pipe(select(selectLinkTypesDictionary)),
-          this.store$.pipe(select(selectConstraintData))
-        ),
-        map(([dto, linkTypesMap, constraintData]) =>
-          convertLinkInstanceDtoToModel(dto, linkTypesMap[dto.linkTypeId]?.attributes, constraintData)
-        ),
+        map(dto => convertLinkInstanceDtoToModel(dto)),
         map(linkInstance => new LinkInstancesAction.GetSuccess({linkInstances: [linkInstance]})),
         catchError(() => EMPTY)
       )
@@ -101,13 +89,7 @@ export class LinkInstancesEffects {
     ofType<LinkInstancesAction.GetByIds>(LinkInstancesActionType.GET_BY_IDS),
     mergeMap(action =>
       this.linkInstanceService.getLinkInstances(action.payload.linkInstancesIds).pipe(
-        withLatestFrom(
-          this.store$.pipe(select(selectLinkTypesDictionary)),
-          this.store$.pipe(select(selectConstraintData))
-        ),
-        map(([dtos, linkTypesMap, constraintData]) =>
-          dtos.map(dto => convertLinkInstanceDtoToModel(dto, linkTypesMap[dto.linkTypeId]?.attributes, constraintData))
-        ),
+        map((dtos) => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
         map(linkInstances => new LinkInstancesAction.GetSuccess({linkInstances})),
         catchError(() => EMPTY)
       )
@@ -131,18 +113,7 @@ export class LinkInstancesEffects {
       const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
 
       return this.linkInstanceService.createLinkInstance(linkInstanceDto).pipe(
-        withLatestFrom(
-          this.store$.pipe(select(selectLinkTypesDictionary)),
-          this.store$.pipe(select(selectConstraintData))
-        ),
-        map(([dto, linkTypesMap, constraintData]) =>
-          convertLinkInstanceDtoToModel(
-            dto,
-            linkTypesMap[dto.linkTypeId]?.attributes,
-            constraintData,
-            linkInstanceDto.correlationId
-          )
-        ),
+        map(dto => convertLinkInstanceDtoToModel(dto, linkInstanceDto.correlationId)),
         mergeMap(linkInstance => [
           ...createCallbackActions(action.payload.onSuccess, linkInstance.id),
           new LinkInstancesAction.CreateSuccess({linkInstance}),
@@ -186,18 +157,7 @@ export class LinkInstancesEffects {
         map(originalLinkInstance => ({...originalLinkInstance, correlationId: linkInstance.correlationId})),
         mergeMap(originalLinkInstance =>
           this.linkInstanceService.updateLinkInstance(linkInstanceDto).pipe(
-            withLatestFrom(
-              this.store$.pipe(select(selectLinkTypesDictionary)),
-              this.store$.pipe(select(selectConstraintData))
-            ),
-            map(([dto, linkTypesMap, constraintData]) =>
-              convertLinkInstanceDtoToModel(
-                dto,
-                linkTypesMap[dto.linkTypeId]?.attributes,
-                constraintData,
-                linkInstanceDto.correlationId
-              )
-            ),
+            map(dto => convertLinkInstanceDtoToModel(dto, linkInstanceDto.correlationId)),
             mergeMap(newLinkInstance => [
               ...createCallbackActions(action.payload.onSuccess),
               new LinkInstancesAction.UpdateSuccess({linkInstance: newLinkInstance, originalLinkInstance}),
@@ -229,21 +189,11 @@ export class LinkInstancesEffects {
   @Effect()
   public patchData$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.PatchData>(LinkInstancesActionType.PATCH_DATA),
-    withLatestFrom(
-      this.store$.pipe(select(selectLinkTypesDictionary)),
-      this.store$.pipe(select(selectLinkInstancesDictionary)),
-      this.store$.pipe(select(selectConstraintData))
-    ),
-    mergeMap(([action, linkTypesMap, linkInstancesMap, constraintData]) => {
+    withLatestFrom(this.store$.pipe(select(selectLinkInstancesDictionary))),
+    mergeMap(([action, linkInstancesMap]) => {
       const {linkInstance} = action.payload;
       const originalLinkInstance = linkInstancesMap[linkInstance.id];
-      const patchAttributeIds = Object.keys(linkInstance.data);
-      const attributes = linkTypesMap[originalLinkInstance.linkTypeId]?.attributes?.filter(attribute =>
-        patchAttributeIds.includes(attribute.id)
-      );
-      const dataValues = convertDataToDataValues(linkInstance.data, attributes, constraintData);
-      const updateLinkInstance = {...linkInstance, dataValues};
-      return of(new LinkInstancesAction.PatchDataInternal({linkInstance: updateLinkInstance, originalLinkInstance}));
+      return of(new LinkInstancesAction.PatchDataInternal({linkInstance, originalLinkInstance}));
     })
   );
 
@@ -254,13 +204,7 @@ export class LinkInstancesEffects {
       const originalLinkInstance = action.payload.originalLinkInstance;
       const documentDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
       return this.linkInstanceService.patchLinkInstanceData(documentDto.id, documentDto.data).pipe(
-        withLatestFrom(
-          this.store$.pipe(select(selectLinkTypesDictionary)),
-          this.store$.pipe(select(selectConstraintData))
-        ),
-        map(([dto, linkTypesMap, constraintData]) =>
-          convertLinkInstanceDtoToModel(dto, linkTypesMap[dto.linkTypeId]?.attributes, constraintData)
-        ),
+        map(dto => convertLinkInstanceDtoToModel(dto)),
         map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})),
         catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
       );
@@ -270,21 +214,11 @@ export class LinkInstancesEffects {
   @Effect()
   public updateData$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.UpdateData>(LinkInstancesActionType.UPDATE_DATA),
-    withLatestFrom(
-      this.store$.pipe(select(selectLinkInstancesDictionary)),
-      this.store$.pipe(select(selectLinkTypesDictionary)),
-      this.store$.pipe(select(selectConstraintData))
-    ),
-    mergeMap(([action, linkInstancesMap, linkTypesMap, constraintData]) => {
+    withLatestFrom(this.store$.pipe(select(selectLinkInstancesDictionary))),
+    mergeMap(([action, linkInstancesMap]) => {
       const {linkInstance} = action.payload;
       const originalLinkInstance = linkInstancesMap[action.payload.linkInstance.id];
-      const dataValues = convertDataToDataValues(
-        linkInstance.data,
-        linkTypesMap[originalLinkInstance.linkTypeId]?.attributes,
-        constraintData
-      );
-      const updateLinkInstance = {...linkInstance, dataValues};
-      return of(new LinkInstancesAction.UpdateDataInternal({linkInstance: updateLinkInstance, originalLinkInstance}));
+      return of(new LinkInstancesAction.UpdateDataInternal({linkInstance, originalLinkInstance}));
     })
   );
 
@@ -295,13 +229,7 @@ export class LinkInstancesEffects {
       const originalLinkInstance = action.payload.originalLinkInstance;
       const linkInstanceDto = convertLinkInstanceModelToDto(action.payload.linkInstance);
       return this.linkInstanceService.updateLinkInstanceData(linkInstanceDto).pipe(
-        withLatestFrom(
-          this.store$.pipe(select(selectLinkTypesDictionary)),
-          this.store$.pipe(select(selectConstraintData))
-        ),
-        map(([dto, linkTypesMap, constraintData]) =>
-          convertLinkInstanceDtoToModel(dto, linkTypesMap[dto.linkTypeId]?.attributes, constraintData)
-        ),
+        map(dto => convertLinkInstanceDtoToModel(dto)),
         map(linkInstance => new LinkInstancesAction.UpdateSuccess({linkInstance, originalLinkInstance})),
         catchError(error => of(new LinkInstancesAction.UpdateFailure({error, originalLinkInstance})))
       );
@@ -455,13 +383,7 @@ export class LinkInstancesEffects {
       };
 
       return this.linkInstanceService.duplicateLinkInstances(duplicateDto).pipe(
-        withLatestFrom(
-          this.store$.pipe(select(selectLinkTypesDictionary)),
-          this.store$.pipe(select(selectConstraintData))
-        ),
-        map(([dtos, linkTypesMap, constraintData]) =>
-          dtos.map(dto => convertLinkInstanceDtoToModel(dto, linkTypesMap[dto.linkTypeId]?.attributes, constraintData))
-        ),
+        map((dtos) => dtos.map(dto => convertLinkInstanceDtoToModel(dto))),
         mergeMap(linkInstances => [
           new LinkInstancesAction.DuplicateSuccess({linkInstances}),
           ...createCallbackActions(onSuccess, linkInstances),
