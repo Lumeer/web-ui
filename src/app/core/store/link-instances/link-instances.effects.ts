@@ -294,10 +294,10 @@ export class LinkInstancesEffects {
   public deleteConfirm$: Observable<Action> = this.actions$.pipe(
     ofType<LinkInstancesAction.DeleteConfirm>(LinkInstancesActionType.DELETE_CONFIRM),
     map((action: LinkInstancesAction.DeleteConfirm) => {
-      const title = this.i18n({id: 'link.instance.delete.dialog.title', value: 'Delete link'});
+      const title = this.i18n({id: 'link.instance.delete.dialog.title', value: 'Remove link'});
       const message = this.i18n({
         id: 'link.instance.delete.dialog.message',
-        value: 'Do you really want to delete this link between records?',
+        value: 'Do you really want to unlink (remove the link between) these records?',
       });
 
       return new NotificationsAction.Confirm({
