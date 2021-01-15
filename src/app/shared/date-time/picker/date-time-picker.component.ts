@@ -92,7 +92,6 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   public form = new FormGroup({
     date: new FormControl(),
-    time: new FormControl(),
   });
 
   public datePickerConfig: Partial<BsDatepickerInlineConfig>;
@@ -104,15 +103,13 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   public ngOnChanges(changes: SimpleChanges) {
     if ((changes.value || changes.asUtc) && this.value) {
-      this.dateControl.setValue(this.value);
-      this.timeControl.setValue(offsetTime(this.value, this.asUtc));
+      this.dateControl.setValue(offsetTime(this.value, false, this.asUtc));
     }
     if ((changes.options || changes.asUtc) && this.options) {
       this.datePickerConfig = {
         containerClass: 'box-shadow-none theme-default',
         customTodayClass: 'date-time-today',
         minMode: detectDatePickerViewMode(this.options),
-        useUtc: this.asUtc,
       };
     }
     if (changes.asUtc) {
@@ -127,14 +124,13 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private subscribeToDateChange(): Subscription {
-    return this.timeControl.valueChanges
+    return this.dateControl.valueChanges
       .pipe(
-        map(time => mergeDateAndTime(this.dateControl.value, time, this.asUtc)),
+        map(time => offsetTime(time, true, this.asUtc)),
         filter(value => value !== this.value)
       )
       .subscribe(value => {
         this.selectedValue = value;
-        this.dateControl.setValue(value, {emitEmit: false});
         this.valueChange.emit(value);
       });
   }
@@ -178,17 +174,11 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   public onDateChange(date: Date) {
-    const parsedDate = mergeDateAndTime(date, this.timeControl.value, this.asUtc);
-    if (parsedDate !== this.dateControl.value) {
-      this.dateControl.setValue(parsedDate);
+    const parsedDate = date;
+    if (!this.dateControl.value && date) {
+      parsedDate.setHours(0, 0, 0, 0);
     }
-    const parsedTime = offsetTime(parsedDate, this.asUtc);
-    if (parsedDate !== this.timeControl.value) {
-      this.timeControl.setValue(parsedTime, {emitEvent: false});
-    }
-
-    this.selectedValue = parsedDate;
-    this.valueChange.emit(parsedDate);
+    this.dateControl.setValue(parsedDate);
   }
 
   public onCancel(event?: MouseEvent) {
@@ -202,15 +192,11 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   public onSave(event: MouseEvent) {
     event.stopPropagation();
     this.close();
-    this.save.emit(mergeDateAndTime(this.dateControl.value, this.timeControl.value, this.asUtc));
+    this.save.emit(offsetTime(this.dateControl.value, true, this.asUtc));
   }
 
   public get dateControl(): AbstractControl {
     return this.form.get('date');
-  }
-
-  public get timeControl(): AbstractControl {
-    return this.form.get('time');
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -226,38 +212,12 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 }
 
-function offsetTime(date: Date, utc?: boolean): Date {
+function offsetTime(date: Date, backwards?: boolean, utc?: boolean): Date {
   if (utc && date) {
     const parsedDate = new Date(date);
-    parsedDate.setHours(parsedDate.getHours() + parsedDate.getTimezoneOffset() / 60);
+    parsedDate.setHours(parsedDate.getHours() + (parsedDate.getTimezoneOffset() / 60) * (backwards ? -1 : 1));
     return parsedDate;
   } else {
     return date;
   }
-}
-
-function mergeDateAndTime(date: Date, time: Date, utc?: boolean): Date {
-  if (!date) {
-    return time;
-  }
-  if (utc) {
-    return new Date(
-      Date.UTC(
-        date.getUTCFullYear(),
-        date.getUTCMonth(),
-        date.getUTCDate(),
-        time?.getHours() || 0,
-        time?.getMinutes() || 0,
-        time?.getSeconds() || 0,
-        time?.getMilliseconds() || 0
-      )
-    );
-  }
-
-  return moment(date)
-    .hours(time?.getHours() || 0)
-    .minutes(time?.getMinutes() || 0)
-    .seconds(time?.getSeconds() || 0)
-    .milliseconds(time?.getMilliseconds() || 0)
-    .toDate();
 }
