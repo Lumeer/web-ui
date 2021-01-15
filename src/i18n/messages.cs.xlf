@@ -427,27 +427,21 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="form.date.errors.customEmpty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="form.date.errors.customEmpty" datatype="html">
         <source>
     Format can not be empty.
   </source><target>
     Format nemůže být prázdný.
   </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit><trans-unit id="form.date.errors.customInvalid" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="form.date.errors.customInvalid" datatype="html">
         <source>
     I am sorry, but this format is not supported. Please enter valid format.
   </source><target>
     Omlouvám se, ale tento formát není podporovaný. Prosím zadejte platný formát.
   </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
         <source>
         Minimum value
       </source><target>
@@ -500,7 +494,7 @@
       Formát
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="constraint.dateTime.format.custom" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="constraint.dateTime.format.custom" datatype="html">
         <source>Custom</source><target>
         Vlastní
       </target>
@@ -512,14 +506,14 @@
         Minimální hodnota
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="constraint.dateTime.maxValue.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="constraint.dateTime.maxValue.label" datatype="html">
         <source>
         Maximum value
       </source><target>
         Maximální hodnota
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="constraint.percentage.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="constraint.percentage.description" datatype="html">
         <source>
       Format any recognizable values as percentages.
       There is no need to enter the percent (%) character. It is added automatically.
@@ -754,7 +748,13 @@
       Desetinná místa
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="constraint.coordinates.precisions.dd" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="constraint.dateTime.config.utc" datatype="html">
+        <source>Time is always in UTC</source><target>Čas je vždy v UTC</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.precisions.dd" datatype="html">
         <source>{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</source>
         <target>{VAR_SELECT, select, 0 {0 míst (~ 100 km)} 1 {1 místo (~ 10 km)} 2 {2 místa (~ 1 km)} 3 {3 místa (~ 100 m)} 4 {4 místa (~ 10 m)} 5 {5 míst (~ 1 m)} 6 {6 míst (~ 0.1 m)} }</target>
 
@@ -916,7 +916,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="constraint.example" datatype="html">
         <source>Example:</source><target>Příklad:</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit>
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit>
             <trans-unit id="view.not.exist" datatype="html">
                 <source>View does not exist!
         </source>
@@ -3681,7 +3681,7 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.instance.delete.dialog.title" datatype="html">
-                <source>Delete link</source>
+                <source>Remove link</source>
                 <target>Odstranit propojení</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
@@ -3689,8 +3689,8 @@
                 </context-group>
             </trans-unit>
             <trans-unit id="link.instance.delete.dialog.message" datatype="html">
-                <source>Do you really want to delete this link between records?</source>
-                <target>Chcete skutečně smazat propojení mezi záznamy?</target>
+                <source>Do you really want to unlink (remove the link between) these records?</source>
+                <target>Chcete skutečně odstranit (rozpojit) propojení mezi těmito záznamy?</target>
                 <context-group purpose="location">
                     <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
                     <context context-type="linenumber">1</context>

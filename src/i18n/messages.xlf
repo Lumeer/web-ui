@@ -1456,7 +1456,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">30</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context>
@@ -1512,13 +1512,19 @@
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
+      </trans-unit><trans-unit id="constraint.dateTime.config.utc" datatype="html">
+        <source>Time is always in UTC</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
       </trans-unit><trans-unit id="constraint.dateTime.format.label" datatype="html">
         <source>
       Format
     </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">3</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.dateTime.minValue.label" datatype="html">
         <source>
@@ -1526,7 +1532,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">36</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.dateTime.maxValue.label" datatype="html">
         <source>
@@ -1534,7 +1540,7 @@
       </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">58</context>
         </context-group>
       </trans-unit><trans-unit id="form.errors.minMaxInvalid" datatype="html">
         <source>
@@ -1542,7 +1548,7 @@
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context>
@@ -1562,7 +1568,7 @@
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">78</context>
         </context-group>
       </trans-unit><trans-unit id="form.date.errors.customInvalid" datatype="html">
         <source>
@@ -1570,7 +1576,7 @@
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit><trans-unit id="constraint.duration.description" datatype="html">
         <source>
@@ -5551,14 +5557,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="link.instance.delete.dialog.title" datatype="html">
-        <source>Delete link</source>
+        <source>Remove link</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="link.instance.delete.dialog.message" datatype="html">
-        <source>Do you really want to delete this link between records?</source>
+        <source>Do you really want to unlink (remove the link between) these records?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
           <context context-type="linenumber">1</context>

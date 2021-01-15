@@ -1422,27 +1422,21 @@
 
 
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">63</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="form.date.errors.customEmpty" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">72</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">129</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/percentage/percentage-constraint-config-form.component.html</context><context context-type="linenumber">67</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/text/text-constraint-config-form.component.html</context><context context-type="linenumber">46</context></context-group></trans-unit><trans-unit id="form.date.errors.customEmpty" datatype="html">
         <source>
     Format can not be empty.
   </source><target state="final">
     Format can not be empty.
   </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">69</context>
-        </context-group>
-      </trans-unit><trans-unit id="form.date.errors.customInvalid" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">78</context></context-group></trans-unit><trans-unit id="form.date.errors.customInvalid" datatype="html">
         <source>
     I am sorry, but this format is not supported. Please enter valid format.
   </source><target state="final">
     I am sorry, but this format is not supported. Please enter valid format.
   </target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
+        
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">84</context></context-group></trans-unit><trans-unit id="constraint.number.minValue.label" datatype="html">
         <source>
         Minimum value
       </source><target state="final">
@@ -1493,7 +1487,7 @@
       Format
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">3</context></context-group></trans-unit><trans-unit id="constraint.dateTime.format.custom" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">12</context></context-group></trans-unit><trans-unit id="constraint.dateTime.format.custom" datatype="html">
         <source>Custom</source><target state="final">Custom</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.dateTime.minValue.label" datatype="html">
@@ -1503,14 +1497,14 @@
         Minimum value
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group></trans-unit><trans-unit id="constraint.dateTime.maxValue.label" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">45</context></context-group></trans-unit><trans-unit id="constraint.dateTime.maxValue.label" datatype="html">
         <source>
         Maximum value
       </source><target state="final">
         Maximum value
       </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">49</context></context-group></trans-unit><trans-unit id="constraint.percentage.description" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">58</context></context-group></trans-unit><trans-unit id="constraint.percentage.description" datatype="html">
         <source>
       Format any recognizable values as percentages.
       There is no need to enter the percent (%) character. It is added automatically.
@@ -1737,7 +1731,13 @@
       Precision
     </target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="constraint.coordinates.precisions.dd" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">22</context></context-group></trans-unit><trans-unit id="constraint.dateTime.config.utc" datatype="html">
+        <source>Time is always in UTC</source><target state="final">Time is always in UTC</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+      </trans-unit><trans-unit id="constraint.coordinates.precisions.dd" datatype="html">
         <source>{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</source><target state="final">{VAR_SELECT, select, 0 {0 digits (~ 100 km)} 1 {1 digit (~ 10 km)} 2 {2 digits (~ 1 km)} 3 {3 digits (~ 100 m)} 4 {4 digits (~ 10 m)} 5 {5 digits (~ 1 m)} 6 {6 digits (~ 0.1 m)} }</target>
 
       <context-group purpose="location"><context context-type="sourcefile">src/app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.ts</context><context context-type="linenumber">1</context></context-group></trans-unit><trans-unit id="constraint.coordinates.precisions.dms" datatype="html">
@@ -1894,7 +1894,7 @@
       <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">91</context></context-group></trans-unit><trans-unit id="constraint.example" datatype="html">
         <source>Example:</source><target state="final">Example:</target>
 
-      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">30</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="button.share" datatype="html">
+      <context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/address/address-constraint-config-form.component.html</context><context context-type="linenumber">42</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/coordinates/coordinates-constraint-config-form.component.html</context><context context-type="linenumber">36</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/datetime/datetime-constraint-config-form.component.html</context><context context-type="linenumber">39</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/duration/duration-constraint-config-form.component.html</context><context context-type="linenumber">31</context></context-group><context-group purpose="location"><context context-type="sourcefile">app/shared/modal/attribute-type/form/constraint-config/number/number-constraint-config-form.component.html</context><context context-type="linenumber">98</context></context-group></trans-unit><trans-unit id="button.share" datatype="html">
         <source>Share</source><target state="final">Share</target>
 
 
@@ -3935,14 +3935,14 @@
         </context-group>
       </trans-unit>
       <trans-unit id="link.instance.delete.dialog.title" datatype="html">
-        <source>Delete link</source><target state="final">Delete link</target>
+        <source>Remove link</source><target state="final">Remove link</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
       <trans-unit id="link.instance.delete.dialog.message" datatype="html">
-        <source>Do you really want to delete this link between records?</source><target state="final">Do you really want to delete this link between records?</target>
+        <source>Do you really want to unlink (remove the link between) these records?</source><target state="final">Do you really want to unlink (remove the link between) these records?</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/core/store/link-instances/link-instances.effects.ts</context>
           <context context-type="linenumber">1</context>
