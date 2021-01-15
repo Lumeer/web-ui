@@ -167,7 +167,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        const selectedOption = this.dropdown.getActiveOption();
+        const selectedOption = this.dropdown?.getActiveOption();
 
         event.preventDefault();
 
@@ -200,7 +200,7 @@ export class SelectDataInputComponent implements OnChanges, AfterViewChecked {
         return;
     }
 
-    this.dropdown.onKeyDown(event);
+    this.dropdown?.onKeyDown(event);
   }
 
   private toggleOption(option: DropdownOption) {

@@ -35,7 +35,7 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
 import {BsDatepickerInlineConfig} from 'ngx-bootstrap/datepicker';
 import {Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
@@ -62,6 +62,9 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input()
   public value: Date;
+
+  @Input()
+  public asUtc: boolean;
 
   @Output()
   public valueChange = new EventEmitter<Date>();
@@ -92,23 +95,27 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   });
 
   public datePickerConfig: Partial<BsDatepickerInlineConfig>;
-
-  public timeZone = `UTC${moment().format('Z')}, ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
+  public timeZone;
 
   private subscriptions = new Subscription();
 
   private selectedValue: Date;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.value && this.value) {
-      this.dateControl.setValue(this.value);
+    if ((changes.value || changes.asUtc) && this.value) {
+      this.dateControl.setValue(offsetTime(this.value, false, this.asUtc));
     }
-    if (changes.options && this.options) {
+    if ((changes.options || changes.asUtc) && this.options) {
       this.datePickerConfig = {
         containerClass: 'box-shadow-none theme-default',
         customTodayClass: 'date-time-today',
         minMode: detectDatePickerViewMode(this.options),
       };
+    }
+    if (changes.asUtc) {
+      this.timeZone = this.asUtc
+        ? 'UTC'
+        : `UTC${moment().format('Z')}, ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
     }
   }
 
@@ -117,10 +124,15 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private subscribeToDateChange(): Subscription {
-    return this.dateControl.valueChanges.pipe(filter(value => value !== this.value)).subscribe(value => {
-      this.selectedValue = value;
-      this.valueChange.emit(value);
-    });
+    return this.dateControl.valueChanges
+      .pipe(
+        map(time => offsetTime(time, true, this.asUtc)),
+        filter(value => value !== this.value)
+      )
+      .subscribe(value => {
+        this.selectedValue = value;
+        this.valueChange.emit(value);
+      });
   }
 
   public ngOnDestroy() {
@@ -162,7 +174,11 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   public onDateChange(date: Date) {
-    this.dateControl.setValue(date);
+    const parsedDate = date;
+    if (!this.dateControl.value && date) {
+      parsedDate.setHours(0, 0, 0, 0);
+    }
+    this.dateControl.setValue(parsedDate);
   }
 
   public onCancel(event?: MouseEvent) {
@@ -176,7 +192,7 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   public onSave(event: MouseEvent) {
     event.stopPropagation();
     this.close();
-    this.save.emit(this.dateControl.value);
+    this.save.emit(offsetTime(this.dateControl.value, true, this.asUtc));
   }
 
   public get dateControl(): AbstractControl {
@@ -193,5 +209,15 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   public onCloseByClickOutside() {
     this.saveOnClose.emit(this.selectedValue);
     this.selectedValue = null;
+  }
+}
+
+function offsetTime(date: Date, backwards?: boolean, utc?: boolean): Date {
+  if (utc && date) {
+    const parsedDate = new Date(date);
+    parsedDate.setHours(parsedDate.getHours() + (parsedDate.getTimezoneOffset() / 60) * (backwards ? -1 : 1));
+    return parsedDate;
+  } else {
+    return date;
   }
 }

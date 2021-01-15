@@ -138,6 +138,7 @@ export class AttributeTypeFormComponent implements OnChanges {
           minValue: this.configForm.get(DatetimeConstraintFormControl.MinValue).value,
           maxValue: this.configForm.get(DatetimeConstraintFormControl.MaxValue).value,
           range: undefined,
+          asUtc: this.configForm.get(DatetimeConstraintFormControl.Utc).value,
         };
       case ConstraintType.Duration:
         return {

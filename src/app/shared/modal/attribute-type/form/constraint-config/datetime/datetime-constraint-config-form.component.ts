@@ -63,6 +63,7 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
   ];
 
   public readonly formatItems: SelectItemModel[];
+  public readonly formControlName = DatetimeConstraintFormControl;
 
   public exampleValue$: Observable<DateTimeDataValue>;
 
@@ -116,13 +117,15 @@ export class DatetimeConstraintConfigFormComponent implements OnInit, OnChanges 
   }
 
   private createForm() {
-    const format = (this.config && this.config.format) || this.formats[0];
+    const format = this.config?.format || this.formats[0];
     const selectFormat = this.formats.includes(format) ? format : '';
     this.form.addControl(DatetimeConstraintFormControl.Format, new FormControl(selectFormat));
     this.form.addControl(DatetimeConstraintFormControl.CustomFormat, new FormControl(format));
 
-    this.form.addControl(DatetimeConstraintFormControl.MinValue, new FormControl(this.config && this.config.minValue));
-    this.form.addControl(DatetimeConstraintFormControl.MaxValue, new FormControl(this.config && this.config.maxValue));
+    this.form.addControl(DatetimeConstraintFormControl.Utc, new FormControl(this.config?.asUtc));
+
+    this.form.addControl(DatetimeConstraintFormControl.MinValue, new FormControl(this.config?.minValue));
+    this.form.addControl(DatetimeConstraintFormControl.MaxValue, new FormControl(this.config?.maxValue));
     this.form.setValidators([
       minMaxValidator(DatetimeConstraintFormControl.MinValue, DatetimeConstraintFormControl.MaxValue),
       customFormatValidator(),

@@ -249,7 +249,7 @@
             "browserTarget": "lumeer:build",
             "port": 7000,
             "progress": true,
-            "sourceMap": true
+            "sourceMap": false
           },
           "configurations": {
             "cs": {

@@ -47,6 +47,7 @@ export interface DateTimeConstraintConfig {
   minValue?: Date;
   maxValue?: Date;
   range?: boolean;
+  asUtc?: boolean;
 }
 
 export interface DurationConstraintConfig {

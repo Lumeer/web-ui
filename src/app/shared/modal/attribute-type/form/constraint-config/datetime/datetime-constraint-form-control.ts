@@ -22,4 +22,5 @@ export enum DatetimeConstraintFormControl {
   CustomFormat = 'customFormat',
   MinValue = 'minValue',
   MaxValue = 'maxValue',
+  Utc = 'asUtc',
 }
