@@ -38,17 +38,23 @@ export class DateTimeDataValue implements DataValue {
     public readonly inputValue?: string
   ) {
     if (inputValue) {
-      this.momentDate = parseMomentDate(this.value, this.config?.format);
+      this.momentDate = parseMomentDate(this.value, this.config?.format, this.config?.asUtc);
     } else if (isDateValid(this.value)) {
-      this.momentDate = moment(this.value);
+      this.momentDate = this.parseMoment(this.value);
       this.value = this.value.getTime();
     } else if (this.value) {
-      this.momentDate = isISOFormat(this.value) ? moment(this.value) : parseMomentDate(this.value, this.config?.format);
+      this.momentDate = isISOFormat(this.value)
+        ? this.parseMoment(this.value)
+        : parseMomentDate(this.value, this.config?.format, this.config?.asUtc);
     }
 
     this.momentDate = this.momentDate?.isValid()
       ? resetUnusedMomentPart(this.momentDate, this.config?.format)
       : this.momentDate;
+  }
+
+  private parseMoment(value: any): moment.Moment {
+    return this.config?.asUtc ? moment.utc(this.value) : moment(this.value);
   }
 
   public serialize(): any {

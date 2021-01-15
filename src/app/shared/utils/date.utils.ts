@@ -213,14 +213,14 @@ export function parseDateTimeByConstraint(value: any, constraint: Constraint): D
   return parseMomentDate(value, null)?.toDate();
 }
 
-export function parseMomentDate(value: any, expectedFormat?: string): moment.Moment | null {
+export function parseMomentDate(value: any, expectedFormat?: string, utc?: boolean): moment.Moment | null {
   if (!value) {
     return null;
   }
 
   const formats = [moment.ISO_8601, ...dateFormats];
   if (expectedFormat) {
-    const result = moment(value, [expectedFormat]);
+    const result = utc ? moment.utc(value, [expectedFormat]) : moment(value, [expectedFormat]);
 
     if (result.isValid()) {
       return result;
@@ -229,7 +229,7 @@ export function parseMomentDate(value: any, expectedFormat?: string): moment.Mom
     formats.splice(1, 0, expectedFormat);
   }
 
-  return moment(value, formats);
+  return utc ? moment.utc(value, formats) : moment(value, formats);
 }
 
 export function constraintContainsHoursInConfig(constraint: Constraint): boolean {

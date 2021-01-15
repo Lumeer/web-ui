@@ -76,7 +76,7 @@ function convertConstraintConfigDtoToModel(type: string, config: any): Constrain
 
 function convertDateTimeConstraintConfigDtoToModel(config: any): DateTimeConstraintConfig {
   return {
-    format: config.format,
+    ...config,
     minValue: config.minValue && new Date(config.minValue),
     maxValue: config.maxValue && new Date(config.maxValue),
   };
@@ -106,21 +106,11 @@ function convertAttributeConstraintModelToDto(model: Constraint): ConstraintDto 
   }
 
   switch (model.type) {
-    case ConstraintType.DateTime:
-      return {type: model.type, config: convertDateTimeConstraintConfigModelToDto(model.config)};
     case ConstraintType.Number:
       return {type: model.type, config: convertNumberConstraintConfigModelToDto(model.config)};
     default:
       return convertAnyConstraintModelToDto(model);
   }
-}
-
-function convertDateTimeConstraintConfigModelToDto(config: Partial<DateTimeConstraintConfig> | any): any {
-  return {
-    format: config.format,
-    minValue: config.minValue,
-    maxValue: config.maxValue,
-  };
 }
 
 function convertNumberConstraintConfigModelToDto(config: Partial<NumberConstraintConfig> | any): any {

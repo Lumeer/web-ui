@@ -35,7 +35,7 @@ import {AbstractControl, FormControl, FormGroup} from '@angular/forms';
 import * as moment from 'moment';
 import {BsDatepickerInlineConfig} from 'ngx-bootstrap/datepicker';
 import {Subscription} from 'rxjs';
-import {filter} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 import {DropdownPosition} from '../../dropdown/dropdown-position';
 import {DropdownComponent} from '../../dropdown/dropdown.component';
 import {KeyCode} from '../../key-code';
@@ -63,6 +63,9 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   @Input()
   public value: Date;
 
+  @Input()
+  public asUtc: boolean;
+
   @Output()
   public valueChange = new EventEmitter<Date>();
 
@@ -89,26 +92,33 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
 
   public form = new FormGroup({
     date: new FormControl(),
+    time: new FormControl(),
   });
 
   public datePickerConfig: Partial<BsDatepickerInlineConfig>;
-
-  public timeZone = `UTC${moment().format('Z')}, ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
+  public timeZone;
 
   private subscriptions = new Subscription();
 
   private selectedValue: Date;
 
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes.value && this.value) {
+    if ((changes.value || changes.asUtc) && this.value) {
       this.dateControl.setValue(this.value);
+      this.timeControl.setValue(offsetTime(this.value, this.asUtc));
     }
-    if (changes.options && this.options) {
+    if ((changes.options || changes.asUtc) && this.options) {
       this.datePickerConfig = {
         containerClass: 'box-shadow-none theme-default',
         customTodayClass: 'date-time-today',
         minMode: detectDatePickerViewMode(this.options),
+        useUtc: this.asUtc,
       };
+    }
+    if (changes.asUtc) {
+      this.timeZone = this.asUtc
+        ? 'UTC'
+        : `UTC${moment().format('Z')}, ${Intl.DateTimeFormat().resolvedOptions().timeZone}`;
     }
   }
 
@@ -117,10 +127,16 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   private subscribeToDateChange(): Subscription {
-    return this.dateControl.valueChanges.pipe(filter(value => value !== this.value)).subscribe(value => {
-      this.selectedValue = value;
-      this.valueChange.emit(value);
-    });
+    return this.timeControl.valueChanges
+      .pipe(
+        map(time => mergeDateAndTime(this.dateControl.value, time, this.asUtc)),
+        filter(value => value !== this.value)
+      )
+      .subscribe(value => {
+        this.selectedValue = value;
+        this.dateControl.setValue(value, {emitEmit: false});
+        this.valueChange.emit(value);
+      });
   }
 
   public ngOnDestroy() {
@@ -162,7 +178,17 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   public onDateChange(date: Date) {
-    this.dateControl.setValue(date);
+    const parsedDate = mergeDateAndTime(date, this.timeControl.value, this.asUtc);
+    if (parsedDate !== this.dateControl.value) {
+      this.dateControl.setValue(parsedDate);
+    }
+    const parsedTime = offsetTime(parsedDate, this.asUtc);
+    if (parsedDate !== this.timeControl.value) {
+      this.timeControl.setValue(parsedTime, {emitEvent: false});
+    }
+
+    this.selectedValue = parsedDate;
+    this.valueChange.emit(parsedDate);
   }
 
   public onCancel(event?: MouseEvent) {
@@ -176,11 +202,15 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
   public onSave(event: MouseEvent) {
     event.stopPropagation();
     this.close();
-    this.save.emit(this.dateControl.value);
+    this.save.emit(mergeDateAndTime(this.dateControl.value, this.timeControl.value, this.asUtc));
   }
 
   public get dateControl(): AbstractControl {
     return this.form.get('date');
+  }
+
+  public get timeControl(): AbstractControl {
+    return this.form.get('time');
   }
 
   @HostListener('document:keydown', ['$event'])
@@ -194,4 +224,40 @@ export class DateTimePickerComponent implements OnChanges, OnInit, OnDestroy {
     this.saveOnClose.emit(this.selectedValue);
     this.selectedValue = null;
   }
+}
+
+function offsetTime(date: Date, utc?: boolean): Date {
+  if (utc && date) {
+    const parsedDate = new Date(date);
+    parsedDate.setHours(parsedDate.getHours() + parsedDate.getTimezoneOffset() / 60);
+    return parsedDate;
+  } else {
+    return date;
+  }
+}
+
+function mergeDateAndTime(date: Date, time: Date, utc?: boolean): Date {
+  if (!date) {
+    return time;
+  }
+  if (utc) {
+    return new Date(
+      Date.UTC(
+        date.getUTCFullYear(),
+        date.getUTCMonth(),
+        date.getUTCDate(),
+        time?.getHours() || 0,
+        time?.getMinutes() || 0,
+        time?.getSeconds() || 0,
+        time?.getMilliseconds() || 0
+      )
+    );
+  }
+
+  return moment(date)
+    .hours(time?.getHours() || 0)
+    .minutes(time?.getMinutes() || 0)
+    .seconds(time?.getSeconds() || 0)
+    .milliseconds(time?.getMilliseconds() || 0)
+    .toDate();
 }
