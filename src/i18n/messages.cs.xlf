@@ -5482,6 +5482,20 @@
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/is-not-empty-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isoToDateBlock" datatype="html">
+        <source>Converts date in an ISO string (from stored data) to the date object.</source>
+        <target>Převede datum v ISO řetězci (z uložených dat) na objekt typu datum.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/iso-to-date-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.isoToMsBlock" datatype="html">
+        <source>Converts date in an ISO string to milliseconds since epoch (Unix time).</source>
+        <target>Převede datum v ISO řetězci na počet milisekund (Unixový čas).</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/iso-to-ms-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.currentDateBlock" datatype="html">
         <source>Gets current date as object for further function calls.</source>
         <target>Vrátí aktuální datum a čas k použití v dalších funkcích.</target>
@@ -5510,8 +5524,8 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.dropdown.units.dateChangeBlock" datatype="html">
-        <source>second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
-        <target>sekund(y),minut(y),hodin(y),dn(ů/y),měsíc(e/ů),měsíc(e/ů) (držet konec měsíce),kvartál(y/ů),kvartál(y/ů) (držet konec měsíce),roky/let,roky/let (držet konec měsíce)</target>
+        <source>second(s),minute(s),hour(s),day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)</source>
+        <target>sekund(y),minut(y),hodin(y),dn(ů/y),týdn(ů/y),měsíc(e/ů),měsíc(e/ů) (držet konec měsíce),kvartál(y/ů),kvartál(y/ů) (držet konec měsíce),roky/let,roky/let (držet konec měsíce)</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/date-change-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5625,6 +5639,26 @@
         <target>Nastaví hodnotu daného sloupce v dané vazbě.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/set-link-attribute-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.tooltip.shiftDateOfBlock" datatype="html">
+        <source>Aligns a date to either beginning or end of the closest time unit.</source>
+        <target>Zarovná datum na začátek nebo konec dané časové jednotky.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/shift-date-of-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.dropdown.units.shiftDateOfBlock" datatype="html">
+        <source>minute,hour,day,week,month,quarter,year</source>
+        <target>minuty,hodiny,dne,týdne,měsíce,kvartálu,roku</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/shift-date-of-blockly-component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit><trans-unit id="blockly.dropdown.ops.shiftDateOfBlock" datatype="html">
+        <source>start,end</source><target>začátek,konec</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/shared/blockly/blockly-editor/blocks/shift-date-of-blockly-component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit><trans-unit id="blockly.tooltip.showMessageBlock" datatype="html">

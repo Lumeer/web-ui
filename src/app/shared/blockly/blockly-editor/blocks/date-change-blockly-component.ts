@@ -40,7 +40,7 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
     this.units = i18n({
       id: 'blockly.dropdown.units.dateChangeBlock',
       value:
-        'second(s),minute(s),hour(s),day(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)',
+        'second(s),minute(s),hour(s),day(s),week(s),month(s),month(s) (stick to end of month),quarter(s),quarter(s) (stick to end of month),year(s),year(s) (stick to end of month)',
     }).split(',');
     this.ops = i18n({id: 'blockly.dropdown.ops.dateChangeBlock', value: 'add,subtract,set'}).split(',');
   }
@@ -79,12 +79,13 @@ export class DateChangeBlocklyComponent extends BlocklyComponent {
                 [this_.units[1], 'minutes'],
                 [this_.units[2], 'hours'],
                 [this_.units[3], 'days'],
-                [this_.units[4], 'months'],
-                [this_.units[5], 'sticky_months'],
-                [this_.units[6], 'quarters'],
-                [this_.units[7], 'sticky_quarters'],
-                [this_.units[8], 'years'],
-                [this_.units[9], 'sticky_years'],
+                [this_.units[4], 'weeks'],
+                [this_.units[5], 'months'],
+                [this_.units[6], 'sticky_months'],
+                [this_.units[7], 'quarters'],
+                [this_.units[8], 'sticky_quarters'],
+                [this_.units[9], 'years'],
+                [this_.units[10], 'sticky_years'],
               ],
             },
             {
