@@ -68,6 +68,9 @@ export class BlocklyUtils {
   public static readonly SHOW_MESSAGE = 'show_message';
   public static readonly DATE_CHANGE = 'date_change';
   public static readonly MS_TO_DATE = 'ms_to_date';
+  public static readonly ISO_TO_DATE = 'iso_to_date';
+  public static readonly ISO_TO_MS = 'iso_to_ms';
+  public static readonly SHIFT_DATE_OF = 'shift_date_of';
   public static readonly DATE_TO_ISO = 'date_to_iso';
   public static readonly DATE_TO_MS = 'date_to_ms';
   public static readonly DATE_NOW = 'date_now';
@@ -710,11 +713,14 @@ export class BlocklyUtils {
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_iso"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_to_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="ms_to_date"></block></xml>').firstChild);
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="iso_to_date"></block></xml>').firstChild);
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="iso_to_ms"></block></xml>').firstChild);
     xmlList.push(
       Blockly.Xml.textToDom(
         '<xml><block type="date_change"><value name="COUNT"><shadow type="math_number"><field name="NUM">1</field></shadow></value></block></xml>'
       ).firstChild
     );
+    xmlList.push(Blockly.Xml.textToDom('<xml><block type="shift_date_of"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="date_now_ms"></block></xml>').firstChild);
     xmlList.push(Blockly.Xml.textToDom('<xml><block type="current_date"></block></xml>').firstChild);

@@ -67,6 +67,9 @@ import {DateToIsoBlocklyComponent} from './blocks/date-to-iso-blockly-component'
 import {DateChangeBlocklyComponent} from './blocks/date-change-blockly-component';
 import {IsEmptyBlocklyComponent} from './blocks/is-empty-blockly-component';
 import {IsNotEmptyBlocklyComponent} from './blocks/is-not-empty-blockly-component';
+import {IsoToDateBlocklyComponent} from './blocks/iso-to-date-blockly-component';
+import {ShiftDateOfBlocklyComponent} from './blocks/shift-date-of-blockly-component';
+import {IsoToMsBlocklyComponent} from './blocks/iso-to-ms-blockly-component';
 
 declare var Blockly: any;
 
@@ -160,6 +163,9 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       new ShowMessageBlocklyComponent(this.blocklyUtils, this.i18n),
       new IsEmptyBlocklyComponent(this.blocklyUtils, this.i18n),
       new IsNotEmptyBlocklyComponent(this.blocklyUtils, this.i18n),
+      new IsoToDateBlocklyComponent(this.blocklyUtils, this.i18n),
+      new IsoToMsBlocklyComponent(this.blocklyUtils, this.i18n),
+      new ShiftDateOfBlocklyComponent(this.blocklyUtils, this.i18n),
     ]);
 
     this.blocklyService.loadBlockly(this.renderer2, this.document, this.blocklyOnLoad.bind(this));
