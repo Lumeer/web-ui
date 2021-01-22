@@ -16,7 +16,7 @@
                  [selectedId]="formatControl.value"
                  [removable]="false"
                  [items]="formatItems"
-                 (select)="formatControl.setValue($event)"
+                 (selected)="formatControl.setValue($event)"
                  buttonClasses="flex-grow-1 text-truncate"
                  data-test="datetime-constraint-format-select">
     </select-item>

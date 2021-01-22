@@ -12,7 +12,7 @@
                  [selectedId]="formatControl.value"
                  [removable]="false"
                  [items]="formatItems"
-                 (select)="onFormatSelect($event)"
+                 (selected)="onFormatSelect($event)"
                  data-test="coordinates-constraint-format-select"
                  buttonClasses="flex-grow-1 text-truncate">
     </select-item>
@@ -26,7 +26,7 @@
                  [items]="formatControl.value === coordinatesFormat.DecimalDegrees ? ddPrecisionItems : dmsPrecisionItems"
                  [removable]="false"
                  [selectedId]="precisionControl.value"
-                 (select)="onPrecisionSelect($event)"
+                 (selected)="onPrecisionSelect($event)"
                  buttonClasses="flex-grow-1 text-truncate"
                  data-test="coordinates-constraint-precision-select">
     </select-item>

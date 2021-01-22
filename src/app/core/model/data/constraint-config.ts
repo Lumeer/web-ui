@@ -81,7 +81,7 @@ export interface NumberConstraintConfig {
   compact?: boolean; // 12k, 5m etc..
   separated?: boolean; // 10,000 in non compact mode; 1 m in compact mode
   forceSign?: boolean; // +350
-  negative?: 'parenthesis'; // (100)
+  negative?: boolean; // (100)
   currency?: LanguageTag;
 }
 

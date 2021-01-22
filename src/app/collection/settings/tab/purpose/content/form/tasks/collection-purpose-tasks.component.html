@@ -10,7 +10,7 @@
                    emptyValue="Select assignee attribute"
                    i18n-emptyValue="@@collections.tab.purpose.assignee.select"
                    [selectedId]="assigneeControl.value"
-                   (select)="assigneeControl.patchValue($event)"
+                   (selected)="assigneeControl.patchValue($event)"
                    (remove)="assigneeControl.patchValue(null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.assignee.help">
@@ -29,7 +29,7 @@
                    emptyValue="Select due date attribute"
                    i18n-emptyValue="@@collections.tab.purpose.dueDate.select"
                    [selectedId]="dueDateControl.value"
-                   (select)="dueDateControl.patchValue($event)"
+                   (selected)="dueDateControl.patchValue($event)"
                    (remove)="dueDateControl.patchValue(null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.dueDate.help">
@@ -49,7 +49,7 @@
                    emptyValue="Select state attribute"
                    i18n-emptyValue="@@collections.tab.purpose.state.select"
                    [selectedId]="stateControl.value"
-                   (select)="stateControl.patchValue($event); stateListControl.patchValue([]);"
+                   (selected)="stateControl.patchValue($event); stateListControl.patchValue([]);"
                    (remove)="stateControl.patchValue(null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.state.help">
@@ -91,7 +91,7 @@
                    emptyValue="Select observer attribute"
                    i18n-emptyValue="@@collections.tab.purpose.observer.select"
                    [selectedId]="observersControl.value"
-                   (select)="observersControl.patchValue($event)"
+                   (selected)="observersControl.patchValue($event)"
                    (remove)="observersControl.patchValue(null)">
       </select-item>
       <div class="text-muted small px-1 mt-1" i18n="@@collections.tab.purpose.observer.help">

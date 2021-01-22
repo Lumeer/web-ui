@@ -36,7 +36,6 @@ export class NotificationComponent extends Toast {
   public iconClass$ = new BehaviorSubject<string>(null);
 
   public onButtonClick($event, button: NotificationButton) {
-    $event.stopPropagation();
     button.action?.();
     this.toastrService.clear(this.toastId);
   }

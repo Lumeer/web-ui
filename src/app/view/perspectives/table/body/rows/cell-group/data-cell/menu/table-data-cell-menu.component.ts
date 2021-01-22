@@ -180,15 +180,17 @@ export class TableDataCellMenuComponent implements OnChanges {
       return;
     }
 
+    const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
     if (this.document.id) {
       this.store$.dispatch(
         new DocumentsAction.DeleteConfirm({
           collectionId: this.document.collectionId,
           documentId: this.document.id,
+          nextAction: removeRowAction,
         })
       );
     } else {
-      this.store$.dispatch(new TablesAction.RemoveRow({cursor: this.cursor}));
+      this.store$.dispatch(removeRowAction);
     }
   }
 
@@ -237,6 +239,11 @@ export class TableDataCellMenuComponent implements OnChanges {
         .pipe(select(selectLinkTypeById(this.linkInstance.linkTypeId)), take(1))
         .subscribe(linkType => this.modalService.showDataResourceDetail(this.linkInstance, linkType));
     }
+  }
+
+  public onClick(event: MouseEvent) {
+    this.contextMenu?.closeMenu();
+    event.stopPropagation();
   }
 
   public onCopyValue() {

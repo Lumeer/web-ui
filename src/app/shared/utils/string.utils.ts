@@ -21,8 +21,9 @@ import {CaseStyle} from '../../core/model/data/constraint-config';
 import * as unorm from 'unorm';
 import {convertBase} from './number.utils';
 
-export function removeAccent(value: string, lowerCase = true): string {
-  return unorm.nfd(lowerCase ? (value || '').toLowerCase() : value || '').replace(/[\u0300-\u036f]/g, '');
+export function removeAccent(value: string | number, lowerCase = true): string {
+  const stringValue = value || value === 0 ? String(value) : '';
+  return unorm.nfd(lowerCase ? stringValue.toLowerCase() : stringValue).replace(/[\u0300-\u036f]/g, '');
 }
 
 export function escapeStringForRegex(text: string): string {

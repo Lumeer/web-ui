@@ -46,7 +46,7 @@
                i18n-emptyValue="@@perspective.chart.config.axis.empty"
                [removable]="true"
                [buttonClasses]="buttonClasses"
-               (select)="onSizeSelect($event)"
+               (selected)="onSizeSelect($event)"
                (remove)="onSizeRemoved()">
   </select-item>
 
@@ -59,7 +59,7 @@
                i18n-emptyValue="@@perspective.chart.config.axis.empty"
                [removable]="true"
                [buttonClasses]="buttonClasses"
-               (select)="onColorSelect($event)"
+               (selected)="onColorSelect($event)"
                (remove)="onColorRemoved()">
   </select-item>
 
@@ -70,7 +70,7 @@
                [buttonClasses]="buttonClasses"
                [removable]="false"
                [selectedId]="yAxis?.aggregation"
-               (select)="onAggregationSelect($event)">
+               (selected)="onAggregationSelect($event)">
   </select-item>
 
 </ng-container>

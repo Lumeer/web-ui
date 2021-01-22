@@ -12,7 +12,7 @@
                [emptyValue]="property | ganttChartBarEmptyValue"
                [removable]="true"
                [buttonClasses]="buttonClasses"
-               (select)="onBarPropertySelect(property, $event)"
+               (selected)="onBarPropertySelect(property, $event)"
                (remove)="onBarPropertyRemoved(property)">
   </select-item>
 
@@ -26,7 +26,7 @@
                i18n-placeholderText="@@aggregation"
                placeholderTitle="Select progress aggregation"
                i18n-placeholderTitle="@@perspective.gantt.config.progressAggregation"
-               (select)="onProgressAggregationSelect($event)">
+               (selected)="onProgressAggregationSelect($event)">
   </select-item>
 
 </ng-container>

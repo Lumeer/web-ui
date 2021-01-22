@@ -6,7 +6,7 @@
              [buttonClasses]="buttonClasses"
              [removable]="false"
              [selectedId]="aggregation?.aggregation || aggregationType.Sum"
-             (select)="onAggregationSelect($event)">
+             (selected)="onAggregationSelect($event)">
 </select-item>
 
 <select-item class="d-block w-100 mt-2"
@@ -18,5 +18,5 @@
              [selectedId]="aggregation?.valueType || valueType.Default"
              [removable]="false"
              [buttonClasses]="buttonClasses"
-             (select)="onValueTypeSelected($event)">
+             (selected)="onValueTypeSelected($event)">
 </select-item>

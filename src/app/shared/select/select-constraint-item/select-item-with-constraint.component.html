@@ -8,7 +8,7 @@
   [placeholderText]="placeholderText"
   [emptyValue]="emptyValue"
   [fitParent]="fitParent"
-  (select)="onSelect($event)"
+  (selected)="onSelect($event)"
   (remove)="onRemove()">
 </select-item>
 
@@ -25,7 +25,7 @@
       [disabled]="disabled"
       [fitParent]="fitParent"
       [emptyValue]="''"
-      (select)="onSelectConstraint($event)">
+      (selected)="onSelectConstraint($event)">
     </select-item>
   </ng-container>
 </ng-container>

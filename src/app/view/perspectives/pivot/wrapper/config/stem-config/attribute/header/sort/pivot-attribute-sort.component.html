@@ -7,7 +7,7 @@
                [selectedId]="pivotAttribute | pivotSortSelectedId:data.selectItems"
                [removable]="false"
                [buttonClasses]="buttonClasses"
-               (select)="onSortSelected($event)">
+               (selected)="onSortSelected($event)">
   </select-item>
 
   <i class="fas fa-fw fa-lg cursor-pointer text-black-50"
@@ -30,7 +30,7 @@
                [selectedId]="value"
                [removable]="index > 0 || !value?.isSummary"
                [buttonClasses]="buttonClasses"
-               (select)="onSubSortSelected(index, $event)"
+               (selected)="onSubSortSelected(index, $event)"
                (remove)="onSubSortRemoved(index)">
   </select-item>
 </ng-container>

@@ -76,7 +76,7 @@ export class SelectItemComponent implements OnChanges, OnDestroy {
   public positionReverse = true;
 
   @Output()
-  public select = new EventEmitter<any>();
+  public selected = new EventEmitter<any>();
 
   @Output()
   public remove = new EventEmitter();
@@ -100,7 +100,7 @@ export class SelectItemComponent implements OnChanges, OnDestroy {
   }
 
   public onSelect(option: DropdownOption) {
-    this.select.emit(option.value);
+    this.selected.emit(option.value);
   }
 
   public onRemove(event: any) {

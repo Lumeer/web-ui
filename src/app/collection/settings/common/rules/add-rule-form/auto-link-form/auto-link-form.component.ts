@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {Collection} from '../../../../../../core/store/collections/collection';
 import {LinkType} from '../../../../../../core/store/link-types/link.type';
@@ -81,25 +81,28 @@ export class AutoLinkFormComponent implements OnInit {
   }
 
   public onSelectLinkType(linkTypeId: string) {
-    this.selectedLinkType = this.linkTypes.find(linkType => linkType.id === linkTypeId);
-    this.form.get('linkType').setValue(linkTypeId);
-    this.form.get('collection1').setValue(this.collection.id);
-    this.linkedCollection =
-      this.selectedLinkType.collections?.length === 2 &&
-      (this.selectedLinkType.collections[0]?.id === this.collection.id
-        ? this.selectedLinkType.collections[1]
-        : this.selectedLinkType.collections[0]);
-    this.form.get('collection2').setValue(this.linkedCollection?.id);
+    const selectedLinkType = this.linkTypes.find(linkType => linkType.id === linkTypeId);
+    if (selectedLinkType) {
+      this.selectedLinkType = selectedLinkType;
+      this.form.get('linkType').setValue(linkTypeId);
+      this.form.get('collection1').setValue(this.collection.id);
+      this.linkedCollection =
+        this.selectedLinkType.collections?.length === 2 &&
+        (this.selectedLinkType.collections[0]?.id === this.collection.id
+          ? this.selectedLinkType.collections[1]
+          : this.selectedLinkType.collections[0]);
+      this.form.get('collection2').setValue(this.linkedCollection?.id);
 
-    this.attribute2Empty = this.i18n(
-      {
-        id: 'collection.config.tab.rules.autoLink.selectFrom',
-        value: 'Select from {{collection}}',
-      },
-      {
-        collection: this.linkedCollection?.name,
-      }
-    );
+      this.attribute2Empty = this.i18n(
+        {
+          id: 'collection.config.tab.rules.autoLink.selectFrom',
+          value: 'Select from {{collection}}',
+        },
+        {
+          collection: this.linkedCollection?.name,
+        }
+      );
+    }
   }
 
   public onSelectAttribute1(attribute1: string) {

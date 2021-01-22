@@ -3,7 +3,7 @@
              [buttonClasses]="buttonClasses"
              [items]="chartTypes | chartTypesToSelect"
              [selectedId]="config.type"
-             (select)="onTypeSelect($event)">
+             (selected)="onTypeSelect($event)">
 </select-item>
 
 <h6 class="font-weight-bold mt-4" i18n="@@perspective.chart.config.axis.x.header">X Axis settings</h6>
@@ -31,7 +31,7 @@
              [selectedId]="config.sort?.axis | chartCleanAxis"
              [buttonClasses]="buttonClasses"
              [removable]="true"
-             (select)="onSortSelect($event)"
+             (selected)="onSortSelect($event)"
              (remove)="onSortRemoved()">
 </select-item>
 
@@ -41,5 +41,5 @@
              [buttonClasses]="buttonClasses"
              [removable]="false"
              [selectedId]="config.sort?.type"
-             (select)="onSortTypeSelect($event)">
+             (selected)="onSortTypeSelect($event)">
 </select-item>

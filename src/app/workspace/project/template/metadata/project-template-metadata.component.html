@@ -82,7 +82,7 @@
                      [removable]="true"
                      [selectedId]="defaultViewControl.value"
                      [fitParent]="true"
-                     (select)="onViewSelected($event)"
+                     (selected)="onViewSelected($event)"
                      (remove)="onViewSelected(null)">
         </select-item>
         <div class="text-muted small px-1 mt-1" i18n="@@projects.tab.template.metadata.defaultView.help">

@@ -29,7 +29,7 @@
              [removable]="true"
              [fitParent]="true"
              [buttonClasses]="buttonClasses"
-             (select)="onResourceSelected($event)"
+             (selected)="onResourceSelected($event)"
              (remove)="onResourceRemoved()">
 </select-item>
 
@@ -43,7 +43,7 @@
              [removable]="true"
              [fitParent]="true"
              [buttonClasses]="buttonClasses"
-             (select)="onDueDateSelected($event)"
+             (selected)="onDueDateSelected($event)"
              (remove)="onDueDateRemoved()">
 </select-item>
 
@@ -77,6 +77,6 @@
              [removable]="true"
              [fitParent]="true"
              [buttonClasses]="buttonClasses"
-             (select)="onAggregationSelected($event)"
+             (selected)="onAggregationSelected($event)"
              (remove)="onAggregationRemoved()">
 </select-item>

@@ -173,7 +173,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
       this.preventSave = false;
       this.blurCleanup();
     } else {
-      const selectedOption = this.dropdown.getActiveOption();
+      const selectedOption = this.dropdown?.getActiveOption();
       if (selectedOption) {
         this.saveValueOnBlur(selectedOption.value);
       } else {
@@ -203,7 +203,7 @@ export class AddressDataInputComponent implements OnInit, OnChanges, AfterViewCh
       case KeyCode.Tab:
         const input = this.addressInput;
         const value = input.nativeElement.value;
-        const selectedOption = this.dropdown.getActiveOption();
+        const selectedOption = this.dropdown?.getActiveOption();
         const dataValue = this.value.parseInput(selectedOption?.value || value);
 
         event.preventDefault();

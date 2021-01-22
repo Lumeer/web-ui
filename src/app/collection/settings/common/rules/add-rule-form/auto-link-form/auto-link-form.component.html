@@ -10,7 +10,7 @@
       placeholderIcon="fas fa-link"
       [items]="linkTypes | linkTypesSelectItems"
       [selectedId]="linkTypeId"
-      (select)="onSelectLinkType($event)">
+      (selected)="onSelectLinkType($event)">
     </select-item>
   </div>
   <div class="form-group d-flex align-items-center justify-content-start text-nowrap mt-2">
@@ -19,7 +19,7 @@
     </div>
     <select-item
       class="ml-3"
-      (select)="onSelectAttribute1($event)"
+      (selected)="onSelectAttribute1($event)"
       [emptyValue]="attribute1Empty"
       [placeholderIcon]="collection.icon"
       [items]="collection | attributesSelectItems"
@@ -30,7 +30,7 @@
     </div>
     <select-item
       class="ml-3"
-      (select)="onSelectAttribute2($event)"
+      (selected)="onSelectAttribute2($event)"
       [emptyValue]="linkedCollection ? attribute2Empty : attribute2NoCollection"
       [placeholderIcon]="linkedCollection ? linkedCollection.icon : 'fas fa-question'"
       [items]="linkedCollection | attributesSelectItems"
