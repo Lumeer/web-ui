@@ -12,7 +12,7 @@
                [emptyValue]="property | calendarPropertyEmptyValue"
                [removable]="true"
                [buttonClasses]="buttonClasses"
-               (select)="onBarPropertySelect(property, $event)"
+               (selected)="onBarPropertySelect(property, $event)"
                (remove)="onBarPropertyRemoved(property)">
   </select-item>
 

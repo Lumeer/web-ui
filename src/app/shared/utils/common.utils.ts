@@ -85,7 +85,8 @@ function removeUndefinedPropertiesFromArray(array: any[]): any[] {
 
 function removeUndefinedPropertiesFromObject(object: any): any {
   const returnObj = {};
-  Object.entries(object).forEach(([key, val]) => {
+  Object.keys(object).forEach(key => {
+    const val = object[key];
     if (isNotNullOrUndefined(val)) {
       if (isArray(val)) {
         returnObj[key] = removeUndefinedPropertiesFromArray(val);

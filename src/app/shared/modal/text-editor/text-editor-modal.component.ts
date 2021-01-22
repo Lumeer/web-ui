@@ -142,9 +142,11 @@ export class TextEditorModalComponent implements OnInit, AfterViewInit {
   }
 
   private editorHeight() {
-    const toolbar = +this.dialogBody.nativeElement.querySelector('.ql-toolbar').clientHeight;
-    const warning = this.valid ? 0 : +this.dialogBody.nativeElement.querySelector('#invalid-warning').clientHeight;
-    const height = +this.dialogBody.nativeElement.parentElement.clientHeight - toolbar - warning - 2;
+    const toolbar = this.dialogBody.nativeElement.querySelector('.ql-toolbar');
+    const toolbarHeight = toolbar ? +toolbar.clientHeight : 0;
+    const warning = this.valid ? null : this.dialogBody.nativeElement.querySelector('#invalid-warning');
+    const warningHeight = warning ? +warning.clientHeight : 0;
+    const height = +this.dialogBody.nativeElement.parentElement.clientHeight - toolbarHeight - warningHeight - 2;
 
     this.element.nativeElement.style.setProperty('--editor-height', `${height}px`);
   }

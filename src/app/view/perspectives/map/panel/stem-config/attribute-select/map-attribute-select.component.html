@@ -10,7 +10,7 @@
                  i18n-emptyValue="@@map.config.attribute.empty"
                  buttonClasses="flex-grow-1 text-truncate"
                  [removable]="true"
-                 (select)="onAttributeSelect(index,$event)"
+                 (selected)="onAttributeSelect(index,$event)"
                  (remove)="onAttributeRemoved(index)">
     </select-item>
   </ng-container>

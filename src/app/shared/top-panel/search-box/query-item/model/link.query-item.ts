@@ -27,15 +27,15 @@ export class LinkQueryItem implements QueryItem {
   public constructor(public linkType: LinkType) {}
 
   public get icons(): string[] {
-    return this.linkType.collections.map(collection => collection.icon);
+    return this.linkType.collections?.map(collection => collection.icon).filter(icon => !!icon) || [];
   }
 
   public get colors(): string[] {
-    return this.linkType.collections.map(collection => collection.color);
+    return this.linkType.collections?.map(collection => collection.color).filter(color => !!color) || [];
   }
 
   public get collectionIds(): string[] {
-    return this.linkType.collections.map(collection => collection.id);
+    return this.linkType.collections?.map(collection => collection?.id).filter(id => !!id) || [];
   }
 
   public get text(): string {

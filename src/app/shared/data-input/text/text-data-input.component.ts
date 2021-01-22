@@ -179,7 +179,7 @@ export class TextDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.Tab:
         const input = this.textInput;
         let dataValue = this.value.parseInput(input.nativeElement.value);
-        const selectedOption = this.dropdown.getActiveOption();
+        const selectedOption = this.dropdown?.getActiveOption();
 
         event.preventDefault();
 

@@ -86,7 +86,7 @@
                  [selectedId]="currencyControl.value"
                  [removable]="true"
                  [positionReverse]="false"
-                 (select)="onCurrencySelect($event)"
+                 (selected)="onCurrencySelect($event)"
                  (remove)="onCurrencySelect(null)"
                  emptyValue="Select currency"
                  i18n-emptyValue="@@constraint.number.currency.empty"

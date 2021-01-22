@@ -409,7 +409,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    if (this.suggestions && this.suggestions.isSelected()) {
+    if (this.suggestions?.isSelected()) {
       this.suggestions.useSelection();
     } else {
       this.saveData(dataValue.serialize());
@@ -604,7 +604,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
 
   private deleteDocumentAndRemoveRow() {
     const removeRowAction = new TablesAction.RemoveRow({cursor: this.cursor});
-    if (this.document && this.document.id) {
+    if (this.document?.id) {
       this.deleteDocument(removeRowAction);
       return;
     }
@@ -684,7 +684,7 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
             partIndex: this.cursor.partIndex + 1,
           })
         ),
-        map(row => row && row.correlationId)
+        map(row => row?.correlationId)
       ),
       this.store$.pipe(
         select(
@@ -701,22 +701,20 @@ export class TableDataCellComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(take(1))
       .subscribe(([{collectionId}, correlationId, {documentId: previousDocumentId}, query, collections]) => {
         const collection = (collections || []).find(coll => coll.id === collectionId);
-        this.store$.dispatch(
-          new DocumentsAction.Create({
-            document: {
-              collectionId,
-              correlationId,
-              data: generateDocumentDataByResourceQuery(collection, query, this.constraintData, false),
-            },
-            onSuccess: documentId =>
-              this.createLinkInstanceWithData([previousDocumentId, documentId], {[attributeId]: value}),
-          })
-        );
+        if (previousDocumentId) {
+          this.store$.dispatch(
+            new DocumentsAction.CreateWithLink({
+              document: {
+                collectionId,
+                correlationId,
+                data: generateDocumentDataByResourceQuery(collection, query, this.constraintData, false),
+              },
+              otherDocumentId: previousDocumentId,
+              linkInstance: {...this.linkInstance, documentIds: [previousDocumentId, ''], data: {[attributeId]: value}},
+            })
+          );
+        }
       });
-  }
-
-  private createLinkInstanceWithData(documentIds: [string, string], data: Record<string, any>) {
-    this.store$.dispatch(new LinkInstancesAction.Create({linkInstance: {...this.linkInstance, documentIds, data}}));
   }
 
   private createLinkTypeAttribute(attributeName: string, onSuccess: (attribute: Attribute) => void) {

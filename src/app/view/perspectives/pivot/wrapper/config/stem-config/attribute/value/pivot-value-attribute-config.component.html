@@ -21,7 +21,7 @@
              [buttonClasses]="buttonClasses"
              [removable]="false"
              [selectedId]="pivotAttribute.aggregation"
-             (select)="onAggregationSelect($event)">
+             (selected)="onAggregationSelect($event)">
 </select-item>
 
 <select-item *ngIf="pivotAttribute"
@@ -34,6 +34,6 @@
              [selectedId]="pivotAttribute.valueType || valueType.Default"
              [removable]="false"
              [buttonClasses]="buttonClasses"
-             (select)="onValueTypeSelected($event)">
+             (selected)="onValueTypeSelected($event)">
 </select-item>
 

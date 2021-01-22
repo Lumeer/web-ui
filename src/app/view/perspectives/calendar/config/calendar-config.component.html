@@ -20,7 +20,7 @@
              placeholderText="Slot duration"
              i18n-placeholderText="@@perspective.calendar.config.slotDuration.label"
              [removable]="false"
-             (select)="onSlotDurationChange($event)">
+             (selected)="onSlotDurationChange($event)">
 </select-item>
 
 <calendar-stem-config *ngFor="let stem of query?.stems; trackBy:trackByStem; let index = index"

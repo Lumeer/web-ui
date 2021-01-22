@@ -165,7 +165,7 @@ export class UserDataInputComponent implements OnChanges, AfterViewChecked {
       case KeyCode.Enter:
       case KeyCode.NumpadEnter:
       case KeyCode.Tab:
-        const selectedOption = this.dropdown.getActiveOption();
+        const selectedOption = this.dropdown?.getActiveOption();
 
         event.preventDefault();
 
