@@ -41,7 +41,7 @@ import {ContrastColorPipe} from '../../pipes/contrast-color.pipe';
 import {BlocklyService} from '../../../core/service/blockly.service';
 import {BehaviorSubject} from 'rxjs';
 import {BlocklyUtils, MasterBlockType} from './blockly-utils';
-import {isNotNullOrUndefined} from '../../utils/common.utils';
+import {isNotNullOrUndefined, isNullOrUndefined} from '../../utils/common.utils';
 import {CreateDocumentBlocklyComponent} from './blocks/create-document-blockly-component';
 import {ForEachDocumentArrayBlocklyComponent} from './blocks/for-each-document-array-blockly-component';
 import {ForEachLinkArrayBlocklyComponent} from './blocks/for-each-link-array-blockly-component';
@@ -557,7 +557,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
       ) {
         block.outputConnection.check_ = changeEvent.newValue + BlocklyUtils.DOCUMENT_VAR_SUFFIX;
 
-        if (block.outputConnection.targetConnection) {
+        if (block.outputConnection?.targetConnection) {
           const linkedBlock = block.outputConnection.targetConnection.getSourceBlock();
 
           if (linkedBlock) {
@@ -594,7 +594,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       // disconnect invalid foreach input
       if (parentBlock.type === BlocklyUtils.FOREACH_DOCUMENT_ARRAY) {
-        if (parentBlock.getInput('LIST').connection.targetConnection.sourceBlock_.id === block.id) {
+        if (parentBlock.getInput('LIST').connection?.targetConnection.sourceBlock_.id === block.id) {
           if (!blockOutputType.endsWith(BlocklyUtils.DOCUMENT_ARRAY_TYPE_SUFFIX)) {
             parentBlock.getInput('LIST').connection.disconnect();
           } else {
@@ -608,7 +608,7 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
 
       // disconnect invalid foreach input
       if (parentBlock.type === BlocklyUtils.FOREACH_LINK_ARRAY) {
-        if (parentBlock.getInput('LIST').connection.targetConnection.sourceBlock_.id === block.id) {
+        if (parentBlock.getInput('LIST').connection?.targetConnection.sourceBlock_.id === block.id) {
           if (!blockOutputType.endsWith(BlocklyUtils.LINK_TYPE_ARRAY_SUFFIX)) {
             parentBlock.getInput('LIST').connection.disconnect();
           } else {
@@ -707,9 +707,11 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           // reset list of attributes upon disconnection
           if (
             (parentBlock.type === BlocklyUtils.SET_ATTRIBUTE &&
-              parentBlock.getInput('DOCUMENT').connection.targetConnection === null) ||
+              (isNullOrUndefined(parentBlock.getInput('DOCUMENT').connection) ||
+                parentBlock.getInput('DOCUMENT').connection.targetConnection === null)) ||
             (parentBlock.type === BlocklyUtils.SET_LINK_ATTRIBUTE &&
-              parentBlock.getInput('LINK').connection.targetConnection === null)
+              (isNullOrUndefined(parentBlock.getInput('LINK').connection) ||
+                parentBlock.getInput('LINK').connection.targetConnection === null))
           ) {
             this.blocklyUtils.resetOptions(parentBlock, 'ATTR');
           }
@@ -717,7 +719,8 @@ export class BlocklyEditorComponent implements AfterViewInit, OnDestroy {
           // reset list of collections upon disconnection
           if (
             parentBlock.type === BlocklyUtils.GET_LINK_DOCUMENT &&
-            parentBlock.getInput('COLLECTION').connection.targetConnection === null
+            (isNullOrUndefined(parentBlock.getInput('COLLECTION').connection) ||
+              parentBlock.getInput('COLLECTION').connection.targetConnection === null)
           ) {
             parentBlock.setOutput(true, BlocklyUtils.UNKNOWN);
             this.blocklyUtils.resetOptions(parentBlock, 'COLLECTION');
